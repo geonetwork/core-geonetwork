@@ -94,23 +94,25 @@
       $scope.saveCategory = function () {
         $http
           .put("../api/tags/" + $scope.categorySelected.id, $scope.categorySelected)
-          .success(function (data) {
-            $scope.unselectCategory();
-            loadCategories();
-            $rootScope.$broadcast("StatusUpdated", {
-              msg: $translate.instant("categoryUpdated"),
-              timeout: 2,
-              type: "success"
-            });
-          })
-          .error(function (data) {
-            $rootScope.$broadcast("StatusUpdated", {
-              title: $translate.instant("categoryUpdateError"),
-              error: data,
-              timeout: 0,
-              type: "danger"
-            });
-          });
+          .then(
+            function (response) {
+              $scope.unselectCategory();
+              loadCategories();
+              $rootScope.$broadcast("StatusUpdated", {
+                msg: $translate.instant("categoryUpdated"),
+                timeout: 2,
+                type: "success"
+              });
+            },
+            function (response) {
+              $rootScope.$broadcast("StatusUpdated", {
+                title: $translate.instant("categoryUpdateError"),
+                error: response.data,
+                timeout: 0,
+                type: "danger"
+              });
+            }
+          );
       };
 
       $scope.addCategory = function () {
@@ -132,8 +134,8 @@
       };
 
       function loadCategories() {
-        $http.get("../api/tags").success(function (data) {
-          $scope.categories = data;
+        $http.get("../api/tags").then(function (response) {
+          $scope.categories = response.data;
         });
       }
       loadCategories();

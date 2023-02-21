@@ -51,7 +51,7 @@ public interface ISearchManager {
      *                            reader
      */
     void index(Path schemaDir, Element metadata, String id, Multimap<String, Object> moreFields,
-               MetadataType metadataType, boolean forceRefreshReaders)
+               MetadataType metadataType, boolean forceRefreshReaders, IndexingMode indexingMode)
         throws Exception;
 
     /**

@@ -1,3 +1,5 @@
 {
-  "trailingComma": "none"
+  "trailingComma": "none",
+  "endOfLine": "lf",
+  "printWidth": 80
 }

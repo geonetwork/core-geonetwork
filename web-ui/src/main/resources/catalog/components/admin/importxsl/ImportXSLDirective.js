@@ -44,8 +44,8 @@
         templateUrl:
           "../../catalog/components/admin/importxsl/partials/" + "importxsl.html",
         link: function (scope, element, attrs) {
-          $http.get("../api/site/info/transforms").success(function (data) {
-            scope.stylesheets = data;
+          $http.get("../api/site/info/transforms").then(function (response) {
+            scope.stylesheets = response.data;
             scope.stylesheets.unshift("");
             if (angular.isUndefined(scope.element) || angular.isObject(scope.element)) {
               scope.element = scope.stylesheets[0];

@@ -25,6 +25,7 @@ package org.fao.geonet.api.processing;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.base.Optional;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -41,6 +42,8 @@ import org.fao.geonet.events.history.RecordProcessingChangeEvent;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MetadataIndexerProcessor;
 import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.UpdateDatestamp;
+import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.specification.MetadataSpecs;
@@ -101,6 +104,9 @@ public class XslProcessApi {
     SchemaManager schemaMan;
 
     @Autowired
+    private IMetadataManager metadataManager;
+
+    @Autowired
     SettingManager settingManager;
 
     @io.swagger.v3.oas.annotations.Operation(
@@ -155,6 +161,11 @@ public class XslProcessApi {
             example = "false")
         @RequestParam(required = false, defaultValue = "false")
             boolean appendFirst,
+        @Parameter(description = "Apply update fixed info",
+            required = false,
+            example = "false")
+        @RequestParam(required = false, defaultValue = "true")
+        boolean applyUpdateFixedInfo,
         @Parameter(hidden = true)
             HttpSession httpSession,
         @Parameter(hidden = true)
@@ -211,6 +222,10 @@ public class XslProcessApi {
                             id, process, false, false,
                             false, xslProcessingReport, siteURL, request.getParameterMap());
                         if (record != null) {
+                            if (applyUpdateFixedInfo) {
+                                record = metadataManager.updateFixedInfo(dataMan.getMetadataSchema(id),
+                                    Optional.<Integer>absent(), uuid, record, null, UpdateDatestamp.NO, serviceContext);
+                            }
                             if (diffType != null) {
                                 IMetadataUtils metadataUtils = serviceContext.getBean(IMetadataUtils.class);
                                 AbstractMetadata metadata = metadataUtils.findOne(id);

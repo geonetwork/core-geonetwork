@@ -49,70 +49,51 @@
     <!-- /.sidebar-col-sub -->
   </div>
   <!-- /.sidebar -->
-  <div class="main"">
-
-  <div class="row gn-row-admin-buttons">
-    <div class="col-md-12" data-ng-controller="GnAdminController">
-      <div class="btn-group btn-group-justified">
-        <a
-          data-ng-repeat="m in getMenu()"
-          href="{{getMenuUrl(m)}}"
-          title="{{m.name}}"
-          class="btn btn-default"
-        >
-          <i class="fa fa-fw {{m.icon}} fa-2x" />
-          <p class="hidden-sm hidden-xs" data-translate="">{{m.name}}</p>
-        </a>
+  <div class="main">
+    <div class="row gn-row-admin-buttons">
+      <div class="col-md-12" data-ng-controller="GnAdminController">
+        <div class="btn-group btn-group-justified">
+          <a
+            data-ng-repeat="m in getMenu()"
+            href="{{getMenuUrl(m)}}"
+            title="{{m.name}}"
+            class="btn btn-default"
+          >
+            <i class="fa fa-fw {{m.icon}} fa-2x" />
+            <p class="hidden-sm hidden-xs" data-translate="">{{m.name}}</p>
+          </a>
+        </div>
       </div>
     </div>
+    <!-- /.gn-row-admin-buttons -->
+
+    <div data-gn-index-error-panel=""></div>
+
+    <div class="row gn-row-admin-stats">
+      <div class="well col-md-6" data-ng-hide="searchInfo.count == 0">
+        <h2 title="{{'totalNumberOfRecordsHelp' | translate}}">
+          {{searchInfo.hits.total.value}}
+          <span data-translate="">totalNumberOfRecords</span>
+        </h2>
+      </div>
+
+      <div
+        class="col-md-4 col-sm-8"
+        data-ng-show="isDefaultNode && searchInfo.count == 0"
+        data-translate=""
+      >
+        emptyCatalogShouldBeFilled
+      </div>
+      <div
+        class="col-md-4 col-sm-8"
+        data-ng-show="!isDefaultNode && searchInfo.count == 0"
+        data-translate=""
+        data-translate-values="{portal: nodeId}"
+      >
+        emptyPortal
+      </div>
+    </div>
+    <!-- /.gn-row-admin-stats -->
   </div>
-  <!-- /.gn-row-admin-buttons -->
-
-  <div data-gn-index-error-panel=""></div>
-
-  <div class="row gn-row-admin-stats">
-    <div
-      class="col-lg-2 col-md-4 col-sm-4"
-      data-ng-repeat="type in searchInfo.facet.types"
-      data-ng-hide="searchInfo.facet.types.length === 0"
-    >
-      <div class="panel panel-default panel-primary1">
-        <div class="panel-heading">
-          <h5>{{(type['@label'] || type['@name']) | translate}}</h5>
-        </div>
-        <div class="panel-body">
-          <h2>{{type['@count']}}</h2>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-4 col-sm-8" data-ng-hide="searchInfo.count == 0">
-      <div class="panel panel-default panel-success">
-        <div class="panel-heading">
-          <h5 data-translate="" title="{{'totalNumberOfRecordsHelp' | translate}}">
-            totalNumberOfRecords
-          </h5>
-        </div>
-        <div class="panel-body">
-          <h2>{{searchInfo.hits.total.value}}</h2>
-        </div>
-      </div>
-    </div>
-
-    <div
-      class="col-md-4 col-sm-8"
-      data-ng-show="isDefaultNode && searchInfo.count == 0"
-      data-translate=""
-    >
-      emptyCatalogShouldBeFilled
-    </div>
-    <div
-      class="col-md-4 col-sm-8"
-      data-ng-show="!isDefaultNode && searchInfo.count == 0"
-      data-translate=""
-      data-translate-values="{portal: nodeId}"
-    >
-      emptyPortal
-    </div>
-  </div>
-  <!-- /.gn-row-admin-stats -->
+  <!-- /.main -->
 </div>

@@ -4,6 +4,8 @@
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 xmlns:gmd="http://www.isotc211.org/2005/gmd"
                 xmlns:gcoold="http://www.isotc211.org/2005/gco"
+                xmlns:gfcold="http://www.isotc211.org/2005/gfc"
+                xmlns:gfc="http://standards.iso.org/iso/19110/gfc/1.1"
                 xmlns:gmi="http://www.isotc211.org/2005/gmi"
                 xmlns:gmx="http://www.isotc211.org/2005/gmx"
                 xmlns:gsr="http://www.isotc211.org/2005/gsr"
@@ -31,7 +33,7 @@
                 xmlns:mds="http://standards.iso.org/iso/19115/-3/mds/2.0"
                 xmlns:mmi="http://standards.iso.org/iso/19115/-3/mmi/1.0"
                 xmlns:mpc="http://standards.iso.org/iso/19115/-3/mpc/1.0"
-                xmlns:mrc="http://standards.iso.org/iso/19115/-3/mrc/1.0"
+                xmlns:mrc="http://standards.iso.org/iso/19115/-3/mrc/2.0"
                 xmlns:mrd="http://standards.iso.org/iso/19115/-3/mrd/1.0"
                 xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0"
                 xmlns:mrs="http://standards.iso.org/iso/19115/-3/mrs/1.0"
@@ -100,29 +102,108 @@
         <!--
         root element (MD_Metadata or MI_Metadata)
         -->
-        <xsl:for-each select="//(gmd:MD_Metadata|gmi:MI_Metadata)">
+        <xsl:for-each select="//(gmd:MD_Metadata|gmi:MI_Metadata|gfcold:FC_FeatureCatalogue)">
             <xsl:variable name="nameSpacePrefix">
                 <xsl:call-template name="getNamespacePrefix"/>
             </xsl:variable>
+
+            <xsl:variable name="isFeatureCatalogue"
+                          select="local-name() = 'FC_FeatureCatalogue'"
+                          as="xs:boolean"/>
 
             <xsl:element name="mdb:MD_Metadata">
                 <!-- new namespaces -->
                 <xsl:call-template name="add-iso19115-3.2018-namespaces"/>
 
-                <xsl:apply-templates select="gmd:fileIdentifier" mode="from19139to19115-3.2018"/>
+                <xsl:apply-templates select="gmd:fileIdentifier|@uuid" mode="from19139to19115-3.2018"/>
+
+                <xsl:if test="$isFeatureCatalogue and gfcold:producer">
+                  <xsl:variable name="metadataContact" as="node()?">
+                    <xsl:apply-templates select="gfcold:producer"
+                                         mode="from19139to19115-3.2018"/>
+                  </xsl:variable>
+                  <mdb:contact>
+                    <xsl:copy-of select="$metadataContact/cit:CI_Responsibility"/>
+                  </mdb:contact>
+                </xsl:if>
+
                 <xsl:apply-templates select="gmd:language" mode="from19139to19115-3.2018"/>
                 <xsl:apply-templates select="gmd:characterSet" mode="from19139to19115-3.2018"/>
                 <xsl:apply-templates select="gmd:parentIdentifier" mode="from19139to19115-3.2018"/>
                 <xsl:apply-templates select="gmd:hierarchyLevel" mode="from19139to19115-3.2018"/>
                 <xsl:apply-templates select="gmd:contact" mode="from19139to19115-3.2018"/>
+
+                <xsl:if test="$isFeatureCatalogue and gfcold:functionalLanguage">
+                  <mdb:defaultLocale>
+                    <lan:PT_Locale id="EN">
+                      <lan:language>
+                        <lan:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="{gfcold:functionalLanguage/*/text()}"/>
+                      </lan:language>
+                      <lan:characterEncoding>
+                        <lan:MD_CharacterSetCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_CharacterSetCode"
+                                                 codeListValue="UTF-8"/>
+                      </lan:characterEncoding>
+                    </lan:PT_Locale>
+                  </mdb:defaultLocale>
+                </xsl:if>
+
                 <xsl:apply-templates select="gmd:dateStamp" mode="from19139to19115-3.2018"/>
                 <xsl:apply-templates select="gmd:metadataStandardName" mode="from19139to19115-3.2018"/>
+
+                <xsl:if test="$isFeatureCatalogue">
+                  <mdb:metadataStandard>
+                    <cit:CI_Citation>
+                      <cit:title>
+                        <gco:CharacterString>ISO 19115-3 / ISO 19110</gco:CharacterString>
+                      </cit:title>
+                    </cit:CI_Citation>
+                  </mdb:metadataStandard>
+                </xsl:if>
+
                 <xsl:apply-templates select="gmd:locale" mode="from19139to19115-3.2018"/>
                 <xsl:apply-templates select="gmd:spatialRepresentationInfo" mode="from19139to19115-3.2018"/>
                 <xsl:apply-templates select="gmd:referenceSystemInfo" mode="from19139to19115-3.2018"/>
                 <xsl:apply-templates select="gmd:metadataExtensionInfo" mode="from19139to19115-3.2018"/>
                 <xsl:apply-templates select="gmd:identificationInfo" mode="from19139to19115-3.2018"/>
                 <xsl:apply-templates select="gmd:contentInfo" mode="from19139to19115-3.2018"/>
+
+                <xsl:if test="$isFeatureCatalogue">
+                  <mdb:contentInfo>
+                    <mrc:MD_FeatureCatalogue>
+                      <mrc:featureCatalogue>
+                        <gfc:FC_FeatureCatalogue>
+                          <xsl:apply-templates select="gfcold:name|gmx:name"
+                                               mode="from19139to19115-3.2018"/>
+                          <xsl:apply-templates select="gfcold:scope|gmx:scope"
+                                               mode="from19139to19115-3.2018"/>
+                          <xsl:apply-templates select="gfcold:fieldOfApplication|gmx:fieldOfApplication"
+                                               mode="from19139to19115-3.2018"/>
+                          <xsl:apply-templates select="gfcold:versionNumber|gmx:versionNumber"
+                                               mode="from19139to19115-3.2018"/>
+                          <xsl:apply-templates select="gfcold:versionDate|gmx:versionDate"
+                                               mode="from19139to19115-3.2018"/>
+                          <xsl:apply-templates select="gfcold:language|gmx:language"
+                                               mode="from19139to19115-3.2018"/>
+                          <xsl:apply-templates select="gfcold:characterSet|gmx:characterSet"
+                                               mode="from19139to19115-3.2018"/>
+                          <xsl:apply-templates select="gfcold:producer"
+                                               mode="from19139to19115-3.2018"/>
+                          <xsl:apply-templates select="gfcold:functionalLanguage"
+                                               mode="from19139to19115-3.2018"/>
+                          <xsl:apply-templates select="gfcold:featureType"
+                                               mode="from19139to19115-3.2018"/>
+                          <xsl:apply-templates select="gfcold:inheritanceRelation"
+                                               mode="from19139to19115-3.2018"/>
+                          <xsl:apply-templates select="gfcold:globalProperty"
+                                               mode="from19139to19115-3.2018"/>
+                          <xsl:apply-templates select="gfcold:definitionSource"
+                                               mode="from19139to19115-3.2018"/>
+                        </gfc:FC_FeatureCatalogue>
+                      </mrc:featureCatalogue>
+                    </mrc:MD_FeatureCatalogue>
+                  </mdb:contentInfo>
+                </xsl:if>
+
                 <xsl:call-template name="onlineSourceDispatcher">
                     <xsl:with-param name="type" select="'featureCatalogueCitation'"/>
                 </xsl:call-template>

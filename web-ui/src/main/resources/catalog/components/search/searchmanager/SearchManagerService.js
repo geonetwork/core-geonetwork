@@ -189,14 +189,14 @@
        */
       var search = function (url, error) {
         var defer = $q.defer();
-        $http
-          .get(url)
-          .success(function (data, status) {
-            defer.resolve(format(data));
-          })
-          .error(function (data, status) {
-            defer.reject(error);
-          });
+        $http.get(url).then(
+          function (response) {
+            defer.resolve(format(response.data));
+          },
+          function (response) {
+            defer.reject(response.data);
+          }
+        );
         return defer.promise;
       };
 
@@ -205,14 +205,14 @@
       var gnSearch = function (params, error, internal) {
         var defer = $q.defer();
 
-        gnHttp
-          .callService(internal ? "internalSearch" : "search", params)
-          .success(function (data, status) {
-            defer.resolve(format(data));
-          })
-          .error(function (data, status) {
-            defer.reject(error);
-          });
+        gnHttp.callService(internal ? "internalSearch" : "search", params).then(
+          function (response) {
+            defer.resolve(format(response.data));
+          },
+          function (response) {
+            defer.reject(response.data);
+          }
+        );
         return defer.promise;
       };
 
@@ -249,14 +249,14 @@
         url += "&fromSelection=";
         url += fromSelection ? "yes" : "no";
 
-        $http
-          .get(url)
-          .success(function (data, status) {
-            defer.resolve(data);
-          })
-          .error(function (data, status) {
-            defer.reject(error);
-          });
+        $http.get(url).then(
+          function (response) {
+            defer.resolve(response.data);
+          },
+          function (response) {
+            defer.reject(response.data);
+          }
+        );
         return defer.promise;
       };
       var selected = function (bucket) {

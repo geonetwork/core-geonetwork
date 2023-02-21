@@ -133,11 +133,10 @@ public class CswFilter2Es extends AbstractFilterVisitor {
         "            ]\n" +
         "          ,\"filter\":{\"query_string\":{\"query\":\"%s\"}}, \"minimum_should_match\" : 1}";
 
-    private final String templateMatch = " {\n" +
-        "            \"match\": {\n" +
-        "             \"%s\": \"%s\"\n" +
-        "            }\n" +
-        "          }";
+    private final String templateMatch = "{\"query_string\": {\n" +
+        "        \"fields\": [\"%s\"],\n" +
+        "        \"query\": \"%s\"\n" +
+        "    }}";
 
     private final String templatePropertyIsNot = " {\"bool\": {\n" +
         "            \"must_not\": " + templateMatch +
@@ -160,13 +159,10 @@ public class CswFilter2Es extends AbstractFilterVisitor {
         "        }\n" +
         "    }";
 
-    private final String templateIsLike = "{\n" +
-        "    \"wildcard\": {\n" +
-        "      \"%s\": {\n" +
-        "        \"value\": \"%s\"\n" +
-        "      }\n" +
-        "    }\n" +
-        "}";
+    private final String templateIsLike = "{\"query_string\": {\n" +
+        "        \"fields\": [\"%s\"],\n" +
+        "        \"query\": \"%s\"\n" +
+        "    }}";
 
     private final String templateSpatial = "{ \"geo_shape\": {\"geom\": {\n" +
         "                        \t\"shape\": {\n" +
@@ -489,7 +485,9 @@ public class CswFilter2Es extends AbstractFilterVisitor {
         final double y0 = bbox.getMinY();
         final double y1 = bbox.getMaxY();
 
-        final String coordsValue = String.format("[[%f, %f], [%f, %f]]", x0, y1, x1, y0);
+        // Specify Locale.US to make Java use dot as decimal separators
+        final String coordsValue = String.format(Locale.US,
+            "[[%f, %f], [%f, %f]]", x0, y1, x1, y0);
 
         final String filterSpatial = fillTemplateSpatial("envelope", coordsValue, "intersects");
         stack.push(filterSpatial);
@@ -527,7 +525,8 @@ public class CswFilter2Es extends AbstractFilterVisitor {
             } else if (geometryJts instanceof Point) {
                 Point pointGeom = (Point) geometryJts;
 
-                String coordsValue = String.format("[%f, %f]", pointGeom.getX(), pointGeom.getY());
+                // Use Locale.US to make java use the dot "." as decimal separator.
+                String coordsValue = String.format(Locale.US, "[%f, %f]", pointGeom.getX(), pointGeom.getY());
                 filterSpatial = fillTemplateSpatial("point", coordsValue, geoOperator);
 
             } else if (geometryJts instanceof LineString) {
@@ -676,7 +675,8 @@ public class CswFilter2Es extends AbstractFilterVisitor {
         List<String> coordinatesList = new ArrayList<>();
 
         for(Coordinate c : coordinates) {
-            String coordsValue = String.format("[%f, %f] ",
+            // Use Locale.US to make Java use dot "." as decimal separator
+            String coordsValue = String.format(Locale.US, "[%f, %f] ",
                 c.getX(), c.getY());
 
             coordinatesList.add(coordsValue);

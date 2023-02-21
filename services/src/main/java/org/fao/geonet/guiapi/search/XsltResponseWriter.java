@@ -1,6 +1,6 @@
 /*
  * =============================================================================
- * ===	Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * ===	Copyright (C) 2001-2023 Food and Agriculture Organization of the
  * ===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * ===	and United Nations Environment Programme (UNEP)
  * ===
@@ -26,6 +26,7 @@
 package org.fao.geonet.guiapi.search;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.xml.utils.XML11Char;
 import org.fao.geonet.ApplicationContextHolder;
@@ -118,12 +119,16 @@ public class XsltResponseWriter {
     public void asPdf(HttpServletResponse response, String fileName) throws Exception {
         GeonetworkDataDirectory dataDirectory = ApplicationContextHolder.get().getBean(GeonetworkDataDirectory.class);
         Path file = Xml.transformFOP(dataDirectory.getUploadDir(), xml, xsl.toString());
+        try {
+            response.setContentType("application/pdf");
+            response.addHeader("Content-Disposition", "attachment; filename=" + fileName);
+            response.setContentLength((int) file.toFile().length());
+            response.getOutputStream().write(Files.readAllBytes(file));
+            response.getOutputStream().flush();
+        } finally {
+            FileUtils.deleteQuietly(file.toFile());
+        }
 
-        response.setContentType("application/pdf");
-        response.addHeader("Content-Disposition", "attachment; filename=" + fileName);
-        response.setContentLength((int) file.toFile().length());
-        response.getOutputStream().write(Files.readAllBytes(file));
-        response.getOutputStream().flush();
     }
 
     public XsltResponseWriter withJson(String json) {

@@ -47,6 +47,12 @@ public class DateUtilTest {
         zdt = zdt.withZoneSameInstant(ZoneOffset.UTC);
         assertEquals(DateUtil.ISO_OFFSET_DATE_TIME_NANOSECONDS.format(zdt), datetimeInIsoFormat);
 
+        datetimeInIsoFormat = DateUtil.convertToISOZuluDateTime("2020-12-31");
+        ld = LocalDate.parse("2020-12-31");
+        zdt = ld.atStartOfDay(ZoneId.systemDefault());
+        zdt = zdt.withZoneSameInstant(ZoneOffset.UTC);
+        assertEquals(DateUtil.ISO_OFFSET_DATE_TIME_NANOSECONDS.format(zdt), datetimeInIsoFormat);
+
         datetimeInIsoFormat = DateUtil.convertToISOZuluDateTime("2020-11");
         ld = LocalDate.of(2020, 11, 1);
         zdt = ld.atStartOfDay(ZoneId.systemDefault());
@@ -55,6 +61,12 @@ public class DateUtilTest {
 
         datetimeInIsoFormat = DateUtil.convertToISOZuluDateTime("2012-09-12Z");
         ld = LocalDate.parse("2012-09-12");
+        zdt = ld.atStartOfDay(ZoneId.systemDefault());
+        zdt = zdt.withZoneSameInstant(ZoneOffset.UTC);
+        assertEquals(DateUtil.ISO_OFFSET_DATE_TIME_NANOSECONDS.format(zdt), datetimeInIsoFormat);
+
+        datetimeInIsoFormat = DateUtil.convertToISOZuluDateTime("2012-12-31Z");
+        ld = LocalDate.parse("2012-12-31");
         zdt = ld.atStartOfDay(ZoneId.systemDefault());
         zdt = zdt.withZoneSameInstant(ZoneOffset.UTC);
         assertEquals(DateUtil.ISO_OFFSET_DATE_TIME_NANOSECONDS.format(zdt), datetimeInIsoFormat);

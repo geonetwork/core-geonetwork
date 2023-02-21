@@ -42,6 +42,7 @@ import org.fao.geonet.domain.SourceType;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.search.EsSearchManager;
+import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.MetadataCategoryRepository;
 import org.fao.geonet.repository.SourceRepository;
@@ -89,7 +90,7 @@ public class DataManagerIntegrationTest extends AbstractDataManagerIntegrationTe
                 new ISODate().getDateAndTime(),
                 new ISODate().getDateAndTime(),
                 false,
-                false);
+                IndexingMode.none);
         assertEquals(count + 1, metadataRepository.count());
 
         metadataManager.deleteMetadata(serviceContext, mdId);
@@ -115,7 +116,7 @@ public class DataManagerIntegrationTest extends AbstractDataManagerIntegrationTe
                 new ISODate().getDateAndTime(),
                 new ISODate().getDateAndTime(),
                 false,
-                false);
+                IndexingMode.none);
         Element info = new Element("info", Geonet.Namespaces.GEONET);
         Map<String, Element> map = Maps.newHashMap();
         map.put(mdId, info);

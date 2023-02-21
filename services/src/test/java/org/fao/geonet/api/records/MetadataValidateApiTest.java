@@ -23,6 +23,7 @@ import org.fao.geonet.domain.MetadataValidationStatus;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.search.EsSearchManager;
+import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.MetadataValidationRepository;
 import org.fao.geonet.repository.SourceRepository;
@@ -205,7 +206,7 @@ public class MetadataValidateApiTest extends AbstractServiceIntegrationTest {
                 context,
                 metadata,
                 sampleMetadataXml,
-                false,
+                IndexingMode.none,
                 false,
                 NO,
                 false,

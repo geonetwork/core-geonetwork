@@ -154,7 +154,7 @@ public class ISO19115_3_2018SchemaPlugin
 
     @Override
     public Set<AssociatedResource> getAssociatedFeatureCatalogues(Element metadata) {
-        Set<AssociatedResource> associatedResources = collectAssociatedResources(metadata, "*//mrc:featureCatalogueCitation");
+        Set<AssociatedResource> associatedResources = collectAssociatedResources(metadata, "*//mrc:featureCatalogueCitation[@uuidref]");
         return associatedResources;
     }
 
@@ -195,8 +195,8 @@ public class ISO19115_3_2018SchemaPlugin
         if (StringUtils.isEmpty(sibUuid)) {
             sibUuid = ref.getTextNormalize();
         }
-        String title = ref.getAttributeValue("title", XLINK);
-        String url = ref.getAttributeValue("href", XLINK);
+        String title = ref.getAttributeValue("title", XLINK, "");
+        String url = ref.getAttributeValue("href", XLINK, "");
         return new AssociatedResource(sibUuid, "", "", url, title);
     }
 

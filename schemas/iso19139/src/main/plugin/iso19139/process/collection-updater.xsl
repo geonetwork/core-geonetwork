@@ -68,9 +68,12 @@
     <tag name="gmd:descriptiveKeywords" context="gmd:MD_DataIdentification|srv:SV_ServiceIdentification"
          groupBy="*/gmd:thesaurusName/*/gmd:title/*/text()"
          merge="gmd:keyword"/>
-    <tag name="gmd:extent" context="gmd:MD_DataIdentification|srv:SV_ServiceIdentification"
-         groupBy="*/(gmd:geographicElement|gmd:temporalElement)"
-         merge="gmd:geographicElement|gmd:temporalElement"/>
+    <tag name="gmd:geographicElement" context="gmd:EX_Extent"
+         groupBy="*"
+         merge="."/>
+    <tag name="gmd:temporalElement" context="gmd:EX_Extent"
+         groupBy="*"
+         merge="."/>
     <!-- TODO: gmd:language can be in various places. -->
     <tag name="gmd:language" context="gmd:MD_DataIdentification|srv:SV_ServiceIdentification"
          groupBy="gmd:LanguageCode/@codeListValue"
@@ -191,10 +194,14 @@
         <xsl:with-param name="name" select="'gmd:topicCategory'"/>
       </xsl:call-template>
       <xsl:apply-templates select="gmd:environmentDescription" mode="expand"/>
-      <xsl:call-template name="copyOrAddElement">
-        <xsl:with-param name="elements" select="gmd:extent"/>
-        <xsl:with-param name="name" select="'gmd:extent'"/>
-      </xsl:call-template>
+
+      <gmd:extent>
+        <gmd:EX_Extent>
+          <gmd:geographicElement/>
+          <gmd:temporalElement/>
+        </gmd:EX_Extent>
+      </gmd:extent>
+
       <xsl:apply-templates select="gmd:supplementalInformation" mode="expand"/>
 
       <xsl:apply-templates select="srv:*" mode="expand"/>

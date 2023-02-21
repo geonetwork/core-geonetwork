@@ -1,0 +1,21 @@
+<div>
+  <div data-ng-controller="GnSearchController" data-ng-search-form="">
+    <input
+      type="text"
+      role="combobox"
+      class="form-control"
+      autocomplete="off"
+      data-ng-model="$parent.model"
+      placeholder="{{'anyPlaceHolder' | translate}}"
+      aria-label="{{'anyPlaceHolder' | translate}}"
+      data-typeahead="md.record[property] as md.label for md in getAnySuggestions($viewValue, searchObj)"
+      data-typeahead-template-url="../../catalog/templates/gn-typeahead-match.html"
+      data-typeahead-loading="anyLoading"
+      data-typeahead-min-length="1"
+      data-typeahead-focus-first="false"
+      data-typeahead-wait-ms="300"
+      data-ng-attr-title="{{(displayTitleAs && current) && current.resourceTitle}}"
+    />
+  </div>
+  <span data-ng-if="displayTitleAs === 'span' && current">{{current.resourceTitle}}</span>
+</div>

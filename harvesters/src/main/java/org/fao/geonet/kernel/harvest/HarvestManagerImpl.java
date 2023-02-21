@@ -135,10 +135,19 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
 
             if (entries != null) {
                 for (Object o : entries.getChildren()) {
-                    Element node = transform((Element) o);
+                    Element node = null;
+                    try {
+                        node = transform((Element) o);
+                    } catch (Exception oae) {
+                        Log.error(Geonet.HARVEST_MAN, "Cannot read harvester configuration.", oae);
+                    }
+
+                    if (node == null) {
+                        continue;
+                    }
+
                     String type = node.getAttributeValue("type");
                     String id = node.getAttributeValue("id");
-
                     try {
                         AbstractHarvester ah = AbstractHarvester.create(type, context);
                         ah.init(node, context);
@@ -148,7 +157,6 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
                         Log.error(Geonet.HARVEST_MAN, "Cannot create harvester " + id + " of type \""
                             + type + "\"", oae);
                     }
-
                 }
             }
         }

@@ -1,0 +1,173 @@
+================================================================================
+===
+=== GeoNetwork 4.2.2: List of changes
+===
+================================================================================
+- Better error logging from ApiError runtime errors and fix potential NPE (#6703)
+- ISO19139 / Indexing / Subtemplate / Avoid warning (#6713)
+- Vocabularies / Add XLink mode producing Anchor encoding (#6664)
+- API / Batch edit / Delete with a non matching XPath can remove unwanted elements (#6707)
+- Editor board / Remove create child action (#6708)
+- Editor board / Facet / Configure decorator. (#6709)
+- Formatter / Datacite / Creator can be organizational. (#6695)
+- Record view / Associated resources / Remote records may have null as title
+- Fix JS error when the relations for a metadata return null when no relations of a type exists
+- Merge branch 'GeoCat-configurable-sitemap-url-template'
+- Sitemap / API / Batch edit / Delete with a non matching XPath can remove unwanted elements / Move migration to 422 version and add a link to the sitemap in the setting desc.
+- Merge branch 'configurable-sitemap-url-template' of github.com:GeoCat/core-geonetwork into GeoCat-configurable-sitemap-url-template
+- DB / Configuration / Removing the spatial index postgis related beans (#5797) (#5824)
+- Git / Checkout unix shell scripts with lf on windows system. (#6669)
+- Validate language parameter in API services (#6673)
+- Updated folder cache logic to improve performance (#6690)
+- Translations / Updates from transifex.
+- Translations / Improvements for French
+- Citation / Refactor to be able to use it in other XSLT (#6483)
+- Standard / ISO19115-3 / Index properly multiple characterSet
+- CSW / GetRecords / Add default sort configuration. (#6694)
+- Formatter / ISO19115-3 / DOI / Fix invalid variable name (#6702)
+- Update core/src/main/java/org/fao/geonet/resources/CMISConfiguration.java
+- Add option to parse secondary properties names for (CmisMetadataUUIDPropertyName ExternalResourceManagementValidationStatusPropertyName) from a more human readable name
+- New metadata - metadata template type display 'Other' instead of 'N/A' when the template has no resource type value (#6696)
+- Indexing / Thesaurus field name if no thesaurus identifier
+- Don't index service type empty values (#6692)
+- add numberofsuggestions to multientrycombiner_onlineresourcesdescription (#6655)
+- Table of Contents for the Feature Catalog page (#6679)
+- OIDC: added logging and better user updating (#6668)
+- Fix indexing of dates when the date element contains the date type as a text value (#6685)
+- UI Settings / Unselect added option once added to the form (#6676)
+- Admin / Thesaurus / Fix layout of pagination
+- Automatic formatting
+- Fix topic category elastic search field name in javascript ES client (#6684)
+- Code style / Prettier / Force EOL config on windows/linux (#6680)
+- Optimise UpdateAllSequenceValueToMax when using a Postgres database (#6678)
+- Settings / Improve layout (#6600)
+- Standard / Feature catalogue / Replace ISO19110 by ISO19115-3 (#6545)
+- Don't show the divider in the main portal
+- Only show the switcher when there are portals to switch
+- Automatic formatting
+- Reload the just created source
+- Add a setting for displaying the portal in the portal switcher
+- Format and refactor code
+- Add field listableInHeaderSelector to Source
+- Remove generic parameters, use diamond instead
+- Editor / Add from directory improvements (#6623)
+- Migration - don't add settings backported to 3.12.x when migrating from a 3.12.x version (#6614)
+- Editor / Configuration / Evaluate condition on section with no name (#6560)
+- MEF Import / Add UUID reference when error happens loading file (#6576)
+- Editor / Directory / Search / Use OR by default (#6497)
+- fix(wfsIndexing): update bs table after button click (#6579)
+- Aggregations / INSPIRE valid / Translation (#6662)
+- CSW / Improve DCAT support (#6635)
+- Selection / Fix ref to old geonet:info (#6580)
+- Map / doSync has no parameters (#6610)
+- Editor / ISO / Empty keywords are ignored for picker config.
+- User feedback / Add delete comment in admin panel. (#6530)
+- Use Map interface instead of implementations
+- Update schemaInfoCombo to only display the section headers if a list of extra options is provided
+- Check the signout redirect url (#6666)
+- Harvester / WFS / limit concurrent indexation to 5 (#6582)
+- Fix close button in the metadata editor tooltips.  (#6665)
+- Merge pull request #6653 from geonetwork/fix-showValidOnly
+- fix(editorEntry): showValidOnly
+- Fix boostrap-table styling (#6657)
+- Support for openid connect SSO and Bearer Tokens (#6494)
+- Allow files in cssSources in Wro4j (#6656)
+- Indexing / Adding dutch analyzer
+- JS / Moment / Timezone lib missing when 3D mode enabled (#6603)
+- Update thesaurus picker directive to work in the metadata editor template fields (#6503)
+- Map servers / sources / metadata template identifiers - delete confirmation dialog and fixes in display delete button in sources page (#6641)
+- Formatter / Set default value for collapsed state
+- RDF export: Encode spaces in foaf:thumbnail urls and update geometry field (#6586)
+- Editor config / Consistent config in ISO schemas
+- Editor configuration / ISO19139 / Do not allow collapsing the main section
+- Editor configuration / Add support to use `@name` directly (without translation).
+- Editor configuration / Add support for direct HTML text (without translation).
+- Editor configuration / Add collapsible/collapsed section support.
+- Editor / Configuration / Allow to include elements from flatModeExceptions.
+- Merge pull request #6632 from fxprunayre/indexmodetestmerge
+- Update metadata relation queries with the workflow filters
+- Prevents browser from auto-completing proxy password in admin console (#6480)
+- Startup / Don't fail on a wrong harvester config
+- Logging / Avoid exception on windows (#6643)
+- Only allow Administrator users delete the UI settings for the default UI (srv)
+- Update core/src/test/java/org/fao/geonet/api/records/attachments/FilesystemStoreTest.java
+- Update bootstrap-table to v1.21.1 (#6628)
+- Update bootstrap from 3.3.7 to 3.4.1 (#6627)
+- Merge remote-tracking branch 'origin/main' into GeoCat-index-mode-merge
+- Add automatically prettified code
+- ISO19139 subtemplates indexing updates (#6619)
+- Multicombiner directive for online resources panel  (#5770)
+- Editor / Configuration / Hide tab if condition rule is false (#6625)
+- Resource type icons (#6613)
+- Cleaning / Lucene optimize scheduler config (#6620)
+- Add proxy to Spatineo registration service (#6453)
+- Admin / Status / Fix facet config for warning
+- Sharing panel / One time binding
+- Fix directory entries list. Related to this change https://github.com/geonetwork/core-geonetwork/pull/6555
+- Thesaurus / Import from Re3gistry failing
+- Record view / Download / Use function to build formatter (xml, pdf, dcat,...) (#6612)
+- UI config / Properly hide empty options (#6609)
+- Search results / Title may be long.
+- Implement a separate JSON file with links to help pages (#6559)
+- Record view / Associated / Support empty initiativeType (#6604)
+- Fix wrong html in the admin page template
+- Search / Autocomplete / Improvements (#6555)
+- Index field data types - Define resourceTypeName type
+- Add index field resourceTypeName (iso19139)
+- Bump geotools.version from 27.0 to 27.1
+- Merge remote-tracking branch 'origin/main' into GeoCat-index-mode
+- Set title / url for associated resources to empty string if not defined (#6512)
+- Admin / UI config / Add choice to add all current config. (#6592)
+- Bump junit-jupiter from 5.7.0 to 5.9.1
+- Move translation packs configuration to the web module
+- Update DateUtil regular expressions to handle dates with day 30 or 31
+- Fix harvester results pagination
+- Harvesters - display the button to assign the harvested records to the local node only to 'Administrator' users
+- Merge pull request #6587 from jahow/harvester-json-esri-better-wfs-support
+- JSON Harvester / leave name empty in ESRI WFS links
+- Remove check of user profile in API requests. If not allowed will return a 403 error (#6581)
+- Fix for the tools in the table search result opening to the right (#6538)
+- Update moment to version 2.29.4 (#6577)
+- Record view / Data preview / Highlight current filter. (#6578)
+- Directory / Facet / Fix loadmore (#6584)
+- Metadata publication / unpublication, in batch publication mode send the mail notifications in recordProfileReviewer level only to the metadata group owner reviewers instead of all reviewers (#6574)
+- Bump actions/setup-java from 3.4.1 to 3.5.1 (#6566)
+- Remove httpOnly from session timeout cookies (#6570)
+- i18n / No . needed in button label (#6573)
+- Security / Update Site API (#6569)
+- Change regular expression using lookbehind not supported in Safari browser
+- Record view / Records may not have extent
+- Record view / Break work on list of items
+- Configuration to notify by mail about metadata publication / unpublication (#6457)
+- Merge pull request #6552 from geonetwork/422-editor-directoryentriesicon
+- Record view / Date range / Display year only.
+- HTML / Remove uneeded attribute (#6565)
+- Fix add thesaurus dialogs - related to #6543 due to a previous wrong html structure in the thesaurus management page
+- Metadata workflow - Bulk metadata submit (#6474)
+- Search / Aggregation / Add decorator (#6556)
+- Admin / Settings / Removed unused. (#6551)
+- Merge branch 'main' into 422-editor-directoryentriesicon
+- Code style / Formatting less with prettier.
+- JS / Fix some codeQL reported issues.
+- JS app / Formatting with prettier / Wrong fix.
+- JS app / Formatting with prettier
+- Code style / Replace unused jslint by prettier.
+- Remove non-needed code since multi-node support is not available (#6558)
+- Dropdown / No pointer on header (#6547)
+- Editor / Directory entries icon fixed
+- Update version to 4.2.2-SNAPSHOT
+- API / Tag / Indexing / Update fields only.
+- API / Associated / Escape title of remote record.
+- Indexing / Move overview downloader to Java process TODO: Run in background.
+- Index / Start indexing by newest.
+- Thesaurus / Cache / Set default value for tests.
+- Indexing / Thread timer.
+- Thesaurus / Cache / Inject properties.
+- Indexing / Add caching at thesaurus level.
+- Indexing / Turn off overview and remote doc process during main XSLT processing.
+- Indexing / Add metrics
+- Directory / End of editing session MUST send terminate flag.
+- Metadata index mode / Enum instead of boolean.
+- Merge branch 'index-mode' of github.com:GeoCat/core-geonetwork into GeoCat-index-mode
+- Metadata index mode
+- Configurable sitemap url template for html render

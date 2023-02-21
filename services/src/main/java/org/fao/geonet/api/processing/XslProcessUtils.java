@@ -34,6 +34,7 @@ import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataSchemaUtils;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataValidationRepository;
@@ -175,7 +176,7 @@ public class XslProcessUtils {
                         }
                     }
 
-                    dataMan.updateMetadata(context, id, processedMetadata, validate, ufo, index, language, new ISODate().toString(), updateDateStamp);
+                    dataMan.updateMetadata(context, id, processedMetadata, validate, ufo, language, new ISODate().toString(), updateDateStamp, IndexingMode.none);
                     if (index) {
                         dataMan.indexMetadata(id, true);
                     }

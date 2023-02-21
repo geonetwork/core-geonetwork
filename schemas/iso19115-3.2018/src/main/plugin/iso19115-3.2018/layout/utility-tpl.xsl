@@ -11,10 +11,13 @@
   xmlns:msr="http://standards.iso.org/iso/19115/-3/msr/2.0"
   xmlns:lan="http://standards.iso.org/iso/19115/-3/lan/1.0"
   xmlns:gcx="http://standards.iso.org/iso/19115/-3/gcx/1.0"
+  xmlns:mrc="http://standards.iso.org/iso/19115/-3/mrc/2.0"
+  xmlns:cat="http://standards.iso.org/iso/19115/-3/cat/1.0"
   xmlns:gex="http://standards.iso.org/iso/19115/-3/gex/1.0"
   xmlns:dqm="http://standards.iso.org/iso/19157/-2/dqm/1.0"
   xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/2.0"
   xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
+  xmlns:gfc="http://standards.iso.org/iso/19110/gfc/1.1"
   xmlns:gn-fn-index="http://geonetwork-opensource.org/xsl/functions/index"
   xmlns:gn="http://www.fao.org/geonetwork"
   xmlns:xs="http://www.w3.org/2001/XMLSchema" exclude-result-prefixes="#all">
@@ -28,7 +31,10 @@
   </xsl:template>
 
   <xsl:template name="get-iso19115-3.2018-title">
-    <xsl:value-of select="$metadata/mdb:identificationInfo/*/mri:citation/*/cit:title/gco:CharacterString"/>
+    <xsl:value-of select="($metadata/mdb:identificationInfo/*/mri:citation/*/cit:title/gco:CharacterString
+                          |$metadata/mdb:contentInfo/*/mrc:featureCatalogue/*/cat:name[*/text() != '']
+                          |$metadata/mdb:contentInfo/*/mrc:featureCatalogue/*/gfc:featureType/*/gfc:typeName[text() != ''])[1]
+"/>
   </xsl:template>
 
   <xsl:template mode="get-formats-as-json" match="mdb:MD_Metadata">

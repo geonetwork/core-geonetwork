@@ -547,5 +547,6 @@
     "fieldTooShort": "Hodnota je příliš krátká",
     "fieldEmailNotValid": "Je vyžadována platná e-mailová adresa",
     "addLayerPrefix": "Přidat vrstvu",
-    "addLayerPostfix": "do mapy"
+    "addLayerPostfix": "do mapy",
+    "submit": "Odeslat"
 }

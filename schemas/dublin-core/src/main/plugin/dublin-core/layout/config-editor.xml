@@ -52,10 +52,10 @@
   <views>
     <view name="default" upAndDownControlHidden="true">
       <sidePanel>
+        <directive data-gn-need-help="creating-metadata"/>
         <directive data-gn-validation-report=""/>
         <directive data-gn-onlinesrc-list=""
                    data-types="onlinesrc|thumbnail|parent"/>
-        <directive data-gn-need-help="user-guide/describing-information/creating-metadata.html"/>
       </sidePanel>
       <tab id="default" default="true" mode="flat">
         <section xpath="/simpledc"/>
@@ -66,10 +66,10 @@
     </view>
     <view name="advanced" upAndDownControlHidden="true">
       <sidePanel>
+        <directive data-gn-need-help="creating-metadata"/>
         <directive data-gn-validation-report=""/>
         <directive data-gn-onlinesrc-list=""
                    data-types="onlinesrc|thumbnail|parent"/>
-        <directive data-gn-need-help="user-guide/describing-information/creating-metadata.html"/>
       </sidePanel>
       <tab id="advanced" default="true">
         <section xpath="/simpledc"/>
@@ -77,10 +77,10 @@
     </view>
     <view name="xml">
       <sidePanel>
+        <directive data-gn-need-help="creating-metadata"/>
         <directive data-gn-validation-report=""/>
         <directive data-gn-onlinesrc-list=""
                    data-types="onlinesrc|thumbnail|parent"/>
-        <directive data-gn-need-help="user-guide/describing-information/creating-metadata.html"/>
       </sidePanel>
       <tab id="xml" default="true"/>
     </view>

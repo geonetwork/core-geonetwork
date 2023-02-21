@@ -39,11 +39,11 @@
                 select="//srv19115:containsOperations/srv19115:SV_OperationMetadata/srv19115:connectPoint/(cit:CI_OnlineResource[cit:protocol/gco:CharacterString='OGC:CSW']/cit:linkage/gco:CharacterString|gmd:CI_OnlineResource[gmd:protocol/*/text()='OGC:CSW']/gmd:linkage/gmd:URL)" />
 
   <xsl:variable name="endPointValue"
-                select="if (string($endPoint)) then $endPoint else '$PROTOCOL://$HOST$PORT$SERVLET/$NODE_ID/$LOCALE/$END-POINT'" />
+                select="if (string($endPoint)) then $endPoint else '$PROTOCOL://$HOST$PORT$SERVLET/$NODE_ID/$LOCALE/$END-POINT'"/>
 
   <xsl:variable name="endPointValuePublication"
-                select="if (string($endPoint)) then $endPoint else '$PROTOCOL://$HOST$PORT$SERVLET/$NODE_ID/$LOCALE/$END-POINT/csw-publication'" />
-
+                select="if (string($endPoint)) then $endPoint else '$PROTOCOL://$HOST$PORT$SERVLET/$NODE_ID/$LOCALE/csw-publication'"/>
+  
   <xsl:template mode="localised" match="*">
     <xsl:variable name="translation"
                   select="*/*:textGroup/*[@locale = $language]"/>

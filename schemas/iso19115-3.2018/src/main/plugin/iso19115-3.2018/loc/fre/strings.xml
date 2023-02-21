@@ -52,6 +52,7 @@
   <bboxesSection>Zone géographique</bboxesSection>
   <citationProposal>Proposition de citation</citationProposal>
   <citationProposal-help>Cette proposition de citation a été générée automatiquement selon le format suggéré par DataCite. Nous vous invitons à vérifier dans les métadonnées si les auteurs n'ont pas imposé un format de citation spécifique.</citationProposal-help>
+  <citationAdditional>Pour toute utilisation de cette ressource dans une publication, merci de citer également les travaux suivants :</citationAdditional>
   <associatedResources>Ressources associées</associatedResources>
 
 

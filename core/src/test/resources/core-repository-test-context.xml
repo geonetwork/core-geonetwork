@@ -117,6 +117,8 @@
     <entry key="searchlogs" value="${es.index.searchlogs}"/>
   </util:map>
 
+  <bean id="OverviewIndexFieldUpdater"
+        class="org.fao.geonet.kernel.search.index.OverviewIndexFieldUpdater"/>
   <bean id="EsSearchManager"
         class="org.fao.geonet.kernel.search.EsSearchManager"
         lazy-init="false">

@@ -41,6 +41,7 @@ import org.fao.geonet.kernel.harvest.AbstractAligner;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
+import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.repository.MetadataCategoryRepository;
 import org.fao.geonet.repository.specification.MetadataCategorySpecs;
 import org.fao.geonet.utils.XmlRequest;
@@ -211,7 +212,7 @@ public class Aligner extends AbstractAligner<GeonetParams> {
         List<Element> categories = info.getChildren("category");
         addCategories(metadata, categories);
 
-        metadata = metadataManager.insertMetadata(context, metadata, md, false, false, UpdateDatestamp.NO, false, false);
+        metadata = metadataManager.insertMetadata(context, metadata, md, IndexingMode.none, false, UpdateDatestamp.NO, false, false);
 
         String id = String.valueOf(metadata.getId());
 
@@ -221,12 +222,6 @@ public class Aligner extends AbstractAligner<GeonetParams> {
 
         return id;
     }
-
-    //--------------------------------------------------------------------------
-    //---
-    //--- Variables
-    //---
-    //--------------------------------------------------------------------------
 
     private void addCategories(AbstractMetadata metadata, List<Element> categ) throws Exception {
         final MetadataCategoryRepository categoryRepository = context.getBean(MetadataCategoryRepository.class);
@@ -296,9 +291,8 @@ public class Aligner extends AbstractAligner<GeonetParams> {
                 //
                 boolean validate = false;
                 boolean ufo = false;
-                boolean index = false;
                 String language = context.getLanguage();
-                metadataManager.updateMetadata(context, id, md, validate, ufo, index, language, changeDate, false);
+                metadataManager.updateMetadata(context, id, md, validate, ufo, language, changeDate, false, IndexingMode.none);
 
                 result.updatedMetadata++;
             }

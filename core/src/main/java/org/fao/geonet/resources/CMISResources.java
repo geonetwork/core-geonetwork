@@ -29,6 +29,7 @@ import org.apache.chemistry.opencmis.client.api.*;
 import org.apache.chemistry.opencmis.client.runtime.DocumentImpl;
 import org.apache.chemistry.opencmis.commons.exceptions.CmisObjectNotFoundException;
 import org.apache.commons.io.FilenameUtils;
+import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
@@ -290,7 +291,7 @@ public class CMISResources extends Resources {
                     final String suffixlessKeyFolder = getKey(Paths.get(FilenameUtils.getFullPath(suffixless)));
 
                     try {
-                        Folder resourceFolder = (Folder) cmisConfiguration.getClient().getObjectByPath(suffixlessKeyFolder);
+                        Folder resourceFolder = cmisUtils.getFolderCache(suffixlessKeyFolder);
                         Map<String, Document> documentMap = cmisUtils.getCmisObjectMap(resourceFolder, null, suffixlessKeyFilename);
 
                         for (Map.Entry<String,Document> entry : documentMap.entrySet()) {
@@ -318,7 +319,7 @@ public class CMISResources extends Resources {
                                 }
                             }
                         }
-                    } catch (CmisObjectNotFoundException e) {
+                    } catch (CmisObjectNotFoundException | ResourceNotFoundException e) {
                         Log.warning(Geonet.RESOURCES,
                                 String.format("Unable to locate resource folder '%s'.", suffixlessKeyFolder));
                         // Ignore not found error.

@@ -121,17 +121,30 @@
                   field: "th_httpinspireeceuropaeutheme-theme_tree.key",
                   size: 34
                   // "order" : { "_key" : "asc" }
+                },
+                meta: {
+                  decorator: {
+                    type: "icon",
+                    prefix: "fa fa-2x pull-left gn-icon iti-",
+                    expression: "http://inspire.ec.europa.eu/theme/(.*)"
+                  }
                 }
               },
               "cl_topic.key": {
                 terms: {
                   field: "cl_topic.key",
                   size: 20
+                },
+                meta: {
+                  decorator: {
+                    type: "icon",
+                    prefix: "fa fa-2x pull-left gn-icon-"
+                  }
                 }
               },
               // 'OrgForResource': {
               //   'terms': {
-              //     'field': 'OrgForResource',
+              //     'field': 'OrgForResourceObject',
               //     'include': '.*',
               //     'missing': '- No org -',
               //     'size': 15
@@ -141,6 +154,12 @@
                 terms: {
                   field: "resourceType",
                   size: 10
+                },
+                meta: {
+                  decorator: {
+                    type: "icon",
+                    prefix: "fa fa-2x pull-left gn-icon-"
+                  }
                 }
               }
             },
@@ -174,19 +193,24 @@
             queryTitle: "resourceTitleObject.\\*:(${any})",
             queryTitleExactMatch: 'resourceTitleObject.\\*:"${any}"',
             searchOptions: {
+              fullText: true,
               titleOnly: true,
               exactMatch: true,
               language: true
             },
+            // The language strategy define how to search on multilingual content.
+            // It also applies to aggregation using ${aggLanguage} substitute.
             // Language strategy can be:
             // * searchInUILanguage: search in UI languages
-            // eg. full text field is any.langfre if French
-            // * searchInAllLanguages: search using any.* fields
+            // eg. full text field is any.langfre if French, aggLanguage is uiLanguage.
+            // * searchInAllLanguages: search using any.* fields, aggLanguage is default
             // (no analysis is done, more records are returned)
             // * searchInDetectedLanguage: restrict the search to the language detected
-            // based on user search. If language detection fails, search in all languages.
+            // based on user search. aggLanguage is detectedLanguage.
+            // If language detection fails, search in all languages and aggLanguage is uiLanguage
             // * searchInThatLanguage: Force a language using searchInThatLanguage:fre
             // 'languageStrategy': 'searchInThatLanguage:fre',
+            // aggLanguage is forcedLanguage.
             languageStrategy: "searchInAllLanguages",
             // Limit language detection to some languages only.
             // If empty, the list of languages in catalogue records is used
@@ -228,6 +252,10 @@
               // }
               boost: "5",
               functions: [
+                {
+                  filter: { match: { resourceType: "series" } },
+                  weight: 1.5
+                },
                 // Boost down member of a series
                 {
                   filter: { exists: { field: "parentUuid" } },
@@ -271,6 +299,7 @@
                           "resourceTitleObject.${searchLang}^6",
                           "resourceAbstractObject.${searchLang}^.5",
                           "tag",
+                          "uuid",
                           "resourceIdentifier"
                           // "anytext",
                           // "anytext._2gram",
@@ -281,20 +310,7 @@
                   ]
                 }
               },
-              _source: ["resourceTitleObject"],
-              // Fuzzy autocomplete
-              // {
-              //   query: {
-              //     // match_phrase_prefix: match
-              //     "multi_match" : {
-              //       "query" : query,
-              //         // "type":       "phrase_prefix",
-              //         "fields" : [ field + "^3", "tag" ]
-              //     }
-              //   },
-              //   _source: [field]
-              // }
-              from: 0,
+              _source: ["resourceTitle*", "resourceType"],
               size: 20
             },
             moreLikeThisSameType: true,
@@ -322,11 +338,10 @@
                 terms: {
                   field: "resourceType"
                 },
-                aggs: {
-                  format: {
-                    terms: {
-                      field: "format"
-                    }
+                meta: {
+                  decorator: {
+                    type: "icon",
+                    prefix: "fa fa-fw gn-icon-"
                   }
                 }
               },
@@ -345,6 +360,14 @@
                   size: 10
                 }
               },
+              format: {
+                terms: {
+                  field: "format"
+                },
+                meta: {
+                  collapsed: true
+                }
+              },
               availableInServices: {
                 filters: {
                   //"other_bucket_key": "others",
@@ -359,6 +382,16 @@
                       query_string: {
                         query: "+linkProtocol:/OGC:WFS.*/"
                       }
+                    }
+                  }
+                },
+                meta: {
+                  decorator: {
+                    type: "icon",
+                    prefix: "fa fa-fw ",
+                    map: {
+                      availableInViewService: "fa-globe",
+                      availableInDownloadService: "fa-download"
                     }
                   }
                 }
@@ -415,11 +448,18 @@
                   field: "th_httpinspireeceuropaeutheme-theme_tree.key",
                   size: 34
                   // "order" : { "_key" : "asc" }
+                },
+                meta: {
+                  decorator: {
+                    type: "icon",
+                    prefix: "fa fa-fw gn-icon iti-",
+                    expression: "http://inspire.ec.europa.eu/theme/(.*)"
+                  }
                 }
               },
-              "tag.default": {
+              tag: {
                 terms: {
-                  field: "tag.default",
+                  field: "tag.${aggLang}",
                   include: ".*",
                   size: 10
                 },
@@ -491,9 +531,11 @@
               // },
               OrgForResource: {
                 terms: {
-                  field: "OrgForResource",
+                  field: "OrgForResourceObject.${aggLang}",
+                  // field: "OrgForResourceObject.default",
+                  // field: "OrgForResourceObject.langfre",
                   include: ".*",
-                  size: 15
+                  size: 20
                 },
                 meta: {
                   // Always display filter even no more elements
@@ -501,6 +543,12 @@
                   // with a large size and you want to provide filtering.
                   // 'displayFilter': true,
                   caseInsensitiveInclude: true
+                  // decorator: {
+                  //   type: 'img',
+                  //   map: {
+                  //     'EEA': 'https://upload.wikimedia.org/wikipedia/en/thumb/7/79/EEA_agency_logo.svg/220px-EEA_agency_logo.svg.png'
+                  //   }
+                  // }
                 }
               },
               "cl_maintenanceAndUpdateFrequency.key": {
@@ -655,7 +703,12 @@
                 // 'url' : '/formatters/xml?attachment=false',
                 url: "/formatters/xml",
                 class: "fa-file-code-o"
-              }
+              } /*,
+              {
+                label: "exportDCAT",
+                url: "/geonetwork/api/collections/main/items/${uuid}?f=dcat",
+                class: "fa-file-code-o"
+              }*/
             ],
             grid: {
               related: ["parent", "children", "services", "datasets"]
@@ -778,7 +831,8 @@
             showStatusTopBarFor: "",
             showCitation: {
               enabled: false,
-              if: null // {'documentStandard': ['iso19115-3.2018']}
+              // if: {'documentStandard': ['iso19115-3.2018']}
+              if: { resourceType: ["series", "dataset", "nonGeographicDataset"] }
             },
             sortKeywordsAlphabetically: true,
             mainThesaurus: ["th_gemet", "th_gemet-theme"],
@@ -868,6 +922,12 @@
               resourceType: {
                 terms: {
                   field: "resourceType"
+                },
+                meta: {
+                  decorator: {
+                    type: "icon",
+                    prefix: "fa fa-fw gn-icon-"
+                  }
                 }
               },
               mdStatus: {
@@ -911,6 +971,10 @@
                   filterByTranslation: true,
                   displayFilter: true,
                   collapsed: true
+                  // decorator: {
+                  //   type: "img",
+                  //   path: "../../images/logos/{key}.png"
+                  // }
                 }
               },
               groupOwner: {
@@ -940,6 +1004,16 @@
                 terms: {
                   field: "isPublishedToAll",
                   size: 2
+                },
+                meta: {
+                  decorator: {
+                    type: "icon",
+                    prefix: "fa fa-fw ",
+                    map: {
+                      false: "fa-lock",
+                      true: "fa-unlock"
+                    }
+                  }
                 }
               },
               groupPublishedId: {
@@ -970,7 +1044,15 @@
                   size: 2
                 },
                 meta: {
-                  collapsed: true
+                  collapsed: true,
+                  decorator: {
+                    type: "icon",
+                    prefix: "fa fa-fw ",
+                    map: {
+                      false: "fa-folder",
+                      true: "fa-cloud"
+                    }
+                  }
                 }
               },
               isTemplate: {
@@ -979,7 +1061,15 @@
                   size: 5
                 },
                 meta: {
-                  collapsed: true
+                  collapsed: true,
+                  decorator: {
+                    type: "icon",
+                    prefix: "fa fa-fw ",
+                    map: {
+                      n: "fa-file-text",
+                      y: "fa-file"
+                    }
+                  }
                 }
               }
             }
@@ -1008,10 +1098,42 @@
               }
             ],
             sortBy: "relevance",
+            facetConfig: {
+              valid: {
+                terms: {
+                  field: "valid",
+                  size: 10
+                }
+              },
+              groupOwner: {
+                terms: {
+                  field: "groupOwner",
+                  size: 10
+                }
+              },
+              recordOwner: {
+                terms: {
+                  field: "recordOwner",
+                  size: 10
+                }
+              },
+              groupPublished: {
+                terms: {
+                  field: "groupPublished",
+                  size: 10
+                }
+              },
+              isHarvested: {
+                terms: {
+                  field: "isHarvested",
+                  size: 2
+                }
+              }
+            },
             // Add some fuzziness when search on directory entries
             // but boost exact match.
             queryBase:
-              'any.${searchLang}:(${any}) any.common:(${any}) resourceTitleObject.${searchLang}:"${any}"^10 resourceTitleObject.${searchLang}:(${any})^5 resourceTitleObject.${searchLang}:(${any}~2)'
+              'any.${searchLang}:(${any}) OR any.common:(${any}) OR resourceTitleObject.${searchLang}:"${any}"^10 OR resourceTitleObject.${searchLang}:(${any})^5 OR resourceTitleObject.${searchLang}:(${any}~2)'
           },
           admin: {
             enabled: true,
@@ -1083,7 +1205,7 @@
         requireProxy: [],
         gnCfg: angular.copy(defaultConfig),
         gnUrl: "",
-        docUrl: "https://geonetwork-opensource.org/manuals/4.0.x/",
+        docUrl: "https://geonetwork-opensource.org/manuals/4.0.x/{lang}",
         //docUrl: '../../doc/',
         modelOptions: {
           updateOn: "default blur",
@@ -1141,10 +1263,17 @@
         isShowLoginAsLink: false,
         isUserProfileUpdateEnabled: true,
         isUserGroupUpdateEnabled: true,
-        init: function (configOverlay, gnUrl, gnViewerSettings, gnSearchSettings) {
+        init: function (
+          configOverlay,
+          gnUrl,
+          nodeUrl,
+          gnViewerSettings,
+          gnSearchSettings
+        ) {
           this.applyConfig(configOverlay !== null ? configOverlay : {});
           this.setLegacyOption(gnViewerSettings, gnSearchSettings);
           this.gnUrl = gnUrl || "../";
+          this.nodeUrl = nodeUrl || "../";
           this.proxyUrl = this.gnUrl + "../proxy?url=";
         },
         setLegacyOption: function (gnViewerSettings, gnSearchSettings) {
@@ -1192,7 +1321,7 @@
               result = result.concat(
                 that.getObjectKeysPaths(obj[key], stopKeyList, allLevels, prefix + key)
               );
-            } else {
+            } else if (key !== "mods") {
               result.push(prefix + key);
             }
             return result;
@@ -1627,25 +1756,25 @@
         // Retrieve site information
         // TODO: Add INSPIRE, harvester, ... information
         var catInfo = promiseStart.then(function (value) {
-          return $http
-            .get("../api/site")
-            .success(function (data, status) {
-              $scope.info = data;
+          return $http.get("../api/site").then(
+            function (response) {
+              $scope.info = response.data;
               // Add the last time catalog info where updated.
               // That could be useful to append to catalog image URL
               // in order to trigger a reload of the logo when info are
               // reloaded.
               $scope.info["system/site/lastUpdate"] = new Date().getTime();
               $scope.initialized = true;
-            })
-            .error(function (data, status, headers, config) {
+            },
+            function (response) {
               $rootScope.$broadcast("StatusUpdated", {
                 id: "catalogueStatus",
                 title: $translate.instant("somethingWrong"),
                 msg: $translate.instant("msgNoCatalogInfo"),
                 type: "danger"
               });
-            });
+            }
+          );
         });
 
         // Utility functions for user
@@ -1733,7 +1862,8 @@
         var userLogin = catInfo.then(function (value) {
           return $http
             .get("../api/me?_random=" + Math.floor(Math.random() * 10000))
-            .success(function (me, status) {
+            .then(function (response) {
+              var me = response.data;
               if (angular.isObject(me)) {
                 me["isAdmin"] = function (groupId) {
                   return me.admin;
@@ -1800,7 +1930,10 @@
                   var keys = Object.keys(gnGlobalSettings.gnCfg.mods.home.facetConfig);
                   selectedFacet = keys[0];
                   for (var i = 0; i < keys.length; i++) {
-                    if ($scope.searchInfo.aggregations[keys[i]].buckets.length > 0) {
+                    if (
+                      $scope.searchInfo.aggregations[keys[i]].buckets.length > 0 ||
+                      Object.keys($scope.searchInfo.aggregations[keys[i]]).length > 0
+                    ) {
                       selectedFacet = keys[i];
                       break;
                     }

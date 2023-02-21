@@ -29,7 +29,7 @@
   <groupId>org.geonetwork-opensource</groupId>
   <artifactId>geonetwork</artifactId>
   <packaging>pom</packaging>
-  <version>4.2.2-SNAPSHOT</version>
+  <version>4.2.3-SNAPSHOT</version>
   <name>GeoNetwork opensource</name>
   <description>GeoNetwork opensource is a standards based, Free and
     Open Source catalog application to manage spatially referenced
@@ -125,7 +125,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-resources-plugin</artifactId>
-          <version>3.1.0</version>
+          <version>3.3.0</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -276,6 +276,7 @@
         <artifactId>maven-resources-plugin</artifactId>
         <configuration>
           <encoding>UTF-8</encoding>
+          <propertiesEncoding>ISO-8859-1</propertiesEncoding>
         </configuration>
       </plugin>
 
@@ -389,7 +390,7 @@
       <dependency>
         <groupId>org.jsoup</groupId>
         <artifactId>jsoup</artifactId>
-        <version>1.14.3</version>
+        <version>1.15.3</version>
       </dependency>
 
       <dependency>
@@ -425,6 +426,12 @@
         <groupId>org.openrdf</groupId>
         <artifactId>rio</artifactId>
         <version>1.0.9</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.jena</groupId>
+        <artifactId>apache-jena-libs</artifactId>
+        <type>pom</type>
+        <version>3.17.0</version>
       </dependency>
 
       <!-- PDF stuff: Managed by Mapfish -->
@@ -472,7 +479,7 @@
       <dependency>
         <groupId>commons-net</groupId>
         <artifactId>commons-net</artifactId>
-        <version>3.0.1</version>
+        <version>3.9.0</version>
       </dependency>
       <dependency>
         <groupId>commons-digester</groupId>
@@ -818,7 +825,7 @@
       <dependency>
         <groupId>org.tmatesoft.svnkit</groupId>
         <artifactId>svnkit</artifactId>
-        <version>1.7.8</version>
+        <version>1.10.9</version>
       </dependency>
       <dependency>
         <groupId>dlib</groupId>  <!--FIXME Handled by local repository -->
@@ -1508,9 +1515,15 @@
     <es.index.max_result_window.limit>15000</es.index.max_result_window.limit>
 
     <es.index.mapping.total_fields.limit>4000</es.index.mapping.total_fields.limit>
+    <es.index.ignore_above>2000</es.index.ignore_above>
 
+    <!-- If elasticsearch security is on,
+    add a read/write user for index features and records: -->
     <es.username></es.username>
     <es.password></es.password>
+    <!-- and a readonly user for index features access. -->
+    <es.ro.username></es.ro.username>
+    <es.ro.password></es.ro.password>
 
     <kb.platform>linux-x86_64</kb.platform>
     <kb.installer.extension>tar.gz</kb.installer.extension>
@@ -1540,17 +1553,17 @@
 
     <!-- NOTE: When updating GeoTools, check which version
     of Postgres is used and update pg.version if needed. -->
-    <geotools.version>27.0</geotools.version>
+    <geotools.version>28.0</geotools.version>
     <jts.version>1.18.2</jts.version>
     <pg.version>42.3.3</pg.version>
 
     <spring.version>5.2.20.RELEASE</spring.version>
     <spring.security.version>5.7.3</spring.security.version>
     <spring.jpa.version>2.2.13.RELEASE</spring.jpa.version>
-    <springboot.version>2.2.2.RELEASE</springboot.version>
+    <springboot.version>2.7.0</springboot.version>
     <springdoc.version>1.5.9</springdoc.version>
 
-    <metrics.version>2.1.1</metrics.version>
+    <metrics.version>2.2.0</metrics.version>
     <maven.build.timestamp.format>yyyy-MM-dd'T'HH'\:'mm'\:'ssZ</maven.build.timestamp.format>
     <build.timestamp>${maven.build.timestamp}</build.timestamp>
     <rootProjectDir>..</rootProjectDir>
@@ -1565,11 +1578,11 @@
     <camel.version>2.25.1</camel.version>
     <log4j2.version>2.17.2</log4j2.version>
     <slf4j.version>1.8.0-beta2</slf4j.version>
-    <xbean.version>3.18</xbean.version>
+    <xbean.version>4.22</xbean.version>
     <jolokia.version>1.6.0</jolokia.version>
     <httpcomponents.version>4.5.9</httpcomponents.version>
     <jasypt.version>1.9.3</jasypt.version>
-    <jupiter.version>5.7.0</jupiter.version>
+    <jupiter.version>5.9.1</jupiter.version>
     <hibernate.version>5.6.7.Final</hibernate.version>
 
     <sonar.organization>geonetwork</sonar.organization>

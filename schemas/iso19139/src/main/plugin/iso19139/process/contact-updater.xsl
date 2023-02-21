@@ -30,7 +30,7 @@
                 exclude-result-prefixes="#all">
 
 
-  <!-- Search for all contact avec a defined email and
+  <!-- Search for all contact with a defined email and
     replace the CI_ResponsibleParty by the provided XML. -->
 
   <!-- The contact email to search for -->

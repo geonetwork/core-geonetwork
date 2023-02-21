@@ -152,7 +152,9 @@
             (angular.isDefined(metadataId) ? "/" + metadataId : "") +
             "/sharing";
 
-          $http.get(url).success(function (data) {
+          $http.get(url).then(function (response) {
+            var data = response.data;
+
             var groups = data.privileges;
 
             // Promote custom topgroups

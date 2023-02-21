@@ -195,7 +195,6 @@
     "$translate",
     "gnSearchManagerService",
     "gnRecordHistoryService",
-    "gnDoiService",
     function (
       $http,
       $filter,
@@ -203,8 +202,7 @@
       gnConfigService,
       $translate,
       gnSearchManagerService,
-      gnRecordHistoryService,
-      gnDoiService
+      gnRecordHistoryService
     ) {
       return {
         restrict: "A",
@@ -230,7 +228,7 @@
               types: types,
               ownerFilter: null,
               authorFilter: null,
-              recordFilter: null,
+              uuid: null,
               dateFromFilter: null,
               dateToFilter: null,
               from: 0,
@@ -240,16 +238,17 @@
 
           scope.hasMoreRecords = false;
 
-          scope.getSuggestions = function (val) {
-            return gnSearchManagerService
-              .search("q?isTemplate=y or n&title=" + (val || "*"))
-              .then(function (res) {
-                var listOfTitles = [];
-                angular.forEach(res.metadata, function (value, key) {
-                  listOfTitles.push({ id: value.id, title: value.title });
-                });
-                return listOfTitles;
-              });
+          scope.defaultSearchObj = {
+            params: {
+              isTemplate: ["y", "n"],
+              from: 1,
+              to: 20
+            },
+            defaultParams: {
+              isTemplate: ["y", "n"],
+              from: 1,
+              to: 20
+            }
           };
 
           scope.more = function () {

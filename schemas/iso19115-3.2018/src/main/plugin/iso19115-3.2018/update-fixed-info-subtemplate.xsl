@@ -35,6 +35,7 @@
                 xmlns:lan="http://standards.iso.org/iso/19115/-3/lan/1.0"
                 xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/2.0"
                 xmlns:dqm="http://standards.iso.org/iso/19157/-2/dqm/1.0"
+                xmlns:mrs="http://standards.iso.org/iso/19115/-3/mrs/1.0"
                 xmlns:mdq="http://standards.iso.org/iso/19157/-2/mdq/1.0"
                 xmlns:gfc="http://standards.iso.org/iso/19110/gfc/1.1"
                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -56,7 +57,7 @@
                 select="count(/root/gex:EX_Extent) = 1"/>
 
   <xsl:template match="/root">
-    <xsl:apply-templates select="gex:*|mdb:*|cit:*|dqm:*|cit:*|mcc:*|mrc:*|mrd:*|mco:*|mdq:*"/>
+    <xsl:apply-templates select="gex:*|mrs:*|mdb:*|cit:*|dqm:*|cit:*|mcc:*|mrc:*|mrd:*|mco:*|mdq:*"/>
   </xsl:template>
 
 

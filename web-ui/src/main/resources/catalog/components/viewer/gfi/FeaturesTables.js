@@ -40,22 +40,26 @@
         controllerAs: "ctrl",
         bindToController: true,
         controller: "gnFeaturesTablesController",
-        templateUrl:
-          "../../catalog/components/viewer/gfi/partials/" + "featurestables.html"
+        templateUrl: "../../catalog/components/viewer/gfi/partials/featurestables.html",
+        link: function (scope, element, attrs, ctrl) {
+          ctrl.addLayers();
+        }
       };
     }
   ]);
 
   var GnFeaturesTablesController = function (gnFeaturesTableManager, gnSearchSettings) {
     this.tm = gnFeaturesTableManager;
-
     this.tables = gnFeaturesTableManager.tables;
+    this.gnSearchSettings = gnSearchSettings;
+  };
 
+  GnFeaturesTablesController.prototype.addLayers = function () {
     this.featuresOverlay = new ol.layer.Vector({
       source: new ol.source.Vector({
         useSpatialIndex: false
       }),
-      style: gnSearchSettings.olStyles.mdExtent,
+      style: this.gnSearchSettings.olStyles.mdExtent,
       updateWhileAnimating: true,
       updateWhileInteracting: true,
       map: this.map
@@ -64,7 +68,7 @@
       source: new ol.source.Vector({
         useSpatialIndex: false
       }),
-      style: gnSearchSettings.olStyles.mdExtentHighlight,
+      style: this.gnSearchSettings.olStyles.mdExtentHighlight,
       updateWhileAnimating: true,
       updateWhileInteracting: true,
       map: this.map

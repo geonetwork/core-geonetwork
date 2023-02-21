@@ -54,6 +54,7 @@ import org.fao.geonet.kernel.datamanager.IMetadataStatus;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.datamanager.IMetadataValidator;
 import org.fao.geonet.kernel.schema.MetadataSchema;
+import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.jdom.Element;
 import org.slf4j.Logger;
@@ -169,7 +170,7 @@ public class DataManager {
 
     @Deprecated
     public void indexMetadata(final String metadataId, boolean forceRefreshReaders) throws Exception {
-        metadataIndexer.indexMetadata(metadataId, forceRefreshReaders);
+        metadataIndexer.indexMetadata(metadataId, forceRefreshReaders, IndexingMode.full);
     }
 
     @Deprecated
@@ -358,16 +359,16 @@ public class DataManager {
     @Deprecated
     public String insertMetadata(ServiceContext context, String schema, Element metadataXml, String uuid, int owner, String groupOwner,
                                  String source, String metadataType, String docType, String category, String createDate, String changeDate, boolean ufo,
-                                 boolean index) throws Exception {
+                                 IndexingMode indexingMode) throws Exception {
         return metadataManager.insertMetadata(context, schema, metadataXml, uuid, owner, groupOwner, source, metadataType, docType,
-            category, createDate, changeDate, ufo, index);
+            category, createDate, changeDate, ufo, indexingMode);
     }
 
     @Deprecated
-    public AbstractMetadata insertMetadata(ServiceContext context, AbstractMetadata newMetadata, Element metadataXml, boolean index,
+    public AbstractMetadata insertMetadata(ServiceContext context, AbstractMetadata newMetadata, Element metadataXml, IndexingMode indexingMode,
                                            boolean updateFixedInfo, UpdateDatestamp updateDatestamp, boolean fullRightsForGroup, boolean forceRefreshReaders)
         throws Exception {
-        return metadataManager.insertMetadata(context, newMetadata, metadataXml, index, updateFixedInfo, updateDatestamp,
+        return metadataManager.insertMetadata(context, newMetadata, metadataXml, indexingMode, updateFixedInfo, updateDatestamp,
             fullRightsForGroup, forceRefreshReaders);
     }
 
@@ -412,11 +413,11 @@ public class DataManager {
         metadataManager.updateMetadataOwner(id, owner, groupOwner);
     }
 
-    @Deprecated
     public AbstractMetadata updateMetadata(final ServiceContext context, final String metadataId, final Element md,
-            final boolean validate, final boolean ufo, final boolean index, final String lang, final String changeDate,
-            final boolean updateDateStamp) throws Exception {
-        return metadataManager.updateMetadata(context, metadataId, md, validate, ufo, index, lang, changeDate, updateDateStamp);
+                                           final boolean validate, final boolean ufo,  final String lang, final String changeDate,
+                                           final boolean updateDateStamp, final IndexingMode indexingMode) throws Exception {
+        return metadataManager.updateMetadata(context, metadataId, md, validate, ufo, lang, changeDate,
+            updateDateStamp, indexingMode);
     }
 
     @Deprecated

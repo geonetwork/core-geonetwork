@@ -25,7 +25,6 @@
 <!-- TODO: simplify layout if only one group -->
 <div class="gn-share-grid">
   <i class="fa fa-spinner fa-spin" data-ng-hide="privileges.length > 0"></i>
-
   <form name="opsForm" id="opsForm" data-ng-class="{'gn-sharing-batch': batch}">
     <input type="hidden" name="_csrf" value="{{csrf}}" />
     <table class="table table-striped" data-ng-show="privileges.length > 0">
@@ -41,7 +40,7 @@
               ></i>
             </a>
           </th>
-          <th data-ng-repeat="key in operations">
+          <th data-ng-repeat="key in ::operations">
             <a href="" ng-click="setSorter(key)">
               <i class="fa {{icons[key] || fa-fw}}" />
               <span class="hidden-xs">&nbsp;{{('op-' + key) | translate}}&nbsp;</span>
@@ -79,7 +78,7 @@
             : ''}}"
         >
           <td><strong>{{('group-' + g.group) | translate}}</strong></td>
-          <td data-ng-repeat="key in operations" class="text-center">
+          <td data-ng-repeat="key in ::operations" class="text-center">
             <input
               type="checkbox"
               name="{{g.group + '-' + key}}"
@@ -93,8 +92,8 @@
           <td data-ng-if="!disableAllCol">
             <input
               type="checkbox"
-              data-ng-disabled="!isAdminOrReviewer"
-              data-ng-click="checkAll(g)"
+              data-ng-disabled="::!isAdminOrReviewer"
+              data-ng-change="checkAll(g)"
               data-ng-model="g.isCheckedAll"
             />
           </td>
@@ -105,8 +104,8 @@
           data-ng-show="(onlyUserGroup == true && g.userGroup == true) ||
                        onlyUserGroup == false"
         >
-          <td><strong>{{('group-' + g.group) | translate}}</strong></td>
-          <td data-ng-repeat="key in operations" class="text-center">
+          <td><strong>{{::('group-' + g.group) | translate}}</strong></td>
+          <td data-ng-repeat="key in ::operations" class="text-center">
             <input
               type="checkbox"
               name="{{g.group + '-' + key}}"
@@ -115,10 +114,10 @@
               data-ng-model="g.operations[key]"
             />
           </td>
-          <td data-ng-if="!disableAllCol">
+          <td data-ng-if="::!disableAllCol">
             <input
               type="checkbox"
-              data-ng-click="checkAll(g)"
+              data-ng-change="checkAll(g)"
               data-ng-model="g.isCheckedAll"
             />
           </td>
@@ -135,7 +134,7 @@
 </div>
 
 <div class="btn-toolbar pull-right">
-  <div data-gn-need-help="user-guide/publishing/index.html" data-icon-only="true"></div>
+  <div data-gn-need-help="publishing-home" data-icon-only="true"></div>
   <button
     type="button"
     class="btn btn-primary"

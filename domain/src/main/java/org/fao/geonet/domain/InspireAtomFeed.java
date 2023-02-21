@@ -23,6 +23,7 @@
 package org.fao.geonet.domain;
 
 
+import org.apache.commons.lang.StringUtils;
 import org.hibernate.annotations.Type;
 import org.jdom.Element;
 import org.jdom.Namespace;
@@ -73,21 +74,23 @@ public class InspireAtomFeed extends GeonetEntity implements Serializable {
         Namespace ns = Namespace.getNamespace("f", "http://www.w3.org/2005/Atom");
         Namespace nsXml = Namespace.getNamespace("xml", "http://www.w3.org/XML/1998/namespace");
 
-        inspireAtomFeed.setTitle(atomDoc.getChildText("title", ns));
+        inspireAtomFeed.setTitle(StringUtils.left(atomDoc.getChildText("title", ns), 255));
 
         if (atomDoc.getChildText("subtitle", ns) != null) {
-            inspireAtomFeed.setSubtitle(atomDoc.getChildText("subtitle", ns));
+            inspireAtomFeed.setSubtitle(StringUtils.left(atomDoc.getChildText("subtitle", ns), 255));
         }
 
         if (atomDoc.getChildText("rights", ns) != null) {
-            inspireAtomFeed.setRights(atomDoc.getChildText("rights", ns));
+            inspireAtomFeed.setRights(StringUtils.left(atomDoc.getChildText("rights", ns), 255));
         }
 
         inspireAtomFeed.setLang(atomDoc.getAttributeValue("lang", ns, ""));
         Element authorEl = atomDoc.getChild("author", ns);
         if (authorEl != null) {
-            inspireAtomFeed.setAuthorName(atomDoc.getChild("author", ns).getChildText("name", ns));
-            inspireAtomFeed.setAuthorEmail(atomDoc.getChild("author", ns).getChildText("email", ns));
+            inspireAtomFeed.setAuthorName(
+                StringUtils.left(atomDoc.getChild("author", ns).getChildText("name", ns), 255));
+            inspireAtomFeed.setAuthorEmail(
+                StringUtils.left(atomDoc.getChild("author", ns).getChildText("email", ns), 255));
         }
         inspireAtomFeed.setLang(atomDoc.getAttributeValue("lang", nsXml, ""));
 
@@ -101,7 +104,7 @@ public class InspireAtomFeed extends GeonetEntity implements Serializable {
                     linkEl.getAttributeValue("rel", "").equals("section")) {
                     InspireAtomFeedEntry inspireAtomFeedEntry = new InspireAtomFeedEntry();
 
-                    inspireAtomFeedEntry.setTitle(entry.getChildText("title", ns));
+                    inspireAtomFeedEntry.setTitle(StringUtils.left(entry.getChildText("title", ns), 255));
 
                     if (entry.getChildText("category", ns) != null) {
                         inspireAtomFeedEntry.setCrs(entry.getChild("category", ns).getAttributeValue("term"));

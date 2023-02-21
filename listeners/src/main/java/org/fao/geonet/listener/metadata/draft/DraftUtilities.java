@@ -9,6 +9,7 @@ import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataOperations;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.search.EsSearchManager;
+import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.repository.*;
 import org.fao.geonet.repository.specification.MetadataFileUploadSpecs;
 import org.fao.geonet.repository.specification.MetadataValidationSpecs;
@@ -151,8 +152,8 @@ public class DraftUtilities {
             // Copy contents
             Log.trace(Geonet.DATA_MANAGER, "Update record with id " + md.getId());
             md = metadataManager.updateMetadata(context, String.valueOf(md.getId()),
-                xmlData, false, false, true,
-                context.getLanguage(), changeDate, true);
+                xmlData, false, false,
+                context.getLanguage(), changeDate, true, IndexingMode.full);
 
             Log.info(Geonet.DATA_MANAGER, "Record updated with draft contents: " + md.getId());
 

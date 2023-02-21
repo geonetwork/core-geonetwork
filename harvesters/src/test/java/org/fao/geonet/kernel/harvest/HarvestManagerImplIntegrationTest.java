@@ -23,32 +23,42 @@
 
 package org.fao.geonet.kernel.harvest;
 
-import static org.junit.Assert.*;
-
 import jeeves.server.context.ServiceContext;
-
 import org.fao.geonet.domain.HarvestHistory;
 import org.fao.geonet.domain.HarvesterSetting;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.kernel.harvest.harvester.csw.CswHarvesterIntegrationTest;
+import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.setting.HarvesterSettingsManager;
-import org.fao.geonet.repository.*;
+import org.fao.geonet.repository.HarvestHistoryRepository;
+import org.fao.geonet.repository.HarvesterSettingRepository;
+import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.repository.MetadataRepositoryTest;
+import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import org.springframework.test.context.ContextConfiguration;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Test the harvest manager.
  *
  * User: Jesse Date: 10/24/13 Time: 2:27 PM
  */
+@ContextConfiguration(
+    inheritLocations = true,
+    locations = {"classpath:harvesters-repository-test-context.xml"}
+)
 public class HarvestManagerImplIntegrationTest extends AbstractHarvesterServiceIntegrationTest {
     @Autowired
     SourceRepository _sourceRepository;
@@ -60,11 +70,6 @@ public class HarvestManagerImplIntegrationTest extends AbstractHarvesterServiceI
     MetadataRepository _metadataRepository;
     @Autowired
     HarvestHistoryRepository _harvestHistoryRepository;
-
-    @PersistenceContext
-    EntityManager em;
-
-    private AtomicInteger _inc = new AtomicInteger();
 
     @Test
     public void testAddRemove() throws Exception {
@@ -118,7 +123,7 @@ public class HarvestManagerImplIntegrationTest extends AbstractHarvesterServiceI
     }
 
     private void addMetadata(String harvesterUUID) {
-        final Metadata entity = MetadataRepositoryTest.newMetadata(_inc);
+        final Metadata entity = MetadataRepositoryTest.newMetadata(new AtomicInteger());
         entity.getHarvestInfo().setHarvested(true);
         entity.getHarvestInfo().setUuid(harvesterUUID);
         _metadataRepository.save(entity);

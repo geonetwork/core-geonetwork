@@ -67,6 +67,7 @@
   <linkToPortal-help>Read here the full details and access to the data.</linkToPortal-help>
   <citationProposal>Citation proposal</citationProposal>
   <citationProposal-help>This proposal was automatically generated, check if the metadata authors did not specified custom citation requirements.</citationProposal-help>
+  <citationAdditional>When using this resource in a publication, also cite the related work(s) with:</citationAdditional>
   <associatedResources>Associated resources</associatedResources>
 
   <!-- XSD error translation -->

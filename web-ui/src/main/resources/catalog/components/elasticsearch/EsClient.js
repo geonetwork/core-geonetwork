@@ -51,17 +51,41 @@
         var params = gnESService.getSuggestParams(field, query, searchObj);
         return callApi("_search", params).then(function (response) {
           var d = response.data.hits.hits.flatMap(function (md) {
+            var md = new Metadata(md),
+              that = md;
+            // Suggestion on something else than the title is experimental.
+            // It is probably better to use aggregation for it.
+            // It is currently not used in the application.
             if (field) {
-              return new Metadata(md)[field];
-            } else {
-              var values = [];
-              for (p in new Metadata(md)) {
-                values = values.concat(md[p]);
-              }
+              var path = field.split("."),
+                values = [],
+                v = md;
+              path.forEach(function (p) {
+                if (v) {
+                  v = angular.isArray(v)
+                    ? v.map(function (o) {
+                        return o[p];
+                      })
+                    : v[p];
+                }
+              });
+              (v || []).forEach(function (value) {
+                values.push({ label: value, record: md });
+              });
               return values;
+            } else {
+              return { label: _.get(md, field) || md.resourceTitle, record: md };
             }
           });
-          return d;
+
+          if (field) {
+            var groups = _.groupBy(d, "label");
+            return Object.keys(groups).map(function (g) {
+              return { label: g, record: groups[g] };
+            });
+          } else {
+            return d;
+          }
         });
       };
 
@@ -76,19 +100,19 @@
 
       this.getTermsParamsWithNewSizeOrFilter = function (
         query,
-        facetPath,
+        key,
+        facetConfig,
         newSize,
         include,
-        exclude,
-        facetConfig
+        exclude
       ) {
         var params = gnESService.getTermsParamsWithNewSizeOrFilter(
           query,
-          facetPath,
+          key,
+          facetConfig,
           newSize,
           include,
-          exclude,
-          facetConfig
+          exclude
         );
         return callApi("_search", params).then(function (response) {
           var model = gnESFacet.getUIModel(response, params);

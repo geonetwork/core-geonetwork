@@ -7,8 +7,19 @@
           -
           <strong data-translate="">GUFwaitingForApproval</strong>
         </span>
+
+        <a
+          class="pull-right"
+          data-ng-if="allowDelete"
+          data-ng-click="deleteC(row.uuid)"
+          title="{{'GUFdeleteUserFeedback' | translate}}"
+        >
+          <i class="fa fa-fw fa-times text-danger"></i>
+        </a>
       </div>
-      <a data-ng-href="#/metadata/{{row.metadataUUID}}">{{row.metadataTitle}}</a>
+      <a data-ng-href="catalog.search#/metadata/{{row.metadataUUID}}"
+        >{{row.metadataTitle}}</a
+      >
       <q class="gn-quote" data-ng-show="row.comment">{{row.comment}}</q>
       <div class="clearfix">
         <div

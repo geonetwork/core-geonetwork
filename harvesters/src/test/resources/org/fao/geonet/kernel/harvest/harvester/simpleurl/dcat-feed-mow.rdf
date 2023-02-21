@@ -1,0 +1,1246 @@
+<?xml version='1.0' encoding='utf-8'?>
+<rdf:RDF
+    xmlns:dcat="http://www.w3.org/ns/dcat#"
+    xmlns:dcterms="http://purl.org/dc/terms/"
+    xmlns:foaf="http://xmlns.com/foaf/0.1/"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+    xmlns:store="http://mobielvlaanderen.be/store-x/man-dcat/"
+    xmlns:vcard="http://www.w3.org/2006/vcard/ns#">
+    <dcat:Catalog rdf:about="http://mobielvlaanderen.be/store-x/man-dcat/dr_catalog">
+        <dcterms:title xml:lang="nl">Dataroom Beleidsdomein Mobiliteit en Openbare Werken</dcterms:title>
+        <dcterms:description xml:lang="nl">Het beleidsdomein verzamelt indicatoren, die relevant zijn voor de beleidsvoorbereiding, -opvolging
+en -evaluatie, in deze databank voor intern gebruik en voor verdere verspreiding, onder meer als open data.
+De kwaliteit en betrouwbaarheid van de data is afhankelijk van de gebruikte meettechnieken
+en berekeningswijzen, die als metadata bij de indicatoren worden aangegeven.</dcterms:description>
+        <dcterms:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2016-02-03</dcterms:issued>
+        <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2023-01-18</dcterms:modified>
+        <dcterms:license rdf:resource="https://data.vlaanderen.be/doc/licentie/modellicentie-gratis-hergebruik/v1.0" />
+        <dcterms:publisher>
+            <foaf:Agent rdf:about="http://data.vlaanderen.be/id/organisatie/OVO000096">
+                <foaf:name>Beleidsdomein Mobiliteit en Openbare Werken</foaf:name>
+                <dcterms:type>organization</dcterms:type>
+            </foaf:Agent>
+        </dcterms:publisher>
+        <dcterms:language rdf:resource="http://lexvo.org/id/iso639-3/nld" />
+        <foaf:homepage rdf:resource="http://opendata.mow.vlaanderen.be" />
+        <dcat:dataset rdf:resource="http://mobielvlaanderen.be/store-x/man-dcat/dataset_ind075" />
+        <dcat:dataset rdf:resource="http://mobielvlaanderen.be/store-x/man-dcat/dataset_ind087" />
+        <dcat:dataset rdf:resource="http://mobielvlaanderen.be/store-x/man-dcat/dataset_ind074" />
+        <dcat:dataset rdf:resource="http://mobielvlaanderen.be/store-x/man-dcat/dataset_ind071" />
+        <dcat:dataset rdf:resource="http://mobielvlaanderen.be/store-x/man-dcat/dataset_ind066" />
+        <dcat:dataset rdf:resource="http://mobielvlaanderen.be/store-x/man-dcat/dataset_ind067" />
+        <dcat:dataset rdf:resource="http://mobielvlaanderen.be/store-x/man-dcat/dataset_ind016" />
+        <dcat:dataset rdf:resource="http://mobielvlaanderen.be/store-x/man-dcat/dataset_ind077" />
+        <dcat:dataset rdf:resource="http://mobielvlaanderen.be/store-x/man-dcat/dataset_ind072" />
+        <dcat:dataset rdf:resource="http://mobielvlaanderen.be/store-x/man-dcat/dataset_ind068" />
+        <dcat:dataset rdf:resource="http://mobielvlaanderen.be/store-x/man-dcat/dataset_ind1080" />
+        <dcat:dataset rdf:resource="http://mobielvlaanderen.be/store-x/man-dcat/dataset_ind076" />
+        <dcat:dataset rdf:resource="http://mobielvlaanderen.be/store-x/man-dcat/dataset_ind003" />
+        <dcat:dataset rdf:resource="http://mobielvlaanderen.be/store-x/man-dcat/dataset_ind065" />
+        <dcat:dataset rdf:resource="http://mobielvlaanderen.be/store-x/man-dcat/dataset_ind1245" />
+        <dcat:dataset rdf:resource="http://mobielvlaanderen.be/store-x/man-dcat/dataset_ind011" />
+        <dcat:dataset rdf:resource="http://mobielvlaanderen.be/store-x/man-dcat/dataset_ind012" />
+        <dcat:dataset rdf:resource="http://mobielvlaanderen.be/store-x/man-dcat/dataset_ind1247" />
+        <dcat:dataset rdf:resource="http://mobielvlaanderen.be/store-x/man-dcat/dataset_ind1246" />
+        <dcat:dataset rdf:resource="http://mobielvlaanderen.be/store-x/man-dcat/dataset_ind1120" />
+        <dcat:dataset rdf:resource="http://mobielvlaanderen.be/store-x/man-dcat/dataset_ind073" />
+        <dcat:dataset rdf:resource="http://mobielvlaanderen.be/store-x/man-dcat/dataset_ind1100" />
+    </dcat:Catalog>
+    <dcat:Dataset rdf:about="http://mobielvlaanderen.be/store-x/man-dcat/dataset_ind075">
+        <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2022-04-28</dcterms:modified>
+        <dcterms:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2022-04-28</dcterms:issued>
+        <dcterms:title xml:lang="nl">aantal ton gelost op de waterwegen</dcterms:title>
+        <dcterms:description xml:lang="nl">hoeveelheid goederen gelost langs waterwegen beheerd door De Vlaamse Waterweg uitgedrukt in ton </dcterms:description>
+        <dcterms:publisher>
+            <foaf:Agent rdf:about="http://data.vlaanderen.be/id/organisatie/OVO000096">
+                <foaf:name>Beleidsdomein Mobiliteit en Openbare Werken</foaf:name>
+                <dcterms:type>organization</dcterms:type>
+            </foaf:Agent>
+        </dcterms:publisher>
+        <dcat:contactPoint>
+            <vcard:Kind rdf:about="https://www.mow-contact.be/">
+                <vcard:fn>https://www.mow-contact.be/</vcard:fn>
+            </vcard:Kind>
+        </dcat:contactPoint>
+        <dcterms:language rdf:resource="http://lexvo.org/id/iso639-3/nld" />
+        <dcat:landingPage rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/bijsluiter_075.html" />
+        <dcat:distribution rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersxml_075.xml" />
+        <dcat:distribution rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersTable_075.html" />
+        <dcat:distribution rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/commentaar_075.xml" />
+        <dcat:distribution rdf:resource="https://app.powerbi.com/view?r=eyJrIjoiMmE3ODAxZWItOWNiMi00ZTU1LWJkNjEtODQ2ZDc4ZWNmZDRkIiwidCI6IjBjMDMzOGE2LTk1NjEtNGVlOC1iOGQ2LTRlODljYmQ1MjBhMCIsImMiOjh9" />
+    </dcat:Dataset>
+    <dcat:Distribution rdf:about="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersxml_075.xml">
+        <dcterms:title xml:lang="nl">aantal ton gelost op de waterwegen - Cijfers (XML)</dcterms:title>
+        <dcat:accessURL rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersxml_075.xml" />
+        <dcterms:license rdf:resource="https://data.vlaanderen.be/doc/licentie/modellicentie-gratis-hergebruik/v1.0" />
+        <dcterms:format>XML</dcterms:format>
+        <dcterms:description xml:lang="nl">Eventuele opmerkingen bij de cijferrecords voor een bepaalde periode (cfr. meetfrequentie)
+zijn terug te vinden in de commentaar file.</dcterms:description>
+    </dcat:Distribution>
+    <dcat:Distribution rdf:about="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersTable_075.html">
+        <dcterms:title xml:lang="nl">aantal ton gelost op de waterwegen - Cijfers (Tabel)</dcterms:title>
+        <dcat:accessURL rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersTable_075.html" />
+        <dcterms:license rdf:resource="https://data.vlaanderen.be/doc/licentie/modellicentie-gratis-hergebruik/v1.0" />
+        <dcterms:format>HTML</dcterms:format>
+        <dcterms:description xml:lang="nl">Kies de URL hierboven om de cijfergegevens in een tabel te zien.
+
+De cijfergegevens in de tabel kunnen in MS Excel opgeladen worden via de 'Data' - 'From Web' functie. Gebruik de
+hierboven vermelde URL in het adres veld.
+
+Eventuele opmerkingen bij de cijferrecords voor een bepaalde periode (cfr. meetfrequentie) zijn terug te vinden
+in de commentaar file.</dcterms:description>
+    </dcat:Distribution>
+    <dcat:Distribution rdf:about="https://mow-dataroom.s3-eu-west-1.amazonaws.com/commentaar_075.xml">
+        <dcterms:title xml:lang="nl">aantal ton gelost op de waterwegen - Commentaar</dcterms:title>
+        <dcat:accessURL rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/commentaar_075.xml" />
+        <dcterms:license rdf:resource="https://data.vlaanderen.be/doc/licentie/modellicentie-gratis-hergebruik/v1.0" />
+        <dcterms:format>XML</dcterms:format>
+        <dcterms:description xml:lang="nl">Opmerkingen horend bij de cijferrecords voor een bepaalde periode (cfr. meetfrequentie).</dcterms:description>
+    </dcat:Distribution>
+    <dcat:Distribution rdf:about="https://app.powerbi.com/view?r=eyJrIjoiMmE3ODAxZWItOWNiMi00ZTU1LWJkNjEtODQ2ZDc4ZWNmZDRkIiwidCI6IjBjMDMzOGE2LTk1NjEtNGVlOC1iOGQ2LTRlODljYmQ1MjBhMCIsImMiOjh9">
+        <dcterms:title xml:lang="nl">aantal ton gelost op de waterwegen - Rapport (PowerBI)</dcterms:title>
+        <dcat:accessURL rdf:resource="https://app.powerbi.com/view?r=eyJrIjoiMmE3ODAxZWItOWNiMi00ZTU1LWJkNjEtODQ2ZDc4ZWNmZDRkIiwidCI6IjBjMDMzOGE2LTk1NjEtNGVlOC1iOGQ2LTRlODljYmQ1MjBhMCIsImMiOjh9" />
+        <dcterms:license rdf:resource="https://data.vlaanderen.be/doc/licentie/modellicentie-gratis-hergebruik/v1.0" />
+        <dcterms:format>Rapport</dcterms:format>
+        <dcterms:description xml:lang="nl">Rapport met de cijfergegevens weergeven.</dcterms:description>
+    </dcat:Distribution>
+    <dcat:Dataset rdf:about="http://mobielvlaanderen.be/store-x/man-dcat/dataset_ind087">
+        <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2021-01-29</dcterms:modified>
+        <dcterms:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2021-01-29</dcterms:issued>
+        <dcterms:title xml:lang="nl">verdeling van woon-werkverplaatsingen volgens hoofdvervoerswijze (beroepsactieven)</dcterms:title>
+        <dcterms:description xml:lang="nl">percentage van de woon-werkverplaatsingen door beroepsactieven waarvoor gebruik wordt gemaakt van de betreffende vervoerswijze als hoofdvervoerswijze (d.w.z. voor het grootste deel van de af te leggen afstand)</dcterms:description>
+        <dcterms:publisher>
+            <foaf:Agent rdf:about="http://data.vlaanderen.be/id/organisatie/OVO000096">
+                <foaf:name>Beleidsdomein Mobiliteit en Openbare Werken</foaf:name>
+                <dcterms:type>organization</dcterms:type>
+            </foaf:Agent>
+        </dcterms:publisher>
+        <dcat:contactPoint>
+            <vcard:Kind rdf:about="https://www.mow-contact.be/">
+                <vcard:fn>https://www.mow-contact.be/</vcard:fn>
+            </vcard:Kind>
+        </dcat:contactPoint>
+        <dcterms:language rdf:resource="http://lexvo.org/id/iso639-3/nld" />
+        <dcat:landingPage rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/bijsluiter_087.html" />
+        <dcat:distribution rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersxml_087.xml" />
+        <dcat:distribution rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersTable_087.html" />
+        <dcat:distribution rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/commentaar_087.xml" />
+        <dcat:distribution rdf:resource="https://app.powerbi.com/view?r=eyJrIjoiNTU4ZjRkMmEtYzRhOC00NWM5LTk4NDctZGU3MzE0ODIyNGQ5IiwidCI6IjBjMDMzOGE2LTk1NjEtNGVlOC1iOGQ2LTRlODljYmQ1MjBhMCIsImMiOjh9" />
+    </dcat:Dataset>
+    <dcat:Distribution rdf:about="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersxml_087.xml">
+        <dcterms:title xml:lang="nl">verdeling van woon-werkverplaatsingen volgens hoofdvervoerswijze (beroepsactieven) - Cijfers (XML)</dcterms:title>
+        <dcat:accessURL rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersxml_087.xml" />
+        <dcterms:license rdf:resource="https://data.vlaanderen.be/doc/licentie/modellicentie-gratis-hergebruik/v1.0" />
+        <dcterms:format>XML</dcterms:format>
+        <dcterms:description xml:lang="nl">Eventuele opmerkingen bij de cijferrecords voor een bepaalde periode (cfr. meetfrequentie)
+zijn terug te vinden in de commentaar file.</dcterms:description>
+    </dcat:Distribution>
+    <dcat:Distribution rdf:about="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersTable_087.html">
+        <dcterms:title xml:lang="nl">verdeling van woon-werkverplaatsingen volgens hoofdvervoerswijze (beroepsactieven) - Cijfers (Tabel)</dcterms:title>
+        <dcat:accessURL rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersTable_087.html" />
+        <dcterms:license rdf:resource="https://data.vlaanderen.be/doc/licentie/modellicentie-gratis-hergebruik/v1.0" />
+        <dcterms:format>HTML</dcterms:format>
+        <dcterms:description xml:lang="nl">Kies de URL hierboven om de cijfergegevens in een tabel te zien.
+
+De cijfergegevens in de tabel kunnen in MS Excel opgeladen worden via de 'Data' - 'From Web' functie. Gebruik de
+hierboven vermelde URL in het adres veld.
+
+Eventuele opmerkingen bij de cijferrecords voor een bepaalde periode (cfr. meetfrequentie) zijn terug te vinden
+in de commentaar file.</dcterms:description>
+    </dcat:Distribution>
+    <dcat:Distribution rdf:about="https://mow-dataroom.s3-eu-west-1.amazonaws.com/commentaar_087.xml">
+        <dcterms:title xml:lang="nl">verdeling van woon-werkverplaatsingen volgens hoofdvervoerswijze (beroepsactieven) - Commentaar</dcterms:title>
+        <dcat:accessURL rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/commentaar_087.xml" />
+        <dcterms:license rdf:resource="https://data.vlaanderen.be/doc/licentie/modellicentie-gratis-hergebruik/v1.0" />
+        <dcterms:format>XML</dcterms:format>
+        <dcterms:description xml:lang="nl">Opmerkingen horend bij de cijferrecords voor een bepaalde periode (cfr. meetfrequentie).</dcterms:description>
+    </dcat:Distribution>
+    <dcat:Distribution rdf:about="https://app.powerbi.com/view?r=eyJrIjoiNTU4ZjRkMmEtYzRhOC00NWM5LTk4NDctZGU3MzE0ODIyNGQ5IiwidCI6IjBjMDMzOGE2LTk1NjEtNGVlOC1iOGQ2LTRlODljYmQ1MjBhMCIsImMiOjh9">
+        <dcterms:title xml:lang="nl">verdeling van woon-werkverplaatsingen volgens hoofdvervoerswijze (beroepsactieven) - Rapport (PowerBI)</dcterms:title>
+        <dcat:accessURL rdf:resource="https://app.powerbi.com/view?r=eyJrIjoiNTU4ZjRkMmEtYzRhOC00NWM5LTk4NDctZGU3MzE0ODIyNGQ5IiwidCI6IjBjMDMzOGE2LTk1NjEtNGVlOC1iOGQ2LTRlODljYmQ1MjBhMCIsImMiOjh9" />
+        <dcterms:license rdf:resource="https://data.vlaanderen.be/doc/licentie/modellicentie-gratis-hergebruik/v1.0" />
+        <dcterms:format>Rapport</dcterms:format>
+        <dcterms:description xml:lang="nl">Rapport met de cijfergegevens weergeven.</dcterms:description>
+    </dcat:Distribution>
+    <dcat:Dataset rdf:about="http://mobielvlaanderen.be/store-x/man-dcat/dataset_ind074">
+        <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2019-08-26</dcterms:modified>
+        <dcterms:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2019-08-26</dcterms:issued>
+        <dcterms:title xml:lang="nl">aantal tonkilometer Albertkanaal</dcterms:title>
+        <dcterms:description xml:lang="nl">hoeveelheid goederen vervoerd op het Albertkanaal uitgedrukt in tonkilometer</dcterms:description>
+        <dcterms:publisher>
+            <foaf:Agent rdf:about="http://data.vlaanderen.be/id/organisatie/OVO000096">
+                <foaf:name>Beleidsdomein Mobiliteit en Openbare Werken</foaf:name>
+                <dcterms:type>organization</dcterms:type>
+            </foaf:Agent>
+        </dcterms:publisher>
+        <dcat:contactPoint>
+            <vcard:Kind rdf:about="https://www.mow-contact.be/">
+                <vcard:fn>https://www.mow-contact.be/</vcard:fn>
+            </vcard:Kind>
+        </dcat:contactPoint>
+        <dcterms:language rdf:resource="http://lexvo.org/id/iso639-3/nld" />
+        <dcat:landingPage rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/bijsluiter_074.html" />
+        <dcat:distribution rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersxml_074.xml" />
+        <dcat:distribution rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersTable_074.html" />
+        <dcat:distribution rdf:resource="https://app.powerbi.com/view?r=eyJrIjoiZmUwODYzNTctNzkyNi00YTg3LWI2ZTgtOGQxM2Y4YzNlODVhIiwidCI6IjBjMDMzOGE2LTk1NjEtNGVlOC1iOGQ2LTRlODljYmQ1MjBhMCIsImMiOjh9" />
+    </dcat:Dataset>
+    <dcat:Distribution rdf:about="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersxml_074.xml">
+        <dcterms:title xml:lang="nl">aantal tonkilometer Albertkanaal - Cijfers (XML)</dcterms:title>
+        <dcat:accessURL rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersxml_074.xml" />
+        <dcterms:license rdf:resource="https://data.vlaanderen.be/doc/licentie/modellicentie-gratis-hergebruik/v1.0" />
+        <dcterms:format>XML</dcterms:format>
+        <dcterms:description xml:lang="nl">Eventuele opmerkingen bij de cijferrecords voor een bepaalde periode (cfr. meetfrequentie)
+zijn terug te vinden in de commentaar file.</dcterms:description>
+    </dcat:Distribution>
+    <dcat:Distribution rdf:about="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersTable_074.html">
+        <dcterms:title xml:lang="nl">aantal tonkilometer Albertkanaal - Cijfers (Tabel)</dcterms:title>
+        <dcat:accessURL rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersTable_074.html" />
+        <dcterms:license rdf:resource="https://data.vlaanderen.be/doc/licentie/modellicentie-gratis-hergebruik/v1.0" />
+        <dcterms:format>HTML</dcterms:format>
+        <dcterms:description xml:lang="nl">Kies de URL hierboven om de cijfergegevens in een tabel te zien.
+
+De cijfergegevens in de tabel kunnen in MS Excel opgeladen worden via de 'Data' - 'From Web' functie. Gebruik de
+hierboven vermelde URL in het adres veld.
+
+Eventuele opmerkingen bij de cijferrecords voor een bepaalde periode (cfr. meetfrequentie) zijn terug te vinden
+in de commentaar file.</dcterms:description>
+    </dcat:Distribution>
+    <dcat:Distribution rdf:about="https://app.powerbi.com/view?r=eyJrIjoiZmUwODYzNTctNzkyNi00YTg3LWI2ZTgtOGQxM2Y4YzNlODVhIiwidCI6IjBjMDMzOGE2LTk1NjEtNGVlOC1iOGQ2LTRlODljYmQ1MjBhMCIsImMiOjh9">
+        <dcterms:title xml:lang="nl">aantal tonkilometer Albertkanaal - Rapport (PowerBI)</dcterms:title>
+        <dcat:accessURL rdf:resource="https://app.powerbi.com/view?r=eyJrIjoiZmUwODYzNTctNzkyNi00YTg3LWI2ZTgtOGQxM2Y4YzNlODVhIiwidCI6IjBjMDMzOGE2LTk1NjEtNGVlOC1iOGQ2LTRlODljYmQ1MjBhMCIsImMiOjh9" />
+        <dcterms:license rdf:resource="https://data.vlaanderen.be/doc/licentie/modellicentie-gratis-hergebruik/v1.0" />
+        <dcterms:format>Rapport</dcterms:format>
+        <dcterms:description xml:lang="nl">Rapport met de cijfergegevens weergeven.</dcterms:description>
+    </dcat:Distribution>
+    <dcat:Dataset rdf:about="http://mobielvlaanderen.be/store-x/man-dcat/dataset_ind071">
+        <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2022-04-28</dcterms:modified>
+        <dcterms:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2022-04-28</dcterms:issued>
+        <dcterms:title xml:lang="nl">aantal vervoerde containers op de waterwegen</dcterms:title>
+        <dcterms:description xml:lang="nl">hoeveelheid vervoerde containers op waterwegen beheerd door De Vlaamse Waterweg uitgedrukt in twenty-foot equivalent units (TEU)</dcterms:description>
+        <dcterms:publisher>
+            <foaf:Agent rdf:about="http://data.vlaanderen.be/id/organisatie/OVO000096">
+                <foaf:name>Beleidsdomein Mobiliteit en Openbare Werken</foaf:name>
+                <dcterms:type>organization</dcterms:type>
+            </foaf:Agent>
+        </dcterms:publisher>
+        <dcat:contactPoint>
+            <vcard:Kind rdf:about="https://www.mow-contact.be/">
+                <vcard:fn>https://www.mow-contact.be/</vcard:fn>
+            </vcard:Kind>
+        </dcat:contactPoint>
+        <dcterms:language rdf:resource="http://lexvo.org/id/iso639-3/nld" />
+        <dcat:landingPage rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/bijsluiter_071.html" />
+        <dcat:distribution rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersxml_071.xml" />
+        <dcat:distribution rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersTable_071.html" />
+        <dcat:distribution rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/commentaar_071.xml" />
+        <dcat:distribution rdf:resource="https://app.powerbi.com/view?r=eyJrIjoiMjUyODc1M2QtNjFjMy00NjhlLThhZTMtNzYzZDFhZGY5ZGY3IiwidCI6IjBjMDMzOGE2LTk1NjEtNGVlOC1iOGQ2LTRlODljYmQ1MjBhMCIsImMiOjh9" />
+    </dcat:Dataset>
+    <dcat:Distribution rdf:about="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersxml_071.xml">
+        <dcterms:title xml:lang="nl">aantal vervoerde containers op de waterwegen - Cijfers (XML)</dcterms:title>
+        <dcat:accessURL rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersxml_071.xml" />
+        <dcterms:license rdf:resource="https://data.vlaanderen.be/doc/licentie/modellicentie-gratis-hergebruik/v1.0" />
+        <dcterms:format>XML</dcterms:format>
+        <dcterms:description xml:lang="nl">Eventuele opmerkingen bij de cijferrecords voor een bepaalde periode (cfr. meetfrequentie)
+zijn terug te vinden in de commentaar file.</dcterms:description>
+    </dcat:Distribution>
+    <dcat:Distribution rdf:about="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersTable_071.html">
+        <dcterms:title xml:lang="nl">aantal vervoerde containers op de waterwegen - Cijfers (Tabel)</dcterms:title>
+        <dcat:accessURL rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersTable_071.html" />
+        <dcterms:license rdf:resource="https://data.vlaanderen.be/doc/licentie/modellicentie-gratis-hergebruik/v1.0" />
+        <dcterms:format>HTML</dcterms:format>
+        <dcterms:description xml:lang="nl">Kies de URL hierboven om de cijfergegevens in een tabel te zien.
+
+De cijfergegevens in de tabel kunnen in MS Excel opgeladen worden via de 'Data' - 'From Web' functie. Gebruik de
+hierboven vermelde URL in het adres veld.
+
+Eventuele opmerkingen bij de cijferrecords voor een bepaalde periode (cfr. meetfrequentie) zijn terug te vinden
+in de commentaar file.</dcterms:description>
+    </dcat:Distribution>
+    <dcat:Distribution rdf:about="https://mow-dataroom.s3-eu-west-1.amazonaws.com/commentaar_071.xml">
+        <dcterms:title xml:lang="nl">aantal vervoerde containers op de waterwegen - Commentaar</dcterms:title>
+        <dcat:accessURL rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/commentaar_071.xml" />
+        <dcterms:license rdf:resource="https://data.vlaanderen.be/doc/licentie/modellicentie-gratis-hergebruik/v1.0" />
+        <dcterms:format>XML</dcterms:format>
+        <dcterms:description xml:lang="nl">Opmerkingen horend bij de cijferrecords voor een bepaalde periode (cfr. meetfrequentie).</dcterms:description>
+    </dcat:Distribution>
+    <dcat:Distribution rdf:about="https://app.powerbi.com/view?r=eyJrIjoiMjUyODc1M2QtNjFjMy00NjhlLThhZTMtNzYzZDFhZGY5ZGY3IiwidCI6IjBjMDMzOGE2LTk1NjEtNGVlOC1iOGQ2LTRlODljYmQ1MjBhMCIsImMiOjh9">
+        <dcterms:title xml:lang="nl">aantal vervoerde containers op de waterwegen - Rapport (PowerBI)</dcterms:title>
+        <dcat:accessURL rdf:resource="https://app.powerbi.com/view?r=eyJrIjoiMjUyODc1M2QtNjFjMy00NjhlLThhZTMtNzYzZDFhZGY5ZGY3IiwidCI6IjBjMDMzOGE2LTk1NjEtNGVlOC1iOGQ2LTRlODljYmQ1MjBhMCIsImMiOjh9" />
+        <dcterms:license rdf:resource="https://data.vlaanderen.be/doc/licentie/modellicentie-gratis-hergebruik/v1.0" />
+        <dcterms:format>Rapport</dcterms:format>
+        <dcterms:description xml:lang="nl">Rapport met de cijfergegevens weergeven.</dcterms:description>
+    </dcat:Distribution>
+    <dcat:Dataset rdf:about="http://mobielvlaanderen.be/store-x/man-dcat/dataset_ind066">
+        <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2019-08-26</dcterms:modified>
+        <dcterms:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2019-08-26</dcterms:issued>
+        <dcterms:title xml:lang="nl">verdeling van personen (beroepsactieven) volgens hoofdvervoerswijze woon-werkverkeer</dcterms:title>
+        <dcterms:description xml:lang="nl">percentage van de beroepsactieven met een vast werkadres dat voor het woon-werkverkeer gebruikt maakt van de betreffende vervoerswijze als hoofdvervoerswijze (d.w.z. voor het grootste deel van de af te leggen afstand) </dcterms:description>
+        <dcterms:publisher>
+            <foaf:Agent rdf:about="http://data.vlaanderen.be/id/organisatie/OVO000096">
+                <foaf:name>Beleidsdomein Mobiliteit en Openbare Werken</foaf:name>
+                <dcterms:type>organization</dcterms:type>
+            </foaf:Agent>
+        </dcterms:publisher>
+        <dcat:contactPoint>
+            <vcard:Kind rdf:about="https://www.mow-contact.be/">
+                <vcard:fn>https://www.mow-contact.be/</vcard:fn>
+            </vcard:Kind>
+        </dcat:contactPoint>
+        <dcterms:language rdf:resource="http://lexvo.org/id/iso639-3/nld" />
+        <dcat:landingPage rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/bijsluiter_066.html" />
+        <dcat:distribution rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersxml_066.xml" />
+        <dcat:distribution rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersTable_066.html" />
+        <dcat:distribution rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/commentaar_066.xml" />
+        <dcat:distribution rdf:resource="https://app.powerbi.com/view?r=eyJrIjoiMWU1MDNiNDUtYWFmNi00NjZlLTgzOWEtYjVkYmQxMDgwNTFjIiwidCI6IjBjMDMzOGE2LTk1NjEtNGVlOC1iOGQ2LTRlODljYmQ1MjBhMCIsImMiOjh9" />
+    </dcat:Dataset>
+    <dcat:Distribution rdf:about="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersxml_066.xml">
+        <dcterms:title xml:lang="nl">verdeling van personen (beroepsactieven) volgens hoofdvervoerswijze woon-werkverkeer - Cijfers (XML)</dcterms:title>
+        <dcat:accessURL rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersxml_066.xml" />
+        <dcterms:license rdf:resource="https://data.vlaanderen.be/doc/licentie/modellicentie-gratis-hergebruik/v1.0" />
+        <dcterms:format>XML</dcterms:format>
+        <dcterms:description xml:lang="nl">Eventuele opmerkingen bij de cijferrecords voor een bepaalde periode (cfr. meetfrequentie)
+zijn terug te vinden in de commentaar file.</dcterms:description>
+    </dcat:Distribution>
+    <dcat:Distribution rdf:about="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersTable_066.html">
+        <dcterms:title xml:lang="nl">verdeling van personen (beroepsactieven) volgens hoofdvervoerswijze woon-werkverkeer - Cijfers (Tabel)</dcterms:title>
+        <dcat:accessURL rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersTable_066.html" />
+        <dcterms:license rdf:resource="https://data.vlaanderen.be/doc/licentie/modellicentie-gratis-hergebruik/v1.0" />
+        <dcterms:format>HTML</dcterms:format>
+        <dcterms:description xml:lang="nl">Kies de URL hierboven om de cijfergegevens in een tabel te zien.
+
+De cijfergegevens in de tabel kunnen in MS Excel opgeladen worden via de 'Data' - 'From Web' functie. Gebruik de
+hierboven vermelde URL in het adres veld.
+
+Eventuele opmerkingen bij de cijferrecords voor een bepaalde periode (cfr. meetfrequentie) zijn terug te vinden
+in de commentaar file.</dcterms:description>
+    </dcat:Distribution>
+    <dcat:Distribution rdf:about="https://mow-dataroom.s3-eu-west-1.amazonaws.com/commentaar_066.xml">
+        <dcterms:title xml:lang="nl">verdeling van personen (beroepsactieven) volgens hoofdvervoerswijze woon-werkverkeer - Commentaar</dcterms:title>
+        <dcat:accessURL rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/commentaar_066.xml" />
+        <dcterms:license rdf:resource="https://data.vlaanderen.be/doc/licentie/modellicentie-gratis-hergebruik/v1.0" />
+        <dcterms:format>XML</dcterms:format>
+        <dcterms:description xml:lang="nl">Opmerkingen horend bij de cijferrecords voor een bepaalde periode (cfr. meetfrequentie).</dcterms:description>
+    </dcat:Distribution>
+    <dcat:Distribution rdf:about="https://app.powerbi.com/view?r=eyJrIjoiMWU1MDNiNDUtYWFmNi00NjZlLTgzOWEtYjVkYmQxMDgwNTFjIiwidCI6IjBjMDMzOGE2LTk1NjEtNGVlOC1iOGQ2LTRlODljYmQ1MjBhMCIsImMiOjh9">
+        <dcterms:title xml:lang="nl">verdeling van personen (beroepsactieven) volgens hoofdvervoerswijze woon-werkverkeer - Rapport (PowerBI)</dcterms:title>
+        <dcat:accessURL rdf:resource="https://app.powerbi.com/view?r=eyJrIjoiMWU1MDNiNDUtYWFmNi00NjZlLTgzOWEtYjVkYmQxMDgwNTFjIiwidCI6IjBjMDMzOGE2LTk1NjEtNGVlOC1iOGQ2LTRlODljYmQ1MjBhMCIsImMiOjh9" />
+        <dcterms:license rdf:resource="https://data.vlaanderen.be/doc/licentie/modellicentie-gratis-hergebruik/v1.0" />
+        <dcterms:format>Rapport</dcterms:format>
+        <dcterms:description xml:lang="nl">Rapport met de cijfergegevens weergeven.</dcterms:description>
+    </dcat:Distribution>
+    <dcat:Dataset rdf:about="http://mobielvlaanderen.be/store-x/man-dcat/dataset_ind067">
+        <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2021-02-10</dcterms:modified>
+        <dcterms:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2021-02-10</dcterms:issued>
+        <dcterms:title xml:lang="nl">verdeling van personen (scholieren en studenten) volgens hoofdvervoerswijze woon-schoolverkeer</dcterms:title>
+        <dcterms:description xml:lang="nl">percentage van de scholieren en studenten dat voor het woon-schoolverkeer gebruikt maakt van de betreffende vervoerswijze als hoofdvervoerswijze (d.w.z. voor het grootste deel van de af te leggen afstand)</dcterms:description>
+        <dcterms:publisher>
+            <foaf:Agent rdf:about="http://data.vlaanderen.be/id/organisatie/OVO000096">
+                <foaf:name>Beleidsdomein Mobiliteit en Openbare Werken</foaf:name>
+                <dcterms:type>organization</dcterms:type>
+            </foaf:Agent>
+        </dcterms:publisher>
+        <dcat:contactPoint>
+            <vcard:Kind rdf:about="https://www.mow-contact.be/">
+                <vcard:fn>https://www.mow-contact.be/</vcard:fn>
+            </vcard:Kind>
+        </dcat:contactPoint>
+        <dcterms:language rdf:resource="http://lexvo.org/id/iso639-3/nld" />
+        <dcat:landingPage rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/bijsluiter_067.html" />
+        <dcat:distribution rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersxml_067.xml" />
+        <dcat:distribution rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersTable_067.html" />
+        <dcat:distribution rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/commentaar_067.xml" />
+        <dcat:distribution rdf:resource="https://app.powerbi.com/view?r=eyJrIjoiYzMzMjUwNWYtZGFlNi00MTBkLWFkODctY2UxMWQyZjkzY2ExIiwidCI6IjBjMDMzOGE2LTk1NjEtNGVlOC1iOGQ2LTRlODljYmQ1MjBhMCIsImMiOjh9" />
+    </dcat:Dataset>
+    <dcat:Distribution rdf:about="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersxml_067.xml">
+        <dcterms:title xml:lang="nl">verdeling van personen (scholieren en studenten) volgens hoofdvervoerswijze woon-schoolverkeer - Cijfers (XML)</dcterms:title>
+        <dcat:accessURL rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersxml_067.xml" />
+        <dcterms:license rdf:resource="https://data.vlaanderen.be/doc/licentie/modellicentie-gratis-hergebruik/v1.0" />
+        <dcterms:format>XML</dcterms:format>
+        <dcterms:description xml:lang="nl">Eventuele opmerkingen bij de cijferrecords voor een bepaalde periode (cfr. meetfrequentie)
+zijn terug te vinden in de commentaar file.</dcterms:description>
+    </dcat:Distribution>
+    <dcat:Distribution rdf:about="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersTable_067.html">
+        <dcterms:title xml:lang="nl">verdeling van personen (scholieren en studenten) volgens hoofdvervoerswijze woon-schoolverkeer - Cijfers (Tabel)</dcterms:title>
+        <dcat:accessURL rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersTable_067.html" />
+        <dcterms:license rdf:resource="https://data.vlaanderen.be/doc/licentie/modellicentie-gratis-hergebruik/v1.0" />
+        <dcterms:format>HTML</dcterms:format>
+        <dcterms:description xml:lang="nl">Kies de URL hierboven om de cijfergegevens in een tabel te zien.
+
+De cijfergegevens in de tabel kunnen in MS Excel opgeladen worden via de 'Data' - 'From Web' functie. Gebruik de
+hierboven vermelde URL in het adres veld.
+
+Eventuele opmerkingen bij de cijferrecords voor een bepaalde periode (cfr. meetfrequentie) zijn terug te vinden
+in de commentaar file.</dcterms:description>
+    </dcat:Distribution>
+    <dcat:Distribution rdf:about="https://mow-dataroom.s3-eu-west-1.amazonaws.com/commentaar_067.xml">
+        <dcterms:title xml:lang="nl">verdeling van personen (scholieren en studenten) volgens hoofdvervoerswijze woon-schoolverkeer - Commentaar</dcterms:title>
+        <dcat:accessURL rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/commentaar_067.xml" />
+        <dcterms:license rdf:resource="https://data.vlaanderen.be/doc/licentie/modellicentie-gratis-hergebruik/v1.0" />
+        <dcterms:format>XML</dcterms:format>
+        <dcterms:description xml:lang="nl">Opmerkingen horend bij de cijferrecords voor een bepaalde periode (cfr. meetfrequentie).</dcterms:description>
+    </dcat:Distribution>
+    <dcat:Distribution rdf:about="https://app.powerbi.com/view?r=eyJrIjoiYzMzMjUwNWYtZGFlNi00MTBkLWFkODctY2UxMWQyZjkzY2ExIiwidCI6IjBjMDMzOGE2LTk1NjEtNGVlOC1iOGQ2LTRlODljYmQ1MjBhMCIsImMiOjh9">
+        <dcterms:title xml:lang="nl">verdeling van personen (scholieren en studenten) volgens hoofdvervoerswijze woon-schoolverkeer - Rapport (PowerBI)</dcterms:title>
+        <dcat:accessURL rdf:resource="https://app.powerbi.com/view?r=eyJrIjoiYzMzMjUwNWYtZGFlNi00MTBkLWFkODctY2UxMWQyZjkzY2ExIiwidCI6IjBjMDMzOGE2LTk1NjEtNGVlOC1iOGQ2LTRlODljYmQ1MjBhMCIsImMiOjh9" />
+        <dcterms:license rdf:resource="https://data.vlaanderen.be/doc/licentie/modellicentie-gratis-hergebruik/v1.0" />
+        <dcterms:format>Rapport</dcterms:format>
+        <dcterms:description xml:lang="nl">Rapport met de cijfergegevens weergeven.</dcterms:description>
+    </dcat:Distribution>
+    <dcat:Dataset rdf:about="http://mobielvlaanderen.be/store-x/man-dcat/dataset_ind016">
+        <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2019-08-26</dcterms:modified>
+        <dcterms:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2019-08-26</dcterms:issued>
+        <dcterms:title xml:lang="nl">aantal ton zwerfvuil langs de gewestwegen</dcterms:title>
+        <dcterms:description xml:lang="nl">som van het aantal ton opgehaald zwerfvuil langs de autosnelwegen en gewestwegen</dcterms:description>
+        <dcterms:publisher>
+            <foaf:Agent rdf:about="http://data.vlaanderen.be/id/organisatie/OVO000096">
+                <foaf:name>Beleidsdomein Mobiliteit en Openbare Werken</foaf:name>
+                <dcterms:type>organization</dcterms:type>
+            </foaf:Agent>
+        </dcterms:publisher>
+        <dcat:contactPoint>
+            <vcard:Kind rdf:about="https://www.mow-contact.be/">
+                <vcard:fn>https://www.mow-contact.be/</vcard:fn>
+            </vcard:Kind>
+        </dcat:contactPoint>
+        <dcterms:language rdf:resource="http://lexvo.org/id/iso639-3/nld" />
+        <dcat:landingPage rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/bijsluiter_016.html" />
+        <dcat:distribution rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersxml_016.xml" />
+        <dcat:distribution rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersTable_016.html" />
+        <dcat:distribution rdf:resource="https://app.powerbi.com/view?r=eyJrIjoiNjgxY2MxNjMtN2EyMC00Y2IzLWJlYjQtNTQ3YTYxOTIzMmFkIiwidCI6IjBjMDMzOGE2LTk1NjEtNGVlOC1iOGQ2LTRlODljYmQ1MjBhMCIsImMiOjh9" />
+    </dcat:Dataset>
+    <dcat:Distribution rdf:about="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersxml_016.xml">
+        <dcterms:title xml:lang="nl">aantal ton zwerfvuil langs de gewestwegen - Cijfers (XML)</dcterms:title>
+        <dcat:accessURL rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersxml_016.xml" />
+        <dcterms:license rdf:resource="https://data.vlaanderen.be/doc/licentie/modellicentie-gratis-hergebruik/v1.0" />
+        <dcterms:format>XML</dcterms:format>
+        <dcterms:description xml:lang="nl">Eventuele opmerkingen bij de cijferrecords voor een bepaalde periode (cfr. meetfrequentie)
+zijn terug te vinden in de commentaar file.</dcterms:description>
+    </dcat:Distribution>
+    <dcat:Distribution rdf:about="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersTable_016.html">
+        <dcterms:title xml:lang="nl">aantal ton zwerfvuil langs de gewestwegen - Cijfers (Tabel)</dcterms:title>
+        <dcat:accessURL rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersTable_016.html" />
+        <dcterms:license rdf:resource="https://data.vlaanderen.be/doc/licentie/modellicentie-gratis-hergebruik/v1.0" />
+        <dcterms:format>HTML</dcterms:format>
+        <dcterms:description xml:lang="nl">Kies de URL hierboven om de cijfergegevens in een tabel te zien.
+
+De cijfergegevens in de tabel kunnen in MS Excel opgeladen worden via de 'Data' - 'From Web' functie. Gebruik de
+hierboven vermelde URL in het adres veld.
+
+Eventuele opmerkingen bij de cijferrecords voor een bepaalde periode (cfr. meetfrequentie) zijn terug te vinden
+in de commentaar file.</dcterms:description>
+    </dcat:Distribution>
+    <dcat:Distribution rdf:about="https://app.powerbi.com/view?r=eyJrIjoiNjgxY2MxNjMtN2EyMC00Y2IzLWJlYjQtNTQ3YTYxOTIzMmFkIiwidCI6IjBjMDMzOGE2LTk1NjEtNGVlOC1iOGQ2LTRlODljYmQ1MjBhMCIsImMiOjh9">
+        <dcterms:title xml:lang="nl">aantal ton zwerfvuil langs de gewestwegen - Rapport (PowerBI)</dcterms:title>
+        <dcat:accessURL rdf:resource="https://app.powerbi.com/view?r=eyJrIjoiNjgxY2MxNjMtN2EyMC00Y2IzLWJlYjQtNTQ3YTYxOTIzMmFkIiwidCI6IjBjMDMzOGE2LTk1NjEtNGVlOC1iOGQ2LTRlODljYmQ1MjBhMCIsImMiOjh9" />
+        <dcterms:license rdf:resource="https://data.vlaanderen.be/doc/licentie/modellicentie-gratis-hergebruik/v1.0" />
+        <dcterms:format>Rapport</dcterms:format>
+        <dcterms:description xml:lang="nl">Rapport met de cijfergegevens weergeven.</dcterms:description>
+    </dcat:Distribution>
+    <dcat:Dataset rdf:about="http://mobielvlaanderen.be/store-x/man-dcat/dataset_ind077">
+        <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2022-04-28</dcterms:modified>
+        <dcterms:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2022-04-28</dcterms:issued>
+        <dcterms:title xml:lang="nl">aantal ton vervoerd op de waterwegen</dcterms:title>
+        <dcterms:description xml:lang="nl">hoeveelheid goederen vervoerd op waterwegen beheerd door De Vlaamse Waterweg uitgedrukt in ton</dcterms:description>
+        <dcterms:publisher>
+            <foaf:Agent rdf:about="http://data.vlaanderen.be/id/organisatie/OVO000096">
+                <foaf:name>Beleidsdomein Mobiliteit en Openbare Werken</foaf:name>
+                <dcterms:type>organization</dcterms:type>
+            </foaf:Agent>
+        </dcterms:publisher>
+        <dcat:contactPoint>
+            <vcard:Kind rdf:about="https://www.mow-contact.be/">
+                <vcard:fn>https://www.mow-contact.be/</vcard:fn>
+            </vcard:Kind>
+        </dcat:contactPoint>
+        <dcterms:language rdf:resource="http://lexvo.org/id/iso639-3/nld" />
+        <dcat:landingPage rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/bijsluiter_077.html" />
+        <dcat:distribution rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersxml_077.xml" />
+        <dcat:distribution rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersTable_077.html" />
+        <dcat:distribution rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/commentaar_077.xml" />
+        <dcat:distribution rdf:resource="https://app.powerbi.com/view?r=eyJrIjoiZTg3ODI5MGItOGE4NC00ZjAyLThmZDItYjRiZDU1NzcyMGE5IiwidCI6IjBjMDMzOGE2LTk1NjEtNGVlOC1iOGQ2LTRlODljYmQ1MjBhMCIsImMiOjh9" />
+    </dcat:Dataset>
+    <dcat:Distribution rdf:about="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersxml_077.xml">
+        <dcterms:title xml:lang="nl">aantal ton vervoerd op de waterwegen - Cijfers (XML)</dcterms:title>
+        <dcat:accessURL rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersxml_077.xml" />
+        <dcterms:license rdf:resource="https://data.vlaanderen.be/doc/licentie/modellicentie-gratis-hergebruik/v1.0" />
+        <dcterms:format>XML</dcterms:format>
+        <dcterms:description xml:lang="nl">Eventuele opmerkingen bij de cijferrecords voor een bepaalde periode (cfr. meetfrequentie)
+zijn terug te vinden in de commentaar file.</dcterms:description>
+    </dcat:Distribution>
+    <dcat:Distribution rdf:about="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersTable_077.html">
+        <dcterms:title xml:lang="nl">aantal ton vervoerd op de waterwegen - Cijfers (Tabel)</dcterms:title>
+        <dcat:accessURL rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersTable_077.html" />
+        <dcterms:license rdf:resource="https://data.vlaanderen.be/doc/licentie/modellicentie-gratis-hergebruik/v1.0" />
+        <dcterms:format>HTML</dcterms:format>
+        <dcterms:description xml:lang="nl">Kies de URL hierboven om de cijfergegevens in een tabel te zien.
+
+De cijfergegevens in de tabel kunnen in MS Excel opgeladen worden via de 'Data' - 'From Web' functie. Gebruik de
+hierboven vermelde URL in het adres veld.
+
+Eventuele opmerkingen bij de cijferrecords voor een bepaalde periode (cfr. meetfrequentie) zijn terug te vinden
+in de commentaar file.</dcterms:description>
+    </dcat:Distribution>
+    <dcat:Distribution rdf:about="https://mow-dataroom.s3-eu-west-1.amazonaws.com/commentaar_077.xml">
+        <dcterms:title xml:lang="nl">aantal ton vervoerd op de waterwegen - Commentaar</dcterms:title>
+        <dcat:accessURL rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/commentaar_077.xml" />
+        <dcterms:license rdf:resource="https://data.vlaanderen.be/doc/licentie/modellicentie-gratis-hergebruik/v1.0" />
+        <dcterms:format>XML</dcterms:format>
+        <dcterms:description xml:lang="nl">Opmerkingen horend bij de cijferrecords voor een bepaalde periode (cfr. meetfrequentie).</dcterms:description>
+    </dcat:Distribution>
+    <dcat:Distribution rdf:about="https://app.powerbi.com/view?r=eyJrIjoiZTg3ODI5MGItOGE4NC00ZjAyLThmZDItYjRiZDU1NzcyMGE5IiwidCI6IjBjMDMzOGE2LTk1NjEtNGVlOC1iOGQ2LTRlODljYmQ1MjBhMCIsImMiOjh9">
+        <dcterms:title xml:lang="nl">aantal ton vervoerd op de waterwegen - Rapport (PowerBI)</dcterms:title>
+        <dcat:accessURL rdf:resource="https://app.powerbi.com/view?r=eyJrIjoiZTg3ODI5MGItOGE4NC00ZjAyLThmZDItYjRiZDU1NzcyMGE5IiwidCI6IjBjMDMzOGE2LTk1NjEtNGVlOC1iOGQ2LTRlODljYmQ1MjBhMCIsImMiOjh9" />
+        <dcterms:license rdf:resource="https://data.vlaanderen.be/doc/licentie/modellicentie-gratis-hergebruik/v1.0" />
+        <dcterms:format>Rapport</dcterms:format>
+        <dcterms:description xml:lang="nl">Rapport met de cijfergegevens weergeven.</dcterms:description>
+    </dcat:Distribution>
+    <dcat:Dataset rdf:about="http://mobielvlaanderen.be/store-x/man-dcat/dataset_ind072">
+        <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2019-08-26</dcterms:modified>
+        <dcterms:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2019-08-26</dcterms:issued>
+        <dcterms:title xml:lang="nl">aantal ton vervoerd Albertkanaal</dcterms:title>
+        <dcterms:description xml:lang="nl">hoeveelheid goederen vervoerd op het Albertkanaal uitgedrukt in ton</dcterms:description>
+        <dcterms:publisher>
+            <foaf:Agent rdf:about="http://data.vlaanderen.be/id/organisatie/OVO000096">
+                <foaf:name>Beleidsdomein Mobiliteit en Openbare Werken</foaf:name>
+                <dcterms:type>organization</dcterms:type>
+            </foaf:Agent>
+        </dcterms:publisher>
+        <dcat:contactPoint>
+            <vcard:Kind rdf:about="https://www.mow-contact.be/">
+                <vcard:fn>https://www.mow-contact.be/</vcard:fn>
+            </vcard:Kind>
+        </dcat:contactPoint>
+        <dcterms:language rdf:resource="http://lexvo.org/id/iso639-3/nld" />
+        <dcat:landingPage rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/bijsluiter_072.html" />
+        <dcat:distribution rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersxml_072.xml" />
+        <dcat:distribution rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersTable_072.html" />
+        <dcat:distribution rdf:resource="https://app.powerbi.com/view?r=eyJrIjoiNWQ5NmRmMjktN2IwZS00Mzg3LThlZjktN2FiOTdlOGIyZTk5IiwidCI6IjBjMDMzOGE2LTk1NjEtNGVlOC1iOGQ2LTRlODljYmQ1MjBhMCIsImMiOjh9" />
+    </dcat:Dataset>
+    <dcat:Distribution rdf:about="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersxml_072.xml">
+        <dcterms:title xml:lang="nl">aantal ton vervoerd Albertkanaal - Cijfers (XML)</dcterms:title>
+        <dcat:accessURL rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersxml_072.xml" />
+        <dcterms:license rdf:resource="https://data.vlaanderen.be/doc/licentie/modellicentie-gratis-hergebruik/v1.0" />
+        <dcterms:format>XML</dcterms:format>
+        <dcterms:description xml:lang="nl">Eventuele opmerkingen bij de cijferrecords voor een bepaalde periode (cfr. meetfrequentie)
+zijn terug te vinden in de commentaar file.</dcterms:description>
+    </dcat:Distribution>
+    <dcat:Distribution rdf:about="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersTable_072.html">
+        <dcterms:title xml:lang="nl">aantal ton vervoerd Albertkanaal - Cijfers (Tabel)</dcterms:title>
+        <dcat:accessURL rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersTable_072.html" />
+        <dcterms:license rdf:resource="https://data.vlaanderen.be/doc/licentie/modellicentie-gratis-hergebruik/v1.0" />
+        <dcterms:format>HTML</dcterms:format>
+        <dcterms:description xml:lang="nl">Kies de URL hierboven om de cijfergegevens in een tabel te zien.
+
+De cijfergegevens in de tabel kunnen in MS Excel opgeladen worden via de 'Data' - 'From Web' functie. Gebruik de
+hierboven vermelde URL in het adres veld.
+
+Eventuele opmerkingen bij de cijferrecords voor een bepaalde periode (cfr. meetfrequentie) zijn terug te vinden
+in de commentaar file.</dcterms:description>
+    </dcat:Distribution>
+    <dcat:Distribution rdf:about="https://app.powerbi.com/view?r=eyJrIjoiNWQ5NmRmMjktN2IwZS00Mzg3LThlZjktN2FiOTdlOGIyZTk5IiwidCI6IjBjMDMzOGE2LTk1NjEtNGVlOC1iOGQ2LTRlODljYmQ1MjBhMCIsImMiOjh9">
+        <dcterms:title xml:lang="nl">aantal ton vervoerd Albertkanaal - Rapport (PowerBI)</dcterms:title>
+        <dcat:accessURL rdf:resource="https://app.powerbi.com/view?r=eyJrIjoiNWQ5NmRmMjktN2IwZS00Mzg3LThlZjktN2FiOTdlOGIyZTk5IiwidCI6IjBjMDMzOGE2LTk1NjEtNGVlOC1iOGQ2LTRlODljYmQ1MjBhMCIsImMiOjh9" />
+        <dcterms:license rdf:resource="https://data.vlaanderen.be/doc/licentie/modellicentie-gratis-hergebruik/v1.0" />
+        <dcterms:format>Rapport</dcterms:format>
+        <dcterms:description xml:lang="nl">Rapport met de cijfergegevens weergeven.</dcterms:description>
+    </dcat:Distribution>
+    <dcat:Dataset rdf:about="http://mobielvlaanderen.be/store-x/man-dcat/dataset_ind068">
+        <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2019-08-26</dcterms:modified>
+        <dcterms:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2019-08-26</dcterms:issued>
+        <dcterms:title xml:lang="nl">verdeling van verplaatsingen volgens verplaatsingsmotief</dcterms:title>
+        <dcterms:description xml:lang="nl">percentage van het gemiddeld aantal verplaatsingen per persoon, per dag dat wordt gemaakt voor het betreffende verplaatsingsmotief</dcterms:description>
+        <dcterms:publisher>
+            <foaf:Agent rdf:about="http://data.vlaanderen.be/id/organisatie/OVO000096">
+                <foaf:name>Beleidsdomein Mobiliteit en Openbare Werken</foaf:name>
+                <dcterms:type>organization</dcterms:type>
+            </foaf:Agent>
+        </dcterms:publisher>
+        <dcat:contactPoint>
+            <vcard:Kind rdf:about="https://www.mow-contact.be/">
+                <vcard:fn>https://www.mow-contact.be/</vcard:fn>
+            </vcard:Kind>
+        </dcat:contactPoint>
+        <dcterms:language rdf:resource="http://lexvo.org/id/iso639-3/nld" />
+        <dcat:landingPage rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/bijsluiter_068.html" />
+        <dcat:distribution rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersxml_068.xml" />
+        <dcat:distribution rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersTable_068.html" />
+        <dcat:distribution rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/commentaar_068.xml" />
+        <dcat:distribution rdf:resource="https://app.powerbi.com/view?r=eyJrIjoiMDhjZDk0NTktZDNmNy00MjExLWJjMjEtNTI1ZmEzZjAyNjhiIiwidCI6IjBjMDMzOGE2LTk1NjEtNGVlOC1iOGQ2LTRlODljYmQ1MjBhMCIsImMiOjh9" />
+    </dcat:Dataset>
+    <dcat:Distribution rdf:about="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersxml_068.xml">
+        <dcterms:title xml:lang="nl">verdeling van verplaatsingen volgens verplaatsingsmotief - Cijfers (XML)</dcterms:title>
+        <dcat:accessURL rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersxml_068.xml" />
+        <dcterms:license rdf:resource="https://data.vlaanderen.be/doc/licentie/modellicentie-gratis-hergebruik/v1.0" />
+        <dcterms:format>XML</dcterms:format>
+        <dcterms:description xml:lang="nl">Eventuele opmerkingen bij de cijferrecords voor een bepaalde periode (cfr. meetfrequentie)
+zijn terug te vinden in de commentaar file.</dcterms:description>
+    </dcat:Distribution>
+    <dcat:Distribution rdf:about="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersTable_068.html">
+        <dcterms:title xml:lang="nl">verdeling van verplaatsingen volgens verplaatsingsmotief - Cijfers (Tabel)</dcterms:title>
+        <dcat:accessURL rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersTable_068.html" />
+        <dcterms:license rdf:resource="https://data.vlaanderen.be/doc/licentie/modellicentie-gratis-hergebruik/v1.0" />
+        <dcterms:format>HTML</dcterms:format>
+        <dcterms:description xml:lang="nl">Kies de URL hierboven om de cijfergegevens in een tabel te zien.
+
+De cijfergegevens in de tabel kunnen in MS Excel opgeladen worden via de 'Data' - 'From Web' functie. Gebruik de
+hierboven vermelde URL in het adres veld.
+
+Eventuele opmerkingen bij de cijferrecords voor een bepaalde periode (cfr. meetfrequentie) zijn terug te vinden
+in de commentaar file.</dcterms:description>
+    </dcat:Distribution>
+    <dcat:Distribution rdf:about="https://mow-dataroom.s3-eu-west-1.amazonaws.com/commentaar_068.xml">
+        <dcterms:title xml:lang="nl">verdeling van verplaatsingen volgens verplaatsingsmotief - Commentaar</dcterms:title>
+        <dcat:accessURL rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/commentaar_068.xml" />
+        <dcterms:license rdf:resource="https://data.vlaanderen.be/doc/licentie/modellicentie-gratis-hergebruik/v1.0" />
+        <dcterms:format>XML</dcterms:format>
+        <dcterms:description xml:lang="nl">Opmerkingen horend bij de cijferrecords voor een bepaalde periode (cfr. meetfrequentie).</dcterms:description>
+    </dcat:Distribution>
+    <dcat:Distribution rdf:about="https://app.powerbi.com/view?r=eyJrIjoiMDhjZDk0NTktZDNmNy00MjExLWJjMjEtNTI1ZmEzZjAyNjhiIiwidCI6IjBjMDMzOGE2LTk1NjEtNGVlOC1iOGQ2LTRlODljYmQ1MjBhMCIsImMiOjh9">
+        <dcterms:title xml:lang="nl">verdeling van verplaatsingen volgens verplaatsingsmotief - Rapport (PowerBI)</dcterms:title>
+        <dcat:accessURL rdf:resource="https://app.powerbi.com/view?r=eyJrIjoiMDhjZDk0NTktZDNmNy00MjExLWJjMjEtNTI1ZmEzZjAyNjhiIiwidCI6IjBjMDMzOGE2LTk1NjEtNGVlOC1iOGQ2LTRlODljYmQ1MjBhMCIsImMiOjh9" />
+        <dcterms:license rdf:resource="https://data.vlaanderen.be/doc/licentie/modellicentie-gratis-hergebruik/v1.0" />
+        <dcterms:format>Rapport</dcterms:format>
+        <dcterms:description xml:lang="nl">Rapport met de cijfergegevens weergeven.</dcterms:description>
+    </dcat:Distribution>
+    <dcat:Dataset rdf:about="http://mobielvlaanderen.be/store-x/man-dcat/dataset_ind1080">
+        <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2019-08-26</dcterms:modified>
+        <dcterms:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2019-08-26</dcterms:issued>
+        <dcterms:title xml:lang="nl">aantal fietsers op vaste telposten</dcterms:title>
+        <dcterms:description xml:lang="nl">aantal fietsers geregistreerd door vaste fietstelposten</dcterms:description>
+        <dcterms:publisher>
+            <foaf:Agent rdf:about="http://data.vlaanderen.be/id/organisatie/OVO000096">
+                <foaf:name>Beleidsdomein Mobiliteit en Openbare Werken</foaf:name>
+                <dcterms:type>organization</dcterms:type>
+            </foaf:Agent>
+        </dcterms:publisher>
+        <dcat:contactPoint>
+            <vcard:Kind rdf:about="https://www.mow-contact.be/">
+                <vcard:fn>https://www.mow-contact.be/</vcard:fn>
+            </vcard:Kind>
+        </dcat:contactPoint>
+        <dcterms:language rdf:resource="http://lexvo.org/id/iso639-3/nld" />
+        <dcat:landingPage rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/bijsluiter_1080.html" />
+        <dcat:distribution rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersxml_1080.xml" />
+        <dcat:distribution rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersTable_1080.html" />
+        <dcat:distribution rdf:resource="https://app.powerbi.com/view?r=eyJrIjoiMGE5YzI3NDAtYjc5OC00ZWI2LTg5ZWItMzU4ZGU3MjkzZjBhIiwidCI6IjBjMDMzOGE2LTk1NjEtNGVlOC1iOGQ2LTRlODljYmQ1MjBhMCIsImMiOjh9" />
+    </dcat:Dataset>
+    <dcat:Distribution rdf:about="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersxml_1080.xml">
+        <dcterms:title xml:lang="nl">aantal fietsers op vaste telposten - Cijfers (XML)</dcterms:title>
+        <dcat:accessURL rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersxml_1080.xml" />
+        <dcterms:license rdf:resource="https://data.vlaanderen.be/doc/licentie/modellicentie-gratis-hergebruik/v1.0" />
+        <dcterms:format>XML</dcterms:format>
+        <dcterms:description xml:lang="nl">Eventuele opmerkingen bij de cijferrecords voor een bepaalde periode (cfr. meetfrequentie)
+zijn terug te vinden in de commentaar file.</dcterms:description>
+    </dcat:Distribution>
+    <dcat:Distribution rdf:about="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersTable_1080.html">
+        <dcterms:title xml:lang="nl">aantal fietsers op vaste telposten - Cijfers (Tabel)</dcterms:title>
+        <dcat:accessURL rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersTable_1080.html" />
+        <dcterms:license rdf:resource="https://data.vlaanderen.be/doc/licentie/modellicentie-gratis-hergebruik/v1.0" />
+        <dcterms:format>HTML</dcterms:format>
+        <dcterms:description xml:lang="nl">Kies de URL hierboven om de cijfergegevens in een tabel te zien.
+
+De cijfergegevens in de tabel kunnen in MS Excel opgeladen worden via de 'Data' - 'From Web' functie. Gebruik de
+hierboven vermelde URL in het adres veld.
+
+Eventuele opmerkingen bij de cijferrecords voor een bepaalde periode (cfr. meetfrequentie) zijn terug te vinden
+in de commentaar file.</dcterms:description>
+    </dcat:Distribution>
+    <dcat:Distribution rdf:about="https://app.powerbi.com/view?r=eyJrIjoiMGE5YzI3NDAtYjc5OC00ZWI2LTg5ZWItMzU4ZGU3MjkzZjBhIiwidCI6IjBjMDMzOGE2LTk1NjEtNGVlOC1iOGQ2LTRlODljYmQ1MjBhMCIsImMiOjh9">
+        <dcterms:title xml:lang="nl">aantal fietsers op vaste telposten - Rapport (PowerBI)</dcterms:title>
+        <dcat:accessURL rdf:resource="https://app.powerbi.com/view?r=eyJrIjoiMGE5YzI3NDAtYjc5OC00ZWI2LTg5ZWItMzU4ZGU3MjkzZjBhIiwidCI6IjBjMDMzOGE2LTk1NjEtNGVlOC1iOGQ2LTRlODljYmQ1MjBhMCIsImMiOjh9" />
+        <dcterms:license rdf:resource="https://data.vlaanderen.be/doc/licentie/modellicentie-gratis-hergebruik/v1.0" />
+        <dcterms:format>Rapport</dcterms:format>
+        <dcterms:description xml:lang="nl">Rapport met de cijfergegevens weergeven.</dcterms:description>
+    </dcat:Distribution>
+    <dcat:Dataset rdf:about="http://mobielvlaanderen.be/store-x/man-dcat/dataset_ind076">
+        <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2022-04-28</dcterms:modified>
+        <dcterms:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2022-04-28</dcterms:issued>
+        <dcterms:title xml:lang="nl">aantal ton geladen op de waterwegen</dcterms:title>
+        <dcterms:description xml:lang="nl">hoeveelheid goederen geladen langs waterwegen beheerd door De Vlaamse Waterweg uitgedrukt in ton</dcterms:description>
+        <dcterms:publisher>
+            <foaf:Agent rdf:about="http://data.vlaanderen.be/id/organisatie/OVO000096">
+                <foaf:name>Beleidsdomein Mobiliteit en Openbare Werken</foaf:name>
+                <dcterms:type>organization</dcterms:type>
+            </foaf:Agent>
+        </dcterms:publisher>
+        <dcat:contactPoint>
+            <vcard:Kind rdf:about="https://www.mow-contact.be/">
+                <vcard:fn>https://www.mow-contact.be/</vcard:fn>
+            </vcard:Kind>
+        </dcat:contactPoint>
+        <dcterms:language rdf:resource="http://lexvo.org/id/iso639-3/nld" />
+        <dcat:landingPage rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/bijsluiter_076.html" />
+        <dcat:distribution rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersxml_076.xml" />
+        <dcat:distribution rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersTable_076.html" />
+        <dcat:distribution rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/commentaar_076.xml" />
+        <dcat:distribution rdf:resource="https://app.powerbi.com/view?r=eyJrIjoiNzliZTc0YTYtOWI1Zi00NTI0LWI0NDktNWIyNGQ1MGQwYjE2IiwidCI6IjBjMDMzOGE2LTk1NjEtNGVlOC1iOGQ2LTRlODljYmQ1MjBhMCIsImMiOjh9" />
+    </dcat:Dataset>
+    <dcat:Distribution rdf:about="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersxml_076.xml">
+        <dcterms:title xml:lang="nl">aantal ton geladen op de waterwegen - Cijfers (XML)</dcterms:title>
+        <dcat:accessURL rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersxml_076.xml" />
+        <dcterms:license rdf:resource="https://data.vlaanderen.be/doc/licentie/modellicentie-gratis-hergebruik/v1.0" />
+        <dcterms:format>XML</dcterms:format>
+        <dcterms:description xml:lang="nl">Eventuele opmerkingen bij de cijferrecords voor een bepaalde periode (cfr. meetfrequentie)
+zijn terug te vinden in de commentaar file.</dcterms:description>
+    </dcat:Distribution>
+    <dcat:Distribution rdf:about="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersTable_076.html">
+        <dcterms:title xml:lang="nl">aantal ton geladen op de waterwegen - Cijfers (Tabel)</dcterms:title>
+        <dcat:accessURL rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersTable_076.html" />
+        <dcterms:license rdf:resource="https://data.vlaanderen.be/doc/licentie/modellicentie-gratis-hergebruik/v1.0" />
+        <dcterms:format>HTML</dcterms:format>
+        <dcterms:description xml:lang="nl">Kies de URL hierboven om de cijfergegevens in een tabel te zien.
+
+De cijfergegevens in de tabel kunnen in MS Excel opgeladen worden via de 'Data' - 'From Web' functie. Gebruik de
+hierboven vermelde URL in het adres veld.
+
+Eventuele opmerkingen bij de cijferrecords voor een bepaalde periode (cfr. meetfrequentie) zijn terug te vinden
+in de commentaar file.</dcterms:description>
+    </dcat:Distribution>
+    <dcat:Distribution rdf:about="https://mow-dataroom.s3-eu-west-1.amazonaws.com/commentaar_076.xml">
+        <dcterms:title xml:lang="nl">aantal ton geladen op de waterwegen - Commentaar</dcterms:title>
+        <dcat:accessURL rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/commentaar_076.xml" />
+        <dcterms:license rdf:resource="https://data.vlaanderen.be/doc/licentie/modellicentie-gratis-hergebruik/v1.0" />
+        <dcterms:format>XML</dcterms:format>
+        <dcterms:description xml:lang="nl">Opmerkingen horend bij de cijferrecords voor een bepaalde periode (cfr. meetfrequentie).</dcterms:description>
+    </dcat:Distribution>
+    <dcat:Distribution rdf:about="https://app.powerbi.com/view?r=eyJrIjoiNzliZTc0YTYtOWI1Zi00NTI0LWI0NDktNWIyNGQ1MGQwYjE2IiwidCI6IjBjMDMzOGE2LTk1NjEtNGVlOC1iOGQ2LTRlODljYmQ1MjBhMCIsImMiOjh9">
+        <dcterms:title xml:lang="nl">aantal ton geladen op de waterwegen - Rapport (PowerBI)</dcterms:title>
+        <dcat:accessURL rdf:resource="https://app.powerbi.com/view?r=eyJrIjoiNzliZTc0YTYtOWI1Zi00NTI0LWI0NDktNWIyNGQ1MGQwYjE2IiwidCI6IjBjMDMzOGE2LTk1NjEtNGVlOC1iOGQ2LTRlODljYmQ1MjBhMCIsImMiOjh9" />
+        <dcterms:license rdf:resource="https://data.vlaanderen.be/doc/licentie/modellicentie-gratis-hergebruik/v1.0" />
+        <dcterms:format>Rapport</dcterms:format>
+        <dcterms:description xml:lang="nl">Rapport met de cijfergegevens weergeven.</dcterms:description>
+    </dcat:Distribution>
+    <dcat:Dataset rdf:about="http://mobielvlaanderen.be/store-x/man-dcat/dataset_ind003">
+        <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2019-08-26</dcterms:modified>
+        <dcterms:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2019-08-26</dcterms:issued>
+        <dcterms:title xml:lang="nl">filezwaarte op het hoofdwegennet - 2007 tot 2014 - oude berekeningswijze</dcterms:title>
+        <dcterms:description xml:lang="nl">product van filelengte en fileduur, cumulatief over de beschouwde periode, cumulatief over wegvakken van het hoofdwegennet</dcterms:description>
+        <dcterms:publisher>
+            <foaf:Agent rdf:about="http://data.vlaanderen.be/id/organisatie/OVO000096">
+                <foaf:name>Beleidsdomein Mobiliteit en Openbare Werken</foaf:name>
+                <dcterms:type>organization</dcterms:type>
+            </foaf:Agent>
+        </dcterms:publisher>
+        <dcat:contactPoint>
+            <vcard:Kind rdf:about="https://www.mow-contact.be/">
+                <vcard:fn>https://www.mow-contact.be/</vcard:fn>
+            </vcard:Kind>
+        </dcat:contactPoint>
+        <dcterms:language rdf:resource="http://lexvo.org/id/iso639-3/nld" />
+        <dcat:landingPage rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/bijsluiter_003.html" />
+        <dcat:distribution rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersxml_003.xml" />
+        <dcat:distribution rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersTable_003.html" />
+        <dcat:distribution rdf:resource="https://app.powerbi.com/view?r=eyJrIjoiNjEwNzVkNGUtOGUzNS00ODZjLWI5ZjgtN2UwMDc1NzZkNjUxIiwidCI6IjBjMDMzOGE2LTk1NjEtNGVlOC1iOGQ2LTRlODljYmQ1MjBhMCIsImMiOjh9" />
+    </dcat:Dataset>
+    <dcat:Distribution rdf:about="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersxml_003.xml">
+        <dcterms:title xml:lang="nl">filezwaarte op het hoofdwegennet - 2007 tot 2014 - oude berekeningswijze - Cijfers (XML)</dcterms:title>
+        <dcat:accessURL rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersxml_003.xml" />
+        <dcterms:license rdf:resource="https://data.vlaanderen.be/doc/licentie/modellicentie-gratis-hergebruik/v1.0" />
+        <dcterms:format>XML</dcterms:format>
+        <dcterms:description xml:lang="nl">Eventuele opmerkingen bij de cijferrecords voor een bepaalde periode (cfr. meetfrequentie)
+zijn terug te vinden in de commentaar file.</dcterms:description>
+    </dcat:Distribution>
+    <dcat:Distribution rdf:about="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersTable_003.html">
+        <dcterms:title xml:lang="nl">filezwaarte op het hoofdwegennet - 2007 tot 2014 - oude berekeningswijze - Cijfers (Tabel)</dcterms:title>
+        <dcat:accessURL rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersTable_003.html" />
+        <dcterms:license rdf:resource="https://data.vlaanderen.be/doc/licentie/modellicentie-gratis-hergebruik/v1.0" />
+        <dcterms:format>HTML</dcterms:format>
+        <dcterms:description xml:lang="nl">Kies de URL hierboven om de cijfergegevens in een tabel te zien.
+
+De cijfergegevens in de tabel kunnen in MS Excel opgeladen worden via de 'Data' - 'From Web' functie. Gebruik de
+hierboven vermelde URL in het adres veld.
+
+Eventuele opmerkingen bij de cijferrecords voor een bepaalde periode (cfr. meetfrequentie) zijn terug te vinden
+in de commentaar file.</dcterms:description>
+    </dcat:Distribution>
+    <dcat:Distribution rdf:about="https://app.powerbi.com/view?r=eyJrIjoiNjEwNzVkNGUtOGUzNS00ODZjLWI5ZjgtN2UwMDc1NzZkNjUxIiwidCI6IjBjMDMzOGE2LTk1NjEtNGVlOC1iOGQ2LTRlODljYmQ1MjBhMCIsImMiOjh9">
+        <dcterms:title xml:lang="nl">filezwaarte op het hoofdwegennet - 2007 tot 2014 - oude berekeningswijze - Rapport (PowerBI)</dcterms:title>
+        <dcat:accessURL rdf:resource="https://app.powerbi.com/view?r=eyJrIjoiNjEwNzVkNGUtOGUzNS00ODZjLWI5ZjgtN2UwMDc1NzZkNjUxIiwidCI6IjBjMDMzOGE2LTk1NjEtNGVlOC1iOGQ2LTRlODljYmQ1MjBhMCIsImMiOjh9" />
+        <dcterms:license rdf:resource="https://data.vlaanderen.be/doc/licentie/modellicentie-gratis-hergebruik/v1.0" />
+        <dcterms:format>Rapport</dcterms:format>
+        <dcterms:description xml:lang="nl">Rapport met de cijfergegevens weergeven.</dcterms:description>
+    </dcat:Distribution>
+    <dcat:Dataset rdf:about="http://mobielvlaanderen.be/store-x/man-dcat/dataset_ind065">
+        <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2019-08-26</dcterms:modified>
+        <dcterms:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2019-08-26</dcterms:issued>
+        <dcterms:title xml:lang="nl">verdeling van verplaatsingen volgens hoofdvervoerswijze en afstandsklasse</dcterms:title>
+        <dcterms:description xml:lang="nl">percentage van het gemiddeld aantal verplaatsingen per persoon, per dag dat valt binnen de betreffende afstandsklasse en waarvoor gebruik gemaakt wordt van de betreffende vervoerswijze als hoofdvervoerswijze (d.w.z. voor het grootste deel van de af te leggen afstand)</dcterms:description>
+        <dcterms:publisher>
+            <foaf:Agent rdf:about="http://data.vlaanderen.be/id/organisatie/OVO000096">
+                <foaf:name>Beleidsdomein Mobiliteit en Openbare Werken</foaf:name>
+                <dcterms:type>organization</dcterms:type>
+            </foaf:Agent>
+        </dcterms:publisher>
+        <dcat:contactPoint>
+            <vcard:Kind rdf:about="https://www.mow-contact.be/">
+                <vcard:fn>https://www.mow-contact.be/</vcard:fn>
+            </vcard:Kind>
+        </dcat:contactPoint>
+        <dcterms:language rdf:resource="http://lexvo.org/id/iso639-3/nld" />
+        <dcat:landingPage rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/bijsluiter_065.html" />
+        <dcat:distribution rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersxml_065.xml" />
+        <dcat:distribution rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersTable_065.html" />
+        <dcat:distribution rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/commentaar_065.xml" />
+        <dcat:distribution rdf:resource="https://app.powerbi.com/view?r=eyJrIjoiOGRlYTcyOTgtYTliNC00ZDgzLThmNzEtNjM4MTY1OTZmYzFkIiwidCI6IjBjMDMzOGE2LTk1NjEtNGVlOC1iOGQ2LTRlODljYmQ1MjBhMCIsImMiOjh9" />
+    </dcat:Dataset>
+    <dcat:Distribution rdf:about="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersxml_065.xml">
+        <dcterms:title xml:lang="nl">verdeling van verplaatsingen volgens hoofdvervoerswijze en afstandsklasse - Cijfers (XML)</dcterms:title>
+        <dcat:accessURL rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersxml_065.xml" />
+        <dcterms:license rdf:resource="https://data.vlaanderen.be/doc/licentie/modellicentie-gratis-hergebruik/v1.0" />
+        <dcterms:format>XML</dcterms:format>
+        <dcterms:description xml:lang="nl">Eventuele opmerkingen bij de cijferrecords voor een bepaalde periode (cfr. meetfrequentie)
+zijn terug te vinden in de commentaar file.</dcterms:description>
+    </dcat:Distribution>
+    <dcat:Distribution rdf:about="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersTable_065.html">
+        <dcterms:title xml:lang="nl">verdeling van verplaatsingen volgens hoofdvervoerswijze en afstandsklasse - Cijfers (Tabel)</dcterms:title>
+        <dcat:accessURL rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersTable_065.html" />
+        <dcterms:license rdf:resource="https://data.vlaanderen.be/doc/licentie/modellicentie-gratis-hergebruik/v1.0" />
+        <dcterms:format>HTML</dcterms:format>
+        <dcterms:description xml:lang="nl">Kies de URL hierboven om de cijfergegevens in een tabel te zien.
+
+De cijfergegevens in de tabel kunnen in MS Excel opgeladen worden via de 'Data' - 'From Web' functie. Gebruik de
+hierboven vermelde URL in het adres veld.
+
+Eventuele opmerkingen bij de cijferrecords voor een bepaalde periode (cfr. meetfrequentie) zijn terug te vinden
+in de commentaar file.</dcterms:description>
+    </dcat:Distribution>
+    <dcat:Distribution rdf:about="https://mow-dataroom.s3-eu-west-1.amazonaws.com/commentaar_065.xml">
+        <dcterms:title xml:lang="nl">verdeling van verplaatsingen volgens hoofdvervoerswijze en afstandsklasse - Commentaar</dcterms:title>
+        <dcat:accessURL rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/commentaar_065.xml" />
+        <dcterms:license rdf:resource="https://data.vlaanderen.be/doc/licentie/modellicentie-gratis-hergebruik/v1.0" />
+        <dcterms:format>XML</dcterms:format>
+        <dcterms:description xml:lang="nl">Opmerkingen horend bij de cijferrecords voor een bepaalde periode (cfr. meetfrequentie).</dcterms:description>
+    </dcat:Distribution>
+    <dcat:Distribution rdf:about="https://app.powerbi.com/view?r=eyJrIjoiOGRlYTcyOTgtYTliNC00ZDgzLThmNzEtNjM4MTY1OTZmYzFkIiwidCI6IjBjMDMzOGE2LTk1NjEtNGVlOC1iOGQ2LTRlODljYmQ1MjBhMCIsImMiOjh9">
+        <dcterms:title xml:lang="nl">verdeling van verplaatsingen volgens hoofdvervoerswijze en afstandsklasse - Rapport (PowerBI)</dcterms:title>
+        <dcat:accessURL rdf:resource="https://app.powerbi.com/view?r=eyJrIjoiOGRlYTcyOTgtYTliNC00ZDgzLThmNzEtNjM4MTY1OTZmYzFkIiwidCI6IjBjMDMzOGE2LTk1NjEtNGVlOC1iOGQ2LTRlODljYmQ1MjBhMCIsImMiOjh9" />
+        <dcterms:license rdf:resource="https://data.vlaanderen.be/doc/licentie/modellicentie-gratis-hergebruik/v1.0" />
+        <dcterms:format>Rapport</dcterms:format>
+        <dcterms:description xml:lang="nl">Rapport met de cijfergegevens weergeven.</dcterms:description>
+    </dcat:Distribution>
+    <dcat:Dataset rdf:about="http://mobielvlaanderen.be/store-x/man-dcat/dataset_ind1245">
+        <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2021-05-06</dcterms:modified>
+        <dcterms:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2021-05-06</dcterms:issued>
+        <dcterms:title xml:lang="nl">verdeling van woon-schoolverplaatsingen volgens hoofdvervoerswijze (scholieren en studenten) </dcterms:title>
+        <dcterms:description xml:lang="nl">percentage van de woon-schoolverplaatsingen door scholieren en studenten waarvoor gebruik wordt gemaakt van de betreffende vervoerswijze als hoofdvervoerswijze (d.w.z. voor het grootste deel van de af te leggen afstand)</dcterms:description>
+        <dcterms:publisher>
+            <foaf:Agent rdf:about="http://data.vlaanderen.be/id/organisatie/OVO000096">
+                <foaf:name>Beleidsdomein Mobiliteit en Openbare Werken</foaf:name>
+                <dcterms:type>organization</dcterms:type>
+            </foaf:Agent>
+        </dcterms:publisher>
+        <dcat:contactPoint>
+            <vcard:Kind rdf:about="https://www.mow-contact.be/">
+                <vcard:fn>https://www.mow-contact.be/</vcard:fn>
+            </vcard:Kind>
+        </dcat:contactPoint>
+        <dcterms:language rdf:resource="http://lexvo.org/id/iso639-3/nld" />
+        <dcat:landingPage rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/bijsluiter_1245.html" />
+        <dcat:distribution rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersxml_1245.xml" />
+        <dcat:distribution rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersTable_1245.html" />
+        <dcat:distribution rdf:resource="https://app.powerbi.com/view?r=eyJrIjoiMGRlYjEwY2ItNWU1OS00MTAzLTliZTQtNWZkYTBiYzMxMDc0IiwidCI6IjBjMDMzOGE2LTk1NjEtNGVlOC1iOGQ2LTRlODljYmQ1MjBhMCIsImMiOjh9" />
+    </dcat:Dataset>
+    <dcat:Distribution rdf:about="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersxml_1245.xml">
+        <dcterms:title xml:lang="nl">verdeling van woon-schoolverplaatsingen volgens hoofdvervoerswijze (scholieren en studenten)  - Cijfers (XML)</dcterms:title>
+        <dcat:accessURL rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersxml_1245.xml" />
+        <dcterms:license rdf:resource="https://data.vlaanderen.be/doc/licentie/modellicentie-gratis-hergebruik/v1.0" />
+        <dcterms:format>XML</dcterms:format>
+        <dcterms:description xml:lang="nl">Eventuele opmerkingen bij de cijferrecords voor een bepaalde periode (cfr. meetfrequentie)
+zijn terug te vinden in de commentaar file.</dcterms:description>
+    </dcat:Distribution>
+    <dcat:Distribution rdf:about="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersTable_1245.html">
+        <dcterms:title xml:lang="nl">verdeling van woon-schoolverplaatsingen volgens hoofdvervoerswijze (scholieren en studenten)  - Cijfers (Tabel)</dcterms:title>
+        <dcat:accessURL rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersTable_1245.html" />
+        <dcterms:license rdf:resource="https://data.vlaanderen.be/doc/licentie/modellicentie-gratis-hergebruik/v1.0" />
+        <dcterms:format>HTML</dcterms:format>
+        <dcterms:description xml:lang="nl">Kies de URL hierboven om de cijfergegevens in een tabel te zien.
+
+De cijfergegevens in de tabel kunnen in MS Excel opgeladen worden via de 'Data' - 'From Web' functie. Gebruik de
+hierboven vermelde URL in het adres veld.
+
+Eventuele opmerkingen bij de cijferrecords voor een bepaalde periode (cfr. meetfrequentie) zijn terug te vinden
+in de commentaar file.</dcterms:description>
+    </dcat:Distribution>
+    <dcat:Distribution rdf:about="https://app.powerbi.com/view?r=eyJrIjoiMGRlYjEwY2ItNWU1OS00MTAzLTliZTQtNWZkYTBiYzMxMDc0IiwidCI6IjBjMDMzOGE2LTk1NjEtNGVlOC1iOGQ2LTRlODljYmQ1MjBhMCIsImMiOjh9">
+        <dcterms:title xml:lang="nl">verdeling van woon-schoolverplaatsingen volgens hoofdvervoerswijze (scholieren en studenten)  - Rapport (PowerBI)</dcterms:title>
+        <dcat:accessURL rdf:resource="https://app.powerbi.com/view?r=eyJrIjoiMGRlYjEwY2ItNWU1OS00MTAzLTliZTQtNWZkYTBiYzMxMDc0IiwidCI6IjBjMDMzOGE2LTk1NjEtNGVlOC1iOGQ2LTRlODljYmQ1MjBhMCIsImMiOjh9" />
+        <dcterms:license rdf:resource="https://data.vlaanderen.be/doc/licentie/modellicentie-gratis-hergebruik/v1.0" />
+        <dcterms:format>Rapport</dcterms:format>
+        <dcterms:description xml:lang="nl">Rapport met de cijfergegevens weergeven.</dcterms:description>
+    </dcat:Distribution>
+    <dcat:Dataset rdf:about="http://mobielvlaanderen.be/store-x/man-dcat/dataset_ind011">
+        <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2019-08-26</dcterms:modified>
+        <dcterms:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2019-08-26</dcterms:issued>
+        <dcterms:title xml:lang="nl">voertuigenpark (De Lijn)</dcterms:title>
+        <dcterms:description xml:lang="nl">wordt bijgehouden in de loop van het jaar door voertuigen uit dienst te verwijderen en nieuwe voertuigen in dienst te zetten</dcterms:description>
+        <dcterms:publisher>
+            <foaf:Agent rdf:about="http://data.vlaanderen.be/id/organisatie/OVO000096">
+                <foaf:name>Beleidsdomein Mobiliteit en Openbare Werken</foaf:name>
+                <dcterms:type>organization</dcterms:type>
+            </foaf:Agent>
+        </dcterms:publisher>
+        <dcat:contactPoint>
+            <vcard:Kind rdf:about="https://www.mow-contact.be/">
+                <vcard:fn>https://www.mow-contact.be/</vcard:fn>
+            </vcard:Kind>
+        </dcat:contactPoint>
+        <dcterms:language rdf:resource="http://lexvo.org/id/iso639-3/nld" />
+        <dcat:landingPage rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/bijsluiter_011.html" />
+        <dcat:distribution rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersxml_011.xml" />
+        <dcat:distribution rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersTable_011.html" />
+        <dcat:distribution rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/commentaar_011.xml" />
+        <dcat:distribution rdf:resource="https://app.powerbi.com/view?r=eyJrIjoiZDg1NGNhNGUtNjI4Ny00NDVhLWJlNDktOTg0YWQ3NTRhM2FmIiwidCI6IjBjMDMzOGE2LTk1NjEtNGVlOC1iOGQ2LTRlODljYmQ1MjBhMCIsImMiOjh9" />
+    </dcat:Dataset>
+    <dcat:Distribution rdf:about="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersxml_011.xml">
+        <dcterms:title xml:lang="nl">voertuigenpark (De Lijn) - Cijfers (XML)</dcterms:title>
+        <dcat:accessURL rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersxml_011.xml" />
+        <dcterms:license rdf:resource="https://data.vlaanderen.be/doc/licentie/modellicentie-gratis-hergebruik/v1.0" />
+        <dcterms:format>XML</dcterms:format>
+        <dcterms:description xml:lang="nl">Eventuele opmerkingen bij de cijferrecords voor een bepaalde periode (cfr. meetfrequentie)
+zijn terug te vinden in de commentaar file.</dcterms:description>
+    </dcat:Distribution>
+    <dcat:Distribution rdf:about="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersTable_011.html">
+        <dcterms:title xml:lang="nl">voertuigenpark (De Lijn) - Cijfers (Tabel)</dcterms:title>
+        <dcat:accessURL rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersTable_011.html" />
+        <dcterms:license rdf:resource="https://data.vlaanderen.be/doc/licentie/modellicentie-gratis-hergebruik/v1.0" />
+        <dcterms:format>HTML</dcterms:format>
+        <dcterms:description xml:lang="nl">Kies de URL hierboven om de cijfergegevens in een tabel te zien.
+
+De cijfergegevens in de tabel kunnen in MS Excel opgeladen worden via de 'Data' - 'From Web' functie. Gebruik de
+hierboven vermelde URL in het adres veld.
+
+Eventuele opmerkingen bij de cijferrecords voor een bepaalde periode (cfr. meetfrequentie) zijn terug te vinden
+in de commentaar file.</dcterms:description>
+    </dcat:Distribution>
+    <dcat:Distribution rdf:about="https://mow-dataroom.s3-eu-west-1.amazonaws.com/commentaar_011.xml">
+        <dcterms:title xml:lang="nl">voertuigenpark (De Lijn) - Commentaar</dcterms:title>
+        <dcat:accessURL rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/commentaar_011.xml" />
+        <dcterms:license rdf:resource="https://data.vlaanderen.be/doc/licentie/modellicentie-gratis-hergebruik/v1.0" />
+        <dcterms:format>XML</dcterms:format>
+        <dcterms:description xml:lang="nl">Opmerkingen horend bij de cijferrecords voor een bepaalde periode (cfr. meetfrequentie).</dcterms:description>
+    </dcat:Distribution>
+    <dcat:Distribution rdf:about="https://app.powerbi.com/view?r=eyJrIjoiZDg1NGNhNGUtNjI4Ny00NDVhLWJlNDktOTg0YWQ3NTRhM2FmIiwidCI6IjBjMDMzOGE2LTk1NjEtNGVlOC1iOGQ2LTRlODljYmQ1MjBhMCIsImMiOjh9">
+        <dcterms:title xml:lang="nl">voertuigenpark (De Lijn) - Rapport (PowerBI)</dcterms:title>
+        <dcat:accessURL rdf:resource="https://app.powerbi.com/view?r=eyJrIjoiZDg1NGNhNGUtNjI4Ny00NDVhLWJlNDktOTg0YWQ3NTRhM2FmIiwidCI6IjBjMDMzOGE2LTk1NjEtNGVlOC1iOGQ2LTRlODljYmQ1MjBhMCIsImMiOjh9" />
+        <dcterms:license rdf:resource="https://data.vlaanderen.be/doc/licentie/modellicentie-gratis-hergebruik/v1.0" />
+        <dcterms:format>Rapport</dcterms:format>
+        <dcterms:description xml:lang="nl">Rapport met de cijfergegevens weergeven.</dcterms:description>
+    </dcat:Distribution>
+    <dcat:Dataset rdf:about="http://mobielvlaanderen.be/store-x/man-dcat/dataset_ind012">
+        <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2019-08-26</dcterms:modified>
+        <dcterms:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2019-08-26</dcterms:issued>
+        <dcterms:title xml:lang="nl">aantal reizigers per type vervoersbewijs (De Lijn)</dcterms:title>
+        <dcterms:description xml:lang="nl">aantal reizigers per type vervoersbewijs </dcterms:description>
+        <dcterms:publisher>
+            <foaf:Agent rdf:about="http://data.vlaanderen.be/id/organisatie/OVO000096">
+                <foaf:name>Beleidsdomein Mobiliteit en Openbare Werken</foaf:name>
+                <dcterms:type>organization</dcterms:type>
+            </foaf:Agent>
+        </dcterms:publisher>
+        <dcat:contactPoint>
+            <vcard:Kind rdf:about="https://www.mow-contact.be/">
+                <vcard:fn>https://www.mow-contact.be/</vcard:fn>
+            </vcard:Kind>
+        </dcat:contactPoint>
+        <dcterms:language rdf:resource="http://lexvo.org/id/iso639-3/nld" />
+        <dcat:landingPage rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/bijsluiter_012.html" />
+        <dcat:distribution rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersxml_012.xml" />
+        <dcat:distribution rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersTable_012.html" />
+        <dcat:distribution rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/commentaar_012.xml" />
+        <dcat:distribution rdf:resource="https://app.powerbi.com/view?r=eyJrIjoiMjNjZjViNGUtYjc5OS00ZDhkLTlhOWUtZWZmNWZhMzY0MjI4IiwidCI6IjBjMDMzOGE2LTk1NjEtNGVlOC1iOGQ2LTRlODljYmQ1MjBhMCIsImMiOjh9" />
+    </dcat:Dataset>
+    <dcat:Distribution rdf:about="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersxml_012.xml">
+        <dcterms:title xml:lang="nl">aantal reizigers per type vervoersbewijs (De Lijn) - Cijfers (XML)</dcterms:title>
+        <dcat:accessURL rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersxml_012.xml" />
+        <dcterms:license rdf:resource="https://data.vlaanderen.be/doc/licentie/modellicentie-gratis-hergebruik/v1.0" />
+        <dcterms:format>XML</dcterms:format>
+        <dcterms:description xml:lang="nl">Eventuele opmerkingen bij de cijferrecords voor een bepaalde periode (cfr. meetfrequentie)
+zijn terug te vinden in de commentaar file.</dcterms:description>
+    </dcat:Distribution>
+    <dcat:Distribution rdf:about="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersTable_012.html">
+        <dcterms:title xml:lang="nl">aantal reizigers per type vervoersbewijs (De Lijn) - Cijfers (Tabel)</dcterms:title>
+        <dcat:accessURL rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersTable_012.html" />
+        <dcterms:license rdf:resource="https://data.vlaanderen.be/doc/licentie/modellicentie-gratis-hergebruik/v1.0" />
+        <dcterms:format>HTML</dcterms:format>
+        <dcterms:description xml:lang="nl">Kies de URL hierboven om de cijfergegevens in een tabel te zien.
+
+De cijfergegevens in de tabel kunnen in MS Excel opgeladen worden via de 'Data' - 'From Web' functie. Gebruik de
+hierboven vermelde URL in het adres veld.
+
+Eventuele opmerkingen bij de cijferrecords voor een bepaalde periode (cfr. meetfrequentie) zijn terug te vinden
+in de commentaar file.</dcterms:description>
+    </dcat:Distribution>
+    <dcat:Distribution rdf:about="https://mow-dataroom.s3-eu-west-1.amazonaws.com/commentaar_012.xml">
+        <dcterms:title xml:lang="nl">aantal reizigers per type vervoersbewijs (De Lijn) - Commentaar</dcterms:title>
+        <dcat:accessURL rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/commentaar_012.xml" />
+        <dcterms:license rdf:resource="https://data.vlaanderen.be/doc/licentie/modellicentie-gratis-hergebruik/v1.0" />
+        <dcterms:format>XML</dcterms:format>
+        <dcterms:description xml:lang="nl">Opmerkingen horend bij de cijferrecords voor een bepaalde periode (cfr. meetfrequentie).</dcterms:description>
+    </dcat:Distribution>
+    <dcat:Distribution rdf:about="https://app.powerbi.com/view?r=eyJrIjoiMjNjZjViNGUtYjc5OS00ZDhkLTlhOWUtZWZmNWZhMzY0MjI4IiwidCI6IjBjMDMzOGE2LTk1NjEtNGVlOC1iOGQ2LTRlODljYmQ1MjBhMCIsImMiOjh9">
+        <dcterms:title xml:lang="nl">aantal reizigers per type vervoersbewijs (De Lijn) - Rapport (PowerBI)</dcterms:title>
+        <dcat:accessURL rdf:resource="https://app.powerbi.com/view?r=eyJrIjoiMjNjZjViNGUtYjc5OS00ZDhkLTlhOWUtZWZmNWZhMzY0MjI4IiwidCI6IjBjMDMzOGE2LTk1NjEtNGVlOC1iOGQ2LTRlODljYmQ1MjBhMCIsImMiOjh9" />
+        <dcterms:license rdf:resource="https://data.vlaanderen.be/doc/licentie/modellicentie-gratis-hergebruik/v1.0" />
+        <dcterms:format>Rapport</dcterms:format>
+        <dcterms:description xml:lang="nl">Rapport met de cijfergegevens weergeven.</dcterms:description>
+    </dcat:Distribution>
+    <dcat:Dataset rdf:about="http://mobielvlaanderen.be/store-x/man-dcat/dataset_ind1247">
+        <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2021-12-23</dcterms:modified>
+        <dcterms:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2021-12-23</dcterms:issued>
+        <dcterms:title xml:lang="nl">kilometers per persoon per dag voor verplaatsingen met de fiets als hoofdvervoerswijze</dcterms:title>
+        <dcterms:description xml:lang="nl">gemiddeld aantal afgelegde kilometers per persoon per dag voor verplaatsingen waarvoor gebruik wordt gemaakt van de fiets of elektrische fiets als hoofdvervoerswijze</dcterms:description>
+        <dcterms:publisher>
+            <foaf:Agent rdf:about="http://data.vlaanderen.be/id/organisatie/OVO000096">
+                <foaf:name>Beleidsdomein Mobiliteit en Openbare Werken</foaf:name>
+                <dcterms:type>organization</dcterms:type>
+            </foaf:Agent>
+        </dcterms:publisher>
+        <dcat:contactPoint>
+            <vcard:Kind rdf:about="https://www.mow-contact.be/">
+                <vcard:fn>https://www.mow-contact.be/</vcard:fn>
+            </vcard:Kind>
+        </dcat:contactPoint>
+        <dcterms:language rdf:resource="http://lexvo.org/id/iso639-3/nld" />
+        <dcat:landingPage rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/bijsluiter_1247.html" />
+        <dcat:distribution rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersxml_1247.xml" />
+        <dcat:distribution rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersTable_1247.html" />
+        <dcat:distribution rdf:resource="https://app.powerbi.com/view?r=eyJrIjoiMGY3NmMwMTktZjFkNy00NGRmLWI1ZjYtZGQ4MTNmZDVkMDMzIiwidCI6IjBjMDMzOGE2LTk1NjEtNGVlOC1iOGQ2LTRlODljYmQ1MjBhMCIsImMiOjh9" />
+    </dcat:Dataset>
+    <dcat:Distribution rdf:about="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersxml_1247.xml">
+        <dcterms:title xml:lang="nl">kilometers per persoon per dag voor verplaatsingen met de fiets als hoofdvervoerswijze - Cijfers (XML)</dcterms:title>
+        <dcat:accessURL rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersxml_1247.xml" />
+        <dcterms:license rdf:resource="https://data.vlaanderen.be/doc/licentie/modellicentie-gratis-hergebruik/v1.0" />
+        <dcterms:format>XML</dcterms:format>
+        <dcterms:description xml:lang="nl">Eventuele opmerkingen bij de cijferrecords voor een bepaalde periode (cfr. meetfrequentie)
+zijn terug te vinden in de commentaar file.</dcterms:description>
+    </dcat:Distribution>
+    <dcat:Distribution rdf:about="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersTable_1247.html">
+        <dcterms:title xml:lang="nl">kilometers per persoon per dag voor verplaatsingen met de fiets als hoofdvervoerswijze - Cijfers (Tabel)</dcterms:title>
+        <dcat:accessURL rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersTable_1247.html" />
+        <dcterms:license rdf:resource="https://data.vlaanderen.be/doc/licentie/modellicentie-gratis-hergebruik/v1.0" />
+        <dcterms:format>HTML</dcterms:format>
+        <dcterms:description xml:lang="nl">Kies de URL hierboven om de cijfergegevens in een tabel te zien.
+
+De cijfergegevens in de tabel kunnen in MS Excel opgeladen worden via de 'Data' - 'From Web' functie. Gebruik de
+hierboven vermelde URL in het adres veld.
+
+Eventuele opmerkingen bij de cijferrecords voor een bepaalde periode (cfr. meetfrequentie) zijn terug te vinden
+in de commentaar file.</dcterms:description>
+    </dcat:Distribution>
+    <dcat:Distribution rdf:about="https://app.powerbi.com/view?r=eyJrIjoiMGY3NmMwMTktZjFkNy00NGRmLWI1ZjYtZGQ4MTNmZDVkMDMzIiwidCI6IjBjMDMzOGE2LTk1NjEtNGVlOC1iOGQ2LTRlODljYmQ1MjBhMCIsImMiOjh9">
+        <dcterms:title xml:lang="nl">kilometers per persoon per dag voor verplaatsingen met de fiets als hoofdvervoerswijze - Rapport (PowerBI)</dcterms:title>
+        <dcat:accessURL rdf:resource="https://app.powerbi.com/view?r=eyJrIjoiMGY3NmMwMTktZjFkNy00NGRmLWI1ZjYtZGQ4MTNmZDVkMDMzIiwidCI6IjBjMDMzOGE2LTk1NjEtNGVlOC1iOGQ2LTRlODljYmQ1MjBhMCIsImMiOjh9" />
+        <dcterms:license rdf:resource="https://data.vlaanderen.be/doc/licentie/modellicentie-gratis-hergebruik/v1.0" />
+        <dcterms:format>Rapport</dcterms:format>
+        <dcterms:description xml:lang="nl">Rapport met de cijfergegevens weergeven.</dcterms:description>
+    </dcat:Distribution>
+    <dcat:Dataset rdf:about="http://mobielvlaanderen.be/store-x/man-dcat/dataset_ind1246">
+        <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2022-01-13</dcterms:modified>
+        <dcterms:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2022-01-13</dcterms:issued>
+        <dcterms:title xml:lang="nl">fietsbezit per gezin</dcterms:title>
+        <dcterms:description xml:lang="nl">Percentage gezinnen die x aantal fietsen bezitten, afzonderlijk voor gewone en voor elektrische fietsen. Waarbij x varieert van 0 tot 9.</dcterms:description>
+        <dcterms:publisher>
+            <foaf:Agent rdf:about="http://data.vlaanderen.be/id/organisatie/OVO000096">
+                <foaf:name>Beleidsdomein Mobiliteit en Openbare Werken</foaf:name>
+                <dcterms:type>organization</dcterms:type>
+            </foaf:Agent>
+        </dcterms:publisher>
+        <dcat:contactPoint>
+            <vcard:Kind rdf:about="https://www.mow-contact.be/">
+                <vcard:fn>https://www.mow-contact.be/</vcard:fn>
+            </vcard:Kind>
+        </dcat:contactPoint>
+        <dcterms:language rdf:resource="http://lexvo.org/id/iso639-3/nld" />
+        <dcat:landingPage rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/bijsluiter_1246.html" />
+        <dcat:distribution rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersxml_1246.xml" />
+        <dcat:distribution rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersTable_1246.html" />
+        <dcat:distribution rdf:resource="https://app.powerbi.com/view?r=eyJrIjoiMjA1OWM1MmMtNDgwNS00OTQxLThhOGYtZjRkYmM1MGJmOTg4IiwidCI6IjBjMDMzOGE2LTk1NjEtNGVlOC1iOGQ2LTRlODljYmQ1MjBhMCIsImMiOjh9" />
+    </dcat:Dataset>
+    <dcat:Distribution rdf:about="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersxml_1246.xml">
+        <dcterms:title xml:lang="nl">fietsbezit per gezin - Cijfers (XML)</dcterms:title>
+        <dcat:accessURL rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersxml_1246.xml" />
+        <dcterms:license rdf:resource="https://data.vlaanderen.be/doc/licentie/modellicentie-gratis-hergebruik/v1.0" />
+        <dcterms:format>XML</dcterms:format>
+        <dcterms:description xml:lang="nl">Eventuele opmerkingen bij de cijferrecords voor een bepaalde periode (cfr. meetfrequentie)
+zijn terug te vinden in de commentaar file.</dcterms:description>
+    </dcat:Distribution>
+    <dcat:Distribution rdf:about="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersTable_1246.html">
+        <dcterms:title xml:lang="nl">fietsbezit per gezin - Cijfers (Tabel)</dcterms:title>
+        <dcat:accessURL rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersTable_1246.html" />
+        <dcterms:license rdf:resource="https://data.vlaanderen.be/doc/licentie/modellicentie-gratis-hergebruik/v1.0" />
+        <dcterms:format>HTML</dcterms:format>
+        <dcterms:description xml:lang="nl">Kies de URL hierboven om de cijfergegevens in een tabel te zien.
+
+De cijfergegevens in de tabel kunnen in MS Excel opgeladen worden via de 'Data' - 'From Web' functie. Gebruik de
+hierboven vermelde URL in het adres veld.
+
+Eventuele opmerkingen bij de cijferrecords voor een bepaalde periode (cfr. meetfrequentie) zijn terug te vinden
+in de commentaar file.</dcterms:description>
+    </dcat:Distribution>
+    <dcat:Distribution rdf:about="https://app.powerbi.com/view?r=eyJrIjoiMjA1OWM1MmMtNDgwNS00OTQxLThhOGYtZjRkYmM1MGJmOTg4IiwidCI6IjBjMDMzOGE2LTk1NjEtNGVlOC1iOGQ2LTRlODljYmQ1MjBhMCIsImMiOjh9">
+        <dcterms:title xml:lang="nl">fietsbezit per gezin - Rapport (PowerBI)</dcterms:title>
+        <dcat:accessURL rdf:resource="https://app.powerbi.com/view?r=eyJrIjoiMjA1OWM1MmMtNDgwNS00OTQxLThhOGYtZjRkYmM1MGJmOTg4IiwidCI6IjBjMDMzOGE2LTk1NjEtNGVlOC1iOGQ2LTRlODljYmQ1MjBhMCIsImMiOjh9" />
+        <dcterms:license rdf:resource="https://data.vlaanderen.be/doc/licentie/modellicentie-gratis-hergebruik/v1.0" />
+        <dcterms:format>Rapport</dcterms:format>
+        <dcterms:description xml:lang="nl">Rapport met de cijfergegevens weergeven.</dcterms:description>
+    </dcat:Distribution>
+    <dcat:Dataset rdf:about="http://mobielvlaanderen.be/store-x/man-dcat/dataset_ind1120">
+        <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2021-03-26</dcterms:modified>
+        <dcterms:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2021-03-26</dcterms:issued>
+        <dcterms:title xml:lang="nl">aantal voertuigkilometers per voertuigtype en wegennetwerk</dcterms:title>
+        <dcterms:description xml:lang="nl">jaarlijks aantal voertuigkilometers op snelwegen, andere gewestwegen en gemeentewegen per voertuigtype</dcterms:description>
+        <dcterms:publisher>
+            <foaf:Agent rdf:about="http://data.vlaanderen.be/id/organisatie/OVO000096">
+                <foaf:name>Beleidsdomein Mobiliteit en Openbare Werken</foaf:name>
+                <dcterms:type>organization</dcterms:type>
+            </foaf:Agent>
+        </dcterms:publisher>
+        <dcat:contactPoint>
+            <vcard:Kind rdf:about="https://www.mow-contact.be/">
+                <vcard:fn>https://www.mow-contact.be/</vcard:fn>
+            </vcard:Kind>
+        </dcat:contactPoint>
+        <dcterms:language rdf:resource="http://lexvo.org/id/iso639-3/nld" />
+        <dcat:landingPage rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/bijsluiter_1120.html" />
+        <dcat:distribution rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersxml_1120.xml" />
+        <dcat:distribution rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersTable_1120.html" />
+        <dcat:distribution rdf:resource="https://app.powerbi.com/view?r=eyJrIjoiMDAzNjczNTYtZmFiNy00ZGI0LThkMTYtNzI3NjM1YmJjMzgwIiwidCI6IjBjMDMzOGE2LTk1NjEtNGVlOC1iOGQ2LTRlODljYmQ1MjBhMCIsImMiOjh9" />
+    </dcat:Dataset>
+    <dcat:Distribution rdf:about="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersxml_1120.xml">
+        <dcterms:title xml:lang="nl">aantal voertuigkilometers per voertuigtype en wegennetwerk - Cijfers (XML)</dcterms:title>
+        <dcat:accessURL rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersxml_1120.xml" />
+        <dcterms:license rdf:resource="https://data.vlaanderen.be/doc/licentie/modellicentie-gratis-hergebruik/v1.0" />
+        <dcterms:format>XML</dcterms:format>
+        <dcterms:description xml:lang="nl">Eventuele opmerkingen bij de cijferrecords voor een bepaalde periode (cfr. meetfrequentie)
+zijn terug te vinden in de commentaar file.</dcterms:description>
+    </dcat:Distribution>
+    <dcat:Distribution rdf:about="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersTable_1120.html">
+        <dcterms:title xml:lang="nl">aantal voertuigkilometers per voertuigtype en wegennetwerk - Cijfers (Tabel)</dcterms:title>
+        <dcat:accessURL rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersTable_1120.html" />
+        <dcterms:license rdf:resource="https://data.vlaanderen.be/doc/licentie/modellicentie-gratis-hergebruik/v1.0" />
+        <dcterms:format>HTML</dcterms:format>
+        <dcterms:description xml:lang="nl">Kies de URL hierboven om de cijfergegevens in een tabel te zien.
+
+De cijfergegevens in de tabel kunnen in MS Excel opgeladen worden via de 'Data' - 'From Web' functie. Gebruik de
+hierboven vermelde URL in het adres veld.
+
+Eventuele opmerkingen bij de cijferrecords voor een bepaalde periode (cfr. meetfrequentie) zijn terug te vinden
+in de commentaar file.</dcterms:description>
+    </dcat:Distribution>
+    <dcat:Distribution rdf:about="https://app.powerbi.com/view?r=eyJrIjoiMDAzNjczNTYtZmFiNy00ZGI0LThkMTYtNzI3NjM1YmJjMzgwIiwidCI6IjBjMDMzOGE2LTk1NjEtNGVlOC1iOGQ2LTRlODljYmQ1MjBhMCIsImMiOjh9">
+        <dcterms:title xml:lang="nl">aantal voertuigkilometers per voertuigtype en wegennetwerk - Rapport (PowerBI)</dcterms:title>
+        <dcat:accessURL rdf:resource="https://app.powerbi.com/view?r=eyJrIjoiMDAzNjczNTYtZmFiNy00ZGI0LThkMTYtNzI3NjM1YmJjMzgwIiwidCI6IjBjMDMzOGE2LTk1NjEtNGVlOC1iOGQ2LTRlODljYmQ1MjBhMCIsImMiOjh9" />
+        <dcterms:license rdf:resource="https://data.vlaanderen.be/doc/licentie/modellicentie-gratis-hergebruik/v1.0" />
+        <dcterms:format>Rapport</dcterms:format>
+        <dcterms:description xml:lang="nl">Rapport met de cijfergegevens weergeven.</dcterms:description>
+    </dcat:Distribution>
+    <dcat:Dataset rdf:about="http://mobielvlaanderen.be/store-x/man-dcat/dataset_ind073">
+        <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2022-09-22</dcterms:modified>
+        <dcterms:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2022-09-22</dcterms:issued>
+        <dcterms:title xml:lang="nl">aantal tonkilometer op de waterwegen</dcterms:title>
+        <dcterms:description xml:lang="nl">hoeveelheid goederen vervoerd op waterwegen beheerd door De Vlaamse Waterweg uitgedrukt in tonkilometer</dcterms:description>
+        <dcterms:publisher>
+            <foaf:Agent rdf:about="http://data.vlaanderen.be/id/organisatie/OVO000096">
+                <foaf:name>Beleidsdomein Mobiliteit en Openbare Werken</foaf:name>
+                <dcterms:type>organization</dcterms:type>
+            </foaf:Agent>
+        </dcterms:publisher>
+        <dcat:contactPoint>
+            <vcard:Kind rdf:about="https://www.mow-contact.be/">
+                <vcard:fn>https://www.mow-contact.be/</vcard:fn>
+            </vcard:Kind>
+        </dcat:contactPoint>
+        <dcterms:language rdf:resource="http://lexvo.org/id/iso639-3/nld" />
+        <dcat:landingPage rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/bijsluiter_073.html" />
+        <dcat:distribution rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersxml_073.xml" />
+        <dcat:distribution rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersTable_073.html" />
+        <dcat:distribution rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/commentaar_073.xml" />
+        <dcat:distribution rdf:resource="https://app.powerbi.com/view?r=eyJrIjoiNmJiZjA0MmEtZDEwNi00NzgxLTg0ZGUtOWNjZGY5YjRlZjZjIiwidCI6IjBjMDMzOGE2LTk1NjEtNGVlOC1iOGQ2LTRlODljYmQ1MjBhMCIsImMiOjh9" />
+    </dcat:Dataset>
+    <dcat:Distribution rdf:about="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersxml_073.xml">
+        <dcterms:title xml:lang="nl">aantal tonkilometer op de waterwegen - Cijfers (XML)</dcterms:title>
+        <dcat:accessURL rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersxml_073.xml" />
+        <dcterms:license rdf:resource="https://data.vlaanderen.be/doc/licentie/modellicentie-gratis-hergebruik/v1.0" />
+        <dcterms:format>XML</dcterms:format>
+        <dcterms:description xml:lang="nl">Eventuele opmerkingen bij de cijferrecords voor een bepaalde periode (cfr. meetfrequentie)
+zijn terug te vinden in de commentaar file.</dcterms:description>
+    </dcat:Distribution>
+    <dcat:Distribution rdf:about="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersTable_073.html">
+        <dcterms:title xml:lang="nl">aantal tonkilometer op de waterwegen - Cijfers (Tabel)</dcterms:title>
+        <dcat:accessURL rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersTable_073.html" />
+        <dcterms:license rdf:resource="https://data.vlaanderen.be/doc/licentie/modellicentie-gratis-hergebruik/v1.0" />
+        <dcterms:format>HTML</dcterms:format>
+        <dcterms:description xml:lang="nl">Kies de URL hierboven om de cijfergegevens in een tabel te zien.
+
+De cijfergegevens in de tabel kunnen in MS Excel opgeladen worden via de 'Data' - 'From Web' functie. Gebruik de
+hierboven vermelde URL in het adres veld.
+
+Eventuele opmerkingen bij de cijferrecords voor een bepaalde periode (cfr. meetfrequentie) zijn terug te vinden
+in de commentaar file.</dcterms:description>
+    </dcat:Distribution>
+    <dcat:Distribution rdf:about="https://mow-dataroom.s3-eu-west-1.amazonaws.com/commentaar_073.xml">
+        <dcterms:title xml:lang="nl">aantal tonkilometer op de waterwegen - Commentaar</dcterms:title>
+        <dcat:accessURL rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/commentaar_073.xml" />
+        <dcterms:license rdf:resource="https://data.vlaanderen.be/doc/licentie/modellicentie-gratis-hergebruik/v1.0" />
+        <dcterms:format>XML</dcterms:format>
+        <dcterms:description xml:lang="nl">Opmerkingen horend bij de cijferrecords voor een bepaalde periode (cfr. meetfrequentie).</dcterms:description>
+    </dcat:Distribution>
+    <dcat:Distribution rdf:about="https://app.powerbi.com/view?r=eyJrIjoiNmJiZjA0MmEtZDEwNi00NzgxLTg0ZGUtOWNjZGY5YjRlZjZjIiwidCI6IjBjMDMzOGE2LTk1NjEtNGVlOC1iOGQ2LTRlODljYmQ1MjBhMCIsImMiOjh9">
+        <dcterms:title xml:lang="nl">aantal tonkilometer op de waterwegen - Rapport (PowerBI)</dcterms:title>
+        <dcat:accessURL rdf:resource="https://app.powerbi.com/view?r=eyJrIjoiNmJiZjA0MmEtZDEwNi00NzgxLTg0ZGUtOWNjZGY5YjRlZjZjIiwidCI6IjBjMDMzOGE2LTk1NjEtNGVlOC1iOGQ2LTRlODljYmQ1MjBhMCIsImMiOjh9" />
+        <dcterms:license rdf:resource="https://data.vlaanderen.be/doc/licentie/modellicentie-gratis-hergebruik/v1.0" />
+        <dcterms:format>Rapport</dcterms:format>
+        <dcterms:description xml:lang="nl">Rapport met de cijfergegevens weergeven.</dcterms:description>
+    </dcat:Distribution>
+    <dcat:Dataset rdf:about="http://mobielvlaanderen.be/store-x/man-dcat/dataset_ind1100">
+        <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2019-08-26</dcterms:modified>
+        <dcterms:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2019-08-26</dcterms:issued>
+        <dcterms:title xml:lang="nl">filezwaarte - nieuwe berekeningswijze</dcterms:title>
+        <dcterms:description xml:lang="nl">product van filelengte en fileduur, cumulatief over de beschouwde periode, cumulatief over wegvakken van het hoofdwegennet</dcterms:description>
+        <dcterms:publisher>
+            <foaf:Agent rdf:about="http://data.vlaanderen.be/id/organisatie/OVO000096">
+                <foaf:name>Beleidsdomein Mobiliteit en Openbare Werken</foaf:name>
+                <dcterms:type>organization</dcterms:type>
+            </foaf:Agent>
+        </dcterms:publisher>
+        <dcat:contactPoint>
+            <vcard:Kind rdf:about="https://www.mow-contact.be/">
+                <vcard:fn>https://www.mow-contact.be/</vcard:fn>
+            </vcard:Kind>
+        </dcat:contactPoint>
+        <dcterms:language rdf:resource="http://lexvo.org/id/iso639-3/nld" />
+        <dcat:landingPage rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/bijsluiter_1100.html" />
+        <dcat:distribution rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersxml_1100.xml" />
+        <dcat:distribution rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersTable_1100.html" />
+        <dcat:distribution rdf:resource="https://app.powerbi.com/view?r=eyJrIjoiMWYwNDdiZDYtNjEwYi00YWM1LWIzYzgtZDcyZWQ0MWE1ZWE0IiwidCI6IjBjMDMzOGE2LTk1NjEtNGVlOC1iOGQ2LTRlODljYmQ1MjBhMCIsImMiOjh9" />
+    </dcat:Dataset>
+    <dcat:Distribution rdf:about="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersxml_1100.xml">
+        <dcterms:title xml:lang="nl">filezwaarte - nieuwe berekeningswijze - Cijfers (XML)</dcterms:title>
+        <dcat:accessURL rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersxml_1100.xml" />
+        <dcterms:license rdf:resource="https://data.vlaanderen.be/doc/licentie/modellicentie-gratis-hergebruik/v1.0" />
+        <dcterms:format>XML</dcterms:format>
+        <dcterms:description xml:lang="nl">Eventuele opmerkingen bij de cijferrecords voor een bepaalde periode (cfr. meetfrequentie)
+zijn terug te vinden in de commentaar file.</dcterms:description>
+    </dcat:Distribution>
+    <dcat:Distribution rdf:about="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersTable_1100.html">
+        <dcterms:title xml:lang="nl">filezwaarte - nieuwe berekeningswijze - Cijfers (Tabel)</dcterms:title>
+        <dcat:accessURL rdf:resource="https://mow-dataroom.s3-eu-west-1.amazonaws.com/cijfersTable_1100.html" />
+        <dcterms:license rdf:resource="https://data.vlaanderen.be/doc/licentie/modellicentie-gratis-hergebruik/v1.0" />
+        <dcterms:format>HTML</dcterms:format>
+        <dcterms:description xml:lang="nl">Kies de URL hierboven om de cijfergegevens in een tabel te zien.
+
+De cijfergegevens in de tabel kunnen in MS Excel opgeladen worden via de 'Data' - 'From Web' functie. Gebruik de
+hierboven vermelde URL in het adres veld.
+
+Eventuele opmerkingen bij de cijferrecords voor een bepaalde periode (cfr. meetfrequentie) zijn terug te vinden
+in de commentaar file.</dcterms:description>
+    </dcat:Distribution>
+    <dcat:Distribution rdf:about="https://app.powerbi.com/view?r=eyJrIjoiMWYwNDdiZDYtNjEwYi00YWM1LWIzYzgtZDcyZWQ0MWE1ZWE0IiwidCI6IjBjMDMzOGE2LTk1NjEtNGVlOC1iOGQ2LTRlODljYmQ1MjBhMCIsImMiOjh9">
+        <dcterms:title xml:lang="nl">filezwaarte - nieuwe berekeningswijze - Rapport (PowerBI)</dcterms:title>
+        <dcat:accessURL rdf:resource="https://app.powerbi.com/view?r=eyJrIjoiMWYwNDdiZDYtNjEwYi00YWM1LWIzYzgtZDcyZWQ0MWE1ZWE0IiwidCI6IjBjMDMzOGE2LTk1NjEtNGVlOC1iOGQ2LTRlODljYmQ1MjBhMCIsImMiOjh9" />
+        <dcterms:license rdf:resource="https://data.vlaanderen.be/doc/licentie/modellicentie-gratis-hergebruik/v1.0" />
+        <dcterms:format>Rapport</dcterms:format>
+        <dcterms:description xml:lang="nl">Rapport met de cijfergegevens weergeven.</dcterms:description>
+    </dcat:Distribution>
+</rdf:RDF>

@@ -30,6 +30,7 @@
   xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/2.0"
   xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0"
   xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
+  xmlns:gcx="http://standards.iso.org/iso/19115/-3/gcx/1.0"
   xmlns:gn="http://www.fao.org/geonetwork"
   xmlns:xs="http://www.w3.org/2001/XMLSchema"
   xmlns:gn-fn-iso19115-3.2018="http://geonetwork-opensource.org/xsl/functions/profiles/iso19115-3.2018"
@@ -39,14 +40,19 @@
 
   <xsl:param name="url"/>
   <xsl:param name="name"/>
+  <xsl:param name="updateKey"/>
 
 
   <xsl:variable name="mainLang"
                 select="/mdb:MD_Metadata/mdb:defaultLocale/*/lan:language/*/@codeListValue"
                 as="xs:string"/>
 
+  <xsl:variable name="mainLangId"
+                select="/mdb:MD_Metadata/mdb:defaultLocale/*/@id"
+                as="xs:string"/>
+
   <xsl:variable name="useOnlyPTFreeText"
-                select="count(//*[lan:PT_FreeText and not(gco:CharacterString)]) > 0"
+                select="count(//*[lan:PT_FreeText and not(gco:CharacterString|gcx:Anchor)]) > 0"
                 as="xs:boolean"/>
 
   <xsl:variable name="metadataIdentifier"
@@ -71,24 +77,10 @@
       <xsl:apply-templates select="mdb:metadataExtensionInfo"/>
       <xsl:apply-templates select="mdb:identificationInfo"/>
       <xsl:apply-templates select="mdb:contentInfo"/>
-      <mdb:contentInfo>
-        <mrc:MD_FeatureCatalogueDescription>
-          <mrc:featureCatalogueCitation>
-            <cit:CI_Citation>
-              <cit:title>
-                <xsl:copy-of select="gn-fn-iso19115-3.2018:fillTextElement($name, $mainLang, $useOnlyPTFreeText)"/>
-              </cit:title>
-              <cit:onlineResource>
-                <cit:CI_OnlineResource>
-                  <cit:linkage>
-                    <xsl:copy-of select="gn-fn-iso19115-3.2018:fillTextElement($url, $mainLang, $useOnlyPTFreeText)"/>
-                  </cit:linkage>
-                </cit:CI_OnlineResource>
-              </cit:onlineResource>
-            </cit:CI_Citation>
-          </mrc:featureCatalogueCitation>
-        </mrc:MD_FeatureCatalogueDescription>
-      </mdb:contentInfo>
+
+      <xsl:if test="$updateKey = ''">
+        <xsl:call-template name="create-fcats"/>
+      </xsl:if>
 
       <xsl:apply-templates select="mdb:distributionInfo"/>
       <xsl:apply-templates select="mdb:dataQualityInfo"/>
@@ -98,13 +90,40 @@
       <xsl:apply-templates select="mdb:applicationSchemaInfo"/>
       <xsl:apply-templates select="mdb:metadataMaintenance"/>
       <xsl:apply-templates select="mdb:acquisitionInformation"/>
-      
     </xsl:copy>
   </xsl:template>
-  
+
+  <xsl:template match="mdb:contentInfo[concat(
+                          */mrc:featureCatalogueCitation/*/cit:onlineResource/cit:CI_OnlineResource/cit:linkage/gco:CharacterString, 'WWW:LINK',
+                          */mrc:featureCatalogueCitation/*/cit:title/gco:CharacterString) =
+                          normalize-space($updateKey)]">
+    <xsl:call-template name="create-fcats"/>
+  </xsl:template>
+
+  <xsl:template name="create-fcats">
+    <mdb:contentInfo>
+      <mrc:MD_FeatureCatalogueDescription>
+        <mrc:featureCatalogueCitation>
+          <cit:CI_Citation>
+            <cit:title>
+              <xsl:copy-of select="gn-fn-iso19115-3.2018:fillTextElement($name, $mainLangId, $useOnlyPTFreeText)"/>
+            </cit:title>
+            <cit:onlineResource>
+              <cit:CI_OnlineResource>
+                <cit:linkage>
+                  <xsl:copy-of select="gn-fn-iso19115-3.2018:fillTextElement($url, $mainLangId, $useOnlyPTFreeText)"/>
+                </cit:linkage>
+              </cit:CI_OnlineResource>
+            </cit:onlineResource>
+          </cit:CI_Citation>
+        </mrc:featureCatalogueCitation>
+      </mrc:MD_FeatureCatalogueDescription>
+    </mdb:contentInfo>
+  </xsl:template>
+
   <!-- Remove geonet:* elements. -->
   <xsl:template match="gn:*" priority="2"/>
-  
+
   <!-- Copy everything. -->
   <xsl:template match="@*|node()">
     <xsl:copy>

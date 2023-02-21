@@ -73,6 +73,7 @@
 
       var defaultStrategy = "";
 
+      $scope.wfsFilterValue = null;
       $scope.url = decodeURIComponent($location.search()["wfs-indexing"]);
 
       // sample CRON expressions
@@ -144,6 +145,7 @@
             $scope.openScheduleSettings(btn.attr("data-job-key"));
           });
           event.preventDefault();
+          $scope.filterWfsBsWithInput();
         });
         $element.find("a[data-trigger-job-key]").click(function (event) {
           var btn = $(event.currentTarget);
@@ -151,6 +153,7 @@
             $scope.triggerIndexing(btn.attr("data-trigger-job-key"));
           });
           event.preventDefault();
+          $scope.filterWfsBsWithInput();
         });
         $element.find("a[data-delete-key]").click(function (event) {
           var btn = $(event.currentTarget);
@@ -158,6 +161,7 @@
             $scope.deleteWfsService(btn.attr("data-delete-key"));
           });
           event.preventDefault();
+          $scope.filterWfsBsWithInput();
         });
         $element.find("div[data-md-uuid]").each(function () {
           updateMdTitle(this);
@@ -189,6 +193,9 @@
       };
 
       $scope.filterWfsBsWithInput = function () {
+        if ($scope.wfsFilterValue == null) {
+          return;
+        }
         $scope.refreshBsTable(
           $scope.jobsArray.filter(function (job) {
             return (
@@ -288,6 +295,7 @@
                       updateMdTitle(this);
                     });
                   });
+                  $scope.filterWfsBsWithInput();
                 });
 
               $scope.jobsArray = Object.keys($scope.jobs)

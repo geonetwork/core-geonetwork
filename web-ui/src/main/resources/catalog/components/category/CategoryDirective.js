@@ -46,8 +46,8 @@
         },
         templateUrl: "../../catalog/components/category/partials/" + "category.html",
         link: function (scope, element, attrs) {
-          $http.get("../api/tags", { cache: true }).success(function (data) {
-            scope.categories = data;
+          $http.get("../api/tags", { cache: true }).then(function (response) {
+            scope.categories = response.data;
           });
 
           scope.sortByLabel = function (c) {
@@ -77,8 +77,8 @@
             scope.categoryIsSelected = true;
           };
 
-          $http.get("../api/tags", { cache: true }).success(function (data) {
-            scope.categories = data;
+          $http.get("../api/tags", { cache: true }).then(function (response) {
+            scope.categories = response.data;
           });
 
           scope.reset = function () {
@@ -119,9 +119,10 @@
               url = url + "&removeId=" + tagsToRemove.join("&removeId=");
             }
 
-            $http
-              .put(url)
-              .success(function (data) {
+            $http.put(url).then(
+              function (response) {
+                var data = response.data;
+
                 scope.processReport = data;
 
                 gnUtilityService.openModal(
@@ -139,9 +140,9 @@
 
                 scope.report = data;
                 defer.resolve(data);
-              })
-              .error(function (data) {
-                scope.processReport = data;
+              },
+              function (response) {
+                scope.processReport = response.data;
 
                 gnUtilityService.openModal(
                   {
@@ -157,7 +158,8 @@
                 );
 
                 defer.reject(data);
-              });
+              }
+            );
             return defer.promise;
           };
         }

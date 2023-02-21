@@ -73,7 +73,9 @@
           var id = undefined;
           $http
             .get("../api/groups?profile=Editor", { cache: true })
-            .success(function (data) {
+            .then(function (response) {
+              var data = response.data;
+
               var groups = data,
                 ownerGroup = null;
               if (ownerGroup === null && data) {

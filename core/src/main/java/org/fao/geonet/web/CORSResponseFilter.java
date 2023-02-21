@@ -22,6 +22,7 @@
  */
 package org.fao.geonet.web;
 
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.setting.SettingManager;
@@ -65,7 +66,7 @@ public class CORSResponseFilter
 
     public void init(FilterConfig config) {
         String allowedHosts = config.getInitParameter(ALLOWED_HOSTS);
-        if (allowedHosts != null) {
+        if (StringUtils.isNotEmpty(allowedHosts)) {
             if (allowedHosts.equals("db")) {
                 isUsingDb = true;
             } else if (allowedHosts.equals("*")) {
@@ -92,7 +93,10 @@ public class CORSResponseFilter
 
         if (isUsingDb) {
             String allowedHosts = settingManager.getValue(SYSTEM_CORS_ALLOWEDHOSTS);
-            if (allowedHosts != null) {
+            if (StringUtils.isEmpty(allowedHosts)) {
+                addHeaderForAllHosts = false;
+                allowedRemoteHosts = new ArrayList<>();
+            } else {
                 if (allowedHosts.equals("*")) {
                     addHeaderForAllHosts = true;
                 } else if (!allowedHosts.equals("")) {
@@ -102,7 +106,7 @@ public class CORSResponseFilter
             }
         }
 
-        if (addHeaderForAllHosts || allowedRemoteHosts.size() > 0) {
+        if (addHeaderForAllHosts || !allowedRemoteHosts.isEmpty()) {
             String clientOriginUrl = httpRequest.getHeader("origin");
             if (clientOriginUrl != null) {
                 try {

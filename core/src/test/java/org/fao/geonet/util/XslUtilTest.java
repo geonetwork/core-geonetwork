@@ -32,7 +32,7 @@ public class XslUtilTest {
     @Test
     public void testHtml2text() {
         String html = "<div><span>Sample text</span><br/><span>Sample text 2</span><br/><span>Sample text 3</span></div>";
-        String expectedText = "Sample textSample text 2Sample text 3";
+        String expectedText = "Sample text\nSample text 2\nSample text 3";
         String text = XslUtil.html2text(html);
 
         assertEquals(expectedText, text);

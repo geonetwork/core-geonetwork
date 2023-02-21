@@ -203,7 +203,20 @@
         );
       };
 
-      // activate the tabs in the advanded metadata view
+      /**
+       * Scroll to an element in the page using it's ID
+       *
+       * @param id  unique element identifier
+       */
+      $scope.scrollToSection = function (id) {
+        var scrollToElement = document.getElementById(id);
+
+        if (scrollToElement) {
+          scrollToElement.scrollIntoView();
+        }
+      };
+
+      // activate the tabs in the full metadata view
       $scope.activateTabs = function () {
         // attach click to tab
         $(".nav-tabs-advanced a").click(function (e) {
@@ -220,8 +233,8 @@
             }
           }
         });
-        // show the first tab
-        $(".nav-tabs-advanced a:first").tab("show");
+        // show the first visible tab
+        $(".nav-tabs-advanced a:visible:first").tab("show");
       };
 
       $scope.loadFormatter = function (url) {
@@ -280,7 +293,10 @@
 
       function checkIfCitationIsDisplayed(record) {
         $scope.showCitation = false;
-        if (gnGlobalSettings.gnCfg.mods.recordview.showCitation.if) {
+        if (
+          gnGlobalSettings.gnCfg.mods.recordview.showCitation.enabled === true &&
+          gnGlobalSettings.gnCfg.mods.recordview.showCitation.if
+        ) {
           gnUtilityService.checkConfigurationPropertyCondition(
             record,
             gnGlobalSettings.gnCfg.mods.recordview.showCitation,

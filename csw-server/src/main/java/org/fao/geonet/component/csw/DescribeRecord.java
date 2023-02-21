@@ -212,10 +212,10 @@ public class DescribeRecord extends AbstractOperation implements CatalogService 
     //---
     //---------------------------------------------------------------------------
 
-    private HashMap<String, Element> getSchemaComponents(ServiceContext context, String typeName)
+    private Map<String, Element> getSchemaComponents(ServiceContext context, String typeName)
         throws NoApplicableCodeEx, InvalidParameterValueEx {
 
-        HashMap<String, Element> scElements = new HashMap<>();
+        Map<String, Element> scElements = new HashMap<>();
 
         if (typeName == null) {
             for (String tname : _catalogConfig.getDescribeRecordTypename().keySet()) {

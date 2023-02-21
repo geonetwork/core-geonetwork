@@ -1,0 +1,21 @@
+PREFIX dcat: <http://www.w3.org/ns/dcat#>
+PREFIX dct: <http://purl.org/dc/terms/>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+
+# Extract all CatalogRecord ids, modified date and primary topic
+SELECT ?catalogId ?recordId ?modified ?resourceId ?baseRecordUUID ?baseResourceUUID
+WHERE {
+  VALUES ?type { dcat:Dataset dcat:DataService }
+  ?recordId a dcat:CatalogRecord .
+  ?recordId foaf:primaryTopic ?resourceId .
+  ?resourceId a ?type
+  OPTIONAL {
+    ?catalogId a dcat:Catalog .
+    ?catalogId dcat:record ?recordId .
+    ?recordId dct:modified ?modified .
+    ?recordId dct:identifier ?recordDctIdentifier .
+    ?resourceId dct:identifier ?resourceDctIdentifier .
+  }
+  BIND (if (bound(?recordDctIdentifier), ?recordDctIdentifier, ?recordId) as ?baseRecordUUID)
+  BIND (if (bound(?resourceDctIdentifier), ?resourceDctIdentifier, ?resourceId) as ?baseResourceUUID)
+}

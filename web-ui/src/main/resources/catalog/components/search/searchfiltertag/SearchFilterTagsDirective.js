@@ -25,18 +25,20 @@
     "gnGlobalSettings",
     "gnHumanizeTimeService",
     function (gnGlobalSettings, gnHumanizeTimeService) {
-      return function (range) {
-        var tokens = range.split(/^[\[{](.*) TO (.*)[\]}]$/),
+      return function (range, key) {
+        var expression = "\\+?" + key + ":",
+          rangeValue = range.replace(new RegExp(expression), ""),
+          tokens = rangeValue.split(/^[\[{](.*) TO (.*)[\]}]$/),
           useFromNowSetting = gnGlobalSettings.gnCfg.mods.global.humanizeDates,
           format = gnGlobalSettings.gnCfg.mods.global.dateFormat;
 
-        return tokens.length === 4
+        return tokens.length === 4 && moment(tokens[1], moment.ISO_8601, true).isValid()
           ? gnHumanizeTimeService(tokens[1], format, useFromNowSetting !== undefined)
               .title +
               " > " +
               gnHumanizeTimeService(tokens[2], format, useFromNowSetting !== undefined)
                 .title
-          : range;
+          : rangeValue;
       };
     }
   ]);
@@ -249,7 +251,7 @@
             if (
               filter.value &&
               filter.value.match &&
-              filter.value.match(/\+\w+:[\[{].* TO .*[\]}]/)
+              filter.value.match(/\+?\w+:[\[{].* TO .*[\]}]/)
             ) {
               return "RANGE";
             } else if (filter.key === "geometry") {

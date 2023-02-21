@@ -170,8 +170,8 @@
             scope.loadMetadataResources = function () {
               return gnfilestoreService
                 .get(scope.uuid, scope.filter)
-                .success(function (data) {
-                  scope.metadataResources = data;
+                .then(function (response) {
+                  scope.metadataResources = response.data;
                 });
             };
             scope.setResourceStatus = function (r) {
@@ -196,7 +196,7 @@
               );
             };
             scope.deleteResource = function (r) {
-              gnfilestoreService.delete(r).success(scope.loadMetadataResources);
+              gnfilestoreService.delete(r).then(scope.loadMetadataResources);
             };
             scope.$on("gnFileStoreUploadDone", scope.loadMetadataResources);
 

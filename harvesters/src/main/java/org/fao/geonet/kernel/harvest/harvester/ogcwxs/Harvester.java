@@ -37,6 +37,7 @@ import org.fao.geonet.api.records.attachments.Store;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
@@ -45,6 +46,7 @@ import org.fao.geonet.kernel.harvest.BaseAligner;
 import org.fao.geonet.kernel.harvest.harvester.*;
 import org.fao.geonet.kernel.schema.ISOPlugin;
 import org.fao.geonet.kernel.schema.SchemaPlugin;
+import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataCategoryRepository;
@@ -373,13 +375,11 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
         }
 
         // Apply custom transformation if requested
-        Path importXsl = context.getAppPath().resolve(Geonet.Path.IMPORT_STYLESHEETS);
+        Path importXsl;
         String importXslFile = params.getImportXslt();
         if (importXslFile != null && !importXslFile.equals("none")) {
-            if (!importXslFile.endsWith("xsl")) {
-                importXslFile = importXslFile + ".xsl";
-            }
-            importXsl = importXsl.resolve(importXslFile);
+            importXsl = ApplicationContextHolder.get().getBean(GeonetworkDataDirectory.class)
+                .getXsltConversion(importXslFile);
             log.info("Applying custom import XSL " + importXsl.getFileName());
             md = Xml.transform(md, importXsl);
             schema = dataMan.autodetectSchema(md, null);
@@ -415,13 +415,13 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
 
         if (!dataMan.existsMetadataUuid(uuid)) {
             result.addedMetadata++;
-            metadata = metadataManager.insertMetadata(context, metadata, md, false, false, UpdateDatestamp.NO, false, false);
+            metadata = metadataManager.insertMetadata(context, metadata, md, IndexingMode.none, false, UpdateDatestamp.NO, false, false);
         } else {
             result.updatedMetadata++;
             String id = dataMan.getMetadataId(uuid);
             metadata.setId(Integer.valueOf(id));
-            metadataManager.updateMetadata(context, id, md, false, false, false,
-                context.getLanguage(), dataMan.extractDateModified(schema, md), false);
+            metadataManager.updateMetadata(context, id, md, false, false,
+                context.getLanguage(), dataMan.extractDateModified(schema, md), false, IndexingMode.none);
         }
 
         String id = String.valueOf(metadata.getId());
@@ -782,13 +782,11 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
                     xml = Xml.transform(capa, styleSheet, param);
 
                     // Apply custom transformation if requested
-                    Path importXsl = context.getAppPath().resolve(Geonet.Path.IMPORT_STYLESHEETS);
+                    Path importXsl;
                     String importXslFile = params.getImportXslt();
                     if (importXslFile != null && !importXslFile.equals("none")) {
-                        if (!importXslFile.endsWith("xsl")) {
-                            importXslFile = importXslFile + ".xsl";
-                        }
-                        importXsl = importXsl.resolve(importXslFile);
+                        importXsl = ApplicationContextHolder.get().getBean(GeonetworkDataDirectory.class)
+                            .getXsltConversion(importXslFile);
                         log.info("Applying custom import XSL " + importXsl.getFileName());
                         xml = Xml.transform(xml, importXsl);
                     }
@@ -836,13 +834,13 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
             }
             if (!dataMan.existsMetadataUuid(reg.uuid)) {
                 result.addedMetadata++;
-                metadata = metadataManager.insertMetadata(context, metadata, xml, false, false, UpdateDatestamp.NO, false, false);
+                metadata = metadataManager.insertMetadata(context, metadata, xml, IndexingMode.none, false, UpdateDatestamp.NO, false, false);
             } else {
                 result.updatedMetadata++;
                 String id = dataMan.getMetadataId(reg.uuid);
                 metadata.setId(Integer.valueOf(id));
-                metadataManager.updateMetadata(context, id, xml, false, false, false,
-                    context.getLanguage(), dataMan.extractDateModified(schema, xml), false);
+                metadataManager.updateMetadata(context, id, xml, false, false,
+                    context.getLanguage(), dataMan.extractDateModified(schema, xml), false, IndexingMode.none);
             }
 
             reg.id = String.valueOf(metadata.getId());
@@ -873,9 +871,9 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
                     xml = loadThumbnail(reg, xml, schema);
                     if (xml != null) {
                         metadataManager.updateMetadata(context, reg.id, xml,
-                            false, false, false,
+                            false, false,
                             context.getLanguage(),
-                            dataMan.extractDateModified(schema, xml), false);
+                            dataMan.extractDateModified(schema, xml), false, IndexingMode.none);
                     }
                 } else {
                     if (log.isDebugEnabled()) {

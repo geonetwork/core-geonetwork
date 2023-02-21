@@ -22,6 +22,7 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns:gml="http://www.opengis.net/gml/3.2"
   xmlns:xlink="http://www.w3.org/1999/xlink"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"
   xmlns:gn="http://www.fao.org/geonetwork"
   xmlns:gn-fn-core="http://geonetwork-opensource.org/xsl/functions/core"
   xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
@@ -63,8 +64,9 @@
     <xsl:param name="labels" select="$labels" required="no"/>
 
     <xsl:variable name="name" select="concat(@prefix, ':', @name)"/>
+    <xsl:variable name="xpath" select="gn-fn-metadata:getXPath(..)"/>
     <xsl:variable name="flatModeException"
-                  select="gn-fn-metadata:isFieldFlatModeException($viewConfig, $name, name())"/>
+                  select="gn-fn-metadata:isFieldFlatModeException($viewConfig, $name, name(..), $xpath)"/>
 
     <xsl:if test="$isEditing and
                   (not($isFlatMode) or $flatModeException)">
@@ -144,6 +146,8 @@
                         not(gco:CharacterString)]">
     <xsl:param name="schema" select="$schema" required="no"/>
     <xsl:param name="labels" select="$labels" required="no"/>
+    <xsl:param name="config" required="no"/>
+    <xsl:param name="overrideLabel" select="''" required="no"/>
 
     <xsl:variable name="xpath" select="gn-fn-metadata:getXPath(.)"/>
     <xsl:variable name="isoType" select="if (../@gco:isoType) then ../@gco:isoType else ''"/>
@@ -168,7 +172,9 @@
 
     <xsl:call-template name="render-boxed-element">
       <xsl:with-param name="label"
-                      select="gn-fn-metadata:getLabel($schema, name(), $labels, name(..), $isoType, $xpath)/label"/>
+                      select="if ($overrideLabel != '')
+                              then $overrideLabel
+                              else gn-fn-metadata:getLabel($schema, name(), $labels, name(..), $isoType, $xpath)/label"/>
       <xsl:with-param name="editInfo" select="gn:element"/>
       <xsl:with-param name="errors" select="$errors"/>
       <xsl:with-param name="cls" select="local-name()"/>
@@ -183,12 +189,18 @@
           <xsl:with-param name="labels" select="$labels"/>
         </xsl:apply-templates>
       </xsl:with-param>
+      <xsl:with-param name="collapsible"
+                      select="if ($config and $config/@collapsible != '')
+                              then xs:boolean($config/@collapsible) else true()"/>
+      <xsl:with-param name="collapsed"
+                      select="if ($config and $config/@collapsed != '')
+                              then xs:boolean($config/@collapsed) else false()"/>
     </xsl:call-template>
   </xsl:template>
 
   <!-- Render simple element which usually match a form field -->
   <xsl:template mode="mode-iso19115-3.2018" priority="200"
-                match="*[gco:CharacterString|gcx:Anchor|gco:Integer|gco:Decimal|
+                match="*[gco:CharacterString|gcx:Anchor|gco:Integer|gco:UnlimitedInteger|gco:Decimal|
        gco:Boolean|gco:Real|gco:Measure|gco:Length|gco:Distance|gco:Angle|gmx:FileName|
        gco:Scale|gco:RecordType|gcx:MimeFileType|gco:LocalName|gco:ScopedName|gco:RecordType|
        gco:Record|lan:PT_FreeText|mcc:URI|gco:TM_PeriodDuration]">
@@ -254,7 +266,7 @@
     <xsl:variable name="forceDisplayAttributes" select="count(gcx:Anchor) > 0"/>
 
     <xsl:variable name="monoLingualValue"
-                  select="gco:CharacterString|gcx:Anchor|gco:Integer|gco:Decimal|
+                  select="gco:CharacterString|gcx:Anchor|gco:Integer|gco:UnlimitedInteger|gco:Decimal|
                           gco:Boolean|gco:Real|gco:Measure|gco:Length|
                           gco:Distance|gco:Angle|gmx:FileName|
                           gco:Scale|gco:RecordType|gcx:MimeFileType|

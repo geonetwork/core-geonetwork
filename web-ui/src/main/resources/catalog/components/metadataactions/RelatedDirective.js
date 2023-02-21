@@ -438,7 +438,9 @@
                   scope.relations.siblings.map &&
                   scope.groupSiblingsByType
                 ) {
-                  scope.relations.siblings
+                  var siblings = angular.copy(scope.relations.siblings);
+                  scope.relations.siblings = [];
+                  siblings
                     .map(function (r) {
                       return (r.properties && r.properties.initiativeType) || "";
                     })
@@ -446,13 +448,11 @@
                       return self.indexOf(value) === index;
                     })
                     .forEach(function (type) {
-                      scope.relations["siblings" + type] =
-                        scope.relations.siblings.filter(function (r) {
-                          return r.properties && r.properties.initiativeType === type;
-                        });
+                      scope.relations["siblings" + type] = siblings.filter(function (r) {
+                        return r.properties && r.properties.initiativeType === type;
+                      });
                       siblingsCount += scope.relations["siblings" + type].length;
                     });
-                  scope.relations.siblings = [];
                 } else {
                   siblingsCount = scope.relations[idx].length;
                 }

@@ -2,9 +2,11 @@ INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metada
 
 UPDATE Settings set position = 7213 WHERE name = 'system/inspire/remotevalidation/nodeid';
 UPDATE Settings set position = 7214 WHERE name = 'system/inspire/remotevalidation/apikey';
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/inspire/remotevalidation/urlquery', '', 0, 7212, 'n');
 
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/import/userprofile', 'Editor', 0, 12001, 'n');
+-- Changes were back ported to version 3.12.x so they are no longer required unless upgrading from previous v40x which did not have 3.12.x  migrations steps.
+-- So lets try to only add the records if they don't already exists.
+INSERT INTO Settings (name, value, datatype, position, internal) SELECT distinct 'system/inspire/remotevalidation/urlquery', '', 0, 7212, 'n' from settings WHERE NOT EXISTS (SELECT name FROM Settings WHERE name = 'system/inspire/remotevalidation/urlquery');
+INSERT INTO Settings (name, value, datatype, position, internal) SELECT distinct 'metadata/import/userprofile', 'Editor', 0, 12001, 'n' from settings WHERE NOT EXISTS (SELECT name FROM Settings WHERE name = 'metadata/import/userprofile');
 
 INSERT INTO Users (id, username, password, name, surname, profile, kind, organisation, security, authtype, isenabled) VALUES  (0,'nobody','','nobody','nobody',4,'','','','', 'n');
 INSERT INTO Address (id, address, city, country, state, zip) VALUES  (0, '', '', '', '', '');

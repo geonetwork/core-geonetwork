@@ -60,6 +60,7 @@
         <sec:filter-chain pattern="/xml/schemas/**" filters=""/>
         <sec:filter-chain pattern="/xsl/harvesting/**" filters=""/>
         <sec:filter-chain pattern="/xsl/ownership/**" filters=""/>
+        <sec:filter-chain pattern="/config/**" filters=""/>
         <ref bean="coreFilterChain"/>
       </list>
     </constructor-arg>

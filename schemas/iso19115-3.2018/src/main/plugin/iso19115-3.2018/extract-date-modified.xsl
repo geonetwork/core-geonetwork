@@ -7,10 +7,10 @@
 
   <xsl:template
     match="mdb:MD_Metadata">
-    <xsl:variable name="revisionDate" 
-                  select="mdb:dateInfo/cit:CI_Date
+    <xsl:variable name="revisionDate"
+                  select="(mdb:dateInfo/cit:CI_Date
       [cit:dateType/cit:CI_DateTypeCode/@codeListValue='revision']
-      /cit:date/*"/>
+      /cit:date/*)[1]"/>
     <dateStamp>
       <xsl:choose>
         <xsl:when test="normalize-space($revisionDate)">

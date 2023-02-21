@@ -59,6 +59,15 @@
     </xsl:call-template>
   </xsl:template>
 
+  <!-- Convert a concept to an ISO19139 gmd:MD_Keywords with an XLink which
+    will be resolved by XLink resolver with Anchor encoding. -->
+  <xsl:template name="to-iso19139-keyword-as-xlink-with-anchor">
+    <xsl:call-template name="to-iso19139-keyword">
+      <xsl:with-param name="withXlink" select="true()"/>
+      <xsl:with-param name="withAnchor" select="true()"/>
+    </xsl:call-template>
+  </xsl:template>
+
 
   <!-- Convert a concept to an ISO19139 keywords.
     If no keyword is provided, only thesaurus section is adaded.
@@ -143,7 +152,8 @@
                                    if (thesaurus/key) then thesaurus/key else /root/request/thesaurus,
                                   '&amp;id=', encode-for-uri(/root/request/id),
                                   if (/root/request/lang) then concat('&amp;lang=', /root/request/lang) else '',
-                                  if ($textgroupOnly) then '&amp;textgroupOnly' else '')"/>
+                                  if ($textgroupOnly) then '&amp;textgroupOnly' else '',
+                                  if ($withAnchor) then '&amp;transformation=to-iso19139-keyword-with-anchor' else '')"/>
         </xsl:when>
         <xsl:otherwise>
           <xsl:call-template name="to-md-keywords">

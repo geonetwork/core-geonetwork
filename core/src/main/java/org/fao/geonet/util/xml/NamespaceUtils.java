@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.List;
 import java.util.TreeMap;
 
@@ -135,7 +136,7 @@ public class NamespaceUtils {
         }
 
         // OK, the things we inherit are the prefixes we have in scope that are also in our parent's scope.
-        HashMap<String, Namespace> parents = new HashMap<String, Namespace>();
+        Map<String, Namespace> parents = new HashMap<String, Namespace>();
         for (Namespace ns : getNamespacesInScope(element.getParentElement())) {
             parents.put(ns.getPrefix(), ns);
         }
@@ -173,7 +174,7 @@ public class NamespaceUtils {
         }
 
         // OK, the things we introduce are the prefixes we have in scope that are *not* in our parent's scope.
-        HashMap<String, Namespace> parents = new HashMap<String, Namespace>();
+        Map<String, Namespace> parents = new HashMap<String, Namespace>();
         for (Namespace ns : getNamespacesInScope(element.getParentElement())) {
             parents.put(ns.getPrefix(), ns);
         }

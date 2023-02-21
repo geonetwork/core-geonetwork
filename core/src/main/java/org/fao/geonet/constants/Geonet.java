@@ -183,6 +183,7 @@ public final class Geonet {
         public static final String XSLT_FOLDER = "xslt";
         public static final String CONV_STYLESHEETS = STYLESHEETS + "/conversion";
         public static final String IMPORT_STYLESHEETS = CONV_STYLESHEETS + "/import";
+        public static final String IMPORT_STYLESHEETS_SCHEMA_PREFIX = "schema:";
         public static final String WFS_STYLESHEETS = "convert/WFSToFragments";
         public static final String TDS_STYLESHEETS = "convert/ThreddsToFragments";
         public static final String TDS_19119_19139_STYLESHEETS = "convert/ThreddsCatalogto19119";
@@ -650,7 +651,7 @@ public final class Geonet {
         public static final String LOGO = "_logo";
         public static final String OP_PREFIX = "op";
         public static final String GROUP_PUBLISHED = "groupPublished";
-        public static final String CAT = "_cat";
+        public static final String CAT = "cat";
         public static final String STATUS = "mdStatus";
         public static final String STATUS_CHANGE_DATE = "mdStatusChangeDate";
         public static final String VALID = "_valid";

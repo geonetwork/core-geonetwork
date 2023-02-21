@@ -30,9 +30,9 @@
         data-translate=""
         >url</label
       >
-      <input
+      <textarea
         id="gn-harvest-settings-simpleurl-basic-service-input"
-        type="text"
+        data-gn-autogrow=""
         class="form-control"
         data-ng-model="harvesterSelected.site.url"
       />
@@ -43,19 +43,25 @@
       id="gn-harvest-settings-simpleurl-advanced-authentication-row"
       data-gn-harvester-account="harvesterSelected"
     />
-  </fieldset>
 
-  <fieldset id="gn-harvest-settings-simpleurl-advanced-row">
-    <legend id="gn-harvest-settings-simpleurl-advanced-title">
-      <i class="fa fa-fw fa-cogs"></i
-      ><span data-translate="">harvesterResponseProcessing</span>
-      {{harvesterSelected['@type'] | translate}}
-    </legend>
+    <div class="well">
+      <span data-translate="">simpleurl-configHelper</span>
+      <div class="btn-group" role="group" aria-label="...">
+        <button
+          data-ng-repeat="(k, v) in simpleUrlHarvesterHelperConfig"
+          type="button"
+          class="btn btn-default"
+          data-ng-disabled="harvesterSelected['@id'] != ''"
+          title="{{::getSimpleUrlConfigHelper(k)}}"
+          data-ng-click="setSimpleUrlConfig(k)"
+        >
+          {{::k}}
+        </button>
+      </div>
+      <div data-translate="">simpleurl-configHelper-help</div>
+    </div>
 
-    <div
-      id="gn-harvest-settings-loopElement-row"
-      data-ng-class="harvesterSelected.site.loopElement == '' ? 'has-error' : ''"
-    >
+    <div id="gn-harvest-settings-loopElement-row">
       <label
         id="gn-harvest-settings-loopElement-label"
         class="control-label"
@@ -69,22 +75,6 @@
         data-ng-model="harvesterSelected.site.loopElement"
       />
       <p class="help-block" data-translate="">simpleurl-loopElementHelp</p>
-    </div>
-
-    <div id="gn-harvest-settings-numberOfRecordPath-row">
-      <label
-        id="gn-harvest-settings-numberOfRecordPath-label"
-        class="control-label"
-        data-translate=""
-        >numberOfRecordPath</label
-      >
-      <input
-        id="gn-harvest-settings-numberOfRecordPath-input"
-        type="text"
-        class="form-control"
-        data-ng-model="harvesterSelected.site.numberOfRecordPath"
-      />
-      <p class="help-block" data-translate="">simpleurl-numberOfRecordPathHelp</p>
     </div>
 
     <div id="gn-harvest-settings-recordIdPath-row">
@@ -103,62 +93,115 @@
       <p class="help-block" data-translate="">simpleurl-recordIdPathHelp</p>
     </div>
 
-    <div id="gn-harvest-settings-pageFromParam-row">
-      <label
-        id="gn-harvest-settings-pageFromParam-label"
-        class="control-label"
-        data-translate=""
-        >pageFromParam</label
-      >
-      <input
-        id="gn-harvest-settings-pageFromParam-input"
-        type="text"
-        class="form-control"
-        data-ng-model="harvesterSelected.site.pageFromParam"
-      />
-      <p class="help-block" data-translate="">simpleurl-pageFromParamHelp</p>
-    </div>
+    <div>
+      <label class="control-label">
+        <input
+          id="gn-harvest-settings-simpleurl-checkbox"
+          type="checkbox"
+          data-ng-model="usePagination.enabled"
+        />
+        <span id="gn-harvest-settings-simpleurl" data-translate=""
+          >simpleurl-pagination</span
+        >
+      </label>
 
-    <div id="gn-harvest-settings-pageSizeParam-row">
-      <label
-        id="gn-harvest-settings-pageSizeParam-label"
-        class="control-label"
-        data-translate=""
-        >pageSizeParam</label
-      >
-      <input
-        id="gn-harvest-settings-pageSizeParam-input"
-        type="text"
-        class="form-control"
-        data-ng-model="harvesterSelected.site.pageSizeParam"
-      />
-      <p class="help-block" data-translate="">simpleurl-pageSizeParamHelp</p>
-    </div>
+      <fieldset data-ng-show="usePagination.enabled">
+        <div class="well">
+          <div id="gn-harvest-settings-numberOfRecordPath-row">
+            <label
+              id="gn-harvest-settings-numberOfRecordPath-label"
+              class="control-label"
+              data-translate=""
+              >numberOfRecordPath</label
+            >
+            <input
+              id="gn-harvest-settings-numberOfRecordPath-input"
+              type="text"
+              class="form-control"
+              data-ng-model="harvesterSelected.site.numberOfRecordPath"
+            />
+            <p class="help-block" data-translate="">simpleurl-numberOfRecordPathHelp</p>
+          </div>
 
-    <div
-      id="gn-harvest-settings-simpleurl-basic-toISOConversion-row"
-      data-ng-class="harvesterSelected.site.toISOConversion == '' ? 'has-error' : ''"
-    >
+          <div id="gn-harvest-settings-pageFromParam-row">
+            <label
+              id="gn-harvest-settings-pageFromParam-label"
+              class="control-label"
+              data-translate=""
+              >pageFromParam</label
+            >
+            <input
+              id="gn-harvest-settings-pageFromParam-input"
+              type="text"
+              class="form-control"
+              data-ng-model="harvesterSelected.site.pageFromParam"
+            />
+            <p class="help-block" data-translate="">simpleurl-pageFromParamHelp</p>
+          </div>
+
+          <div id="gn-harvest-settings-pageSizeParam-row">
+            <label
+              id="gn-harvest-settings-pageSizeParam-label"
+              class="control-label"
+              data-translate=""
+              >pageSizeParam</label
+            >
+            <input
+              id="gn-harvest-settings-pageSizeParam-input"
+              type="text"
+              class="form-control"
+              data-ng-model="harvesterSelected.site.pageSizeParam"
+            />
+            <p class="help-block" data-translate="">simpleurl-pageSizeParamHelp</p>
+          </div>
+        </div>
+      </fieldset>
+    </div>
+  </fieldset>
+
+  <fieldset id="gn-harvest-settings-simpleurl-process-row">
+    <legend id="gn-harvest-settings-simpleurl-process-title">
+      <i class="fa fa-fw fa-cogs"></i
+      ><span data-translate="">harvesterResponseProcessing</span>
+      {{harvesterSelected['@type'] | translate}}
+    </legend>
+
+    <div id="gn-harvest-settings-simpleurl-basic-toISOConversion-row">
       <label
         id="gn-harvest-settings-toISOConversion-label"
         class="control-label"
         data-translate=""
-        >toISOConversion</label
+        >applyXSLToRecord</label
       >
-      <input
-        id="gn-harvest-settings-toISOConversion-input"
-        type="text"
-        class="form-control"
-        data-ng-model="harvesterSelected.site.toISOConversion"
+      <div
+        id="gn-harvest-settings-toISOConversion-list"
+        data-gn-import-xsl="harvesterSelected.site.toISOConversion"
+        data-mode="btn-group"
       />
-      <p class="help-block" data-translate="">simpleurl-toISOConversionHelp</p>
+      <p class="help-block" data-translate="">applyXSLToRecordHelp</p>
+    </div>
+
+    <div id="gn-harvest-settings-csw-advanced-batchEdits-row">
+      <label id="gn-harvest-settings-csw-advanced-batchEdits-label" class="control-label">
+        <span data-translate="">harvesterBatchEdits</span>
+      </label>
+
+      <div gn-batch-edit-examples-selector="addBatchEdits" />
+
+      <div
+        id="gn-harvest-settings-csw-advanced-batchEdits-list"
+        style="height: 300px"
+        ui-ace="{useWrapMode:true, showGutter:true, mode:'json'}"
+        data-ng-model="harvesterSelected.content.batchEdits"
+      />
+      <p class="help-block" data-translate="">harvesterBatchEditsHelp</p>
     </div>
 
     <div
       id="gn-harvest-settings-simpleurl-advanced-category-row"
       data-gn-category="harvesterSelected.categories[0]['@id']"
       data-lang="{{lang}}"
-      data-label="simpleurl-category"
+      data-label="category"
     />
 
     <div id="gn-harvest-settings-simpleurl-advanced-validate-row">

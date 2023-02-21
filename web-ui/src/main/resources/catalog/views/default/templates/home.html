@@ -37,7 +37,7 @@
           placeholder="{{'anyPlaceHolder' | translate}}"
           aria-label="{{'anyPlaceHolder' | translate}}"
           data-ng-keyup="$event.keyCode == 13 && goToSearch(homeAnyField)"
-          data-typeahead="address for address in getAnySuggestions($viewValue, searchObj)"
+          data-typeahead="md.label as md.label for md in getAnySuggestions($viewValue, searchObj)"
           data-typeahead-template-url="../../catalog/templates/gn-typeahead-match.html"
           data-typeahead-loading="anyLoading"
           data-typeahead-min-length="1"
@@ -101,7 +101,7 @@
   <div data-ng-class="fluidLayout ? 'container-fluid' : 'container'">
     <div class="col-md-offset-2 col-md-8 alert alert-warning">
       <span data-translate="">noDataInCatalog</span>
-      <div data-gn-need-help="user-guide/quick-start/index.html"></div>
+      <div data-gn-need-help="quick-start-home"></div>
     </div>
   </div>
 </div>
@@ -120,7 +120,7 @@
           <label
             data-ng-repeat="facetKey in homeFacet.list"
             data-ng-init="agg = searchInfo.aggregations[facetKey]"
-            data-ng-show="agg.buckets.length > 0 && facetKey != homeFacet.lastKey"
+            data-ng-show="facetKey != homeFacet.lastKey"
           >
             <input
               type="radio"
@@ -140,7 +140,6 @@
           es-facet-cards="homeFacet.key"
           data-home-facet="homeFacet"
           data-search-info="searchInfo"
-          data-agg-response="aggResponse"
           data-agg-config="aggConfig"
         />
       </div>
@@ -157,7 +156,6 @@
           es-facet-cards="homeFacet.lastKey"
           data-home-facet="homeFacet"
           data-search-info="searchInfo"
-          data-agg-response="aggResponse"
           data-agg-config="aggConfig"
         />
       </div>

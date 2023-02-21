@@ -48,7 +48,12 @@
         <bean class="org.fao.geonet.kernel.schema.SavedQuery">
           <property name="id" value="doi-get"/>
           <property name="xpath"
-                    value="*//cit:CI_OnlineResource[cit:protocol/gco:CharacterString = 'DOI']/cit:linkage/gco:CharacterString/text()"/>
+                    value="*//cit:CI_OnlineResource[cit:protocol/gco:CharacterString = 'DOI' or cit:protocol/gco:CharacterString = 'WWW:LINK-1.0-http--metadata-URL']/cit:linkage/gco:CharacterString/text()"/>
+        </bean>
+        <bean class="org.fao.geonet.kernel.schema.SavedQuery">
+          <property name="id" value="resourceid-get"/>
+          <property name="xpath"
+                    value="mdb:identificationInfo/*/mri:citation/*/cit:identifier[1]/*/mcc:code/*/text()"/>
         </bean>
       </list>
     </property>

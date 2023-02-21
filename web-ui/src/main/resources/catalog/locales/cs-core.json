@@ -574,9 +574,12 @@
     "copyToClipboard": "Zkopírovat text do schránky",
     "textCopied": "Text byl zkopírován do schránky.",
     "metadataApproved": "Metadata schválena.",
+    "metadataSubmitted": "Metadata odeslána.",
     "batchApproveTitle": "Dávkové schválení metadat",
     "batchApproveInfo": "Tato možnost schvaluje vybraná metadata vlastněná uživatelem. Ve výchozím nastavení jsou schválena pouze metadata v odeslaném stavu, výběrem níže uvedené možnosti schválíte přímo metadata, která nejsou ve odeslaném stavu.",
     "batchApproveDirect": "Schválit metadata, aniž byste museli být ve stavu odeslání",
     "facet-mdStatus": "Vývoj v postupu prací",
-    "skipLink": "Skip and go to the content"
+    "skipLink": "Přeskočte a přejděte k obsahu",
+    "batchSubmitTitle": "Dávkové odeslání metadat",
+    "batchSubmitInfo": "Tato možnost odešle vybraná metadata vlastněná uživatelem."
 }

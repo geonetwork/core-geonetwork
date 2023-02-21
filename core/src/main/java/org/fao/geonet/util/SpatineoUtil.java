@@ -21,12 +21,21 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.client.ClientHttpResponse;
 import org.w3c.dom.Node;
 
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeoutException;
+
+import org.apache.http.client.methods.HttpGet;
+
+import javax.annotation.Nullable;
+import org.apache.http.impl.client.HttpClientBuilder;
+import com.google.common.base.Function;
+import org.fao.geonet.lib.Lib;
+import jeeves.server.context.ServiceContext;
 
 public class SpatineoUtil {
     private static final String API = "https://api.spatineo.com/monitor/resolverRequest";
@@ -43,7 +52,7 @@ public class SpatineoUtil {
                 service.addContent(Xml.getXmlFromJSON(e));
                 report.addContent(service);
             });
-        } catch (TimeoutException e) {
+        } catch (TimeoutException | IOException e) {
             report.setAttribute("error", e.getMessage());
         }
         try {
@@ -61,17 +70,19 @@ public class SpatineoUtil {
      * Returns Spatineo ID to access the service monitoring
      * pages. eg. https://directory.spatineo.com/service/{id}/index.html
      */
-    public static Map<String, String> registerService(String url, Integer maxNumberOfCalls) throws TimeoutException {
-        ClientHttpResponse httpResponse = null;
+    public static Map<String, String> registerService(String url, Integer maxNumberOfCalls) throws TimeoutException, IOException {
+        ServiceContext context = ServiceContext.get();
+        final GeonetHttpRequestFactory requestFactory = context.getBean(GeonetHttpRequestFactory.class);
+        HttpGet req = new HttpGet(API);
+        final String requestHost = req.getURI().getHost();
         HttpPost method = null;
-        GeonetHttpRequestFactory requestFactory =
-            ApplicationContextHolder.get().getBean(GeonetHttpRequestFactory.class);
         ObjectMapper mapper = new ObjectMapper();
         String cookie = null;
         int maxTry = maxNumberOfCalls != null ? maxNumberOfCalls : 10;
         int i = 0;
         Map<String, String> listOfServices = new HashMap<>();
 
+        ClientHttpResponse httpResponse = null;
         try {
             Log.debug(LOGGER_NAME, String.format("Sending registration for %s ...", url));
             method = new HttpPost(API);
@@ -84,7 +95,14 @@ public class SpatineoUtil {
                     method.setEntity(null);
                     method.setHeader(HttpHeaders.COOKIE, "JSESSIONID=" + cookie);
                 }
-                httpResponse = requestFactory.execute(method);
+                httpResponse = requestFactory.execute(method, new Function<HttpClientBuilder, Void>() {
+                    @Nullable
+                    @Override
+                    public Void apply(@Nullable HttpClientBuilder input) {
+                        Lib.net.setupProxy(context, input, requestHost);
+                        return null;
+                    }
+                });
 
                 int status = httpResponse.getRawStatusCode();
                 i++;

@@ -32,6 +32,7 @@
   xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/2.0"
   xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0"
   xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
+  xmlns:gcx="http://standards.iso.org/iso/19115/-3/gcx/1.0"
   xmlns:gn="http://www.fao.org/geonetwork"
   xmlns:xs="http://www.w3.org/2001/XMLSchema"
   xmlns:gn-fn-iso19115-3.2018="http://geonetwork-opensource.org/xsl/functions/profiles/iso19115-3.2018"
@@ -45,15 +46,19 @@
   <xsl:param name="type"/>
 
   <!-- Target element to update. The key is based on the concatenation
-  of URL+title -->
+  of URL+protocol+title -->
   <xsl:param name="updateKey"/>
 
   <xsl:variable name="mainLang"
                 select="/mdb:MD_Metadata/mdb:defaultLocale/*/lan:language/*/@codeListValue"
                 as="xs:string"/>
 
+  <xsl:variable name="mainLangId"
+                select="/mdb:MD_Metadata/mdb:defaultLocale/*/@id"
+                as="xs:string"/>
+
   <xsl:variable name="useOnlyPTFreeText"
-                select="count(//*[lan:PT_FreeText and not(gco:CharacterString)]) > 0"
+                select="count(//*[lan:PT_FreeText and not(gco:CharacterString|gcx:Anchor)]) > 0"
                 as="xs:boolean"/>
 
   <xsl:variable name="metadataIdentifier"
@@ -193,14 +198,14 @@
       <xsl:apply-templates select="mdb:applicationSchemaInfo"/>
       <xsl:apply-templates select="mdb:metadataMaintenance"/>
       <xsl:apply-templates select="mdb:acquisitionInformation"/>
-      
+
     </xsl:copy>
   </xsl:template>
 
 
   <xsl:template match="mdq:report[concat(
                           mdq:DQ_DomainConsistency/mdq:result/mdq:DQ_ConformanceResult/mdq:specification/
-                          cit:CI_Citation/cit:onlineResource/cit:CI_OnlineResource/cit:linkage/gco:CharacterString,
+                          cit:CI_Citation/cit:onlineResource/cit:CI_OnlineResource/cit:linkage/gco:CharacterString, 'WWW:LINK',
                           mdq:DQ_DomainConsistency/mdq:result/mdq:DQ_ConformanceResult/mdq:specification/
                           cit:CI_Citation/cit:title/gco:CharacterString) =
                           normalize-space($updateKey)]">
@@ -215,12 +220,12 @@
             <mdq:specification>
               <cit:CI_Citation>
                 <cit:title>
-                  <xsl:copy-of select="gn-fn-iso19115-3.2018:fillTextElement($name, $mainLang, $useOnlyPTFreeText)"/>
+                  <xsl:copy-of select="gn-fn-iso19115-3.2018:fillTextElement($name, $mainLangId, $useOnlyPTFreeText)"/>
                 </cit:title>
                 <cit:onlineResource>
                   <cit:CI_OnlineResource>
                     <cit:linkage>
-                      <xsl:copy-of select="gn-fn-iso19115-3.2018:fillTextElement($url, $mainLang, $useOnlyPTFreeText)"/>
+                      <xsl:copy-of select="gn-fn-iso19115-3.2018:fillTextElement($url, $mainLangId, $useOnlyPTFreeText)"/>
                     </cit:linkage>
                   </cit:CI_OnlineResource>
                 </cit:onlineResource>
@@ -228,7 +233,7 @@
             </mdq:specification>
             <xsl:if test="$desc">
               <mdq:explanation>
-                <xsl:copy-of select="gn-fn-iso19115-3.2018:fillTextElement($desc, $mainLang, $useOnlyPTFreeText)"/>
+                <xsl:copy-of select="gn-fn-iso19115-3.2018:fillTextElement($desc, $mainLangId, $useOnlyPTFreeText)"/>
               </mdq:explanation>
             </xsl:if>
             <mdq:pass>
@@ -243,7 +248,7 @@
 
   <xsl:template match="mdq:standaloneQualityReport[concat(
                           mdq:DQ_StandaloneQualityReportInformation/mdq:reportReference/
-                          cit:CI_Citation/cit:onlineResource/cit:CI_OnlineResource/cit:linkage/gco:CharacterString,
+                          cit:CI_Citation/cit:onlineResource/cit:CI_OnlineResource/cit:linkage/gco:CharacterString, 'WWW:LINK',
                           mdq:DQ_StandaloneQualityReportInformation/mdq:reportReference/
                           cit:CI_Citation/cit:title/gco:CharacterString) =
                           normalize-space($updateKey)]">
@@ -256,12 +261,12 @@
         <mdq:reportReference>
           <cit:CI_Citation>
             <cit:title>
-              <xsl:copy-of select="gn-fn-iso19115-3.2018:fillTextElement($name, $mainLang, $useOnlyPTFreeText)"/>
+              <xsl:copy-of select="gn-fn-iso19115-3.2018:fillTextElement($name, $mainLangId, $useOnlyPTFreeText)"/>
             </cit:title>
             <cit:onlineResource>
               <cit:CI_OnlineResource>
                 <cit:linkage>
-                  <xsl:copy-of select="gn-fn-iso19115-3.2018:fillTextElement($url, $mainLang, $useOnlyPTFreeText)"/>
+                  <xsl:copy-of select="gn-fn-iso19115-3.2018:fillTextElement($url, $mainLangId, $useOnlyPTFreeText)"/>
                 </cit:linkage>
               </cit:CI_OnlineResource>
             </cit:onlineResource>
@@ -269,7 +274,7 @@
         </mdq:reportReference>
         <xsl:if test="$desc">
           <mdq:abstract>
-            <xsl:copy-of select="gn-fn-iso19115-3.2018:fillTextElement($desc, $mainLang, $useOnlyPTFreeText)"/>
+            <xsl:copy-of select="gn-fn-iso19115-3.2018:fillTextElement($desc, $mainLangId, $useOnlyPTFreeText)"/>
           </mdq:abstract>
         </xsl:if>
       </mdq:DQ_StandaloneQualityReportInformation>
@@ -277,7 +282,7 @@
   </xsl:template>
 
   <xsl:template match="mrl:additionalDocumentation[concat(
-                          cit:CI_Citation/cit:onlineResource/cit:CI_OnlineResource/cit:linkage/gco:CharacterString,
+                          cit:CI_Citation/cit:onlineResource/cit:CI_OnlineResource/cit:linkage/gco:CharacterString, 'WWW:LINK',
                           cit:CI_Citation/cit:title/gco:CharacterString) =
                           normalize-space($updateKey)]">
     <xsl:call-template name="create-dq-lineage-report"/>
@@ -287,19 +292,19 @@
     <mrl:additionalDocumentation>
       <cit:CI_Citation>
         <cit:title>
-          <xsl:copy-of select="gn-fn-iso19115-3.2018:fillTextElement($name, $mainLang, $useOnlyPTFreeText)"/>
+          <xsl:copy-of select="gn-fn-iso19115-3.2018:fillTextElement($name, $mainLangId, $useOnlyPTFreeText)"/>
         </cit:title>
         <cit:onlineResource>
           <cit:CI_OnlineResource>
-            <cit:linkage >
-              <xsl:copy-of select="gn-fn-iso19115-3.2018:fillTextElement($url, $mainLang, $useOnlyPTFreeText)"/>
+            <cit:linkage>
+              <xsl:copy-of select="gn-fn-iso19115-3.2018:fillTextElement($url, $mainLangId, $useOnlyPTFreeText)"/>
             </cit:linkage>
             <cit:protocol>
-              <gco:CharacterString>WWW:LINK-1.0-http--link</gco:CharacterString>
+              <gco:CharacterString>WWW:LINK</gco:CharacterString>
             </cit:protocol>
             <xsl:if test="$desc">
               <cit:description>
-                <xsl:copy-of select="gn-fn-iso19115-3.2018:fillTextElement($desc, $mainLang, $useOnlyPTFreeText)"/>
+                <xsl:copy-of select="gn-fn-iso19115-3.2018:fillTextElement($desc, $mainLangId, $useOnlyPTFreeText)"/>
               </cit:description>
             </xsl:if>
           </cit:CI_OnlineResource>
@@ -307,10 +312,10 @@
       </cit:CI_Citation>
     </mrl:additionalDocumentation>
   </xsl:template>
-  
+
   <!-- Remove geonet:* elements. -->
   <xsl:template match="gn:*" priority="2"/>
-  
+
   <!-- Copy everything. -->
   <xsl:template match="@*|node()">
     <xsl:copy>

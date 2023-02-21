@@ -106,7 +106,9 @@
       // Get print config
       var updatePrintConfig = function () {
         var http = $http.get($scope.options.printConfigUrl);
-        http.success(function (data) {
+        http.then(function (response) {
+          var data = response.data;
+
           $scope.capabilities = data;
 
           // default values:

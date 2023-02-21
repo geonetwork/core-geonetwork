@@ -13,7 +13,18 @@
           <span class="sr-only" data-translate="">previous</span>
         </a>
       </li>
-      <li class="btn-group">
+      <li data-ng-if="values.length === 0">
+        <span ng-show="config.pages > 1">
+          {{config.from}} - {{config.to}}
+          <span translate>resultXonY</span>
+          {{config.resultsCount}}
+        </span>
+        <span ng-show="config.pages <= 1">
+          {{config.to}}
+          <span translate>results</span>
+        </span>
+      </li>
+      <li class="btn-group" data-ng-if="values.length > 0">
         <!-- A dropdown button to select the number of page
     and indicating the current page info -->
         <a href class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">

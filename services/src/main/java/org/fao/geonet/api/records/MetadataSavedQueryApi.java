@@ -140,7 +140,7 @@ public class MetadataSavedQueryApi {
         return query(metadata, savedQuery, parameters);
     }
 
-    public Map<String, String> query(AbstractMetadata metadata, String savedQuery, HashMap<String, String> parameters) throws ResourceNotFoundException, IOException, NoResultsFoundException {
+    public Map<String, String> query(AbstractMetadata metadata, String savedQuery, Map<String, String> parameters) throws ResourceNotFoundException, IOException, NoResultsFoundException {
         String metadataUuid = metadata.getUuid();
         String schemaIdentifier = metadata.getDataInfo().getSchemaId();
         SchemaPlugin schemaPlugin = schemaManager.getSchema(schemaIdentifier).getSchemaPlugin();

@@ -63,13 +63,13 @@
           };
           $http
             .get("admin.harvester.info?type=icons&_content_type=json", { cache: true })
-            .success(function (data) {
-              scope.icons = data[0];
+            .then(function (response) {
+              scope.icons = response.data[0];
             });
           $http
             .get("info?_content_type=json&type=languages", { cache: true })
-            .success(function (data) {
-              scope.languages = data.language;
+            .then(function (response) {
+              scope.languages = response.data.language;
             });
         }
       };
@@ -88,8 +88,7 @@
         scope: {
           harvester: "=gnHarvesterAccount"
         },
-        templateUrl:
-          "../../catalog/components/admin/harvester/partials/" + "account.html",
+        templateUrl: "../../catalog/components/admin/harvester/partials/account.html",
         link: function (scope, element, attrs) {}
       };
     }
@@ -203,8 +202,8 @@
               .get("info?_content_type=json&" + "type=groupsIncludingSystemGroups", {
                 cache: true
               })
-              .success(function (data) {
-                scope.groups = data !== "null" ? data.group : null;
+              .then(function (response) {
+                scope.groups = response.data !== "null" ? response.data.group : null;
               });
           }
 
@@ -264,8 +263,8 @@
         link: function (scope, element, attrs) {
           $http
             .get("admin.harvester.info?type=icons&_content_type=json", { cache: true })
-            .success(function (data) {
-              scope.icons = data[0];
+            .then(function (response) {
+              scope.icons = response.data[0];
             });
 
           /**
@@ -318,8 +317,8 @@
           harvester: "=gnHarvesterExtras"
         },
         link: function (scope, element, attrs) {
-          $http.get("../api/languages", { cache: true }).success(function (data) {
-            scope.languages = data;
+          $http.get("../api/languages", { cache: true }).then(function (response) {
+            scope.languages = response.data;
           });
         }
       };

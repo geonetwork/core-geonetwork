@@ -66,5 +66,9 @@ public enum StatusValueNotificationLevel {
     /**
      * When assigned should notify the record author.
      */
-    recordUserAuthor;
+    recordUserAuthor,
+    /**
+     * When assigned should notify the group email.
+     */
+    recordGroupEmail;
 }

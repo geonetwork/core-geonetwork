@@ -4,6 +4,7 @@
                   xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0"
                   xmlns:mdb="http://standards.iso.org/iso/19115/-3/mdb/2.0"
                   xmlns:gcx="http://standards.iso.org/iso/19115/-3/gcx/1.0"
+                  xmlns:gex="http://standards.iso.org/iso/19115/-3/gex/1.0"
                   xmlns:mrd="http://standards.iso.org/iso/19115/-3/mrd/1.0"
                   xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
                   xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0"
@@ -72,9 +73,15 @@
     <tag name="mri:descriptiveKeywords" context="mri:MD_DataIdentification|srv:SV_ServiceIdentification"
          groupBy="*/mri:thesaurusName/*/cit:title/*/text()"
          merge="mri:keyword"/>
-    <tag name="mri:extent" context="mri:MD_DataIdentification|srv:SV_ServiceIdentification"
+    <!--<tag name="mri:extent" context="mri:MD_DataIdentification|srv:SV_ServiceIdentification"
          groupBy="*/(gex:geographicElement|gex:temporalElement)"
-         merge="gex:geographicElement|gex:temporalElement"/>
+         merge="gex:geographicElement|gex:temporalElement"/>-->
+    <tag name="gex:geographicElement" context="gex:EX_Extent"
+         groupBy="*"
+         merge="."/>
+    <tag name="gex:temporalElement" context="gex:EX_Extent"
+         groupBy="*"
+         merge="."/>
     <!-- TODO: mri:defaultLocale can be in various places. -->
     <tag name="mri:defaultLocale" context="mri:MD_DataIdentification|srv:SV_ServiceIdentification"
          groupBy="mri:defaultLocaleCode/lan:PT_Locale/lan:language/lan:LanguageCode/@codeListValue"
@@ -173,10 +180,13 @@
         <xsl:with-param name="elements" select="mri:topicCategory"/>
         <xsl:with-param name="name" select="'mri:topicCategory'"/>
       </xsl:call-template>
-      <xsl:call-template name="copyOrAddElement">
-        <xsl:with-param name="elements" select="mri:extent"/>
-        <xsl:with-param name="name" select="'mri:extent'"/>
-      </xsl:call-template>
+
+      <mri:extent>
+        <gex:EX_Extent>
+          <gex:geographicElement/>
+          <gex:temporalElement/>
+        </gex:EX_Extent>
+      </mri:extent>
 
       <xsl:apply-templates select="mri:additionalDocumentation" mode="expand"/>
       <xsl:apply-templates select="mri:processingLevel" mode="expand"/>

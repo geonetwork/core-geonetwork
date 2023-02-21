@@ -1,4 +1,7 @@
-<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                xmlns:gfcold="http://www.isotc211.org/2005/gfc"
+                xmlns:gfc="http://standards.iso.org/iso/19110/gfc/1.1"
   xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gcoold="http://www.isotc211.org/2005/gco" xmlns:gmi="http://www.isotc211.org/2005/gmi" xmlns:gmx="http://www.isotc211.org/2005/gmx"
   xmlns:gsr="http://www.isotc211.org/2005/gsr" xmlns:gss="http://www.isotc211.org/2005/gss" xmlns:gts="http://www.isotc211.org/2005/gts" xmlns:srvold="http://www.isotc211.org/2005/srv"
   xmlns:gml30="http://www.opengis.net/gml" xmlns:cat="http://standards.iso.org/iso/19115/-3/cat/1.0" xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/2.0"
@@ -57,6 +60,26 @@
       </mcc:MD_Identifier>
     </xsl:element>
   </xsl:template>
+
+
+  <xsl:template match="gfcold:FC_FeatureCatalogue/@uuid" priority="5" mode="from19139to19115-3.2018">
+    <xsl:element name="mdb:metadataIdentifier">
+      <mcc:MD_Identifier>
+        <mcc:code>
+          <gco:CharacterString><xsl:value-of select="."/></gco:CharacterString>
+        </mcc:code>
+      </mcc:MD_Identifier>
+    </xsl:element>
+  </xsl:template>
+
+  <xsl:template match="gfcold:typeName/gcoold:LocalName
+                      |gfcold:aliases/gcoold:LocalName
+                      |gfcold:memberName/gcoold:LocalName" priority="5"
+                mode="from19139to19115-3.2018">
+    <xsl:value-of select="."/>
+  </xsl:template>
+
+
   <xsl:template match="gmd:language|gmd:locale" priority="5" mode="from19139to19115-3.2018">
     <xsl:variable name="nameSpacePrefix">
       <xsl:call-template name="getNamespacePrefix"/>

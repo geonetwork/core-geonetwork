@@ -59,10 +59,6 @@
             <protocol>WWW:LINK-1.0-http--link</protocol>
         </entry>
         <entry>
-            <format>arcgis geoservices rest api</format>
-            <protocol>ESRI:REST</protocol>
-        </entry>
-        <entry>
             <format>wms</format>
             <protocol>OGC:WMS</protocol>
         </entry>

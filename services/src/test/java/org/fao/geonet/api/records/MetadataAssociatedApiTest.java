@@ -22,50 +22,35 @@
  */
 package org.fao.geonet.api.records;
 
-import com.google.common.collect.Lists;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.NodeInfo;
+import jeeves.server.dispatchers.ServiceManager;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.ApiParams;
-import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
-import org.fao.geonet.kernel.SpringLocalServiceInvoker;
-import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.kernel.mef.MEFLibIntegrationTest;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
-import org.fao.geonet.utils.Xml;
-import org.jdom.Element;
-import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.util.*;
+import java.util.UUID;
 
-import static org.fao.geonet.kernel.mef.MEFLib.Version.Constants.MEF_V1_ACCEPT_TYPE;
-import static org.fao.geonet.kernel.mef.MEFLib.Version.Constants.MEF_V2_ACCEPT_TYPE;
-import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GCO;
-import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GMD;
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.assertEquals;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
@@ -127,6 +112,9 @@ public class MetadataAssociatedApiTest extends AbstractServiceIntegrationTest {
         MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
         MockHttpSession mockHttpSession = loginAsAdmin();
 
+        ServiceManager serviceManager = ApplicationContextHolder.get().getBean(ServiceManager.class);
+        serviceManager.setBaseUrl("/geonetwork");
+
         // Load sample
         final MEFLibIntegrationTest.ImportMetadata importMetadata = new MEFLibIntegrationTest.ImportMetadata(this, context);
         importMetadata.getMefFilesToLoad().add("/org/fao/geonet/api/records/samples/related-test.zip");
@@ -178,7 +166,7 @@ public class MetadataAssociatedApiTest extends AbstractServiceIntegrationTest {
             .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
             .andExpect(jsonPath("$.parent", hasSize(2)))
             .andExpect(jsonPath("$.parent[0].origin").value("catalog"))
-            .andExpect(jsonPath("$.parent[0].record.resourceTitleObject.default").value("TESTASSOCIATED - parent FR"));
+            .andExpect(jsonPath("$.parent[0]._source.resourceTitleObject.default").value("TESTASSOCIATED - parent FR"));
 
 
         // Siblings have association and initiative type properties
@@ -193,7 +181,7 @@ public class MetadataAssociatedApiTest extends AbstractServiceIntegrationTest {
             .andExpect(jsonPath("$.siblings[0].properties.associationType").value("crossReference"))
             .andExpect(jsonPath("$.siblings[0].properties.initiativeType").value("collection"))
             .andExpect(jsonPath("$.siblings[2].origin").value("remote"))
-            .andExpect(jsonPath("$.siblings[2].record.resourceTitleObject.default").value("Les offres touristiques en Wallonie"));
+            .andExpect(jsonPath("$.siblings[2]._source.resourceTitleObject.default").value("Les offres touristiques en Wallonie"));
 
 
 
@@ -203,7 +191,7 @@ public class MetadataAssociatedApiTest extends AbstractServiceIntegrationTest {
                 .session(mockHttpSession)
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.children", hasSize(1)))
-            .andExpect(jsonPath("$.children[0].uuid").value(SERIE_UUID));
+            .andExpect(jsonPath("$.children[0]._source.uuid").value(SERIE_UUID));
 
 
         // Check sources / hassources relation
@@ -212,14 +200,14 @@ public class MetadataAssociatedApiTest extends AbstractServiceIntegrationTest {
             .session(mockHttpSession)
             .accept(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.sources", hasSize(1)))
-            .andExpect(jsonPath("$.sources[0].uuid").value(SOURCE_UUID));
+            .andExpect(jsonPath("$.sources[0]._source.uuid").value(SOURCE_UUID));
 
 
         resultActions = mockMvc.perform(get("/srv/api/records/" + SOURCE_UUID + "/associated?type=hassources")
                 .session(mockHttpSession)
                 .accept(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.sources", hasSize(1)))
-            .andExpect(jsonPath("$.sources[0].uuid").value(SERIE_UUID));
+            .andExpect(jsonPath("$.hassources", hasSize(1)))
+            .andExpect(jsonPath("$.hassources[0]._source.uuid").value(SERIE_UUID));
 
 
         // Check siblings / associated relation
@@ -228,12 +216,6 @@ public class MetadataAssociatedApiTest extends AbstractServiceIntegrationTest {
                 .session(mockHttpSession)
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.associated", hasSize(1)))
-            .andExpect(jsonPath("$.associated[0].uuid").value(SERIE_UUID));
-
-
-        MvcResult result = resultActions.andReturn();
-        String contentAsString = result.getResponse().getContentAsString();
-        System.out.println("=============");
-        System.out.println(contentAsString);
+            .andExpect(jsonPath("$.associated[0]._source.uuid").value(SERIE_UUID));
     }
 }

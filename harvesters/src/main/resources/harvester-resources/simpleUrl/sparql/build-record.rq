@@ -1,0 +1,94 @@
+PREFIX dcat: <http://www.w3.org/ns/dcat#>
+PREFIX dct: <http://purl.org/dc/terms/>
+PREFIX vcard: <http://www.w3.org/2006/vcard/ns#>
+PREFIX apf: <http://jena.hpl.hp.com/ARQ/property#>
+PREFIX afn: <http://jena.hpl.hp.com/ARQ/function#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+
+# Retrieve all triples about a specific record URI.
+# Replace the string "%recordId%" with the record ID and
+# the string "%resourceId%" with the resource ID before executing
+SELECT DISTINCT ?subject ?predicate ?object ?pAsQName
+WHERE {
+  {
+    # Triples on a dct:Catalog instance
+    ?subject ?predicate ?object.
+    ?subject a dcat:Catalog.
+    ?subject dcat:dataset|dcat:service <%resourceId%>.
+    FILTER (?predicate != dcat:dataset && ?predicate != dcat:service && ?predicate != dcat:record)
+
+  } UNION {
+    # Triples on a dct:Catalog instance's child resources (publisher, distribution, ed.)
+    ?subject ?predicate ?object.
+    ?s a dcat:Catalog.
+    ?s dcat:dataset|dcat:service <%resourceId%>.
+    ?s ?p ?subject.
+    FILTER (?p != dcat:dataset && ?p != dcat:service && ?p != dcat:record).
+    FILTER (?predicate != dcat:dataset && ?predicate != dcat:service && ?predicate != dcat:record).
+
+  } UNION {
+    # Triples on a specific catalog record
+    ?subject ?predicate ?object.
+    FILTER (?subject = <%recordId%> || ?object = <%recordId%>)
+
+  } UNION {
+    # Triples on specific catalog record's child resources
+    ?subject ?predicate ?object.
+    <%recordId%> ?p ?subject
+
+  } UNION {
+    # Triples on specific catalog record's child of child
+    ?subject ?predicate ?object.
+    <%recordId%> ?p1 ?obj.
+    ?obj ?p2 ?subject.
+
+  } UNION {
+    # Triples on a specific resource
+    ?subject ?predicate ?object.
+    FILTER (?subject = <%resourceId%> || ?object = <%resourceId%>)
+
+  } UNION {
+    #Triples on a specific resource's child resources (publisher, distribution, ed.)
+    ?subject ?predicate ?object.
+    <%resourceId%> ?p ?subject.
+
+  } UNION {
+    # Triple on a specific distribution's child dct:license
+    ?subject ?predicate ?object.
+    <%resourceId%> dcat:distribution ?distribution.
+    ?distribution ?p ?subject.
+
+  } UNION {
+    # Triple on a specific contactPoint's child Address
+    ?subject ?predicate ?object.
+    <%resourceId%> dcat:contactPoint ?address.
+    ?address ?p ?subject.
+
+  } UNION {
+    # Triples on a skos:Concept instance
+    ?subject ?predicate ?object.
+    ?subject a skos:Concept.
+  }
+
+  BIND (afn:namespace(?predicate) as ?pns)
+
+  BIND (COALESCE(
+    IF(?pns = 'http://www.w3.org/ns/dcat#', 'dcat:', 1/0),
+    IF(?pns = 'http://purl.org/dc/terms/', 'dct:', 1/0),
+    IF(?pns = 'http://spdx.org/rdf/terms#', 'spdx:', 1/0),
+    IF(?pns = 'http://www.w3.org/2004/02/skos/core#', 'skos:', 1/0),
+    IF(?pns = 'http://www.w3.org/ns/adms#', 'adms:', 1/0),
+    IF(?pns = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#', 'rdf:', 1/0),
+    IF(?pns = 'http://www.w3.org/2006/vcard/ns#', 'vcard:', 1/0),
+    IF(?pns = 'http://xmlns.com/foaf/0.1/', 'foaf:', 1/0),
+    IF(?pns = 'http://www.w3.org/2002/07/owl#', 'owl:', 1/0),
+    IF(?pns = 'http://schema.org/', 'schema:', 1/0),
+    IF(?pns = 'http://www.w3.org/2000/01/rdf-schema#', 'rdfs:', 1/0),
+    IF(?pns = 'http://www.w3.org/ns/locn#', 'locn:', 1/0),
+    IF(?pns = 'http://purl.org/dc/elements/1.1/', 'dc:', 1/0),
+    IF(?pns = 'http://data.vlaanderen.be/ns/metadata-dcat#', 'mdcat:', 1/0),
+    'unkown:'
+  ) AS ?pprefix)
+
+  BIND (CONCAT(?pprefix, afn:localname(?predicate)) AS ?pAsQName)
+}

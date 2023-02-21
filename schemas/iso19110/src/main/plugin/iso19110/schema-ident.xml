@@ -29,8 +29,8 @@
   <id>ae229ba0-dde3-11df-99ab-001c2346de4c</id>
   <version>1.0</version>
   <appMinorVersionSupported>3.4.0</appMinorVersionSupported>
-  <title xml:lang="en">Geographic information -- Methodology for feature cataloguing</title>
-  <title xml:lang="fr">Information géographique -- Méthodologie de catalogage des entités</title>
+  <title xml:lang="en">Geographic information -- Methodology for feature cataloguing (Deprecated - use ISO19115-3)</title>
+  <title xml:lang="fr">Information géographique -- Méthodologie de catalogage des entités (Deprecated - utiliser ISO19115-3)</title>
   <standardUrl xml:lang="en">
     http://www.iso.org/iso/home/store/catalogue_tc/catalogue_detail.htm?csnumber=39965
   </standardUrl>

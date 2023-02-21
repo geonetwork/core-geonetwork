@@ -24,6 +24,8 @@
 package jeeves.config.springutil;
 
 import org.fao.geonet.NodeInfo;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.security.core.Authentication;
@@ -31,6 +33,8 @@ import org.springframework.security.web.authentication.AbstractAuthenticationTar
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -50,6 +54,9 @@ public class JeevesNodeAwareLogoutSuccessHandler extends AbstractAuthenticationT
     @Autowired
     ServletContext context;
 
+    @Autowired
+    SettingManager settingManager;
+
     @Override
     public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         super.handle(request, response, authentication);
@@ -61,9 +68,39 @@ public class JeevesNodeAwareLogoutSuccessHandler extends AbstractAuthenticationT
 
         NodeInfo nodeInfo = applicationContext.getBean(NodeInfo.class);
 
-        String urlPattern = super.determineTargetUrl(request, response);
+        String urlPatternValue = super.determineTargetUrl(request, response);
 
-        return urlPattern.replace("@@nodeId@@", nodeInfo.getId());
+        if (urlPatternValue != null) {
+
+            if (!urlPatternValue.startsWith("/")) {
+                // Check the url to redirect it's from the same site, otherwise use the default target url
+                URL urlPattern = null;
+                try {
+                    urlPattern = new URL(urlPatternValue);
+
+                    String hostName = urlPattern.getHost();
+                    String protocol = urlPattern.getProtocol();
+                    int port = urlPattern.getPort() == -1 ? urlPattern.getDefaultPort() : urlPattern.getPort();
+
+                    String siteHost = settingManager.getValue(Settings.SYSTEM_SERVER_HOST);
+                    String siteProtocol = settingManager.getValue(Settings.SYSTEM_SERVER_PROTOCOL);
+                    int sitePort = settingManager.getValueAsInt(Settings.SYSTEM_SERVER_PORT);
+
+
+                    if (!hostName.equalsIgnoreCase(siteHost) ||
+                        !protocol.equalsIgnoreCase(siteProtocol) ||
+                        port != sitePort) {
+                        urlPatternValue = getDefaultTargetUrl();
+                    }
+                } catch (MalformedURLException e) {
+                    urlPatternValue = getDefaultTargetUrl();
+                }
+            }
+        } else {
+            urlPatternValue = getDefaultTargetUrl();
+        }
+
+        return urlPatternValue.replace("@@nodeId@@", nodeInfo.getId());
     }
 
 }

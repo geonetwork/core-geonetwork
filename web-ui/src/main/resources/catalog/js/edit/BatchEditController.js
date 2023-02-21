@@ -98,7 +98,8 @@
           $scope.selectedRecordsCount = 0;
           $scope.selectedStandards = [];
           $scope.selectedRecords = [];
-          $http.get("../api/selections/e101").success(function (uuids) {
+          $http.get("../api/selections/e101").then(function (response) {
+            var uuids = response.data;
             $scope.selectedRecordsCount = uuids.length;
             if (uuids.length > 0) {
               var query = {
@@ -169,7 +170,8 @@
       // Get current selection which returns the list of uuids.
       // Then search those records.
       $scope.searchSelection = function (params) {
-        $http.get("../api/selections/e101").success(function (uuids) {
+        $http.get("../api/selections/e101").then(function (response) {
+          var uuids = response.data;
           $scope.searchObj.params = angular.extend(
             {
               uuid: uuids
@@ -302,14 +304,17 @@
         value,
         index,
         insertMode,
-        isXpath
+        isXpath,
+        condition
       ) {
         $scope.changes[index] = {
           field: field,
           insertMode: insertMode || field.insertMode,
           xpath: xpath,
+          condition: condition,
           value: template && value !== "" ? template.replace("{{value}}", value) : value,
-          isXpath: isXpath || false
+          isXpath: isXpath || false,
+          condition: condition || ""
         };
       };
 
@@ -321,7 +326,8 @@
           field.template,
           $event.target.value,
           $scope.changes.length,
-          field.insertMode
+          field.insertMode,
+          field.condition
         );
       };
 
@@ -344,7 +350,8 @@
             field.template,
             $event.target.value,
             index,
-            field.insertMode
+            field.insertMode,
+            field.condition
           );
         }
       };
@@ -386,7 +393,8 @@
             field.template,
             "",
             $scope.changes.length,
-            mode || "gn_delete"
+            mode || "gn_delete",
+            field.condition
           );
         }
       };
@@ -446,8 +454,10 @@
       $scope.defaultCurrentXpath = {
         field: "",
         xpath: "",
+        condition: "",
         value: "",
-        insertMode: "gn_add"
+        insertMode: "gn_add",
+        condition: ""
       }; // The default value when reset.
       $scope.currentXpath = angular.copy($scope.defaultCurrentXpath, {});
 
@@ -465,7 +475,8 @@
           c.value,
           $scope.changes.length,
           c.insertMode,
-          true
+          true,
+          c.condition
         );
 
         $scope.currentXpath = angular.copy($scope.defaultCurrentXpath, {});
@@ -526,7 +537,7 @@
             } else {
               value = value;
             }
-            params.push({ xpath: xpath, value: value });
+            params.push({ xpath: xpath, value: value, condition: field.condition });
             i++;
           }
         });
@@ -635,16 +646,16 @@
       };
 
       function init() {
-        $http
-          .get("../api/standards/batchconfiguration")
-          .success(function (data) {
-            $scope.fieldConfig = data;
+        $http.get("../api/standards/batchconfiguration").then(
+          function (response) {
+            $scope.fieldConfig = response.data;
             gnSchemaManagerService.getNamespaces();
             $scope.setType($scope.editTypes[0].id);
-          })
-          .error(function (response) {
-            console.warn(response);
-          });
+          },
+          function (response) {
+            console.warn(response.data);
+          }
+        );
       }
       init();
     }

@@ -1,6 +1,7 @@
 package org.fao.geonet.kernel.csw;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class CatalogConfigurationGetRecordsField {
     private String name;
@@ -8,7 +9,7 @@ public class CatalogConfigurationGetRecordsField {
     private boolean range;
     private String luceneField;
     private String luceneSortField;
-    private HashMap<String, String> xpaths = new HashMap();
+    private Map<String, String> xpaths = new HashMap();
 
     public String getName() {
         return name;
@@ -30,12 +31,12 @@ public class CatalogConfigurationGetRecordsField {
         return luceneSortField;
     }
 
-    public HashMap<String, String> getXpaths() {
+    public Map<String, String> getXpaths() {
         return xpaths;
     }
 
     public CatalogConfigurationGetRecordsField(String name, String type, boolean range, String luceneField,
-                                               String luceneSortField, HashMap<String, String> xpaths) {
+                                               String luceneSortField, Map<String, String> xpaths) {
         this.name = name;
         this.type = type;
         this.range = range;

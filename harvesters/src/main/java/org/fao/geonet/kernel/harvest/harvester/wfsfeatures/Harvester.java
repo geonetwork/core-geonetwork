@@ -1,30 +1,33 @@
-//=============================================================================
-//===	Copyright (C) 2001-2007 Food and Agriculture Organization of the
-//===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
-//===	and United Nations Environment Programme (UNEP)
-//===
-//===	This program is free software; you can redistribute it and/or modify
-//===	it under the terms of the GNU General Public License as published by
-//===	the Free Software Foundation; either version 2 of the License, or (at
-//===	your option) any later version.
-//===
-//===	This program is distributed in the hope that it will be useful, but
-//===	WITHOUT ANY WARRANTY; without even the implied warranty of
-//===	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-//===	General Public License for more details.
-//===
-//===	You should have received a copy of the GNU General Public License
-//===	along with this program; if not, write to the Free Software
-//===	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
-//===
-//===	Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
-//===	Rome - Italy. email: geonetwork@osgeo.org
-//==============================================================================
+/*
+ * =============================================================================
+ * ===	Copyright (C) 2001-2023 Food and Agriculture Organization of the
+ * ===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
+ * ===	and United Nations Environment Programme (UNEP)
+ * ===
+ * ===	This program is free software; you can redistribute it and/or modify
+ * ===	it under the terms of the GNU General Public License as published by
+ * ===	the Free Software Foundation; either version 2 of the License, or (at
+ * ===	your option) any later version.
+ * ===
+ * ===	This program is distributed in the hope that it will be useful, but
+ * ===	WITHOUT ANY WARRANTY; without even the implied warranty of
+ * ===	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * ===	General Public License for more details.
+ * ===
+ * ===	You should have received a copy of the GNU General Public License
+ * ===	along with this program; if not, write to the Free Software
+ * ===	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+ * ===
+ * ===	Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+ * ===	Rome - Italy. email: geonetwork@osgeo.org
+ * ==============================================================================
+ */
 
 package org.fao.geonet.kernel.harvest.harvester.wfsfeatures;
 
 import jeeves.server.context.ServiceContext;
 import jeeves.xlink.Processor;
+import org.apache.commons.io.FileUtils;
 import org.apache.jcs.access.exception.CacheException;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Logger;
@@ -43,11 +46,7 @@ import org.fao.geonet.kernel.harvest.harvester.fragment.FragmentHarvester.Fragme
 import org.fao.geonet.kernel.harvest.harvester.fragment.FragmentHarvester.HarvestSummary;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.lib.Lib;
-import org.fao.geonet.utils.GeonetHttpRequestFactory;
-import org.fao.geonet.utils.IO;
-import org.fao.geonet.utils.Xml;
-import org.fao.geonet.utils.XmlElementReader;
-import org.fao.geonet.utils.XmlRequest;
+import org.fao.geonet.utils.*;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
@@ -59,12 +58,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 //=============================================================================
@@ -180,7 +174,6 @@ class Harvester implements IHarvester<HarvestResult> {
      * Start the harvesting of fragments from the WFS node.
      *
      *
-     *
      * <?xml version="1.0" encoding="utf-8"?> <wfs:GetFeature xmlns:ogc="http://www.opengis.net/ogc"
      * xmlns:gml="http://www.opengis.net/gml" xmlns:wfs="http://www.opengis.net/wfs"
      * outputFormat="text/xml; subtype=gml/3.1.1"> <wfs:Query xmlns:app="http://www.deegree.org/app"
@@ -269,39 +262,43 @@ class Harvester implements IHarvester<HarvestResult> {
         Lib.net.setupProxy(context, req);
 
         Path tempFile = Files.createTempFile("temp-", ".xml");
+        try {
 
-        // Read response into temporary file
-        req.executeLarge(tempFile);
+            // Read response into temporary file
+            req.executeLarge(tempFile);
 
-        List<Namespace> namespaces = new ArrayList<Namespace>();
-        namespaces.add(Namespace.getNamespace("gml", "http://www.opengis.net/gml"));
+            List<Namespace> namespaces = new ArrayList<>();
+            namespaces.add(Namespace.getNamespace("gml", "http://www.opengis.net/gml"));
 
-        XmlElementReader reader;
-        try (InputStream fin = IO.newInputStream(tempFile)) {
-            reader = new XmlElementReader(fin, "gml:featureMembers/*", namespaces);
-        }
-
-        if (cancelMonitor.get()) {
-            return;
-        }
-
-        if (!reader.hasNext()) {
-            namespaces.add(Namespace.getNamespace("wfs", "http://www.opengis.net/wfs"));
+            XmlElementReader reader;
             try (InputStream fin = IO.newInputStream(tempFile)) {
-                reader = new XmlElementReader(fin, "wfs:FeatureCollection/gml:featureMember", namespaces);
-
+                reader = new XmlElementReader(fin, "gml:featureMembers/*", namespaces);
             }
-        }
 
-        while (reader.hasNext()) {
             if (cancelMonitor.get()) {
                 return;
             }
 
-            stylesheetDirectory = schemaMan.getSchemaDir(params.outputSchema).resolve(Geonet.Path.WFS_STYLESHEETS);
-            Element records = Xml.transform(reader.next(), stylesheetDirectory.resolve(params.stylesheet), ssParams);
+            if (!reader.hasNext()) {
+                namespaces.add(Namespace.getNamespace("wfs", "http://www.opengis.net/wfs"));
+                try (InputStream fin = IO.newInputStream(tempFile)) {
+                    reader = new XmlElementReader(fin, "wfs:FeatureCollection/gml:featureMember", namespaces);
 
-            harvest(records, fragmentHarvester);
+                }
+            }
+
+            while (reader.hasNext()) {
+                if (cancelMonitor.get()) {
+                    return;
+                }
+
+                stylesheetDirectory = schemaMan.getSchemaDir(params.outputSchema).resolve(Geonet.Path.WFS_STYLESHEETS);
+                Element records = Xml.transform(reader.next(), stylesheetDirectory.resolve(params.stylesheet), ssParams);
+
+                harvest(records, fragmentHarvester);
+            }
+        } finally {
+            FileUtils.deleteQuietly(tempFile.toFile());
         }
     }
 

@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2007 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2022 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -24,6 +24,7 @@
 package org.fao.geonet.kernel.mef;
 
 import jeeves.server.context.ServiceContext;
+import org.apache.commons.io.FileUtils;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.search.SearchHit;
 import org.fao.geonet.Constants;
@@ -32,13 +33,7 @@ import org.fao.geonet.ZipUtil;
 import org.fao.geonet.api.records.attachments.Store;
 import org.fao.geonet.api.records.attachments.StoreUtils;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.AbstractMetadata;
-import org.fao.geonet.domain.MetadataRelation;
-import org.fao.geonet.domain.MetadataResource;
-import org.fao.geonet.domain.MetadataResourceVisibility;
-import org.fao.geonet.domain.MetadataType;
-import org.fao.geonet.domain.Pair;
-import org.fao.geonet.domain.ReservedOperation;
+import org.fao.geonet.domain.*;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.mef.MEFLib.Format;
@@ -74,7 +69,7 @@ class MEF2Exporter {
     public static Path doExport(ServiceContext context, Set<String> uuids,
                                 Format format, boolean skipUUID, Path stylePath, boolean resolveXlink,
                                 boolean removeXlinkAttribute, boolean skipError, boolean addSchemaLocation) throws Exception {
-    	return doExport(context, uuids, format, skipUUID, stylePath, resolveXlink, removeXlinkAttribute, skipError, addSchemaLocation, false);
+        return doExport(context, uuids, format, skipUUID, stylePath, resolveXlink, removeXlinkAttribute, skipError, addSchemaLocation, false);
     }
 
     /**
@@ -93,7 +88,7 @@ class MEF2Exporter {
         EsSearchManager searchManager = context.getBean(EsSearchManager.class);
         String contextLang = context.getLanguage() == null ? Geonet.DEFAULT_LANGUAGE : context.getLanguage();
         try (
-            FileSystem zipFs = ZipUtil.createZipFs(file);
+            FileSystem zipFs = ZipUtil.createZipFs(file)
         ) {
             StringBuilder csvBuilder = new StringBuilder("\"schema\";\"uuid\";\"id\";\"type\";\"isHarvested\";\"title\";\"abstract\"\n");
             Element html = new Element("html").addContent(new Element("head").addContent(Arrays.asList(
@@ -120,8 +115,7 @@ class MEF2Exporter {
             )));
             Element body = new Element("body");
             html.addContent(body);
-            for (Object uuid1 : uuids) {
-                String uuid = (String) uuid1;
+            for (String uuid : uuids) {
                 final String cleanUUID = cleanForCsv(uuid);
 
                 AbstractMetadata md = context.getBean(IMetadataUtils.class).findOneByUuid(uuid);
@@ -129,7 +123,7 @@ class MEF2Exporter {
                 //Here we just care if we need the approved version explicitly.
                 //IMetadataUtils already filtered draft for non editors.
 
-                if(approved) {
+                if (approved) {
                     md = context.getBean(MetadataRepository.class).findOneByUuid(uuid);
                 }
                 String id = String.valueOf(md.getId());
@@ -188,6 +182,9 @@ class MEF2Exporter {
             }
             Files.write(zipFs.getPath("/index.csv"), csvBuilder.toString().getBytes(Constants.CHARSET));
             Files.write(zipFs.getPath("/index.html"), Xml.getString(html).getBytes(Constants.CHARSET));
+        } catch (Exception e) {
+            FileUtils.deleteQuietly(file.toFile());
+            throw e;
         }
         return file;
     }
@@ -252,7 +249,7 @@ class MEF2Exporter {
 
         final Store store = context.getBean("resourceStore", Store.class);
         final List<MetadataResource> publicResources = store.getResources(context, metadata.getUuid(),
-                MetadataResourceVisibility.PUBLIC, null, true);
+            MetadataResourceVisibility.PUBLIC, null, true);
 
         // --- save thumbnails and maps
 

@@ -50,8 +50,8 @@
               if (scope.md && scope.md.groupOwner) {
                 $http
                   .get("../api/groups/" + scope.md.groupOwner, { cache: true })
-                  .success(function (data) {
-                    scope.recordGroup = data;
+                  .then(function (response) {
+                    scope.recordGroup = response.data;
                   });
               }
             }
@@ -102,8 +102,8 @@
           };
           $http
             .get(gnGlobalSettings.gnUrl + "../catalog/config/batch-examples.json")
-            .success(function (data) {
-              scope.batchExamples = data;
+            .then(function (response) {
+              scope.batchExamples = response.data;
             });
         }
       };
@@ -233,8 +233,8 @@
                   cache: true
                 }
               )
-              .success(function (response) {
-                var data = response.region;
+              .then(function (response) {
+                var data = response.data.region;
 
                 // Compute default name and add a
                 // tokens element which is used for filter
@@ -703,7 +703,9 @@
                   cache: true
                 }
               )
-              .success(function (data) {
+              .then(function (response) {
+                var data = response.data;
+
                 // Compute default name and add a
                 // tokens element which is used for filter
                 angular.forEach(data, function (lang) {
@@ -789,7 +791,8 @@
                   function () {
                     deferred.resolve();
                   },
-                  function () {
+                  function (r) {
+                    console.warn(r);
                     deferred.reject();
                   }
                 );
@@ -828,26 +831,30 @@
 
   /*
    * @description
-   * Put a string in a input field with copy to clipboard functions attached to it.
+   * Put a string in an input field, the parent element text
+   * or the results of a promise in the clipboard.
    *
    * The code to be used in a HTML page:
    *
-   * <span gn-copy-to-clipboard="{{r.url | gnLocalized: lang}}"></span>
+   * <span gn-copy-to-clipboard=""></span>
+   *  eg. for citation
    *
    * or
    *
-   * <span gn-copy-to-clipboard="{{r.url | gnLocalized: lang}}" gn-copy-button-only="true"></span>
+   * <span gn-copy-to-clipboard="" data-text="{{::r.locUrl}}" gn-copy-button-only="true"></span>
+   *  eg. copy UUID or link URL
    *
-   * The first option displays an input and copy button. Copying the text to the clipboard is triggered by
-   * clicking on the button or in the input.
+   * or
    *
-   * The second option only displays the copy button (in case the input is not needed). The input is
-   * moved out of sight, because for copying you need an input (or textarea)
+   * <button gn-copy-to-clipboard-button="" get-text-fn="getListOfUuids()"/>
+   *  eg. UUID of record with indexing errors
+   *
    */
   module.directive("gnCopyToClipboardButton", [
     "gnClipboard",
     "$timeout",
-    function (gnClipboard, $timeout) {
+    "$q",
+    function (gnClipboard, $timeout, $q) {
       return {
         restrict: "A",
         replace: true,
@@ -860,20 +867,36 @@
           "   ng-class=\"{'fa-copy': !copied, 'fa-check': copied}\"/>" +
           "</a>",
         scope: {
-          btnClass: "@"
+          btnClass: "@",
+          getTextFn: "&?"
         },
         link: function linkFn(scope, element, attr) {
           scope.copied = false;
           scope.title = attr["tooltip"] || "copyToClipboard";
           scope.copy = function () {
-            gnClipboard
-              .copy(attr["text"] ? attr["text"] : element.parent().text().trim())
-              .then(function () {
-                scope.copied = true;
-                $timeout(function () {
-                  scope.copied = false;
-                }, attr["timeout"] || 2000);
-              });
+            var promise = undefined;
+
+            if (angular.isFunction(scope.getTextFn)) {
+              promise = scope.getTextFn();
+            } else {
+              promise = $q.when(
+                attr["text"] ? attr["text"] : element.parent().text().trim()
+              );
+            }
+
+            promise.then(function (text) {
+              gnClipboard.copy(text).then(
+                function () {
+                  scope.copied = true;
+                  $timeout(function () {
+                    scope.copied = false;
+                  }, attr["timeout"] || 2000);
+                },
+                function () {
+                  console.warn("Failed to copy to clipboard.");
+                }
+              );
+            });
           };
         }
       };
@@ -981,14 +1004,18 @@
           '<i class="fa fa-fw fa-angle-double-up"/>&nbsp;' +
           "</button>",
         link: function linkFn(scope, element, attr) {
-          var selector =
+          var collapsing = true,
+            selector =
               attr["gnSectionToggle"] ||
-              "form > div > fieldset > legend[data-gn-slide-toggle]",
+              "form > div > fieldset legend[data-gn-slide-toggle]",
             event = attr["event"] || "click";
           element.on("click", function () {
             $(selector).each(function (idx, elem) {
-              $(elem).trigger(event);
+              if (collapsing !== $(elem).hasClass("collapsed")) {
+                $(elem).trigger(event);
+              }
             });
+            collapsing = !collapsing;
             $(this).find("i").toggleClass("fa-angle-double-up fa-angle-double-down");
           });
         }
@@ -2308,6 +2335,7 @@
   /**
    * Directive to display a metadata selector, that accepts a search object
    * to filter the metadata to display in the selector.
+   * @deprecated Use gnSuggest instead.
    */
   module.directive("gnMetadataSelector", [
     function () {
@@ -2333,6 +2361,41 @@
             scope.md = md;
             scope.uuid = md.uuid;
           };
+        }
+      };
+    }
+  ]);
+
+  module.directive("gnSuggest", [
+    "gnMetadataManager",
+    function (gnMetadataManager) {
+      return {
+        restrict: "A",
+        replace: true,
+        scope: {
+          searchObj: "=gnSuggest",
+          property: "@?gnSuggestProperty",
+          model: "=?gnSuggestModel",
+          displayTitleAs: "@?gnSuggestDisplayTitle" // span or title
+        },
+        templateUrl: "../../catalog/components/utility/partials/suggest.html",
+        link: function (scope, element, attrs) {
+          if (angular.isDefined(scope.displayTitleAs)) {
+            scope.$watch("model", function (n, o) {
+              if (
+                (n !== o && !!n && scope.property === "_id") ||
+                (!!n && scope.property === "_id" && scope.current === undefined)
+              ) {
+                scope.current = undefined;
+
+                gnMetadataManager
+                  .getMdObjByUuid(n, ["y", "n", "s"])
+                  .then(function (record) {
+                    scope.current = record;
+                  });
+              }
+            });
+          }
         }
       };
     }

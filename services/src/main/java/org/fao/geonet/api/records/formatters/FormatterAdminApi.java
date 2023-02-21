@@ -1,5 +1,5 @@
 //==============================================================================
-//===	Copyright (C) 2001-2008 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2023 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -279,9 +279,11 @@ public class FormatterAdminApi extends AbstractFormatService {
         }
         Path formatDir = getAndVerifyFormatDir(dataDirectory, Params.ID, formatter, schemaDir);
 
+        Path tmpDir = null;
+        Path zippedFile = null;
         try {
-            Path tmpDir = Files.createTempDirectory("gn-formatters-");
-            Path zippedFile = Files.createTempFile(tmpDir, formatter, ".zip");
+            tmpDir = Files.createTempDirectory("gn-formatters-");
+            zippedFile = Files.createTempFile(tmpDir, formatter, ".zip");
 
             try (FileSystem zipFs = ZipUtil.createZipFs(zippedFile);
                  DirectoryStream<Path> paths = Files.newDirectoryStream(formatDir)) {
@@ -298,11 +300,19 @@ public class FormatterAdminApi extends AbstractFormatService {
             ));
             response.setHeader(HttpHeaders.CONTENT_LENGTH, String.valueOf(Files.size(zippedFile)));
             FileUtils.copyFile(zippedFile.toFile(), response.getOutputStream());
-            Files.deleteIfExists(tmpDir);
+
         } catch (IOException e) {
             throw new RuntimeException(String.format(
                 "Error occurred while trying to download formatter bundle %s/%s.",
                 schema, formatter));
+        }
+        finally {
+            if (zippedFile != null) {
+                FileUtils.deleteQuietly(zippedFile.toFile());
+            }
+            if (tmpDir != null) {
+                FileUtils.deleteQuietly(tmpDir.toFile());
+            }
         }
     }
 

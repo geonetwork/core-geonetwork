@@ -267,7 +267,9 @@
           link: function (scope, element, attrs) {
             var url = "info?_content_type=json&type=users";
 
-            $http.get(url, { cache: true }).success(function (data) {
+            $http.get(url, { cache: true }).then(function (response) {
+              var data = response.data;
+
               scope.users = data !== "null" ? data.users : null;
 
               // Select by default the first group.
@@ -318,7 +320,9 @@
               }
             }
 
-            $http.get(url, { cache: true }).success(function (data) {
+            $http.get(url, { cache: true }).then(function (response) {
+              var data = response.data;
+
               //data-ng-if is not correctly updating groups.
               //So we do the filter here
               if (scope.excludeSpecialGroups) {
@@ -720,21 +724,29 @@
 
             var isLabelSet = false;
             function appendExtraOptions() {
-              if (baseList && angular.isArray(scope.extraOptions)) {
-                if (!isLabelSet) {
-                  scope.extraOptions.unshift({
-                    value: "",
-                    label: $translate.instant("recordFormats"),
-                    disabled: true
-                  });
-                  scope.extraOptions.push({
-                    value: "",
-                    label: $translate.instant("commonProtocols"),
-                    disabled: true
-                  });
+              if (baseList) {
+                // Only add the header options if there are extra options defined.
+                if (
+                  angular.isArray(scope.extraOptions) &&
+                  scope.extraOptions.length > 0
+                ) {
+                  if (!isLabelSet) {
+                    scope.extraOptions.unshift({
+                      value: "",
+                      label: $translate.instant("recordFormats"),
+                      disabled: true
+                    });
+                    scope.extraOptions.push({
+                      value: "",
+                      label: $translate.instant("commonProtocols"),
+                      disabled: true
+                    });
+                    isLabelSet = true;
+                  }
+                  scope.infos = scope.extraOptions.concat(baseList);
+                } else {
                   isLabelSet = true;
                 }
-                scope.infos = scope.extraOptions.concat(baseList);
               }
             }
 

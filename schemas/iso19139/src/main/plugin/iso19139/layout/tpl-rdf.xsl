@@ -39,6 +39,8 @@
                 xmlns:gml="http://www.opengis.net/gml/3.2"
                 xmlns:gml320="http://www.opengis.net/gml"
                 xmlns:ogc="http://www.opengis.net/rdf#"
+                xmlns:util="java:org.fao.geonet.util.XslUtil"
+                xmlns:geo="http://www.opengis.net/ont/geosparql#"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 xmlns:iso19139="http://geonetwork-opensource.org/schemas/iso19139"
                 version="2.0"
@@ -52,24 +54,23 @@
     See http://www.w3.org/TR/2004/REC-rdf-concepts-20040210/#dfn-URI-reference
   -->
 
+  <xsl:variable name="resourcePrefix"
+                select="util:getSettingValue('metadata/resourceIdentifierPrefix')"/>
 
   <!--
     Create reference block to metadata record and dataset to be added in dcat:Catalog usually.
   -->
   <!-- FIME : $url comes from a global variable. -->
-  <xsl:template match="gmd:MD_Metadata|*[@gco:isoType='gmd:MD_Metadata']" mode="record-reference">
+  <xsl:template match="gmd:MD_Metadata|*[@gco:isoType='gmd:MD_Metadata']"
+                mode="record-reference">
     <!-- TODO : a metadata record may contains aggregate. In that case create one dataset per aggregate member. -->
     <dcat:dataset rdf:resource="{iso19139:ResourceUri(iso19139:getResourceCode(.))}"/>
     <dcat:record rdf:resource="{iso19139:RecordUri(gmd:fileIdentifier/gco:CharacterString)}"/>
   </xsl:template>
 
 
-  <!--
-    Convert ISO record to DCAT
-    -->
-  <xsl:template match="gmd:MD_Metadata|*[@gco:isoType='gmd:MD_Metadata']" mode="to-dcat">
-
-  
+  <xsl:template match="gmd:MD_Metadata|*[@gco:isoType='gmd:MD_Metadata']"
+                mode="to-dcat">
     <!-- Catalogue records
       "A record in a data catalog, describing a single dataset."
 
@@ -88,28 +89,58 @@
       <dct:modified>
         <xsl:value-of select="$date"/>
       </dct:modified>
+      <xsl:call-template name="add-reference">
+        <xsl:with-param name="uuid" select="gmd:fileIdentifier/gco:CharacterString"/>
+      </xsl:call-template>
     </dcat:CatalogRecord>
 
-    <xsl:apply-templates select="gmd:identificationInfo/*" mode="to-dcat"/>
-
+    <xsl:apply-templates select="gmd:identificationInfo/*"
+                         mode="to-dcat"/>
   </xsl:template>
 
 
+  <!-- Add references for HTML and XML metadata record link -->
+  <xsl:template name="add-reference">
+    <xsl:param name="uuid"/>
+
+    <dct:references>
+      <rdf:Description rdf:about="{$url}/srv/api/records/{$uuid}/formatters/xml">
+        <dct:format>
+          <dct:IMT>
+            <rdf:value>application/xml</rdf:value>
+            <rdfs:label>XML</rdfs:label>
+          </dct:IMT>
+        </dct:format>
+      </rdf:Description>
+    </dct:references>
+
+    <dct:references>
+      <rdf:Description rdf:about="{$url}/srv/api/records/{$uuid}">
+        <dct:format>
+          <dct:IMT>
+            <rdf:value>text/html</rdf:value>
+            <rdfs:label>HTML</rdfs:label>
+          </dct:IMT>
+        </dct:format>
+      </rdf:Description>
+    </dct:references>
+  </xsl:template>
+
   <!-- Create all references for ISO19139 record (if rdf.metadata.get) or records (if rdf.search) -->
-  <xsl:template match="gmd:MD_Metadata|*[@gco:isoType='gmd:MD_Metadata']" mode="references">
+  <xsl:template match="gmd:MD_Metadata|*[@gco:isoType='gmd:MD_Metadata']"
+                mode="references">
 
     <xsl:variable name="uuid" select="gmd:fileIdentifier/gco:CharacterString"/>
 
     <!-- Keywords -->
-    <xsl:for-each-group
-      select="//gmd:MD_Keywords[(gmd:thesaurusName)]/gmd:keyword/gco:CharacterString" group-by=".">
-      <!-- FIXME maybe only do that, if keyword URI is available (when xlink is used ?) -->
+    <xsl:for-each-group select="//gmd:MD_Keywords[(gmd:thesaurusName)]/gmd:keyword"
+                        group-by="gco:CharacterString|gmx:Anchor">
       <skos:Concept
-        rdf:about="{$resourcePrefix}/registries/vocabularies/{encode-for-uri(iso19139:getThesaurusCode(../../gmd:thesaurusName))}/concepts/{encode-for-uri(.)}">
+        rdf:about="{iso19139:getKeywordURI(., iso19139:getThesaurusURI(../gmd:thesaurusName, $resourcePrefix))}">
         <skos:inScheme
-          rdf:resource="{$resourcePrefix}/registries/vocabularies/{encode-for-uri(iso19139:getThesaurusCode(../../gmd:thesaurusName))}"/>
+          rdf:resource="{iso19139:getThesaurusURI(../gmd:thesaurusName, $resourcePrefix)}"/>
         <skos:prefLabel>
-          <xsl:value-of select="."/>
+          <xsl:value-of select="(gco:CharacterString|gmx:Anchor)"/>
         </skos:prefLabel>
       </skos:Concept>
     </xsl:for-each-group>
@@ -149,7 +180,7 @@
         <!-- "The size of a distribution.":N/A
           <dcat:size></dcat:size>
         -->
-        
+
           <xsl:if test="(gmd:protocol/gmx:Anchor/@xlink:href)[1]!=''">
           <dcat:mediaType>
             <xsl:attribute name="rdf:resource" select="(gmd:protocol/gmx:Anchor/@xlink:href)[1]"/>
@@ -161,7 +192,7 @@
             <xsl:value-of select="(gmd:protocol/gco:CharacterString)[1]"/>
           </dct:format>
           </xsl:if>
-          
+
       </dcat:Distribution>
     </xsl:for-each-group>
 
@@ -291,23 +322,13 @@
 
 
     <!-- "The main category of the dataset. A dataset can have multiple themes."
-      Create dcat:theme if gmx:Anchor or GEMET concepts or INSPIRE themes
     -->
-    <!-- xpath: gmd:identificationInfo/*/gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword/gco:CharaceterString -->
     <xsl:for-each
-      select="gmd:descriptiveKeywords/gmd:MD_Keywords[(gmd:thesaurusName)]/gmd:keyword/gco:CharacterString">
-      <!-- FIXME maybe only do that, if keyword URI is available (when xlink is used ?) -->
+      select="gmd:descriptiveKeywords/gmd:MD_Keywords[(gmd:thesaurusName)]/gmd:keyword">
       <dcat:theme
-        rdf:resource="{$resourcePrefix}/registries/vocabularies/{encode-for-uri(iso19139:getThesaurusCode(../../gmd:thesaurusName))}/concepts/{encode-for-uri(.)}"/>
+        rdf:resource="{iso19139:getKeywordURI(., iso19139:getThesaurusURI(../gmd:thesaurusName, $resourcePrefix))}"/>
     </xsl:for-each>
-    <!-- xpath: gmd:identificationInfo/*/gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword/gmx:Anchor -->    
-    <xsl:for-each
-      select="gmd:descriptiveKeywords/gmd:MD_Keywords[(gmd:thesaurusName)]/gmd:keyword/gmx:Anchor">
-      <dcat:theme rdf:resource="{@xlink:href}">
-        <xsl:value-of select="./text()"/>
-      </dcat:theme>
-    </xsl:for-each>
-    <!-- xpath: gmd:identificationInfo/*/gmd:topicCategory/gmd:MD_TopicCategoryCode -->
+
     <xsl:for-each select="gmd:topicCategory/gmd:MD_TopicCategoryCode[.!='']">
       <!-- FIXME Is there any public URI pointing to topicCategory enumeration ? -->
       <dcat:theme rdf:resource="https://inspire.ec.europa.eu/metadata-codelist/TopicCategory/{translate(.,' ','')}"/>
@@ -316,7 +337,7 @@
     <!-- Thumbnail -->
     <xsl:for-each
       select="gmd:graphicOverview/gmd:MD_BrowseGraphic/gmd:fileName/gco:CharacterString[normalize-space(.)!='']">
-      <foaf:thumbnail rdf:resource="{.}"/>
+      <foaf:thumbnail rdf:resource="{replace(., ' ', '%20')}" />
     </xsl:for-each>
     <!-- xpath: gmd:identificationInfo/*/gmd:graphicOverview/gmd:MD_BrowseGraphic/gmd:fileName/gco:CharacterString -->
 
@@ -332,10 +353,9 @@
       </xsl:variable>
       <dct:spatial>
         <ogc:Polygon>
-          <ogc:asWKT rdf:datatype="http://www.opengis.net/rdf#WKTLiteral">
-            &lt;http://www.opengis.net/def/crs/OGC/1.3/CRS84&gt;
+          <geo:asWKT rdf:datatype="http://www.opengis.net/rdf#wktLiteral">
             Polygon((<xsl:value-of select="string-join($coords, ', ')"/>))
-          </ogc:asWKT>
+          </geo:asWKT>
         </ogc:Polygon>
       </dct:spatial>
     </xsl:for-each>
@@ -430,7 +450,7 @@
     <xsl:for-each select="../../gmd:distributionInfo/*/gmd:transferOptions/*/gmd:onLine">
       <dcat:distribution rdf:resource="{iso19139:RecordUri($uuid)}#{encode-for-uri(gmd:CI_OnlineResource/gmd:protocol/*/text())}-{encode-for-uri(gmd:CI_OnlineResource/gmd:name/*/text())}"/>
     </xsl:for-each>
- 
+
     <!-- xpath: gmd:distributionInfo/*/gmd:transferOptions/*/gmd:onLine/gmd:CI_OnlineResource -->
 
 
@@ -517,12 +537,47 @@
   <!--
     Get thesaurus identifier, otherCitationDetails value, citation @id or thesaurus title.
   -->
-  <xsl:function name="iso19139:getThesaurusCode" as="xs:string">
+  <xsl:function name="iso19139:getThesaurusURI" as="xs:string">
     <xsl:param name="thesaurusName" as="node()"/>
+    <xsl:param name="resourcePrefix" as="xs:string"/>
 
-    <xsl:value-of select="if ($thesaurusName/*/gmd:otherCitationDetails/*!='') then $thesaurusName/*/gmd:otherCitationDetails/*
-      else if ($thesaurusName/gmd:CI_Citation/@id!='') then $thesaurusName/gmd:CI_Citation/@id!=''
-      else encode-for-uri($thesaurusName/*/gmd:title/gco:CharacterString)"/>
+    <xsl:variable name="prefixIfNoHttp"
+                  select="concat($resourcePrefix, '/registries/vocabularies/')"/>
+
+    <xsl:variable name="thesaurusUri"
+                  select="if ($thesaurusName/*/gmd:title/gmx:Anchor/@xlink:href)
+                          then $thesaurusName/*/gmd:title/gmx:Anchor/@xlink:href
+                          else if ($thesaurusName/*/gmd:otherCitationDetails/*[. != ''])
+                          then $thesaurusName/*/gmd:otherCitationDetails/*[. != '']
+                          else if ($thesaurusName/gmd:CI_Citation/@id[. != ''])
+                          then $thesaurusName/gmd:CI_Citation/@id[. != '']
+                          else if ($thesaurusName/*/gmd:title/gmx:Anchor)
+                          then $thesaurusName/*/gmd:title/gmx:Anchor
+                          else if ($thesaurusName/*/gmd:title/gco:CharacterString)
+                          then $thesaurusName/*/gmd:title/gco:CharacterString
+                          else generate-id($thesaurusName)"/>
+
+    <xsl:value-of select="if (starts-with($thesaurusUri, 'http'))
+                          then $thesaurusUri
+                          else concat($prefixIfNoHttp,
+                                encode-for-uri($thesaurusUri))"/>
+  </xsl:function>
+
+  <xsl:function name="iso19139:getKeywordURI" as="xs:string">
+    <xsl:param name="keyword" as="node()"/>
+    <xsl:param name="thesaurusUri" as="xs:string"/>
+
+    <xsl:variable name="keywordUri"
+                  select="if ($keyword/gmx:Anchor/@xlink:href)
+                          then $keyword/gmx:Anchor/@xlink:href
+                          else if ($keyword/gco:CharacterString)
+                          then $keyword/gco:CharacterString
+                          else generate-id($keyword)"/>
+
+    <xsl:value-of select="if (starts-with($keywordUri, 'http'))
+                          then $keywordUri
+                          else concat($thesaurusUri, '/concepts/',
+                                encode-for-uri($keywordUri))"/>
   </xsl:function>
 
   <!--
@@ -531,9 +586,10 @@
   <xsl:function name="iso19139:getContactId" as="xs:string">
     <xsl:param name="responsibleParty" as="node()"/>
 
-    <xsl:value-of select="if ($responsibleParty/gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString!='')
-      then $responsibleParty/gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString
-      else generate-id($responsibleParty)"/>
+    <xsl:variable name="email"
+                  select="$responsibleParty/gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress/gco:CharacterString[. != '']"/>
+    <xsl:value-of select="if ($email != '') then $email
+                          else generate-id($responsibleParty)"/>
   </xsl:function>
 
 

@@ -23,6 +23,9 @@
 
 package org.fao.geonet.kernel.csw.services.getrecords.es;
 
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
+import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.csw.CatalogConfiguration;
 import org.fao.geonet.kernel.csw.services.getrecords.IFieldMapper;
 import org.fao.geonet.kernel.csw.services.getrecords.IdentityFieldMapper;
 import org.springframework.context.annotation.Bean;
@@ -34,4 +37,18 @@ public class CswFilter2EsTestConfiguration {
         return new IdentityFieldMapper();
     }
 
+    @Bean
+    public CatalogConfiguration catalogConfiguration() {
+        return new CatalogConfiguration();
+    }
+
+    @Bean
+    public GeonetworkDataDirectory dataDirectory() {
+        return new GeonetworkDataDirectory();
+    }
+
+    @Bean
+    public SchemaManager schemaManager() {
+        return new SchemaManager();
+    }
 }

@@ -56,6 +56,12 @@
         </xsl:apply-templates>
       </abstract>
 
+      <xsl:for-each select="gmd:identificationInfo/*/gmd:citation/*/gmd:identifier/*/gmd:code/*[. != '']">
+        <resourceIdentifier>
+          <xsl:value-of select="."/>
+        </resourceIdentifier>
+      </xsl:for-each>
+
       <category>
         <xsl:choose>
           <xsl:when test="gmd:identificationInfo/srv:SV_ServiceIdentification">service</xsl:when>

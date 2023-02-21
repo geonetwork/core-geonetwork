@@ -162,7 +162,7 @@
         </xsl:when>
         <xsl:otherwise>
           <!-- Build a new one -->
-          <xsl:value-of select="$$doiId"/>
+          <xsl:value-of select="$doiId"/>
         </xsl:otherwise>
       </xsl:choose>
     </datacite:identifier>
@@ -353,9 +353,18 @@
           <!--
           Expect the entry point to be CI_Organisation
           The full name of the creator. -->
-          <datacite:creatorName nameType="Personal">
-            <xsl:value-of select="cit:party/*/cit:individual/*/cit:name/*/text()"/>
-          </datacite:creatorName>
+          <xsl:choose>
+            <xsl:when test="cit:party/*/cit:individual/*/cit:name/*/text() != ''">
+              <datacite:creatorName nameType="Personal">
+                <xsl:value-of select="cit:party/*/cit:individual/*/cit:name/*/text()"/>
+              </datacite:creatorName>
+            </xsl:when>
+            <xsl:otherwise>
+              <datacite:creatorName nameType="Organizational">
+              <xsl:value-of select="cit:party/*/cit:name/*/text()"/>
+              </datacite:creatorName>
+            </xsl:otherwise>
+          </xsl:choose>
 
           <!--
           <datacite:givenName>Elizabeth</datacite:givenName>
@@ -456,7 +465,7 @@ eg.
   <xsl:template mode="toDatacite"
                 match="mdb:distributionInfo[1]">
     <datacite:publisher>
-      <xsl:value-of select="($metadata//mrd:distributorContact)[1]/*/cit:party//cit:CI_Organisation/cit:name/gco:CharacterString"/>
+      <xsl:value-of select="($metadata//mrd:distributorContact)[1]/*/cit:party//cit:CI_Organisation/cit:name/*/text()"/>
     </datacite:publisher>
 
     <!--

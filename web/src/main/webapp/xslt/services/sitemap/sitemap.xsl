@@ -23,8 +23,8 @@
   -->
 
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-				xmlns:util="java:org.fao.geonet.util.XslUtil"
-				version="2.0"
+                xmlns:util="java:org.fao.geonet.util.XslUtil"
+                version="2.0"
                 exclude-result-prefixes="#all">
 
   <xsl:include href="../../common/base-variables.xsl"/>
@@ -119,16 +119,15 @@
               <xsl:when test="$format='xml'">
                 <xsl:value-of select="concat($nodeUrl, 'api/records/', $uuid, '/formatters/xml')"/>
               </xsl:when>
-
               <xsl:otherwise>
-                <xsl:value-of select="concat($nodeUrl, 'api/records/', $uuid, '?language=all')"/>
+                <xsl:value-of select="util:getPermalink($uuid, $lang)"/>
               </xsl:otherwise>
             </xsl:choose>
           </loc>
           <lastmod>
             <xsl:value-of select="substring($changedate,1,10)"/>
           </lastmod>
-          
+
           <!--
           <dct:format>
               <xsl:value-of select="$schemaid"/>

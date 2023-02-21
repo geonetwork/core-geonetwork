@@ -194,18 +194,22 @@
               cache: true,
               timeout: timeout
             })
-            .success(function (data, status, headers, config) {
-              // Check if the response contains a mapName property,
-              // to verify it's an ESRI Rest Capabilities document.
-              if (!!data.mapName) {
-                defer.resolve(data);
-              } else {
-                defer.reject($translate.instant("esriCapabilitiesNoValid"));
+            .then(
+              function (response) {
+                var data = response.data;
+
+                // Check if the response contains a mapName property,
+                // to verify it's an ESRI Rest Capabilities document.
+                if (!!data.mapName) {
+                  defer.resolve(data);
+                } else {
+                  defer.reject($translate.instant("esriCapabilitiesNoValid"));
+                }
+              },
+              function (response) {
+                defer.reject($translate.instant("esriCapabilitiesFailed"));
               }
-            })
-            .error(function (data, status, headers, config) {
-              defer.reject($translate.instant("esriCapabilitiesFailed"));
-            });
+            );
 
           return defer.promise;
         }

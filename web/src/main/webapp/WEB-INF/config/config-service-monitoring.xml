@@ -45,11 +45,11 @@
     <counter class=".AbstractHarvesterErrorCounter"/>
   </monitors>
   <monitors package="jeeves.monitor.timer">
-    <!-- timer must implement the MetricsFactory<Timer> interface -->
     <timer class=".ServiceManagerGuiServicesTimer"/>
     <timer class=".ServiceManagerServicesTimer"/>
     <timer class=".ServiceManagerXslOutputTransformTimer"/>
-    <!-- Other monitor types are: gauge, counter, meter, histogram -->
+    <timer class=".IndexingRecordTimer"/>
+    <meter class=".IndexingRecordMeter"/>
   </monitors>
   <monitors package="jeeves.monitor.counter">
     <!-- The following doesn't exist, it is a potential example -->

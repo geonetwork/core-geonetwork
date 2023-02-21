@@ -76,7 +76,7 @@
             var profile, elevationData, poiData;
 
             scope.$watchCollection(optionsAttr, function (newVal) {
-              var options = goog.cloneObject(newVal);
+              var options = $.extend(true, {}, newVal);
 
               if (options !== undefined) {
                 // proxy the hoverCallback and outCallbackin order to be able to
@@ -131,12 +131,12 @@
               }
             });
 
-            goog.events.listen(
-              window,
-              goog.events.EventType.RESIZE,
-              gnDebounce(refreshData, 50, true),
-              false,
-              this
+            window.addEventListener(
+              "resize",
+              function (event) {
+                gnDebounce(refreshData, 50, true);
+              },
+              true
             );
 
             function refreshData() {

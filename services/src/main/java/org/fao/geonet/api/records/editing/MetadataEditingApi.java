@@ -34,7 +34,6 @@ import jeeves.services.ReadWriteController;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
-import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.exception.NotAllowedException;
@@ -51,6 +50,7 @@ import org.fao.geonet.kernel.datamanager.IMetadataValidator;
 import org.fao.geonet.kernel.datamanager.base.BaseMetadataStatus;
 import org.fao.geonet.kernel.metadata.StatusActions;
 import org.fao.geonet.kernel.metadata.StatusActionsFactory;
+import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.*;
@@ -310,15 +310,18 @@ public class MetadataEditingApi {
         sa.onEdit(iLocalId, minor);
         Element beforeMetadata = dataMan.getMetadata(context, String.valueOf(metadata.getId()), false, false, false);
 
+        IndexingMode indexingMode = terminate ? IndexingMode.full : IndexingMode.core;
+
         if (StringUtils.isNotEmpty(data)) {
             Log.trace(Geonet.DATA_MANAGER, " > Updating metadata through data manager");
             Element md = Xml.loadString(data, false);
             String changeDate = null;
             boolean updateDateStamp = !minor;
             boolean ufo = true;
-            boolean index = true;
-            dataMan.updateMetadata(context, id, md, withValidationErrors, ufo, index, context.getLanguage(), changeDate,
-                updateDateStamp);
+
+
+            dataMan.updateMetadata(context, id, md, withValidationErrors, ufo, context.getLanguage(), changeDate,
+                updateDateStamp, indexingMode);
 
             if (terminate) {
                 XMLOutputter outp = new XMLOutputter();
@@ -329,7 +332,7 @@ public class MetadataEditingApi {
             }
         } else {
             Log.trace(Geonet.DATA_MANAGER, " > Updating contents");
-            ajaxEditUtils.updateContent(params, false, true);
+            ajaxEditUtils.updateContent(params, false, true, indexingMode);
 
             Element afterMetadata = dataMan.getMetadata(context, String.valueOf(metadata.getId()), false, false, false);
 
@@ -454,7 +457,7 @@ public class MetadataEditingApi {
 
             if (reindex) {
                 Log.trace(Geonet.DATA_MANAGER, " > Reindexing record");
-                dataMan.indexMetadata(id, true);
+                metadataIndexer.indexMetadata(id, true, IndexingMode.full);
             }
 
             // Reindex the metadata table record to update the field _statusWorkflow that contains the composite
@@ -463,7 +466,7 @@ public class MetadataEditingApi {
                 Metadata metadataApproved = metadataRepository.findOneByUuid(metadata.getUuid());
 
                 if (metadataApproved != null) {
-                    metadataIndexer.indexMetadata(String.valueOf(metadataApproved.getId()), true);
+                    metadataIndexer.indexMetadata(String.valueOf(metadataApproved.getId()), true, IndexingMode.full);
                 }
             }
 

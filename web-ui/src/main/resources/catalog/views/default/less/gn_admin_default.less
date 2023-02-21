@@ -10,7 +10,7 @@ ul.gn-resultview li.list-group-item {
 
 .wfs-indexing-dashboard {
   .panel-body {
-    margin: 0px;
+    margin: 0;
     padding: 0.7em;
   }
   .panel {
@@ -39,13 +39,14 @@ ul.gn-resultview li.list-group-item {
     border-width: 0 0 1px 0;
     background-color: #fff;
     top: 0;
-    z-index: 100;
+    z-index: 1001;
     padding-left: 0;
     // navbar in admin always 100%
-    .container, .container-fluid {
+    .container,
+    .container-fluid {
       width: auto;
       padding: 0;
-      &> .navbar-header {
+      & > .navbar-header {
         margin-right: 0;
         margin-left: 0;
       }
@@ -54,9 +55,12 @@ ul.gn-resultview li.list-group-item {
       background: #fff;
     }
 
-    .navbar-nav > li > a, .navbar-nav > .open > a, .navbar-nav > .active > a {
+    .navbar-nav > li > a,
+    .navbar-nav > .open > a,
+    .navbar-nav > .active > a {
       color: @navbar-default-link-color;
-      &:hover, &:focus {
+      &:hover,
+      &:focus {
         color: @navbar-default-link-hover-color;
         background-color: @navbar-default-link-hover-bg;
       }
@@ -69,7 +73,8 @@ ul.gn-resultview li.list-group-item {
         > a {
           padding: 8px 20px;
         }
-        &.active, &:hover {
+        &.active,
+        &:hover {
           > a {
             color: @navbar-default-link-color;
             background-color: lighten(@brand-primary, 46.7%);
@@ -80,7 +85,8 @@ ul.gn-resultview li.list-group-item {
     @media (min-width: @screen-sm-min) {
       li.dropdown-hover {
         &.open:not(.active) > .dropdown-toggle {
-          &:hover, &:focus {
+          &:hover,
+          &:focus {
             background: none;
           }
         }
@@ -165,14 +171,14 @@ ul.gn-resultview li.list-group-item {
               span {
                 display: inline-block;
                 color: #333;
-                padding: 0px 10px;
+                padding: 0 10px;
               }
               &:hover {
                 span {
                   position: relative;
                   color: #333;
                   background: none;
-                  padding: 0px 10px;
+                  padding: 0 10px;
                   margin-left: 0;
                 }
               }
@@ -195,13 +201,13 @@ ul.gn-resultview li.list-group-item {
               color: @gray-dark;
             }
           }
-          &.active, &:hover {
+          &.active,
+          &:hover {
             a {
               color: @gray-darker;
               background-color: lighten(@brand-primary, 46.7%);
             }
           }
-
         }
       }
     }
@@ -216,7 +222,7 @@ ul.gn-resultview li.list-group-item {
       .gn-row-admin-buttons {
         margin-bottom: 20px;
         .btn-group {
-          box-shadow: 0 0.5px 0.5px rgba(0,0,0,.03);
+          box-shadow: 0 0.5px 0.5px rgba(0, 0, 0, 0.03);
           .btn {
             border-color: darken(@gray-lighter, 6.5%);
             padding: 15px;
@@ -256,12 +262,11 @@ ul.gn-resultview li.list-group-item {
             }
           }
         }
-
       }
       .gn-row-admin-stats {
         .panel {
           border-color: darken(@gray-lighter, 6.5%);
-          box-shadow: 0 0.5px 0.5px rgba(0,0,0,.03);
+          box-shadow: 0 0.5px 0.5px rgba(0, 0, 0, 0.03);
           .panel-heading {
             padding: 5px 15px;
             background: @gray-lighter;
@@ -282,7 +287,8 @@ ul.gn-resultview li.list-group-item {
         }
         .panel-primary {
           border-color: darken(@brand-primary, 6.5%);
-          .panel-heading, .panel-body {
+          .panel-heading,
+          .panel-body {
             color: #fff;
             background: @brand-primary;
             border-color: darken(@brand-primary, 6.5%);
@@ -290,7 +296,8 @@ ul.gn-resultview li.list-group-item {
         }
         .panel-success {
           border-color: darken(@brand-success, 6.5%);
-          .panel-heading, .panel-body {
+          .panel-heading,
+          .panel-body {
             color: #fff;
             background: @brand-success;
             border-color: darken(@brand-success, 6.5%);
@@ -309,7 +316,8 @@ ul.gn-resultview li.list-group-item {
             float: none;
           }
           @media (max-width: @screen-xs-max) {
-            .form-control, .btn {
+            .form-control,
+            .btn {
               margin: 10px 0;
               width: 100%;
             }
@@ -374,7 +382,8 @@ ul.gn-resultview li.list-group-item {
         .timeline-title {
           display: inline-block;
         }
-        #gn-harvest-history-panel, #gn-harvest-settings-panel {
+        #gn-harvest-history-panel,
+        #gn-harvest-settings-panel {
           .panel-heading {
             height: auto;
             line-height: 3em;
@@ -501,8 +510,52 @@ ul.gn-resultview li.list-group-item {
         text-decoration: underline;
         font-weight: 400;
       }
+      hr {
+        margin-top: 10px;
+        margin-bottom: 10px;
+        border-color: #ccc;
+      }
+      // checkbox (Bootstrap 5.2)
+      input[type="checkbox"],
+      input[type="radio"] {
+        width: 1em;
+        height: 1em;
+        margin: 0.25em;
+        vertical-align: top;
+        background-color: #fff;
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: contain;
+        border: 1px solid rgba(0, 0, 0, 0.25);
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        -webkit-print-color-adjust: exact;
+        color-adjust: exact;
+        print-color-adjust: exact;
+        &:checked {
+          background-color: @brand-primary;
+          border-color: @brand-primary;
+        }
+        &:focus {
+          border-color: #86b7fe;
+          outline: 0 !important;
+          box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+        }
+      }
+      input[type="radio"] {
+        border-radius: 50%;
+      }
+      input[type="checkbox"]:checked {
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23fff' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='m6 10 3 3 6-6'/%3e%3c/svg%3e");
+      }
+      input[type="radio"]:checked {
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='2' fill='%23fff'/%3e%3c/svg%3e");
+      }
       legend {
         font-size: 16px;
+        padding-top: 15px;
+        border-color: #ccc;
         h2 {
           display: inline-block;
         }
@@ -516,9 +569,10 @@ ul.gn-resultview li.list-group-item {
           margin: 0;
         }
       }
-      fieldset, [data-ng-show="uiConfiguration"] {
+      fieldset,
+      [data-ng-show="uiConfiguration"] {
         label {
-          padding-top: 7px;
+          padding-top: 0;
           font-weight: normal;
           &.control-label {
             font-weight: 500;
@@ -542,7 +596,9 @@ ul.gn-resultview li.list-group-item {
             font-size: 14px;
             border-top-left-radius: @gn-border-radius;
             border-top-right-radius: @gn-border-radius;
-            h1, h2, h3 {
+            h1,
+            h2,
+            h3 {
               display: inline-block;
             }
             h2 {
@@ -565,6 +621,54 @@ ul.gn-resultview li.list-group-item {
       .input-group {
         .table {
           margin-bottom: 0;
+        }
+      }
+      .nav-pills {
+        margin-bottom: 10px;
+      }
+      .form-group {
+        padding: 0;
+        margin: 0;
+        .row {
+          padding: 10px 0;
+        }
+        &:hover {
+          .row {
+            padding: 10px 15px;
+            margin-left: -15px;
+            margin-right: -15px;
+            background: #f7f7f7;
+            width: calc(~"100% + 30px");
+            .table {
+              background: #fff;
+            }
+          }
+        }
+      }
+      // UI settings toolbar
+      #gn-uiconfig-toolbar {
+        position: sticky;
+        background-color: #f7f7f7;
+        border-bottom: 1px solid @panel-default-border;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        top: calc(~"@{gn-menubar-height} + 1px");
+        z-index: 901;
+      }
+      #gn-uiconfig-customize {
+        margin-top: -85px;
+        .dropdown-menu {
+          padding: 0 !important;
+          li {
+            border-bottom: 1px solid @dropdown-border;
+            a {
+              padding: 8px 10px !important;
+              .fa {
+                width: 1em;
+                margin-right: 5px;
+              }
+            }
+          }
         }
       }
     }
@@ -601,8 +705,4 @@ ul.gn-resultview li.list-group-item {
       border-bottom: 1px solid @panel-default-border;
     }
   }
-
 }
-
-
-

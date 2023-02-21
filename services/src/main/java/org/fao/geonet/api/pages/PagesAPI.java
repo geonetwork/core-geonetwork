@@ -36,6 +36,7 @@ import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.exception.ResourceAlreadyExistException;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.api.exception.WebApplicationException;
+import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.page.Page;
 import org.fao.geonet.domain.page.PageIdentity;
@@ -56,6 +57,7 @@ import javax.servlet.http.HttpSession;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @RequestMapping(value = {"/{portal}/api/pages"})
@@ -74,6 +76,9 @@ public class PagesAPI {
 
     @Autowired
     private PageRepository pageRepository;
+
+    @Autowired
+    private LanguageUtils languageUtils;
 
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Add a new Page object in DRAFT section in status HIDDEN",
@@ -98,6 +103,7 @@ public class PagesAPI {
         @RequestParam(value = "format", required = true) final Page.PageFormat format,
         @Parameter(hidden = true) final HttpServletResponse response) throws ResourceAlreadyExistException {
 
+        checkValidLanguage(language);
 
         checkMandatoryContent(data, link);
 
@@ -141,6 +147,9 @@ public class PagesAPI {
         @RequestParam(value = "link", required = false) final String link,
         @RequestParam(value = "format", required = true) final Page.PageFormat format
     ) throws ResourceNotFoundException {
+
+        checkValidLanguage(language);
+
         checkUniqueContent(data, link);
 
         checkCorrectFormat(data, link, format);
@@ -173,6 +182,10 @@ public class PagesAPI {
         @RequestParam(value = "newLanguage", required = false) final String newLanguage,
         @RequestParam(value = "newPageId", required = false) final String newPageId,
         @Parameter(hidden = true) final HttpServletResponse response) throws ResourceNotFoundException, ResourceAlreadyExistException {
+
+        checkValidLanguage(language);
+
+        checkValidLanguage(newLanguage);
 
         final Page page = pageRepository.findById(new PageIdentity(language, pageId)).get();
 
@@ -498,6 +511,15 @@ public class PagesAPI {
             if (!ArrayUtils.contains(supportedExtensions, extension)) {
                 throw new MultipartException("Unsuppoted file type (only html, txt and md are allowed).");
             }
+        }
+    }
+
+    private void checkValidLanguage(String language) {
+        if (!languageUtils.getUiLanguages().contains(language)) {
+            throw new IllegalArgumentException(
+                String.format("Language value is not valid: %s. A valid application language is mandatory: %s.",
+                    language,
+                    String.join(",", languageUtils.getUiLanguages())));
         }
     }
 

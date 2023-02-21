@@ -547,5 +547,6 @@
     "fieldTooShort": "Värdet är för kort",
     "fieldEmailNotValid": "En giltig emailadress krävs",
     "addLayerPrefix": "Add layer",
-    "addLayerPostfix": "to the map"
+    "addLayerPostfix": "to the map",
+    "submit": "Inlämna"
 }

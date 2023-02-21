@@ -40,23 +40,4 @@
     <constructor-arg value="#{environment.gnDatabaseDialect}"/>
   </bean>
 
-  <!-- Enable for PostGis configuration with JNDI -->
-  <!--<bean id="datastoreFactory" class="org.geotools.data.postgis.PostgisNGJNDIDataStoreFactory"/>
-  <bean id="datastore" factory-bean="datastoreFactory" factory-method="createDataStore">
-    <constructor-arg>
-      <map>
-        <description>The datastore factory parameters see Geotools documentation for details.
-          http://docs.geotools.org/latest/userguide/library/data/datastore.html
-        </description>
-        <entry key="dbtype" value="postgis"/>
-        <entry key="Data Source" value-ref="jdbcDataSource"/>
-        <entry key="Loose bbox" value="true"/>
-        <entry key="Estimated extends" value="true"/>
-        <entry key="encode functions" value="true"/>
-        <entry key="validate connections" value="true"/>
-        <entry key="fetch size" value="1000"/>
-        <entry key="Expose primary keys" value="true"/>
-      </map>
-    </constructor-arg>
-  </bean>-->
 </beans>

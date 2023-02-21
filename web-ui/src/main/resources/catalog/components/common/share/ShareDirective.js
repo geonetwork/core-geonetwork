@@ -108,6 +108,14 @@
           var loadPrivileges;
           var fillGrid = function (data) {
             scope.privileges = data.privileges;
+            angular.forEach(scope.privileges, function (p) {
+              var checkedCounter = 0,
+                uncheckedCounter = 0;
+              angular.forEach(p.operations, function (v, k) {
+                v === false ? ++uncheckedCounter : ++checkedCounter;
+              });
+              p.isCheckedAll = checkedCounter > uncheckedCounter;
+            });
             scope.operations = data.operations;
             scope.isAdminOrReviewer = data.isAdminOrReviewer;
           };

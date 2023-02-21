@@ -129,6 +129,7 @@ public class UiApiTest extends AbstractServiceIntegrationTest {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 
         this.mockMvc.perform(delete("/srv/api/ui/" + uiConfiguration.getId())
+            .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(204));
 

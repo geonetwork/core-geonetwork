@@ -40,7 +40,7 @@ public class AddElemValue {
 
     public AddElemValue(String stringValue) throws JDOMException, IOException {
         Element finalNodeVal = null;
-        String finalStringVal = stringValue.replaceAll("</?gn_(add|replace|delete)>", "");
+        String finalStringVal = stringValue.replaceAll("</?gn_(add|replace)>", "");
         if (Xml.isXMLLike(finalStringVal)) {
             try {
                 finalNodeVal = Xml.loadString(stringValue, false);

@@ -59,7 +59,7 @@
   "ui-languageWhitelist-help": "Limit language detection to some languages only. If empty, the list of languages in catalogue records is used and if none found, mods.header.languages is used.",
   "ui-queryBase": "Basisquery",
   "ui-queryBase-help": "For a simple full text search on all fields use '${any}'. To give more importance to the title, use '${any} resourceTitleObject.default:(${any})^2'. See <a href=\"https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-query-string-query.html\">the documentation</a> for more details. Use '${searchLang}' to set the detected language or '${uiLang}' for the user interface language.",
-  "anyFieldTitle": "Zoeken. Typ in om suggesties te krijgen. Gebruik &quot;om naar woordgroepen en exacte overeenkomsten te zoeken, bijv.&quot; Referentieraster &quot;. Gebruik q () voor geavanceerde zoekopdrachten, bijv. Q (-cl_status_text: obsolete)",
+  "anyFieldTitle": "Zoeken. Typ tekst om suggesties te krijgen. Gebruik dubbele aanhalingstekens - \" - om naar woordgroepen en exacte overeenkomsten te zoeken, bijv. \"Referentieraster\". Gebruik q() voor geavanceerde zoekopdrachten, e.g., q(-cl_status_text:obsolete)",
   "accessManager": "Toegangs rechten",
   "facetIncludeFilter": "Filter de warden. Regular expressies kunnen gebruikt worden, zoals '/Land.*/'",
   "allValuesExcept": "Alle waardes accepteren",
@@ -129,6 +129,7 @@
   "facet-valid_inspire": "INSPIRE-validatiestatus",
   "valid_inspire-1": "geldig",
   "valid_inspire-0": "ongeldig",
+  "valid_inspire-3": "No rule applies",
   "valid_inspire--1": "Onbekend",
   "facet-OrgForResource": "Organisaties",
   "facet-sourceCatalogue": "Catalogi",
@@ -267,10 +268,12 @@
   "ui/chooseAnOption-help": "Current user configuration is empty. Choose one or more option above or create a full configuration.",
   "uiConfigForm": "Configuration form",
   "uiConfigJsonForm": "JSON form",
+  "uiCurrentConfig": "Current configuration",
   "uiBasicConfig": "Full configuration",
   "uiRemoveDefaultOptions": "Remove default options",
   "preferredOptions": "Preferred options",
-  "ui-full-configuration": "All options",
+  "ui-full-configuration": "All default options (reset all current options)",
+  "ui-full-current-configuration": "All current configuration",
   "ui-hitsPerPage": "Default aantal records per pagina",
   "ui-queryTitle": "Query for title only search",
   "ui-related": "Results / Type of related records to search for",
@@ -365,5 +368,6 @@
   "mimeType": "Formaat",
   "uploadedResourceAlreadyExistException": "File {{file}} already exist in this record data store. Remove it first.",
   "switchPortals": "Switch to another Portal",
-  "dataPreview":  "Discover data"
+  "dataPreview":  "Discover data",
+  "tableOfContents": "Table of Contents"
 }

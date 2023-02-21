@@ -45,6 +45,7 @@ import org.fao.geonet.events.history.RecordUpdatedEvent;
 import org.fao.geonet.kernel.*;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.schema.MetadataSchema;
+import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.utils.Diff;
@@ -266,15 +267,14 @@ public class BatchEditsApi implements ApplicationContextAware {
                     } else if (metadataChanged) {
                         boolean validate = false;
                         boolean ufo = true;
-                        boolean index = true;
                         boolean uds = updateDateStamp;
                         Element beforeMetadata = dataMan.getMetadata(serviceContext, String.valueOf(record.getId()), false, false, false);
 
                         dataMan.updateMetadata(
                             serviceContext, record.getId() + "", metadata,
-                            validate, ufo, index,
+                            validate, ufo,
                             "eng", // Not used when validate is false
-                            changeDate, uds);
+                            changeDate, uds, IndexingMode.full);
                         report.addMetadataInfos(record, "Metadata updated.");
 
                         Element afterMetadata = dataMan.getMetadata(serviceContext, String.valueOf(record.getId()), false, false, false);

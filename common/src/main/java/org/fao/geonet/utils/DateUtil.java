@@ -60,8 +60,8 @@ public class DateUtil {
     private static final Pattern gsYearMonth = Pattern.compile("([0-9]{4})-([0-1][0-9])(-([0-2][0-9]):([0-5][0-9])([A-Z]{0,1}))?");
 
     // Some catalogs are using 2012-09-12Z
-    private static final Pattern gsYearMonthDayZ = Pattern.compile("([0-9]{4})-([0-1][0-9])-([0-2][0-9])Z");
-    private static final Pattern gsDayMonthYear = Pattern.compile("([0-2][0-9])/([0-1][0-9])/([0-9]{4})");
+    private static final Pattern gsYearMonthDayZ = Pattern.compile("([0-9]{4})-([0-1][0-9])-([0-3][0-9])Z");
+    private static final Pattern gsDayMonthYear = Pattern.compile("([0-3][0-9])/([0-1][0-9])/([0-9]{4})");
 
     // Fri Jan 01 2010 00:00:00 GMT+0100 (CET)
     private static final Pattern htmlFormat = Pattern

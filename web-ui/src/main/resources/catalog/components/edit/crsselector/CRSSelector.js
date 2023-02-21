@@ -89,8 +89,8 @@
             if (scope.filter) {
               $http
                 .get("../api/registries/crs?type=&rows=50&q=" + scope.filter)
-                .success(function (data) {
-                  scope.crsResults = data;
+                .then(function (response) {
+                  scope.crsResults = response.data;
                 });
             }
           };

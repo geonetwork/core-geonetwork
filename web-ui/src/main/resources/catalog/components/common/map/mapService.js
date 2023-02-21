@@ -570,7 +570,10 @@
            */
           getBboxFeatureFromMd: function (md, proj) {
             var feat = new ol.Feature();
-            var wkts = md.geom;
+            var wkts = md.shape || md.geom;
+            if (!angular.isArray(wkts)) {
+              wkts = [wkts];
+            }
             var projExtent = proj.getExtent();
             if (wkts && wkts.length) {
               var geometry;
@@ -581,7 +584,9 @@
                   featureProjection: proj,
                   dataProjection: "EPSG:4326"
                 });
-                geoms.push(geom);
+                if (geom) {
+                  geoms.push(geom);
+                }
               });
               var geometryCollection = new ol.geom.GeometryCollection(geoms);
               feat.setGeometry(geometryCollection);

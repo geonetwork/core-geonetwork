@@ -30,6 +30,7 @@
                 xmlns:gml="http://www.opengis.net/gml/3.2"
                 xmlns:gml320="http://www.opengis.net/gml"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
+                xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 xmlns:gn="http://www.fao.org/geonetwork"
                 xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
                 xmlns:gn-fn-iso19139="http://geonetwork-opensource.org/xsl/functions/profiles/iso19139"
@@ -66,10 +67,10 @@
     <xsl:param name="schema" select="$schema" required="no"/>
     <xsl:param name="labels" select="$labels" required="no"/>
 
-
     <xsl:variable name="name" select="concat(@prefix, ':', @name)"/>
+    <xsl:variable name="xpath" select="gn-fn-metadata:getXPath(..)"/>
     <xsl:variable name="flatModeException"
-                  select="gn-fn-metadata:isFieldFlatModeException($viewConfig, $name,  name(..))"/>
+                  select="gn-fn-metadata:isFieldFlatModeException($viewConfig, $name,  name(..), $xpath)"/>
 
 
     <xsl:if test="$name = 'gmd:descriptiveKeywords' and count(../gmd:descriptiveKeywords) = 0">
@@ -185,6 +186,7 @@
     <xsl:param name="schema" select="$schema" required="no"/>
     <xsl:param name="labels" select="$labels" required="no"/>
     <xsl:param name="refToDelete" required="no"/>
+    <xsl:param name="config" required="no"/>
 
 
     <xsl:variable name="xpath" select="gn-fn-metadata:getXPath(.)"/>
@@ -218,6 +220,12 @@
           <xsl:with-param name="labels" select="$labels"/>
         </xsl:apply-templates>
       </xsl:with-param>
+      <xsl:with-param name="collapsible"
+                      select="if ($config and $config/@collapsible != '')
+                              then xs:boolean($config/@collapsible) else true()"/>
+      <xsl:with-param name="collapsed"
+                      select="if ($config and $config/@collapsed != '')
+                              then xs:boolean($config/@collapsed) else false()"/>
     </xsl:call-template>
 
   </xsl:template>

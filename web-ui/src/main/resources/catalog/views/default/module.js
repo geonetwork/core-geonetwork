@@ -74,6 +74,7 @@
         permalink: false,
         internal: true,
         filters: gnSearchSettings.filters,
+        configId: "home",
         params: {
           isTemplate: "n",
           sortBy: "popularity",
@@ -92,6 +93,7 @@
         permalink: false,
         internal: true,
         filters: gnSearchSettings.filters,
+        configId: "home",
         params: {
           isTemplate: "n",
           sortBy: "createDate",
@@ -120,6 +122,7 @@
             }
           }
         ],
+        configId: "home",
         params: {
           isTemplate: "n",
           sortBy: "changeDate",

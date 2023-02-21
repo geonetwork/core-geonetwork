@@ -47,10 +47,12 @@ import com.google.common.cache.RemovalNotification;
 import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.MoreExecutors;
 import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MetadataIndexerProcessor;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.util.ThreadUtils;
+import org.fao.geonet.utils.Log;
 import org.springframework.jmx.export.MBeanExporter;
 import org.springframework.jmx.export.annotation.ManagedAttribute;
 import org.springframework.jmx.export.annotation.ManagedResource;
@@ -144,6 +146,10 @@ public class BatchOpsMetadataReindexer extends MetadataIndexerProcessor implemen
 
         int index = 0;
 
+        Log.warning(Geonet.INDEX_ENGINE, String.format(
+            "Indexing %d records with %d threads.",
+            ids.length, threadCount));
+
         List<BatchOpsCallable> jobs = Lists.newArrayList();
         while (index < ids.length) {
             int start = index;
@@ -198,6 +204,10 @@ public class BatchOpsMetadataReindexer extends MetadataIndexerProcessor implemen
 
         @Override
         public void run() {
+            Log.warning(Geonet.INDEX_ENGINE, String.format(
+                "Indexing range [%d-%d]/%d by threads %s.",
+                beginIndex, beginIndex + count, ids.length, Thread.currentThread().getId()));
+            long start = System.currentTimeMillis();
             for (int i = beginIndex; i < beginIndex + count; i++) {
                 try {
                     dm.indexMetadata(ids[i] + "", false);
@@ -206,6 +216,11 @@ public class BatchOpsMetadataReindexer extends MetadataIndexerProcessor implemen
                     inError.incrementAndGet();
                 }
             }
+            Log.warning(Geonet.INDEX_ENGINE, String.format(
+                "Indexing range [%d-%d]/%d completed in %dms by threads %s.",
+                beginIndex, beginIndex + count, ids.length,
+                System.currentTimeMillis() - start,
+                Thread.currentThread().getId()));
             ApplicationContextHolder.get().getBean(EsSearchManager.class).forceIndexChanges();
         }
     }

@@ -28,6 +28,7 @@ import org.elasticsearch.search.sort.FieldSortBuilder;
 import org.elasticsearch.search.sort.SortBuilder;
 import org.elasticsearch.search.sort.SortOrder;
 import org.fao.geonet.csw.common.Csw;
+import org.fao.geonet.kernel.csw.CatalogConfiguration;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -40,15 +41,18 @@ public class SortByParser {
     @Autowired
     IFieldMapper fieldMapper;
 
+    @Autowired
+    private CatalogConfiguration _catalogConfig;
+
     public List<SortBuilder<FieldSortBuilder>> parseSortBy(Element request) {
         Element query = request.getChild("Query", Csw.NAMESPACE_CSW);
         if (query == null) {
-            return Collections.emptyList();
+            return getDefaultSort();
         }
 
         Element sortBy = query.getChild("SortBy", Csw.NAMESPACE_OGC);
         if (sortBy == null) {
-            return Collections.emptyList();
+            return getDefaultSort();
         }
 
         List<SortBuilder<FieldSortBuilder>> sortFields = new ArrayList<>();
@@ -61,6 +65,20 @@ public class SortByParser {
                 sortFields.add(new FieldSortBuilder(esSortFieldName).order(esSortOrder));
             }
         }
+
+        if (sortFields.size() == 0) {
+            sortFields = getDefaultSort();
+        }
+        return sortFields;
+    }
+
+    private List<SortBuilder<FieldSortBuilder>> getDefaultSort() {
+        List<SortBuilder<FieldSortBuilder>> sortFields = new ArrayList<>();
+        FieldSortBuilder defaultSortField =
+            new FieldSortBuilder(_catalogConfig.getDefaultSortField())
+                .order(SortOrder.fromString(_catalogConfig.getDefaultSortOrder()));
+
+        sortFields.add(defaultSortField);
         return sortFields;
     }
 

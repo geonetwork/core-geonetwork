@@ -169,17 +169,19 @@
             .get(url, {
               headers: { "Content-Type": "application/x-www-form-urlencoded" }
             })
-            .success(function (data) {
-              var snippet = $(cleanData(data));
-              scope.refreshEditorForm(snippet);
-              gnCurrentEdit.working = false;
-              defer.resolve(snippet);
-            })
-            .error(function (error) {
-              setStatus({ msg: "saveMetadataError", saving: false });
-              gnCurrentEdit.working = false;
-              defer.reject(error);
-            });
+            .then(
+              function (response) {
+                var snippet = $(cleanData(response.data));
+                scope.refreshEditorForm(snippet);
+                gnCurrentEdit.working = false;
+                defer.resolve(snippet);
+              },
+              function (response) {
+                setStatus({ msg: "saveMetadataError", saving: false });
+                gnCurrentEdit.working = false;
+                defer.reject(response.data);
+              }
+            );
           return defer.promise;
         },
         /**
@@ -255,30 +257,34 @@
                 headers: { "Content-Type": "application/x-www-form-urlencoded" }
               }
             )
-            .success(function (data) {
-              var snippet = $(cleanData(data));
-              if (refreshForm) {
-                scope.refreshEditorForm(snippet);
-              }
-              if (!silent) {
-                setStatus({ msg: "allChangesSaved", saving: false });
-              }
-              gnCurrentEdit.working = false;
-              defer.resolve(snippet);
-            })
-            .error(function (error) {
-              if (!silent) {
-                setStatus({ msg: "saveMetadataError", saving: false });
-              }
+            .then(
+              function (response) {
+                var snippet = $(cleanData(response.data));
+                if (refreshForm) {
+                  scope.refreshEditorForm(snippet);
+                }
+                if (!silent) {
+                  setStatus({ msg: "allChangesSaved", saving: false });
+                }
+                gnCurrentEdit.working = false;
+                defer.resolve(snippet);
+              },
+              function (response) {
+                var error = response.data;
 
-              gnCurrentEdit.working = false;
+                if (!silent) {
+                  setStatus({ msg: "saveMetadataError", saving: false });
+                }
 
-              // Error is returned in XML format, convert it to JSON
-              var x2js = new X2JS();
-              var errorJson = x2js.xml_str2json(error);
+                gnCurrentEdit.working = false;
 
-              defer.reject(errorJson.apiError);
-            });
+                // Error is returned in XML format, convert it to JSON
+                var x2js = new X2JS();
+                var errorJson = x2js.xml_str2json(error);
+
+                defer.reject(errorJson.apiError);
+              }
+            );
           return defer.promise;
         },
         /**
@@ -292,16 +298,18 @@
             setStatus({ msg: "cancelling", saving: true });
           }
 
-          $http
-            .delete("../api/records/" + gnCurrentEdit.id + "/editor")
-            .success(function (data) {
+          $http.delete("../api/records/" + gnCurrentEdit.id + "/editor").then(
+            function (response) {
               setStatus({ msg: "allChangesCanceled", saving: false });
-              defer.resolve(data);
-            })
-            .error(function (error) {
+              defer.resolve(response.data);
+            },
+            function (response) {
+              var error = response.data;
+
               setStatus({ msg: "cancelChangesError", saving: false });
               defer.reject(error);
-            });
+            }
+          );
           return defer.promise;
         },
 
@@ -467,35 +475,37 @@
                 name +
                 attributeAction
             )
-            .success(function (data) {
-              // Append HTML snippet after current element - compile Angular
-              var target = $("#gn-el-" + insertRef);
-              var snippet = $(cleanData(data));
+            .then(
+              function (response) {
+                // Append HTML snippet after current element - compile Angular
+                var target = $("#gn-el-" + insertRef);
+                var snippet = $(cleanData(response.data));
 
-              if (attribute) {
-                target.replaceWith(snippet);
-              } else {
-                // If the element was a add button
-                // without any existing element, the
-                // gn-extra-field indicating a not first field
-                // was not set. After add, set the css class.
-                if (target.hasClass("gn-add-field")) {
-                  target.addClass("gn-extra-field");
+                if (attribute) {
+                  target.replaceWith(snippet);
+                } else {
+                  // If the element was a add button
+                  // without any existing element, the
+                  // gn-extra-field indicating a not first field
+                  // was not set. After add, set the css class.
+                  if (target.hasClass("gn-add-field")) {
+                    target.addClass("gn-extra-field");
+                  }
+                  snippet.css("display", "none"); // Hide
+                  target[position || "after"](snippet); // Insert
+                  snippet.slideDown(duration, function () {}); // Slide
+
+                  // Adapt the add & move element
+                  checkAddControls(snippet);
+                  checkMoveControls(snippet);
                 }
-                snippet.css("display", "none"); // Hide
-                target[position || "after"](snippet); // Insert
-                snippet.slideDown(duration, function () {}); // Slide
-
-                // Adapt the add & move element
-                checkAddControls(snippet);
-                checkMoveControls(snippet);
+                $compile(snippet)(gnCurrentEdit.formScope);
+                defer.resolve(snippet);
+              },
+              function (response) {
+                defer.reject(response.data);
               }
-              $compile(snippet)(gnCurrentEdit.formScope);
-              defer.resolve(snippet);
-            })
-            .error(function (data) {
-              defer.reject(data);
-            });
+            );
 
           return defer.promise;
         },
@@ -513,27 +523,29 @@
                 "&child=" +
                 name
             )
-            .success(function (data) {
-              // Append HTML snippet after current element - compile Angular
-              var target = $("#gn-el-" + insertRef);
-              var snippet = $(cleanData(data));
+            .then(
+              function (response) {
+                // Append HTML snippet after current element - compile Angular
+                var target = $("#gn-el-" + insertRef);
+                var snippet = $(cleanData(response.data));
 
-              if (target.hasClass("gn-add-field")) {
-                target.addClass("gn-extra-field");
+                if (target.hasClass("gn-add-field")) {
+                  target.addClass("gn-extra-field");
+                }
+                snippet.css("display", "none"); // Hide
+                target[position || "before"](snippet); // Insert
+                snippet.slideDown(duration, function () {}); // Slide
+
+                checkAddControls(snippet);
+                checkMoveControls(snippet);
+
+                $compile(snippet)(gnCurrentEdit.formScope);
+                defer.resolve(snippet);
+              },
+              function (response) {
+                defer.reject(response.data);
               }
-              snippet.css("display", "none"); // Hide
-              target[position || "before"](snippet); // Insert
-              snippet.slideDown(duration, function () {}); // Slide
-
-              checkAddControls(snippet);
-              checkMoveControls(snippet);
-
-              $compile(snippet)(gnCurrentEdit.formScope);
-              defer.resolve(snippet);
-            })
-            .error(function (data) {
-              defer.reject(data);
-            });
+            );
           return defer.promise;
         },
         remove: function (metadataId, ref, parent, domRef) {
@@ -551,66 +563,68 @@
                 "&parent=" +
                 parent
             )
-            .success(function (data) {
-              // For a fieldset, domref is equal to ref.
-              // For an input, it may be different because
-              // the element to remove is the parent of the input
-              // element (eg. gmd:voice for a gco:CharacterString)
-              domRef = domRef || ref;
-              // The element to remove from the DOM
-              var target = $("#gn-el-" + domRef);
+            .then(
+              function (response) {
+                // For a fieldset, domref is equal to ref.
+                // For an input, it may be different because
+                // the element to remove is the parent of the input
+                // element (eg. gmd:voice for a gco:CharacterString)
+                domRef = domRef || ref;
+                // The element to remove from the DOM
+                var target = $("#gn-el-" + domRef);
 
-              // When adding a new element, the down control
-              // of the previous element must be enabled and
-              // the up control enabled only if the previous
-              // element is not on top.
-              var checkMoveControls = function (element) {
-                // If first element with down only
-                //  apply this to the next one
-                var isFirst = isFirstElementOfItsKind(element);
-                if (isFirst) {
-                  var next = $(element).next().get(0);
-                  var elementCtrl = $(next).find("div.gn-move").get(0);
-                  var ctrl = $(elementCtrl).children();
-                  $(ctrl.get(0)).addClass("invisible");
-
-                  if ($(next).hasClass("gn-extra-field")) {
-                    $(next).removeClass("gn-extra-field");
-                  }
-                } else {
-                  // If middle element with up and down
-                  // do nothing
-
-                  // If last element with up only
-                  //  apply this to previous
-                  var isLast = isLastElementOfItsKind(element);
-                  if (isLast) {
-                    var prev = $(element).prev().get(0);
-                    var elementCtrl = $(prev).find("div.gn-move").get(0);
+                // When adding a new element, the down control
+                // of the previous element must be enabled and
+                // the up control enabled only if the previous
+                // element is not on top.
+                var checkMoveControls = function (element) {
+                  // If first element with down only
+                  //  apply this to the next one
+                  var isFirst = isFirstElementOfItsKind(element);
+                  if (isFirst) {
+                    var next = $(element).next().get(0);
+                    var elementCtrl = $(next).find("div.gn-move").get(0);
                     var ctrl = $(elementCtrl).children();
-                    $(ctrl.get(1)).addClass("invisible");
+                    $(ctrl.get(0)).addClass("invisible");
 
-                    var next = $(element).next();
-                    if (next.hasClass("gn-add-field")) {
-                      next.removeClass("gn-extra-field");
+                    if ($(next).hasClass("gn-extra-field")) {
+                      $(next).removeClass("gn-extra-field");
+                    }
+                  } else {
+                    // If middle element with up and down
+                    // do nothing
+
+                    // If last element with up only
+                    //  apply this to previous
+                    var isLast = isLastElementOfItsKind(element);
+                    if (isLast) {
+                      var prev = $(element).prev().get(0);
+                      var elementCtrl = $(prev).find("div.gn-move").get(0);
+                      var ctrl = $(elementCtrl).children();
+                      $(ctrl.get(1)).addClass("invisible");
+
+                      var next = $(element).next();
+                      if (next.hasClass("gn-add-field")) {
+                        next.removeClass("gn-extra-field");
+                      }
                     }
                   }
-                }
-              };
+                };
 
-              checkAddControls(target.get(0), true);
-              checkMoveControls(target.get(0));
+                checkAddControls(target.get(0), true);
+                checkMoveControls(target.get(0));
 
-              target.slideUp(duration, function () {
-                $(this).remove();
-              });
+                target.slideUp(duration, function () {
+                  $(this).remove();
+                });
 
-              // TODO: Take care of moving the + sign
-              defer.resolve(data);
-            })
-            .error(function (data) {
-              defer.reject(data);
-            });
+                // TODO: Take care of moving the + sign
+                defer.resolve(response.data);
+              },
+              function (response) {
+                defer.reject(response.data);
+              }
+            );
           return defer.promise;
         },
         removeAttribute: function (metadataId, ref) {
@@ -671,25 +685,27 @@
 
           $http
             .put(this.buildEditUrlPrefix("editor/elements/" + direction) + "&ref=" + ref)
-            .success(function (data) {
-              // Switch with previous element
-              if (domelementToMove) {
-                var currentElement = $("#gn-el-" + domelementToMove);
-                var switchWithElement;
-                if (direction === "up") {
-                  switchWithElement = currentElement.prev();
-                  switchWithElement.insertAfter(currentElement);
-                } else {
-                  switchWithElement = currentElement.next();
-                  switchWithElement.insertBefore(currentElement);
+            .then(
+              function (response) {
+                // Switch with previous element
+                if (domelementToMove) {
+                  var currentElement = $("#gn-el-" + domelementToMove);
+                  var switchWithElement;
+                  if (direction === "up") {
+                    switchWithElement = currentElement.prev();
+                    switchWithElement.insertAfter(currentElement);
+                  } else {
+                    switchWithElement = currentElement.next();
+                    switchWithElement.insertBefore(currentElement);
+                  }
+                  swapMoveControls(currentElement, switchWithElement);
                 }
-                swapMoveControls(currentElement, switchWithElement);
+                defer.resolve(response.data);
+              },
+              function (response) {
+                defer.reject(response.data);
               }
-              defer.resolve(data);
-            })
-            .error(function (data) {
-              defer.reject(data);
-            });
+            );
           return defer.promise;
         },
         view: function (md) {
@@ -700,15 +716,15 @@
         },
         getRecord: function (uuid) {
           var defer = $q.defer();
-          $http
-            .get("../api/records/" + uuid)
-            .success(function (data) {
-              defer.resolve(data);
-            })
-            .error(function (data) {
+          $http.get("../api/records/" + uuid).then(
+            function (response) {
+              defer.resolve(response.data);
+            },
+            function (response) {
               //                TODO handle error
               //                defer.reject(error);
-            });
+            }
+          );
           return defer.promise;
         },
         /**

@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2007 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2023 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -27,6 +27,7 @@ import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+import org.apache.commons.io.FileUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.ZipUtil;
@@ -52,8 +53,6 @@ import org.fao.geonet.utils.*;
 import org.jdom.Element;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -266,6 +265,7 @@ public class DownloadArchive implements Service {
                 Path outmef = MEFLib.doExport(context, info.getUuid(), MEFLib.Format.PARTIAL.toString(), false, true, true, true, true);
                 final Path toPath = zipFs.getPath("metadata.zip");
                 Files.copy(outmef, toPath);
+                FileUtils.deleteQuietly(outmef.toFile());
             }
             return BinaryFile.encode(200, zFile.toAbsolutePath().normalize(), true).getElement();
         }

@@ -37,7 +37,7 @@
   <!-- Dispatch to the current profile mode -->
   <xsl:template name="dispatch-iso19115-3.2018">
     <xsl:param name="base" as="node()"/>
-    <xsl:param name="overrideLabel" as="xs:string" required="no" select="''"/>
+    <xsl:param name="overrideLabel" as="xs:string?" required="no" select="''"/>
     <xsl:param name="refToDelete" as="node()?" required="no"/>
     <xsl:param name="config" as="node()?" required="no"/>
 

@@ -24,6 +24,7 @@
 package org.fao.geonet.kernel.csw.services.getrecords;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 import org.fao.geonet.kernel.csw.CatalogConfiguration;
 import org.fao.geonet.kernel.csw.CatalogConfigurationGetRecordsField;
@@ -49,7 +50,7 @@ public class FieldMapper implements IFieldMapper {
             .get(getAbsolute(field));
 
         if (fieldInfo != null) {
-            HashMap<String, String> xpaths = fieldInfo.getXpaths();
+            Map<String, String> xpaths = fieldInfo.getXpaths();
 
             if (xpaths != null) {
                 xpath = xpaths.get(schema);

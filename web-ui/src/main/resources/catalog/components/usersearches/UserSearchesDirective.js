@@ -40,8 +40,8 @@
 
           function getPortals() {
             var url = "../api/sources/subportal";
-            $http.get(url).success(function (data) {
-              scope.portals = data.filter(function (p) {
+            $http.get(url).then(function (response) {
+              scope.portals = response.data.filter(function (p) {
                 return p.uuid != scope.nodeId;
               });
             });
@@ -343,9 +343,9 @@
           }
 
           function loadUserGroup() {
-            $http
-              .get("../api/users/" + userIdForGroups + "/groups")
-              .success(function (data) {
+            $http.get("../api/users/" + userIdForGroups + "/groups").then(
+              function (response) {
+                var data = response.data;
                 var choices = [];
 
                 // Remove internal groups
@@ -373,10 +373,11 @@
                   scope.userSearchGroupsTextList = scope.userSearch.groups.join(",");
                 }
                 scope.userSearchGroups.groups = searchGroup;
-              })
-              .error(function (data) {
+              },
+              function (response) {
                 // TODO
-              });
+              }
+            );
           }
 
           //loadUserGroup();
@@ -532,10 +533,9 @@
 
           scope.tableEl = element;
 
-          $http
-            .get("../api/groups")
-            .success(function (data) {
-              scope.groups = data;
+          $http.get("../api/groups").then(
+            function (response) {
+              scope.groups = response.data;
               scope.bsTableControl = {
                 options: {
                   locale: "en",
@@ -649,10 +649,11 @@
                   ]
                 }
               };
-            })
-            .error(function (data) {
+            },
+            function (response) {
               // TODO
-            });
+            }
+          );
 
           var findUserSeachById = function (userSearches, searchId) {
             var search = _.find(userSearches, function (search) {

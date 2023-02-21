@@ -1,79 +1,70 @@
 <div class="gn-drawmap-panel">
-  <!-- full width map -->
-  <div class="row gn-editor-map">
-    <div class="col-md-12 gn-nopadding-right gn-nopadding-left" ol-map="ctrl.map"></div>
-  </div>
-
-  <!--  <div class="spacer" />-->
-  <div class="gn-editor-map-toolbar">
-    <!-- draw tool & select boxes -->
-    <div class="row">
-      <div
-        class="col-xs-12 col-sm-6 col-sm-push-6 gn-nopadding-right"
-        ng-if="!ctrl.readOnly"
-      >
-        <div class="pull-right">
-          <label class="text-muted control-label" translate>drawOnMap</label>
-          <br />
-          <div gi-btn-group>
-            <div class="btn-group">
-              <div class="btn-group">
-                <button
-                  class="btn btn-default"
-                  gi-btn="active"
-                  ng-model="ctrl.drawInteraction.active"
-                >
-                  <span class="fa fa-pencil"></span>&nbsp;
-                  <span translate>Polygon</span>
-                </button>
-                <button
-                  class="btn btn-default"
-                  gi-btn="active"
-                  ng-model="ctrl.drawLineInteraction.active"
-                >
-                  <span class="fa fa-pencil"></span>&nbsp;
-                  <span translate>Line</span>
-                </button>
-              </div>
-            </div>
-            <button
-              class="btn btn-default"
-              gi-btn="active"
-              ng-model="ctrl.modifyInteraction.active"
-            >
-              <span class="fa fa-pencil"></span>&nbsp;
-              <span translate>modifyGeometry</span>
-            </button>
-          </div>
+  <div class="gn-editor-map-toolbar clearfix">
+    <div class="pull-left">
+      <label class="text-muted control-label" translate> selectFormatAndProjection</label>
+      <br />
+      <div class="flex-row width-100">
+        <div class="flex-nogrow">
+          <select
+            ng-model="ctrl.currentFormat"
+            ng-options="format for format in ctrl.formats"
+            ng-change="ctrl.handleInputOptionsChange()"
+          ></select>
         </div>
-      </div>
-      <div class="col-xs-12 col-sm-6 col-sm-pull-6 gn-nopadding-left">
-        <label class="text-muted control-label" translate>
-          selectFormatAndProjection</label
-        >
-        <br />
-        <div class="flex-row width-100">
-          <div class="flex-nogrow">
-            <select
-              ng-model="ctrl.currentFormat"
-              ng-options="format for format in ctrl.formats"
-              ng-change="ctrl.handleInputOptionsChange()"
-            ></select>
-          </div>
-          <div class="flex-spacer"></div>
-          <div class="flex-shrink">
-            <select
-              ng-model="ctrl.currentProjection"
-              ng-options="proj.code as proj.label for proj in ctrl.projections"
-              ng-change="ctrl.handleInputOptionsChange()"
-            ></select>
-          </div>
+        <div class="flex-spacer"></div>
+        <div class="flex-shrink">
+          <select
+            ng-model="ctrl.currentProjection"
+            ng-options="proj.code as proj.label for proj in ctrl.projections"
+            ng-change="ctrl.handleInputOptionsChange()"
+          ></select>
         </div>
       </div>
     </div>
 
-    <div class="spacer" />
+    <div class="pull-right" ng-if="!ctrl.readOnly">
+      <div class="pull-right">
+        <label class="text-muted control-label" translate>drawOnMap</label>
+        <br />
+        <div gi-btn-group>
+          <div class="btn-group">
+            <div class="btn-group">
+              <button
+                class="btn btn-default"
+                gi-btn="active"
+                ng-model="ctrl.drawInteraction.active"
+              >
+                <span class="fa fa-pencil"></span>&nbsp;
+                <span translate>Polygon</span>
+              </button>
+              <button
+                class="btn btn-default"
+                gi-btn="active"
+                ng-model="ctrl.drawLineInteraction.active"
+              >
+                <span class="fa fa-pencil"></span>&nbsp;
+                <span translate>Line</span>
+              </button>
+            </div>
+          </div>
+          <button
+            class="btn btn-default"
+            gi-btn="active"
+            ng-model="ctrl.modifyInteraction.active"
+          >
+            <span class="fa fa-pencil"></span>&nbsp;
+            <span translate>modifyGeometry</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 
+  <div class="row gn-editor-map">
+    <div class="col-md-12 gn-nopadding-right gn-nopadding-left" ol-map="ctrl.map"></div>
+  </div>
+
+  <div class="gn-editor-map-toolbar">
     <div
       ng-if="ctrl.dataOlProjection == null"
       class="alert alert-danger"

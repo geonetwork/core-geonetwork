@@ -328,7 +328,7 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         SettingManager sm = gc.getBean(SettingManager.class);
 
-        HashMap<String, String> vars = new HashMap<String, String>();
+        Map<String, String> vars = new HashMap<String, String>();
 
         String protocol = sm.getValue(Settings.SYSTEM_SERVER_PROTOCOL);
         vars.put("$PROTOCOL", protocol);
@@ -428,7 +428,7 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
             }
 
             // Current language
-            HashMap<String, String> vars = new HashMap<String, String>();
+            Map<String, String> vars = new HashMap<String, String>();
             if (languages.contains(currLang)) {
                 vars.put("$INSPIRE_LOCALE", currLang);
 

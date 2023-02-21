@@ -34,26 +34,28 @@
       <!-- Defines the number of records that will be processed for any propertyname  -->
       <maxNumberOfRecordsForPropertyNames>1000</maxNumberOfRecordsForPropertyNames>
     </operation>
-    <operation name="GetRecords">
+    <operation name="GetRecords"
+               defaultSortField="_score"
+               defaultSortOrder="DESC">
       <parameters>
         <!-- - - - - - - - - - - - - - -->
         <!-- Core queryable properties -->
         <!-- - - - - - - - - - - - - - -->
-        <parameter name="Subject" field="tag.default" type="SupportedISOQueryables">
+        <parameter name="Subject" field="tag.*" type="SupportedISOQueryables">
           <xpath schema="iso19139" path="*/gmd:MD_Keywords/gmd:keyword/gco:CharacterString"/>
         </parameter>
 
-        <parameter name="Title" field="resourceTitleObject.default" sortField="resourceTitleObject.default.keyword" type="SupportedISOQueryables">
+        <parameter name="Title" field="resourceTitleObject.*" sortField="resourceTitleObject.default.keyword" type="SupportedISOQueryables">
           <xpath schema="iso19139"
                  path="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:title/gco:CharacterString"/>
         </parameter>
 
-        <parameter name="Abstract" field="resourceAbstractObject.default" sortField="resourceAbstractObject.default.keyword" type="SupportedISOQueryables">
+        <parameter name="Abstract" field="resourceAbstractObject.*" sortField="resourceAbstractObject.default.keyword" type="SupportedISOQueryables">
           <xpath schema="iso19139"
                  path="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:abstract/gco:CharacterString"/>
         </parameter>
 
-        <parameter name="AnyText" field="any.default" type="SupportedISOQueryables"/>
+        <parameter name="AnyText" field="any.*" type="SupportedISOQueryables"/>
 
         <parameter name="Format" field="format" type="SupportedISOQueryables">
           <xpath schema="iso19139"
@@ -83,7 +85,7 @@
                  path="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date[gmd:dateType/gmd:CI_DateTypeCode/@codeListValue='revision']/gmd:date/gco:Date|gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date[gmd:dateType/gmd:CI_DateTypeCode/@codeListValue='revision']/gmd:date/gco:Date"/>
         </parameter>
 
-        <parameter name="AlternateTitle" field="resourceAltTitle" sortField="resourceAltTitle.keyword" type="SupportedISOQueryables">
+        <parameter name="AlternateTitle" field="resourceAltTitleObject.*" sortField="resourceAltTitleObject.default.keyword" type="SupportedISOQueryables">
           <xpath schema="iso19139"
                  path="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:alternateTitle/gco:CharacterString"/>
         </parameter>
@@ -113,7 +115,7 @@
                  path="gmd:language/gco:CharacterString|gmd:language/gmd:LanguageCode/@codeListValue"/>
         </parameter>
 
-        <parameter name="ResourceIdentifier" field="resourceIdentifier" type="SupportedISOQueryables">
+        <parameter name="ResourceIdentifier" field="resourceIdentifier.code" type="SupportedISOQueryables">
           <xpath schema="iso19139"
                  path="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/gco:CharacterString|gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/gco:CharacterString"/>
         </parameter>
@@ -122,8 +124,7 @@
           <xpath schema="iso19139" path="gmd:parentIdentifier/gco:CharacterString"/>
         </parameter>
 
-        <!-- TODO: Check ES index field -->
-        <parameter name="KeywordType" field="keywordType" type="SupportedISOQueryables">
+        <parameter name="KeywordType" field="cl_type.key" type="SupportedISOQueryables">
           <xpath schema="iso19139"
                  path="*/gmd:MD_Keywords/gmd:type/gmd:MD_KeywordTypeCode/@codeListValue"/>
         </parameter>
@@ -133,7 +134,7 @@
         <!-- (both services and datasets)    -->
         <!-- - - - - - - - - - - - - - - - - -->
 
-        <parameter name="GeographicDescriptionCode" field="geoTag"
+        <parameter name="GeographicDescriptionCode" field="keywordType-place.*"
                    type="SupportedISOQueryables">
           <xpath schema="iso19139"
                  path="*/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicDescription/gmd:geographicIdentifier/gmd:MD_Identifier/gmd:code/gco:CharacterString"/>
@@ -144,7 +145,7 @@
         <!-- (dataset, datasetcollection, application ...)   -->
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-        <parameter name="TopicCategory" field="topic" type="SupportedISOQueryables">
+        <parameter name="TopicCategory" field="cl_topic.key" type="SupportedISOQueryables">
           <xpath schema="iso19139"
                  path="gmd:identificationInfo//gmd:MD_DataIdentification/gmd:topicCategory/gmd:MD_TopicCategoryCode|gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:topicCategory/gmd:MD_TopicCategoryCode"/>
         </parameter>
@@ -172,13 +173,13 @@
                  path="gmd:spatialResolution/gmd:MD_Resolution/gmd:distance/gco:Distance/@uom"/>
         </parameter>
 
-        <parameter name="TempExtent_begin" field="resourceTemporalDateRange" type="SupportedISOQueryables"
+        <parameter name="TempExtent_begin" field="resourceTemporalDateRange.gte" type="SupportedISOQueryables"
                    range="true">
           <xpath schema="iso19139"
                  path="gmd:identificationInfo/gmd:MD_DataIdentification|gmd:identificationInfo/*/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/gml:beginPosition|gmd:identificationInfo/gmd:MD_DataIdentification|gmd:identificationInfo/*/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/gml:beginPosition/gml:begin/gml:TimeInstant/gml:timePosition"/>
         </parameter>
 
-        <parameter name="TempExtent_end" field="resourceTemporalDateRange" type="SupportedISOQueryables"
+        <parameter name="TempExtent_end" field="resourceTemporalDateRange.lte" type="SupportedISOQueryables"
                    range="true">
           <xpath schema="iso19139"
                  path="gmd:identificationInfo/gmd:MD_DataIdentification|gmd:identificationInfo/*/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/gml:endPosition|gmd:identificationInfo/gmd:MD_DataIdentification|gmd:identificationInfo/*/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/gml:endPosition/gml:end/gml:TimeInstant/gml:timePosition"/>
@@ -239,12 +240,12 @@
                  path="gmd:dataQualityInfo/*/gmd:report/*/gmd:result//gmd:pass/gco:Boolean"/>
         </parameter>
 
-        <parameter name="SpecificationTitle" field="specificationTitle" type="AdditionalQueryables">
+        <parameter name="SpecificationTitle" field="specificationConformance.title" type="AdditionalQueryables">
           <xpath schema="iso19139"
                  path="gmd:dataQualityInfo/*/gmd:report/*/gmd:result//gmd:specification/*/gmd:title/gco:CharacterString"/>
         </parameter>
 
-        <parameter name="SpecificationDate" field="specificationDate" type="AdditionalQueryables">
+        <parameter name="SpecificationDate" field="specificationConformance.date" type="AdditionalQueryables">
           <xpath schema="iso19139"
                  path="gmd:dataQualityInfo/*/gmd:report/*/gmd:result//gmd:specification/*/gmd:date/*/gmd:date/gco:DateTime"/>
         </parameter>
@@ -255,29 +256,29 @@
                  path="gmd:dataQualityInfo/*/gmd:report/*/gmd:result//gmd:specification/*/gmd:date/*/gmd:dateType/gmd:CI_DateTypeCode/@codeListValue"/>
         </parameter>
 
-        <parameter name="AccessConstraints" field="accessConstr" type="AdditionalQueryables">
+        <parameter name="AccessConstraints" field="cl_accessConstraints.key" type="AdditionalQueryables">
           <xpath schema="iso19139"
                  path="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints//gmd:accessConstraints/gmd:MD_RestrictionCode/@codeListValueClassification|gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:resourceConstraints//gmd:accessConstraints/gmd:MD_RestrictionCode/@codeListValueClassification"/>
         </parameter>
 
-        <parameter name="OtherConstraints" field="otherConstr" type="AdditionalQueryables">
+        <parameter name="OtherConstraints" field="MD_LegalConstraintsOtherConstraintsObject.*" type="AdditionalQueryables">
           <xpath schema="iso19139"
                  path="[gmd:identificationInfo//gmd:MD_DataIdentification/gmd:resourceConstraints//gmd:otherConstraints/gco:CharacterString|gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:resourceConstraints//gmd:otherConstraints/gco:CharacterString"/>
         </parameter>
 
-        <parameter name="Classification" field="cl_classification" type="AdditionalQueryables">
+        <parameter name="Classification" field="cl_classification.key" type="AdditionalQueryables">
           <xpath schema="iso19139"
                  path="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/gmd:classification/gmd:MD_ClassificationCode/@codeListValue|gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:resourceConstraints/gmd:classification/gmd:MD_ClassificationCode/@codeListValue"/>
         </parameter>
 
-        <parameter name="ConditionApplyingToAccessAndUse" field="conditionApplyingToAccessAndUse"
+        <parameter name="ConditionApplyingToAccessAndUse" field="MD_ConstraintsUseLimitationObject.*"
                    type="AdditionalQueryables"/>
 
         <parameter name="MetadataPointOfContact" field="Org" type="AdditionalQueryables">
           <xpath schema="iso19139" path="gmd:contact/*/gmd:organisationName/gco:CharacterString"/>
         </parameter>
 
-        <parameter name="Lineage" field="lineage" type="AdditionalQueryables">
+        <parameter name="Lineage" field="lineageObject.*" type="AdditionalQueryables">
           <xpath schema="iso19139"
                  path="gmd:dataQualityInfo/*/gmd:lineage/*/gmd:statement/gco:CharacterString"/>
         </parameter>

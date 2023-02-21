@@ -1,0 +1,165 @@
+<!--
+  ~ Copyright (C) 2022 Food and Agriculture Organization of the
+  ~ United Nations (FAO-UN), United Nations World Food Programme (WFP)
+  ~ and United Nations Environment Programme (UNEP)
+  ~
+  ~ This program is free software; you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation; either version 2 of the License, or (at
+  ~ your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but
+  ~ WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+  ~ General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program; if not, write to the Free Software
+  ~ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+  ~
+  ~ Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+  ~ Rome - Italy. email: geonetwork@osgeo.org
+  -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:security="http://www.springframework.org/schema/security"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="
+          http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+          http://www.springframework.org/schema/context
+          http://www.springframework.org/schema/context/spring-context-3.0.xsd
+          http://www.springframework.org/schema/util
+          http://www.springframework.org/schema/util/spring-util.xsd">
+
+  <context:property-override
+    location="WEB-INF/config-security/config-security-openidconnect-overrides.properties"
+    ignore-resource-not-found="true"/>
+
+  <bean id ="openidconnectConfiguration" class="org.fao.geonet.kernel.security.openidconnect.OIDCConfiguration"/>
+
+
+  <!-- Reads from the .json file and creates a ClientRegistration -->
+  <bean id="openidconnectClientRegistration" class="org.fao.geonet.kernel.security.openidconnect.GeonetworkClientRegistrationProvider">
+    <constructor-arg value="${OPENIDCONNECT_SERVERMETADATA_FNAME:#{''}}"/>
+    <constructor-arg value="${OPENIDCONNECT_SERVERMETADATA_JSON_TEXT:#{''}}"/>
+    <constructor-arg value="${OPENIDCONNECT_SERVERMETADATA_CONFIG_URL:#{''}}"/>
+    <constructor-arg ref="openidconnectConfiguration"/>
+  </bean>
+
+
+
+  <!-- Provides a hardcoded  ClientRegistrationRepository with exactly one  ClientRegistration-->
+  <bean id="openidconnectClientRegistrationRepository" class="org.fao.geonet.kernel.security.openidconnect.GeonetworkClientRegistrationRepository">
+    <constructor-arg ref="openidconnectClientRegistration"/>
+  </bean>
+
+  <bean id="openidconnectAuthorizationRequestResolver" class="org.fao.geonet.kernel.security.openidconnect.HardcodedRegistrationIdOAuth2AuthorizationRequestResolver">
+    <constructor-arg ref="openidconnectClientRegistrationRepository"/>
+    <constructor-arg value ="/signin" />
+  </bean>
+
+
+  <bean id="opidconnectSimpleOidcUserFactory" class="org.fao.geonet.kernel.security.openidconnect.SimpleOidcUserFactory"/>
+
+  <bean id="openidconnectOAuth2AuthorizationRequestRedirectFilter" class="org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestRedirectFilter">
+    <constructor-arg ref ="openidconnectAuthorizationRequestResolver" />
+   </bean>
+
+
+  <bean id ="openidconnectInMemoryOAuth2AuthorizedClientService" class="org.springframework.security.oauth2.client.InMemoryOAuth2AuthorizedClientService">
+    <constructor-arg ref ="openidconnectClientRegistrationRepository" />
+  </bean>
+
+  <bean id="openidconnectOAuth2LoginAuthenticationFilter" class="org.fao.geonet.kernel.security.openidconnect.GeonetworkOAuth2LoginAuthenticationFilter">
+    <constructor-arg ref ="openidconnectClientRegistrationRepository" />
+    <constructor-arg ref ="openidconnectInMemoryOAuth2AuthorizedClientService" />
+    <property name="authenticationManager" ref="openidconnectProviderManager"/>
+  </bean>
+
+  <bean id="openidconnectDefaultAuthorizationCodeTokenResponseClient" class="org.springframework.security.oauth2.client.endpoint.DefaultAuthorizationCodeTokenResponseClient"/>
+
+  <bean id ="openidconnectOIDCRoleProcessor" class="org.fao.geonet.kernel.security.openidconnect.OIDCRoleProcessor"/>
+
+  <bean id="openidconnectUserService" class="org.fao.geonet.kernel.security.openidconnect.GeonetworkOidcUserService">
+  </bean>
+
+   <bean id="openidconnectAuthorizationProvider" class="org.fao.geonet.kernel.security.openidconnect.LoggingOidcAuthorizationCodeAuthenticationProvider">
+      <constructor-arg ref="openidconnectDefaultAuthorizationCodeTokenResponseClient"/>
+      <constructor-arg ref="openidconnectUserService"/>
+     <constructor-arg ref="openidconnectConfiguration"/>
+    </bean>
+
+<!--  <bean id="openidconnectAuthorizationProvider" class="org.springframework.security.oauth2.client.oidc.authentication.OidcAuthorizationCodeAuthenticationProvider">-->
+<!--    <constructor-arg ref="openidconnectDefaultAuthorizationCodeTokenResponseClient"/>-->
+<!--    <constructor-arg ref="openidconnectUserService"/>-->
+<!--  </bean>-->
+
+  <bean id="openidconnectProviderManager" class="org.springframework.security.authentication.ProviderManager">
+    <constructor-arg>
+    <util:list>
+      <ref bean="openidconnectAuthorizationProvider"/>
+    </util:list>
+    </constructor-arg>
+  </bean>
+
+  <bean id="openidconnectOAuth2SecurityProviderUtil" class="org.fao.geonet.kernel.security.openidconnect.OAuth2SecurityProviderUtil"/>
+
+  <bean id="openidconnectOidcUser2GeonetworkUser" class="org.fao.geonet.kernel.security.openidconnect.OidcUser2GeonetworkUser"/>
+
+  <bean id="openidconnectLogoutSuccessHandlerBase" class="org.springframework.security.oauth2.client.oidc.web.logout.OidcClientInitiatedLogoutSuccessHandler">
+    <constructor-arg ref="openidconnectClientRegistrationRepository"/>
+    <property name="postLogoutRedirectUri" value="REPLACE"/>
+  </bean>
+
+  <bean id="openidconnectLogoutSuccessHandler" class="org.fao.geonet.kernel.security.openidconnect.GeonetworkOidcLogoutHandler">
+    <constructor-arg ref="openidconnectLogoutSuccessHandlerBase"/>
+  </bean>
+
+  <bean id="logoutFilter"
+        class="org.springframework.security.web.authentication.logout.LogoutFilter">
+    <constructor-arg ref="openidconnectLogoutSuccessHandler"/>
+    <constructor-arg>
+      <list>
+        <bean
+          class="org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler"/>
+        <bean
+          class="org.springframework.security.web.authentication.logout.CookieClearingLogoutHandler">
+          <constructor-arg>
+            <array>
+              <value>JSESSIONID</value>
+              <value>OAuth_Token_Request_State</value>
+              <value>XSRF-TOKEN</value>
+            </array>
+          </constructor-arg>
+        </bean>
+      </list>
+    </constructor-arg>
+    <property name="filterProcessesUrl" value="/signout"/>
+  </bean>
+
+
+  <bean id="filterChainFilters" class="java.util.ArrayList">
+    <constructor-arg>
+      <list>
+        <ref bean="securityContextPersistenceFilter"/>
+        <!-- To disable csrf security (not recommended) comment the following line -->
+        <ref bean="csrfFilter" />
+        <!-- To disable csrf security (not recommended) comment the upper line -->
+
+        <ref bean="openidconnectOAuth2AuthorizationRequestRedirectFilter"/>
+        <ref bean="openidconnectOAuth2LoginAuthenticationFilter"/>
+        <ref bean="logoutFilter"/>
+
+
+        <ref bean="requestCacheFilter"/>
+        <ref bean="anonymousFilter"/>
+        <ref bean="sessionMgmtFilter"/>
+        <ref bean="exceptionTranslationFilter"/>
+        <ref bean="filterSecurityInterceptor"/>
+      </list>
+    </constructor-arg>
+  </bean>
+
+</beans>
