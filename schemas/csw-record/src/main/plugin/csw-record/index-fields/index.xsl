@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Copyright (C) 2001-2020 Food and Agriculture Organization of the
+  ~ Copyright (C) 2001-2023 Food and Agriculture Organization of the
   ~ United Nations (FAO-UN), United Nations World Food Programme (WFP)
   ~ and United Nations Environment Programme (UNEP)
   ~
@@ -103,11 +103,19 @@
       </xsl:for-each>
 
       <xsl:for-each select="dc:date">
-        <creationDateForResource><xsl:value-of select="date-util:convertToISOZuluDateTime(string(.))"/></creationDateForResource>
+        <xsl:variable name="zuluDate" select="date-util:convertToISOZuluDateTime(string(.))"/>
+        <creationDateForResource><xsl:value-of select="$zuluDate"/></creationDateForResource>
+        <xsl:if test="normalize-space($zuluDate) = ''">
+          <indexingErrorMsg>Warning / Creation date / Date with value '<xsl:value-of select="string(.)"/>' was empty or with a wrong format.</indexingErrorMsg>
+        </xsl:if>
       </xsl:for-each>
 
       <xsl:for-each select="dct:modified">
-        <revisionDateForResource><xsl:value-of select="date-util:convertToISOZuluDateTime(string(.))"/></revisionDateForResource>
+        <xsl:variable name="zuluDate" select="date-util:convertToISOZuluDateTime(string(.))"/>
+        <revisionDateForResource><xsl:value-of select="$zuluDate"/></revisionDateForResource>
+        <xsl:if test="normalize-space($zuluDate) = ''">
+          <indexingErrorMsg>Warning / Update or revision date / Date with value '<xsl:value-of select="string(.)"/>' was empty or with a wrong format.</indexingErrorMsg>
+        </xsl:if>
       </xsl:for-each>
 
       <xsl:for-each select="dc:format">

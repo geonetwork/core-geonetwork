@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
-  ~ Copyright (C) 2001-2020 Food and Agriculture Organization of the
+  ~ Copyright (C) 2001-2023 Food and Agriculture Organization of the
   ~ United Nations (FAO-UN), United Nations World Food Programme (WFP)
   ~ and United Nations Environment Programme (UNEP)
   ~
@@ -74,7 +74,12 @@
       <!-- === Revision date === -->
       <xsl:for-each select="/gfc:FC_FeatureCatalogue/gmx:versionDate/gco:Date|
         /gfc:FC_FeatureCatalogue/gfc:versionDate/gco:Date">
-        <revisionDate><xsl:value-of select="date-util:convertToISOZuluDateTime(string(.))"/></revisionDate>
+        <xsl:variable name="featureCatalogueZuluDate" select="normalize-space(date-util:convertToISOZuluDateTime(string(.)))" />
+        <revisionDate><xsl:value-of select="$featureCatalogueZuluDate"/></revisionDate>
+        <xsl:if test="$featureCatalogueZuluDate = ''">
+          <indexingErrorMsg>Warning / Field Catalogue date / Date with value '<xsl:value-of select="string(.)"/>' was empty or with a wrong format.</indexingErrorMsg>
+        </xsl:if>
+
       </xsl:for-each>
 
       <xsl:variable name="jsonFeatureTypes">[
