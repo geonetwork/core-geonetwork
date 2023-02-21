@@ -71,7 +71,7 @@ import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static org.fao.geonet.kernel.search.EsSearchManager.FIELDLIST_CORE;
+import static org.fao.geonet.kernel.search.EsSearchManager.FIELDLIST_UUID;
 import static org.fao.geonet.kernel.setting.Settings.SYSTEM_CSW_TRANSACTION_XPATH_UPDATE_CREATE_NEW_ELEMENTS;
 import static org.fao.geonet.utils.AbstractHttpRequest.Method.GET;
 import static org.fao.geonet.utils.AbstractHttpRequest.Method.POST;
@@ -575,16 +575,14 @@ public class Aligner extends BaseAligner<CswParams> {
                         String identifier = identifierNode.getTextTrim();
                         log.debug("    - Searching for duplicates for resource identifier: " + identifier);
 
-                        Set<String> values = retrieveMetadataUuidsFromIdentifier(searchManager, identifier);
+                        Set<String> values = retrieveMetadataUuidsFromIdentifier(searchManager, identifier, uuid);
                         log.debug("    - Number of resources with same identifier: " + values.size());
-                        for (String indexRecordUuid : values) {
-                            if (!indexRecordUuid.equals(uuid)) {
-                                log.debug("      - UUID " + indexRecordUuid + " in index does not match harvested record UUID " + uuid);
-                                log.warning("      - Duplicates found. Skipping record with UUID " + uuid + " and resource identifier " + identifier);
 
-                                result.duplicatedResource++;
-                                return true;
-                            }
+                        if (!values.isEmpty()) {
+                            log.warning("      - Duplicates found. Skipping record with UUID " + uuid + " and resource identifier " + identifier);
+                            log.warning("      - Duplicates found. Metadata uuid resources with same resource identifier: " + String.join(",", values));
+                            result.duplicatedResource++;
+                            return true;
                         }
                     }
                 }
@@ -630,23 +628,23 @@ public class Aligner extends BaseAligner<CswParams> {
      *
      * @param searchMan         ES search manager.
      * @param datasetIdCode     Dataset identifier.
+     * @param metadataUuid      Metadata identifier to exclude from the search.
      * @return  A list of metadata uuids that have the same dataset identifier.
      */
     private Set<String> retrieveMetadataUuidsFromIdentifier(EsSearchManager searchMan,
-                                                            String datasetIdCode) {
+                                                            String datasetIdCode,
+                                                            String metadataUuid) {
 
-        Set<String> metadataUuids = new HashSet<>();
+         Set<String> metadataUuids = new HashSet<>();
 
-        String jsonQuery = "{" +
-            "          \"term\": {" +
-            "            \"resourceIdentifier.code\": {" +
-            "              \"value\": \"%s\"" +
-            "            }" +
-            "          }" +
+        String jsonQuery = " {" +
+            "       \"query_string\": {" +
+            "       \"query\": \"+resourceIdentifier.code:%s -uuid:%s\"" +
+            "       }" +
             "}";
         ObjectMapper objectMapper = new ObjectMapper();
         try {
-            JsonNode esJsonQuery = objectMapper.readTree(String.format(jsonQuery, datasetIdCode));
+            JsonNode esJsonQuery = objectMapper.readTree(String.format(jsonQuery, datasetIdCode, metadataUuid));
 
             final SearchResponse queryResult = searchMan.query(
                 esJsonQuery,
