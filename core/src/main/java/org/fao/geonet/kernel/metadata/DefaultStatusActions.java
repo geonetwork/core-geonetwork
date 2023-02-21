@@ -185,7 +185,7 @@ public class DefaultStatusActions implements StatusActions {
             Log.trace(Geonet.DATA_MANAGER, "Issue workflow events.");
 
             List<String> unsuccessful = new ArrayList<>();
-            Throwable statusChangeFailure = null;
+            Exception statusChangeFailure = null;
             for (Integer mid : listOfId) {
                 if (!unchanged.contains(mid)) {
                   try {
@@ -208,11 +208,16 @@ public class DefaultStatusActions implements StatusActions {
                 }
             }
             if (!unsuccessful.isEmpty()){
-                throw new Exception(
-                    "Unable to change status for metadata records: "+
-                    String.join(",", unsuccessful),
-                    statusChangeFailure
-                );
+                if (statusChangeFailure instanceof java.lang.reflect.UndeclaredThrowableException) {
+                    throw new Exception(
+                        "Unable to change status for metadata records: "+
+                            String.join(",", unsuccessful),
+                        statusChangeFailure
+                    );
+                }
+
+                throw statusChangeFailure;
+
             }
         }
 
