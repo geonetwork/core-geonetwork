@@ -650,7 +650,7 @@ public class Aligner extends BaseAligner<CswParams> {
 
             final SearchResponse queryResult = searchMan.query(
                 esJsonQuery,
-                FIELDLIST_CORE,
+                FIELDLIST_UUID,
                 0, 1000);
 
             for (SearchHit hit : queryResult.getHits()) {
