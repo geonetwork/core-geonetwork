@@ -50,7 +50,6 @@ import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.util.XslUtil;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Attribute;
@@ -517,9 +516,6 @@ public class MetadataApi {
     @GetMapping(value = "/{metadataUuid:.+}/popularity",
         consumes = {
             MediaType.ALL_VALUE
-        },
-        produces = {
-            MediaType.TEXT_PLAIN_VALUE
         })
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Popularity."),
@@ -554,9 +550,6 @@ public class MetadataApi {
     @PostMapping(value = "/{metadataUuid:.+}/popularity",
         consumes = {
             MediaType.ALL_VALUE
-        },
-        produces = {
-            MediaType.TEXT_PLAIN_VALUE
         })
     @ApiResponses(value = {
         @ApiResponse(responseCode = "201", description = "Popularity updated."),
