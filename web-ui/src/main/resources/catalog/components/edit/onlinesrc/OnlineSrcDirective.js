@@ -1186,7 +1186,7 @@
                 scope.selectUploadedResource = function(res) {
                   if (res && res.url) {
                     var o = {
-                      name: res.id.split('/').splice(2).join('/'),
+                      name: decodeURI(res.id.split("/").splice(2).join("/")),
                       url: res.url
                     };
                     ['url', 'name'].forEach(function(pName) {
