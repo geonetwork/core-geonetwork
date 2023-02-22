@@ -165,19 +165,30 @@
             id="gn-staticpage-uploadfile-row"
             class="form-group"
           >
-            <label
-              id="gn-import-uploadfile-label"
-              for="md-staticpage-file"
-              class="col-sm-3 control-label"
-              >page</label
-            >
+            <div class="row">
+              <label
+                id="gn-import-uploadfile-label"
+                for="md-staticpage-file"
+                class="col-sm-3 control-label"
+                data-translate=""
+                >pageContentFile</label
+              >
 
-            <p data-ng-show="staticPageSelected.link !== ''">
-              {{staticPageSelected.link}}
-              <a href="" data-ng-click="deleteContent()"
-                ><i class="fa fa-fw fa-trash"
-              /></a>
-            </p>
+              <div class="col-sm-9" data-ng-show="staticPageSelected.link !== ''">
+                {{staticPageSelected.link}}
+                <a href="" data-ng-click="deleteContent()"
+                  ><i class="fa fa-fw fa-trash"
+                /></a>
+              </div>
+            </div>
+
+            <div class="row">
+              <label class="col-sm-3 control-label" data-translate="">pageApiLink</label>
+
+              <div class="col-sm-9" data-ng-show="staticPageSelected.pageApiLink !== ''">
+                <a href="{{pageApiLink}}">{{pageApiLink}}</a>
+              </div>
+            </div>
 
             <div
               id="gn-import-uploadfile-panel"
@@ -214,7 +225,7 @@
           </div>
 
           <div class="form-group" data-ng-show="staticPageSelected.format !== 'LINK'">
-            <label class="control-label col-sm-3" data-translate="">content</label>
+            <label class="control-label col-sm-3" data-translate="">pageContent</label>
 
             <div class="col-sm-12">
               <input
@@ -232,7 +243,7 @@
           </div>
 
           <div class="form-group">
-            <label class="control-label col-sm-3" data-translate="">section</label>
+            <label class="control-label col-sm-3" data-translate="">pageSection</label>
 
             <div class="col-sm-9">
               <select
