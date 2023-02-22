@@ -639,7 +639,7 @@ public class Aligner extends BaseAligner<CswParams> {
 
         String jsonQuery = " {" +
             "       \"query_string\": {" +
-            "       \"query\": \"+resourceIdentifier.code:%s -uuid:%s\"" +
+            "       \"query\": \"+resourceIdentifier.code:\\\"%s\\\" -uuid:\\\"%s\\\"\"" +
             "       }" +
             "}";
         ObjectMapper objectMapper = new ObjectMapper();
