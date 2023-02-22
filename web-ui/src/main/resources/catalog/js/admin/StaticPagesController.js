@@ -31,8 +31,8 @@
     "$http",
     "$rootScope",
     "$translate",
-    "gnUrlUtils",
-    function ($scope, $http, $rootScope, $translate, gnUrlUtils) {
+    "gnGlobalSettings",
+    function ($scope, $http, $rootScope, $translate, gnGlobalSettings) {
       $scope.dbLanguages = [];
       $scope.staticPages = [];
       $scope.formats = [];
@@ -85,7 +85,7 @@
         });
       }
 
-      var successHandler = function() {
+      var successHandler = function () {
         $scope.queue = [];
         loadStaticPages();
         $rootScope.$broadcast("StatusUpdated", {
@@ -93,7 +93,7 @@
           timeout: 2,
           type: "success"
         });
-      }
+      };
 
       var failureHandler = function (error) {
         $rootScope.$broadcast("StatusUpdated", {
@@ -102,7 +102,7 @@
           timeout: 0,
           type: "danger"
         });
-      }
+      };
 
       /** Upload management */
       var uploadStaticPageFileDone = function (e, data) {
@@ -159,13 +159,15 @@
         $scope.isUpdate = true;
         $scope.staticPageSelected = v;
 
-        $scope.action =
-          "../api/pages/" +
+        var link =
+          "api/pages/" +
           $scope.staticPageSelected.language +
           "/" +
           $scope.staticPageSelected.pageId;
+        $scope.action = "../" + link;
 
         $scope.content = "";
+        $scope.pageApiLink = gnGlobalSettings.nodeUrl + link + "/content";
         if ($scope.staticPageSelected.format !== "LINK") {
           $http.get($scope.action + "/content").then(function (r) {
             $scope.staticPageSelected.content = r.data;
@@ -210,12 +212,9 @@
                 "Content-Type": "application/json"
               }
             })
-            .then(
-              successHandler,
-              function(r) {
-                failureHandler(r.data);
-              }
-            );
+            .then(successHandler, function (r) {
+              failureHandler(r.data);
+            });
         }
       };
 
