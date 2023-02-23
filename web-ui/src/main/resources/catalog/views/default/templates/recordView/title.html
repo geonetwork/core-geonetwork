@@ -18,6 +18,14 @@
   </h1>
 
   <div
+    class="gn-alt-title"
+    data-ng-if="mdView.current.record.resourceAltTitle.length > 0"
+  >
+    <span data-translate="">alternateTitle</span>
+    {{mdView.current.record.resourceAltTitle.join(', ')}}
+  </div>
+
+  <div
     data-ng-if="['series', 'service'].indexOf(mdView.current.record.resourceType[0]) !== -1
                     && mdView.current.record.related"
     data-gn-record-mosaic=""
