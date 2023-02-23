@@ -336,6 +336,12 @@
               scope.setRange();
             }
           });
+
+          scope.$on("resetSelection", function () {
+            scope.dateFrom = null;
+            scope.dateTo = null;
+            scope.relation = scope.relations[0];
+          });
         }
       };
     }
