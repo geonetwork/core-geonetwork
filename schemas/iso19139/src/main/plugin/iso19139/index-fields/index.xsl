@@ -97,11 +97,6 @@
                   select="gmd:fileIdentifier/gco:CharacterString[. != '']"/>
 
 
-    <!-- In ISO19139 consider datestamp element the last update date
-    even if the standard says creation date. Most of the catalog implementations
-    update the datestamp on change. -->
-    <xsl:variable name="lastRevisionDate" as="xs:string?"
-                  select="gmd:dateStamp[1]/gco:DateTime[gn-fn-index:is-isoDate(.)]"/>
 
     <xsl:variable name="mainLanguageCode" as="xs:string?"
                   select="gmd:language[1]/gmd:LanguageCode/
