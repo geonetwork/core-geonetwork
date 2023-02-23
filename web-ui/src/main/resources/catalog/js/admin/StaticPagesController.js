@@ -169,9 +169,11 @@
         $scope.content = "";
         $scope.pageApiLink = gnGlobalSettings.nodeUrl + link + "/content";
         if ($scope.staticPageSelected.format !== "LINK") {
-          $http.get($scope.action + "/content").then(function (r) {
-            $scope.staticPageSelected.content = r.data;
-          });
+          $http
+            .get($scope.action + "/content", { headers: { Accept: "text/html" } })
+            .then(function (r) {
+              $scope.staticPageSelected.content = r.data;
+            });
         }
       };
 
