@@ -918,7 +918,8 @@ public class MetadataWorkflowApi {
                 categoriesAsString.append("]");
                 return categoriesAsString.toString();
             case StatusValue.Events.RECORDVALIDATIONTRIGGERED:
-                return s.getCurrentState().equals("1") ? "OK" : "KO";
+                return s.getCurrentState() == null
+                    ? "UNKNOWN" : (s.getCurrentState().equals("1") ? "OK" : "KO");
             default:
                 return "";
         }
