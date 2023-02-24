@@ -22,16 +22,13 @@
 //==============================================================================
 package org.fao.geonet.api;
 
-import org.jdom.Document;
+import org.fao.geonet.utils.TransformerFactoryFactory;
 import org.jdom.Element;
-import org.jdom.output.Format;
-import org.jdom.output.XMLOutputter;
+import org.jdom.transform.JDOMSource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.converter.xml.AbstractXmlHttpMessageConverter;
 
-import javax.xml.transform.Result;
-import javax.xml.transform.Source;
-import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.*;
 import java.io.IOException;
 
 /**
@@ -47,9 +44,24 @@ public class DOMElementMessageConverter extends AbstractXmlHttpMessageConverter<
 
     @Override
     protected void writeToResult(Object t, HttpHeaders headers, Result result) throws IOException {
-        XMLOutputter outputter = new XMLOutputter(Format.getPrettyFormat());
-        outputter.output(new Document((Element)t), ((StreamResult)result).getOutputStream());
- }
+        final TransformerFactory tf;
+        try {
+            tf = TransformerFactoryFactory.getTransformerFactory();
+        } catch (TransformerConfigurationException e) {
+            throw new IOException("TransformerFactory Exception", e);
+        }
+        Transformer transformer;
+        try {
+            transformer = tf.newTransformer();
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
+            transformer.transform(new JDOMSource((Element) t), result);
+        } catch (TransformerConfigurationException e) {
+            throw new IOException("Transformer Config Exception", e);
+        } catch (TransformerException e) {
+            throw new IOException("Transformer Exception", e);
+        }
+    }
 
     @Override
     protected boolean supports(Class<?> clazz) {
