@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2023 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -903,7 +903,6 @@ public class MetadataWorkflowApi {
             case StatusValue.Events.ATTACHMENTADDED:
                 return s.getCurrentState();
             case StatusValue.Events.RECORDOWNERCHANGE:
-                return ObjectJSONUtils.extractFieldFromJSONString(s.getCurrentState(), "owner", "name");
             case StatusValue.Events.RECORDGROUPOWNERCHANGE:
                 return ObjectJSONUtils.extractFieldFromJSONString(s.getCurrentState(), "owner", "name");
             case StatusValue.Events.RECORDPROCESSINGCHANGE:
@@ -911,16 +910,16 @@ public class MetadataWorkflowApi {
             case StatusValue.Events.RECORDCATEGORYCHANGE:
                 List<String> categories = ObjectJSONUtils.extractListOfFieldFromJSONString(s.getCurrentState(), "category",
                         "name");
-                StringBuffer categoriesAsString = new StringBuffer("[ ");
+                StringBuilder categoriesAsString = new StringBuilder("[ ");
                 for (String categoryName : categories) {
-                    categoriesAsString.append(categoryName + " ");
+                    categoriesAsString.append(categoryName).append(" ");
                 }
                 categoriesAsString.append("]");
                 return categoriesAsString.toString();
             case StatusValue.Events.RECORDVALIDATIONTRIGGERED:
                 if (s.getCurrentState() == null) {
                     return "UNKNOWN";
-                } else if(s.getCurrentState().equals("1") {
+                } else if(s.getCurrentState().equals("1")) {
                     return "OK";
                 } else {
                     return "KO";
@@ -935,7 +934,6 @@ public class MetadataWorkflowApi {
             case StatusValue.Events.ATTACHMENTDELETED:
                 return s.getPreviousState();
             case StatusValue.Events.RECORDOWNERCHANGE:
-                return ObjectJSONUtils.extractFieldFromJSONString(s.getPreviousState(), "owner", "name");
             case StatusValue.Events.RECORDGROUPOWNERCHANGE:
                 return ObjectJSONUtils.extractFieldFromJSONString(s.getPreviousState(), "owner", "name");
             default:
@@ -977,7 +975,7 @@ public class MetadataWorkflowApi {
                 }
             } else {
                 throw new SecurityException(
-                        String.format("Error identify group where this metadata belong to. Only administrator can view this record"));
+                        "Error identify group where this metadata belong to. Only administrator can view this record");
             }
         }
     }
