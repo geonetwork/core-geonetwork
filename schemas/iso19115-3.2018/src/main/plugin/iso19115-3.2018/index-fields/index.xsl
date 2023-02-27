@@ -1330,6 +1330,10 @@
 
     <xsl:variable name="identifiers"
                   select=".//cit:partyIdentifier/*"/>
+
+
+    <xsl:variable name="hasWithheld" select="@gco:nilReason = 'withheld'" as="xs:boolean" />
+
     <xsl:element name="contact{$fieldSuffix}">
       <!-- TODO: Can be multilingual -->
       <xsl:attribute name="type" select="'object'"/>{
@@ -1345,6 +1349,9 @@
       "position":"<xsl:value-of select="gn-fn-index:json-escape($positionName)"/>",
       "phone":"<xsl:value-of select="gn-fn-index:json-escape($phone)"/>",
       "address":"<xsl:value-of select="gn-fn-index:json-escape($address)"/>"
+      <xsl:if test="$hasWithheld">
+        ,"nilReason": "withheld"
+      </xsl:if>
       <xsl:if test="count($identifiers) > 0">
         ,"identifiers":[
         <xsl:for-each select="$identifiers">

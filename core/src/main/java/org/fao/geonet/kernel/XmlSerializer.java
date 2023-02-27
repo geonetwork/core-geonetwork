@@ -36,6 +36,7 @@ import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.schema.MetadataSchema;
+import org.fao.geonet.kernel.schema.MetadataSchemaOperationFilter;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.utils.Log;
@@ -70,13 +71,13 @@ public abstract class XmlSerializer {
     }
 
     public static void removeFilteredElement(Element metadata,
-                                             final Pair<String, Element> xPathAndMarkedElement,
+                                             final MetadataSchemaOperationFilter filter,
                                              List<Namespace> namespaces) throws JDOMException {
         // xPathAndMarkedElement seem can be null in some schemas like dublin core
-        if (xPathAndMarkedElement == null) return;
+        if (filter == null) return;
 
-        String xpath = xPathAndMarkedElement.one();
-        Element mark = xPathAndMarkedElement.two();
+        String xpath = filter.getXpath();
+        Element mark = filter.getMarkedElement();
 
         List<?> nodes = Xml.selectNodes(metadata,
             xpath,
@@ -89,13 +90,13 @@ public abstract class XmlSerializer {
 
                     // Remove attributes
                     @SuppressWarnings("unchecked")
-                    List<Attribute> atts = new ArrayList<Attribute>(element.getAttributes());
+                    List<Attribute> atts = new ArrayList<>(element.getAttributes());
                     for (Attribute attribute : atts) {
                         attribute.detach();
                     }
 
                     // Insert attributes or children element of the mark
-                    List<Attribute> markAtts = new ArrayList<Attribute>(mark.getAttributes());
+                    List<Attribute> markAtts = new ArrayList<>(mark.getAttributes());
                     for (Attribute attribute : markAtts) {
                         element.setAttribute((Attribute) attribute.clone());
                     }
@@ -182,7 +183,7 @@ public abstract class XmlSerializer {
             // Check if a filter is defined for this schema
             // for the editing operation ie. user who can not edit
             // will not see those elements.
-            Pair<String, Element> editXpathFilter = mds.getOperationFilter(ReservedOperation.editing);
+            MetadataSchemaOperationFilter editXpathFilter = mds.getOperationFilter(ReservedOperation.editing);
             boolean filterEditOperationElements = editXpathFilter != null;
             List<Namespace> namespaces = mds.getNamespaces();
             if (context != null) {
@@ -192,14 +193,14 @@ public abstract class XmlSerializer {
                         filterEditOperationElements = false;
                     }
                 }
-                Pair<String, Element> downloadXpathFilter = mds.getOperationFilter(ReservedOperation.download);
+                MetadataSchemaOperationFilter downloadXpathFilter = mds.getOperationFilter(ReservedOperation.download);
                 if (downloadXpathFilter != null) {
                     boolean canDownload = accessManager.canDownload(context, id);
                     if (!canDownload) {
                         removeFilteredElement(metadataXml, downloadXpathFilter, namespaces);
                     }
                 }
-                Pair<String, Element> dynamicXpathFilter = mds.getOperationFilter(ReservedOperation.dynamic);
+                MetadataSchemaOperationFilter dynamicXpathFilter = mds.getOperationFilter(ReservedOperation.dynamic);
                 if (dynamicXpathFilter != null) {
                     boolean canDynamic = accessManager.canDynamic(context, id);
                     if (!canDynamic) {

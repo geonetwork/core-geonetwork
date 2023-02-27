@@ -85,6 +85,7 @@
   </autodetect>
   <filters xmlns:gco="http://www.isotc211.org/2005/gco">
     <filter xpath=".//*[@gco:nilReason='withheld']"
+            jsonpath="$.*[?(@.nilReason == 'withheld')]"
             ifNotOperation="editing">
       <keepMarkedElement gco:nilReason="withheld"/>
     </filter>
