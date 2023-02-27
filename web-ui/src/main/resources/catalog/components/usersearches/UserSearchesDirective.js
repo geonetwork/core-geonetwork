@@ -193,10 +193,11 @@
           scope.loadUserSearches = function () {
             gnUserSearchesService.loadUserSelections().then(
               function (userselections) {
-                var items =  userselections.data;
-                items = _.sortBy( items, function(item) {return item.name});
-                 scope.userSelections = items;
-
+                var items = userselections.data;
+                items = _.sortBy(items, function (item) {
+                  return item.name;
+                });
+                scope.userSelections = items;
               },
               function () {
                 // TODO: Log error
@@ -238,10 +239,10 @@
             });
           };
 
-
-          scope.updateUserSelections = function() {
-            scope.userSelections = []
+          scope.updateUserSelections = function () {
+            scope.userSelections = [];
             scope.loadUserSearches();
+            scope.$emit("search",{});
           };
 
           scope.editUserSelection = function (search) {
@@ -297,8 +298,6 @@
           };
 
           scope.createNewList = function (search) {
-
-
             gnUtilityService.openModal(
               {
                 title: "userSearch",
@@ -369,9 +368,9 @@
         },
         templateUrl: "../../catalog/components/usersearches/partials/savefavourite.html",
         link: function postLink(scope, element, attrs) {
-          scope.page = {pageSize:4,pages:0,page:0,from:0,to:0, count:0}
+          scope.page = { pageSize: 4, pages: 0, page: 0, from: 0, to: 0, count: 0 };
           //scope.pageSize = 4;
-         // scope.pageNumber = 0;
+          // scope.pageNumber = 0;
           scope.updateSearchUrl = false;
           scope.name = scope.userSearch.name;
           scope.hits = [];
@@ -384,31 +383,31 @@
               scope.page.page,
               scope.page.pageSize
             );
-          }
+          };
 
-          scope.pageFirst = function() {
+          scope.pageFirst = function () {
             scope.page.page = 0;
             scope.reloadPage();
           };
 
-          scope.pageLast = function() {
-            scope.page.page = scope.page.pages-1;
+          scope.pageLast = function () {
+            scope.page.page = scope.page.pages - 1;
 
             scope.reloadPage();
           };
 
-          scope.pageNext = function() {
+          scope.pageNext = function () {
             scope.page.page++;
             if (scope.page.page >= scope.page.pages) {
-              scope.page.page = scope.page.pages-1;
+              scope.page.page = scope.page.pages - 1;
             }
             scope.reloadPage();
           };
 
-          scope.pagePrevious = function() {
+          scope.pagePrevious = function () {
             scope.page.page--;
-            if (scope.page.page<0) {
-              scope.page.page =0;
+            if (scope.page.page < 0) {
+              scope.page.page = 0;
             }
             scope.reloadPage();
           };
@@ -439,22 +438,22 @@
             scope.editMode = true;
           }
 
-          scope.delete = function(hit) {
+          scope.delete = function (hit) {
             if (!scope.isDeleted(hit)) {
               scope.toDelete.push(hit._id);
-            }
-            else {
-              scope.toDelete = scope.toDelete
-                .filter (function(item) {return item !== hit._id} );
+            } else {
+              scope.toDelete = scope.toDelete.filter(function (item) {
+                return item !== hit._id;
+              });
             }
           };
 
-          scope.isDeleted = function(hit) {
-             var uuid = hit._id;
-             var found = scope.toDelete.find(function(val) {
-                return val == uuid;
-             });
-             return (typeof found !== 'undefined');
+          scope.isDeleted = function (hit) {
+            var uuid = hit._id;
+            var found = scope.toDelete.find(function (val) {
+              return val == uuid;
+            });
+            return typeof found !== "undefined";
           };
 
           scope.getTitle = function (hit) {
@@ -469,16 +468,15 @@
             var obj = hit._source.resourceAbstractObject;
             var result = "No Title";
             if (obj["default"]) {
-              result= obj["default"];
+              result = obj["default"];
+            } else {
+              result = Object.values(obj)[0];
             }
-            else {
-              result= Object.values(obj)[0];
-            }
-            if ((typeof result == 'undefined')) {
+            if (typeof result == "undefined") {
               return "No Title";
             }
-            if (result.length >255) {
-              return result.substr(0, 255)+"...";
+            if (result.length > 255) {
+              return result.substr(0, 255) + "...";
             }
             return result;
           };
@@ -490,11 +488,12 @@
                 scope.hits = response.data.hits.hits;
                 scope.page.count = response.data.hits.total.value;
                 //scope.page.page = 0;
-                scope.page.pages = Math.ceil(scope.page.count/scope.page.pageSize);
+                scope.page.pages = Math.ceil(scope.page.count / scope.page.pageSize);
                 scope.page.from = scope.page.pageSize * scope.page.page + 1;
-                scope.page.to = scope.page.pageSize * scope.page.page +scope.page.pageSize;
-                if (scope.page.to > scope.page.count ){
-                  scope.page.to=scope.page.count;
+                scope.page.to =
+                  scope.page.pageSize * scope.page.page + scope.page.pageSize;
+                if (scope.page.to > scope.page.count) {
+                  scope.page.to = scope.page.count;
                 }
               });
           };
@@ -538,12 +537,11 @@
           };
 
           scope.saveUserSearch = function () {
-            return gnUserSearchesService.updateFavourites(scope.userSearch.id,scope.name,scope.toDelete)
-              .then(
-                function (response) {
-                  scope.$emit("updated", true);
-                }
-              );
+            return gnUserSearchesService
+              .updateFavourites(scope.userSearch.id, scope.name, scope.toDelete)
+              .then(function (response) {
+                scope.$emit("updated", true);
+              });
           };
         }
       };
@@ -746,7 +744,6 @@
             );
           };
 
-
           scope.editUserSearch = function (searchId) {
             scope.currentSearch = findUserSeachById(scope.userSearches, searchId);
 
@@ -756,8 +753,8 @@
                 content:
                   '<div gn-save-user-search="currentSearch" data-user="user"></div>',
                 className: "gn-savesearch-popup",
-                onCloseCallback: function (a,b,c) {
-                  scope.updateUserSelection(a,b,c);
+                onCloseCallback: function (a, b, c) {
+                  scope.updateUserSelection(a, b, c);
                 }
               },
               scope,

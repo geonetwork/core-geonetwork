@@ -98,7 +98,7 @@ public class UserSelectionESQueryRewriter implements ESQueryRewriter{
 
     ObjectNode replacement(int selectionId,ObjectMapper mapper,HttpSession httpSession, HttpServletRequest request) throws Exception {
         Optional<UserMetadataSelectionList> selectionList= userMetadataSelectionListRepo.findById(selectionId);
-4        if (!selectionList.isPresent()) {
+        if (!selectionList.isPresent()) {
             throw new Exception("could not find selectionId="+selectionId);
         }
         //check security

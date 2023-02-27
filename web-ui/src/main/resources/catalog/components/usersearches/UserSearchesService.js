@@ -37,7 +37,7 @@
         var t = 0;
         var url = this.gnESClient.getUrl("_search");
         var from = pageNumber * pageSize;
-        var size =  pageSize;
+        var size = pageSize;
         var body =
           "{\n" +
           '  "from": ' +
@@ -153,16 +153,16 @@
         // gnESClient.
       };
 
-      this.updateFavourites = function (id,name,toDelete) {
-        var t=0;
+      this.updateFavourites = function (id, name, toDelete) {
+        var t = 0;
 
-        var body = "name="+name+"&action=remove";
-        if (toDelete.length>0) {
+        var body = "name=" + name + "&action=remove";
+        if (toDelete.length > 0) {
           body += "&metadataUuids=";
-          body+= toDelete.join("&metadataUuids=");
+          body += toDelete.join("&metadataUuids=");
         }
 
-        return $http.put("../api/userselection/" + id , body, {
+        return $http.put("../api/userselection/" + id, body, {
           headers: { "Content-Type": "application/x-www-form-urlencoded" }
         });
       };
