@@ -1,5 +1,5 @@
 <div class="panel panel-default gn-favourites" data-ng-show="isUserSearchPanelEnabled()">
-  <div class="panel-heading" data-gn-slide-toggle="true">
+  <div class="panel-heading" data-gn-slide-toggle="false">
     <i class="fa fa-fw fa-thumb-tack" />&nbsp;
     <span data-translate="">Favourites</span>
 
@@ -9,7 +9,7 @@
           type="button"
           class="btn btn-default btn-xs"
           title="{{'createUserSearch' | translate}}"
-          data-ng-click="openSaveUserSearchPanel()"
+          data-ng-click="createNewList()"
         >
           <span class="fa fa-fw fa-plus"></span>
         </button>
@@ -38,39 +38,42 @@
     <ul class="list-group">
       <li
         class="list-group-item clearfix"
-        data-ng-repeat="search in userSearchesPageItems()"
+        data-ng-repeat="search in userSelectionsItems()"
       >
         <div class="gn-favourite pull-left">
-          <span
-            class="fa fa-star fa-fw text-warning"
-            data-ng-show="canManageUserSearches() && search.featuredType !== ''"
-            title="{{ 'featuredsearch' | translate }}"
-          ></span>
+          <!--          <span-->
+          <!--            class="fa fa-star fa-fw text-warning"-->
+          <!--            data-ng-show="canManageUserSearches() && search.featuredType !== ''"-->
+          <!--            title="{{ 'featuredsearch' | translate }}"-->
+          <!--          ></span>-->
           <span
             class="fa"
             data-ng-hide="canManageUserSearches() && search.featuredType !== ''"
           />
 
-          <a data-ng-href="#/{{routeSearch}}?{{search.url}}">
-            {{search.names[lang] || search.names['eng'] || ('userSearchNameMissing' |
-            translate)}}
+          <a ng-click="searchUrl(search)" style="cursor: pointer"
+            >{{search.name}}&nbsp;({{search.nItems}})</a
+          >
+          <!--          <a data-ng-href="#/{{routeSearch}}?{{search.url}}">-->
+          <!--            {{search.names[lang] || search.names['eng'] || ('userSearchNameMissing' |-->
+          <!--            translate)}}-->
 
-            <img
-              data-ng-if="search.logo"
-              data-ng-src="{{search.logo}}"
-              class="gn-source-logo"
-            />
-          </a>
+          <!--            <img-->
+          <!--              data-ng-if="search.logo"-->
+          <!--              data-ng-src="{{search.logo}}"-->
+          <!--              class="gn-source-logo"-->
+          <!--            />-->
+          <!--          </a>-->
         </div>
 
         <div
           class="btn-group btn-group-sm pull-right"
           role="group"
-          data-ng-if="canEditUserSearch(search)"
+          ng-disabled="!search.editable"
         >
           <!-- view -->
           <a
-            href=""
+            ng-click="searchUrl(search)"
             class="btn btn-default"
             title="{{'view' | translate}}"
             aria-label="{{'view' | translate}}"
@@ -81,18 +84,22 @@
           <a
             href=""
             class="btn btn-default"
-            title="{{'view' | translate}}"
-            aria-label="{{'view' | translate}}"
+            data-ng-click="toggleStatus(search)"
+            title="{{'toggle public/private status' | translate}}"
+            aria-label="{{'change status' | translate}}"
+            ng-disabled="!search.editable"
           >
-            <span class="fa fa-unlock"></span>
+            <span class="fa fa-unlock" ng-if="search.public"></span>
+            <span class="fa fa-lock" ng-if="!search.public"></span>
           </a>
           <!-- edit -->
           <a
             href=""
             class="btn btn-default"
-            data-ng-click="editUserSearch(search)"
+            data-ng-click="editUserSelection(search)"
             title="{{'edit' | translate}}"
             aria-label="{{'edit' | translate}}"
+            ng-disabled="!search.editable"
           >
             <span class="fa fa-pencil"></span>
           </a>
@@ -100,10 +107,11 @@
           <a
             href=""
             class="btn btn-default"
-            data-gn-click-and-spin="removeUserSearch(search)"
+            data-gn-click-and-spin="delete(search)"
             data-gn-confirm-click="{{'deleteUserSearchConfirm' | translate}}"
             title="{{'delete' | translate}}"
             aria-label="{{'delete' | translate}}"
+            ng-disabled="!search.editable"
           >
             <span class="fa fa-remove text-danger"></span>
           </a>

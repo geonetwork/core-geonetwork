@@ -58,6 +58,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * The API for userselection.
@@ -119,7 +120,7 @@ public class UserSelectionApi {
     @Autowired
     MetadataRepository metadataRepository;
 
-    static String SESSION_COOKIE_NAME="not-logged-in-user-selection-sessionid";
+    public static String SESSION_COOKIE_NAME="not-logged-in-user-selection-sessionid";
 
     enum ActionType {add, replace, remove}
 
@@ -147,7 +148,7 @@ public class UserSelectionApi {
     public
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
-    List<UserMetadataSelectionList> getSelectionLists(
+    List<UserMetadataSelectionListVM> getSelectionLists(
         @Parameter(hidden = true)
         HttpSession httpSession,
 
@@ -157,7 +158,13 @@ public class UserSelectionApi {
         throws Exception {
         String sessionId = getSessionId(httpServletRequest);
         User user =  getUser(httpSession);
-        return userMetadataSelectionListRepository.findPublic(user,sessionId);
+        boolean isAdmin = isAdmin(httpSession);
+        return userMetadataSelectionListRepository.findPublic(user,sessionId)
+            .stream()
+            .map(x->new UserMetadataSelectionListVM(x
+                ,permittedWrite(x,user,sessionId,isAdmin),
+                ownedByMe(x,user,sessionId)))
+            .collect(Collectors.toList());
     }
 
     /**
@@ -579,6 +586,8 @@ public class UserSelectionApi {
         return Profile.Administrator.equals(session.getProfile());
     }
 
+
+
     /**
      * @return true if the user/session is permitted to read the list
      */
@@ -597,6 +606,20 @@ public class UserSelectionApi {
         }
         //public
         if (list.getIsPublic()) {
+            return true;
+        }
+        //otherwise its private and owned by someone else
+        return false;
+    }
+
+
+    boolean ownedByMe(UserMetadataSelectionList list, User user, String sessionId) {
+        //owned by same user
+        if ( (user != null) && (list.getUser() !=null) && (user.equals(list.getUser()))) {
+            return true;
+        }
+        //owned by same session
+        if ( (sessionId != null) && (list.getSessionId() !=null) && (sessionId.equals(list.getSessionId()))) {
             return true;
         }
         //otherwise its private and owned by someone else

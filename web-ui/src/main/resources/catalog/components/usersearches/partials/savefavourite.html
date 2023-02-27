@@ -6,69 +6,124 @@
       <label class="control-label gn-margin-bottom-sm" data-translate=""
         >userSearchName</label
       >
-      <div gn-multilingual-field="{{langList}}" main-language="{{currentLangShown}}">
+      <div>
         <input
-          data-ng-repeat="(lang3, lang2) in availableLangs"
           type="text"
           name="name"
           class="form-control gn-margin-bottom-sm"
-          lang="{{lang2}}"
           maxlength="255"
-          data-ng-model="userSearch.names[lang3]"
+          data-ng-model="name"
         />
       </div>
     </div>
     <!-- contents -->
     <div class="form-group">
-      <label class="control-label gn-margin-bottom-sm" data-translate="">Contents (my favourite records)</label>
+      <label class="control-label gn-margin-bottom-sm" data-translate=""
+        >Contents (favourite records)</label
+      >
       <!-- list of metadata for the selected list -->
       <div class="list-group">
-        <a href="#" class="list-group-item">
-          <div class="btn-group btn-group-sm pull-right" role="group">
-            <button class="btn btn-default">
-              <i class="fa fa-trash-o text-danger"></i>
-            </button>
-          </div>
-          <label class="list-group-item-heading">My Favourite MD 01</label>
-          <p class="list-group-item-text">
-            Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus
-            varius blandit.
-          </p>
-        </a>
-        <a href="#" class="list-group-item">
-          <div class="btn-group btn-group-sm pull-right" role="group">
-            <button class="btn btn-default">
-              <i class="fa fa-trash-o text-danger"></i>
-            </button>
-          </div>
-          <label class="list-group-item-heading">My Favourite MD 02</label>
-          <p class="list-group-item-text">
-            Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus
-            varius blandit.
-          </p>
-        </a>
-        <a href="#" class="list-group-item">
-          <div class="btn-group btn-group-sm pull-right" role="group">
-            <button class="btn btn-default">
-              <i class="fa fa-trash-o text-danger"></i>
-            </button>
-          </div>
-          <label class="list-group-item-heading">My Favourite MD 03</label>
-          <p class="list-group-item-text">
-            Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus
-            varius blandit.
-          </p>
-        </a>
+        <div ng-repeat="hit in hits" >
+          <a href="#" class="list-group-item"  ng-style="{'background-color': isDeleted(hit) ? '#FFF0F0':'white'}">
+            <div class="btn-group btn-group-sm pull-right" role="group">
+              <button ng-click="delete(hit)" class="btn btn-default">
+                <i class="fa fa-trash-o text-danger"></i>
+              </button>
+            </div>
+
+            <label class="list-group-item-heading"> {{getTitle(hit)}}</label>
+            <p class="list-group-item-text" style="font-size: 10px">
+              <i>{{hit._id}}</i>
+            </p>
+            <p class="list-group-item-text">{{getAbstract(hit)}}</p>
+          </a>
+        </div>
       </div>
 
-      <div
-        data-gn-pagination="paginationInfo"
-        data-hits-values="searchObj.hitsperpageValues"
-        data-enable-hot-keys=""
-        data-enable-events=""
-      ></div>
+      <!--pagenation -->
+      <div>
+        <div class="gn-pager">
+          <ul class="pagination">
+            <li data-ng-class="page.page == 0 ? 'disabled' : ''">
+              <a href="" data-ng-click="pageFirst()">
+                <i class="fa fa-angle-double-left"></i>
+                <span class="sr-only" data-translate="">first</span>
+              </a>
+            </li>
+            <li data-ng-class="page.page == 0 ? 'disabled' : ''">
+              <a href="" data-ng-click="pagePrevious()">
+                <i class="fa fa-angle-left"></i>
+                <span class="sr-only" data-translate="">previous</span>
+              </a>
+            </li>
+            <li data-ng-if="hits.length === 0">
+        <span ng-show="page.pages > 1">
+          {{page.from}} - {{page.to}}
+          <span translate>resultXonY</span>
+          {{page.count}}
+        </span>
+              <span ng-show="page.pages <= 1">
+          {{page.to}}
+          <span translate>results</span>
+        </span>
+            </li>
+            <li class="btn-group" data-ng-if="hits.length > 0">
+              <!-- A dropdown button to select the number of page
+          and indicating the current page info -->
+              <div style="padding:7px">
+          <span ng-show="page.pages > 1">
+            {{page.from}} - {{page.to}}
+            <span translate>resultXonY</span>
+            {{page.count}}
+          </span>
+                <span ng-show="page.pages <= 1">
+            {{page.to}}
+            <span translate>results</span>
+          </span>
+
+              </div>
+<!--              <ul class="dropdown-menu" role="menu">-->
+<!--                <li role="presentation" class="dropdown-header" data-translate="">-->
+<!--                  hitsPerPage-->
+<!--                </li>-->
+<!--                <li-->
+<!--                  data-ng-repeat="nb in values"-->
+<!--                  role="menuitem"-->
+<!--                  data-ng-class="nb === page.pageSize ? 'disabled' : ''"-->
+<!--                >-->
+<!--                  <a href="" data-ng-click="updateSearch(nb)">{{nb}}</a>-->
+<!--                </li>-->
+<!--              </ul>-->
+<!--            </li>-->
+            <li data-ng-class="page.page == (page.pages-1) ? 'disabled' : ''">
+              <a href="" data-ng-click="pageNext()">
+                <i class="fa fa-angle-right"></i>
+                <span class="sr-only" data-translate="">next</span>
+              </a>
+            </li>
+            <li data-ng-class="page.page == (page.pages-1) ? 'disabled' : ''">
+              <a href="" data-ng-click="pageLast()">
+                <i class="fa fa-angle-double-right"></i>
+                <span class="sr-only" data-translate="">last</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+
+      <!--      <div-->
+      <!--        data-gn-pagination="{hitsPerPage:5}"-->
+      <!--        data-hits-values="5"-->
+      <!--        data-enable-hot-keys=""-->
+      <!--        data-enable-events=""-->
+      <!--      >-->
+      <!--      </div>-->
     </div>
   </form>
+
+
+  <!--save/cancel -->
 
   <div class="btn-toolbar">
     <button
@@ -79,8 +134,8 @@
       <i class="fa fa-fw fa-save"></i>
       <span data-translate="">save</span>
     </button>
-    <button type="button" class="btn btn-default pull-right">
-      <span data-translate="">cancel</span>
+    <button data-dismiss="modal"  type="button" class="btn btn-default pull-right">
+      <span   data-translate="">cancel</span>
     </button>
   </div>
 </div>

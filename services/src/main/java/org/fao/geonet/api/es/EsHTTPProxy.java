@@ -43,6 +43,8 @@ import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.Constants;
 import org.fao.geonet.NodeInfo;
 import org.fao.geonet.api.ApiUtils;
+import org.fao.geonet.api.es.queryrewrite.ESQueryRewriter;
+import org.fao.geonet.api.es.queryrewrite.UserSelectionESQueryRewriter;
 import org.fao.geonet.api.records.MetadataApi;
 import org.fao.geonet.api.records.MetadataUtils;
 import org.fao.geonet.api.records.model.related.AssociatedRecord;
@@ -291,8 +293,11 @@ public class EsHTTPProxy {
         @Parameter(hidden = true)
         HttpEntity<String> httpEntity) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
-        call(context, httpSession, request, response, SEARCH_ENDPOINT, httpEntity.getBody(), bucket, relatedTypes);
+        call(context, httpSession, request, response, SEARCH_ENDPOINT, esQueryRewriter.rewriteQuery(httpSession, request,httpEntity.getBody()), bucket, relatedTypes);
     }
+
+    @Autowired
+    UserSelectionESQueryRewriter esQueryRewriter;
 
 
     @io.swagger.v3.oas.annotations.Operation(

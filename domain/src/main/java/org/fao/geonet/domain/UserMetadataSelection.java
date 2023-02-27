@@ -26,6 +26,7 @@ import org.fao.geonet.entitylistener.UserMetadataSelectionListenerManager;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
@@ -50,6 +51,8 @@ public class UserMetadataSelection extends GeonetEntity implements Serializable 
     private int id;
     private String metadataUuid;
 
+    private int selection_id;
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = ID_SEQ_NAME)
@@ -71,4 +74,12 @@ public class UserMetadataSelection extends GeonetEntity implements Serializable 
         this.metadataUuid = metadataUuid;
     }
 
+    @Column(name = "selection_id", insertable = false, updatable = false)
+    public int getSelection_id() {
+        return selection_id;
+    }
+
+    public void setSelection_id(int selection_id) {
+        this.selection_id = selection_id;
+    }
 }

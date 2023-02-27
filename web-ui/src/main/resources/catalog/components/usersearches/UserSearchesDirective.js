@@ -133,6 +133,7 @@
     "$location",
     "$filter",
     "$route",
+    "gnSearchSettings",
     function (
       gnUserSearchesService,
       gnConfigService,
@@ -145,7 +146,8 @@
       $translate,
       $location,
       $filter,
-      $route
+      $route,
+      gnSearchSettings
     ) {
       return {
         restrict: "A",
@@ -170,6 +172,7 @@
           scope.isUserSearchesEnabled =
             gnGlobalSettings.gnCfg.mods.search.usersearches.enabled;
 
+          scope.gnSearchSettings = gnSearchSettings;
           scope.userSearches = null;
           scope.currentSearch = null;
 
@@ -183,17 +186,17 @@
             }
           });
 
-          scope.loadUserSearches = function () {
-            gnUserSearchesService.loadUserSearches().then(
-              function (featuredSearchesCollection) {
-                scope.userSearches = featuredSearchesCollection.data;
+          scope.userSelectionsItems = function () {
+            return scope.userSelections;
+          };
 
-                angular.forEach(scope.userSearches, function (search) {
-                  search.label =
-                    search.names[scope.lang] ||
-                    search.names["eng"] ||
-                    $filter("translate")("userSearchNameMissing");
-                });
+          scope.loadUserSearches = function () {
+            gnUserSearchesService.loadUserSelections().then(
+              function (userselections) {
+                var items =  userselections.data;
+                items = _.sortBy( items, function(item) {return item.name});
+                 scope.userSelections = items;
+
               },
               function () {
                 // TODO: Log error
@@ -218,6 +221,53 @@
 
           scope.editUserSearch = function (search) {
             scope.openSaveUserSearchPanel(search);
+          };
+
+          scope.searchUrl = function (search) {
+            var id = search.id;
+            var params = { userselection: id, from: 1, to: 30 };
+            $location.search(params);
+          };
+
+          scope.delete = function (search) {
+            gnUserSearchesService.deleteUserSelection(search.id).then(function (result) {
+              ///
+              scope.userSelections = scope.userSelections.filter(
+                (item) => item.id !== search.id
+              );
+            });
+          };
+
+
+          scope.updateUserSelections = function() {
+            scope.userSelections = []
+            scope.loadUserSearches();
+          };
+
+          scope.editUserSelection = function (search) {
+            scope.currentUserSelection = search;
+
+            gnUtilityService.openModal(
+              {
+                title: "userSelectionFavourites",
+                content:
+                  '<div gn-save-user-search="currentUserSelection" data-user="user"></div>',
+                className: "gn-savesearch-popup",
+                onCloseCallback: function () {
+                  scope.updateUserSelections();
+                }
+              },
+              scope,
+              "updated"
+            );
+          };
+
+          scope.toggleStatus = function (search) {
+            gnUserSearchesService
+              .setUserSelectionStatus(search.id, !search.public)
+              .then(function (result) {
+                search.public = result.data.isPublic;
+              });
           };
 
           scope.canEditUserSearch = function (search) {
@@ -246,11 +296,8 @@
             );
           };
 
-          scope.openSaveUserSearchPanel = function (search) {
-            scope.currentSearch = angular.copy(search);
-            if (scope.currentSearch) {
-              delete scope.currentSearch.label;
-            }
+          scope.createNewList = function (search) {
+
 
             gnUtilityService.openModal(
               {
@@ -259,11 +306,11 @@
                   '<div gn-save-user-search="currentSearch" data-user="user"></div>',
                 className: "gn-savesearch-popup",
                 onCloseCallback: function () {
-                  scope.loadUserSearches();
+                  // scope.loadUserSearches();
                 }
               },
               scope,
-              "UserSearchUpdated"
+              "update"
             );
           };
 
@@ -322,81 +369,49 @@
         },
         templateUrl: "../../catalog/components/usersearches/partials/savefavourite.html",
         link: function postLink(scope, element, attrs) {
-          scope.lang = gnLangs.current;
+          scope.page = {pageSize:4,pages:0,page:0,from:0,to:0, count:0}
+          //scope.pageSize = 4;
+         // scope.pageNumber = 0;
           scope.updateSearchUrl = false;
+          scope.name = scope.userSearch.name;
+          scope.hits = [];
+          scope.toDelete = [];
+          scope.totalHits = 0;
 
-          scope.availableLangs = gnGlobalSettings.gnCfg.mods.header.languages;
-          scope.langList = angular.copy(scope.availableLangs);
-          angular.forEach(scope.langList, function (lang2, lang3) {
-            scope.langList[lang3] = "#" + lang2;
-          });
-          scope.currentLangShown = scope.lang;
-
-          scope.userSearchGroups = { choices: [], groups: [] };
-
-          // Retrieve groups for current user when creating a new
-          // user search or the user creator groups
-          var userIdForGroups = scope.user.id;
-
-          if (scope.userSearch && scope.user.isAdministratorOrMore()) {
-            userIdForGroups = scope.userSearch.creatorId;
-          }
-
-          function loadUserGroup() {
-            $http.get("../api/users/" + userIdForGroups + "/groups").then(
-              function (response) {
-                var data = response.data;
-                var choices = [];
-
-                // Remove internal groups
-                for (var i = 0; i < data.length; i++) {
-                  if (data[i].group.id > 1) {
-                    var g = data[i].group;
-                    g.langlabel = g.label[scope.lang] || g.name;
-                    choices.push(g);
-                  }
-                }
-                scope.userSearchGroups.choices = choices;
-
-                var searchGroup = [];
-                scope.userSearchGroupsTextList = "";
-
-                if (scope.userSearch && scope.userSearch.groups.length > 0) {
-                  for (var i = 0; i < scope.userSearch.groups.length; i++) {
-                    var groupId = scope.userSearch.groups[i];
-                    searchGroup = searchGroup.concat(
-                      scope.userSearchGroups.choices.filter(function (group) {
-                        return group.id === groupId;
-                      })
-                    );
-                  }
-                  scope.userSearchGroupsTextList = scope.userSearch.groups.join(",");
-                }
-                scope.userSearchGroups.groups = searchGroup;
-              },
-              function (response) {
-                // TODO
-              }
+          scope.reloadPage = function () {
+            scope.loadUserSelectionPaged(
+              scope.userSearch.id,
+              scope.page.page,
+              scope.page.pageSize
             );
           }
 
-          //loadUserGroup();
-          $timeout(loadUserGroup, 200);
+          scope.pageFirst = function() {
+            scope.page.page = 0;
+            scope.reloadPage();
+          };
 
-          scope.$watchCollection("userSearchGroups.groups", function (n, o) {
-            if (n !== o) {
-              scope.userSearchGroupsTextList = "";
+          scope.pageLast = function() {
+            scope.page.page = scope.page.pages-1;
 
-              for (var j = 0; j < n.length; j++) {
-                var g = n[j];
-                scope.userSearchGroupsTextList += g.id;
+            scope.reloadPage();
+          };
 
-                if (j != n.length - 1) {
-                  scope.userSearchGroupsTextList += ",";
-                }
-              }
+          scope.pageNext = function() {
+            scope.page.page++;
+            if (scope.page.page >= scope.page.pages) {
+              scope.page.page = scope.page.pages-1;
             }
-          });
+            scope.reloadPage();
+          };
+
+          scope.pagePrevious = function() {
+            scope.page.page--;
+            if (scope.page.page<0) {
+              scope.page.page =0;
+            }
+            scope.reloadPage();
+          };
 
           var retrieveSearchParameters = function () {
             var searchParams = angular.copy($location.search());
@@ -423,6 +438,71 @@
           } else {
             scope.editMode = true;
           }
+
+          scope.delete = function(hit) {
+            if (!scope.isDeleted(hit)) {
+              scope.toDelete.push(hit._id);
+            }
+            else {
+              scope.toDelete = scope.toDelete
+                .filter (function(item) {return item !== hit._id} );
+            }
+          };
+
+          scope.isDeleted = function(hit) {
+             var uuid = hit._id;
+             var found = scope.toDelete.find(function(val) {
+                return val == uuid;
+             });
+             return (typeof found !== 'undefined');
+          };
+
+          scope.getTitle = function (hit) {
+            var obj = hit._source.resourceTitleObject;
+            if (obj["default"]) {
+              return obj["default"];
+            }
+            return Object.values(obj)[0];
+          };
+
+          scope.getAbstract = function (hit) {
+            var obj = hit._source.resourceAbstractObject;
+            var result = "No Title";
+            if (obj["default"]) {
+              result= obj["default"];
+            }
+            else {
+              result= Object.values(obj)[0];
+            }
+            if ((typeof result == 'undefined')) {
+              return "No Title";
+            }
+            if (result.length >255) {
+              return result.substr(0, 255)+"...";
+            }
+            return result;
+          };
+
+          scope.loadUserSelectionPaged = function (search, pageNumber, pageSize) {
+            gnUserSearchesService
+              .loadUserSelectionPaged(search, pageNumber, pageSize)
+              .then(function (response) {
+                scope.hits = response.data.hits.hits;
+                scope.page.count = response.data.hits.total.value;
+                //scope.page.page = 0;
+                scope.page.pages = Math.ceil(scope.page.count/scope.page.pageSize);
+                scope.page.from = scope.page.pageSize * scope.page.page + 1;
+                scope.page.to = scope.page.pageSize * scope.page.page +scope.page.pageSize;
+                if (scope.page.to > scope.page.count ){
+                  scope.page.to=scope.page.count;
+                }
+              });
+          };
+          scope.loadUserSelectionPaged(
+            scope.userSearch.id,
+            scope.page.page,
+            scope.page.pageSize
+          );
 
           /**
            * Checks if the user can set the feature type info in a search:
@@ -458,34 +538,12 @@
           };
 
           scope.saveUserSearch = function () {
-            var userSearch = angular.copy(scope.userSearch);
-            delete userSearch.title;
-
-            if (scope.isFeaturedSearch()) {
-              // Featured searches are public, can't be associated to groups
-              userSearch.groups = [];
-            } else {
-              userSearch.groups = scope.userSearchGroupsTextList.split(",");
-            }
-
-            return gnUserSearchesService.saveUserSearch(userSearch).then(
-              function (response) {
-                scope.$emit("UserSearchUpdated", true);
-                scope.$emit("StatusUpdated", {
-                  msg: $translate.instant("userSearchUpdated"),
-                  timeout: 0,
-                  type: "success"
-                });
-              },
-              function (response) {
-                scope.$emit("StatusUpdated", {
-                  title: $translate.instant("userSearchUpdatedError"),
-                  error: response.data,
-                  timeout: 0,
-                  type: "danger"
-                });
-              }
-            );
+            return gnUserSearchesService.updateFavourites(scope.userSearch.id,scope.name,scope.toDelete)
+              .then(
+                function (response) {
+                  scope.$emit("updated", true);
+                }
+              );
           };
         }
       };
@@ -564,7 +622,7 @@
                   striped: true,
                   sidePagination: "server",
                   pagination: true,
-                  pageSize: scope.pageSize,
+                  pageSize: scope.page.pageSize,
                   pageList: [5, 10, 50, 100, 200],
                   search: true,
                   minimumCountColumns: 2,
@@ -688,6 +746,7 @@
             );
           };
 
+
           scope.editUserSearch = function (searchId) {
             scope.currentSearch = findUserSeachById(scope.userSearches, searchId);
 
@@ -697,12 +756,12 @@
                 content:
                   '<div gn-save-user-search="currentSearch" data-user="user"></div>',
                 className: "gn-savesearch-popup",
-                onCloseCallback: function () {
-                  refreshTable();
+                onCloseCallback: function (a,b,c) {
+                  scope.updateUserSelection(a,b,c);
                 }
               },
               scope,
-              "UserSearchUpdated"
+              "updated"
             );
           };
         }
