@@ -183,33 +183,42 @@ public abstract class XmlSerializer {
             // Check if a filter is defined for this schema
             // for the editing operation ie. user who can not edit
             // will not see those elements.
-            MetadataSchemaOperationFilter editXpathFilter = mds.getOperationFilter(ReservedOperation.editing);
-            boolean filterEditOperationElements = editXpathFilter != null;
+            MetadataSchemaOperationFilter editFilter = mds.getOperationFilter(ReservedOperation.editing);
+            boolean filterEditOperationElements = editFilter != null;
             List<Namespace> namespaces = mds.getNamespaces();
             if (context != null) {
-                if (editXpathFilter != null) {
+                if (editFilter != null) {
                     boolean canEdit = accessManager.canEdit(context, id);
                     if (canEdit) {
                         filterEditOperationElements = false;
                     }
                 }
-                MetadataSchemaOperationFilter downloadXpathFilter = mds.getOperationFilter(ReservedOperation.download);
-                if (downloadXpathFilter != null) {
-                    boolean canDownload = accessManager.canDownload(context, id);
-                    if (!canDownload) {
-                        removeFilteredElement(metadataXml, downloadXpathFilter, namespaces);
+
+                MetadataSchemaOperationFilter authenticatedFilter = mds.getOperationFilter("authenticated");
+                if (authenticatedFilter != null) {
+                    boolean isAuthenticated = context.getUserSession().isAuthenticated();
+                    if (!isAuthenticated) {
+                        removeFilteredElement(metadataXml, authenticatedFilter, namespaces);
                     }
                 }
-                MetadataSchemaOperationFilter dynamicXpathFilter = mds.getOperationFilter(ReservedOperation.dynamic);
-                if (dynamicXpathFilter != null) {
+
+                MetadataSchemaOperationFilter downloadFilter = mds.getOperationFilter(ReservedOperation.download);
+                if (downloadFilter != null) {
+                    boolean canDownload = accessManager.canDownload(context, id);
+                    if (!canDownload) {
+                        removeFilteredElement(metadataXml, downloadFilter, namespaces);
+                    }
+                }
+                MetadataSchemaOperationFilter dynamicFilter = mds.getOperationFilter(ReservedOperation.dynamic);
+                if (dynamicFilter != null) {
                     boolean canDynamic = accessManager.canDynamic(context, id);
                     if (!canDynamic) {
-                        removeFilteredElement(metadataXml, dynamicXpathFilter, namespaces);
+                        removeFilteredElement(metadataXml, dynamicFilter, namespaces);
                     }
                 }
             }
             if (filterEditOperationElements || (getThreadLocal(false) != null && getThreadLocal(false).forceFilterEditOperation)) {
-                removeFilteredElement(metadataXml, editXpathFilter, namespaces);
+                removeFilteredElement(metadataXml, editFilter, namespaces);
             }
         }
         return metadataXml;

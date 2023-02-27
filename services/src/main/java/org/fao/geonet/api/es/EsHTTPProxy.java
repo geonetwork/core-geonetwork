@@ -831,39 +831,39 @@ public class EsHTTPProxy {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode sourceNode = (ObjectNode) doc.get("_source");
 
-        MetadataSchemaOperationFilter authenticatedXpathFilter = mds.getOperationFilter("authenticated");
+        MetadataSchemaOperationFilter authenticatedFilter = mds.getOperationFilter("authenticated");
 
         List<String> jsonpathFilters = new ArrayList<>();
 
-        if (authenticatedXpathFilter != null && !context.getUserSession().isAuthenticated()) {
-            jsonpathFilters.add(authenticatedXpathFilter.getJsonpath());
+        if (authenticatedFilter != null && !context.getUserSession().isAuthenticated()) {
+            jsonpathFilters.add(authenticatedFilter.getJsonpath());
         }
 
-        MetadataSchemaOperationFilter editXpathFilter = mds.getOperationFilter(ReservedOperation.editing);
+        MetadataSchemaOperationFilter editFilter = mds.getOperationFilter(ReservedOperation.editing);
 
-        if (editXpathFilter != null) {
+        if (editFilter != null) {
             boolean canEdit = doc.get("edit").asBoolean();
 
             if (!canEdit) {
-                jsonpathFilters.add(editXpathFilter.getJsonpath());
+                jsonpathFilters.add(editFilter.getJsonpath());
             }
         }
 
-        MetadataSchemaOperationFilter downloadXpathFilter = mds.getOperationFilter(ReservedOperation.download);
-        if (downloadXpathFilter != null) {
+        MetadataSchemaOperationFilter downloadFilter = mds.getOperationFilter(ReservedOperation.download);
+        if (downloadFilter != null) {
             boolean canDownload = doc.get("download").asBoolean();
 
             if (!canDownload) {
-                jsonpathFilters.add(downloadXpathFilter.getJsonpath());
+                jsonpathFilters.add(downloadFilter.getJsonpath());
             }
         }
 
-        MetadataSchemaOperationFilter dynamicXpathFilter = mds.getOperationFilter(ReservedOperation.dynamic);
-        if (dynamicXpathFilter != null) {
+        MetadataSchemaOperationFilter dynamicFilter = mds.getOperationFilter(ReservedOperation.dynamic);
+        if (dynamicFilter != null) {
             boolean canDynamic = doc.get("dynamic").asBoolean();
 
             if (!canDynamic) {
-                jsonpathFilters.add(dynamicXpathFilter.getJsonpath());
+                jsonpathFilters.add(dynamicFilter.getJsonpath());
             }
         }
 
