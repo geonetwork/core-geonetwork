@@ -736,6 +736,27 @@
           size: 300
         }
       }
+    },
+    th_fem_data_types_tree: {
+      "th_fem_data_types_tree.key": {
+        terms: {
+          field: "th_fem_data_types_tree.key"
+        }
+      }
+    },
+    th_fem_projects_tree: {
+      "th_fem_projects_tree.key": {
+        terms: {
+          field: "th_fem_projects_tree.key"
+        }
+      }
+    },
+    th_fem_facades_tree: {
+      "th_fem_facades_tree.key": {
+        terms: {
+          field: "th_fem_facades_tree.key"
+        }
+      }
     }
   });
 })();
