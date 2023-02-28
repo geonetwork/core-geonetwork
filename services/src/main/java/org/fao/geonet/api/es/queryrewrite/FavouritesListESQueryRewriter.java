@@ -6,17 +6,14 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.IntNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
  import jeeves.server.UserSession;
- import net.sf.json.JSONObject;
  import org.fao.geonet.api.ApiUtils;
  import org.fao.geonet.domain.Profile;
  import org.fao.geonet.domain.User;
- import org.fao.geonet.domain.UserMetadataSelectionList;
- import org.fao.geonet.repository.UserMetadataSelectionListRepository;
- import org.fao.geonet.repository.UserMetadataSelectionRepository;
+ import org.fao.geonet.domain.FavouriteMetadataList;
+ import org.fao.geonet.repository.FavouriteMetadataListRepository;
+ import org.fao.geonet.repository.FavouriteMetadataListItemRepository;
  import org.fao.geonet.repository.UserRepository;
  import org.springframework.beans.factory.annotation.Autowired;
- import org.springframework.data.domain.PageRequest;
- import org.springframework.data.domain.Pageable;
  import org.springframework.stereotype.Component;
 
  import javax.servlet.http.Cookie;
@@ -27,7 +24,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
  import java.util.Optional;
  import java.util.stream.Collectors;
 
- import static org.fao.geonet.api.selections.UserSelectionApi.SESSION_COOKIE_NAME;
+ import static org.fao.geonet.api.selections.FavouriteMetadataListApi.SESSION_COOKIE_NAME;
 
 /**
  * typically, an incoming elastic request will be very large (see below for an example, with 90% removed).
@@ -99,14 +96,14 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
     }
  */
 @Component
-public class UserSelectionESQueryRewriter implements ESQueryRewriter{
+public class FavouritesListESQueryRewriter implements ESQueryRewriter{
 
 
     @Autowired
-    UserMetadataSelectionRepository userMetadataSelectionRepo;
+    FavouriteMetadataListItemRepository userMetadataSelectionRepo;
 
     @Autowired
-    UserMetadataSelectionListRepository userMetadataSelectionListRepo;
+    FavouriteMetadataListRepository userMetadataSelectionListRepo;
 
     @Autowired
     UserRepository userRepository;
@@ -165,7 +162,7 @@ public class UserSelectionESQueryRewriter implements ESQueryRewriter{
 //    }
 
     ObjectNode replacement(int selectionId,ObjectMapper mapper,HttpSession httpSession, HttpServletRequest request) throws Exception {
-        Optional<UserMetadataSelectionList> selectionList= userMetadataSelectionListRepo.findById(selectionId);
+        Optional<FavouriteMetadataList> selectionList= userMetadataSelectionListRepo.findById(selectionId);
         if (!selectionList.isPresent()) {
             throw new Exception("could not find selectionId="+selectionId);
         }
@@ -230,7 +227,7 @@ public class UserSelectionESQueryRewriter implements ESQueryRewriter{
     /**
      * @return true if the user/session is permitted to read the list
      */
-    boolean permittedRead(UserMetadataSelectionList list, User user, String sessionId, boolean isAdmin) {
+    boolean permittedRead(FavouriteMetadataList list, User user, String sessionId, boolean isAdmin) {
         // admin can always read
         if (isAdmin) {
             return true;

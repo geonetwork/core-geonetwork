@@ -242,7 +242,7 @@
           scope.updateUserSelections = function () {
             scope.userSelections = [];
             scope.loadUserSearches();
-            scope.$emit("search",{});
+            scope.$emit("search", {});
           };
 
           scope.editUserSelection = function (search) {

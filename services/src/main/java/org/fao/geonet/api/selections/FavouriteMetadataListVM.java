@@ -1,8 +1,7 @@
 package org.fao.geonet.api.selections;
 
+import org.fao.geonet.domain.FavouriteMetadataList;
 import org.fao.geonet.domain.ISODate;
-
-import org.fao.geonet.domain.UserMetadataSelectionList;
 
 
 import java.util.ArrayList;
@@ -18,13 +17,13 @@ import java.util.stream.Collectors;
  *    + isEditable -> boolean: owned by the requester
  *    + isMyList -> boolean: owned by the requester
  */
-public class UserMetadataSelectionListVM {
+public class FavouriteMetadataListVM {
 
     private int id;
     private String name;
     private String userName;
     private String sessionId;
-    private UserMetadataSelectionList.ListType listType;
+    private FavouriteMetadataList.ListType listType;
     private boolean isPublic;
     private ISODate createDate;
     private ISODate changeDate;
@@ -34,14 +33,14 @@ public class UserMetadataSelectionListVM {
     private int nItems;
 
 
-    public UserMetadataSelectionListVM() {
+    public FavouriteMetadataListVM() {
         this.selections = new ArrayList<>();
     }
     /**
      * doesn't set isEditable
      * @param model
      */
-    public UserMetadataSelectionListVM(UserMetadataSelectionList model) {
+    public FavouriteMetadataListVM(FavouriteMetadataList model) {
         this.id = model.getId();
         this.name = model.getName();
         this.userName = model.getUser() !=null ? model.getUser().getUsername() : null;
@@ -61,7 +60,7 @@ public class UserMetadataSelectionListVM {
         this.nItems = this.selections.size();
     }
 
-    public UserMetadataSelectionListVM(UserMetadataSelectionList model, boolean isEditable, boolean isMyList) {
+    public FavouriteMetadataListVM(FavouriteMetadataList model, boolean isEditable, boolean isMyList) {
         this(model);
         this.isEditable = isEditable;
         this.isMyList = isMyList;
@@ -102,11 +101,11 @@ public class UserMetadataSelectionListVM {
         this.sessionId = sessionId;
     }
 
-    public UserMetadataSelectionList.ListType getListType() {
+    public FavouriteMetadataList.ListType getListType() {
         return listType;
     }
 
-    public void setListType(UserMetadataSelectionList.ListType listType) {
+    public void setListType(FavouriteMetadataList.ListType listType) {
         this.listType = listType;
     }
 

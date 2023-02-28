@@ -22,7 +22,7 @@
  */
 package org.fao.geonet.entitylistener;
 
-import org.fao.geonet.domain.UserMetadataSelectionList;
+import org.fao.geonet.domain.FavouriteMetadataListItem;
 
 import javax.persistence.PostLoad;
 import javax.persistence.PostPersist;
@@ -32,39 +32,40 @@ import javax.persistence.PrePersist;
 import javax.persistence.PreRemove;
 import javax.persistence.PreUpdate;
 
-public class UserMetadataSelectionListListenerManager  extends AbstractEntityListenerManager<UserMetadataSelectionList> {
+public class FavouriteMetadataListItemListenerManager extends AbstractEntityListenerManager<FavouriteMetadataListItem> {
     @PrePersist
-    public void prePresist(final UserMetadataSelectionList entity) {
+    public void prePresist(final FavouriteMetadataListItem entity) {
         handleEvent(PersistentEventType.PrePersist, entity);
     }
 
     @PreRemove
-    public void preRemove(final UserMetadataSelectionList entity) {
+    public void preRemove(final FavouriteMetadataListItem entity) {
         handleEvent(PersistentEventType.PreRemove, entity);
     }
 
     @PostPersist
-    public void postPersist(final UserMetadataSelectionList entity) {
+    public void postPersist(final FavouriteMetadataListItem entity) {
         handleEvent(PersistentEventType.PostPersist, entity);
     }
 
     @PostRemove
-    public void postRemove(final UserMetadataSelectionList entity) {
+    public void postRemove(final FavouriteMetadataListItem entity) {
         handleEvent(PersistentEventType.PostRemove, entity);
     }
 
     @PreUpdate
-    public void preUpdate(final UserMetadataSelectionList entity) {
+    public void preUpdate(final FavouriteMetadataListItem entity) {
         handleEvent(PersistentEventType.PreUpdate, entity);
     }
 
     @PostUpdate
-    public void postUpdate(final UserMetadataSelectionList entity) {
+    public void postUpdate(final FavouriteMetadataListItem entity) {
         handleEvent(PersistentEventType.PostUpdate, entity);
     }
 
     @PostLoad
-    public void postLoad(final UserMetadataSelectionList entity) {
+    public void postLoad(final FavouriteMetadataListItem entity) {
         handleEvent(PersistentEventType.PostLoad, entity);
     }
 }
+

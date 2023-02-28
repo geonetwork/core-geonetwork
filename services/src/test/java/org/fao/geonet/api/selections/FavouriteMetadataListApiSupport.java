@@ -27,28 +27,26 @@ import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.collections4.CollectionUtils;
 import org.fao.geonet.api.ApiUtils;
+import org.fao.geonet.domain.FavouriteMetadataList;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.User;
-import org.fao.geonet.domain.UserMetadataSelectionList;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.SourceRepository;
-import org.fao.geonet.repository.UserMetadataSelectionListRepository;
+import org.fao.geonet.repository.FavouriteMetadataListRepository;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.junit.Before;
-import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -62,7 +60,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static org.fao.geonet.api.selections.UserSelectionApi.SESSION_COOKIE_NAME;
+import static org.fao.geonet.api.selections.FavouriteMetadataListApi.SESSION_COOKIE_NAME;
 import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GCO;
 import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GMD;
 import static org.junit.Assert.assertEquals;
@@ -84,12 +82,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
  * 2. creates 3 users (user1, user2, user3)
  *
  */
-public abstract class UserSelectionApiSupport extends AbstractServiceIntegrationTest {
+public abstract class FavouriteMetadataListApiSupport extends AbstractServiceIntegrationTest {
     @Autowired
-    UserSelectionApi userSelectionApi;
+    FavouriteMetadataListApi favouriteMetadataListApi;
 
     @Autowired
-    UserMetadataSelectionListRepository metadataSelectionListRepository;
+    FavouriteMetadataListRepository metadataSelectionListRepository;
 
     @Autowired
     MetadataRepository metadataRepository;
@@ -112,7 +110,7 @@ public abstract class UserSelectionApiSupport extends AbstractServiceIntegration
 
     ServiceContext context;
 
-    static String apiBaseURL = "/srv/api/userselection";
+    static String apiBaseURL = "/srv/api/favouriteslist";
 
     ///-- UUIDS of metadata documents
     String uuid1;
@@ -177,9 +175,9 @@ public abstract class UserSelectionApiSupport extends AbstractServiceIntegration
      * uses the webapi to create a UserMetadataSelectionList.
      * The result is validated against what was inserted.
      */
-    public Pair<UserMetadataSelectionListVM,String> create(MockHttpSession session,
-                                                         String cookieValue,
-                                                         String name, UserMetadataSelectionList.ListType listType, String[] uuids)
+    public Pair<FavouriteMetadataListVM,String> create(MockHttpSession session,
+                                                       String cookieValue,
+                                                       String name, FavouriteMetadataList.ListType listType, String[] uuids)
         throws Exception {
 
         // create the x-www-form-urlencoded for the parameters
@@ -201,7 +199,7 @@ public abstract class UserSelectionApiSupport extends AbstractServiceIntegration
         // get the result of the api call as string (json text) and convert to an actual object
         String jsonStr= result.andReturn().getResponse().getContentAsString();
         ObjectMapper objectMapper = new ObjectMapper();
-        UserMetadataSelectionListVM resultListObj = objectMapper.readValue(jsonStr,UserMetadataSelectionListVM.class);
+        FavouriteMetadataListVM resultListObj = objectMapper.readValue(jsonStr, FavouriteMetadataListVM.class);
 
         //valid the response
         assertEquals(name, resultListObj.getName());
@@ -239,7 +237,7 @@ public abstract class UserSelectionApiSupport extends AbstractServiceIntegration
     }
 
     //calls the API to get all lists for the user  (cf UserSelectionApi#getSelectionLists)
-    UserMetadataSelectionListVM[] getAllLists(MockHttpSession session, String cookieValue ) throws  Exception {
+    FavouriteMetadataListVM[] getAllLists(MockHttpSession session, String cookieValue ) throws  Exception {
 
         MockHttpServletRequestBuilder requestBuilder = get(apiBaseURL)
             //.content(requestContent.toString())
@@ -256,12 +254,12 @@ public abstract class UserSelectionApiSupport extends AbstractServiceIntegration
         // get the result of the api call as string (json text) and convert to an actual object
         String jsonStr= result.andReturn().getResponse().getContentAsString();
         ObjectMapper objectMapper = new ObjectMapper();
-        UserMetadataSelectionListVM[] resultListObj = objectMapper.readValue(jsonStr,UserMetadataSelectionListVM[].class);
+        FavouriteMetadataListVM[] resultListObj = objectMapper.readValue(jsonStr, FavouriteMetadataListVM[].class);
         return resultListObj;
     }
 
     //Gets a single list (by id) from the API (cf UserSelectionApi#getSelectionList)
-    UserMetadataSelectionListVM getList(MockHttpSession session, String cookieValue, int id) throws Exception {
+    FavouriteMetadataListVM getList(MockHttpSession session, String cookieValue, int id) throws Exception {
 
 
         MockHttpServletRequestBuilder requestBuilder =        get(apiBaseURL+"/"+id)
@@ -278,13 +276,13 @@ public abstract class UserSelectionApiSupport extends AbstractServiceIntegration
         // get the result of the api call as string (json text) and convert to an actual object
         String jsonStr= result.andReturn().getResponse().getContentAsString();
         ObjectMapper objectMapper = new ObjectMapper();
-        UserMetadataSelectionListVM resultListObj = objectMapper.readValue(jsonStr,UserMetadataSelectionListVM.class);
+        FavouriteMetadataListVM resultListObj = objectMapper.readValue(jsonStr, FavouriteMetadataListVM.class);
         return resultListObj;
     }
 
-    UserMetadataSelectionListVM setstatus(MockHttpSession session, String cookieValue,
-                                     int id,
-                                     boolean isPublic) throws Exception {
+    FavouriteMetadataListVM setstatus(MockHttpSession session, String cookieValue,
+                                      int id,
+                                      boolean isPublic) throws Exception {
         StringBuilder requestContent = new StringBuilder("public="+Boolean.toString(isPublic));
 
         MockHttpServletRequestBuilder requestBuilder =          put(apiBaseURL+"/"+id+"/status")
@@ -301,7 +299,7 @@ public abstract class UserSelectionApiSupport extends AbstractServiceIntegration
 
         String jsonStr= result.andReturn().getResponse().getContentAsString();
         ObjectMapper objectMapper = new ObjectMapper();
-        UserMetadataSelectionListVM resultListObj = objectMapper.readValue(jsonStr,UserMetadataSelectionListVM.class);
+        FavouriteMetadataListVM resultListObj = objectMapper.readValue(jsonStr, FavouriteMetadataListVM.class);
 
         return  resultListObj;
     }
@@ -325,11 +323,11 @@ public abstract class UserSelectionApiSupport extends AbstractServiceIntegration
     }
 
 
-    UserMetadataSelectionListVM update(MockHttpSession session, String cookieValue,
-                                     int id,
-                                     String name,
-                                     String[] uuids,
-                                     UserSelectionApi.ActionType actionType) throws Exception {
+    FavouriteMetadataListVM update(MockHttpSession session, String cookieValue,
+                                   int id,
+                                   String name,
+                                   String[] uuids,
+                                   FavouriteMetadataListApi.ActionType actionType) throws Exception {
         StringBuilder requestContent = new StringBuilder("name="+name+"&action="+actionType.toString());
         Arrays.stream(uuids).forEach(x->requestContent.append("&metadataUuids="+x));
 
@@ -347,14 +345,14 @@ public abstract class UserSelectionApiSupport extends AbstractServiceIntegration
 
         String jsonStr= result.andReturn().getResponse().getContentAsString();
         ObjectMapper objectMapper = new ObjectMapper();
-        UserMetadataSelectionListVM resultListObj = objectMapper.readValue(jsonStr,UserMetadataSelectionListVM.class);
+        FavouriteMetadataListVM resultListObj = objectMapper.readValue(jsonStr, FavouriteMetadataListVM.class);
 
         return  resultListObj;
     }
 
 
     //list should not contain specified item (by id)
-    public void doesNotContain(List<UserMetadataSelectionListVM> list1, UserMetadataSelectionListVM item) {
+    public void doesNotContain(List<FavouriteMetadataListVM> list1, FavouriteMetadataListVM item) {
         boolean contains= list1.stream()
             .anyMatch(x->x.getId() == item.getId());
         assertFalse(contains);
@@ -362,31 +360,31 @@ public abstract class UserSelectionApiSupport extends AbstractServiceIntegration
 
     //given two lists of UserMetadataSelectionList check that they are the same
     // cf areSame(UserMetadataSelectionList,UserMetadataSelectionList)
-    public void areSame(List<UserMetadataSelectionListVM> list1, List<UserMetadataSelectionListVM> list2) {
+    public void areSame(List<FavouriteMetadataListVM> list1, List<FavouriteMetadataListVM> list2) {
         assertEquals(list1.size(),list2.size());
 
-        list1.sort(Comparator.comparing(UserMetadataSelectionListVM::getId));
-        list2.sort(Comparator.comparing(UserMetadataSelectionListVM::getId));
+        list1.sort(Comparator.comparing(FavouriteMetadataListVM::getId));
+        list2.sort(Comparator.comparing(FavouriteMetadataListVM::getId));
 
         for (int t=0;t<list1.size();t++){
-            UserMetadataSelectionListVM e1 = list1.get(t);
-            UserMetadataSelectionListVM e2 = list2.get(t);
+            FavouriteMetadataListVM e1 = list1.get(t);
+            FavouriteMetadataListVM e2 = list2.get(t);
             areSame(e1,e2);
         }
     }
 
-    public void contains(List<UserMetadataSelectionListVM> list, int id){
+    public void contains(List<FavouriteMetadataListVM> list, int id){
        assertTrue(list.stream()
             .anyMatch(x->x.getId()==id));
     }
 
-    public void notContains(List<UserMetadataSelectionListVM> list, int id){
+    public void notContains(List<FavouriteMetadataListVM> list, int id){
         assertFalse(list.stream()
             .anyMatch(x->x.getId()==id));
     }
 
     //Tests that two UserMetadataSelectionLists are the same.
-    public void areSame(UserMetadataSelectionList l1, UserMetadataSelectionList l2) {
+    public void areSame(FavouriteMetadataList l1, FavouriteMetadataList l2) {
         assertEquals(l1.getId(),l2.getId());
         assertEquals(l1.getName(),l2.getName());
         assertEquals(l1.getIsPublic(),l2.getIsPublic());
@@ -407,7 +405,7 @@ public abstract class UserSelectionApiSupport extends AbstractServiceIntegration
             l2.getSelections().stream().map(x->x.getMetadataUuid()).collect(Collectors.toList())));
     }
 
-    public void areSame(UserMetadataSelectionListVM l1, UserMetadataSelectionListVM l2) {
+    public void areSame(FavouriteMetadataListVM l1, FavouriteMetadataListVM l2) {
         assertEquals(l1.getId(),l2.getId());
         assertEquals(l1.getName(),l2.getName());
         assertEquals(l1.isPublic(),l2.isPublic());
@@ -428,7 +426,7 @@ public abstract class UserSelectionApiSupport extends AbstractServiceIntegration
             l2.getSelections() ));
     }
 
-    public void areSameUuids(List<String> list1, UserMetadataSelectionListVM item){
+    public void areSameUuids(List<String> list1, FavouriteMetadataListVM item){
         List<String> list2 = item.getSelections() ;
         Collections.sort(list1);
         Collections.sort(list2);

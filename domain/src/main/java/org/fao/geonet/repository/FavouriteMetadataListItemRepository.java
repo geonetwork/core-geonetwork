@@ -22,18 +22,18 @@
  */
 package org.fao.geonet.repository;
 
-import org.fao.geonet.domain.UserMetadataSelection;
+import org.fao.geonet.domain.FavouriteMetadataListItem;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface UserMetadataSelectionRepository extends GeonetRepository<UserMetadataSelection, Integer>   {
+public interface FavouriteMetadataListItemRepository extends GeonetRepository<FavouriteMetadataListItem, Integer>   {
 
-    @Query("SELECT s.metadataUuid FROM UserMetadataSelection s WHERE s.selection_id = :parentId ORDER BY s.metadataUuid")
-    List<String> queryByParent(@Param("parentId") int parentId, Pageable pageable);
+//    @Query("SELECT s.metadataUuid FROM FavouriteMetadataListItem s WHERE s.selection_id = :parentId ORDER BY s.metadataUuid")
+//    List<String> queryByParent(@Param("parentId") int parentId, Pageable pageable);
 
-    @Query("SELECT s.metadataUuid FROM UserMetadataSelection s WHERE s.selection_id = :parentId ORDER BY s.metadataUuid")
+    @Query("SELECT s.metadataUuid FROM FavouriteMetadataListItem s WHERE s.selection_id = :parentId ORDER BY s.metadataUuid")
     List<String> queryByParent(@Param("parentId") int parentId);
 }

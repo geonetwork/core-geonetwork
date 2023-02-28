@@ -22,7 +22,7 @@
  */
 package org.fao.geonet.entitylistener;
 
-import org.fao.geonet.domain.UserMetadataSelection;
+import org.fao.geonet.domain.FavouriteMetadataList;
 
 import javax.persistence.PostLoad;
 import javax.persistence.PostPersist;
@@ -32,40 +32,39 @@ import javax.persistence.PrePersist;
 import javax.persistence.PreRemove;
 import javax.persistence.PreUpdate;
 
-public class UserMetadataSelectionListenerManager extends AbstractEntityListenerManager<UserMetadataSelection> {
+public class FavouriteMetadataListListenerManager extends AbstractEntityListenerManager<FavouriteMetadataList> {
     @PrePersist
-    public void prePresist(final UserMetadataSelection entity) {
+    public void prePresist(final FavouriteMetadataList entity) {
         handleEvent(PersistentEventType.PrePersist, entity);
     }
 
     @PreRemove
-    public void preRemove(final UserMetadataSelection entity) {
+    public void preRemove(final FavouriteMetadataList entity) {
         handleEvent(PersistentEventType.PreRemove, entity);
     }
 
     @PostPersist
-    public void postPersist(final UserMetadataSelection entity) {
+    public void postPersist(final FavouriteMetadataList entity) {
         handleEvent(PersistentEventType.PostPersist, entity);
     }
 
     @PostRemove
-    public void postRemove(final UserMetadataSelection entity) {
+    public void postRemove(final FavouriteMetadataList entity) {
         handleEvent(PersistentEventType.PostRemove, entity);
     }
 
     @PreUpdate
-    public void preUpdate(final UserMetadataSelection entity) {
+    public void preUpdate(final FavouriteMetadataList entity) {
         handleEvent(PersistentEventType.PreUpdate, entity);
     }
 
     @PostUpdate
-    public void postUpdate(final UserMetadataSelection entity) {
+    public void postUpdate(final FavouriteMetadataList entity) {
         handleEvent(PersistentEventType.PostUpdate, entity);
     }
 
     @PostLoad
-    public void postLoad(final UserMetadataSelection entity) {
+    public void postLoad(final FavouriteMetadataList entity) {
         handleEvent(PersistentEventType.PostLoad, entity);
     }
 }
-

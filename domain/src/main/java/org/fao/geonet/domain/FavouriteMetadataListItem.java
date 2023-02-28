@@ -22,7 +22,7 @@
  */
 package org.fao.geonet.domain;
 
-import org.fao.geonet.entitylistener.UserMetadataSelectionListenerManager;
+import org.fao.geonet.entitylistener.FavouriteMetadataListItemListenerManager;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
@@ -39,13 +39,13 @@ import java.io.Serializable;
 @Entity
 @Access(AccessType.PROPERTY)
 @Table(
-    name = "UserMetadataSelection"
+    name = "FavouriteMetadataListItem"
     // ,indexes = {@Index(name = "idx_usersavedselections_metadatauuid", columnList = "metadataUuid")}
 )
-@SequenceGenerator(name = UserMetadataSelection.ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
-@EntityListeners(UserMetadataSelectionListenerManager.class)
-public class UserMetadataSelection extends GeonetEntity implements Serializable {
-    static final String ID_SEQ_NAME = "user_md_selection_id_seq";
+@SequenceGenerator(name = FavouriteMetadataListItem.ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
+@EntityListeners(FavouriteMetadataListItemListenerManager.class)
+public class FavouriteMetadataListItem extends GeonetEntity implements Serializable {
+    static final String ID_SEQ_NAME = "fav_md_item_id_seq";
 
 
     private int id;
@@ -60,7 +60,7 @@ public class UserMetadataSelection extends GeonetEntity implements Serializable 
         return id;
     }
 
-    public UserMetadataSelection setId(int id) {
+    public FavouriteMetadataListItem setId(int id) {
         this.id = id;
         return this;
     }

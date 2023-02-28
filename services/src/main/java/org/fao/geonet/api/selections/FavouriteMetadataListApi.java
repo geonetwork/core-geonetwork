@@ -28,14 +28,14 @@ import jeeves.server.UserSession;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.exception.NotAllowedException;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
+import org.fao.geonet.domain.FavouriteMetadataList;
+import org.fao.geonet.domain.FavouriteMetadataListItem;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.User;
-import org.fao.geonet.domain.UserMetadataSelection;
-import org.fao.geonet.domain.UserMetadataSelectionList;
 import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.repository.UserMetadataSelectionListRepository;
+import org.fao.geonet.repository.FavouriteMetadataListRepository;
 import org.fao.geonet.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -61,7 +61,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
- * The API for userselection.
+ * The API for FavouriteMaetadataList.
  *
  * session:
  *    a. usually null
@@ -70,19 +70,19 @@ import java.util.stream.Collectors;
  *    d. if you are not logged in, then your created lists are owned by the session cookie.
  *
  *
- *    1. get all viewable by user (getSelectionLists)
- *        This returns a list of UserMetadataSelectionLists that are visible.
+ *    1. get all viewable by user (getFavouritesLists)
+ *        This returns a list of FavouriteMetadataListVM that are visible.
  *        1. If logged in, then all lists "owned" by that user
  *        2. If not logged in, then all list "owned" by that session
  *        3. Any lists (user or session) that are "public"
  *
- *    2. Get UserMetadataSelectionList by id (getSelectionList)
- *        Gets a single UserMetadataSelectionList by ID.  This must be visible;
+ *    2. Get FavouriteMetadataListVM by id (getFavouritesList)
+ *        Gets a single FavouriteMetadataListVM by ID.  This must be visible;
  *           1. If logged in, "owned" by that user
  *           2. If not logged in, then "owned" by that session
  *           3. list must be "public"
  *
- *    3. Modify a list (name or metadataUuids) - updateSelectionList
+ *    3. Modify a list (name or metadataUuids) - updateFavourtiesList
  *        The list must be owned by the user (either the same sessionId or same User).
  *        If there is a new "name" given, the list's name will be updated (cannot conflict with other named lists that the user/session owns).
  *        The set of MetadataUuids can be (ActionType) added to, removed from, or replaced.
@@ -95,7 +95,7 @@ import java.util.stream.Collectors;
  *       The list must be owned by the user (either the same sessionId or same User).
  *       The list is deleted.
  *
- *    6. Create a list - createNewSelectionList
+ *    6. Create a list - createNewFavourtiesList
  *       Creates a new list with the given name and set of metadatauuids.
  *       List is owned by the user/session.
  *       Name must be unique for the user/session.
@@ -104,15 +104,15 @@ import java.util.stream.Collectors;
  *   Note - all uuids in a list must exist in the database.
  */
 @RequestMapping(value = {
-    "/{portal}/api/userselection"
+    "/{portal}/api/favouriteslist"
 })
-@Tag(name = "userselection",
-    description = "User selections related operations")
-@Controller("userselection")
-public class UserSelectionApi {
+@Tag(name = "favouriteslist",
+    description = "Favourites List related operations")
+@Controller("favouriteslist")
+public class FavouriteMetadataListApi {
 
     @Autowired
-    UserMetadataSelectionListRepository userMetadataSelectionListRepository;
+    FavouriteMetadataListRepository favouriteMetadataListRepository;
 
     @Autowired
     UserRepository userRepository;
@@ -120,12 +120,12 @@ public class UserSelectionApi {
     @Autowired
     MetadataRepository metadataRepository;
 
-    public static String SESSION_COOKIE_NAME="not-logged-in-user-selection-sessionid";
+    public static String SESSION_COOKIE_NAME="not-logged-in-FavouritesList-sessionid";
 
     enum ActionType {add, replace, remove}
 
     /**
-     * This will retrieve a list of UserMetadataSelectionList/
+     * This will retrieve a list of FavouriteMetadataListVM
      * included;
      *      + all public lists (from other users or other sessions)
      *      + all private lists for the user
@@ -139,7 +139,7 @@ public class UserSelectionApi {
      * @return
      * @throws Exception
      */
-    @io.swagger.v3.oas.annotations.Operation(summary = "Get list of user selection sets")
+    @io.swagger.v3.oas.annotations.Operation(summary = "Get list of FavouritesLists accessible to the user/session")
     @RequestMapping(
         method = RequestMethod.GET,
         produces = {
@@ -148,7 +148,7 @@ public class UserSelectionApi {
     public
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
-    List<UserMetadataSelectionListVM> getSelectionLists(
+    List<FavouriteMetadataListVM> getFavouritesLists(
         @Parameter(hidden = true)
         HttpSession httpSession,
 
@@ -159,9 +159,9 @@ public class UserSelectionApi {
         String sessionId = getSessionId(httpServletRequest);
         User user =  getUser(httpSession);
         boolean isAdmin = isAdmin(httpSession);
-        return userMetadataSelectionListRepository.findPublic(user,sessionId)
+        return favouriteMetadataListRepository.findPublic(user,sessionId)
             .stream()
-            .map(x->new UserMetadataSelectionListVM(x
+            .map(x->new FavouriteMetadataListVM(x
                 ,permittedWrite(x,user,sessionId,isAdmin),
                 ownedByMe(x,user,sessionId)))
             .collect(Collectors.toList());
@@ -204,22 +204,22 @@ public class UserSelectionApi {
     }
 
     /**
-     *  Get a UserMetadataSelectionList by id.
+     *  Get a FavouriteMetadataListVM by id.
      */
-    @io.swagger.v3.oas.annotations.Operation(summary = "Get a specific (by DB id) of selection list")
+    @io.swagger.v3.oas.annotations.Operation(summary = "Get a specific (by DB id) of FavouriteList list")
     @RequestMapping(
         method = RequestMethod.GET,
-        value = "/{selectionListIdentifier}",
+        value = "/{favouriteListIdentifier}",
         produces = {
             MediaType.APPLICATION_JSON_VALUE
         })
     public
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
-    UserMetadataSelectionListVM getSelectionList(
-        @Parameter(description = "Selection DB id (int)",required = true)
+    FavouriteMetadataListVM getFavouritesList(
+        @Parameter(description = "FavouritesList DB id (int)",required = true)
         @PathVariable
-        Integer selectionListIdentifier,
+        Integer favouriteListIdentifier,
         @Parameter(hidden = true)
         HttpSession httpSession,
         @Parameter(hidden = true)
@@ -227,52 +227,52 @@ public class UserSelectionApi {
     )
         throws Exception {
 
-        if (selectionListIdentifier == null) {
-            throw new IllegalArgumentException("no selectionListIdentifier given");
+        if (favouriteListIdentifier == null) {
+            throw new IllegalArgumentException("no favouriteListIdentifier given");
         }
-        if (selectionListIdentifier <=0) {
-            throw new IllegalArgumentException("invalid selectionListIdentifier given");
+        if (favouriteListIdentifier <=0) {
+            throw new IllegalArgumentException("invalid favouriteListIdentifier given");
         }
 
         boolean isAdmin = isAdmin(httpSession);
         String sessionId = getSessionId(httpServletRequest);
         User user =  getUser(httpSession);
 
-        Optional<UserMetadataSelectionList> list = userMetadataSelectionListRepository.findById(selectionListIdentifier);
+        Optional<FavouriteMetadataList> list = favouriteMetadataListRepository.findById(favouriteListIdentifier);
         if (!list.isPresent()) {
-            throw new ResourceNotFoundException("cannot find selectionListIdentifier, based on id"+selectionListIdentifier);
+            throw new ResourceNotFoundException("cannot find favouriteListIdentifier, based on id"+favouriteListIdentifier);
         }
-        UserMetadataSelectionList result = list.get();
+        FavouriteMetadataList result = list.get();
 
         if (permittedRead(result,user,sessionId,isAdmin)) {
-            return new UserMetadataSelectionListVM(result);
+            return new FavouriteMetadataListVM(result);
         }
 
-        throw new NotAllowedException("you don't have permission to read that user selection list");
+        throw new NotAllowedException("you don't have permission to read that favouriteList list");
     }
 
     /**
-     *  update a UserMetadataSelectionList
-     *  user or session must own the UserMetadataSelectionList.
+     *  update a FavouriteMetadataList
+     *  user or session must own the FavouriteMetadataList.
      *  change name - name must be unique for the user/session.
      *
      *  update the set of metadataUuuids (add/remove/replace)
      *
      */
-    @io.swagger.v3.oas.annotations.Operation(summary = "Update a specific (by DB id) of selection list")
+    @io.swagger.v3.oas.annotations.Operation(summary = "Update a specific (by DB id) of FavouriteList list")
     @RequestMapping(
         method = RequestMethod.PUT,
-        value = "/{selectionListIdentifier}",
+        value = "/{favouriteListIdentifier}",
         produces = {
             MediaType.APPLICATION_JSON_VALUE
         })
     public
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
-    UserMetadataSelectionListVM updateSelectionList(
-        @Parameter(description = "Selection DB id (int)",required = true)
+    FavouriteMetadataListVM updateFavouriteList(
+        @Parameter(description = "favouriteList DB id (int)",required = true)
         @PathVariable
-            Integer selectionListIdentifier,
+            Integer favouriteListIdentifier,
 
         @Parameter(description = "new name of list",required = false)
         @RequestParam(name="name",required = false)
@@ -293,22 +293,22 @@ public class UserSelectionApi {
     )
         throws Exception {
 
-        if (selectionListIdentifier == null) {
-            throw new IllegalArgumentException("no selectionListIdentifier given");
+        if (favouriteListIdentifier == null) {
+            throw new IllegalArgumentException("no favouriteListIdentifier given");
         }
-        if (selectionListIdentifier <= 0) {
-            throw new IllegalArgumentException("invalid selectionListIdentifier given");
+        if (favouriteListIdentifier <= 0) {
+            throw new IllegalArgumentException("invalid favouriteListIdentifier given");
         }
 
         boolean isAdmin = isAdmin(httpSession);
         String sessionId = getSessionId(httpServletRequest);
         User user = getUser(httpSession);
 
-        Optional<UserMetadataSelectionList> list1 = userMetadataSelectionListRepository.findById(selectionListIdentifier);
+        Optional<FavouriteMetadataList> list1 = favouriteMetadataListRepository.findById(favouriteListIdentifier);
         if (!list1.isPresent()) {
-            throw new ResourceNotFoundException("cannot find selectionListIdentifier, based on id" + selectionListIdentifier);
+            throw new ResourceNotFoundException("cannot find favouriteListIdentifier, based on id" + favouriteListIdentifier);
         }
-        UserMetadataSelectionList list = list1.get();
+        FavouriteMetadataList list = list1.get();
 
         if (!permittedWrite(list,user,sessionId,isAdmin)) {
             throw new NotAllowedException("You do not have permission to modify this list");
@@ -325,7 +325,7 @@ public class UserSelectionApi {
         //update name
         if (StringUtils.hasText(name) && !name.equals(list.getName())) {
             //is this valid?
-            UserMetadataSelectionList item = userMetadataSelectionListRepository.findName(name,user,sessionId);
+            FavouriteMetadataList item = favouriteMetadataListRepository.findName(name,user,sessionId);
             if (item != null) {
                 throw new IllegalArgumentException("name '"+name+"' is already in use!");
             }
@@ -346,7 +346,7 @@ public class UserSelectionApi {
                 boolean alreadyInList = list.getSelections().stream()
                     .anyMatch(x->x.getMetadataUuid().equals(uuid));
                 if (!alreadyInList) {
-                    UserMetadataSelection selection = new UserMetadataSelection();
+                    FavouriteMetadataListItem selection = new FavouriteMetadataListItem();
                     selection.setMetadataUuid(uuid);
                     list.getSelections().add(selection);
                 }
@@ -355,7 +355,7 @@ public class UserSelectionApi {
         else {
             //action = remove
             for(String uuid : metadataUuids) {
-                Optional<UserMetadataSelection> existing = list.getSelections().stream()
+                Optional<FavouriteMetadataListItem> existing = list.getSelections().stream()
                     .filter(x->x.getMetadataUuid().equals(uuid))
                     .findFirst();
                 if (existing.isPresent()) {
@@ -366,29 +366,29 @@ public class UserSelectionApi {
         }
         //save
         updateChangeTimeToNow(list);
-        list = userMetadataSelectionListRepository.save(list);
-        return new UserMetadataSelectionListVM(list);
+        list = favouriteMetadataListRepository.save(list);
+        return new FavouriteMetadataListVM(list);
     }
 
 
     /**
-     *  Change the UserMetadataSelectionList's IsPublic Attribute.
-     *  User or session must own the UserMetadataSelectionList.
+     *  Change the FavouriteMetadataList's IsPublic Attribute.
+     *  User or session must own the FavouriteMetadataList.
      */
     @io.swagger.v3.oas.annotations.Operation(summary = "Update a specific (by DB id) List's IsPublic attribute")
     @RequestMapping(
         method = RequestMethod.PUT,
-        value = "/{selectionListIdentifier}/status",
+        value = "/{favouriteListIdentifier}/status",
         produces = {
             MediaType.APPLICATION_JSON_VALUE
         })
     public
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
-    UserMetadataSelectionListVM updateStatus(
-        @Parameter(description = "Selection DB id (int)",required = true)
+    FavouriteMetadataListVM updateStatus(
+        @Parameter(description = "favouriteListIdentifier DB id (int)",required = true)
         @PathVariable
-            Integer selectionListIdentifier,
+            Integer favouriteListIdentifier,
 
         @Parameter(description = "new isPublic status",required = false)
         @RequestParam(name="public",required = true)
@@ -401,50 +401,50 @@ public class UserSelectionApi {
     )
         throws Exception {
 
-        if (selectionListIdentifier == null) {
-            throw new IllegalArgumentException("no selectionListIdentifier given");
+        if (favouriteListIdentifier == null) {
+            throw new IllegalArgumentException("no favouriteListIdentifier given");
         }
-        if (selectionListIdentifier <= 0) {
-            throw new IllegalArgumentException("invalid selectionListIdentifier given");
+        if (favouriteListIdentifier <= 0) {
+            throw new IllegalArgumentException("invalid favouriteListIdentifier given");
         }
 
         boolean isAdmin = isAdmin(httpSession);
         String sessionId = getSessionId(httpServletRequest);
         User user = getUser(httpSession);
 
-        Optional<UserMetadataSelectionList> list1 = userMetadataSelectionListRepository.findById(selectionListIdentifier);
+        Optional<FavouriteMetadataList> list1 = favouriteMetadataListRepository.findById(favouriteListIdentifier);
         if (!list1.isPresent()) {
-            throw new ResourceNotFoundException("cannot find selectionListIdentifier, based on id" + selectionListIdentifier);
+            throw new ResourceNotFoundException("cannot find favouriteMetadataListRepository, based on id" + favouriteListIdentifier);
         }
-        UserMetadataSelectionList list = list1.get();
+        FavouriteMetadataList list = list1.get();
 
         if (!permittedWrite(list, user, sessionId, isAdmin)) {
             throw new NotAllowedException("You do not have permission to modify this list");
         }
         list.setIsPublic(isPublic);
         updateChangeTimeToNow(list);
-        list = userMetadataSelectionListRepository.save(list);
-        return new UserMetadataSelectionListVM(list);
+        list = favouriteMetadataListRepository.save(list);
+        return new FavouriteMetadataListVM(list);
     }
 
     /**
-     * Delete (by id) a UserMetadataSelectionList.
-     * User or Session must own the UserMetadataSelectionList.
+     * Delete (by id) a favouriteMetadataList.
+     * User or Session must own the favouriteMetadataList.
      */
-    @io.swagger.v3.oas.annotations.Operation(summary = "Delete a specific (by DB id) List")
+    @io.swagger.v3.oas.annotations.Operation(summary = "Delete a specific (by DB id) FavouritesList")
     @RequestMapping(
         method = RequestMethod.DELETE,
-        value = "/{selectionListIdentifier}",
+        value = "/{favouriteListIdentifier}",
         produces = {
             MediaType.APPLICATION_JSON_VALUE
         })
     public
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
-    boolean deleteItem(
-        @Parameter(description = "Selection DB id (int)",required = true)
+    boolean deleteFavouriteList(
+        @Parameter(description = "FavouritesList DB id (int)",required = true)
         @PathVariable
-            Integer selectionListIdentifier,
+            Integer favouriteListIdentifier,
 
         @Parameter(hidden = true)
             HttpSession httpSession,
@@ -453,47 +453,47 @@ public class UserSelectionApi {
     )
         throws Exception {
 
-        if (selectionListIdentifier == null) {
-            throw new IllegalArgumentException("no selectionListIdentifier given");
+        if (favouriteListIdentifier == null) {
+            throw new IllegalArgumentException("no favouriteListIdentifier given");
         }
-        if (selectionListIdentifier <= 0) {
-            throw new IllegalArgumentException("invalid selectionListIdentifier given");
+        if (favouriteListIdentifier <= 0) {
+            throw new IllegalArgumentException("invalid favouriteListIdentifier given");
         }
 
         boolean isAdmin = isAdmin(httpSession);
         String sessionId = getSessionId(httpServletRequest);
         User user = getUser(httpSession);
 
-        Optional<UserMetadataSelectionList> list1 = userMetadataSelectionListRepository.findById(selectionListIdentifier);
+        Optional<FavouriteMetadataList> list1 = favouriteMetadataListRepository.findById(favouriteListIdentifier);
         if (!list1.isPresent()) {
-            throw new ResourceNotFoundException("cannot find selectionListIdentifier, based on id" + selectionListIdentifier);
+            throw new ResourceNotFoundException("cannot find favouriteListIdentifier, based on id" + favouriteListIdentifier);
         }
-        UserMetadataSelectionList list = list1.get();
+        FavouriteMetadataList list = list1.get();
 
         if (!permittedWrite(list, user, sessionId, isAdmin)) {
             throw new NotAllowedException("You do not have permission to modify this list");
         }
-        userMetadataSelectionListRepository.delete(list);
+        favouriteMetadataListRepository.delete(list);
         return true;
     }
 
 
     /**
-     * A user selection is created, for logged users are assigned to the user and reused between sessions.
+     * A favouriteList is created, for logged users are assigned to the user and reused between sessions.
      *
      * For unlogged users, are assigned to the user session.
      *
      * Create as private.
      *
      * example:
-     * curl -X POST "http://localhost:8080/geonetwork/srv/api/userselection"
+     * curl -X POST "http://localhost:8080/geonetwork/srv/api/favouritelist"
      *     -H "accept: application/json"
      *     -H "X-XSRF-TOKEN: ccc"
      *     -H $'Cookie: XSRF-TOKEN=ccc'
      *     -d "name=dave&metadataUuids=1&metadataUuids=2&listType=WatchList"
      *
      */
-    @io.swagger.v3.oas.annotations.Operation(summary = "Create a new user selection")
+    @io.swagger.v3.oas.annotations.Operation(summary = "Create a new FavouritesList")
     @RequestMapping(
         method = RequestMethod.POST,
         produces = {
@@ -502,18 +502,18 @@ public class UserSelectionApi {
     public
     @ResponseBody
     @ResponseStatus(HttpStatus.CREATED)
-    UserMetadataSelectionListVM createNewSelectionList(
+    FavouriteMetadataListVM createNewFavouritesList(
         @Parameter(description = "Name of the list to be created",required = true)
         @RequestParam(name="name",required = true)
         String name,
 
-        @Parameter(description = "List of metadata to add to the selection",required = false)
+        @Parameter(description = "List of metadata to add to the FavourtiesList",required = false)
         @RequestParam(name="metadataUuids",required = false)
         String[] metadataUuids,
 
         @Parameter(description = "Type of list to create (Watch or Preferred)",required = true)
         @RequestParam(name="listType",required = true)
-        UserMetadataSelectionList.ListType listType,
+        FavouriteMetadataList.ListType listType,
 
         @Parameter(hidden = true)
         HttpSession httpSession,
@@ -535,12 +535,12 @@ public class UserSelectionApi {
                 //create a new session
                 sessionId = setSessionId(httpServletResponse);
             }
-            UserMetadataSelectionList alreadyExistsList = userMetadataSelectionListRepository.findName(name,user,sessionId);
+            FavouriteMetadataList alreadyExistsList = favouriteMetadataListRepository.findName(name,user,sessionId);
 
             if (alreadyExistsList != null) {
                 throw new IllegalArgumentException("There is already a list of that name");
             }
-            UserMetadataSelectionList list = new UserMetadataSelectionList();
+            FavouriteMetadataList list = new FavouriteMetadataList();
             list.setName(name);
             list.setIsPublic(false);
             list.setListType(listType);
@@ -564,14 +564,14 @@ public class UserSelectionApi {
                     if (md == null) {
                         throw new IllegalArgumentException("metadataUuids: "+uuid+" is not in DB");
                     }
-                    UserMetadataSelection selection = new UserMetadataSelection();
+                    FavouriteMetadataListItem selection = new FavouriteMetadataListItem();
                     selection.setMetadataUuid(uuid);
                     list.getSelections().add(selection);
                 }
             }
             //save
-            list = userMetadataSelectionListRepository.save(list);
-            return new UserMetadataSelectionListVM(list);
+            list = favouriteMetadataListRepository.save(list);
+            return new FavouriteMetadataListVM(list);
     }
 
 
@@ -591,7 +591,7 @@ public class UserSelectionApi {
     /**
      * @return true if the user/session is permitted to read the list
      */
-    boolean permittedRead(UserMetadataSelectionList list, User user, String sessionId, boolean isAdmin) {
+    boolean permittedRead(FavouriteMetadataList list, User user, String sessionId, boolean isAdmin) {
         // admin can always read
         if (isAdmin) {
             return true;
@@ -613,7 +613,7 @@ public class UserSelectionApi {
     }
 
 
-    boolean ownedByMe(UserMetadataSelectionList list, User user, String sessionId) {
+    boolean ownedByMe(FavouriteMetadataList list, User user, String sessionId) {
         //owned by same user
         if ( (user != null) && (list.getUser() !=null) && (user.equals(list.getUser()))) {
             return true;
@@ -629,7 +629,7 @@ public class UserSelectionApi {
     /**
      * @return true if the user/session owns the list.
      */
-    boolean permittedWrite(UserMetadataSelectionList list, User user, String sessionId, boolean isAdmin) {
+    boolean permittedWrite(FavouriteMetadataList list, User user, String sessionId, boolean isAdmin) {
         // admin can always read
         if (isAdmin) {
             return true;
@@ -662,7 +662,7 @@ public class UserSelectionApi {
         return user;
     }
 
-    UserMetadataSelectionList updateChangeTimeToNow(UserMetadataSelectionList list) {
+    FavouriteMetadataList updateChangeTimeToNow(FavouriteMetadataList list) {
         list.setChangeDate(new ISODate());
         return list;
     }

@@ -23,7 +23,7 @@
 package org.fao.geonet.domain;
 
 
-import org.fao.geonet.entitylistener.UserMetadataSelectionListListenerManager;
+import org.fao.geonet.entitylistener.FavouriteMetadataListListenerManager;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
@@ -49,16 +49,16 @@ import java.util.List;
 @Entity
 @Access(AccessType.PROPERTY)
 @Table(
-    name = "UserMetadataSelectionList"
+    name = "FavouriteMetadataList"
     // ,indexes = {@Index(name = "idx_usersavedselections_metadatauuid", columnList = "metadataUuid")}
 )
-@SequenceGenerator(name = UserMetadataSelectionList.ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
-@EntityListeners(UserMetadataSelectionListListenerManager.class)
-public class UserMetadataSelectionList extends GeonetEntity implements Serializable {
+@SequenceGenerator(name = FavouriteMetadataList.ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
+@EntityListeners(FavouriteMetadataListListenerManager.class)
+public class FavouriteMetadataList extends GeonetEntity implements Serializable {
     public static final String CHANGE_DATE_COLUMN_NAME = "changedate";
     public static final String CREATE_DATE_COLUMN_NAME = "createdate";
 
-    static final String ID_SEQ_NAME = "user_md_select_list_id_seq";
+    static final String ID_SEQ_NAME = "fav_md_list_id_seq";
 
 
     private int id;
@@ -69,7 +69,7 @@ public class UserMetadataSelectionList extends GeonetEntity implements Serializa
     private boolean _isPublic;
     private ISODate _createDate;
     private ISODate _changeDate;
-    private List<UserMetadataSelection> _selections;
+    private List<FavouriteMetadataListItem> _selections;
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = ID_SEQ_NAME)
@@ -77,7 +77,7 @@ public class UserMetadataSelectionList extends GeonetEntity implements Serializa
         return id;
     }
 
-    public UserMetadataSelectionList setId(int id) {
+    public FavouriteMetadataList setId(int id) {
         this.id = id;
         return this;
     }
@@ -150,11 +150,11 @@ public class UserMetadataSelectionList extends GeonetEntity implements Serializa
     @JoinColumn(
         name = "selection_id",
         nullable = false)
-    public List<UserMetadataSelection> getSelections() {
+    public List<FavouriteMetadataListItem> getSelections() {
         return _selections;
     }
 
-    public void setSelections(List<UserMetadataSelection> selections) {
+    public void setSelections(List<FavouriteMetadataListItem> selections) {
         this._selections = selections;
     }
 

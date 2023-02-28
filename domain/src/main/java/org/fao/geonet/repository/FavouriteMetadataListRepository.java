@@ -23,44 +23,43 @@
 
 package org.fao.geonet.repository;
 
+import org.fao.geonet.domain.FavouriteMetadataList;
 import org.fao.geonet.domain.User;
-import org.fao.geonet.domain.UserMetadataSelectionList;
 import org.springframework.data.jpa.repository.Query;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public interface UserMetadataSelectionListRepository extends GeonetRepository<UserMetadataSelectionList, Integer>   {
+public interface FavouriteMetadataListRepository extends GeonetRepository<FavouriteMetadataList, Integer>   {
 
-    List<UserMetadataSelectionList> findByUser(User user);
-    List<UserMetadataSelectionList> findBySessionId(String sessionId);
-    List<UserMetadataSelectionList> findByUserOrSessionId(User user, String sessionId);
+    List<FavouriteMetadataList> findByUser(User user);
+    List<FavouriteMetadataList> findBySessionId(String sessionId);
+    List<FavouriteMetadataList> findByUserOrSessionId(User user, String sessionId);
 
-    @Query("select umsl from UserMetadataSelectionList umsl where umsl.isPublic = true")
-    List<UserMetadataSelectionList> findPublic();
+    @Query("select umsl from FavouriteMetadataList umsl where umsl.isPublic = true")
+    List<FavouriteMetadataList> findPublic();
 
     //---
-    @Query("select umsl from UserMetadataSelectionList umsl where umsl.name = ?1 and (umsl.user = ?2 or umsl.sessionId = ?3)")
-    UserMetadataSelectionList findByNameAndUserOrSessionId(String name, User user, String sessionId);
+    @Query("select umsl from FavouriteMetadataList umsl where umsl.name = ?1 and (umsl.user = ?2 or umsl.sessionId = ?3)")
+    FavouriteMetadataList findByNameAndUserOrSessionId(String name, User user, String sessionId);
 
-    @Query("select umsl from UserMetadataSelectionList umsl where umsl.name = ?1 and umsl.user = ?2")
-    UserMetadataSelectionList findByNameAndUser(String name, User user);
+    @Query("select umsl from FavouriteMetadataList umsl where umsl.name = ?1 and umsl.user = ?2")
+    FavouriteMetadataList findByNameAndUser(String name, User user);
 
-    @Query("select umsl from UserMetadataSelectionList umsl where umsl.name = ?1 and  umsl.sessionId = ?2")
-    UserMetadataSelectionList findByNameAndSessionId(String name, String sessionId);
-
-    //--
-    @Query("select umsl from UserMetadataSelectionList umsl where umsl.user = ?1 or umsl.sessionId = ?2 or umsl.isPublic = true")
-    List<UserMetadataSelectionList> findByUserOrSessionOrPublic( User user, String sessionId);
-
-    @Query("select umsl from UserMetadataSelectionList umsl where umsl.user = ?1  or umsl.isPublic = true")
-    List<UserMetadataSelectionList> findByUserOrPublic( User user);
-
-    @Query("select umsl from UserMetadataSelectionList umsl where umsl.sessionId = ?1 or umsl.isPublic = true")
-    List<UserMetadataSelectionList> findBySessionOrPublic(  String sessionId);
+    @Query("select umsl from FavouriteMetadataList umsl where umsl.name = ?1 and  umsl.sessionId = ?2")
+    FavouriteMetadataList findByNameAndSessionId(String name, String sessionId);
 
     //--
-    default UserMetadataSelectionList findName(String name, User user, String sessionId) {
+    @Query("select umsl from FavouriteMetadataList umsl where umsl.user = ?1 or umsl.sessionId = ?2 or umsl.isPublic = true")
+    List<FavouriteMetadataList> findByUserOrSessionOrPublic(User user, String sessionId);
+
+    @Query("select umsl from FavouriteMetadataList umsl where umsl.user = ?1  or umsl.isPublic = true")
+    List<FavouriteMetadataList> findByUserOrPublic(User user);
+
+    @Query("select umsl from FavouriteMetadataList umsl where umsl.sessionId = ?1 or umsl.isPublic = true")
+    List<FavouriteMetadataList> findBySessionOrPublic(String sessionId);
+
+    //--
+    default FavouriteMetadataList findName(String name, User user, String sessionId) {
         if (user == null && sessionId == null) {
             return null;
         }
@@ -73,7 +72,7 @@ public interface UserMetadataSelectionListRepository extends GeonetRepository<Us
         return findByNameAndSessionId(name,sessionId);
     }
 
-    default  List<UserMetadataSelectionList> findPublic(User user, String sessionId) {
+    default  List<FavouriteMetadataList> findPublic(User user, String sessionId) {
         if (user == null && sessionId == null) {
             return findPublic();
         }

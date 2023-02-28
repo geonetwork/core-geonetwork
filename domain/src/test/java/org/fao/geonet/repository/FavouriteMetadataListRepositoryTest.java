@@ -23,10 +23,10 @@
 
 package org.fao.geonet.repository;
 
+import org.fao.geonet.domain.FavouriteMetadataList;
+import org.fao.geonet.domain.FavouriteMetadataListItem;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.User;
-import org.fao.geonet.domain.UserMetadataSelection;
-import org.fao.geonet.domain.UserMetadataSelectionList;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -40,21 +40,21 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-public class UserMetadataSelectionListRepositoryTest extends AbstractSpringDataTest {
+public class FavouriteMetadataListRepositoryTest extends AbstractSpringDataTest {
 
     @Autowired
-    UserMetadataSelectionListRepository _repo;
+    FavouriteMetadataListRepository _repo;
 
     @Autowired
     UserRepository _userRepository;
 
 
-    ISODate date1 = new ISODate("2023-06-01T01:02:02");
-    ISODate date2 = new ISODate("2023-06-01T01:03:03");
+    static ISODate date1 = new ISODate("2023-06-01T01:02:02");
+    static ISODate date2 = new ISODate("2023-06-01T01:03:03");
 
-    public UserMetadataSelectionList createSimpleList() {
-        UserMetadataSelectionList list = new UserMetadataSelectionList();
-        list.setListType(UserMetadataSelectionList.ListType.WatchList);
+    public static FavouriteMetadataList createSimpleList() {
+        FavouriteMetadataList list = new FavouriteMetadataList();
+        list.setListType(FavouriteMetadataList.ListType.WatchList);
         list.setCreateDate(date1);
         list.setChangeDate(date2);
         list.setIsPublic(true);
@@ -63,13 +63,17 @@ public class UserMetadataSelectionListRepositoryTest extends AbstractSpringDataT
         return list;
     }
 
-    public UserMetadataSelectionList createListWithItems(String name) {
-        UserMetadataSelectionList list = createSimpleList();
+    public static FavouriteMetadataList createListWithItems(String name) {
+        return createListWithItems(name,"");
+    }
+
+        public static FavouriteMetadataList createListWithItems(String name, String prefix) {
+        FavouriteMetadataList list = createSimpleList();
         list.setName(name);
-        UserMetadataSelection item1 = new UserMetadataSelection();
-        item1.setMetadataUuid("metadataid1");
-        UserMetadataSelection item2 = new UserMetadataSelection();
-        item2.setMetadataUuid("metadataid2");
+        FavouriteMetadataListItem item1 = new FavouriteMetadataListItem();
+        item1.setMetadataUuid(prefix+"metadataid1");
+        FavouriteMetadataListItem item2 = new FavouriteMetadataListItem();
+        item2.setMetadataUuid(prefix+"metadataid2");
 
         list.setSelections(Arrays.asList(item1, item2));
         return list;
@@ -77,11 +81,11 @@ public class UserMetadataSelectionListRepositoryTest extends AbstractSpringDataT
 
     @Test
     public void testSaveSimple() {
-        UserMetadataSelectionList list = createSimpleList();
+        FavouriteMetadataList list = createSimpleList();
 
         _repo.save(list);
 
-        UserMetadataSelectionList list2 = _repo.findById(list.getId()).get();
+        FavouriteMetadataList list2 = _repo.findById(list.getId()).get();
 
         assertEquals(list.getListType(), list2.getListType());
         assertEquals(list.getCreateDate(), list2.getCreateDate());
@@ -93,11 +97,11 @@ public class UserMetadataSelectionListRepositoryTest extends AbstractSpringDataT
 
     @Test
     public void testSaveWithItems() {
-        UserMetadataSelectionList list = createListWithItems("test case list");
+        FavouriteMetadataList list = createListWithItems("test case list");
 
         _repo.save(list);
 
-        UserMetadataSelectionList list2 = _repo.findById(list.getId()).get();
+        FavouriteMetadataList list2 = _repo.findById(list.getId()).get();
         assertEquals(list.getSelections().size(), list2.getSelections().size());
         assertEquals(list.getSelections().get(0).getMetadataUuid(), list2.getSelections().get(0).getMetadataUuid());
         assertEquals(list.getSelections().get(1).getMetadataUuid(), list2.getSelections().get(1).getMetadataUuid());
@@ -114,62 +118,62 @@ public class UserMetadataSelectionListRepositoryTest extends AbstractSpringDataT
         User user2 = _userRepository.save(UserRepositoryTest.newUser(_inc));
         String sessionId = UUID.randomUUID().toString();
 
-        UserMetadataSelectionList list_user1 = createListWithItems("test case list_user1");
+        FavouriteMetadataList list_user1 = createListWithItems("test case list_user1");
         list_user1.setUser(user1);
         _repo.save(list_user1);
 
-        UserMetadataSelectionList list_user1b = createListWithItems("test case list_user1b");
+        FavouriteMetadataList list_user1b = createListWithItems("test case list_user1b");
         list_user1b.setUser(user1);
         _repo.save(list_user1b);
 
-        UserMetadataSelectionList list_user2 = createListWithItems("test case list_user2");
+        FavouriteMetadataList list_user2 = createListWithItems("test case list_user2");
         list_user2.setUser(user2);
         _repo.save(list_user2);
 
-        UserMetadataSelectionList list_session1 = createListWithItems("test case list_session1");
+        FavouriteMetadataList list_session1 = createListWithItems("test case list_session1");
         list_session1.setSessionId(sessionId);
         _repo.save(list_session1);
 
         // we saved 2 lists by user1 - list_user1 list_user1b
-        List<UserMetadataSelectionList> byUser1 = _repo.findByUser(user1);
+        List<FavouriteMetadataList> byUser1 = _repo.findByUser(user1);
         assertEquals(2, byUser1.size());
         assertTrue(byUser1.contains(list_user1));
         assertTrue(byUser1.contains(list_user1b));
 
-        List<UserMetadataSelectionList> byUser2 = _repo.findByUser(user2);
+        List<FavouriteMetadataList> byUser2 = _repo.findByUser(user2);
         assertEquals(1, byUser2.size());
         assertTrue(byUser2.contains(list_user2));
 
-        List<UserMetadataSelectionList> bySession1 = _repo.findBySessionId(sessionId);
+        List<FavouriteMetadataList> bySession1 = _repo.findBySessionId(sessionId);
         assertEquals(1, bySession1.size());
         assertTrue(bySession1.contains(list_session1));
 
-        List<UserMetadataSelectionList> bySession1Users1 = _repo.findByUserOrSessionId(user1, sessionId);
+        List<FavouriteMetadataList> bySession1Users1 = _repo.findByUserOrSessionId(user1, sessionId);
         assertEquals(3, bySession1Users1.size());
         assertTrue(bySession1Users1.contains(list_user1));
         assertTrue(bySession1Users1.contains(list_user1b));
         assertTrue(bySession1Users1.contains(list_session1));
 
-        List<UserMetadataSelectionList> bySession1Users2 = _repo.findByUserOrSessionId(user2, sessionId);
+        List<FavouriteMetadataList> bySession1Users2 = _repo.findByUserOrSessionId(user2, sessionId);
         assertEquals(2, bySession1Users2.size());
         assertTrue(bySession1Users2.contains(list_session1));
         assertTrue(bySession1Users2.contains(list_user2));
 
 
-        UserMetadataSelectionList byNameUser1SessionId = _repo.findByNameAndUserOrSessionId("test case list_session1", user1, sessionId);
+        FavouriteMetadataList byNameUser1SessionId = _repo.findByNameAndUserOrSessionId("test case list_session1", user1, sessionId);
         assertNotNull(byNameUser1SessionId);
         assertEquals(list_session1, byNameUser1SessionId);
 
 
-        UserMetadataSelectionList byNameUser1SessionId_1 = _repo.findByNameAndUserOrSessionId("BAD NAME", user1, sessionId);
+        FavouriteMetadataList byNameUser1SessionId_1 = _repo.findByNameAndUserOrSessionId("BAD NAME", user1, sessionId);
         assertNull(byNameUser1SessionId_1);
 
 
-        UserMetadataSelectionList byNameUser1SessionId_2 = _repo.findByNameAndUserOrSessionId("test case list_user2", user2, sessionId);
+        FavouriteMetadataList byNameUser1SessionId_2 = _repo.findByNameAndUserOrSessionId("test case list_user2", user2, sessionId);
         assertNotNull(byNameUser1SessionId_2);
         assertEquals(list_user2, byNameUser1SessionId_2);
 
-        UserMetadataSelectionList byNameUser1SessionId_3 = _repo.findByNameAndUserOrSessionId("test case list_session1", user2, sessionId);
+        FavouriteMetadataList byNameUser1SessionId_3 = _repo.findByNameAndUserOrSessionId("test case list_session1", user2, sessionId);
         assertNotNull(byNameUser1SessionId_3);
         assertEquals(list_session1, byNameUser1SessionId_3);
     }
@@ -184,44 +188,44 @@ public class UserMetadataSelectionListRepositoryTest extends AbstractSpringDataT
         String sessionId2 = UUID.randomUUID().toString();
 
 
-        UserMetadataSelectionList list_user1 = createListWithItems("test case public list_user1");
+        FavouriteMetadataList list_user1 = createListWithItems("test case public list_user1");
         list_user1.setUser(user1);
         _repo.save(list_user1);
 
-        UserMetadataSelectionList list_user1b = createListWithItems("test case public list_user1b");
+        FavouriteMetadataList list_user1b = createListWithItems("test case public list_user1b");
         list_user1b.setUser(user1);
         _repo.save(list_user1b);
 
-        UserMetadataSelectionList list_user1c = createListWithItems("test case private list_user1c");
+        FavouriteMetadataList list_user1c = createListWithItems("test case private list_user1c");
         list_user1c.setIsPublic(false);
         list_user1c.setUser(user1);
         _repo.save(list_user1c);
 
-        UserMetadataSelectionList list_user2 = createListWithItems("test case public list_user2");
+        FavouriteMetadataList list_user2 = createListWithItems("test case public list_user2");
         list_user2.setUser(user2);
         _repo.save(list_user2);
 
-        UserMetadataSelectionList list_user3 = createListWithItems("test case private list_user3");
+        FavouriteMetadataList list_user3 = createListWithItems("test case private list_user3");
         list_user3.setUser(user3);
         list_user3.setIsPublic(false);
         _repo.save(list_user3);
 
-        UserMetadataSelectionList list_session1 = createListWithItems("test case public list_session1");
+        FavouriteMetadataList list_session1 = createListWithItems("test case public list_session1");
         list_session1.setSessionId(sessionId);
         _repo.save(list_session1);
 
-        UserMetadataSelectionList list_session2 = createListWithItems("test case private list_session2");
+        FavouriteMetadataList list_session2 = createListWithItems("test case private list_session2");
         list_session2.setSessionId(sessionId2);
         list_session2.setIsPublic(false);
         _repo.save(list_session2);
 
-        List<UserMetadataSelectionList> byUser1SessionId = _repo.findByUserOrSessionOrPublic( user1, sessionId);
+        List<FavouriteMetadataList> byUser1SessionId = _repo.findByUserOrSessionOrPublic( user1, sessionId);
         assertNotNull(byUser1SessionId);
         assertEquals(5, byUser1SessionId.size());
         assertTrue(!byUser1SessionId.contains(list_user3));  // private
         assertTrue(!byUser1SessionId.contains(list_session2)); // private
 
-        List<UserMetadataSelectionList> byUser2 = _repo.findByUserOrSessionOrPublic( user2, "BAD SESSION");
+        List<FavouriteMetadataList> byUser2 = _repo.findByUserOrSessionOrPublic( user2, "BAD SESSION");
         assertNotNull(byUser2);
         assertEquals(4, byUser2.size());
         assertTrue(!byUser2.contains(list_user1c));  // private
@@ -229,14 +233,14 @@ public class UserMetadataSelectionListRepositoryTest extends AbstractSpringDataT
         assertTrue(!byUser2.contains(list_session2)); // private
 
 
-        List<UserMetadataSelectionList> bySession2 = _repo.findByUserOrSessionOrPublic( null, sessionId2);
+        List<FavouriteMetadataList> bySession2 = _repo.findByUserOrSessionOrPublic( null, sessionId2);
         assertNotNull(bySession2);
         assertEquals(5, bySession2.size());
         assertTrue(!bySession2.contains(list_user1c));  // private
         assertTrue(!bySession2.contains(list_user3)); // private
 
 
-        List<UserMetadataSelectionList> bySession1 = _repo.findByUserOrSessionOrPublic( null, sessionId);
+        List<FavouriteMetadataList> bySession1 = _repo.findByUserOrSessionOrPublic( null, sessionId);
         assertNotNull(bySession1);
         assertEquals(4, bySession1.size());
         assertTrue(!bySession1.contains(list_user1c));  // private
