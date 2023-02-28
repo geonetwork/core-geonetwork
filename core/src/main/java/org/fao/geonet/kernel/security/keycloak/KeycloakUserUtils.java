@@ -165,7 +165,9 @@ public class KeycloakUserUtils {
 
             // Assign the highest profile available
             Map<Profile, List<String>> profileGroups = getProfileGroups(accessToken);
-            user.setProfile(getMaxProfile(baselUser.getProfile(), profileGroups));
+            if (newUserFlag || keycloakConfiguration.isUpdateProfile()) {
+                user.setProfile(getMaxProfile(baselUser.getProfile(), profileGroups));
+            }
 
             //Apply changes to database is required.
             if (withDbUpdate) {
