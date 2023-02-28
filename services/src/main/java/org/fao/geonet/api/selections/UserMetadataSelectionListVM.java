@@ -33,6 +33,10 @@ public class UserMetadataSelectionListVM {
     private  boolean isMyList;
     private int nItems;
 
+
+    public UserMetadataSelectionListVM() {
+        this.selections = new ArrayList<>();
+    }
     /**
      * doesn't set isEditable
      * @param model

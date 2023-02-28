@@ -49,10 +49,10 @@ public class UserSelectionApiTest extends UserSelectionApiSupport {
     @Test
     public void testCreateGetSimple() throws Exception {
         MockHttpSession session;
-        UserMetadataSelectionList list,list2;
-        UserMetadataSelectionList one;
-        List<UserMetadataSelectionList> all;
-        Pair<UserMetadataSelectionList,String> createResult;
+        UserMetadataSelectionListVM list,list2;
+        UserMetadataSelectionListVM one;
+        List<UserMetadataSelectionListVM> all;
+        Pair<UserMetadataSelectionListVM,String> createResult;
 
 
         //1. anonymous creates a list
@@ -98,8 +98,8 @@ public class UserSelectionApiTest extends UserSelectionApiSupport {
     @Test
     public void testSessionSameName() throws Exception {
         MockHttpSession session;
-        UserMetadataSelectionList list;
-        Pair<UserMetadataSelectionList,String> createResult;
+        UserMetadataSelectionListVM list;
+        Pair<UserMetadataSelectionListVM,String> createResult;
 
         //1. anonymous creates a list
         session = loginAsAnonymous();
@@ -122,8 +122,8 @@ public class UserSelectionApiTest extends UserSelectionApiSupport {
     @Test
     public void testUserSameName() throws Exception {
         MockHttpSession session;
-        UserMetadataSelectionList list;
-        Pair<UserMetadataSelectionList,String> createResult;
+        UserMetadataSelectionListVM list;
+        Pair<UserMetadataSelectionListVM,String> createResult;
 
         //1. anonymous creates a list
         session = loginAs(user1);
@@ -152,8 +152,8 @@ public class UserSelectionApiTest extends UserSelectionApiSupport {
     @Test
     public void testSessionUserSameName() throws Exception {
         MockHttpSession session;
-        UserMetadataSelectionList list;
-        Pair<UserMetadataSelectionList,String> createResult;
+        UserMetadataSelectionListVM list;
+        Pair<UserMetadataSelectionListVM,String> createResult;
 
         //1. anonymous creates a list
         session = loginAsAnonymous();
@@ -181,9 +181,9 @@ public class UserSelectionApiTest extends UserSelectionApiSupport {
     @Test
     public void testVisibilitySession() throws Exception {
         MockHttpSession session;
-        UserMetadataSelectionList list;
-        List<UserMetadataSelectionList> all;
-        Pair<UserMetadataSelectionList,String> createResult;
+        UserMetadataSelectionListVM list;
+        List<UserMetadataSelectionListVM> all;
+        Pair<UserMetadataSelectionListVM,String> createResult;
 
         //1. anonymous creates a list (private)
         session = loginAsAnonymous();
@@ -228,9 +228,9 @@ public class UserSelectionApiTest extends UserSelectionApiSupport {
     @Test
     public void testVisibilityUser() throws Exception {
         MockHttpSession session;
-        UserMetadataSelectionList list;
-        List<UserMetadataSelectionList> all;
-        Pair<UserMetadataSelectionList,String> createResult;
+        UserMetadataSelectionListVM list;
+        List<UserMetadataSelectionListVM> all;
+        Pair<UserMetadataSelectionListVM,String> createResult;
 
         //1. anonymous creates a list (private)
         session = loginAs(user1);
@@ -275,9 +275,9 @@ public class UserSelectionApiTest extends UserSelectionApiSupport {
     @Test
     public void testUpdateNameSimple() throws Exception {
         MockHttpSession session;
-        UserMetadataSelectionList list, list2;
-        List<UserMetadataSelectionList> all;
-        Pair<UserMetadataSelectionList,String> createResult;
+        UserMetadataSelectionListVM list, list2;
+        List<UserMetadataSelectionListVM> all;
+        Pair<UserMetadataSelectionListVM,String> createResult;
 
         session = loginAs(user1);
         createResult = create(session, null,
@@ -305,10 +305,10 @@ public class UserSelectionApiTest extends UserSelectionApiSupport {
     @Test
     public void testUpdateNameUserDuplicate() throws Exception {
         MockHttpSession session;
-        UserMetadataSelectionList list1;
-        UserMetadataSelectionList list2;
-        List<UserMetadataSelectionList> all;
-        Pair<UserMetadataSelectionList,String> createResult;
+        UserMetadataSelectionListVM list1;
+        UserMetadataSelectionListVM list2;
+        List<UserMetadataSelectionListVM> all;
+        Pair<UserMetadataSelectionListVM,String> createResult;
 
         session = loginAs(user1);
         createResult = create(session, null,
@@ -324,7 +324,7 @@ public class UserSelectionApiTest extends UserSelectionApiSupport {
 
 
         MockHttpSession finalSession2 = session;
-        UserMetadataSelectionList finalList = list2;
+        UserMetadataSelectionListVM finalList = list2;
         String finalReturnedSessionId = returnedSessionId;
         assertThrows(Exception.class, () -> {
             update(session, finalReturnedSessionId,finalList.getId(), "testcase", new String[0], UserSelectionApi.ActionType.add);
@@ -340,10 +340,10 @@ public class UserSelectionApiTest extends UserSelectionApiSupport {
     @Test
     public void testAdd() throws Exception {
         MockHttpSession session;
-        UserMetadataSelectionList list1;
-        UserMetadataSelectionList list2;
-        UserMetadataSelectionList list3;
-        Pair<UserMetadataSelectionList,String> createResult;
+        UserMetadataSelectionListVM list1;
+        UserMetadataSelectionListVM list2;
+        UserMetadataSelectionListVM list3;
+        Pair<UserMetadataSelectionListVM,String> createResult;
 
         session = loginAs(user1);
         createResult = create(session, null,
@@ -374,10 +374,10 @@ public class UserSelectionApiTest extends UserSelectionApiSupport {
     @Test
     public void testRemove() throws Exception {
         MockHttpSession session;
-        UserMetadataSelectionList list1;
-        UserMetadataSelectionList list2;
-        UserMetadataSelectionList list3;
-        Pair<UserMetadataSelectionList,String> createResult;
+        UserMetadataSelectionListVM list1;
+        UserMetadataSelectionListVM list2;
+        UserMetadataSelectionListVM list3;
+        Pair<UserMetadataSelectionListVM,String> createResult;
 
         session = loginAs(user1);
         createResult = create(session, null,
@@ -403,10 +403,10 @@ public class UserSelectionApiTest extends UserSelectionApiSupport {
     @Test
     public void testReplace() throws Exception {
         MockHttpSession session;
-        UserMetadataSelectionList list1;
-        UserMetadataSelectionList list2;
-        UserMetadataSelectionList list3;
-        Pair<UserMetadataSelectionList,String> createResult;
+        UserMetadataSelectionListVM list1;
+        UserMetadataSelectionListVM list2;
+        UserMetadataSelectionListVM list3;
+        Pair<UserMetadataSelectionListVM,String> createResult;
 
         session = loginAs(user1);
         createResult = create(session, null,
@@ -430,8 +430,8 @@ public class UserSelectionApiTest extends UserSelectionApiSupport {
     @Test
     public void changeStatus() throws Exception {
         MockHttpSession session;
-        UserMetadataSelectionList list1, list2;
-        Pair<UserMetadataSelectionList,String> createResult;
+        UserMetadataSelectionListVM list1, list2;
+        Pair<UserMetadataSelectionListVM,String> createResult;
 
         session = loginAs(user1);
         createResult = create(session,null,
@@ -439,14 +439,14 @@ public class UserSelectionApiTest extends UserSelectionApiSupport {
         list1 = createResult.one();
         String returnedSessionId = createResult.two();
 
-        assertEquals(false, list1.getIsPublic());
+        assertEquals(false, list1.isPublic());
 
         list2 = setstatus(session, returnedSessionId,list1.getId(), true);
-        assertEquals(true, list2.getIsPublic());
+        assertEquals(true, list2.isPublic());
         assertNotEquals(list1.getChangeDate(), list2.getChangeDate());
 
         list2 = setstatus(session, returnedSessionId,list1.getId(), false);
-        assertEquals(false, list2.getIsPublic());
+        assertEquals(false, list2.isPublic());
     }
 
     /**
@@ -458,9 +458,9 @@ public class UserSelectionApiTest extends UserSelectionApiSupport {
     @Test
     public void changeStatusPermissions() throws Exception {
         MockHttpSession sessionUser1, sessionUser2, sessionAnonymous;
-        UserMetadataSelectionList list1, list2;
-        List<UserMetadataSelectionList> all;
-        Pair<UserMetadataSelectionList,String> createResult;
+        UserMetadataSelectionListVM list1, list2;
+        List<UserMetadataSelectionListVM> all;
+        Pair<UserMetadataSelectionListVM,String> createResult;
 
 
         sessionUser1 = loginAs(user1);
@@ -484,7 +484,7 @@ public class UserSelectionApiTest extends UserSelectionApiSupport {
         //user2 cannot see/retrieve
         all = Arrays.asList(getAllLists(sessionUser2,null));
         notContains(all, list1.getId());
-        UserMetadataSelectionList finalList = list1;
+        UserMetadataSelectionListVM finalList = list1;
         MockHttpSession finalSessionUser = sessionUser2;
         assertThrows(Exception.class, () -> {
             getList(finalSessionUser, null, finalList.getId());
@@ -495,7 +495,7 @@ public class UserSelectionApiTest extends UserSelectionApiSupport {
         //Anonymous cannot see/retrieve
         all = Arrays.asList(getAllLists(sessionUser2,null));
         notContains(all, list1.getId());
-        UserMetadataSelectionList finalList2 = list1;
+        UserMetadataSelectionListVM finalList2 = list1;
         MockHttpSession finalSessionUser1 = sessionUser2;
         assertThrows(Exception.class, () -> {
             getList(finalSessionUser1, null,finalList2.getId());
@@ -503,7 +503,7 @@ public class UserSelectionApiTest extends UserSelectionApiSupport {
 
         sessionUser1 = loginAs(user1);
         list1 = setstatus(sessionUser1,returnedSessionId, list1.getId(), true);
-        assertEquals(true, list1.getIsPublic());
+        assertEquals(true, list1.isPublic());
 
         //user1 can retrieve and see
         all = Arrays.asList(getAllLists(sessionUser1,returnedSessionId));
@@ -533,9 +533,9 @@ public class UserSelectionApiTest extends UserSelectionApiSupport {
     @Test
     public void delete() throws Exception {
         MockHttpSession session;
-        UserMetadataSelectionList list1;
+        UserMetadataSelectionListVM list1;
         Boolean result;
-        Pair<UserMetadataSelectionList,String> createResult;
+        Pair<UserMetadataSelectionListVM,String> createResult;
 
         session = loginAs(user1);
         createResult = create(session, null,
@@ -560,8 +560,8 @@ public class UserSelectionApiTest extends UserSelectionApiSupport {
     @Test
     public void permissionOnPublic() throws Exception {
         MockHttpSession sessionUser1, sessionUser2, sessionAnonymous;
-        UserMetadataSelectionList list1, list2;
-        Pair<UserMetadataSelectionList,String> createResult;
+        UserMetadataSelectionListVM list1, list2;
+        Pair<UserMetadataSelectionListVM,String> createResult;
 
         sessionUser1 = loginAs(user1);
 
@@ -572,7 +572,7 @@ public class UserSelectionApiTest extends UserSelectionApiSupport {
         String returnedSessionId = createResult.two();
 
         list2 = setstatus(sessionUser1,returnedSessionId, list1.getId(), true);
-        assertEquals(true, list2.getIsPublic());
+        assertEquals(true, list2.isPublic());
 
         sessionUser2 = loginAs(user2);
 
@@ -614,8 +614,8 @@ public class UserSelectionApiTest extends UserSelectionApiSupport {
     @Test
     public void session1() throws Exception {
         MockHttpSession session;
-        UserMetadataSelectionList list1, list2,list3;
-        Pair<UserMetadataSelectionList,String> createResult;
+        UserMetadataSelectionListVM list1, list2,list3;
+        Pair<UserMetadataSelectionListVM,String> createResult;
         String sessionIDA, sessionIDB, sessionIDC;
 
         session = loginAs(user1);
@@ -626,7 +626,7 @@ public class UserSelectionApiTest extends UserSelectionApiSupport {
         sessionIDA = createResult.two();
 
         assertNull(list1.getSessionId());
-        assertNotNull(list1.getUser()); // user logged on (no current session)
+        assertNotNull(list1.getUserName()); // user logged on (no current session)
         assertNotNull(sessionIDA);
 
         session = loginAs(user1);
@@ -637,10 +637,10 @@ public class UserSelectionApiTest extends UserSelectionApiSupport {
         sessionIDB = createResult.two();
 
         assertNull(list2.getSessionId());
-        assertNotNull(list2.getUser()); // user takes preference over session
+        assertNotNull(list2.getUserName()); // user takes preference over session
         assertEquals("cookie", sessionIDB); //cookie doesn't change
 
-        List<UserMetadataSelectionList> all = Arrays.asList(getAllLists(session,sessionIDB));
+        List<UserMetadataSelectionListVM> all = Arrays.asList(getAllLists(session,sessionIDB));
 
         //user1 (regardless of session id) can see both
         areSame(Arrays.asList(list1,list2),all);
@@ -654,7 +654,7 @@ public class UserSelectionApiTest extends UserSelectionApiSupport {
         sessionIDC = createResult.two();
 
         assertNotNull(list3.getSessionId());
-        assertNull(list3.getUser()); //  no user
+        assertNull(list3.getUserName()); //  no user
         assertNotNull(sessionIDC);
 
         all = Arrays.asList(getAllLists(session,sessionIDC));
@@ -678,8 +678,8 @@ public class UserSelectionApiTest extends UserSelectionApiSupport {
     @Test
     public void session2() throws Exception {
         MockHttpSession session;
-        UserMetadataSelectionList list1, list2;
-        Pair<UserMetadataSelectionList, String> createResult;
+        UserMetadataSelectionListVM list1, list2;
+        Pair<UserMetadataSelectionListVM, String> createResult;
         String sessionIDA;
 
         session = loginAsAnonymous();
@@ -688,7 +688,7 @@ public class UserSelectionApiTest extends UserSelectionApiSupport {
             "testcase", UserMetadataSelectionList.ListType.WatchList, new String[]{uuid1, uuid2});
         list1 = createResult.one();
         sessionIDA = createResult.two();
-        assertNull(list1.getUser()); // no   user
+        assertNull(list1.getUserName()); // no   user
 
 
         session = loginAs(user1);
@@ -696,9 +696,9 @@ public class UserSelectionApiTest extends UserSelectionApiSupport {
             "testcase2", UserMetadataSelectionList.ListType.WatchList, new String[]{uuid1, uuid2});
         list2 = createResult.one();
         assertEquals(sessionIDA, createResult.two());
-        assertNotNull(list2.getUser()); //    user
+        assertNotNull(list2.getUserName()); //    user
 
-        List<UserMetadataSelectionList> all = Arrays.asList(getAllLists(session,sessionIDA));
+        List<UserMetadataSelectionListVM> all = Arrays.asList(getAllLists(session,sessionIDA));
 
         //user1 (with the sessionID) can see both
         areSame(Arrays.asList(list1,list2),all);

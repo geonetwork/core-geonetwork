@@ -177,7 +177,7 @@ public abstract class UserSelectionApiSupport extends AbstractServiceIntegration
      * uses the webapi to create a UserMetadataSelectionList.
      * The result is validated against what was inserted.
      */
-    public Pair<UserMetadataSelectionList,String> create(MockHttpSession session,
+    public Pair<UserMetadataSelectionListVM,String> create(MockHttpSession session,
                                                          String cookieValue,
                                                          String name, UserMetadataSelectionList.ListType listType, String[] uuids)
         throws Exception {
@@ -201,19 +201,18 @@ public abstract class UserSelectionApiSupport extends AbstractServiceIntegration
         // get the result of the api call as string (json text) and convert to an actual object
         String jsonStr= result.andReturn().getResponse().getContentAsString();
         ObjectMapper objectMapper = new ObjectMapper();
-        UserMetadataSelectionList resultListObj = objectMapper.readValue(jsonStr,UserMetadataSelectionList.class);
+        UserMetadataSelectionListVM resultListObj = objectMapper.readValue(jsonStr,UserMetadataSelectionListVM.class);
 
         //valid the response
         assertEquals(name, resultListObj.getName());
-        assertEquals(false, resultListObj.getIsPublic());
+        assertEquals(false, resultListObj.isPublic());
         assertEquals(listType, resultListObj.getListType());
 
         //has all the same metadata uuids
-        assertTrue(CollectionUtils.isEqualCollection( resultListObj.getSelections().stream()
-            .map(x->x.getMetadataUuid()).collect(Collectors.toList()), Arrays.asList(uuids)));
+        assertTrue(CollectionUtils.isEqualCollection( resultListObj.getSelections(), Arrays.asList(uuids)));
 
         UserSession userSession = ApiUtils.getUserSession(mockHttpSession);
-        String userId = userSession.getUserId();
+        String userName = userSession.getUsername();
         String sessionId;
         if (result.andReturn().getResponse().getCookie(SESSION_COOKIE_NAME) != null) {
             //cookie was set in response
@@ -224,10 +223,10 @@ public abstract class UserSelectionApiSupport extends AbstractServiceIntegration
         }
 
         // don't have a sessionId AND userid
-        assertTrue(resultListObj.getSessionId() == null || resultListObj.getUser() == null);
+        assertTrue(resultListObj.getSessionId() == null || resultListObj.getUserName() == null);
         //verify user or session is correct
-        if (userId != null) {
-            assertEquals(Integer.toString(resultListObj.getUser().getId()) , userId);
+        if (userName != null) {
+            assertEquals( resultListObj.getUserName()  , userName);
         }
         else {
             assertEquals(sessionId,resultListObj.getSessionId());
@@ -240,7 +239,7 @@ public abstract class UserSelectionApiSupport extends AbstractServiceIntegration
     }
 
     //calls the API to get all lists for the user  (cf UserSelectionApi#getSelectionLists)
-    UserMetadataSelectionList[] getAllLists(MockHttpSession session, String cookieValue ) throws  Exception {
+    UserMetadataSelectionListVM[] getAllLists(MockHttpSession session, String cookieValue ) throws  Exception {
 
         MockHttpServletRequestBuilder requestBuilder = get(apiBaseURL)
             //.content(requestContent.toString())
@@ -257,12 +256,12 @@ public abstract class UserSelectionApiSupport extends AbstractServiceIntegration
         // get the result of the api call as string (json text) and convert to an actual object
         String jsonStr= result.andReturn().getResponse().getContentAsString();
         ObjectMapper objectMapper = new ObjectMapper();
-        UserMetadataSelectionList[] resultListObj = objectMapper.readValue(jsonStr,UserMetadataSelectionList[].class);
+        UserMetadataSelectionListVM[] resultListObj = objectMapper.readValue(jsonStr,UserMetadataSelectionListVM[].class);
         return resultListObj;
     }
 
     //Gets a single list (by id) from the API (cf UserSelectionApi#getSelectionList)
-    UserMetadataSelectionList getList(MockHttpSession session, String cookieValue, int id) throws Exception {
+    UserMetadataSelectionListVM getList(MockHttpSession session, String cookieValue, int id) throws Exception {
 
 
         MockHttpServletRequestBuilder requestBuilder =        get(apiBaseURL+"/"+id)
@@ -279,11 +278,11 @@ public abstract class UserSelectionApiSupport extends AbstractServiceIntegration
         // get the result of the api call as string (json text) and convert to an actual object
         String jsonStr= result.andReturn().getResponse().getContentAsString();
         ObjectMapper objectMapper = new ObjectMapper();
-        UserMetadataSelectionList resultListObj = objectMapper.readValue(jsonStr,UserMetadataSelectionList.class);
+        UserMetadataSelectionListVM resultListObj = objectMapper.readValue(jsonStr,UserMetadataSelectionListVM.class);
         return resultListObj;
     }
 
-    UserMetadataSelectionList setstatus(MockHttpSession session, String cookieValue,
+    UserMetadataSelectionListVM setstatus(MockHttpSession session, String cookieValue,
                                      int id,
                                      boolean isPublic) throws Exception {
         StringBuilder requestContent = new StringBuilder("public="+Boolean.toString(isPublic));
@@ -302,7 +301,7 @@ public abstract class UserSelectionApiSupport extends AbstractServiceIntegration
 
         String jsonStr= result.andReturn().getResponse().getContentAsString();
         ObjectMapper objectMapper = new ObjectMapper();
-        UserMetadataSelectionList resultListObj = objectMapper.readValue(jsonStr,UserMetadataSelectionList.class);
+        UserMetadataSelectionListVM resultListObj = objectMapper.readValue(jsonStr,UserMetadataSelectionListVM.class);
 
         return  resultListObj;
     }
@@ -326,7 +325,7 @@ public abstract class UserSelectionApiSupport extends AbstractServiceIntegration
     }
 
 
-    UserMetadataSelectionList update(MockHttpSession session, String cookieValue,
+    UserMetadataSelectionListVM update(MockHttpSession session, String cookieValue,
                                      int id,
                                      String name,
                                      String[] uuids,
@@ -348,14 +347,14 @@ public abstract class UserSelectionApiSupport extends AbstractServiceIntegration
 
         String jsonStr= result.andReturn().getResponse().getContentAsString();
         ObjectMapper objectMapper = new ObjectMapper();
-        UserMetadataSelectionList resultListObj = objectMapper.readValue(jsonStr,UserMetadataSelectionList.class);
+        UserMetadataSelectionListVM resultListObj = objectMapper.readValue(jsonStr,UserMetadataSelectionListVM.class);
 
         return  resultListObj;
     }
 
 
     //list should not contain specified item (by id)
-    public void doesNotContain(List<UserMetadataSelectionList> list1, UserMetadataSelectionList item) {
+    public void doesNotContain(List<UserMetadataSelectionListVM> list1, UserMetadataSelectionListVM item) {
         boolean contains= list1.stream()
             .anyMatch(x->x.getId() == item.getId());
         assertFalse(contains);
@@ -363,25 +362,25 @@ public abstract class UserSelectionApiSupport extends AbstractServiceIntegration
 
     //given two lists of UserMetadataSelectionList check that they are the same
     // cf areSame(UserMetadataSelectionList,UserMetadataSelectionList)
-    public void areSame(List<UserMetadataSelectionList> list1, List<UserMetadataSelectionList> list2) {
+    public void areSame(List<UserMetadataSelectionListVM> list1, List<UserMetadataSelectionListVM> list2) {
         assertEquals(list1.size(),list2.size());
 
-        list1.sort(Comparator.comparing(UserMetadataSelectionList::getId));
-        list2.sort(Comparator.comparing(UserMetadataSelectionList::getId));
+        list1.sort(Comparator.comparing(UserMetadataSelectionListVM::getId));
+        list2.sort(Comparator.comparing(UserMetadataSelectionListVM::getId));
 
         for (int t=0;t<list1.size();t++){
-            UserMetadataSelectionList e1 = list1.get(t);
-            UserMetadataSelectionList e2 = list2.get(t);
+            UserMetadataSelectionListVM e1 = list1.get(t);
+            UserMetadataSelectionListVM e2 = list2.get(t);
             areSame(e1,e2);
         }
     }
 
-    public void contains(List<UserMetadataSelectionList> list, int id){
+    public void contains(List<UserMetadataSelectionListVM> list, int id){
        assertTrue(list.stream()
             .anyMatch(x->x.getId()==id));
     }
 
-    public void notContains(List<UserMetadataSelectionList> list, int id){
+    public void notContains(List<UserMetadataSelectionListVM> list, int id){
         assertFalse(list.stream()
             .anyMatch(x->x.getId()==id));
     }
@@ -408,10 +407,29 @@ public abstract class UserSelectionApiSupport extends AbstractServiceIntegration
             l2.getSelections().stream().map(x->x.getMetadataUuid()).collect(Collectors.toList())));
     }
 
-    public void areSameUuids(List<String> list1, UserMetadataSelectionList item){
-        List<String> list2 = item.getSelections().stream()
-                .map(x->x.getMetadataUuid())
-                    .collect(Collectors.toList());
+    public void areSame(UserMetadataSelectionListVM l1, UserMetadataSelectionListVM l2) {
+        assertEquals(l1.getId(),l2.getId());
+        assertEquals(l1.getName(),l2.getName());
+        assertEquals(l1.isPublic(),l2.isPublic());
+        assertEquals(l1.getCreateDate(),l2.getCreateDate());
+        assertEquals(l1.getChangeDate(),l2.getChangeDate());
+        assertEquals(l1.getListType(),l2.getListType());
+
+        if (l1.getUserName() != null) {
+            assertNotNull(l2.getUserName());
+            assertEquals(l1.getUserName(),l2.getUserName());
+        }
+        else {
+            assertEquals(l1.getSessionId(),l2.getSessionId());
+        }
+
+        assertTrue(CollectionUtils.isEqualCollection(
+            l1.getSelections() ,
+            l2.getSelections() ));
+    }
+
+    public void areSameUuids(List<String> list1, UserMetadataSelectionListVM item){
+        List<String> list2 = item.getSelections() ;
         Collections.sort(list1);
         Collections.sort(list2);
 

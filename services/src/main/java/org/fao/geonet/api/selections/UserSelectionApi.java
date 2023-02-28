@@ -216,7 +216,7 @@ public class UserSelectionApi {
     public
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
-    UserMetadataSelectionList getSelectionList(
+    UserMetadataSelectionListVM getSelectionList(
         @Parameter(description = "Selection DB id (int)",required = true)
         @PathVariable
         Integer selectionListIdentifier,
@@ -245,7 +245,7 @@ public class UserSelectionApi {
         UserMetadataSelectionList result = list.get();
 
         if (permittedRead(result,user,sessionId,isAdmin)) {
-            return result;
+            return new UserMetadataSelectionListVM(result);
         }
 
         throw new NotAllowedException("you don't have permission to read that user selection list");
@@ -269,7 +269,7 @@ public class UserSelectionApi {
     public
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
-    UserMetadataSelectionList updateSelectionList(
+    UserMetadataSelectionListVM updateSelectionList(
         @Parameter(description = "Selection DB id (int)",required = true)
         @PathVariable
             Integer selectionListIdentifier,
@@ -367,7 +367,7 @@ public class UserSelectionApi {
         //save
         updateChangeTimeToNow(list);
         list = userMetadataSelectionListRepository.save(list);
-        return list;
+        return new UserMetadataSelectionListVM(list);
     }
 
 
@@ -385,7 +385,7 @@ public class UserSelectionApi {
     public
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
-    UserMetadataSelectionList updateStatus(
+    UserMetadataSelectionListVM updateStatus(
         @Parameter(description = "Selection DB id (int)",required = true)
         @PathVariable
             Integer selectionListIdentifier,
@@ -424,7 +424,7 @@ public class UserSelectionApi {
         list.setIsPublic(isPublic);
         updateChangeTimeToNow(list);
         list = userMetadataSelectionListRepository.save(list);
-        return list;
+        return new UserMetadataSelectionListVM(list);
     }
 
     /**
@@ -502,7 +502,7 @@ public class UserSelectionApi {
     public
     @ResponseBody
     @ResponseStatus(HttpStatus.CREATED)
-    UserMetadataSelectionList createNewSelectionList(
+    UserMetadataSelectionListVM createNewSelectionList(
         @Parameter(description = "Name of the list to be created",required = true)
         @RequestParam(name="name",required = true)
         String name,
@@ -571,7 +571,7 @@ public class UserSelectionApi {
             }
             //save
             list = userMetadataSelectionListRepository.save(list);
-            return list;
+            return new UserMetadataSelectionListVM(list);
     }
 
 

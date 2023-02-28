@@ -29,7 +29,75 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
  import static org.fao.geonet.api.selections.UserSelectionApi.SESSION_COOKIE_NAME;
 
+/**
+ * typically, an incoming elastic request will be very large (see below for an example, with 90% removed).
+ * The important part is:
+ *           {
+ *                 "terms": {
+ *                   "userselection": [
+ *                        104
+ *                    ]
+ *                }
+ *            }
+ *
+ *  If this is seen in the elastic query, that section will be removed and replaced with something like this:
+ *
+ *  {
+ *    query:
+ *     {
+ *         query_string: "_id(uuid1) OR _id(uuid2) ..."
+ *     }
+ *  }
+ *
+ *  If the there is no sort, then an _id sort is added (for paging).
+ *
+ * None of the rest of the query is changed.  This means you can add more queries (in the GN4 UI) and they will
+ * work on the backend.
+ *
+ *
 
+{
+    "from": 0,
+    "size": 30,
+    "sort": [
+    "_score"
+    ],
+    "query": {
+    "function_score": {
+    ...
+    "score_mode": "multiply",
+    "query": {
+       "bool": {
+          "must": [
+             {
+               "terms": {
+                  "isTemplate": [
+                     "n"
+                  ]
+               }
+            },
+            {
+                "terms": {
+                  "userselection": [
+                       104
+                   ]
+               }
+           }
+    ]
+    }
+    }
+    }
+    },
+    "aggregations": {
+    ...
+    },
+    "_source": {
+    ...
+
+    },
+    "track_total_hits": true
+    }
+ */
 @Component
 public class UserSelectionESQueryRewriter implements ESQueryRewriter{
 
