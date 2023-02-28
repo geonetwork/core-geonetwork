@@ -102,7 +102,7 @@
           "             \n" +
           "            {\n" +
           '              "terms": {\n' +
-          '                "userselection": [\n' +
+          '                "favouritesList": [\n' +
           selectionId +
           "                ]\n" +
           "              }\n" +
@@ -162,7 +162,7 @@
           body += toDelete.join("&metadataUuids=");
         }
 
-        return $http.put("../api/userselection/" + id, body, {
+        return $http.put("../api/favouriteslist/" + id, body, {
           headers: { "Content-Type": "application/x-www-form-urlencoded" }
         });
       };
@@ -202,17 +202,17 @@
       };
 
       this.deleteUserSelection = function (id) {
-        return $http.delete("../api/userselection/" + id);
+        return $http.delete("../api/favouriteslist/" + id);
       };
 
       this.setUserSelectionStatus = function (id, status) {
-        return $http.put("../api/userselection/" + id + "/status", "public=" + status, {
+        return $http.put("../api/favouriteslist/" + id + "/status", "public=" + status, {
           headers: { "Content-Type": "application/x-www-form-urlencoded" }
         });
       };
 
       this.loadUserSelections = function () {
-        return $http.get("../api/userselection");
+        return $http.get("../api/favouriteslist");
       };
 
       this.loadUserSearches = function () {

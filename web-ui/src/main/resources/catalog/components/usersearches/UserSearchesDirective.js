@@ -226,7 +226,7 @@
 
           scope.searchUrl = function (search) {
             var id = search.id;
-            var params = { userselection: id, from: 1, to: 30 };
+            var params = { favouritesList: id, from: 1, to: 30 };
             $location.search(params);
           };
 
@@ -234,7 +234,7 @@
             gnUserSearchesService.deleteUserSelection(search.id).then(function (result) {
               ///
               scope.userSelections = scope.userSelections.filter(
-                (item) => item.id !== search.id
+               function (item){ return item.id !== search.id;}
               );
             });
           };

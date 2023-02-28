@@ -31,7 +31,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
  * The important part is:
  *           {
  *                 "terms": {
- *                   "userselection": [
+ *                   "favouritesList": [
  *                        104
  *                    ]
  *                }
@@ -75,7 +75,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
             },
             {
                 "terms": {
-                  "userselection": [
+                  "favouritesList": [
                        104
                    ]
                }
@@ -126,10 +126,10 @@ public class FavouritesListESQueryRewriter implements ESQueryRewriter{
                     continue;
                 }
                 ObjectNode termsNode = (ObjectNode) objectNode.get("terms");
-                if (!termsNode.has("userselection")) {
+                if (!termsNode.has("favouritesList")) {
                     continue;
                 }
-                int selectionId =  ((IntNode)termsNode.get("userselection").get(0)).asInt();
+                int selectionId =  ((IntNode)termsNode.get("favouritesList").get(0)).asInt();
 //                int from = root.get("from").asInt();
 //                int size = root.get("size").asInt();
                 ObjectNode queryString = replacement(selectionId,mapper, httpSession, request);
