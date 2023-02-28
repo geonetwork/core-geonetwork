@@ -113,9 +113,9 @@ public abstract class FavouriteMetadataListApiSupport extends AbstractServiceInt
     static String apiBaseURL = "/srv/api/favouriteslist";
 
     ///-- UUIDS of metadata documents
-    String uuid1;
-    String uuid2;
-    String uuid3;
+    public String uuid1;
+    public String uuid2;
+    public String uuid3;
 
     //-- USERS
     User user1;

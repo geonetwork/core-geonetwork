@@ -1,30 +1,52 @@
+/*
+ * Copyright (C) 2023 Food and Agriculture Organization of the
+ * United Nations (FAO-UN), United Nations World Food Programme (WFP)
+ * and United Nations Environment Programme (UNEP)
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or (at
+ * your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+ *
+ * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+ * Rome - Italy. email: geonetwork@osgeo.org
+ */
 package org.fao.geonet.api.es.queryrewrite;
 
- import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.IntNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
- import jeeves.server.UserSession;
- import org.fao.geonet.api.ApiUtils;
- import org.fao.geonet.domain.Profile;
- import org.fao.geonet.domain.User;
- import org.fao.geonet.domain.FavouriteMetadataList;
- import org.fao.geonet.repository.FavouriteMetadataListRepository;
- import org.fao.geonet.repository.FavouriteMetadataListItemRepository;
- import org.fao.geonet.repository.UserRepository;
- import org.springframework.beans.factory.annotation.Autowired;
- import org.springframework.stereotype.Component;
+import jeeves.server.UserSession;
+import org.fao.geonet.api.ApiUtils;
+import org.fao.geonet.domain.Profile;
+import org.fao.geonet.domain.User;
+import org.fao.geonet.domain.FavouriteMetadataList;
+import org.fao.geonet.repository.FavouriteMetadataListRepository;
+import org.fao.geonet.repository.FavouriteMetadataListItemRepository;
+import org.fao.geonet.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
- import javax.servlet.http.Cookie;
- import javax.servlet.http.HttpServletRequest;
- import javax.servlet.http.HttpSession;
- import java.util.Arrays;
- import java.util.List;
- import java.util.Optional;
- import java.util.stream.Collectors;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
- import static org.fao.geonet.api.selections.FavouriteMetadataListApi.SESSION_COOKIE_NAME;
+import static org.fao.geonet.api.selections.FavouriteMetadataListApi.SESSION_COOKIE_NAME;
 
 /**
  * typically, an incoming elastic request will be very large (see below for an example, with 90% removed).
@@ -153,13 +175,7 @@ public class FavouritesListESQueryRewriter implements ESQueryRewriter{
             root.putArray("sort").add("_id");
         }
     }
-//
-//    Pageable getPageable(int from, int size) throws Exception {
-//        if (from % size != 0) {
-//            throw new Exception("paging isn't consistent!");
-//        }
-//        return PageRequest.of( from/size, size);
-//    }
+
 
     ObjectNode replacement(int selectionId,ObjectMapper mapper,HttpSession httpSession, HttpServletRequest request) throws Exception {
         Optional<FavouriteMetadataList> selectionList= userMetadataSelectionListRepo.findById(selectionId);
