@@ -4,7 +4,7 @@ sites:
   dcsmm : https://dcsmm.milieumarinfrance.fr/Acces-aux-donnees-cartographiques/Catalogue
   dynalit : https://www.dynalit.fr/Voir-Trouver-Telecharger
   emodnet-chemistry : https://www.emodnet-chemistry.eu/products/catalogue
-  emodnet-bathymetry : https://www.emodnet-bathymetry.eu/metadata-amp-data/composite-dtms-catalogue-service
+  emodnet-bathymetry : https://sextant.ifremer.fr/documentation/emodnet_chemistry/api/catalogue.html
   odatis : https://www.odatis-ocean.fr/donnees-et-services/acces-aux-donnees/catalogue-complet
   seadatanet : https://www.seadatanet.org/Products
   sextant : https://sextant.ifremer.fr/Donnees/Catalogue

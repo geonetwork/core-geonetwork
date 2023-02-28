@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en-EN" xml:lang="en-EN" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="ie=edge" http-equiv="x-ua-compatible"/>
+  <title>
+  </title>
+  <meta content="" name="description"/>
+  <meta content="width=device-width, initial-scale=1" name="viewport"/>
+  <link href="app_light.css" rel="stylesheet"/>
+</head>
+<body style="margin:0">
+<header id="head">
+  <a class="logo" href="https://emodnet.ec.europa.eu/en/chemistry" target="_blank" title="EMODnet">
+  </a>
+  <div class="text">
+    <h1>
+      Chemistry
+    </h1>
+    <p>
+    </p>
+  </div>
+</header>
+<div class="gn sxt-max-md" ng-app="gn_search_sextant" ng-controller="GnCatController" ng-include="'../../catalog/views/sextant/templates/index.html'" sxt-size="auto ">
+</div>
+<script type="text/javascript">
+  var sxtSettings = {
+    langDetector: {
+      fromHtmlTag: true,
+      regexp: '^\/([a-z]+)\/',
+      lang: 'fre'
+    },
+    allowLogin : true,
+    configWhat: 'EMODNET_Chemistry',
+    tabOverflow : {
+      "search":true,
+      "map":true,
+      "panier":true
+    },
+    facetConfig : [{
+      key: 'publishedForGroup',
+      index: "_groupPublished",
+      opened:true,
+      labels: {
+        eng: 'Catalogue',
+        fre: "Catalogue"
+      }},{
+      key: 'keyword',
+      labels: {
+        eng: 'Keywords'
+      }},{
+      key: 'orgName',
+      labels: {
+        eng: 'Contact for the ressource'
+      }},{
+      key: 'createDateYear',
+      labels: {
+        eng: 'Years'
+      }}],
+
+    theme: 'emodnet-bathymetry'
+  };
+</script>
+<script src="http://localhost:8080/geonetwork/static/lib.js">
+</script>
+<script src="http://localhost:8080/geonetwork/static/gn_search_sextant.js">
+</script>
+</body>
+</html>
