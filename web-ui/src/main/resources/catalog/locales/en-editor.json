@@ -387,6 +387,7 @@
     "directoryEntryAssociatedMetadata": "Associated Metadata",
     "directoryEntryEditor": "Entry Editor",
     "directoryEntryEditing": "Currently editing:",
+    "directoryEntry-removeError-referenced": "You can't remove this subtemplate cause it is used in some records.",
     "directoryManagerMode-newEntry": "New Entry",
     "directoryManagerMode-editEntry": "Edit Entry",
     "directoryManagerMode-newTemplate": "New Template",
