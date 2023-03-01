@@ -32,10 +32,12 @@ import org.apache.chemistry.opencmis.commons.enums.UnfileObject;
 import org.apache.chemistry.opencmis.commons.exceptions.CmisConstraintException;
 import org.apache.chemistry.opencmis.commons.exceptions.CmisObjectNotFoundException;
 import org.apache.chemistry.opencmis.commons.exceptions.CmisPermissionDeniedException;
+import org.apache.chemistry.opencmis.commons.exceptions.CmisRuntimeException;
 import org.apache.commons.collections.MapUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.exception.NotAllowedException;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
+import org.fao.geonet.api.exception.WebApplicationException;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.MetadataResource;
 import org.fao.geonet.domain.MetadataResourceContainer;
@@ -183,6 +185,11 @@ public class CMISStore extends AbstractStore {
                 String.format("Metadata resource '%s' not found for metadata '%s'", resourceId, metadataUuid))
                 .withMessageKey("exception.resourceNotFound.resource", new String[]{resourceId})
                 .withDescriptionKey("exception.resourceNotFound.resource.description", new String[]{resourceId, metadataUuid});
+        } catch (CmisRuntimeException e) {
+            throw new WebApplicationException(
+                "CMIS backend is have some issues")
+                .withMessageKey("exception.web.resource.system.not.available")
+                .withDescriptionKey("exception.web.resource.system.not.available");
         }
     }
 
@@ -492,6 +499,11 @@ public class CMISStore extends AbstractStore {
             return createResourceDescription(context, metadataUuid, visibility, filename, (Document)object, metadataId, approved);
         } catch (CmisObjectNotFoundException e) {
             return null;
+        } catch (CmisRuntimeException e) {
+            throw new WebApplicationException(
+                "CMIS backend is have some issues")
+                .withMessageKey("exception.web.resource.system.not.available")
+                .withDescriptionKey("exception.web.resource.system.not.available");
         }
     }
 
@@ -506,12 +518,20 @@ public class CMISStore extends AbstractStore {
         if (folderRoot == null) {
             folderRoot = "";
         }
-        Folder parentFolder = cmisUtils.getFolderCache(key + folderRoot, false, true);
-        MetadataResourceExternalManagementProperties metadataResourceExternalManagementProperties =
-            getMetadataResourceExternalManagementProperties(context, metadataId, metadataUuid, null, String.valueOf(metadataId), null, null, parentFolder.getId(), parentFolder.getType(), MetadataResourceExternalManagementProperties.ValidationStatus.UNKNOWN);
+        try {
+            Folder parentFolder = cmisUtils.getFolderCache(key + folderRoot, false, true);
+            MetadataResourceExternalManagementProperties metadataResourceExternalManagementProperties =
+                getMetadataResourceExternalManagementProperties(context, metadataId, metadataUuid, null, String.valueOf(metadataId), null, null, parentFolder.getId(), parentFolder.getType(), MetadataResourceExternalManagementProperties.ValidationStatus.UNKNOWN);
 
-        return new FilesystemStoreResourceContainer(metadataUuid, metadataId, metadataUuid,
-            settingManager.getNodeURL() + "api/records/", metadataResourceExternalManagementProperties, approved);
+            return new FilesystemStoreResourceContainer(metadataUuid, metadataId, metadataUuid,
+                settingManager.getNodeURL() + "api/records/", metadataResourceExternalManagementProperties, approved);
+        } catch (CmisRuntimeException e) {
+            throw new WebApplicationException(
+                "CMIS backend is have some issues")
+                .withMessageKey("exception.web.resource.system.not.available")
+                .withDescriptionKey("exception.web.resource.system.not.available");
+        }
+
 
 
     }
