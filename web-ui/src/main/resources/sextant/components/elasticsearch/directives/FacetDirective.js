@@ -351,36 +351,26 @@
           );
         },
         link: function (scope, element, attrs) {
-          var sextantThesaurusWithHierarchyInLabel = Object.keys(
-            SEXTANT_LEGACY_FACET_MAPPING
-          )
-            .filter(function (k) {
-              return (
-                Object.keys(SEXTANT_LEGACY_FACET_MAPPING[k])[0].indexOf("_tree.key") !==
-                -1
-              );
-            })
-            .map(function (k) {
-              return Object.keys(SEXTANT_LEGACY_FACET_MAPPING[k])[0];
-            })
-            .filter(function (v, i, array) {
-              return array.indexOf(v) === i;
-            });
           function buildLabel() {
             if (
               scope.ctrl &&
-              sextantThesaurusWithHierarchyInLabel.indexOf(scope.ctrl.facet.key) !== -1
+              scope.ctrl.facet.key &&
+              scope.ctrl.facet.key.indexOf("_tree.key") !== -1
             ) {
-              // In sextant, the label contains all the hierarchy to the root
-              // Removing parent part of the label to only have current node label
+              // In sextant thesaurus, the label contains all the hierarchy
+              // to the root using /a, /a/b, /a/b/c ...
+              // Removing parent part of the label when keyword start with "/"
+              // to only have current node label
               var parentLabel =
                 scope.$parent.ctrl.item && scope.$parent.ctrl.item.value
                   ? $filter("facetTranslator")(scope.$parent.ctrl.item.value) + "/"
                   : "/";
-              scope.ctrl.item.label = $filter("facetTranslator")(
-                scope.ctrl.item.value
-              ).replace(parentLabel, "");
 
+              scope.ctrl.item.label = $filter("facetTranslator")(scope.ctrl.item.value);
+
+              if (scope.ctrl.item.label.indexOf("/") === 0) {
+                scope.ctrl.item.label = scope.ctrl.item.label.replace(parentLabel, "");
+              }
               if (scope.ctrl.item.items && scope.ctrl.item.items.length > 0) {
                 scope.ctrl.item.items.forEach(function (facet) {
                   var treePathTranslated = $filter("facetTranslator")(facet.value),
