@@ -301,7 +301,7 @@
             // Load user group and then select user
             $http.get("../api/users/" + u.id + "/groups").then(
               function (response) {
-                $scope.userGroups = response.groups;
+                $scope.userGroups = response.data;
               },
               function (response) {
                 // TODO
