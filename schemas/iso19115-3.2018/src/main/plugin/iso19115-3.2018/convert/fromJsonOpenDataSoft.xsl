@@ -87,14 +87,14 @@
             </lan:language>
             <lan:characterEncoding>
               <lan:MD_CharacterSetCode codeList="codeListLocation#MD_CharacterSetCode"
-                                       codeListValue=""/>
+                                       codeListValue="utf8"/>
             </lan:characterEncoding>
           </lan:PT_Locale>
         </mdb:defaultLocale>
         <mdb:metadataScope>
           <mdb:MD_MetadataScope>
             <mdb:resourceScope>
-              <mcc:MD_ScopeCode codeList=""
+              <mcc:MD_ScopeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_ScopeCode"
                                 codeListValue="{if (@type) then @type else 'dataset'}"/>
             </mdb:resourceScope>
           </mdb:MD_MetadataScope>
@@ -175,6 +175,43 @@
                 <xsl:value-of select="(metas/description|dataset/metas/default/description)[1]"/>
               </gco:CharacterString>
             </mri:abstract>
+            <!-- TODO: Check state definition-->
+            <!--<mri:status>
+              <mcc:MD_ProgressCode codeList="codeListLocation#MD_ProgressCode" codeListValue="{state}"/>
+            </mri:status>-->
+
+            <!-- add publisher to resource organisation as well-->
+            <xsl:if test="not(organization)">
+              <mri:pointOfContact>
+                <cit:CI_Responsibility>
+                  <cit:role>
+                    <cit:CI_RoleCode codeList="codeListLocation#CI_RoleCode" codeListValue="originator">publisher</cit:CI_RoleCode>
+                  </cit:role>
+                  <cit:party>
+                    <cit:CI_Organisation>
+                      <cit:name>
+                        <gco:CharacterString>
+                          <xsl:value-of select="metas/publisher"/>
+                        </gco:CharacterString>
+                      </cit:name>
+                      <cit:contactInfo>
+                        <cit:CI_Contact>
+                          <cit:address>
+                            <cit:CI_Address>
+                              <cit:electronicMailAddress>
+                                <gco:CharacterString>
+                                  <xsl:value-of select="author_email"/>
+                                </gco:CharacterString>
+                              </cit:electronicMailAddress>
+                            </cit:CI_Address>
+                          </cit:address>
+                        </cit:CI_Contact>
+                      </cit:contactInfo>
+                    </cit:CI_Organisation>
+                  </cit:party>
+                </cit:CI_Responsibility>
+              </mri:pointOfContact>
+            </xsl:if>
             <xsl:for-each select="organization">
               <mri:pointOfContact>
                 <cit:CI_Responsibility>
@@ -386,6 +423,25 @@
                 </mrd:MD_Format>
               </mrd:distributionFormat>
             </xsl:for-each-group>
+            <xsl:if test="metas/records_count > 0">
+              <xsl:call-template name="dataFormat">
+                <xsl:with-param name="format">csv</xsl:with-param>
+              </xsl:call-template>
+              <xsl:call-template name="dataFormat">
+                <xsl:with-param name="format">json</xsl:with-param>
+              </xsl:call-template>
+              <xsl:if test="count(features[. = 'geo']) > 0">
+                <xsl:call-template name="dataFormat">
+                  <xsl:with-param name="format">geojson</xsl:with-param>
+                </xsl:call-template>
+                <xsl:if test="metas/records_count &lt; 5000">
+                  <xsl:call-template name="dataFormat">
+                    <xsl:with-param name="format">shapefile</xsl:with-param>
+                  </xsl:call-template>
+                </xsl:if>
+              </xsl:if>
+            </xsl:if>
+
 
             <mrd:transferOptions>
               <mrd:MD_DigitalTransferOptions>
@@ -525,6 +581,23 @@
           </cit:function>
         </cit:CI_OnlineResource>
       </mrd:onLine>
+    </xsl:template>
+
+    <xsl:template name="dataFormat">
+      <xsl:param name="format" />
+      <mrd:distributionFormat>
+        <mrd:MD_Format>
+          <mrd:formatSpecificationCitation>
+            <cit:CI_Citation>
+              <cit:title>
+                <gco:CharacterString>
+                  <xsl:value-of select="$format"/>
+                </gco:CharacterString>
+              </cit:title>
+            </cit:CI_Citation>
+          </mrd:formatSpecificationCitation>
+        </mrd:MD_Format>
+      </mrd:distributionFormat>
     </xsl:template>
 
 </xsl:stylesheet>
