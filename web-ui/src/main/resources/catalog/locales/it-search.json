@@ -494,6 +494,7 @@
     "manageUserSearches": "Gestisci la ricerca",
     "manageUserSearchesTitle": "Gestisci ricerche",
     "deleteUserSearchConfirm": "Vuoi veramente rimuovere la ricerca?",
+    "deleteFavouritesConfirm": "Do you really want to remove the favourites list?",
     "userSearchTblSearchName": "Nome",
     "userSearchTblCreator": "Creator",
     "userSearchTblCreationDate": "Data di creazione",

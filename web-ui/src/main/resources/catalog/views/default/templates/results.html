@@ -38,6 +38,13 @@
           data-ng-show="searchResults.records.length > 0"
           data-gn-saved-selections-panel="user"
         ></div>
+
+        <div data-gn-favourites-list-panel="user"
+             data-ng-if="isFavouritesListEnabled"
+             >
+
+        </div>
+
         <div
           data-gn-user-searches-panel="user"
           data-ng-if="isUserSearchesEnabled && user.isConnected()"

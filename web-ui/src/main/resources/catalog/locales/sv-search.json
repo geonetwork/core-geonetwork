@@ -494,6 +494,7 @@
     "manageUserSearches": "Hantera",
     "manageUserSearchesTitle": "Hantera användarsökningar",
     "deleteUserSearchConfirm": "Vill du verkligen ta bort sökningen?",
+    "deleteFavouritesConfirm": "Do you really want to remove the favourites list?",
     "userSearchTblSearchName": "Söknamn",
     "userSearchTblCreator": "Skapare",
     "userSearchTblCreationDate": "Produktionsdatum",

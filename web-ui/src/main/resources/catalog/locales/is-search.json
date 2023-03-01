@@ -494,6 +494,7 @@
     "manageUserSearches": "Stjórna",
     "manageUserSearchesTitle": "Stjórna notendaleit",
     "deleteUserSearchConfirm": "Ertu viss um að þú viljir fjarlægja leitina?",
+    "deleteFavouritesConfirm": "Do you really want to remove the favourites list?",
     "userSearchTblSearchName": "Leitarnafn",
     "userSearchTblCreator": "Höfundur",
     "userSearchTblCreationDate": "Búið til, dagsetning",

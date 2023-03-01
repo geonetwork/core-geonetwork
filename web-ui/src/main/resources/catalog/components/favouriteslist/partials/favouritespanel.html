@@ -1,0 +1,107 @@
+<div class="panel panel-default gn-favourites" data-ng-show="isFavouritesPanelEnabled">
+  <div class="panel-heading" data-gn-slide-toggle="false">
+    <i class="fa fa-fw fa-thumb-tack" />&nbsp;
+    <span data-translate="">Favourites</span>
+
+    <div class="pull-right">
+      <div class="btn-group" role="group">
+        <button
+          type="button"
+          class="btn btn-default btn-xs"
+          title="{{'createUserSearch' | translate}}"
+          data-ng-click="createNewList()"
+        >
+          <span class="fa fa-fw fa-plus"></span>
+        </button>
+
+        <!--        <button-->
+        <!--          type="button"-->
+        <!--          class="btn btn-default btn-xs"-->
+        <!--          title="{{'manageUserSearches' | translate}}"-->
+        <!--          data-ng-click="openAdminUserSearchPanel()"-->
+        <!--          data-ng-show="canManageUserSearches()"-->
+        <!--        >-->
+        <!--          <span class="fa fa-fw fa-cog"></span>-->
+        <!--        </button>-->
+      </div>
+    </div>
+  </div>
+  <div class="panel-body">
+    <!--    <input-->
+    <!--      class="form-control"-->
+    <!--      data-ng-show="userSearches.length > 10"-->
+    <!--      data-ng-model="userSearchesSearch.$"-->
+    <!--      autofocus=""-->
+    <!--      placeholder="{{'filter' | translate}}"-->
+    <!--    />-->
+
+    <ul class="list-group">
+      <li class="list-group-item clearfix" data-ng-repeat="search in favouriteLists">
+        <div class="gn-favourite pull-left">
+          <a ng-click="searchUrl(search)" style="cursor: pointer"
+            >{{search.name}}&nbsp;({{search.nItems}})</a
+          >
+        </div>
+
+        <div
+          class="btn-group btn-group-sm pull-right"
+          role="group"
+          ng-disabled="!search.editable"
+        >
+          <!-- view -->
+          <a
+            ng-click="searchUrl(search)"
+            class="btn btn-default"
+            title="{{'view' | translate}}"
+            aria-label="{{'view' | translate}}"
+          >
+            <span class="fa fa-eye"></span>
+          </a>
+          <!-- publish -->
+          <a
+            href=""
+            class="btn btn-default"
+            data-ng-click="toggleStatus(search)"
+            title="{{'toggle public/private status' | translate}}"
+            aria-label="{{'change status' | translate}}"
+            ng-disabled="!search.editable"
+          >
+            <span class="fa fa-unlock" ng-if="search.public"></span>
+            <span class="fa fa-lock" ng-if="!search.public"></span>
+          </a>
+          <!-- edit -->
+          <a
+            href=""
+            class="btn btn-default"
+            data-ng-click="edit(search)"
+            title="{{'edit' | translate}}"
+            aria-label="{{'edit' | translate}}"
+            ng-disabled="!search.editable"
+          >
+            <span class="fa fa-pencil"></span>
+          </a>
+          <!-- delete -->
+          <a
+            href=""
+            class="btn btn-default"
+            data-gn-click-and-spin="delete(search)"
+            data-gn-confirm-click="{{'deleteFavouritesConfirm' | translate}}"
+            title="{{'delete' | translate}}"
+            aria-label="{{'delete' | translate}}"
+            ng-disabled="!search.editable"
+          >
+            <span class="fa fa-remove text-danger"></span>
+          </a>
+        </div>
+      </li>
+    </ul>
+
+    <!--    <span-->
+    <!--      data-gn-pagination-list=""-->
+    <!--      data-get-items-function-name="userSearchesPageItems"-->
+    <!--      data-first-page-function-name="userSearchesFirstPage"-->
+    <!--      data-items="userSearches | filter:userSearchesSearch | orderBy:'label'"-->
+    <!--      data-cache="userSearches"-->
+    <!--    />-->
+  </div>
+</div>

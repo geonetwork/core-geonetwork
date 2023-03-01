@@ -494,6 +494,7 @@
     "manageUserSearches": "Spravovat",
     "manageUserSearchesTitle": "Spravovat uživatelská hledání",
     "deleteUserSearchConfirm": "Opravdu chcete odstranit vyhledávání?",
+    "deleteFavouritesConfirm": "Do you really want to remove the favourites list?",
     "userSearchTblSearchName": "Hledat název",
     "userSearchTblCreator": "Tvůrce",
     "userSearchTblCreationDate": "Datum vytvoření",

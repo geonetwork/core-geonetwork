@@ -233,9 +233,9 @@
           scope.delete = function (search) {
             gnUserSearchesService.deleteUserSelection(search.id).then(function (result) {
               ///
-              scope.userSelections = scope.userSelections.filter(
-               function (item){ return item.id !== search.id;}
-              );
+              scope.userSelections = scope.userSelections.filter(function (item) {
+                return item.id !== search.id;
+              });
             });
           };
 

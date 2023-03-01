@@ -28,13 +28,14 @@
   goog.require("gn_searchsuggestion_service");
   goog.require("gn_static_pages");
   goog.require("gn_usersearches");
-
+  goog.require("gn_favouriteslist");
   var module = angular.module("gn_search_controller", [
     "ui.bootstrap.typeahead",
     "gn_searchsuggestion_service",
     "gn_catalog_service",
     "gn_static_pages",
-    "gn_usersearches"
+    "gn_usersearches",
+    "gn_favouriteslist"
   ]);
 
   /**
@@ -96,6 +97,10 @@
 
       $scope.isUserSearchesEnabled =
         gnGlobalSettings.gnCfg.mods.search.usersearches.enabled;
+
+      $scope.isFavouritesListEnabled =
+        gnGlobalSettings.gnCfg.mods.search.favouriteslists.enabled;
+
       $scope.displayFeaturedSearchesPanel =
         gnGlobalSettings.gnCfg.mods.search.usersearches.displayFeaturedSearchesPanel;
 
