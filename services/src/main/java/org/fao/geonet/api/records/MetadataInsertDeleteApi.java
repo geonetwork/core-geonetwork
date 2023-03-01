@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2021 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2023 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -47,19 +47,7 @@ import org.fao.geonet.api.records.attachments.Store;
 import org.fao.geonet.api.records.attachments.StoreUtils;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.constants.Geonet;
-
-import org.fao.geonet.domain.AbstractMetadata;
-import org.fao.geonet.domain.ISODate;
-import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.domain.MetadataCategory;
-import org.fao.geonet.domain.MetadataDraft;
-import org.fao.geonet.domain.MetadataResourceVisibility;
-import org.fao.geonet.domain.MetadataType;
-import org.fao.geonet.domain.Pair;
-import org.fao.geonet.domain.Profile;
-import org.fao.geonet.domain.ReservedGroup;
-import org.fao.geonet.domain.ReservedOperation;
-import org.fao.geonet.domain.UserGroup;
+import org.fao.geonet.domain.*;
 import org.fao.geonet.domain.utils.ObjectJSONUtils;
 import org.fao.geonet.events.history.RecordCreateEvent;
 import org.fao.geonet.events.history.RecordDeletedEvent;
@@ -102,7 +90,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.access.vote.RoleHierarchyVoter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -357,12 +344,18 @@ public class MetadataInsertDeleteApi {
         if (url != null) {
             for (String u : url) {
                 Element xmlContent = null;
+                Path tempFile = null;
                 try {
-                    xmlContent = Xml.loadFile(ApiUtils.downloadUrlInTemp(u));
+                    tempFile = ApiUtils.downloadUrlInTemp(u);
+                    xmlContent = Xml.loadFile(tempFile);
                 } catch (Exception e) {
                     Log.error(LOGGER, String.format("Error importing metadata from '%s'.", url), e);
                     report.addError(new Exception(
                         String.format(messages.getString("api.metadata.import.errorFromUrl"), url)));
+                } finally {
+                    if (tempFile != null) {
+                        FileUtils.deleteQuietly(tempFile.toFile());
+                    }
                 }
                 if (xmlContent != null) {
                     Pair<Integer, String> pair = loadRecord(metadataType, xmlContent, uuidProcessing, group, category,
@@ -684,8 +677,7 @@ public class MetadataInsertDeleteApi {
         }
 
         ServiceContext context = ApiUtils.createServiceContext(request);
-        String styleSheetWmc = dataDirectory.getWebappDir() + File.separator + Geonet.Path.IMPORT_STYLESHEETS
-            + File.separator + "OGCWMC-OR-OWSC-to-ISO19139.xsl";
+        Path styleSheetWmc = dataDirectory.getXsltConversion("schema:iso19139:convert/fromOGCWMC-OR-OWSC");
 
         FilePathChecker.verify(filename);
 
@@ -712,7 +704,7 @@ public class MetadataInsertDeleteApi {
         // 1. JDOMize the string
         Element wmcDoc = Xml.loadString(xml, false);
         // 2. Apply XSL (styleSheetWmc)
-        Element transformedMd = Xml.transform(wmcDoc, new File(styleSheetWmc).toPath(), xslParams);
+        Element transformedMd = Xml.transform(wmcDoc, styleSheetWmc, xslParams);
 
         // 4. Inserts the metadata (does basically the same as the metadata.insert.paste
         // service (see Insert.java)
@@ -871,9 +863,8 @@ public class MetadataInsertDeleteApi {
         ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages", locale);
 
         if (!transformWith.equals("_none_")) {
-            Path folder = dataDirectory.getWebappDir().resolve(Geonet.Path.IMPORT_STYLESHEETS);
             FilePathChecker.verify(transformWith);
-            Path xslFile = folder.resolve(transformWith + ".xsl");
+            Path xslFile = dataDirectory.getXsltConversion(transformWith);
             if (Files.exists(xslFile)) {
                 xmlElement = Xml.transform(xmlElement, xslFile);
             } else {

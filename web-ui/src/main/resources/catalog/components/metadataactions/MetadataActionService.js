@@ -42,6 +42,7 @@
     "gnMetadataManager",
     "gnAlertService",
     "gnSearchSettings",
+    "gnGlobalSettings",
     "gnUtilityService",
     "gnShareService",
     "gnPopup",
@@ -58,6 +59,7 @@
       gnMetadataManager,
       gnAlertService,
       gnSearchSettings,
+      gnGlobalSettings,
       gnUtilityService,
       gnShareService,
       gnPopup,
@@ -444,14 +446,6 @@
       };
 
       /**
-       * Create a child of the given metadata. Open the editor in new page.
-       * @param {string} md
-       */
-      this.createChild = function (md) {
-        duplicateMetadata(md.id, true);
-      };
-
-      /**
        * Update publication on metadata (one or selection).
        * If a md is provided, it update publication of the given md, depending
        * on its current state. If no metadata is given, it updates the
@@ -540,14 +534,14 @@
 
       this.assignGroup = function (metadataId, groupId) {
         var defer = $q.defer();
-        $http
-          .put("../api/records/" + metadataId + "/group", groupId)
-          .success(function (data) {
-            defer.resolve(data);
-          })
-          .error(function (data) {
-            defer.reject(data);
-          });
+        $http.put("../api/records/" + metadataId + "/group", groupId).then(
+          function (response) {
+            defer.resolve(response.data);
+          },
+          function (response) {
+            defer.reject(response.data);
+          }
+        );
         return defer.promise;
       };
 
@@ -555,35 +549,40 @@
         var defer = $q.defer();
         $http
           .get("../records/" + metadataId + "/tags?id=" + categories.join("&id="))
-          .success(function (data) {
-            defer.resolve(data);
-          })
-          .error(function (data) {
-            defer.reject(data);
-          });
+          .then(
+            function (response) {
+              defer.resolve(response.data);
+            },
+            function (response) {
+              defer.reject(response.data);
+            }
+          );
         return defer.promise;
       };
 
       this.startVersioning = function (metadataId) {
         var defer = $q.defer();
-        $http
-          .get("md.versioning.start?id=" + metadataId)
-          .success(function (data) {
-            defer.resolve(data);
-          })
-          .error(function (data) {
-            defer.reject(data);
-          });
+        $http.get("md.versioning.start?id=" + metadataId).then(
+          function (response) {
+            defer.resolve(response.data);
+          },
+          function (response) {
+            defer.reject(response.data);
+          }
+        );
         return defer.promise;
       };
 
       /**
-       * Get html formatter link for the given md
+       * Get permalink depending on catalog configuration
+       * and open the permalink modal.
+       *
        * @param {Object} md
        */
       this.getPermalink = function (md) {
-        var url = $location.absUrl().split("#")[0] + "#/metadata/" + md.uuid;
-        gnUtilityService.getPermalink(md.resourceTitle, url);
+        $http.get("../api/records/" + md.getUuid() + "/permalink").then(function (r) {
+          gnUtilityService.displayPermalink(md.resourceTitle, r.data);
+        });
       };
 
       /**

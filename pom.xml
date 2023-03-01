@@ -125,7 +125,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-resources-plugin</artifactId>
-          <version>3.1.0</version>
+          <version>3.3.0</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -276,6 +276,7 @@
         <artifactId>maven-resources-plugin</artifactId>
         <configuration>
           <encoding>UTF-8</encoding>
+          <propertiesEncoding>ISO-8859-1</propertiesEncoding>
         </configuration>
       </plugin>
 
@@ -389,7 +390,7 @@
       <dependency>
         <groupId>org.jsoup</groupId>
         <artifactId>jsoup</artifactId>
-        <version>1.14.3</version>
+        <version>1.15.3</version>
       </dependency>
 
       <dependency>
@@ -425,6 +426,12 @@
         <groupId>org.openrdf</groupId>
         <artifactId>rio</artifactId>
         <version>1.0.9</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.jena</groupId>
+        <artifactId>apache-jena-libs</artifactId>
+        <type>pom</type>
+        <version>3.17.0</version>
       </dependency>
 
       <!-- PDF stuff: Managed by Mapfish -->
@@ -1508,9 +1515,15 @@
     <es.index.max_result_window.limit>15000</es.index.max_result_window.limit>
 
     <es.index.mapping.total_fields.limit>4000</es.index.mapping.total_fields.limit>
+    <es.index.ignore_above>2000</es.index.ignore_above>
 
+    <!-- If elasticsearch security is on,
+    add a read/write user for index features and records: -->
     <es.username></es.username>
     <es.password></es.password>
+    <!-- and a readonly user for index features access. -->
+    <es.ro.username></es.ro.username>
+    <es.ro.password></es.ro.password>
 
     <kb.platform>linux-x86_64</kb.platform>
     <kb.installer.extension>tar.gz</kb.installer.extension>
@@ -1540,7 +1553,7 @@
 
     <!-- NOTE: When updating GeoTools, check which version
     of Postgres is used and update pg.version if needed. -->
-    <geotools.version>27.1</geotools.version>
+    <geotools.version>28.0</geotools.version>
     <jts.version>1.18.2</jts.version>
     <pg.version>42.3.3</pg.version>
 

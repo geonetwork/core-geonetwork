@@ -46,8 +46,12 @@
                 select="/mdb:MD_Metadata/mdb:defaultLocale/*/lan:language/*/@codeListValue"
                 as="xs:string?"/>
 
+  <xsl:variable name="mainLangId"
+                select="/mdb:MD_Metadata/mdb:defaultLocale/*/@id"
+                as="xs:string"/>
+
   <xsl:variable name="useOnlyPTFreeText"
-                select="count(//*[lan:PT_FreeText and not(gco:CharacterString)]) > 0"
+                select="count(//*[lan:PT_FreeText and not(gco:CharacterString|gcx:Anchor)]) > 0"
                 as="xs:boolean"/>
 
   <xsl:variable name="metadataIdentifier"
@@ -173,7 +177,7 @@
             <mrd:onLine>
               <cit:CI_OnlineResource>
                 <cit:linkage>
-                  <xsl:copy-of select="gn-fn-iso19115-3.2018:fillTextElement($url, '◿', '◿', $mainLang, $useOnlyPTFreeText)"/>
+                  <xsl:copy-of select="gn-fn-iso19115-3.2018:fillTextElement($url, '\|', '', $mainLangId, $useOnlyPTFreeText)"/>
                 </cit:linkage>
 
                 <xsl:if test="$protocol != ''">
@@ -194,14 +198,14 @@
 
                 <xsl:if test="normalize-space(.) != ''">
                   <cit:name>
-                    <xsl:copy-of select="gn-fn-iso19115-3.2018:fillTextElement(., $mainLang, $useOnlyPTFreeText)"/>
+                    <xsl:copy-of select="gn-fn-iso19115-3.2018:fillTextElement(., $mainLangId, $useOnlyPTFreeText)"/>
                   </cit:name>
                 </xsl:if>
                 <xsl:variable name="pos" select="position()"/>
                 <xsl:variable name="description" select="tokenize($desc, ',')[position() = $pos]"/>
                 <xsl:if test="$description != ''">
                   <cit:description>
-                    <xsl:copy-of select="gn-fn-iso19115-3.2018:fillTextElement($description, $mainLang, $useOnlyPTFreeText)"/>
+                    <xsl:copy-of select="gn-fn-iso19115-3.2018:fillTextElement($description, $mainLangId, $useOnlyPTFreeText)"/>
                   </cit:description>
                 </xsl:if>
 
@@ -219,7 +223,7 @@
           <mrd:onLine>
             <cit:CI_OnlineResource>
               <cit:linkage>
-                <xsl:copy-of select="gn-fn-iso19115-3.2018:fillTextElement($url, '◿', '◿', $mainLang, $useOnlyPTFreeText)"/>
+                <xsl:copy-of select="gn-fn-iso19115-3.2018:fillTextElement($url, '\|', '', $mainLangId, $useOnlyPTFreeText)"/>
               </cit:linkage>
 
               <xsl:if test="$protocol != ''">
@@ -238,13 +242,13 @@
 
               <xsl:if test="normalize-space($name) != ''">
                 <cit:name>
-                  <xsl:copy-of select="gn-fn-iso19115-3.2018:fillTextElement($name, $mainLang, $useOnlyPTFreeText)"/>
+                  <xsl:copy-of select="gn-fn-iso19115-3.2018:fillTextElement($name, $mainLangId, $useOnlyPTFreeText)"/>
                 </cit:name>
               </xsl:if>
 
               <xsl:if test="$desc != ''">
                 <cit:description>
-                  <xsl:copy-of select="gn-fn-iso19115-3.2018:fillTextElement($desc, $mainLang, $useOnlyPTFreeText)"/>
+                  <xsl:copy-of select="gn-fn-iso19115-3.2018:fillTextElement($desc, $mainLangId, $useOnlyPTFreeText)"/>
                 </cit:description>
               </xsl:if>
 

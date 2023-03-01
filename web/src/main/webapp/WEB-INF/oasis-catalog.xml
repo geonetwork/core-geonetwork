@@ -77,4 +77,7 @@
 
   <uri name="common/functions-metadata.xsl"
        uri="../xslt/common/functions-metadata.xsl"/>
+
+  <uri name="common/functions-sparql.xsl"
+       uri="../xslt/common/functions-sparql.xsl"/>
 </catalog>

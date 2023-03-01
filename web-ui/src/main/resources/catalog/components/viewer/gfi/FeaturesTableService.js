@@ -41,7 +41,7 @@
     if (record && record.featureTypes && record.featureTypes[0]) {
       var dictionary = {};
       record.featureTypes[0].attributeTable.map(function (col) {
-        dictionary[col.code] = col;
+        dictionary[col.code.toLowerCase()] = col;
       });
       deferred.resolve(dictionary);
       return deferred.promise;
@@ -63,9 +63,9 @@
           if (response.data["decodeMap"] != null) {
             var dictionary = {};
             Object.keys(response.data["decodeMap"]).map(function (key) {
-              dictionary[key] = {
-                code: response.data["decodeMap"][key][0],
-                name: response.data["decodeMap"][key][1]
+              dictionary[key.toLowerCase()] = {
+                name: response.data["decodeMap"][key][0],
+                definition: response.data["decodeMap"][key][1]
               };
             });
             deferred.resolve(dictionary);

@@ -259,6 +259,7 @@
     "signIn": "Sign in",
     "signedInAs": "Signed in as",
     "signout": "Sign out",
+    "signoutDescription": "You are already logged in, click the button to logout.",
     "somethingWrong": "Something went wrong!",
     "south": "South",
     "siblings": "Associated resources",

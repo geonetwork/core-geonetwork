@@ -45,6 +45,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Iterator;
 
+import static org.fao.geonet.constants.Geonet.Path.IMPORT_STYLESHEETS_SCHEMA_PREFIX;
+
 /**
  * The GeoNetwork data directory is the location on the file system where GeoNetwork stores all of
  * its custom configuration. This configuration defines such things as: What thesaurus is used by
@@ -814,6 +816,22 @@ public class GeonetworkDataDirectory {
      */
     public void setBackupDir(Path backupDir) {
         this.backupDir = backupDir;
+    }
+
+
+    public Path getXsltConversion(String conversionId) {
+        if (conversionId.startsWith(IMPORT_STYLESHEETS_SCHEMA_PREFIX)) {
+            String[] pathToken = conversionId.split(":");
+            if (pathToken.length == 3) {
+                return this.getSchemaPluginsDir()
+                    .resolve(pathToken[1])
+                    .resolve(pathToken[2] + ".xsl");
+            }
+        } else {
+            return this.getWebappDir().resolve(Geonet.Path.IMPORT_STYLESHEETS).
+                resolve(conversionId + ".xsl");
+        }
+        return null;
     }
 
     /**

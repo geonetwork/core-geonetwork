@@ -355,7 +355,9 @@
                       .get("../api/registries/entries/" + uuid, {
                         params: params
                       })
-                      .success(function (xml) {
+                      .then(function (response) {
+                        var xml = response.data;
+
                         if (usingXlink) {
                           snippets.push(
                             gnEditorXMLService.buildXMLForXlink(

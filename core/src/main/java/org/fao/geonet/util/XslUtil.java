@@ -62,6 +62,7 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.index.es.EsRestClient;
 import org.fao.geonet.kernel.*;
+import org.fao.geonet.kernel.datamanager.base.BaseMetadataUtils;
 import org.fao.geonet.kernel.search.CodeListTranslator;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.search.Translator;
@@ -126,7 +127,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static org.fao.geonet.kernel.setting.Settings.SYSTEM_SITE_ORGANIZATION;
+import static org.fao.geonet.kernel.setting.Settings.*;
 import static org.fao.geonet.utils.Xml.getXmlFromJSON;
 
 
@@ -749,11 +750,28 @@ public final class XslUtil {
                 Geometry geometry = reader.read(wktString);
                 if (geometry != null) {
                     final Envelope envelope = geometry.getEnvelopeInternal();
+                    // Use Locale.US to make Java use dot "." as decimal separator
                     return
-                        String.format("%f|%f|%f|%f",
+                        String.format(Locale.US, "%f|%f|%f|%f",
                             envelope.getMinX(), envelope.getMinY(),
                             envelope.getMaxX(), envelope.getMaxY());
                 }
+            }
+        } catch (Throwable e) {
+        }
+        return ret;
+    }
+
+    public static String geoJsonGeomToBbox(Object WKT) throws Exception {
+        String ret = "";
+        try {
+            Geometry geometry = new GeometryJSON().read(WKT);
+            if (geometry != null) {
+                final Envelope envelope = geometry.getEnvelopeInternal();
+                return
+                    String.format("%f|%f|%f|%f",
+                        envelope.getMinX(), envelope.getMinY(),
+                        envelope.getMaxX(), envelope.getMaxY());
             }
         } catch (Throwable e) {
         }
@@ -1129,6 +1147,16 @@ public final class XslUtil {
 
         SettingInfo si = new SettingInfo();
         return si.getSiteUrl() + (!baseUrl.startsWith("/") ? "/" : "") + baseUrl;
+    }
+
+    public static String getPermalink(String uuid, String language) {
+        BaseMetadataUtils metadataUtils = ApplicationContextHolder.get().getBean(BaseMetadataUtils.class);
+        return metadataUtils.getPermalink(uuid, language);
+    }
+
+    public static String getDefaultUrl(String uuid, String language) {
+        BaseMetadataUtils metadataUtils = ApplicationContextHolder.get().getBean(BaseMetadataUtils.class);
+        return metadataUtils.getDefaultUrl(uuid, language);
     }
 
     /**

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2023 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -72,22 +72,6 @@ public class ThesaurusTest extends AbstractThesaurusBasedTest {
         writableThesaurus.getRepository().shutDown();
     }
 
-    @SuppressWarnings("deprecation")
-    @Test
-    public void testAddElementStringStringStringString() throws Exception {
-        String label = "Hello";
-        String note = "note";
-        String code = "http://thesaurus.test#0";
-        writableThesaurus.addElement(code, label, note, "eng");
-        assertElement(1, code, label, note, "", "", "", "");
-
-        label = "Hello2";
-        note = "note2";
-        code = "http://thesaurus.test#1";
-        writableThesaurus.addElement(code, label, note, "en");
-        assertElement(2, code, label, note, "", "", "", "");
-    }
-
     private KeywordBean assertElement(int words, String code, String label, String note, String coordEast, String coordWest, String coordSouth, String coordNorth) throws GraphException, IOException, AccessDeniedException,
         MalformedQueryException, QueryEvaluationException {
         List<KeywordBean> keywords = QueryBuilder.keywordQueryBuilder(isoLangMapper, "eng", "fre").build().execute(writableThesaurus);
@@ -102,25 +86,6 @@ public class ThesaurusTest extends AbstractThesaurusBasedTest {
         assertEquals(coordWest, keywordBean.getCoordWest());
         assertEquals(coordSouth, keywordBean.getCoordSouth());
         return keywordBean;
-    }
-
-    @SuppressWarnings("deprecation")
-    @Test
-    public void testAddElementStringStringStringStringString() throws Exception {
-        String label = "Hello";
-        String note = "note";
-        String code = "http://thesaurus.test#0";
-        String coordEast = "12";
-        String coordWest = "5";
-        String coordNorth = "30";
-        String coordSouth = "20";
-        writableThesaurus.addElement(code, label, note, coordEast, coordWest, coordSouth, coordNorth, "eng");
-        assertElement(1, code, label, note, coordEast, coordWest, coordSouth, coordNorth);
-        label = "Hello2";
-        note = "note2";
-        code = "http://thesaurus.test#1";
-        writableThesaurus.addElement(code, label, note, coordEast, coordWest, coordSouth, coordNorth, "eng");
-        assertElement(2, code, label, note, coordEast, coordWest, coordSouth, coordNorth);
     }
 
     @Test
@@ -195,66 +160,6 @@ public class ThesaurusTest extends AbstractThesaurusBasedTest {
 
         thesaurus.removeElement(keyword.getNameSpaceCode(), keyword.getRelativeCode());
         assertEquals(0, query.execute(thesaurus).size());
-    }
-
-    @SuppressWarnings("deprecation")
-    @Test
-    public void testUpdateElementStringStringStringStringString() throws Exception {
-        String label = "Hello";
-        String note = "note";
-        String code = "http://thesaurus.test#0";
-        String coordEast = "12";
-        String coordWest = "5";
-        String coordNorth = "30";
-        String coordSouth = "20";
-        String lang = "eng";
-        KeywordBean keyword = new KeywordBean(isoLangMapper)
-            .setUriCode(code)
-            .setCoordEast(coordEast)
-            .setCoordNorth(coordNorth)
-            .setCoordSouth(coordSouth)
-            .setCoordWest(coordWest)
-            .setDefinition(note, lang)
-            .setValue(label, lang);
-
-        writableThesaurus.addElement(keyword);
-        assertElement(1, code, label, note, coordEast, coordWest, coordSouth, coordNorth);
-        label = "Hello2";
-        note = "note2";
-        writableThesaurus.updateElement(keyword.getNameSpaceCode(), keyword.getRelativeCode(), label, note, "eng");
-        assertElement(1, code, label, note, coordEast, coordWest, coordSouth, coordNorth);
-    }
-
-    @SuppressWarnings("deprecation")
-    @Test
-    public void testUpdateElementStringStringStringStringStringStringStringStringString() throws Exception {
-        String label = "Hello";
-        String note = "note";
-        String code = "http://thesaurus.test#0";
-        String coordEast = "12";
-        String coordWest = "5";
-        String coordNorth = "30";
-        String coordSouth = "20";
-        String lang = "eng";
-        KeywordBean keyword = new KeywordBean(isoLangMapper)
-            .setUriCode(code)
-            .setCoordEast(coordEast)
-            .setCoordNorth(coordNorth)
-            .setCoordSouth(coordSouth)
-            .setCoordWest(coordWest)
-            .setDefinition(note, lang)
-            .setValue(label, lang);
-
-        writableThesaurus.addElement(keyword);
-        assertElement(1, code, label, note, coordEast, coordWest, coordSouth, coordNorth);
-        label = "Hello2";
-        note = "note2";
-        coordEast = "0";
-        coordWest = "-10";
-        coordNorth = "20";
-        coordSouth = "10";
-        writableThesaurus.updateElement(keyword.getNameSpaceCode(), keyword.getRelativeCode(), label, note, coordEast, coordWest, coordSouth, coordNorth, "eng");
-        assertElement(1, code, label, note, coordEast, coordWest, coordSouth, coordNorth);
     }
 
     @Test

@@ -94,6 +94,20 @@
     <url-pattern>/srv/*</url-pattern>
   </filter-mapping>
 
+  <!-- Add CORS Header -->
+  <filter>
+    <filter-name>cors</filter-name>
+    <filter-class>org.fao.geonet.web.CORSResponseFilter</filter-class>
+    <init-param>
+      <param-name>allowedHosts</param-name>
+      <param-value>${cors.allowedHosts}</param-value>
+    </init-param>
+  </filter>
+  <filter-mapping>
+    <filter-name>cors</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+  
   <!-- url rewrite filter -->
   <filter>
     <filter-name>UrlRewriteFilter</filter-name>
@@ -169,15 +183,7 @@
     <filter-name>resources</filter-name>
     <filter-class>org.fao.geonet.resources.ResourceFilter</filter-class>
   </filter>
-  <!-- Add CORS Header -->
-  <filter>
-    <filter-name>cors</filter-name>
-    <filter-class>org.fao.geonet.web.CORSResponseFilter</filter-class>
-    <init-param>
-      <param-name>allowedHosts</param-name>
-      <param-value>${cors.allowedHosts}</param-value>
-    </init-param>
-  </filter>
+  
   <filter>
     <!--
         WebResourceOptimizer is a WRO4J Filter (https://code.google.com/p/wro4j/wiki/Introduction)
@@ -185,10 +191,10 @@
 
         * Runtime as a Servlet Filter - at runtime WRO4J compiles, lints, minifies and compresses all javascript and css files.
                                         This allows a developer to be able to get instant feed back when he/she changes a file.
-                                        By Default the javascript and css is minimized.  To not have it minized use ?minimize=false
+                                        By Default the javascript and css is minimized.  To not have it minimized use ?minimize=false
         * Maven build - The same configuration is run on all javascript files during build time.  The artifacts are ignored
-                        because they are generated at runtime but it a check to verify that when deployed all artifacts can be
-                        correctly built when the .
+                        because they are generated at runtime, but it is a check to verify that when deployed all artifacts can be
+                        correctly built.
     -->
 
     <filter-name>WebResourceOptimizer</filter-name>
@@ -220,11 +226,6 @@
 
   <filter-mapping>
     <filter-name>webappMetricsFilter</filter-name>
-    <url-pattern>/*</url-pattern>
-  </filter-mapping>
-
-  <filter-mapping>
-    <filter-name>cors</filter-name>
     <url-pattern>/*</url-pattern>
   </filter-mapping>
 
@@ -406,7 +407,7 @@
   -->
   <servlet>
     <servlet-name>ESFeaturesProxy</servlet-name>
-    <servlet-class>org.mitre.dsmiley.httpproxy.URITemplateProxyServlet</servlet-class>
+    <servlet-class>org.fao.geonet.proxy.URITemplateProxyServlet</servlet-class>
     <init-param>
       <param-name>targetUri</param-name>
       <param-value>${es.url}/${es.index.features}/{_}</param-value>
@@ -415,11 +416,28 @@
       <param-name>log</param-name>
       <param-value>false</param-value>
     </init-param>
+    <!--
+     If Elasticsearch has a security layer, create a readonly user
+     with access to the features index and configure the proxy
+     with basic authentication if needed.-->
+    <!--<init-param>
+      <param-name>username</param-name>
+      <param-value>${es.ro.username}</param-value>
+    </init-param>
+    <init-param>
+      <param-name>password</param-name>
+      <param-value>${es.ro.password}</param-value>
+    </init-param>
+    <init-param>
+      <param-name>isSecured</param-name>
+      <param-value>true</param-value>
+    </init-param>-->
   </servlet>
   <servlet-mapping>
     <servlet-name>ESFeaturesProxy</servlet-name>
     <url-pattern>/index/features</url-pattern>
   </servlet-mapping>
+
 
   <servlet>
     <servlet-name>HttpDashboardProxy</servlet-name>

@@ -25,13 +25,13 @@ package org.fao.geonet.harvester.wfsfeatures.worker;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.geotools.http.HTTPClient;
-import org.geotools.http.HTTPResponse;
 import org.geotools.data.wfs.internal.WFSClient;
 import org.geotools.data.wfs.internal.WFSConfig;
 import org.geotools.data.wfs.internal.WFSGetCapabilities;
 import org.geotools.data.wfs.internal.WFSStrategy;
 import org.geotools.data.wfs.internal.v1_x.MapServerWFSStrategy;
+import org.geotools.http.HTTPClient;
+import org.geotools.http.HTTPResponse;
 import org.geotools.ows.ServiceException;
 
 import java.io.ByteArrayOutputStream;
@@ -39,13 +39,17 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
+import static org.fao.geonet.harvester.wfsfeatures.worker.WFSHarvesterExchangeState.MAPSERVER_STRATEGY;
+import static org.fao.geonet.harvester.wfsfeatures.worker.WFSHarvesterExchangeState.QGIS_STRATEGY;
+
 /**
  * WFSClient which use the DescribeFeatureType request to determine
  * which WFSStrategy to user.
  */
 public class WFSClientWithStrategyInvestigator extends WFSClient {
     private String describeFeatureTypeUrl;
-    private transient Logger logger = LogManager.getLogger(WFSHarvesterRouteBuilder.LOGGER_NAME);
+    private String strategyId;
+    private Logger logger = LogManager.getLogger(WFSHarvesterRouteBuilder.LOGGER_NAME);
 
     public WFSClientWithStrategyInvestigator(URL capabilitiesURL, HTTPClient httpClient, WFSConfig config, String describeFeatureTypeUrl) throws IOException, ServiceException {
         this(capabilitiesURL, httpClient, config, (WFSGetCapabilities) null, describeFeatureTypeUrl);
@@ -54,12 +58,12 @@ public class WFSClientWithStrategyInvestigator extends WFSClient {
     public WFSClientWithStrategyInvestigator(URL capabilitiesURL, HTTPClient httpClient, WFSConfig config, WFSGetCapabilities capabilities, String describeFeatureTypeUrl) throws IOException, ServiceException {
         super(capabilitiesURL, httpClient, config, capabilities);
         this.describeFeatureTypeUrl = describeFeatureTypeUrl;
-        logger.debug(String.format(
-            "WFS client default strategy is %s", getStrategy()));
+        logger.debug(
+            "WFS client default strategy is {}", getStrategy());
         WFSStrategy targetNsBasedStrategy = this.determineCorrectStrategy(httpClient);
         if (targetNsBasedStrategy != null) {
-            logger.debug(String.format(
-                "Overriding WFS client strategy with GFI target namespace strategy: %s", targetNsBasedStrategy.getClass().getName()));
+            logger.debug(
+                "Overriding WFS client strategy with GFI target namespace strategy: {}", targetNsBasedStrategy.getClass().getName());
             super.specification = targetNsBasedStrategy;
             ((WFSStrategy) specification).setCapabilities(super.capabilities);
         }
@@ -70,7 +74,7 @@ public class WFSClientWithStrategyInvestigator extends WFSClient {
         WFSStrategy strategy = null;
 
         try {
-            logger.debug(String.format("Determining strategy based on %s", describeFeatureTypeUrl));
+            logger.debug("Determining strategy based on {}", describeFeatureTypeUrl);
             HTTPResponse httpResponse = httpClient.get(new URL(describeFeatureTypeUrl));
             InputStream inputStream = httpResponse.getResponseStream();
 
@@ -83,12 +87,18 @@ public class WFSClientWithStrategyInvestigator extends WFSClient {
             String responsePayload = out.toString("UTF-8");
             if (responsePayload.contains("targetNamespace=\"http://www.qgis.org/gml\"")) {
                 strategy = new QgisStrategy();
+                strategyId = QGIS_STRATEGY;
             } else if (responsePayload.contains("targetNamespace=\"http://mapserver.gis.umn.edu/mapserver\"")) {
                 strategy = new MapServerWFSStrategy(capabilities.getRawDocument());
+                strategyId = MAPSERVER_STRATEGY;
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
         return strategy;
+    }
+
+    public String getStrategyId() {
+        return strategyId;
     }
 }

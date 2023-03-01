@@ -62,7 +62,8 @@ public class UserDtoValidator implements Validator {
                 "Users with username "
                     + user.getUsername() + " ignore case already exists");
         }
-
-        PasswordValidationUtils.rejectIfInvalid(errors, user.getPassword());
+        if (user.getPassword() != null) {
+            PasswordValidationUtils.rejectIfInvalid(errors, user.getPassword());
+        }
     }
 }

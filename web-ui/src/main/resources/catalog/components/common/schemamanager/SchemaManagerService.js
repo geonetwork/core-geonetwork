@@ -85,8 +85,8 @@
           if (fromCache) {
             defer.resolve(fromCache);
           } else {
-            $http.get("../api/standards", { cache: false }).success(function (data) {
-              var nss = extractNamespaces(data);
+            $http.get("../api/standards", { cache: false }).then(function (response) {
+              var nss = extractNamespaces(response.data);
               infoCache.put("schemas", nss);
               defer.resolve(nss);
             });
@@ -106,7 +106,9 @@
               "../api/standards/" + info[0] + "/codelists/" + info[1] + "/details";
             $http
               .get(url + (displayIf ? "?displayIf=" + encodeURIComponent(displayIf) : ""))
-              .success(function (data) {
+              .then(function (response) {
+                var data = response.data;
+
                 infoCache.put(cacheKey, data);
                 defer.resolve(data);
               });
@@ -146,7 +148,9 @@
                     "&displayIf=" +
                     (encodeURIComponent(displayIf) || "")
                 )
-                .success(function (data) {
+                .then(function (response) {
+                  var data = response.data;
+
                   infoCache.put(cacheKey, data);
                   defer.resolve(data);
                 });

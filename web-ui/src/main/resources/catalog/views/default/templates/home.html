@@ -120,7 +120,7 @@
           <label
             data-ng-repeat="facetKey in homeFacet.list"
             data-ng-init="agg = searchInfo.aggregations[facetKey]"
-            data-ng-show="agg.buckets.length > 0 && facetKey != homeFacet.lastKey"
+            data-ng-show="facetKey != homeFacet.lastKey"
           >
             <input
               type="radio"

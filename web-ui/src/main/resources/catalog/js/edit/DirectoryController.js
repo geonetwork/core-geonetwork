@@ -162,8 +162,8 @@
       var init = function () {
         $http
           .get("../api/groups?profile=Editor", { cache: true })
-          .success(function (data) {
-            $scope.groups = data;
+          .then(function (response) {
+            $scope.groups = response.data;
           });
 
         refreshEntriesInfo();
@@ -551,7 +551,8 @@
         $scope.importData.metadataType = asTemplate
           ? "TEMPLATE_OF_SUB_TEMPLATE"
           : "SUB_TEMPLATE";
-        $scope.importData.group = gnConfig["system.metadatacreate.preferredGroup"];
+        $scope.importData.group =
+          gnConfig["system.metadatacreate.preferredGroup"] || $scope.groups[0].id;
       };
 
       // begin edition of an entry

@@ -69,23 +69,24 @@
               status: "pending",
               deferred: defer
             });
-            feedPromise
-              .success(function (responseData, status, headers, config) {
+            feedPromise.then(
+              function (response) {
                 var currentDefer = feedsCache.get(url).deferred;
                 try {
-                  var xmlDoc = $.parseXML(responseData);
+                  var xmlDoc = $.parseXML(response.data);
                   feedsCache.put(url, { data: $(xmlDoc), status: "success" });
                   currentDefer.resolve($(xmlDoc));
                 } catch (e) {
                   feedsCache.put(url, { data: e, status: "fail" });
                   currentDefer.reject(e);
                 }
-              })
-              .error(function (data, status, headers, config) {
+              },
+              function (response) {
                 var currentDefer = feedsCache.get(url).deferred;
                 feedsCache.put(url, { data: "url_unavailable", status: "fail" });
                 currentDefer.reject("url_unavailable");
-              });
+              }
+            );
           } else {
             feedsCache.put(url, { data: "invalid_url", status: "fail" });
             defer.reject("invalid_url");

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2023 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -44,6 +44,7 @@ import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.api.exception.WebApplicationException;
+import org.fao.geonet.api.registries.model.ThesaurusInfo;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
@@ -53,7 +54,6 @@ import org.fao.geonet.kernel.search.keyword.*;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.lib.Lib;
-import org.fao.geonet.repository.ThesaurusActivationRepository;
 import org.fao.geonet.utils.*;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -124,9 +124,6 @@ public class KeywordsApi {
 
     @Autowired
     GeonetworkDataDirectory dataDirectory;
-
-    @Autowired
-    ThesaurusActivationRepository thesaurusActivationRepository;
 
     @Autowired
     GeonetHttpRequestFactory httpRequestFactory;
@@ -263,12 +260,8 @@ public class KeywordsApi {
             HttpSession httpSession
     )
         throws Exception {
-        ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
         ServiceContext context = ApiUtils.createServiceContext(request);
         UserSession session = ApiUtils.getUserSession(httpSession);
-
-//        Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
-//        lang = locale.getISO3Language();
 
         KeywordsSearcher searcher;
         // perform the search and save search result into session
@@ -287,10 +280,6 @@ public class KeywordsApi {
             lang, q, rows, start,
             targetLangs, thesauri,
             thesauriDomainName, type, uri, languagesMapper);
-
-//            if (checkModified(webRequest, thesaurusMan, builder)) {
-//                return null;
-//            }
 
         if (q == null || q.trim().isEmpty()) {
             builder.setComparator(KeywordSort.defaultLabelSorter(SortDirection.parse(sort)));
@@ -406,7 +395,6 @@ public class KeywordsApi {
                 throw new IllegalArgumentException(String.format(
                     "Thesaurus '%s' not found.", sThesaurusName));
             } else {
-                thesaurus = thesaurusEntry.get();
                 sThesaurusName = thesaurusEntry.get().getKey();
             }
         }
@@ -622,12 +610,6 @@ public class KeywordsApi {
         // Remove file
         if (Files.exists(item)) {
             IO.deleteFile(item, true, Geonet.THESAURUS);
-
-            // Delete thesaurus record in the database
-            String thesaurusId = thesaurusObject.getFname();
-            if (thesaurusActivationRepository.existsById(thesaurusId)) {
-                thesaurusActivationRepository.deleteById(thesaurusId);
-            }
         } else {
             throw new IllegalArgumentException(String.format(
                 "Thesaurus RDF file was not found for thesaurus with identifier '%s'.",
@@ -1110,6 +1092,7 @@ public class KeywordsApi {
             description = "XSL to be use to convert the thesaurus before load. Default _none_.")
         @RequestParam(value = "stylesheet", defaultValue = "_none_")
             String stylesheet,
+        @RequestBody(required = false) ThesaurusInfo thesaurusInfo,
         HttpServletRequest request
     ) throws Exception {
 
@@ -1151,6 +1134,24 @@ public class KeywordsApi {
                 "-" +
                 itemName + ".rdf";
 
+        } else if (thesaurusInfo != null) {
+            final ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
+
+            rdfFile = thesaurusMan.buildThesaurusFilePath(thesaurusInfo.getFilename(), thesaurusInfo.getType(), thesaurusInfo.getDname());
+
+            final String siteURL = applicationContext.getBean(SettingManager.class).getSiteURL(context);
+            final IsoLanguagesMapper isoLanguageMapper = applicationContext.getBean(IsoLanguagesMapper.class);
+            Thesaurus thesaurus = new Thesaurus(isoLanguageMapper, thesaurusInfo.getFilename(), thesaurusInfo.getMultilingualTitles(),
+                thesaurusInfo.getMultilingualDescriptions(), thesaurusInfo.getDefaultNamespace(), thesaurusInfo.getType(),
+                thesaurusInfo.getDname(), rdfFile, siteURL, false, thesaurusMan.getThesaurusCacheMaxSize());
+
+            thesaurusMan.addThesaurus(thesaurus, true);
+
+            long end = System.currentTimeMillis();
+            long duration = (end - start) / 1000;
+
+            return String.format("Thesaurus '%s' loaded in %d sec.",
+                fname, duration);
         } else {
 
             Log.debug(Geonet.THESAURUS, "No URL or file name provided for thesaurus upload.");
@@ -1193,6 +1194,64 @@ public class KeywordsApi {
 
         return String.format("Thesaurus '%s' loaded in %d sec.",
             fname, duration);
+    }
+
+    /**
+     * Update the information related to a local thesaurus .
+     *
+     * @param thesaurusInfo
+     * @return
+     * @throws Exception
+     */
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Updates the information of a local thesaurus",
+        description = "Updates the information of a local thesaurus."
+    )
+    @RequestMapping(
+        value = "/{thesaurus:.+}",
+        method = RequestMethod.PUT,
+        produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "201", description = "Thesaurus created."),
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_ADMIN)
+    })
+    @PreAuthorize("hasAuthority('Administrator')")
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
+    public void updateThesaurus(
+        @Parameter(
+            description = "Thesaurus to update.",
+            required = true)
+        @PathVariable(value = "thesaurus")
+            String thesaurus,
+        @Parameter(
+            description = "Thesaurus information")
+        @RequestBody
+        ThesaurusInfo thesaurusInfo
+    ) throws Exception {
+        Thesaurus thesaurusContent = thesaurusMan.getThesaurusByName(thesaurus);
+        if (thesaurusContent == null) {
+            throw new IllegalArgumentException("Thesaurus not found --> " + thesaurus);
+        }
+
+        if (!"local".equalsIgnoreCase(thesaurusContent.getType())) {
+            throw new IllegalArgumentException("Thesaurus is external, can't be edited --> " + thesaurus);
+        }
+
+        thesaurusContent.setMultilingualTitles(thesaurusInfo.getMultilingualTitles());
+        thesaurusContent.setMultilingualDescriptions(thesaurusInfo.getMultilingualDescriptions());
+
+        thesaurusContent.updateConceptScheme(
+            thesaurusContent.getTitle(),
+            thesaurusContent.getMultilingualTitles(),
+            thesaurusContent.getDescription(),
+            thesaurusContent.getMultilingualDescriptions(),
+            thesaurusContent.getFname(),
+            thesaurusContent.getDname(),
+            thesaurusContent.getDefaultNamespace());
+
+        thesaurusMan.addOrReloadThesaurus(thesaurusContent);
     }
 
     /**

@@ -80,8 +80,8 @@
                 url: "../../config/manual.json",
                 method: "GET",
                 cache: true
-              }).success(function (data) {
-                scope.documentationLinks = data;
+              }).then(function (response) {
+                scope.documentationLinks = response.data;
               });
             }
           };

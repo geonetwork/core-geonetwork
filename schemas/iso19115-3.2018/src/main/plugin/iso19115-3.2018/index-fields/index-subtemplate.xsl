@@ -104,22 +104,23 @@
                   select="string-join(.//cit:individual/cit:CI_Individual/cit:name/gco:CharacterString, ', ')"/>
     <xsl:variable name="mail"
                   select="string-join(.//cit:CI_Address/cit:electronicMailAddress/gco:CharacterString, ', ')"/>
+
     <xsl:variable name="contactInfo"
-                  select="if ($name != '') then $name else $mail"/>
+                  select="if ($name != '') then $name
+                          else if ($mail != '') then $mail else ''"/>
+    <xsl:variable name="orgContactInfoSuffix"
+                  select="if ($contactInfo != '')
+                          then concat(' (', $contactInfo, ')') else ''"/>
 
     <resourceTitleObject type="object">{
       "default": "<xsl:value-of select="gn-fn-index:json-escape(
-                                          concat($org, if ($contactInfo != '')
-                                          then concat(' (', $contactInfo, ')')
-                                          else ''))"/>"
+                                          concat($org, $orgContactInfoSuffix))"/>"
       <xsl:for-each
         select="cit:party/cit:CI_Organisation/cit:name/lan:PT_FreeText/*/lan:LocalisedCharacterString[. != '']">
         ,"lang<xsl:value-of select="$allLanguages/lang[
                                       @id = current()/@locale/substring(., 2, 2)
                                     ]/@value"/>": "<xsl:value-of select="gn-fn-index:json-escape(
-                                       if ($contactInfo != '')
-                                       then concat(., ' (', $contactInfo, ')')
-                                       else .)"/>"
+                                               concat(., $orgContactInfoSuffix))"/>"
       </xsl:for-each>
       }
     </resourceTitleObject>

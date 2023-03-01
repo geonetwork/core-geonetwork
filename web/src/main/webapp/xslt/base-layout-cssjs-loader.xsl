@@ -246,13 +246,6 @@
     <xsl:variable name="appConfig"
                   select="util:getUiConfiguration(/root/request/ui)"/>
 
-    <xsl:if test="$angularApp = 'gn_search'">
-      <script src="{$uiResourcesPath}lib/d3_timeseries/d3.min.js?v={$buildNumber}"></script>
-      <script src="{$uiResourcesPath}lib/timeline/timeline-zoomable.js?v={$buildNumber}"></script>
-      <link rel="stylesheet" href="{$uiResourcesPath}lib/timeline/timeline.css"/>
-      <link rel="stylesheet" href="{$uiResourcesPath}lib/d3_timeseries/nv.d3.min.css"/>
-    </xsl:if>
-
     <script type="text/javascript">
       var module = angular.module('<xsl:value-of select="$angularApp"/>');
     </script>
@@ -311,7 +304,10 @@
       function(gnViewerSettings, gnSearchSettings, gnGlobalSettings) {
       gnGlobalSettings.init(
       <xsl:value-of select="if ($appConfig != '') then $appConfig else '{}'"/>,
-      null, gnViewerSettings, gnSearchSettings);
+      // Relative path is safer as even if settings are wrong, the client app works.
+      null,
+      <xsl:value-of select="if ($nodeUrl != '') then concat('&quot;', $nodeUrl, '&quot;') else 'null'"/>,
+      gnViewerSettings, gnSearchSettings);
       }]);
     </script>
   </xsl:template>

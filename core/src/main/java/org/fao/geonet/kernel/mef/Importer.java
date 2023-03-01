@@ -252,8 +252,7 @@ public class Importer {
                     FilePathChecker.verify(style);
 
                     final GeonetworkDataDirectory dataDirectory = applicationContext.getBean(GeonetworkDataDirectory.class);
-                    Path stylePath = dataDirectory.getWebappDir().resolve(Geonet.Path.IMPORT_STYLESHEETS);
-                    Path xsltPath = stylePath.resolve(style + ".xsl");
+                    Path xsltPath = dataDirectory.getXsltConversion(style);
                     if (Files.exists(xsltPath)) {
                         md.add(index, Xml.transform(md.get(index), xsltPath));
                     } else {

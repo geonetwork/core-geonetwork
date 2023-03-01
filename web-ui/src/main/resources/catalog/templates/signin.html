@@ -1,6 +1,36 @@
 <div class="container" data-ng-controller="GnLoginController" role="main">
   <div class="row">
-    <div class="col-lg-4 col-md-4 col-md-offset-4 col-lg-offset-4">
+    <div
+      data-ng-show="authenticated"
+      class="col-lg-4 col-md-4 col-md-offset-4 col-lg-offset-4"
+    >
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h1 data-translate="">signout</h1>
+        </div>
+        <div class="panel-body">
+          <p data-translate="">signoutDescription</p>
+          <input
+            type="hidden"
+            name="redirectUrl"
+            data-ng-model="redirectUrl"
+            value="{{redirectUrl}}"
+          />
+          <a
+            href="{{gnCfg.mods.authentication.signoutUrl}}"
+            class="btn btn-primary btn-block"
+          >
+            <i class="fa fa-fw fa-sign-out" />
+            <span data-translate="">signout</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div
+      data-ng-hide="authenticated"
+      class="col-lg-4 col-md-4 col-md-offset-4 col-lg-offset-4"
+    >
       <div class="panel panel-default">
         <div class="panel-heading">
           <h1 data-translate="">loginTitle</h1>

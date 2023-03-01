@@ -286,7 +286,7 @@
               <a class="btn btn-block btn-primary"
                  href="{if ($portalLink != '')
                         then replace($portalLink, '\$\{uuid\}', $metadataUuid)
-                        else concat($nodeUrl, $language, '/catalog.search#/metadata/', $metadataUuid)}">
+                        else utils:getDefaultUrl($metadataUuid, $language)}">
                 <i class="fa fa-fw fa-link"><xsl:comment select="'icon'"/></i>
                 <xsl:value-of select="$schemaStrings/linkToPortal"/>
               </a>

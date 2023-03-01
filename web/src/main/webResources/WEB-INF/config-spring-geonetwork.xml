@@ -157,6 +157,64 @@
           p:proportion=".015" p:factor=".2"/>
   </util:set>
 
+
+  <!--
+   WMS:
+   ====
+
+     The configuration URL will have the following placeholders replaced with actual values;
+
+        + {minx} and {MINX}
+        + {miny} and {MINY}
+        + {maxx} and {MAXX}
+        + {maxy} and {MAXY}
+        + {srs}  and {SRS}
+        + {width} and {WIDTH}
+        + {height} and {HEIGHT}
+
+     with the necessary values from the request.
+
+     For example, the URL might look like this;
+     https://ows.terrestris.de/osm/service?SERVICE=WMS&REQUEST=GetMap&VERSION=1.1.0&LAYERS=OSM-WMS&STYLES=default&SRS={srs}&BBOX={minx},{miny},{maxx},{maxy}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png
+
+    WMTS:
+    =====
+
+    The configuration should be a json string with the following attributes;
+
+    wmtsGetCapabilitiesURL - (required) URL to the GetCapabilities for the WMTS service
+    layerName - (required)  Name of the layer to use (in the WMTS GetCapabilities)
+
+    matrixSet - (optional, default is the same as SRID) Name of the WMTS GetCapabilities matrixSet to use (hardcoded for all requests)
+    SRID2MatrixSet - (optional, default is no translation)
+    flip4326 - (optional, default is NO)
+
+    Typically, you should just need to set the `wmtsGetCapabilitiesURL` and `layerName`.
+    In this case, it will use the WMTS matrixSet with the same name as the SRS.
+
+    If you want to ALWAYS (!!) use a specific matrixSet, you can use the `matrixSet` parameter.
+
+    If the WMTS doesn't use the SRS as the name of the matrixSets, you can use the SRID2MatrixSet to convert the SRID
+    to a matrixSet.
+
+    Most WMTS systems will use YX ordering for EPSG:4326.  If you are supplying coordinates in XY ordering, you will
+    likely need to set flip4326 to true.
+
+    EXAMPLE
+
+    {
+        "wmtsGetCapabilitiesURL":"URL",
+        "layerName":"LAYERNAME",
+        "SRID2MatrixSet": {
+             "EPSG:900913":"EPSG:3857"
+        },
+        "flip4326": true
+    }
+
+    A request for SRID EPSG:1234 will use the "EPSG:1234" matrixSet.
+    A request for SRID EPSG:900913 will use the "EPSG:3857" matrixSet (SRID2MatrixSet).
+    If the request is for EPSG:4326, the request bbox (AOI) will be flipped from XY to YX.
+  -->
   <util:map id="regionGetMapBackgroundLayers">
     <entry key="osm"
            value="\${map.bbox.background.service}"/>

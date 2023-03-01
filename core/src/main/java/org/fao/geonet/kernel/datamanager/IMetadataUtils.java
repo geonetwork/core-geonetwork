@@ -23,6 +23,7 @@
 
 package org.fao.geonet.kernel.datamanager;
 
+import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +32,7 @@ import java.util.Set;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.MetadataSourceInfo;
@@ -39,6 +41,7 @@ import org.fao.geonet.domain.Pair;
 import org.fao.geonet.repository.SimpleMetadata;
 import org.fao.geonet.repository.reports.MetadataReportsQueries;
 import org.jdom.Element;
+import org.jdom.JDOMException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -117,6 +120,14 @@ public interface IMetadataUtils {
     LinkedHashMap<String, String> extractTitles(String schema, Element md) throws Exception;
 
     LinkedHashMap<String, String> extractTitles(@Nonnull String id) throws Exception;
+
+    String getPermalink(String uuid, String language);
+
+    String getDefaultUrl(String uuid, String language);
+
+    String getDoi(String uuid) throws ResourceNotFoundException, IOException, JDOMException;
+
+    String getResourceIdentifier(String uuid) throws ResourceNotFoundException, JDOMException, IOException;
 
     /**
      * Extract the last editing date from the record

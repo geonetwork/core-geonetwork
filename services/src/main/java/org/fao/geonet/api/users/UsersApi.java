@@ -72,6 +72,7 @@ import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.fao.geonet.kernel.setting.Settings.SYSTEM_SECURITY_PASSWORD_ALLOWADMINRESET;
 import static org.fao.geonet.kernel.setting.Settings.SYSTEM_USERS_IDENTICON;
@@ -139,13 +140,13 @@ public class UsersApi {
         UserSession session = ApiUtils.getUserSession(httpSession);
         Profile profile = session.getProfile();
 
-        if (profile == Profile.Administrator) {
+        if (Profile.Administrator.equals(profile)) {
             // Get all users
             return userRepository.findAll(SortUtils.createSort(User_.name));
-        } else if (profile != Profile.UserAdmin) {
+        } else if (!Profile.UserAdmin.equals(profile)) {
             // Return only the current user
             return userRepository.findAll(UserSpecs.hasUserId(session.getUserIdAsInt()));
-        } else if (profile == Profile.UserAdmin) {
+        } else if (Profile.UserAdmin.equals(profile)) {
             // Return all the users belonging to a group where the current user is UserAdmin
             int userId = session.getUserIdAsInt();
             final List<Integer> userGroupIds = getGroupIdsWhereUserIsUserAdmin(userId);
@@ -423,15 +424,19 @@ public class UsersApi {
         Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
         ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages", locale);
 
-        if (securityProviderConfiguration != null && !securityProviderConfiguration.isUserProfileUpdateEnabled()) {
+        UserSession session = ApiUtils.getUserSession(httpSession);
+        Profile myProfile = session.getProfile();
+
+        // Allow administrator to modify the user profile as they may need to manually pre-create users via api in certain cases (i.e. migration)
+        if (securityProviderConfiguration != null &&
+            !securityProviderConfiguration.isUserProfileUpdateEnabled() &&
+            !Profile.Administrator.equals(myProfile)) {
             return new ResponseEntity<>(messages.getString("security_provider_unsupported_functionality"), HttpStatus.PRECONDITION_FAILED);
         }
 
         Profile profile = Profile.findProfileIgnoreCase(userDto.getProfile());
-        UserSession session = ApiUtils.getUserSession(httpSession);
-        Profile myProfile = session.getProfile();
 
-        if (profile == Profile.Administrator) {
+        if (Profile.Administrator.equals(profile)) {
             checkIfAtLeastOneAdminIsEnabled(userDto, userRepository);
         }
 
@@ -451,6 +456,13 @@ public class UsersApi {
             throw new IllegalArgumentException(errorMessage);
         }
 
+        // If userProfileUpdateEnabled is not enabled, the user password are managed by the security provider so allow null passwords.
+        // Otherwise the password cannot be null.
+        if (userDto.getPassword() == null
+            && (securityProviderConfiguration == null || securityProviderConfiguration.isUserProfileUpdateEnabled())) {
+            throw new IllegalArgumentException("Users password must be supplied");
+        }
+
         List<User> existingUsers = userRepository.findByUsernameIgnoreCase(userDto.getUsername());
         if (!existingUsers.isEmpty()) {
             throw new IllegalArgumentException("Users with username "
@@ -465,9 +477,11 @@ public class UsersApi {
         groups.addAll(processGroups(userDto.getGroupsUserAdmin(), Profile.UserAdmin));
 
         User user = new User();
-        user.getSecurity().setPassword(
-            PasswordUtil.encoder(ApplicationContextHolder.get()).encode(
-                userDto.getPassword()));
+        if (userDto.getPassword() != null) {
+            user.getSecurity().setPassword(
+                PasswordUtil.encoder(ApplicationContextHolder.get()).encode(
+                    userDto.getPassword()));
+        }
 
         fillUserFromParams(user, userDto);
 
@@ -511,11 +525,11 @@ public class UsersApi {
         Profile myProfile = session.getProfile();
         String myUserId = session.getUserId();
 
-        if (myProfile != Profile.Administrator && myProfile != Profile.UserAdmin && !myUserId.equals(Integer.toString(userIdentifier))) {
+        if (!Profile.Administrator.equals(myProfile) && !Profile.UserAdmin.equals(myProfile) && !myUserId.equals(Integer.toString(userIdentifier))) {
             throw new IllegalArgumentException("You don't have rights to do this");
         }
 
-        if (profile == Profile.Administrator) {
+        if (Profile.Administrator.equals(profile)) {
             checkIfAtLeastOneAdminIsEnabled(userDto, userRepository);
         }
 
@@ -554,13 +568,27 @@ public class UsersApi {
 
         //If it is a useradmin updating,
         //maybe we don't know all the groups the user is part of
-        if (!myProfile.equals(Profile.Administrator)) {
+        if (!Profile.Administrator.equals(myProfile)) {
             List<Integer> myUserAdminGroups = userGroupRepository.findGroupIds(Specification.where(
                 hasProfile(myProfile)).and(hasUserId(Integer.parseInt(myUserId))));
 
             List<UserGroup> usergroups =
                 userGroupRepository.findAll(Specification.where(
                     hasUserId(Integer.parseInt(userDto.getId()))));
+
+            List<Integer> userToUpdateGroupIds = usergroups.stream()
+                .map(ug -> ug.getId().getGroupId())
+                .collect(Collectors.toList());
+
+            Set<Integer> groupsInCommon = myUserAdminGroups.stream()
+                .distinct()
+                .filter(userToUpdateGroupIds::contains)
+                .collect(Collectors.toSet());
+
+            // UserAdmin can't update users that are not in the groups administered
+            if (groupsInCommon.isEmpty()) {
+                throw new IllegalArgumentException("You don't have rights to do this");
+            }
 
             //keep unknown groups as is
             for (UserGroup ug : usergroups) {
@@ -571,11 +599,14 @@ public class UsersApi {
             }
         }
 
-        if (securityProviderConfiguration == null || securityProviderConfiguration.isUserProfileUpdateEnabled()) {
-            fillUserFromParams(user, userDto);
-        } else {
+        // Allow administrator to modify the user profile as they may need to manually modify users via api in certain cases (i.e. migration)
+        if (securityProviderConfiguration != null &&
+            !securityProviderConfiguration.isUserProfileUpdateEnabled() &&
+            !Profile.Administrator.equals(myProfile)) {
             // If profile update is not enabled then the only thing that can be changed it enabling/disabling the user.
             user.setEnabled(userDto.isEnabled());
+        } else {
+            fillUserFromParams(user, userDto);
         }
 
         user = userRepository.save(user);
@@ -589,7 +620,7 @@ public class UsersApi {
 
     private boolean isUserAllowedToResetWithoutOldPassword(Profile myProfile) {
         boolean isAdminAllowed = settingManager.getValueAsBool(SYSTEM_SECURITY_PASSWORD_ALLOWADMINRESET, false);
-        return isAdminAllowed && myProfile == Profile.Administrator;
+        return isAdminAllowed && Profile.Administrator.equals(myProfile);
     }
 
     @io.swagger.v3.oas.annotations.Operation(
@@ -636,8 +667,8 @@ public class UsersApi {
         Profile myProfile = session.getProfile();
         String myUserId = session.getUserId();
 
-        if (myProfile != Profile.Administrator
-            && myProfile != Profile.UserAdmin
+        if (!Profile.Administrator.equals(myProfile) 
+            && !Profile.UserAdmin.equals(myProfile) 
             && !myUserId.equals(Integer.toString(userIdentifier))) {
             throw new IllegalArgumentException("You don't have rights to do this");
         }
@@ -691,7 +722,7 @@ public class UsersApi {
         Profile myProfile = session.getProfile();
         String myUserId = session.getUserId();
 
-        if (myProfile == Profile.Administrator || myProfile == Profile.UserAdmin || myUserId.equals(Integer.toString(userIdentifier))) {
+        if (Profile.Administrator.equals(myProfile) || Profile.UserAdmin.equals(myProfile) || myUserId.equals(Integer.toString(userIdentifier))) {
             // -- get the profile of the user id supplied
             User user = userRepository.findById(userIdentifier).get();
             if (user == null) {
@@ -702,7 +733,7 @@ public class UsersApi {
 
             List<UserGroup> userGroups;
 
-            if (myProfile == Profile.Administrator && userProfile.equals(Profile.Administrator.name())) {
+            if (Profile.Administrator.equals(myProfile) && userProfile.equals(Profile.Administrator.name())) {
                 // Return all groups for administrator.
                 // TODO: Check if a better option returning instead of UserGroup a customised GroupDTO
                 // containing all group properties and user profile

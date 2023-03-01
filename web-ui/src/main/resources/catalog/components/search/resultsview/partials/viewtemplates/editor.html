@@ -71,7 +71,7 @@
           <div class="btn-group">
             <a
               class="btn btn-default"
-              data-ng-href=""
+              href=""
               data-ng-if="user.canManagePrivileges(md) && user.isEditorOrMore() && md.draft != 'y'"
               data-ng-click="mdService.openPrivilegesPanel(md, getCatScope())"
               title="{{'privileges' | translate}}"
@@ -93,6 +93,7 @@
             </a>
             <a
               class="btn btn-default"
+              href=""
               data-ng-show="(!md.isPublished() || (md.isPublished() && user.canDeletePublishedMetadata())) && user.canEditRecord(md) && md.isTemplate != 's'
                              && (user.isReviewerOrMore() || md.mdStatus != 4 || !isMdWorkflowEnable)
                              && md.draft != 'e'"

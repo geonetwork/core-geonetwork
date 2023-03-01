@@ -223,8 +223,8 @@
             isChild,
             metadataUuid,
             hasCategoryOfSource
-          ).success(function (id) {
-            var path = "/metadata/" + id;
+          ).then(function (response) {
+            var path = "/metadata/" + response.data;
             if (tab) {
               path += "/tab/" + tab;
             }
@@ -661,30 +661,11 @@
 
         var record = this;
 
-        // See EsSearchManager#documentToJson to define fields as array.
-        // var listOfArrayFields = ; // Except for geom
         if (angular.isDefined(record.geom) && !angular.isArray(record.geom)) {
           record.geom = [record.geom];
         }
 
-        // Multilingual fields
-        $.each(this, function (key, value) {
-          var fieldName = key;
-          // Object fields, allKeywords, th_* and codelist are storing translations.
-          // Create a field with the UI translation or fallback to default.
-          if (key.endsWith("Object") || key.indexOf("cl_") === 0) {
-            record.translate(fieldName);
-          } else if (key === "allKeywords") {
-            Object.keys(this).forEach(function (th) {
-              record.translate(th, record.allKeywords[th].keywords);
-            });
-          } else if (
-            key.match(/th_.*$/) !== null &&
-            key.match(/.*(_tree|Number)$/) === null
-          ) {
-            record.translate(key, this);
-          }
-        });
+        this.translateMultingualFields(this);
 
         if (this.related) {
           $.each(Object.keys(this.related), function (value, key) {
@@ -722,46 +703,56 @@
       }
 
       Metadata.prototype = {
-        // For codelist and keywords, default property is replaced
-        // For Object, a new field is created without the Object suffix.
-        translate: function (fieldName, fieldValues) {
-          var fieldValues = fieldValues || this[fieldName],
-            isCodelist = fieldName.indexOf("cl_") === 0,
-            isObject = fieldName.endsWith("Object");
-
-          // In object lang prop, in translations, default prop.
-          function getCodelistTranslation(o) {
-            if (o["lang" + gnLangs.current]) {
-              return o["lang" + gnLangs.current];
-            } else if ($translate.instant(o.key) != o.key) {
-              return $translate.instant(o.key);
+        translateMultilingualObjects: function (multilingualObjects) {
+          var mlObjs = angular.isArray(multilingualObjects)
+            ? multilingualObjects
+            : [multilingualObjects];
+          mlObjs.forEach(function (mlObj) {
+            mlObj.default =
+              mlObj["lang" + gnLangs.current] ||
+              mlObj.default ||
+              mlObj["lang" + this.mainLanguage];
+          });
+        },
+        translateCodelists: function (index) {
+          var codelists = angular.isArray(index) ? index : [index];
+          codelists.forEach(function (mlObj) {
+            mlObj.default =
+              mlObj["lang" + gnLangs.current] ||
+              ($translate.instant(mlObj.key) != mlObj.key &&
+                $translate.instant(mlObj.key)) ||
+              mlObj.default;
+          });
+        },
+        // For codelist, Object, and keywords, default property is replaced
+        // For Object a new field is also created without the Object suffix.
+        // The function is recursive
+        translateMultingualFields: function (index) {
+          for (var fieldName in index) {
+            var field = index[fieldName];
+            if (fieldName.endsWith("Object")) {
+              this.translateMultilingualObjects(field);
+              index[fieldName.replace(/Object$/g, "")] = angular.isArray(field)
+                ? field.map(function (mlObj) {
+                    return mlObj.default;
+                  })
+                : field.default;
+            } else if (fieldName.startsWith("cl_")) {
+              this.translateCodelists(field);
+            } else if (fieldName === "allKeywords") {
+              Object.keys(field).forEach(
+                function (th) {
+                  this.translateMultilingualObjects(field[th].keywords);
+                }.bind(this)
+              );
+            } else if (
+              fieldName.match(/th_.*$/) !== null &&
+              fieldName.match(/.*(_tree|Number)$/) === null
+            ) {
+              this.translateMultilingualObjects(field);
+            } else if (typeof field === "object") {
+              this.translateMultingualFields(field);
             }
-            return o.default;
-          }
-
-          if (angular.isArray(fieldValues)) {
-            var translatedValues = [];
-            angular.forEach(fieldValues, function (o) {
-              if (isCodelist) {
-                o.default = getCodelistTranslation(o);
-              } else {
-                var translation = o["lang" + gnLangs.current] || o.default;
-                translatedValues.push(translation);
-                o.default = translation;
-              }
-            });
-            if (isObject) {
-              this[fieldName.slice(0, -6)] = translatedValues;
-            }
-          } else if (angular.isObject(fieldValues)) {
-            if (isCodelist) {
-              o.default = getCodelistTranslation(fieldValues);
-            } else {
-              this[fieldName.slice(0, -6)] =
-                fieldValues["lang" + gnLangs.current] || fieldValues.default;
-            }
-          } else {
-            console.warn(fieldName + " is not defined in this record.");
           }
         },
         getUuid: function () {

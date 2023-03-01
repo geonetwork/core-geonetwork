@@ -421,6 +421,7 @@ public class EsSearchManager implements ISearchManager {
             document.put(id, jsonDocument);
             final BulkResponse bulkItemResponses = client.bulkRequest(defaultIndex, document);
             checkIndexResponse(bulkItemResponses, document);
+            overviewFieldUpdater.process(id);
         } else {
             listOfDocumentsToIndex.put(id, jsonDocument);
             if (listOfDocumentsToIndex.size() == commitInterval) {
@@ -520,6 +521,7 @@ public class EsSearchManager implements ISearchManager {
             .add("cat")
             .add("keyword")
             .add("extentDescriptionObject")
+            .add("resourceAltTitleObject")
             .add("resourceCredit")
             .add("resourceCreditObject")
             .add("resolutionScaleDenominator")
@@ -553,6 +555,7 @@ public class EsSearchManager implements ISearchManager {
             .add("type")
             .add("resourceDate")
             .add("link")
+            .add("linkProtocol")
             .add("crsDetails")
             .add("format")
             .add("orderingInstructionsObject")

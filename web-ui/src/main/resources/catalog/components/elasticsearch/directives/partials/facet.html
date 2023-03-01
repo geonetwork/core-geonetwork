@@ -31,7 +31,8 @@
         data-key="ctrl.item.value"
       />
       <span class="gn-facet-label flex-shrink text-ellipsis">
-        {{::ctrl.item.value | facetTranslator: ctrl.facet.key | capitalize}}
+        {{::ctrl.item.value | facetTranslator: (ctrl.facet.meta && ctrl.facet.meta.field)
+        || ctrl.facet.key | capitalize}}
       </span>
       <span
         ng-if="ctrl.item.count"
@@ -43,13 +44,13 @@
     <a
       href
       class="facet-invert"
-      title="{{::(ctrl.item.inverted ? 'filterWithValue' : 'allValuesExcept') | translate}}"
+      title="{{(ctrl.item.inverted ? 'filterWithValue' : 'allValuesExcept') | translate}}"
       ng-click="ctrl.toggleInvert()"
     >
       <span class="fa" ng-class="ctrl.item.inverted ? 'fa-check' : 'fa-minus-circle'">
       </span>
       <span>
-        {{::(ctrl.item.inverted ? 'filterWithValue' : 'allValuesExcept') | translate}}
+        {{(ctrl.item.inverted ? 'filterWithValue' : 'allValuesExcept') | translate}}
       </span>
     </a>
   </div>

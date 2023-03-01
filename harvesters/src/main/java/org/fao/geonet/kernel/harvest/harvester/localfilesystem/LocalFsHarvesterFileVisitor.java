@@ -30,12 +30,14 @@ import com.google.common.collect.Sets;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.harvest.BaseAligner;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
@@ -95,13 +97,9 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
         this.aligner = new LocalFileSytemAligner(cancelMonitor, params);
         this.cancelMonitor = cancelMonitor;
         this.context = context;
-        this.thisXslt = context.getAppPath().resolve(Geonet.Path.IMPORT_STYLESHEETS);
         if (!params.getImportXslt().equals("none")) {
-            String xslPath = params.getImportXslt();
-            if(!xslPath.endsWith(".xsl")) {
-                xslPath += ".xsl";
-            }
-            thisXslt = thisXslt.resolve(xslPath);
+            thisXslt = ApplicationContextHolder.get().getBean(GeonetworkDataDirectory.class)
+                .getXsltConversion(params.getImportXslt());
             transformIt = true;
         }
         localCateg = new CategoryMapper(context);

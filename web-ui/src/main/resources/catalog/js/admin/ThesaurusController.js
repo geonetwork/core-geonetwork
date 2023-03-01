@@ -77,6 +77,8 @@
           "https://registry.geonetwork-opensource.org/{{type}}/{{filename}}";
       });
 
+      $scope.angularEquals = angular.equals;
+
       $scope.modelOptions = angular.copy(gnGlobalSettings.modelOptions);
 
       /**
@@ -93,10 +95,6 @@
        * The currently selected thesaurus
        */
       $scope.thesaurusSelected = null;
-      /**
-       * Is the selected thesaurus activated or not.
-       */
-      $scope.thesaurusSelectedActivated = false;
       /**
        * A suggested namespace for new thesaurus based
        * on other thesaurus properties
@@ -173,7 +171,6 @@
       $scope.selectThesaurus = function (t) {
         creatingThesaurus = false;
         $scope.thesaurusSelected = t;
-        $scope.thesaurusSelectedActivated = t.activated == "y";
 
         $("#keywordFilter").focus();
         searchThesaurusKeyword();
@@ -210,8 +207,8 @@
                 "&pLang=" +
                 langsList.join(",")
             )
-            .success(function (data) {
-              $scope.keywords = data;
+            .then(function (response) {
+              $scope.keywords = response.data;
               var idTokens = $scope.thesaurusSelected.key.split(".");
               $http
                 .post("../api/search/records/_search", {
@@ -346,41 +343,102 @@
        * and refresh the list.
        */
       $scope.createThesaurus = function () {
-        var xml =
-          "<request>" +
-          "<tname>" +
-          $scope.thesaurusSelected.title +
-          "</tname>" +
-          "<description>" +
-          $scope.thesaurusSelected.description +
-          "</description>" +
-          "<fname>" +
-          $scope.thesaurusSelected.filename +
-          "</fname>" +
-          "<tns>" +
-          $scope.thesaurusSelected.defaultNamespace +
-          "</tns>" +
-          "<dname>" +
-          $scope.thesaurusSelected.dname +
-          "</dname>" +
-          "<type>local</type></request>";
-        $http
-          .post("thesaurus.update", xml, {
-            headers: { "Content-type": "application/xml" }
-          })
-          .success(function (data) {
+        var hasMultilingualTitlesValues = !_.values(
+          $scope.thesaurusSelected.multilingualTitles
+        ).every(_.isEmpty);
+
+        if (!hasMultilingualTitlesValues) {
+          alert($translate.instant("thesaurusTitleRequired"));
+          return;
+        }
+
+        var thesaurusToCreate = Object.assign({}, $scope.thesaurusSelected);
+
+        // Change the keys from iso3lang to iso2lang
+        thesaurusToCreate.multilingualTitles = _.mapKeys(
+          thesaurusToCreate.multilingualTitles,
+          function (value, key) {
+            return $scope.availableLangs[key];
+          }
+        );
+
+        thesaurusToCreate.multilingualDescriptions = _.mapKeys(
+          thesaurusToCreate.multilingualDescriptions,
+          function (value, key) {
+            return $scope.availableLangs[key];
+          }
+        );
+
+        $http.put("../api/registries/vocabularies", thesaurusToCreate).then(
+          function (response) {
             $scope.thesaurusSelected = null;
             $("#thesaurusModal").modal("hide");
             loadThesaurus();
-          })
-          .error(function (data) {
+          },
+          function (response) {
             $rootScope.$broadcast("StatusUpdated", {
               title: $translate.instant("thesaurusCreationError"),
-              error: data,
+              error: response.data,
               timeout: 0,
               type: "danger"
             });
-          });
+          }
+        );
+      };
+
+      /**
+       * Updates the thesaurus titles and descriptions, for local thesaurus.
+       */
+      $scope.updateThesaurus = function () {
+        var hasMultilingualTitlesValues = !_.values(
+          $scope.thesaurusSelected.multilingualTitles
+        ).every(_.isEmpty);
+
+        if (!hasMultilingualTitlesValues) {
+          alert($translate.instant("thesaurusTitleRequired"));
+          return;
+        }
+
+        var thesaurusToUpdate = {
+          multilingualTitles: {},
+          multilingualDescriptions: {}
+        };
+
+        // Change the keys from iso3lang to iso2lang
+        thesaurusToUpdate.multilingualTitles = _.mapKeys(
+          $scope.thesaurusSelected.multilingualTitles,
+          function (value, key) {
+            return $scope.availableLangs[key];
+          }
+        );
+
+        thesaurusToUpdate.multilingualDescriptions = _.mapKeys(
+          $scope.thesaurusSelected.multilingualDescriptions,
+          function (value, key) {
+            return $scope.availableLangs[key];
+          }
+        );
+
+        $http
+          .put(
+            "../api/registries/vocabularies/" + $scope.thesaurusSelected.key,
+            thesaurusToUpdate
+          )
+          .then(
+            function (response) {
+              $scope.thesaurusSelected = null;
+              $("#thesaurusModal").modal("hide");
+              loadThesaurus();
+            },
+            function (response) {
+              $rootScope.$broadcast("StatusUpdated", {
+                title: $translate.instant("thesaurusUpdateError"),
+                error: response.data,
+                timeout: 0,
+                type: "danger"
+              });
+            }
+          );
       };
 
       /**
@@ -470,40 +528,22 @@
        * (this is done after a confirm dialog)
        */
       $scope.confirmDeleteThesaurus = function () {
-        $http
-          .delete("../api/registries/vocabularies/" + $scope.delEntryId)
-          .success(function (data) {
+        $http.delete("../api/registries/vocabularies/" + $scope.delEntryId).then(
+          function (response) {
             $scope.thesaurusSelected = null;
             $scope.delEntryId = null;
             loadThesaurus();
-          })
-          .error(function (data) {
+          },
+          function (response) {
             $scope.delEntryId = null;
             $rootScope.$broadcast("StatusUpdated", {
               title: $translate.instant("thesaurusDeleteError"),
-              error: data,
+              error: response.data,
               timeout: 0,
               type: "danger"
             });
-          });
-      };
-
-      /**
-       * Activate a thesaurus in order to be able to
-       * use it in the metadata editor.
-       */
-      $scope.enableThesaurus = function () {
-        $http
-          .get(
-            "thesaurus.enable?_content_type=json" +
-              "&ref=" +
-              $scope.thesaurusSelected.key +
-              "&activated=" +
-              ($scope.thesaurusSelected.activated == "y" ? "n" : "y")
-          )
-          .success(function (data) {
-            $scope.thesaurusSelected.activated = data.activated;
-          });
+          }
+        );
       };
 
       $scope.reindexRecords = function () {
@@ -548,8 +588,8 @@
                 "&id=" +
                 encodeURIComponent(k.uri)
             )
-            .success(function (data) {
-              $scope.keywordSelectedRelation[value] = data.descKeys;
+            .then(function (response) {
+              $scope.keywordSelectedRelation[value] = response.data.descKeys;
             });
         });
       };
@@ -692,31 +732,33 @@
             buildKeywordXML($scope.keywordSelected),
             { headers: { "Content-type": "application/xml" } }
           )
-          .success(function (data) {
-            var response = data[0];
-            if (response && response["@message"]) {
-              var statusConfig = {
+          .then(
+            function (response) {
+              var response = response.data[0];
+              if (response && response["@message"]) {
+                var statusConfig = {
+                  title: $translate.instant("keywordCreationError"),
+                  msg: response["@message"],
+                  timeout: 0,
+                  type: "danger"
+                };
+                $rootScope.$broadcast("StatusUpdated", statusConfig);
+              } else {
+                $scope.keywordSelected = null;
+                $("#keywordModal").modal("hide");
+                searchThesaurusKeyword();
+                creatingKeyword = false;
+              }
+            },
+            function (response) {
+              $rootScope.$broadcast("StatusUpdated", {
                 title: $translate.instant("keywordCreationError"),
-                msg: response["@message"],
+                error: response.data,
                 timeout: 0,
                 type: "danger"
-              };
-              $rootScope.$broadcast("StatusUpdated", statusConfig);
-            } else {
-              $scope.keywordSelected = null;
-              $("#keywordModal").modal("hide");
-              searchThesaurusKeyword();
-              creatingKeyword = false;
+              });
             }
-          })
-          .error(function (data) {
-            $rootScope.$broadcast("StatusUpdated", {
-              title: $translate.instant("keywordCreationError"),
-              error: data,
-              timeout: 0,
-              type: "danger"
-            });
-          });
+          );
       };
 
       /**
@@ -727,20 +769,22 @@
           .post("thesaurus.keyword.update", buildKeywordXML($scope.keywordSelected), {
             headers: { "Content-type": "application/xml" }
           })
-          .success(function (data) {
-            $scope.keywordSelected = null;
-            $("#keywordModal").modal("hide");
-            searchThesaurusKeyword();
-            selectedKeywordOldId = null;
-          })
-          .error(function (data) {
-            $rootScope.$broadcast("StatusUpdated", {
-              title: $translate.instant("keywordUpdateError"),
-              error: data,
-              timeout: 0,
-              type: "danger"
-            });
-          });
+          .then(
+            function (response) {
+              $scope.keywordSelected = null;
+              $("#keywordModal").modal("hide");
+              searchThesaurusKeyword();
+              selectedKeywordOldId = null;
+            },
+            function (response) {
+              $rootScope.$broadcast("StatusUpdated", {
+                title: $translate.instant("keywordUpdateError"),
+                error: response.data,
+                timeout: 0,
+                type: "danger"
+              });
+            }
+          );
       };
 
       /**
@@ -759,17 +803,19 @@
               "&id=" +
               encodeURIComponent(k.uri)
           )
-          .success(function (data) {
-            searchThesaurusKeyword();
-          })
-          .error(function (data) {
-            $rootScope.$broadcast("StatusUpdated", {
-              title: $translate.instant("keywordDeleteError"),
-              error: data,
-              timeout: 0,
-              type: "danger"
-            });
-          })
+          .then(
+            function (response) {
+              searchThesaurusKeyword();
+            },
+            function (response) {
+              $rootScope.$broadcast("StatusUpdated", {
+                title: $translate.instant("keywordDeleteError"),
+                error: response.data,
+                timeout: 0,
+                type: "danger"
+              });
+            }
+          )
           .finally(function () {
             $scope.keywordToDelete = null;
           });
@@ -842,19 +888,107 @@
        * Load the list of thesaurus from the server
        */
       function loadThesaurus() {
-        $http
-          .get("thesaurus?_content_type=json")
-          .success(function (data) {
-            $scope.thesaurus = data[0];
-          })
-          .error(function (data) {
+        $http.get("thesaurus?_content_type=json").then(
+          function (response) {
+            $scope.thesaurus = response.data[0];
+
+            // {"iso2lang": "iso3lang", ...
+            var invertedAvailableLangs = _.invert($scope.availableLangs);
+
+            for (var i = 0; i < $scope.thesaurus.length; i++) {
+              // JSON output is returning empty values as empty array
+              $scope.thesaurus[i].title = Array.isArray($scope.thesaurus[i].title)
+                ? ""
+                : $scope.thesaurus[i].title;
+              $scope.thesaurus[i].description = Array.isArray(
+                $scope.thesaurus[i].description
+              )
+                ? ""
+                : $scope.thesaurus[i].description;
+
+              // Convert the multilingual titles object from {"lang": "iso2lang", "title": "value", ...
+              // to the format required by the multilingual field directive: {"iso3lang": "value", ...
+              $scope.thesaurus[i].multilingualTitles = _.zipObject(
+                _.map($scope.thesaurus[i].multilingualTitles, function (t) {
+                  return invertedAvailableLangs[t.lang];
+                }),
+                _.map($scope.thesaurus[i].multilingualTitles, "title")
+              );
+
+              // Add missing languages with empty values to the multilingual titles object
+              var availableLangsEmptyValues = _.zipObject(
+                _.keys($scope.availableLangs),
+                _.map(Array(_.keys($scope.availableLangs).length), function () {
+                  return "";
+                })
+              );
+
+              $scope.thesaurus[i].multilingualTitles = _.merge(
+                availableLangsEmptyValues,
+                $scope.thesaurus[i].multilingualTitles
+              );
+
+              // Convert the multilingual descriptions object from {"lang": "iso2lang", "title": "value", ...
+              // to the format required by the multilingual field directive: {"iso3lang": "value", ...
+              $scope.thesaurus[i].multilingualDescriptions = _.zipObject(
+                _.map($scope.thesaurus[i].multilingualDescriptions, function (t) {
+                  return invertedAvailableLangs[t.lang];
+                }),
+                _.map($scope.thesaurus[i].multilingualDescriptions, "description")
+              );
+
+              availableLangsEmptyValues = _.zipObject(
+                _.keys($scope.availableLangs),
+                _.map(Array(_.keys($scope.availableLangs).length), function () {
+                  return "";
+                })
+              );
+
+              // Add missing languages with empty values to the multilingual titles object
+              $scope.thesaurus[i].multilingualDescriptions = _.merge(
+                availableLangsEmptyValues,
+                $scope.thesaurus[i].multilingualDescriptions
+              );
+
+              var hasMultilingualTitlesValues = !_.values(
+                $scope.thesaurus[i].multilingualTitles
+              ).every(_.isEmpty);
+              var hasMultilingualDescValues = !_.values(
+                $scope.thesaurus[i].multilingualDescriptions
+              ).every(_.isEmpty);
+
+              if (!hasMultilingualTitlesValues) {
+                if ($scope.thesaurus[i].type == "external") {
+                  // Clear the multilingual title object to display a single textarea control with the description
+                  $scope.thesaurus[i].multilingualTitles = {};
+                } else {
+                  // Assign the title if available as the default language multilingual title
+                  $scope.thesaurus[i].multilingualTitles["eng"] =
+                    $scope.thesaurus[i].title;
+                }
+              }
+
+              if (!hasMultilingualDescValues) {
+                if ($scope.thesaurus[i].type == "external") {
+                  // Clear the multilingual description object to display a single textarea control with the description
+                  $scope.thesaurus[i].multilingualDescriptions = {};
+                } else {
+                  // Assign the description if available as the default language multilingual description
+                  $scope.thesaurus[i].multilingualDescriptions["eng"] =
+                    $scope.thesaurus[i].description;
+                }
+              }
+            }
+          },
+          function (response) {
             $rootScope.$broadcast("StatusUpdated", {
               title: $translate.instant("thesaurusListError"),
-              error: data,
+              error: response.data,
               timeout: 0,
               type: "danger"
             });
-          });
+          }
+        );
       }
 
       loadThesaurus();

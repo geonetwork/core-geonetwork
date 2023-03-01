@@ -672,9 +672,9 @@
       <xsl:variable name="btnOverrideName"
                     select="@name"/>
       <xsl:variable name="btnName"
-                    select="if ($btnOverrideName)
+                    select="if ($btnOverrideName and $strings/*[name() = $btnOverrideName] != '')
                             then $strings/*[name() = $btnOverrideName]
-                            else ''"/>
+                            else $btnOverrideName"/>
 
       <!-- If multiple elements $elementName contains multiple values. Use the first one in getLabel to avoid failure. -->
       <xsl:variable name="labelConfig"
