@@ -93,41 +93,39 @@ public class GeonetTestFixture {
 
         synchronized (GeonetTestFixture.class) {
             if (templateFs == null) {
-                if (templateFs == null) {
-                    templateFs = FILE_SYSTEM_POOL.getTemplate();
+                templateFs = FILE_SYSTEM_POOL.getTemplate();
 
-                    Path templateDataDirectory = templateFs.dataDir;
-                    IO.copyDirectoryOrFile(webappDir.resolve("WEB-INF/data"), templateDataDirectory, true, new DirectoryStream
-                        .Filter<Path>() {
-                        @Override
-                        public boolean accept(Path entry) throws IOException {
-                            return !entry.toString().contains("schema_plugins") &&
-                                !entry.getFileName().toString().startsWith(".") &&
-                                !entry.getFileName().toString().endsWith(".iml") &&
-                                !entry.toString().contains("metadata_data") &&
-                                !entry.toString().contains("removed") &&
-                                !entry.toString().contains("metadata_subversion") &&
-                                !entry.toString().contains("upload") &&
-                                !entry.toString().contains("resources");
-                        }
-                    });
+                Path templateDataDirectory = templateFs.dataDir;
+                IO.copyDirectoryOrFile(webappDir.resolve("WEB-INF/data"), templateDataDirectory, true, new DirectoryStream
+                    .Filter<Path>() {
+                    @Override
+                    public boolean accept(Path entry) throws IOException {
+                        return !entry.toString().contains("schema_plugins") &&
+                            !entry.getFileName().toString().startsWith(".") &&
+                            !entry.getFileName().toString().endsWith(".iml") &&
+                            !entry.toString().contains("metadata_data") &&
+                            !entry.toString().contains("removed") &&
+                            !entry.toString().contains("metadata_subversion") &&
+                            !entry.toString().contains("upload") &&
+                            !entry.toString().contains("resources");
+                    }
+                });
 
 
-                    Path schemaPluginsDir = templateDataDirectory.resolve("config/schema_plugins");
-                    deploySchema(webappDir, schemaPluginsDir);
+                Path schemaPluginsDir = templateDataDirectory.resolve("config/schema_plugins");
+                deploySchema(webappDir, schemaPluginsDir);
 
-                    final GeonetworkDataDirectory geonetworkDataDirectory = _applicationContext.getBean(GeonetworkDataDirectory.class);
-                    final ServiceConfig serviceConfig = new ServiceConfig(Lists.<Element>newArrayList());
-                    geonetworkDataDirectory.init("geonetwork", webappDir, templateDataDirectory, serviceConfig, null);
-                    test.addTestSpecificData(geonetworkDataDirectory);
+                final GeonetworkDataDirectory geonetworkDataDirectory = _applicationContext.getBean(GeonetworkDataDirectory.class);
+                final ServiceConfig serviceConfig = new ServiceConfig(Lists.<Element>newArrayList());
+                geonetworkDataDirectory.init("geonetwork", webappDir, templateDataDirectory, serviceConfig, null);
+                test.addTestSpecificData(geonetworkDataDirectory);
 
-                    // Create ES index
-                   _applicationContext.getBean(EsSearchManager.class).init(false, Optional.empty());
+                // Create ES index
+               _applicationContext.getBean(EsSearchManager.class).init(false, Optional.empty());
 
-                    templateSchemaManager = initSchemaManager(webappDir, geonetworkDataDirectory);
+                templateSchemaManager = initSchemaManager(webappDir, geonetworkDataDirectory);
 
-                    Files.createDirectories(templateDataDirectory.resolve("data/resources/htmlcache"));
-                }
+                Files.createDirectories(templateDataDirectory.resolve("data/resources/htmlcache"));
             }
             isoLanguagesMapper.reinit();
         }
