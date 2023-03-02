@@ -33,9 +33,7 @@ import jeeves.transaction.TransactionManager;
 import jeeves.transaction.TransactionTask;
 import jeeves.xlink.Processor;
 import org.apache.commons.lang.StringUtils;
-import org.elasticsearch.action.search.SearchResponse;
 import org.fao.geonet.ApplicationContextHolder;
-import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
@@ -47,6 +45,7 @@ import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.schema.SchemaPlugin;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.search.IndexingMode;
+import org.fao.geonet.kernel.search.MetaSearcher;
 import org.fao.geonet.kernel.search.index.BatchOpsMetadataReindexer;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
@@ -86,7 +85,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static org.fao.geonet.constants.Geonet.IndexFieldNames.IS_TEMPLATE;
 import static org.springframework.data.jpa.domain.Specification.where;
 
 public class BaseMetadataManager implements IMetadataManager {
@@ -1311,17 +1309,9 @@ public class BaseMetadataManager implements IMetadataManager {
         return true;
     }
 
-    private boolean hasResult(SearchResponse searchResponse) {
-        return searchResponse.getHits().getTotalHits().value > 0;
-    }
-    SearchResponse searcherForReferencingMetadata(ServiceContext context, AbstractMetadata metadata) throws Exception {
-        StringBuilder query = new StringBuilder(String.format("xlink:*%s*", metadata.getUuid()));
-        query.append(String.format(" AND (%s:y OR %s:n)", IS_TEMPLATE, IS_TEMPLATE).toString());
-        return this.searchManager.query(query.toString(), null, 0, 0);
-    }
-
     boolean hasReferencingMetadata(ServiceContext context, AbstractMetadata metadata) throws Exception {
-        return hasResult(searcherForReferencingMetadata(context, metadata));
+        StringBuilder query = new StringBuilder(String.format("xlink:*%s*", metadata.getUuid()));
+        return this.searchManager.query(query.toString(), null, 0, 0).getHits().getTotalHits().value > 0;
     }
 
 }
