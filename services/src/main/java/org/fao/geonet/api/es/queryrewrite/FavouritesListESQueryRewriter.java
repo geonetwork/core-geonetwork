@@ -29,12 +29,14 @@ import com.fasterxml.jackson.databind.node.IntNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import jeeves.server.UserSession;
 import org.fao.geonet.api.ApiUtils;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.FavouriteMetadataList;
 import org.fao.geonet.repository.FavouriteMetadataListRepository;
 import org.fao.geonet.repository.FavouriteMetadataListItemRepository;
 import org.fao.geonet.repository.UserRepository;
+import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -130,6 +132,16 @@ public class FavouritesListESQueryRewriter implements ESQueryRewriter{
     @Autowired
     UserRepository userRepository;
 
+    /**
+     * rewrites an elasticsearch query.
+     *
+     * If there is an exception, it is logged.  However, this will return with an unmodified query.
+     *
+     * @param httpSession - used to get the current User (for security)
+     * @param request - used to get the current http session (for security)
+     * @param jsonESQuery - original query
+     * @return
+     */
     @Override
     public String rewriteQuery(HttpSession httpSession, HttpServletRequest request, String jsonESQuery)  {
         try {
@@ -165,7 +177,8 @@ public class FavouritesListESQueryRewriter implements ESQueryRewriter{
             return jsonESQuery;
         }
         catch (Exception e) {
-            //don't process
+            //don't modify
+            Log.debug(Geonet.SEARCH_ENGINE, "FavouritesListESQueryRewriter",e);
             return jsonESQuery;
         }
     }
@@ -177,10 +190,32 @@ public class FavouritesListESQueryRewriter implements ESQueryRewriter{
     }
 
 
-    ObjectNode replacement(int selectionId,ObjectMapper mapper,HttpSession httpSession, HttpServletRequest request) throws Exception {
-        Optional<FavouriteMetadataList> selectionList= userMetadataSelectionListRepo.findById(selectionId);
+    /**
+     * constructs the
+     *
+     *  {
+     *    query:
+     *     {
+     *         query_string: "_id(uuid1) OR _id(uuid2) ..."
+     *     }
+     *  }
+     *
+     *  that will replace the
+     *
+     *           {
+     *                 "terms": {
+     *                   "favouritesList": [
+     *                        104
+     *                    ]
+     *                }
+     *            }
+     *
+     *   This checks security (i.e. does the user/session have read permission on the favourites list?)
+     */
+    ObjectNode replacement(int favouritesListId, ObjectMapper mapper, HttpSession httpSession, HttpServletRequest request) throws Exception {
+        Optional<FavouriteMetadataList> selectionList= userMetadataSelectionListRepo.findById(favouritesListId);
         if (!selectionList.isPresent()) {
-            throw new Exception("could not find selectionId="+selectionId);
+            throw new Exception("could not find favouritesListId="+ favouritesListId);
         }
         //check security
         boolean isAdmin = isAdmin(httpSession);
@@ -191,7 +226,7 @@ public class FavouritesListESQueryRewriter implements ESQueryRewriter{
             throw new Exception("not permitted to read");
         }
 
-        List<String>  uuids = userMetadataSelectionRepo.queryByParent(selectionId);
+        List<String>  uuids = userMetadataSelectionRepo.queryByParent(favouritesListId);
         List<String> statements = uuids.stream()
             .map(x->"_id:("+x+")")
             .collect(Collectors.toList());

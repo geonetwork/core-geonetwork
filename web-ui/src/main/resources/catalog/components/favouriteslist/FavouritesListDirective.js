@@ -20,6 +20,15 @@
  * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
  * Rome - Italy. email: geonetwork@osgeo.org
  */
+
+/*
+ *  This provides 2 directives;
+ *
+ *    a) gnFavouritesListPanel: This is the main panel on the search screen.
+ *                              It shows the list of available favourites lists and has tools for them.
+ *    b) gnEditFavouritesList:  This is the edit button's pop-up window.
+ *                              It shows a paged list of metadata items (in the favourites list).
+ */
 (function () {
   goog.provide("gn_favouriteslist_directive");
   var module = angular.module("gn_favouriteslist_directive", []);

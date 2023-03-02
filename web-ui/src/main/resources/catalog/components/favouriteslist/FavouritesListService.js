@@ -20,6 +20,10 @@
  * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
  * Rome - Italy. email: geonetwork@osgeo.org
  */
+
+/*
+ *  This provides some support for the favourites list panel for talking with the backend server.
+ */
 (function () {
   goog.provide("gn_favouriteslist_service");
 

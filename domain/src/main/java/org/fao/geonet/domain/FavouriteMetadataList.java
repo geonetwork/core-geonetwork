@@ -60,15 +60,43 @@ public class FavouriteMetadataList extends GeonetEntity implements Serializable 
 
     static final String ID_SEQ_NAME = "fav_md_list_id_seq";
 
-
+    /**
+     * id - managed by hibernate/JPA
+     */
     private int id;
+    /**
+     * name of the list (what the user entered)
+     */
     private String _name;
+    /**
+     * If the list was created when the user is logged in, then this will be the user who created it.
+     * NOTE: if this is set, sessionID is null (and visa-versa)
+     */
     private User _user;
+    /**
+     * If the list was created when the user is NOT logged in, then this will be the value of the cookie used.
+     * NOTE: if this is set, user is null (and visa-versa)
+     */
     private String _sessionId;
+    /**
+     * type of the list
+     */
     private ListType _listType;
+    /**
+     * if its public, then other people can see (but not edit it).
+     */
     private boolean _isPublic;
+    /**
+     * when the list was created.
+     */
     private ISODate _createDate;
+    /**
+     * when the list was last updated.
+     */
     private ISODate _changeDate;
+    /**
+     *  list of metadata UUIDs.  Should be unique.
+     */
     private List<FavouriteMetadataListItem> _selections;
 
     @Id

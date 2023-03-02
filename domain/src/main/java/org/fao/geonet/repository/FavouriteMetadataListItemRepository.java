@@ -29,11 +29,15 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
+/**
+ * repository for FavouriteMetadataListItem
+ */
 public interface FavouriteMetadataListItemRepository extends GeonetRepository<FavouriteMetadataListItem, Integer>   {
 
-//    @Query("SELECT s.metadataUuid FROM FavouriteMetadataListItem s WHERE s.selection_id = :parentId ORDER BY s.metadataUuid")
-//    List<String> queryByParent(@Param("parentId") int parentId, Pageable pageable);
 
+    /**
+     * find all the items that are a part of given list.
+     */
     @Query("SELECT s.metadataUuid FROM FavouriteMetadataListItem s WHERE s.selection_id = :parentId ORDER BY s.metadataUuid")
     List<String> queryByParent(@Param("parentId") int parentId);
 }

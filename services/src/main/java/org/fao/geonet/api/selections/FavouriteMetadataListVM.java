@@ -35,9 +35,10 @@ import java.util.stream.Collectors;
  *
  * Changes:
  *    + User -> just the userName
- *    + Selection -> just a list of IDs
- *    + isEditable -> boolean: owned by the requester
- *    + isMyList -> boolean: owned by the requester
+ *    + Selection -> just a list of metadata UUIDs
+ *    + isEditable -> boolean: if owned by the requester (or requester is admin)
+ *    + isMyList -> boolean: if owned by the requester
+ *    + nItems -> number of items in the selection list.
  */
 public class FavouriteMetadataListVM {
 
