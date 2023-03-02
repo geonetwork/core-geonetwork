@@ -32,21 +32,20 @@ import jeeves.server.context.ServiceContext;
 import jeeves.transaction.TransactionManager;
 import jeeves.transaction.TransactionTask;
 import jeeves.xlink.Processor;
+import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.StringUtils;
-import org.elasticsearch.action.search.SearchResponse;
 import org.fao.geonet.ApplicationContextHolder;
-import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.*;
-import org.fao.geonet.exceptions.UnAuthorizedException;
 import org.fao.geonet.kernel.*;
 import org.fao.geonet.kernel.datamanager.*;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.schema.SchemaPlugin;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.search.IndexingMode;
+import org.fao.geonet.kernel.search.MetaSearcher;
 import org.fao.geonet.kernel.search.index.BatchOpsMetadataReindexer;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
@@ -86,7 +85,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static org.fao.geonet.constants.Geonet.IndexFieldNames.IS_TEMPLATE;
 import static org.springframework.data.jpa.domain.Specification.where;
 
 public class BaseMetadataManager implements IMetadataManager {
@@ -291,9 +289,14 @@ public class BaseMetadataManager implements IMetadataManager {
         AbstractMetadata metadata = metadataUtils.findOne(Integer.valueOf(id));
         if (!settingManager.getValueAsBool(Settings.SYSTEM_XLINK_ALLOW_REFERENCED_DELETION)
             && metadata.getDataInfo().getType() == MetadataType.SUB_TEMPLATE) {
-            if (this.hasReferencingMetadata(context, metadata)) {
-                throw new UnAuthorizedException("This template is referenced.", metadata);
-            }
+
+//		    TODOES
+            throw new NotImplementedException("SYSTEM_XLINK_ALLOW_REFERENCED_DELETION not implemented in ES.");
+//            MetaSearcher searcher = searcherForReferencingMetadata(context, metadata);
+//            Map<Integer, AbstractMetadata> result = ((LuceneSearcher) searcher).getAllMdInfo(context, 1);
+//            if (result.size() > 0) {
+//                throw new Exception("this template is referenced.");
+//            }
         }
 
         // --- remove operations
@@ -317,6 +320,22 @@ public class BaseMetadataManager implements IMetadataManager {
 
         // --- remove metadata
         getXmlSerializer().delete(id, context);
+    }
+
+    private MetaSearcher searcherForReferencingMetadata(ServiceContext context, AbstractMetadata metadata)
+        throws Exception {
+        // TODOES
+        throw new NotImplementedException("searcherForReferencingMetadata not implemented in ES.");
+//        MetaSearcher searcher = context.getBean(SearchManager.class).newSearcher(SearcherType.LUCENE,
+//            Geonet.File.SEARCH_LUCENE);
+//        Element parameters = new Element(Jeeves.Elem.REQUEST);
+//        parameters.addContent(new Element(Geonet.IndexFieldNames.XLINK).addContent("*" + metadata.getUuid() + "*"));
+//        parameters.addContent(new Element(Geonet.SearchResult.BUILD_SUMMARY).setText("false"));
+//        parameters.addContent(new Element(SearchParameter.ISADMIN).addContent("true"));
+//        parameters.addContent(new Element(SearchParameter.ISTEMPLATE).addContent("y or n"));
+//        ServiceConfig config = new ServiceConfig();
+//        searcher.search(context, parameters, config);
+//        return searcher;
     }
 
     // --------------------------------------------------------------------------
@@ -1310,18 +1329,4 @@ public class BaseMetadataManager implements IMetadataManager {
         }
         return true;
     }
-
-    private boolean hasResult(SearchResponse searchResponse) {
-        return searchResponse.getHits().getTotalHits().value > 0;
-    }
-    SearchResponse searcherForReferencingMetadata(ServiceContext context, AbstractMetadata metadata) throws Exception {
-        StringBuilder query = new StringBuilder(String.format("xlink:*%s*", metadata.getUuid()));
-        query.append(String.format(" AND (%s:y OR %s:n)", IS_TEMPLATE, IS_TEMPLATE).toString());
-        return this.searchManager.query(query.toString(), null, 0, 0);
-    }
-
-    boolean hasReferencingMetadata(ServiceContext context, AbstractMetadata metadata) throws Exception {
-        return hasResult(searcherForReferencingMetadata(context, metadata));
-    }
-
 }
