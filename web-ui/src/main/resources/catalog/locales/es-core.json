@@ -259,6 +259,7 @@
     "signIn": "Identificarse",
     "signedInAs": "Identificarse como",
     "signout": "Salir",
+    "signoutDescription": "Ya ha iniciado sesión, haga clic en el botón para cerrar sesión.",
     "somethingWrong": "¡Algo salió mal!",
     "south": "Sur",
     "siblings": "Recursos asociados",
@@ -574,9 +575,12 @@
     "copyToClipboard": "Copy the text to the clipboard",
     "textCopied": "Text has been copied to the clipboard.",
     "metadataApproved": "Metadatos aprobados.",
+    "metadataSubmitted": "Metadata submitted.",
     "batchApproveTitle": "Aprobación de metadatos por lotes",
     "batchApproveInfo": "Esta opción aprueba los metadatos seleccionados que son propiedad del usuario. De forma predeterminada, solo se aprueban los metadatos en estado enviado, seleccione la opción a continuación para aprobar directamente los metadatos que no están en estado enviado.",
     "batchApproveDirect": "Aprobar los metadatos sin necesidad de estar en estado enviado",
     "facet-mdStatus": "Progreso del flujo de trabajo",
-    "skipLink": "Skip and go to the content"
+    "skipLink": "Skip and go to the content",
+    "batchSubmitTitle": "Batch metadata submission",
+    "batchSubmitInfo": "This option submits the selected metadata owned by the user."
 }

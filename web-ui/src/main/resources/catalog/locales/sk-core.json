@@ -259,6 +259,7 @@
     "signIn": "Prihlásiť sa",
     "signedInAs": "Přihlásen(ý) ako",
     "signout": "Odhlásiť sa",
+    "signoutDescription": "You are already logged in, click the button to logout.",
     "somethingWrong": "Niečo se nepodarilo!",
     "south": "Juh",
     "siblings": "Pridružené zdroje",
@@ -430,7 +431,7 @@
     "link-fcats": "Katalóg prvkov",
     "link-associated": "Pridružené zdroje",
     "indexAccessError": "Error during index access.",
-    "applyFilter": "Apply Filter",
+    "applyFilter": "Apply current filter to the map (build a SLD to apply to the WMS layer).",
     "confirm": "OK",
     "confirmDialogTitle": "Potvrdiť tento krok",
     "close": "Zavrieť",
@@ -574,8 +575,12 @@
     "copyToClipboard": "Copy the text to the clipboard",
     "textCopied": "Text has been copied to the clipboard.",
     "metadataApproved": "Metadata approved.",
+    "metadataSubmitted": "Metadata submitted.",
     "batchApproveTitle": "Batch metadata approval",
     "batchApproveInfo": "This option approves the selected metadata owned by the user. By default, only the metadata in submitted status is approved, select the option below to  approve directly the metadata that is not in submitted status.",
     "batchApproveDirect": "Approve the metadata without requiring to be in submitted status",
-    "facet-mdStatus": "Vývoj v postupe prác"
+    "facet-mdStatus": "Vývoj v postupe prác",
+    "skipLink": "Skip and go to the content",
+    "batchSubmitTitle": "Batch metadata submission",
+    "batchSubmitInfo": "This option submits the selected metadata owned by the user."
 }
