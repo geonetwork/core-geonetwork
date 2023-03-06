@@ -17,10 +17,10 @@
           data-ng-src="{{onlinesrcService.getApprovedUrl(f.lUrl || f.id)}}"
         />
 
-        <span class="flex-row" data-ng-if="!isOverview">
-          <div class="width-25" data-gn-link-icon="f" data-mode="gn-icon-inline"></div>
-          <div class="width-75" data-gn-link-label="f" />
-        </span>
+        <div data-ng-if="!isOverview">
+          <div data-gn-link-icon="f" data-mode="gn-icon-inline"></div>
+          <div data-gn-link-label="f"></div>
+        </div>
 
         <a
           href=""

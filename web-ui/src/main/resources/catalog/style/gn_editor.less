@@ -523,6 +523,12 @@ form.gn-tab-inspire {
   }
 }
 
+[data-gn-file-uploader] {
+  [data-gn-link-icon] .label {
+    display: inline;
+  }
+}
+
 /* Onlinesrc styles */
 .gn-onlinesrc-panel {
   h2 {
@@ -531,6 +537,17 @@ form.gn-tab-inspire {
   .list-group-item {
     padding-left: 10px;
     padding-right: 5px;
+
+    [data-gn-link-icon] .label {
+      display: inline;
+    }
+
+    [data-gn-link-icon] {
+      display: inline-block;
+      float: left;
+      width: 100%;
+    }
+
     // background-color: #fbfcfb;
     .row > div.col-md-10 {
       white-space: nowrap;
