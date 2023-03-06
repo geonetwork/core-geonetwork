@@ -259,6 +259,7 @@
     "signIn": "Inloggen",
     "signedInAs": "Ingelogd als",
     "signout": "Uitloggen",
+    "signoutDescription": "Je bent al ingelogd, klik op de knop om uit te loggen.",
     "somethingWrong": "Er ging iets mis!",
     "south": "Zuid",
     "siblings": "Downloads, views en links",
@@ -574,9 +575,12 @@
     "copyToClipboard": "Kopieer de tekst naar het klembord",
     "textCopied": "Tekst is gekopieerd naar het klembord.",
     "metadataApproved": "Metadata goedgekeurd.",
+    "metadataSubmitted": "Metadata submitted.",
     "batchApproveTitle": "Goedkeuring van batch-metagegevens",
     "batchApproveInfo": "Deze optie keurt de geselecteerde metagegevens goed die eigendom zijn van de gebruiker. Standaard worden alleen de metadata in de ingediende status goedgekeurd, selecteer de onderstaande optie om de metadata die niet de ingediende status hebben direct goed te keuren.",
     "batchApproveDirect": "Keur de metadata goed zonder de status &#39;Ingediend&#39; te hebben",
     "facet-mdStatus": "Voortgang in de workflow",
-    "skipLink": "Skip and go to the content"
+    "skipLink": "Skip and go to the content",
+    "batchSubmitTitle": "Batch metadata submission",
+    "batchSubmitInfo": "This option submits the selected metadata owned by the user."
 }

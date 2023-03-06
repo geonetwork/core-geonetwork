@@ -259,6 +259,7 @@
     "signIn": "Entrar",
     "signedInAs": "Entrou como",
     "signout": "Sair",
+    "signoutDescription": "You are already logged in, click the button to logout.",
     "somethingWrong": "Algo deu errado!",
     "south": "Sul",
     "siblings": "Recursos associados",
@@ -574,9 +575,12 @@
     "copyToClipboard": "Copy the text to the clipboard",
     "textCopied": "Text has been copied to the clipboard.",
     "metadataApproved": "Metadata approved.",
+    "metadataSubmitted": "Metadata submitted.",
     "batchApproveTitle": "Batch metadata approval",
     "batchApproveInfo": "This option approves the selected metadata owned by the user. By default, only the metadata in submitted status is approved, select the option below to  approve directly the metadata that is not in submitted status.",
     "batchApproveDirect": "Approve the metadata without requiring to be in submitted status",
     "facet-mdStatus": "Progresso do fluxo de trabalho",
-    "skipLink": "Skip and go to the content"
+    "skipLink": "Skip and go to the content",
+    "batchSubmitTitle": "Batch metadata submission",
+    "batchSubmitInfo": "This option submits the selected metadata owned by the user."
 }

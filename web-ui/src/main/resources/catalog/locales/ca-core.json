@@ -259,6 +259,7 @@
     "signIn": "Autenticar",
     "signedInAs": "Autenticar com",
     "signout": "Sortir",
+    "signoutDescription": "You are already logged in, click the button to logout.",
     "somethingWrong": "Quelcom ha fet figa!",
     "south": "Sud",
     "siblings": "Recursos associats",
@@ -430,7 +431,7 @@
     "link-fcats": "Catàleg d'Objectes Geogràfics",
     "link-associated": "Recursos associats",
     "indexAccessError": "Error during index access.",
-    "applyFilter": "Apply Filter",
+    "applyFilter": "Apply current filter to the map (build a SLD to apply to the WMS layer).",
     "confirm": "OK",
     "confirmDialogTitle": "Confirmar Acció",
     "close": "Tancar",
@@ -574,8 +575,12 @@
     "copyToClipboard": "Copy the text to the clipboard",
     "textCopied": "Text has been copied to the clipboard.",
     "metadataApproved": "Metadata approved.",
+    "metadataSubmitted": "Metadata submitted.",
     "batchApproveTitle": "Batch metadata approval",
     "batchApproveInfo": "This option approves the selected metadata owned by the user. By default, only the metadata in submitted status is approved, select the option below to  approve directly the metadata that is not in submitted status.",
     "batchApproveDirect": "Approve the metadata without requiring to be in submitted status",
-    "facet-mdStatus": "Progrés del flux de treball"
+    "facet-mdStatus": "Progrés del flux de treball",
+    "skipLink": "Skip and go to the content",
+    "batchSubmitTitle": "Batch metadata submission",
+    "batchSubmitInfo": "This option submits the selected metadata owned by the user."
 }
