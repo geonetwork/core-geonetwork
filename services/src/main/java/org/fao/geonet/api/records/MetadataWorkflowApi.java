@@ -535,6 +535,7 @@ public class MetadataWorkflowApi {
     @io.swagger.v3.oas.annotations.Operation(summary = "Search status", description = "")
     @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET, path = "/status/search")
     @ResponseStatus(value = HttpStatus.OK)
+    @PreAuthorize("hasAuthority('Editor')")
     @ResponseBody
     public List<MetadataStatusResponse> getWorkflowStatusByType(
         @Parameter(description = "One or more types to retrieve (ie. worflow, event, task). Default is all.",
@@ -592,6 +593,31 @@ public class MetadataWorkflowApi {
         HttpServletRequest request) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
 
+        Profile profile = context.getUserSession().getProfile();
+        if (profile != Profile.Administrator) {
+            if (CollectionUtils.isEmpty(record) &&
+                CollectionUtils.isEmpty(uuid)) {
+                throw new NotAllowedException(
+                    "Non administrator user must use a id or uuid parameter to search for status.");
+            }
+
+            for(Integer recordId : record) {
+                AbstractMetadata md;
+                try {
+                    md = ApiUtils.canEditRecord(recordId + "", request);
+                } catch (SecurityException e) {
+                    throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT);
+                }
+            }
+            for(String recordId : uuid) {
+                AbstractMetadata md;
+                try {
+                    md = ApiUtils.canEditRecord(recordId, request);
+                } catch (SecurityException e) {
+                    throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT);
+                }
+            }
+        }
         PageRequest pageRequest;
         if (sortOrder != null) {
             Sort sortByStatusChangeDate = SortUtils.createSort(sortOrder, MetadataStatus_.changeDate).and(SortUtils.createSort(sortOrder, MetadataStatus_.id));
