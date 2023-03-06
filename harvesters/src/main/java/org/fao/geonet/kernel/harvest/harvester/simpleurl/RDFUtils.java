@@ -165,7 +165,7 @@ public class RDFUtils {
         String recordUUID = resourceId;
         Date now = new Date();
         String localQuery = getQueryString("add-CatalogRecord.rq")
-            .replace("%recordID%", recordUUID)
+            .replace("%recordID%", recordUUID + "-record")
             .replace("%recordUUID%", recordUUID)
             .replace("%resourceId%", resourceId)
             // TODO: Should we set modified of catalog record to the date of publication?
