@@ -601,12 +601,14 @@ public class MetadataWorkflowApi {
                     "Non administrator user must use a id or uuid parameter to search for status.");
             }
 
-            for(Integer recordId : record) {
-                AbstractMetadata md;
-                try {
-                    md = ApiUtils.canEditRecord(recordId + "", request);
-                } catch (SecurityException e) {
-                    throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT);
+            if (!CollectionUtils.isEmpty(record)) {
+                for(Integer recordId : record) {
+                    AbstractMetadata md;
+                    try {
+                        md = ApiUtils.canEditRecord(recordId + "", request);
+                    } catch (SecurityException e) {
+                        throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT);
+                    }
                 }
             }
             for(String recordId : uuid) {
