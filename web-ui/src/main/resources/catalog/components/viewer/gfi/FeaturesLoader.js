@@ -190,7 +190,7 @@
           this.dictionary = this.$http.get('../api/records/'+uuid+'/featureCatalog?_content_type=json')
           .then(function(response) {
             if(response.data['decodeMap']!=null) {
-              return Object.keys(response.data['decodeMap']).reduce((acc, key) => {
+              return Object.keys(response.data['decodeMap']).reduce(function(acc, key) {
                 acc[key.toLowerCase()] = response.data['decodeMap'][key];
                 return acc;
               }, {});
