@@ -564,7 +564,8 @@
                 }
               }
               // no valid bbox was found: clear geometry
-              if (!geometry.getPolygons().length) {
+              if (geometry.getType() === 'MultiPolygon' &&
+                !geometry.getPolygons().length) {
                 geometry = null;
               }
               feat.setGeometry(geometry);
