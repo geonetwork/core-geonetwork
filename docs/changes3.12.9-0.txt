@@ -1,0 +1,24 @@
+================================================================================
+===
+=== GeoNetwork 3.12.9: List of changes
+===
+================================================================================
+- Remove ES6 javascript code, introduced in #6802
+- [BP] Workflow / Restrict search by status to record that user can edit (#6889)
+- [BP] When identifying on a layer from a metadata with a linked feature catalog record, use case insensitive comparison between the feature catalog column definitions and the WMS FeatureInfo response. (#6802)
+- Fix indexing of resource date month / year in iso19139 and iso19115.3-2008 schemas (#6873)
+- [BP] KeyCloak / set the user profile retrieved from KeyCloak only for new users or if the configuration option KEYCLOACK_UPDATEPROFILE is enabled (#6871)
+- [BP] ISO19115-3 / Metadata editor / Support gex:EX_BoundingPolygon with multiple gex:polygon elements
+- [BP] Update GH Actions base image to Ubuntu 22.04
+- [BP] Update OnlineSrcDirective.js (#6833)
+- Update German user management translations
+- Update German metadata identifier translation
+- [BP] API / User feedback only allowed on record user can view (#6781)
+- [BP] Metadata status change: don't execute mail notification logic if there are no users to notify
+- [BP] Update userapi so that it will allow administrators to pre-create/update user profile information when using service provider (#6712)
+- [BP] create resource folder if missing during metadata loading. (#6750)
+- [BP] Map / Profile directive / remove goog calls (#6752)
+- [BP] XSL / improve log messages #5751 (#6753)
+- [BP] Report file download - check if related file upload is available (#6722)
+- [BP] Allow for null passwords when creating user via api. (#6711)
+- [BP] Git / Checkout unix shell scripts with lf on windows system. (#6669)
