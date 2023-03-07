@@ -30,6 +30,14 @@
         </h1>
       </a>
     </div>
+    <div
+      data-ng-repeat="c in md.cl_status track by $index"
+      data-ng-show="showStatusFooterFor.indexOf(md.cl_status[0].key) !== -1"
+      title="{{c.key | translate}}"
+      class="gn-status gn-status-md gn-status-bottomright gn-status-{{c.key}}"
+    >
+      {{c.key | translate}}
+    </div>
   </div>
   <!-- /.gn-card-heading -->
   <div class="panel-body gn-card-body">
