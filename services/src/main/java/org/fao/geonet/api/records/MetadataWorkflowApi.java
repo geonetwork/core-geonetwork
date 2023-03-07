@@ -549,6 +549,7 @@ public class MetadataWorkflowApi {
     @ApiOperation(value = "Search status", notes = "", nickname = "searchStatusByType")
     @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET, path = "/status/search")
     @ResponseStatus(value = HttpStatus.OK)
+    @PreAuthorize("hasAuthority('Editor')")
     @ResponseBody
     public List<MetadataStatusResponse> getStatusByType(
         @ApiParam(value = "One or more types to retrieve (ie. worflow, event, task). Default is all.", required = false) @RequestParam(required = false) List<StatusValueType> type,
@@ -567,6 +568,35 @@ public class MetadataWorkflowApi {
         HttpServletRequest request) throws Exception {
       try (ServiceContext context = ApiUtils.createServiceContext(request)) {
 
+        Profile profile = context.getUserSession().getProfile();
+        if (profile != Profile.Administrator) {
+            if (CollectionUtils.isEmpty(record) &&
+                CollectionUtils.isEmpty(uuid)) {
+                throw new NotAllowedException(
+                    "Non administrator user must use a id or uuid parameter to search for status.");
+            }
+
+            if (!CollectionUtils.isEmpty(record)) {
+                for(Integer recordId : record) {
+                    AbstractMetadata md;
+                    try {
+                        md = ApiUtils.canEditRecord(recordId + "", request);
+                    } catch (SecurityException e) {
+                        throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT);
+                    }
+                }
+            }
+            if (!CollectionUtils.isEmpty(uuid)) {
+                for(String recordId : uuid) {
+                    AbstractMetadata md;
+                    try {
+                        md = ApiUtils.canEditRecord(recordId, request);
+                    } catch (SecurityException e) {
+                        throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT);
+                    }
+                }
+            }
+        }
         PageRequest pageRequest;
         if (sortOrder !=null) {
             Sort sortByStatusChangeDate = SortUtils.createSort(sortOrder, MetadataStatus_.changeDate).and(SortUtils.createSort(sortOrder, MetadataStatus_.id));
