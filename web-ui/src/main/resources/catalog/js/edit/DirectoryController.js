@@ -450,13 +450,15 @@
         if (!$scope.delEntryId) {
           return;
         }
-        gnMetadataManager.remove($scope.delEntryId).then(refreshEntriesInfo, function(e) {
-          gnAlertService.addAlert({
-            msg: $translate.instant("directoryEntry-removeError-referenced"),
-            delay: 5000,
-            type: "danger"
+        gnMetadataManager
+          .remove($scope.delEntryId)
+          .then(refreshEntriesInfo, function (e) {
+            gnAlertService.addAlert({
+              msg: $translate.instant("directoryEntry-removeError-referenced"),
+              delay: 5000,
+              type: "danger"
+            });
           });
-        });
         $scope.delEntryId = null;
       };
 
