@@ -427,6 +427,10 @@
     }
     [gn-layermanager],
     .gn-layer-tree {
+      .list-group-item.gn-layer-active {
+        background-color: @gray-lighter;
+        border-color: @list-group-border;
+      }
       .gn-layer-ordering {
         margin-right: -10px;
         position: absolute;
@@ -452,7 +456,6 @@
       .dropdown {
         .dropdown-menu {
           min-width: 16em;
-          right: 0;
           left: auto;
         }
         .gn-padding-left {

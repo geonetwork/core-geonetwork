@@ -116,20 +116,62 @@
       </tab>
 
       <tab heading="{{'layerInfo' | translate}}">
-        <a href="" data-ng-click="zoomToExtent(layer, map)">
+        <br />
+        <a
+          class="btn btn-default btn-block"
+          href=""
+          data-ng-click="zoomToExtent(layer, map)"
+        >
+          <i class="fa fa-fw fa-arrows-alt"></i>
           <span translate="">layerExtentZoom</span>
         </a>
         <br />
         <a
+          class="btn btn-default btn-block"
           href=""
           data-ng-if="layer.get('md') || layer.get('metadataUrl')"
           data-ng-click="showMetadata()"
         >
+          <i class="fa fa-fw fa-file-text"></i>
           <span translate="">layerMetadata</span>
         </a>
+        <br />
+
+        <label data-translate="">ogcServiceUrl</label>
+        <div class="input-group">
+          <input
+            type="text"
+            class="form-control"
+            disabled="disabled"
+            value="{{layer.getSource().getUrl()}}"
+          />
+          <span
+            gn-copy-to-clipboard-button=""
+            data-btn-class="input-group-addon"
+            data-text="{{layer.getSource().getUrl()}}"
+          >
+          </span>
+        </div>
+
+        <label data-translate="">layerName</label>
+        <div class="input-group">
+          <input
+            type="text"
+            class="form-control"
+            disabled="disabled"
+            value="{{layer.get('name')}}"
+          />
+          <span
+            gn-copy-to-clipboard-button=""
+            data-btn-class="input-group-addon"
+            data-text="{{layer.getSource().get('name')}}"
+          >
+          </span>
+        </div>
+
+        <br />
 
         <div
-          class="btn-block"
           ng-if="hasDownload"
           data-gn-wfs-download="layer"
           data-init-on-demand="true"

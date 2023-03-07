@@ -30,6 +30,8 @@
   "language.name": "Language",
   "language.id": "Identifier",
   "language.remove": "Remove language",
+  "layerName": "Layer name",
+  "ogcServiceUrl": "Service URL",
   "translation.addFor": "Add a new translation for",
   "translation.add": "Add",
   "translation.added": "Translation added",
