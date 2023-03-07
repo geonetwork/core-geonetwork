@@ -611,12 +611,14 @@ public class MetadataWorkflowApi {
                     }
                 }
             }
-            for(String recordId : uuid) {
-                AbstractMetadata md;
-                try {
-                    md = ApiUtils.canEditRecord(recordId, request);
-                } catch (SecurityException e) {
-                    throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT);
+            if (!CollectionUtils.isEmpty(uuid)) {
+                for(String recordId : uuid) {
+                    AbstractMetadata md;
+                    try {
+                        md = ApiUtils.canEditRecord(recordId, request);
+                    } catch (SecurityException e) {
+                        throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT);
+                    }
                 }
             }
         }
