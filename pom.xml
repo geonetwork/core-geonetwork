@@ -893,8 +893,8 @@
         <version>${metrics.version}</version>
         <exclusions>
            <exclusion>
-             <groupId>ch.qos.reload4j</groupId>
-             <artifactId>reload4j</artifactId>
+             <groupId>log4j</groupId>
+             <artifactId>log4j</artifactId>
            </exclusion>
         </exclusions>
       </dependency>
