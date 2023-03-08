@@ -914,10 +914,10 @@ Customizing thesaurus
 
 To configure the type of transformations
 or the number of keyword allowed or if the widget
-has to be displayed in a fieldset or as simple field for e
-thesaurus define a specific configuration:
+has to be displayed in a fieldset or as a simple field.
 
-eg. only 2 INSPIRE themes.
+eg. Configuration to add max 2 INSPIRE themes in a simple field
+with suggestion from similar records.
 
 
 .. code-block:: xml
@@ -926,6 +926,7 @@ eg. only 2 INSPIRE themes.
         <thesaurus key="external.theme.httpinspireeceuropaeutheme-theme"
                    maxtags="2"
                    fieldset="false"
+                   suggestion="true"
                    transformations=""/>
       </thesaurusList>
 
@@ -939,7 +940,8 @@ eg. only 2 INSPIRE themes.
             <xs:attribute name="key" type="xs:string" use="required"/>
             <xs:attribute name="maxtags" type="xs:integer" use="optional"/>
             <xs:attribute name="orderById" type="xs:boolean" use="optional"/>
-            <xs:attribute name="fieldset" type="xs:string" use="optional" fixed="false"/>
+            <xs:attribute name="suggestion" type="xs:boolean" use="optional" fixed="true"/>
+            <xs:attribute name="fieldset" type="xs:boolean" use="optional" fixed="false"/>
             <xs:attribute name="transformations" type="xs:string" use="optional"/>
           </xs:complexType>
         </xs:element>

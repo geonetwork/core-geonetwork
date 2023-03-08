@@ -250,6 +250,7 @@
           currentTransformation: "@",
           lang: "@",
           orderById: "@",
+          suggestion: "@",
           textgroupOnly: "@",
 
           // Max number of tags allowed. Use 1 to restrict to only
@@ -257,8 +258,7 @@
           maxTags: "@",
           thesaurusTitle: "@"
         },
-        templateUrl:
-          "../../catalog/components/thesaurus/" + "partials/keywordselector.html",
+        templateUrl: "../../catalog/components/thesaurus/partials/keywordselector.html",
         link: function (scope, element, attrs) {
           $compile(element.contents())(scope);
           // pick up skos browser directive with compiler
@@ -642,8 +642,6 @@
     function (gnCurrentEdit, $http, Metadata) {
       return {
         restrict: "A",
-        replace: true,
-        transclude: true,
         scope: {
           record: "@",
           field: "=",

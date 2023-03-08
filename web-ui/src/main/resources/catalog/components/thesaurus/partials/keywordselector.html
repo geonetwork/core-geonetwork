@@ -84,11 +84,10 @@
     </div>
   </span>
 
-  <div
-    data-ng-if="true"
-    data-gn-keyword-suggestions=""
-    data-field="'th_' + thesaurusKey.split('.')[2] + '.default'"
-    data-exclude="selected"
-    data-select-cb="addThesaurusConceptByLabel"
-  ></div>
+  <div data-ng-if="suggestion == 'true'"
+       data-gn-keyword-suggestions=""
+       data-field="'th_' + thesaurusKey.split('.')[2] + '.default'"
+       data-exclude="selected"
+       data-select-cb="addThesaurusConceptByLabel"
+    ></div>
 </div>
