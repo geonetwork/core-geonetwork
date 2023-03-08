@@ -43,6 +43,7 @@ import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.XmlSerializer;
 import org.fao.geonet.kernel.datamanager.*;
 import org.fao.geonet.kernel.schema.MetadataSchema;
+import org.fao.geonet.kernel.schema.MetadataSchemaOperationFilter;
 import org.fao.geonet.kernel.search.index.IndexingList;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
@@ -141,8 +142,8 @@ public class BaseMetadataUtils implements IMetadataUtils {
         final AbstractMetadata metadata = findOne(metadataId);
         if (metadata != null && metadata.getDataInfo().getType() == MetadataType.METADATA) {
             MetadataSchema mds = schemaManager.getSchema(metadata.getDataInfo().getSchemaId());
-            Pair<String, Element> editXpathFilter = mds.getOperationFilter(ReservedOperation.editing);
-            XmlSerializer.removeFilteredElement(md, editXpathFilter, mds.getNamespaces());
+            MetadataSchemaOperationFilter editFilter = mds.getOperationFilter(ReservedOperation.editing);
+            XmlSerializer.removeFilteredElement(md, editFilter, mds.getNamespaces());
 
             String uuid = getMetadataUuid(metadataId);
             metadataNotifierManager.updateMetadata(md, metadataId, uuid, getServiceContext());

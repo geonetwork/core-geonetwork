@@ -81,15 +81,15 @@ public class MetadataSchema {
     private static final String XSL_FILE_EXTENSION = ".xsl";
     private static final String SCH_FILE_EXTENSION = ".sch";
     private static final String SCHEMATRON_RULE_FILE_PREFIX = "schematron-rules";
-    private Map<String, List<String>> hmElements = new HashMap<String, List<String>>();
-    private Map<String, List<List<String>>> hmRestric = new HashMap<String, List<List<String>>>();
-    private Map<String, MetadataType> hmTypes = new HashMap<String, MetadataType>();
-    private Map<String, List<String>> hmSubs = new HashMap<String, List<String>>();
-    private Map<String, String> hmSubsLink = new HashMap<String, String>();
-    private Map<String, Namespace> hmNameSpaces = new HashMap<String, Namespace>();
-    private Map<String, Namespace> hmPrefixes = new HashMap<String, Namespace>();
-    private Map<String, Pair<String, Element>> hmOperationFilters =
-        new HashMap<String, Pair<String, Element>>();
+    private Map<String, List<String>> hmElements = new HashMap<>();
+    private Map<String, List<List<String>>> hmRestric = new HashMap<>();
+    private Map<String, MetadataType> hmTypes = new HashMap<>();
+    private Map<String, List<String>> hmSubs = new HashMap<>();
+    private Map<String, String> hmSubsLink = new HashMap<>();
+    private Map<String, Namespace> hmNameSpaces = new HashMap<>();
+    private Map<String, Namespace> hmPrefixes = new HashMap<>();
+    private Map<String, MetadataSchemaOperationFilter> hmOperationFilters =
+        new HashMap<>();
     private String schemaName;
     private Path schemaDir;
     private String standardUrl;
@@ -517,7 +517,7 @@ public class MetadataSchema {
         this.schemaRepo.save(updated);
     }
 
-    public void setOperationFilters(Map<String, Pair<String, Element>> operationFilters) {
+    public void setOperationFilters(Map<String, MetadataSchemaOperationFilter> operationFilters) {
         this.hmOperationFilters = operationFilters;
     }
 
@@ -526,8 +526,12 @@ public class MetadataSchema {
      *
      * @return The XPath to select element to filter or null
      */
-    public Pair<String, Element> getOperationFilter(ReservedOperation operation) {
+    public MetadataSchemaOperationFilter getOperationFilter(ReservedOperation operation) {
         return hmOperationFilters.get(operation.name());
+    }
+
+    public MetadataSchemaOperationFilter getOperationFilter(String operation) {
+        return hmOperationFilters.get(operation);
     }
 
     @JsonIgnore
