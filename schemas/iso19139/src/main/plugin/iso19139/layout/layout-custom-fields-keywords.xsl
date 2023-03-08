@@ -241,6 +241,11 @@
                       select="if ($thesaurusConfig/@maxtags)
                               then $thesaurusConfig/@maxtags
                               else ''"/>
+        <xsl:variable name="suggestion"
+                      as="xs:string"
+                      select="if ($thesaurusConfig/@suggestion)
+                              then $thesaurusConfig/@suggestion
+                              else 'false'"/>
         <xsl:variable name="orderById"
                       as="xs:string"
                       select="if ($thesaurusConfig/@orderById)
@@ -273,6 +278,7 @@
              data-current-transformation="{$transformation}"
              data-max-tags="{$maxTags}"
              data-order-by-id="{$orderById}"
+             data-suggestion="{$suggestion}"
              data-lang="{$metadataOtherLanguagesAsJson}"
              data-textgroup-only="false">
         </div>

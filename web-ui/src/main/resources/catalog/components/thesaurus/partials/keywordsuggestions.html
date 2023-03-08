@@ -1,0 +1,50 @@
+<div class="row">
+  <div class="col-lg-12">
+    <span data-translate=""> similarRecordsAlsoContain </span>
+
+    <div class="btn-group btn-group-xs">
+      <button
+        type="button"
+        class="btn btn-link dropdown-toggle"
+        data-toggle="dropdown"
+        aria-haspopup="true"
+        aria-expanded="false"
+      >
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu">
+        <li class="dropdown-header" data-translate="">computeSimilarityBasedOn</li>
+        <li data-ng-repeat="f in moreLikeThisField">
+          <label for="mlt_{{f.field}}">
+            <input type="checkbox" id="mlt_{{f.field}}" data-ng-model="f.selected" />
+            {{f.field | translate}}
+          </label>
+        </li>
+        <li role="separator" class="divider"></li>
+        <li>
+          <label>
+            <span data-translate="">minimumShouldMatch</span>
+            <span>&nbsp;{{moreLikeThisShouldMatch}}%</span>
+          </label>
+          <input
+            type="range"
+            min="10"
+            max="100"
+            step="10"
+            data-ng-model="moreLikeThisShouldMatch"
+          />
+        </li>
+      </ul>
+    </div>
+    <button
+      type="button"
+      style="margin: 2px"
+      data-ng-repeat="(k, v) in suggestions"
+      data-ng-click="selectCb(k)"
+      class="btn btn-xs btn-info"
+      title="{{('suggestionFoundIn' | translate) + '\n' + v.join('\n') + '\n\n' + ('suggestionFoundInClickToAdd' | translate)}}"
+    >
+      {{k}}
+    </button>
+  </div>
+</div>
