@@ -132,7 +132,10 @@
             hits &&
               hits.map &&
               hits.map(function (h) {
-                var overview = h.overview || (h._source && h._source.overview);
+                var overview =
+                  h.overview ||
+                  (h._source && h._source.overview) ||
+                  (h.fields && h.fields.overview);
                 if (overview) {
                   scope.images = scope.images.concat(overview);
                 }
