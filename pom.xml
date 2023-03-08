@@ -798,7 +798,7 @@
         <exclusions>
           <exclusion>
             <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-reload4j</artifactId>
+            <artifactId>slf4j-log4j12</artifactId>
           </exclusion>
         </exclusions>
       </dependency>
