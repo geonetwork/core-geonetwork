@@ -566,10 +566,17 @@ public class AccessManager {
         try {
             if (network.isPresent() && netmask.isPresent() &&
                 StringUtils.isNotEmpty(network.get().getValue()) && StringUtils.isNotEmpty(netmask.get().getValue())) {
-                long lIntranetNet = getAddress(network.get().getValue());
-                long lIntranetMask = getAddress(netmask.get().getValue());
                 long lAddress = getAddress(ip.split(",")[0]);
-                return (lAddress & lIntranetMask) == (lIntranetNet & lIntranetMask);
+                String[] networkArray = network.get().getValue().split(",");
+                String[] netmaskArray = netmask.get().getValue().split(",");
+                for (int i = 0; i < networkArray.length; i++) {
+                    long lIntranetNet = getAddress(networkArray[i]);
+                    long lIntranetMask = getAddress(netmaskArray[i]);
+                    if ((lAddress & lIntranetMask) == (lIntranetNet & lIntranetMask)) {
+                        return true;
+                    };
+                }
+                return false;
             }
         } catch (Exception nfe) {
             Log.error(Geonet.ACCESS_MANAGER,"isIntranet error: " + nfe.getMessage(), nfe);
