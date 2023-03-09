@@ -132,13 +132,13 @@
         <div
           class="pull-left gn-md-category"
           title="{{'listOfCategories' | translate}}"
-          data-ng-class="md.category.length > 0 ||
-                            md.topic.length > 0 ||
+          data-ng-class="md.cat.length > 0 ||
+                            md.cl_topic.length > 0 ||
                             md.inspireThemeUri.length > 0 ? '' : 'invisible'"
         >
           <i
             class="fa"
-            data-ng-repeat="cat in ::md.category"
+            data-ng-repeat="cat in ::md.cat"
             title="{{('cat-' + cat) | translate}}"
             aria-label="{{('cat-' + cat) | translate}}"
           >
@@ -153,10 +153,10 @@
             <span class="fa iti-{{::code}}"></span>
           </i>
           <i
-            data-ng-repeat="t in md.topic"
-            title="{{t | translate}}"
-            aria-label="{{t | translate}}"
-            class="fa gn-icon-{{t}}"
+            data-ng-repeat="t in md.cl_topic"
+            title="{{t.key | translate}}"
+            aria-label="{{t.key | translate}}"
+            class="fa text-primary gn-icon-{{t.key}}"
           >
           </i>
         </div>
