@@ -663,7 +663,7 @@ public class CMISConfiguration {
                     client.getDefaultContext().setIncludePolicies(false);
                 }
                 // IncludeRelationships should be NONE
-                if (! client.getDefaultContext().getIncludeRelationships().equals(IncludeRelationships.NONE)) {
+                if (!client.getDefaultContext().getIncludeRelationships().equals(IncludeRelationships.NONE)) {
                     Log.debug(Geonet.RESOURCES, "Changing default CMIS operational context to not include relationships.");
                     client.getDefaultContext().setIncludeRelationships(IncludeRelationships.NONE);
                 }
