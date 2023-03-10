@@ -235,10 +235,8 @@ public class CMISStore extends AbstractStore {
     protected void setCmisProperties(String metadataUuid, Map<String, Object> properties, Document doc, Map<String, Object> additionalProperties) {
 
         // Add additional properties if exists.
-        if (additionalProperties != null) {
-            if (MapUtils.isNotEmpty(additionalProperties)) {
-                properties.putAll(additionalProperties);
-            }
+        if (MapUtils.isNotEmpty(additionalProperties)) {
+            properties.putAll(additionalProperties);
         }
 
         // now update metadata uuid and status within primary cmis fields if needed.
