@@ -545,7 +545,7 @@ public class CMISStore extends AbstractStore {
 
         for (Property<?> property:document.getProperties()) {
            // Add secondary properties if exists.
-           if (aspectId != null && property.getId().startsWith(aspectId) && property.getValue()!=null) {
+           if (aspectId != null && property.getId().startsWith(aspectId) && property.getValue() != null) {
                properties.put(property.getId(), property.getValue());
            }
            // Add other common cmis properties.
