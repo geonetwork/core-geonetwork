@@ -59,6 +59,7 @@ import java.util.regex.Pattern;
 public class CMISConfiguration {
     private Session client = null;
 
+    public final static Integer CMIS_MAX_ITEMS_PER_PAGE = 1000;
     public final static String CMIS_FOLDER_DELIMITER = "/"; // Specs indicate that "/" is the folder delimiter/separator - not sure if other delimiter can be used?.
     public final static String CMIS_SECONDARY_PROPERTY_SEPARATOR = "->";
     private final String CMIS_DEFAULT_WEBSERVICES_ACL_SERVICE = "/services/ACLService?wsdl";
@@ -668,9 +669,9 @@ public class CMISConfiguration {
                     client.getDefaultContext().setIncludeRelationships(IncludeRelationships.NONE);
                 }
 
-                if (client.getDefaultContext().getMaxItemsPerPage() != 1000) {
-                    Log.debug(Geonet.RESOURCES, "Changing default CMIS max items per page to 1000.");
-                    client.getDefaultContext().setMaxItemsPerPage(1000);
+                if (client.getDefaultContext().getMaxItemsPerPage() != CMIS_MAX_ITEMS_PER_PAGE) {
+                    Log.debug(Geonet.RESOURCES, "Changing default CMIS max items per page to " + CMIS_MAX_ITEMS_PER_PAGE + ".");
+                    client.getDefaultContext().setMaxItemsPerPage(CMIS_MAX_ITEMS_PER_PAGE);
                 }
 
                 // Setup default filter. Only include properties that are used by the application.

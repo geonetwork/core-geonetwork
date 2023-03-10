@@ -65,6 +65,8 @@ public class CMISStore extends AbstractStore {
 
     private Path baseMetadataDir = null;
 
+    private static final String CMIS_PROPERTY_PREFIX = "cmis:";
+
     @Autowired
     CMISConfiguration cmisConfiguration;
 
@@ -526,8 +528,8 @@ public class CMISStore extends AbstractStore {
                 putResource(context, targetUuid, sourceDocument.getName(), sourceDocument.getContentStream().getStream(), null, metadataResourceVisibility, targetApproved, sourceProperties);
 
             }
-        } catch (CmisObjectNotFoundException | ResourceNotFoundException  e) {
-            Log.warning(Geonet.RESOURCES,"Cannot find folder object from CMIS ... Abort copping resources from " + sourceResourceTypeDir);
+        } catch (CmisObjectNotFoundException | ResourceNotFoundException e) {
+            Log.warning(Geonet.RESOURCES, "Cannot find folder object from CMIS ... Abort copping resources from " + sourceResourceTypeDir);
         }
     }
 
@@ -535,21 +537,21 @@ public class CMISStore extends AbstractStore {
         Map<String, Object> properties = new HashMap<>();
 
         // Get secondary properties aspect if it exists.
-        String aspectId=null;
+        String aspectId = null;
         Property aspectProperty = document.getProperty(PropertyIds.SECONDARY_OBJECT_TYPE_IDS);
         if (aspectProperty != null && !StringUtils.isEmpty(aspectProperty.getValueAsString())) {
             aspectId = aspectProperty.getValueAsString();
         }
 
-        for (Property<?> property:document.getProperties()) {
-           // Add secondary properties if exists.
-           if (aspectId != null && property.getId().startsWith(aspectId) && property.getValue() != null) {
-               properties.put(property.getId(), property.getValue());
-           }
-           // Add other common cmis properties.
-           if (property.getId().startsWith("cmis:") && property.getValue()!=null) {
-              properties.put(property.getId(), property.getValue());
-           }
+        for (Property<?> property : document.getProperties()) {
+            // Add secondary properties if exists.
+            if (aspectId != null && property.getId().startsWith(aspectId) && property.getValue() != null) {
+                properties.put(property.getId(), property.getValue());
+            }
+            // Add other common cmis properties.
+            if (property.getId().startsWith(CMIS_PROPERTY_PREFIX) && property.getValue() != null) {
+                properties.put(property.getId(), property.getValue());
+            }
         }
 
         return properties;
