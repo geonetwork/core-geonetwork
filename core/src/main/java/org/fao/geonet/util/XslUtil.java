@@ -1034,7 +1034,7 @@ public final class XslUtil {
     public static Node getGroupDetailsInConfigFile(String groupIdentifier) {
         GeonetworkDataDirectory dataDirectory = ApplicationContextHolder.get().getBean(GeonetworkDataDirectory.class);
         Path groupLandingPageDir = dataDirectory.getWebappDir()
-            .resolve("catalog").resolve("views")
+            .resolve("sextant").resolve("views")
             .resolve("sextant").resolve("landing-pages")
             .resolve(groupIdentifier).resolve("config.xml");
         if(java.nio.file.Files.exists(groupLandingPageDir)) {
