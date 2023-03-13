@@ -374,7 +374,6 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
         try {
             md = metadata.getXmlData(false);
         } catch (IOException | JDOMException e) {
-            // Todo Add error to errorReport
             return Pair.read(errorReport, false);
         }
 
