@@ -35,6 +35,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
 
 import org.apache.chemistry.opencmis.client.api.CmisObject;
 import org.apache.chemistry.opencmis.client.api.Document;
@@ -231,14 +232,6 @@ public class CMISUtils {
         int isLength = is.available();
         ContentStream contentStream = cmisConfiguration.getClient().getObjectFactory().createContentStream(key, isLength, Files.probeContentType(new File(key).toPath()), is);
 
-        // If we have a cmisObject then lets refresh it to make sure it still exists.
-        if (cmisObject != null) {
-            try {
-                cmisObject.refresh();
-            } catch (CmisObjectNotFoundException e) {
-                cmisObject = null;
-            }
-        }
         Document doc;
         if (cmisObject != null) {
             try {
@@ -256,15 +249,38 @@ public class CMISUtils {
                     ObjectId objectID = doc.checkOut();
                     CmisObject o = cmisConfiguration.getClient().getObject(objectID, oc);
                     ((Document) o).checkIn(true, properties, contentStream, null);
+                    if (cmisConfiguration.existSecondaryProperty()) {
+                       //need to reload document to avoid  "Document is not the latest version" when updating secondary types.
+                       doc.refresh();
+                    }
                 } else {
-                    doc.updateProperties(properties, true);
-                    doc.setContentStream(contentStream, true, true);
+                    doc = doc.setContentStream(contentStream, true);
+                    // Split properties because it fails to set primary properties and secondary properties at the same time.
+                    //      {"exception":"invalidArgument","message":"Category attributes and name\/description can't be changed at once [986930338]"}
+                    if (properties.containsKey(PropertyIds.SECONDARY_OBJECT_TYPE_IDS)) {
+                        Map<String, Object> secondaryProperties = new HashMap<>();
+                        Map<String, Object> primaryProperties = properties.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+
+                        for (Object objectPropertyName : ((ArrayList) properties.get(PropertyIds.SECONDARY_OBJECT_TYPE_IDS))) {
+                            String aspectPropertyName = (String)objectPropertyName;
+                            secondaryProperties.putAll(properties.entrySet().stream()
+                                .filter(c -> c.getKey().startsWith(aspectPropertyName))
+                                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))
+                              );
+                            primaryProperties.keySet().removeAll(properties.keySet().stream()
+                                .filter(c -> c.startsWith(aspectPropertyName))
+                                .collect(Collectors.toSet())
+                            );
+                        }
+                        secondaryProperties.put(PropertyIds.SECONDARY_OBJECT_TYPE_IDS, properties.get(PropertyIds.SECONDARY_OBJECT_TYPE_IDS));
+                        primaryProperties.remove(PropertyIds.SECONDARY_OBJECT_TYPE_IDS);
+                        doc = (Document) doc.updateProperties(primaryProperties);
+                        doc = (Document) doc.updateProperties(secondaryProperties);
+                    } else {
+                        doc = (Document) doc.updateProperties(properties);
+                    }
                 }
 
-                if (cmisConfiguration.existSecondaryProperty()) {
-                    //need to reload document to avoid  "Document is not the latest version" when updating secondary types.
-                    doc.refresh();
-                }
                 // Avoid CMIS API call is info is not enabled.
                 if (LogManager.getLogger(Geonet.RESOURCES).isInfoEnabled()) {
                     Log.info(Geonet.RESOURCES,

@@ -65,6 +65,8 @@ public class CMISStore extends AbstractStore {
 
     private Path baseMetadataDir = null;
 
+    private static final String CMIS_PROPERTY_PREFIX = "cmis:";
+
     @Autowired
     CMISConfiguration cmisConfiguration;
 
@@ -214,75 +216,64 @@ public class CMISStore extends AbstractStore {
         // Reset Filter from the default operationalContext to include all fields because we may need secondary properties.
         oc.setFilter(null);
 
-        CmisObject cmisObject;
-        try {
-            cmisObject = cmisConfiguration.getClient().getObjectByPath(key, oc);
-        } catch (Exception e) {
-            cmisObject = null;
-        }
-
         Map<String, Object> properties = new HashMap<String, Object>();
-        if (!StringUtils.isEmpty(cmisConfiguration.getCmisMetadataUUIDPropertyName()) && !cmisConfiguration.existMetadataUUIDSecondaryProperty()) {
-            setCmisMetadataUUIDPrimary(properties, metadataUuid);
-        }
+        Document doc;
+        try {
+            doc = (Document) cmisConfiguration.getClient().getObjectByPath(key, oc);
 
-        // If cmisObject is empty then it is a new record. With new records, we need to set the default value for the status.
-        MetadataResourceExternalManagementProperties.ValidationStatus defaultStatus = null;
-        // We only need to set the default if there is a status property supplied.
-        if (!StringUtils.isEmpty(cmisConfiguration.getExternalResourceManagementValidationStatusPropertyName())) {
-            if (cmisConfiguration.getExternalResourceManagementValidationStatusDefaultValue() != null) {
-                // If a default property name does exist then use it
-                defaultStatus = MetadataResourceExternalManagementProperties.ValidationStatus.valueOf(cmisConfiguration.getExternalResourceManagementValidationStatusDefaultValue());
-            } else {
-                // Otherwise lets default to incomplete.
-                // Reason - as the administrator decided to use the status, it most likely means that there are extra properties that need to be set after a file is uploaded so defaulting it to
-                // incomplete seems reasonable.
-                defaultStatus = MetadataResourceExternalManagementProperties.ValidationStatus.INCOMPLETE;
-            }
-            if (cmisObject==null &&
-                !cmisConfiguration.existExternalResourceManagementValidationStatusSecondaryProperty() &&
-                !properties.containsKey(cmisConfiguration.getExternalResourceManagementValidationStatusPropertyName())
-                ) {
-                setCmisExternalManagementResourceStatusPrimary(properties, defaultStatus);
-            }
-        }
-
-        Document doc = cmisUtils.saveDocument(key, cmisObject, properties, is, changeDate);
-
-        // The optional metadata UUID is assigned to a user-defined property in the content management system.
-        // In some content management systems, custom properties appear as CMIS Secondary properties.
-        // CMIS Secondary properties cannot be set in the same call that creates the document and sets it's properties,
-        // so this is done in the following call after the document is created
-        if (cmisConfiguration.existSecondaryProperty()) {
-            Map<String, Object> secondaryProperties = new HashMap<>();
-            if (MapUtils.isNotEmpty(additionalProperties)) {
-                secondaryProperties.putAll(additionalProperties);
-            }
-            if (cmisConfiguration.existMetadataUUIDSecondaryProperty()) {
-                setCmisMetadataUUIDSecondary(doc, secondaryProperties, metadataUuid);
-            }
-
-            // If cmisObject is empty and the property does not already exist as an additional secondary property then it is a new record.
-            // With new records, we need to set the default value for the status.
-            if (cmisObject==null &&
-                cmisConfiguration.existExternalResourceManagementValidationStatusSecondaryProperty() &&
-                !secondaryProperties.containsKey(cmisConfiguration.getExternalResourceManagementValidationStatusPropertyName().split(CMISConfiguration.CMIS_SECONDARY_PROPERTY_SEPARATOR)[1])) {
-                setCmisExternalManagementResourceStatusSecondary(doc, secondaryProperties, defaultStatus);
-            }
-
-            try {
-                doc.updateProperties(secondaryProperties);
-            } catch (Exception e) {
-                Log.error(Geonet.RESOURCES,
-                    String.format("Unable to update CMIS secondary property on metadata resource '%s' for metadata '%s'.", key, metadataUuid), e);
-                throw e;
-            }
+            // Update existing document
+            setCmisProperties(metadataUuid, properties, doc, additionalProperties);
+            doc = cmisUtils.saveDocument(key, doc, properties, is, changeDate);
+        } catch (CmisObjectNotFoundException e) {
+            // add new document
+            setCmisProperties(metadataUuid, properties, null, additionalProperties);
+            doc = cmisUtils.saveDocument(key, null, properties, is, changeDate);
         }
 
         return createResourceDescription(context, metadataUuid, visibility, filename,
             doc, metadataId, approved);
     }
 
+    protected void setCmisProperties(String metadataUuid, Map<String, Object> properties, Document doc, Map<String, Object> additionalProperties) {
+
+        // Add additional properties if exists.
+        if (MapUtils.isNotEmpty(additionalProperties)) {
+            properties.putAll(additionalProperties);
+        }
+
+        // now update metadata uuid and status within primary cmis fields if needed.
+
+        // Don't allow users metadata uuid to be supplied as a property so let's overwrite any value that may exist.
+        if (!StringUtils.isEmpty(cmisConfiguration.getCmisMetadataUUIDPropertyName())) {
+            setCmisMetadataUUIDPrimary(properties, metadataUuid);
+        }
+        // If document is empty it is a new record so set the default status value property if it does not already exist as an additional property.
+        if (doc == null &&
+            !StringUtils.isEmpty(cmisConfiguration.getExternalResourceManagementValidationStatusPropertyName()) &&
+            !properties.containsKey(cmisConfiguration.getExternalResourceManagementValidationStatusPropertyName())) {
+            setCmisExternalManagementResourceStatusPrimary(properties, cmisConfiguration.getValidationStatusDefaultValue());
+        }
+
+        // If we have secondary properties then lets apply those changes as well.
+        if (cmisConfiguration.existSecondaryProperty()) {
+            Property secondaryProperties = null;
+            if (doc != null) {
+                secondaryProperties = doc.getProperty(PropertyIds.SECONDARY_OBJECT_TYPE_IDS);
+            }
+
+            // Don't allow users metadata uuid to be supplied as a property so let's overwrite any value that may exist.
+            if (cmisConfiguration.existMetadataUUIDSecondaryProperty()) {
+                setCmisMetadataUUIDSecondary(secondaryProperties, properties, metadataUuid);
+            }
+            // If document is empty it is a new record so set the default status value property if it does not already exist as an additional secondary property.
+            if (doc == null &&
+                cmisConfiguration.existExternalResourceManagementValidationStatusSecondaryProperty() &&
+                !properties.containsKey(cmisConfiguration.getExternalResourceManagementValidationStatusPropertyName().split(CMISConfiguration.CMIS_SECONDARY_PROPERTY_SEPARATOR)[1])) {
+                setCmisExternalManagementResourceStatusSecondary(secondaryProperties, properties, cmisConfiguration.getValidationStatusDefaultValue());
+            }
+        }
+
+    }
     protected void setCmisMetadataUUIDPrimary(Map<String, Object> properties, String metadataUuid) {
         setCmisPrimaryProperty(properties, cmisConfiguration.getCmisMetadataUUIDPropertyName(), metadataUuid);
     }
@@ -298,22 +289,21 @@ public class CMISStore extends AbstractStore {
         }
     }
 
-    protected void setCmisExternalManagementResourceStatusSecondary(Document doc, Map<String, Object> properties, MetadataResourceExternalManagementProperties.ValidationStatus status) {
-        setCmisSecondaryProperty(doc, properties, cmisConfiguration.getExternalResourceManagementValidationStatusPropertyName(), status.getValue());
+    protected void setCmisExternalManagementResourceStatusSecondary(Property secondaryProperty, Map<String, Object> properties, MetadataResourceExternalManagementProperties.ValidationStatus status) {
+        setCmisSecondaryProperty(secondaryProperty, properties, cmisConfiguration.getExternalResourceManagementValidationStatusPropertyName(), status.getValue());
     }
 
-    protected void setCmisMetadataUUIDSecondary(Document doc, Map<String, Object> properties, String metadataUuid) {
-        setCmisSecondaryProperty(doc, properties, cmisConfiguration.getCmisMetadataUUIDPropertyName(), metadataUuid);
+    protected void setCmisMetadataUUIDSecondary(Property secondaryProperty, Map<String, Object> properties, String metadataUuid) {
+        setCmisSecondaryProperty(secondaryProperty, properties, cmisConfiguration.getCmisMetadataUUIDPropertyName(), metadataUuid);
     }
 
-    protected void setCmisSecondaryProperty(Document doc, Map<String, Object> properties, String propertyName, Object value) {
+    protected void setCmisSecondaryProperty(Property secondaryProperty, Map<String, Object> properties, String propertyName, Object value) {
         if (!StringUtils.isEmpty(propertyName) &&
             propertyName.contains(cmisConfiguration.getSecondaryPropertySeparator())) {
             String[] splitPropertyNames = propertyName.split(Pattern.quote(cmisConfiguration.getSecondaryPropertySeparator()));
             String aspectName = splitPropertyNames[0];
             String secondaryPropertyName = splitPropertyNames[1];
             List<Object> aspects = null;
-            Property secondaryProperty = doc.getProperty(PropertyIds.SECONDARY_OBJECT_TYPE_IDS);
             if (secondaryProperty != null) {
                 // It may return an unmodifiable list and we need to potentially modify the list so lets make a copy of the list.
                 aspects = new ArrayList<>(secondaryProperty.getValues());
@@ -534,28 +524,33 @@ public class CMISStore extends AbstractStore {
                 Document sourceDocument = sourceEntry.getValue();
 
                 // Get cmis properties from the source document
-                Map<String, Object> sourceProperties = getSecondaryProperties(sourceDocument);
+                Map<String, Object> sourceProperties = getProperties(sourceDocument);
                 putResource(context, targetUuid, sourceDocument.getName(), sourceDocument.getContentStream().getStream(), null, metadataResourceVisibility, targetApproved, sourceProperties);
 
             }
-        } catch (CmisObjectNotFoundException  e) {
-            Log.warning("Cannot find folder object from CMIS ... Abort copping resources from "+sourceResourceTypeDir, e);
+        } catch (CmisObjectNotFoundException | ResourceNotFoundException e) {
+            Log.warning(Geonet.RESOURCES, "Cannot find folder object from CMIS ... Abort copping resources from " + sourceResourceTypeDir);
         }
     }
 
-    protected Map<String, Object> getSecondaryProperties(Document document) {
-        String aspectId=null;
+    protected Map<String, Object> getProperties(Document document) {
+        Map<String, Object> properties = new HashMap<>();
+
+        // Get secondary properties aspect if it exists.
+        String aspectId = null;
         Property aspectProperty = document.getProperty(PropertyIds.SECONDARY_OBJECT_TYPE_IDS);
-        if (aspectProperty != null) {
+        if (aspectProperty != null && !StringUtils.isEmpty(aspectProperty.getValueAsString())) {
             aspectId = aspectProperty.getValueAsString();
         }
 
-        Map<String, Object> properties = new HashMap<>();
-        if (!StringUtils.isEmpty(aspectId)) {
-            for (Property<?> property:document.getProperties()) {
-                if (property.getId().startsWith(aspectId) && property.getValue()!=null) {
-                    properties.put(property.getId(), property.getValue());
-                }
+        for (Property<?> property : document.getProperties()) {
+            // Add secondary properties if exists.
+            if (aspectId != null && property.getId().startsWith(aspectId) && property.getValue() != null) {
+                properties.put(property.getId(), property.getValue());
+            }
+            // Add other common cmis properties.
+            if (property.getId().startsWith(CMIS_PROPERTY_PREFIX) && property.getValue() != null) {
+                properties.put(property.getId(), property.getValue());
             }
         }
 
