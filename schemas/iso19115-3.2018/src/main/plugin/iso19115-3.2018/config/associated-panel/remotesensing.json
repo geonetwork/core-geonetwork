@@ -212,6 +212,30 @@
             "isMultilingual": false
           }
         }
+      },{
+        "group": "services",
+        "label": "Broadcast",
+        "icon": "fa gn-icon-onlinesrc",
+        "process": "onlinesrc-add",
+        "fields": {
+          "url": {
+            "isMultilingual": false
+          },
+          "protocol": {
+            "value": "WWW:BROADCAST",
+            "hidden": true,
+            "isMultilingual": false
+          },
+          "name": {},
+          "desc": {
+            "hidden": true
+          },
+          "function": {
+            "value": "browsing",
+            "hidden": true,
+            "isMultilingual": false
+          }
+        }
       },
       {
         "group": "documents",

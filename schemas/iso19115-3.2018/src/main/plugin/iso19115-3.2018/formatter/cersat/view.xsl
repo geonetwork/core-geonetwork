@@ -655,6 +655,7 @@
         <link key="OGC:WMS" label="WMS"/>
         <link key="WWW:OPENDAP" label="OPeNDAP"/>
         <link key="WWW:OPENSEARCH" label="OpenSearch"/>
+        <link key="WWW:BROADCAST" label="Broadcast"/>
         <link key="WWW:LINK" label="HTTPS"/>
         <link key="WWW:LINKUser guide" label="User guide"/>
         <link key="WWW:LINKSoftware" label="Software"/>
