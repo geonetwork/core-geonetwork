@@ -233,13 +233,14 @@ public class ValidateApi {
 
                                     // Extract all the know errors that exists in the report as List of Text
                                     List<?> schemaTronReportErrors = Xml.selectNodes(schemaTronReport,
-                                        "geonet:xsderrors/geonet:error/geonet:message/text()" +
-                                            "| geonet:schematronerrors/geonet:report[@geonet:required = '" + SchematronRequirement.REQUIRED + "']/svrl:schematron-output/svrl:failed-assert/svrl:text/*/text()" +
-                                            "| geonet:schematronerrors/geonet:report[@geonet:required = '" + SchematronRequirement.REQUIRED + "']/geonet:schematronVerificationError/text()",
+                                        "geonet:xsderrors/geonet:error/geonet:message[normalize-space(.) != '']" +
+                                            "| geonet:schematronerrors/geonet:report[@geonet:required = '" + SchematronRequirement.REQUIRED + "']/svrl:schematron-output/svrl:failed-assert/svrl:text[normalize-space(.) != '']" +
+                                            "| geonet:schematronerrors/geonet:report[@geonet:required = '" + SchematronRequirement.REQUIRED + "']/geonet:schematronVerificationError[normalize-space(.) != '']",
                                         theNSs);
 
                                     for (Object schemaTronReportError :schemaTronReportErrors) {
-                                        report.addMetadataError(record, ((Text)schemaTronReportError).getText());
+                                        // Add normalized string to the report.
+                                        report.addMetadataError(record, Xml.selectString((Element) schemaTronReportError, "normalize-space(.)",  theNSs));
                                     }
                                 }
 
