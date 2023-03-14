@@ -6,6 +6,7 @@
                 xmlns:owl="http://www.w3.org/2002/07/owl#"
                 xmlns:void="http://rdfs.org/ns/void#"
                 xmlns:util="java:java.util.UUID"
+                xmlns:java="java:org.fao.geonet.util.XslUtil"
                 xmlns:gml="http://www.opengis.net/gml#"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform" exclude-result-prefixes="#all">
 
@@ -32,11 +33,10 @@
       <xsl:variable name="bounds"
                     select=".//rdf:Description[rdf:type/@rdf:resource = 'http://www.opengis.net/gml#Envelope']"
                     as="node()*"/>
-      <!-- https://sextant.ifremer.fr/-->
       <xsl:variable name="prefix"
-                    select="'https://vocab.ifremer.fr/collection/'"/>
+                    select="java:getSettingValue('system/metadata/thesaurusNamespace')"/>
       <xsl:variable name="baseUri"
-                    select="concat($prefix, $filename)"/>
+                    select="replace($prefix, '\{\{filename\}\}', $filename)"/>
 
       <xsl:message>============================</xsl:message>
       <xsl:message>Processing <xsl:value-of select="$baseUri"/></xsl:message>

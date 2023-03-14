@@ -426,9 +426,11 @@
           )
           .then(
             function (response) {
-              $scope.thesaurusSelected = null;
               $("#thesaurusModal").modal("hide");
-              loadThesaurus();
+              $scope.buildHierarchy().then(function () {
+                loadThesaurus();
+                $scope.thesaurusSelected = null;
+              });
             },
             function (response) {
               $rootScope.$broadcast("StatusUpdated", {
@@ -536,11 +538,10 @@
         }
       }
 
-      $scope.buildHierarchy = function (formId) {
+      $scope.buildHierarchy = function () {
         return $http
           .post(
             "../api/registries/vocabularies/" +
-              // 'actions/sextantFormat')
               $scope.thesaurusSelected.key +
               "/actions/sextantFormat"
           )

@@ -1508,7 +1508,7 @@ public class KeywordsApi {
         });
     }
 
-    private void applySextantFormat(Thesaurus thesaurusToUpdate) throws Exception {
+    private void applySextantFormat(Thesaurus thesaurusToUpdate) {
         Path thesaurusFile = thesaurusToUpdate.getFile();
 
         Path skosTransform = dataDirectory.getWebappDir().resolve(
@@ -1519,15 +1519,25 @@ public class KeywordsApi {
         String[] subarray = (String[]) ArrayUtils.subarray(tokens, 2, tokens.length);
         params.put("filename",
             Arrays.stream(subarray).collect(Collectors.joining(".")));
-        Element transform = Xml.transform(
-            Xml.loadFile(thesaurusFile), skosTransform, params);
+        Element transform = null;
+        try {
+            transform = Xml.transform(
+                Xml.loadFile(thesaurusFile), skosTransform, params);
 
-        XMLOutputter xmlOutput = new XMLOutputter();
-        xmlOutput.setFormat(Format.getCompactFormat());
-        xmlOutput.output(transform,
-            new OutputStreamWriter(new FileOutputStream(thesaurusFile.toFile().getCanonicalPath()),
-                StandardCharsets.UTF_8));
-
-        thesaurusManager.addOrReloadThesaurus(thesaurusToUpdate);
+            if (transform != null
+                && StringUtils.isNotEmpty(Xml.getString(transform).trim())) {
+                XMLOutputter xmlOutput = new XMLOutputter();
+                xmlOutput.setFormat(Format.getCompactFormat());
+                xmlOutput.output(transform,
+                    new OutputStreamWriter(new FileOutputStream(thesaurusFile.toFile().getCanonicalPath()),
+                        StandardCharsets.UTF_8));
+                thesaurusToUpdate.retrieveThesaurusInformation();
+                thesaurusManager.addOrReloadThesaurus(thesaurusToUpdate);
+            } else {
+                throw new WebApplicationException("Transformed thesaurus is empty. Probably error occurred while formatting it to Sextant format. Check log file.");
+            }
+        } catch (Exception e) {
+            throw new WebApplicationException("Transformed thesaurus is empty. Probably error occurred while formatting it to Sextant format. Check log file. Error is: " + e.getMessage());
+        }
     }
 }
