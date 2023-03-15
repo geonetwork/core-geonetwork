@@ -1035,6 +1035,28 @@ the mandatory section with no name and then the inner elements.
           </xs:documentation>
         </xs:annotation>
       </xs:attribute>
+      <xs:attribute name="forEach" type="xs:string">
+        <xs:annotation>
+          <xs:documentation><![CDATA[
+The xpath of the element to loop on.
+If a for-each attribute is set for a section,
+then all children xpath will be relative to the current element.
+
+
+.. code-block:: xml
+
+            <section forEach="/gmd:MD_Metadata/gmd:distributionInfo">
+              <text><h2>Distribution</h2></text>
+              <section forEach="*/gmd:transferOptions/*/gmd:onLine/gmd:CI_OnlineResource" name="A link">
+                <field xpath="gmd:linkage"/>
+                <field xpath="gmd:name" or="name" in="."/>
+              </section>
+              <text><hr/></text>
+            </section>
+
+          ]]></xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
       <xs:attribute ref="or"/>
       <xs:attribute ref="in"/>
       <xs:attribute ref="displayIfRecord"/>
