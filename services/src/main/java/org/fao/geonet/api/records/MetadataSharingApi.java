@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2021 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2023 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -58,11 +58,11 @@ import org.fao.geonet.repository.specification.MetadataValidationSpecs;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.fao.geonet.util.MailUtil;
 import org.fao.geonet.util.WorkflowUtil;
-import org.fao.geonet.util.XslUtil;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -139,6 +139,9 @@ public class MetadataSharingApi {
     @Autowired
     UserGroupRepository userGroupRepository;
 
+    @Autowired
+    MetadataStatusRepository metadataStatusRepository;
+
     /**
      * What does publish mean?
      */
@@ -159,7 +162,7 @@ public class MetadataSharingApi {
 
         List<OperationAllowed> operationsAllowed = opAllowRepo.findAllWithOwner(userId, Optional.of(spec));
 
-        Vector<OperationAllowedId> result = new Vector<OperationAllowedId>();
+        Vector<OperationAllowedId> result = new Vector<>();
         for (OperationAllowed operationAllowed : operationsAllowed) {
             result.add(operationAllowed.getId());
         }
@@ -185,9 +188,9 @@ public class MetadataSharingApi {
             description = API_PARAM_RECORD_UUID,
             required = true)
         @PathVariable
-            String metadataUuid,
+        String metadataUuid,
         @Parameter(hidden = true)
-            HttpSession session,
+        HttpSession session,
         HttpServletRequest request
     )
         throws Exception {
@@ -212,9 +215,9 @@ public class MetadataSharingApi {
             description = API_PARAM_RECORD_UUID,
             required = true)
         @PathVariable
-            String metadataUuid,
+        String metadataUuid,
         @Parameter(hidden = true)
-            HttpSession session,
+        HttpSession session,
         HttpServletRequest request
     )
         throws Exception {
@@ -248,7 +251,7 @@ public class MetadataSharingApi {
             description = API_PARAM_RECORD_UUID,
             required = true)
         @PathVariable
-            String metadataUuid,
+        String metadataUuid,
         @Parameter(
             description = "Privileges",
             required = true
@@ -256,9 +259,9 @@ public class MetadataSharingApi {
         @RequestBody(
             required = true
         )
-            SharingParameter sharing,
+        SharingParameter sharing,
         @Parameter(hidden = true)
-            HttpSession session,
+        HttpSession session,
         HttpServletRequest request
     )
         throws Exception {
@@ -316,7 +319,7 @@ public class MetadataSharingApi {
             required = false)
         @RequestParam(required = false) String bucket,
         @Parameter(hidden = true)
-            HttpSession session,
+        HttpSession session,
         HttpServletRequest request
     )
         throws Exception {
@@ -347,7 +350,7 @@ public class MetadataSharingApi {
             required = false)
         @RequestParam(required = false) String bucket,
         @Parameter(hidden = true)
-            HttpSession session,
+        HttpSession session,
         HttpServletRequest request
     )
         throws Exception {
@@ -384,9 +387,9 @@ public class MetadataSharingApi {
         @RequestBody(
             required = true
         )
-            SharingParameter sharing,
+        SharingParameter sharing,
         @Parameter(hidden = true)
-            HttpSession session,
+        HttpSession session,
         HttpServletRequest request
     )
         throws Exception {
@@ -409,7 +412,6 @@ public class MetadataSharingApi {
         List<MetadataPublicationNotificationInfo> metadataListToNotifyPublication,
         boolean notifyByMail) throws Exception {
         if (privileges != null) {
-
             Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
             ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages", locale);
 
@@ -506,6 +508,40 @@ public class MetadataSharingApi {
                     metadataNotificationInfo.setMetadataId(metadata.getId());
                     metadataNotificationInfo.setGroupId(metadata.getSourceInfo().getGroupOwner());
                     metadataNotificationInfo.setPublished(publishedAfter);
+                    metadataNotificationInfo.setPublicationDateStamp(new ISODate());
+
+                    java.util.Optional<User> publishUser = userRepository.findById(userId);
+
+                    if (publishUser.isPresent()) {
+                        metadataNotificationInfo.setPublisherUser(publishUser.get().getUsername());
+                    }
+
+                    // If the metadata workflow is enabled retrieve the submitter and reviewer users information
+                    if (isMdWorkflowEnable) {
+                        String sortField = SortUtils.createPath(MetadataStatus_.changeDate);
+                        List<MetadataStatus> statusList = metadataStatusRepository.findAllByMetadataIdAndByType(metadata.getId(),
+                            StatusValueType.workflow, Sort.by(Sort.Direction.DESC, sortField));
+
+                        java.util.Optional<MetadataStatus> approvedStatus = statusList.stream().filter(status ->
+                            status.getStatusValue().getId() == Integer.valueOf(StatusValue.Status.APPROVED)).findFirst();
+                        if (approvedStatus.isPresent()) {
+                            java.util.Optional<User> reviewerUser = userRepository.findById(approvedStatus.get().getUserId());
+
+                            if (reviewerUser.isPresent()) {
+                                metadataNotificationInfo.setReviewerUser(reviewerUser.get().getUsername());
+                            }
+                        }
+
+                        java.util.Optional<MetadataStatus> submittedStatus = statusList.stream().filter(status ->
+                            status.getStatusValue().getId() == Integer.valueOf(StatusValue.Status.SUBMITTED)).findFirst();
+                        if (submittedStatus.isPresent()) {
+                            java.util.Optional<User> submitterUser = userRepository.findById(submittedStatus.get().getUserId());
+
+                            if (submitterUser.isPresent()) {
+                                metadataNotificationInfo.setSubmitterUser(submitterUser.get().getUsername());
+                            }
+                        }
+                    }
 
                     metadataListToNotifyPublication.add(metadataNotificationInfo);
                 }
@@ -539,9 +575,9 @@ public class MetadataSharingApi {
             description = API_PARAM_RECORD_UUID,
             required = true)
         @PathVariable
-            String metadataUuid,
+        String metadataUuid,
         @Parameter(hidden = true)
-            HttpSession session,
+        HttpSession session,
         HttpServletRequest request
     )
         throws Exception {
@@ -634,7 +670,7 @@ public class MetadataSharingApi {
             description = API_PARAM_RECORD_UUID,
             required = true)
         @PathVariable
-            String metadataUuid,
+        String metadataUuid,
         @Parameter(
             description = "Group identifier",
             required = true
@@ -642,13 +678,12 @@ public class MetadataSharingApi {
         @RequestBody(
             required = true
         )
-            Integer groupIdentifier,
+        Integer groupIdentifier,
         HttpServletRequest request
     )
         throws Exception {
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
         ApplicationContext appContext = ApplicationContextHolder.get();
-        ServiceContext context = ApiUtils.createServiceContext(request);
 
         Group group = groupRepository.findById(groupIdentifier).get();
         if (group == null) {
@@ -689,11 +724,10 @@ public class MetadataSharingApi {
     @ResponseBody
     public SharingResponse getSharingSettings(
         @Parameter(hidden = true)
-            HttpSession session,
+        HttpSession session,
         HttpServletRequest request
     )
         throws Exception {
-        ApplicationContext appContext = ApplicationContextHolder.get();
         ServiceContext context = ApiUtils.createServiceContext(request);
         UserSession userSession = ApiUtils.getUserSession(session);
 
@@ -745,7 +779,7 @@ public class MetadataSharingApi {
         @Parameter(description = ApiParams.API_PARAM_RECORD_UUIDS_OR_SELECTION,
             required = false)
         @RequestParam(required = false)
-            String[] uuids,
+        String[] uuids,
         @Parameter(
             description = "Group identifier",
             required = true
@@ -753,14 +787,14 @@ public class MetadataSharingApi {
         @RequestParam(
             required = true
         )
-            Integer groupIdentifier,
+        Integer groupIdentifier,
         @Parameter(
             description = ApiParams.API_PARAM_BUCKET_NAME,
             required = false)
         @RequestParam(
             required = false
         )
-            String bucket,
+        String bucket,
         @Parameter(
             description = "User identifier",
             required = true
@@ -768,12 +802,12 @@ public class MetadataSharingApi {
         @RequestParam(
             required = true
         )
-            Integer userIdentifier,
+        Integer userIdentifier,
         @Parameter(description = "Use approved version or not", example = "true")
         @RequestParam(required = false, defaultValue = "false")
-            Boolean approved,
+        Boolean approved,
         @Parameter(hidden = true)
-            HttpSession session,
+        HttpSession session,
         HttpServletRequest request
     )
         throws Exception {
@@ -782,8 +816,6 @@ public class MetadataSharingApi {
         try {
             Set<String> records = ApiUtils.getUuidsParameterOrSelection(uuids, bucket, ApiUtils.getUserSession(session));
             report.setTotalRecords(records.size());
-
-            final ApplicationContext context = ApplicationContextHolder.get();
 
             ServiceContext serviceContext = ApiUtils.createServiceContext(request);
 
@@ -824,7 +856,7 @@ public class MetadataSharingApi {
             description = API_PARAM_RECORD_UUID,
             required = true)
         @PathVariable
-            String metadataUuid,
+        String metadataUuid,
         @Parameter(
             description = "Group identifier",
             required = true
@@ -832,7 +864,7 @@ public class MetadataSharingApi {
         @RequestParam(
             required = true
         )
-            Integer groupIdentifier,
+        Integer groupIdentifier,
         @Parameter(
             description = "User identifier",
             required = true
@@ -840,18 +872,18 @@ public class MetadataSharingApi {
         @RequestParam(
             required = true
         )
-            Integer userIdentifier,
+        Integer userIdentifier,
         @Parameter(description = "Use approved version or not", example = "true")
         @RequestParam(required = false, defaultValue = "true")
-            Boolean approved,
+        Boolean approved,
         @Parameter(hidden = true)
-            HttpSession session,
+        HttpSession session,
         HttpServletRequest request
     )
         throws Exception {
         MetadataProcessingReport report = new SimpleMetadataProcessingReport();
 
-        AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
+        ApiUtils.canEditRecord(metadataUuid, request);
         try {
             report.setTotalRecords(1);
 
@@ -923,7 +955,7 @@ public class MetadataSharingApi {
 
                 // -- Set new privileges for new owner from privileges of the old
                 // -- owner, if none then set defaults
-                if (sourcePriv.size() == 0) {
+                if (sourcePriv.isEmpty()) {
                     dataManager.copyDefaultPrivForGroup(
                         serviceContext,
                         String.valueOf(metadata.getId()),
@@ -1163,9 +1195,9 @@ public class MetadataSharingApi {
 
         List<GroupOperations> privilegesList = new ArrayList<>();
 
-        final Iterator iterator = publicationConfig.entrySet().iterator();
+        final Iterator<Map.Entry<String, Object[]>> iterator = publicationConfig.entrySet().iterator();
         while (iterator.hasNext()) {
-            Map.Entry<String, Object[]> e = (Map.Entry<String, Object[]>) iterator.next();
+            Map.Entry<String, Object[]> e = iterator.next();
             GroupOperations privAllGroup = new GroupOperations();
             privAllGroup.setGroup(Integer.parseInt(e.getKey()));
 
@@ -1268,18 +1300,41 @@ public class MetadataSharingApi {
         String message = messages.getString("metadata_published_text");
         String recordPublishedMessage = messages.getString("metadata_published_record_text")
             .replace("{{link}}", sm.getNodeURL()+ "api/records/{{index:uuid}}");
+
         String recordUnpublishedMessage = messages.getString("metadata_unpublished_record_text")
             .replace("{{link}}", sm.getNodeURL()+ "api/records/{{index:uuid}}");
 
         StringBuilder listOfProcessedMetadataMessage = new StringBuilder();
 
         metadataListToNotifyPublication.forEach( metadata -> {
-            if (metadata.getPublished()) {
+            java.util.Optional<Group> group = groupRepository.findById(metadata.getGroupId());
+
+            if (Boolean.TRUE.equals(metadata.getPublished())) {
+                String recordPublishedMessageAux = recordPublishedMessage
+                    .replace("{{publisherUser}}", metadata.getPublisherUser())
+                    .replace("{{submitterUser}}", metadata.getSubmitterUser())
+                    .replace("{{reviewerUser}}", metadata.getReviewerUser())
+                    .replace("{{timeStamp}}", metadata.getPublicationDateStamp().getDateAndTime());
+
+                if (group.isPresent()) {
+                    recordPublishedMessageAux = recordPublishedMessageAux.replace("{{group}}", group.get().getName());
+                }
+
                 listOfProcessedMetadataMessage.append(
-                    MailUtil.compileMessageWithIndexFields(recordPublishedMessage, metadata.getMetadataUuid(), context.getLanguage()));
+                    MailUtil.compileMessageWithIndexFields(recordPublishedMessageAux, metadata.getMetadataUuid(), context.getLanguage()));
             } else {
+                String recordUnpublishedMessageAux = recordUnpublishedMessage
+                    .replace("{{publisherUser}}", metadata.getPublisherUser())
+                    .replace("{{submitterUser}}", metadata.getSubmitterUser())
+                    .replace("{{reviewerUser}}", metadata.getReviewerUser())
+                    .replace("{{timeStamp}}", metadata.getPublicationDateStamp().getDateAndTime());
+
+                if (group.isPresent()) {
+                    recordUnpublishedMessageAux = recordUnpublishedMessageAux.replace("{{group}}", group.get().getName());
+                }
+
                 listOfProcessedMetadataMessage.append(
-                    MailUtil.compileMessageWithIndexFields(recordUnpublishedMessage, metadata.getMetadataUuid(), context.getLanguage()));
+                    MailUtil.compileMessageWithIndexFields(recordUnpublishedMessageAux, metadata.getMetadataUuid(), context.getLanguage()));
             }
         });
 
