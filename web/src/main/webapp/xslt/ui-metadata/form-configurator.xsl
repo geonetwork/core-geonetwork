@@ -123,6 +123,7 @@
 
       <xsl:for-each select="$nodes/*">
         <xsl:variable name="base" select="."/>
+
         <xsl:choose>
           <xsl:when test="$sectionName">
             <fieldset data-gn-field-highlight="" class="gn-{$sectionName}">
@@ -436,7 +437,10 @@
             metadocument. This mode will probably take precedence over the others
             if defined in a view.
             -->
-          <xsl:variable name="name" select="@name"/>
+          <xsl:variable name="name"
+                        select="if (@name and $strings/*[name() = @name] != '')
+                                then $strings/*[name() = @name]
+                                else @name"/>
           <xsl:variable name="del" select="@del"/>
           <xsl:variable name="template" select="template"/>
           <xsl:variable name="forceLabel" select="@forceLabel"/>
@@ -516,7 +520,7 @@
                   correct location. -->
             <xsl:variable name="id" select="concat('_X', gn:element/@ref, '_replace')"/>
             <xsl:call-template name="render-element-template-field">
-              <xsl:with-param name="name" select="$strings/*[name() = $name]"/>
+              <xsl:with-param name="name" select="$name"/>
               <xsl:with-param name="id" select="$id"/>
               <xsl:with-param name="isExisting" select="true()"/>
               <xsl:with-param name="template" select="$templateCombinedWithNode"/>
@@ -700,13 +704,18 @@
     <xsl:param name="base" as="node()"/>
 
 
+    <xsl:variable name="xpathPrefix"
+                  select="if (starts-with(@in, '/'))
+                          then '/..'
+                          else '/'"/>
+
     <!-- Match any gn:child nodes from the metadocument which
       correspond to non existing node but available in the schema. -->
     <xsl:variable name="nonExistingChildParent">
       <xsl:if test="@or and @in">
         <saxon:call-template name="{concat('evaluate-', $schema)}">
           <xsl:with-param name="base" select="$base"/>
-          <xsl:with-param name="in" select="concat('/../', @in, '[gn:child/@name=''', @or, ''']')"/>
+          <xsl:with-param name="in" select="concat($xpathPrefix, @in, '[gn:child/@name=''', @or, ''']')"/>
         </saxon:call-template>
       </xsl:if>
     </xsl:variable>
@@ -716,7 +725,7 @@
         <saxon:call-template name="{concat('evaluate-', $schema)}">
           <xsl:with-param name="base" select="$base"/>
           <xsl:with-param name="in"
-                          select="concat('/../', @in,
+                          select="concat($xpathPrefix, @in,
                             '/*[local-name() = ''', @or, ''']')"/>
         </saxon:call-template>
       </xsl:if>

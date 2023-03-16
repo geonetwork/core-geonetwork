@@ -1042,6 +1042,7 @@ The xpath of the element to loop on.
 If a for-each attribute is set for a section,
 then all children xpath will be relative to the current element.
 
+Note: Section with forEach does not support del attribute.
 
 .. code-block:: xml
 
@@ -1327,7 +1328,7 @@ This mode is used to hide the complexity of the XML element to edit. eg.
                  xpath="gmd:URL"
                  tooltip="gmd:linkage"/>
           </values>
-          <snippet>t
+          <snippet>
             <gmd:linkage>
               <gmd:URL>{{url}}</gmd:URL>
             </gmd:linkage>
