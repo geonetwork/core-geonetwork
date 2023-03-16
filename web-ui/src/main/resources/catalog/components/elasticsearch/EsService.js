@@ -130,6 +130,29 @@
         keyword: "tag"
       };
 
+      var excludeFields = [
+        "_content_type",
+        "fast",
+        "from",
+        "to",
+        "bucket",
+        "sortBy",
+        "sortOrder",
+        "resultType",
+        "facet.q",
+        "any",
+        "geometry",
+        "query_string",
+        "creationDateFrom",
+        "creationDateTo",
+        "dateFrom",
+        "dateTo",
+        "geom",
+        "relation",
+        "editable",
+        "queryBase"
+      ];
+
       // https://lucene.apache.org/core/3_4_0/queryparsersyntax.html#Escaping%20Special%20Characters
       function escapeSpecialCharacters(luceneQueryString) {
         return luceneQueryString.replace(
@@ -179,6 +202,31 @@
       }
 
       /**
+       * Configure additional fields to exclude from the search.
+       *
+       * Example usage: in config.js of a view, can inject the service to add extra fields that
+       * need to be stored in the url hash, but should be excluded from the queries.
+       *
+       * module.run([
+       *     ...
+       *     "gnESService",
+       *     function (
+       *       ...
+       *       gnESService
+       *     ) {
+       *
+       *       gnESService.addExcludeField('myCustomField');
+       *       ...
+       *
+       * @param {string} fieldName Field name to exclude from the search query.
+       */
+      this.addExcludeField = function (fieldName) {
+        if (excludeFields.indexOf(fieldName) == -1) {
+          excludeFields.push(fieldName);
+        }
+      };
+
+      /**
        * Build all clauses to be added to the Elasticsearch
        * query from current parameters.
        *
@@ -189,29 +237,6 @@
        * @param {boolean} titleOnly search in title only
        */
       this.buildQueryClauses = function (queryHook, p, luceneQueryString, state) {
-        var excludeFields = [
-          "_content_type",
-          "fast",
-          "from",
-          "to",
-          "bucket",
-          "sortBy",
-          "sortOrder",
-          "resultType",
-          "facet.q",
-          "any",
-          "geometry",
-          "query_string",
-          "creationDateFrom",
-          "creationDateTo",
-          "dateFrom",
-          "dateTo",
-          "geom",
-          "relation",
-          "editable",
-          "queryBase"
-        ];
-
         state.languageConfig = gnEsLanguageService.getLanguageConfig(p.any, state);
 
         if (p.any || luceneQueryString) {
