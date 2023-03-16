@@ -1458,6 +1458,7 @@
     <db.username>#{systemEnvironment['GEONETWORK_DB_USERNAME']?:'www-data'}</db.username>
     <db.password>#{systemEnvironment['GEONETWORK_DB_PASSWORD']?:'www-data'}</db.password>
     <db.connectionProperties>#{systemEnvironment['GEONETWORK_DB_CONNECTION_PROPERTIES']}</db.connectionProperties>
+    <db.migration_onstartup>#{systemEnvironment['GEONETWORK_DB_MIGRATION_ONSTARTUP']?:'true'}</db.migration_onstartup>
 
     <db.pool.maxActive>30</db.pool.maxActive>
     <db.pool.maxIdle>10</db.pool.maxIdle>

@@ -24,7 +24,6 @@
 package org.fao.geonet;
 
 import com.google.common.util.concurrent.Callables;
-import org.locationtech.jts.util.Assert;
 import jeeves.server.sources.http.ServletPathFinder;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Pair;
@@ -33,6 +32,7 @@ import org.fao.geonet.lib.DatabaseType;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Version;
+import org.locationtech.jts.util.Assert;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanPostProcessor;
@@ -65,6 +65,8 @@ public class DatabaseMigration implements BeanPostProcessor {
     private static final int SUBVERSION_NUMBER_ID_BEFORE_2_11 = 16;
     private static final String JAVA_MIGRATION_PREFIX = "java:";
 
+    private boolean dbMigrationOnStartup = true;
+
     @Autowired
     private SystemInfo systemInfo;
     @Autowired
@@ -84,6 +86,9 @@ public class DatabaseMigration implements BeanPostProcessor {
 
     @Override
     public final Object postProcessAfterInitialization(final Object bean, final String beanName) {
+        if (!dbMigrationOnStartup) {
+            return bean;
+        }
         try {
             if (Class.forName(initAfter).isInstance(bean)) {
                 _logger.debug(String.format("DB Migration / Running '%s' after initialization of '%s'.", bean.getClass(), initAfter));
@@ -412,6 +417,14 @@ public class DatabaseMigration implements BeanPostProcessor {
 
     public boolean isFoundErrors() {
         return foundErrors;
+    }
+
+    public boolean isDbMigrationOnStartup() {
+        return dbMigrationOnStartup;
+    }
+
+    public void setDbMigrationOnStartup(boolean dbMigrationOnStartup) {
+        this.dbMigrationOnStartup = dbMigrationOnStartup;
     }
 
     public String getInitAfter() {
