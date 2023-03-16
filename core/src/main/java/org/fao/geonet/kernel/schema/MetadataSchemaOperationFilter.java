@@ -25,9 +25,9 @@ package org.fao.geonet.kernel.schema;
 import org.jdom.Element;
 
 public class MetadataSchemaOperationFilter {
-    private String xpath;
-    private String ifNotOperation;
-    private Element markedElement;
+    private final String xpath;
+    private final String ifNotOperation;
+    private final Element markedElement;
 
 
     public MetadataSchemaOperationFilter(String xpath, String ifNotOperation) {
