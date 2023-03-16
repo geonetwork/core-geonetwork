@@ -22,29 +22,9 @@
  */
 package org.fao.geonet.kernel.schema;
 
-import org.jdom.Element;
-
-public class MetadataSchemaOperationFilter {
-    private final String xpath;
-    private final String ifNotOperation;
-    private final Element markedElement;
-
-    public MetadataSchemaOperationFilter(String xpath, String ifNotOperation, Element markedElement) {
-        this.xpath = xpath;
-        this.ifNotOperation = ifNotOperation;
-        this.markedElement = markedElement;
-
-    }
-
-    public String getXpath() {
-        return xpath;
-    }
-
-    public String getIfNotOperation() {
-        return ifNotOperation;
-    }
-
-    public Element getMarkedElement() {
-        return markedElement;
-    }
+public enum MetadataSchemaOperation {
+    authenticated,
+    editing,
+    download,
+    dynamic
 }

@@ -27,6 +27,7 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import org.fao.geonet.kernel.schema.MetadataSchema;
+import org.fao.geonet.kernel.schema.MetadataSchemaOperation;
 import org.fao.geonet.kernel.schema.MetadataSchemaOperationFilter;
 import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.io.WKTReader;
@@ -950,7 +951,7 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
                 if (context != null) {
                     MetadataSchema mds = context.getBean(DataManager.class).getSchema(schema);
 
-                    MetadataSchemaOperationFilter editFilter = mds.getOperationFilter(ReservedOperation.editing);
+                    MetadataSchemaOperationFilter editFilter = mds.getOperationFilter(MetadataSchemaOperation.editing);
                     boolean filterEditOperationElements = false;
 
                     if (editFilter != null && editFilter.getXpath().contains(WITHHELD_VALUE)) {
@@ -958,20 +959,20 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
                         filterEditOperationElements = !canEdit;
                     }
 
-                    MetadataSchemaOperationFilter authenticatedFilter = mds.getOperationFilter("authenticated");
+                    MetadataSchemaOperationFilter authenticatedFilter = mds.getOperationFilter(MetadataSchemaOperation.authenticated);
                     boolean filterAuthOperationElements = false;
                     if (authenticatedFilter != null && authenticatedFilter.getXpath().contains(WITHHELD_VALUE)) {
                         boolean isAuthenticated = context.getUserSession().isAuthenticated();
                         filterAuthOperationElements = !isAuthenticated;
                     }
 
-                    MetadataSchemaOperationFilter downloadFilter = mds.getOperationFilter(ReservedOperation.download);
+                    MetadataSchemaOperationFilter downloadFilter = mds.getOperationFilter(MetadataSchemaOperation.download);
                     boolean filterDownloadOperationElements = false;
                     if (downloadFilter != null && downloadFilter.getXpath().contains(WITHHELD_VALUE)) {
                         boolean canDownload = (Boolean.TRUE.toString().equals(info.getChildText(Edit.Info.Elem.DOWNLOAD)));
                         filterDownloadOperationElements = !canDownload;
                     }
-                    MetadataSchemaOperationFilter dynamicFilter = mds.getOperationFilter(ReservedOperation.dynamic);
+                    MetadataSchemaOperationFilter dynamicFilter = mds.getOperationFilter(MetadataSchemaOperation.dynamic);
                     boolean filterDynamicOperationElements = false;
                     if (dynamicFilter != null && dynamicFilter.getXpath().contains(WITHHELD_VALUE)) {
                         boolean canDynamic = (Boolean.TRUE.toString().equals(info.getChildText(Edit.Info.Elem.DYNAMIC)));

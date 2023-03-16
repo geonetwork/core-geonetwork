@@ -509,12 +509,8 @@ public class MetadataSchema {
      *
      * @return The XPath to select element to filter or null
      */
-    public MetadataSchemaOperationFilter getOperationFilter(ReservedOperation operation) {
+    public MetadataSchemaOperationFilter getOperationFilter(MetadataSchemaOperation operation) {
         return hmOperationFilters.get(operation.name());
-    }
-
-    public MetadataSchemaOperationFilter getOperationFilter(String operation) {
-        return hmOperationFilters.get(operation);
     }
 
     @JsonIgnore

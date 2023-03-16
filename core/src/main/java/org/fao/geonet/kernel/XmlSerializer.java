@@ -29,10 +29,10 @@ import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
-import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.schema.MetadataSchema;
+import org.fao.geonet.kernel.schema.MetadataSchemaOperation;
 import org.fao.geonet.kernel.schema.MetadataSchemaOperationFilter;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
@@ -188,7 +188,7 @@ public abstract class XmlSerializer {
             // Check if a filter is defined for this schema
             // for the editing operation ie. user who can not edit
             // will not see those elements.
-            MetadataSchemaOperationFilter editFilter = mds.getOperationFilter(ReservedOperation.editing);
+            MetadataSchemaOperationFilter editFilter = mds.getOperationFilter(MetadataSchemaOperation.editing);
             boolean filterEditOperationElements = editFilter != null;
             List<Namespace> namespaces = mds.getNamespaces();
             if (context != null) {
@@ -199,7 +199,7 @@ public abstract class XmlSerializer {
                     }
                 }
 
-                MetadataSchemaOperationFilter authenticatedFilter = mds.getOperationFilter("authenticated");
+                MetadataSchemaOperationFilter authenticatedFilter = mds.getOperationFilter(MetadataSchemaOperation.authenticated);
                 if (authenticatedFilter != null) {
                     boolean isAuthenticated = context.getUserSession().isAuthenticated();
                     if (!isAuthenticated) {
@@ -207,14 +207,14 @@ public abstract class XmlSerializer {
                     }
                 }
 
-                MetadataSchemaOperationFilter downloadFilter = mds.getOperationFilter(ReservedOperation.download);
+                MetadataSchemaOperationFilter downloadFilter = mds.getOperationFilter(MetadataSchemaOperation.download);
                 if (downloadFilter != null) {
                     boolean canDownload = accessManager.canDownload(context, id);
                     if (!canDownload) {
                         removeFilteredElement(metadataXml, downloadFilter, namespaces);
                     }
                 }
-                MetadataSchemaOperationFilter dynamicFilter = mds.getOperationFilter(ReservedOperation.dynamic);
+                MetadataSchemaOperationFilter dynamicFilter = mds.getOperationFilter(MetadataSchemaOperation.dynamic);
                 if (dynamicFilter != null) {
                     boolean canDynamic = accessManager.canDynamic(context, id);
                     if (!canDynamic) {
