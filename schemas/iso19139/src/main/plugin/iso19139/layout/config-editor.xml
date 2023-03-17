@@ -296,6 +296,8 @@
     <name>gmd:spatialRepresentationInfo</name>
     <name>gmd:pointOfContact</name>
     <name>gmd:contact</name>
+    <name>gmd:userContactInfo</name>
+    <name>gmd:resourceSpecificUsage</name>
     <name>gmd:graphicOverview</name>
     <name>gmd:citedResponsibleParty</name>
     <name>gmd:dataQualityInfo</name>
