@@ -263,26 +263,24 @@
           "../../catalog/views/default/directives/" + "partials/dateRangeFilter.html",
         scope: {
           label: "@gnDateRangeFilter",
-          field: "="
+          field: "=",
+          fieldName: "="
         },
         link: function linkFn(scope, element, attr) {
           var today = moment();
           scope.relations = ["intersects", "within", "contains"];
           scope.relation = scope.relations[0];
-          scope.field = {
-            range: {
-              resourceTemporalDateRange: {
-                gte: null,
-                lte: null,
-                relation: scope.relation
-              }
-            }
+          scope.field.range = scope.field.range || {};
+          scope.field.range[scope.fieldName] = {
+            gte: null,
+            lte: null,
+            relation: scope.relation
           };
 
           scope.setRange = function () {
-            scope.field.range.resourceTemporalDateRange.gte = scope.dateFrom;
-            scope.field.range.resourceTemporalDateRange.lte = scope.dateTo;
-            scope.field.range.resourceTemporalDateRange.relation = scope.relation;
+            scope.field.range[scope.fieldName].gte = scope.dateFrom;
+            scope.field.range[scope.fieldName].lte = scope.dateTo;
+            scope.field.range[scope.fieldName].relation = scope.relation;
           };
 
           scope.format = "YYYY-MM-DD";
