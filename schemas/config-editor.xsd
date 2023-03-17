@@ -1042,7 +1042,7 @@ The xpath of the element to loop on.
 If a for-each attribute is set for a section,
 then all children xpath will be relative to the current element.
 
-Note: Section with forEach does not support del attribute.
+Note: Only sections with forEach support del attribute.
 
 .. code-block:: xml
 
@@ -1058,6 +1058,7 @@ Note: Section with forEach does not support del attribute.
           ]]></xs:documentation>
         </xs:annotation>
       </xs:attribute>
+      <xs:attribute ref="del"/>
       <xs:attribute ref="or"/>
       <xs:attribute ref="in"/>
       <xs:attribute ref="displayIfRecord"/>

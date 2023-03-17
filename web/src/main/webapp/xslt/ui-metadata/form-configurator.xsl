@@ -110,6 +110,8 @@
                                     then '/..'
                                     else '/'"/>
     <xsl:if test="$isDisplayed">
+      <xsl:variable name="del" select="@del"/>
+
       <xsl:variable name="nodes">
         <saxon:call-template name="{concat('evaluate-', $schema)}">
           <xsl:with-param name="base" select="$base"/>
@@ -140,6 +142,22 @@
                     then $strings/*[name() = $sectionName]
                     else $sectionName"
                 />
+
+                <xsl:if test="$del != ''">
+                  <xsl:variable name="originalNode"
+                                select="gn-fn-metadata:getOriginalNode($metadata, .)"/>
+
+                  <xsl:variable name="refToDelete">
+                    <xsl:call-template name="get-ref-element-to-delete">
+                      <xsl:with-param name="node" select="$originalNode"/>
+                      <xsl:with-param name="delXpath" select="$del"/>
+                    </xsl:call-template>
+                  </xsl:variable>
+
+                  <xsl:call-template name="render-form-field-control-remove">
+                    <xsl:with-param name="editInfo" select="gn:element"/>
+                  </xsl:call-template>
+                </xsl:if>
               </legend>
               <xsl:apply-templates mode="form-builder" select="$sectionContent">
                 <xsl:with-param name="base" select="$base"/>
