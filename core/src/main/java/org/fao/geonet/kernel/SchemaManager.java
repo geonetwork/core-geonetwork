@@ -1,38 +1,32 @@
-//=============================================================================
-//===
-//=== SchemaManager
-//===
-//=============================================================================
-//=== Copyright (C) 2001-2011 Food and Agriculture Organization of the
-//=== United Nations (FAO-UN), United Nations World Food Programme (WFP)
-//=== and United Nations Environment Programme (UNEP)
-//===
-//===	This program is free software; you can redistribute it and/or modify
-//===	it under the terms of the GNU General Public License as published by
-//===	the Free Software Foundation; either version 2 of the License, or (at
-//===	your option) any later version.
-//===
-//===	This program is distributed in the hope that it will be useful, but
-//===	WITHOUT ANY WARRANTY; without even the implied warranty of
-//===	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-//===	General Public License for more details.
-//===
-//===	You should have received a copy of the GNU General Public License
-//===	along with this program; if not, write to the Free Software
-//===	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
-//===
-//===	Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
-//===	Rome - Italy. email: geonetwork@osgeo.org
-//==============================================================================
+/*
+ * Copyright (C) 2001-2023 Food and Agriculture Organization of the
+ * United Nations (FAO-UN), United Nations World Food Programme (WFP)
+ * and United Nations Environment Programme (UNEP)
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or (at
+ * your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+ *
+ * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+ * Rome - Italy. email: geonetwork@osgeo.org
+ */
 
 package org.fao.geonet.kernel;
 
 import com.google.common.annotations.VisibleForTesting;
-
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.guiservices.XmlFile;
 import jeeves.server.overrides.ConfigurationOverrides;
-
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Constants;
@@ -45,6 +39,7 @@ import org.fao.geonet.exceptions.NoSchemaMatchesException;
 import org.fao.geonet.exceptions.OperationAbortedEx;
 import org.fao.geonet.exceptions.SchemaMatchConflictException;
 import org.fao.geonet.kernel.schema.MetadataSchema;
+import org.fao.geonet.kernel.schema.MetadataSchemaOperationFilter;
 import org.fao.geonet.kernel.schema.SchemaLoader;
 import org.fao.geonet.kernel.schema.SchemaPlugin;
 import org.fao.geonet.kernel.setting.SettingInfo;
@@ -60,13 +55,7 @@ import org.springframework.context.ApplicationContext;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Pattern;
 
 /**
@@ -96,8 +85,8 @@ public class SchemaManager {
      * Active writers count
      */
     private static int activeWriters = 0;
-    private Map<String, Schema> hmSchemas = new HashMap<String, Schema>();
-    private Map<String, Namespace> hmSchemasTypenames = new HashMap<String, Namespace>();
+    private Map<String, Schema> hmSchemas = new HashMap<>();
+    private Map<String, Namespace> hmSchemasTypenames = new HashMap<>();
     private String[] fnames = {"labels.xml", "codelists.xml", "strings.xml"};
     private Path schemaPluginsDir;
     private Path schemaPluginsCat;
@@ -277,7 +266,7 @@ public class SchemaManager {
      */
     public Set<String> getDependencies(String name) {
 
-        Set<String> dependencies = new HashSet<String>();
+        Set<String> dependencies = new HashSet<>();
 
         beforeRead();
         try {
@@ -530,7 +519,7 @@ public class SchemaManager {
         try {
             Schema schema = hmSchemas.get(name);
             List<Element> childs = schema.getConversionElements();
-            List<Element> dChilds = new ArrayList<Element>();
+            List<Element> dChilds = new ArrayList<>();
             for (Element child : childs) {
                 if (child != null) dChilds.add((Element) child.clone());
             }
@@ -858,7 +847,7 @@ public class SchemaManager {
         if (schema != null) {
             if (doDependencies) {
                 List<String> dependsOnMe = getSchemasThatDependOnMe(name);
-                if (dependsOnMe.size() > 0) {
+                if (!dependsOnMe.isEmpty()) {
                     String errStr = "Cannot remove schema " + name + " because the following schemas list it as a dependency: " + dependsOnMe;
                     Log.error(Geonet.SCHEMA_MANAGER, errStr);
                     throw new OperationAbortedEx(errStr);
@@ -948,7 +937,7 @@ public class SchemaManager {
 
         final String schemaName = schemaDir.getFileName().toString();
         Path locBase = schemaDir.resolve("loc");
-        Map<String, XmlFile> xfMap = new HashMap<String, XmlFile>();
+        Map<String, XmlFile> xfMap = new HashMap<>();
 
         for (String fname : fnames) {
             Path filePath = path.resolve("loc").resolve(defaultLang).resolve(fname);
@@ -1307,7 +1296,7 @@ public class SchemaManager {
      * Check dependencies for all schemas - remove those that fail.
      */
     private void checkDependencies(Element schemaPluginCatRoot) throws Exception {
-        List<String> removes = new ArrayList<String>();
+        List<String> removes = new ArrayList<>();
 
         // process each schema to see whether its dependencies are present
         for (String schemaName : hmSchemas.keySet()) {
@@ -1330,7 +1319,7 @@ public class SchemaManager {
     }
 
     private void checkAppSupported(Element schemaPluginCatRoot) throws Exception {
-        List<String> removes = new ArrayList<String>();
+        List<String> removes = new ArrayList<>();
 
         final SystemInfo systemInfo = ApplicationContextHolder.get().getBean(SystemInfo.class);
 
@@ -1385,7 +1374,7 @@ public class SchemaManager {
      */
     public List<String> getSchemasThatDependOnMe(String schemaName) {
 
-        List<String> myDepends = new ArrayList<String>();
+        List<String> myDepends = new ArrayList<>();
 
         // process each schema to see whether its dependencies are present
         for (String schemaNameToTest : hmSchemas.keySet()) {
@@ -1433,7 +1422,7 @@ public class SchemaManager {
 
         // get list of depends elements from schema-ident.xml
         List<Element> dependsList = root.getChildren("depends", GEONET_SCHEMA_NS);
-        if (dependsList.size() == 0) {
+        if (dependsList.isEmpty()) {
             dependsList = root.getChildren("depends", GEONET_SCHEMA_PREFIX_NS);
         }
         return dependsList;
@@ -1491,11 +1480,11 @@ public class SchemaManager {
      * true if schema requires to synch the uuid column schema info with the uuid in the metadata
      * record (updated on editing or in UFO).
      */
-    private Map<String, Pair<String, Element>> extractOperationFilters(Path xmlIdFile) throws Exception {
+    private Map<String, MetadataSchemaOperationFilter> extractOperationFilters(Path xmlIdFile) throws Exception {
         Element root = Xml.loadFile(xmlIdFile);
         Element filters = root.getChild("filters", GEONET_SCHEMA_NS);
-        Map<String, Pair<String, Element>> filterRules =
-            new HashMap<String, Pair<String, Element>>();
+        Map<String, MetadataSchemaOperationFilter> filterRules =
+            new HashMap<>();
         if (filters == null) {
             return filterRules;
         } else {
@@ -1507,7 +1496,8 @@ public class SchemaManager {
                     Element markedElement = ruleElement.getChild("keepMarkedElement", GEONET_SCHEMA_NS);
                     if (StringUtils.isNotBlank(ifNotOperation) &&
                         StringUtils.isNotBlank(xpath)) {
-                        filterRules.put(ifNotOperation, Pair.read(xpath, markedElement));
+                        MetadataSchemaOperationFilter filter = new MetadataSchemaOperationFilter(xpath, ifNotOperation, markedElement);
+                        filterRules.put(ifNotOperation, filter);
                     }
                 }
             }
@@ -1563,13 +1553,14 @@ public class SchemaManager {
         if (!Files.exists(xmlConvFile)) {
             if (Log.isDebugEnabled(Geonet.SCHEMA_MANAGER))
                 Log.debug(Geonet.SCHEMA_MANAGER, "Schema conversions file not present");
-            return new ArrayList<Element>();
+            return new ArrayList<>();
         } else {
             Element root = Xml.loadFile(xmlConvFile);
             ConfigurationOverrides.DEFAULT.updateWithOverrides(xmlConvFile.toString(), null, basePath, root);
 
-            if (root.getName() != "conversions")
+            if (!root.getName().equals("conversions")) {
                 throw new IllegalArgumentException("Schema conversions file " + xmlConvFile + " is invalid, no <conversions> root element");
+            }
             @SuppressWarnings("unchecked")
             List<Element> result = root.getChildren();
             return result;
@@ -1620,7 +1611,7 @@ public class SchemaManager {
                 Attribute type = elem.getAttribute("type");
 
                 // --- try and find the attribute and value in md
-                if (mode == MODE_ATTRIBUTEWITHVALUE && elem.getName() == "attributes") {
+                if (mode == MODE_ATTRIBUTEWITHVALUE && elem.getName().equals("attributes")) {
                     @SuppressWarnings("unchecked")
                     List<Attribute> atts = elem.getAttributes();
                     for (Attribute searchAtt : atts) {
@@ -1914,7 +1905,6 @@ public class SchemaManager {
         List<String> listOfTypenames = new ArrayList<>();
         while (iterator.hasNext()) {
             String typeName = iterator.next();
-            Namespace ns = hmSchemasTypenames.get(typeName);
             listOfTypenames.add(typeName);
         }
         return listOfTypenames;

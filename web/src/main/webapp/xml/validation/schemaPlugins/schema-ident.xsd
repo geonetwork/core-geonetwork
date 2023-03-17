@@ -258,6 +258,7 @@
           <xs:enumeration value="editing"/>
           <xs:enumeration value="download"/>
           <xs:enumeration value="dynamic"/>
+          <xs:enumeration value="authenticated" />
         </xs:restriction>
       </xs:simpleType>
     </xs:attribute>
