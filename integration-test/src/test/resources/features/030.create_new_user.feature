@@ -5,8 +5,8 @@ Feature: GeoNetwork Create new user
     Given I login as admin/admin and navigate to admin.console#/organization
     And I click on element having id "gn-btn-user-add"
     And I enter "etabeta" into input field having id "username"
-    And I enter "PassTest" into input field having id "gn-user-password"
-    And I enter "PassTest" into input field having id "gn-user-password2"
+    And I enter "PassTest1@-" into input field having id "gn-user-password"
+    And I enter "PassTest1@-" into input field having id "gn-user-password2"
     And I enter "Eta" into input field having name "name"
     And I enter "Beta" into input field having name "surname"
     And I enter "etabeta@email.com" into input field having name "email"

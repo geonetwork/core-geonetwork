@@ -12,15 +12,15 @@ With GeoNetwork running and accessible on http://localhost:8080/geonetwork, go t
 
 * With Chrome 
 
-`mvn clean test -Dbrowser=chrome`
+`mvn clean test -Pitests -Dbrowser=chrome`
 
 * With phantomJS 
 
-`mvn clean test -Dbrowser=phantomjs`
+`mvn clean test -Pitests -Dbrowser=phantomjs`
 
 * With firefox
 
-`mvn test -Dbrowser=firefox`
+`mvn test -Pitests -Dbrowser=firefox`
 
 Additional configuration parameters:
 
@@ -65,7 +65,7 @@ Where **W** is the group test id and **XX** is the test unique numeric identifie
 
 The last two tests for each group **W** are:
 
-*W98.cleanup.feature* that removes all the data created from the tests in the group. It's important to keep the database clean for other groups of tests.
+W98.cleanup.feature* that removes all the data created from the tests in the group. It's important to keep the database clean for other groups of tests.
 *W99.exit.feature* closes the browser.
 
 ### A test should be written following these conventions:
@@ -77,3 +77,11 @@ The last two tests for each group **W** are:
 * The data created must be removed in the **98** test following the descending order in id numeration.
 
 
+## Common issues:
+
+* Check that driver version match binary browser version. If not, the following error is reported:
+
+```shell
+session not created: This version of ChromeDriver only supports Chrome version 112
+Current browser version is 110.0.5481.177 with binary path /usr/bin/google-chrome
+```

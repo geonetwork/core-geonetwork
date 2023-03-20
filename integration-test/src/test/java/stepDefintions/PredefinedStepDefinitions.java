@@ -1,16 +1,13 @@
 package stepDefintions;
 
-import java.io.IOException;
-
-import cucumber.api.java.en.And;
-import cucumber.api.java.en.Given;
-import cucumber.api.java.en.Then;
 import env.BaseTest;
-import env.Env;
+import io.cucumber.java.en.And;
+import io.cucumber.java.en.Given;
+import io.cucumber.java.en.Then;
 import junit.framework.Assert;
 import methods.TestCaseFailed;
 
-import static org.junit.Assert.assertEquals;
+import java.io.IOException;
 
 public class PredefinedStepDefinitions implements BaseTest {
     // Navigation Steps
@@ -31,7 +28,7 @@ public class PredefinedStepDefinitions implements BaseTest {
     // step to check attribute value
     @Then("^element having (.+) \"([^\"]*)\" should\\s*((?:not)?)\\s+have attribute \"(.*?)\" with value \"(.*?)\"$")
     public void check_element_attribute(String type, String accessName, String present, String attrb, String value)
-            throws Exception {
+        throws Exception {
         miscmethodObj.validateLocator(type);
         assertionObj.checkElementAttribute(type, attrb, value, accessName, present.isEmpty());
     }
@@ -52,7 +49,7 @@ public class PredefinedStepDefinitions implements BaseTest {
     // step to check element partial text
     @Then("^element having (.+) \"([^\"]*)\" should\\s*((?:not)?)\\s+have partial text as \"(.*?)\"$")
     public void check_element_partial_text(String type, String accessName, String present, String value)
-            throws Exception {
+        throws Exception {
         miscmethodObj.validateLocator(type);
         assertionObj.checkElementPartialText(type, value, accessName, present.isEmpty());
     }
@@ -97,10 +94,8 @@ public class PredefinedStepDefinitions implements BaseTest {
     /**
      * page title checking
      *
-     * @param present
-     *            :
-     * @param title
-     *            :
+     * @param present :
+     * @param title   :
      */
     @Then("^I should\\s*((?:not)?)\\s+see page title as \"(.+)\"$")
     public void check_title(String present, String title) throws TestCaseFailed {
@@ -166,7 +161,7 @@ public class PredefinedStepDefinitions implements BaseTest {
     // deselect option by text/value from multiselect
     @Then("^I deselect \"(.*?)\" option by (.+) from multiselect dropdown having (.+) \"(.*?)\"$")
     public void deselect_option_from_multiselect_dropdown(String option, String optionBy, String type,
-            String accessName) throws Exception {
+                                                          String accessName) throws Exception {
         miscmethodObj.validateLocator(type);
         miscmethodObj.validateOptionBy(optionBy);
         inputObj.deselectOptionFromDropdown(type, optionBy, option, accessName);
@@ -177,7 +172,7 @@ public class PredefinedStepDefinitions implements BaseTest {
     // deselect option by index from multiselect
     @Then("^I deselect (\\d+) option by index from multiselect dropdown having (.+) \"(.*?)\"$")
     public void deselect_option_from_multiselect_dropdown_by_index(String option, String type, String accessName)
-            throws Exception {
+        throws Exception {
         miscmethodObj.validateLocator(type);
         inputObj.deselectOptionFromDropdown(type, "selectByIndex", option, accessName);
     }
@@ -230,7 +225,7 @@ public class PredefinedStepDefinitions implements BaseTest {
     // step to select dropdown list
     @Then("^option \"(.*?)\" by (.+) from dropdown having (.+) \"(.*?)\" should be (selected|unselected)$")
     public void is_option_from_dropdown_selected(String option, String by, String type, String accessName, String state)
-            throws Exception {
+        throws Exception {
         miscmethodObj.validateLocator(type);
         final boolean flag = state.equals("selected");
         assertionObj.isOptionFromDropdownSelected(type, by, option, accessName, flag);
@@ -239,7 +234,7 @@ public class PredefinedStepDefinitions implements BaseTest {
     // steps to assert option by text from radio button group selected/unselected
     @Then("^option \"(.*?)\" by (.+) from radio button group having (.+) \"(.*?)\" should be (selected|unselected)$")
     public void is_option_from_radio_button_group_selected(String option, String attrb, String type, String accessName,
-            String state) throws Exception {
+                                                           String state) throws Exception {
         miscmethodObj.validateLocator(type);
         final boolean flag = state.equals("selected");
         assertionObj.isOptionFromRadioButtonGroupSelected(type, attrb, option, accessName, flag);
@@ -350,7 +345,7 @@ public class PredefinedStepDefinitions implements BaseTest {
     // select option by text/value from dropdown
     @Then("^I select \"(.*?)\" option by (.+) from dropdown having (.+) \"(.*?)\"$")
     public void select_option_from_dropdown(String option, String optionBy, String type, String accessName)
-            throws Exception {
+        throws Exception {
         miscmethodObj.validateLocator(type);
         miscmethodObj.validateOptionBy(optionBy);
         inputObj.selectOptionFromDropdown(type, optionBy, option, accessName);
@@ -366,7 +361,7 @@ public class PredefinedStepDefinitions implements BaseTest {
     // select option by text/value from multiselect
     @Then("^I select \"(.*?)\" option by (.+) from multiselect dropdown having (.+) \"(.*?)\"$")
     public void select_option_from_multiselect_dropdown(String option, String optionBy, String type, String accessName)
-            throws Exception {
+        throws Exception {
         miscmethodObj.validateLocator(type);
         miscmethodObj.validateOptionBy(optionBy);
         inputObj.selectOptionFromDropdown(type, optionBy, option, accessName);
@@ -383,7 +378,7 @@ public class PredefinedStepDefinitions implements BaseTest {
     // select option by index from multiselect
     @Then("^I select (\\d+) option by index from multiselect dropdown having (.+) \"(.*?)\"$")
     public void select_option_from_multiselect_dropdown_by_index(String option, String type, String accessName)
-            throws Exception {
+        throws Exception {
         miscmethodObj.validateLocator(type);
         inputObj.selectOptionFromDropdown(type, "selectByIndex", option, accessName);
     }
@@ -391,7 +386,7 @@ public class PredefinedStepDefinitions implements BaseTest {
     // steps to select option by text from radio button group
     @Then("^I select \"(.*?)\" option by (.+) from radio button group having (.+) \"(.*?)\"$")
     public void select_option_from_radio_btn_group(String option, String by, String type, String accessName)
-            throws Exception {
+        throws Exception {
         miscmethodObj.validateLocator(type);
         // miscmethodObj.validateOptionBy(optionBy);
         inputObj.selectOptionFromRadioButtonGroup(type, option, by, accessName);

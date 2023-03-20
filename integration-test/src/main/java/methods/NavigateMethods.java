@@ -1,34 +1,21 @@
 package methods;
 
+import env.BaseTest;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpDelete;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpPut;
-import org.apache.http.client.methods.HttpRequestBase;
-import org.apache.http.entity.StringEntity;
+import org.apache.http.client.methods.*;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.impl.client.HttpClients;
-import org.openqa.selenium.By;
-import org.openqa.selenium.Dimension;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-
-import env.BaseTest;
 
 import java.io.IOException;
 
@@ -38,12 +25,16 @@ public class NavigateMethods extends SelectElementByType implements BaseTest {
     private String old_win = null;
     private String lastWinHandle;
 
-    /** Method to quite webdriver instance */
+    /**
+     * Method to quite webdriver instance
+     */
     public void closeDriver() {
         BaseTest.driver.quit();
     }
 
-    /** Method to close new window */
+    /**
+     * Method to close new window
+     */
     public void closeNewWindow() {
         BaseTest.driver.close();
     }
@@ -78,7 +69,9 @@ public class NavigateMethods extends SelectElementByType implements BaseTest {
         action.moveToElement(element).perform();
     }
 
-    /** Method to maximize browser */
+    /**
+     * Method to maximize browser
+     */
     public void maximizeBrowser() {
         BaseTest.driver.manage().window().maximize();
     }
@@ -134,8 +127,9 @@ public class NavigateMethods extends SelectElementByType implements BaseTest {
 
     /**
      * Call API without authentication and return status code.
+     *
      * @param url
-     * @return  The status code
+     * @return The status code
      */
     public Integer apiCallStatus(String method, String url) {
         return apiCallStatus(method, url, null, null);
@@ -143,10 +137,11 @@ public class NavigateMethods extends SelectElementByType implements BaseTest {
 
     /**
      * Call API with authentication if credential provided.
+     *
      * @param url
      * @param username
      * @param password
-     * @return  The status code
+     * @return The status code
      */
     public Integer apiCallStatus(String method, String url, String username, String password) {
         retrieveToken();
@@ -155,7 +150,7 @@ public class NavigateMethods extends SelectElementByType implements BaseTest {
             StringUtils.isNotEmpty(password)) {
             CredentialsProvider provider = new BasicCredentialsProvider();
             UsernamePasswordCredentials credentials
-                = new UsernamePasswordCredentials(username,password);
+                = new UsernamePasswordCredentials(username, password);
             provider.setCredentials(AuthScope.ANY, credentials);
 
             httpClient = HttpClientBuilder.create()
@@ -207,7 +202,7 @@ public class NavigateMethods extends SelectElementByType implements BaseTest {
     /**
      * Method to resize browser
      *
-     * @param width : int : Width for browser resize
+     * @param width  : int : Width for browser resize
      * @param height : int : Height for browser resize
      */
     public void resizeBrowser(int width, int height) {
@@ -224,10 +219,10 @@ public class NavigateMethods extends SelectElementByType implements BaseTest {
         final JavascriptExecutor executor = (JavascriptExecutor) BaseTest.driver;
         if (to.equals("end")) {
             executor.executeScript(
-                    "window.scrollTo(0,Math.max(document.documentElement.scrollHeight,document.body.scrollHeight,document.documentElement.clientHeight));");
+                "window.scrollTo(0,Math.max(document.documentElement.scrollHeight,document.body.scrollHeight,document.documentElement.clientHeight));");
         } else if (to.equals("top")) {
             executor.executeScript(
-                    "window.scrollTo(Math.max(document.documentElement.scrollHeight,document.body.scrollHeight,document.documentElement.clientHeight),0);");
+                "window.scrollTo(Math.max(document.documentElement.scrollHeight,document.body.scrollHeight,document.documentElement.clientHeight),0);");
         } else {
             throw new Exception("Exception : Invalid Direction (only scroll \"top\" or \"end\")");
         }
@@ -260,12 +255,16 @@ public class NavigateMethods extends SelectElementByType implements BaseTest {
         }
     }
 
-    /** method to switch to default content */
+    /**
+     * method to switch to default content
+     */
     public void switchToDefaultContent() {
         BaseTest.driver.switchTo().defaultContent();
     }
 
-    /** Method to switch to new window */
+    /**
+     * Method to switch to new window
+     */
     public void switchToNewWindow() {
         old_win = BaseTest.driver.getWindowHandle();
         for (final String winHandle : BaseTest.driver.getWindowHandles()) {
@@ -274,7 +273,9 @@ public class NavigateMethods extends SelectElementByType implements BaseTest {
         BaseTest.driver.switchTo().window(lastWinHandle);
     }
 
-    /** Method to switch to old window */
+    /**
+     * Method to switch to old window
+     */
     public void switchToOldWindow() {
         BaseTest.driver.switchTo().window(old_win);
     }
@@ -322,7 +323,7 @@ public class NavigateMethods extends SelectElementByType implements BaseTest {
      * Method to zoom in/out web page until web element displays
      *
      * @param accessType : String : Locator type (id, name, class, xpath, css)
-     * @param inOut : String : Zoom in or out
+     * @param inOut      : String : Zoom in or out
      * @param accessName : String : Locator value
      */
     public void zoomInOutTillElementDisplay(String accessType, String inOut, String accessName) {

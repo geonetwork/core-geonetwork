@@ -1,7 +1,7 @@
 package stepDefintions;
 
-import cucumber.api.Scenario;
-import cucumber.api.java.After;
+import io.cucumber.java.After;
+import io.cucumber.java.Scenario;
 
 public class Hooks {
     @After("@NegativeTest")
