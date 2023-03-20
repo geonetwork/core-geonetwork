@@ -13,6 +13,5 @@ import org.junit.runner.RunWith;
     }
 // pretty:target/cucumber-json-report.json
 )
-
 public class RunCukeTest {
 }

@@ -26,9 +26,8 @@
     </dependency>
 
     <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.13.1</version>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
       <scope>test</scope>
     </dependency>
 
@@ -41,6 +40,18 @@
     <dependency>
       <groupId>org.seleniumhq.selenium</groupId>
       <artifactId>selenium-server</artifactId>
+      <version>3.141.59</version>
+    </dependency>
+
+    <!--<dependency>
+      <groupId>org.seleniumhq.selenium</groupId>
+      <artifactId>selenium-remote-driver</artifactId>
+      <version>3.141.59</version>
+    </dependency>-->
+
+    <dependency>
+      <groupId>org.seleniumhq.selenium</groupId>
+      <artifactId>selenium-chrome-driver</artifactId>
       <version>3.141.59</version>
     </dependency>
 
@@ -76,6 +87,16 @@
       <artifactId>log4j-slf4j18-impl</artifactId>
       <version>${log4j2.version}</version>
     </dependency>
+
+    <dependency>
+      <groupId>org.testcontainers</groupId>
+      <artifactId>testcontainers</artifactId>
+    </dependency>
+
+    <!--<dependency>
+      <groupId>org.testcontainers</groupId>
+      <artifactId>selenium</artifactId>
+    </dependency>-->
   </dependencies>
 
   <properties>
