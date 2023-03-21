@@ -532,12 +532,9 @@
         <version>1.10</version>
       </dependency>
       <!-- logging -->
-      <dependency> <!-- usedf for camel -->
-        <groupId>org.apache.logging.log4j</groupId>
-        <artifactId>log4j-slf4j18-impl</artifactId>
-        <version>${log4j2.version}</version>
-      </dependency>
-      <dependency> <!-- used for LDAP test dependency in core -->
+      <dependency> 
+        <!-- usedf for camel -->
+        <!-- used for LDAP test dependency in core -->
         <groupId>org.apache.logging.log4j</groupId>
         <artifactId>log4j-slf4j-impl</artifactId>
         <version>${log4j2.version}</version>
