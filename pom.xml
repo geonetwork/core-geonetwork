@@ -1546,7 +1546,7 @@
 
     <!-- NOTE: When updating GeoTools, check which version
     of Postgres is used and update pg.version if needed. -->
-    <geotools.version>24.1</geotools.version>
+    <geotools.version>24.7</geotools.version>
     <pg.version>42.2.18</pg.version>
 
     <lucene.version>4.9.0</lucene.version>
