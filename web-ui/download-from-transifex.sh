@@ -52,6 +52,7 @@ SRC_DIR=src/main/resources/catalog/locales
 l=(
     'es::es'
     'fr::fr'
+    'da::da'
     'de::de'
     'it::it'
     'ko::ko'
