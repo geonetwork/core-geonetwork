@@ -558,7 +558,7 @@
           <action type="process"
                   btnClass="fa fa-square-o"
                   process="add-vector-info"
-                  if="count(gmd:MD_Metadata/gmd:identificationInfo/*/gmd:spatialRepresentationType) = 0 and count(gmd:MD_Metadata/gmd:identificationInfo/*/gmd:spatialRepresentationType[*/@codeListValue = 'vector']) = 0"/>
+                  if="(count(gmd:MD_Metadata/gmd:identificationInfo/*/gmd:spatialRepresentationType) = 0 and count(gmd:MD_Metadata/gmd:identificationInfo/*/gmd:spatialRepresentationType[*/@codeListValue = 'vector']) = 0)"/>
           <action type="process"
                   btnClass="fa fa-square-o"
                   process="change-to-vector-info"
@@ -568,7 +568,7 @@
           <action type="process"
                   btnClass="fa fa-th"
                   process="add-grid-info"
-                  if="count(gmd:MD_Metadata/gmd:identificationInfo/*/gmd:spatialRepresentationType) = 0 and count(gmd:MD_Metadata/gmd:identificationInfo/*/gmd:spatialRepresentationType[*/@codeListValue = 'grid']) = 0"/>
+                  if="(count(gmd:MD_Metadata/gmd:identificationInfo/*/gmd:spatialRepresentationType) = 0 and count(gmd:MD_Metadata/gmd:identificationInfo/*/gmd:spatialRepresentationType[*/@codeListValue = 'grid']) = 0)"/>
           <action type="process"
                   btnClass="fa fa-th"
                   process="change-to-grid-info"
