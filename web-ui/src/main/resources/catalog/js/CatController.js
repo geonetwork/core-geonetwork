@@ -94,7 +94,8 @@
               rus: "ru",
               chi: "zh",
               slo: "sk",
-              swe: "sv"
+              swe: "sv",
+			  dan: "da"
             },
             isLogoInHeader: false,
             logoInHeaderPosition: "left",
@@ -1627,7 +1628,8 @@
         rus: "русский",
         chi: "中文",
         slo: "Slovenčina",
-        swe: "Svenska"
+        swe: "Svenska",
+		dan: "Dansk"
       };
       $scope.url = "";
       $scope.gnUrl = gnGlobalSettings.gnUrl;
