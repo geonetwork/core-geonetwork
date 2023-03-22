@@ -80,22 +80,22 @@
             enabled: true,
             languages: {
               eng: "en",
-              dut: "nl",
-              fre: "fr",
-              ger: "de",
-              kor: "ko",
-              spa: "es",
-              cze: "cs",
               cat: "ca",
-              fin: "fi",
+              chi: "zh",
+              cze: "cs",
+              dan: "da",
+              ger: "de",
+              fre: "fr",
+              spa: "es",
               ice: "is",
               ita: "it",
+              dut: "nl",
+              kor: "ko",
               por: "pt",
               rus: "ru",
-              chi: "zh",
               slo: "sk",
-              swe: "sv",
-			  dan: "da"
+              fin: "fi",
+              swe: "sv"
             },
             isLogoInHeader: false,
             logoInHeaderPosition: "left",
@@ -1629,7 +1629,7 @@
         chi: "中文",
         slo: "Slovenčina",
         swe: "Svenska",
-		dan: "Dansk"
+        dan: "Dansk"
       };
       $scope.url = "";
       $scope.gnUrl = gnGlobalSettings.gnUrl;
