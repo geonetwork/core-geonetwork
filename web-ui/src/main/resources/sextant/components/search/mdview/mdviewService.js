@@ -535,7 +535,7 @@
         });
       };
 
-      createMetadataDisplay = function(selector) {
+      createMetadataDisplay = function (selector) {
         var el = document.createElement("div");
         el.setAttribute("gn-metadata-display", "");
         el.setAttribute(
@@ -548,7 +548,7 @@
         $(selector).find("[gn-metadata-display]").remove();
         $(selector).append(el);
         return el;
-      }
+      };
 
       this.load = function (uuid, selector, scope, opt_url) {
         $rootScope.$broadcast("mdLoadingStart");
