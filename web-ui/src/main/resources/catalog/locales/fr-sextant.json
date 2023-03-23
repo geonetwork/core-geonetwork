@@ -1,5 +1,6 @@
 {
   "parent": "Parent",
+  "children": "Enfant",
   "associated": "Ressources associées",
   "createMetadataRestricted": "Créer (restreint)",
   "createMetadataRestricted-help": "Créer dans le groupe, modification par l'auteur uniquement",

@@ -399,7 +399,6 @@
           </td>
           <td>
             <div gn-related="md"
-                 gn-read-more=""
                  data-user="user"
                  data-layout="title"
                  data-container="#sextant-related"
