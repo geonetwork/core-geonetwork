@@ -22,9 +22,6 @@
  */
 
 (function () {
-  // SEXTANT SPECIFIC
-  goog.require("sx_sxt_formatter_utils");
-
   goog.provide("sx_mdview_directive");
 
   var module = angular.module("gn_mdview_directive", [
@@ -236,10 +233,6 @@
               window.location.origin + window.location.pathname + me.attr("href")
             );
           });
-
-          // SEXTANT SPECIFIC: process collapsable field
-          sxtFormatterUtils.processCollapsableField(".gn-abstract");
-          sxtFormatterUtils.processCollapsableField(".sxt-field-collapse");
         }
       };
     }

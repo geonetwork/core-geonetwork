@@ -289,7 +289,7 @@
 
   <xsl:template mode="getMetadataHeader" match="gmd:MD_Metadata|*[@gco:isoType = 'gmd:MD_Metadata']">
     <xsl:if test="normalize-space(gmd:identificationInfo/*/gmd:abstract) != ''">
-      <div class="gn-abstract">
+      <div class="gn-abstract" data-gn-read-more="">
         <xsl:for-each select="gmd:identificationInfo/*/gmd:abstract">
           <xsl:variable name="txt">
             <xsl:call-template name="localised">
@@ -695,7 +695,7 @@
         </saxon:call-template>
       </xsl:variable>
 
-      <ul class="sdn-contact sxt-field-collapse">
+      <ul class="sdn-contact" data-gn-read-more="">
       <xsl:for-each select="$elements/*">
         <li><xsl:apply-templates mode="render-field" select=".">
           <xsl:with-param name="layout" select="'short'"/>
