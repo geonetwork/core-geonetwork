@@ -47,11 +47,17 @@
           md: "=gnMetadataOpen",
           formatter: "=gnFormatter",
           records: "=gnRecords",
-          selector: "@gnMetadataOpenSelector"
+          selector: "@gnMetadataOpenSelector",
+          appUrl: "@?"
         },
         link: function (scope, element, attrs, controller) {
           scope.$watch("md", function (n, o) {
-            if (n == null || n == undefined) {
+            if (
+              n == null ||
+              n == undefined ||
+              (n && n.uuid == undefined) ||
+              (n && n.remoteUrl !== undefined)
+            ) {
               return;
             }
 
@@ -63,8 +69,7 @@
             var hyperlinkTagName = "A";
             if (element.get(0).tagName === hyperlinkTagName) {
               var url =
-                window.location.pathname +
-                window.location.search +
+                (scope.appUrl || window.location.pathname + window.location.search) +
                 "#/" +
                 (scope.md.draft == "y" ? "metadraf" : "metadata") +
                 "/" +

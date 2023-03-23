@@ -765,11 +765,22 @@ button.active [role="tooltip"] {
 .datepicker-dropdown.datepicker-orient-bottom:before {
   border: none;
 }
+
+[data-gn-related-dropdown] {
+  float: left;
+  .btn-group {
+    vertical-align: top;
+  }
+  button.btn-default {
+    .btn-sm();
+  }
+}
+
 .gn-related-list {
   padding: 0;
   list-style: none;
   > li {
-    padding-left: 15px;
+    padding-left: 0px;
     &:hover {
       text-decoration: none;
       color: #262626;

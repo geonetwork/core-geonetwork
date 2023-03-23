@@ -44,7 +44,13 @@
     "gnSearchSettings",
     "gnUrlUtils",
     "gnUtilityService",
+    "gnESService",
+    "gnESClient",
+    "gnESFacet",
+    "gnGlobalSettings",
+    "gnMetadataActions",
     "$http",
+    "$filter",
     function (
       gnSearchLocation,
       $rootScope,
@@ -55,7 +61,13 @@
       gnSearchSettings,
       gnUrlUtils,
       gnUtilityService,
-      $http
+      gnESService,
+      gnESClient,
+      gnESFacet,
+      gnGlobalSettings,
+      gnMetadataActions,
+      $http,
+      $filter
     ) {
       // Keep where the metadataview come from to get back on close
       var initFromConfig = function () {
@@ -91,6 +103,100 @@
         gnUtilityService.scrollTo();
 
         gnMdViewObj.current.record = md;
+
+        // Record with associations
+        if (md.resourceType && md.related) {
+          var relatedRecords = md.related;
+          var recordsMap = {};
+          // Collect stats using search service
+          if (relatedRecords) {
+            // Build metadata as the API response already contains an index document
+            Object.keys(relatedRecords).map(function (k) {
+              relatedRecords[k] &&
+                relatedRecords[k].map &&
+                relatedRecords[k].map(function (l) {
+                  recordsMap[l._id] = new Metadata(l);
+                });
+            });
+
+            // Configuration to retrieve the results for the aggregations
+            var relatedFacetConfig =
+              gnGlobalSettings.gnCfg.mods.recordview.relatedFacetConfig;
+            Object.keys(relatedFacetConfig).map(function (k) {
+              relatedFacetConfig[k].aggs = {
+                docs: {
+                  top_hits: {
+                    // associated stats with UUIDs
+                    size: 100,
+                    _source: {
+                      includes: ["uuid"]
+                    }
+                  }
+                }
+              };
+            });
+
+            // Build multiquery to get aggregations for each
+            // set of associated records
+            var body = "";
+            var relatedRecordKeysWithValues = []; // keep track of the relations with values
+
+            Object.keys(relatedRecords).forEach(function (k) {
+              if (relatedRecords[k] && relatedRecords[k].length > 0) {
+                relatedRecordKeysWithValues.push(k);
+
+                body += '{"index": "records"}\n';
+                body +=
+                  "{" +
+                  '  "query": {' +
+                  '    "bool": {' +
+                  '      "must": [' +
+                  '        { "terms": { "uuid": ["' +
+                  relatedRecords[k]
+                    .map(function (md) {
+                      return md._id;
+                    })
+                    .join('","') +
+                  '"]} },' +
+                  '        { "terms": { "isTemplate": ["n"] } }' +
+                  "      ]" +
+                  "    }" +
+                  "  }," +
+                  '  "aggs":' +
+                  JSON.stringify(relatedFacetConfig) +
+                  "," +
+                  '  "from": 0,' +
+                  '  "size": 100,' +
+                  '  "_source": ["uuid"]' +
+                  "}";
+              }
+            });
+
+            // Collect stats in main portal as some records may not be visible in subportal
+            $http
+              .post("../../srv/api/search/records/_msearch", body)
+              .then(function (data) {
+                gnMdViewObj.current.record.related = [];
+
+                Object.keys(relatedRecords).map(function (k) {
+                  relatedRecords[k] &&
+                    relatedRecords[k].map(function (l, i) {
+                      var md = recordsMap[l._id];
+                      relatedRecords[k][i] = md;
+                    });
+                });
+
+                gnMdViewObj.current.record.related = relatedRecords;
+                gnMdViewObj.current.record.related.all = Object.values(recordsMap);
+                gnMdViewObj.current.record.related.uuids = Object.keys(recordsMap);
+
+                relatedRecordKeysWithValues.forEach(function (key, index) {
+                  gnMdViewObj.current.record.related["aggregations_" + key] =
+                    data.data.responses[index].aggregations;
+                });
+              });
+          }
+        }
 
         // TODO: do not add duplicates
         gnMdViewObj.previousRecords.push(md);
@@ -135,6 +241,15 @@
         }
       };
 
+      this.buildRelatedTypesQueryParameter = function (types) {
+        types =
+          types ||
+          "parent|children|sources|hassources|" +
+            "brothersAndSisters|services|datasets|" +
+            "siblings|associated|fcats|hasfeaturecats|related";
+        return "relatedType=" + types.split("|").join("&relatedType=");
+      };
+
       /**
        * Init the mdview behavior linked on $location.
        * At start and $location change, the uuid is extracted
@@ -146,6 +261,7 @@
         var that = this;
         var loadMdView = function (event, newUrl, oldUrl) {
           gnMdViewObj.loadDetailsFinished = false;
+          gnMdViewObj.recordsLoaded = false;
           var uuid = gnSearchLocation.getUuid();
           if (uuid) {
             if (
@@ -164,7 +280,7 @@
               //           && !getDraft) {
               //   for (var i = 0; i < gnMdViewObj.records.length; i++) {
               //     var md = gnMdViewObj.records[i];
-              //     if (md.getUuid() === uuid) {
+              //     if (md.uuid === uuid) {
               //       foundMd = true;
               //       that.feedMd(i, md, gnMdViewObj.records);
               //     }
@@ -176,7 +292,8 @@
                 gnMdViewObj.current.record = null;
                 $http
                   .post(
-                    "../api/search/records/_search",
+                    "../api/search/records/_search?" +
+                      that.buildRelatedTypesQueryParameter(),
                     {
                       query: {
                         bool: {
@@ -213,16 +330,22 @@
 
                         //If returned more than one, maybe we are looking for the draft
                         var i = 0;
+
                         r.data.hits.hits.forEach(function (md, index) {
                           if (getDraft && md._source.draft == "y") {
                             //This will only happen if the draft exists
                             //and the user can see it
+                            i = index;
+                          } else if (!getDraft && md._source.draft != "y") {
+                            // This use the non-draft version when the  results include the
+                            // approved and the working copy (draft) versions
                             i = index;
                           }
                         });
 
                         var metadata = [];
                         metadata.push(new Metadata(r.data.hits.hits[i]));
+
                         data = { metadata: metadata };
                         //Keep the search results (gnMdViewObj.records)
                         // that.feedMd(0, undefined, data.metadata);
@@ -237,9 +360,12 @@
                       } else {
                         gnMdViewObj.loadDetailsFinished = true;
                       }
+
+                      $rootScope.$broadcast("recordInfoLoaded");
                     },
                     function (error) {
                       gnMdViewObj.loadDetailsFinished = true;
+                      $rootScope.$broadcast("recordInfoLoaded");
                     }
                   );
               }
@@ -272,8 +398,10 @@
             $this.setCurrentMdScope();
           }
         };
-        loadFormatter();
-        $rootScope.$on("$locationChangeSuccess", loadFormatter);
+
+        $rootScope.$on("recordInfoLoaded", loadFormatter);
+        // loadFormatter();
+        // $rootScope.$on("$locationChangeSuccess", loadFormatter);
       };
 
       /**
@@ -306,6 +434,7 @@
     "$sce",
     "gnAlertService",
     "gnConfig",
+    "gnMdViewObj",
     "gnSearchSettings",
     "$q",
     "gnMetadataManager",
@@ -320,6 +449,7 @@
       $sce,
       gnAlertService,
       gnConfig,
+      gnMdViewObj,
       gnSearchSettings,
       $q,
       gnMetadataManager,
@@ -396,12 +526,6 @@
             url = fUrl(md);
           }
 
-          // Attach the md to the grid element scope
-          if (!scope.md) {
-            scope.$parent.md = md;
-            scope.md = md;
-            sxtService.feedMd(scope.$parent);
-          }
           return (
             url ||
             "../api/records/" +
@@ -411,6 +535,21 @@
         });
       };
 
+      createMetadataDisplay = function(selector) {
+        var el = document.createElement("div");
+        el.setAttribute("gn-metadata-display", "");
+        el.setAttribute(
+          "template",
+          "../../sextant/views/sextant/templates/mdview/mdpanel.html"
+        );
+        if (gnSearchSettings.tabOverflow && gnSearchSettings.tabOverflow.search) {
+          el.setAttribute("class", "sxt-scroll");
+        }
+        $(selector).find("[gn-metadata-display]").remove();
+        $(selector).append(el);
+        return el;
+      }
+
       this.load = function (uuid, selector, scope, opt_url) {
         $rootScope.$broadcast("mdLoadingStart");
         var newscope;
@@ -418,7 +557,18 @@
           newscope = scope.$new();
         } else {
           newscope = angular.element($("#sxt-controller")).scope().$new();
-          newscope.$parent.md = undefined;
+          newscope.$parent.md = gnMdViewObj.current.record;
+          if (gnMdViewObj.current.record) {
+            newscope.md = gnMdViewObj.current.record;
+            sxtService.feedMd(newscope.$parent);
+          }
+        }
+
+        if (!gnMdViewObj.current.record) {
+          var el = createMetadataDisplay(selector);
+          newscope.uuid = uuid;
+          $compile(el)(newscope);
+          return;
         }
 
         this.getFormatterUrl(
@@ -427,19 +577,6 @@
           uuid
         ).then(function (url) {
           if (url == null) {
-            var newscope = scope
-              ? scope.$new()
-              : angular.element($("#sxt-controller")).scope().$new();
-
-            var notFoundEl =
-              '<div class="alert alert-warning"' +
-              'data-translate=""' +
-              'data-translate-values="{uuid: ' +
-              "'{{recordIdentifierRequested | htmlToPlaintext}}'}\">" +
-              "  recordNotFound" +
-              "</div>";
-            $(selector).append(notFoundEl);
-            $compile(notFoundEl)(newscope);
             return;
           }
           $http
@@ -461,25 +598,14 @@
 
                 newscope.showCitation =
                   gnGlobalSettings.gnCfg.mods.recordview.showCitation;
-                var el = document.createElement("div");
-                el.setAttribute("gn-metadata-display", "");
-                el.setAttribute(
-                  "template",
-                  "../../sextant/views/sextant/templates/mdview/mdpanel.html"
-                );
-                if (gnSearchSettings.tabOverflow && gnSearchSettings.tabOverflow.search) {
-                  el.setAttribute("class", "sxt-scroll");
-                }
-                $(selector).find("[gn-metadata-display]").remove();
-                $(selector).append(el);
+                var el = createMetadataDisplay(selector);
                 $compile(el)(newscope);
               },
               function () {
                 $rootScope.$broadcast("mdLoadingEnd");
-                gnAlertService.addAlert({
-                  msg: $translate.instant("metadataViewLoadError"),
-                  type: "danger"
-                });
+                var el = createMetadataDisplay(selector);
+                newscope.metadataViewLoadError = true;
+                $compile(el)(newscope);
               }
             );
         });

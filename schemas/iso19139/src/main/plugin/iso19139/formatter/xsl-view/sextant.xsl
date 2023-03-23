@@ -400,7 +400,9 @@
           <td>
             <div gn-related="md"
                  data-user="user"
+                 data-layout="title"
                  data-container="#sextant-related"
+                 data-group-siblings-by-type="true"
                  data-types="{$sideRelated}"><xsl:comment>.</xsl:comment>
             </div>
           </td>

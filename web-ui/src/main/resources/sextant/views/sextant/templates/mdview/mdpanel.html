@@ -2,7 +2,8 @@
   <div class="panel-heading">
     <div class="container">
       <div class="row gn-md-view-header">
-        <div class="col-md-8 gn-title" title="{{md.resourceTitle}}">
+        <div data-ng-if="::md"
+             class="col-md-8 gn-title" title="{{md.resourceTitle}}">
           <span
             class="fa gn-icon-{{md.resourceType[0]}}"
             title="{{md.resourceType[0] | translate}}"
@@ -10,13 +11,20 @@
           {{md.resourceTitle}}
         </div>
 
+        <div data-ng-if="::!md"
+             class="col-md-8 gn-title"
+             data-translate=""
+             data-translate-values="{uuid: uuid}">recordNotFound
+        </div>
+
         <div class="col-md-4 gn-links pull-right text-right">
           <div
-            ng-if="::user.canManagePrivileges(md)"
+            ng-if="::md && user.canManagePrivileges(md)"
             sxt-md-manage-actions-menu="md"
           ></div>
 
-          <div sxt-md-actions-menu="md"></div>
+          <div ng-if="::md"
+               sxt-md-actions-menu="md"></div>
 
           <button class="btn btn-default" ng-click="dismiss()">
             <i class="fa fa-share fa-flip-horizontal"></i>&nbsp;
@@ -24,7 +32,12 @@
           >&nbsp;
         </div>
       </div>
+
+      <div data-ng-if="::metadataViewLoadError">
+        <div class="alert alert-danger"
+             data-translate="">metadataViewLoadError
+        </div>
+      </div>
     </div>
+    <div class="panel-body"></div>
   </div>
-  <div class="panel-body"></div>
-</div>

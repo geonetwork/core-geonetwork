@@ -818,6 +818,30 @@
           this.linksCache[key] = ret;
           return ret;
         },
+        getLinksByFilter: function (filter) {
+          if (this.linksCache[filter]) {
+            return this.linksCache[filter];
+          }
+          var filters = gnConfigService.parseFilters(filter),
+            links = this.getLinks(),
+            matches = [];
+          for (var i = 0; i < links.length; i++) {
+            gnConfigService.testFilters(filters, links[i]) && matches.push(links[i]);
+          }
+          this.linksCache[filter] = matches;
+          return matches;
+        },
+        isLinkDisabled: function (link) {
+          // TODO: Should be more consistent with schema-ident.xml filter section
+          var p = link && link.protocol;
+          if (p.match(/OGC:WMS|ESRI:REST|OGC:WFS/i) != null) {
+            return this.dynamic === false;
+          }
+          if (p.match(/WWW:DOWNLOAD.*|ATOM.*|DB.*|FILE.*/i) != null) {
+            return this.download === false;
+          }
+          return false;
+        },
         /**
          * Return an object containing metadata contacts
          * as an array and resource contacts as array
@@ -870,6 +894,22 @@
             });
           }
           return res;
+        },
+        getKeywordsGroupedByUriBase: function (thesaurusId, groupExtractionRegex) {
+          var thesaurus = this.allKeywords[thesaurusId];
+          if (thesaurus && thesaurus.keywords) {
+            var keywordsWithGroup = [];
+            for (var i = 0; i < thesaurus.keywords.length; i++) {
+              var k = angular.copy(thesaurus.keywords[i]);
+              k.group = k.link
+                ? k.link.replaceAll(new RegExp(groupExtractionRegex, "g"), "$1")
+                : "";
+              keywordsWithGroup.push(k);
+            }
+            return keywordsWithGroup;
+          } else {
+            return [];
+          }
         }
       };
       return Metadata;

@@ -33,13 +33,16 @@
     "Metadata",
     "gnESFacet",
     "gnESService",
-    function ($http, Metadata, gnESFacet, gnESService) {
+    "gnGlobalSettings",
+    function ($http, Metadata, gnESFacet, gnESService, gnGlobalSettings) {
       this.getUrl = function (service) {
         return ES_API_URL + service;
       };
 
-      this.search = function (params, selectionBucket, configId) {
-        return callApi("_search", params, selectionBucket).then(function (response) {
+      this.search = function (params, selectionBucket, configId, types) {
+        return callApi("_search", params, selectionBucket, types).then(function (
+          response
+        ) {
           return gnESFacet.getUIModel(response, params, configId);
         });
       };
@@ -93,9 +96,14 @@
         });
       };
 
-      function callApi(service, params, selectionBucket) {
+      function callApi(service, params, selectionBucket, types) {
+        var types = types || [];
+
         return $http.post(
-          ES_API_URL + service + (selectionBucket ? "?bucket=" + selectionBucket : ""),
+          ES_API_URL +
+            service +
+            (selectionBucket ? "?bucket=" + selectionBucket : "") +
+            (types.length > 0 ? [""].concat(types).join("&relatedType=") : ""),
           params
         );
       }
