@@ -219,11 +219,6 @@ public class PagesAPI {
         Page pageToUpdate = page.get();
 
         String updatedLanguage = StringUtils.isBlank(newLanguage) ? language : newLanguage;
-        if (updatedLanguage == null) {
-            throw new IllegalArgumentException(
-                "A valid language in the URL or in the language body field is required.");
-
-        }
         String updatedPageId = StringUtils.isBlank(newPageId) ? pageId : newPageId;
 
         boolean isChangingKey = !updatedLanguage.equals(language)
