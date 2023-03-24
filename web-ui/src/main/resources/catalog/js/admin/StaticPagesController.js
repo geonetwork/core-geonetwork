@@ -152,6 +152,8 @@
           sections: []
         };
 
+        $scope.pageApiLink = "";
+
         $scope.action = "../api/pages";
       };
 
