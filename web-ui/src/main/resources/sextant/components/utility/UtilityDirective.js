@@ -90,14 +90,23 @@
         link: function (scope, el, attrs) {
           var MAX_HEIGHT_LINE = 5,
             element = el.get(0),
+            toggleButton = undefined,
             expandLabel = attrs["expandLabel"]
               ? $translate.instant(attrs["expandLabel"])
               : "",
+            expandTooltip = attrs["expandTooltip"]
+              ? $translate.instant(attrs["expandTooltip"])
+              : $translate.instant("readMore"),
             expandedLabel = attrs["expandedLabel"]
               ? $translate.instant(attrs["expandedLabel"])
               : "",
+            expandedTooltip = attrs["expandedTooltip"]
+              ? $translate.instant(attrs["expandedTooltip"])
+              : "",
             expandIcon = attrs["expandIcon"] || "fa-plus-circle",
-            expandedIcon = attrs["expandedIcon"] || "fa-minus-circle";
+            gradient = attrs["gradient"] || true,
+            expandedIcon = attrs["expandedIcon"] || "fa-minus-circle",
+            transparent = "rgba(0, 0, 0, 0)";
 
           /**
            * Returns the background style using the parent element color
@@ -105,18 +114,26 @@
            */
           function getParentBackgroundStyle(parentElement) {
             var parentBgColor = getComputedStyle(parentElement).backgroundColor;
+            // Background color is not inherited
+            if (parentBgColor === transparent) {
+              return getParentBackgroundStyle(parentElement.parentElement);
+            }
             var baseColor = "255, 255, 255";
             var matches = /^rgba?\(([0-9]+, [0-9]+, [0-9]+)/.exec(parentBgColor);
-            if (matches && parentBgColor !== "rgba(0, 0, 0, 0)") {
+            if (matches && parentBgColor !== transparent) {
               baseColor = matches[1];
             }
-            return (
-              "linear-gradient(0deg, rgba(" +
-              baseColor +
-              ", 1) 40%, rgba(" +
-              baseColor +
-              ", 0))"
-            );
+            if (gradient !== false) {
+              return (
+                "linear-gradient(0deg, rgba(" +
+                baseColor +
+                ", 1) 40%, rgba(" +
+                baseColor +
+                ", 0))"
+              );
+            } else {
+              return "rgba(" + baseColor + ")";
+            }
           }
 
           /**
@@ -128,12 +145,12 @@
             contentChild.style.maxHeight = pxSize + "px";
             contentChild.style.overflowY = "hidden";
 
-            var toggleBtn = element.querySelector(".gn-collapse-toggle");
-            toggleBtn.innerHTML =
+            toggleButton.innerHTML =
               '<span class="fa fa-fw ' + expandIcon + '"></span>' + expandLabel;
+            toggleButton.setAttribute("title", expandTooltip);
             element.setAttribute("data-collapsed", "");
-            toggleBtn.style.background = getParentBackgroundStyle(element);
-            toggleBtn.style.left = "0";
+            toggleButton.style.background = getParentBackgroundStyle(element);
+            toggleButton.style.left = "0";
           }
 
           /**
@@ -144,12 +161,12 @@
             contentChild.style.removeProperty("max-height");
             contentChild.style.removeProperty("overflow-y");
 
-            var toggleBtn = element.querySelector(".gn-collapse-toggle");
-            toggleBtn.innerHTML =
+            toggleButton.innerHTML =
               '<span class="fa fa-fw ' + expandedIcon + '"></span>' + expandedLabel;
-            toggleBtn.style.removeProperty("left");
+            toggleButton.setAttribute("title", expandedTooltip);
+            toggleButton.style.removeProperty("left");
             element.removeAttribute("data-collapsed");
-            toggleBtn.style.removeProperty("background");
+            toggleButton.style.removeProperty("background");
           }
 
           /**
@@ -193,7 +210,7 @@
            * @param {HTMLElement} parentElement
            */
           function createToggleButton(parentElement) {
-            var toggleButton = document.createElement("a");
+            toggleButton = document.createElement("a");
             toggleButton.setAttribute("href", "");
             toggleButton.classList.add("gn-collapse-toggle", "text-right");
             toggleButton.style.display = "block";
@@ -201,12 +218,11 @@
             toggleButton.style.bottom = "0";
             toggleButton.style.left = "0";
             toggleButton.style.right = "0";
-            toggleButton.style.padding = "0.5em 0.5em 0.5em 0.5em";
+            toggleButton.style.paddingRight = "0.5em";
 
             // get parent background color to determine the gradient
             toggleButton.style.background = getParentBackgroundStyle(parentElement);
             parentElement.appendChild(toggleButton);
-            return toggleButton;
           }
 
           var init = function () {
@@ -219,13 +235,13 @@
             if (elHeightPx < lineHeightPx * (lineNumbers + 1)) {
               return;
             }
-            var maxHeightPx = lineHeightPx * lineNumbers;
+            var maxHeightPx = lineHeightPx * (lineNumbers + 1);
 
             // put the element content in a child div
             var contentChild = document.createElement("div");
             contentChild.classList.add("gn-collapse-content");
             contentChild.innerHTML = element.innerHTML;
-            contentChild.style.paddingBottom = "0.5em";
+            contentChild.style.paddingBottom = "0";
             element.innerHTML = "";
             element.style.position = "relative";
             element.appendChild(contentChild);
@@ -233,7 +249,7 @@
               element.style.position = "relative";
             }
 
-            var toggleButton = createToggleButton(element);
+            createToggleButton(element);
             toggleButton.addEventListener("click", function (event) {
               if (element.hasAttribute("data-collapsed")) {
                 expandElement(element);
@@ -252,6 +268,7 @@
       };
     }
   ]);
+
 
   /**
    * @ngdoc directive
