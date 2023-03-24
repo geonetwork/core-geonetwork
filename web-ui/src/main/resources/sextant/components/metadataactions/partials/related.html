@@ -173,8 +173,7 @@
       {{(type === 'siblings' ? type : type.replace('siblings', '')) | translate}}
     </h5>
 
-    <ul class="gn-related-list" ng-if="items.length > 0"
-        data-gn-read-more="">
+    <ul class="gn-related-list" ng-if="items.length > 0" data-gn-read-more="">
       <li data-ng-repeat="md in items | orderBy:getOrderBy">
         <a
           data-ng-hide="md.remoteUrl"
