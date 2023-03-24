@@ -360,6 +360,8 @@
               ? "wmts"
               : link.protocol == "ESRI:REST" || link.protocol.startsWith("ESRI REST")
               ? "esrirest"
+              : link.protocol == "OGC:3DTILES"
+              ? "3dtiles"
               : "wms",
           url: $filter("gnLocalized")(link.url) || link.url
         };
