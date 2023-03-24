@@ -55,8 +55,7 @@
           ref: "@ref",
           required: "@required"
         },
-        templateUrl:
-          "../../sextant/components/utility/partials/fieldduration.html",
+        templateUrl: "../../sextant/components/utility/partials/fieldduration.html",
         link: function (scope, element, attrs) {
           var buildDuration = function () {
             var duration = [

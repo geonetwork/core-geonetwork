@@ -182,7 +182,7 @@
               <xsl:with-param name="key" select="'sxt-view-author'"/>
             </xsl:call-template>
           </td>
-          <td class="sxt-field-collapse" data-line-number="10">
+          <td class="" data-gn-read-more="" data-line-number="10">
             <xsl:for-each select="$authors">
               <xsl:apply-templates mode="render-field"
                                    select=".">
@@ -204,7 +204,7 @@
               <xsl:with-param name="key" select="'sxt-view-contact'"/>
             </xsl:call-template>
           </td>
-          <td class="sxt-field-collapse" data-line-number="10">
+          <td  data-gn-read-more="" data-line-number="10">
             <xsl:for-each select="$contacts">
 <!--            <xsl:for-each select="$contacts" group-by="">-->
               <xsl:apply-templates mode="render-field"
@@ -263,7 +263,7 @@
               <xsl:with-param name="key" select="'sxt-view-lineage'"/>
             </xsl:call-template>
           </td>
-          <td class="sxt-field-collapse">
+          <td data-gn-read-more="">
             <xsl:apply-templates mode="render-value"
                                  select="$metadata/gmd:dataQualityInfo/*/gmd:lineage/*/gmd:statement"/>
           </td>
@@ -400,7 +400,9 @@
           <td>
             <div gn-related="md"
                  data-user="user"
+                 data-layout="title"
                  data-container="#sextant-related"
+                 data-group-siblings-by-type="true"
                  data-types="{$sideRelated}"><xsl:comment>.</xsl:comment>
             </div>
           </td>

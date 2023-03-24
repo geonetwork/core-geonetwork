@@ -10,7 +10,7 @@
         restrict: "E",
         replace: true,
         scope: true,
-        templateUrl: "../../sextant/views/sextant/directives/" + "partials/linksbtn.html",
+        templateUrl: "../../sextant/views/sextant/directives/partials/linksbtn.html",
         link: function (scope) {
           scope.container = scope.container || ".links";
           scope.isMap =

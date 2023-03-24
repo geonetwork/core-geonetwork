@@ -48,6 +48,7 @@
     Metadata,
     gnSearchLocation,
     gnESClient,
+    gnGlobalSettings,
     gnESService,
     gnESFacet,
     gnAlertService,
@@ -172,11 +173,22 @@
         $scope.searchObj.configId,
         $scope.searchObj.filters
       );
+
+      // For now, only the list result template renders related records
+      // based on UI config.
+      var template = "grid";
+      // In sextant we always load relation
+      // $scope.resultTemplate && $scope.resultTemplate.endsWith('list.html')
+      //  ? 'grid' : '',
+      (templateConfig = gnGlobalSettings.gnCfg.mods.search[template]),
+        (types = templateConfig && templateConfig.related ? templateConfig.related : []);
+
       gnESClient
         .search(
           esParams,
           $scope.searchResults.selectionBucket || "metadata",
-          $scope.searchObj.configId
+          $scope.searchObj.configId,
+          types
         )
         .then(
           function (data) {
@@ -674,6 +686,7 @@
     "Metadata",
     "gnSearchLocation",
     "gnESClient",
+    "gnGlobalSettings",
     "gnESService",
     "gnESFacet",
     "gnAlertService",

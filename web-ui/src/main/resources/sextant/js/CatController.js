@@ -829,7 +829,8 @@
             showCitation: {
               enabled: true,
               if: null // {'documentStandard': ['iso19115-3.2018']}
-            }
+            },
+            relatedFacetConfig: {}
           },
           editor: {
             enabled: true,

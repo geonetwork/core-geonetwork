@@ -32,35 +32,6 @@
     types: []
   });
 
-  module.directive("gnGridRelatedQuery", [
-    "gnGlobalSettings",
-    "gnRelatedService",
-    "gnGridRelatedList",
-    function (gnGlobalSettings, gnRelatedService, gnGridRelatedList) {
-      return {
-        restrict: "A",
-        scope: {
-          records: "<gnGridRelatedQuery",
-          validatorFn: "&"
-        },
-        link: function (scope, element, attrs) {
-          var types = gnGlobalSettings.gnCfg.mods.search.grid.related;
-          gnGridRelatedList.types = types;
-
-          scope.$watch("records", function (mds, o) {
-            if (mds !== o && mds.length) {
-              gnGridRelatedList.promise = gnRelatedService
-                .getMdsRelated(mds, types)
-                .then(function (response) {
-                  gnGridRelatedList.list = response.data;
-                });
-            }
-          });
-        }
-      };
-    }
-  ]);
-
   module.directive("gnGridRelated", [
     "gnGlobalSettings",
     "gnRelatedResources",

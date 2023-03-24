@@ -71,7 +71,16 @@
     "Metadata",
     "sxtService",
     "gnConfig",
-    function (gnMetadataActions, $http, $location, Metadata, sxtService, gnConfig) {
+    "gnMdView",
+    function (
+      gnMetadataActions,
+      $http,
+      $location,
+      Metadata,
+      sxtService,
+      gnConfig,
+      gnMdView
+    ) {
       return {
         restrict: "A",
         replace: true,
@@ -121,30 +130,34 @@
           };
 
           loadTasks();
-          if (!scope.md) {
-            var url = $location.url();
-            var uuid = url.substring(url.lastIndexOf("/") + 1);
-            $http
-              .post("../api/search/records/_search", {
-                query: {
-                  bool: {
-                    must: [
-                      {
-                        multi_match: {
-                          query: uuid,
-                          fields: ["id", "uuid"]
-                        }
-                      },
-                      { terms: { draft: ["n", "y", "e"] } }
-                    ]
-                  }
-                }
-              })
-              .success(function (resp) {
-                scope.md = new Metadata(resp.metadata);
-                sxtService.feedMd(scope);
-              });
-          }
+
+          // if (!scope.md) {
+          //
+          //   gnMdView.initMdView();
+          //
+          //   var url = $location.url();
+          //   var uuid = url.substring(url.lastIndexOf("/") + 1);
+          //   $http
+          //     .post("../api/search/records/_search", {
+          //       query: {
+          //         bool: {
+          //           must: [
+          //             {
+          //               multi_match: {
+          //                 query: uuid,
+          //                 fields: ["id", "uuid"]
+          //               }
+          //             },
+          //             { terms: { draft: ["n", "y", "e"] } }
+          //           ]
+          //         }
+          //       }
+          //     })
+          //     .success(function (resp) {
+          //       scope.md = new Metadata(resp.metadata);
+          //       sxtService.feedMd(scope);
+          //     });
+          // }
           // START sextant SPECIFIC
           scope.location = window.location;
           // END sextant SPECIFIC

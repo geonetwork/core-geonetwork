@@ -279,28 +279,8 @@
         return suggestService.getAnySuggestions(val, searchObj);
       };
 
-      /** Manage metadata view */
-      /*
-       $scope.mdView = mdView;
-       gnMdView.initMdView();
-
-       $scope.openRecord = function(index, md, records) {
-       gnMdView.feedMd(index, md, records);
-       };
-
-       $scope.closeRecord = function() {
-       gnMdView.removeLocationUuid();
-       };
-       $scope.nextRecord = function() {
-       // TODO: When last record of page reached, go to next page...
-       $scope.openRecord(mdView.current.index + 1);
-       };
-       $scope.previousRecord = function() {
-       $scope.openRecord(mdView.current.index - 1);
-       };
-       */
-
-      ///////////////////////////////////////////////////////////////////
+      $scope.mdView = mdView;
+      gnMdView.initMdView();
 
       $scope.$on("layerAddedFromContext", function (e, l) {
         var md = l.get("md");

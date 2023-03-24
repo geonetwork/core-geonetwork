@@ -12,13 +12,13 @@
     </div>
 
     <div class="modal-footer-inline clearfix">
-      <div
-        data-gn-need-help="user-guide/workflow/life-cycle.html"
-        data-icon-only="true"
-        class="pull-left"
-      ></div>
+      <div data-gn-need-help="life-cycle" data-icon-only="true" class="pull-left"></div>
       <div class="btn-toolbar pull-right">
-        <button class="btn btn-default" data-gn-click-and-spin="updateStatus()">
+        <button
+          class="btn btn-default"
+          data-ng-disabled="newStatus.status == -1"
+          data-gn-click-and-spin="updateStatus()"
+        >
           {{"mdStatusButton-" + statusToSelect | translate}}
         </button>
         <button class="btn btn-default" type="button" data-dismiss="modal">
@@ -66,7 +66,11 @@
         ></textarea>
       </div>
 
-      <button class="btn btn-default" data-gn-click-and-spin="updateStatus()">
+      <button
+        class="btn btn-default"
+        data-ng-disabled="newStatus.status == -1"
+        data-gn-click-and-spin="updateStatus()"
+      >
         <i class="fa fa-mail-forward"></i>&nbsp;
         <span data-translate="">triggerTask</span>
       </button>

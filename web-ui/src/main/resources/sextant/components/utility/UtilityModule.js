@@ -29,7 +29,11 @@
   goog.require("sx_field_duration_directive");
 
   angular
-    .module("gn_utility", ["gn_utility_service", "gn_utility_directive", "gn_field_duration_directive"])
+    .module("gn_utility", [
+      "gn_utility_service",
+      "gn_utility_directive",
+      "gn_field_duration_directive"
+    ])
     .filter("characters", function () {
       return function (input, chars, breakOnWord) {
         if (isNaN(chars)) return input;

@@ -35,7 +35,6 @@
   ]);
 
   module.service("gnMetadataActions", [
-    "$window",
     "$rootScope",
     "$timeout",
     "$location",
@@ -43,6 +42,7 @@
     "gnMetadataManager",
     "gnAlertService",
     "gnSearchSettings",
+    "gnGlobalSettings",
     "gnUtilityService",
     "gnShareService",
     "gnPopup",
@@ -50,9 +50,8 @@
     "$translate",
     "$q",
     "$http",
-    "gnGlobalSettings",
+    "gnConfig",
     function (
-      $window,
       $rootScope,
       $timeout,
       $location,
@@ -60,6 +59,7 @@
       gnMetadataManager,
       gnAlertService,
       gnSearchSettings,
+      gnGlobalSettings,
       gnUtilityService,
       gnShareService,
       gnPopup,
@@ -67,16 +67,15 @@
       $translate,
       $q,
       $http,
-      gnGlobalSettings
+      gnConfig
     ) {
-      var printConfigUrlPrefix = gnGlobalSettings.gnUrl ? gnGlobalSettings.gnUrl : "";
-
       var windowName = "geonetwork";
       var windowOption = "";
       var translations = null;
       $translate([
         "metadataPublished",
         "metadataUnpublished",
+        "metadataLinksValidated",
         "metadataPublishedError",
         "metadataUnpublishedError",
         "metadataValidated"
@@ -90,44 +89,6 @@
         });
       };
 
-      /**
-       * Open a modal and compile object content.
-       * Bind to an event to close the popup.
-       * @param {Object} o popup config
-       * @param {Object} scope to build content uppon
-       * @param {string} eventName
-       */
-      var openModal = function (o, scope, eventName) {
-        // var popup = gnPopup.create(o, scope);
-        var popup = gnPopup.createModal(o, scope);
-        var myListener = $rootScope.$on(eventName, function (e, o) {
-          $timeout(function () {
-            popup.modal("hide");
-          }, 0);
-          myListener();
-        });
-      };
-
-      // specific Sextant
-      /**
-       * Open a popup and compile object content.
-       * Bind to an event to close the popup.
-       * @param {Object} o popup config
-       * @param {Object} scope to build content uppon
-       * @param {string} eventName
-       */
-      var openPopup = function (o, scope, eventName) {
-        // var popup = gnPopup.create(o, scope);
-        var popup = gnPopup.create(o, scope);
-        var myListener = $rootScope.$on(eventName, function (e, o) {
-          $timeout(function () {
-            popup.close();
-          }, 0);
-          myListener();
-        });
-      };
-      // end specific Sextant
-
       var callBatch = function (service) {
         return gnHttp.callService(service).then(function (data) {
           alertResult(data.data);
@@ -140,7 +101,7 @@
        * @param {boolean} child
        */
       var duplicateMetadata = function (id, child) {
-        var url = printConfigUrlPrefix + "catalog.edit#/";
+        var url = "catalog.edit#/";
         if (id) {
           if (child) {
             url += "create?childOf=" + id;
@@ -148,7 +109,35 @@
             url += "create?from=" + id;
           }
         }
-        $window.open(url, "_blank");
+        window.open(url, "_blank");
+      };
+
+      /**
+       * Index the current metadata record.
+       * @param {string} md
+       */
+      this.indexMd = function (md) {
+        return $http
+          .get("../api/records/index", {
+            params: {
+              uuids: [md.uuid]
+            }
+          })
+          .then(
+            function (response) {
+              var res = response.data;
+              gnAlertService.addAlert({
+                msg: $translate.instant("selection.indexing.count", res),
+                type: res.success ? "success" : "danger"
+              });
+            },
+            function (response) {
+              gnAlertService.addAlert({
+                msg: $translate.instant("selection.indexing.error"),
+                type: "danger"
+              });
+            }
+          );
       };
 
       /**
@@ -156,11 +145,9 @@
        * for sortBy and sortOrder to process the print. If it is a string
        * (uuid), we print only one metadata.
        * @param {Object|string} params
-       * @param {string} bucket
-       * @param {string} prefix
        */
-      this.metadataPrint = function (params, bucket, prefix) {
-        var url = prefix ? prefix : "";
+      this.metadataPrint = function (params, bucket) {
+        var url;
         if (angular.isObject(params) && params.sortBy) {
           url = "../api/records/pdf";
           url += "?sortBy=" + params.sortBy;
@@ -170,25 +157,14 @@
           url += "&bucket=" + bucket;
           location.replace(url);
         } else if (angular.isString(params)) {
-          // TODO: May depend on schema
-          url += gnSearchSettings.formatter.defaultPdfUrl + encodeURIComponent(params);
-          $window.open(url, "_blank");
+          gnMdFormatter.getFormatterUrl(null, null, params).then(function (url) {
+            $http.get(url, {
+              headers: {
+                Accept: "text/html"
+              }
+            });
+          });
         }
-        // if (url) {
-        // }
-        // else if (angular.isString(params)) {
-        //   gnMdFormatter.getFormatterUrl(null,
-        // null, params).then(function(url) {
-        //     $http.get(url, {
-        //       headers: {
-        //         Accept: 'text/html'
-        //       }
-        //     });
-        //   });
-        // }
-        // else {
-        //   console.error('Error while exporting PDF');
-        // }
       };
 
       /**
@@ -209,8 +185,8 @@
        * @param {string} uuid
        */
       this.metadataMEF = function (uuid, bucket, approved) {
-        var url = printConfigUrlPrefix + "../api/records/zip?";
-        url += angular.isDefined(uuid) ? "&uuid=" + uuid : "";
+        var url = "../api/records/zip?";
+        url += angular.isDefined(uuid) ? "&uuids=" + uuid : "";
         url += angular.isDefined(bucket) ? "&bucket=" + bucket : "";
         url += angular.isDefined(approved) ? "&approved=" + approved : "";
 
@@ -218,11 +194,7 @@
       };
 
       this.exportCSV = function (bucket) {
-        window.open(
-          printConfigUrlPrefix + "../api/records/csv" + "?bucket=" + bucket,
-          windowName,
-          windowOption
-        );
+        window.open("../api/records/csv" + "?bucket=" + bucket, windowName, windowOption);
       };
       this.validateMdLinks = function (bucket) {
         $rootScope.$broadcast("operationOnSelectionStart");
@@ -254,7 +226,6 @@
         $rootScope.$broadcast("operationOnSelectionStart");
         if (md) {
           return gnMetadataManager.validate(md.id).then(function () {
-            $rootScope.$broadcast("operationOnSelectionStop");
             $rootScope.$broadcast("search");
           });
         } else {
@@ -318,11 +289,18 @@
         return deferred.promise;
       };
 
+      this.getMetadataIdToEdit = function (md) {
+        if (!md) return;
+
+        if (md.draftId) {
+          return md.draftId;
+        } else {
+          return md.id;
+        }
+      };
       this.openPrivilegesPanel = function (md, scope) {
-        // SEXTANT SPECIFIC
-        openPopup(
+        gnUtilityService.openModal(
           {
-            // gnUtilityService.openModal({
             title: $translate.instant("privileges") + " - " + md.resourceTitle,
             content: '<div gn-share="' + md.id + '"></div>',
             className: "gn-privileges-popup"
@@ -331,7 +309,7 @@
           "PrivilegesUpdated"
         );
       };
-      // end specific Sextant
+
       this.openUpdateStatusPanel = function (scope, statusType, t, statusToBe, label) {
         scope.task = t;
         scope.statusToSelect = statusToBe;
@@ -344,7 +322,7 @@
               statusToBe +
               '" data-status-type="' +
               statusType +
-              '" task="t"></div>'
+              '" task="task"></div>'
           },
           scope,
           "metadataStatusUpdated"
@@ -378,6 +356,30 @@
               });
             }
           );
+      };
+
+      this.approve = function (bucket, scope) {
+        gnUtilityService.openModal(
+          {
+            title: "batchApproveTitle",
+            content:
+              '<div gn-metadata-batch-approve selection-bucket="' + bucket + '"></div>'
+          },
+          scope,
+          "StatusUpdated"
+        );
+      };
+
+      this.submit = function (bucket, scope) {
+        gnUtilityService.openModal(
+          {
+            title: "batchSubmitTitle",
+            content:
+              '<div gn-metadata-batch-submit selection-bucket="' + bucket + '"></div>'
+          },
+          scope,
+          "StatusUpdated"
+        );
       };
 
       this.openPrivilegesBatchPanel = function (scope, bucket) {
@@ -441,14 +443,6 @@
        */
       this.duplicate = function (md) {
         duplicateMetadata(md.id, false);
-      };
-
-      /**
-       * Create a child of the given metadata. Open the editor in new page.
-       * @param {string} md
-       */
-      this.createChild = function (md) {
-        duplicateMetadata(md.id, true);
       };
 
       /**
@@ -540,14 +534,14 @@
 
       this.assignGroup = function (metadataId, groupId) {
         var defer = $q.defer();
-        $http
-          .put("../api/records/" + metadataId + "/group", groupId)
-          .success(function (data) {
-            defer.resolve(data);
-          })
-          .error(function (data) {
-            defer.reject(data);
-          });
+        $http.put("../api/records/" + metadataId + "/group", groupId).then(
+          function (response) {
+            defer.resolve(response.data);
+          },
+          function (response) {
+            defer.reject(response.data);
+          }
+        );
         return defer.promise;
       };
 
@@ -555,36 +549,40 @@
         var defer = $q.defer();
         $http
           .get("../records/" + metadataId + "/tags?id=" + categories.join("&id="))
-          .success(function (data) {
-            defer.resolve(data);
-          })
-          .error(function (data) {
-            defer.reject(data);
-          });
+          .then(
+            function (response) {
+              defer.resolve(response.data);
+            },
+            function (response) {
+              defer.reject(response.data);
+            }
+          );
         return defer.promise;
       };
 
       this.startVersioning = function (metadataId) {
         var defer = $q.defer();
-        $http
-          .get("md.versioning.start?id=" + metadataId)
-          .success(function (data) {
-            defer.resolve(data);
-          })
-          .error(function (data) {
-            defer.reject(data);
-          });
+        $http.get("md.versioning.start?id=" + metadataId).then(
+          function (response) {
+            defer.resolve(response.data);
+          },
+          function (response) {
+            defer.reject(response.data);
+          }
+        );
         return defer.promise;
       };
 
       /**
-       * Get html formatter link for the given md
+       * Get permalink depending on catalog configuration
+       * and open the permalink modal.
+       *
        * @param {Object} md
-       * @param {String} prefix
        */
       this.getPermalink = function (md) {
-        var url = $location.absUrl().split("#")[0] + "#/metadata/" + md.uuid;
-        gnUtilityService.getPermalink(md.resourceTitle, url);
+        $http.get("../api/records/" + md.getUuid() + "/permalink").then(function (r) {
+          gnUtilityService.displayPermalink(md.resourceTitle, r.data);
+        });
       };
 
       /**

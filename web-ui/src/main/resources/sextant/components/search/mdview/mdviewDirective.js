@@ -22,9 +22,6 @@
  */
 
 (function () {
-  // SEXTANT SPECIFIC
-  goog.require("sx_sxt_formatter_utils");
-
   goog.provide("sx_mdview_directive");
 
   var module = angular.module("gn_mdview_directive", [
@@ -47,11 +44,17 @@
           md: "=gnMetadataOpen",
           formatter: "=gnFormatter",
           records: "=gnRecords",
-          selector: "@gnMetadataOpenSelector"
+          selector: "@gnMetadataOpenSelector",
+          appUrl: "@?"
         },
         link: function (scope, element, attrs, controller) {
           scope.$watch("md", function (n, o) {
-            if (n == null || n == undefined) {
+            if (
+              n == null ||
+              n == undefined ||
+              (n && n.uuid == undefined) ||
+              (n && n.remoteUrl !== undefined)
+            ) {
               return;
             }
 
@@ -63,8 +66,7 @@
             var hyperlinkTagName = "A";
             if (element.get(0).tagName === hyperlinkTagName) {
               var url =
-                window.location.pathname +
-                window.location.search +
+                (scope.appUrl || window.location.pathname + window.location.search) +
                 "#/" +
                 (scope.md.draft == "y" ? "metadraf" : "metadata") +
                 "/" +
@@ -231,10 +233,6 @@
               window.location.origin + window.location.pathname + me.attr("href")
             );
           });
-
-          // SEXTANT SPECIFIC: process collapsable field
-          sxtFormatterUtils.processCollapsableField(".gn-abstract");
-          sxtFormatterUtils.processCollapsableField(".sxt-field-collapse");
         }
       };
     }
