@@ -269,7 +269,6 @@
     }
   ]);
 
-
   /**
    * @ngdoc directive
    * @name gn_utility.directive:gnCountryPicker

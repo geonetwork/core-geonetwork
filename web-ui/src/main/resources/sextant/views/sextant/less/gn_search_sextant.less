@@ -1548,6 +1548,8 @@ to a common CSS class?
     ul.dropdown-menu {
       padding-bottom: 0;
       width: 100%;
+      max-height: 18.5em;
+      overflow-y: auto;
     }
     li {
       width: 100%;
@@ -1561,7 +1563,9 @@ to a common CSS class?
       padding-top: 1px;
       padding-bottom: 1px;
       line-height: normal;
-      .text-overflow();
+      word-wrap: break-word;
+      white-space: normal;
+      min-width: auto;
       width: 100%;
       position: relative;
       padding-left: 23px;

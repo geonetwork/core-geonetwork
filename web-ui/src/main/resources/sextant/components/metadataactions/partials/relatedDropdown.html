@@ -1,4 +1,11 @@
-<div class="btn-group" data-ng-if="hasRelations">
+<div
+  class="btn-group"
+  sxt-popover-dropdown
+  placement="bottom"
+  container="{{$parent.$parent.container}}"
+  className="sxt-popover-grid"
+  data-ng-if="hasRelations"
+>
   <button
     type="button"
     class="btn dropdown-toggle btn-default"
@@ -9,14 +16,14 @@
     <span class="caret"></span>
   </button>
   <ul class="dropdown-menu">
-    <li
+    <span
       data-ng-repeat-start="(type, items) in md.related track by $index"
       data-ng-init="mainType = config.getType(md, type);
                     icon = config.getClassIcon(mainType);"
     >
-      <span data-ng-if="items.length > 0">
-        <i class="fa {{icon}}" /> {{('link-' + type) | translate}}
-      </span>
+    </span>
+    <li data-ng-if="items.length > 0">
+      <i class="fa {{icon}}" /> {{('link-' + type) | translate}}
     </li>
     <li data-ng-repeat="md in items | orderBy:getOrderBy">
       <a
@@ -43,6 +50,6 @@
         ></i>
       </a>
     </li>
-    <li data-ng-repeat-end=""></li>
+    <span data-ng-repeat-end=""></span>
   </ul>
 </div>
