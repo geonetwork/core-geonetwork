@@ -82,6 +82,7 @@
   "csw-sortByHelp": "Define sort option for GetRecords query. This can solve issue for large sets where some records may change on the remote node during harvesting and returned in different pages. Sorting by 'identifier:A' means by UUID with alphabetical order. Any CSW queryables can be used in combination with A or D for setting the ordering.",
   "moreLikeThis": "Similar records",
   "moreLikeType": "Similar ",
+  "readMore": "See more...",
   "onTheWeb": "More online information",
   "pdfReportTocTitle": "Contents",
   "loadMoreResults": "load more results...",
