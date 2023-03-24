@@ -379,5 +379,9 @@
   "staticPageFormat-LINK": "Web link",
   "staticPageFormat-HTML": "HTML content displayed embedded in the app",
   "staticPageFormat-HTMLPAGE": "HTML content displayed in a new browser tab",
-  "staticPageFormat-TEXT": "Plain text content"
+  "staticPageFormat-TEXT": "Plain text content",
+  "staticPageStatus-HIDDEN": "Visible only to the administrator",
+  "staticPageStatus-PRIVATE": "Visible to logged users",
+  "staticPageStatus-PUBLIC": "Visible to everyone",
+  "pageLink": "Link"
 }
