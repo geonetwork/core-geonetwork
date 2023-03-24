@@ -33,6 +33,7 @@
           <p class="text-muted">
             <span
               data-translate="{{(mainType | lowercase) + 'LinkDetails'}}"
+              data-translate-default=""
               data-translate-values="{
                       url:{{r.locUrl | json}},
                       layer:{{r.locTitle | json}}
@@ -66,8 +67,10 @@
           data-ng-if="::r.locDescription.length > 0
                        && r.locDescription !== r.locTitle"
           title="{{::r.locDescription}}"
+          data-gn-read-more=""
+          data-line-number="3"
         >
-          {{::r.locDescription | striptags | characters:150}}
+          {{::r.locDescription | striptags}}
         </p>
         <div data-ng-switch on="mainType">
           <div data-ng-switch-when="WFS">
