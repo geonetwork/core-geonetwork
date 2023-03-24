@@ -31,8 +31,9 @@
     "$http",
     "$rootScope",
     "$translate",
+    "$log",
     "gnGlobalSettings",
-    function ($scope, $http, $rootScope, $translate, gnGlobalSettings) {
+    function ($scope, $http, $rootScope, $translate, $log, gnGlobalSettings) {
       $scope.dbLanguages = [];
       $scope.staticPages = [];
       $scope.formats = [];
@@ -108,19 +109,21 @@
       var uploadStaticPageFileDone = function (e, data) {
         $scope.staticPageSelected.data = data.files[0].name;
         $scope.clear(data.files[0]);
+        successHandler();
       };
       var uploadStaticPageFileError = function (event, data) {
         var req = data.response().jqXHR;
-        if (req.status === 201) {
-          successHandler();
-        } else {
-          var contentType = req.getResponseHeader("Content-Type");
-          var errorText = req.responseText;
-          if ("application/json" === contentType) {
-            var parsedError = JSON.parse(req.responseText);
+        var contentType = req.getResponseHeader("Content-Type");
+        var errorText = req.responseText;
+        var parsedError = null;
+        if ("application/json" === contentType) {
+          try {
+            parsedError = JSON.parse(req.responseText);
+          } catch (e) {
+            $log.warn("Error converting response in JSON object: " + req.responseText);
           }
-          failureHandler(parsedError || errorText);
         }
+        failureHandler(parsedError || errorText);
       };
 
       // upload directive options

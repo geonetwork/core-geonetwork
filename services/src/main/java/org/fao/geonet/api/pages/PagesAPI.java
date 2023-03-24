@@ -107,7 +107,7 @@ public class PagesAPI {
         @ApiResponse(responseCode = "500", description = ERROR_FILE)})
     @PreAuthorize("hasAuthority('Administrator')")
     @ResponseBody
-    public ResponseEntity<Void> addPageWithoutUploadingFile(
+    public ResponseEntity<String> addPageWithoutUploadingFile(
         @RequestBody
         PageProperties pageProperties)
         throws ResourceAlreadyExistException {
@@ -129,7 +129,7 @@ public class PagesAPI {
         @ApiResponse(responseCode = "500", description = ERROR_FILE)})
     @PreAuthorize("hasAuthority('Administrator')")
     @ResponseBody
-    public ResponseEntity<Void> addPageUploadingFile(
+    public ResponseEntity<String> addPageUploadingFile(
         @RequestParam(value = "language", required = true) final String language,
         @RequestParam(value = "pageId", required = true) final String pageId,
         @RequestParam(value = "sections", required = false) final List<Page.PageSection> sections,
@@ -147,7 +147,7 @@ public class PagesAPI {
         return createPage(page, data);
     }
 
-    private ResponseEntity<Void> createPage(PageProperties pageProperties,
+    private ResponseEntity<String> createPage(PageProperties pageProperties,
                                             MultipartFile data) throws ResourceAlreadyExistException {
 
         String link = pageProperties.getLink();
@@ -185,7 +185,7 @@ public class PagesAPI {
             }
 
             pageRepository.save(newPage);
-            return ResponseEntity.status(HttpStatus.CREATED).build();
+            return ResponseEntity.status(HttpStatus.CREATED).body("{}");
         } else {
             throw new ResourceAlreadyExistException();
         }
