@@ -140,7 +140,9 @@
                 data-ng-readonly="isUpdate"
                 data-ng-model="staticPageSelected.format"
               >
-                <option data-ng-repeat="f in formats" value="{{f}}">{{f}}</option>
+                <option data-ng-repeat="f in formats" value="{{f}}">
+                  {{'staticPageFormat-' + f | translate }}
+                </option>
               </select>
             </div>
           </div>
@@ -185,7 +187,7 @@
             <div class="row">
               <label class="col-sm-3 control-label" data-translate="">pageApiLink</label>
 
-              <div class="col-sm-9" data-ng-show="staticPageSelected.pageApiLink !== ''">
+              <div class="col-sm-9" data-ng-show="pageApiLink !== ''">
                 <a href="{{pageApiLink}}">{{pageApiLink}}</a>
               </div>
             </div>
@@ -227,7 +229,7 @@
           <div class="form-group" data-ng-show="staticPageSelected.format !== 'LINK'">
             <label class="control-label col-sm-3" data-translate="">pageContent</label>
 
-            <div class="col-sm-12">
+            <div class="col-sm-9">
               <input
                 type="hidden"
                 name="content"

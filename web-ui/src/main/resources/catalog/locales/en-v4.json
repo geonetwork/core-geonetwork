@@ -385,5 +385,9 @@
   "uploadedResourceAlreadyExistException": "File {{file}} already exist in this record data store. Remove it first.",
   "switchPortals": "Switch to another Portal",
   "dataPreview":  "Discover data",
-  "tableOfContents": "Table of Contents"
+  "tableOfContents": "Table of Contents",
+  "staticPageFormat-LINK": "Web link",
+  "staticPageFormat-HTML": "HTML content displayed embedded in the app",
+  "staticPageFormat-HTMLPAGE": "HTML content displayed in a new browser tab",
+  "staticPageFormat-TEXT": "Plain text content"
 }
