@@ -185,7 +185,7 @@ public class PagesAPI {
             }
 
             pageRepository.save(newPage);
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.status(HttpStatus.CREATED).build();
         } else {
             throw new ResourceAlreadyExistException();
         }
