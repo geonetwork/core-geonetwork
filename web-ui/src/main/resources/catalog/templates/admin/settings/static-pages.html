@@ -184,17 +184,17 @@
               </div>
             </div>
 
-            <div class="row">
+            <div class="row" data-ng-show="pageApiLink !== ''">
               <label class="col-sm-3 control-label" data-translate="">pageApiLink</label>
 
-              <div class="col-sm-9" data-ng-show="pageApiLink !== ''">
+              <div class="col-sm-9">
                 <a href="{{pageApiLink}}">{{pageApiLink}}</a>
               </div>
             </div>
 
             <div
               id="gn-import-uploadfile-panel"
-              class="col-sm-9"
+              class="col-sm-9 col-sm-offset-3"
               data-ng-show="staticPageSelected.link === ''"
             >
               <div class="panel panel-default">
@@ -270,7 +270,9 @@
                 data-ng-model="staticPageSelected.status"
               >
                 <option value="HIDDEN">{{'staticPageStatus-HIDDEN' | translate }}</option>
-                <option value="PRIVATE">{{'staticPageStatus-PRIVATE' | translate }}</option>
+                <option value="PRIVATE">
+                  {{'staticPageStatus-PRIVATE' | translate }}
+                </option>
                 <option value="PUBLIC">{{'staticPageStatus-PUBLIC' | translate }}</option>
               </select>
             </div>
