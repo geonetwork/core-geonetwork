@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2023 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -39,7 +39,6 @@ import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.page.Page;
 import org.fao.geonet.domain.page.PageIdentity;
 import org.fao.geonet.repository.page.PageRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -52,6 +51,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.validation.constraints.NotNull;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -74,15 +74,27 @@ public class PagesAPI {
     private static final String ERROR_FILE = "File not valid";
     private static final String ERROR_CREATE = "Wrong parameters are provided";
 
-    @Autowired
-    private PageRepository pageRepository;
+    private final PageRepository pageRepository;
 
-    @Autowired
-    private LanguageUtils languageUtils;
+    private final LanguageUtils languageUtils;
+
+    public PagesAPI(PageRepository pageRepository, LanguageUtils languageUtils) {
+        this.pageRepository = pageRepository;
+        this.languageUtils = languageUtils;
+    }
+
+    private static void setDefaultLink(Page page) {
+        page.setLink(
+            "../api/pages/"
+                + page.getPageIdentity().getLanguage()
+                + "/"
+                + page.getPageIdentity().getLinkText()
+                + "/content");
+    }
 
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Add a page",
-        description = "<p>Is not possible to load a link and a file at the same time.</p> <a href='http://geonetwork-opensource.org/manuals/4.0.x/eng/users/user-guide/define-static-pages/define-pages.html'>More info</a>")
+        description = "<p>Is not possible to load a link and a file at the same time.</p> <a href='https://geonetwork-opensource.org/manuals/4.0.x/en/customizing-application/adding-static-pages.html'>More info</a>")
     @PutMapping(
         consumes = {
             MediaType.APPLICATION_JSON_VALUE}
@@ -95,17 +107,16 @@ public class PagesAPI {
         @ApiResponse(responseCode = "500", description = ERROR_FILE)})
     @PreAuthorize("hasAuthority('Administrator')")
     @ResponseBody
-    public ResponseEntity addPage(
+    public ResponseEntity<Void> addPageWithoutUploadingFile(
         @RequestBody
         PageProperties pageProperties)
         throws ResourceAlreadyExistException {
         return createPage(pageProperties, null);
     }
 
-
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Add a page by uploading a file",
-        description = "<p>Is not possible to load a link and a file at the same time.</p> <a href='http://geonetwork-opensource.org/manuals/4.0.x/eng/users/user-guide/define-static-pages/define-pages.html'>More info</a>")
+        description = "<p>Is not possible to load a link and a file at the same time.</p> <a href='https://geonetwork-opensource.org/manuals/4.0.x/en/customizing-application/adding-static-pages.html'>More info</a>")
     @PostMapping(
         consumes = {
             MediaType.MULTIPART_FORM_DATA_VALUE}
@@ -118,7 +129,7 @@ public class PagesAPI {
         @ApiResponse(responseCode = "500", description = ERROR_FILE)})
     @PreAuthorize("hasAuthority('Administrator')")
     @ResponseBody
-    public ResponseEntity addPage(
+    public ResponseEntity<Void> addPageUploadingFile(
         @RequestParam(value = "language", required = true) final String language,
         @RequestParam(value = "pageId", required = true) final String pageId,
         @RequestParam(value = "sections", required = false) final List<Page.PageSection> sections,
@@ -136,8 +147,8 @@ public class PagesAPI {
         return createPage(page, data);
     }
 
-    private ResponseEntity createPage(PageProperties pageProperties,
-                                      MultipartFile data) throws ResourceAlreadyExistException {
+    private ResponseEntity<Void> createPage(PageProperties pageProperties,
+                                            MultipartFile data) throws ResourceAlreadyExistException {
 
         String link = pageProperties.getLink();
         String content = pageProperties.getContent();
@@ -156,10 +167,8 @@ public class PagesAPI {
         }
 
         checkMandatoryContent(data, link, content);
-
         checkUniqueContent(data, link, content);
-
-        checkCorrectFormat(data, link, format);
+        checkCorrectFormat(data, format);
 
         Optional<Page> page = pageRepository.findById(new PageIdentity(language, pageId));
 
@@ -176,16 +185,15 @@ public class PagesAPI {
             }
 
             pageRepository.save(newPage);
-            return new ResponseEntity(HttpStatus.CREATED);
+            return ResponseEntity.noContent().build();
         } else {
             throw new ResourceAlreadyExistException();
         }
     }
 
-    private ResponseEntity updatePage(String language,
-                                      String pageId,
-                                      PageProperties pageProperties,
-                                      MultipartFile data) throws ResourceNotFoundException, ResourceAlreadyExistException {
+    private ResponseEntity<Void> updatePageInternal(@NotNull String language,
+                                                    String pageId,
+                                                    PageProperties pageProperties) throws ResourceNotFoundException, ResourceAlreadyExistException {
 
         String link = pageProperties.getLink();
         String content = pageProperties.getContent();
@@ -193,66 +201,66 @@ public class PagesAPI {
         String newPageId = pageProperties.getPageId();
         Page.PageFormat format = pageProperties.getFormat();
 
-        if (language != null) {
-            checkValidLanguage(language);
-        }
+        checkValidLanguage(language);
 
         if (newLanguage != null) {
             checkValidLanguage(newLanguage);
         }
 
-        checkMandatoryContent(data, link, content);
-
-        checkUniqueContent(data, link, content);
-
-        checkCorrectFormat(data, link, format);
+        checkMandatoryContent(null, link, content);
+        checkUniqueContent(null, link, content);
+        checkCorrectFormat(null, format);
 
         Optional<Page> page = pageRepository.findById(new PageIdentity(language, pageId));
 
         if (!page.isPresent()) {
             throw new ResourceNotFoundException("Can't update non existing page " + pageId + ".");
-        } else {
-            Page pageToUpdate = page.get();
-
-            String updatedLanguage = StringUtils.isBlank(newLanguage) ? language : newLanguage;
-            String updatedPageId = StringUtils.isBlank(newPageId) ? pageId : newPageId;
-
-            boolean isChangingKey = !updatedLanguage.equals(language)
-                && !updatedPageId.equals(pageId);
-
-            if (isChangingKey) {
-                checkValidLanguage(updatedLanguage);
-
-                Optional<Page> newPage = pageRepository.findById(new PageIdentity(updatedLanguage, updatedPageId));
-                if (newPage.isPresent()) {
-                    throw new ResourceAlreadyExistException();
-                }
-                PageIdentity newId = new PageIdentity(updatedLanguage, updatedPageId);
-                Page pageCopy = new Page(newId, pageToUpdate.getData(),
-                    link != null ? link : pageToUpdate.getLink(),
-                    format != null ? format : pageToUpdate.getFormat(),
-                    pageProperties.getSections() != null ? pageProperties.getSections() : pageToUpdate.getSections(),
-                    pageProperties.getStatus() != null ? pageProperties.getStatus() : pageToUpdate.getStatus());
-
-                pageRepository.save(pageCopy);
-                pageRepository.delete(pageToUpdate);
-            } else {
-                pageToUpdate.setFormat(format != null ? format : pageToUpdate.getFormat());
-                fillContent(data, link, content, pageToUpdate);
-                pageToUpdate.setSections(pageProperties.getSections() != null ? pageProperties.getSections() : pageToUpdate.getSections());
-                pageToUpdate.setStatus(pageProperties.getStatus() != null ? pageProperties.getStatus() : pageToUpdate.getStatus());
-                pageRepository.save(pageToUpdate);
-            }
-
-            return new ResponseEntity<>(HttpStatus.OK);
         }
+        Page pageToUpdate = page.get();
+
+        String updatedLanguage = StringUtils.isBlank(newLanguage) ? language : newLanguage;
+        if (updatedLanguage == null) {
+            throw new IllegalArgumentException(
+                "A valid language in the URL or in the language body field is required.");
+
+        }
+        String updatedPageId = StringUtils.isBlank(newPageId) ? pageId : newPageId;
+
+        boolean isChangingKey = !updatedLanguage.equals(language)
+            && !updatedPageId.equals(pageId);
+
+        if (isChangingKey) {
+            checkValidLanguage(updatedLanguage);
+
+            Optional<Page> newPage = pageRepository.findById(new PageIdentity(updatedLanguage, updatedPageId));
+            if (newPage.isPresent()) {
+                throw new ResourceAlreadyExistException();
+            }
+            PageIdentity newId = new PageIdentity(updatedLanguage, updatedPageId);
+            Page pageCopy = new Page(newId, pageToUpdate.getData(),
+                link != null ? link : pageToUpdate.getLink(),
+                format != null ? format : pageToUpdate.getFormat(),
+                pageProperties.getSections() != null ? pageProperties.getSections() : pageToUpdate.getSections(),
+                pageProperties.getStatus() != null ? pageProperties.getStatus() : pageToUpdate.getStatus());
+
+            pageRepository.save(pageCopy);
+            pageRepository.delete(pageToUpdate);
+        } else {
+            pageToUpdate.setFormat(format != null ? format : pageToUpdate.getFormat());
+            fillContent(null, link, content, pageToUpdate);
+            pageToUpdate.setSections(pageProperties.getSections() != null ? pageProperties.getSections() : pageToUpdate.getSections());
+            pageToUpdate.setStatus(pageProperties.getStatus() != null ? pageProperties.getStatus() : pageToUpdate.getStatus());
+            pageRepository.save(pageToUpdate);
+        }
+
+        return ResponseEntity.noContent().build();
     }
 
     // Isn't done with PUT because the multipart support as used by Spring
     // doesn't support other request method than POST
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Update a page",
-        description = "<a href='http://geonetwork-opensource.org/manuals/4.0.x/eng/users/user-guide/define-static-pages/define-pages.html'>More info</a>")
+        description = "<a href='https://geonetwork-opensource.org/manuals/4.0.x/en/customizing-application/adding-static-pages.html'>More info</a>")
     @PutMapping(
         value = "/{language}/{pageId}",
         consumes = {
@@ -267,19 +275,18 @@ public class PagesAPI {
     @PreAuthorize("hasAuthority('Administrator')")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public ResponseEntity updatePage(
+    public ResponseEntity<Void> updatePage(
         @PathVariable(value = "language") final String language,
         @PathVariable(value = "pageId") final String pageId,
         @RequestBody
         PageProperties pageProperties
     ) throws ResourceNotFoundException, ResourceAlreadyExistException {
-        return updatePage(language, pageId, pageProperties, null);
+        return updatePageInternal(language, pageId, pageProperties);
     }
-
 
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Delete a page",
-        description = "<a href='http://geonetwork-opensource.org/manuals/4.0.x/eng/users/user-guide/define-static-pages/define-pages.html'>More info</a>")
+        description = "<a href='https://geonetwork-opensource.org/manuals/4.0.x/en/customizing-application/adding-static-pages.html'>More info</a>")
     @DeleteMapping(
         value = "/{language}/{pageId}")
     @ApiResponses(value = {
@@ -298,7 +305,7 @@ public class PagesAPI {
 
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Return the page object details except the content",
-        description = "<a href='http://geonetwork-opensource.org/manuals/4.0.x/eng/users/user-guide/define-static-pages/define-pages.html'>More info</a>")
+        description = "<a href='https://geonetwork-opensource.org/manuals/4.0.x/en/customizing-application/adding-static-pages.html'>More info</a>")
     @GetMapping(
         value = "/{language}/{pageId}",
         produces = MediaType.APPLICATION_JSON_VALUE)
@@ -318,7 +325,7 @@ public class PagesAPI {
 
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Return the static html content identified by pageId",
-        description = "<a href='http://geonetwork-opensource.org/manuals/4.0.x/eng/users/user-guide/define-static-pages/define-pages.html'>More info</a>")
+        description = "<a href='https://geonetwork-opensource.org/manuals/4.0.x/en/customizing-application/adding-static-pages.html'>More info</a>")
     @GetMapping(
         value = "/{language}/{pageId}/content")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = PAGE_OK),
@@ -335,35 +342,35 @@ public class PagesAPI {
         final Optional<Page> page = pageRepository.findById(new PageIdentity(language, pageId));
 
         if (!page.isPresent()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } else {
-            final UserSession us = ApiUtils.getUserSession(session);
-            if (page.get().getStatus().equals(Page.PageStatus.HIDDEN) && us.getProfile() != Profile.Administrator) {
-                return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-            } else if (page.get().getStatus().equals(Page.PageStatus.PRIVATE) && (us.getProfile() == null || us.getProfile() == Profile.Guest)) {
-                return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-            } else {
-                String content = "";
-                if (page.get().getData() != null && page.get().getData().length > 0) {
-                    content = new String(page.get().getData(), StandardCharsets.UTF_8);
-                } else {
-                    content = page.get().getLink();
-                }
-
-                response.setHeader(CONTENT_TYPE,
-                    (page.get().getFormat().equals(Page.PageFormat.HTML)
-                        || page.get().getFormat().equals(Page.PageFormat.HTMLPAGE)
-                        ? MediaType.TEXT_HTML_VALUE : MediaType.TEXT_PLAIN_VALUE)
-                        + "; charset=utf-8");
-                return new ResponseEntity<>(content, HttpStatus.OK);
-            }
+            return ResponseEntity.notFound().build();
         }
-    }
 
+        final UserSession us = ApiUtils.getUserSession(session);
+        if (page.get().getStatus().equals(Page.PageStatus.HIDDEN) && us.getProfile() != Profile.Administrator) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        } else if (page.get().getStatus().equals(Page.PageStatus.PRIVATE) && (us.getProfile() == null || us.getProfile() == Profile.Guest)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        } else {
+            String content;
+            if (page.get().getData() != null && page.get().getData().length > 0) {
+                content = new String(page.get().getData(), StandardCharsets.UTF_8);
+            } else {
+                content = page.get().getLink();
+            }
+
+            response.setHeader(CONTENT_TYPE,
+                (page.get().getFormat().equals(Page.PageFormat.HTML)
+                    || page.get().getFormat().equals(Page.PageFormat.HTMLPAGE)
+                    ? MediaType.TEXT_HTML_VALUE : MediaType.TEXT_PLAIN_VALUE)
+                    + "; charset=utf-8");
+            return new ResponseEntity<>(content, HttpStatus.OK);
+        }
+
+    }
 
     @io.swagger.v3.oas.annotations.Operation(
         summary = "List all pages according to the filters",
-        description = "<a href='http://geonetwork-opensource.org/manuals/4.0.x/eng/users/user-guide/define-static-pages/define-pages.html'>More info</a>")
+        description = "<a href='https://geonetwork-opensource.org/manuals/4.0.x/en/customizing-application/adding-static-pages.html'>More info</a>")
     @GetMapping
     @ApiResponses(value = {
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)})
@@ -372,11 +379,10 @@ public class PagesAPI {
         @RequestParam(value = "language", required = false) final String language,
         @RequestParam(value = "section", required = false) final Page.PageSection section,
         @RequestParam(value = "format", required = false) final Page.PageFormat format,
-        @Parameter(hidden = true) final HttpServletResponse response,
         @Parameter(hidden = true) final HttpSession session) {
 
         final UserSession us = ApiUtils.getUserSession(session);
-        List<Page> unfilteredResult = null;
+        List<Page> unfilteredResult;
 
         if (language == null) {
             unfilteredResult = pageRepository.findAll();
@@ -433,8 +439,7 @@ public class PagesAPI {
         return Page.PageStatus.values();
     }
 
-
-    private void checkCorrectFormat(final MultipartFile data, final String link, final Page.PageFormat format) {
+    private void checkCorrectFormat(final MultipartFile data, final Page.PageFormat format) {
         if (Page.PageFormat.LINK.equals(format) && data != null && !data.isEmpty()) {
             throw new IllegalArgumentException("Wrong format. Cannot set format to LINK and upload a file.");
         }
@@ -464,14 +469,13 @@ public class PagesAPI {
         }
     }
 
-
     private void checkFileType(final MultipartFile data) {
         if (data != null) {
-            String extension = FilenameUtils.getExtension(data.getOriginalFilename());
-            if (!Arrays.stream(Page.PageExtension.values()).anyMatch(t -> t.name().equals(extension.toUpperCase()))) {
+            String extension = StringUtils.defaultIfBlank(FilenameUtils.getExtension(data.getOriginalFilename()), "");
+            if (Arrays.stream(Page.PageExtension.values()).noneMatch(t -> t.name().equals(extension.toUpperCase()))) {
                 throw new MultipartException(String.format(
                     "Unsupported file type (only %s are allowed).",
-                    Page.PageExtension.values()));
+                    Arrays.toString(Page.PageExtension.values())));
             }
         }
     }
@@ -540,7 +544,7 @@ public class PagesAPI {
     private void fillContent(final MultipartFile data,
                              final String link,
                              String content, final Page page) {
-        byte[] bytesData = null;
+        byte[] bytesData;
         if (data != null && !data.isEmpty()) {
             checkFileType(data);
             try {
@@ -563,14 +567,5 @@ public class PagesAPI {
             }
         }
 
-    }
-
-    private static void setDefaultLink(Page page) {
-        page.setLink(
-            "../api/pages/"
-                + page.getPageIdentity().getLanguage()
-                + "/"
-                + page.getPageIdentity().getLinkText()
-                + "/content");
     }
 }
