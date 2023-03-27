@@ -409,6 +409,7 @@ public class FavouriteMetadataListApi {
         }
 
         boolean isAdmin = isAdmin(httpSession);
+
         String sessionId = getSessionId(httpServletRequest);
         User user = getUser(httpSession);
 
@@ -421,6 +422,11 @@ public class FavouriteMetadataListApi {
         if (!permittedWrite(list, user, sessionId, isAdmin)) {
             throw new NotAllowedException("You do not have permission to modify this list");
         }
+
+        if (list.getUser()==null) {
+            throw new Exception("anonymous lists cannot be made public!");
+        }
+
         list.setIsPublic(isPublic);
         updateChangeTimeToNow(list);
         list = favouriteMetadataListRepository.save(list);

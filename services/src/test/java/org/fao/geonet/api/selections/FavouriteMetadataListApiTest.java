@@ -450,6 +450,32 @@ public class FavouriteMetadataListApiTest extends FavouriteMetadataListApiSuppor
     }
 
     /**
+     * 1. create list (private) anonymous
+     * 2. change to public
+     * 3. should throw exception
+     */
+    @Test
+    public void changeStatusAnonymous() throws Exception {
+        MockHttpSession sessionUser1;
+        final FavouriteMetadataListVM[] list1 = new FavouriteMetadataListVM[1];
+        Pair<FavouriteMetadataListVM,String> createResult;
+
+
+        sessionUser1 = loginAsAnonymous();
+
+        createResult = create(sessionUser1,null,
+            "testcase", FavouriteMetadataList.ListType.WatchList, new String[]{uuid1, uuid2});
+        list1[0] = createResult.one();
+        String returnedSessionId = createResult.two();
+
+
+        assertThrows(Exception.class, () -> {
+            list1[0] = setstatus(sessionUser1,returnedSessionId, list1[0].getId(), true);
+        });
+
+    }
+
+    /**
      * 1. create list (private)
      * 2. user1 can see it, user2 and anonymous cannot
      * 3. change to public
