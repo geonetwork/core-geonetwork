@@ -281,7 +281,7 @@
           label: "addToMap",
           action: addWMTSToMap
         },
-        3DTILES: {
+        "3DTILES": {
           iconClass: "fa-globe",
           label: "addToMap",
           action: add3dTilesToMap
