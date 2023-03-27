@@ -172,7 +172,7 @@
                 var value = newFilters[filterKey];
 
                 // value is empty/undefined
-                if (!value || typeof value !== "string") {
+                if (!value || (typeof value !== "string" && typeof value !== "number")) {
                   continue;
                 }
 
@@ -245,7 +245,7 @@
           scope.isSpecificParameter = function (key) {
             // full text search and uuid on selection only
             // are not translated like facet.
-            return key === "any" || key === "uuid";
+            return key === "any" || key === "uuid" || key=="favouritesList";
           };
           scope.getFilterType = function (filter) {
             if (

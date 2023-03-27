@@ -447,7 +447,7 @@
     };
 
     this.updateState = function (path, value, doNotRemove) {
-      if (path[0] === "any" || path[0] === "uuid" || path[0] === "geometry") {
+      if (path[0] === "any" || path[0] === "uuid" || path[0] === "geometry" || path[0]==="favouritesList") {
         delete $scope.searchObj.params[path[0]];
         if (path[0] === "geometry") {
           $scope.$broadcast("beforeSearchReset", false);
