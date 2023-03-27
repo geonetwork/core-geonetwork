@@ -259,7 +259,7 @@
                   id="gn-addonlinesrc-layers-row"
                   class="col-sm-9 col-md-offset-2"
                   data-ng-if="OGCProtocol != null  && isWMSProtocol()"
-                  data-selection-mode="(!isWMSProtocolWithLayersInUrl() && isEditing) ? 'single' : 'multiple'"
+                  data-selection-mode="(!isWMSProtocolWithLayersInUrl()) ? 'single' : 'multiple'"
                   data-layers="capabilitiesLayers"
                   data-selection="params.selectedLayers"
                 ></div>
@@ -270,7 +270,7 @@
                   id="gn-addonlinesrc-layers-row"
                   class="col-sm-9 col-md-offset-2"
                   data-ng-if="OGCProtocol != null && !isWMSProtocol()"
-                  data-gn-selection-mode="isEditing ? 'single' : 'multiple'"
+                  data-gn-selection-mode="'single'"
                   data-layers="layers"
                   data-selection="params.selectedLayers"
                 ></div>
@@ -307,6 +307,8 @@
                   type="text"
                   data-gn-field-tooltip="{{schema}}|{{params.linkType.fields.name.tooltip}}"
                   placeholder="Name"
+                  data-ng-readonly='config.wmsResources.addLayerNamesMode ==
+                "resourcename" && OGCProtocol != null && isWMSProtocol()'
                 />
               </div>
               <div
@@ -325,6 +327,8 @@
                   lang="{{val}}"
                   data-gn-field-tooltip="{{schema}}|{{params.linkType.fields.name.tooltip}}"
                   data-ng-model="params.name[val]"
+                  data-ng-readonly='config.wmsResources.addLayerNamesMode ==
+                "resourcename" && OGCProtocol != null && isWMSProtocol()'
                 />
               </div>
 
