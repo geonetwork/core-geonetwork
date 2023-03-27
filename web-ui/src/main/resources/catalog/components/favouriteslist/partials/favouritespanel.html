@@ -64,7 +64,7 @@
             data-ng-click="toggleStatus(search)"
             title="{{'toggle public/private status' | translate}}"
             aria-label="{{'change status' | translate}}"
-            ng-disabled="!search.editable"
+            ng-disabled="!search.editable || search.username ==null"
           >
             <span class="fa fa-unlock" ng-if="search.public"></span>
             <span class="fa fa-lock" ng-if="!search.public"></span>
