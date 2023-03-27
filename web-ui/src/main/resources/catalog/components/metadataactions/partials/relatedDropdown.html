@@ -9,11 +9,15 @@
     <span class="caret"></span>
   </button>
   <ul class="dropdown-menu">
-    <li
+    <span
       data-ng-repeat-start="(type, items) in md.related track by $index"
       data-ng-init="mainType = config.getType(md, type);
-                icon = config.getClassIcon(mainType);"
-    ></li>
+                    icon = config.getClassIcon(mainType);"
+    >
+    </span>
+    <li data-ng-if="items.length > 0" class="gn-related-title">
+      <i class="fa {{icon}}" /> {{('link-' + type) | translate}}
+    </li>
     <li data-ng-repeat="md in items | orderBy:getOrderBy">
       <a
         data-ng-hide="md.remoteUrl"
@@ -22,7 +26,6 @@
         gn-metadata-open="md"
         gn-formatter="formatter.defaultUrl"
       >
-        <i class="fa {{icon}}" />
         {{md.resourceTitle}}
       </a>
       <a
@@ -32,7 +35,6 @@
         target="_blank"
         title="{{md.resourceTitle}}"
       >
-        <i class="fa {{icon}}" />
         {{md.resourceTitle}}
         <i
           data-ng-if="md.origin === 'remote'"
@@ -41,6 +43,6 @@
         ></i>
       </a>
     </li>
-    <li data-ng-repeat-end=""></li>
+    <span data-ng-repeat-end=""></span>
   </ul>
 </div>
