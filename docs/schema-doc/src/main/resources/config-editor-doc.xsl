@@ -39,7 +39,11 @@
     <xsl:text>.. _creating-custom-editor:&#13;&#13;</xsl:text>
     <xsl:text>Customizing editor&#13;</xsl:text>
     <xsl:text>##################&#13;&#13;&#13;</xsl:text>
-
+    <xsl:text>.. warning::&#13;</xsl:text>
+    <xsl:text>This file is produced automatically from the geonetwork-core repository.</xsl:text>
+    <xsl:text>To make any suggestions to the content of the page please add your changes to</xsl:text>
+    <xsl:text>`core-geonetwork/schemas/config.editor.xsd <https://github.com/geonetwork/core-geonetwork/blob/main/schemas/config-editor.xsd>`__.&#13;&#13;</xsl:text>
+    
     <xsl:for-each select="//xs:element[@name = $elements]">
 
       <!-- Documentation for the current element -->
