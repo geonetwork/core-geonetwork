@@ -79,7 +79,7 @@
           return r.mimeType;
         } else if (r.protocol && r.protocol.indexOf("WWW:DOWNLOAD:") >= 0) {
           return r.protocol.replace("WWW:DOWNLOAD:", "");
-        } else if (mainType.match(/W([MCF]|MT)S.*|ESRI:REST/) != null) {
+        } else if (mainType.match(/W([MCF]|MT)S.*|3DTILES|ESRI:REST/) != null) {
           return mainType.replace("SERVICE", "");
         } else if (mainType.match(/KML|GPX/) != null) {
           return mainType;
