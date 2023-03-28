@@ -3,7 +3,7 @@
   gn-metadata-open="md"
   gn-formatter="formatterUrl"
   id="gn-info-list-mw-{{md.uuid}}"
-  data-ng-class="md.overview.length > 0 ? 'hasThumbnail' : 'noThumbnail'"
+  data-ng-class="(getOverviewUrl(md) !== '')? 'hasThumbnail' : 'noThumbnail'"
 >
   <div class="panel-heading gn-card-heading">
     <div class="gn-md-title">
@@ -45,7 +45,7 @@
       <div
         class="gn-md-thumbnail"
         title="{{md.resourceAbstract | striptags}}"
-        data-ng-class="{'gn-md-no-thumbnail': !md.overview[0]}"
+        data-ng-class="{'gn-md-no-thumbnail': (getOverviewUrl(md) === '')}"
       >
         <a
           data-ng-hide="md.remoteUrl"
@@ -55,7 +55,7 @@
         >
           <div
             class="gn-img-thumbnail"
-            style="background-image: url('{{md.overview[0].url | thumbnailUrlSize:320}}') !important"
+            style="background-image: url('{{getOverviewUrl(md) | thumbnailUrlSize:320}}') !important"
           ></div>
         </a>
         <a
@@ -66,7 +66,7 @@
         >
           <div
             class="gn-img-thumbnail"
-            style="background-image: url('{{md.overview[0].url | thumbnailUrlSize:320}}') !important"
+            style="background-image: url('{{getOverviewUrl(md) | thumbnailUrlSize:320}}') !important"
           ></div>
         </a>
       </div>

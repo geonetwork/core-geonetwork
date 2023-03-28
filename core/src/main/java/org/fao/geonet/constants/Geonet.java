@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2021 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2023 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -681,6 +681,7 @@ public final class Geonet {
         public static final String INSPIRE_VALIDATION_DATE = "_inspireValidationDate";
         public static final String STATUS_WORKFLOW = "statusWorkflow";
         public static final String USER_SAVED_COUNT = "userSavedCount";
+        public static final String INDEXING_DATE = "indexingDate";
     }
 
     public static class SearchConfig {
