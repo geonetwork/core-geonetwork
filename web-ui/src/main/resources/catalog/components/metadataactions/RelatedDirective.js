@@ -711,6 +711,17 @@
           scope.lang = scope.lang || scope.$parent.lang;
           scope.showStatusFooterFor =
             gnGlobalSettings.gnCfg.mods.search.showStatusFooterFor;
+
+          scope.getOverviewUrl = function (md) {
+            if (md.overview && md.overview.length > 0) {
+              return md.overview[0].url;
+            // Related records contain the first overview in the properties.overview property
+            } else if (md.properties && md.properties.overview) {
+              return md.properties.overview;
+            }
+
+            return "";
+          };
         }
       };
     }
