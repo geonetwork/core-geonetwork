@@ -1,11 +1,11 @@
 <li data-ng-repeat="page in pagesList">
   <a
     data-ng-show="{{page.format == 'LINK' || page.format == 'HTMLPAGE'}}"
-    title="{{page.pageId}}"
+    title="{{page.label}}"
     href="{{page.link}}"
     target="_blank"
   >
-    <span>{{page.pageId}}</span>
+    <span>{{page.label}}</span>
   </a>
   <a
     data-ng-show="{{page.format != 'LINK' && page.format != 'HTMLPAGE'}}"

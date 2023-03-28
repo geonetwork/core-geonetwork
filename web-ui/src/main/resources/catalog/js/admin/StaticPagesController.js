@@ -152,6 +152,7 @@
           data: "",
           content: "",
           status: "HIDDEN",
+          label: "",
           sections: []
         };
 
