@@ -18,7 +18,7 @@ public class PageProperties implements Serializable {
     private Page.PageStatus status;
     private String link;
     private String content;
-
+    private String label;
     private Page.PageFormat format;
     private Page page;
 
@@ -33,6 +33,7 @@ public class PageProperties implements Serializable {
         link = p.getLink();
         sections = p.getSections();
         status = p.getStatus();
+        label = p.getLabel();
     }
 
     @Override
@@ -94,5 +95,13 @@ public class PageProperties implements Serializable {
 
     public void setFormat(PageFormat format) {
         this.format = format;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
     }
 }

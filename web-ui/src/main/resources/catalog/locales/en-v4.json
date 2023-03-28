@@ -291,6 +291,7 @@
   "pageId": "Page identifier",
   "pageContent": "Page content",
   "pageContentFile": "Page content file",
+  "pageLabel": "Page label",
   "pageSection": "Page section",
   "pageApiLink": "Page API link",
   "uiRestorePrevious": "Restore last saved",

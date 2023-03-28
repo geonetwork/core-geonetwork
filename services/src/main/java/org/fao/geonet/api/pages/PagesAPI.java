@@ -173,7 +173,7 @@ public class PagesAPI {
         Optional<Page> page = pageRepository.findById(new PageIdentity(language, pageId));
 
         if (!page.isPresent()) {
-            Page newPage = getEmptyHiddenDraftPage(pageProperties.getLanguage(), pageProperties.getPageId(), format);
+            Page newPage = getEmptyHiddenDraftPage(pageProperties.getLanguage(), pageProperties.getPageId(), pageProperties.getLabel(), format);
             fillContent(data, link, content, newPage);
 
             if (section != null) {
@@ -200,6 +200,7 @@ public class PagesAPI {
         String newLanguage = pageProperties.getLanguage();
         String newPageId = pageProperties.getPageId();
         Page.PageFormat format = pageProperties.getFormat();
+        String newLabel = pageProperties.getLabel();
 
         checkValidLanguage(language);
 
@@ -236,7 +237,8 @@ public class PagesAPI {
                 link != null ? link : pageToUpdate.getLink(),
                 format != null ? format : pageToUpdate.getFormat(),
                 pageProperties.getSections() != null ? pageProperties.getSections() : pageToUpdate.getSections(),
-                pageProperties.getStatus() != null ? pageProperties.getStatus() : pageToUpdate.getStatus());
+                pageProperties.getStatus() != null ? pageProperties.getStatus() : pageToUpdate.getStatus(),
+                newLabel != null ? newLabel : pageToUpdate.getLabel());
 
             pageRepository.save(pageCopy);
             pageRepository.delete(pageToUpdate);
@@ -528,9 +530,9 @@ public class PagesAPI {
     /**
      * @return An empty hidden draft Page
      */
-    protected Page getEmptyHiddenDraftPage(final String language, final String pageId, final Page.PageFormat format) {
+    protected Page getEmptyHiddenDraftPage(final String language, final String pageId, final String label, final Page.PageFormat format) {
         final List<Page.PageSection> sections = new ArrayList<>();
-        return new Page(new PageIdentity(language, pageId), null, null, format, sections, Page.PageStatus.HIDDEN);
+        return new Page(new PageIdentity(language, pageId), null, null, format, sections, Page.PageStatus.HIDDEN, label);
     }
 
     /**
