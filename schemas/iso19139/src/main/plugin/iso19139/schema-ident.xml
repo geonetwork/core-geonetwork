@@ -31,37 +31,35 @@
   <appMinorVersionSupported>3.4.0</appMinorVersionSupported>
   <title xml:lang="en">Geographic information -- Metadata (iso19139:2007)</title>
   <title xml:lang="fr">Information géographique -- Métadonnées (iso19139:2007)</title>
-  <description xml:lang="en">
-    ISO 19115 defines the schema required for describing geographic information and services by
-    means of metadata. It provides information about the identification, the extent, the quality,
-    the spatial and temporal aspects, the content, the spatial reference, the portrayal,
-    distribution, and other properties of digital geographic data and services.
+  <description xml:lang="en"><![CDATA[
+ISO 19115 defines the schema required for describing geographic information and services by
+means of metadata. It provides information about the identification, the extent, the quality,
+the spatial and temporal aspects, the content, the spatial reference, the portrayal,
+distribution, and other properties of digital geographic data and services.
 
-    ISO 19115 is applicable to:
+ISO 19115 is applicable to:
 
-    - the cataloguing of all types of resources, clearinghouse activities, and the full description
-    of datasets and services;
+- the cataloguing of all types of resources, clearinghouse activities, and the full description of datasets and services;
 
-    - geographic services, geographic datasets, dataset series, and individual geographic features
-    and feature properties.
+- geographic services, geographic datasets, dataset series, and individual geographic features and feature properties.
 
-    ISO 19115 defines:
+ISO 19115 defines:
 
-    - mandatory and conditional metadata sections, metadata entities, and metadata elements;
+- mandatory and conditional metadata sections, metadata entities, and metadata elements;
 
-    - the minimum set of metadata required to serve most metadata applications (data discovery,
-    determining data fitness for use, data access, data transfer, and use of digital data and
-    services);
+- the minimum set of metadata required to serve most metadata applications (data discovery,
+  determining data fitness for use, data access, data transfer, and use of digital data and
+  services);
 
-    - optional metadata elements to allow for a more extensive standard description of resources, if
-    required;
+- optional metadata elements to allow for a more extensive standard description of resources, if
+  required;
 
-    - a method for extending metadata to fit specialized needs.
+- a method for extending metadata to fit specialized needs.
 
-    Though ISO 19115 is applicable to digital data and services, its principles can be extended to
-    many other types of resources such as maps, charts, and textual documents as well as
-    non-geographic data. Certain conditional metadata elements might not apply to these other forms
-    of data.
+Though ISO 19115 is applicable to digital data and services, its principles can be extended to
+many other types of resources such as maps, charts, and textual documents as well as
+non-geographic data. Certain conditional metadata elements might not apply to these other forms
+of data.]]>
   </description>
   <standardUrl>https://www.iso.org/iso/home/store/catalogue_tc/catalogue_detail.htm?csnumber=53798
   </standardUrl>

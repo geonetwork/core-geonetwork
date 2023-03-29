@@ -294,8 +294,10 @@
 
       <xsl:value-of select="gndoc:writelnfield($t/xpath, @xpath)"/>
       <xsl:value-of select="gndoc:nl(2)"/>
-      <xsl:value-of select="concat($t/cf, ' ')"/><xsl:value-of
-      select="gndoc:refTo(concat($schemaId, '-elem-', normalize-space($nodeName)), true())"/>
+      <xsl:if test="$nodeName != '.'">
+        <xsl:value-of select="concat($t/cf, ' ')"/><xsl:value-of
+        select="gndoc:refTo(concat($schemaId, '-elem-', normalize-space($nodeName)), true())"/>
+      </xsl:if>
     </xsl:if>
   </xsl:template>
 
