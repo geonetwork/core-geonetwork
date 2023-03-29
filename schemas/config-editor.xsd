@@ -31,37 +31,36 @@
 A metadata editor configuration is defined for a specific schema plugin standard
 (see :ref:`implementing-a-schema-plugin`).
 
-The editor configuration defined the navigation menu (ie. list of views and tabs)
-for the editor, the list of fields and the type of control to use. Controls could
-be HTML type (eg. text, date) or more advanced control build using
-`AngularJS directive <https://docs.angularjs.org/guide/directive>`_.
+The editor configuration defines the navigation menu for the editor (i.e. list of views and tabs), 
+the list of fields and the type of control to use. Controls can
+be HTML-type (e.g. text, date) or more advanced controls built using
+`AngularJS directives <https://docs.angularjs.org/guide/directive>`_.
 
 
-To build such an editor configuration user needs to know the XSD of the standard
-to properly build views, tabs and fields according to element names
+To build such an editor configuration, the user needs to know the XSD of the standard
+to properly build views, tabs and fields according to the element names
 (see :code:`schemas/config-editor.xsd`). Create an editor root element and
 attach:
 
-- the schema and
-
-- namespaces for the standards
+* the schema and
+* namespaces for the standards
 
 
 .. code-block:: xml
 
     <editor xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xsi:noNamespaceSchemaLocation="../../../../../../config-editor.xsd"
       xmlns:gn="http://www.fao.org/geonetwork"
       xmlns:gco="http://www.isotc211.org/2005/gco"
       xmlns:gmd="http://www.isotc211.org/2005/gmd"
       xmlns:gmx="http://www.isotc211.org/2005/gmx"
       xmlns:srv="http://www.isotc211.org/2005/srv"
       xmlns:gml="http://www.opengis.net/gml"
-      xmlns:xlink="http://www.w3.org/1999/xlink">
+      xmlns:xlink="http://www.w3.org/1999/xlink"
+      xsi:noNamespaceSchemaLocation="../../../../../../config-editor.xsd">
 
 
-An editor configuration should define first some general element description and then
-a set of views with at least one.
+An editor configuration should first define some general element descriptions and then
+a set of views with at least one defined view.
 
 
         ]]></xs:documentation>
@@ -86,16 +85,15 @@ a set of views with at least one.
 Defining field type
 -------------------
 
-Define the form fields type configuration. Default is simple text input.
-This list contains the list of exception which does not use a simple text input.
+Define the form fields type configuration. The default is simple text input.
+This list contains a list of fields which do not use a simple text input.
 The list of possible values are:
 
-- all HTML5 input type or
-
-- an AngularJS directive name. MUST starts with 'data-' and
-  could end with '-textarea' to create a textarea element.
-  It could end with '-div' if the directive does not apply
-  to the input or textarea but to the div containing it.
+* all HTML5 input type or
+* an AngularJS directive name. MUST start with ``data-`` and
+  could end with ``-textarea`` to create a textarea element or
+  with ``-div`` if the directive does not apply
+  to the input or textarea but to the div element containing it.
 
 
 An element can only have one type defined.
@@ -112,8 +110,8 @@ An element can only have one type defined.
 
 
 The other option to define a more advanced field type is to catch the element using
-and XSL template. This approach is used for keywords in ISO19139 for example
-(see :code:`schemas/iso19139/src/main/plugin/iso19139/layout/layout-custom-fields-keywords.xsl`).
+and XSL template. This approach is used for keywords in ISO19139
+(see for example :code:`schemas/iso19139/src/main/plugin/iso19139/layout/layout-custom-fields-keywords.xsl`).
 
 
         ]]>
@@ -138,10 +136,10 @@ and XSL template. This approach is used for keywords in ISO19139 for example
 Grouping element from the standards
 -----------------------------------
 
-List of element to be displayed in a fieldset (ie. boxed element). Those
-elements usually contain children elements and define major section in the
-standard. For example, in ISO19139, identification and distribution are major
-section and should usually be displayed as a group of information.
+List of elements to be displayed in a fieldset (i.e. boxed element). Those
+elements usually contain children elements and define major sections in the
+standard. For example, in ISO19139, `identification` and `distribution` are major
+sections and should usually be displayed as a group of `information`.
 
 .. code-block:: xml
 
@@ -206,8 +204,8 @@ Defining multilingual fields
 
 Configure here the list of multilingual fields for a standard.
 
-By default, if the standard as multilingual support like ISO19139, all fields will be displayed
-as multilingual fields. Define in the exclude section the exception (eg. gmd:identifier for example in ISO19139).
+By default, if the standard has multilingual support like ISO19139, all fields will be displayed
+as multilingual fields. Define in the exclude section the exceptions (e.g. `gmd:identifier` in ISO19139).
 
 Then this section also allows to define how multilingual fields are displayed using the expanded elements.
 If expanded, then one field per language is displayed with no need to click on the language switcher.
@@ -539,9 +537,9 @@ For example, apply flatModeExceptions to all gmd:contact, except for the ones in
 Configuring views
 -----------------
 
-At least one view MUST be defined but more view modes can be defined depending on the needs.
+At least one view MUST be defined, but more view modes can be defined depending on the needs.
 
-By default ISO19139 define 3 views (ie. default, advanced, xml) and one disabled (ie. INSPIRE).
+By default ISO19139 defines 3 views (i.e. default, advanced, xml) and has one disabled view (i.e. INSPIRE).
 See :code:`schemas/iso19139/src/main/plugin/iso19139/layout/config-editor.xml` for the configuration.
 
 .. figure:: ../../user-guide/describing-information/img/view-mode.png
@@ -575,20 +573,20 @@ To create a new view, use the following:
 Defining a view
 ---------------
 
-A view has a label and define a specific rendering of the metadata records.
+A view has a label and defines a specific rendering of the metadata records.
 A view is composed of one or more tabs.
 
 .. code-block:: xml
 
 
       <views>
-          <view name="custom-view">
-              ....
-          </view>
+        <view name="custom-view">
+            ....
+        </view>
 
 
 The view could be displayed or not according to the metadata record content or
-the current user session using the displayIfRecord and displayIfServiceInfo attribute.
+the current user session using the `displayIfRecord` and `displayIfServiceInfo` attributes.
 
         ]]>
       </xs:documentation>
@@ -639,7 +637,7 @@ to set the type of indent:
  * gn-indent-colored: colored left border on each fieldset
  * gn-indent-bluescale: blue scale colored left border on each fieldset
 
-See catalog/views/default/less/gn_editor_default.less to add your custom editor styles.
+See `catalog/views/default/less/gn_editor_default.less` to add your custom editor styles.
             ]]></xs:documentation>
         </xs:annotation>
       </xs:attribute>
@@ -690,8 +688,8 @@ Display help documentation onhover elements (default) or by clicking on an icon.
       <xs:attribute name="hideTimeInCalendar" type="xs:boolean" fixed="true">
         <xs:annotation>
           <xs:documentation><![CDATA[
-Define if calendar control should allows users to set date only or
-datetime. If attribute is not set, then date and time can be set. This is controlled at the view level,
+Define if calendar control should allow users to set date only or
+datetime. If the attribute is not set, then date and datetime can be set. This is controlled at the view level,
 switching to another view may allow more control over the dates.
 
 ]]></xs:documentation>
@@ -793,12 +791,12 @@ For overview, a simple manager can be used or the general one:
 Defining a tab
 --------------
 
-A view contains at least one tab. In that case it will be the default to display and no
+A view contains at least one tab. In that case it will be the default tab to display and no
 top toolbar will be displayed to switch from one tab to another.
 
 .. figure:: ../../user-guide/describing-information/img/editor-tab-switcher.png
 
-Add custom view one default tab and a field for the title:
+Add custom view with one default tab and a field for the title:
 
 .. code-block:: xml
 
@@ -854,8 +852,8 @@ Define if the tab should be hidden (and not disabled only) if not displayed base
       <xs:attribute name="toggle" fixed="true" type="xs:boolean">
         <xs:annotation>
           <xs:documentation><![CDATA[
-Define if the tab should be displayed in a drop down menu instead of a tab. This is used for advanced
-section which is not used often by the end-user. More than one tab could be grouped in that drop down tab menu.
+Define if the tab should be displayed as a dropdown menu instead of a tab. This is used for advanced
+section, which is not used often by the end-user. More than one tab could be grouped in that dropdown tab menu.
             ]]></xs:documentation>
         </xs:annotation>
       </xs:attribute>
@@ -876,11 +874,11 @@ Configuring complex element display
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Elements to apply "flat" mode exceptions. By default,
-"flat" mode does not display elements containing only children and no value.
+"flat" mode does not display elements containing only children and no values.
 
-Use or and in attribute to display non existing element.
-To display gmd:descriptiveKeywords element even if does not exist in the metadata
-record or if the field should be displayed to add new occurrences:
+Use `or` and `in` attributes to display non-existing elements.
+To display the `gmd:descriptiveKeywords` element even if it does not exist in the metadata
+record, or if the field should be displayed to enable the user to add new occurrences:
 
 .. code-block:: xml
 
@@ -890,7 +888,7 @@ record or if the field should be displayed to add new occurrences:
             in="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords/*"/>
    </tab>
 
-   <!-- Elements that should not use the "flat" mode -->
+   <!-* Elements that should not use the "flat" mode -->
    <flatModeExceptions>
      <for name="gmd:descriptiveKeywords" />
    </flatModeExceptions>
@@ -912,12 +910,12 @@ record or if the field should be displayed to add new occurrences:
 Customizing thesaurus
 ~~~~~~~~~~~~~~~~~~~~~
 
-To configure the type of transformations
-or the number of keyword allowed or if the widget
-has to be displayed in a fieldset or as simple field for e
+To configure the type of transformations,
+or the number of keywords allowed, or if the widget
+has to be displayed in a fieldset, or as simple field for a
 thesaurus define a specific configuration:
 
-eg. only 2 INSPIRE themes.
+e.g. only 2 INSPIRE themes:
 
 
 .. code-block:: xml
@@ -952,16 +950,15 @@ eg. only 2 INSPIRE themes.
       <xs:documentation><![CDATA[
 The "flat" mode is an important concept to understand for the editor. It controls the way:
 
- - complex elements are displayed (ie. elements having children) and
+ * complex elements are displayed (i.e. elements having children) and
+ * non-existing elements are displayed (i.e. elements in the standard, not in the current document).
 
- - non existing elements are displayed (ie. elements in the standard not in the current document).
 
+When a tab is in flat mode, this tab will not display elements which are not in the current metadata
+document and it will display complex elements as a group only if defined in the list of
+elements with fieldset (see :ref:`creating-custom-editor-fieldsWithFieldset`).
 
-When a tab is in flat mode, this tab will not display element which are not in the current metadata
-document and it will display complex element as a group only if defined in the list of
-element with fieldset (see :ref:`creating-custom-editor-fieldsWithFieldset`).
-
-Example for a contact in non "flat" mode:
+Example for a contact in ""non-flat" mode:
 
 
 .. figure:: ../../user-guide/describing-information/img/editor-contact-nonflatmode.png
@@ -973,16 +970,15 @@ Example for a contact in "flat" mode:
 .. figure:: ../../user-guide/describing-information/img/editor-contact-flatmode.png
 
 
-This mode makes the layout simpler but does not provide all controls to remove
-some of the usually boxed element. End-user can still move  to the advanced view mode
+This mode makes the layout simpler, but does not provide all controls to remove
+some of the usually boxed elements. End-users can still change to the advanced view mode
 to access those hidden elements in flat mode.
 
-It's recommended to preserve at least one view in non "flat" mode for reviewer or administrator in order
+It's recommended to preserve at least one view in ""non-flat" mode for Reviewers or Administrators in order
 to be able:
 
- - to build proper templates based on the standards
-
- - to fix any types of errors.
+ * to build proper templates based on the standards
+ * to fix any type of errors.
 
 
         ]]></xs:documentation>
@@ -995,10 +991,10 @@ to be able:
 Adding a section to a tab
 -------------------------
 
-A section is a group of fields. If a name attribute is provided,
+A section is a group of fields. If a `name` attribute is provided,
 then it will create an HTML fieldset which is collapsible.
-If no name attribute is provided, then it just render the inner elements.
-For example, if you need a tab without a root fieldset, juste create
+If no `name` attribute is provided, then it will just render the inner elements.
+For example, if you need a tab without a root fieldset, just create
 the mandatory section with no name and then the inner elements.
 
 
@@ -1024,14 +1020,14 @@ the mandatory section with no name and then the inner elements.
       <xs:attribute name="name" type="xs:string">
         <xs:annotation>
           <xs:documentation>An optional name to override the default one base on field name for the
-            section. The name must be defined in ``{schema}/loc/{lang}/strings.xml``.
+  section. The name must be defined in ``{schema}/loc/{lang}/strings.xml``.
           </xs:documentation>
         </xs:annotation>
       </xs:attribute>
       <xs:attribute name="xpath" type="xs:string">
         <xs:annotation>
-          <xs:documentation>The xpath of the element to match. If an XPath is set for a section, it
-            should not contains any field.
+          <xs:documentation>The XPath of the element to match. If an XPath is set for a section, it
+  should not contain any fields.
           </xs:documentation>
         </xs:annotation>
       </xs:attribute>
@@ -1098,14 +1094,14 @@ the mandatory section with no name and then the inner elements.
 Adding a field
 --------------
 
-To display a simple element use the ``xpath`` attribute to point to the element to display:
+To display a simple element use the `xpath` attribute to point to the element to display:
 
 .. code-block:: xml
 
       <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/*/gmd:title"/>
 
 
-To override a field label use the ``name`` attribute and define that new label in ``{schema}/loc/{lang}/strings.xml``:
+To override a field label use the `name` attribute and define that new label in ``{schema}/loc/{lang}/strings.xml``:
 
 .. code-block:: xml
 
@@ -1113,19 +1109,19 @@ To override a field label use the ``name`` attribute and define that new label i
              xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/*/gmd:title"/>
 
 
-To display a complex element which exist in the metadata document:
+To display a complex element which exists in the metadata document:
 
 .. code-block:: xml
 
       <field name="pointOfContact"
              xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:pointOfContact"/>
 
-In that case all children elements are also displayed.
+In this case all children elements are also displayed.
 
 
 
-To display a field if exist in the metadata document or providing a add button
-in case it does not exist (specify ``in`` and ``or`` attribute):
+To display a field if it exists in the metadata document or to provide an `add` button
+in case it does not exist (specify `in` and `or` attributes):
 
 
 .. code-block:: xml
@@ -1167,8 +1163,8 @@ Activate the "flat" mode at the tab level to make the form display only existing
       <xs:attribute name="if">
         <xs:annotation>
           <xs:documentation><![CDATA[
-An optional xpath expression to evaluate to define if the element should be displayed
-only in some situation (eg. only for service metadata records). eg.
+An optional XPath expression to evaluate to define if the element should be displayed
+only in some situation (e.g. only for service metadata records). e.g.
 
 .. code-block:: xml
 
@@ -1194,8 +1190,8 @@ only in some situation (eg. only for service metadata records). eg.
         <xs:annotation>
           <xs:documentation><![CDATA[
 The label to display if the element does not exist in the metadata record. It indicates that
-the element is missing in the current record. It could be use for a conformity section saying
-that the element is "not evaluated". EXPERIMENTAL
+the element is missing in the current record. It could be used for a conformity section saying
+that the element is "not evaluated". **EXPERIMENTAL**
             ]]>
           </xs:documentation>
         </xs:annotation>
@@ -1204,13 +1200,13 @@ that the element is "not evaluated". EXPERIMENTAL
         <xs:annotation>
           <xs:documentation>
             <![CDATA[
-The local name of the geonet child (ie. non existing element) to match.
+The local name of the geonet child (i.e. non-existing element) to match.
 
 .. code-block:: xml
 
     <field xpath="/gmd:MD_Metadata/gmd:language"
-           or="language"
-           in="/gmd:MD_Metadata"/>
+            or="language"
+            in="/gmd:MD_Metadata"/>
 
 ]]></xs:documentation>
         </xs:annotation>
@@ -1224,9 +1220,9 @@ The local name of the geonet child (ie. non existing element) to match.
         <xs:annotation>
           <xs:documentation>
             <![CDATA[
-Relative XPath of the element to remove when the remove button is clicked.
+Relative XPath of the element to remove when the `remove` button is clicked.
 
-eg. If a template field match linkage and allows editing of field URL,
+e.g. If a template field match linkage and allows editing of field URL,
 the remove control should remove the parent element gmd:onLine.
 
 .. code-block:: xml
@@ -1237,13 +1233,11 @@ the remove control should remove the parent element gmd:onLine.
       del="../..">
       <template>
 
-
-
-Del attribute can be used in template mode or not. Example to remove
-spatialResolution while only editing denominator or distance. Denominator or distance
-are mandatory but as the del element point to the spatialResolution
+`del` attribute can be used in template mode or not. Example to remove
+`spatialResolution` while only editing `denominator` or `distance`. `denominator` or `distance`
+are mandatory, but as the `del` element points to the `spatialResolution`
 ancestor, there is no mandatory flag displayed and the remove control
-remove the spatialResolution element.
+removes the `spatialResolution` element.
 
 
 .. code-block:: xml
@@ -1251,11 +1245,11 @@ remove the spatialResolution element.
 
     <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/
                     */gmd:spatialResolution/*/gmd:distance"
-           del="../.."/>
+            del="../.."/>
     <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/
                     */gmd:spatialResolution/
                       */gmd:equivalentScale/*/gmd:denominator"
-           del="../../../.."/>
+            del="../../../.."/>
 
             ]]>
           </xs:documentation>
