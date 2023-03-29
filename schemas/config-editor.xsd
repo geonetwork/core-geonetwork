@@ -31,7 +31,7 @@
 A metadata editor configuration is defined for a specific schema plugin standard
 (see :ref:`implementing-a-schema-plugin`).
 
-The editor configuration defines the navigation menu for the editor (i.e. list of views and tabs), 
+The editor configuration defines the navigation menu for the editor (i.e. list of views and tabs),
 the list of fields and the type of control to use. Controls can
 be HTML-type (e.g. text, date) or more advanced controls built using
 `AngularJS directives <https://docs.angularjs.org/guide/directive>`_.
@@ -1677,7 +1677,7 @@ with the metadata identifier.
       <xs:attribute ref="displayIfServiceInfo"/>
       <xs:attribute name="class" type="xs:string">
         <xs:annotation>
-          <xs:documentation>Optional CSS class to add to the parent div element. eg. gn-required to show a *.</xs:documentation>
+          <xs:documentation>Optional CSS class to add to the parent div element. eg. gn-required to show a *****.</xs:documentation>
         </xs:annotation>
       </xs:attribute>
       <xs:attribute name="btnLabel" type="xs:string">
