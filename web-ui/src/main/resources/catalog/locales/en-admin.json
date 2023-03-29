@@ -1440,6 +1440,10 @@
     "staticPageUpdateError": "Error occurred while saving the static page",
     "staticPageDeleteError": "Error while removing the static page",
     "staticPageRemoved": "Static page removed",
-    "chooseStaticPageFile": "Choose or drop static page file here"
+    "chooseStaticPageFile": "Choose or drop static page file here",
+    "ui-topCustomMenu": "Header custom menu items",
+    "ui-topCustomMenu-help": "List of static page IDs associated with the header section to display: <ul><li>When a list is provided, the links are displayed in the order provided and only for the pages listed.</li><li>When a list is not provided, all static pages configured for the header section are displayed, with no guaranteed order.</li>",
+    "ui-footerCustomMenu": "Footer custom menu items",
+    "ui-footerCustomMenu-help": "List of static page IDs associated with the footer section to display: <ul><li>When a list is provided, the links are displayed in the order provided and only for the pages listed.</li><li>When a list is not provided, all static pages configured for the footer section are displayed, with no guaranteed order.</li>"
 }
 

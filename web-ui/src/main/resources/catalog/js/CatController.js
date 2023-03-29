@@ -74,7 +74,8 @@
           footer: {
             enabled: true,
             showSocialBarInFooter: true,
-            showApplicationInfoAndLinksInFooter: true
+            showApplicationInfoAndLinksInFooter: true,
+            footerCustomMenu: [] // List of static pages identifiers to display
           },
           header: {
             enabled: true,
@@ -102,7 +103,8 @@
             showGNName: true,
             isHeaderFixed: false,
             isMenubarAccessible: true,
-            showPortalSwitcher: true
+            showPortalSwitcher: true,
+            topCustomMenu: [] // List of static pages identifiers to display
           },
           cookieWarning: {
             enabled: true,

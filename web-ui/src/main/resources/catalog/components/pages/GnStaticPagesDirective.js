@@ -73,7 +73,8 @@
   module.directive("gnStaticPagesListViewer", [
     "$http",
     "$location",
-    function ($http, $location) {
+    "gnGlobalSettings",
+    function ($http, $location, gnGlobalSettings) {
       return {
         restrict: "AEC",
         replace: true,
@@ -95,7 +96,20 @@
                 $scope.section.toUpperCase()
             }).then(
               function (response) {
-                $scope.pagesList = response.data;
+                var configKey = ($scope.section === 'footer') ? 'footer' : 'header';
+                var customMenuOptions = gnGlobalSettings.gnCfg.mods[configKey][$scope.section + 'CustomMenu'];
+                if (customMenuOptions && customMenuOptions.length > 0) {
+                  $scope.pagesList = [];
+                  for (var i = 0; i < customMenuOptions.length; i++) {
+                    var g = _.find(response.data, function (x) { return x.pageId == customMenuOptions[i] });
+
+                    if (g) {
+                      $scope.pagesList.push(g);
+                    }
+                  }
+                } else {
+                  $scope.pagesList = response.data;
+                }
               },
               function (response) {
                 $scope.pagesList = null;
