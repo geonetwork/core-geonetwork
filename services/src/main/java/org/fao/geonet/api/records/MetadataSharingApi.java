@@ -1337,7 +1337,8 @@ public class MetadataSharingApi {
 
             // Is the user profile is higher than the profile allowed to import metadata?
             if (!UserUtil.hasHierarchyRole(allowedUserProfileToUnpublishMetadata, this.roleHierarchy)) {
-                throw new NotAllowedException("The user has no permissions to un-publish metadata.");
+                throw new NotAllowedException(String.format(
+                    "Unpublication of metadata is not allowed. User needs to be at least %s to unpublish record.", allowedUserProfileToUnpublishMetadata));
             }
         }
     }
