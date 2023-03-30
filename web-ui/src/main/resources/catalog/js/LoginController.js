@@ -76,8 +76,9 @@
           $scope.isShowLoginAsLink = gnGlobalSettings.isShowLoginAsLink;
          $scope.isUserProfileUpdateEnabled = gnGlobalSettings.isUserProfileUpdateEnabled;
 
+         // take the bigger of the two values
          $scope.passwordMinLength =
-           Math.min(gnConfig['system.security.passwordEnforcement.minLength'], 6);
+           Math.max(gnConfig['system.security.passwordEnforcement.minLength'], 6);
          $scope.passwordMaxLength =
            Math.max(gnConfig['system.security.passwordEnforcement.maxLength'], 6);
          $scope.passwordPattern =
