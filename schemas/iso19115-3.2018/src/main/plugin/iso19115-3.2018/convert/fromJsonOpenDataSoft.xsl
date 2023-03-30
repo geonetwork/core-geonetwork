@@ -136,6 +136,16 @@
               <gco:DateTime><xsl:value-of select="(metas/modified|dataset/metas/default/metadata_processed)[1]"/></gco:DateTime>
             </cit:date>
             <cit:dateType>
+              <cit:CI_DateTypeCode codeList="codeListLocation#CI_DateTypeCode" codeListValue="publication"/>
+            </cit:dateType>
+          </cit:CI_Date>
+        </mdb:dateInfo>
+        <mdb:dateInfo>
+          <cit:CI_Date>
+            <cit:date>
+              <gco:DateTime><xsl:value-of select="metas/metadata_processed"/></gco:DateTime>
+            </cit:date>
+            <cit:dateType>
               <cit:CI_DateTypeCode codeList="codeListLocation#CI_DateTypeCode" codeListValue="revision"/>
             </cit:dateType>
           </cit:CI_Date>
@@ -164,7 +174,17 @@
                       </gco:DateTime>
                     </cit:date>
                     <cit:dateType>
-                      <cit:CI_DateTypeCode codeList="codeListLocation#CI_DateTypeCode" codeListValue="creation"/>
+                      <cit:CI_DateTypeCode codeList="codeListLocation#CI_DateTypeCode" codeListValue="publication"/>
+                    </cit:dateType>
+                  </cit:CI_Date>
+                </cit:date>
+                <cit:date>
+                  <cit:CI_Date>
+                    <cit:date>
+                      <gco:DateTime><xsl:value-of select="metas/data_processed"/></gco:DateTime>
+                    </cit:date>
+                    <cit:dateType>
+                      <cit:CI_DateTypeCode codeList="codeListLocation#CI_DateTypeCode" codeListValue="revision"/>
                     </cit:dateType>
                   </cit:CI_Date>
                 </cit:date>
