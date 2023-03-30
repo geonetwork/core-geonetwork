@@ -140,6 +140,15 @@
               scope.is3DModeAllowed = gnViewerSettings.mapConfig.is3DModeAllowed || false;
               scope.is3dEnabled = gnConfig["is3dEnabled"] || false;
 
+              // map accessibility is disabled by default
+              scope.isAccessible = gnViewerSettings.mapConfig.isAccessible || false;
+              // add `tabindex="0"` so the map can get keyboard focus
+              //
+              // more info: https://openlayers.org/en/latest/examples/accessible.html
+              if (scope.isAccessible) {
+                iElement.find("#map").attr("tabindex", 0);
+              }
+
               // By default, sync only background layer
               // between main map and search map
               scope.syncAllLayers = false;
