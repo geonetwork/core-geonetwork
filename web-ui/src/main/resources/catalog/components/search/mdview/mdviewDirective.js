@@ -97,7 +97,8 @@
     "$http",
     "gnGlobalSettings",
     "Metadata",
-    function ($http, gnGlobalSettings, Metadata) {
+    "gnESFacet",
+    function ($http, gnGlobalSettings, Metadata, gnESFacet) {
       return {
         scope: {
           md: "=gnMoreLikeThis"
@@ -134,20 +135,8 @@
             };
 
           function buildQuery() {
-            var query = {
-              _source: {
-                include: [
-                  "id",
-                  "uuid",
-                  "overview.*",
-                  "resourceTitle*",
-                  "resourceAbstract*",
-                  "resourceType",
-                  "cl_status*"
-                ]
-              },
-              size: scope.size,
-              query: {
+            var query = gnESFacet.buildDefaultQuery(
+              {
                 bool: {
                   must: [
                     moreLikeThisQuery,
@@ -168,8 +157,10 @@
                     }
                   ]
                 }
-              }
-            };
+              },
+              scope.size
+            );
+
             query.query.bool.must[0].more_like_this.like = scope.md.resourceTitle;
 
             var resourceType = scope.md.resourceType
