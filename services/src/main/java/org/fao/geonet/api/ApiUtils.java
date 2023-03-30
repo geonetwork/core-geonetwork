@@ -43,7 +43,6 @@ import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.XmlRequest;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
@@ -75,9 +74,10 @@ import java.util.*;
  * API utilities mainly to deal with parameters.
  */
 public class ApiUtils {
-    @Autowired
-    static
-    LanguageUtils languageUtils;
+
+    private ApiUtils() {
+
+    }
 
     /**
      * Return a set of UUIDs based on the input UUIDs array or based on the current selection.
@@ -347,15 +347,17 @@ public class ApiUtils {
             while (it.hasNext()) {
                 ObjectError err = it.next();
                 String msg = "";
-                for(int i = 0; i < err.getCodes().length; i++) {
-                    try {
-                        msg = messages.getString(err.getCodes()[i]);
+                if (err.getCodes() != null) {
+                    for(int i = 0; i < err.getCodes().length; i++) {
+                        try {
+                            msg = messages.getString(err.getCodes()[i]);
 
-                        if (!StringUtils.isEmpty(msg)) {
-                            break;
+                            if (!StringUtils.isEmpty(msg)) {
+                                break;
+                            }
+                        } catch (MissingResourceException ex) {
+                            // Ignore
                         }
-                    } catch (MissingResourceException ex) {
-                        // Ignore
                     }
                 }
 
@@ -376,6 +378,7 @@ public class ApiUtils {
     }
 
     public static ResourceBundle getMessagesResourceBundle(Enumeration<Locale> locales) {
+        LanguageUtils languageUtils = ApplicationContextHolder.get().getBean(LanguageUtils.class);
         Locale locale = languageUtils.parseAcceptLanguage(locales);
         return ResourceBundle.getBundle("org.fao.geonet.api.Messages", locale);
     }
