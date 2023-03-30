@@ -63,6 +63,16 @@
           "mdStatus*"
         ]
       };
+      var minimalSource = {
+        includes: [
+          "id",
+          "uuid",
+          "resourceTitle*",
+          "resourceAbstract*",
+          "resourceType",
+          "cl_status*"
+        ]
+      };
       var defaultScriptedFields = {
         // Collect only first overview in search results.
         overview: {
@@ -71,6 +81,14 @@
               "return params['_source'].overview == null ? [] : params['_source'].overview.stream().findFirst().orElse([]);"
           }
         }
+      };
+      this.buildDefaultQuery = function (query, size) {
+        return {
+          script_fields: defaultScriptedFields,
+          _source: minimalSource,
+          size: size || 1,
+          query: query || {}
+        };
       };
       this.configs = {
         search: {

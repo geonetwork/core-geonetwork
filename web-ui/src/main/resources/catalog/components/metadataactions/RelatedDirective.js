@@ -279,7 +279,8 @@
   module.directive("gnRecordIsReplacedBy", [
     "$http",
     "Metadata",
-    function ($http, Metadata) {
+    "gnESFacet",
+    function ($http, Metadata, gnESFacet) {
       return {
         restrict: "A",
         templateUrl:
@@ -289,13 +290,14 @@
         },
         link: function (scope) {
           $http
-            .post("../api/search/records/_search", {
-              query: {
+            .post(
+              "../api/search/records/_search",
+              gnESFacet.buildDefaultQuery({
                 query_string: {
                   query: '+agg_associated_revisionOf:"' + scope.uuid + '"'
                 }
-              }
-            })
+              })
+            )
             .then(function (r) {
               scope.items = r.data.hits.hits.map(function (r) {
                 return new Metadata(r);
@@ -715,7 +717,7 @@
           scope.getOverviewUrl = function (md) {
             if (md.overview && md.overview.length > 0) {
               return md.overview[0].url;
-            // Related records contain the first overview in the properties.overview property
+              // Related records contain the first overview in the properties.overview property
             } else if (md.properties && md.properties.overview) {
               return md.properties.overview;
             }
