@@ -1319,7 +1319,8 @@ public class MetadataSharingApi {
 
             // Is the user profile is higher than the profile allowed to import metadata?
             if (!UserUtil.hasHierarchyRole(allowedUserProfileToPublishMetadata, this.roleHierarchy)) {
-                throw new NotAllowedException("The user has no permissions to publish metadata.");
+                throw new NotAllowedException(String.format(
+                    "Publication of metadata is not allowed. User needs to be at least %s to publish record.", allowedUserProfileToPublishMetadata));
             }
         }
     }
