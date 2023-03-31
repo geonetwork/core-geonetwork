@@ -122,7 +122,7 @@
             }
           }
         ],
-        configId: "home",
+        configId: "recordWithLink",
         params: {
           isTemplate: "n",
           sortBy: "changeDate",

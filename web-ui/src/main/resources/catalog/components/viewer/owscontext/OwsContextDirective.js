@@ -47,6 +47,7 @@
             }
           }
         ],
+        configId: "recordWithLink",
         hitsperpageValues: 2,
         params: {
           isTemplate: "n",
