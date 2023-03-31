@@ -321,14 +321,14 @@
               data-variables="cit:role/cit:CI_RoleCode/@codeListValue~{role}"/>
     </for>
 
-    <for name="mdb:referenceSystemInfo" addDirective="data-gn-directory-entry-selector">
+    <!--<for name="mdb:referenceSystemInfo" addDirective="data-gn-directory-entry-selector">
       <directiveAttributes
         data-template-add-action="true"
         data-search-action="true"
         data-template-type="CRS"
         data-filter='{"root": "mrs:MD_ReferenceSystem"}'
         data-insert-modes=""/>
-    </for>
+    </for>-->
 
 
     <for name="mri:extent" addDirective="data-gn-directory-entry-selector">
