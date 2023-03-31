@@ -341,7 +341,7 @@ public class Group extends Localized implements Serializable {
      * Should we use the enableAllowedCategories list on this group? If false, we allow all
      * categories.
      *
-     * @param enableCategoriesRestriction
+     * @param enableAllowedCategories
      * @return this group entity object
      */
     public Group setEnableAllowedCategories(Boolean enableAllowedCategories) {
