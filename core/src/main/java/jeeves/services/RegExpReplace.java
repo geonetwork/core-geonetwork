@@ -42,7 +42,7 @@ import java.util.regex.Pattern;
 //=============================================================================
 
 /**
- * This service reads a configuration xml file containint containing pattern-replacement pairs and
+ * This service reads a configuration xml file containing pattern-replacement pairs and
  * applies all the pairs to each text element of the output. The configuration is read from
  * xml/regexp.xml and is formatted: <regexp> <expr pattern="..." replacement="..."/> </regexp>
  */
