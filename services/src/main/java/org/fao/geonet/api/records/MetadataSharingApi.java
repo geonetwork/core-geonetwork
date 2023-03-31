@@ -558,6 +558,9 @@ public class MetadataSharingApi {
             sharingResponse.setGroupOwner(String.valueOf(groupOwner));
         }
 
+        String network = sm.getValue(Settings.SYSTEM_INTRANET_NETWORK);
+        boolean hasNetworkConfig = StringUtils.isNotEmpty(network);
+
         //--- retrieve groups operations
         Set<Integer> userGroups = accessManager.getUserGroups(
             userSession,
@@ -570,6 +573,10 @@ public class MetadataSharingApi {
         List<GroupPrivilege> groupPrivileges = new ArrayList<>(elGroup.size());
         if (elGroup != null) {
             for (Group g : elGroup) {
+                if (!hasNetworkConfig
+                    && g.getId() == ReservedGroup.intranet.getId()) {
+                    continue;
+                }
                 GroupPrivilege groupPrivilege = new GroupPrivilege();
                 groupPrivilege.setGroup(g.getId());
                 groupPrivilege.setReserved(g.isReserved());
@@ -597,7 +604,6 @@ public class MetadataSharingApi {
 
                 Map<String, Boolean> operations = new HashMap<>(allOperations.size());
                 for (Operation o : allOperations) {
-
                     boolean operationSetForGroup = false;
                     for (OperationAllowed operationAllowed : operationAllowedForGroup) {
                         if (o.getId() == operationAllowed.getId().getOperationId()) {
@@ -710,7 +716,14 @@ public class MetadataSharingApi {
         List<Group> elGroup = groupRepository.findAll();
         List<GroupPrivilege> groupPrivileges = new ArrayList<>(elGroup.size());
 
+        String network = sm.getValue(Settings.SYSTEM_INTRANET_NETWORK);
+        boolean hasNetworkConfig = StringUtils.isNotEmpty(network);
+
         for (Group g : elGroup) {
+            if (!hasNetworkConfig
+                && g.getId() == ReservedGroup.intranet.getId()) {
+                continue;
+            }
             GroupPrivilege groupPrivilege = new GroupPrivilege();
             groupPrivilege.setGroup(g.getId());
             groupPrivilege.setReserved(g.isReserved());
