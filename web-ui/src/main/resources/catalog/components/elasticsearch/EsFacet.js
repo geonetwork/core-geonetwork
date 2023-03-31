@@ -113,6 +113,13 @@
           },
           script_fields: defaultScriptedFields
         },
+        recordWithLink: {
+          facets: {},
+          source: {
+            includes: minimalSource.includes.concat("link")
+          },
+          script_fields: defaultScriptedFields
+        },
         editor: {
           facets: gnGlobalSettings.gnCfg.mods.editor.facetConfig,
           source: {
