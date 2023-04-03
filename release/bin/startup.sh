@@ -26,7 +26,6 @@ fi
 rm -f logs/*request.log*
 rm -f logs/output.log
 find logs -maxdepth 1 -name 'geonetwork.log.*' -type f -exec mv -t logs/archive/ '{}' +
-find logs -maxdepth 1 -name 'geoserver.log.*' -type f -exec mv -t logs/archive/ '{}' +
 
 # Set custom data directory location using system property
 #export geonetwork_dir=/app/geonetwork_data_dir
