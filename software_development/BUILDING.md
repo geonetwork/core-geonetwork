@@ -142,6 +142,16 @@ To run GeoNetwork with the embedded Jetty server:
 
 5. For more information see [web/README.md](../web/README.md).
 
+
+
+To start the application under the root context, use:
+
+   ```
+   cd web
+   mvn jetty:run -Dgeonetwork.webapp.contextpath=/
+   ```
+
+
 Tool chain
 ----------
 
