@@ -9,11 +9,12 @@
                 version="2.0" exclude-result-prefixes="#all">
 
   <xsl:variable name="dateTypes" as="node()+">
-    <status is="completed" dateType="publication"/>
-    <status is="superseded" dateType="superseded"/>
-    <status is="deprecated" dateType="deprecated"/>
-    <status is="obsolete" dateType="deprecated"/>
-    <status is="retired" dateType="deprecated"/>
+   <status is="completed" dateType="publication" schema="iso19139"/>
+    <status is="completed" dateType="publication" schema="iso19115-3.2018"/>
+    <status is="superseded" dateType="superseded" schema="iso19115-3.2018"/>
+    <status is="deprecated" dateType="deprecated" schema="iso19115-3.2018"/>
+    <status is="obsolete" dateType="deprecated" schema="iso19115-3.2018"/>
+    <status is="retired" dateType="deprecated" schema="iso19115-3.2018"/>
   </xsl:variable>
 
 
@@ -42,7 +43,7 @@
     <xsl:param name="root"/>
 
     <xsl:variable name="recordStatus"
-                  select="$root//*:identificationInfo/*/*:status/*[@codeListValue = $dateTypes/@is]"/>
+                  select="$root//*:identificationInfo/*/*:status/*[@codeListValue = $dateTypes[starts-with(@schema, $schema)]/@is]"/>
 
     <xsl:for-each select="$recordStatus">
       <xsl:variable name="status"
@@ -56,7 +57,7 @@
                             $status)"/>
 
       <xsl:variable name="dateTypeForStatus"
-                    select="$dateTypes[@is = $status]/@dateType"/>
+                    select="$dateTypes[@is = $status and starts-with(@schema, $schema)]/@dateType"/>
 
       <xsl:variable name="dateTypeLabel"
                     select="tr:codelist-value-label(
