@@ -41,6 +41,16 @@
   ]);
 
   /**
+   * Sextant / Fix relative link to after # part to have working links in API mode.
+   */
+  module.filter('sextantApiLink', function() {
+    return function(input) {
+      input = input || '';
+      return input.replace(/..\/..\/srv\/(eng|fre)\/catalog.search/, '');
+    }
+  });
+
+  /**
    * Shows a list of related records given an uuid with the actions defined in
    * config.js
    */
