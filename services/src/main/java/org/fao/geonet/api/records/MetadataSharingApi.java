@@ -460,16 +460,8 @@ public class MetadataSharingApi {
 
             SharingResponse sharingBefore = getRecordSharingSettings(metadata.getUuid(), request.getSession(), request);
 
-            boolean metadataWasPublished = sharingBefore.getPrivileges().stream().filter(gp -> ReservedGroup.all.getId() == gp.getGroup().intValue() && gp.getOperations().get(ReservedOperation.view.name())).count() > 0;
-            boolean metadataIsPublished = privileges.stream().filter(gp -> ReservedGroup.all.getId() == gp.getGroup().intValue() && gp.getOperations().get(ReservedOperation.view.name())).count() > 0;
-
-            if (metadataWasPublished && !metadataIsPublished) {
-                // Is the user profile allowed to un-publish the metadata
-                checkUserProfileToUnpublishMetadata(context.getUserSession());
-            } else if (!metadataWasPublished && metadataIsPublished) {
-                // Is the user profile allowed to publish the metadata
-                checkUserProfileToPublishMetadata(context.getUserSession());
-            }
+            // Check if the user profile can change the privileges for publication/un-publication of the reserved groups
+            checkChangesAllowedToUserProfileForReservedGroups(context.getUserSession(), sharingBefore, privileges, !sharing.isClear());
 
             if (sharing.isClear()) {
                 dataManager.deleteMetadataOper(context, String.valueOf(metadata.getId()), skipAllReservedGroup);
@@ -484,12 +476,12 @@ public class MetadataSharingApi {
                         continue;
                     }
 
-                    if (o.getValue()) {
+                    if (Boolean.TRUE.equals(o.getValue())) {
                         // For privileges to ALL group, check if it's allowed or not to publish invalid metadata
                         if ((p.getGroup() == ReservedGroup.all.getId())) {
                             try {
                                 checkCanPublishToAllGroup(context, messages, metadata,
-                                    allowPublishInvalidMd, allowPublishNonApprovedMd, metadataWasPublished);
+                                    allowPublishInvalidMd, allowPublishNonApprovedMd);
                             } catch (Exception ex) {
                                 // If building a report of the sharing, annotate the error and continue
                                 // processing the other group privileges, otherwise throw the exception
@@ -505,7 +497,7 @@ public class MetadataSharingApi {
                         dataMan.setOperation(
                             context, metadata.getId(), p.getGroup(), opId);
                         sharingChanges = true;
-                    } else if (!sharing.isClear() && !o.getValue()) {
+                    } else if (!sharing.isClear() && Boolean.TRUE.equals(!o.getValue())) {
                         dataMan.unsetOperation(
                             context, metadata.getId(), p.getGroup(), opId);
                         sharingChanges = true;
@@ -1002,11 +994,11 @@ public class MetadataSharingApi {
      * @throws Exception
      */
     private void checkCanPublishToAllGroup(ServiceContext context, ResourceBundle messages, AbstractMetadata metadata,
-                                           boolean allowPublishInvalidMd, boolean allowPublishNonApprovedMd, boolean wasPublished) throws Exception {
+                                           boolean allowPublishInvalidMd, boolean allowPublishNonApprovedMd) throws Exception {
 
-        if (!wasPublished) {
+        /*if (!wasPublished) {
             checkUserProfileToPublishMetadata(context.getUserSession());
-        }
+        }*/
 
         if (!allowPublishInvalidMd) {
             boolean hasValidation =
@@ -1310,6 +1302,49 @@ public class MetadataSharingApi {
     }
 
     /**
+     * Verifies if the user profile can make the privileges changes for reserved groups.
+     *
+     * @param userSession
+     * @param originalPrivileges
+     * @param newPrivileges
+     * @param merge
+     */
+    private void checkChangesAllowedToUserProfileForReservedGroups(UserSession userSession,
+                                                                   SharingResponse originalPrivileges,
+                                                                   List<GroupOperations> newPrivileges,
+                                                                   boolean merge) {
+        if (userSession.getProfile() == Profile.Administrator) {
+            return;
+        }
+
+        List<PrivilegeStatusChange> privilegeStatusChangesList =
+            reservedGroupsPrivilegesStatusChanges(originalPrivileges, newPrivileges, merge);
+
+        if (!privilegeStatusChangesList.isEmpty()) {
+            boolean metadataWasPublishedBeforeAndNotAfter = false;
+            boolean metadataWasNotPublishedBeforeAndIsAfter = false;
+
+            for(PrivilegeStatusChange status : privilegeStatusChangesList) {
+                if (status.isPublishedBefore() && !status.isPublishedAfter()) {
+                    metadataWasPublishedBeforeAndNotAfter = true;
+                } else if (!status.isPublishedBefore() && status.isPublishedAfter()) {
+                    metadataWasNotPublishedBeforeAndIsAfter = true;
+                }
+            }
+
+            if (metadataWasPublishedBeforeAndNotAfter) {
+                // Is the user profile allowed to un-publish the metadata?
+                checkUserProfileToUnpublishMetadata(userSession);
+            }
+
+            if (metadataWasNotPublishedBeforeAndIsAfter) {
+                // Is the user profile allowed to publish the metadata?
+                checkUserProfileToPublishMetadata(userSession);
+            }
+        }
+    }
+
+    /**
      * Checks if the user profile is allowed to publish metadata.
      *
      * @param userSession
@@ -1342,6 +1377,89 @@ public class MetadataSharingApi {
                 throw new NotAllowedException(String.format(
                     "Unpublication of metadata is not allowed. User needs to be at least %s to unpublish record.", allowedUserProfileToUnpublishMetadata));
             }
+        }
+    }
+
+    /**
+     * Returns the list of privilege changes for the reserved groups.
+     *
+     * @param sharingBefore Metadata privileges before applying the new privileges.
+     * @param newPrivileges New metadata privileges.
+     * @param merge         Merge the new privileges or replace them.
+     * @return  List of privilege changes for the reserved groups.
+     */
+    public  List<PrivilegeStatusChange> reservedGroupsPrivilegesStatusChanges(SharingResponse sharingBefore,
+                                                                        List<GroupOperations> newPrivileges,
+                                                                        boolean merge) {
+
+        List<PrivilegeStatusChange> privilegeStatuses = new ArrayList<>();
+        for(GroupPrivilege g : sharingBefore.getPrivileges()) {
+            if (g.isReserved()) {
+                ReservedGroup group = Arrays.stream(ReservedGroup.values()).filter(rg -> rg.getId() == g.getGroup()).findFirst().get();
+
+                Map<String, Boolean> operationsAllGroupAfter = new HashMap<>();
+                java.util.Optional<GroupOperations> groupPrivilegeAllGroupAfter =
+                    newPrivileges.stream().filter(gp -> group.getId() == gp.getGroup().intValue()).findFirst();
+                if (groupPrivilegeAllGroupAfter.isPresent()) {
+                    operationsAllGroupAfter = groupPrivilegeAllGroupAfter.get().getOperations();
+                }
+
+                for(Map.Entry<String, Boolean> op : g.getOperations().entrySet()) {
+                    PrivilegeStatusChange privilegeStatus = new PrivilegeStatusChange();
+                    privilegeStatus.setGroup(group);
+                    privilegeStatus.setPublishedBefore(g.getOperations().getOrDefault(op.getKey(), Boolean.FALSE));
+                    // When merging privileges and no value for the new privilege
+                    // uses as default the previous value, otherwise false.
+                    privilegeStatus.setPublishedAfter(operationsAllGroupAfter.getOrDefault(op.getKey(),
+                        merge?privilegeStatus.publishedBefore :Boolean.FALSE));
+                    privilegeStatus.setOperation(op.getKey());
+                    privilegeStatuses.add(privilegeStatus);
+                }
+            }
+        }
+
+        return privilegeStatuses.stream().filter(p -> p.publishedBefore != p.publishedAfter).collect(Collectors.toList());
+    }
+
+    /**
+     * Class to track the privileges status changes on the reserved groups operations.
+     */
+    private class PrivilegeStatusChange {
+        private boolean publishedBefore;
+        private boolean publishedAfter;
+        private ReservedGroup group;
+        private String operation;
+
+        public boolean isPublishedBefore() {
+            return publishedBefore;
+        }
+
+        public void setPublishedBefore(boolean publishedBefore) {
+            this.publishedBefore = publishedBefore;
+        }
+
+        public boolean isPublishedAfter() {
+            return publishedAfter;
+        }
+
+        public void setPublishedAfter(boolean publishedAfter) {
+            this.publishedAfter = publishedAfter;
+        }
+
+        public ReservedGroup getGroup() {
+            return group;
+        }
+
+        public void setGroup(ReservedGroup group) {
+            this.group = group;
+        }
+
+        public String getOperation() {
+            return operation;
+        }
+
+        public void setOperation(String operation) {
+            this.operation = operation;
         }
     }
 }
