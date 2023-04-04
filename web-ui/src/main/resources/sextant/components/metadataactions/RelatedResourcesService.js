@@ -345,7 +345,7 @@
           action: openMd
         },
         MDCHILDREN: {
-          iconClass: "fa-sitemap",
+          iconClass: "fa-sitemap fa-rotate-180",
           label: "openRecord",
           action: openMd
         },
