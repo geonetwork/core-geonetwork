@@ -105,6 +105,15 @@
             scope.alertMsg = true;
           }
 
+          /**
+           * Enable a privilege for reserved groups:
+           *   - Batch mode.
+           *   - Admin user.
+           *   - Reviewers if allowed to publish / unpublish metadata.
+           *
+           * @param value
+           * @returns {boolean|*}
+           */
           scope.enabledReservedGroups = function (value) {
             if (scope.batch) {
               return true;
@@ -132,6 +141,14 @@
             }
           };
 
+          /**
+           * Enable select all checkbox:
+           *   - Batch mode.
+           *   - Admin user.
+           *   - Reviewers if allowed to publish / unpublish metadata.
+           *
+           * @returns {boolean}
+           */
           scope.enabledReservedGroupsSelectAll = function () {
             if (scope.batch) {
               return true;
@@ -151,6 +168,14 @@
             }
           };
 
+          /**
+           * Display a tooltip for a group privilege when is disabled for reviewers:
+           *
+           *   - If the privilege is checked (published) and reviewers not allowed to unpublish.
+           *   - If the privilege is not checked (not published) and reviewers not allowed to publish.
+           *
+           * @returns {boolean}
+           */
           scope.tooltipReservedGroups = function (value) {
             var tooltip = "";
 
