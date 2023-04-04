@@ -1,7 +1,7 @@
 <button
   type="button"
   class="btn btn-default"
-  data-ng-disabled="sugg === undefined"
+  data-ng-hide="sugg === undefined"
   title="{{sugg === undefined ? 'processNotFound' : ''}}"
   data-ng-click="gnSuggestion.onSuggestionClick(sugg)"
 >
