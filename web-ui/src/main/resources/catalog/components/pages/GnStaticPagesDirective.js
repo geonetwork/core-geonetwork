@@ -96,12 +96,15 @@
                 $scope.section.toUpperCase()
             }).then(
               function (response) {
-                var configKey = ($scope.section === 'footer') ? 'footer' : 'header';
-                var customMenuOptions = gnGlobalSettings.gnCfg.mods[configKey][$scope.section + 'CustomMenu'];
+                var configKey = $scope.section === "footer" ? "footer" : "header";
+                var customMenuOptions =
+                  gnGlobalSettings.gnCfg.mods[configKey][$scope.section + "CustomMenu"];
                 if (customMenuOptions && customMenuOptions.length > 0) {
                   $scope.pagesList = [];
                   for (var i = 0; i < customMenuOptions.length; i++) {
-                    var g = _.find(response.data, function (x) { return x.pageId == customMenuOptions[i] });
+                    var g = _.find(response.data, function (x) {
+                      return x.pageId == customMenuOptions[i];
+                    });
 
                     if (g) {
                       $scope.pagesList.push(g);
