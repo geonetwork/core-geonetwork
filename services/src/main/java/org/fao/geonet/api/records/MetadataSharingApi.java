@@ -489,7 +489,7 @@ public class MetadataSharingApi {
                         if ((p.getGroup() == ReservedGroup.all.getId())) {
                             try {
                                 checkCanPublishToAllGroup(context, messages, metadata,
-                                    allowPublishInvalidMd, allowPublishNonApprovedMd);
+                                    allowPublishInvalidMd, allowPublishNonApprovedMd, metadataWasPublished);
                             } catch (Exception ex) {
                                 // If building a report of the sharing, annotate the error and continue
                                 // processing the other group privileges, otherwise throw the exception
@@ -1002,9 +1002,11 @@ public class MetadataSharingApi {
      * @throws Exception
      */
     private void checkCanPublishToAllGroup(ServiceContext context, ResourceBundle messages, AbstractMetadata metadata,
-                                           boolean allowPublishInvalidMd, boolean allowPublishNonApprovedMd) throws Exception {
+                                           boolean allowPublishInvalidMd, boolean allowPublishNonApprovedMd, boolean wasPublished) throws Exception {
 
-        checkUserProfileToPublishMetadata(context.getUserSession());
+        if (!wasPublished) {
+            checkUserProfileToPublishMetadata(context.getUserSession());
+        }
 
         if (!allowPublishInvalidMd) {
             boolean hasValidation =
