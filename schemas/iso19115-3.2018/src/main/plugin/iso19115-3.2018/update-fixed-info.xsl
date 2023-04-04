@@ -60,10 +60,6 @@
   <xsl:variable name="url" select="/root/env/siteURL"/>
   <xsl:variable name="uuid" select="/root/env/uuid"/>
 
-  <xsl:variable name="metadataIdentifierCodeSpace"
-                select="'urn:uuid'"
-                as="xs:string"/>
-
   <xsl:template match="/root">
     <xsl:apply-templates select="mdb:MD_Metadata"/>
   </xsl:template>
@@ -80,25 +76,28 @@
 
       <xsl:call-template name="add-iso19115-3.2018-namespaces"/>
 
-      <!-- Add metadataIdentifier if it doesn't exist
-      TODO: only if not harvested -->
-      <mdb:metadataIdentifier>
-        <mcc:MD_Identifier>
-          <!-- authority could be for this GeoNetwork node ?
-            <mcc:authority><cit:CI_Citation>etc</cit:CI_Citation></mcc:authority>
-          -->
-          <mcc:code>
-            <gco:CharacterString><xsl:value-of select="/root/env/uuid"/></gco:CharacterString>
-          </mcc:code>
-          <mcc:codeSpace>
-            <gco:CharacterString><xsl:value-of select="$metadataIdentifierCodeSpace"/></gco:CharacterString>
-          </mcc:codeSpace>
-        </mcc:MD_Identifier>
-      </mdb:metadataIdentifier>
+      <xsl:for-each select="mdb:metadataIdentifier">
+        <xsl:copy>
+          <mcc:MD_Identifier>
+            <xsl:apply-templates select="*/mcc:authority"/>
 
-  <!--    <xsl:apply-templates select="mdb:metadataIdentifier[
-                                    mcc:MD_Identifier/mcc:codeSpace/gco:CharacterString !=
-                                    $metadataIdentifierCodeSpace]"/>-->
+            <xsl:choose>
+              <xsl:when test="/root/env/uuid != ''">
+                <mcc:code>
+                  <gco:CharacterString><xsl:value-of select="/root/env/uuid"/></gco:CharacterString>
+                </mcc:code>
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:apply-templates select="*/mcc:code"/>
+              </xsl:otherwise>
+            </xsl:choose>
+
+            <xsl:apply-templates select="*/mcc:codeSpace"/>
+            <xsl:apply-templates select="*/mcc:version"/>
+            <xsl:apply-templates select="*/mcc:description"/>
+          </mcc:MD_Identifier>
+        </xsl:copy>
+      </xsl:for-each>
 
       <xsl:apply-templates select="mdb:defaultLocale"/>
       <xsl:apply-templates select="mdb:parentMetadata"/>
