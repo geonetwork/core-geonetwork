@@ -129,7 +129,7 @@ public class ReportDownloads implements IReport {
                                 u -> u.getUsername().equals(
                                     fileDownload.getUserName()))
                                 .findFirst();
-                        if (userFilter.isPresent()) {
+                        if (userDownloadFilter.isPresent()) {
                             User userDownload = userDownloadFilter.get();
 
                             requesterName = userDownload.getName() + " "
@@ -145,23 +145,23 @@ public class ReportDownloads implements IReport {
                 String metadataTitle = ReportUtils.retrieveMetadataIndex(
                     metadataUuid, "resourceTitleObject", "default");
 
-                List<String> record = new ArrayList<>();
-                record.add(metadataUuid);
-                record.add(metadataTitle);
-                record.add(fileDownload.getFileName());
-                record.add(fileDownload.getDownloadDate());
-                record.add(requesterName);
-                record.add(requesterMail);
-                record.add(fileDownload.getRequesterOrg());
-                record.add(fileDownload.getRequesterComments());
-                record.add(username);
-                record.add(surname);
-                record.add(name);
-                record.add(email);
-                record.add(profile);
-                record.add(metadataFileUpload.isPresent() ? metadataFileUpload.get().getDeletedDate() : "");
+                List<String> recordDownloadInfo = new ArrayList<>();
+                recordDownloadInfo.add(metadataUuid);
+                recordDownloadInfo.add(metadataTitle);
+                recordDownloadInfo.add(fileDownload.getFileName());
+                recordDownloadInfo.add(fileDownload.getDownloadDate());
+                recordDownloadInfo.add(requesterName);
+                recordDownloadInfo.add(requesterMail);
+                recordDownloadInfo.add(fileDownload.getRequesterOrg());
+                recordDownloadInfo.add(fileDownload.getRequesterComments());
+                recordDownloadInfo.add(username);
+                recordDownloadInfo.add(surname);
+                recordDownloadInfo.add(name);
+                recordDownloadInfo.add(email);
+                recordDownloadInfo.add(profile);
+                recordDownloadInfo.add(metadataFileUpload.isPresent() ? metadataFileUpload.get().getDeletedDate() : "");
 
-                csvFilePrinter.printRecord(record);
+                csvFilePrinter.printRecord(recordDownloadInfo);
             }
 
         } finally {
