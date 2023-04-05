@@ -7,10 +7,7 @@
     onclick="focus(this)"
   ></div>
   <div gn-gfi="" map="map"></div>
-  <gn-features-tables
-    gn-features-tables-map="map"
-    data-height="300"
-  ></gn-features-tables>
+  <gn-features-tables gn-features-tables-map="map" data-height="300"></gn-features-tables>
 
   <div gn-localisation-input map="map"></div>
 
@@ -32,10 +29,7 @@
       <span class="label" ng-show="showToolLabels" translate="">addLayers</span>
       <span role="tooltip" translate="">addLayers</span>
     </button>
-    <div
-      class="panel panel-default panel-tools"
-      ng-show="activeTools.addLayers"
-    >
+    <div class="panel panel-default panel-tools" ng-show="activeTools.addLayers">
       <div class="panel-heading">
         <h3>{{'AddALayer' | translate}}</h3>
       </div>
@@ -123,16 +117,8 @@
         <h3>{{'ManageLayers' | translate}}</h3>
       </div>
       <div class="panel-body layers">
-        <div
-          gn-layermanager=""
-          gn-layermanager-map="map"
-          class="gn-margin-bottom"
-        ></div>
-        <div
-          gn-baselayerswitcher=""
-          gn-baselayerswitcher-map="map"
-          data-dropup=""
-        ></div>
+        <div gn-layermanager="" gn-layermanager-map="map" class="gn-margin-bottom"></div>
+        <div gn-baselayerswitcher="" gn-baselayerswitcher-map="map" data-dropup=""></div>
         <br data-ng-show="is3dEnabled" />
         <div
           data-gn-terrain-switcher="ol3d"
@@ -151,15 +137,10 @@
       ng-hide="disabledTools.projectionSwitcher"
     >
       <span class="fa fa-th-large"></span>
-      <span class="label" ng-show="showToolLabels" translate=""
-        >projectionSwitcher</span
-      >
+      <span class="label" ng-show="showToolLabels" translate="">projectionSwitcher</span>
       <span role="tooltip" translate="">projectionSwitcher</span>
     </button>
-    <div
-      class="panel-default panel-tools"
-      ng-show="activeTools.projectionSwitcher"
-    >
+    <div class="panel-default panel-tools" ng-show="activeTools.projectionSwitcher">
       <div gn-projection-switcher="map"></div>
     </div>
 
@@ -193,9 +174,7 @@
       aria-label="{{'filterData' | translate}}"
     >
       <span class="fa fa-filter"></span>
-      <span class="label" ng-show="showToolLabels" translate=""
-        >filterData</span
-      >
+      <span class="label" ng-show="showToolLabels" translate="">filterData</span>
       <span role="tooltip" translate="">filterData</span>
     </button>
     <div
@@ -221,34 +200,21 @@
       aria-label="{{'processesTool' | translate}}"
     >
       <span class="fa fa-cogs"></span>
-      <span class="label" ng-show="showToolLabels" translate=""
-        >processesTool</span
-      >
+      <span class="label" ng-show="showToolLabels" translate="">processesTool</span>
       <span role="tooltip" translate="">processesTool</span>
     </button>
-    <div
-      class="panel panel-default panel-tools"
-      ng-show="activeTools.processes"
-    >
+    <div class="panel panel-default panel-tools" ng-show="activeTools.processes">
       <div class="panel-heading">
         <h3>{{'processesTool' | translate}}</h3>
       </div>
       <div class="panel-body">
         <p translate="" class="text-muted">WPSDescription</p>
         <tabset class="info-tabset">
-          <tab
-            heading="{{'wpsByUrl' | translate}}"
-            active="wpsTabs.byUrl"
-            role="tab"
-          >
+          <tab heading="{{'wpsByUrl' | translate}}" active="wpsTabs.byUrl" role="tab">
             <br />
             <gn-wps-url-discovery wps-link="selectedWps" />
           </tab>
-          <tab
-            heading="{{'wpsRecent' | translate}}"
-            active="wpsTabs.recent"
-            role="tab"
-          >
+          <tab heading="{{'wpsRecent' | translate}}" active="wpsTabs.recent" role="tab">
             <br />
             <gn-wps-recent-list wps-link="selectedWps" />
           </tab>
@@ -327,9 +293,7 @@
       </div>
       <div class="panel-body">
         <div class="gn-measure-text">
-          <div class="text-muted hidden-print" translate>
-            measure_instruction
-          </div>
+          <div class="text-muted hidden-print" translate>measure_instruction</div>
           <dl class="dl-horizontal">
             <dt>{{'Distance' | translate}}</dt>
             <dd>{{measureObj.distance}}</dd>
@@ -350,9 +314,7 @@
       aria-label="{{'Annotations' | translate}}"
     >
       <span class="fa fa-pencil"></span>
-      <span class="label" ng-show="showToolLabels" translate=""
-        >Annotations</span
-      >
+      <span class="label" ng-show="showToolLabels" translate="">Annotations</span>
       <span role="tooltip" translate="">Annotations</span>
     </button>
     <div class="panel panel-default panel-tools" ng-show="drawVector.active">
@@ -360,12 +322,7 @@
         <h3>{{'Annotations' | translate}}</h3>
       </div>
       <div class="panel-body">
-        <div
-          class="gn-draw-styleform"
-          gn-draw=""
-          map="map"
-          vector="drawVector"
-        ></div>
+        <div class="gn-draw-styleform" gn-draw="" map="map" vector="drawVector"></div>
       </div>
     </div>
 
@@ -376,13 +333,8 @@
       ng-hide="disabledTools.syncAllLayers"
       aria-label="{{'syncAllLayers' | translate}}"
     >
-      <span
-        class="fa fa-sync"
-        ng-class="syncAllLayers ? 'fa-lock' : 'fa-unlock'"
-      />
-      <span class="label" ng-show="showToolLabels" translate=""
-        >syncAllLayers</span
-      >
+      <span class="fa fa-sync" ng-class="syncAllLayers ? 'fa-lock' : 'fa-unlock'" />
+      <span class="label" ng-show="showToolLabels" translate="">syncAllLayers</span>
       <span role="tooltip" translate="">syncAllLayers</span>
     </button>
   </div>
@@ -423,19 +375,11 @@
       data-ng-click="switch2D3D(map)"
       aria-label="{{'switchFrom2DTo3D' | translate}}"
     >
-      <span class="badge badge-left badge-2d" data-ng-hide="is3dEnabled"
-        >2D</span
-      >
-      <span class="badge badge-left badge-3d" data-ng-show="is3dEnabled"
-        >3D</span
-      >
+      <span class="badge badge-left badge-2d" data-ng-hide="is3dEnabled">2D</span>
+      <span class="badge badge-left badge-3d" data-ng-show="is3dEnabled">3D</span>
       <span class="fa fa-cube" />
-      <span class="badge badge-right badge-2d" data-ng-hide="is3dEnabled"
-        >2D</span
-      >
-      <span class="badge badge-right badge-3d" data-ng-show="is3dEnabled"
-        >3D</span
-      >
+      <span class="badge badge-right badge-2d" data-ng-hide="is3dEnabled">2D</span>
+      <span class="badge badge-right badge-3d" data-ng-show="is3dEnabled">3D</span>
       <span role="tooltip" data-translate="">switchFrom2DTo3D</span>
     </button>
     <button
