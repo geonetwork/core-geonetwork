@@ -99,6 +99,8 @@ public class Thesaurus {
 
     private String date;
 
+    private boolean isFileSystemDate;
+
     private String defaultNamespace;
 
     private String downloadUrl;
@@ -256,6 +258,10 @@ public class Thesaurus {
 
     public String getDate() {
         return date;
+    }
+
+    public boolean isFileSystemDate() {
+        return isFileSystemDate;
     }
 
     @Nonnull
@@ -996,6 +1002,7 @@ public class Thesaurus {
                 }
                 if (this.date == null) {
                     this.date = new ISODate(lastModifiedTime.toMillis(), true).toString();
+                    this.isFileSystemDate = true;
                 }
             }
 

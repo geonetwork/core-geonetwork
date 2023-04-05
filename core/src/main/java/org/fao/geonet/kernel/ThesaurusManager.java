@@ -551,6 +551,10 @@ public class ThesaurusManager implements ThesaurusFinder {
             String date = currentTh.getDate();
             elDate.addContent(date);
 
+            Element elIsFileSystemDate = new Element("isFileSystemDate");
+            boolean isFileSystemDate = currentTh.isFileSystemDate();
+            elIsFileSystemDate.addContent(Boolean.toString(isFileSystemDate));
+
             Element elUrl = new Element("url");
             String url = currentTh.getDownloadUrl();
             elUrl.addContent(url);
@@ -568,6 +572,7 @@ public class ThesaurusManager implements ThesaurusFinder {
             elLoop.addContent(elDublinCoreMultilingual);
             elLoop.addContent(elMultilingualDescriptions);
             elLoop.addContent(elDate);
+            elLoop.addContent(elIsFileSystemDate);
             elLoop.addContent(elUrl);
             elLoop.addContent(elDefaultURI);
             elLoop.addContent(elType);
