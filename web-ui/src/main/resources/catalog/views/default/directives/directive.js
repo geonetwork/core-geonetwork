@@ -178,6 +178,26 @@
             }
           };
 
+          /**
+           * Display the publication / un-publication option. Checks:
+           *   - User can review the metadata.
+           *   - It's not a draft.
+           *   - Retired metadata can't be published.
+           *   - The user profile can publish / unpublish the metadata.
+           * @param md
+           * @param user
+           * @returns {*|boolean|false|boolean}
+           */
+          scope.displayPublicationOption = function (md, user) {
+            return (
+              md.canReview &&
+              md.draft != "y" &&
+              md.mdStatus != 3 &&
+              ((md.isPublished() && user.canUnpublishMetadata()) ||
+                (!md.isPublished() && user.canPublishMetadata()))
+            );
+          };
+
           loadTasks();
 
           scope.$watch(attrs.gnMdActionsMenu, function (a) {

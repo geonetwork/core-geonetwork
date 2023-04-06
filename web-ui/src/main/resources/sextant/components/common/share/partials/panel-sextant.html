@@ -75,7 +75,8 @@
             <input
               type="checkbox"
               name="{{g.group + '-' + key}}"
-              data-ng-disabled="!isAdminOrReviewer"
+              data-ng-disabled="::!enabledReservedGroups(g.operations[key])"
+              title="{{::tooltipReservedGroups(g.operations[key])}}"
               data-ng-class="internalGroups.indexOf(g.group) != -1 &&
                                 internalOperations.indexOf(key) != -1 ? 'hidden' : ''"
               data-ng-model="g.operations[key]"
@@ -84,7 +85,7 @@
           <td data-ng-if="!disableAllCol">
             <input
               type="checkbox"
-              data-ng-disabled="::!isAdminOrReviewer"
+              data-ng-disabled="::!enabledReservedGroupsSelectAll()"
               data-ng-click="checkAll(g)"
               data-ng-model="g.isCheckedAll"
             />
