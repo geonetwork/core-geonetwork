@@ -72,9 +72,9 @@ import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.MetadataDraftRepository;
 import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.repository.Updater;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
+import org.fao.geonet.util.UserUtil;
 import org.fao.geonet.utils.FilePathChecker;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
@@ -90,8 +90,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -100,7 +98,6 @@ import javax.annotation.Nonnull;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
@@ -123,13 +120,13 @@ public class MetadataInsertDeleteApi {
     public static final String API_PARAM_REPORT_ABOUT_IMPORTED_RECORDS = "Report about imported records.";
     public static final String API_PARAM_RECORD_GROUP = "The group the record is attached to.";
     public static final String API_PARAM_RECORD_UUID_PROCESSING = "Record identifier processing.";
-    private final String API_PARAM_RECORD_TAGS = "Tags to assign to the record.";
-    private final String API_PARAM_RECORD_VALIDATE = "Validate the record first and reject it if not valid.";
-    private final String API_PARAM_RECORD_XSL = "XSL transformation to apply to the record.";
-    private final String API_PARAM_FORCE_SCHEMA = "Force the schema of the record. If not set, schema autodetection "
+    private static final String API_PARAM_RECORD_TAGS = "Tags to assign to the record.";
+    private static final String API_PARAM_RECORD_VALIDATE = "Validate the record first and reject it if not valid.";
+    private static final String API_PARAM_RECORD_XSL = "XSL transformation to apply to the record.";
+    private static final String API_PARAM_FORCE_SCHEMA = "Force the schema of the record. If not set, schema autodetection "
         + "is used (and is the preferred method).";
-    private final String API_PARAM_BACKUP_FIRST = "Backup first the record as MEF in the metadata removed folder.";
-    private final String API_PARAM_RECORD_TYPE = "The type of record.";
+    private static final String API_PARAM_BACKUP_FIRST = "Backup first the record as MEF in the metadata removed folder.";
+    private static final String API_PARAM_RECORD_TYPE = "The type of record.";
     @Autowired
     MetadataDraftRepository metadataDraftRepository;
     @Autowired
@@ -256,7 +253,7 @@ public class MetadataInsertDeleteApi {
                     try {
                         checkUserProfileToDeletePublishedMetadata(userSession);
                     } catch (NotAllowedException ex) {
-                        report.addMetadataInfos(metadata, "The user has no permissions to delete published metadata.");
+                        report.addMetadataInfos(metadata, ex.getMessage());
                         continue;
                     }
                 }
@@ -315,8 +312,7 @@ public class MetadataInsertDeleteApi {
         @Parameter(description = "(experimental) Add extra information to the record.", required = false) @RequestParam(required = false) final String extra,
          HttpServletRequest request) throws Exception {
 
-        Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
-        ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages", locale);
+        ResourceBundle messages = ApiUtils.getMessagesResourceBundle(request.getLocales());
 
         if (url == null && xml == null && serverFolder == null) {
             throw new IllegalArgumentException(
@@ -466,8 +462,7 @@ public class MetadataInsertDeleteApi {
         @Parameter(description = "Copy attachments from source?", required = false) @RequestParam(required = false, defaultValue = "true") final boolean hasAttachmentsOfSource,
         @Parameter(hidden = true) HttpSession httpSession, HttpServletRequest request) throws Exception {
 
-        Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
-        ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages", locale);
+        ResourceBundle messages = ApiUtils.getMessagesResourceBundle(request.getLocales());
 
         AbstractMetadata sourceMetadata = ApiUtils.getRecord(sourceUuid);
 
@@ -500,7 +495,7 @@ public class MetadataInsertDeleteApi {
 
             final List<UserGroup> userGroups = userGroupRepository.findAll(spec);
 
-            if (userGroups.size() == 0) {
+            if (userGroups.isEmpty()) {
                 throw new SecurityException(
                     messages.getString("api.metadata.import.errorNotEditorInGroup"));
             }
@@ -582,8 +577,7 @@ public class MetadataInsertDeleteApi {
             + "If not, only the author and administrator can edit the record.", required = false) @RequestParam(required = false, defaultValue = "false") final boolean allowEditGroupMembers,
         HttpServletRequest request) throws Exception {
 
-        Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
-        ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages", locale);
+        ResourceBundle messages = ApiUtils.getMessagesResourceBundle(request.getLocales());
 
         if (file == null) {
             throw new IllegalArgumentException(messages.getString("api.metadata.import.errorFileRequired"));
@@ -672,7 +666,7 @@ public class MetadataInsertDeleteApi {
         @Parameter(description = API_PARAM_RECORD_GROUP, required = false) @RequestParam(required = false) final String group,
         HttpServletRequest request) throws Exception {
         if (StringUtils.isEmpty(xml) && StringUtils.isEmpty(url)) {
-            throw new IllegalArgumentException(String.format("A context as XML or a remote URL MUST be provided."));
+            throw new IllegalArgumentException("A context as XML or a remote URL MUST be provided.");
         }
         if (StringUtils.isEmpty(xml) && StringUtils.isEmpty(filename)) {
             throw new IllegalArgumentException(String.format("A context as XML will be saved as a record attachment. "
@@ -685,7 +679,7 @@ public class MetadataInsertDeleteApi {
         FilePathChecker.verify(filename);
 
         // Convert the context in an ISO19139 records
-        Map<String, Object> xslParams = new HashMap<String, Object>();
+        Map<String, Object> xslParams = new HashMap<>();
         xslParams.put("viewer_url", viewerUrl);
         xslParams.put("map_url", url);
         xslParams.put("topic", topic);
@@ -716,8 +710,8 @@ public class MetadataInsertDeleteApi {
         String date = new ISODate().toString();
         SimpleMetadataProcessingReport report = new SimpleMetadataProcessingReport();
 
-        final List<String> id = new ArrayList<String>();
-        final List<Element> md = new ArrayList<Element>();
+        final List<String> id = new ArrayList<>();
+        final List<Element> md = new ArrayList<>();
 
         md.add(transformedMd);
 
@@ -726,7 +720,6 @@ public class MetadataInsertDeleteApi {
             settingManager.getSiteName(), null, context, id, date, date, group, MetadataType.METADATA);
 
         final Store store = context.getBean("resourceStore", Store.class);
-        final IMetadataUtils metadataUtils = context.getBean(IMetadataUtils.class);
         final String metadataUuid = metadataUtils.getMetadataUuid(id.get(0));
 
         // Save the context if no context-url provided
@@ -735,7 +728,7 @@ public class MetadataInsertDeleteApi {
                 MetadataResourceVisibility.PUBLIC, true);
 
             // Update the MD
-            Map<String, Object> onlineSrcParams = new HashMap<String, Object>();
+            Map<String, Object> onlineSrcParams = new HashMap<>();
             onlineSrcParams.put("protocol", "OGC:OWS-C");
             onlineSrcParams.put("url",
                 settingManager.getNodeURL() + String.format("api/records/%s/attachments/%s", uuid, filename));
@@ -753,7 +746,7 @@ public class MetadataInsertDeleteApi {
                 MetadataResourceVisibility.PUBLIC, true);
 
             // Update the MD
-            Map<String, Object> onlineSrcParams = new HashMap<String, Object>();
+            Map<String, Object> onlineSrcParams = new HashMap<>();
             onlineSrcParams.put("thumbnail_url", settingManager.getNodeURL()
                 + String.format("api/records/%s/attachments/%s", uuid, overviewFilename));
             transformedMd = Xml.transform(transformedMd,
@@ -765,15 +758,15 @@ public class MetadataInsertDeleteApi {
 
         int iId = Integer.parseInt(id.get(0));
         if (publishToAll) {
-            dataManager.setOperation(context, iId, ReservedGroup.all.getId(), ReservedOperation.view.getId());
-            dataManager.setOperation(context, iId, ReservedGroup.all.getId(), ReservedOperation.download.getId());
-            dataManager.setOperation(context, iId, ReservedGroup.all.getId(), ReservedOperation.dynamic.getId());
+            metadataOperations.setOperation(context, iId, ReservedGroup.all.getId(), ReservedOperation.view.getId());
+            metadataOperations.setOperation(context, iId, ReservedGroup.all.getId(), ReservedOperation.download.getId());
+            metadataOperations.setOperation(context, iId, ReservedGroup.all.getId(), ReservedOperation.dynamic.getId());
         }
         if (StringUtils.isNotEmpty(group)) {
             int gId = Integer.parseInt(group);
-            dataManager.setOperation(context, iId, gId, ReservedOperation.view.getId());
-            dataManager.setOperation(context, iId, gId, ReservedOperation.download.getId());
-            dataManager.setOperation(context, iId, gId, ReservedOperation.dynamic.getId());
+            metadataOperations.setOperation(context, iId, gId, ReservedOperation.view.getId());
+            metadataOperations.setOperation(context, iId, gId, ReservedOperation.download.getId());
+            metadataOperations.setOperation(context, iId, gId, ReservedOperation.dynamic.getId());
         }
 
         dataManager.indexMetadata(id);
@@ -862,8 +855,7 @@ public class MetadataInsertDeleteApi {
 
         ServiceContext context = ApiUtils.createServiceContext(request);
 
-        Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
-        ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages", locale);
+        ResourceBundle messages = ApiUtils.getMessagesResourceBundle(request.getLocales());
 
         if (!transformWith.equals("_none_")) {
             FilePathChecker.verify(transformWith);
@@ -925,8 +917,8 @@ public class MetadataInsertDeleteApi {
 
         String date = new ISODate().toString();
 
-        final List<String> id = new ArrayList<String>();
-        final List<Element> md = new ArrayList<Element>();
+        final List<String> id = new ArrayList<>();
+        final List<Element> md = new ArrayList<>();
         md.add(xmlElement);
 
         // Import record
@@ -965,12 +957,9 @@ public class MetadataInsertDeleteApi {
         }
 
         if (extra != null) {
-            metadataRepository.update(iId, new Updater<Metadata>() {
-                @Override
-                public void apply(@Nonnull Metadata metadata) {
-                    if (extra != null) {
-                        metadata.getDataInfo().setExtra(extra);
-                    }
+            metadataRepository.update(iId, metadata -> {
+                if (extra != null) {
+                    metadata.getDataInfo().setExtra(extra);
                 }
             });
         }
@@ -997,7 +986,7 @@ public class MetadataInsertDeleteApi {
                 StringUtils.defaultIfBlank(settingManager.getValue(Settings.METADATA_IMPORT_USERPROFILE), Profile.Editor.toString());
 
             // Is the user profile is higher than the profile allowed to import metadata?
-            if (!hasHierarchyRole(allowedUserProfileToImportMetadata, this.roleHierarchy)) {
+            if (!UserUtil.hasHierarchyRole(allowedUserProfileToImportMetadata, this.roleHierarchy)) {
                 throw new NotAllowedException("The user has no permissions to import metadata.");
             }
         }
@@ -1015,32 +1004,10 @@ public class MetadataInsertDeleteApi {
                 StringUtils.defaultIfBlank(settingManager.getValue(Settings.METADATA_PUBLISHED_DELETE_USERPROFILE), Profile.Editor.toString());
 
             // Is the user profile is higher than the profile allowed to import metadata?
-            if (!hasHierarchyRole(allowedUserProfileToImportMetadata, this.roleHierarchy)) {
+            if (!UserUtil.hasHierarchyRole(allowedUserProfileToImportMetadata, this.roleHierarchy)) {
                 throw new NotAllowedException("The user has no permissions to delete published metadata.");
             }
         }
 
     }
-
-    /**
-     * Checks if the current user has a role using the role hierarchy.
-     *
-     * @param role  Role to check.
-     * @param roleHierarchy  Role hierarchy.
-     * @return true if the current user has a role using the role hierarchy, otherwise false.
-     */
-    private boolean hasHierarchyRole(String role, RoleHierarchy roleHierarchy) {
-        Collection<? extends GrantedAuthority> authorities = SecurityContextHolder.getContext().getAuthentication().getAuthorities();
-
-        Collection<? extends GrantedAuthority> hierarchyAuthorities = roleHierarchy.getReachableGrantedAuthorities(authorities);
-
-        for (GrantedAuthority authority : hierarchyAuthorities) {
-            if (authority.getAuthority().equals(role)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
 }

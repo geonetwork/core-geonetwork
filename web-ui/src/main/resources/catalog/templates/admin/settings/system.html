@@ -203,6 +203,37 @@
                         </option>
                       </select>
 
+                      <select
+                        data-ng-switch-when="metadata/publication/profilePublishMetadata"
+                        class="form-control"
+                        name="{{s.name}}"
+                      >
+                        <option value="Reviewer" ng-selected="'Reviewer' == s.value">
+                          {{'Reviewer' | translate}}
+                        </option>
+                        <option
+                          value="Administrator"
+                          ng-selected="'Administrator' == s.value"
+                        >
+                          {{'Administrator' | translate}}
+                        </option>
+                      </select>
+
+                      <select
+                        data-ng-switch-when="metadata/publication/profileUnpublishMetadata"
+                        class="form-control"
+                        name="{{s.name}}"
+                      >
+                        <option value="Reviewer" ng-selected="'Reviewer' == s.value">
+                          {{'Reviewer' | translate}}
+                        </option>
+                        <option
+                          value="Administrator"
+                          ng-selected="'Administrator' == s.value"
+                        >
+                          {{'Administrator' | translate}}
+                        </option>
+                      </select>
                       <div data-ng-switch-when="system/metadatacreate/preferredGroup">
                         <input
                           type="hidden"
