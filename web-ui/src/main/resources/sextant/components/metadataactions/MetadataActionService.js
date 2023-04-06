@@ -69,6 +69,7 @@
       $http,
       gnConfig
     ) {
+      var sextantUrlPrefix = gnGlobalSettings.gnUrl ? gnGlobalSettings.gnUrl : "";
       var windowName = "geonetwork";
       var windowOption = "";
       var translations = null;
@@ -101,7 +102,7 @@
        * @param {boolean} child
        */
       var duplicateMetadata = function (id, child) {
-        var url = "catalog.edit#/";
+        var url = sextantUrlPrefix + "catalog.edit#/";
         if (id) {
           if (child) {
             url += "create?childOf=" + id;
@@ -156,7 +157,7 @@
       this.metadataPrint = function (params, bucket) {
         var url;
         if (angular.isObject(params) && params.sortBy) {
-          url = "../api/records/pdf";
+          url = sextantUrlPrefix + "../api/records/pdf";
           url += "?sortBy=" + params.sortBy;
           if (params.sortOrder) {
             url += "&sortOrder=" + params.sortOrder;
@@ -192,7 +193,7 @@
        * @param {string} uuid
        */
       this.metadataMEF = function (uuid, bucket, approved) {
-        var url = "../api/records/zip?";
+        var url = sextantUrlPrefix + "../api/records/zip?";
         url += angular.isDefined(uuid) ? "&uuids=" + uuid : "";
         url += angular.isDefined(bucket) ? "&bucket=" + bucket : "";
         url += angular.isDefined(approved) ? "&approved=" + approved : "";
@@ -201,7 +202,7 @@
       };
 
       this.exportCSV = function (bucket) {
-        window.open("../api/records/csv" + "?bucket=" + bucket, windowName, windowOption);
+        window.open(sextantUrlPrefix + "../api/records/csv" + "?bucket=" + bucket, windowName, windowOption);
       };
       this.validateMdLinks = function (bucket) {
         $rootScope.$broadcast("operationOnSelectionStart");
