@@ -35,7 +35,7 @@
         data-ng-click="ctrl.currentTable = 'summary'"
         title="{{'summary' | translate}}"
       >
-        <i class="fa fa-fw fa-info-circle" />
+        <i class="fa fa-fw fa-lg fa-info-circle" />
       </a>
     </li>
   </ul>
@@ -43,8 +43,18 @@
   <div class="tab-content" data-ng-show="ctrl.currentTable == 'summary'">
     <ul>
       <li data-ng-repeat="table in ctrl.tables">
-        <span>{{table.name}}</span>&nbsp; {{table.loader.getCount()}}
-        <span data-translate="">features</span>
+        <a
+          href=""
+          data-ng-show="!table.loader.isLoading() && table.loader.getCount() > 0"
+          data-ng-click="ctrl.currentTable = table"
+        >
+          <span>{{table.name}}</span>&nbsp; {{table.loader.getCount()}}
+          <span data-translate="">features</span>
+        </a>
+        <span data-ng-hide="!table.loader.isLoading() && table.loader.getCount() > 0">
+          <span>{{table.name}}</span>&nbsp; {{table.loader.getCount()}}
+          <span data-translate="">features</span>
+        </span>
       </li>
     </ul>
   </div>
