@@ -715,7 +715,7 @@
 
           <xsl:for-each select="current-group()">
             <xsl:sort select="cit:name/*/text()"/>
-            <div>
+            <div class="gn-margin-top">
               <xsl:choose>
                 <xsl:when test="cit:protocol/*/text() = 'WWW:OPENSEARCH'">
                   <xsl:value-of select="cit:description/*/text()"/>:
