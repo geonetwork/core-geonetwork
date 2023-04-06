@@ -474,6 +474,7 @@
                                 );
                               if (found === preferedOutputFormat) {
                                 input.outputFormat = found;
+                                input.mimeType = f.mimeType;
                                 break;
                               }
                             }
@@ -485,6 +486,7 @@
                                 gnGeometryService.getFormatFromMimeType(
                                   input.complexData._default.format.mimeType
                                 );
+                              input.mimeType = input.complexData._default.format.mimeType;
                             }
 
                             // check if geom can be multi
@@ -904,16 +906,25 @@
 
             scope.running = true;
             scope.executeState = "sent";
-            gnWpsService.execute(processUri, processId, inputs, output).then(
-              function (response) {
-                processResponse(response);
-              },
-              function (response) {
-                scope.executeState = "failed";
-                scope.executeResponse = response;
-                scope.running = false;
-              }
-            );
+            // gnWpsService.execute(processUri, processId, inputs, output).then(
+            gnWpsService
+              .executeWithoutDescribe(
+                processUri,
+                processId,
+                scope.processDescription,
+                inputs,
+                output
+              )
+              .then(
+                function (response) {
+                  processResponse(response);
+                },
+                function (response) {
+                  scope.executeState = "failed";
+                  scope.executeResponse = response;
+                  scope.running = false;
+                }
+              );
 
             // update local storage
             if ($window.localStorage) {

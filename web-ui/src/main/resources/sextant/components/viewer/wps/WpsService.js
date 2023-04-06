@@ -224,7 +224,8 @@
             });
           }
           if (input.complexData && data) {
-            var mimeType = input.complexData._default.format.mimeType;
+            // Use selected mimeType when analyzing describe process
+            var mimeType = input.mimeType || complexData._default.format.mimeType;
             request.value.dataInputs.input.push({
               identifier: {
                 value: input.identifier.value
@@ -346,6 +347,34 @@
               }
             );
         });
+
+        return defer.promise;
+      };
+
+      this.executeWithoutDescribe = function (
+        uri,
+        processId,
+        description,
+        inputs,
+        responseDocument
+      ) {
+        var defer = $q.defer();
+        var me = this;
+        var message = me.printExecuteMessage(description, inputs, responseDocument);
+
+        $http
+          .post(uri, message, {
+            headers: { "Content-Type": "application/xml" }
+          })
+          .then(
+            function (data) {
+              var response = unmarshaller.unmarshalString(data.data).value;
+              defer.resolve(response);
+            },
+            function (data) {
+              defer.reject(data);
+            }
+          );
 
         return defer.promise;
       };
