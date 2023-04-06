@@ -79,11 +79,10 @@
       >
     </li>
 
-    <li role="menuitem" data-ng-show="isMdWorkflowEnable" class="divider" />
     <li
       role="menuitem"
       class="divider"
-      data-ng-show="user.canEditRecord(md) && isMdWorkflowEnable && (md.mdStatus == 1 || md.mdStatus == 4)"
+      data-ng-show="user.canEditRecord(md) && isMdWorkflowEnable"
     ></li>
     <li
       role="menuitem"

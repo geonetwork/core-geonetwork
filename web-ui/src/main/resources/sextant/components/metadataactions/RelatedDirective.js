@@ -43,11 +43,11 @@
   /**
    * Sextant / Fix relative link to after # part to have working links in API mode.
    */
-  module.filter('sextantApiLink', function() {
-    return function(input) {
-      input = input || '';
-      return input.replace(/..\/..\/srv\/(eng|fre)\/catalog.search/, '');
-    }
+  module.filter("sextantApiLink", function () {
+    return function (input) {
+      input = input || "";
+      return input.replace(/..\/..\/srv\/(eng|fre)\/catalog.search/, "");
+    };
   });
 
   /**
