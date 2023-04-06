@@ -118,11 +118,7 @@
       $scope.isLoadingGroups = false;
 
       gnConfigService.load().then(function (c) {
-<<<<<<< HEAD
-        // take the bigger of the two values 
-=======
         // take the bigger of the two values
->>>>>>> 160fa0d6fd35dfb8f6199a446069b653284fc7f6
         $scope.passwordMinLength = Math.max(
           gnConfig["system.security.passwordEnforcement.minLength"],
           6
