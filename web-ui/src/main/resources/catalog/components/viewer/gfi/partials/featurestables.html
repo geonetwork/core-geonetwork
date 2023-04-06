@@ -10,6 +10,7 @@
   <ul class="nav nav-tabs" data-ng-show="ctrl.tables.length > 1">
     <li
       data-ng-repeat="table in ctrl.tables"
+      data-ng-show="table.loader.getCount() > 0"
       data-ng-class="{active: table == ctrl.currentTable}"
     >
       <a role="tab" data-ng-click="ctrl.currentTable = table" title="{{::table.name}}">
@@ -18,20 +19,56 @@
           <i class="fa fa-spin fa-spinner"></i>
         </span>
         <span
-          ng-init="ctrl.currentTable=table"
+          ng-init="ctrl.currentTable = table"
           ng-if="!table.loader.isLoading() && table.loader.getCount() > 0"
           class="badge"
           >{{table.loader.getCount()}}</span
         >
       </a>
     </li>
+    <li
+      data-ng-show="ctrl.tables.length > 1"
+      data-ng-class="{active: 'summary' == ctrl.currentTable}"
+    >
+      <a
+        role="tab"
+        data-ng-click="ctrl.currentTable = 'summary'"
+        title="{{'summary' | translate}}"
+      >
+        <i class="fa fa-fw fa-lg fa-info-circle" />
+      </a>
+    </li>
   </ul>
 
+  <div class="tab-content" data-ng-show="ctrl.currentTable == 'summary'">
+    <ul>
+      <li data-ng-repeat="table in ctrl.tables">
+        <a
+          href=""
+          data-ng-show="!table.loader.isLoading() && table.loader.getCount() > 0"
+          data-ng-click="ctrl.currentTable = table"
+        >
+          <span>{{table.name}}</span>&nbsp; {{table.loader.getCount()}}
+          <span data-translate="">features</span>
+        </a>
+        <span data-ng-hide="!table.loader.isLoading() && table.loader.getCount() > 0">
+          <span>{{table.name}}</span>&nbsp; {{table.loader.getCount()}}
+          <span data-translate="">features</span>
+        </span>
+      </li>
+    </ul>
+  </div>
   <div
     class="tab-content"
     data-ng-show="ctrl.currentTable == table"
     ng-repeat="table in ctrl.tables"
   >
+    <div class="pull-left">
+      <strong>
+        <span>{{table.name}}</span>&nbsp; {{table.loader.getCount()}}
+        <span data-translate="">features</span>
+      </strong>
+    </div>
     <gn-features-table
       gn-features-table-loader="table.loader"
       gn-features-table-loader-map="ctrl.map"
