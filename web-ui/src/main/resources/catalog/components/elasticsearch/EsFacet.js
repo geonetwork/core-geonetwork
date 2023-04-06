@@ -37,25 +37,22 @@
         includes: [
           "uuid",
           "id",
-          "creat*",
-          "group*",
+          "groupOwner",
           "logo",
-          "category",
-          "cl_topic*",
-          "inspire*",
-          "resource*",
-          "draft*",
-          "overview.*",
-          "owner*",
-          "link*",
-          "image*",
+          "cat",
+          "inspireThemeUri",
+          "inspireTheme_syn",
+          "cl_topic",
+          "resourceType",
+          "resourceTitle*",
+          "resourceAbstract*",
+          "draft",
+          "owner",
+          "link",
           "status*",
           "rating",
-          "tag*",
           "geom",
-          "contact*",
-          "*Org*",
-          "hasBoundingPolygon",
+          "Org*",
           "isTemplate",
           "valid",
           "isHarvested",
@@ -63,14 +60,41 @@
           "documentStandard",
           "standardNameObject.default",
           "cl_status*",
-          "mdStatus*",
-          "recordLink"
+          "mdStatus*"
         ]
+      };
+      var minimalSource = {
+        includes: [
+          "id",
+          "uuid",
+          "resourceTitle*",
+          "resourceAbstract*",
+          "resourceType",
+          "cl_status*"
+        ]
+      };
+      var defaultScriptedFields = {
+        // Collect only first overview in search results.
+        overview: {
+          script: {
+            source:
+              "return params['_source'].overview == null ? [] : params['_source'].overview.stream().findFirst().orElse([]);"
+          }
+        }
+      };
+      this.buildDefaultQuery = function (query, size) {
+        return {
+          script_fields: defaultScriptedFields,
+          _source: minimalSource,
+          size: size || 1,
+          query: query || {}
+        };
       };
       this.configs = {
         search: {
           facets: gnGlobalSettings.gnCfg.mods.search.facetConfig,
           source: defaultSource,
+          script_fields: defaultScriptedFields,
           track_total_hits: true
         },
         home: {
@@ -82,12 +106,12 @@
               "creat*",
               "cl_topic*",
               "inspire*",
-              "overview.*",
               "resource*",
               "image*",
               "tag*"
             ]
-          }
+          },
+          script_fields: defaultScriptedFields
         },
         editor: {
           facets: gnGlobalSettings.gnCfg.mods.editor.facetConfig,
@@ -117,15 +141,7 @@
         harvester: {
           facets: gnGlobalSettings.gnCfg.mods.admin.facetConfig,
           source: {
-            includes: [
-              "id",
-              "uuid",
-              "overview.*",
-              "resource*",
-              "isTemplate",
-              "valid",
-              "index*"
-            ]
+            includes: ["id", "uuid", "resource*", "isTemplate", "valid", "index*"]
           },
           track_total_hits: true
         },
@@ -176,16 +192,9 @@
         simplelist: {
           facets: {},
           source: {
-            includes: [
-              "id",
-              "uuid",
-              "overview.*",
-              "resource*",
-              "link",
-              "format",
-              "cl_status.key"
-            ]
-          }
+            includes: ["id", "uuid", "resource*", "link", "format", "cl_status.key"]
+          },
+          script_fields: defaultScriptedFields
         },
         recordsWithErrors: {
           facets: {
@@ -303,6 +312,9 @@
         }
         var source = typeof type === "string" ? this.configs[type].source : type;
         esParams._source = source;
+        if (this.configs[type].script_fields) {
+          esParams.script_fields = this.configs[type].script_fields;
+        }
 
         // By default limit to 10000.
         // Set to true will be a bit slower

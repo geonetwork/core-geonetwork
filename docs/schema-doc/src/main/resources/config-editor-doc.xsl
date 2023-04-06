@@ -40,11 +40,11 @@
     <xsl:text>Customizing editor&#13;</xsl:text>
     <xsl:text>##################&#13;&#13;&#13;</xsl:text>
     <xsl:text>.. warning::&#13;</xsl:text>
-    <xsl:text>This file is produced automatically from the geonetwork-core repository.</xsl:text>
-    <xsl:text>To make any suggestions to the content of the page please add your changes to</xsl:text>
-    <xsl:text>`core-geonetwork/schemas/config.editor.xsd <https://github.com/geonetwork/core-geonetwork/blob/main/schemas/config-editor.xsd>`__.&#13;&#13;</xsl:text>
-    
-    <xsl:for-each select="//xs:element[@name = $elements]">
+    <xsl:text>  This file is produced automatically from the geonetwork-core repository.</xsl:text>
+    <xsl:text>  To make any suggestions to the content of the page please add your changes to</xsl:text>
+    <xsl:text>  `core-geonetwork/schemas/config.editor.xsd &lt;https://github.com/geonetwork/core-geonetwork/blob/main/schemas/config-editor.xsd&gt;`__.&#13;&#13;</xsl:text>
+
+    <xsl:for-each select="//xs:element[@name = $elements and not(ancestor::xs:element[@name = 'batchEditing'])]">
 
       <!-- Documentation for the current element -->
       <xsl:text>.. _creating-custom-editor-</xsl:text><xsl:value-of select="@name"/><xsl:text>:</xsl:text>

@@ -118,7 +118,11 @@
       $scope.isLoadingGroups = false;
 
       gnConfigService.load().then(function (c) {
+<<<<<<< HEAD
         // take the bigger of the two values 
+=======
+        // take the bigger of the two values
+>>>>>>> 160fa0d6fd35dfb8f6199a446069b653284fc7f6
         $scope.passwordMinLength = Math.max(
           gnConfig["system.security.passwordEnforcement.minLength"],
           6
@@ -848,6 +852,27 @@
       });
 
       return filtered;
+    };
+  });
+
+  /**
+   * Directive to check the password confirmation field
+   * and set the form validation status.
+   */
+  module.directive("gnValidPasswordConfirmation", function () {
+    return {
+      require: "ngModel",
+      link: function (scope, elm, attrs, ctrl) {
+        ctrl.$setValidity("noMatch", true);
+
+        attrs.$observe("gnValidPasswordConfirmation", function (newVal) {
+          if (newVal === "true") {
+            ctrl.$setValidity("noMatch", true);
+          } else {
+            ctrl.$setValidity("noMatch", false);
+          }
+        });
+      }
     };
   });
 })();

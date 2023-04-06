@@ -113,22 +113,19 @@
       };
 
       /**
-       * Prepare name and description parameters
+       * Prepare name and url parameters
        * if we are adding resource with layers.
        *
        * Parse all selected layers, extract name
-       * and title to build name and desc params like
+       * and title to build name param like
        *   name : name1,name2,name3
-       *   desc : title1,title2,title3
        */
       var setLayersParams = function (params) {
         if (angular.isArray(params.selectedLayers) && params.selectedLayers.length > 0) {
-          var names = [],
-            descs = [];
+          var names = [];
 
           angular.forEach(params.selectedLayers, function (layer) {
             names.push(layer.Name || layer.name);
-            descs.push(layer.Title || layer.title);
           });
 
           var addLayersInUrl = params.addLayersInUrl;
@@ -143,8 +140,7 @@
 
           if (params.wmsResources.addLayerNamesMode == "resourcename") {
             angular.extend(params, {
-              name: names.join(","),
-              desc: descs.join(",")
+              name: names.join(",")
             });
           }
         }

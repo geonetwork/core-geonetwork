@@ -658,6 +658,9 @@
         var source = k._source;
         delete k._source;
         $.extend(true, this, k, source);
+        var fields = k.fields;
+        delete k.fields;
+        $.extend(true, this, k, fields);
 
         var record = this;
 

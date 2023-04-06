@@ -880,6 +880,10 @@
                 }
 
                 scope.isEditing = angular.isDefined(linkToEdit);
+                // Flag used when editing an online resource to prevent the watcher to update the online
+                // resource description when loading the dialog.
+                scope.processSelectedWMSLayer = false;
+
                 scope.codelistFilter =
                   scope.gnCurrentEdit && scope.gnCurrentEdit.codelistFilter;
 
@@ -1475,11 +1479,22 @@
                * them to the record.
                */
               scope.$watchCollection("params.selectedLayers", function (n, o) {
+                if (scope.config.wmsResources.addLayerNamesMode != "resourcename") {
+                  return;
+                }
+
                 if (
                   o !== n &&
                   scope.params.selectedLayers &&
                   scope.params.selectedLayers.length > 0
                 ) {
+                  // To avoid setting the online resource description to the WMS layer description, when loading
+                  // the dialog to edit it, so it is preserved the value from the online resource description.
+                  if (scope.isEditing && !scope.processSelectedWMSLayer) {
+                    scope.processSelectedWMSLayer = true;
+                    return;
+                  }
+
                   var names = [],
                     descs = [];
 
@@ -1488,17 +1503,15 @@
                     descs.push(layer.Title || layer.title);
                   });
 
-                  if (scope.config.wmsResources.addLayerNamesMode == "resourcename") {
-                    if (scope.isMdMultilingual) {
-                      var langCode = scope.mdLangs[scope.mdLang];
-                      scope.params.name[langCode] = names.join(",");
-                      scope.params.desc[langCode] = descs.join(",");
-                    } else {
-                      angular.extend(scope.params, {
-                        name: names.join(","),
-                        desc: descs.join(",")
-                      });
-                    }
+                  if (scope.isMdMultilingual) {
+                    var langCode = scope.mdLangs[scope.mdLang];
+                    scope.params.name[langCode] = names.join(",");
+                    scope.params.desc[langCode] = descs.join(",");
+                  } else {
+                    angular.extend(scope.params, {
+                      name: names.join(","),
+                      desc: descs.join(",")
+                    });
                   }
                 }
               });

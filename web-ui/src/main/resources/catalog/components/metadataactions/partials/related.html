@@ -33,6 +33,7 @@
           <p class="text-muted">
             <span
               data-translate="{{(mainType | lowercase) + 'LinkDetails'}}"
+              data-translate-default=""
               data-translate-values="{
                       url:{{r.locUrl | json}},
                       layer:{{r.locTitle | json}}
@@ -66,8 +67,10 @@
           data-ng-if="::r.locDescription.length > 0
                        && r.locDescription !== r.locTitle"
           title="{{::r.locDescription}}"
+          data-gn-read-more=""
+          data-line-number="3"
         >
-          {{::r.locDescription | striptags | characters:150}}
+          {{::r.locDescription | striptags}}
         </p>
         <div data-ng-switch on="mainType">
           <div data-ng-switch-when="WFS">
@@ -168,7 +171,8 @@
                     badge = config.getBadgeLabel(mainType, md);
                     icon = config.getClassIcon(mainType);"
   >
-    <h3 data-ng-if="groupSiblingsByType && items.length > 0">
+    <h3 data-ng-if="groupSiblingsByType && items.length > 0" class="gn-related-title">
+      <i class="fa fa-fw {{icon}}" />
       {{type.replace('siblings', '') | translate}}
     </h3>
 
@@ -181,7 +185,6 @@
           gn-metadata-open="md"
           gn-formatter="formatter.defaultUrl"
         >
-          <i class="fa {{icon}}" />
           {{md.resourceTitle}}
         </a>
         <a
@@ -191,7 +194,6 @@
           target="_blank"
           title="{{md.resourceTitle}}"
         >
-          <i class="fa {{icon}}" />
           {{md.resourceTitle}}
           <i
             data-ng-if="md.origin === 'remote'"

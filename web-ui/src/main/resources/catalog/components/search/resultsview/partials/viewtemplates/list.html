@@ -62,6 +62,7 @@
             </p>
 
             <div
+              class="gn-margin-top"
               data-gn-related-list="md"
               data-user="user"
               data-title="{{::('associatedResources' | translate)}}"
@@ -132,13 +133,13 @@
         <div
           class="pull-left gn-md-category"
           title="{{'listOfCategories' | translate}}"
-          data-ng-class="md.category.length > 0 ||
-                            md.topic.length > 0 ||
+          data-ng-class="md.cat.length > 0 ||
+                            md.cl_topic.length > 0 ||
                             md.inspireThemeUri.length > 0 ? '' : 'invisible'"
         >
           <i
             class="fa"
-            data-ng-repeat="cat in ::md.category"
+            data-ng-repeat="cat in ::md.cat"
             title="{{('cat-' + cat) | translate}}"
             aria-label="{{('cat-' + cat) | translate}}"
           >
@@ -153,15 +154,16 @@
             <span class="fa iti-{{::code}}"></span>
           </i>
           <i
-            data-ng-repeat="t in md.topic"
-            title="{{t | translate}}"
-            aria-label="{{t | translate}}"
-            class="fa gn-icon-{{t}}"
+            data-ng-repeat="t in md.cl_topic"
+            title="{{t.key | translate}}"
+            aria-label="{{t.key | translate}}"
+            class="fa text-primary gn-icon-{{t.key}}"
           >
           </i>
         </div>
 
         <gn-links-btn class="pull-right"></gn-links-btn>
+        <!-- <div class="pull-right" data-gn-related-dropdown="md" data-user="user"></div>-->
       </div>
     </div>
     <!-- /.gn-card-footer -->

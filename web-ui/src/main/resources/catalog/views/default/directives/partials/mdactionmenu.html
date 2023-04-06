@@ -54,9 +54,7 @@
       <!-- Retired metadata can't be published -->
       <li
         role="menuitem"
-        data-ng-if="md.canReview
-                      && md.draft != 'y'
-                      && md.mdStatus != 3"
+        data-ng-if="displayPublicationOption(md, user)"
         data-ng-class="
             (md.isPublished() || (allowPublishInvalidMd() === true) ||
             (!md.isPublished() && (allowPublishInvalidMd() === false) &&

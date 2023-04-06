@@ -276,4 +276,145 @@
       };
     }
   ]);
+
+  module.directive("gnLayerDimensions", [
+    "$interval",
+    "$translate",
+    "$filter",
+    function ($interval, $translate, $filter) {
+      return {
+        templateUrl:
+          "../../catalog/components/viewer/layermanager/partials/layerdimensions.html",
+        scope: true,
+        link: function (scope, element, attrs, ctrl) {
+          scope.animationInterval = 1.5;
+          scope.layer = scope.$eval(attrs["gnLayerDimensions"]);
+          scope.dimensions = {};
+          scope.parameters = { time: "fa-clock-o", elevation: "fa-signal fa-rotate-90" };
+
+          function initDimension(dimension) {
+            var dimensionConfig = scope.layer.get(dimension);
+            if (dimensionConfig) {
+              var idx = dimensionConfig.values.length - 1;
+              for (i = 0; i < dimensionConfig.values.length; i++) {
+                if (dimensionConfig.values[i] === dimensionConfig.default) {
+                  idx = i;
+                  break;
+                }
+              }
+              scope.dimensions[dimension] = {
+                current: dimensionConfig.values[idx],
+                idx: idx,
+                playing: false,
+                pause: false,
+                stop: undefined,
+                filter: "",
+                filteredValues: dimensionConfig.values,
+                animationInterval: scope.animationInterval,
+                info: $translate.instant("wms" + dimension + "-info", {
+                  layerName: scope.layer.get("label"),
+                  instantNumber: dimensionConfig.values.length,
+                  start: dimensionConfig.values[0],
+                  end: dimensionConfig.values[dimensionConfig.values.length - 1]
+                })
+              };
+              angular.extend(scope.dimensions[dimension], dimensionConfig);
+
+              scope.$watch("dimensions." + dimension + ".current", function (instant) {
+                if (!instant) {
+                  return;
+                }
+                scope.params[dimension.toUpperCase()] = instant;
+                scope.layer.getSource().updateParams(scope.params);
+              });
+              scope.$watch("dimensions." + dimension + ".filter", function (filter) {
+                var config = scope.dimensions[dimension];
+                if (filter.length > 0) {
+                  config.filteredValues = $filter("filter")(config.values, config.filter);
+                } else {
+                  config.filteredValues = config.values;
+                }
+              });
+            }
+          }
+          function init() {
+            scope.params = scope.layer.getSource().getParams() || {};
+            angular.forEach(scope.parameters, function (icon, p) {
+              initDimension(p);
+            });
+          }
+
+          init();
+
+          scope.setIndex = function (dimension, idx) {
+            var config = scope.dimensions[dimension],
+              values = config.filteredValues;
+            if (idx >= 0 && idx < values.length) {
+              config.idx = idx;
+              config.current = values[idx];
+            }
+          };
+
+          scope.previous = function (dimension) {
+            scope.setIndex(dimension, --scope.dimensions[dimension].idx);
+          };
+
+          scope.next = function (dimension) {
+            scope.setIndex(dimension, ++scope.dimensions[dimension].idx);
+          };
+
+          scope.setTime = function (dimension, instant, index) {
+            if (instant) {
+              var config = scope.dimensions[dimension];
+              config.current = instant;
+              if (index) {
+                config.idx = index;
+              } else {
+                config.idx = config.filteredValues.indexOf(instant);
+              }
+            }
+          };
+
+          scope.play = function (dimension, restart) {
+            var config = scope.dimensions[dimension];
+            if (angular.isDefined(config.stop)) return;
+
+            config.playing = true;
+            if (restart !== true) {
+              config.idx = -1;
+            }
+
+            config.stop = $interval(function () {
+              config.playing = config.idx < config.filteredValues.length - 1;
+              if (config.playing === false) {
+                scope.stop(dimension);
+              } else {
+                scope.next(dimension);
+              }
+            }, config.animationInterval * 1000);
+          };
+
+          scope.pause = function (dimension) {
+            scope.dimensions[dimension].pause = true;
+            scope.stop(dimension);
+          };
+
+          scope.resume = function (dimension) {
+            scope.dimensions[dimension].pause = false;
+            scope.play(dimension, true);
+          };
+
+          scope.stop = function (dimension) {
+            var config = scope.dimensions[dimension];
+            if (angular.isDefined(config.stop)) {
+              $interval.cancel(config.stop);
+              config.stop = undefined;
+              config.pause = false;
+              config.playing = false;
+            }
+          };
+        }
+      };
+    }
+  ]);
 })();
