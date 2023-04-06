@@ -1,7 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- FIXME: Which MD_Identifier do we select under mds:metadataIdentifier
-  probably should use some form of match on a particular codeSpace?
--->
 <xsl:stylesheet version="2.0" xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
   xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0"
   xmlns:mdb="http://standards.iso.org/iso/19115/-3/mdb/2.0"
