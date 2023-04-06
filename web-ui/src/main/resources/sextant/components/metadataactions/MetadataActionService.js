@@ -116,7 +116,7 @@
       /** Create a child of the given metadata. Open the editor in new page.
        * @param {string} md
        */
-      this.createChild = function(md) {
+      this.createChild = function (md) {
         duplicateMetadata(md.id, true);
       };
 
@@ -202,7 +202,11 @@
       };
 
       this.exportCSV = function (bucket) {
-        window.open(sextantUrlPrefix + "../api/records/csv" + "?bucket=" + bucket, windowName, windowOption);
+        window.open(
+          sextantUrlPrefix + "../api/records/csv" + "?bucket=" + bucket,
+          windowName,
+          windowOption
+        );
       };
       this.validateMdLinks = function (bucket) {
         $rootScope.$broadcast("operationOnSelectionStart");
