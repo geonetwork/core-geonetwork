@@ -112,6 +112,13 @@
         window.open(url, "_blank");
       };
 
+      /** Create a child of the given metadata. Open the editor in new page.
+       * @param {string} md
+       */
+      this.createChild = function(md) {
+        duplicateMetadata(md.id, true);
+      };
+
       /**
        * Index the current metadata record.
        * @param {string} md
