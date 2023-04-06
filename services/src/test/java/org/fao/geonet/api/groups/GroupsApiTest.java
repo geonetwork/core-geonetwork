@@ -311,7 +311,7 @@ public class GroupsApiTest extends AbstractServiceIntegrationTest {
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(400))
-            .andExpect(jsonPath("$.description", is("A group with name 'sample' already exist.")));
+            .andExpect(jsonPath("$.message", is("A group with name 'sample' already exist.")));
     }
 
     /**
