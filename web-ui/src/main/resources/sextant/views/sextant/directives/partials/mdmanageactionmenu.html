@@ -73,7 +73,7 @@
         <i class="fa fa-copy"></i><span translate>duplicate</span></a
       >
     </li>
-    <li data-ng-if="md.documentStandard == 'iso19139'">
+    <li data-ng-if="md.documentStandard == 'iso19139' || md.documentStandard == 'iso19115-3.2018'">
       <a ng-href="" data-ng-click="mdService.createChild(md)">
         <i class="fa fa-sitemap"></i><span translate>createChild</span></a
       >
