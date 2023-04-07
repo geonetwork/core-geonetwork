@@ -99,6 +99,8 @@
 
   <xsl:variable name="metadata"
                 select="//gmd:MD_Metadata"/>
+  <xsl:variable name="metadataUuid"
+                select="$metadata/gmd:fileIdentifier/*/text()"/>
 
   <!-- TODO: Convert language code eng > en_US ? -->
   <xsl:variable name="metadataLanguage"

@@ -123,6 +123,8 @@
 
   <xsl:variable name="metadata"
                 select="//mdb:MD_Metadata"/>
+  <xsl:variable name="metadataUuid"
+                select="$metadata/mdb:metadataIdentifier/*/mcc:code/*/text()"/>
 
   <!-- TODO: Convert language code eng > en_US ? -->
   <xsl:variable name="metadataLanguage"
