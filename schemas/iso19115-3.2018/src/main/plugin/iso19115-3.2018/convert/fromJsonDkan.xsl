@@ -367,7 +367,7 @@
 
     <!-- Regexps for parsing expected date formats -->
     <!-- examples of localized date: "jeu, 24/12/2020 - 03:00", "24-12-2020 03:00" -->
-    <xsl:variable name="regExLoc">^.*([0-9]{2})[-/]([0-9]{2})[-/]([0-9]{4})\s+([0-9]{2}:[0-9]{2})$</xsl:variable>
+    <xsl:variable name="regExLoc">^.*([0-9]{2})[-/]([0-9]{2})[-/]([0-9]{4})[-\s]+([0-9]{2}:[0-9]{2}).*$</xsl:variable>
     <!-- example of internationalized date: "2020-12-24 03:00:00" -->
     <xsl:variable name="regExInt">^([0-9]{4})-([0-9]{2})-([0-9]{2}) ([0-9]{2}:[0-9]{2}:[0-9]{2})$</xsl:variable>
 
