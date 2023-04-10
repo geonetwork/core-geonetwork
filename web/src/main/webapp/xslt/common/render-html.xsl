@@ -39,7 +39,7 @@
   <xsl:template name="render-html">
     <xsl:param name="content"/>
     <xsl:param name="title"
-               select="/root/gui/systemConfig/settings/system/site/name"/>
+               select="/root/gui/systemConfig/settings/catalog/site/name"/>
     <xsl:param name="description"
                select="/root/gui/systemConfig/settings/strings/mainpage2"/>
     <xsl:param name="thumbnail"
@@ -53,7 +53,7 @@
       <head>
         <title><xsl:value-of select="if($title != '')
                   then $title
-                  else /root/gui/systemConfig/settings/system/site/name"/></title>
+                  else /root/gui/systemConfig/settings/catalog/site/name"/></title>
         <meta charset="utf-8"/>
 
         <xsl:copy-of select="$meta"/>
@@ -66,14 +66,14 @@
 
         <meta property="og:title" content="{$title}" />
         <meta property="og:description" content="{normalize-space($description)}" />
-        <meta property="og:site_name" content="{/root/gui/systemConfig/settings/system/site/name}" />
+        <meta property="og:site_name" content="{/root/gui/systemConfig/settings/catalog/site/name}" />
         <meta property="og:image" content="{$thumbnail}" />
 
         <meta name="twitter:card" content="summary" />
         <meta name="twitter:image" content="{$thumbnail}" />
         <meta name="twitter:title" content="{$title}" />
         <meta name="twitter:description" content="{normalize-space($description)}" />
-        <meta name="twitter:site" content="{/root/gui/systemConfig/settings/system/site/name}" />
+        <meta name="twitter:site" content="{/root/gui/systemConfig/settings/catalog/site/name}" />
 
         <xsl:if test="/root/info/record/uuid">
           <link rel="canonical" href="{$nodeUrl}api/records/{/root/info/record/uuid}" />

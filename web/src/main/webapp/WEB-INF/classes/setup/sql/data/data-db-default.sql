@@ -571,101 +571,101 @@ INSERT INTO Operations (id, name) VALUES  (6,'featured');
 -- === Table: Settings
 -- ======================================================================
 
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/site/name', 'My GeoNetwork catalogue', 0, 110, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/site/siteId', '', 0, 120, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/site/organization', 'My organization', 0, 130, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/platform/version', '4.2.4', 0, 150, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/platform/subVersion', 'SNAPSHOT', 0, 160, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/site/svnUuid', '', 0, 170, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('catalog/site/name', 'My GeoNetwork catalogue', 0, 110, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('catalog/site/siteId', '', 0, 120, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('catalog/site/organization', 'My organization', 0, 130, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('catalog/platform/version', '4.2.4', 0, 150, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('catalog/platform/subVersion', 'SNAPSHOT', 0, 160, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('catalog/site/svnUuid', '', 0, 170, 'y');
 
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/server/host', 'localhost', 0, 210, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/server/protocol', 'http', 0, 220, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/server/port', '8080', 1, 230, 'n');
-INSERT INTO settings (name, value, datatype, position, internal) VALUES ('system/server/log','log4j2.xml', 0, 250, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/server/timeZone', '', 0, 260, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('catalog/server/host', 'localhost', 0, 210, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('catalog/server/protocol', 'http', 0, 220, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('catalog/server/port', '8080', 1, 230, 'n');
+INSERT INTO settings (name, value, datatype, position, internal) VALUES ('catalog/server/log','log4j2.xml', 0, 250, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('catalog/server/timeZone', '', 0, 260, 'n');
 
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/intranet/network', '127.0.0.1', 0, 310, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/intranet/netmask', '255.0.0.0', 0, 320, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/proxy/use', 'false', 2, 510, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/proxy/host', NULL, 0, 520, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/proxy/port', NULL, 1, 530, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/proxy/username', NULL, 0, 540, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal, encrypted) VALUES ('system/proxy/password', NULL, 0, 550, 'y', 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/proxy/ignorehostlist', NULL, 0, 560, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/cors/allowedHosts', '*', 0, 561, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/feedback/email', 'root@localhost', 0, 610, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/feedback/mailServer/host', '', 0, 630, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/feedback/mailServer/port', '25', 1, 640, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/feedback/mailServer/username', '', 0, 642, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal, encrypted) VALUES ('system/feedback/mailServer/password', '', 0, 643, 'y', 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/feedback/mailServer/ssl', 'false', 2, 641, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/feedback/mailServer/tls', 'false', 2, 644, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/feedback/mailServer/ignoreSslCertificateErrors', 'false', 2, 645, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('network/intranet/network', '127.0.0.1', 0, 310, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('network/intranet/netmask', '255.0.0.0', 0, 320, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('network/proxy/use', 'false', 2, 510, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('network/proxy/host', NULL, 0, 520, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('network/proxy/port', NULL, 1, 530, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('network/proxy/username', NULL, 0, 540, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal, encrypted) VALUES ('network/proxy/password', NULL, 0, 550, 'y', 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('network/proxy/ignorehostlist', NULL, 0, 560, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('network/cors/allowedHosts', '*', 0, 561, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('catalog/feedback/email', 'root@localhost', 0, 610, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('catalog/feedback/mailServer/host', '', 0, 630, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('catalog/feedback/mailServer/port', '25', 1, 640, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('catalog/feedback/mailServer/username', '', 0, 642, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal, encrypted) VALUES ('catalog/feedback/mailServer/password', '', 0, 643, 'y', 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('catalog/feedback/mailServer/ssl', 'false', 2, 641, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('catalog/feedback/mailServer/tls', 'false', 2, 644, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('catalog/feedback/mailServer/ignoreSslCertificateErrors', 'false', 2, 645, 'y');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/selectionmanager/maxrecords', '1000', 1, 910, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/csw/enable', 'true', 2, 1210, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/csw/enabledWhenIndexing', 'true', 2, 1211, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/csw/capabilityRecordUuid', '-1', 0, 1220, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/csw/metadataPublic', 'false', 2, 1310, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/csw/transactionUpdateCreateXPath', 'true', 2, 1320, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/userSelfRegistration/enable', 'false', 2, 1910, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('services/csw/enable', 'true', 2, 1210, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('services/csw/enabledWhenIndexing', 'true', 2, 1211, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('services/csw/capabilityRecordUuid', '-1', 0, 1220, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('services/csw/metadataPublic', 'false', 2, 1310, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('services/csw/transactionUpdateCreateXPath', 'true', 2, 1320, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('usersgroups/userSelfRegistration/enable', 'false', 2, 1910, 'n');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/userFeedback/enable', 'false', 2, 1911, 'n');
 INSERT INTO Settings (name, value, datatype, position, internal, editable) VALUES ('system/userFeedback/lastNotificationDate', '', 0, 1912, 'y', 'n');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/clickablehyperlinks/enable', 'true', 2, 2010, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/localrating/enable', 'advanced', 0, 2110, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/localrating/notificationLevel', 'catalogueAdministrator', 0, 2111, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/localrating/notificationGroups', '', 0, 2112, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/xlinkResolver/enable', 'false', 2, 2310, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/xlinkResolver/localXlinkEnable', 'true', 2, 2311, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/xlinkResolver/ignore', 'operatesOn,featureCatalogueCitation,Anchor,source,parentIdentifier', 0, 2312, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/xlinkResolver/referencedDeletionAllowed', 'true', 2, 2313, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/localrating/enable', 'advanced', 0, 2110, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/localrating/notificationLevel', 'catalogueAdministrator', 0, 2111, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/localrating/notificationGroups', '', 0, 2112, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/xlinkResolver/enable', 'false', 2, 2310, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/xlinkResolver/localXlinkEnable', 'true', 2, 2311, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/xlinkResolver/ignore', 'operatesOn,featureCatalogueCitation,Anchor,source,parentIdentifier', 0, 2312, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/xlinkResolver/referencedDeletionAllowed', 'true', 2, 2313, 'n');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/hidewithheldelements/enableLogging', 'false', 2, 2320, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/autofixing/enable', 'true', 2, 2410, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/autofixing/enable', 'true', 2, 2410, 'y');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/searchStats/enable', 'false', 2, 2510, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/oai/mdmode', '1', 0, 7010, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/oai/tokentimeout', '3600', 1, 7020, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/oai/cachesize', '60', 1, 7030, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/oai/maxrecords', '10', 1, 7040, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/inspire/enable', 'false', 2, 7210, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/inspire/atom', 'disabled', 0, 7230, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/inspire/atomSchedule', '0 0 0 * * ?', 0, 7240, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/inspire/atomProtocol', 'INSPIRE-ATOM', 0, 7250, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/harvester/enableEditing', 'false', 2, 9010, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/harvester/enablePrivilegesManagement', 'false', 2, 9010, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/harvester/disabledHarvesterTypes', '', 0, 9011, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('services/oai/mdmode', '1', 0, 7010, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('services/oai/tokentimeout', '3600', 1, 7020, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('services/oai/cachesize', '60', 1, 7030, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('services/oai/maxrecords', '10', 1, 7040, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('inspire/enable', 'false', 2, 7210, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('inspire/atom', 'disabled', 0, 7230, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('inspire/atomSchedule', '0 0 0 * * ?', 0, 7240, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('inspire/atomProtocol', 'INSPIRE-ATOM', 0, 7250, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('harvester/enableEditing', 'false', 2, 9010, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('harvester/enablePrivilegesManagement', 'false', 2, 9010, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('harvester/disabledHarvesterTypes', '', 0, 9011, 'n');
 
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/harvesting/mail/recipient', NULL, 0, 9020, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/harvesting/mail/template', '', 0, 9021, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/harvesting/mail/templateError', 'There was an error on the harvesting: $$errorMsg$$', 0, 9022, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/harvesting/mail/templateWarning', '', 0, 9023, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/harvesting/mail/subject', '[$$harvesterType$$] $$harvesterName$$ finished harvesting', 0, 9024, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/harvesting/mail/enabled', 'false', 2, 9025, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/harvesting/mail/level1', 'false', 2, 9026, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/harvesting/mail/level2', 'false', 2, 9027, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/harvesting/mail/level3', 'false', 2, 9028, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/users/identicon', 'gravatar:mp', 0, 9110, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/metadata/prefergrouplogo', 'true', 2, 9111, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/metadata/allThesaurus', 'false', 2, 9160, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/metadata/thesaurusNamespace', 'https://registry.geonetwork-opensource.org/{{type}}/{{filename}}', 0, 9161, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('harvester/mail/recipient', NULL, 0, 9020, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('harvester/mail/template', '', 0, 9021, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('harvester/mail/templateError', 'There was an error on the harvesting: $$errorMsg$$', 0, 9022, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('harvester/mail/templateWarning', '', 0, 9023, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('harvester/mail/subject', '[$$harvesterType$$] $$harvesterName$$ finished harvesting', 0, 9024, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('harvester/mail/enabled', 'false', 2, 9025, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('harvester/mail/level1', 'false', 2, 9026, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('harvester/mail/level2', 'false', 2, 9027, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('harvester/mail/level3', 'false', 2, 9028, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('usersgroups/users/identicon', 'gravatar:mp', 0, 9110, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/prefergrouplogo', 'true', 2, 9111, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/allThesaurus', 'false', 2, 9160, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/thesaurusNamespace', 'https://registry.geonetwork-opensource.org/{{type}}/{{filename}}', 0, 9161, 'n');
 
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/vcs/enable', 'false', 2, 9161, 'n');
 
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/metadata/validation/removeSchemaLocation', 'false', 2, 9170, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/metadata/history/enabled', 'false', 2, 9171, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/metadatacreate/generateUuid', 'true', 2, 9100, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/metadatacreate/preferredGroup', '', 1, 9105, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/metadatacreate/preferredTemplate', '', 0, 9106, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/validation/removeSchemaLocation', 'false', 2, 9170, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/history/enabled', 'false', 2, 9171, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/metadatacreate/generateUuid', 'true', 2, 9100, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/metadatacreate/preferredGroup', '', 1, 9105, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/metadatacreate/preferredTemplate', '', 0, 9106, 'n');
 
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/metadataprivs/usergrouponly', 'false', 2, 9180, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/metadataprivs/publicationbyrevieweringroupowneronly', 'true', 2, 9181, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/metadataprivs/publication/notificationLevel', '', 0, 9182, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/metadataprivs/publication/notificationGroups', '', 0, 9183, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/metadataprivs/usergrouponly', 'false', 2, 9180, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/metadataprivs/publicationbyrevieweringroupowneronly', 'true', 2, 9181, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/metadataprivs/publication/notificationLevel', '', 0, 9182, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/metadataprivs/publication/notificationGroups', '', 0, 9183, 'n');
 
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/index/indexingTimeRecordLink', 'false', 2, 9209, 'n');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/threadedindexing/maxthreads', '1', 1, 9210, 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/inspire/remotevalidation/url', '', 0, 7211, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/inspire/remotevalidation/urlquery', '', 0, 7212, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/inspire/remotevalidation/nodeid', '', 0, 7213, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/inspire/remotevalidation/apikey', '', 0, 7214, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('inspire/remotevalidation/url', '', 0, 7211, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('inspire/remotevalidation/urlquery', '', 0, 7212, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('inspire/remotevalidation/nodeid', '', 0, 7213, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('inspire/remotevalidation/apikey', '', 0, 7214, 'y');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('region/getmap/background', 'osm', 0, 9590, 'n');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('region/getmap/width', '500', 0, 9590, 'n');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('region/getmap/summaryWidth', '500', 0, 9590, 'n');
@@ -712,30 +712,30 @@ INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metada
 
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/ui/defaultView', 'default', 0, 10100, 'n');
 
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/userSelfRegistration/recaptcha/enable', 'false', 2, 1910, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/userSelfRegistration/recaptcha/publickey', '', 0, 1910, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/userSelfRegistration/recaptcha/secretkey', '', 0, 1910, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('usersgroups/userSelfRegistration/recaptcha/enable', 'false', 2, 1910, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('usersgroups/userSelfRegistration/recaptcha/publickey', '', 0, 1910, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('usersgroups/userSelfRegistration/recaptcha/secretkey', '', 0, 1910, 'y');
 
 
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/publication/doi/doienabled', 'false', 2, 100191, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/publication/doi/doiurl', '', 0, 100192, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/publication/doi/doiusername', '', 0, 100193, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal, encrypted) VALUES ('system/publication/doi/doipassword', '', 0, 100194, 'y', 'y');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/publication/doi/doikey', '', 0, 110095, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/publication/doi/doilandingpagetemplate', 'http://localhost:8080/geonetwork/srv/resources/records/{{uuid}}', 0, 100195, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/publication/doi/doipublicurl', '', 0, 100196, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/publication/doi/doipattern', '{{uuid}}', 0, 100197, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/publication/doi/doienabled', 'false', 2, 100191, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/publication/doi/doiurl', '', 0, 100192, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/publication/doi/doiusername', '', 0, 100193, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal, encrypted) VALUES ('metadata/publication/doi/doipassword', '', 0, 100194, 'y', 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/publication/doi/doikey', '', 0, 110095, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/publication/doi/doilandingpagetemplate', 'http://localhost:8080/geonetwork/srv/resources/records/{{uuid}}', 0, 100195, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/publication/doi/doipublicurl', '', 0, 100196, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/publication/doi/doipattern', '{{uuid}}', 0, 100197, 'n');
 
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/security/passwordEnforcement/minLength', '6', 1, 12000, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/security/passwordEnforcement/maxLength', '20', 1, 12001, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/security/passwordEnforcement/usePattern', 'true', 2, 12002, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal, editable) VALUES ('system/security/passwordEnforcement/pattern', '^((?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*(_|[^\w])).*)$', 0, 12003, 'n', 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('usersgroups/security/passwordEnforcement/minLength', '6', 1, 12000, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('usersgroups/security/passwordEnforcement/maxLength', '20', 1, 12001, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('usersgroups/security/passwordEnforcement/usePattern', 'true', 2, 12002, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal, editable) VALUES ('usersgroups/security/passwordEnforcement/pattern', '^((?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*(_|[^\w])).*)$', 0, 12003, 'n', 'n');
 
 -- WARNING: Security / Add this settings only if you need to allow admin
 -- users to be able to reset user password. If you have mail server configured
 -- user can reset password directly. If not, then you may want to add that settings
 -- if you don't have access to the database.
--- INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/security/password/allowAdminReset', 'false', 2, 12004, 'n');
+-- INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('usersgroups/security/password/allowAdminReset', 'false', 2, 12004, 'n');
 
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES  (1,NULL,'harvesting',NULL);
 

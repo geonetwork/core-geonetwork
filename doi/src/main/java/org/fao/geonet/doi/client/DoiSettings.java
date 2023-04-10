@@ -27,19 +27,19 @@ package org.fao.geonet.doi.client;
  */
 public class DoiSettings {
     public static final String SETTING_PUBLICATION_DOI_DOIURL =
-        "system/publication/doi/doiurl";
+        "metadata/publication/doi/doiurl";
     public static final String SETTING_PUBLICATION_DOI_DOIPUBLICURL =
-        "system/publication/doi/doipublicurl";
+        "metadata/publication/doi/doipublicurl";
     public static final String SETTING_PUBLICATION_DOI_DOIUSERNAME =
-        "system/publication/doi/doiusername";
+        "metadata/publication/doi/doiusername";
     public static final String SETTING_PUBLICATION_DOI_DOIPASSWORD =
-        "system/publication/doi/doipassword";
+        "metadata/publication/doi/doipassword";
     public static final String SETTING_PUBLICATION_DOI_DOIKEY =
-        "system/publication/doi/doikey";
+        "metadata/publication/doi/doikey";
     public static final String SETTING_PUBLICATION_DOI_DOIPATTERN =
-        "system/publication/doi/doipattern";
+        "metadata/publication/doi/doipattern";
     public static final String SETTING_PUBLICATION_DOI_LANDING_PAGE_TEMPLATE =
-        "system/publication/doi/doilandingpagetemplate";
+        "metadata/publication/doi/doilandingpagetemplate";
 
     protected static final String LOGGER_NAME = "DOI";
 }

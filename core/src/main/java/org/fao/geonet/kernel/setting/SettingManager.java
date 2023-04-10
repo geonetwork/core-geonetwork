@@ -175,7 +175,7 @@ public class SettingManager {
     /**
      * Return a setting by its key
      *
-     * @param path eg. system/site/name
+     * @param path eg. catalog/site/name
      */
     public String getValue(String path) {
         return getValue(path, false);

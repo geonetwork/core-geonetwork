@@ -43,7 +43,7 @@
       <head>
         <head>
           <title>
-            <xsl:value-of select="concat($env/system/site/name, ' - ', $env/system/site/organization)"
+            <xsl:value-of select="concat($env/catalog/site/name, ' - ', $env/catalog/site/organization)"
             />
           </title>
           <meta charset="utf-8"/>
@@ -59,7 +59,7 @@
           <link href="feeds"
                 rel="search"
                 type="application/opensearchdescription+xml"
-                title="{concat($env/system/site/name, ' - ', $env/system/site/organization)}"/>
+                title="{concat($env/catalog/site/name, ' - ', $env/catalog/site/organization)}"/>
 
           <style>
             html {

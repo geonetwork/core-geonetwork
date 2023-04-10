@@ -136,7 +136,7 @@
           </xsl:attribute>
           <xsl:attribute name="href">
             <xsl:value-of
-              select="concat('http://',$env/system/server/host,':',$env/system/server/port,
+              select="concat('http://',$env/catalog/server/host,':',$env/catalog/server/port,
               /root/gui/locService, '/google.kml?uuid=', $uuid, '&amp;layers=', $name)"
             />
           </xsl:attribute>

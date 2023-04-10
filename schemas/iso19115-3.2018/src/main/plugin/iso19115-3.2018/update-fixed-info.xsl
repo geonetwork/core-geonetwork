@@ -65,7 +65,7 @@
   </xsl:template>
 
   <xsl:template match="@xsi:schemaLocation">
-    <xsl:if test="java:getSettingValue('system/metadata/validation/removeSchemaLocation') = 'false'">
+    <xsl:if test="java:getSettingValue('metadata/validation/removeSchemaLocation') = 'false'">
       <xsl:copy-of select="."/>
     </xsl:if>
   </xsl:template>

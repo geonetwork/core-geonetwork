@@ -55,9 +55,9 @@
         <link rel="icon" sizes="16x16 32x32 48x48" type="image/png"
               href="../../images/logos/favicon.png"/>
         <link href="rss.search?sortBy=changeDate" rel="alternate" type="application/rss+xml"
-              title="{concat($env/system/site/name, ' - ', $env/system/site/organization)}"/>
+              title="{concat($env/catalog/site/name, ' - ', $env/catalog/site/organization)}"/>
         <link href="portal.opensearch" rel="search" type="application/opensearchdescription+xml"
-              title="{concat($env/system/site/name, ' - ', $env/system/site/organization)}"/>
+              title="{concat($env/catalog/site/name, ' - ', $env/catalog/site/organization)}"/>
 
         <xsl:call-template name="css-load"/>
       </head>
@@ -109,7 +109,7 @@
       <div class="container page">
         <div class="row gn-row-main">
           <div class="col-sm-8 col-sm-offset-2">
-            <h1><xsl:value-of select="$env/system/site/name"/></h1>
+            <h1><xsl:value-of select="$env/catalog/site/name"/></h1>
             <p><xsl:value-of select="/root/gui/strings/mainpage2"/></p>
             <p><xsl:value-of select="/root/gui/strings/mainpage1"/></p>
             <br/><br/>

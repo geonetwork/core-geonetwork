@@ -94,7 +94,7 @@
       <xsl:copy-of select="gn-fn-index:add-field('metadataIdentifier', $identifier)"/>
 
 
-      <!-- Since GN sets the timezone in system/server/timeZone setting as Java system default
+      <!-- Since GN sets the timezone in catalog/server/timeZone setting as Java system default
         timezone we can rely on XSLT functions to get current date in the right timezone -->
       <harvestedDate>
         <xsl:value-of select="format-dateTime(current-dateTime(), $dateFormat)"/>

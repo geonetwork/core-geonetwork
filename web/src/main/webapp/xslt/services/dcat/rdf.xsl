@@ -37,13 +37,13 @@
   <xsl:include href="../../common/base-variables.xsl"/>
   <xsl:include href="../../common/profiles-loader-tpl-rdf.xsl"/>
 
-  <xsl:variable name="port"> <xsl:value-of select="$env/system/server/port"/></xsl:variable>
+  <xsl:variable name="port"> <xsl:value-of select="$env/catalog/server/port"/></xsl:variable>
 
   <xsl:variable name="url"
-                select="concat($env/system/server/protocol, '://',
-                          $env/system/server/host,
-                          if (($env/system/server/protocol = 'http' and $port = '80') or
-                              ($env/system/server/protocol = 'https' and $port = '443')) then '' else concat(':', $port),
+                select="concat($env/catalog/server/protocol, '://',
+                          $env/catalog/server/host,
+                          if (($env/catalog/server/protocol = 'http' and $port = '80') or
+                              ($env/catalog/server/protocol = 'https' and $port = '443')) then '' else concat(':', $port),
                           /root/gui/url)"/>
 
   <xsl:variable name="resourcePrefix" select="$env/metadata/resourceIdentifierPrefix"/>
@@ -78,19 +78,19 @@
       "Typically, a web-based data catalog is represented as a single instance of this class."
       ... also describe harvested catalogues if harvested records are in the current dump.
     -->
-    <dcat:Catalog rdf:about="{$resourcePrefix}/catalogs/{$env/system/site/siteId}">
+    <dcat:Catalog rdf:about="{$resourcePrefix}/catalogs/{$env/catalog/site/siteId}">
 
       <!-- A name given to the catalog. -->
       <dct:title xml:lang="{$iso2letterLanguageCode}">
-        <xsl:value-of select="$env/system/site/name"/>
+        <xsl:value-of select="$env/catalog/site/name"/>
       </dct:title>
 
       <!-- free-text account of the catalog. -->
       <dct:description/>
 
       <rdfs:label xml:lang="{$iso2letterLanguageCode}">
-        <xsl:value-of select="$env/system/site/name"/> (<xsl:value-of
-        select="$env/system/site/organization"/>)
+        <xsl:value-of select="$env/catalog/site/name"/> (<xsl:value-of
+        select="$env/catalog/site/organization"/>)
       </rdfs:label>
 
       <!-- The homepage of the catalog -->
@@ -104,7 +104,7 @@
 
 
       <!-- The entity responsible for making the catalog online. -->
-      <dct:publisher rdf:resource="{$resourcePrefix}/organizations/{encode-for-uri($env/system/site/organization)}"/>
+      <dct:publisher rdf:resource="{$resourcePrefix}/organizations/{encode-for-uri($env/catalog/site/organization)}"/>
 
       <!-- The knowledge organization system (KOS) used to classify catalog's datasets.
       -->
@@ -152,9 +152,9 @@
 
     <!-- Organization in charge of the catalogue defined in the administration
     > system configuration -->
-    <foaf:Organization rdf:about="{$resourcePrefix}/organizations/{encode-for-uri($env/system/site/organization)}">
+    <foaf:Organization rdf:about="{$resourcePrefix}/organizations/{encode-for-uri($env/catalog/site/organization)}">
       <foaf:name>
-        <xsl:value-of select="$env/system/site/organization"></xsl:value-of>
+        <xsl:value-of select="$env/catalog/site/organization"></xsl:value-of>
       </foaf:name>
     </foaf:Organization>
 

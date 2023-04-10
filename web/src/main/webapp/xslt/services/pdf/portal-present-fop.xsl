@@ -37,11 +37,11 @@
              xmlns:fox="http://xmlgraphics.apache.org/fop/extensions">
       <xsl:call-template name="fop-master"/>
 
-      <xsl:if test="string($env/system/system/metadata/pdfReport/coverPdf)">
-        <fox:external-document content-type="pdf" src="{$env/system/metadata/pdfReport/coverPdf}" />
+      <xsl:if test="string($env/metadata/pdfReport/coverPdf)">
+        <fox:external-document content-type="pdf" src="{$env/metadata/pdfReport/coverPdf}" />
       </xsl:if>
 
-      <xsl:if test="$env/system/metadata/pdfReport/tocPage = 'true'">
+      <xsl:if test="$env/metadata/pdfReport/tocPage = 'true'">
         <fo:page-sequence master-reference="Intro" force-page-count="no-force">
           <xsl:call-template name="fop-header"/>
 
@@ -54,8 +54,8 @@
       </xsl:if>
 
       <!-- Intro page -->
-      <xsl:if test="string($env/system/metadata/pdfReport/introPdf)">
-        <fox:external-document content-type="pdf" src="{$env/system/metadata/pdfReport/introPdf}" />
+      <xsl:if test="string($env/metadata/pdfReport/introPdf)">
+        <fox:external-document content-type="pdf" src="{$env/metadata/pdfReport/introPdf}" />
       </xsl:if>
 
       <xsl:variable name="formatter"

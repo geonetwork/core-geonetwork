@@ -139,7 +139,7 @@
       <xsl:choose>
         <xsl:when test="$withXlink">
           <xsl:variable name="isLocalXlink"
-                        select="util:getSettingValue('system/xlinkResolver/localXlinkEnable')"/>
+                        select="util:getSettingValue('metadata/xlinkResolver/localXlinkEnable')"/>
           <xsl:variable name="prefixUrl"
                         select="if ($isLocalXlink = 'true')
                                 then concat('local://', $node, '/')

@@ -39,13 +39,13 @@
                   select="/root/search/response[1]/summary[1]/@count"/>
 
     <div class="row"
-      id="{/root/gui/systemConfig/system/site/siteId}"
+      id="{/root/gui/systemConfig/catalog/site/siteId}"
       itemscope="itemscope"
       itemtype="http://schema.org/DataCatalog">
-      <meta itemprop="name" content="{/root/gui/systemConfig/system/site/name}"></meta>
+      <meta itemprop="name" content="{/root/gui/systemConfig/catalog/site/name}"></meta>
       <span itemprop="publisher" itemscope="itemscope" itemtype="http://schema.org/Organization">
-        <meta itemprop="name" content="{/root/gui/systemConfig/system/site/organization}"></meta>
-        <meta itemprop="email" content="{/root/gui/systemConfig/system/feedback/email}"></meta>
+        <meta itemprop="name" content="{/root/gui/systemConfig/catalog/site/organization}"></meta>
+        <meta itemprop="email" content="{/root/gui/systemConfig/catalog/feedback/email}"></meta>
       </span>
       <meta itemprop="url" content="{$nodeUrl}search"></meta>
 
