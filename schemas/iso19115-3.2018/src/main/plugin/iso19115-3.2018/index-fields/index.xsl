@@ -195,7 +195,7 @@
       </xsl:for-each>
 
 
-      <!-- Since GN sets the timezone in system/server/timeZone setting as Java system default
+      <!-- Since GN sets the timezone in catalog/server/timeZone setting as Java system default
         timezone we can rely on XSLT functions to get current date in the right timezone -->
       <indexingDate>
         <xsl:value-of select="format-dateTime(current-dateTime(), $dateFormat)"/>
@@ -440,7 +440,7 @@
         </xsl:for-each>
 
 
-        <xsl:variable name="inspireEnable" select="util:getSettingValue('system/inspire/enable')" />
+        <xsl:variable name="inspireEnable" select="util:getSettingValue('inspire/enable')" />
 
 
         <xsl:if test="$inspireEnable = 'true'">
@@ -1264,7 +1264,7 @@
       </xsl:for-each>
 
       <xsl:variable name="indexingTimeRecordLink"
-                    select="util:getSettingValue('system/index/indexingTimeRecordLink')" />
+                    select="util:getSettingValue('catalog/index/indexingTimeRecordLink')" />
       <xsl:if test="$indexingTimeRecordLink = 'true'">
         <xsl:variable name="parentUuid"
                       select=".//mri:associatedResource/*[mri:associationType/*/@codeListValue = $parentAssociatedResourceType]/mri:metadataReference/@uuidref[. != '']"/>

@@ -83,14 +83,14 @@ public class ResumptionTokenCache extends Thread {
      * @return the timeout
      */
     public long getTimeout() {
-        return settingMan.getValueAsInt("system/oai/tokentimeout");
+        return settingMan.getValueAsInt("services/oai/tokentimeout");
     }
 
     /**
      * @return the cachemaxsize
      */
     public int getCachemaxsize() {
-        return settingMan.getValueAsInt("system/oai/cachesize");
+        return settingMan.getValueAsInt("services/oai/cachesize");
     }
 
     public void run() {

@@ -305,7 +305,7 @@
     <xsl:param name="keywordList" select="''" required="no"/>
     <xsl:param name="transformation" select="'to-iso19139-keyword'" required="no"/>
 
-    <xsl:if test="java:getSettingValue('system/metadata/allThesaurus') = 'true'">
+    <xsl:if test="java:getSettingValue('metadata/allThesaurus') = 'true'">
       <xsl:variable name="thesaurusConfig"
                     as="element()?"
                     select="$thesaurusList/thesaurus[@key='external.none.allThesaurus']"/>

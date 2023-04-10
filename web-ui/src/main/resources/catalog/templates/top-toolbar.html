@@ -8,7 +8,7 @@
       <img
         class="gn-logo"
         alt="{{'siteLogo' | translate}}"
-        data-ng-src="{{gnUrl}}../images/logos/{{info['node/id'] || info['system/site/siteId']}}.png?random{{info['system/site/lastUpdate']}}"
+        data-ng-src="{{gnUrl}}../images/logos/{{info['node/id'] || info['catalog/site/siteId']}}.png?random{{info['catalog/site/lastUpdate']}}"
       />
     </a>
     <a
@@ -19,8 +19,8 @@
       <span
         class="gn-name"
         data-ng-class="authenticated && user.isEditorOrMore() ? 'gn-truncate' : ''"
-        title="{{info['system/site/name']}}"
-        >{{info['node/name'] || info['system/site/name']}}</span
+        title="{{info['catalog/site/name']}}"
+        >{{info['node/name'] || info['catalog/site/name']}}</span
       >
     </a>
     <button
@@ -49,15 +49,15 @@
             class="gn-logo"
             data-ng-hide="{{gnCfg.mods.header.isLogoInHeader}}"
             alt="{{'siteLogo' | translate}}"
-            data-ng-src="{{gnUrl}}../images/logos/{{info['node/id'] || info['system/site/siteId']}}.png?random{{info['system/site/lastUpdate']}}"
+            data-ng-src="{{gnUrl}}../images/logos/{{info['node/id'] || info['catalog/site/siteId']}}.png?random{{info['catalog/site/lastUpdate']}}"
           />
           <span
             class="gn-name hidden-sm hidden-md gn-margin-left"
             data-ng-if="gnCfg.mods.header.showGNName"
             data-ng-class="authenticated && user.isEditorOrMore() ? 'gn-truncate' : ''"
-            title="{{info['node/name'] || info['system/site/name']}}"
+            title="{{info['node/name'] || info['catalog/site/name']}}"
           >
-            {{info['node/name'].split('|')[0] || info['system/site/name']}}
+            {{info['node/name'].split('|')[0] || info['catalog/site/name']}}
           </span>
         </a>
       </li>

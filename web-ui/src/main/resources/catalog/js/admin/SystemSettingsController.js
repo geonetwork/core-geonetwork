@@ -36,7 +36,7 @@
     return function (input) {
       var filtered = [];
       angular.forEach(input, function (el) {
-        if (el.name.indexOf("system/site/labels/") === -1) {
+        if (el.name.indexOf("catalog/site/labels/") === -1) {
           filtered.push(el);
         }
       });
@@ -232,11 +232,11 @@
                 $scope.draftInAllGroups = $scope.settings[i].value == ".*";
               } else if (
                 $scope.settings[i].name ==
-                "system/metadataprivs/publication/notificationLevel"
+                "metadata/metadataprivs/publication/notificationLevel"
               ) {
                 $scope.isGroupPublicationNotificationLevel =
                   $scope.settings[i].value === "recordGroupEmail";
-              } else if ("system/localrating/notificationLevel") {
+              } else if ("metadata/localrating/notificationLevel") {
                 $scope.isGroupLocalRatingNotificationLevel =
                   $scope.settings[i].value === "recordGroupEmail";
               }
@@ -252,6 +252,14 @@
                     position: $scope.settings[i].position,
                     children: []
                   };
+                } else {
+                  if (
+                    $scope.settings[i].position <
+                    $scope.sectionsLevel1[level1name].position
+                  ) {
+                    $scope.sectionsLevel1[level1name].position =
+                      $scope.settings[i].position;
+                  }
                 }
                 var level2name = level1name + "/" + tokens[1];
                 if (sectionsLevel2.indexOf(level2name) === -1) {
@@ -549,9 +557,9 @@
         );
       };
       var buildUrl = function (settings) {
-        var port = filterBySection(settings, "system/server/port")[0].value;
-        var host = filterBySection(settings, "system/server/host")[0].value;
-        var protocol = filterBySection(settings, "system/server/protocol")[0].value;
+        var port = filterBySection(settings, "catalog/server/port")[0].value;
+        var host = filterBySection(settings, "catalog/server/host")[0].value;
+        var protocol = filterBySection(settings, "catalog/server/protocol")[0].value;
 
         return (
           protocol + "://" + host + (isPortRequired(procotol, port) ? ":" + port : "")

@@ -65,7 +65,7 @@ public class GetNotificationSettings implements Service {
     private void setProperty(Element res, SettingManager settings,
                              String property, String path, String split) {
         try {
-            String value = settings.getValue("system/harvesting/" + path);
+            String value = settings.getValue("harvester/" + path);
 
             if (split != null && value != null) {
                 String[] values = value.split(split);

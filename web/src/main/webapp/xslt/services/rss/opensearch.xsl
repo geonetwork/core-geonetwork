@@ -29,11 +29,11 @@
   <xsl:template match="/">
     <OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/">
       <ShortName>
-        <xsl:value-of select="$env/system/site/name"/>
+        <xsl:value-of select="$env/catalog/site/name"/>
       </ShortName>
       <LongName>
         <xsl:value-of
-          select="concat($env/system/site/name, ' (', $env/system/site/organization, ')')"/>
+          select="concat($env/catalog/site/name, ' (', $env/catalog/site/organization, ')')"/>
       </LongName>
       <Description>
         <xsl:value-of select="/root/gui/strings/opensearch"/>

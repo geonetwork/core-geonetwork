@@ -34,8 +34,8 @@
               <a href="{/root/gui/nodeUrl}">
                 <img class="gn-logo"
                      alt="{$i18n/siteLogo}"
-                     src="{/root/gui/url}/images/logos/{$env//system/site/siteId}.png"></img>
-                <xsl:value-of select="$env//system/site/name"/>
+                     src="{/root/gui/url}/images/logos/{$env//catalog/site/siteId}.png"></img>
+                <xsl:value-of select="$env//catalog/site/name"/>
               </a>
             </li>
             <li>

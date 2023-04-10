@@ -136,7 +136,7 @@
           </xsl:attribute>
           <xsl:attribute name="href">
             <xsl:value-of
-              select="concat('http://',$env/system/server/host,':',$env/system/server/port,
+              select="concat('http://',$env/catalog/server/host,':',$env/catalog/server/port,
               /root/gui/locService, '/google.kml?uuid=', $uuid, '&amp;layers=', $name)"
             />
           </xsl:attribute>
@@ -201,7 +201,7 @@
       <xsl:copy-of select="gn:info/*[name(.)!='edit']"/>
       <xsl:choose>
         <xsl:when
-          test="$env/harvester/enableEditing='false' and gn:info/isHarvested='y' and gn:info/edit='true'">
+          test="$env/harvester/config/enableEditing='false' and gn:info/isHarvested='y' and gn:info/edit='true'">
           <edit>false</edit>
         </xsl:when>
         <xsl:otherwise>

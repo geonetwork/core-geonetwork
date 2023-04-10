@@ -61,7 +61,7 @@
   <xsl:variable name="withD3" select="$service = 'admin.console'"/>
 
   <xsl:variable name="searchView"
-                select="if (/root/request/view) then util:encodeForJavaScript(/root/request/view) else if(util:getSettingValue('system/ui/defaultView')) then util:getSettingValue('system/ui/defaultView') else 'default'"></xsl:variable>
+                select="if (/root/request/view) then util:encodeForJavaScript(/root/request/view) else if(util:getSettingValue('catalog/ui/defaultView')) then util:getSettingValue('catalog/ui/defaultView') else 'default'"></xsl:variable>
   <xsl:variable name="angularModule"
                 select="if ($angularApp = 'gn_search') then concat('gn_search_', $searchView) else $angularApp"></xsl:variable>
 
@@ -159,7 +159,7 @@
                         else false()"/>
 
   <xsl:variable name="isRecaptchaEnabled"
-                select="$env/system/userSelfRegistration/recaptcha/enable = 'true'" />
+                select="$env/usersgroups/userSelfRegistration/recaptcha/enable = 'true'" />
 
   <!-- TODO: retrieve from settings -->
   <xsl:variable name="geopublishMatchingPattern"

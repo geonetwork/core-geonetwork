@@ -104,7 +104,7 @@
                           padding-left="4pt"
                           text-align="left">
                   <xsl:call-template name="replacePlaceholders">
-                    <xsl:with-param name="value" select="$env/system/metadata/pdfReport/headerLeft"/>
+                    <xsl:with-param name="value" select="$env/metadata/pdfReport/headerLeft"/>
                   </xsl:call-template>
                 </fo:block>
               </fo:table-cell>
@@ -114,7 +114,7 @@
                           padding-left="4pt"
                           text-align="right">
                   <xsl:call-template name="replacePlaceholders">
-                    <xsl:with-param name="value" select="$env/system/metadata/pdfReport/headerRight"/>
+                    <xsl:with-param name="value" select="$env/metadata/pdfReport/headerRight"/>
                   </xsl:call-template>
                 </fo:block>
               </fo:table-cell>
@@ -138,7 +138,7 @@
                           padding-left="4pt"
                           text-align="left">
                   <xsl:call-template name="replacePlaceholders">
-                    <xsl:with-param name="value" select="$env/system/metadata/pdfReport/footerLeft"/>
+                    <xsl:with-param name="value" select="$env/metadata/pdfReport/footerLeft"/>
                   </xsl:call-template>
                 </fo:block>
               </fo:table-cell>
@@ -149,9 +149,9 @@
                           padding-left="4pt"
                           text-align="right">
                   <xsl:call-template name="replacePlaceholders">
-                    <xsl:with-param name="value" select="$env/system/metadata/pdfReport/footerRight"/>
+                    <xsl:with-param name="value" select="$env/metadata/pdfReport/footerRight"/>
                   </xsl:call-template>
-                  <xsl:if test="string($env/system/metadata/pdfReport/footerRight)"> | </xsl:if>
+                  <xsl:if test="string($env/metadata/pdfReport/footerRight)"> | </xsl:if>
                   <fo:page-number/>/<fo:page-number-citation ref-id="terminator"/>
                 </fo:block>
               </fo:table-cell>
@@ -170,8 +170,8 @@
                                 $value, '\{date\}',
                                 format-dateTime(current-dateTime(),$df)),
                                   '\{siteInfo\}',
-                                  concat($env/system/system/site/name, '-',
-                                         $env/system/system/site/organization))"/>
+                                  concat($env/system/catalog/site/name, '-',
+                                         $env/system/catalog/site/organization))"/>
   </xsl:template>
 
 
