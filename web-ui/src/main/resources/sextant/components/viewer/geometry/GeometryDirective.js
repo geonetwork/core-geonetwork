@@ -56,10 +56,11 @@
           inputFormat: "@",
           inputCrs: "@",
           inputErrorHandler: "=",
-          nameType: "@"
+          nameType: "@",
+          activeGeometryTool: "="
         },
         templateUrl:
-          "../../sextant/components/viewer/geometry/" + "partials/geometrytool.html",
+          "../../catalog/components/viewer/geometry/" + "partials/geometrytool.html",
         controllerAs: "ctrl",
         bindToController: true,
         controller: [
@@ -98,7 +99,6 @@
             // add our layer&interactions to the map
             ctrl.map.addInteraction(ctrl.drawInteraction);
             ctrl.map.addInteraction(ctrl.modifyInteraction);
-
             ctrl.drawInteraction.setActive(false);
             ctrl.modifyInteraction.setActive(false);
             olDecorateInteraction(ctrl.drawInteraction);
@@ -131,12 +131,12 @@
                 outputAsWFSFeaturesCollection: ctrl.outputAsFeatures
                 // TODO: make sure this works everytime?
               });
+
               // When adding a geom to an existing feature we must update the layer
               if (ctrl.geomIsMulti && !isNew) {
                 ctrl.source.refresh();
               }
             }
-
             ctrl.drawInteraction.on("drawstart", function () {
               angular.forEach(ctrl.map.getInteractions(), function (interaction) {
                 if (
@@ -174,6 +174,7 @@
                 event.feature.setGeometry(geom);
               }
               ctrl.features.push(event.feature);
+
               updateOutput(event.feature);
 
               // prevent interference by zoom interaction
@@ -235,6 +236,30 @@
                 }
               }
             }
+
+            // Only one draw interaction at a time
+            function setActiveGeometryTool(e) {
+              if (
+                (ctrl.activeGeometryTool.current === undefined ||
+                  ctrl.activeGeometryTool.current !== $scope.$id) &&
+                e.oldValue === false
+              ) {
+                $scope.ctrl.activeGeometryTool.current = $scope.$id;
+              }
+            }
+
+            ctrl.drawInteraction.on("change:active", setActiveGeometryTool);
+            ctrl.modifyInteraction.on("change:active", setActiveGeometryTool);
+
+            $scope.$watchCollection("ctrl.activeGeometryTool", function(n) {
+              if (n && n.current !== $scope.$id) {
+                ctrl.drawInteraction.setActive(false);
+                ctrl.modifyInteraction.setActive(false);
+              } else {
+                ctrl.drawInteraction.setActive(true);
+              }
+            });
+
             $scope.$watch(function () {
               return ctrl.input + ctrl.inputCrs + ctrl.inputFormat;
             }, handleInputUpdate);

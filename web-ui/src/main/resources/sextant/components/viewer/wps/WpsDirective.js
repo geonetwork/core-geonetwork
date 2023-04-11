@@ -127,6 +127,7 @@
             attrs.cancelPrevious !== undefined
               ? !!scope.$eval(attrs.cancelPrevious)
               : true;
+          scope.activeGeometryTool = { current: undefined };
 
           // this will hold pre-loaded process descriptions
           // keys are: '<processId>@<uri>'
@@ -352,6 +353,7 @@
                   function (response) {
                     scope.describeState = "succeeded";
                     scope.describeResponse = response;
+                    scope.activeGeometryTool = { current: undefined };
 
                     if (response.processDescription) {
                       // Bind input directly in link object
