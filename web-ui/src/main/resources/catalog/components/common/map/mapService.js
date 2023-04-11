@@ -576,7 +576,6 @@
             }
             var projExtent = proj.getExtent();
             if (wkts && wkts.length) {
-              var geometry;
               var geoms = [];
               var format = new ol.format.GeoJSON();
               wkts.forEach(function (wkt) {
@@ -590,31 +589,26 @@
               });
               var geometryCollection = new ol.geom.GeometryCollection(geoms);
               feat.setGeometry(geometryCollection);
-              // // If is composed of one geometry of type point
-              // if (extent.length === 1 &&
-              //     extent[0][0] === extent[0][2] &&
-              //     extent[0][1] === extent[0][3]) {
-              //   geometry = new ol.geom.Point([extent[0][0], extent[0][1]]);
-              // } else {
-              //   // Build multipolygon from the set of bboxes
-              //   geometry = new ol.geom.MultiPolygon([]);
-              //   for (var j = 0; j < extent.length; j++) {
-              //     // TODO: Point will not be supported in multi geometry
-              //     var projectedExtent = ol.proj.transformExtent(extent[j], 'EPSG:4326', proj);
-              //     if (!ol.extent.intersects(projectedExtent, projExtent)) {
-              //       continue;
-              //     }
-              //     var coords = this.getPolygonFromExtent(
-              //       ol.extent.getIntersection(projectedExtent, projExtent)
-              //     );
-              //     geometry.appendPolygon(new ol.geom.Polygon(coords));
-              //   }
-              // }
-              // // no valid bbox was found: clear geometry
-              // if (!geometry.getPolygons().length) {
-              //   geometry = null;
-              // }
-              // feat.setGeometry(geometry);
+
+              if (
+                !gnGlobalSettings.gnCfg.mods.map["map-search"].geodesicExtents &&
+                !proj.isGlobal() &&
+                !feat.getGeometry().isEmpty()
+              ) {
+                var geometry = new ol.geom.MultiPolygon([]);
+
+                var coords = this.getPolygonFromExtent(
+                  ol.extent.getIntersection(feat.getGeometry().getExtent(), projExtent)
+                );
+
+                geometry.appendPolygon(new ol.geom.Polygon(coords));
+                // no valid bbox was found: clear geometry
+                if (!geometry.getPolygons().length) {
+                  geometry = null;
+                }
+                feat = new ol.Feature();
+                feat.setGeometry(geometry);
+              }
             }
             return feat;
           },

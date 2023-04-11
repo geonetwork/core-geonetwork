@@ -1182,6 +1182,8 @@
     "mapConfigContext-help": "URL to the map context file which can contain the variable lang, for 3 letters language code, between '{' and '}'",
     "mapConfigExtent": "Extent, expressed in current projection",
     "mapConfigLayers": "Layer objects in JSON: {\"type\"=\"XXX\",\"arg1\":\"YYY\",...}",
+    "mapConfigSearchGeodesicExtents": "Use geodesic extents for metadata results",
+    "mapConfigSearchGeodesicExtents-help": "When enabled, use the metadata extent full polygon projected (usually a trapezoid when displaying the map in a local projection). When disabled create a polygon using min /max (displayed as a a rectangle) ",
     "system/xlinkResolver/referencedDeletionAllowed": "Allow deletion of subtemplates referenced through an xlink.",
     "system/xlinkResolver/referencedDeletionAllowed-help": "Checked means allow.",
     "ui-grid": "Search results configuration",

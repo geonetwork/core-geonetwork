@@ -808,7 +808,8 @@
             "map-search": {
               context: "../../map/config-viewer.xml",
               extent: [0, 0, 0, 0],
-              layers: []
+              layers: [],
+              geodesicExtents: false
             },
             "map-editor": {
               context: "",
