@@ -8,23 +8,18 @@
     <i class="fa fa-gear"></i>
     <span class="caret"></span>
   </button>
-  <ul class="dropdown-menu" role="menu"
-      data-ng-init="isUsingEnglishEditor =
+  <!-- Force CERSAT and EMODNET record to use UI in english. -->
+  <ul
+    class="dropdown-menu"
+    role="menu"
+    data-ng-init="isUsingEnglishEditor =
           (md.standardName === 'ISO 19115-3:2018 - Remote Sensing'
-           || md.standardName === 'ISO 19115:2003/19139 - EMODNET - BATHYMETRY')">
+           || md.standardName === 'ISO 19115:2003/19139 - EMODNET - BATHYMETRY');
+                  editingLanguage = isUsingEnglishEditor ? 'eng' : lang"
+  >
     <li ng-if="user.canEditRecord(md)">
-      <!-- Force CERSAT and EMODNET record to use UI in english. -->
       <a
-        ng-show="isUsingEnglishEditor"
-        ng-href="{{::gnUrl}}../eng/catalog.edit#/metadata/{{::md.id}}"
-        target="_blank"
-      >
-        <i class="fa fa-pencil"></i>
-        <span translate>edit</span>
-      </a>
-      <a
-        ng-hide="isUsingEnglishEditor"
-        ng-href="{{::gnUrl}}catalog.edit#/metadata/{{::md.id}}"
+        ng-href="{{::gnUrl}}../{{editingLanguage}}/catalog.edit#/metadata/{{::md.id}}"
         target="_blank"
       >
         <i class="fa fa-pencil"></i>
@@ -78,14 +73,14 @@
     <li role="menuitem" class="divider" />
 
     <li>
-      <a ng-href="" data-ng-click="mdService.duplicate(md)">
+      <a ng-href="" data-ng-click="mdService.duplicate(md, editingLanguage)">
         <i class="fa fa-copy"></i><span translate>duplicate</span></a
       >
     </li>
     <li
       data-ng-if="md.documentStandard == 'iso19139' || md.documentStandard == 'iso19115-3.2018'"
     >
-      <a ng-href="" data-ng-click="mdService.createChild(md)">
+      <a ng-href="" data-ng-click="mdService.createChild(md, editingLanguage)">
         <i class="fa fa-sitemap"></i><span translate>createChild</span></a
       >
     </li>

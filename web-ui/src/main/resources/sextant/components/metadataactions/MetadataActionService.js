@@ -101,8 +101,11 @@
        * @param {string} id
        * @param {boolean} child
        */
-      var duplicateMetadata = function (id, child) {
-        var url = sextantUrlPrefix + "catalog.edit#/";
+      var duplicateMetadata = function (id, child, editingLanguage) {
+        var url =
+          sextantUrlPrefix +
+          (editingLanguage ? "../" + editingLanguage + "/" : "") +
+          "catalog.edit#/";
         if (id) {
           if (child) {
             url += "create?childOf=" + id;
@@ -116,8 +119,8 @@
       /** Create a child of the given metadata. Open the editor in new page.
        * @param {string} md
        */
-      this.createChild = function (md) {
-        duplicateMetadata(md.id, true);
+      this.createChild = function (md, editingLanguage) {
+        duplicateMetadata(md.id, true, editingLanguage);
       };
 
       /**
@@ -453,8 +456,8 @@
        * Duplicate the given metadata. Open the editor in new page.
        * @param {string} md
        */
-      this.duplicate = function (md) {
-        duplicateMetadata(md.id, false);
+      this.duplicate = function (md, editingLanguage) {
+        duplicateMetadata(md.id, false, editingLanguage);
       };
 
       /**
