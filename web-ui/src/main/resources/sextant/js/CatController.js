@@ -1551,6 +1551,15 @@
                   : "";
             return angular.isFunction(this[fnName]) ? this[fnName]() : this.isConnected();
           },
+          canDeletePublishedMetadata: function () {
+            var profile =
+                gnConfig["metadata.delete.profilePublishedMetadata"] || "Editor",
+              fnName =
+                profile !== ""
+                  ? "is" + profile[0].toUpperCase() + profile.substring(1) + "OrMore"
+                  : "";
+            return angular.isFunction(this[fnName]) ? this[fnName]() : false;
+          },
           canPublishMetadata: function () {
             var profile =
                 gnConfig["metadata.publication.profilePublishMetadata"] || "Reviewer",
