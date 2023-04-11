@@ -251,7 +251,7 @@
             ctrl.drawInteraction.on("change:active", setActiveGeometryTool);
             ctrl.modifyInteraction.on("change:active", setActiveGeometryTool);
 
-            $scope.$watchCollection("ctrl.activeGeometryTool", function(n) {
+            $scope.$watchCollection("ctrl.activeGeometryTool", function (n) {
               if (n && n.current !== $scope.$id) {
                 ctrl.drawInteraction.setActive(false);
                 ctrl.modifyInteraction.setActive(false);
