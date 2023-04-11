@@ -8,11 +8,14 @@
     <i class="fa fa-gear"></i>
     <span class="caret"></span>
   </button>
-  <ul class="dropdown-menu" role="menu">
+  <ul class="dropdown-menu" role="menu"
+      data-ng-init="isUsingEnglishEditor =
+          (md.standardName === 'ISO 19115-3:2018 - Remote Sensing'
+           || md.standardName === 'ISO 19115:2003/19139 - EMODNET - BATHYMETRY')">
     <li ng-if="user.canEditRecord(md)">
-      <!-- Force CERSAT record to use UI in english. -->
+      <!-- Force CERSAT and EMODNET record to use UI in english. -->
       <a
-        ng-show="md.standardName === 'ISO 19115-3:2018 - Remote Sensing'"
+        ng-show="isUsingEnglishEditor"
         ng-href="{{::gnUrl}}../eng/catalog.edit#/metadata/{{::md.id}}"
         target="_blank"
       >
@@ -20,7 +23,7 @@
         <span translate>edit</span>
       </a>
       <a
-        ng-hide="md.standardName === 'ISO 19115-3:2018 - Remote Sensing'"
+        ng-hide="isUsingEnglishEditor"
         ng-href="{{::gnUrl}}catalog.edit#/metadata/{{::md.id}}"
         target="_blank"
       >
@@ -56,7 +59,13 @@
         3. Retire metadata (id = 3)
     -->
 
-    <li data-ng-if="user.isReviewerOrMore()">
+    <li
+      data-ng-show="(!md.isPublished()
+                      || (md.isPublished()
+                        && user.canDeletePublishedMetadata()))
+                      && user.canEditRecord(md)
+                      && user.isReviewerOrMore()"
+    >
       <a
         data-gn-click-and-spin="mdService.deleteMd(md)"
         data-gn-confirm-click="{{::('deleteRecordConfirm' | translate:md)}}"
