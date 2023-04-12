@@ -84,13 +84,13 @@ public class SextantStatusActions extends DefaultStatusActions {
             listOfId.add(status.getMetadataId());
 
             // --- if the status is already set to value of status then do nothing
-            if (status.equals(currentStatus)) {
+            if (statusId.equals(currentStatus)) {
                 unchanged.add(status.getMetadataId());
             }
 
-            if (status.equals(StatusValue.Status.APPROVED)) {
+            if (statusId.equals(StatusValue.Status.APPROVED)) {
                 // setAllOperations(mid); - this is a short cut that could be enabled
-            } else if (status.equals(StatusValue.Status.RETIRED)) {
+            } else if (statusId.equals(StatusValue.Status.RETIRED)) {
                 unsetAllOperations(status.getMetadataId());
             }
 
