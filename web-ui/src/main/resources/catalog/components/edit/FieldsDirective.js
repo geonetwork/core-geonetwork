@@ -526,4 +526,80 @@
       };
     }
   ]);
+
+  /**
+   * @ngdoc directive
+   * @name gn_fields.directive:gnDuplicatedMetadataTitleChecker
+   *
+   * @description
+   * Checks if the associated control value exists in another metadata record title.
+   * Configure in your metadata schema config-editor.xml the usage of this directive
+   * for the title element. For example, for iso19139:
+   * <fields>
+   *   ...
+   *   <for name="gmd:title" use="data-gn-duplicated-metadata-title-checker" />
+   */
+  module.directive("gnDuplicatedMetadataTitleChecker", [
+    "gnCurrentEdit",
+    "$http",
+    "$compile",
+    function (gnCurrentEdit, $http, $compile) {
+      return {
+        restrict: "A",
+        scope: {},
+        link: function (scope, element, attrs) {
+          var messageTemplate =
+            "<p class='help-block' " +
+            "style='color: #d9534f' " +
+            "data-ng-show='duplicatedTitle && !hiddenControl' " +
+            "data-translate>metadataDuplicatedTitle</p>";
+          var messageTemplateCompiled = $compile(messageTemplate)(scope);
+
+          var messageTarget = element.context;
+          element.blur(function () {
+            if (messageTarget.value !== scope.metadataTitle) {
+              scope.metadataTitle = messageTarget.value;
+              scope.checkTitle(scope.metadataTitle, scope.metadataUuid);
+            }
+          });
+
+          scope.metadataUuid = gnCurrentEdit.uuid;
+          scope.metadataTitle = messageTarget.value;
+          scope.duplicatedTitle = false;
+          scope.hiddenControl = false;
+
+          element.after(messageTemplateCompiled);
+
+          // For multilingual title directive to hide the messages when displaying each language individually
+          var observer = new MutationObserver(function (event) {
+            if (event.length > 0) {
+              scope.hiddenControl = event[0].target.className.indexOf("hidden") > -1;
+              // Force a refresh, otherwise takes a delay to show / hide the message
+              scope.$apply();
+            }
+          });
+
+          observer.observe(messageTarget, {
+            attributes: true,
+            attributeFilter: ["class"],
+            childList: false,
+            characterData: false
+          });
+
+          scope.checkTitle = function (metadataTitle, metadataUuid) {
+            $http
+              .post(
+                "../api/records/" + metadataUuid + "/checkDuplicatedTitle",
+                metadataTitle
+              )
+              .then(function (response) {
+                scope.duplicatedTitle = response.data === true;
+              });
+          };
+
+          scope.checkTitle(scope.metadataTitle, scope.metadataUuid);
+        }
+      };
+    }
+  ]);
 })();

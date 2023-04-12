@@ -23,6 +23,8 @@
 
 package org.fao.geonet.api.records;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -31,6 +33,8 @@ import jeeves.server.context.ServiceContext;
 import jeeves.services.ReadWriteController;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
+import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.search.SearchHit;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
@@ -48,6 +52,7 @@ import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.mef.MEFLib;
+import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.utils.Log;
@@ -55,11 +60,11 @@ import org.fao.geonet.utils.Xml;
 import org.jdom.Attribute;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -74,6 +79,7 @@ import java.util.stream.Stream;
 import static org.fao.geonet.api.ApiParams.*;
 import static org.fao.geonet.kernel.mef.MEFLib.Version.Constants.MEF_V1_ACCEPT_TYPE;
 import static org.fao.geonet.kernel.mef.MEFLib.Version.Constants.MEF_V2_ACCEPT_TYPE;
+import static org.fao.geonet.kernel.search.EsSearchManager.FIELDLIST_UUID;
 
 @RequestMapping(value = {
     "/{portal}/api/records"
@@ -85,7 +91,7 @@ import static org.fao.geonet.kernel.mef.MEFLib.Version.Constants.MEF_V2_ACCEPT_T
 public class MetadataApi {
 
     @Autowired
-    SchemaManager _schemaManager;
+    SchemaManager schemaManager;
 
     @Autowired
     LanguageUtils languageUtils;
@@ -102,7 +108,8 @@ public class MetadataApi {
     @Autowired
     GeonetworkDataDirectory dataDirectory;
 
-    private ApplicationContext context;
+    @Autowired
+    EsSearchManager esSearchManager;
 
     public static RelatedResponse getAssociatedResources(
         String language, ServiceContext context,
@@ -121,12 +128,7 @@ public class MetadataApi {
             .resolve("xslt/services/metadata/relation.xsl");
 
         final Element transform = Xml.transform(raw, relatedXsl);
-        RelatedResponse response = (RelatedResponse) Xml.unmarshall(transform, RelatedResponse.class);
-        return response;
-    }
-
-    public synchronized void setApplicationContext(ApplicationContext context) {
-        this.context = context;
+        return (RelatedResponse) Xml.unmarshall(transform, RelatedResponse.class);
     }
 
     @io.swagger.v3.oas.annotations.Operation(summary = "Get a metadata record",
@@ -182,22 +184,23 @@ public class MetadataApi {
         List<String> accept = Arrays.asList(acceptHeader.split(","));
 
         String defaultFormatter = "xsl-view";
+        String forwardResponsePrefix = "forward:";
+
         if (accept.contains(MediaType.TEXT_HTML_VALUE)
             || accept.contains(MediaType.APPLICATION_XHTML_XML_VALUE)
             || accept.contains("application/pdf")) {
-            return "forward:" + (metadataUuid + "/formatters/" + defaultFormatter);
+            return forwardResponsePrefix + (metadataUuid + "/formatters/" + defaultFormatter);
         } else if (accept.contains(MediaType.APPLICATION_XML_VALUE)
             || accept.contains(MediaType.APPLICATION_JSON_VALUE)) {
-            return "forward:" + (metadataUuid + "/formatters/xml");
+            return forwardResponsePrefix + (metadataUuid + "/formatters/xml");
         } else if (accept.contains("application/zip")
             || accept.contains(MEF_V1_ACCEPT_TYPE)
             || accept.contains(MEF_V2_ACCEPT_TYPE)) {
-            return "forward:" + (metadataUuid + "/formatters/zip");
+            return forwardResponsePrefix + (metadataUuid + "/formatters/zip");
         } else {
             // FIXME this else is never reached because any of the accepted medias match one of the previous if conditions.
             response.setHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_XHTML_XML_VALUE);
-            //response.sendRedirect(metadataUuid + "/formatters/" + defaultFormatter);
-            return "forward:" + (metadataUuid + "/formatters/" + defaultFormatter);
+            return forwardResponsePrefix + (metadataUuid + "/formatters/" + defaultFormatter);
         }
     }
 
@@ -312,11 +315,13 @@ public class MetadataApi {
         }
 
         if (increasePopularity) {
-            dataManager.increasePopularity(context, metadata.getId() + "");
+            metadataUtils.increasePopularity(context, metadata.getId() + "");
         }
 
 
-        boolean withValidationErrors = false, keepXlinkAttributes = false, forEditing = false;
+        boolean withValidationErrors = false;
+        boolean keepXlinkAttributes = false;
+        boolean forEditing = false;
 
         String mdId = String.valueOf(metadata.getId());
 
@@ -329,22 +334,21 @@ public class MetadataApi {
         Element xml = withInfo ?
             dataManager.getMetadata(context, mdId, forEditing,
                 withValidationErrors, keepXlinkAttributes) :
-            dataManager.getMetadataNoInfo(context, mdId + "");
+            metadataUtils.getMetadataNoInfo(context, mdId + "");
 
         if (addSchemaLocation) {
-            Attribute schemaLocAtt = _schemaManager.getSchemaLocation(
+            Attribute schemaLocAtt = schemaManager.getSchemaLocation(
                 metadata.getDataInfo().getSchemaId(), context);
 
-            if (schemaLocAtt != null) {
-                if (xml.getAttribute(
+            if (schemaLocAtt != null && (xml.getAttribute(
                     schemaLocAtt.getName(),
-                    schemaLocAtt.getNamespace()) == null) {
+                    schemaLocAtt.getNamespace()) == null)) {
                     xml.setAttribute(schemaLocAtt);
                     // make sure namespace declaration for schemalocation is present -
                     // remove it first (does nothing if not there) then add it
                     xml.removeNamespaceDeclaration(schemaLocAtt.getNamespace());
                     xml.addNamespaceDeclaration(schemaLocAtt.getNamespace());
-                }
+
             }
         }
 
@@ -572,7 +576,7 @@ public class MetadataApi {
         }
         ServiceContext context = ApiUtils.createServiceContext(request);
 
-        dataManager.increasePopularity(context, metadata.getId() + "");
+        metadataUtils.increasePopularity(context, metadata.getId() + "");
 
         return new ResponseEntity<>(metadata.getDataInfo().getPopularity() + "",
             HttpStatus.CREATED);
@@ -690,13 +694,84 @@ public class MetadataApi {
 
     }
 
+    @io.swagger.v3.oas.annotations.Operation(summary = "Check metadata title not duplicated",
+        description = "Verifies if the metadata title is in use.")
+    @PostMapping(value = "/{metadataUuid:.+}/checkDuplicatedTitle",
+        produces = {MediaType.APPLICATION_JSON_VALUE})
+    @PreAuthorize("hasAuthority('Editor')")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Return if the title is duplicated or not."),
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)
+    })
+    public ResponseEntity<Boolean> checkMetadataTitleDuplicated(
+        @Parameter(description = API_PARAM_RECORD_UUID,
+            required = true)
+        @PathVariable
+        String metadataUuid,
+        @Parameter(description = "Metadata title to check",
+            required = true)
+        @RequestBody String title,
+        HttpServletRequest request
+    )
+        throws Exception {
+        try {
+            ApiUtils.canViewRecord(metadataUuid, request);
+        } catch (SecurityException e) {
+            Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
+            throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
+        }
+
+        Set<String> uuidsWithSameTitle = retrieveMetadataUuidsFromTitle(esSearchManager, title, metadataUuid);
+
+        return ResponseEntity.ok(!uuidsWithSameTitle.isEmpty());
+    }
 
     private boolean isIncludedAttributeTable(RelatedResponse.Fcat fcat) {
         return fcat != null
             && fcat.getItem() != null
-            && fcat.getItem().size() > 0
+            && !fcat.getItem().isEmpty()
             && fcat.getItem().get(0).getFeatureType() != null
             && fcat.getItem().get(0).getFeatureType().getAttributeTable() != null
             && fcat.getItem().get(0).getFeatureType().getAttributeTable().getElement() != null;
+    }
+
+
+    /**
+     * Retrieves the list of metadata uuids that have the same dataset identifier.
+     *
+     * @param searchMan             ES search manager.
+     * @param metadataTitle         Metadata title to check.
+     * @param metadataUuidToExclude Metadata identifier to exclude from the search.
+     * @return  A list of metadata uuids that have the same metadata title.
+     */
+    private Set<String> retrieveMetadataUuidsFromTitle(EsSearchManager searchMan,
+                                                            String metadataTitle,
+                                                            String metadataUuidToExclude) {
+
+        Set<String> metadataUuids = new HashSet<>();
+
+        String jsonQuery = " {" +
+            "       \"query_string\": {" +
+            "       \"query\": \"+resourceTitleObject.\\\\*.keyword:\\\"%s\\\" -uuid:\\\"%s\\\"\"" +
+            "       }" +
+            "}";
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            JsonNode esJsonQuery = objectMapper.readTree(String.format(jsonQuery, metadataTitle, metadataUuidToExclude));
+
+            final SearchResponse queryResult = searchMan.query(
+                esJsonQuery,
+                FIELDLIST_UUID,
+                0, 1000);
+
+            for (SearchHit hit : queryResult.getHits()) {
+                String uuid = hit.getSourceAsMap().get(Geonet.IndexFieldNames.UUID).toString();
+                metadataUuids.add(uuid);
+            }
+
+        } catch (Exception ex) {
+            Log.error(API.LOG_MODULE_NAME, ex.getMessage(), ex);
+        }
+        return metadataUuids;
     }
 }
