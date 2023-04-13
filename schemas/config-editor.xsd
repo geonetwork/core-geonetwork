@@ -921,10 +921,12 @@ record, or if the field should be displayed to enable the user to add new occurr
 Customizing thesaurus
 ~~~~~~~~~~~~~~~~~~~~~
 
-To configure the type of transformations,
-or the number of keywords allowed, or if the widget
-has to be displayed in a fieldset, or as simple field for a
-thesaurus define a specific configuration:
+To configure:
+ * the type of transformations (eg. to-iso19139-keyword, to-iso19139-keyword-with-anchor - see convert/thesaurus-transformation.xsl in each plugins),
+ * the number of keywords allowed,
+ * if the widget has to be displayed in a fieldset or as simple field
+ * if the concept relationships are browsable (enable by default)
+
 
 e.g. only 2 INSPIRE themes:
 
@@ -949,6 +951,7 @@ e.g. only 2 INSPIRE themes:
             <xs:attribute name="maxtags" type="xs:integer" use="optional"/>
             <xs:attribute name="orderById" type="xs:boolean" use="optional"/>
             <xs:attribute name="fieldset" type="xs:string" use="optional" fixed="false"/>
+            <xs:attribute name="browsable" type="xs:string" use="optional" fixed="false"/>
             <xs:attribute name="transformations" type="xs:string" use="optional"/>
           </xs:complexType>
         </xs:element>
