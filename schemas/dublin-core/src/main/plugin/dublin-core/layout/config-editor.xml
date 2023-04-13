@@ -50,7 +50,7 @@
 
   <!-- View configuration -->
   <views>
-    <view name="default" upAndDownControlHidden="true">
+    <view name="default" default="true" upAndDownControlHidden="true">
       <sidePanel>
         <directive data-gn-need-help="creating-metadata"/>
         <directive data-gn-validation-report=""/>

@@ -614,6 +614,7 @@
   <!-- View configuration -->
   <views>
     <view name="default"
+          default="true"
           class="gn-label-above-input gn-indent-bluescale">
       <sidePanel>
         <directive data-gn-need-help="creating-metadata"/>
