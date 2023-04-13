@@ -157,7 +157,7 @@
           ];
           gnCurrentEdit.tab
             ? params.push("&currTab=", gnCurrentEdit.tab)
-            : params.push("&currTab=", "default");
+            : params.push("&currTab=", "");
           gnCurrentEdit.withAttributes &&
             params.push("&withAttributes=", gnCurrentEdit.displayAttributes);
           return params.join("");

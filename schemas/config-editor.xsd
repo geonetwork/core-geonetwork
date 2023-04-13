@@ -620,6 +620,16 @@ The key of the view name stored in ``{schema}/loc/{lang}/strings.xml`` or the el
             ]]></xs:documentation>
         </xs:annotation>
       </xs:attribute>
+      <xs:attribute name="default" type="xs:boolean" fixed="true">
+        <xs:annotation>
+          <xs:documentation><![CDATA[
+One default view per schema can be configured. The default tab of the default
+view will be used if no tab parameter set. To customize the tab to use
+on a per metadata record basis, check the EditorController.js file schemaCustomConfig
+function.
+            ]]></xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
       <xs:attribute name="disabled" type="xs:boolean" fixed="true">
         <xs:annotation>
           <xs:documentation><![CDATA[
