@@ -182,7 +182,7 @@
             element.is("input") || element.is("textarea") || element.is("select");
           var isDiv = element.is("div");
           var tooltipTarget = element;
-          var iconMode = gnCurrentEdit.displayTooltipsMode === "icon";
+          var tooltipsMode = gnCurrentEdit.displayTooltipsMode;
           var isDatePicker = "gnDatePicker" in attrs;
 
           var createTooltipForDatePicker = function (el, tooltip) {
@@ -193,7 +193,7 @@
           };
 
           // use a icon to click on for a tooltip
-          if (iconMode) {
+          if (tooltipsMode === "icon") {
             var tooltipAfterLabel = false;
             var tooltipIconCompiled = $compile(iconTemplate)(scope);
             var asideCol;
@@ -294,6 +294,7 @@
             $(".popover").hide();
           };
 
+          var mouseLeft = false;
           var initTooltip = function (event) {
             if (!isInitialized && gnCurrentEdit.displayTooltips) {
               // Retrieve field information (there is a cache)
@@ -322,7 +323,7 @@
                     }
 
                     // Only one tooltip visible at a time
-                    if (iconMode) {
+                    if (tooltipsMode === "icon") {
                       closeTooltips();
                     }
 
@@ -363,24 +364,27 @@
                         closeBtn +
                         '<h3 class="popover-title"></h3>' +
                         '<div class="popover-content"><p></p></div></div></div>',
-                      trigger: isField ? "focus" : "click"
+                      trigger:
+                        tooltipsMode === "onhover" ? "hover" : isField ? "focus" : "click"
                     });
 
-                    // Remove first the event, to avoid ending with multiple events
-                    // every time a new popup is displayed.
-                    $(document)
-                      .off("click", ".popover .close-popover")
-                      .on("click", ".popover .close-popover", function () {
-                        $(this).closest("div.popover").remove();
-                      });
+                    if (tooltipsMode === "" || tooltipsMode === "onfocus") {
+                      // Remove first the event, to avoid ending with multiple events
+                      // every time a new popup is displayed.
+                      $(document)
+                        .off("click", ".popover .close-popover")
+                        .on("click", ".popover .close-popover", function () {
+                          $(this).closest("div.popover").remove();
+                        });
 
-                    if (event === "click" && !isField) {
-                      tooltipTarget.click("show");
-                    } else {
-                      tooltipTarget.focus();
+                      if (event === "click" && !isField) {
+                        tooltipTarget.click("show");
+                      } else {
+                        tooltipTarget.focus();
+                      }
                     }
 
-                    if (iconMode) {
+                    if (tooltipsMode === "icon") {
                       tooltipTarget.mouseleave(function () {
                         isInitialized = false;
                       });
@@ -405,7 +409,9 @@
                       }
                     });
 
-                    tooltipTarget.popover("show");
+                    if (!mouseLeft) {
+                      tooltipTarget.popover("show");
+                    }
                     isInitialized = true;
                   }
                 });
@@ -413,7 +419,16 @@
           };
 
           // On hover trigger the tooltip init
-          if (iconMode) {
+          if (tooltipsMode === "onhover") {
+            tooltipTarget.hover(function () {
+              initTooltip("hover");
+            });
+            tooltipTarget.mouseleave(function () {
+              mouseLeft = true;
+              tooltipTarget.popover("hide");
+              isInitialized = false;
+            });
+          } else if (tooltipsMode === "icon") {
             tooltipTarget.hover(function (event) {
               event.stopPropagation;
             });
