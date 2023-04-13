@@ -679,15 +679,16 @@ Display help documentation for all elements by default when loading the view.
 ]]></xs:documentation>
         </xs:annotation>
       </xs:attribute>
-      <xs:attribute name="displayTooltipsMode" type="xs:string">
+      <xs:attribute name="displayTooltipsMode">
         <xs:annotation>
           <xs:documentation><![CDATA[
-Display help documentation onhover elements (default) or by clicking on an icon.
+Display help documentation onfocus (default), onhover or by clicking on an icon.
 ]]></xs:documentation>
         </xs:annotation>
         <xs:simpleType>
           <xs:restriction base="xs:string">
             <xs:enumeration value="icon"/>
+            <xs:enumeration value="onfocus"/>
             <xs:enumeration value="onhover"/>
           </xs:restriction>
         </xs:simpleType>
