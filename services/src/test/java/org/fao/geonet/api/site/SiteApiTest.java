@@ -43,7 +43,7 @@ public class SiteApiTest extends AbstractServiceIntegrationTest {
                 .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isOk())
             .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
-            .andExpect(jsonPath("$['system/site/name']", is("My GeoNetwork catalogue")));
+            .andExpect(jsonPath("$['catalog/site/name']", is("My GeoNetwork catalogue")));
     }
 
     @Test
@@ -57,7 +57,7 @@ public class SiteApiTest extends AbstractServiceIntegrationTest {
                 .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isOk())
             .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
-            .andExpect(jsonPath("$['system/site/name']", is("My GeoNetwork catalogue")));
+            .andExpect(jsonPath("$['catalog/site/name']", is("My GeoNetwork catalogue")));
     }
 
 
@@ -74,11 +74,11 @@ public class SiteApiTest extends AbstractServiceIntegrationTest {
                 .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isOk())
             .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
-            .andExpect(jsonPath("$['system/site/name']", is("My GeoNetwork catalogue")));
+            .andExpect(jsonPath("$['catalog/site/name']", is("My GeoNetwork catalogue")));
 
         String newName = "DataHub";
         this.mockMvc.perform(post("/srv/api/site/settings")
-                .param("system/site/name", newName)
+                .param("catalog/site/name", newName)
                 .session(this.mockHttpSession)
                 .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(204));
@@ -88,7 +88,7 @@ public class SiteApiTest extends AbstractServiceIntegrationTest {
                 .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isOk())
             .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
-            .andExpect(jsonPath("$['system/site/name']", is(newName)));
+            .andExpect(jsonPath("$['catalog/site/name']", is(newName)));
     }
 
     @Test

@@ -144,7 +144,7 @@
             xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
       <sc:dataset>
         <sc:datasetLabel>
-          <xsl:value-of select="$env/system/site/name"/> content catalogue for Linked Data spiders
+          <xsl:value-of select="$env/catalog/site/name"/> content catalogue for Linked Data spiders
           (RDF)
         </sc:datasetLabel>
         <xsl:for-each select="metadata/record">

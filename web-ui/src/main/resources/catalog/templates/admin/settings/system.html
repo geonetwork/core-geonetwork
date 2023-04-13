@@ -87,12 +87,12 @@
                   <h3>{{section2.name | translate}}</h3>
 
                   <div
-                    data-ng-if="::section2.name === 'system/inspire'"
+                    data-ng-if="::section2.name === 'inspire'"
                     data-gn-need-help="inspire-configuration"
                     class="pull-right"
                   ></div>
                   <div
-                    data-ng-if="::section2.name === 'system/publication'"
+                    data-ng-if="::section2.name === 'metadata/publication'"
                     data-gn-need-help="doi"
                     class="pull-right"
                   ></div>
@@ -102,12 +102,12 @@
                     class="pull-right"
                   ></div>
                   <div
-                    data-ng-if="::section2.name === 'system/userSelfRegistration'"
+                    data-ng-if="::section2.name === 'usersgroups/userSelfRegistration'"
                     data-gn-need-help="user-self-registration"
                     class="pull-right"
                   ></div>
                   <div
-                    data-ng-if="::section2.name === 'system/csw'"
+                    data-ng-if="::section2.name === 'services/csw'"
                     data-gn-need-help="csw-configuration"
                     class="pull-right"
                   ></div>
@@ -234,7 +234,7 @@
                           {{'Administrator' | translate}}
                         </option>
                       </select>
-                      <div data-ng-switch-when="system/metadatacreate/preferredGroup">
+                      <div data-ng-switch-when="metadata/metadatacreate/preferredGroup">
                         <input
                           type="hidden"
                           id="{{s.name}}"
@@ -252,7 +252,9 @@
                         />
                       </div>
 
-                      <div data-ng-switch-when="system/metadatacreate/preferredTemplate">
+                      <div
+                        data-ng-switch-when="metadata/metadatacreate/preferredTemplate"
+                      >
                         <input
                           type="hidden"
                           id="{{s.name}}"
@@ -303,7 +305,7 @@
                       </div>
 
                       <input
-                        data-ng-switch-when="system/server/timeZone"
+                        data-ng-switch-when="catalog/server/timeZone"
                         type="input"
                         id="{{s.name}}"
                         data-gn-timezone-selector=""
@@ -314,7 +316,7 @@
 
                       <textarea
                         data-gn-autogrow=""
-                        data-ng-switch-when="system/harvesting/mail/template"
+                        data-ng-switch-when="harvester/mail/template"
                         type="text"
                         class="form-control"
                         id="{{s['name']}}"
@@ -324,7 +326,7 @@
                       >
                       <textarea
                         data-gn-autogrow=""
-                        data-ng-switch-when="system/harvesting/mail/templateError"
+                        data-ng-switch-when="harvester/mail/templateError"
                         type="text"
                         class="form-control"
                         id="{{s['name']}}"
@@ -334,7 +336,7 @@
                       >
                       <textarea
                         data-gn-autogrow=""
-                        data-ng-switch-when="system/harvesting/mail/templateWarning"
+                        data-ng-switch-when="harvester/mail/templateWarning"
                         type="text"
                         class="form-control"
                         id="{{s['name']}}"
@@ -344,7 +346,7 @@
                       >
 
                       <select
-                        data-ng-switch-when="system/server/protocol"
+                        data-ng-switch-when="catalog/server/protocol"
                         class="form-control"
                         name="{{s.name}}"
                       >
@@ -354,7 +356,7 @@
                         </option>
                       </select>
                       <select
-                        data-ng-switch-when="system/server/log"
+                        data-ng-switch-when="catalog/server/log"
                         class="form-control"
                         name="{{s.name}}"
                       >
@@ -367,7 +369,7 @@
                         </option>
                       </select>
                       <select
-                        data-ng-switch-when="system/localrating/notificationLevel"
+                        data-ng-switch-when="metadata/localrating/notificationLevel"
                         class="form-control"
                         name="{{s.name}}"
                         data-ng-model="s.value"
@@ -383,7 +385,7 @@
                         </option>
                       </select>
                       <select
-                        data-ng-switch-when="system/metadataprivs/publication/notificationLevel"
+                        data-ng-switch-when="metadata/metadataprivs/publication/notificationLevel"
                         class="form-control"
                         name="{{s.name}}"
                         data-ng-model="s.value"
@@ -399,19 +401,19 @@
                         </option>
                       </select>
                       <select
-                        data-ng-switch-when="system/oai/mdmode"
+                        data-ng-switch-when="services/oai/mdmode"
                         class="form-control"
                         name="{{s.name}}"
                       >
                         <option value="1" ng-selected="'1' == s.value">
-                          {{'system/oai/mdmode-valueTemporaExtent' | translate}}
+                          {{'services/oai/mdmode-valueTemporaExtent' | translate}}
                         </option>
                         <option value="2" ng-selected="'2' == s.value">
-                          {{'system/oai/mdmode-valueModificationDate' | translate}}
+                          {{'services/oai/mdmode-valueModificationDate' | translate}}
                         </option>
                       </select>
                       <select
-                        data-ng-switch-when="system/localrating/enable"
+                        data-ng-switch-when="metadata/localrating/enable"
                         class="form-control"
                         name="{{s.name}}"
                       >
@@ -427,26 +429,26 @@
                       </select>
 
                       <select
-                        data-ng-switch-when="system/inspire/atom"
+                        data-ng-switch-when="inspire/atom"
                         class="form-control"
                         name="{{s.name}}"
                         data-ng-model="atomFeedType"
                       >
                         <option value="disabled" ng-selected="'disabled' == s.value">
-                          {{'system/inspire/atomDisabled' | translate}}
+                          {{'inspire/atomDisabled' | translate}}
                         </option>
                         <option value="remote" ng-selected="'remote' == s.value">
-                          {{'system/inspire/atomRemote' | translate}}
+                          {{'inspire/atomRemote' | translate}}
                         </option>
                       </select>
 
                       <button
                         class="btn btn-primary pull-right ng-scope"
-                        data-ng-switch-when="system/inspire/atom"
+                        data-ng-switch-when="inspire/atom"
                         data-gn-click-and-spin="executeAtomHarvester()"
                       >
-                        <span class="fa fa-refresh"></span>&nbsp;
-                        {{'system/inspire/atomExecute' | translate}}
+                        <span class="fa fa-refresh"></span>&nbsp; {{'inspire/atomExecute'
+                        | translate}}
                       </button>
 
                       <div
@@ -520,7 +522,7 @@
 
                       <!-- Read only fields -->
                       <input
-                        data-ng-switch-when="system/platform/version"
+                        data-ng-switch-when="catalog/platform/version"
                         type="text"
                         class="form-control"
                         id="{{s['name']}}"
@@ -529,7 +531,7 @@
                         readonly="readonly"
                       />
                       <input
-                        data-ng-switch-when="system/platform/subVersion"
+                        data-ng-switch-when="catalog/platform/subVersion"
                         type="text"
                         class="form-control"
                         id="{{s['name']}}"
@@ -538,7 +540,7 @@
                         readonly="readonly"
                       />
                       <input
-                        data-ng-switch-when="system/site/svnUuid"
+                        data-ng-switch-when="catalog/site/svnUuid"
                         type="text"
                         class="form-control"
                         id="{{s['name']}}"
@@ -547,7 +549,7 @@
                         readonly="readonly"
                       />
                       <input
-                        data-ng-switch-when="system/proxy/password"
+                        data-ng-switch-when="network/proxy/password"
                         type="password"
                         autocomplete="new-password"
                         class="form-control"
@@ -556,7 +558,7 @@
                         value="{{s.value}}"
                       />
                       <input
-                        data-ng-switch-when="system/feedback/mailServer/password"
+                        data-ng-switch-when="catalog/feedback/mailServer/password"
                         type="password"
                         class="form-control"
                         id="{{s['name']}}"
@@ -564,14 +566,14 @@
                         value="{{s.value}}"
                       />
                       <input
-                        data-ng-switch-when="system/publication/doi/doipassword"
+                        data-ng-switch-when="metadata/publication/doi/doipassword"
                         type="password"
                         class="form-control"
                         id="{{s['name']}}"
                         name="{{s.name}}"
                         value="{{s.value}}"
                       />
-                      <div data-ng-switch-when="system/feedback/mailServer/host">
+                      <div data-ng-switch-when="catalog/feedback/mailServer/host">
                         <div class="input-group">
                           <input
                             type="text"
@@ -594,7 +596,7 @@
                           </span>
                         </div>
                       </div>
-                      <div data-ng-switch-when="system/server/host">
+                      <div data-ng-switch-when="catalog/server/host">
                         <div>
                           <input
                             type="text"
@@ -620,7 +622,7 @@
                         </div>
                       </div>
 
-                      <div data-ng-switch-when="system/server/port">
+                      <div data-ng-switch-when="catalog/server/port">
                         <input
                           type="text"
                           class="form-control"
@@ -634,7 +636,7 @@
 
                       <div
                         class="input-group"
-                        data-ng-switch-when="system/inspire/remotevalidation/url"
+                        data-ng-switch-when="inspire/remotevalidation/url"
                       >
                         <input
                           type="text"
@@ -642,12 +644,12 @@
                           id="{{s['name']}}"
                           name="{{s.name}}"
                           value="{{s.value}}"
-                          placeholder="{{'system/inspire/remotevalidation/url-placeholder' | translate}}"
+                          placeholder="{{'inspire/remotevalidation/url-placeholder' | translate}}"
                         />
                         <span class="input-group-btn">
                           <div
                             class="btn btn-default"
-                            onClick="document.getElementById('system/inspire/remotevalidation/url').value = 'https://inspire.ec.europa.eu/validator/';"
+                            onClick="document.getElementById('inspire/remotevalidation/url').value = 'https://inspire.ec.europa.eu/validator/';"
                             data-translate=""
                           >
                             validatorUseInspireOne
@@ -657,7 +659,7 @@
 
                       <div
                         class="input-group"
-                        data-ng-switch-when="system/inspire/remotevalidation/urlquery"
+                        data-ng-switch-when="inspire/remotevalidation/urlquery"
                       >
                         <input
                           type="text"
@@ -665,12 +667,12 @@
                           id="{{s['name']}}"
                           name="{{s.name}}"
                           value="{{s.value}}"
-                          placeholder="{{'system/inspire/remotevalidation/urlquery-placeholder' | translate}}"
+                          placeholder="{{'inspire/remotevalidation/urlquery-placeholder' | translate}}"
                         />
                         <span class="input-group-btn">
                           <div
                             class="btn btn-default"
-                            onClick="document.getElementById('system/inspire/remotevalidation/urlquery').value = 'https://inspire.ec.europa.eu/validator/';"
+                            onClick="document.getElementById('inspire/remotevalidation/urlquery').value = 'https://inspire.ec.europa.eu/validator/';"
                             data-translate=""
                           >
                             validatorUseInspireOne
@@ -679,7 +681,7 @@
                       </div>
 
                       <input
-                        data-ng-switch-when="system/metadataprivs/publication/notificationGroups"
+                        data-ng-switch-when="metadata/metadataprivs/publication/notificationGroups"
                         type="text"
                         class="form-control"
                         id="{{s['name']}}"
@@ -689,7 +691,7 @@
                       />
 
                       <input
-                        data-ng-switch-when="system/localrating/notificationGroups"
+                        data-ng-switch-when="metadata/localrating/notificationGroups"
                         type="text"
                         class="form-control"
                         id="{{s['name']}}"

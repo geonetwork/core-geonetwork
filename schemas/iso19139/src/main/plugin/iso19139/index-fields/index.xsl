@@ -156,7 +156,7 @@
         <xsl:copy-of select="gn-fn-index:add-multilingual-field('resourceTypeName', ., $allLanguages)"/>
       </xsl:for-each>
 
-      <!-- Since GN sets the timezone in system/server/timeZone setting as Java system default
+      <!-- Since GN sets the timezone in catalog/server/timeZone setting as Java system default
         timezone we can rely on XSLT functions to get current date in the right timezone -->
       <indexingDate>
         <xsl:value-of select="format-dateTime(current-dateTime(), $dateFormat)"/>
@@ -387,7 +387,7 @@
           </resourceLanguage>
         </xsl:for-each>
 
-        <xsl:variable name="inspireEnable" select="util:getSettingValue('system/inspire/enable')" />
+        <xsl:variable name="inspireEnable" select="util:getSettingValue('inspire/enable')" />
 
         <xsl:if test="$inspireEnable = 'true'">
           <!-- TODO: create specific INSPIRE template or mode -->
@@ -984,7 +984,7 @@
         </xsl:for-each>
       </xsl:for-each>
 
-      <xsl:variable name="atomProtocol" select="util:getSettingValue('system/inspire/atomProtocol')" />
+      <xsl:variable name="atomProtocol" select="util:getSettingValue('inspire/atomProtocol')" />
 
       <xsl:for-each select="gmd:distributionInfo/*">
         <xsl:for-each

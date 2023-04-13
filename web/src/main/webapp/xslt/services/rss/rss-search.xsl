@@ -40,7 +40,7 @@
 
         <title>
           <xsl:value-of
-            select="concat($env/system/site/name, ' (', $env/system/site/organization, ')')"/>
+            select="concat($env/catalog/site/name, ' (', $env/catalog/site/organization, ')')"/>
         </title>
         <link>
           <xsl:value-of select="$baseURL"/>

@@ -12,47 +12,47 @@
       <autodetect name="system/autodetect" position="9510">
         <enable name="system/autodetect/enable" position="9510" datatype="2" datatypeName="BOOLEAN">false</enable>
       </autodetect>
-      <autofixing name="system/autofixing" position="2410">
-        <enable name="system/autofixing/enable" position="2410" datatype="2" datatypeName="BOOLEAN">true</enable>
+      <autofixing name="metadata/autofixing" position="2410">
+        <enable name="metadata/autofixing/enable" position="2410" datatype="2" datatypeName="BOOLEAN">true</enable>
       </autofixing>
       <clickablehyperlinks name="system/clickablehyperlinks" position="2010">
         <enable name="system/clickablehyperlinks/enable" position="2010" datatype="2" datatypeName="BOOLEAN">true</enable>
       </clickablehyperlinks>
-      <csw name="system/csw" position="1220">
-        <contactId name="system/csw/contactId" position="1220" datatype="0" datatypeName="STRING" />
-        <enable name="system/csw/enable" position="1210" datatype="2" datatypeName="BOOLEAN">true</enable>
-        <metadataPublic name="system/csw/metadataPublic" position="1310" datatype="2" datatypeName="BOOLEAN">false</metadataPublic>
-        <transactionUpdateCreateXPath name="system/csw/transactionUpdateCreateXPath" position="1320" datatype="2" datatypeName="BOOLEAN">true</transactionUpdateCreateXPath>
+      <csw name="services/csw" position="1220">
+        <contactId name="services/csw/contactId" position="1220" datatype="0" datatypeName="STRING" />
+        <enable name="services/csw/enable" position="1210" datatype="2" datatypeName="BOOLEAN">true</enable>
+        <metadataPublic name="services/csw/metadataPublic" position="1310" datatype="2" datatypeName="BOOLEAN">false</metadataPublic>
+        <transactionUpdateCreateXPath name="services/csw/transactionUpdateCreateXPath" position="1320" datatype="2" datatypeName="BOOLEAN">true</transactionUpdateCreateXPath>
       </csw>
       <downloadservice name="system/downloadservice" position="2210">
         <leave name="system/downloadservice/leave" position="2210" datatype="0" datatypeName="STRING">false</leave>
         <simple name="system/downloadservice/simple" position="2220" datatype="0" datatypeName="STRING">true</simple>
         <withdisclaimer name="system/downloadservice/withdisclaimer" position="2230" datatype="0" datatypeName="STRING">false</withdisclaimer>
       </downloadservice>
-      <feedback name="system/feedback" position="610">
-        <email name="system/feedback/email" position="610" datatype="0" datatypeName="STRING" />
-        <mailServer name="system/feedback/mailServer" position="630">
-          <host name="system/feedback/mailServer/host" position="630" datatype="0" datatypeName="STRING" />
-          <password name="system/feedback/mailServer/password" position="643" datatype="0" datatypeName="STRING" />
-          <port name="system/feedback/mailServer/port" position="640" datatype="1" datatypeName="INT">25</port>
-          <ssl name="system/feedback/mailServer/ssl" position="641" datatype="2" datatypeName="BOOLEAN">false</ssl>
-          <username name="system/feedback/mailServer/username" position="642" datatype="0" datatypeName="STRING" />
+      <feedback name="catalog/feedback" position="610">
+        <email name="catalog/feedback/email" position="610" datatype="0" datatypeName="STRING" />
+        <mailServer name="catalog/feedback/mailServer" position="630">
+          <host name="catalog/feedback/mailServer/host" position="630" datatype="0" datatypeName="STRING" />
+          <password name="catalog/feedback/mailServer/password" position="643" datatype="0" datatypeName="STRING" />
+          <port name="catalog/feedback/mailServer/port" position="640" datatype="1" datatypeName="INT">25</port>
+          <ssl name="catalog/feedback/mailServer/ssl" position="641" datatype="2" datatypeName="BOOLEAN">false</ssl>
+          <username name="catalog/feedback/mailServer/username" position="642" datatype="0" datatypeName="STRING" />
         </mailServer>
       </feedback>
-      <harvester name="system/harvester" position="9010">
-        <enableEditing name="system/harvester/enableEditing" position="9010" datatype="2" datatypeName="BOOLEAN">false</enableEditing>
+      <harvester name="harvester" position="9010">
+        <enableEditing name="harvester/enableEditing" position="9010" datatype="2" datatypeName="BOOLEAN">false</enableEditing>
       </harvester>
-      <harvesting name="system/harvesting" position="9025">
-        <mail name="system/harvesting/mail" position="9025">
-          <enabled name="system/harvesting/mail/enabled" position="9025" datatype="2" datatypeName="BOOLEAN">false</enabled>
-          <level1 name="system/harvesting/mail/level1" position="9026" datatype="2" datatypeName="BOOLEAN">false</level1>
-          <level2 name="system/harvesting/mail/level2" position="9027" datatype="2" datatypeName="BOOLEAN">false</level2>
-          <level3 name="system/harvesting/mail/level3" position="9028" datatype="2" datatypeName="BOOLEAN">false</level3>
-          <recipient name="system/harvesting/mail/recipient" position="9020" datatype="0" datatypeName="STRING" />
-          <subject name="system/harvesting/mail/subject" position="9024" datatype="0" datatypeName="STRING">[$$harvesterType$$] $$harvesterName$$ finished harvesting</subject>
-          <template name="system/harvesting/mail/template" position="9021" datatype="0" datatypeName="STRING" />
-          <templateError name="system/harvesting/mail/templateError" position="9022" datatype="0" datatypeName="STRING">There was an error on the harvesting: $$errorMsg$$</templateError>
-          <templateWarning name="system/harvesting/mail/templateWarning" position="9023" datatype="0" datatypeName="STRING" />
+      <harvesting name="harvester" position="9025">
+        <mail name="harvester/mail" position="9025">
+          <enabled name="harvester/mail/enabled" position="9025" datatype="2" datatypeName="BOOLEAN">false</enabled>
+          <level1 name="harvester/mail/level1" position="9026" datatype="2" datatypeName="BOOLEAN">false</level1>
+          <level2 name="harvester/mail/level2" position="9027" datatype="2" datatypeName="BOOLEAN">false</level2>
+          <level3 name="harvester/mail/level3" position="9028" datatype="2" datatypeName="BOOLEAN">false</level3>
+          <recipient name="harvester/mail/recipient" position="9020" datatype="0" datatypeName="STRING" />
+          <subject name="harvester/mail/subject" position="9024" datatype="0" datatypeName="STRING">[$$harvesterType$$] $$harvesterName$$ finished harvesting</subject>
+          <template name="harvester/mail/template" position="9021" datatype="0" datatypeName="STRING" />
+          <templateError name="harvester/mail/templateError" position="9022" datatype="0" datatypeName="STRING">There was an error on the harvesting: $$errorMsg$$</templateError>
+          <templateWarning name="harvester/mail/templateWarning" position="9023" datatype="0" datatypeName="STRING" />
         </mail>
       </harvesting>
       <indexoptimizer name="system/indexoptimizer" position="6030">
@@ -68,42 +68,42 @@
           <min name="system/indexoptimizer/interval/min" position="6090" datatype="1" datatypeName="INT">0</min>
         </interval>
       </indexoptimizer>
-      <inspire name="system/inspire" position="7210">
-        <enable name="system/inspire/enable" position="7210" datatype="2" datatypeName="BOOLEAN">false</enable>
-        <enableSearchPanel name="system/inspire/enableSearchPanel" position="7220" datatype="2" datatypeName="BOOLEAN">false</enableSearchPanel>
+      <inspire name="inspire" position="7210">
+        <enable name="inspire/enable" position="7210" datatype="2" datatypeName="BOOLEAN">false</enable>
+        <enableSearchPanel name="inspire/enableSearchPanel" position="7220" datatype="2" datatypeName="BOOLEAN">false</enableSearchPanel>
       </inspire>
-      <intranet name="system/intranet" position="320">
-        <netmask name="system/intranet/netmask" position="320" datatype="0" datatypeName="STRING">255.0.0.0</netmask>
-        <network name="system/intranet/network" position="310" datatype="0" datatypeName="STRING">127.0.0.1</network>
+      <intranet name="network/intranet" position="320">
+        <netmask name="network/intranet/netmask" position="320" datatype="0" datatypeName="STRING">255.0.0.0</netmask>
+        <network name="network/intranet/network" position="310" datatype="0" datatypeName="STRING">127.0.0.1</network>
       </intranet>
-      <localrating name="system/localrating" position="2110">
-        <enable name="system/localrating/enable" position="2110" datatype="2" datatypeName="BOOLEAN">false</enable>
+      <localrating name="metadata/localrating" position="2110">
+        <enable name="metadata/localrating/enable" position="2110" datatype="2" datatypeName="BOOLEAN">false</enable>
       </localrating>
-      <metadata name="system/metadata" position="9150">
-        <defaultView name="system/metadata/defaultView" position="9150" datatype="0" datatypeName="STRING">simple</defaultView>
-        <enableInspireView name="system/metadata/enableInspireView" position="9130" datatype="2" datatypeName="BOOLEAN">false</enableInspireView>
-        <enableIsoView name="system/metadata/enableIsoView" position="9120" datatype="2" datatypeName="BOOLEAN">true</enableIsoView>
-        <enableSimpleView name="system/metadata/enableSimpleView" position="9110" datatype="2" datatypeName="BOOLEAN">true</enableSimpleView>
-        <enableXmlView name="system/metadata/enableXmlView" position="9140" datatype="2" datatypeName="BOOLEAN">true</enableXmlView>
+      <metadata name="metadata" position="9150">
+        <defaultView name="metadata/defaultView" position="9150" datatype="0" datatypeName="STRING">simple</defaultView>
+        <enableInspireView name="metadata/enableInspireView" position="9130" datatype="2" datatypeName="BOOLEAN">false</enableInspireView>
+        <enableIsoView name="metadata/enableIsoView" position="9120" datatype="2" datatypeName="BOOLEAN">true</enableIsoView>
+        <enableSimpleView name="metadata/enableSimpleView" position="9110" datatype="2" datatypeName="BOOLEAN">true</enableSimpleView>
+        <enableXmlView name="metadata/enableXmlView" position="9140" datatype="2" datatypeName="BOOLEAN">true</enableXmlView>
       </metadata>
-      <metadataprivs name="system/metadataprivs" position="9180">
-        <usergrouponly name="system/metadataprivs/usergrouponly" position="9180" datatype="2" datatypeName="BOOLEAN">false</usergrouponly>
+      <metadataprivs name="metadata/metadataprivs" position="9180">
+        <usergrouponly name="metadata/metadataprivs/usergrouponly" position="9180" datatype="2" datatypeName="BOOLEAN">false</usergrouponly>
       </metadataprivs>
-      <oai name="system/oai" position="7030">
-        <cachesize name="system/oai/cachesize" position="7030" datatype="1" datatypeName="INT">60</cachesize>
-        <mdmode name="system/oai/mdmode" position="7010" datatype="0" datatypeName="STRING">1</mdmode>
-        <tokentimeout name="system/oai/tokentimeout" position="7020" datatype="1" datatypeName="INT">3600</tokentimeout>
+      <oai name="services/oai" position="7030">
+        <cachesize name="services/oai/cachesize" position="7030" datatype="1" datatypeName="INT">60</cachesize>
+        <mdmode name="services/oai/mdmode" position="7010" datatype="0" datatypeName="STRING">1</mdmode>
+        <tokentimeout name="services/oai/tokentimeout" position="7020" datatype="1" datatypeName="INT">3600</tokentimeout>
       </oai>
-      <platform name="system/platform" position="160">
-        <subVersion name="system/platform/subVersion" position="160" datatype="0" datatypeName="STRING">SNAPSHOT</subVersion>
-        <version name="system/platform/version" position="150" datatype="0" datatypeName="STRING">2.11.0</version>
+      <platform name="catalog/platform" position="160">
+        <subVersion name="catalog/platform/subVersion" position="160" datatype="0" datatypeName="STRING">SNAPSHOT</subVersion>
+        <version name="catalog/platform/version" position="150" datatype="0" datatypeName="STRING">2.11.0</version>
       </platform>
-      <proxy name="system/proxy" position="520">
-        <host name="system/proxy/host" position="520" datatype="0" datatypeName="STRING" />
-        <password name="system/proxy/password" position="550" datatype="0" datatypeName="STRING" />
-        <port name="system/proxy/port" position="530" datatype="1" datatypeName="INT" />
-        <use name="system/proxy/use" position="510" datatype="2" datatypeName="BOOLEAN">false</use>
-        <username name="system/proxy/username" position="540" datatype="0" datatypeName="STRING" />
+      <proxy name="network/proxy" position="520">
+        <host name="network/proxy/host" position="520" datatype="0" datatypeName="STRING" />
+        <password name="network/proxy/password" position="550" datatype="0" datatypeName="STRING" />
+        <port name="network/proxy/port" position="530" datatype="1" datatypeName="INT" />
+        <use name="network/proxy/use" position="510" datatype="2" datatypeName="BOOLEAN">false</use>
+        <username name="network/proxy/username" position="540" datatype="0" datatypeName="STRING" />
       </proxy>
       <removedMetadata name="system/removedMetadata" position="710">
         <dir name="system/removedMetadata/dir" position="710" datatype="0" datatypeName="STRING">WEB-INF/data/removed</dir>
@@ -120,10 +120,10 @@
       <selectionmanager name="system/selectionmanager" position="910">
         <maxrecords name="system/selectionmanager/maxrecords" position="910" datatype="1" datatypeName="INT">1000</maxrecords>
       </selectionmanager>
-      <server name="system/server" position="210">
-        <host name="system/server/host" position="210" datatype="0" datatypeName="STRING">localhost</host>
-        <port name="system/server/port" position="230" datatype="1" datatypeName="INT">8080</port>
-        <protocol name="system/server/protocol" position="220" datatype="0" datatypeName="STRING">http</protocol>
+      <server name="catalog/server" position="210">
+        <host name="catalog/server/host" position="210" datatype="0" datatypeName="STRING">localhost</host>
+        <port name="catalog/server/port" position="230" datatype="1" datatypeName="INT">8080</port>
+        <protocol name="catalog/server/protocol" position="220" datatype="0" datatypeName="STRING">http</protocol>
        </server>
       <shib name="system/shib" position="1760">
         <firstname name="system/shib/firstname" position="1760" datatype="0" datatypeName="STRING">Shib-InetOrgPerson-givenName</firstname>
@@ -133,11 +133,11 @@
         <use name="system/shib/use" position="1710" datatype="2" datatypeName="BOOLEAN">false</use>
         <username name="system/shib/username" position="1740" datatype="0" datatypeName="STRING">REMOTE_USER</username>
       </shib>
-      <site name="system/site" position="110">
-        <name name="system/site/name" position="110" datatype="0" datatypeName="STRING">My GeoNetwork catalogue</name>
-        <organization name="system/site/organization" position="130" datatype="0" datatypeName="STRING">My organization</organization>
-        <siteId name="system/site/siteId" position="120" datatype="0" datatypeName="STRING">190d9c2a-4327-454e-a803-ef4680824dde</siteId>
-        <svnUuid name="system/site/svnUuid" position="170" datatype="0" datatypeName="STRING">a99d80b3-b6e1-4bd2-a454-b952f0244082</svnUuid>
+      <site name="catalog/site" position="110">
+        <name name="catalog/site/name" position="110" datatype="0" datatypeName="STRING">My GeoNetwork catalogue</name>
+        <organization name="catalog/site/organization" position="130" datatype="0" datatypeName="STRING">My organization</organization>
+        <siteId name="catalog/site/siteId" position="120" datatype="0" datatypeName="STRING">190d9c2a-4327-454e-a803-ef4680824dde</siteId>
+        <svnUuid name="catalog/site/svnUuid" position="170" datatype="0" datatypeName="STRING">a99d80b3-b6e1-4bd2-a454-b952f0244082</svnUuid>
       </site>
       <threadedindexing name="system/threadedindexing" position="9210">
         <maxthreads name="system/threadedindexing/maxthreads" position="9210" datatype="1" datatypeName="INT">1</maxthreads>
@@ -145,11 +145,11 @@
       <userFeedback name="system/userFeedback" position="1911">
         <enable name="system/userFeedback/enable" position="1911" datatype="2" datatypeName="BOOLEAN">true</enable>
       </userFeedback>
-      <userSelfRegistration name="system/userSelfRegistration" position="1910">
-        <enable name="system/userSelfRegistration/enable" position="1910" datatype="2" datatypeName="BOOLEAN">false</enable>
+      <userSelfRegistration name="usersgroups/userSelfRegistration" position="1910">
+        <enable name="usersgroups/userSelfRegistration/enable" position="1910" datatype="2" datatypeName="BOOLEAN">false</enable>
       </userSelfRegistration>
-      <xlinkResolver name="system/xlinkResolver" position="2310">
-        <enable name="system/xlinkResolver/enable" position="2310" datatype="2" datatypeName="BOOLEAN">false</enable>
+      <xlinkResolver name="metadata/xlinkResolver" position="2310">
+        <enable name="metadata/xlinkResolver/enable" position="2310" datatype="2" datatypeName="BOOLEAN">false</enable>
       </xlinkResolver>
       <z3950 name="system/z3950" position="410">
         <enable name="system/z3950/enable" position="410" datatype="2" datatypeName="BOOLEAN">true</enable>
@@ -162,47 +162,47 @@
         <autodetect name="system/autodetect" position="9510">
           <enable name="system/autodetect/enable" position="9510" datatype="2" datatypeName="BOOLEAN">false</enable>
         </autodetect>
-        <autofixing name="system/autofixing" position="2410">
-          <enable name="system/autofixing/enable" position="2410" datatype="2" datatypeName="BOOLEAN">true</enable>
+        <autofixing name="metadata/autofixing" position="2410">
+          <enable name="metadata/autofixing/enable" position="2410" datatype="2" datatypeName="BOOLEAN">true</enable>
         </autofixing>
         <clickablehyperlinks name="system/clickablehyperlinks" position="2010">
           <enable name="system/clickablehyperlinks/enable" position="2010" datatype="2" datatypeName="BOOLEAN">true</enable>
         </clickablehyperlinks>
-        <csw name="system/csw" position="1220">
-          <contactId name="system/csw/contactId" position="1220" datatype="0" datatypeName="STRING" />
-          <enable name="system/csw/enable" position="1210" datatype="2" datatypeName="BOOLEAN">true</enable>
-          <metadataPublic name="system/csw/metadataPublic" position="1310" datatype="2" datatypeName="BOOLEAN">false</metadataPublic>
-          <transactionUpdateCreateXPath name="system/csw/transactionUpdateCreateXPath" position="1320" datatype="2" datatypeName="BOOLEAN">true</transactionUpdateCreateXPath>
+        <csw name="services/csw" position="1220">
+          <contactId name="services/csw/contactId" position="1220" datatype="0" datatypeName="STRING" />
+          <enable name="services/csw/enable" position="1210" datatype="2" datatypeName="BOOLEAN">true</enable>
+          <metadataPublic name="services/csw/metadataPublic" position="1310" datatype="2" datatypeName="BOOLEAN">false</metadataPublic>
+          <transactionUpdateCreateXPath name="services/csw/transactionUpdateCreateXPath" position="1320" datatype="2" datatypeName="BOOLEAN">true</transactionUpdateCreateXPath>
         </csw>
         <downloadservice name="system/downloadservice" position="2210">
           <leave name="system/downloadservice/leave" position="2210" datatype="0" datatypeName="STRING">false</leave>
           <simple name="system/downloadservice/simple" position="2220" datatype="0" datatypeName="STRING">true</simple>
           <withdisclaimer name="system/downloadservice/withdisclaimer" position="2230" datatype="0" datatypeName="STRING">false</withdisclaimer>
         </downloadservice>
-        <feedback name="system/feedback" position="610">
-          <email name="system/feedback/email" position="610" datatype="0" datatypeName="STRING" />
-          <mailServer name="system/feedback/mailServer" position="630">
-            <host name="system/feedback/mailServer/host" position="630" datatype="0" datatypeName="STRING" />
-            <password name="system/feedback/mailServer/password" position="643" datatype="0" datatypeName="STRING" />
-            <port name="system/feedback/mailServer/port" position="640" datatype="1" datatypeName="INT">25</port>
-            <ssl name="system/feedback/mailServer/ssl" position="641" datatype="2" datatypeName="BOOLEAN">false</ssl>
-            <username name="system/feedback/mailServer/username" position="642" datatype="0" datatypeName="STRING" />
+        <feedback name="catalog/feedback" position="610">
+          <email name="catalog/feedback/email" position="610" datatype="0" datatypeName="STRING" />
+          <mailServer name="catalog/feedback/mailServer" position="630">
+            <host name="catalog/feedback/mailServer/host" position="630" datatype="0" datatypeName="STRING" />
+            <password name="catalog/feedback/mailServer/password" position="643" datatype="0" datatypeName="STRING" />
+            <port name="catalog/feedback/mailServer/port" position="640" datatype="1" datatypeName="INT">25</port>
+            <ssl name="catalog/feedback/mailServer/ssl" position="641" datatype="2" datatypeName="BOOLEAN">false</ssl>
+            <username name="catalog/feedback/mailServer/username" position="642" datatype="0" datatypeName="STRING" />
           </mailServer>
         </feedback>
-        <harvester name="system/harvester" position="9010">
-          <enableEditing name="system/harvester/enableEditing" position="9010" datatype="2" datatypeName="BOOLEAN">false</enableEditing>
+        <harvester name="harvester" position="9010">
+          <enableEditing name="harvester/enableEditing" position="9010" datatype="2" datatypeName="BOOLEAN">false</enableEditing>
         </harvester>
-        <harvesting name="system/harvesting" position="9025">
-          <mail name="system/harvesting/mail" position="9025">
-            <enabled name="system/harvesting/mail/enabled" position="9025" datatype="2" datatypeName="BOOLEAN">false</enabled>
-            <level1 name="system/harvesting/mail/level1" position="9026" datatype="2" datatypeName="BOOLEAN">false</level1>
-            <level2 name="system/harvesting/mail/level2" position="9027" datatype="2" datatypeName="BOOLEAN">false</level2>
-            <level3 name="system/harvesting/mail/level3" position="9028" datatype="2" datatypeName="BOOLEAN">false</level3>
-            <recipient name="system/harvesting/mail/recipient" position="9020" datatype="0" datatypeName="STRING" />
-            <subject name="system/harvesting/mail/subject" position="9024" datatype="0" datatypeName="STRING">[$$harvesterType$$] $$harvesterName$$ finished harvesting</subject>
-            <template name="system/harvesting/mail/template" position="9021" datatype="0" datatypeName="STRING" />
-            <templateError name="system/harvesting/mail/templateError" position="9022" datatype="0" datatypeName="STRING">There was an error on the harvesting: $$errorMsg$$</templateError>
-            <templateWarning name="system/harvesting/mail/templateWarning" position="9023" datatype="0" datatypeName="STRING" />
+        <harvesting name="harvester" position="9025">
+          <mail name="harvester/mail" position="9025">
+            <enabled name="harvester/mail/enabled" position="9025" datatype="2" datatypeName="BOOLEAN">false</enabled>
+            <level1 name="harvester/mail/level1" position="9026" datatype="2" datatypeName="BOOLEAN">false</level1>
+            <level2 name="harvester/mail/level2" position="9027" datatype="2" datatypeName="BOOLEAN">false</level2>
+            <level3 name="harvester/mail/level3" position="9028" datatype="2" datatypeName="BOOLEAN">false</level3>
+            <recipient name="harvester/mail/recipient" position="9020" datatype="0" datatypeName="STRING" />
+            <subject name="harvester/mail/subject" position="9024" datatype="0" datatypeName="STRING">[$$harvesterType$$] $$harvesterName$$ finished harvesting</subject>
+            <template name="harvester/mail/template" position="9021" datatype="0" datatypeName="STRING" />
+            <templateError name="harvester/mail/templateError" position="9022" datatype="0" datatypeName="STRING">There was an error on the harvesting: $$errorMsg$$</templateError>
+            <templateWarning name="harvester/mail/templateWarning" position="9023" datatype="0" datatypeName="STRING" />
           </mail>
         </harvesting>
         <indexoptimizer name="system/indexoptimizer" position="6030">
@@ -218,42 +218,42 @@
             <min name="system/indexoptimizer/interval/min" position="6090" datatype="1" datatypeName="INT">0</min>
           </interval>
         </indexoptimizer>
-        <inspire name="system/inspire" position="7210">
-          <enable name="system/inspire/enable" position="7210" datatype="2" datatypeName="BOOLEAN">false</enable>
-          <enableSearchPanel name="system/inspire/enableSearchPanel" position="7220" datatype="2" datatypeName="BOOLEAN">false</enableSearchPanel>
+        <inspire name="inspire" position="7210">
+          <enable name="inspire/enable" position="7210" datatype="2" datatypeName="BOOLEAN">false</enable>
+          <enableSearchPanel name="inspire/enableSearchPanel" position="7220" datatype="2" datatypeName="BOOLEAN">false</enableSearchPanel>
         </inspire>
-        <intranet name="system/intranet" position="320">
-          <netmask name="system/intranet/netmask" position="320" datatype="0" datatypeName="STRING">255.0.0.0</netmask>
-          <network name="system/intranet/network" position="310" datatype="0" datatypeName="STRING">127.0.0.1</network>
+        <intranet name="network/intranet" position="320">
+          <netmask name="network/intranet/netmask" position="320" datatype="0" datatypeName="STRING">255.0.0.0</netmask>
+          <network name="network/intranet/network" position="310" datatype="0" datatypeName="STRING">127.0.0.1</network>
         </intranet>
-        <localrating name="system/localrating" position="2110">
-          <enable name="system/localrating/enable" position="2110" datatype="2" datatypeName="BOOLEAN">false</enable>
+        <localrating name="metadata/localrating" position="2110">
+          <enable name="metadata/localrating/enable" position="2110" datatype="2" datatypeName="BOOLEAN">false</enable>
         </localrating>
-        <metadata name="system/metadata" position="9150">
-          <defaultView name="system/metadata/defaultView" position="9150" datatype="0" datatypeName="STRING">simple</defaultView>
-          <enableInspireView name="system/metadata/enableInspireView" position="9130" datatype="2" datatypeName="BOOLEAN">false</enableInspireView>
-          <enableIsoView name="system/metadata/enableIsoView" position="9120" datatype="2" datatypeName="BOOLEAN">true</enableIsoView>
-          <enableSimpleView name="system/metadata/enableSimpleView" position="9110" datatype="2" datatypeName="BOOLEAN">true</enableSimpleView>
-          <enableXmlView name="system/metadata/enableXmlView" position="9140" datatype="2" datatypeName="BOOLEAN">true</enableXmlView>
+        <metadata name="metadata" position="9150">
+          <defaultView name="metadata/defaultView" position="9150" datatype="0" datatypeName="STRING">simple</defaultView>
+          <enableInspireView name="metadata/enableInspireView" position="9130" datatype="2" datatypeName="BOOLEAN">false</enableInspireView>
+          <enableIsoView name="metadata/enableIsoView" position="9120" datatype="2" datatypeName="BOOLEAN">true</enableIsoView>
+          <enableSimpleView name="metadata/enableSimpleView" position="9110" datatype="2" datatypeName="BOOLEAN">true</enableSimpleView>
+          <enableXmlView name="metadata/enableXmlView" position="9140" datatype="2" datatypeName="BOOLEAN">true</enableXmlView>
         </metadata>
-        <metadataprivs name="system/metadataprivs" position="9180">
-          <usergrouponly name="system/metadataprivs/usergrouponly" position="9180" datatype="2" datatypeName="BOOLEAN">false</usergrouponly>
+        <metadataprivs name="metadata/metadataprivs" position="9180">
+          <usergrouponly name="metadata/metadataprivs/usergrouponly" position="9180" datatype="2" datatypeName="BOOLEAN">false</usergrouponly>
         </metadataprivs>
-        <oai name="system/oai" position="7030">
-          <cachesize name="system/oai/cachesize" position="7030" datatype="1" datatypeName="INT">60</cachesize>
-          <mdmode name="system/oai/mdmode" position="7010" datatype="0" datatypeName="STRING">1</mdmode>
-          <tokentimeout name="system/oai/tokentimeout" position="7020" datatype="1" datatypeName="INT">3600</tokentimeout>
+        <oai name="services/oai" position="7030">
+          <cachesize name="services/oai/cachesize" position="7030" datatype="1" datatypeName="INT">60</cachesize>
+          <mdmode name="services/oai/mdmode" position="7010" datatype="0" datatypeName="STRING">1</mdmode>
+          <tokentimeout name="services/oai/tokentimeout" position="7020" datatype="1" datatypeName="INT">3600</tokentimeout>
         </oai>
-        <platform name="system/platform" position="160">
-          <subVersion name="system/platform/subVersion" position="160" datatype="0" datatypeName="STRING">SNAPSHOT</subVersion>
-          <version name="system/platform/version" position="150" datatype="0" datatypeName="STRING">2.11.0</version>
+        <platform name="catalog/platform" position="160">
+          <subVersion name="catalog/platform/subVersion" position="160" datatype="0" datatypeName="STRING">SNAPSHOT</subVersion>
+          <version name="catalog/platform/version" position="150" datatype="0" datatypeName="STRING">2.11.0</version>
         </platform>
-        <proxy name="system/proxy" position="520">
-          <host name="system/proxy/host" position="520" datatype="0" datatypeName="STRING" />
-          <password name="system/proxy/password" position="550" datatype="0" datatypeName="STRING" />
-          <port name="system/proxy/port" position="530" datatype="1" datatypeName="INT" />
-          <use name="system/proxy/use" position="510" datatype="2" datatypeName="BOOLEAN">false</use>
-          <username name="system/proxy/username" position="540" datatype="0" datatypeName="STRING" />
+        <proxy name="network/proxy" position="520">
+          <host name="network/proxy/host" position="520" datatype="0" datatypeName="STRING" />
+          <password name="network/proxy/password" position="550" datatype="0" datatypeName="STRING" />
+          <port name="network/proxy/port" position="530" datatype="1" datatypeName="INT" />
+          <use name="network/proxy/use" position="510" datatype="2" datatypeName="BOOLEAN">false</use>
+          <username name="network/proxy/username" position="540" datatype="0" datatypeName="STRING" />
         </proxy>
         <removedMetadata name="system/removedMetadata" position="710">
           <dir name="system/removedMetadata/dir" position="710" datatype="0" datatypeName="STRING">WEB-INF/data/removed</dir>
@@ -270,10 +270,10 @@
         <selectionmanager name="system/selectionmanager" position="910">
           <maxrecords name="system/selectionmanager/maxrecords" position="910" datatype="1" datatypeName="INT">1000</maxrecords>
         </selectionmanager>
-        <server name="system/server" position="210">
-          <host name="system/server/host" position="210" datatype="0" datatypeName="STRING">localhost</host>
-          <port name="system/server/port" position="230" datatype="1" datatypeName="INT">8080</port>
-          <protocol name="system/server/protocol" position="220" datatype="0" datatypeName="STRING">http</protocol>
+        <server name="catalog/server" position="210">
+          <host name="catalog/server/host" position="210" datatype="0" datatypeName="STRING">localhost</host>
+          <port name="catalog/server/port" position="230" datatype="1" datatypeName="INT">8080</port>
+          <protocol name="catalog/server/protocol" position="220" datatype="0" datatypeName="STRING">http</protocol>
          </server>
         <shib name="system/shib" position="1760">
           <firstname name="system/shib/firstname" position="1760" datatype="0" datatypeName="STRING">Shib-InetOrgPerson-givenName</firstname>
@@ -283,11 +283,11 @@
           <use name="system/shib/use" position="1710" datatype="2" datatypeName="BOOLEAN">false</use>
           <username name="system/shib/username" position="1740" datatype="0" datatypeName="STRING">REMOTE_USER</username>
         </shib>
-        <site name="system/site" position="110">
-          <name name="system/site/name" position="110" datatype="0" datatypeName="STRING">My GeoNetwork catalogue</name>
-          <organization name="system/site/organization" position="130" datatype="0" datatypeName="STRING">My organization</organization>
-          <siteId name="system/site/siteId" position="120" datatype="0" datatypeName="STRING">190d9c2a-4327-454e-a803-ef4680824dde</siteId>
-          <svnUuid name="system/site/svnUuid" position="170" datatype="0" datatypeName="STRING">a99d80b3-b6e1-4bd2-a454-b952f0244082</svnUuid>
+        <site name="catalog/site" position="110">
+          <name name="catalog/site/name" position="110" datatype="0" datatypeName="STRING">My GeoNetwork catalogue</name>
+          <organization name="catalog/site/organization" position="130" datatype="0" datatypeName="STRING">My organization</organization>
+          <siteId name="catalog/site/siteId" position="120" datatype="0" datatypeName="STRING">190d9c2a-4327-454e-a803-ef4680824dde</siteId>
+          <svnUuid name="catalog/site/svnUuid" position="170" datatype="0" datatypeName="STRING">a99d80b3-b6e1-4bd2-a454-b952f0244082</svnUuid>
         </site>
         <threadedindexing name="system/threadedindexing" position="9210">
           <maxthreads name="system/threadedindexing/maxthreads" position="9210" datatype="1" datatypeName="INT">1</maxthreads>
@@ -295,11 +295,11 @@
         <userFeedback name="system/userFeedback" position="1911">
           <enable name="system/userFeedback/enable" position="1911" datatype="2" datatypeName="BOOLEAN">true</enable>
         </userFeedback>
-        <userSelfRegistration name="system/userSelfRegistration" position="1910">
-          <enable name="system/userSelfRegistration/enable" position="1910" datatype="2" datatypeName="BOOLEAN">false</enable>
+        <userSelfRegistration name="usersgroups/userSelfRegistration" position="1910">
+          <enable name="usersgroups/userSelfRegistration/enable" position="1910" datatype="2" datatypeName="BOOLEAN">false</enable>
         </userSelfRegistration>
-        <xlinkResolver name="system/xlinkResolver" position="2310">
-          <enable name="system/xlinkResolver/enable" position="2310" datatype="2" datatypeName="BOOLEAN">false</enable>
+        <xlinkResolver name="metadata/xlinkResolver" position="2310">
+          <enable name="metadata/xlinkResolver/enable" position="2310" datatype="2" datatypeName="BOOLEAN">false</enable>
         </xlinkResolver>
         <z3950 name="system/z3950" position="410">
           <enable name="system/z3950/enable" position="410" datatype="2" datatypeName="BOOLEAN">true</enable>

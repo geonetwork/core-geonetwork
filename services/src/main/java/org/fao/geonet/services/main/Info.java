@@ -171,7 +171,7 @@ public class Info implements Service {
             } else if (type.equals(INSPIRE)) {
                 result.addContent(gc.getBean(SettingManager.class).getValues(
                     new String[]{
-                        "system/inspire/enable"
+                        "inspire/enable"
                     }));
             } else if (type.equals(HARVESTER)) {
                 result.addContent(gc.getBean(SettingManager.class).getValues(

@@ -33,13 +33,13 @@
     <xsl:variable name="infoSeparator" select="'|'"/>
 
     <div class="row gn-portal"
-         id="{/root/gui/systemConfig/system/site/siteId}"
+         id="{/root/gui/systemConfig/catalog/site/siteId}"
          itemscope="itemscope"
          itemtype="http://schema.org/DataCatalog">
-      <meta itemprop="name" content="{/root/gui/systemConfig/system/site/name}"></meta>
+      <meta itemprop="name" content="{/root/gui/systemConfig/catalog/site/name}"></meta>
       <span itemprop="publisher" itemscope="itemscope" itemtype="http://schema.org/Organization">
-        <meta itemprop="name" content="{/root/gui/systemConfig/system/site/organization}"></meta>
-        <meta itemprop="email" content="{/root/gui/systemConfig/system/feedback/email}"></meta>
+        <meta itemprop="name" content="{/root/gui/systemConfig/catalog/site/organization}"></meta>
+        <meta itemprop="email" content="{/root/gui/systemConfig/catalog/feedback/email}"></meta>
       </span>
       <meta itemprop="url" content="{$nodeUrl}search"></meta>
 
@@ -48,16 +48,16 @@
           <div class="gn-md-thumbnail">
             <a href="{$nodeUrl}">
               <img class="gn-portal-main-logo"
-                   src="../../images/logos/{$env//system/site/siteId}.png"/>
+                   src="../../images/logos/{$env//catalog/site/siteId}.png"/>
             </a>
           </div>
 
           <a href="{$nodeUrl}">
             <h1>
-              <xsl:value-of select="/root/gui/systemConfig/system/site/name"/>
+              <xsl:value-of select="/root/gui/systemConfig/catalog/site/name"/>
             </h1>
             <h2>
-              <xsl:value-of select="/root/gui/systemConfig/system/site/organization"/>
+              <xsl:value-of select="/root/gui/systemConfig/catalog/site/organization"/>
             </h2>
           </a>
         </div>

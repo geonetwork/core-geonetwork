@@ -41,7 +41,7 @@
   <xsl:template match="/">
     <xsl:call-template name="render-html">
       <xsl:with-param name="title"
-                      select="concat($env//system/site/name, ' - ', $env//system/site/organization)"/>
+                      select="concat($env//catalog/site/name, ' - ', $env//catalog/site/organization)"/>
       <xsl:with-param name="content">
         <xsl:apply-templates mode="content" select="."/>
       </xsl:with-param>

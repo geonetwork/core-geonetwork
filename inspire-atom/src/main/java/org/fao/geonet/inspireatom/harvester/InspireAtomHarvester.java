@@ -366,7 +366,7 @@ public class InspireAtomHarvester {
         // Retrieve the metadata referencing atom feed documents.
 
         // Value used in metadata editor for online resources to identify an INSPIRE atom resource
-        String atomProtocol = gc.getBean(SettingManager.class).getValue("system/inspire/atomProtocol");
+        String atomProtocol = gc.getBean(SettingManager.class).getValue("inspire/atomProtocol");
 
         final InspireAtomFeedRepository repository = gc.getBean(InspireAtomFeedRepository.class);
 

@@ -514,7 +514,7 @@
     WARNING: INSPIRE view is not compatible with ISO19139:2005 schema.
     You have to use the default ISO19139:2007 schema.
     -->
-    <view name="inspire" upAndDownControlHidden="true" displayIfServiceInfo="/settings/system/inspire/enable='true'">
+    <view name="inspire" upAndDownControlHidden="true" displayIfServiceInfo="/settings/inspire/enable='true'">
       <sidePanel>
         <directive data-gn-need-help="creating-metadata"/>
         <directive data-gn-validation-report=""/>
@@ -3172,7 +3172,7 @@
     <!--
     Customize the editor layout by adding a class attribute
     <view name="default" class="gn-indent-bluescale gn-label-above-input">-->
-    <view name="default" 
+    <view name="default"
           class="gn-label-above-input gn-indent-bluescale">
       <sidePanel>
         <!-- Simple overview manager + online source manger for other types

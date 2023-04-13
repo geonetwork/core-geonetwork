@@ -1766,7 +1766,7 @@
               // That could be useful to append to catalog image URL
               // in order to trigger a reload of the logo when info are
               // reloaded.
-              $scope.info["system/site/lastUpdate"] = new Date().getTime();
+              $scope.info["catalog/site/lastUpdate"] = new Date().getTime();
               $scope.initialized = true;
             },
             function (response) {
