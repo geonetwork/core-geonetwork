@@ -99,7 +99,11 @@ public class Thesaurus {
 
     private String date;
 
-    private boolean isFileSystemDate;
+    private String createdDate;
+
+    private String issuedDate;
+
+    private String modifiedDate;
 
     private String defaultNamespace;
 
@@ -260,8 +264,16 @@ public class Thesaurus {
         return date;
     }
 
-    public boolean isFileSystemDate() {
-        return isFileSystemDate;
+    public String getCreatedDate() {
+        return createdDate;
+    }
+
+    public String getIssuedDate() {
+        return issuedDate;
+    }
+
+    public String getModifiedDate() {
+        return modifiedDate;
     }
 
     @Nonnull
@@ -971,18 +983,26 @@ public class Thesaurus {
                 this.defaultNamespace = DEFAULT_THESAURUS_NAMESPACE;
             }
 
-            Element dateEl = Xml.selectElement(thesaurusEl, "skos:ConceptScheme/dcterms:issued|skos:Collection/dc:date", theNSs);
+            Element issuedDateEl = Xml.selectElement(thesaurusEl, "skos:ConceptScheme/dcterms:issued|skos:Collection/dc:date", theNSs);
+            DateFormat dateFormatYearOnly = new SimpleDateFormat("yyyy");
+            this.issuedDate = dateFormatYearOnly.format(parseThesaurusDate(issuedDateEl));
 
-            Date thesaususDate = parseThesaurusDate(dateEl);
+            Element modifiedDateEl = Xml.selectElement(thesaurusEl, "skos:ConceptScheme/dcterms:modified", theNSs);
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            this.modifiedDate = dateFormat.format(parseThesaurusDate(modifiedDateEl));
+
+            Element createdDateEl = Xml.selectElement(thesaurusEl, "skos:ConceptScheme/dcterms:created", theNSs);
+            this.createdDate = dateFormat.format(parseThesaurusDate(createdDateEl));
+
+            // Default date
+            Date thesaususDate = parseThesaurusDate(issuedDateEl);
 
             if (thesaususDate == null) {
-                dateEl = Xml.selectElement(thesaurusEl, "skos:ConceptScheme/dcterms:modified", theNSs);
-                thesaususDate = parseThesaurusDate(dateEl);
+                thesaususDate = parseThesaurusDate(modifiedDateEl);
             }
 
             if (thesaususDate != null) {
-                DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-                this.date = df.format(thesaususDate);
+                this.date = dateFormat.format(thesaususDate);
             }
 
             FileTime lastModifiedTime = null;
@@ -1002,7 +1022,6 @@ public class Thesaurus {
                 }
                 if (this.date == null) {
                     this.date = new ISODate(lastModifiedTime.toMillis(), true).toString();
-                    this.isFileSystemDate = true;
                 }
             }
 
