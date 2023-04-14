@@ -1236,7 +1236,7 @@
 
               <xsl:attribute name="{$type}">
                 <xsl:value-of
-                  select="."/>
+                  select="normalize-space($valueToEdit)"/>
               </xsl:attribute>
 
               <xsl:if test="$directiveAttributes instance of node()+">
