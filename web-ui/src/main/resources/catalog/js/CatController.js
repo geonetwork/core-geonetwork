@@ -1194,7 +1194,7 @@
           },
           workflowHelper: {
             enabled: false,
-            workflowAssistApps: [{ appUrl: "", appLabelKey: "" }]
+            workflowAssistApps: [{ appUrl: "", appLabelKey: "", appAccessCheckUrl: "" }]
           }
         }
       };
@@ -1985,6 +1985,10 @@
           gnAlertService.addAlert(statusToApply, statusToApply.timeout);
         }
       });
+
+      $scope.gnExistsQuerySelector = function (querySelector) {
+        return !!document.querySelector(querySelector);
+      };
 
       gnSessionService.scheduleCheck($scope.user);
       $scope.session = gnSessionService.getSession();

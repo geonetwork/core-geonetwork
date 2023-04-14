@@ -364,4 +364,40 @@
       };
     }
   ]);
+
+  module.directive("gnAppUrlAccessibilityCheck", [
+    "$http",
+    function ($http) {
+      return {
+        restrict: "A",
+        scope: {
+          isAccessible: "="
+        },
+        link: function (scope, element, attrs) {
+          $http
+            .get(attrs.gnAppUrlAccessibilityCheck)
+            .then(function (response) {
+              // Even if we get a possible response, if the content is negative then make it non-accessible.
+              if (typeof response.body === "string") {
+                switch (response.body.toLowerCase().trim()) {
+                  case "false":
+                  case "no":
+                  case "off":
+                  case "0":
+                  case "-0":
+                    scope.isAccessible = false;
+                    return;
+                }
+              }
+              // It was executed successfully so lets return true.
+              scope.isAccessible = true;
+            })
+            .catch(function (error) {
+              // If it was not a successful request then access is denied.
+              scope.isAccessible = false;
+            });
+        }
+      };
+    }
+  ]);
 })();

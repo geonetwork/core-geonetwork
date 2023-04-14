@@ -228,7 +228,7 @@
       <li
         role="menuitem"
         class="divider"
-        data-ng-if="user.isConnected() && user.canEditRecord(md) && isMdWorkflowAssistEnable"
+        data-ng-if="gnExistsQuerySelector('.mdWorkflowAssistMenuItem:not(.ng-hide)')"
       ></li>
       <li
         role="menuitem"
@@ -238,7 +238,12 @@
       >
         <a
           href=""
+          class="mdWorkflowAssistMenuItem"
           data-ng-href="{{app.appUrl.replace('{uuid}', md.getUuid()).replace('{lang}', lang).replace('{isoLang}', iso2Lang)}}"
+          data-ng-if="(app.appUrl !== null && app.appUrl.trim() !== '')"
+          gn-app-url-accessibility-check="{{app.appAccessCheckUrl.replace('{uuid}', md.getUuid()).replace('{lang}', lang).replace('{isoLang}', iso2Lang)}}"
+          is-accessible="linkIsAccessible"
+          ng-hide="!linkIsAccessible"
           target="_blank"
           rel="noopener"
         >
