@@ -9,7 +9,7 @@
  * your option) any later version.
  *
  * This program is distributed in the hope that it will be useful, but
- * WITHWpsDectiveOUT ANY WARRANTY; without even the implied warranty of
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * General Public License for more details.
  *
@@ -129,6 +129,10 @@
               : true;
           scope.activeGeometryTool = { current: undefined };
 
+          scope.desactivateGeometryTool = function () {
+            scope.activeGeometryTool = { current: undefined };
+          };
+
           // this will hold pre-loaded process descriptions
           // keys are: '<processId>@<uri>'
           scope.loadedDescriptions = {};
@@ -242,24 +246,26 @@
               };
               scope.sortKeyValue = "&#9660;";
 
-              // SPECIFIC SEXTANT
               scope.isDateTime = function (input) {
                 if (input.hasOwnProperty("metadata")) {
                   return input.metadata[0].href === "datetime";
                 }
                 return false;
               };
+
               scope.isBoolean = function (input) {
                 if (input.hasOwnProperty("metadata")) {
                   return input.metadata[0].href === "boolean";
                 }
                 return false;
               };
+
               scope.checkOutput = function (outputs) {
                 return outputs.filter(function (o) {
                   return o.reference.mimeType !== "application/x-ogc-wms";
                 });
               };
+
               scope.getDateBounds = function (input, isMin) {
                 if (!input) {
                   return;
@@ -269,7 +275,6 @@
                 }
                 return input.literalData.allowedValues.valueOrRange[0].maximumValue.value;
               };
-              // END SPECIFIC SEXTANT
 
               scope.reOrderLayerInputs = function (key) {
                 scope.removeAllInputValuesByName(scope.emodnetSortInputKey);
@@ -536,10 +541,7 @@
                             var result = /\?.*GEOMETRYNAME=([^&\b]*)/gi.exec(url);
                             var geom =
                               result && result[1] ? result[1].toLowerCase() : null;
-                            input.geometryType = scope.getGeomType(
-                              geom,
-                              input.geometryType
-                            );
+                            input.geometryType = scope.getGeomType(geom);
                             // Deal with multi processing:geometryType
                             if (!input.geometryType) {
                               input.geometryType = scope.getGeomType(
