@@ -985,14 +985,17 @@ public class Thesaurus {
 
             Element issuedDateEl = Xml.selectElement(thesaurusEl, "skos:ConceptScheme/dcterms:issued|skos:Collection/dc:date", theNSs);
             DateFormat dateFormatYearOnly = new SimpleDateFormat("yyyy");
-            this.issuedDate = dateFormatYearOnly.format(parseThesaurusDate(issuedDateEl));
+            Date thesaususIssuedDate = parseThesaurusDate(issuedDateEl);
+            this.issuedDate = thesaususIssuedDate == null? "" : dateFormatYearOnly.format(thesaususIssuedDate);
 
             Element modifiedDateEl = Xml.selectElement(thesaurusEl, "skos:ConceptScheme/dcterms:modified", theNSs);
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            this.modifiedDate = dateFormat.format(parseThesaurusDate(modifiedDateEl));
+            Date thesaususModifiedDate = parseThesaurusDate(modifiedDateEl);
+            this.modifiedDate = thesaususModifiedDate==null? "" : dateFormat.format(thesaususModifiedDate);
 
             Element createdDateEl = Xml.selectElement(thesaurusEl, "skos:ConceptScheme/dcterms:created", theNSs);
-            this.createdDate = dateFormat.format(parseThesaurusDate(createdDateEl));
+            Date thesaususCreatedDate = parseThesaurusDate(createdDateEl);
+            this.createdDate = thesaususCreatedDate==null? "":dateFormat.format(thesaususCreatedDate);
 
             // Default date
             Date thesaususDate = parseThesaurusDate(issuedDateEl);
