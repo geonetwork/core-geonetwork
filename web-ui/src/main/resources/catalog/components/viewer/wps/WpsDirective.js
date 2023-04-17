@@ -119,6 +119,11 @@
             attrs.cancelPrevious !== undefined
               ? !!scope.$eval(attrs.cancelPrevious)
               : true;
+          scope.activeGeometryTool = { current: undefined };
+
+          scope.desactivateGeometryTool = function () {
+            scope.activeGeometryTool = { current: undefined };
+          };
 
           // this will hold pre-loaded process descriptions
           // keys are: '<processId>@<uri>'
@@ -194,11 +199,19 @@
                 return false;
               };
 
+              scope.isBoolean = function (input) {
+                if (input.hasOwnProperty("metadata")) {
+                  return input.metadata[0].href === "boolean";
+                }
+                return false;
+              };
+
               scope.checkOutput = function (outputs) {
                 return outputs.filter(function (o) {
                   return o.reference.mimeType !== "application/x-ogc-wms";
                 });
               };
+
               scope.getDateBounds = function (input, isMin) {
                 if (!input) {
                   return;
@@ -242,6 +255,7 @@
                   function (response) {
                     scope.describeState = "succeeded";
                     scope.describeResponse = response;
+                    scope.activeGeometryTool = { current: undefined };
 
                     if (response.processDescription) {
                       // Bind input directly in link object
@@ -354,6 +368,7 @@
                                 );
                               if (found === preferedOutputFormat) {
                                 input.outputFormat = found;
+                                input.mimeType = f.mimeType;
                                 break;
                               }
                             }
@@ -365,32 +380,69 @@
                                 gnGeometryService.getFormatFromMimeType(
                                   input.complexData._default.format.mimeType
                                 );
+                              input.mimeType = input.complexData._default.format.mimeType;
                             }
 
+                            // check if geom can be a multi
+                            var isMulti = false;
+                            if (input.metadata !== undefined) {
+                              input.metadata.forEach(function (m) {
+                                if (m.title.contains("allowMultipart")) {
+                                  isMulti = true;
+                                }
+                              });
+                            }
+
+                            scope.getGeomType = function (geom) {
+                              if (!geom) {
+                                return;
+                              }
+                              var geom_type;
+                              geom = geom.toLowerCase();
+                              switch (geom) {
+                                case "line":
+                                  geom_type = "LineString";
+                                  break;
+
+                                case "point":
+                                  geom_type = "Point";
+                                  break;
+
+                                case "polygon":
+                                  geom_type = "Polygon";
+                                  break;
+
+                                // TODO: add other types?
+
+                                default:
+                                  geom_type = null;
+                              }
+                              if (geom_type && isMulti) {
+                                geom_type = "Multi" + geom_type;
+                              }
+                              return geom_type;
+                            };
                             // guess geometry type from schema url
                             var url = input.complexData._default.format.schema;
                             var result = /\?.*GEOMETRYNAME=([^&\b]*)/gi.exec(url);
-                            switch (
-                              result && result[1] ? result[1].toLowerCase() : null
-                            ) {
-                              case "line":
-                                input.geometryType = "LineString";
-                                break;
-
-                              case "point":
-                                input.geometryType = "Point";
-                                break;
-
-                              case "polygon":
-                                input.geometryType = "Polygon";
-                                break;
-
-                              // TODO: add other types?
-
-                              default:
-                                input.geometryType = null;
+                            var geom =
+                              result && result[1] ? result[1].toLowerCase() : null;
+                            input.geometryType = scope.getGeomType(geom);
+                            // Deal with multi processing:geometryType
+                            if (!input.geometryType) {
+                              input.geometryType = scope.getGeomType(
+                                input.metadata
+                                  .filter(function (i) {
+                                    return (
+                                      i.hasOwnProperty("title") &&
+                                      i.title === "processing:geometryType"
+                                    );
+                                  })
+                                  .map(function (i) {
+                                    return i.href;
+                                  })[0]
+                              );
                             }
-
                             // try in ows:Metadata if not found
                             if (
                               !input.geometryType &&
@@ -724,16 +776,18 @@
 
             scope.running = true;
             scope.executeState = "sent";
-            gnWpsService.execute(processUri, processId, inputs, output).then(
-              function (response) {
-                processResponse(response);
-              },
-              function (response) {
-                scope.executeState = "failed";
-                scope.executeResponse = response;
-                scope.running = false;
-              }
-            );
+            gnWpsService
+              .execute(processUri, processId, inputs, output, scope.processDescription)
+              .then(
+                function (response) {
+                  processResponse(response);
+                },
+                function (response) {
+                  scope.executeState = "failed";
+                  scope.executeResponse = response;
+                  scope.running = false;
+                }
+              );
 
             // update local storage
             if ($window.localStorage) {
