@@ -224,7 +224,7 @@
             });
           }
           if (input.complexData && data) {
-            var mimeType = input.complexData._default.format.mimeType;
+            var mimeType = input.mimeType || input.complexData._default.format.mimeType;
             request.value.dataInputs.input.push({
               identifier: {
                 value: input.identifier.value
@@ -317,18 +317,25 @@
        * @param {string} uri of the wps service
        * @param {string} processId of the process
        * @param {Object} inputs of the process
-       * @param {Object} output of the process
-       * @param {Object} options such as storeExecuteResponse,
-       * lineage and status
+       * @param {Object} responseDocument of the process
+       * @param {Object} formDescription Optional initial describe process processDescription (which contains form inputs and extra properties eg. preferred mimetype)
        * @return {defer} promise
        */
-      this.execute = function (uri, processId, inputs, responseDocument) {
+      this.execute = function (
+        uri,
+        processId,
+        inputs,
+        responseDocument,
+        formDescription
+      ) {
         var defer = $q.defer();
         var me = this;
 
+        // Not really sure why a describe process is required here
+        // as it was done already for creating the form.
         this.describeProcess(uri, processId).then(function (data) {
           // generate the XML message from the description
-          var description = data.processDescription[0];
+          var description = formDescription || data.processDescription[0];
           var message = me.printExecuteMessage(description, inputs, responseDocument);
 
           // do the post request
