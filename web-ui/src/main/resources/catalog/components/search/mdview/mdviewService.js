@@ -165,28 +165,30 @@
             });
 
             // Collect stats in main portal as some records may not be visible in subportal
-            $http
-              .post("../../srv/api/search/records/_msearch", body)
-              .then(function (data) {
-                gnMdViewObj.current.record.related = [];
+            if (Object.entries(recordsMap).length !== 0) {
+              $http
+                .post("../../srv/api/search/records/_msearch", body)
+                .then(function (data) {
+                  gnMdViewObj.current.record.related = [];
 
-                Object.keys(relatedRecords).map(function (k) {
-                  relatedRecords[k] &&
-                    relatedRecords[k].map(function (l, i) {
-                      var md = recordsMap[l._id];
-                      relatedRecords[k][i] = md;
-                    });
+                  Object.keys(relatedRecords).map(function (k) {
+                    relatedRecords[k] &&
+                      relatedRecords[k].map(function (l, i) {
+                        var md = recordsMap[l._id];
+                        relatedRecords[k][i] = md;
+                      });
+                  });
+
+                  gnMdViewObj.current.record.related = relatedRecords;
+                  gnMdViewObj.current.record.related.all = Object.values(recordsMap);
+                  gnMdViewObj.current.record.related.uuids = Object.keys(recordsMap);
+
+                  relatedRecordKeysWithValues.forEach(function (key, index) {
+                    gnMdViewObj.current.record.related["aggregations_" + key] =
+                      data.data.responses[index].aggregations;
+                  });
                 });
-
-                gnMdViewObj.current.record.related = relatedRecords;
-                gnMdViewObj.current.record.related.all = Object.values(recordsMap);
-                gnMdViewObj.current.record.related.uuids = Object.keys(recordsMap);
-
-                relatedRecordKeysWithValues.forEach(function (key, index) {
-                  gnMdViewObj.current.record.related["aggregations_" + key] =
-                    data.data.responses[index].aggregations;
-                });
-              });
+            }
           }
         }
 

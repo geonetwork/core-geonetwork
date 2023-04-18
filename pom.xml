@@ -532,12 +532,9 @@
         <version>1.10</version>
       </dependency>
       <!-- logging -->
-      <dependency> <!-- usedf for camel -->
-        <groupId>org.apache.logging.log4j</groupId>
-        <artifactId>log4j-slf4j18-impl</artifactId>
-        <version>${log4j2.version}</version>
-      </dependency>
-      <dependency> <!-- used for LDAP test dependency in core -->
+      <dependency> 
+        <!-- usedf for camel -->
+        <!-- used for LDAP test dependency in core -->
         <groupId>org.apache.logging.log4j</groupId>
         <artifactId>log4j-slf4j-impl</artifactId>
         <version>${log4j2.version}</version>
@@ -1553,7 +1550,7 @@
 
     <!-- NOTE: When updating GeoTools, check which version
     of Postgres is used and update pg.version if needed. -->
-    <geotools.version>28.0</geotools.version>
+    <geotools.version>28.2</geotools.version>
     <jts.version>1.18.2</jts.version>
     <pg.version>42.3.3</pg.version>
 
@@ -1580,7 +1577,7 @@
     <slf4j.version>1.8.0-beta2</slf4j.version>
     <xbean.version>4.22</xbean.version>
     <jolokia.version>1.6.0</jolokia.version>
-    <httpcomponents.version>4.5.9</httpcomponents.version>
+    <httpcomponents.version>4.5.14</httpcomponents.version>
     <jasypt.version>1.9.3</jasypt.version>
     <jupiter.version>5.9.1</jupiter.version>
     <hibernate.version>5.6.7.Final</hibernate.version>

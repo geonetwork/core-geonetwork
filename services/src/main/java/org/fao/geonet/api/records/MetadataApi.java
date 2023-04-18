@@ -114,7 +114,7 @@ public class MetadataApi {
                 new Element("language").setText(language),
                 new Element("url").setText(context.getBaseUrl())
             )),
-            MetadataUtils.getRelated(context, md.getId(), md.getUuid(), type, start, start + rows, true)
+            MetadataUtils.getRelated(context, md.getId(), md.getUuid(), type, start, start + rows)
         ));
         Path relatedXsl = ApplicationContextHolder.get()
             .getBean(GeonetworkDataDirectory.class).getWebappDir()

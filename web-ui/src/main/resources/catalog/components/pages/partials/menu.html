@@ -1,18 +1,18 @@
 <li data-ng-repeat="page in pagesList">
   <a
     data-ng-show="{{page.format=='LINK'}}"
-    title="{{page.linkText}}"
+    title="{{page.label}}"
     href="{{page.link}}"
     target="_blank"
   >
-    <span>{{page.linkText}}</span>
+    <span>{{page.label}}</span>
   </a>
   <a
     data-ng-show="{{page.format!='LINK'}}"
-    data-gn-active-tb-item="{{gnCfg.mods.page.appUrl + '/' + page.linkText}}?page={{page.linkText}}"
-    title="{{page.linkText}}"
+    data-gn-active-tb-item="{{gnCfg.mods.page.appUrl + '/' + page.pageId}}?page={{page.pageId}}"
+    title="{{page.pageId}}"
     data-ng-click="changePage($event)"
   >
-    <span>{{page.linkText}}</span>
+    <span>{{page.pageId}}</span>
   </a>
 </li>

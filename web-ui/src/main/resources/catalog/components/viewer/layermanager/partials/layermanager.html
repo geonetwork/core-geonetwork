@@ -3,7 +3,10 @@
     gn-layermanager-item="layer"
     ng-repeat="layer in (layers | gnReverse | filter:layerFilterFn)"
     class="list-group-item"
-    data-ng-class="{'gn-layer-outofrange': !((layer.getMaxResolution() >= map.getView().getResolution()) && (layer.getMinResolution() <= map.getView().getResolution()))}"
+    data-ng-class="{'gn-layer-active': layer.showInfo,
+                    'gn-layer-outofrange':
+                    !((layer.getMaxResolution() >= map.getView().getResolution())
+                    && (layer.getMinResolution() <= map.getView().getResolution()))}"
   ></li>
 </ul>
 <ul class="list-group">

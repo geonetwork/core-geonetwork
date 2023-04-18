@@ -60,10 +60,6 @@
   <xsl:variable name="url" select="/root/env/siteURL"/>
   <xsl:variable name="uuid" select="/root/env/uuid"/>
 
-  <xsl:variable name="metadataIdentifierCodeSpace"
-                select="'urn:uuid'"
-                as="xs:string"/>
-
   <xsl:template match="/root">
     <xsl:apply-templates select="mdb:MD_Metadata"/>
   </xsl:template>
@@ -80,25 +76,28 @@
 
       <xsl:call-template name="add-iso19115-3.2018-namespaces"/>
 
-      <!-- Add metadataIdentifier if it doesn't exist
-      TODO: only if not harvested -->
-      <mdb:metadataIdentifier>
-        <mcc:MD_Identifier>
-          <!-- authority could be for this GeoNetwork node ?
-            <mcc:authority><cit:CI_Citation>etc</cit:CI_Citation></mcc:authority>
-          -->
-          <mcc:code>
-            <gco:CharacterString><xsl:value-of select="/root/env/uuid"/></gco:CharacterString>
-          </mcc:code>
-          <mcc:codeSpace>
-            <gco:CharacterString><xsl:value-of select="$metadataIdentifierCodeSpace"/></gco:CharacterString>
-          </mcc:codeSpace>
-        </mcc:MD_Identifier>
-      </mdb:metadataIdentifier>
+      <xsl:for-each select="mdb:metadataIdentifier">
+        <xsl:copy>
+          <mcc:MD_Identifier>
+            <xsl:apply-templates select="*/mcc:authority"/>
 
-  <!--    <xsl:apply-templates select="mdb:metadataIdentifier[
-                                    mcc:MD_Identifier/mcc:codeSpace/gco:CharacterString !=
-                                    $metadataIdentifierCodeSpace]"/>-->
+            <xsl:choose>
+              <xsl:when test="/root/env/uuid != ''">
+                <mcc:code>
+                  <gco:CharacterString><xsl:value-of select="/root/env/uuid"/></gco:CharacterString>
+                </mcc:code>
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:apply-templates select="*/mcc:code"/>
+              </xsl:otherwise>
+            </xsl:choose>
+
+            <xsl:apply-templates select="*/mcc:codeSpace"/>
+            <xsl:apply-templates select="*/mcc:version"/>
+            <xsl:apply-templates select="*/mcc:description"/>
+          </mcc:MD_Identifier>
+        </xsl:copy>
+      </xsl:for-each>
 
       <xsl:apply-templates select="mdb:defaultLocale"/>
       <xsl:apply-templates select="mdb:parentMetadata"/>
@@ -107,12 +106,18 @@
 
 
       <xsl:variable name="isCreationDateAvailable"
-                    select="mdb:dateInfo/*[cit:dateType/*/@codeListValue = 'creation']"/>
+                    select="count(mdb:dateInfo/*[cit:dateType/*/@codeListValue = 'creation'
+                              and cit:date/*/text() != '']) > 0"
+                    as="xs:boolean"/>
       <xsl:variable name="isRevisionDateAvailable"
-                    select="mdb:dateInfo/*[cit:dateType/*/@codeListValue = 'revision']"/>
+                    select="count(mdb:dateInfo/*[cit:dateType/*/@codeListValue = 'revision'
+                              and cit:date/*/text() != '']) > 0"
+                    as="xs:boolean"/>
 
       <!-- Add creation date if it does not exist-->
-      <xsl:if test="not($isCreationDateAvailable)">
+      <xsl:if test="not($isCreationDateAvailable)
+                    or (/root/env/createDate != ''
+                        and /root/env/newRecord = 'true')">
         <mdb:dateInfo>
           <cit:CI_Date>
             <cit:date>
@@ -141,7 +146,6 @@
       <!-- Preserve date order -->
       <xsl:for-each select="mdb:dateInfo">
         <xsl:variable name="currentDateType" select="*/cit:dateType/*/@codeListValue"/>
-
         <!-- Update revision date-->
         <xsl:choose>
           <xsl:when test="$currentDateType = 'revision' and /root/env/changeDate">
@@ -156,17 +160,9 @@
               </cit:CI_Date>
             </mdb:dateInfo>
           </xsl:when>
-          <xsl:when test="$currentDateType = 'creation' and /root/env/newRecord = 'true'">
-              <mdb:dateInfo>
-                <cit:CI_Date>
-                  <cit:date>
-                    <gco:DateTime><xsl:value-of select="/root/env/createDate"/></gco:DateTime>
-                  </cit:date>
-                  <cit:dateType>
-                    <cit:CI_DateTypeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_DateTypeCode" codeListValue="creation"/>
-                  </cit:dateType>
-                </cit:CI_Date>
-              </mdb:dateInfo>
+          <xsl:when test="$currentDateType = 'creation'
+                          and */cit:date/* = ''">
+            <!-- remove empty creation date, added before if emtpy. -->
           </xsl:when>
           <xsl:otherwise>
             <xsl:copy-of select="."/>

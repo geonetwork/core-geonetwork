@@ -1098,7 +1098,16 @@
               if (style && this.containsStyles(getCapLayer)) {
                 for (var i = 0; i < getCapLayer.Style.length; i++) {
                   var s = getCapLayer.Style[i];
-                  if (s.Name === style.Name) {
+                  var withEqualCompare =
+                    (s.Name.indexOf(":") !== -1 && style.Name.indexOf(":") !== -1) ||
+                    (s.Name.indexOf(":") === -1 && style.Name.indexOf(":") === -1);
+
+                  if (
+                    (withEqualCompare && s.Name === style.Name) ||
+                    (!withEqualCompare &&
+                      s.Name.replace(/.*:(.*)/, "$1") ===
+                        style.Name.replace(/.*:(.*)/, "$1"))
+                  ) {
                     requestedStyle = s;
                     legendUrl = s.LegendURL[0];
                     break;

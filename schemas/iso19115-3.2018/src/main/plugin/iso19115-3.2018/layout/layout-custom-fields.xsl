@@ -18,16 +18,9 @@
   exclude-result-prefixes="#all">
 
 
-  <!-- Readonly elements
-  [parent::mds:metadataIdentifier and
-                        mcc:codeSpace/gco:CharacterString='urn:uuid']|
-                      mds:dateInfo/cit:CI_Date[cit:dateType/cit:CI_DateTypeCode
-                        /@codeListValue='revision']
--->
+  <!-- Readonly elements -->
   <xsl:template mode="mode-iso19115-3.2018"
                 match="mdb:metadataIdentifier/mcc:MD_Identifier/mcc:code|
-                       mdb:metadataIdentifier/mcc:MD_Identifier/mcc:codeSpace|
-                       mdb:metadataIdentifier/mcc:MD_Identifier/mcc:description|
                        mdb:dateInfo/cit:CI_Date[cit:dateType/cit:CI_DateTypeCode = 'revision']/cit:date|
                        mdb:dateInfo/cit:CI_Date[cit:dateType/cit:CI_DateTypeCode = 'revision']/cit:dateType"
                 priority="2000">

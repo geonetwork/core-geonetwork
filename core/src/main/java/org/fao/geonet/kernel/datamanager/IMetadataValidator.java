@@ -28,7 +28,6 @@ import java.util.List;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.MetadataValidation;
 import org.fao.geonet.domain.Pair;
-import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.Namespace;
 
@@ -37,7 +36,7 @@ import jeeves.server.context.ServiceContext;
 
 /**
  * Interface to handle all operations related to validations of records
- * 
+ *
  * @author delawen
  *
  */
@@ -51,9 +50,9 @@ public interface IMetadataValidator {
     void validateExternalMetadata(String schema, Element xml, ServiceContext context, String fileName, Integer groupOwner) throws Exception;
 
     /**
-     * 
+     *
      * if the metadata has no namespace or already has a namespace then we must skip this phase
-     * 
+     *
      * @param md
      */
     void setNamespacePrefix(Element md);
@@ -72,9 +71,9 @@ public interface IMetadataValidator {
      * Used by harvesters that need to validate metadata.
      *
      * @param metadata metadata
-     * @param lang Language from context
+     * @param lang     Language from context
      */
-    boolean doValidate(AbstractMetadata metadata, String lang);
+    Pair<Element, Boolean> doValidate(AbstractMetadata metadata, String lang);
 
     /**
      * Used by the validate embedded service. The validation report is stored in the session.
@@ -100,7 +99,7 @@ public interface IMetadataValidator {
 
     /**
      * Adds the namespace to the element
-     * 
+     *
      * @param md
      * @param ns
      */
@@ -108,7 +107,7 @@ public interface IMetadataValidator {
 
     /**
      * Helper function to prevent loop on dependencies
-     * 
+     *
      * @param metadataManager
      */
     void setMetadataManager(IMetadataManager metadataManager);

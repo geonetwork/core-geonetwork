@@ -115,7 +115,7 @@ public class MetadataEditingApi {
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)})
     public void startEditing(
         @Parameter(description = API_PARAM_RECORD_UUID, required = true) @PathVariable String metadataUuid,
-        @Parameter(description = "Tab") @RequestParam(defaultValue = "simple") String currTab,
+        @Parameter(description = "Tab") @RequestParam(defaultValue = "") String currTab,
         @RequestParam(defaultValue = "false") boolean withAttributes,
         @Parameter(hidden = true) HttpSession session,
         @Parameter(hidden = true) @RequestParam Map<String, String> allRequestParams,

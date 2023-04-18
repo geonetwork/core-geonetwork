@@ -637,8 +637,7 @@
     function () {
       return {
         restrict: "A",
-        templateUrl:
-          "../../catalog/components/viewer/wmsimport/" + "partials/styles.html",
+        templateUrl: "../../catalog/components/viewer/wmsimport/partials/styles.html",
         scope: {
           styles: "=gnLayerStyles",
           onClick: "&gnLayerStylesOnClick",

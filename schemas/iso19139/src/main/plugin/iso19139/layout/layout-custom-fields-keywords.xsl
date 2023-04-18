@@ -272,6 +272,8 @@
              data-transformations="{$transformations}"
              data-current-transformation="{$transformation}"
              data-max-tags="{$maxTags}"
+             data-browsable="{not($thesaurusConfig/@browsable)
+                              or $thesaurusConfig/@browsable != 'false'}"
              data-order-by-id="{$orderById}"
              data-lang="{$metadataOtherLanguagesAsJson}"
              data-textgroup-only="false">

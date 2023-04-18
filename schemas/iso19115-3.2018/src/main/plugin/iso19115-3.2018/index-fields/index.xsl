@@ -1154,9 +1154,11 @@
           <linkUrl>
             <xsl:value-of select="cit:linkage/gco:CharacterString"/>
           </linkUrl>
-          <linkProtocol>
-            <xsl:value-of select="$protocol"/>
-          </linkProtocol>
+          <xsl:if test="normalize-space($protocol) != ''">
+            <linkProtocol>
+              <xsl:value-of select="$protocol"/>
+            </linkProtocol>
+          </xsl:if>
           <xsl:element name="linkUrlProtocol{replace($protocol, '[^a-zA-Z0-9]', '')}">
             <xsl:value-of select="cit:linkage/*/text()"/>
           </xsl:element>

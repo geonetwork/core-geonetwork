@@ -52,21 +52,21 @@ import java.util.Map;
 public class OidcUser2GeonetworkUser {
 
     @Autowired
-    OIDCConfiguration oidcConfiguration;
+    protected OIDCConfiguration oidcConfiguration;
     @Autowired
-    OIDCRoleProcessor oidcRoleProcessor;
+    protected OIDCRoleProcessor oidcRoleProcessor;
     @Autowired
-    SimpleOidcUserFactory simpleOidcUserFactory;
+    protected SimpleOidcUserFactory simpleOidcUserFactory;
     @Autowired
-    private UserRepository userRepository;
+    protected UserRepository userRepository;
     @Autowired
-    private GroupRepository groupRepository;
+    protected GroupRepository groupRepository;
     @Autowired
-    private LanguageRepository langRepository;
+    protected LanguageRepository langRepository;
     @Autowired
-    private UserGroupRepository userGroupRepository;
+    protected UserGroupRepository userGroupRepository;
     @Autowired
-    private GeonetworkAuthenticationProvider geonetworkAuthenticationProvider;
+    protected GeonetworkAuthenticationProvider geonetworkAuthenticationProvider;
 
 
     public UserDetails getUserDetails(Map attributes, boolean withDbUpdate) throws Exception {
@@ -158,7 +158,7 @@ public class OidcUser2GeonetworkUser {
      * @param user          to apply the changes to.
      */
     //from keycloak
-    private void updateGroups(Map<Profile, List<String>> profileGroups, User user) {
+    protected void updateGroups(Map<Profile, List<String>> profileGroups, User user) {
         // First we remove all previous groups
         userGroupRepository.deleteAll(UserGroupSpecs.hasUserId(user.getId()));
 

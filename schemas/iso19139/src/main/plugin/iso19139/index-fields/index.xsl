@@ -1006,7 +1006,7 @@
                                   /gmd:distributionOrderProcess/*/gmd:orderingInstructions">
           <xsl:copy-of select="gn-fn-index:add-multilingual-field('orderingInstructions', ., $allLanguages)"/>
         </xsl:for-each>
-        
+
         <xsl:for-each select="gmd:transferOptions/*/
                                 gmd:onLine/*[gmd:linkage/gmd:URL != '']">
 
@@ -1020,9 +1020,11 @@
           <linkUrl>
             <xsl:value-of select="gmd:linkage/gmd:URL"/>
           </linkUrl>
-          <linkProtocol>
-            <xsl:value-of select="$protocol"/>
-          </linkProtocol>
+          <xsl:if test="normalize-space($protocol) != ''">
+            <linkProtocol>
+              <xsl:value-of select="$protocol"/>
+            </linkProtocol>
+          </xsl:if>
           <xsl:element name="linkUrlProtocol{replace($protocol[1], '[^a-zA-Z0-9]', '')}">
             <xsl:value-of select="gmd:linkage/gmd:URL"/>
           </xsl:element>

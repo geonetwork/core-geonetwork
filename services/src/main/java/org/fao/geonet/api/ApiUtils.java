@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2021 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2023 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -43,7 +43,6 @@ import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.XmlRequest;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
@@ -68,11 +67,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
-import java.util.Set;
+import java.util.*;
 
 
 /**
@@ -80,14 +75,14 @@ import java.util.Set;
  */
 public class ApiUtils {
 
-    @Autowired
-    static
-    LanguageUtils languageUtils;
+    private ApiUtils() {
+
+    }
 
     /**
      * Return a set of UUIDs based on the input UUIDs array or based on the current selection.
      */
-    static public Set<String> getUuidsParameterOrSelection(String[] uuids, String bucket, UserSession session) {
+    public static Set<String> getUuidsParameterOrSelection(String[] uuids, String bucket, UserSession session) {
         final Set<String> setOfUuidsToEdit;
         if (uuids == null) {
             if (bucket == null) {
@@ -103,7 +98,7 @@ public class ApiUtils {
         } else {
             setOfUuidsToEdit = Sets.newHashSet(Arrays.asList(uuids));
         }
-        if (setOfUuidsToEdit.size() == 0) {
+        if (setOfUuidsToEdit.isEmpty()) {
             // TODO: i18n
             throw new IllegalArgumentException(
                 "At least one record should be defined or selected for analysis.");
@@ -123,7 +118,7 @@ public class ApiUtils {
         if (StringUtils.isEmpty(id)) {
             //It wasn't a UUID
             id = String.valueOf(metadataUtils.findOne(uuidOrInternalId).getId());
-        } else if (approved) {
+        } else if (Boolean.TRUE.equals(approved)) {
             //It was a UUID, check if draft or approved version
             id = String.valueOf(ApplicationContextHolder.get().getBean(MetadataRepository.class)
                 .findOneByUuid(uuidOrInternalId).getId());
@@ -197,7 +192,7 @@ public class ApiUtils {
      * If session is null, it's probably a bot due to {@link AllRequestsInterceptor#createSessionForAllButNotCrawlers(HttpServletRequest)}.
      * In such case return an exception.
      */
-    static public UserSession getUserSession(HttpSession httpSession) {
+    public static UserSession getUserSession(HttpSession httpSession) {
         if (httpSession == null) {
             throw new SecurityException("The service requested is not available for crawlers. HTTP session is not activated for bots.");
         }
@@ -212,13 +207,13 @@ public class ApiUtils {
      * If you really need a ServiceContext use this. Try to avoid in order to reduce dependency on
      * Jeeves.
      */
-    static public ServiceContext createServiceContext(HttpServletRequest request) {
+    public static ServiceContext createServiceContext(HttpServletRequest request) {
         String iso3langCode = ApplicationContextHolder.get().getBean(LanguageUtils.class)
             .getIso3langCode(request.getLocales());
         return createServiceContext(request, iso3langCode);
     }
 
-    static public ServiceContext createServiceContext(HttpServletRequest request, String iso3langCode) {
+    public static ServiceContext createServiceContext(HttpServletRequest request, String iso3langCode) {
         ServiceManager serviceManager = ApplicationContextHolder.get().getBean(ServiceManager.class);
         ServiceContext serviceContext = serviceManager.createServiceContext("Api", iso3langCode, request);
         serviceContext.setAsThreadLocal();
@@ -259,7 +254,7 @@ public class ApiUtils {
     /**
      * Check if the current user can edit this record.
      */
-    static public AbstractMetadata canEditRecord(String metadataUuid, HttpServletRequest request) throws Exception {
+    public static AbstractMetadata canEditRecord(String metadataUuid, HttpServletRequest request) throws Exception {
         ApplicationContext appContext = ApplicationContextHolder.get();
         AbstractMetadata metadata = getRecord(metadataUuid);
         AccessManager accessManager = appContext.getBean(AccessManager.class);
@@ -273,7 +268,7 @@ public class ApiUtils {
     /**
      * Check if the current user can change status of this record.
      */
-    static public AbstractMetadata canChangeStatusRecord(String metadataUuid, HttpServletRequest request) throws Exception {
+    public static AbstractMetadata canChangeStatusRecord(String metadataUuid, HttpServletRequest request) throws Exception {
         ApplicationContext appContext = ApplicationContextHolder.get();
         AbstractMetadata metadata = getRecord(metadataUuid);
         AccessManager accessManager = appContext.getBean(AccessManager.class);
@@ -352,15 +347,17 @@ public class ApiUtils {
             while (it.hasNext()) {
                 ObjectError err = it.next();
                 String msg = "";
-                for(int i = 0; i < err.getCodes().length; i++) {
-                    try {
-                        msg = messages.getString(err.getCodes()[i]);
+                if (err.getCodes() != null) {
+                    for(int i = 0; i < err.getCodes().length; i++) {
+                        try {
+                            msg = messages.getString(err.getCodes()[i]);
 
-                        if (!StringUtils.isEmpty(msg)) {
-                            break;
+                            if (!StringUtils.isEmpty(msg)) {
+                                break;
+                            }
+                        } catch (MissingResourceException ex) {
+                            // Ignore
                         }
-                    } catch (MissingResourceException ex) {
-                        // Ignore
                     }
                 }
 
@@ -378,5 +375,11 @@ public class ApiUtils {
         } else {
             return "";
         }
+    }
+
+    public static ResourceBundle getMessagesResourceBundle(Enumeration<Locale> locales) {
+        LanguageUtils languageUtils = ApplicationContextHolder.get().getBean(LanguageUtils.class);
+        Locale locale = languageUtils.parseAcceptLanguage(locales);
+        return ResourceBundle.getBundle("org.fao.geonet.api.Messages", locale);
     }
 }

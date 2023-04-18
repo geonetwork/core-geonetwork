@@ -178,6 +178,26 @@
             }
           };
 
+          /**
+           * Display the publication / un-publication option. Checks:
+           *   - User can review the metadata.
+           *   - It's not a draft.
+           *   - Retired metadata can't be published.
+           *   - The user profile can publish / unpublish the metadata.
+           * @param md
+           * @param user
+           * @returns {*|boolean|false|boolean}
+           */
+          scope.displayPublicationOption = function (md, user) {
+            return (
+              md.canReview &&
+              md.draft != "y" &&
+              md.mdStatus != 3 &&
+              ((md.isPublished() && user.canUnpublishMetadata()) ||
+                (!md.isPublished() && user.canPublishMetadata()))
+            );
+          };
+
           loadTasks();
 
           scope.$watch(attrs.gnMdActionsMenu, function (a) {
@@ -263,26 +283,24 @@
           "../../catalog/views/default/directives/" + "partials/dateRangeFilter.html",
         scope: {
           label: "@gnDateRangeFilter",
-          field: "="
+          field: "=",
+          fieldName: "="
         },
         link: function linkFn(scope, element, attr) {
           var today = moment();
           scope.relations = ["intersects", "within", "contains"];
           scope.relation = scope.relations[0];
-          scope.field = {
-            range: {
-              resourceTemporalDateRange: {
-                gte: null,
-                lte: null,
-                relation: scope.relation
-              }
-            }
+          scope.field.range = scope.field.range || {};
+          scope.field.range[scope.fieldName] = {
+            gte: null,
+            lte: null,
+            relation: scope.relation
           };
 
           scope.setRange = function () {
-            scope.field.range.resourceTemporalDateRange.gte = scope.dateFrom;
-            scope.field.range.resourceTemporalDateRange.lte = scope.dateTo;
-            scope.field.range.resourceTemporalDateRange.relation = scope.relation;
+            scope.field.range[scope.fieldName].gte = scope.dateFrom;
+            scope.field.range[scope.fieldName].lte = scope.dateTo;
+            scope.field.range[scope.fieldName].relation = scope.relation;
           };
 
           scope.format = "YYYY-MM-DD";
