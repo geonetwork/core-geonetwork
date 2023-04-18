@@ -984,18 +984,13 @@ public class Thesaurus {
             }
 
             Element issuedDateEl = Xml.selectElement(thesaurusEl, "skos:ConceptScheme/dcterms:issued|skos:Collection/dc:date", theNSs);
-            DateFormat dateFormatYearOnly = new SimpleDateFormat("yyyy");
-            Date thesaususIssuedDate = parseThesaurusDate(issuedDateEl);
-            this.issuedDate = thesaususIssuedDate == null? "" : dateFormatYearOnly.format(thesaususIssuedDate);
+            this.issuedDate = issuedDateEl==null? "": issuedDateEl.getText();
 
             Element modifiedDateEl = Xml.selectElement(thesaurusEl, "skos:ConceptScheme/dcterms:modified", theNSs);
-            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            Date thesaususModifiedDate = parseThesaurusDate(modifiedDateEl);
-            this.modifiedDate = thesaususModifiedDate==null? "" : dateFormat.format(thesaususModifiedDate);
+            this.modifiedDate = modifiedDateEl==null? "": modifiedDateEl.getText();
 
             Element createdDateEl = Xml.selectElement(thesaurusEl, "skos:ConceptScheme/dcterms:created", theNSs);
-            Date thesaususCreatedDate = parseThesaurusDate(createdDateEl);
-            this.createdDate = thesaususCreatedDate==null? "":dateFormat.format(thesaususCreatedDate);
+            this.createdDate = createdDateEl==null? "": createdDateEl.getText();
 
             // Default date
             Date thesaususDate = parseThesaurusDate(issuedDateEl);
@@ -1005,7 +1000,8 @@ public class Thesaurus {
             }
 
             if (thesaususDate != null) {
-                this.date = dateFormat.format(thesaususDate);
+                DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+                this.date = df.format(thesaususDate);
             }
 
             FileTime lastModifiedTime = null;
