@@ -1182,6 +1182,8 @@
     "mapConfigContext-help": "URL to the map context file which can contain the variable lang, for 3 letters language code, between '{' and '}'",
     "mapConfigExtent": "Extent, expressed in current projection",
     "mapConfigLayers": "Layer objects in JSON: {\"type\"=\"XXX\",\"arg1\":\"YYY\",...}",
+    "mapConfigSearchGeodesicExtents": "Display geodesic extents for metadata results",
+    "mapConfigSearchGeodesicExtents-help": "By default, the displayed metadata extents are planar (i.e. rectangular). If you enable this option, the metadata extents will become geodesic. If the map uses a projected coordinate system, this may lead to non-rectangular extents (e.g. trapezoid).",
     "system/xlinkResolver/referencedDeletionAllowed": "Allow deletion of subtemplates referenced through an xlink.",
     "system/xlinkResolver/referencedDeletionAllowed-help": "Checked means allow.",
     "ui-grid": "Search results configuration",
