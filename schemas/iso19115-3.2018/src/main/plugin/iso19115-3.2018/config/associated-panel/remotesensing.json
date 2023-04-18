@@ -130,40 +130,6 @@
       },
       {
         "group": "services",
-        "label": "onlineDiscoverWMS",
-        "copyLabel": "desc",
-        "icon": "fa gn-icon-onlinesrc",
-        "sources": {
-          "metadataStore": {
-            "label": "searchAservice",
-            "params": {
-              "serviceType": "OGC:WMS or WMS or view"
-            }
-          }
-        },
-        "process": "onlinesrc-add",
-        "fields": {
-          "url": {
-            "isMultilingual": false
-          },
-          "protocol": {
-            "value": "OGC:WMS",
-            "hidden": true,
-            "isMultilingual": false
-          },
-          "name": {},
-          "desc": {
-            "hidden": true
-          },
-          "function": {
-            "value": "browsing",
-            "hidden": true,
-            "isMultilingual": false
-          }
-        }
-      },
-      {
-        "group": "services",
         "label": "Opendap",
         "copyLabel": "desc",
         "icon": "fa gn-icon-onlinesrc",
@@ -182,7 +148,7 @@
             "hidden": true
           },
           "function": {
-            "value": "browsing",
+            "value": "download",
             "hidden": true,
             "isMultilingual": false
           }
@@ -207,7 +173,7 @@
             "hidden": true
           },
           "function": {
-            "value": "browsing",
+            "value": "search",
             "hidden": true,
             "isMultilingual": false
           }
@@ -231,7 +197,7 @@
             "hidden": true
           },
           "function": {
-            "value": "browsing",
+            "value": "download",
             "hidden": true,
             "isMultilingual": false
           }
@@ -382,6 +348,95 @@
           "desc": {},
           "function": {
             "value": "information",
+            "hidden": true,
+            "isMultilingual": false
+          }
+        }
+      },
+      {
+        "group": "visualization",
+        "label": "onlineDiscoverWMS",
+        "copyLabel": "desc",
+        "icon": "fa gn-icon-onlinesrc",
+        "sources": {
+          "metadataStore": {
+            "label": "searchAservice",
+            "params": {
+              "serviceType": "OGC:WMS or WMS or view"
+            }
+          }
+        },
+        "process": "onlinesrc-add",
+        "fields": {
+          "url": {
+            "isMultilingual": false
+          },
+          "protocol": {
+            "value": "OGC:WMS",
+            "hidden": true,
+            "isMultilingual": false
+          },
+          "name": {},
+          "desc": {
+            "hidden": true
+          },
+          "function": {
+            "value": "browsing",
+            "hidden": true,
+            "isMultilingual": false
+          }
+        }
+      },
+      {
+        "group": "visualization",
+        "label": "onlineDiscoverSyntool",
+        "icon": "fa gn-icon-onlinesrc",
+        "process": "onlinesrc-add",
+        "fields": {
+          "url": {
+            "isMultilingual": false
+          },
+          "protocol": {
+            "value": "WWW:LINK",
+            "hidden": true,
+            "isMultilingual": false
+          },
+          "name": {
+            "value": "Syntool"
+          },
+          "desc": {
+            "value": ""
+          },
+          "function": {
+            "value": "browsing",
+            "hidden": true,
+            "isMultilingual": false
+          }
+        }
+      },
+      {
+        "group": "visualization",
+        "label": "onlineDiscoverOther",
+        "icon": "fa gn-icon-onlinesrc",
+        "process": "onlinesrc-add",
+        "fields": {
+          "url": {
+            "isMultilingual": false
+          },
+          "protocol": {
+            "value": "WWW:LINK",
+            "hidden": true,
+            "isMultilingual": false
+          },
+          "name": {
+            "value": "",
+            "hidden": true
+          },
+          "desc": {
+            "value": ""
+          },
+          "function": {
+            "value": "browsing",
             "hidden": true,
             "isMultilingual": false
           }

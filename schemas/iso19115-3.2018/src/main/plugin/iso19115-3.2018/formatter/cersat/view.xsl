@@ -280,7 +280,7 @@
 
             <xsl:call-template name="render-cersat-links">
               <xsl:with-param name="links"
-                              select="$metadata//mrd:onLine/*[cit:function/*/@codeListValue != 'information']"/>
+                              select="$metadata//mrd:onLine/*[cit:function/*/@codeListValue != 'information' and cit:function/*/@codeListValue != 'browsing']"/>
             </xsl:call-template>
 
             <xsl:variable name="citation"
@@ -301,6 +301,23 @@
           </div>
         </div>
 
+        <xsl:variable name="datavizLinks"
+                      select="$metadata//mrd:onLine/*[cit:function/*/@codeListValue = 'browsing']"/>
+        <xsl:if test="count($datavizLinks) > 0">
+          <div class="row">
+            <div class="col-md-12">
+              <h2>
+                <xsl:value-of select="$schemaStrings/cersat-dataviz"/>
+              </h2>
+              <div class="">
+                <xsl:call-template name="render-cersat-links">
+                  <xsl:with-param name="links"
+                                  select="$datavizLinks"/>
+                </xsl:call-template>
+              </div>
+            </div>
+          </div>
+        </xsl:if>
 
         <div class="row">
           <div class="col-md-12">
