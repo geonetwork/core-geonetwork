@@ -146,13 +146,17 @@
                       <input type="radio" class="gn-no-setting" data-ng-model="draftInAllGroups"
                              data-ng-value="false" /> {{'draftWhenInGroup-selection' | translate}}<br>
 
-                      <input type="hidden"
-                             class="form-control" id="{{s['name']}}" name="{{s.name}}" value=".*"
-                             data-ng-disabled="draftInAllGroups != true" />
-
-                      <input type="text"
-                             class="form-control" id="{{s['name']}}" name="{{s.name}}" value="{{s.value}}"
-                             data-ng-disabled="draftInAllGroups == true" />
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="{{s['name']}}"
+                        name="{{s.name}}"
+                        data-ng-model="draftInAllGroupsUserValue"
+                        data-ng-init="draftInAllGroupsInputValue=s.value || '.*'"
+                        data-ng-change="draftInAllGroups == true?null:draftInAllGroupsInputValue=draftInAllGroupsUserValue"
+                        data-ng-readonly="draftInAllGroups == true"
+                        data-ng-value="draftInAllGroups == true ? '.*' : draftInAllGroupsInputValue"
+                      />
                     </div>
 
                     <input data-ng-switch-when="system/server/timeZone"
