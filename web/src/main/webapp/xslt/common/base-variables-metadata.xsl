@@ -101,11 +101,11 @@
 
 
   <xsl:variable name="tab"
-                select="if (/root/request/currTab)
+                select="if (/root/request/currTab != '')
                         then /root/request/currTab
-                        else if (/root/gui/currTab)
+                        else if (/root/gui/currTab != '')
                         then /root/gui/currTab
-                        else $editorConfig/editor/views/view/tab[@default]/@id"/>
+                        else $editorConfig/editor/views/view[@default]/tab[@default]/@id"/>
 
   <xsl:variable name="viewConfig"
                 select="$editorConfig/editor/views/view[tab/@id = $tab]"/>

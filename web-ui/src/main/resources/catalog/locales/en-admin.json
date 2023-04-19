@@ -1182,6 +1182,8 @@
     "mapConfigContext-help": "URL to the map context file which can contain the variable lang, for 3 letters language code, between '{' and '}'",
     "mapConfigExtent": "Extent, expressed in current projection",
     "mapConfigLayers": "Layer objects in JSON: {\"type\"=\"XXX\",\"arg1\":\"YYY\",...}",
+    "mapConfigSearchGeodesicExtents": "Display geodesic extents for metadata results",
+    "mapConfigSearchGeodesicExtents-help": "By default, the displayed metadata extents are planar (i.e. rectangular). If you enable this option, the metadata extents will become geodesic. If the map uses a projected coordinate system, this may lead to non-rectangular extents (e.g. trapezoid).",
     "system/xlinkResolver/referencedDeletionAllowed": "Allow deletion of subtemplates referenced through an xlink.",
     "system/xlinkResolver/referencedDeletionAllowed-help": "Checked means allow.",
     "ui-grid": "Search results configuration",
@@ -1431,6 +1433,19 @@
     "uiConfigDeleteError": "Error deleting user interface configuration",
     "sourceRemoved": "Source removed",
     "sourceRemovedError": "Error while removing the source",
-    "saveThesaurus": "Save"
+    "saveThesaurus": "Save",
+    "manageStaticPages": "Static pages",
+    "newStaticPage": "New static page",
+    "updateStaticPage": "Update static page",
+    "confirmStaticPageDelete": "Are you sure you want to delete the static page?",
+    "staticPageUpdated": "Static page updated",
+    "staticPageUpdateError": "Error occurred while saving the static page",
+    "staticPageDeleteError": "Error while removing the static page",
+    "staticPageRemoved": "Static page removed",
+    "chooseStaticPageFile": "Choose or drop static page file here",
+    "ui-topCustomMenu": "Header custom menu items",
+    "ui-topCustomMenu-help": "List of static page IDs associated with the header section to display: <ul><li>When a list is provided, the links are displayed in the order provided and only for the pages listed.</li><li>When a list is not provided, all static pages configured for the header section are displayed, with no guaranteed order.</li>",
+    "ui-footerCustomMenu": "Footer custom menu items",
+    "ui-footerCustomMenu-help": "List of static page IDs associated with the footer section to display: <ul><li>When a list is provided, the links are displayed in the order provided and only for the pages listed.</li><li>When a list is not provided, all static pages configured for the footer section are displayed, with no guaranteed order.</li>"
 }
 

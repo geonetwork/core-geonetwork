@@ -46,10 +46,12 @@
               method: "GET",
               url: "../api/pages/" + $scope.language + "/" + page + "/content"
             }).then(
-              function mySuccess(response) {
+              function (response) {
+                $sce.trustAsJs(response.data);
+                // $sce.trustAsHtml(response.data);
                 $scope.content = $sce.trustAsHtml(response.data);
               },
-              function myError(response) {
+              function (response) {
                 $scope.content = "Page not available";
                 console.log(response.statusText);
               }
@@ -71,7 +73,8 @@
   module.directive("gnStaticPagesListViewer", [
     "$http",
     "$location",
-    function ($http, $location) {
+    "gnGlobalSettings",
+    function ($http, $location, gnGlobalSettings) {
       return {
         restrict: "AEC",
         replace: true,
@@ -87,17 +90,32 @@
             $http({
               method: "GET",
               url:
-                "../api/pages/list?language=" +
+                "../api/pages?language=" +
                 $scope.language +
                 "&section=" +
                 $scope.section.toUpperCase()
             }).then(
-              function mySuccess(response) {
-                $scope.pagesList = response.data;
+              function (response) {
+                var configKey = $scope.section === "footer" ? "footer" : "header";
+                var customMenuOptions =
+                  gnGlobalSettings.gnCfg.mods[configKey][$scope.section + "CustomMenu"];
+                if (customMenuOptions && customMenuOptions.length > 0) {
+                  $scope.pagesList = [];
+                  for (var i = 0; i < customMenuOptions.length; i++) {
+                    var g = _.find(response.data, function (x) {
+                      return x.pageId == customMenuOptions[i];
+                    });
+
+                    if (g) {
+                      $scope.pagesList.push(g);
+                    }
+                  }
+                } else {
+                  $scope.pagesList = response.data;
+                }
               },
-              function myError(response) {
+              function (response) {
                 $scope.pagesList = null;
-                console.log(response.statusText);
               }
             );
           };

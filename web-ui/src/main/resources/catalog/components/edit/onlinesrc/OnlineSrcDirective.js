@@ -1479,7 +1479,10 @@
                * them to the record.
                */
               scope.$watchCollection("params.selectedLayers", function (n, o) {
-                if (scope.config.wmsResources.addLayerNamesMode != "resourcename") {
+                if (
+                  scope.config &&
+                  scope.config.wmsResources.addLayerNamesMode != "resourcename"
+                ) {
                   return;
                 }
 
