@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2021 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2023 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -65,6 +65,7 @@ import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -141,6 +142,9 @@ public class MetadataSharingApi {
 
     @Autowired
     UserGroupRepository userGroupRepository;
+
+    @Autowired
+    MetadataStatusRepository metadataStatusRepository;
 
     @Autowired
     RoleHierarchy roleHierarchy;
@@ -522,6 +526,40 @@ public class MetadataSharingApi {
                     metadataNotificationInfo.setMetadataId(metadata.getId());
                     metadataNotificationInfo.setGroupId(metadata.getSourceInfo().getGroupOwner());
                     metadataNotificationInfo.setPublished(publishedAfter);
+                    metadataNotificationInfo.setPublicationDateStamp(new ISODate());
+
+                    java.util.Optional<User> publishUser = userRepository.findById(userId);
+
+                    if (publishUser.isPresent()) {
+                        metadataNotificationInfo.setPublisherUser(publishUser.get().getUsername());
+                    }
+
+                    // If the metadata workflow is enabled retrieve the submitter and reviewer users information
+                    if (isMdWorkflowEnable) {
+                        String sortField = SortUtils.createPath(MetadataStatus_.changeDate);
+                        List<MetadataStatus> statusList = metadataStatusRepository.findAllByMetadataIdAndByType(metadata.getId(),
+                            StatusValueType.workflow, Sort.by(Sort.Direction.DESC, sortField));
+
+                        java.util.Optional<MetadataStatus> approvedStatus = statusList.stream().filter(status ->
+                            status.getStatusValue().getId() == Integer.valueOf(StatusValue.Status.APPROVED)).findFirst();
+                        if (approvedStatus.isPresent()) {
+                            java.util.Optional<User> reviewerUser = userRepository.findById(approvedStatus.get().getUserId());
+
+                            if (reviewerUser.isPresent()) {
+                                metadataNotificationInfo.setReviewerUser(reviewerUser.get().getUsername());
+                            }
+                        }
+
+                        java.util.Optional<MetadataStatus> submittedStatus = statusList.stream().filter(status ->
+                            status.getStatusValue().getId() == Integer.valueOf(StatusValue.Status.SUBMITTED)).findFirst();
+                        if (submittedStatus.isPresent()) {
+                            java.util.Optional<User> submitterUser = userRepository.findById(submittedStatus.get().getUserId());
+
+                            if (submitterUser.isPresent()) {
+                                metadataNotificationInfo.setSubmitterUser(submitterUser.get().getUsername());
+                            }
+                        }
+                    }
 
                     metadataListToNotifyPublication.add(metadataNotificationInfo);
                 }
@@ -1002,16 +1040,14 @@ public class MetadataSharingApi {
      * For privileges to {@link ReservedGroup#all} group, check if it's allowed or not to publish invalid metadata.
      *
      * @param context
+     * @param messages
      * @param metadata
-     * @return
+     * @param allowPublishInvalidMd
+     * @param allowPublishNonApprovedMd
      * @throws Exception
      */
     private void checkCanPublishToAllGroup(ServiceContext context, ResourceBundle messages, AbstractMetadata metadata,
                                            boolean allowPublishInvalidMd, boolean allowPublishNonApprovedMd) throws Exception {
-
-        /*if (!wasPublished) {
-            checkUserProfileToPublishMetadata(context.getUserSession());
-        }*/
 
         if (!allowPublishInvalidMd) {
             boolean hasValidation =
@@ -1050,8 +1086,8 @@ public class MetadataSharingApi {
      *
      * @param metadataUuid Metadata uuid.
      * @param publish      Flag to publish/unpublish the metadata.
-     * @param request
      * @param session
+     * @param request
      * @throws Exception
      */
     private void shareMetadataWithAllGroup(String metadataUuid, boolean publish,
@@ -1185,9 +1221,9 @@ public class MetadataSharingApi {
 
         List<GroupOperations> privilegesList = new ArrayList<>();
 
-        final Iterator iterator = publicationConfig.entrySet().iterator();
+        final Iterator<Map.Entry<String, Object[]>> iterator = publicationConfig.entrySet().iterator();
         while (iterator.hasNext()) {
-            Map.Entry<String, Object[]> e = (Map.Entry<String, Object[]>) iterator.next();
+            Map.Entry<String, Object[]> e = iterator.next();
             GroupOperations privAllGroup = new GroupOperations();
             privAllGroup.setGroup(Integer.parseInt(e.getKey()));
 
@@ -1289,18 +1325,41 @@ public class MetadataSharingApi {
         String message = messages.getString("metadata_published_text");
         String recordPublishedMessage = messages.getString("metadata_published_record_text")
             .replace("{{link}}", sm.getNodeURL()+ "api/records/{{index:uuid}}");
+
         String recordUnpublishedMessage = messages.getString("metadata_unpublished_record_text")
             .replace("{{link}}", sm.getNodeURL()+ "api/records/{{index:uuid}}");
 
         StringBuilder listOfProcessedMetadataMessage = new StringBuilder();
 
         metadataListToNotifyPublication.forEach( metadata -> {
+            java.util.Optional<Group> group = groupRepository.findById(metadata.getGroupId());
+
             if (Boolean.TRUE.equals(metadata.getPublished())) {
+                String recordPublishedMessageAux = recordPublishedMessage
+                    .replace("{{publisherUser}}", metadata.getPublisherUser())
+                    .replace("{{submitterUser}}", metadata.getSubmitterUser())
+                    .replace("{{reviewerUser}}", metadata.getReviewerUser())
+                    .replace("{{timeStamp}}", metadata.getPublicationDateStamp().getDateAndTime());
+
+                if (group.isPresent()) {
+                    recordPublishedMessageAux = recordPublishedMessageAux.replace("{{group}}", group.get().getName());
+                }
+
                 listOfProcessedMetadataMessage.append(
-                    MailUtil.compileMessageWithIndexFields(recordPublishedMessage, metadata.getMetadataUuid(), context.getLanguage()));
+                    MailUtil.compileMessageWithIndexFields(recordPublishedMessageAux, metadata.getMetadataUuid(), context.getLanguage()));
             } else {
+                String recordUnpublishedMessageAux = recordUnpublishedMessage
+                    .replace("{{publisherUser}}", metadata.getPublisherUser())
+                    .replace("{{submitterUser}}", metadata.getSubmitterUser())
+                    .replace("{{reviewerUser}}", metadata.getReviewerUser())
+                    .replace("{{timeStamp}}", metadata.getPublicationDateStamp().getDateAndTime());
+
+                if (group.isPresent()) {
+                    recordUnpublishedMessageAux = recordUnpublishedMessageAux.replace("{{group}}", group.get().getName());
+                }
+
                 listOfProcessedMetadataMessage.append(
-                    MailUtil.compileMessageWithIndexFields(recordUnpublishedMessage, metadata.getMetadataUuid(), context.getLanguage()));
+                    MailUtil.compileMessageWithIndexFields(recordUnpublishedMessageAux, metadata.getMetadataUuid(), context.getLanguage()));
             }
         });
 
