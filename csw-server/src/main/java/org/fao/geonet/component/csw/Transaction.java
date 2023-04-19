@@ -65,8 +65,8 @@ import java.util.*;
  */
 @Component(CatalogService.BEAN_PREFIX + Transaction.NAME)
 public class Transaction extends AbstractOperation implements CatalogService {
-    private final boolean APPLY_UPDATE_FIXED_INFO = true;
-    private final boolean APPLY_VALIDATION = false;
+    private static final boolean applyUpdateFixedInfo = true;
+    private static final boolean applyValidation = false;
 
     static final String NAME = "Transaction";
     @Autowired
@@ -256,7 +256,7 @@ public class Transaction extends AbstractOperation implements CatalogService {
         //
         String docType = null, isTemplate = null;
         String id = dataMan.insertMetadata(context, schema, xml, uuid, userId, group, source,
-            isTemplate, docType, category, createDate, changeDate, APPLY_UPDATE_FIXED_INFO, IndexingMode.none);
+            isTemplate, docType, category, createDate, changeDate, applyUpdateFixedInfo, IndexingMode.none);
 
         // Privileges for the first group of the user that inserts the metadata
         // (same permissions as when inserting xml file from UI)
@@ -346,7 +346,7 @@ public class Transaction extends AbstractOperation implements CatalogService {
 
             String language = context.getLanguage();
             dataMan.updateMetadata(context, id, xml,
-                APPLY_VALIDATION, APPLY_UPDATE_FIXED_INFO,
+                applyValidation, applyUpdateFixedInfo,
                 language, changeDate, true, IndexingMode.none);
 
             toIndex.add(id);
@@ -447,7 +447,7 @@ public class Transaction extends AbstractOperation implements CatalogService {
                     }
                     String language = context.getLanguage();
                     dataMan.updateMetadata(context, id, metadata,
-                        APPLY_VALIDATION, APPLY_UPDATE_FIXED_INFO,
+                        applyValidation, applyUpdateFixedInfo,
                         language, changeDate, true, IndexingMode.none);
 
                     updatedMd.add(id);
