@@ -171,7 +171,27 @@
         });
       };
 
-      this.updateFavourites = function (id, name, toDelete) {
+      this.createFavourites = function (name) {
+        var body = "name=" + name + "&listType=PreferredList";
+
+        return $http.post("../api/favouriteslist", body, {
+          headers: { "Content-Type": "application/x-www-form-urlencoded" }
+        });
+      };
+
+      this.addToFavorites = function (id, name, uuids) {
+        var body = "name=" + name + "&action=add";
+        if (uuids.length > 0) {
+          body += "&metadataUuids=";
+          body += uuids.join("&metadataUuids=");
+        }
+
+        return $http.put("../api/favouriteslist/" + id, body, {
+          headers: { "Content-Type": "application/x-www-form-urlencoded" }
+        });
+      };
+
+      this.removeFromFavourites = function (id, name, toDelete) {
         var body = "name=" + name + "&action=remove";
         if (toDelete.length > 0) {
           body += "&metadataUuids=";

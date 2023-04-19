@@ -33,24 +33,204 @@
   goog.provide("gn_favouriteslist_directive");
   var module = angular.module("gn_favouriteslist_directive", []);
 
+  /**
+   * @ngdoc directive
+   * @name gn_favourite_selections.directive:gnFavouriteSelections
+   * @restrict A
+   * @requires gnFavouritesListService
+   * @requires $translate
+   *
+   * @description
+   *
+   */
+  module.directive("gnFavouriteSelections", [
+    "gnSearchManagerService",
+    "gnFavouritesListService",
+    "$http",
+    "$q",
+    "$rootScope",
+    "$translate",
+    "Metadata",
+    function (
+      gnSearchManagerService,
+      gnFavouritesListService,
+      $http,
+      $q,
+      $rootScope,
+      $translate,
+      Metadata
+    ) {
+      // List of persistent favorite lists
+      // and user records in each favorite lists
+      var favouriteLists = [];
+
+      var user = null;
+      var storagePrefix = "basket";
+      var maxSize = 200;
+
+      function FavouriteSelectionController(scope) {}
+
+      // Load the list of db saved selection + local selection
+      // and then load the content of each selections
+      // from db or local/session storage.
+      FavouriteSelectionController.prototype.init = function (user, localOnly) {
+        //var defer = $q.defer();
+
+        /*angular.forEach(gnSavedSelectionConfig.localList, function (s) {
+          if (!(user && user.id !== undefined && s.isAnonymousOnly)) {
+            selections.list.push(s);
+          }
+        });*/
+
+        return gnFavouritesListService.loadFavourites().then(function (r) {
+          favouriteLists = r.data;
+          $rootScope.$broadcast("favouriteSelectionsUpdate", favouriteLists);
+
+          return favouriteLists;
+        });
+
+        //return defer.promise;
+      };
+
+      FavouriteSelectionController.prototype.getSelections = function (user) {
+        if (user && this.userId !== user.id) {
+          this.userId = user.id;
+          var p = this.init(this.userId);
+          return p;
+        } else if (user === undefined) {
+          this.userId = undefined;
+          return this.init();
+        } else {
+          var defer = $q.defer();
+          defer.resolve(favouriteLists);
+          return defer.promise;
+        }
+      };
+
+      FavouriteSelectionController.prototype.add = function (favouriteList, user, uuid) {
+        var ctrl = this;
+
+        var tooManyItems = favouriteList.selections.length > maxSize;
+        if (tooManyItems) {
+          $rootScope.$broadcast("StatusUpdated", {
+            msg: $translate.instant("tooManyItemsInSelection", { maxSize: maxSize }),
+            timeout: 0,
+            type: "danger"
+          });
+          return;
+        }
+
+        if (favouriteList.id > -1) {
+          if (typeof favouriteList === "string") {
+            favouriteList = this.getSelectionId(favouriteList);
+          }
+
+          return gnFavouritesListService
+            .addToFavorites(favouriteList.id, favouriteList.name, [uuid])
+            .then(function (response) {
+              //scope.selections[0] = response.data;
+              return ctrl.init(ctrl.userId);
+            });
+        } else {
+          this.addToStore(this.getSelection(favouriteList), uuid);
+          return ctrl.init(ctrl.userId, true);
+        }
+      };
+
+      FavouriteSelectionController.prototype.remove = function (
+        favouriteList,
+        user,
+        uuid
+      ) {
+        var ctrl = this;
+        if (favouriteList.id > -1) {
+          return gnFavouritesListService
+            .removeFromFavourites(favouriteList.id, favouriteList.name, [uuid])
+            .then(function (response) {
+              //scope.selections[0] = response.data;
+              return ctrl.init(ctrl.userId);
+            });
+        } else {
+          this.removeFromStore(this.getSelection(favouriteList), uuid);
+        }
+      };
+
+      // For local selection, the storage is in synch with
+      // the selection records property.
+      FavouriteSelectionController.prototype.addToStore = function (
+        favouriteList,
+        uuid
+      ) {};
+
+      FavouriteSelectionController.prototype.removeFromStore = function (
+        selection,
+        uuid
+      ) {};
+
+      FavouriteSelectionController.prototype.getSelectionId = function (name) {};
+
+      // Return the selection object if an id is provided
+      FavouriteSelectionController.prototype.getSelection = function (selOrId) {
+        if (typeof selOrId === "number") {
+          for (var i = 0; i < favouriteLists.length; i++) {
+            if (favouriteLists[i].id === selOrId) {
+              return favouriteLists[i];
+            }
+          }
+        } else {
+          return selOrId;
+        }
+      };
+
+      return {
+        restrict: "A",
+        controller: ["$scope", FavouriteSelectionController]
+      };
+    }
+  ]);
+
   module.directive("gnFavouritesListPanel", [
     "gnFavouritesListService",
     "$location",
+    "$rootScope",
     "gnUtilityService",
-    function (gnFavouritesListService, $location, gnUtilityService) {
+    function (gnFavouritesListService, $location, $rootScope, gnUtilityService) {
       return {
         restrict: "A",
         replace: true,
+        require: "^gnFavouriteSelections",
         scope: {
-          user: "=gnUserSearchesPanel"
+          user: "=gnFavouritesListPanel"
         },
-
         templateUrl:
           "../../catalog/components/favouriteslist/partials/favouritespanel.html",
-        link: function (scope, element, attrs) {
+        link: function (scope, element, attrs, controller) {
           scope.isFavouritesPanelEnabled = true; // gnGlobalSettings.gnCfg.mods.search.usersearches.enabled;
 
-          scope.favouriteLists = [];
+          scope.favouriteLists = null;
+
+          $rootScope.$on("favouriteSelectionsUpdate", function (e, n, o) {
+            if (n != o) {
+              scope.favouriteLists = n;
+            }
+          });
+
+          scope.$watch(
+            "user",
+            function (n, o) {
+              if (n !== o || scope.favouriteLists === null) {
+                scope.favouriteLists = null;
+                controller.getSelections(scope.user).then(function (favouriteLists) {
+                  var items = favouriteLists;
+                  items = _.sortBy(items, function (item) {
+                    return item.name;
+                  });
+                  scope.favouriteLists = items;
+                });
+              }
+            },
+            true
+          );
 
           scope.loadFavouritesLists = function () {
             gnFavouritesListService.loadFavourites().then(
@@ -60,6 +240,8 @@
                   return item.name;
                 });
                 scope.favouriteLists = items;
+
+                $rootScope.$emit("refreshFavouriteLists", scope.favouriteLists);
               },
               function () {
                 // TODO: Log error
@@ -76,7 +258,7 @@
           };
 
           scope.updateFavouritesList = function () {
-            scope.favouriteLists = [];
+            scope.selections = [];
             scope.loadFavouritesLists();
             scope.$emit("search", {});
           };
@@ -94,7 +276,7 @@
                 }
               },
               scope,
-              "updated"
+              "addUserSelectionFavourites"
             );
           };
 
@@ -103,9 +285,11 @@
               .deleteFavouritesList(favouritesList.id)
               .then(function (result) {
                 ///
-                scope.favouriteLists = scope.favouriteLists.filter(function (item) {
+                scope.selections = scope.favouriteLists.filter(function (item) {
                   return item.id !== favouritesList.id;
                 });
+
+                scope.updateFavouritesList();
               });
           };
 
@@ -115,8 +299,26 @@
             $location.search(params);
           };
 
+          scope.createNewList = function ($event) {
+            gnUtilityService.openModal(
+              {
+                title: "userSelectionFavourites",
+                content:
+                  '<div gn-create-favourites-list="currentFavouritesList"  ></div>',
+                className: "gn-savesearch-popup",
+                onCloseCallback: function () {
+                  scope.updateFavouritesList();
+                }
+              },
+              scope,
+              "updatedUserSelectionFavourites"
+            );
+
+            $event.stopPropagation();
+          };
+
           //----
-          scope.loadFavouritesLists();
+          //scope.loadFavouritesLists();
         }
       };
     }
@@ -261,6 +463,153 @@
             scope.page.page,
             scope.page.pageSize
           );
+        }
+      };
+    }
+  ]);
+
+  //---------------------------------------------------------------------------
+  //---------------------------------------------------------------------------
+  //---------------------------------------------------------------------------
+
+  module.directive("gnCreateFavouritesList", [
+    "gnFavouritesListService",
+    "gnConfigService",
+    "gnConfig",
+    "gnGlobalSettings",
+
+    function (gnFavouritesListService, gnConfigService, gnConfig, gnGlobalSettings) {
+      return {
+        restrict: "A",
+        replace: true,
+        scope: {},
+        templateUrl:
+          "../../catalog/components/favouriteslist/partials/createfavourite.html",
+        link: function postLink(scope, element, attrs) {
+          scope.updateSearchUrl = false;
+
+          scope.save = function () {
+            return gnFavouritesListService
+              .createFavourites(scope.name)
+              .then(function (response) {
+                scope.$emit("updatedUserSelectionFavourites", response.data);
+              });
+          };
+
+          //------------------------------------------
+
+          /*scope.loadFavouritesPaged(
+            scope.favouritesList.id,
+            scope.page.page,
+            scope.page.pageSize
+          );*/
+        }
+      };
+    }
+  ]);
+
+  /**
+   * Button to add or remove item from user saved selection.
+   */
+  module.directive("gnFavouritesSelectionsAction", [
+    "gnFavouritesListService",
+    "$rootScope",
+    "gnGlobalSettings",
+    function (gnFavouritesListService, $rootScope, gnGlobalSettings) {
+      return {
+        restrict: "A",
+        templateUrl: "../../catalog/components/favouriteslist/partials/action.html",
+        require: "^gnFavouriteSelections",
+        scope: {
+          record: "=",
+          user: "=",
+          lang: "="
+        },
+        link: function (scope, element, attrs, controller) {
+          scope.favouriteLists = [];
+
+          scope.uuid = scope.record.uuid;
+
+          $rootScope.$on("refreshFavouriteLists", function (e, n, o) {
+            if (n != o) {
+              scope.favouriteLists = n;
+            }
+          });
+
+          $rootScope.$on("favouriteSelectionsUpdate", function (e, n, o) {
+            if (n != o) {
+              scope.favouriteLists = n;
+            }
+          });
+
+          controller.getSelections(scope.user).then(function (favouriteLists) {
+            scope.favouriteLists = favouriteLists;
+          });
+
+          function check(favouriteList, canBeAdded) {
+            // Authenticated user can't use local anymous selections
+            if (
+              scope.user &&
+              scope.user.id !== undefined &&
+              favouriteList.isAnonymousOnly === true
+            ) {
+              return false;
+            }
+
+            if (angular.isArray(favouriteList.selections) && canBeAdded) {
+              // Check if record already in current selection
+              return favouriteList.selections.indexOf(scope.record.uuid) === -1;
+            } else if (
+              angular.isArray(favouriteList.selections) &&
+              canBeAdded === false
+            ) {
+              // Check if record not already in current selection
+              return favouriteList.selections.indexOf(scope.record.uuid) !== -1;
+            } else {
+              return false;
+            }
+          }
+
+          function checkStatus(favouriteList, addedOrRemoved) {
+            if (favouriteList) {
+              return check(favouriteList, addedOrRemoved);
+            } else {
+              var result = false;
+
+              if (scope.favouriteLists.length === 0) {
+                return false;
+              }
+
+              for (var i = 0; i < scope.favouriteLists.length; i++) {
+                if (check(scope.favouriteLists[i], addedOrRemoved)) {
+                  result = true;
+                  break;
+                }
+              }
+              return result;
+            }
+          }
+
+          scope.add = function (favouriteList) {
+            controller.add(favouriteList, scope.user, scope.uuid).then(function (data) {
+              scope.favouriteLists = data;
+            });
+          };
+
+          scope.remove = function (favouriteList) {
+            controller
+              .remove(favouriteList, scope.user, scope.uuid)
+              .then(function (data) {
+                scope.favouriteLists = data;
+              });
+          };
+
+          scope.canBeAdded = function (favouriteList) {
+            return checkStatus(favouriteList, true);
+          };
+          scope.canBeRemoved = function (favouriteList) {
+            return checkStatus(favouriteList, false);
+          };
         }
       };
     }

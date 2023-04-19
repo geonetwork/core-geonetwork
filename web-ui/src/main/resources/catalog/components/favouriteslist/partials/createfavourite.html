@@ -1,0 +1,35 @@
+<div class="gn-favourite-modal">
+  <form class="form-horizontal">
+    <!-- name -->
+    <div class="form-group">
+      <label class="control-label gn-margin-bottom-sm" data-translate=""
+        >userSearchName</label
+      >
+      <div>
+        <input
+          type="text"
+          name="name"
+          class="form-control gn-margin-bottom-sm"
+          maxlength="255"
+          data-ng-model="name"
+        />
+      </div>
+    </div>
+  </form>
+
+  <!--save/cancel -->
+
+  <div class="btn-toolbar">
+    <button
+      type="button"
+      class="btn btn-success pull-right"
+      data-gn-click-and-spin="save()"
+    >
+      <i class="fa fa-fw fa-save"></i>
+      <span data-translate="">save</span>
+    </button>
+    <button data-dismiss="modal" type="button" class="btn btn-default pull-right">
+      <span data-translate="">cancel</span>
+    </button>
+  </div>
+</div>

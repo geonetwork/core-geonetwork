@@ -245,7 +245,7 @@
           scope.isSpecificParameter = function (key) {
             // full text search and uuid on selection only
             // are not translated like facet.
-            return key === "any" || key === "uuid" || key=="favouritesList";
+            return key === "any" || key === "uuid" || key == "favouritesList";
           };
           scope.getFilterType = function (filter) {
             if (
