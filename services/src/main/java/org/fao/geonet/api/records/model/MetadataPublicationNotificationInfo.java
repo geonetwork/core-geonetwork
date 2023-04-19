@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2022 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2023 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -23,14 +23,22 @@
 
 package org.fao.geonet.api.records.model;
 
+
+import org.fao.geonet.domain.ISODate;
+
 /**
  * Information used for metadata publication/un-publication mail notifications.
  */
 public class MetadataPublicationNotificationInfo {
-    public String metadataUuid;
-    public int metadataId;
-    public Integer groupId;
-    public Boolean published;
+    private String metadataUuid;
+    private int metadataId;
+    private Integer groupId;
+    private Boolean published;
+    private ISODate publicationDateStamp;
+    private String publisherUser = "";
+
+    private String reviewerUser = "";
+    private String submitterUser = "";
 
     public String getMetadataUuid() {
         return metadataUuid;
@@ -62,5 +70,37 @@ public class MetadataPublicationNotificationInfo {
 
     public void setPublished(Boolean published) {
         this.published = published;
+    }
+
+    public ISODate getPublicationDateStamp() {
+        return publicationDateStamp;
+    }
+
+    public void setPublicationDateStamp(ISODate publicationDateStamp) {
+        this.publicationDateStamp = publicationDateStamp;
+    }
+
+    public String getPublisherUser() {
+        return publisherUser;
+    }
+
+    public void setPublisherUser(String publisherUser) {
+        this.publisherUser = publisherUser;
+    }
+
+    public String getReviewerUser() {
+        return reviewerUser;
+    }
+
+    public void setReviewerUser(String reviewerUser) {
+        this.reviewerUser = reviewerUser;
+    }
+
+    public String getSubmitterUser() {
+        return submitterUser;
+    }
+
+    public void setSubmitterUser(String submitterUser) {
+        this.submitterUser = submitterUser;
     }
 }
