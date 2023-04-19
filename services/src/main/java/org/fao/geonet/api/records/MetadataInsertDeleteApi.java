@@ -299,7 +299,7 @@ public class MetadataInsertDeleteApi {
         @Parameter(description = "URL of a file to download and insert.", required = false) @RequestParam(required = false) String[] url,
         @Parameter(description = "Server folder where to look for files.", required = false) @RequestParam(required = false) String serverFolder,
         @Parameter(description = "(Server folder import only) Recursive search in folder.", required = false) @RequestParam(required = false, defaultValue = "false") final boolean recursiveSearch,
-        @Parameter(description = "(XML file only) Publish record.", required = false) @RequestParam(required = false, defaultValue = "false") final boolean publishToAll,
+        @Parameter(description = "(XML file only and if workflow is not enabled) Publish record.", required = false) @RequestParam(required = false, defaultValue = "false") boolean publishToAll,
         @Parameter(description = "(MEF file only) Assign to current catalog.", required = false) @RequestParam(required = false, defaultValue = "false") final boolean assignToCatalog,
         @Parameter(description = API_PARAM_RECORD_UUID_PROCESSING, required = false) @RequestParam(required = false, defaultValue = "NOTHING") final MEFLib.UuidAction uuidProcessing,
         @Parameter(description = API_PARAM_RECORD_GROUP, required = false) @RequestParam(required = false) final String group,
@@ -324,6 +324,11 @@ public class MetadataInsertDeleteApi {
         checkUserProfileToImportMetadata(userSession);
 
 
+        boolean isMdWorkflowEnable = settingManager.getValueAsBool(Settings.METADATA_WORKFLOW_ENABLE);
+        if (isMdWorkflowEnable) {
+            publishToAll = false;
+        }
+
         if (xml != null) {
             Element element = null;
             try {
@@ -332,6 +337,7 @@ public class MetadataInsertDeleteApi {
                 throw new IllegalArgumentException(
                     String.format(messages.getString("api.metadata.import.errorInvalidXMLFragment"), ex.getMessage()));
             }
+
             Pair<Integer, String> pair = loadRecord(metadataType, element, uuidProcessing, group, category,
                     rejectIfInvalid, publishToAll, allowEditGroupMembers, transformWith, schema, extra, request);
             report.addMetadataInfos(pair.one(), pair.two(), !publishToAll, false, String.format(messages.getString("api.metadata.import.importedFromXMLWithUuid"), pair.two()));
