@@ -302,3 +302,32 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+.gn-status-draft-to-submitted-editor:before,
+.gn-status-draft-to-submitted-reviewer:before {
+  content: @fa-var-check-circle;
+}
+.gn-status-retired-to-draft-editor:before,
+.gn-status-retired-to-draft-reviewer:before {
+  content: @fa-var-pencil;
+}
+.gn-status-submitted-to-draft-editor:before {
+  content: @fa-var-undo;
+}
+.gn-status-submitted-to-draft-reviewer:before {
+  content: @fa-var-thumbs-down;
+}
+.gn-status-submitted-to-approved-reviewer:before {
+  content: @fa-var-thumbs-up;
+}
+.gn-status-draft-to-approved-reviewer:before {
+  content: @fa-var-thumbs-up;
+}
+.gn-status-approved-to-retired-editor:before,
+.gn-status-approved-to-retired-reviewer:before {
+  content: @fa-var-archive;
+}
+.gn-status-draft-to-submitted-editor:before,
+.gn-status-draft-to-submitted-reviewer:before {
+  content: @fa-var-check-circle;
+}
