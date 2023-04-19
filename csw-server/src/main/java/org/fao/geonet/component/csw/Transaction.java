@@ -23,8 +23,6 @@
 
 package org.fao.geonet.component.csw;
 
-import org.fao.geonet.kernel.search.IndexingMode;
-import org.locationtech.jts.util.Assert;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
@@ -38,37 +36,28 @@ import org.fao.geonet.csw.common.ResultType;
 import org.fao.geonet.csw.common.exceptions.CatalogException;
 import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
 import org.fao.geonet.domain.ISODate;
-import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.domain.ReservedOperation;
-import org.fao.geonet.kernel.AccessManager;
-import org.fao.geonet.kernel.AddElemValue;
-import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.EditLib;
-import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.*;
 import org.fao.geonet.kernel.csw.CatalogService;
 import org.fao.geonet.kernel.csw.services.AbstractOperation;
 import org.fao.geonet.kernel.csw.services.getrecords.FieldMapper;
 import org.fao.geonet.kernel.csw.services.getrecords.SearchController;
-import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.schema.MetadataSchema;
+import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.utils.Log;
 import org.jdom.Element;
+import org.locationtech.jts.util.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 //=============================================================================
 /**
@@ -76,6 +65,9 @@ import java.util.UUID;
  */
 @Component(CatalogService.BEAN_PREFIX + Transaction.NAME)
 public class Transaction extends AbstractOperation implements CatalogService {
+    private final boolean APPLY_UPDATE_FIXED_INFO = true;
+    private final boolean APPLY_VALIDATION = false;
+
     static final String NAME = "Transaction";
     @Autowired
     SchemaManager _schemaManager;
@@ -263,9 +255,8 @@ public class Transaction extends AbstractOperation implements CatalogService {
         // insert metadata
         //
         String docType = null, isTemplate = null;
-        boolean ufo = true;
         String id = dataMan.insertMetadata(context, schema, xml, uuid, userId, group, source,
-            isTemplate, docType, category, createDate, changeDate, ufo, IndexingMode.none);
+            isTemplate, docType, category, createDate, changeDate, APPLY_UPDATE_FIXED_INFO, IndexingMode.none);
 
         // Privileges for the first group of the user that inserts the metadata
         // (same permissions as when inserting xml file from UI)
@@ -353,10 +344,10 @@ public class Transaction extends AbstractOperation implements CatalogService {
                 changeDate = new ISODate().toString();
             }
 
-            boolean validate = false;
-            boolean ufo = false;
             String language = context.getLanguage();
-            dataMan.updateMetadata(context, id, xml, validate, ufo, language, changeDate, true, IndexingMode.none);
+            dataMan.updateMetadata(context, id, xml,
+                APPLY_VALIDATION, APPLY_UPDATE_FIXED_INFO,
+                language, changeDate, true, IndexingMode.none);
 
             toIndex.add(id);
 
@@ -449,15 +440,15 @@ public class Transaction extends AbstractOperation implements CatalogService {
 
                 // Update the metadata with changes
                 if (metadataChanged) {
-                    boolean validate = false;
-                    boolean ufo = false;
                     try {
                         changeDate = metadataUtils.extractDateModified(schemaId, metadata);
                     } catch (Exception ex) {
                         changeDate = new ISODate().toString();
                     }
                     String language = context.getLanguage();
-                    dataMan.updateMetadata(context, id, metadata, validate, ufo, language, changeDate, true, IndexingMode.none);
+                    dataMan.updateMetadata(context, id, metadata,
+                        APPLY_VALIDATION, APPLY_UPDATE_FIXED_INFO,
+                        language, changeDate, true, IndexingMode.none);
 
                     updatedMd.add(id);
 
