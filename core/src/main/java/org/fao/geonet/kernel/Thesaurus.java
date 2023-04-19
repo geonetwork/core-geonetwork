@@ -71,6 +71,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
+import static org.fao.geonet.kernel.AllThesaurus.ALL_THESAURUS_KEY;
+
 public class Thesaurus {
 
     private static final String DEFAULT_THESAURUS_NAMESPACE = "http://custom.shared.obj.ch/concept#";
@@ -1091,18 +1093,12 @@ public class Thesaurus {
     }
 
     /**
-     * Gets a keyword using its id
+     * Gets a keyword using its id.
      *
      * @param uri the keyword to retrieve
      * @return keyword
      */
-    public KeywordBean getKeyword(String uri, String... languages) {
-        String cacheKey = "getKeyword" + uri + Arrays.stream(languages).collect(Collectors.joining(""));
-        Object cacheValue = THESAURUS_SEARCH_CACHE.getIfPresent(cacheKey);
-        if (cacheValue != null) {
-            return (KeywordBean) cacheValue;
-        }
-
+    public KeywordBean getKeywordWithoutCache(String uri, String... languages) {
         List<KeywordBean> keywords;
 
         try {
@@ -1119,9 +1115,19 @@ public class Thesaurus {
         if (keywords.isEmpty()) {
             throw new TermNotFoundException(getTermNotFoundMessage(uri));
         }
+        return keywords.get(0);
+    }
 
-        KeywordBean keywordBean = keywords.get(0);
-        THESAURUS_SEARCH_CACHE.put(cacheKey, keywordBean);
+    public KeywordBean getKeyword(String uri, String... languages) {
+        String cacheKey = "getKeyword" + uri + Arrays.stream(languages).collect(Collectors.joining(""));
+        Object cacheValue = THESAURUS_SEARCH_CACHE.getIfPresent(cacheKey);
+        if (cacheValue != null) {
+            return (KeywordBean) cacheValue;
+        }
+        KeywordBean keywordBean = getKeywordWithoutCache(uri, languages);
+        if (!this.getKey().equals(ALL_THESAURUS_KEY)) {
+            THESAURUS_SEARCH_CACHE.put(cacheKey, keywordBean);
+        }
         return keywordBean;
     }
 
