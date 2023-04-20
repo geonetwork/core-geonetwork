@@ -993,10 +993,12 @@ public class Thesaurus {
             this.createdDate = createdDateEl==null? "": createdDateEl.getText();
 
             // Default date
-            Date thesaususDate = parseThesaurusDate(issuedDateEl);
+            Element dateEl = Xml.selectElement(thesaurusEl, "skos:ConceptScheme/dcterms:issued|skos:Collection/dc:date", theNSs);
+            Date thesaususDate = parseThesaurusDate(dateEl);
 
             if (thesaususDate == null) {
-                thesaususDate = parseThesaurusDate(modifiedDateEl);
+                dateEl = Xml.selectElement(thesaurusEl, "skos:ConceptScheme/dcterms:modified", theNSs);
+                thesaususDate = parseThesaurusDate(dateEl);
             }
 
             if (thesaususDate != null) {
