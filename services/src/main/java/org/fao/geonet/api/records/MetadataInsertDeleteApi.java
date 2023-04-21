@@ -94,7 +94,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.annotation.Nonnull;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.ByteArrayInputStream;
@@ -194,7 +193,7 @@ public class MetadataInsertDeleteApi {
 
         if (metadata.getDataInfo().getType() != MetadataType.SUB_TEMPLATE
             && metadata.getDataInfo().getType() != MetadataType.TEMPLATE_OF_SUB_TEMPLATE && withBackup) {
-            MetadataUtils.backupRecord(metadata, context);
+            MEFLib.backupRecord(metadata, context);
         }
 
         boolean approved=true;
@@ -264,7 +263,7 @@ public class MetadataInsertDeleteApi {
 
                 if (metadata.getDataInfo().getType() != MetadataType.SUB_TEMPLATE
                     && metadata.getDataInfo().getType() != MetadataType.TEMPLATE_OF_SUB_TEMPLATE && withBackup) {
-                    MetadataUtils.backupRecord(metadata, context);
+                    MEFLib.backupRecord(metadata, context);
                 }
 
                 store.delResources(context, metadata.getUuid());

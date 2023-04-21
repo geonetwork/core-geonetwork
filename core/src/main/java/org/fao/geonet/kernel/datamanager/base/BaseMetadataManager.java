@@ -34,13 +34,17 @@ import jeeves.transaction.TransactionTask;
 import jeeves.xlink.Processor;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.api.records.attachments.Store;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.*;
+import org.fao.geonet.events.history.RecordDeletedEvent;
+import org.fao.geonet.events.md.MetadataPreRemove;
 import org.fao.geonet.exceptions.UnAuthorizedException;
 import org.fao.geonet.kernel.*;
 import org.fao.geonet.kernel.datamanager.*;
+import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.schema.SchemaPlugin;
 import org.fao.geonet.kernel.search.EsSearchManager;
@@ -192,7 +196,7 @@ public class BaseMetadataManager implements IMetadataManager {
         Sort sortByMetadataChangeDate = SortUtils.createSort(Sort.Direction.DESC, Metadata_.dataInfo, MetadataDataInfo_.changeDate);
         int currentPage = 0;
         Page<Pair<Integer, ISODate>> results = metadataUtils.findAllIdsAndChangeDates(
-            PageRequest.of(currentPage, METADATA_BATCH_PAGE_SIZE, sortByMetadataChangeDate));
+                PageRequest.of(currentPage, METADATA_BATCH_PAGE_SIZE, sortByMetadataChangeDate));
 
         // index all metadata in DBMS if needed
         while (results.getNumberOfElements() > 0) {
@@ -229,7 +233,7 @@ public class BaseMetadataManager implements IMetadataManager {
 
             currentPage++;
             results = metadataRepository.findIdsAndChangeDates(
-                PageRequest.of(currentPage, METADATA_BATCH_PAGE_SIZE, sortByMetadataChangeDate));
+                    PageRequest.of(currentPage, METADATA_BATCH_PAGE_SIZE, sortByMetadataChangeDate));
         }
 
         // if anything to index then schedule it to be done after servlet is
@@ -238,8 +242,8 @@ public class BaseMetadataManager implements IMetadataManager {
             if (asynchronous) {
                 Set<Integer> integerList = toIndex.stream().map(Integer::parseInt).collect(Collectors.toSet());
                 new BatchOpsMetadataReindexer(
-                    context.getBean(DataManager.class),
-                    integerList).process(settingManager.getSiteId(), false);
+                        context.getBean(DataManager.class),
+                        integerList).process(settingManager.getSiteId(), false);
             } else {
                 metadataIndexer.batchIndexInThreadPool(context, toIndex);
             }
@@ -269,14 +273,14 @@ public class BaseMetadataManager implements IMetadataManager {
     @Deprecated
     public void flush() {
         TransactionManager.runInTransaction("DataManager flush()", getApplicationContext(),
-            TransactionManager.TransactionRequirement.CREATE_ONLY_WHEN_NEEDED, TransactionManager.CommitBehavior.ALWAYS_COMMIT, false,
-            new TransactionTask<Object>() {
-                @Override
-                public Object doInTransaction(TransactionStatus transaction) throws Throwable {
-                    _entityManager.flush();
-                    return null;
-                }
-            });
+                TransactionManager.TransactionRequirement.CREATE_ONLY_WHEN_NEEDED, TransactionManager.CommitBehavior.ALWAYS_COMMIT, false,
+                new TransactionTask<Object>() {
+                    @Override
+                    public Object doInTransaction(TransactionStatus transaction) throws Throwable {
+                        _entityManager.flush();
+                        return null;
+                    }
+                });
 
     }
 
@@ -288,7 +292,7 @@ public class BaseMetadataManager implements IMetadataManager {
     protected void deleteMetadataFromDB(ServiceContext context, String id) throws Exception {
         AbstractMetadata metadata = metadataUtils.findOne(Integer.valueOf(id));
         if (!settingManager.getValueAsBool(Settings.SYSTEM_XLINK_ALLOW_REFERENCED_DELETION)
-            && metadata.getDataInfo().getType() == MetadataType.SUB_TEMPLATE) {
+                && metadata.getDataInfo().getType() == MetadataType.SUB_TEMPLATE) {
             if (this.hasReferencingMetadata(context, metadata)) {
                 throw new UnAuthorizedException("This template is referenced.", metadata);
             }
@@ -311,7 +315,7 @@ public class BaseMetadataManager implements IMetadataManager {
         };
 
         metadataFileUploadRepository
-            .createBatchUpdateQuery(deletedDatePathSpec, new ISODate().toString(), MetadataFileUploadSpecs.isNotDeletedForMetadata(intId));
+                .createBatchUpdateQuery(deletedDatePathSpec, new ISODate().toString(), MetadataFileUploadSpecs.isNotDeletedForMetadata(intId));
 
         // --- remove metadata
         getXmlSerializer().delete(id, context);
@@ -346,6 +350,36 @@ public class BaseMetadataManager implements IMetadataManager {
     }
 
     /**
+     * Delete the record with the id metadataId and additionally take care of cleaning up resources, send events, ...
+     */
+    @Override
+    public void purgeMetadata(ServiceContext context, String metadataId, boolean withBackup) throws Exception {
+        AbstractMetadata metadata = metadataUtils.findOne(metadataId);
+        Store store = context.getBean("resourceStore", Store.class);
+
+        MetadataPreRemove preRemoveEvent = new MetadataPreRemove(metadata);
+        ApplicationContextHolder.get().publishEvent(preRemoveEvent);
+
+        if (metadata.getDataInfo().getType() != MetadataType.SUB_TEMPLATE
+                && metadata.getDataInfo().getType() != MetadataType.TEMPLATE_OF_SUB_TEMPLATE && withBackup) {
+            MEFLib.backupRecord(metadata, context);
+        }
+
+        boolean approved = true;
+        if (metadata instanceof MetadataDraft) {
+            approved = false;
+        }
+
+        store.delResources(context, metadata.getUuid(), approved);
+
+        RecordDeletedEvent recordDeletedEvent = new RecordDeletedEvent(
+                metadata.getId(), metadata.getUuid(), new LinkedHashMap<>(),
+                context.getUserSession().getUserIdAsInt(), metadata.getData());
+        deleteMetadata(context, metadataId);
+        recordDeletedEvent.publish(ApplicationContextHolder.get());
+    }
+
+    /**
      * @param context
      * @param metadataId
      * @throws Exception
@@ -368,7 +402,7 @@ public class BaseMetadataManager implements IMetadataManager {
                                  String parentUuid, String isTemplate, boolean fullRightsForGroup) throws Exception {
 
         return createMetadata(context, templateId, groupOwner, source, owner, parentUuid, isTemplate, fullRightsForGroup,
-            UUID.randomUUID().toString());
+                UUID.randomUUID().toString());
     }
 
     /**
@@ -400,19 +434,19 @@ public class BaseMetadataManager implements IMetadataManager {
 
             xml = duplicateMetadata(schema, xml, context);
         } else if (type == MetadataType.SUB_TEMPLATE
-                   || type == MetadataType.TEMPLATE_OF_SUB_TEMPLATE) {
+                || type == MetadataType.TEMPLATE_OF_SUB_TEMPLATE) {
             xml.setAttribute("uuid", uuid);
         }
 
         final Metadata newMetadata = new Metadata();
         newMetadata.setUuid(uuid);
         newMetadata.getDataInfo()
-            .setChangeDate(new ISODate())
-            .setCreateDate(new ISODate())
-            .setSchemaId(schema)
-            .setRoot(templateMetadata.getDataInfo().getRoot())
-            .setType(type)
-            .setRoot(xml.getQualifiedName());
+                .setChangeDate(new ISODate())
+                .setCreateDate(new ISODate())
+                .setSchemaId(schema)
+                .setRoot(templateMetadata.getDataInfo().getRoot())
+                .setType(type)
+                .setRoot(xml.getQualifiedName());
         newMetadata.getSourceInfo().setGroupOwner(Integer.valueOf(groupOwner)).setOwner(owner).setSourceId(source);
 
         // If there is a default category for the group, use it:
@@ -421,17 +455,17 @@ public class BaseMetadataManager implements IMetadataManager {
             newMetadata.getMetadataCategories().add(group.get().getDefaultCategory());
         }
         Collection<MetadataCategory> filteredCategories = Collections2
-            .filter(templateMetadata.getCategories(), new Predicate<MetadataCategory>() {
-                @Override
-                public boolean apply(@Nullable MetadataCategory input) {
-                    return input != null;
-                }
-            });
+                .filter(templateMetadata.getCategories(), new Predicate<MetadataCategory>() {
+                    @Override
+                    public boolean apply(@Nullable MetadataCategory input) {
+                        return input != null;
+                    }
+                });
 
         newMetadata.getMetadataCategories().addAll(filteredCategories);
 
         int finalId = insertMetadata(context, newMetadata, xml, IndexingMode.full, true, UpdateDatestamp.YES,
-            fullRightsForGroup, true).getId();
+                fullRightsForGroup, true).getId();
 
         return String.valueOf(finalId);
     }
@@ -465,13 +499,13 @@ public class BaseMetadataManager implements IMetadataManager {
                             Element title = (Element) o;
                             // Use settings defined timezone to format the date/time
                             title.setText(String
-                                .format(messages.getString("metadata.title.createdFrom" + (fromTemplate ? "Template" : "Record")),
-                                    title.getTextTrim(), ZonedDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME)));
+                                    .format(messages.getString("metadata.title.createdFrom" + (fromTemplate ? "Template" : "Record")),
+                                            title.getTextTrim(), ZonedDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME)));
                         }
                     }
                 } catch (JDOMException e) {
                     LOGGER_DATA_MANAGER
-                        .debug("Check xpath '{}' for schema plugin '{}'. Error is '{}'.", new Object[]{path, schema, e.getMessage()});
+                            .debug("Check xpath '{}' for schema plugin '{}'. Error is '{}'.", new Object[]{path, schema, e.getMessage()});
                 }
             });
         }
@@ -494,7 +528,7 @@ public class BaseMetadataManager implements IMetadataManager {
      * @param createDate   date of creation
      * @param changeDate   date of modification
      * @param ufo          whether to apply automatic changes
-     * @param indexingMode        whether to index this metadata
+     * @param indexingMode whether to index this metadata
      * @return id, as a string
      * @throws Exception hmm
      */
@@ -514,7 +548,7 @@ public class BaseMetadataManager implements IMetadataManager {
         final ISODate isoChangeDate = changeDate != null ? new ISODate(changeDate) : new ISODate();
         final ISODate isoCreateDate = createDate != null ? new ISODate(createDate) : new ISODate();
         newMetadata.getDataInfo().setChangeDate(isoChangeDate).setCreateDate(isoCreateDate).setSchemaId(schema).setDoctype(docType)
-            .setRoot(metadataXml.getQualifiedName()).setType(MetadataType.lookup(metadataType));
+                .setRoot(metadataXml.getQualifiedName()).setType(MetadataType.lookup(metadataType));
         newMetadata.getSourceInfo().setOwner(owner).setSourceId(source);
         if (StringUtils.isNotEmpty(groupOwner)) {
             newMetadata.getSourceInfo().setGroupOwner(Integer.valueOf(groupOwner));
@@ -536,7 +570,7 @@ public class BaseMetadataManager implements IMetadataManager {
         boolean fullRightsForGroup = false;
 
         int finalId = insertMetadata(context, newMetadata, metadataXml, indexingMode, ufo, UpdateDatestamp.NO,
-            fullRightsForGroup, true).getId();
+                fullRightsForGroup, true).getId();
 
         return String.valueOf(finalId);
     }
@@ -552,9 +586,9 @@ public class BaseMetadataManager implements IMetadataManager {
         if (mdImportSetting != null && !mdImportSetting.equals("")) {
             if (!newMetadata.getHarvestInfo().isHarvested() && !Arrays.asList(mdImportSetting.split(",")).contains(schema)) {
                 throw new IllegalArgumentException("The system setting '" + Settings.METADATA_IMPORT_RESTRICT
-                    + "' doesn't allow to import " + schema
-                    + " metadata records (they can still be harvested). "
-                    + "Apply an import stylesheet to convert file to one of the allowed schemas: " + mdImportSetting);
+                        + "' doesn't allow to import " + schema
+                        + " metadata records (they can still be harvested). "
+                        + "Apply an import stylesheet to convert file to one of the allowed schemas: " + mdImportSetting);
             }
         }
 
@@ -564,7 +598,7 @@ public class BaseMetadataManager implements IMetadataManager {
         if (updateFixedInfo && newMetadata.getDataInfo().getType() == MetadataType.METADATA) {
             String parentUuid = null;
             metadataXml = updateFixedInfo(schema, Optional.absent(), newMetadata.getUuid(), metadataXml, parentUuid,
-                updateDatestamp, context);
+                    updateDatestamp, context);
         }
 
         // --- store metadata
@@ -630,7 +664,7 @@ public class BaseMetadataManager implements IMetadataManager {
 
             if (withEditorValidationErrors) {
                 final Pair<Element, String> versionAndReport = metadataValidator
-                    .doValidate(srvContext.getUserSession(), schema, id, metadataXml, srvContext.getLanguage(), forEditing);
+                        .doValidate(srvContext.getUserSession(), schema, id, metadataXml, srvContext.getLanguage(), forEditing);
                 version = versionAndReport.two();
                 // Add the validation report to the record
                 // under a geonet:report element. The report
@@ -719,7 +753,7 @@ public class BaseMetadataManager implements IMetadataManager {
             uuidBeforeUfo = findUuid(metadataXml, schema, metadata);
 
             metadataXml = updateFixedInfo(schema, Optional.of(intId), uuidBeforeUfo, metadataXml, parentUuid,
-                (updateDateStamp ? UpdateDatestamp.YES : UpdateDatestamp.NO), context);
+                    (updateDateStamp ? UpdateDatestamp.YES : UpdateDatestamp.NO), context);
         }
 
         // --- force namespace prefix for iso19139 metadata
@@ -769,7 +803,7 @@ public class BaseMetadataManager implements IMetadataManager {
         String uuid = null;
 
         if (schemaManager.getSchema(schema).isReadwriteUUID() && metadata.getDataInfo().getType() != MetadataType.SUB_TEMPLATE
-            && metadata.getDataInfo().getType() != MetadataType.TEMPLATE_OF_SUB_TEMPLATE) {
+                && metadata.getDataInfo().getType() != MetadataType.TEMPLATE_OF_SUB_TEMPLATE) {
             uuid = metadataUtils.extractUUID(schema, metadataXml);
         }
         return uuid;
@@ -869,7 +903,7 @@ public class BaseMetadataManager implements IMetadataManager {
                 String ratio = "xsd".equals(type) ? "" : vi.getNumFailures() + "/" + vi.getNumTests();
 
                 info.addContent(new Element(Edit.Info.Elem.VALID + "_details").addContent(new Element("type").setText(type))
-                    .addContent(new Element("status").setText(vi.isValid() ? "1" : "0").addContent(new Element("ratio").setText(ratio))));
+                        .addContent(new Element("status").setText(vi.isValid() ? "1" : "0").addContent(new Element("ratio").setText(ratio))));
             }
             addElement(info, Edit.Info.Elem.VALID, isValid);
         }
@@ -930,8 +964,7 @@ public class BaseMetadataManager implements IMetadataManager {
                 if (metadata != null) {
                     changeDate = metadata.getDataInfo().getChangeDate().getDateAndTime();
                     createDate = metadata.getDataInfo().getCreateDate().getDateAndTime();
-                }
-                else {
+                } else {
                     createDate = new ISODate().toString();
                 }
                 env.addContent(new Element("changeDate").setText(changeDate));
@@ -984,12 +1017,12 @@ public class BaseMetadataManager implements IMetadataManager {
             result.addContent(env);
             // apply update-fixed-info.xsl
             Path styleSheet = metadataSchemaUtils.getSchemaDir(schema).resolve(
-                metadata != null
-                    && (
-                        metadata.getDataInfo().getType() == MetadataType.SUB_TEMPLATE
-                        || metadata.getDataInfo().getType() == MetadataType.TEMPLATE_OF_SUB_TEMPLATE)?
-                    Geonet.File.UPDATE_FIXED_INFO_SUBTEMPLATE :
-                    Geonet.File.UPDATE_FIXED_INFO);
+                    metadata != null
+                            && (
+                            metadata.getDataInfo().getType() == MetadataType.SUB_TEMPLATE
+                                    || metadata.getDataInfo().getType() == MetadataType.TEMPLATE_OF_SUB_TEMPLATE) ?
+                            Geonet.File.UPDATE_FIXED_INFO_SUBTEMPLATE :
+                            Geonet.File.UPDATE_FIXED_INFO);
             result = Xml.transform(result, styleSheet);
             return result;
         } else {
@@ -1013,7 +1046,7 @@ public class BaseMetadataManager implements IMetadataManager {
      */
     @Override
     public Set<String> updateChildren(ServiceContext srvContext, String parentUuid, String[] children, Map<String, Object> params)
-        throws Exception {
+            throws Exception {
         String parentId = (String) params.get(Params.ID);
         String parentSchema = (String) params.get(Params.SCHEMA);
 
@@ -1048,7 +1081,7 @@ public class BaseMetadataManager implements IMetadataManager {
             if (!childSchema.equals(parentSchema)) {
                 untreatedChildSet.add(childId);
                 LOGGER_DATA_MANAGER.debug("Could not update child ({}) because schema ({}) is different from the parent one ({}).",
-                    new Object[]{childId, childSchema, parentSchema});
+                        new Object[]{childId, childSchema, parentSchema});
                 continue;
             }
             LOGGER_DATA_MANAGER.debug("Updating child ({}) ...", childId);
@@ -1101,14 +1134,14 @@ public class BaseMetadataManager implements IMetadataManager {
 
         final Collection<Integer> allUserGroups = accessManager.getUserGroups(context.getUserSession(), context.getIpAddress(), false);
         final SetMultimap<Integer, ReservedOperation> operationsPerMetadata = loadOperationsAllowed(context,
-            where(operationAllowedSpec).and(OperationAllowedSpecs.hasGroupIdIn(allUserGroups)));
+                where(operationAllowedSpec).and(OperationAllowedSpecs.hasGroupIdIn(allUserGroups)));
         final Set<Integer> visibleToAll = loadOperationsAllowed(context,
-            where(operationAllowedSpec).and(OperationAllowedSpecs.isPublic(ReservedOperation.view))).keySet();
+                where(operationAllowedSpec).and(OperationAllowedSpecs.isPublic(ReservedOperation.view))).keySet();
         final Set<Integer> downloadableByGuest = loadOperationsAllowed(context,
-            where(operationAllowedSpec).and(OperationAllowedSpecs.hasGroupId(ReservedGroup.guest.getId()))
-                .and(OperationAllowedSpecs.hasOperation(ReservedOperation.download))).keySet();
+                where(operationAllowedSpec).and(OperationAllowedSpecs.hasGroupId(ReservedGroup.guest.getId()))
+                        .and(OperationAllowedSpecs.hasOperation(ReservedOperation.download))).keySet();
         final Map<Integer, MetadataSourceInfo> allSourceInfo = findAllSourceInfo(
-            (Specification<Metadata>) MetadataSpecs.hasMetadataIdIn(metadataIds));
+                (Specification<Metadata>) MetadataSpecs.hasMetadataIdIn(metadataIds));
 
         for (Map.Entry<String, Element> entry : mdIdToInfoMap.entrySet()) {
             Element infoEl = entry.getValue();
@@ -1184,8 +1217,8 @@ public class BaseMetadataManager implements IMetadataManager {
                 String prefix = mds.getPrefix(aNs.getURI());
                 if (prefix == null) {
                     LOGGER_DATA_MANAGER.warn(
-                        "Metadata record contains a default namespace {} (with no prefix) which does not match any {} schema's namespaces.",
-                        aNs.getURI(), schema);
+                            "Metadata record contains a default namespace {} (with no prefix) which does not match any {} schema's namespaces.",
+                            aNs.getURI(), schema);
                 }
                 ns = Namespace.getNamespace(prefix, aNs.getURI());
                 metadataValidator.setNamespacePrefix(md, ns);
@@ -1201,15 +1234,15 @@ public class BaseMetadataManager implements IMetadataManager {
      * Applies a xslt process when duplicating a metadata, typically to remove identifiers
      * or other information like DOI (Digital Object Identifiers) and returns the updated metadata.
      *
-     * @param schema        Metadata schema.
-     * @param md            Metadata to duplicate.
+     * @param schema     Metadata schema.
+     * @param md         Metadata to duplicate.
      * @param srvContext
-     * @return              If the xslt process exists, the metadata processed, otherwise the original metadata.
+     * @return If the xslt process exists, the metadata processed, otherwise the original metadata.
      * @throws Exception
      */
-    private Element duplicateMetadata(String schema,  Element md, ServiceContext srvContext) throws Exception {
+    private Element duplicateMetadata(String schema, Element md, ServiceContext srvContext) throws Exception {
         Path styleSheet = metadataSchemaUtils.getSchemaDir(schema).resolve(
-            Geonet.File.DUPLICATE_METADATA);
+                Geonet.File.DUPLICATE_METADATA);
 
         if (Files.exists(styleSheet)) {
             // --- setup environment
@@ -1279,7 +1312,7 @@ public class BaseMetadataManager implements IMetadataManager {
                                        Specification<? extends AbstractMetadata> harvested) {
         try {
             metadataRepository
-                .createBatchUpdateQuery((PathSpec<Metadata, String>) servicesPath, newUuid, (Specification<Metadata>) harvested);
+                    .createBatchUpdateQuery((PathSpec<Metadata, String>) servicesPath, newUuid, (Specification<Metadata>) harvested);
         } catch (ClassCastException t) {
             throw new ClassCastException("Unknown AbstractMetadata subtype: " + servicesPath.getClass().getName());
         }

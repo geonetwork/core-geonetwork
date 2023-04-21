@@ -70,6 +70,15 @@ public interface IMetadataManager {
     void deleteMetadata(ServiceContext context, String metadataId) throws Exception;
 
     /**
+     * Delete the record with the id metadataId and additionally take care of cleaning up resources, send events, ...
+     *
+     * @param context
+     * @param metadataId
+     * @throws Exception
+     */
+    void purgeMetadata(ServiceContext context, String metadataId, boolean withBackup) throws Exception;
+
+    /**
      * Removes a record without notifying.
      *
      * FIXME explain better why this and not {@link #deleteMetadata(ServiceContext, String)}
