@@ -983,7 +983,7 @@ public class Thesaurus {
                 this.defaultNamespace = DEFAULT_THESAURUS_NAMESPACE;
             }
 
-            Element issuedDateEl = Xml.selectElement(thesaurusEl, "skos:ConceptScheme/dcterms:issued|skos:Collection/dc:date", theNSs);
+            Element issuedDateEl = Xml.selectElement(thesaurusEl, "skos:ConceptScheme/dcterms:issued", theNSs);
             this.issuedDate = issuedDateEl==null? "": issuedDateEl.getText();
 
             Element modifiedDateEl = Xml.selectElement(thesaurusEl, "skos:ConceptScheme/dcterms:modified", theNSs);
@@ -1054,6 +1054,8 @@ public class Thesaurus {
         dfList.add(new SimpleDateFormat("EEE MMM d HH:mm:ss z yyyy"));
         dfList.add(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
         dfList.add(new SimpleDateFormat("yyyy-MM-dd"));
+        dfList.add(new SimpleDateFormat("yyyy-MM"));
+        dfList.add(new SimpleDateFormat("yyyy"));
 
         StringBuffer errorMsg = new StringBuffer("Error parsing the thesaurus date value: ");
         errorMsg.append(dateVal);
