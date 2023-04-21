@@ -368,6 +368,14 @@ public class Transaction extends AbstractOperation implements CatalogService {
 
             afterMetadata = metadataUtils.findOneByUuid(uuid).getXmlData(false);
 
+            XMLOutputter outp = new XMLOutputter();
+            String xmlBefore = outp.outputString(beforeMetadata);
+            String xmlAfter = outp.outputString(afterMetadata);
+            new RecordUpdatedEvent(Long.parseLong(id),
+                context.getUserSession().getUserIdAsInt(),
+                xmlBefore, xmlAfter)
+                .publish(ApplicationContextHolder.get());
+            
             toIndex.add(id);
 
             totalUpdated++;
