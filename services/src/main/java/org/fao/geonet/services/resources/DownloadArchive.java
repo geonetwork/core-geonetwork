@@ -347,9 +347,9 @@ public class DownloadArchive implements Service {
         if (doNotify) {
 
             String site = sm.getSiteId();
-            String host = sm.getValue("catalog/feedback/mailServer/host");
-            String port = sm.getValue("catalog/feedback/mailServer/port");
-            String from = sm.getValue("catalog/feedback/email");
+            String host = sm.getValue("catalog/mail/mailServer/host");
+            String port = sm.getValue("catalog/mail/mailServer/port");
+            String from = sm.getValue("catalog/mail/email");
 
             String fromDescr = "GeoNetwork administrator";
 
@@ -388,11 +388,11 @@ public class DownloadArchive implements Service {
                         try {
                             MailSender sender = new MailSender(context);
                             sender.send(host, Integer.parseInt(port),
-                                sm.getValue("catalog/feedback/mailServer/username"),
-                                sm.getValue("catalog/feedback/mailServer/password"),
-                                sm.getValueAsBool("catalog/feedback/mailServer/ssl"),
-                                sm.getValueAsBool("catalog/feedback/mailServer/tls"),
-                                sm.getValueAsBool("catalog/feedback/mailServer/ingoreSslCertificateErrors", false),
+                                sm.getValue("catalog/mail/mailServer/username"),
+                                sm.getValue("catalog/mail/mailServer/password"),
+                                sm.getValueAsBool("catalog/mail/mailServer/ssl"),
+                                sm.getValueAsBool("catalog/mail/mailServer/tls"),
+                                sm.getValueAsBool("catalog/mail/mailServer/ingoreSslCertificateErrors", false),
                                 from, fromDescr, email, null, subject, message);
                         } catch (Exception e) {
                             Log.error(Geonet.RESOURCES, e.getMessage(), e);

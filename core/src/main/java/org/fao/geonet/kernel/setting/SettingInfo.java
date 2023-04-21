@@ -102,6 +102,6 @@ public class SettingInfo {
 
     public String getFeedbackEmail() {
         SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
-        return settingManager.getValue("catalog/feedback/email");
+        return settingManager.getValue("catalog/mail/email");
     }
 }

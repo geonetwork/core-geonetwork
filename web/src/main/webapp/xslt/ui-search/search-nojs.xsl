@@ -45,7 +45,7 @@
       <meta itemprop="name" content="{/root/gui/systemConfig/catalog/site/name}"></meta>
       <span itemprop="publisher" itemscope="itemscope" itemtype="http://schema.org/Organization">
         <meta itemprop="name" content="{/root/gui/systemConfig/catalog/site/organization}"></meta>
-        <meta itemprop="email" content="{/root/gui/systemConfig/catalog/feedback/email}"></meta>
+        <meta itemprop="email" content="{/root/gui/systemConfig/catalog/mail/email}"></meta>
       </span>
       <meta itemprop="url" content="{$nodeUrl}search"></meta>
 

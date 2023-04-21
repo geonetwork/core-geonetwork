@@ -59,15 +59,15 @@ public class Settings {
     public static final String SYSTEM_PREFER_GROUP_LOGO = "metadata/prefergrouplogo";
     public static final String SYSTEM_USERS_IDENTICON = "usersgroups/users/identicon";
     public static final String SYSTEM_SEARCHSTATS = "catalog/searchStats/enable";
-    public static final String SYSTEM_FEEDBACK_EMAIL = "catalog/feedback/email";
-    public static final String SYSTEM_FEEDBACK_MAILSERVER_HOST = "catalog/feedback/mailServer/host";
-    public static final String SYSTEM_FEEDBACK_MAILSERVER_PORT = "catalog/feedback/mailServer/port";
-    public static final String SYSTEM_FEEDBACK_MAILSERVER_USERNAME = "catalog/feedback/mailServer/username";
-    public static final String SYSTEM_FEEDBACK_MAILSERVER_PASSWORD = "catalog/feedback/mailServer/password";
-    public static final String SYSTEM_FEEDBACK_MAILSERVER_SSL = "catalog/feedback/mailServer/ssl";
-    public static final String SYSTEM_FEEDBACK_MAILSERVER_TLS = "catalog/feedback/mailServer/tls";
+    public static final String SYSTEM_FEEDBACK_EMAIL = "catalog/mail/email";
+    public static final String SYSTEM_FEEDBACK_MAILSERVER_HOST = "catalog/mail/mailServer/host";
+    public static final String SYSTEM_FEEDBACK_MAILSERVER_PORT = "catalog/mail/mailServer/port";
+    public static final String SYSTEM_FEEDBACK_MAILSERVER_USERNAME = "catalog/mail/mailServer/username";
+    public static final String SYSTEM_FEEDBACK_MAILSERVER_PASSWORD = "catalog/mail/mailServer/password";
+    public static final String SYSTEM_FEEDBACK_MAILSERVER_SSL = "catalog/mail/mailServer/ssl";
+    public static final String SYSTEM_FEEDBACK_MAILSERVER_TLS = "catalog/mail/mailServer/tls";
     public static final String SYSTEM_FEEDBACK_MAILSERVER_IGNORE_SSL_CERTIFICATE_ERRORS =
-        "catalog/feedback/mailServer/ignoreSslCertificateErrors";
+        "catalog/mail/mailServer/ignoreSslCertificateErrors";
     public static final String SYSTEM_ENABLE_ALL_THESAURUS = "metadata/allThesaurus";
     public static final String SYSTEM_METADATA_THESAURUS_NAMESPACE = "metadata/thesaurusNamespace";
     public static final String SYSTEM_METADATA_VALIDATION_REMOVESCHEMALOCATION = "metadata/validation/removeSchemaLocation";
