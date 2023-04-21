@@ -822,7 +822,7 @@
       <dependency>
         <groupId>org.tmatesoft.svnkit</groupId>
         <artifactId>svnkit</artifactId>
-        <version>1.10.9</version>
+        <version>1.10.11</version>
       </dependency>
       <dependency>
         <groupId>dlib</groupId>  <!--FIXME Handled by local repository -->
@@ -1472,7 +1472,7 @@
      when watchlist notifier is triggered (Default 4AM) -->
     <savedselection.watchlist.frequency>0 0 4 * * ?</savedselection.watchlist.frequency>
 
-    <microservices.url></microservices.url>
+    <microservices.url/>
     <!--<microservices.url>http://localhost:9901</microservices.url>-->
 
     <!-- Proxy security configuration:
@@ -1516,11 +1516,11 @@
 
     <!-- If elasticsearch security is on,
     add a read/write user for index features and records: -->
-    <es.username></es.username>
-    <es.password></es.password>
+    <es.username/>
+    <es.password/>
     <!-- and a readonly user for index features access. -->
-    <es.ro.username></es.ro.username>
-    <es.ro.password></es.ro.password>
+    <es.ro.username/>
+    <es.ro.password/>
 
     <kb.platform>linux-x86_64</kb.platform>
     <kb.installer.extension>tar.gz</kb.installer.extension>
