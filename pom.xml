@@ -1472,7 +1472,7 @@
      when watchlist notifier is triggered (Default 4AM) -->
     <savedselection.watchlist.frequency>0 0 4 * * ?</savedselection.watchlist.frequency>
 
-    <microservices.url></microservices.url>
+    <microservices.url/>
     <!--<microservices.url>http://localhost:9901</microservices.url>-->
 
     <!-- Proxy security configuration:
@@ -1516,11 +1516,11 @@
 
     <!-- If elasticsearch security is on,
     add a read/write user for index features and records: -->
-    <es.username></es.username>
-    <es.password></es.password>
+    <es.username/>
+    <es.password/>
     <!-- and a readonly user for index features access. -->
-    <es.ro.username></es.ro.username>
-    <es.ro.password></es.ro.password>
+    <es.ro.username/>
+    <es.ro.password/>
 
     <kb.platform>linux-x86_64</kb.platform>
     <kb.installer.extension>tar.gz</kb.installer.extension>
@@ -1570,7 +1570,7 @@
     <node.version>v8.11.1</node.version>
     <npm.version>5.8.0</npm.version>
     <xmlunit.version>2.1.1</xmlunit.version>
-    <jackson.version>2.10.4</jackson.version>
+    <jackson.version>2.14.2</jackson.version>
     <flying-saucer>9.1.22</flying-saucer>
     <camel.version>2.25.1</camel.version>
     <log4j2.version>2.17.2</log4j2.version>
