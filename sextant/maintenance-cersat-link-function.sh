@@ -25,7 +25,7 @@ curl $AUTH "$SERVER/srv/api/search/records/_search?bucket=s101" \
   -H "X-XSRF-TOKEN: $TOKEN" \
   -H "Cookie: XSRF-TOKEN=$TOKEN; JSESSIONID=$JSESSIONID" \
   -H 'content-type: application/json;charset=UTF-8' \
-  --data-raw '{"from":0,"size":1800,"sort":["uuid"],"query":{"query_string":{"query":"+isHarvested:false +groupPublished:CERSAT"}},"_source":{"includes":["uuid","resourceTitleObject*"]},"track_total_hits":true}' \
+  --data-raw '{"from":0,"size":1800,"sort":["uuid"],"query":{"query_string":{"query":"+isHarvested:false +standardNameObject.default:\"ISO 19115-3:2018 - Remote Sensing\""}},"_source":{"includes":["uuid","resourceTitleObject*"]},"track_total_hits":true}' \
   --compressed \
   -o results.json
 
