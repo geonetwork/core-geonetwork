@@ -29,15 +29,12 @@
           <span data-translate="">transferOwnership</span>
         </a></li>
       <!-- Retired metadata can't be published -->
-      <li role="menuitem"
-          data-ng-if="user.canEditRecord(md) && (user.isAdmin() || user.isReviewerForGroup(md.groupOwner)) && md.draft != 'y' && md.mdStatus != 3"
-          data-ng-class="
-            (md.isPublished() || (allowPublishInvalidMd() === true) ||
-            (!md.isPublished() && (allowPublishInvalidMd() === false) &&
-            (!md.hasValidation() || (md.hasValidation() && md.isValid())))) ? '' : 'disabled'"
-          title="{{(!md.isPublished() ? (md.isValid() ? 'mdvalid' :
-            (!md.hasValidation() ? 'mdnovalidation':
-            (allowPublishInvalidMd() === false ? 'mdinvalidcantpublish' : 'mdinvalid'))) : '') | translate }}">
+      <li
+        role="menuitem"
+        data-ng-if="displayPublicationOption(md, user)"
+        data-ng-class="getPublicationOptionClass(md, user, isMdWorkflowEnable)"
+        title="{{getPublicationOptionTitle(md, user, isMdWorkflowEnable) | translate}}"
+      >
         <a href="" data-ng-click="mdService.publish(md, undefined, undefined, getCatScope())">
           <span class="fa fa-fw"
              data-ng-class="md.isPublished() ? 'fa-lock' : 'fa-unlock'"></span>&nbsp;
