@@ -389,33 +389,6 @@
       },
       {
         "group": "visualization",
-        "label": "onlineDiscoverSyntool",
-        "icon": "fa gn-icon-onlinesrc",
-        "process": "onlinesrc-add",
-        "fields": {
-          "url": {
-            "isMultilingual": false
-          },
-          "protocol": {
-            "value": "WWW:LINK",
-            "hidden": true,
-            "isMultilingual": false
-          },
-          "name": {
-            "value": "Syntool"
-          },
-          "desc": {
-            "value": ""
-          },
-          "function": {
-            "value": "browsing",
-            "hidden": true,
-            "isMultilingual": false
-          }
-        }
-      },
-      {
-        "group": "visualization",
         "label": "onlineDiscoverOther",
         "icon": "fa gn-icon-onlinesrc",
         "process": "onlinesrc-add",
