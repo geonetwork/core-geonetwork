@@ -166,6 +166,46 @@ public class LinksApi {
         return getLinks(filter, groupIdFilter, groupOwnerIdFilter, pageRequest, userSession);
     }
 
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Get record links",
+        description = "")
+    @Parameters({
+        @Parameter(name = "page",
+            in = ParameterIn.QUERY, schema = @Schema(type = "integer", format = "int32"),
+            description = "Results page you want to retrieve (0..N)"),
+        @Parameter(name = "size",
+            in = ParameterIn.QUERY, schema = @Schema(type = "integer", format = "int32"),
+            description = "Number of records per page."),
+        @Parameter(name = "sort",
+            //allowMultiple = false
+            in = ParameterIn.QUERY, schema = @Schema(type = "string"),
+            description = "Sorting criteria in the format: property(,asc|desc). " +
+                "Default sort order is ascending. ")
+    })
+    @PostMapping(
+        consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("isAuthenticated()")
+    public Page<Link> getRecordLinksPost(
+        @Parameter(description = "Filter, e.g. \"{url: 'png', lastState: 'ko', records: 'e421', groupId: 12}\", lastState being 'ok'/'ko'/'unknown'", required = false)
+        @RequestParam(required = false)
+        JSONObject filter,
+        @Parameter(description = "Optional, filter links to records published in that group.", required = false)
+        @RequestParam(required = false)
+        Integer[] groupIdFilter,
+        @Parameter(description = "Optional, filter links to records created in that group.", required = false)
+        @RequestParam(required = false)
+        Integer[] groupOwnerIdFilter,
+        @Parameter(hidden = true)
+        Pageable pageRequest,
+        @Parameter(hidden = true)
+        HttpSession session,
+        @Parameter(hidden = true)
+        HttpServletRequest request) throws Exception {
+
+        final UserSession userSession = ApiUtils.getUserSession(session);
+        return getLinks(filter, groupIdFilter, groupOwnerIdFilter, pageRequest, userSession);
+    }
     private Page<Link> getLinks(
         JSONObject filter,
         Integer[] groupIdFilter,
@@ -264,6 +304,7 @@ public class LinksApi {
         summary = "Analyze records links",
         description = "One of uuids or bucket parameter is required if not an Administrator. Only records that you can edit will be validated.")
     @RequestMapping(
+        path = "/analyze",
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.POST)
     @PreAuthorize("hasAuthority('Editor')")
@@ -359,7 +400,7 @@ public class LinksApi {
         summary = "Analyze one or more links",
         description = "")
     @RequestMapping(
-        path = "/analyze",
+        path = "/analyzeurl",
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.POST)
     @PreAuthorize("hasAuthority('Editor')")
@@ -384,7 +425,7 @@ public class LinksApi {
     @ResponseStatus(value = HttpStatus.OK)
     @PreAuthorize("hasAuthority('Administrator')")
     @ResponseBody
-    public ResponseEntity purgeAll() throws IOException, JDOMException {
+    public ResponseEntity purgeAll() {
         urlAnalyser.deleteAll();
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
