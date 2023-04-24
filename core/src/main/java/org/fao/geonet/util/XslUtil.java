@@ -125,6 +125,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import static org.fao.geonet.kernel.setting.Settings.*;
 import static org.fao.geonet.utils.Xml.getXmlFromJSON;
@@ -1173,6 +1174,14 @@ public final class XslUtil {
         return null;
     }
 
+    public static boolean uuidAlreadyUsed(final String uuid, final int id)
+        throws ExecutionException {
+        BaseMetadataUtils metadataUtils = ApplicationContextHolder.get().getBean(BaseMetadataUtils.class);
+        List<? extends AbstractMetadata> records = metadataUtils.findAllByUuid(uuid);
+        return records.stream().anyMatch(m -> {
+            return m.getId() != id;
+        });
+    }
 
     /**
      * @param formula    Math expression to evaluate

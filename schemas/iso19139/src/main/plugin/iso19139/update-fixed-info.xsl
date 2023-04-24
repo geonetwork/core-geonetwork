@@ -149,11 +149,13 @@
       <xsl:message>Emodnet uuid: <xsl:value-of select="$emodnetUuid"/> </xsl:message>
       -->
       <xsl:variable name="existsLocally"
-                    select="not(normalize-space(java:getRecord($emodnetUuid)) = '')" />
+                    select="java:uuidAlreadyUsed($emodnetUuid, /root/env/id)" />
 
       <xsl:choose>
         <xsl:when test="$existsLocally">
-          <xsl:value-of select="util:toString(util:randomUUID())"/>
+          <xsl:value-of select="if (starts-with(/root/env/uuid, 'SDN_CPRD_'))
+                                then util:toString(util:randomUUID())
+                                else /root/env/uuid"/>
         </xsl:when>
         <xsl:otherwise>
           <xsl:value-of select="if (normalize-space($emodnetUuid) != '')
