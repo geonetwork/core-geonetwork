@@ -686,8 +686,10 @@
                     select="$links/cit:function/*/@codeListValue = 'information'"/>
       <xsl:variable name="isBrowsing"
                     select="$links/cit:function/*/@codeListValue = 'browsing'"/>
+      <xsl:variable name="isSearch"
+                    select="$links/cit:function/*/@codeListValue = 'search'"/>
       <xsl:variable name="groupLabel"
-                    select="if ($isBrowsing)
+                    select="if ($isBrowsing or $isSearch)
                             then 'protocol' else if ($isInformation)
                             then 'name' else 'description'"/>
       <xsl:variable name="listLabel"
@@ -739,8 +741,10 @@
             <xsl:sort select="cit:name/*/text()"/>
             <div class="gn-margin-top">
               <xsl:choose>
-                <xsl:when test="cit:protocol/*/text() = 'WWW:OPENSEARCH' and cit:description/*/text() != ''">
-                  <xsl:value-of select="cit:description/*/text()"/>:
+                <xsl:when test="cit:protocol/*/text() = 'WWW:OPENSEARCH'">
+                  <xsl:if test="cit:description/*/text() != ''">
+                    <xsl:value-of select="cit:description/*/text()"/>:
+                  </xsl:if>
                 </xsl:when>
                 <xsl:otherwise>
                   <xsl:value-of select="if (cit:*[local-name() = $listLabel]/*/text() != '')
@@ -758,7 +762,7 @@
                     <xsl:value-of select="cit:linkage/*/text()"/>
                   </a>
 
-                  <xsl:if test="cit:protocol/*/text() = 'WWW:OPENSEARCH'">
+                  <xsl:if test="cit:protocol/*/text() = 'WWW:OPENSEARCH' and cit:name/*/text() != ''">
                     [dataset id: <xsl:value-of select="cit:name/*/text()"/>]
                   </xsl:if>
                 </xsl:otherwise>
