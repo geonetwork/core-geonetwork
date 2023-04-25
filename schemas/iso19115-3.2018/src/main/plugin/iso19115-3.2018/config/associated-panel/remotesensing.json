@@ -354,7 +354,7 @@
         }
       },
       {
-        "group": "visualization",
+        "group": "visualisation",
         "label": "onlineDiscoverWMS",
         "copyLabel": "desc",
         "icon": "fa gn-icon-onlinesrc",
@@ -388,7 +388,7 @@
         }
       },
       {
-        "group": "visualization",
+        "group": "visualisation",
         "label": "onlineDiscoverOther",
         "icon": "fa gn-icon-onlinesrc",
         "process": "onlinesrc-add",
@@ -402,8 +402,7 @@
             "isMultilingual": false
           },
           "name": {
-            "value": "",
-            "hidden": true
+            "value": ""
           },
           "desc": {
             "value": ""

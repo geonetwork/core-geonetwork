@@ -61,7 +61,7 @@
   "onlineDownloadWWWHTTPs": "HTTPS",
   "onlineDiscoverSyntool": "Syntool",
   "onlineDiscoverOther": "Other",
-  "visualization": "Visualization",
+  "visualisation": "Visualisation",
   "layerSource": "Sources",
   "facet-th_sextant-theme_tree": "Sextant themes",
   "wfsIssueWhileLoadingSLD": "The filter couldn't be applied for the layer. The generated SLD is not available.",

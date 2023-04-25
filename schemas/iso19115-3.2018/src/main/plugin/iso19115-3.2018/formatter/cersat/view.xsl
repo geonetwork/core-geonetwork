@@ -684,8 +684,11 @@
 
       <xsl:variable name="isInformation"
                     select="$links/cit:function/*/@codeListValue = 'information'"/>
+      <xsl:variable name="isBrowsing"
+                    select="$links/cit:function/*/@codeListValue = 'browsing'"/>
       <xsl:variable name="groupLabel"
-                    select="if ($isInformation)
+                    select="if ($isBrowsing)
+                            then 'protocol' else if ($isInformation)
                             then 'name' else 'description'"/>
       <xsl:variable name="listLabel"
                     select="if ($isInformation)
@@ -718,7 +721,9 @@
           <xsl:variable name="allWithSameDesc"
                         select="false()"/>
           <xsl:variable name="groupLabel"
-                        select="if (current-grouping-key() = 'WWW:LINKTHREDDS')
+                        select="if ($isBrowsing and current-grouping-key() = 'WWW:LINKWWW:LINK')
+                                  then 'Other'
+                                  else if (current-grouping-key() = 'WWW:LINKTHREDDS')
                                   then 'THREDDS'
                                   else if ($isInformation)
                                   then $linkLabels[current-grouping-key() = @key]/@label
