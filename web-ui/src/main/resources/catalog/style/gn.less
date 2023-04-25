@@ -1105,29 +1105,6 @@ select.ng-invalid {
   }
 }
 
-/* Highlight updated checkboxes in sharing form */
-.gn-sharing-batch {
-  // remove
-  input.ng-dirty.ng-empty:after {
-    content: "-";
-    padding-left: 20px;
-    margin-top: -20px;
-    color: @brand-danger;
-    font-size: 24px;
-    display: inline-block;
-    font-weight: bold;
-  }
-  // add
-  input.ng-dirty.ng-not-empty:after {
-    content: "+";
-    padding-left: 20px;
-    margin-top: -20px;
-    color: @brand-success;
-    font-size: 24px;
-    display: inline-block;
-    font-weight: bold;
-  }
-}
 [gn-batch-categories] {
   // remove
   input.ng-dirty.ng-empty ~ span {
