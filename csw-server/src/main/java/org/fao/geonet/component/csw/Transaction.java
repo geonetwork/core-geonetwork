@@ -23,17 +23,9 @@
 
 package org.fao.geonet.component.csw;
 
-import org.fao.geonet.ApplicationContextHolder;
-import org.fao.geonet.domain.*;
-import org.fao.geonet.domain.utils.ObjectJSONUtils;
-import org.fao.geonet.events.history.RecordDeletedEvent;
-import org.fao.geonet.events.history.RecordImportedEvent;
-import org.fao.geonet.events.history.RecordUpdatedEvent;
-import org.fao.geonet.kernel.search.IndexingMode;
-import org.jdom.output.XMLOutputter;
-import org.locationtech.jts.util.Assert;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Edit;
@@ -44,22 +36,26 @@ import org.fao.geonet.csw.common.OutputSchema;
 import org.fao.geonet.csw.common.ResultType;
 import org.fao.geonet.csw.common.exceptions.CatalogException;
 import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
-import org.fao.geonet.kernel.AccessManager;
-import org.fao.geonet.kernel.AddElemValue;
-import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.EditLib;
-import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.domain.*;
+import org.fao.geonet.domain.utils.ObjectJSONUtils;
+import org.fao.geonet.events.history.RecordDeletedEvent;
+import org.fao.geonet.events.history.RecordImportedEvent;
+import org.fao.geonet.events.history.RecordUpdatedEvent;
+import org.fao.geonet.kernel.*;
 import org.fao.geonet.kernel.csw.CatalogService;
 import org.fao.geonet.kernel.csw.services.AbstractOperation;
 import org.fao.geonet.kernel.csw.services.getrecords.FieldMapper;
 import org.fao.geonet.kernel.csw.services.getrecords.SearchController;
-import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.schema.MetadataSchema;
+import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.utils.Log;
 import org.jdom.Element;
+import org.jdom.output.XMLOutputter;
+import org.locationtech.jts.util.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
@@ -72,6 +68,9 @@ import java.util.*;
  */
 @Component(CatalogService.BEAN_PREFIX + Transaction.NAME)
 public class Transaction extends AbstractOperation implements CatalogService {
+    private static final boolean applyUpdateFixedInfo = true;
+    private static final boolean applyValidation = false;
+
     static final String NAME = "Transaction";
     @Autowired
     SchemaManager _schemaManager;
@@ -214,7 +213,7 @@ public class Transaction extends AbstractOperation implements CatalogService {
      * @throws Exception
      */
     private boolean insertTransaction(Element xml, List<InsertedMetadata> documents, ServiceContext context, Set<String> toIndex)
-            throws Exception {
+        throws Exception {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         DataManager dataMan = gc.getBean(DataManager.class);
 
@@ -259,9 +258,8 @@ public class Transaction extends AbstractOperation implements CatalogService {
         // insert metadata
         //
         String docType = null, isTemplate = null;
-        boolean ufo = true;
         String id = dataMan.insertMetadata(context, schema, xml, uuid, userId, group, source,
-            isTemplate, docType, category, createDate, changeDate, ufo, IndexingMode.none);
+            isTemplate, docType, category, createDate, changeDate, applyUpdateFixedInfo, IndexingMode.none);
 
         // Privileges for the first group of the user that inserts the metadata
         // (same permissions as when inserting xml file from UI)
@@ -361,10 +359,10 @@ public class Transaction extends AbstractOperation implements CatalogService {
 
             beforeMetadata = metadataUtils.findOneByUuid(uuid).getXmlData(false);
 
-            boolean validate = false;
-            boolean ufo = false;
             String language = context.getLanguage();
-            dataMan.updateMetadata(context, id, xml, validate, ufo, language, changeDate, true, IndexingMode.none);
+            dataMan.updateMetadata(context, id, xml,
+                applyValidation, applyUpdateFixedInfo,
+                language, changeDate, true, IndexingMode.none);
 
             afterMetadata = metadataUtils.findOneByUuid(uuid).getXmlData(false);
 
@@ -375,7 +373,7 @@ public class Transaction extends AbstractOperation implements CatalogService {
                 context.getUserSession().getUserIdAsInt(),
                 xmlBefore, xmlAfter)
                 .publish(ApplicationContextHolder.get());
-            
+
             toIndex.add(id);
 
             totalUpdated++;
@@ -469,15 +467,15 @@ public class Transaction extends AbstractOperation implements CatalogService {
 
                 // Update the metadata with changes
                 if (metadataChanged) {
-                    boolean validate = false;
-                    boolean ufo = false;
                     try {
                         changeDate = metadataUtils.extractDateModified(schemaId, metadata);
                     } catch (Exception ex) {
                         changeDate = new ISODate().toString();
                     }
                     String language = context.getLanguage();
-                    dataMan.updateMetadata(context, id, metadata, validate, ufo, language, changeDate, true, IndexingMode.none);
+                    dataMan.updateMetadata(context, id, metadata,
+                        applyValidation, applyUpdateFixedInfo,
+                        language, changeDate, true, IndexingMode.none);
 
                     updatedMd.add(id);
 
@@ -632,13 +630,13 @@ public class Transaction extends AbstractOperation implements CatalogService {
     }
 
     private static Element applyCswBrief(ServiceContext context, SchemaManager schemaManager, String schema,
-                                               Element md,
-                                               String id, String displayLanguage) throws Exception
+                                         Element md,
+                                         String id, String displayLanguage) throws Exception
     {
         return org.fao.geonet.csw.common.util.Xml.applyElementSetName(
-                context, schemaManager, schema, md,
-                "csw", ElementSetName.BRIEF, ResultType.RESULTS,
-                id, displayLanguage);
+            context, schemaManager, schema, md,
+            "csw", ElementSetName.BRIEF, ResultType.RESULTS,
+            id, displayLanguage);
     }
 
     /**

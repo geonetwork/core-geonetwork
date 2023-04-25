@@ -330,20 +330,81 @@
 
           <xsl:variable name="thesaurusDate"
                         select="normalize-space($thesauri/thesaurus[key = $currentThesaurus]/date)"/>
+          <xsl:variable name="thesaurusCreatedDate"
+                        select="normalize-space($thesauri/thesaurus[key = $currentThesaurus]/createdDate)"/>
+          <xsl:variable name="thesaurusIssuedDate"
+                        select="normalize-space($thesauri/thesaurus[key = $currentThesaurus]/issuedDate)"/>
+          <xsl:variable name="thesaurusModifiedDate"
+                        select="normalize-space($thesauri/thesaurus[key = $currentThesaurus]/modifiedDate)"/>
 
-          <xsl:if test="$thesaurusDate != ''">
+          <!-- Publication Date-->
+          <xsl:choose>
+            <xsl:when test="$thesaurusIssuedDate != ''">
+              <gmd:date>
+                <gmd:CI_Date>
+                  <gmd:date>
+                    <xsl:choose>
+                      <xsl:when test="contains($thesaurusIssuedDate, 'T')">
+                        <gco:DateTime>
+                          <xsl:value-of select="$thesaurusIssuedDate"/>
+                        </gco:DateTime>
+                      </xsl:when>
+                      <xsl:otherwise>
+                        <gco:Date>
+                          <xsl:value-of select="$thesaurusIssuedDate"/>
+                        </gco:Date>
+                      </xsl:otherwise>
+                    </xsl:choose>
+                  </gmd:date>
+                  <gmd:dateType>
+                    <gmd:CI_DateTypeCode
+                      codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode"
+                      codeListValue="publication"/>
+                  </gmd:dateType>
+                </gmd:CI_Date>
+              </gmd:date>
+            </xsl:when>
+            <xsl:otherwise>
+              <gmd:date>
+                <gmd:CI_Date>
+                  <gmd:date>
+                    <xsl:choose>
+                      <xsl:when test="contains($thesaurusDate, 'T')">
+                        <gco:DateTime>
+                          <xsl:value-of select="$thesaurusDate"/>
+                        </gco:DateTime>
+                      </xsl:when>
+                      <xsl:otherwise>
+                        <gco:Date>
+                          <xsl:value-of select="$thesaurusDate"/>
+                        </gco:Date>
+                      </xsl:otherwise>
+                    </xsl:choose>
+                  </gmd:date>
+                  <gmd:dateType>
+                    <gmd:CI_DateTypeCode
+                      codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode"
+                      codeListValue="publication"/>
+                  </gmd:dateType>
+                </gmd:CI_Date>
+              </gmd:date>
+            </xsl:otherwise>
+          </xsl:choose>
+
+          <!--Creation Date-->
+          <xsl:if test="$thesaurusCreatedDate != ''">
             <gmd:date>
               <gmd:CI_Date>
                 <gmd:date>
                   <xsl:choose>
-                    <xsl:when test="contains($thesaurusDate, 'T')">
+                    <xsl:when test="contains($thesaurusCreatedDate, 'T')">
                       <gco:DateTime>
-                        <xsl:value-of select="$thesaurusDate"/>
+                        <xsl:value-of select="$thesaurusCreatedDate"/>
                       </gco:DateTime>
                     </xsl:when>
                     <xsl:otherwise>
                       <gco:Date>
-                        <xsl:value-of select="$thesaurusDate"/>
+                        <xsl:value-of select="$thesaurusCreatedDate"/>
                       </gco:Date>
                     </xsl:otherwise>
                   </xsl:choose>
@@ -351,7 +412,7 @@
                 <gmd:dateType>
                   <gmd:CI_DateTypeCode
                     codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode"
-                    codeListValue="publication"/>
+                    codeListValue="creation"/>
                 </gmd:dateType>
               </gmd:CI_Date>
             </gmd:date>

@@ -99,6 +99,12 @@ public class Thesaurus {
 
     private String date;
 
+    private String createdDate;
+
+    private String issuedDate;
+
+    private String modifiedDate;
+
     private String defaultNamespace;
 
     private String downloadUrl;
@@ -256,6 +262,18 @@ public class Thesaurus {
 
     public String getDate() {
         return date;
+    }
+
+    public String getCreatedDate() {
+        return createdDate;
+    }
+
+    public String getIssuedDate() {
+        return issuedDate;
+    }
+
+    public String getModifiedDate() {
+        return modifiedDate;
     }
 
     @Nonnull
@@ -965,8 +983,17 @@ public class Thesaurus {
                 this.defaultNamespace = DEFAULT_THESAURUS_NAMESPACE;
             }
 
-            Element dateEl = Xml.selectElement(thesaurusEl, "skos:ConceptScheme/dcterms:issued|skos:Collection/dc:date", theNSs);
+            Element issuedDateEl = Xml.selectElement(thesaurusEl, "skos:ConceptScheme/dcterms:issued", theNSs);
+            this.issuedDate = issuedDateEl==null? "": issuedDateEl.getText();
 
+            Element modifiedDateEl = Xml.selectElement(thesaurusEl, "skos:ConceptScheme/dcterms:modified", theNSs);
+            this.modifiedDate = modifiedDateEl==null? "": modifiedDateEl.getText();
+
+            Element createdDateEl = Xml.selectElement(thesaurusEl, "skos:ConceptScheme/dcterms:created", theNSs);
+            this.createdDate = createdDateEl==null? "": createdDateEl.getText();
+
+            // Default date
+            Element dateEl = Xml.selectElement(thesaurusEl, "skos:ConceptScheme/dcterms:issued|skos:Collection/dc:date", theNSs);
             Date thesaususDate = parseThesaurusDate(dateEl);
 
             if (thesaususDate == null) {
@@ -1027,6 +1054,8 @@ public class Thesaurus {
         dfList.add(new SimpleDateFormat("EEE MMM d HH:mm:ss z yyyy"));
         dfList.add(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
         dfList.add(new SimpleDateFormat("yyyy-MM-dd"));
+        dfList.add(new SimpleDateFormat("yyyy-MM"));
+        dfList.add(new SimpleDateFormat("yyyy"));
 
         StringBuffer errorMsg = new StringBuffer("Error parsing the thesaurus date value: ");
         errorMsg.append(dateVal);

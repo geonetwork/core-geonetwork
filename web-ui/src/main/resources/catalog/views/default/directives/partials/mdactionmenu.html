@@ -55,13 +55,8 @@
       <li
         role="menuitem"
         data-ng-if="displayPublicationOption(md, user)"
-        data-ng-class="
-            (md.isPublished() || (allowPublishInvalidMd() === true) ||
-            (!md.isPublished() && (allowPublishInvalidMd() === false) &&
-            (!md.hasValidation() || (md.hasValidation() && md.isValid())))) ? '' : 'disabled'"
-        title="{{(!md.isPublished() ? (md.isValid() ? 'mdvalid' :
-            (!md.hasValidation() ? 'mdnovalidation':
-            (allowPublishInvalidMd() === false ? 'mdinvalidcantpublish' : 'mdinvalid'))) : '') | translate }}"
+        data-ng-class="getPublicationOptionClass(md, user, isMdWorkflowEnable)"
+        title="{{getPublicationOptionTitle(md, user, isMdWorkflowEnable) | translate}}"
       >
         <a
           href=""
