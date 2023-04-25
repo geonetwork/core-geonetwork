@@ -41,13 +41,13 @@ for hit in $(jq -r '.hits.hits[] | @base64' results.json); do
 
   read -r -d '' functionXml << EOF
 {
-"xpath":"/mdb:distributionInfo/*/mrd:transferOptions/*/mrd:onLine/*[cit:protocol/*/text() = 'WWW:OPENDAP' and cit:function/*/@codeListValue = 'browsing']/cit:function/*/@codeListValue",
+"xpath":"/mdb:distributionInfo/*/mrd:transferOptions/*/mrd:onLine/*/cit:function/*/@codeListValue[../../../cit:protocol/*/text() = 'WWW:OPENDAP' and . = 'browsing']",
 "value":"<gn_replace>download</gn_replace>"
 },{
-"xpath":"/mdb:distributionInfo/*/mrd:transferOptions/*/mrd:onLine/*[cit:protocol/*/text() = 'WWW:OPENSEARCH' and cit:function/*/@codeListValue = 'browsing']/cit:function/*/@codeListValue",
+"xpath":"/mdb:distributionInfo/*/mrd:transferOptions/*/mrd:onLine/*/cit:function/*/@codeListValue[../../../cit:protocol/*/text() = 'WWW:OPENSEARCH' and @codeListValue = 'browsing']",
 "value":"<gn_replace>search</gn_replace>"
 },{
-"xpath":"/mdb:distributionInfo/*/mrd:transferOptions/*/mrd:onLine/*[cit:protocol/*/text() = 'WWW:BROADCAST' and cit:function/*/@codeListValue = 'browsing']/cit:function/*/@codeListValue",
+"xpath":"/mdb:distributionInfo/*/mrd:transferOptions/*/mrd:onLine/*/cit:function/*/@codeListValue[../../../cit:protocol/*/text() = 'WWW:BROADCAST' and @codeListValue = 'browsing']",
 "value":"<gn_replace>download</gn_replace>"
 }
 EOF
