@@ -739,7 +739,7 @@
             <xsl:sort select="cit:name/*/text()"/>
             <div class="gn-margin-top">
               <xsl:choose>
-                <xsl:when test="cit:protocol/*/text() = 'WWW:OPENSEARCH'">
+                <xsl:when test="cit:protocol/*/text() = 'WWW:OPENSEARCH' and cit:description/*/text() != ''">
                   <xsl:value-of select="cit:description/*/text()"/>:
                 </xsl:when>
                 <xsl:otherwise>

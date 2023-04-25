@@ -405,7 +405,7 @@
             "value": ""
           },
           "desc": {
-            "value": ""
+            "hidden": true
           },
           "function": {
             "value": "browsing",
