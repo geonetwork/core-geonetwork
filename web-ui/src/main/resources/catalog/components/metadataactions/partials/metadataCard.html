@@ -3,7 +3,7 @@
   gn-metadata-open="md"
   gn-formatter="formatterUrl"
   id="gn-info-list-mw-{{md.uuid}}"
-  data-ng-class="md.overview.length > 0 ? 'hasThumbnail' : 'noThumbnail'"
+  data-ng-class="(getOverviewUrl(md) !== '')? 'hasThumbnail' : 'noThumbnail'"
 >
   <div class="panel-heading gn-card-heading">
     <div class="gn-md-title">
@@ -30,6 +30,14 @@
         </h1>
       </a>
     </div>
+    <div
+      data-ng-repeat="c in md.cl_status track by $index"
+      data-ng-show="showStatusFooterFor.indexOf(md.cl_status[0].key) !== -1"
+      title="{{c.key | translate}}"
+      class="gn-status gn-status-md gn-status-bottomright gn-status-{{c.key}}"
+    >
+      {{c.key | translate}}
+    </div>
   </div>
   <!-- /.gn-card-heading -->
   <div class="panel-body gn-card-body">
@@ -37,7 +45,7 @@
       <div
         class="gn-md-thumbnail"
         title="{{md.resourceAbstract | striptags}}"
-        data-ng-class="{'gn-md-no-thumbnail': !md.overview[0]}"
+        data-ng-class="{'gn-md-no-thumbnail': (getOverviewUrl(md) === '')}"
       >
         <a
           data-ng-hide="md.remoteUrl"
@@ -47,7 +55,7 @@
         >
           <div
             class="gn-img-thumbnail"
-            style="background-image: url('{{md.overview[0].url | thumbnailUrlSize:320}}') !important"
+            style="background-image: url('{{getOverviewUrl(md) | thumbnailUrlSize:320}}') !important"
           ></div>
         </a>
         <a
@@ -58,7 +66,7 @@
         >
           <div
             class="gn-img-thumbnail"
-            style="background-image: url('{{md.overview[0].url | thumbnailUrlSize:320}}') !important"
+            style="background-image: url('{{getOverviewUrl(md) | thumbnailUrlSize:320}}') !important"
           ></div>
         </a>
       </div>

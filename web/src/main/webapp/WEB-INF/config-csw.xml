@@ -102,7 +102,7 @@
                  path="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date[gmd:dateType/gmd:CI_DateTypeCode/@codeListValue='publication']/gmd:date/gco:Date|gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date[gmd:dateType/gmd:CI_DateTypeCode/@codeListValue='publication']/gmd:date/gco:Date"/>
         </parameter>
 
-        <parameter name="OrganisationName" field="OrgForResource" type="SupportedISOQueryables">
+        <parameter name="OrganisationName" field="OrgForResourceObject.*" type="SupportedISOQueryables">
           <xpath schema="iso19139"
                  path="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString"/>
         </parameter>
@@ -274,7 +274,7 @@
         <parameter name="ConditionApplyingToAccessAndUse" field="MD_ConstraintsUseLimitationObject.*"
                    type="AdditionalQueryables"/>
 
-        <parameter name="MetadataPointOfContact" field="Org" type="AdditionalQueryables">
+        <parameter name="MetadataPointOfContact" field="OrgObject.*" type="AdditionalQueryables">
           <xpath schema="iso19139" path="gmd:contact/*/gmd:organisationName/gco:CharacterString"/>
         </parameter>
 

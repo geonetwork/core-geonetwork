@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2023 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -535,6 +535,7 @@ public class MetadataWorkflowApi {
     @io.swagger.v3.oas.annotations.Operation(summary = "Search status", description = "")
     @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET, path = "/status/search")
     @ResponseStatus(value = HttpStatus.OK)
+    @PreAuthorize("hasAuthority('Editor')")
     @ResponseBody
     public List<MetadataStatusResponse> getWorkflowStatusByType(
         @Parameter(description = "One or more types to retrieve (ie. worflow, event, task). Default is all.",
@@ -592,6 +593,35 @@ public class MetadataWorkflowApi {
         HttpServletRequest request) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
 
+        Profile profile = context.getUserSession().getProfile();
+        if (profile != Profile.Administrator) {
+            if (CollectionUtils.isEmpty(record) &&
+                CollectionUtils.isEmpty(uuid)) {
+                throw new NotAllowedException(
+                    "Non administrator user must use a id or uuid parameter to search for status.");
+            }
+
+            if (!CollectionUtils.isEmpty(record)) {
+                for(Integer recordId : record) {
+                    AbstractMetadata md;
+                    try {
+                        md = ApiUtils.canEditRecord(recordId + "", request);
+                    } catch (SecurityException e) {
+                        throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT);
+                    }
+                }
+            }
+            if (!CollectionUtils.isEmpty(uuid)) {
+                for(String recordId : uuid) {
+                    AbstractMetadata md;
+                    try {
+                        md = ApiUtils.canEditRecord(recordId, request);
+                    } catch (SecurityException e) {
+                        throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT);
+                    }
+                }
+            }
+        }
         PageRequest pageRequest;
         if (sortOrder != null) {
             Sort sortByStatusChangeDate = SortUtils.createSort(sortOrder, MetadataStatus_.changeDate).and(SortUtils.createSort(sortOrder, MetadataStatus_.id));
@@ -903,7 +933,6 @@ public class MetadataWorkflowApi {
             case StatusValue.Events.ATTACHMENTADDED:
                 return s.getCurrentState();
             case StatusValue.Events.RECORDOWNERCHANGE:
-                return ObjectJSONUtils.extractFieldFromJSONString(s.getCurrentState(), "owner", "name");
             case StatusValue.Events.RECORDGROUPOWNERCHANGE:
                 return ObjectJSONUtils.extractFieldFromJSONString(s.getCurrentState(), "owner", "name");
             case StatusValue.Events.RECORDPROCESSINGCHANGE:
@@ -911,14 +940,20 @@ public class MetadataWorkflowApi {
             case StatusValue.Events.RECORDCATEGORYCHANGE:
                 List<String> categories = ObjectJSONUtils.extractListOfFieldFromJSONString(s.getCurrentState(), "category",
                         "name");
-                StringBuffer categoriesAsString = new StringBuffer("[ ");
+                StringBuilder categoriesAsString = new StringBuilder("[ ");
                 for (String categoryName : categories) {
-                    categoriesAsString.append(categoryName + " ");
+                    categoriesAsString.append(categoryName).append(" ");
                 }
                 categoriesAsString.append("]");
                 return categoriesAsString.toString();
             case StatusValue.Events.RECORDVALIDATIONTRIGGERED:
-                return s.getCurrentState().equals("1") ? "OK" : "KO";
+                if (s.getCurrentState() == null) {
+                    return "UNKNOWN";
+                } else if(s.getCurrentState().equals("1")) {
+                    return "OK";
+                } else {
+                    return "KO";
+                }
             default:
                 return "";
         }
@@ -929,7 +964,6 @@ public class MetadataWorkflowApi {
             case StatusValue.Events.ATTACHMENTDELETED:
                 return s.getPreviousState();
             case StatusValue.Events.RECORDOWNERCHANGE:
-                return ObjectJSONUtils.extractFieldFromJSONString(s.getPreviousState(), "owner", "name");
             case StatusValue.Events.RECORDGROUPOWNERCHANGE:
                 return ObjectJSONUtils.extractFieldFromJSONString(s.getPreviousState(), "owner", "name");
             default:
@@ -971,7 +1005,7 @@ public class MetadataWorkflowApi {
                 }
             } else {
                 throw new SecurityException(
-                        String.format("Error identify group where this metadata belong to. Only administrator can view this record"));
+                        "Error identify group where this metadata belong to. Only administrator can view this record");
             }
         }
     }

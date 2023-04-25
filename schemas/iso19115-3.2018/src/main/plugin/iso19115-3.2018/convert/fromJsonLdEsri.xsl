@@ -82,14 +82,14 @@
             </lan:language>
             <lan:characterEncoding>
               <lan:MD_CharacterSetCode codeList="codeListLocation#MD_CharacterSetCode"
-                                       codeListValue=""/>
+                                       codeListValue="utf8"/>
             </lan:characterEncoding>
           </lan:PT_Locale>
         </mdb:defaultLocale>
         <mdb:metadataScope>
           <mdb:MD_MetadataScope>
             <mdb:resourceScope>
-              <mcc:MD_ScopeCode codeList="" codeListValue="{@type}"/>
+              <mcc:MD_ScopeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_ScopeCode" codeListValue="dataset"/>
             </mdb:resourceScope>
           </mdb:MD_MetadataScope>
         </mdb:metadataScope>
@@ -192,6 +192,39 @@
             <!--<mri:status>
               <mcc:MD_ProgressCode codeList="codeListLocation#MD_ProgressCode" codeListValue="{state}"/>
             </mri:status>-->
+
+            <!-- add publisher to resource organisation as well-->
+            <xsl:if test="not(organization)">
+              <mri:pointOfContact>
+                <cit:CI_Responsibility>
+                  <cit:role>
+                    <cit:CI_RoleCode codeList="codeListLocation#CI_RoleCode" codeListValue="publisher"/>
+                  </cit:role>
+                  <cit:party>
+                    <cit:CI_Organisation>
+                      <cit:name>
+                        <gco:CharacterString>
+                          <xsl:value-of select="publisher"/>
+                        </gco:CharacterString>
+                      </cit:name>
+                      <cit:contactInfo>
+                        <cit:CI_Contact>
+                          <cit:address>
+                            <cit:CI_Address>
+                              <cit:electronicMailAddress>
+                                <gco:CharacterString>
+                                  <xsl:value-of select="contactPoint/hasEmail"/>
+                                </gco:CharacterString>
+                              </cit:electronicMailAddress>
+                            </cit:CI_Address>
+                          </cit:address>
+                        </cit:CI_Contact>
+                      </cit:contactInfo>
+                    </cit:CI_Organisation>
+                  </cit:party>
+                </cit:CI_Responsibility>
+              </mri:pointOfContact>
+            </xsl:if>
 
             <xsl:for-each select="organization">
               <mri:pointOfContact>

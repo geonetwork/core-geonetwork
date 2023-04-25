@@ -33,6 +33,7 @@
             "filter": [
               "english_possessive_stemmer",
               "lowercase",
+              "asciifolding",
               "english_synonym",
               "english_stop",
               "english_keywords",
@@ -1296,7 +1297,7 @@
           "mapping": {
             "type": "nested",
             "properties": {
-              "org": {
+              "organisation": {
                 "type": "keyword"
               },
               "role": {
@@ -1509,10 +1510,12 @@
         "type": "keyword"
       },
       "geom": {
-        "type": "geo_shape"
+        "type": "geo_shape",
+        "ignore_malformed": true
       },
       "shape": {
-        "type": "geo_shape"
+        "type": "geo_shape",
+        "ignore_malformed": true
       },
       "location": {
         "type": "geo_point"
@@ -1768,6 +1771,66 @@
           },
           "link": {
             "type": "keyword"
+          }
+        }
+      },
+      "featureTypes": {
+        "type": "object",
+        "properties": {
+          "aliases": {
+            "type": "keyword",
+            "copy_to": "any.common"
+          },
+          "code": {
+            "type": "keyword"
+          },
+          "definition": {
+            "type": "text"
+          },
+          "typeName": {
+            "type": "keyword",
+            "copy_to": "any.common"
+          },
+          "isAbstract": {
+            "type": "boolean"
+          },
+          "attributeTable": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "keyword",
+                "copy_to": "any.common"
+              },
+              "definition": {
+                "type": "text"
+              },
+              "link": {
+                "type": "keyword"
+              },
+              "name": {
+                "type": "keyword",
+                "copy_to": "any.common"
+              },
+              "type": {
+                "type": "keyword"
+              },
+              "values": {
+                "type": "object",
+                "properties": {
+                  "code": {
+                    "type": "keyword",
+                    "copy_to": "any.common"
+                  },
+                  "definition": {
+                    "type": "text"
+                  },
+                  "label": {
+                    "type": "keyword",
+                    "copy_to": "any.common"
+                  }
+                }
+              }
+            }
           }
         }
       },

@@ -134,7 +134,7 @@ Ce schéma est également composé des normes :
     the information. When filtered the element is
     preserved but with no content in.
     -->
-    <filter xpath="*//*[@gco:nilReason='withheld']"
+    <filter xpath=".//*[@gco:nilReason='withheld']"
             ifNotOperation="editing">
       <keepMarkedElement gco:nilReason="withheld"/>
     </filter>
@@ -144,7 +144,7 @@ Ce schéma est également composé des normes :
     are filtered when user does not have download
     privilege.
     -->
-    <filter xpath="*//mrd:onLine[contains(*/cit:protocol/gco:CharacterString, 'DOWNLOAD') or
+    <filter xpath=".//mrd:onLine[contains(*/cit:protocol/gco:CharacterString, 'DOWNLOAD') or
                                   */cit:protocol/gco:CharacterString = 'FILE' or
                                   */cit:protocol/gco:CharacterString = 'DB' or
                                   */cit:protocol/gco:CharacterString = 'COPYFILE']"
@@ -155,7 +155,7 @@ Ce schéma est également composé des normes :
     to user not having dynamic privilege.
     TODO: other type of services ?
     -->
-    <filter xpath="*//mrd:onLine[starts-with(*/cit:protocol/gco:CharacterString, 'OGC:WMS')]"
+    <filter xpath=".//mrd:onLine[starts-with(*/cit:protocol/gco:CharacterString, 'OGC:WMS')]"
             ifNotOperation="dynamic"/>
   </filters>
 </schema>

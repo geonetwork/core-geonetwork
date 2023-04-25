@@ -356,16 +356,25 @@ public class ServiceManager {
         return context;
     }
 
+    /**
+     * If we do have the optional x-forwarded-for request header then
+     * use whatever is in it to record ip address of client
+     */
+    public static String getRequestIpAddress(HttpServletRequest request) {
+        String xForwardedForHeader = request.getHeader("x-forwarded-for");
+        return StringUtils.isNotEmpty(xForwardedForHeader)
+            ? xForwardedForHeader : request.getRemoteAddr();
+    }
+
+
     public ServiceContext createServiceContext(String name, String lang, HttpServletRequest request) {
         ServiceContext context = new ServiceContext(name, ApplicationContextHolder.get(), htContexts, entityManager);
 
         context.setBaseUrl(baseUrl);
         context.setLanguage(lang);
-        context.setIpAddress(request.getRemoteAddr());
+        context.setIpAddress(getRequestIpAddress(request));
         context.setMaxUploadSize(maxUploadSize);
         context.setServlet(servlet);
-
-        String ip = request.getRemoteAddr();
 
         // Session is created by ApiInterceptor when needed
         // Save the session here in the ServiceContext (not used in the API package).

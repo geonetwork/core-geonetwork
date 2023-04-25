@@ -18,16 +18,9 @@
   exclude-result-prefixes="#all">
 
 
-  <!-- Readonly elements
-  [parent::mds:metadataIdentifier and
-                        mcc:codeSpace/gco:CharacterString='urn:uuid']|
-                      mds:dateInfo/cit:CI_Date[cit:dateType/cit:CI_DateTypeCode
-                        /@codeListValue='revision']
--->
+  <!-- Readonly elements -->
   <xsl:template mode="mode-iso19115-3.2018"
                 match="mdb:metadataIdentifier/mcc:MD_Identifier/mcc:code|
-                       mdb:metadataIdentifier/mcc:MD_Identifier/mcc:codeSpace|
-                       mdb:metadataIdentifier/mcc:MD_Identifier/mcc:description|
                        mdb:dateInfo/cit:CI_Date[cit:dateType/cit:CI_DateTypeCode = 'revision']/cit:date|
                        mdb:dateInfo/cit:CI_Date[cit:dateType/cit:CI_DateTypeCode = 'revision']/cit:dateType"
                 priority="2000">
@@ -290,29 +283,32 @@
     <xsl:variable name="isoType" select="if (../@gco:isoType) then ../@gco:isoType else ''"/>
     <xsl:variable name="labelConfig" select="gn-fn-metadata:getLabel($schema, name(), $labels, name(..), $isoType, $xpath)"/>
 
-    <xsl:call-template name="render-boxed-element">
-      <xsl:with-param name="label"
-                      select="$labelConfig/label"/>
-      <xsl:with-param name="editInfo" select="../gn:element"/>
-      <xsl:with-param name="cls" select="local-name()"/>
-      <xsl:with-param name="subTreeSnippet">
+    <xsl:variable name="readonly" select="ancestor-or-self::node()[@xlink:href] != ''"/>
 
-        <xsl:variable name="geometry">
-          <xsl:apply-templates select="gex:polygon/gml:MultiSurface|gex:polygon/gml:LineString"
-                               mode="gn-element-cleaner"/>
-        </xsl:variable>
+    <xsl:for-each select="gex:polygon">
+      <xsl:call-template name="render-boxed-element">
+        <xsl:with-param name="label"
+                        select="$labelConfig/label"/>
+        <xsl:with-param name="editInfo" select="../../gn:element"/>
+        <xsl:with-param name="cls" select="local-name()"/>
+        <xsl:with-param name="subTreeSnippet">
 
-        <xsl:variable name="identifier"
-                      select="concat('_X', gex:polygon/gn:element/@ref, '_replace')"/>
-        <xsl:variable name="readonly" select="ancestor-or-self::node()[@xlink:href] != ''"/>
+          <xsl:variable name="geometry">
+            <xsl:apply-templates select="gml:MultiSurface|gml:LineString|gml:Point|gml:Polygon"
+                                 mode="gn-element-cleaner"/>
+          </xsl:variable>
 
-        <br />
-        <gn-bounding-polygon polygon-xml="{saxon:serialize($geometry, 'default-serialize-mode')}"
-                             identifier="{$identifier}"
-                             read-only="{$readonly}">
-        </gn-bounding-polygon>
-      </xsl:with-param>
-    </xsl:call-template>
+          <xsl:variable name="identifier"
+                        select="concat('_X', ./gn:element/@ref, '_replace')"/>
+
+          <br />
+          <gn-bounding-polygon polygon-xml="{saxon:serialize($geometry, 'default-serialize-mode')}"
+                               identifier="{$identifier}"
+                               read-only="{$readonly}">
+          </gn-bounding-polygon>
+        </xsl:with-param>
+      </xsl:call-template>
+    </xsl:for-each>
   </xsl:template>
 
   <!-- Those elements MUST be ignored in the editor layout -->

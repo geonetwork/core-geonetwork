@@ -136,7 +136,7 @@
                   select="util:getIndexField(
                   $language,
                   $uuid,
-                  'resourceTitle',
+                  'resourceTitleObject',
                   $language)"/>
     <xsl:choose>
       <xsl:when test="$metadataTitle=''">
@@ -144,7 +144,7 @@
                       select="util:getIndexField(
                       $language,
                       $uuid,
-                      'resourceTitle',
+                      'resourceTitleObject',
                       $language)"/>
         <xsl:choose>
           <xsl:when test="$metadataDefaultTitle=''">

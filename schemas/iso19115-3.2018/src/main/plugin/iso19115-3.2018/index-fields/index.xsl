@@ -519,7 +519,7 @@
         <xsl:for-each select="$overviews">
           <overview type="object">{
             "url": "<xsl:value-of select="if (local-name() = 'FileName') then @src else normalize-space(.)"/>"
-            <xsl:if test="count(../../mcc:fileDescription) > 0">,
+            <xsl:if test="normalize-space(../../mcc:fileDescription) != ''">,
               "nameObject":
               <xsl:value-of select="gn-fn-index:add-multilingual-field('name', ../../mcc:fileDescription, $allLanguages, true())"/>
             </xsl:if>
@@ -1310,9 +1310,11 @@
           <linkUrl>
             <xsl:value-of select="cit:linkage/gco:CharacterString"/>
           </linkUrl>
-          <linkProtocol>
-            <xsl:value-of select="$protocol"/>
-          </linkProtocol>
+          <xsl:if test="normalize-space($protocol) != ''">
+            <linkProtocol>
+              <xsl:value-of select="$protocol"/>
+            </linkProtocol>
+          </xsl:if>
           <xsl:element name="linkUrlProtocol{replace($protocol, '[^a-zA-Z0-9]', '')}">
             <xsl:value-of select="cit:linkage/*/text()"/>
           </xsl:element>

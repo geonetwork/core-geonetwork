@@ -1,3 +1,25 @@
+/*
+ * Copyright (C) 2001-2023 Food and Agriculture Organization of the
+ * United Nations (FAO-UN), United Nations World Food Programme (WFP)
+ * and United Nations Environment Programme (UNEP)
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or (at
+ * your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+ *
+ * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+ * Rome - Italy. email: geonetwork@osgeo.org
+ */
 package org.fao.geonet.schema.iso19115_3_2018;
 
 import com.google.common.collect.ImmutableMap;
@@ -15,6 +37,8 @@ import org.jdom.filter.ElementFilter;
 import org.jdom.xpath.XPath;
 
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static org.fao.geonet.schema.iso19115_3_2018.ISO19115_3_2018Namespaces.XLINK;
@@ -30,6 +54,7 @@ public class ISO19115_3_2018SchemaPlugin
     LinkAwareSchemaPlugin {
     public static final String IDENTIFIER = "iso19115-3";
 
+    private static final Pattern RECORD_ID_PATTERN  = Pattern.compile(".*[i|I][d|D]=([_\\w\\-\\.\\{{\\}}]*).*");
     public static ImmutableSet<Namespace> allNamespaces;
     private static Map<String, Namespace> allTypenames;
     private static Map<String, String> allExportFormats;
@@ -66,16 +91,16 @@ public class ISO19115_3_2018SchemaPlugin
     }
 
     public Set<AssociatedResource> getAssociatedResourcesUUIDs(Element metadata) {
-        String XPATH_FOR_AGGRGATIONINFO = "*//mri:associatedResource/*" +
+        String xpathForAggregationInfo = "*//mri:associatedResource/*" +
             "[mri:metadataReference/@uuidref " +
             "and %s]";
-        Set<AssociatedResource> listOfResources = new HashSet<AssociatedResource>();
+        Set<AssociatedResource> listOfResources = new HashSet<>();
         List<?> sibs = null;
         try {
             sibs = Xml
                 .selectNodes(
                     metadata,
-                    String.format(XPATH_FOR_AGGRGATIONINFO,
+                    String.format(xpathForAggregationInfo,
                         StringUtils.isNotEmpty(parentAssociatedResourceType) ?
                             String.format("mri:associationType/*/@codeListValue != '%s'", parentAssociatedResourceType) :
                             "mri:associationType/mri:DS_AssociationTypeCode/@codeListValue != ''"
@@ -125,6 +150,7 @@ public class ISO19115_3_2018SchemaPlugin
                     associatedResources.add(resource);
                 }
             } catch (JDOMException e) {
+                // Ignore exception
             }
         }
         return associatedResources;
@@ -139,8 +165,7 @@ public class ISO19115_3_2018SchemaPlugin
 
     @Override
     public Set<AssociatedResource> getAssociatedDatasets(Element metadata) {
-        Set<AssociatedResource> associatedResources = collectAssociatedResources(metadata, "*//srv:operatesOn");
-        return associatedResources;
+        return collectAssociatedResources(metadata, "*//srv:operatesOn", true);
     }
 
     public Set<String> getAssociatedFeatureCatalogueUUIDs(Element metadata) {
@@ -154,8 +179,7 @@ public class ISO19115_3_2018SchemaPlugin
 
     @Override
     public Set<AssociatedResource> getAssociatedFeatureCatalogues(Element metadata) {
-        Set<AssociatedResource> associatedResources = collectAssociatedResources(metadata, "*//mrc:featureCatalogueCitation[@uuidref]");
-        return associatedResources;
+        return collectAssociatedResources(metadata, "*//mrc:featureCatalogueCitation[@uuidref]");
     }
 
     public Set<String> getAssociatedSourceUUIDs(Element metadata) {
@@ -167,21 +191,24 @@ public class ISO19115_3_2018SchemaPlugin
 
     @Override
     public Set<AssociatedResource> getAssociatedSources(Element metadata) {
-        Set<AssociatedResource> associatedResources = collectAssociatedResources(metadata, "*//mrl:source");
-        return associatedResources;
+        return collectAssociatedResources(metadata, "*//mrl:source");
     }
 
-    private Set<AssociatedResource> collectAssociatedResources(Element metadata, String XPATH) {
+    private Set<AssociatedResource> collectAssociatedResources(Element metadata, String xpath) {
+        return collectAssociatedResources(metadata, xpath, false);
+    }
+
+    private Set<AssociatedResource> collectAssociatedResources(Element metadata, String xpath, boolean checkUuidInHref) {
         Set<AssociatedResource> associatedResources = new HashSet<>();
         try {
             final List<?> parentMetadata = Xml
                 .selectNodes(
                     metadata,
-                    XPATH,
+                    xpath,
                     allNamespaces.asList());
             for (Object o : parentMetadata) {
                 Element sib = (Element) o;
-                AssociatedResource resource = elementAsAssociatedResource(sib);
+                AssociatedResource resource = elementAsAssociatedResource(sib, checkUuidInHref);
                 associatedResources.add(resource);
             }
         } catch (JDOMException e) {
@@ -190,18 +217,32 @@ public class ISO19115_3_2018SchemaPlugin
         return associatedResources;
     }
 
-    private AssociatedResource elementAsAssociatedResource(Element ref) {
+    private AssociatedResource elementAsAssociatedResource(Element ref, boolean checkUuidInHref) {
+        String title = ref.getAttributeValue("title", XLINK, "");
+        String url = ref.getAttributeValue("href", XLINK, "");
+
         String sibUuid = ref.getAttributeValue("uuidref");
         if (StringUtils.isEmpty(sibUuid)) {
             sibUuid = ref.getTextNormalize();
         }
-        String title = ref.getAttributeValue("title", XLINK, "");
-        String url = ref.getAttributeValue("href", XLINK, "");
+
+        // For srv:operatesOn, check if the xlink:href has a url with a parameter named 'id'
+        // (aligned with the index.xsl process), as that element usually contains the reference to the metadata.
+        // GeoNetwork uses uuidref to store this reference, but that's just a GeoNetwork convention.
+        if (checkUuidInHref) {
+            Matcher matcher = RECORD_ID_PATTERN.matcher(url);
+
+            if (matcher.matches()) {
+                sibUuid = matcher.group(1);
+            }
+        }
+
         return new AssociatedResource(sibUuid, "", "", url, title);
     }
 
+
     private AssociatedResource metadataRefAsAssociatedResource(Element sibling) {
-        Element ref = (Element) sibling.getChild("metadataReference", ISO19115_3_2018Namespaces.MRI);
+        Element ref = sibling.getChild("metadataReference", ISO19115_3_2018Namespaces.MRI);
         String sibUuid = ref.getAttributeValue("uuidref");
 
         String associationType = sibling.getChild("associationType", ISO19115_3_2018Namespaces.MRI)
@@ -235,7 +276,7 @@ public class ISO19115_3_2018SchemaPlugin
                 " using XPath '" + path +
                 " Exception: " + e.getMessage());
         }
-        return null;
+        return Collections.emptyList();
     }
 
     /**
@@ -287,7 +328,7 @@ public class ISO19115_3_2018SchemaPlugin
      */
     @Override
     public Element removeTranslationFromElement(Element element, List<String> langs) throws JDOMException {
-        String mainLanguage = langs != null && langs.size() > 0 ? langs.get(0) : "#EN";
+        String mainLanguage = langs != null && !langs.isEmpty() ? langs.get(0) : "#EN";
 
         List<Element> nodesWithStrings = (List<Element>) Xml.selectNodes(element, "*//lan:PT_FreeText", Arrays.asList(ISO19115_3_2018Namespaces.LAN));
 
@@ -333,7 +374,7 @@ public class ISO19115_3_2018SchemaPlugin
 
         // Remove PT_FreeText which might be emptied by above processing
         for (Element el : nodesWithStrings) {
-            if (el.getChildren().size() == 0) {
+            if (el.getChildren().isEmpty()) {
                 el.detach();
             }
         }
@@ -441,12 +482,12 @@ public class ISO19115_3_2018SchemaPlugin
     }
 
     @Override
-    public List<Extent> getExtents(Element record) {
+    public List<Extent> getExtents(Element metadataRecord) {
         List<Extent> extents = new ArrayList<>();
 
         ElementFilter bboxFinder = new ElementFilter("EX_GeographicBoundingBox", ISO19115_3_2018Namespaces.GEX);
         @SuppressWarnings("unchecked")
-        Iterator<Element> bboxes = record.getDescendants(bboxFinder);
+        Iterator<Element> bboxes = metadataRecord.getDescendants(bboxFinder);
         while (bboxes.hasNext()) {
             Element box = bboxes.next();
             try {
@@ -457,6 +498,7 @@ public class ISO19115_3_2018SchemaPlugin
                     Double.valueOf(box.getChild("northBoundLatitude", ISO19115_3_2018Namespaces.GEX).getChild("Decimal", ISO19115_3_2018Namespaces.GCO).getText())
                 ));
             } catch (NullPointerException e) {
+                // Ignore exception
             }
         }
         return extents;

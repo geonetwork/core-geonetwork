@@ -353,14 +353,17 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
      * @param lang     Language from context
      */
     @Override
-    public boolean doValidate(AbstractMetadata metadata, String lang) {
+    public Pair<Element, Boolean> doValidate(AbstractMetadata metadata, String lang) {
         String schema = metadata.getDataInfo().getSchemaId();
         int metadataId = metadata.getId();
+        Element errorReport = new Element("report", Edit.NAMESPACE);
+        errorReport.setAttribute("id", String.valueOf(metadataId), Edit.NAMESPACE);
+
         Element md;
         try {
             md = metadata.getXmlData(false);
         } catch (IOException | JDOMException e) {
-            return false;
+            return Pair.read(errorReport, false);
         }
 
         List<MetadataValidation> validations = new ArrayList<>();
@@ -375,15 +378,19 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
             xsdErrorCount = xsdErrors.getContent().size();
         }
         if (xsdErrorCount > 0) {
+            errorReport.addContent(xsdErrors);
             validations.add(new MetadataValidation().setId(new MetadataValidationId(metadataId, "xsd"))
                 .setStatus(MetadataValidationStatus.INVALID).setRequired(true).setNumTests(xsdErrorCount)
                 .setNumFailures(xsdErrorCount));
-            LOGGER.debug("Invalid.");
+
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug("  - XSD error: {}", Xml.getString(xsdErrors));
+            }
             valid = false;
         } else {
             validations.add(new MetadataValidation().setId(new MetadataValidationId(metadataId, "xsd"))
                 .setStatus(MetadataValidationStatus.VALID).setRequired(true).setNumTests(1).setNumFailures(0));
-            LOGGER.debug("Valid.");
+            LOGGER.debug("  - XSD Valid.");
         }
         try {
             metadataManager.getEditLib().enumerateTree(md);
@@ -405,6 +412,10 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
 
                 if (failedAssert.size() >  0 || failedSchematronVerification.size() > 0) {
                     valid = false;
+                    errorReport.addContent(schemaTronReport);
+                    if (LOGGER.isDebugEnabled()) {
+                        LOGGER.debug("  - Schematron error: {}", Xml.getString(schemaTronReport));
+                    }
                 }
             }
         } catch (Exception e) {
@@ -417,7 +428,7 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
 
         saveValidationStatus(metadataId, validations);
 
-        return valid;
+        return Pair.read(errorReport, valid);
     }
 
     /**

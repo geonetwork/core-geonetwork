@@ -21,16 +21,6 @@
   ~ Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
-
-<!--
-==============================================================================
-=== This Ant build file is used to create the GeoNetwork opensource distro's
-===
-=== Authors : Jeroen Ticheler <ticheler@users.sourceforge.net>
-===           Andrea Carboni <acarboni@users.sourceforge.net>
-==============================================================================
--->
-
 <project name="geonetwork" default="distributions" basedir=".">
 
   <condition property="osys" value="macosx">
@@ -120,27 +110,19 @@
       <zipfileset dir="./bin" includes="**.sh" prefix="bin" filemode="774"/>
       <zipfileset dir="${propsdir}" includes="readme.html, license.html" />
       <zipfileset dir="./jetty" prefix="jetty" excludes="logs/*.log, logs/archive/*.log" />
-      <!-- Use war to include META-INF/MANIFEST.MF file -->
       <zipfileset src="../web/target/geonetwork.war" prefix="web/geonetwork" />
-      <zipfileset dir="./data" prefix="web/geonetwork/data" />
-      <zipfileset dir="./schemaPlugins" prefix="web/geonetwork/WEB-INF/data/config/schema_plugins" />
     </zip>
 
     <checksum
       file="target/${appName}-${version}/${bundleName}-${version}-${subVersion}.zip"
       forceOverwrite="yes"/>
-
   </target>
 
   <!-- Copy and rename WAR file and calculate checksum -->
   <target name="war" depends="zip">
-
     <copy file="../web/target/geonetwork.war"
           tofile="target/${appName}-${version}/${appName}-${version}-${subVersion}.war" />
-
     <checksum file="target/${appName}-${version}/${appName}-${version}-${subVersion}.war"
               forceOverwrite="yes"/>
-
   </target>
-
 </project>

@@ -36,8 +36,13 @@
 
     <xsl:choose>
       <xsl:when test="$condition">
+        <!-- Depending on the context, we need to prefix the xpath
+              to work in evaluate function. If root element eg. /gmd:MD_Metadata...
+              then we prepend /.. if 'gui' context or a child node, we use current. -->
         <xsl:variable name="prefixPath"
-                      select="if (local-name($base) = 'gui') then '/' else '/../'"/>
+                      select="if (local-name($base) = 'gui'
+                              or count($base/ancestor::*) = 0)
+                               then '/' else '/../'"/>
         <saxon:call-template name="{concat('evaluate-', $schema, '-boolean')}">
           <xsl:with-param name="base" select="$base"/>
           <xsl:with-param name="in" select="concat($prefixPath, $condition)"/>

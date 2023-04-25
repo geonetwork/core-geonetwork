@@ -64,6 +64,7 @@
     "gnSearchSettings",
     "gnConfig",
     "gnConfigService",
+    "gnAlertService",
     function (
       $scope,
       $routeParams,
@@ -81,7 +82,8 @@
       gnGlobalSettings,
       gnSearchSettings,
       gnConfig,
-      gnConfigService
+      gnConfigService,
+      gnAlertService
     ) {
       // option to allow only administrators
       // to validate a subtemplate
@@ -448,7 +450,15 @@
         if (!$scope.delEntryId) {
           return;
         }
-        gnMetadataManager.remove($scope.delEntryId).then(refreshEntriesInfo);
+        gnMetadataManager
+          .remove($scope.delEntryId)
+          .then(refreshEntriesInfo, function (e) {
+            gnAlertService.addAlert({
+              msg: $translate.instant("directoryEntry-removeError-referenced"),
+              delay: 5000,
+              type: "danger"
+            });
+          });
         $scope.delEntryId = null;
       };
 

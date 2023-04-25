@@ -71,14 +71,14 @@
           </lan:language>
           <lan:characterEncoding>
             <lan:MD_CharacterSetCode codeList="codeListLocation#MD_CharacterSetCode"
-                                     codeListValue=""/>
+                                     codeListValue="utf8"/>
           </lan:characterEncoding>
         </lan:PT_Locale>
       </mdb:defaultLocale>
       <mdb:metadataScope>
         <mdb:MD_MetadataScope>
           <mdb:resourceScope>
-            <mcc:MD_ScopeCode codeList="" codeListValue="dataset"/>
+            <mcc:MD_ScopeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_ScopeCode" codeListValue="dataset"/>
           </mdb:resourceScope>
         </mdb:MD_MetadataScope>
       </mdb:metadataScope>

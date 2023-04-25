@@ -259,6 +259,7 @@
     "signIn": "Logga in",
     "signedInAs": "Inloggad som",
     "signout": "Logga ut",
+    "signoutDescription": "Du är redan inloggad, klicka på knappen för att logga ut.",
     "somethingWrong": "Något gick fel!",
     "south": "Söder",
     "siblings": "Associerade resurser",
@@ -574,9 +575,12 @@
     "copyToClipboard": "Copy the text to the clipboard",
     "textCopied": "Text has been copied to the clipboard.",
     "metadataApproved": "Metadata godkända.",
+    "metadataSubmitted": "Metadata submitted.",
     "batchApproveTitle": "Satsvis godkännande av metadata",
     "batchApproveInfo": "Det här alternativet godkänner de valda metadata som ägs av användaren. Som standard godkänns endast metadata med status inskickad. Välj alternativet nedan för att direkt godkänna metadata som inte har status inskickad.",
     "batchApproveDirect": "Godkänn metadata utan att de behöver ha status inskickad",
     "facet-mdStatus": "Status i arbetsflödet",
-    "skipLink": "Skip and go to the content"
+    "skipLink": "Skip and go to the content",
+    "batchSubmitTitle": "Batch metadata submission",
+    "batchSubmitInfo": "This option submits the selected metadata owned by the user."
 }

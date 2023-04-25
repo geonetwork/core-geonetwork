@@ -219,6 +219,41 @@
     </xsl:copy>
   </xsl:template>
 
+
+
+  <xsl:template match="mdb:identificationInfo/*/mri:citation/*" mode="expand">
+    <xsl:copy>
+      <xsl:copy-of select="@*"/>
+      <xsl:apply-templates select="cit:title
+                                  |cit:alternateTitle"
+                           mode="expand"/>
+
+      <xsl:for-each-group select="$existingMembers//mdb:MD_Metadata/mdb:identificationInfo
+            /*/mri:citation/*/cit:date[*/cit:dateType/*/@codeListValue = 'publication']"
+                          group-by="*/cit:date/gco:*">
+        <xsl:sort select="*/cit:date/gco:*" order="descending"/>
+
+        <xsl:if test="position() = 1">
+          <xsl:copy-of select="."/>
+        </xsl:if>
+      </xsl:for-each-group>
+
+      <xsl:apply-templates select="cit:edition
+                                   |cit:editionDate
+                                   |cit:identifier
+                                   |cit:citedResponsibleParty
+                                   |cit:presentationForm
+                                   |cit:series
+                                   |cit:otherCitationDetails
+                                   |cit:collectiveTitle
+                                   |cit:ISBN
+                                   |cit:ISSN
+                                   |cit:onlineResource
+                                   |cit:graphic" mode="expand"/>
+    </xsl:copy>
+  </xsl:template>
+
+
   <xsl:template match="@*|node()" mode="expand">
     <xsl:copy>
       <xsl:apply-templates select="@*|node()" mode="expand"/>

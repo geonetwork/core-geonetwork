@@ -117,7 +117,7 @@
 
                 <div
                   class="row"
-                  data-ng-switch-when="languageWhitelist|mainThesaurus|locationThesaurus|internalThesaurus"
+                  data-ng-switch-when="languageWhitelist|mainThesaurus|locationThesaurus|internalThesaurus|topCustomMenu|footerCustomMenu"
                   data-ng-switch-when-separator="|"
                 >
                   <div class="col-lg-5 gn-nopadding-left">
@@ -749,7 +749,7 @@
                 <!-- boolean -->
                 <div
                   class="row"
-                  data-ng-switch-when="is3DModeAllowed|isVegaEnabled|isSaveMapInCatalogAllowed|isExportMapAsImageEnabled|useOSM|isUserRecordsOnly|isFilterTagsDisplayed|isFilterTagsDisplayedInSearch|showMapInFacet|autoFitOnLayer|showSocialBarInFooter|isSocialbarEnabled|isLogoInHeader|isHeaderFixed|isMenubarAccessible|fluidLayout|fluidHeaderLayout|fluidEditorLayout|showGNName|humanizeDates|sortKeywordsAlphabetically|showMosaic|showMaps|showApplicationInfoAndLinksInFooter|showBatchDropdown|moreLikeThisSameType|allowRemoteRecordLink"
+                  data-ng-switch-when="is3DModeAllowed|isVegaEnabled|isSaveMapInCatalogAllowed|isAccessible|isExportMapAsImageEnabled|useOSM|isUserRecordsOnly|isFilterTagsDisplayed|isFilterTagsDisplayedInSearch|showMapInFacet|autoFitOnLayer|showSocialBarInFooter|isSocialbarEnabled|isLogoInHeader|isHeaderFixed|isMenubarAccessible|fluidLayout|fluidHeaderLayout|fluidEditorLayout|showGNName|humanizeDates|sortKeywordsAlphabetically|showMosaic|showMaps|showApplicationInfoAndLinksInFooter|showBatchDropdown|moreLikeThisSameType|allowRemoteRecordLink"
                   data-ng-switch-when-separator="|"
                 >
                   <div class="col-lg-5 gn-nopadding-left">
@@ -1012,6 +1012,21 @@
                   <div
                     ng-include="'../../catalog/components/admin/uiconfig/partials/mapconfig.html'"
                   ></div>
+
+                  <div class="col-lg-5 gn-nopadding-left">
+                    <label class="control-label" translate>mapConfigSearchGeodesicExtents</label>
+
+                    <p class="help-block">{{('mapConfigSearchGeodesicExtents-help') | translate}}</p>
+                  </div>
+
+
+                  <div class="col-lg-7 gn-nopadding-right">
+                    <input
+                      type="checkbox"
+                      id="ui-geodesicExtents-enabled"
+                      data-ng-model="mCfg[key]['geodesicExtents']"
+                    />
+                  </div>
 
                   <div class="col-lg-12 gn-nopadding-left gn-nopadding-right">
                     <hr />

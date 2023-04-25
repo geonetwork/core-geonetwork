@@ -132,7 +132,10 @@
             hits &&
               hits.map &&
               hits.map(function (h) {
-                var overview = h.overview || (h._source && h._source.overview);
+                var overview =
+                  h.overview ||
+                  (h._source && h._source.overview) ||
+                  (h.fields && h.fields.overview);
                 if (overview) {
                   scope.images = scope.images.concat(overview);
                 }
@@ -199,6 +202,194 @@
               e.preventDefault();
             }
           });
+        }
+      };
+    }
+  ]);
+
+  module.directive("gnReadMore", [
+    "$timeout",
+    "$translate",
+    function ($timeout, $translate) {
+      return {
+        restrict: "A",
+        link: function (scope, el, attrs) {
+          var MAX_HEIGHT_LINE = 5,
+            element = el.get(0),
+            toggleButton = undefined,
+            expandLabel = attrs["expandLabel"]
+              ? $translate.instant(attrs["expandLabel"])
+              : "",
+            expandTooltip = attrs["expandTooltip"]
+              ? $translate.instant(attrs["expandTooltip"])
+              : $translate.instant("readMore"),
+            expandedLabel = attrs["expandedLabel"]
+              ? $translate.instant(attrs["expandedLabel"])
+              : "",
+            expandedTooltip = attrs["expandedTooltip"]
+              ? $translate.instant(attrs["expandedTooltip"])
+              : "",
+            expandIcon = attrs["expandIcon"] || "fa-plus-circle",
+            gradient = attrs["gradient"] || false,
+            expandedIcon = attrs["expandedIcon"] || "fa-minus-circle",
+            transparent = "rgba(0, 0, 0, 0)";
+
+          /**
+           * Returns the background style using the parent element color
+           * @param {string} background css value
+           */
+          function getParentBackgroundStyle(parentElement) {
+            var parentBgColor = getComputedStyle(parentElement).backgroundColor;
+            // Background color is not inherited
+            if (parentBgColor === transparent) {
+              return getParentBackgroundStyle(parentElement.parentElement);
+            }
+            var baseColor = "255, 255, 255";
+            var matches = /^rgba?\(([0-9]+, [0-9]+, [0-9]+)/.exec(parentBgColor);
+            if (matches && parentBgColor !== transparent) {
+              baseColor = matches[1];
+            }
+            if (gradient !== false) {
+              return (
+                "linear-gradient(0deg, rgba(" +
+                baseColor +
+                ", 1) 40%, rgba(" +
+                baseColor +
+                ", 0))"
+              );
+            } else {
+              return "rgba(" + baseColor + ")";
+            }
+          }
+
+          /**
+           * @param {HTMLElement} element
+           * @param {number} pxSize
+           */
+          function collapseElement(element, pxSize) {
+            var contentChild = element.querySelector(".gn-collapse-content");
+            contentChild.style.maxHeight = pxSize + "px";
+            contentChild.style.overflowY = "hidden";
+
+            toggleButton.innerHTML =
+              '<span class="fa fa-fw ' + expandIcon + '"></span>' + expandLabel;
+            toggleButton.setAttribute("title", expandTooltip);
+            element.setAttribute("data-collapsed", "");
+            toggleButton.style.background = getParentBackgroundStyle(element);
+            toggleButton.style.left = "0";
+          }
+
+          /**
+           * @param {HTMLElement} element
+           */
+          function expandElement(element) {
+            var contentChild = element.querySelector(".gn-collapse-content");
+            contentChild.style.removeProperty("max-height");
+            contentChild.style.removeProperty("overflow-y");
+
+            toggleButton.innerHTML =
+              '<span class="fa fa-fw ' + expandedIcon + '"></span>' + expandedLabel;
+            toggleButton.setAttribute("title", expandedTooltip);
+            toggleButton.style.removeProperty("left");
+            element.removeAttribute("data-collapsed");
+            toggleButton.style.removeProperty("background");
+          }
+
+          /**
+           * Returns the line height in px
+           * @param {HTMLElement} element
+           */
+          function measureLineHeight(element) {
+            var height = parseInt(
+              getComputedStyle(element).getPropertyValue("line-height"),
+              10
+            );
+            // make sure lineheight is not null;
+            if (!height) {
+              height = 10;
+            }
+            return height;
+          }
+
+          /**
+           * Returns the inner height (without padding) in px
+           * @param {HTMLElement} element
+           */
+          function measureInnerHeight(element) {
+            var height = parseInt(
+              getComputedStyle(element).getPropertyValue("height"),
+              10
+            );
+            var paddingTop = parseInt(
+              getComputedStyle(element).getPropertyValue("padding-top"),
+              10
+            );
+            var paddingBottom = parseInt(
+              getComputedStyle(element).getPropertyValue("padding-bottom"),
+              10
+            );
+            return height - paddingTop - paddingBottom;
+          }
+
+          /**
+           * Creates a toggle button and position it in the parent element
+           * @param {HTMLElement} parentElement
+           */
+          function createToggleButton(parentElement) {
+            toggleButton = document.createElement("a");
+            toggleButton.setAttribute("href", "");
+            toggleButton.classList.add("gn-collapse-toggle");
+            toggleButton.style.display = "block";
+            toggleButton.style.position = "absolute";
+            toggleButton.style.bottom = "0";
+            toggleButton.style.left = "0";
+            toggleButton.style.right = "0";
+            toggleButton.style.paddingRight = "0.5em";
+
+            // get parent background color to determine the gradient
+            toggleButton.style.background = getParentBackgroundStyle(parentElement);
+            parentElement.appendChild(toggleButton);
+          }
+
+          var init = function () {
+            var elHeightPx = measureInnerHeight(element);
+            var lineHeightPx = measureLineHeight(element);
+            var lineNumbers =
+              attrs["lineNumber"] != null
+                ? parseInt(attrs["lineNumber"], 10)
+                : MAX_HEIGHT_LINE;
+            if (elHeightPx < lineHeightPx * (lineNumbers + 1)) {
+              return;
+            }
+            var maxHeightPx = lineHeightPx * (lineNumbers + 1);
+
+            // put the element content in a child div
+            var contentChild = document.createElement("div");
+            contentChild.classList.add("gn-collapse-content");
+            contentChild.innerHTML = element.innerHTML;
+            contentChild.style.paddingBottom = "0";
+            element.innerHTML = "";
+            element.style.position = "relative";
+            element.appendChild(contentChild);
+            if (!getComputedStyle(element).position) {
+              element.style.position = "relative";
+            }
+
+            createToggleButton(element);
+            toggleButton.addEventListener("click", function (event) {
+              if (element.hasAttribute("data-collapsed")) {
+                expandElement(element);
+              } else {
+                collapseElement(element, maxHeightPx);
+              }
+              event.preventDefault();
+            });
+
+            // element is collapsed initially
+            collapseElement(element, maxHeightPx);
+          };
+
+          $timeout(init);
         }
       };
     }

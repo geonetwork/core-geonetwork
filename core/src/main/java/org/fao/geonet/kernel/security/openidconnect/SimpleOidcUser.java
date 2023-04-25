@@ -42,7 +42,7 @@ import java.util.Map;
  * <p>
  * parts taken from BaselUser (GN keycloak plugin)
  */
-class SimpleOidcUser {
+public class SimpleOidcUser {
 
 
     private String username;
@@ -61,7 +61,7 @@ class SimpleOidcUser {
      * @param idToken  The User's ID token
      * @param attributes All the user's claims (ID Token claims + USERINFO claims)
      */
-    SimpleOidcUser(OIDCConfiguration oidcConfiguration, OIDCRoleProcessor oidcRoleProcessor, OidcIdToken idToken, Map userAttributes) throws Exception {
+    public SimpleOidcUser(OIDCConfiguration oidcConfiguration, OIDCRoleProcessor oidcRoleProcessor, OidcIdToken idToken, Map userAttributes) throws Exception {
         Map attributes = (userAttributes == null) ? new HashMap() : userAttributes;
 
         username = (String) idToken.getClaims().get(oidcConfiguration.getUserNameAttribute());
@@ -132,7 +132,7 @@ class SimpleOidcUser {
         }
     }
 
-    SimpleOidcUser(OIDCConfiguration oidcConfiguration, OIDCRoleProcessor oidcRoleProcessor, Map attributes) throws Exception {
+    public SimpleOidcUser(OIDCConfiguration oidcConfiguration, OIDCRoleProcessor oidcRoleProcessor, Map attributes) throws Exception {
         username = (String) attributes.get(oidcConfiguration.getUserNameAttribute());
         if (username == null) {
             username = (String) attributes.get(StandardClaimNames.PREFERRED_USERNAME);

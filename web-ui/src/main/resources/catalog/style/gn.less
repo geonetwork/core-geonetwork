@@ -488,9 +488,6 @@ div.thumb-small {
 }
 .gn-list-file {
   position: relative;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
   width: 100%;
   text-align: left;
   margin-bottom: 5px !important;
@@ -865,6 +862,7 @@ i.fa-times.delete:hover {
   .gn-status-stamp {
     position: absolute;
     margin: 100px;
+    right: 0;
     overflow: hidden;
     transform: rotate(-15deg);
     font-size: 4rem;
@@ -911,6 +909,15 @@ i.fa-times.delete:hover {
     margin-right: -8px;
     bottom: auto;
   }
+  .gn-status-bottomright {
+    position: absolute;
+    left: auto;
+    right: 0;
+    float: right;
+    margin-right: -8px;
+    bottom: 10px;
+    line-height: 1.6em;
+  }
   .gn-status-table {
     position: relative;
     bottom: unset;
@@ -928,6 +935,16 @@ i.fa-times.delete:hover {
   }
   .gn-status-lg {
     font-size: 1.6em;
+  }
+
+  // ----- Keep the text size inside card panels for related metadata
+  .gn-card-heading {
+    .gn-status-md {
+      font-size: inherit !important;
+    }
+    .gn-status-lg {
+      font-size: inherit !important;
+    }
   }
 }
 
@@ -1055,7 +1072,8 @@ fieldset[disabled] .radio label {
   }
 }
 
-input.ng-invalid {
+input.ng-invalid,
+select.ng-invalid {
   border-color: #a94442;
 }
 

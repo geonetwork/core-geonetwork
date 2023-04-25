@@ -170,14 +170,17 @@
           >
             <div class="row">
               <div class="col-md-11">
-                <span data-gn-link-icon="resource" data-mode="gn-icon-inline"></span>
-                <span data-gn-link-label="resource" />
-                <br data-ng-if="resource.locTitle" />
+                <span
+                  data-gn-link-icon="resource"
+                  titel="{{resource.protocol || ''}}"
+                  data-mode="gn-icon-inline"
+                ></span>
                 <strong>{{resource.locTitle}}</strong>
-                <br data-ng-if="resource.locDescription" />
+                <br data-ng-if="resource.locTitle" />
                 {{resource.locDescription}}
+                <br data-ng-if="resource.locDescription" />
+                <span data-gn-link-label="resource" />
                 <br />
-                <em data-ng-if="resource.protocol">{{resource.protocol || ''}}</em>
 
                 <div
                   data-ng-if="canPublishDoiForResource(resource)"

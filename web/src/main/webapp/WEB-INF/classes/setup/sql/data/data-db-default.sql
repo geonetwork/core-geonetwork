@@ -574,7 +574,7 @@ INSERT INTO Operations (id, name) VALUES  (6,'featured');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/site/name', 'Catalogue Sextant - Copernicus Marine', 0, 110, 'n');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/site/siteId', '52d62b80-a2a4-11e2-9e96-0800200c9a66', 0, 120, 'n');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/site/organization', 'Ifremer', 0, 130, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/platform/version', '4.2.3', 0, 150, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/platform/version', '4.2.4', 0, 150, 'n');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/platform/subVersion', 'SNAPSHOT', 0, 160, 'n');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/site/svnUuid', '', 0, 170, 'y');
 

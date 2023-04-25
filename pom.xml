@@ -1,3 +1,4 @@
+
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   ~ Copyright (C) 2001-2016 Food and Agriculture Organization of the
@@ -29,7 +30,7 @@
   <groupId>org.geonetwork-opensource</groupId>
   <artifactId>geonetwork</artifactId>
   <packaging>pom</packaging>
-  <version>4.2.3-SNAPSHOT</version>
+  <version>4.2.4-SNAPSHOT</version>
   <name>GeoNetwork opensource</name>
   <description>GeoNetwork opensource is a standards based, Free and
     Open Source catalog application to manage spatially referenced
@@ -576,12 +577,9 @@
         <version>1.10</version>
       </dependency>
       <!-- logging -->
-      <dependency> <!-- usedf for camel -->
-        <groupId>org.apache.logging.log4j</groupId>
-        <artifactId>log4j-slf4j-impl</artifactId>
-        <version>${log4j2.version}</version>
-      </dependency>
-      <dependency> <!-- used for LDAP test dependency in core -->
+      <dependency>
+        <!-- usedf for camel -->
+        <!-- used for LDAP test dependency in core -->
         <groupId>org.apache.logging.log4j</groupId>
         <artifactId>log4j-slf4j-impl</artifactId>
         <version>${log4j2.version}</version>
@@ -879,7 +877,7 @@
       <dependency>
         <groupId>org.tmatesoft.svnkit</groupId>
         <artifactId>svnkit</artifactId>
-        <version>1.10.9</version>
+        <version>1.10.11</version>
       </dependency>
       <dependency>
         <groupId>dlib</groupId>  <!--FIXME Handled by local repository -->
@@ -1176,7 +1174,7 @@
       <dependency>
         <groupId>com.google.code.findbugs</groupId>
         <artifactId>jsr305</artifactId>
-        <version>2.0.1</version>
+        <version>2.0.3</version>
       </dependency>
       <dependency>
         <groupId>net.sf.json-lib</groupId>
@@ -1536,7 +1534,8 @@
 
     <baseUrl>https://sextant.ifremer.fr/geonetwork</baseUrl>
 <!--    <baseUrl>https://sextant-test.ifremer.fr/geonetwork</baseUrl>-->
-    <microservices.url></microservices.url>
+
+    <microservices.url/>
     <!--<microservices.url>http://localhost:9901</microservices.url>-->
 
     <!-- Proxy security configuration:
@@ -1617,7 +1616,7 @@
 
     <!-- NOTE: When updating GeoTools, check which version
     of Postgres is used and update pg.version if needed. -->
-    <geotools.version>28.0</geotools.version>
+    <geotools.version>28.2</geotools.version>
     <jts.version>1.18.2</jts.version>
     <pg.version>42.3.3</pg.version>
 
@@ -1639,12 +1638,12 @@
     <xmlunit.version>2.1.1</xmlunit.version>
     <jackson.version>2.10.4</jackson.version>
     <flying-saucer>9.1.22</flying-saucer>
-    <camel.version>2.25.1</camel.version>
+    <camel.version>2.25.4</camel.version>
     <log4j2.version>2.17.2</log4j2.version>
     <slf4j.version>1.8.0-beta2</slf4j.version>
     <xbean.version>4.22</xbean.version>
     <jolokia.version>1.6.0</jolokia.version>
-    <httpcomponents.version>4.5.9</httpcomponents.version>
+    <httpcomponents.version>4.5.14</httpcomponents.version>
     <jasypt.version>1.9.3</jasypt.version>
     <jupiter.version>5.9.1</jupiter.version>
     <hibernate.version>5.6.7.Final</hibernate.version>

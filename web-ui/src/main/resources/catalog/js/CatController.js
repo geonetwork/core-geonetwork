@@ -74,7 +74,8 @@
           footer: {
             enabled: true,
             showSocialBarInFooter: true,
-            showApplicationInfoAndLinksInFooter: true
+            showApplicationInfoAndLinksInFooter: true,
+            footerCustomMenu: [] // List of static pages identifiers to display
           },
           header: {
             enabled: true,
@@ -101,7 +102,8 @@
             showGNName: true,
             isHeaderFixed: false,
             isMenubarAccessible: true,
-            showPortalSwitcher: true
+            showPortalSwitcher: true,
+            topCustomMenu: [] // List of static pages identifiers to display
           },
           cookieWarning: {
             enabled: true,
@@ -759,6 +761,7 @@
             is3DModeAllowed: false,
             isSaveMapInCatalogAllowed: true,
             isExportMapAsImageEnabled: false,
+            isAccessible: false,
             storage: "sessionStorage",
             bingKey: "",
             listOfServices: {
@@ -806,7 +809,8 @@
             "map-search": {
               context: "../../map/config-viewer.xml",
               extent: [0, 0, 0, 0],
-              layers: []
+              layers: [],
+              geodesicExtents: false
             },
             "map-editor": {
               context: "",
@@ -1973,6 +1977,61 @@
 
       $scope.allowPublishInvalidMd = function () {
         return gnConfig["metadata.workflow.allowPublishInvalidMd"];
+      };
+
+      $scope.allowPublishNonApprovedMd = function () {
+        return gnConfig["metadata.workflow.allowPublishNonApprovedMd"];
+      };
+
+      $scope.getPublicationOptionClass = function (md, user, isMdWorkflowEnable) {
+        var publicationOptionTitle = $scope.getPublicationOptionTitle(
+          md,
+          user,
+          isMdWorkflowEnable
+        );
+        switch (publicationOptionTitle) {
+          case "mdnonapprovedcantpublish":
+          case "mdinvalidcantpublish":
+            return "disabled";
+            break;
+          default:
+            return "";
+        }
+      };
+
+      // Function to get the title name to be used when displaying the publish item in the menu
+      $scope.getPublicationOptionTitle = function (md, user, isMdWorkflowEnable) {
+        var publicationOptionTitle = "";
+        if (!md.isPublished()) {
+          if (md.isValid()) {
+            publicationOptionTitle = "mdvalid";
+          } else {
+            if (
+              isMdWorkflowEnable &&
+              md.isWorkflowEnabled() &&
+              $scope.allowPublishInvalidMd() === false
+            ) {
+              publicationOptionTitle = "mdinvalidcantpublish";
+            } else {
+              if (!md.hasValidation()) {
+                publicationOptionTitle = "mdnovalidation";
+              } else {
+                publicationOptionTitle = "mdinvalid";
+              }
+            }
+          }
+          // if we are not using a disabled option like mdinvalidcantpublish then check if there is an approval
+          if (
+            publicationOptionTitle != "mdinvalidcantpublish" &&
+            isMdWorkflowEnable &&
+            md.isWorkflowEnabled() &&
+            md.mdStatus != 2 &&
+            $scope.allowPublishNonApprovedMd() === false
+          ) {
+            publicationOptionTitle = "mdnonapprovedcantpublish";
+          }
+        }
+        return publicationOptionTitle;
       };
 
       $scope.$on("StatusUpdated", function (event, status) {
