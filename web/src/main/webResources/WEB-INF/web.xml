@@ -374,28 +374,6 @@
         <param-name>geonetwork.dir</param-name>
         <param-value>/app/geonetwork_data_dir</param-value>
     </init-param>-->
-    <init-param>
-      <param-name>${application.name}.dir</param-name>
-      <param-value>${gn.datadir}</param-value>
-    </init-param>
-    <init-param>
-      <param-name>${application.name}.schema.dir</param-name>
-      <param-value>${gn.webappdir}/WEB-INF/data/config/schema_plugins</param-value>
-    </init-param>
-    <init-param>
-      <param-name>${application.name}.indexConfig.dir</param-name>
-      <param-value>${gn.webappdir}/WEB-INF/data/config/index</param-value>
-    </init-param>
-    <init-param>
-      <param-name>${application.name}.formatter.dir</param-name>
-      <param-value>${gn.webappdir}/WEB-INF/data/data/formatter</param-value>
-    </init-param>
-    <!--
-      Specified what geonetwork data directory to use.
-      <init-param>
-      <param-name>geonetwork.dir</param-name>
-      <param-value>/app/geonetwork_data_dir</param-value>
-  </init-param>-->
     <load-on-startup>1</load-on-startup>
   </servlet>
 
