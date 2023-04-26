@@ -95,7 +95,7 @@
     <init-param>
       <!-- List of url regular expressions that should be not checked -->
       <param-name>excludedPaths</param-name>
-      <param-value>^/catalog/.*,^/jolokia/.*,^/dashboards/.*,^/doc/.*,^/api/.*,^/static/.*,^/images/.*,^/map/.*,^/htmlcache/.*,^/pdf/.*,^/xml/.*,^/xsl/.*,^/config/.*,^/read/.*,^/.*\.jsp,^/.*\.html,^/.*\.css</param-value>
+      <param-value>^/catalog/.*,^/sextant/.*,^/jolokia/.*,^/dashboards/.*,^/doc/.*,^/api/.*,^/static/.*,^/images/.*,^/map/.*,^/htmlcache/.*,^/pdf/.*,^/xml/.*,^/xsl/.*,^/config/.*,^/read/.*,^/.*\.jsp,^/.*\.html,^/.*\.css</param-value>
     </init-param>
   </filter>
   <filter-mapping>
