@@ -23,10 +23,10 @@
 package org.fao.geonet.doi.client;
 
 import com.google.common.io.CharStreams;
+import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
@@ -35,226 +35,112 @@ import org.apache.http.message.BasicHeader;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.geonet.utils.Log;
-import org.apache.commons.httpclient.HttpStatus;
 import org.springframework.http.client.ClientHttpResponse;
 
 import java.io.InputStreamReader;
-import java.text.MessageFormat;
 
 import static org.fao.geonet.doi.client.DoiSettings.LOGGER_NAME;
 
 /**
- * Doi API client.
+ * Doi API client for European Registration Agency of DOI.
  *
- * See https://mds.datacite.org/static/apidoc.
- *
- * @author Jose García
+ * See https://www.medra.org/.
  */
-public class DoiClient {
+public class DoiMedraClient implements IDoiClient {
 
+    public static final String MEDRA_SEARCH_KEY = "medra.org";
     public static final String DOI_ENTITY = "DOI";
     public static final String ALL_DOI_ENTITY = "All DOI";
     public static final String DOI_METADATA_ENTITY = "DOI metadata";
+    public static final String MEDRA_NOT_SUPPORTED_EXCEPTION_MESSAGE = "Not supported by European Registration Agency of DOI.";
 
     private String apiUrl;
     private String doiPublicUrl;
     private String username;
     private String password;
 
-    private boolean testMode;
 
     protected GeonetHttpRequestFactory requestFactory;
 
-    public DoiClient(String apiUrl, String username, String password, String doiPublicUrl) {
-        this(apiUrl, username, password, doiPublicUrl, true);
-    }
-
-    public DoiClient(String apiUrl, String username, String password, String doiPublicUrl, boolean testMode) {
-        this.apiUrl = apiUrl.endsWith("/") ? apiUrl : apiUrl + "/";
+    public DoiMedraClient(String apiUrl, String username, String password, String doiPublicUrl) {
+        this.apiUrl = apiUrl;
         this.doiPublicUrl = doiPublicUrl.endsWith("/") ? doiPublicUrl : doiPublicUrl + "/";
         this.username = username;
         this.password = password;
-        this.testMode = testMode;
 
         requestFactory =
             ApplicationContextHolder.get().getBean(GeonetHttpRequestFactory.class);
     }
 
-    /**
-     * POST will mint new DOI if specified DOI doesn't exist.
-     * This method will attempt to update URL if you specify existing DOI.
-     * Standard domains and quota restrictions check will be performed.
-     * Datacentre's doiQuotaUsed will be increased by 1. A new record in Datasets will be created.
-     *
-     * @param doi   The DOI prefix for the datacenter / identifier eg. 10.5072/TEST-1
-     * @param url   The landing page
-     * @throws DoiClientException
-     */
-    public void createDoi(String doi, String url)
-            throws DoiClientException {
+    @Override
+    public void createDoi(String doi, String url) throws DoiClientException {
+        // Medra is not like Datacite with a 2 steps process
+    }
 
-        String requestBody = MessageFormat.format(
-                "doi={0}\nurl={1}",
-                doi, url);
+    @Override
+    public String retrieveDoi(String doi) throws DoiClientException {
+        return retrieve(createPublicUrl(doi));
+    }
 
-        create(createUrl("doi"), requestBody,
-            "text/plain;charset=UTF-8",
-            DOI_ENTITY);
+    @Override
+    public String retrieveAllDoi(String doi) throws DoiClientException {
+        throw new DoiClientException(MEDRA_NOT_SUPPORTED_EXCEPTION_MESSAGE);
     }
 
     /**
-     * This request returns an URL associated with a given DOI.
+     * Rest API
+     * A REST-API is made available to register DOIs for datasets in a B2B environment.
      *
-     * @param doi
-     * @return If response status is 200: URL representing a dataset;
-     *          empty for 204;
-     *          null for not found;
-     *          otherwise short explanation for non-200 status.
-     * @throws DoiClientException
-     */
-    public String retrieveDoi(String doi)
-            throws DoiClientException {
-
-        return retrieve(createUrl("doi/" + doi), DOI_ENTITY);
-    }
-
-    /**
-     * This request returns a list of all DOIs for the requesting datacentre.
-     * There is no guaranteed order.
+     * A B2B client can submit a DOI Registration Message in OP system by sending an HTTP POST Request to the endpoint https://ra.publications.europa.eu/servlet/ws/doidata with:
      *
-     * @param doi
-     * @return If response status is 200: list of DOIs, one DOI per line; empty for 204.
-     * @throws DoiClientException
-     */
-    public String retrieveAllDoi(String doi)
-            throws DoiClientException {
-
-        return retrieve(createUrl("doi"), ALL_DOI_ENTITY);
-    }
-
-    /**
-     * This request stores new version of metadata.
-     * The request body must contain valid XML.
+     *  request body: the DOI Registration Message XML document, UTT-8 encoded;
+     *  request headers: "Content-Type:application/xml;charset=UTF-8";
+     *  basic authentication: username and password of its user.
+     * The max size of the xml document in the request body is 10Mb.
      *
+     * The xml document in the request body must be valid according to OP DOI RA registration schema for datasets.
+     *
+     * The HTTP Response status will be:
+     *
+     *  200 OK: the submission was successful;
+     *  400 Bad Request: in case of invalid XML;
+     *  401 Unauthorized: the user cannot access the API;
+     *  415 Unsupported Media Type: the HTTP Content-Type header is not "application/xml";
+     *  500 Internal Server Error: internal server error.
+     * The HTTP Response Content-Type will be "text/plain". The HTTP Response body will contain a free text with an error message, if any.
+     *
+     * The registration is asynchronous.
      *
      * @param doi eg. 10.5072/JQX3-61AT
      * @param doiMetadata XML in DataCite format as String
      * @throws DoiClientException
      */
+    @Override
     public void createDoiMetadata(String doi, String doiMetadata)
             throws DoiClientException {
 
-//        create(createUrl("metadata/" + doi),
-        create(createUrl("metadata"),
+        create(this.apiUrl,
             doiMetadata,
-            "application/xml", DOI_METADATA_ENTITY);
+            "application/xml");
     }
 
-    /**
-     * This request returns the most recent version of metadata associated with a given DOI.
-     *
-     * @param doi
-     * @return
-     * @throws DoiClientException
-     */
-    public String retrieveDoiMetadata(String doi)
-            throws DoiClientException {
-        return retrieve(createUrl("metadata/" + doi),
-            "DOI metadata");
+    @Override
+    public String retrieveDoiMetadata(String doi) throws DoiClientException {
+        return null;
+    }
+
+    @Override
+    public void deleteDoiMetadata(String doi) throws DoiClientException {
+        // DOI metadata can't be deleted
+    }
+
+    @Override
+    public void deleteDoi(String doi) throws DoiClientException {
+        // DOI can't be deleted
     }
 
 
-    /**
-     * This request marks a dataset as 'inactive'.
-     * To activate it again, POST new metadata or set the isActive-flag in the user interface.
-     *
-     * @param doi
-     * @throws DoiClientException
-     */
-    public void deleteDoiMetadata(String doi)
-            throws DoiClientException {
-
-        ClientHttpResponse httpResponse = null;
-        HttpDelete deleteMethod = null;
-
-        try {
-            Log.debug(LOGGER_NAME, "   -- URL: " + this.apiUrl + "/metadata");
-
-            deleteMethod = new HttpDelete(createUrl("metadata/" + doi));
-
-            httpResponse = requestFactory.execute(
-                deleteMethod,
-                new UsernamePasswordCredentials(username, password), AuthScope.ANY);
-            int status = httpResponse.getRawStatusCode();
-
-            Log.debug(LOGGER_NAME, "   -- Request status code: " + status);
-
-            // Ignore NOT FOUND (trying to delete a non existing doi metadata)
-            if ((status != HttpStatus.SC_NOT_FOUND) && (status != HttpStatus.SC_OK)) {
-                Log.info(LOGGER_NAME, "Delete DOI metadata end -- Error: " + httpResponse.getStatusText());
-
-                throw new DoiClientException( httpResponse.getStatusText() );
-            } else {
-                Log.info(LOGGER_NAME, "DeleteDOI metadata end");
-            }
-
-        } catch (Exception ex) {
-            Log.error(LOGGER_NAME, "   -- Error (exception): " + ex.getMessage());
-            throw new DoiClientException(ex.getMessage());
-
-        } finally {
-            if (deleteMethod != null) {
-                deleteMethod.releaseConnection();
-            }
-            // Release the connection.
-            IOUtils.closeQuietly(httpResponse);
-        }
-    }
-
-    public void deleteDoi(String doi)
-        throws DoiClientException {
-
-        ClientHttpResponse httpResponse = null;
-        HttpDelete deleteMethod = null;
-
-        try {
-            Log.debug(LOGGER_NAME, "   -- URL: " + this.apiUrl + "/metadata");
-
-            deleteMethod = new HttpDelete(createUrl("doi/" + doi));
-
-            httpResponse = requestFactory.execute(
-                deleteMethod,
-                new UsernamePasswordCredentials(username, password), AuthScope.ANY);
-            int status = httpResponse.getRawStatusCode();
-
-            Log.debug(LOGGER_NAME, "   -- Request status code: " + status);
-
-            // Ignore NOT FOUND (trying to delete a non existing doi metadata)
-            if ((status != HttpStatus.SC_NOT_FOUND) && (status != HttpStatus.SC_OK)) {
-                Log.info(LOGGER_NAME, "Delete DOI end -- Error: " + httpResponse.getStatusText());
-
-                throw new DoiClientException( httpResponse.getStatusText() );
-            } else {
-                Log.info(LOGGER_NAME, "DeleteDOI end");
-            }
-
-        } catch (Exception ex) {
-            Log.error(LOGGER_NAME, "   -- Error (exception): " + ex.getMessage());
-            throw new DoiClientException(ex.getMessage());
-
-        } finally {
-            if (deleteMethod != null) {
-                deleteMethod.releaseConnection();
-            }
-            // Release the connection.
-            IOUtils.closeQuietly(httpResponse);
-        }
-    }
-
-    /**
-     * See https://support.datacite.org/docs/mds-api-guide#section-register-metadata
-     */
-    private void create(String url, String body, String contentType, String entity)
+    private void create(String url, String body, String contentType)
             throws DoiClientException {
 
         ClientHttpResponse httpResponse = null;
@@ -282,10 +168,8 @@ public class DoiClient {
 
             Log.debug(LOGGER_NAME, "   -- Request status code: " + status);
 
-            if (status != HttpStatus.SC_CREATED) {
-                String responseBody = httpResponse.getBody() != null
-                    ? CharStreams.toString(new InputStreamReader(httpResponse.getBody()))
-                    :  "";
+            if (status != HttpStatus.SC_OK) {
+                String responseBody = CharStreams.toString(new InputStreamReader(httpResponse.getBody()));
                 String message = String.format(
                     "Failed to create '%s' with '%s'. Status is %d. Error is %s. Response body: %s",
                     url, body, status,
@@ -294,7 +178,7 @@ public class DoiClient {
                 throw new DoiClientException(message);
             } else {
                 Log.info(LOGGER_NAME, String.format(
-                    "DOI metadata created at %s.", url));
+                    "DOI metadata registration sent to %s.", url));
             }
         } catch (Exception ex) {
             Log.error(LOGGER_NAME, "   -- Error (exception): " + ex.getMessage());
@@ -309,7 +193,7 @@ public class DoiClient {
         }
     }
 
-    private String retrieve(String url, String entity)
+    private String retrieve(String url)
             throws DoiClientException {
 
         ClientHttpResponse httpResponse = null;
@@ -358,6 +242,7 @@ public class DoiClient {
      *
      * eg. https://mds.datacite.org/doi/10.12770/38e00808-ffca-4266-943f-b691d3ca0bec
      */
+    @Override
     public String createUrl(String service) {
         return this.apiUrl + service;
     }
@@ -368,6 +253,7 @@ public class DoiClient {
      *
      * eg. https://doi.org/10.17882/80771
      */
+    @Override
     public String createPublicUrl(String doi) {
         return this.doiPublicUrl + doi;
     }
