@@ -75,7 +75,7 @@ public class GeoNetworkPortalFilter implements javax.servlet.Filter {
             if (!NodeInfo.DEFAULT_NODE.equals(portal)) {
                 SourceRepository sourceRepository = ApplicationContextHolder.get().getBean(SourceRepository.class);
                 // Check the portal exists and it's of type subportal, otherwise redirect to the default portal
-                boolean redirectToDefaultPortal = !sourceRepository.existsByNameAndType(portal, SourceType.subportal);
+                boolean redirectToDefaultPortal = !sourceRepository.existsByUuidAndType(portal, SourceType.subportal);
 
                 if (redirectToDefaultPortal) {
                     String newPath = httpReq.getPathInfo().replace(URL_PATH_SEPARATOR + portal + URL_PATH_SEPARATOR,
