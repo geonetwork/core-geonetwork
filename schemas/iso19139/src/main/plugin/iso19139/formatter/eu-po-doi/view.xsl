@@ -22,10 +22,11 @@ http://ra.publications.europa.eu/schema/OP/DOIMetadata/1.0/OP_DOIMetadata_1.0.xs
   <xsl:template match="/">
     <xsl:call-template name="eu-po-doi-message">
       <xsl:with-param name="dataciteResource">
-        <datacite:resource>
+        <resource
+          xmlns="http://datacite.org/schema/kernel-4">
           <xsl:apply-templates select="$metadata"
                                mode="toDatacite"/>
-        </datacite:resource>
+        </resource>
       </xsl:with-param>
     </xsl:call-template>
   </xsl:template>
