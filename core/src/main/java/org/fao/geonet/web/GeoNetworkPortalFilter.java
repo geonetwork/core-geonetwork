@@ -44,17 +44,28 @@ import java.util.List;
  *  - Valid portal defined in the sources table
  */
 public class GeoNetworkPortalFilter implements javax.servlet.Filter {
-    private static final String EXCLUDED_PATHS = "excludedPaths";
+    private static final String EXCLUDED_URL_PATHS = "excludedPaths";
+
+    private static final String EXCLUDED_URL_SERVLET = "excludedServletPaths";
 
     private static final String URL_PATH_SEPARATOR = "/";
 
+    /** Ignored application paths **/
     private List<String> excludedPaths = new ArrayList<>();
+
+    /** Ignored servlet paths **/
+    private List<String> excludedServletPaths = new ArrayList<>();
 
     @Override
     public void init(FilterConfig config) {
-        String excludedPathsValue = config.getInitParameter(EXCLUDED_PATHS);
+        String excludedPathsValue = config.getInitParameter(EXCLUDED_URL_PATHS);
         if (StringUtils.isNotEmpty(excludedPathsValue)) {
             excludedPaths = Arrays.asList(excludedPathsValue.split(","));
+        }
+
+        String excludedServletPathsValue = config.getInitParameter(EXCLUDED_URL_SERVLET);
+        if (StringUtils.isNotEmpty(excludedServletPathsValue)) {
+            excludedServletPaths = Arrays.asList(excludedServletPathsValue.split(","));
         }
     }
 
@@ -62,7 +73,8 @@ public class GeoNetworkPortalFilter implements javax.servlet.Filter {
         HttpServletResponse httpResp = (HttpServletResponse) resp;
         HttpServletRequest httpReq = (HttpServletRequest) req;
 
-        if (!ignoreUrl(httpReq.getPathInfo())) {
+        if (!ignoreServletPath(httpReq.getServletPath()) &&
+            !ignoreUrl(httpReq.getPathInfo())) {
             String portal = "";
 
             // Check the url format: /portal/lang/service/..., /portal/api/service/...
@@ -102,6 +114,14 @@ public class GeoNetworkPortalFilter implements javax.servlet.Filter {
             return true;
         } else {
             return excludedPaths.stream().anyMatch(urlPath::matches);
+        }
+    }
+
+    private boolean ignoreServletPath(String servletPath) {
+        if (StringUtils.isEmpty(servletPath)) {
+            return false;
+        } else {
+            return excludedServletPaths.stream().anyMatch(servletPath::matches);
         }
     }
 }

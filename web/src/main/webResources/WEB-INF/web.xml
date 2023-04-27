@@ -93,11 +93,18 @@
     <filter-name>portalCheckFilter</filter-name>
     <filter-class>org.fao.geonet.web.GeoNetworkPortalFilter</filter-class>
     <init-param>
-      <!-- List of url regular expressions that should be not checked -->
+      <!-- List of url regular expressions that should be not checked for application url paths -->
       <param-name>excludedPaths</param-name>
-      <param-value>^/catalog/.*,^/jolokia/.*,^/dashboards/.*,^/doc/.*,^/api/.*,^/static/.*,^/images/.*,^/map/.*,^/htmlcache/.*,^/pdf/.*,^/xml/.*,^/xsl/.*,^/config/.*,^/read/.*,^/.*\.jsp,^/.*\.html,^/.*\.css</param-value>
+      <param-value>^/catalog/.*,^/doc/.*,^/static/.*,^/images/.*,^/map/.*,^/htmlcache/.*,^/pdf/.*,^/xml/.*,^/xsl/.*,^/config/.*,^/read/.*,^/.*\.jsp,^/.*\.html,^/.*\.css</param-value>
+    </init-param>
+
+    <init-param>
+      <!-- List of url regular expressions that should be not checked for servlet paths -->
+      <param-name>excludedServletPaths</param-name>
+      <param-value>^/api,^/jolokia,^/dashboards,^/index/features,^/criticalhealthcheck,^/warninghealthcheck,^/expensivehealthcheck,^/monitor</param-value>
     </init-param>
   </filter>
+
   <filter-mapping>
     <filter-name>portalCheckFilter</filter-name>
     <url-pattern>/*</url-pattern>
