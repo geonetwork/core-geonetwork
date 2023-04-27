@@ -143,7 +143,7 @@ public class DoiDataciteClient implements IDoiClient {
 //        create(createUrl("metadata/" + doi),
         create(createUrl("metadata"),
             doiMetadata,
-            "application/xml", DOI_METADATA_ENTITY);
+            "application/xml");
     }
 
     /**
