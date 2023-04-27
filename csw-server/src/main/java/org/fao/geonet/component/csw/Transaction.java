@@ -25,6 +25,7 @@ package org.fao.geonet.component.csw;
 
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Edit;
@@ -35,10 +36,11 @@ import org.fao.geonet.csw.common.OutputSchema;
 import org.fao.geonet.csw.common.ResultType;
 import org.fao.geonet.csw.common.exceptions.CatalogException;
 import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
-import org.fao.geonet.domain.ISODate;
-import org.fao.geonet.domain.Profile;
-import org.fao.geonet.domain.ReservedGroup;
-import org.fao.geonet.domain.ReservedOperation;
+import org.fao.geonet.domain.*;
+import org.fao.geonet.domain.utils.ObjectJSONUtils;
+import org.fao.geonet.events.history.RecordDeletedEvent;
+import org.fao.geonet.events.history.RecordImportedEvent;
+import org.fao.geonet.events.history.RecordUpdatedEvent;
 import org.fao.geonet.kernel.*;
 import org.fao.geonet.kernel.csw.CatalogService;
 import org.fao.geonet.kernel.csw.services.AbstractOperation;
@@ -52,6 +54,7 @@ import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.utils.Log;
 import org.jdom.Element;
+import org.jdom.output.XMLOutputter;
 import org.locationtech.jts.util.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -210,7 +213,7 @@ public class Transaction extends AbstractOperation implements CatalogService {
      * @throws Exception
      */
     private boolean insertTransaction(Element xml, List<InsertedMetadata> documents, ServiceContext context, Set<String> toIndex)
-            throws Exception {
+        throws Exception {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         DataManager dataMan = gc.getBean(DataManager.class);
 
@@ -278,6 +281,13 @@ public class Transaction extends AbstractOperation implements CatalogService {
 
         dataMan.indexMetadata(id, true);
 
+        AbstractMetadata metadata = metadataUtils.findOne(id);
+        ApplicationContext applicationContext = ApplicationContextHolder.get();
+        new RecordImportedEvent(metadata.getId(), us.getUserIdAsInt(),
+            ObjectJSONUtils.convertObjectInJsonObject(us.getPrincipal(),
+                RecordImportedEvent.FIELD),
+            metadata.getData()).publish(applicationContext);
+
         documents.add(new InsertedMetadata(schema, id, xml));
 
         toIndex.add(id);
@@ -306,6 +316,9 @@ public class Transaction extends AbstractOperation implements CatalogService {
 
         int totalUpdated = 0;
 
+
+        Element beforeMetadata;
+        Element afterMetadata;
 
         // Update full metadata
         if (xml != null) {
@@ -344,10 +357,22 @@ public class Transaction extends AbstractOperation implements CatalogService {
                 changeDate = new ISODate().toString();
             }
 
+            beforeMetadata = metadataUtils.findOneByUuid(uuid).getXmlData(false);
+
             String language = context.getLanguage();
             dataMan.updateMetadata(context, id, xml,
                 applyValidation, applyUpdateFixedInfo,
                 language, changeDate, true, IndexingMode.none);
+
+            afterMetadata = metadataUtils.findOneByUuid(uuid).getXmlData(false);
+
+            XMLOutputter outp = new XMLOutputter();
+            String xmlBefore = outp.outputString(beforeMetadata);
+            String xmlAfter = outp.outputString(afterMetadata);
+            new RecordUpdatedEvent(Long.parseLong(id),
+                context.getUserSession().getUserIdAsInt(),
+                xmlBefore, xmlAfter)
+                .publish(ApplicationContextHolder.get());
 
             toIndex.add(id);
 
@@ -388,6 +413,8 @@ public class Transaction extends AbstractOperation implements CatalogService {
 
 
                 Element metadata = dataMan.getMetadata(context, id, false, false, true);
+                beforeMetadata = metadata;
+
                 metadata.removeChild("info", Edit.NAMESPACE);
 
                 // Retrieve the schema and Namespaces of metadata to update
@@ -454,8 +481,17 @@ public class Transaction extends AbstractOperation implements CatalogService {
 
                     totalUpdated++;
                 }
+                afterMetadata = metadataUtils.findOneByUuid(uuid).getXmlData(false);
 
+                XMLOutputter outp = new XMLOutputter();
+                String xmlBefore = outp.outputString(beforeMetadata);
+                String xmlAfter = outp.outputString(afterMetadata);
+                new RecordUpdatedEvent(Long.parseLong(id),
+                    context.getUserSession().getUserIdAsInt(),
+                    xmlBefore, xmlAfter)
+                    .publish(ApplicationContextHolder.get());
             }
+
             toIndex.addAll(updatedMd);
 
             return totalUpdated;
@@ -501,8 +537,25 @@ public class Transaction extends AbstractOperation implements CatalogService {
             if (!dataMan.getAccessManager().canEdit(context, id)) {
                 throw new NoApplicableCodeEx("User not allowed to delete metadata : " + id);
             }
+            AbstractMetadata metadata = metadataUtils.findOneByUuid(uuid);
+            LinkedHashMap<String, String> titles = new LinkedHashMap<>();
+            try {
+                titles = metadataUtils.extractTitles(Integer.toString(metadata.getId()));
+            } catch (Exception e) {
+                Log.warning(Geonet.DATA_MANAGER,
+                    String.format(
+                        "Error while extracting title for the metadata %d " +
+                            "while creating delete event. Error is %s.",
+                        metadata.getId(), e.getMessage()));
+            }
+            RecordDeletedEvent recordDeletedEvent = new RecordDeletedEvent(
+                metadata.getId(), metadata.getUuid(), titles,
+                context.getUserSession().getUserIdAsInt(),
+                metadata.getData());
 
             metadataManager.deleteMetadata(context, id);
+            recordDeletedEvent.publish(ApplicationContextHolder.get());
+
             deleted++;
         }
 
@@ -577,13 +630,13 @@ public class Transaction extends AbstractOperation implements CatalogService {
     }
 
     private static Element applyCswBrief(ServiceContext context, SchemaManager schemaManager, String schema,
-                                               Element md,
-                                               String id, String displayLanguage) throws Exception
+                                         Element md,
+                                         String id, String displayLanguage) throws Exception
     {
         return org.fao.geonet.csw.common.util.Xml.applyElementSetName(
-                context, schemaManager, schema, md,
-                "csw", ElementSetName.BRIEF, ResultType.RESULTS,
-                id, displayLanguage);
+            context, schemaManager, schema, md,
+            "csw", ElementSetName.BRIEF, ResultType.RESULTS,
+            id, displayLanguage);
     }
 
     /**
