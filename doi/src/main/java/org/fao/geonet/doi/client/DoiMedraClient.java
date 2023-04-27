@@ -22,45 +22,19 @@
 //==============================================================================
 package org.fao.geonet.doi.client;
 
-import com.google.common.io.CharStreams;
 import org.apache.commons.httpclient.HttpStatus;
-import org.apache.commons.io.IOUtils;
-import org.apache.http.auth.AuthScope;
-import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.message.BasicHeader;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
-import org.fao.geonet.utils.Log;
-import org.springframework.http.client.ClientHttpResponse;
-
-import java.io.InputStreamReader;
-
-import static org.fao.geonet.doi.client.DoiSettings.LOGGER_NAME;
 
 /**
  * Doi API client for European Registration Agency of DOI.
  *
  * See https://www.medra.org/.
  */
-public class DoiMedraClient implements IDoiClient {
+public class DoiMedraClient extends BaseDoiClient  implements IDoiClient {
 
     public static final String MEDRA_SEARCH_KEY = "medra.org";
-    public static final String DOI_ENTITY = "DOI";
-    public static final String ALL_DOI_ENTITY = "All DOI";
-    public static final String DOI_METADATA_ENTITY = "DOI metadata";
     public static final String MEDRA_NOT_SUPPORTED_EXCEPTION_MESSAGE = "Not supported by European Registration Agency of DOI.";
-
-    private String apiUrl;
-    private String doiPublicUrl;
-    private String username;
-    private String password;
-
-
-    protected GeonetHttpRequestFactory requestFactory;
 
     public DoiMedraClient(String apiUrl, String username, String password, String doiPublicUrl) {
         this.apiUrl = apiUrl;
@@ -118,10 +92,12 @@ public class DoiMedraClient implements IDoiClient {
     @Override
     public void createDoiMetadata(String doi, String doiMetadata)
             throws DoiClientException {
-
-        create(this.apiUrl,
+        this.create(this.apiUrl,
             doiMetadata,
-            "application/xml");
+            "application/xml",
+            HttpStatus.SC_OK,
+            String.format(
+                "DOI metadata registration sent to %s.", this.apiUrl));
     }
 
     @Override
@@ -137,104 +113,6 @@ public class DoiMedraClient implements IDoiClient {
     @Override
     public void deleteDoi(String doi) throws DoiClientException {
         // DOI can't be deleted
-    }
-
-
-    private void create(String url, String body, String contentType)
-            throws DoiClientException {
-
-        ClientHttpResponse httpResponse = null;
-        HttpPost postMethod = null;
-
-        try {
-            Log.debug(LOGGER_NAME, "   -- URL: " + url);
-
-            postMethod = new HttpPost(url);
-
-            ((HttpUriRequest) postMethod).addHeader( new BasicHeader("Content-Type",  contentType + ";charset=UTF-8") );
-            Log.debug(LOGGER_NAME, "   -- Request body: " + body);
-
-            StringEntity requestEntity = new StringEntity(
-                    body,
-                    contentType,
-                    "UTF-8");
-
-            postMethod.setEntity(requestEntity);
-
-            httpResponse = requestFactory.execute(
-                postMethod,
-                new UsernamePasswordCredentials(username, password), AuthScope.ANY);
-            int status = httpResponse.getRawStatusCode();
-
-            Log.debug(LOGGER_NAME, "   -- Request status code: " + status);
-
-            if (status != HttpStatus.SC_OK) {
-                String responseBody = CharStreams.toString(new InputStreamReader(httpResponse.getBody()));
-                String message = String.format(
-                    "Failed to create '%s' with '%s'. Status is %d. Error is %s. Response body: %s",
-                    url, body, status,
-                    httpResponse.getStatusText(), responseBody);
-                Log.info(LOGGER_NAME, message);
-                throw new DoiClientException(message);
-            } else {
-                Log.info(LOGGER_NAME, String.format(
-                    "DOI metadata registration sent to %s.", url));
-            }
-        } catch (Exception ex) {
-            Log.error(LOGGER_NAME, "   -- Error (exception): " + ex.getMessage());
-            throw new DoiClientException(ex.getMessage());
-
-        } finally {
-            if (postMethod != null) {
-                postMethod.releaseConnection();
-            }
-            // Release the connection.
-            IOUtils.closeQuietly(httpResponse);
-        }
-    }
-
-    private String retrieve(String url)
-            throws DoiClientException {
-
-        ClientHttpResponse httpResponse = null;
-        HttpGet getMethod = null;
-
-        try {
-            Log.debug(LOGGER_NAME, "   -- URL: " + url);
-
-            getMethod = new HttpGet(url);
-
-
-            httpResponse = requestFactory.execute(getMethod,
-                new UsernamePasswordCredentials(username, password), AuthScope.ANY);
-            int status = httpResponse.getRawStatusCode();
-
-            Log.debug(LOGGER_NAME, "   -- Request status code: " + status);
-
-            if (status == HttpStatus.SC_OK) {
-                return CharStreams.toString(new InputStreamReader(httpResponse.getBody()));
-            } else if (status == HttpStatus.SC_NO_CONTENT) {
-                return null; // Not found
-            } else if (status == HttpStatus.SC_NOT_FOUND) {
-                return null; // Not found
-            } else {
-                Log.info(LOGGER_NAME, "Retrieve DOI metadata end -- Error: " + httpResponse.getStatusText());
-
-                throw new DoiClientException( httpResponse.getStatusText() +
-                    CharStreams.toString(new InputStreamReader(httpResponse.getBody())));
-            }
-
-        } catch (Exception ex) {
-            Log.error(LOGGER_NAME, "   -- Error (exception): " + ex.getMessage());
-            throw new DoiClientException(ex.getMessage());
-
-        } finally {
-            if (getMethod != null) {
-                getMethod.releaseConnection();
-            }
-            // Release the connection.
-            IOUtils.closeQuietly(httpResponse);
-        }
     }
 
     /**
