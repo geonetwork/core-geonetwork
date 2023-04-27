@@ -78,7 +78,9 @@
             ></div>
           </div>
 
-          <div class="col-xs-6 col-sm-3 gn-nopadding-right text-right navbar-right">
+          <div
+            class="col-xs-6 col-sm-3 gn-nopadding-right text-right navbar-right"
+          >
             <div
               data-sortby-combo=""
               class="d-inline-block"
@@ -100,7 +102,10 @@
         </div>
         <div class="row">
           <div class="col-xs-12 gn-nopadding-left gn-nopadding-right">
-            <span class="loading fa fa-spinner fa-spin" data-ng-show="searching"></span>
+            <span
+              class="loading fa fa-spinner fa-spin"
+              data-ng-show="searching"
+            ></span>
 
             <div
               class="alert alert-warning"
@@ -118,7 +123,10 @@
               data-template-url="resultTemplate"
               data-map="searchObj.searchMap"
             ></div>
-
+          </div>
+        </div>
+        <div class="row gn-row-tools gn-noborder-bottom hidden-print">
+          <div class="col-sm-3">
             <button
               data-ng-show="searchResults.records.length > 9"
               class="btn btn-link hidden-print"
@@ -127,6 +135,15 @@
             >
               <i class="fa fa-fw fa-chevron-up" />
             </button>
+          </div>
+          <div class="col-xs-12 col-sm-6 text-center">
+            <div
+              class=""
+              data-gn-pagination="paginationInfo"
+              data-hits-values="searchObj.hitsperpageValues"
+              data-enable-hot-keys=""
+              data-enable-events=""
+            ></div>
           </div>
         </div>
       </div>
@@ -146,7 +163,9 @@
         class="gn-toggle gn-minimap-toggle btn btn-primary gn-minimap-button hidden-xs"
       >
         <i class="fa fa-angle-double-right"></i>
-        <strong class="gn-minimap-toggle gn-minimap-text" data-translate="">map</strong>
+        <strong class="gn-minimap-toggle gn-minimap-text" data-translate=""
+          >map</strong
+        >
       </button>
     </div>
   </div>
