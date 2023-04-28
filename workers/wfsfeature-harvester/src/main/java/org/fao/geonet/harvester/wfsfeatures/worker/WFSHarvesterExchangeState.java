@@ -51,7 +51,7 @@ public class WFSHarvesterExchangeState implements Serializable {
     private transient Logger logger = LogManager.getLogger(WFSHarvesterRouteBuilder.LOGGER_NAME);
     private transient Map<String, String> fields = new LinkedHashMap<>();
     private transient WFSDataStore wfsDatastore = null;
-    private String resolvedTypeName = null;
+    private List<String> resolvedTypeNames = new ArrayList<>();
 
     private String strategyId = null;
 
@@ -88,8 +88,8 @@ public class WFSHarvesterExchangeState implements Serializable {
         return wfsDatastore;
     }
 
-    public String getResolvedTypeName() {
-        return resolvedTypeName;
+    public List<String> getResolvedTypeNames() {
+        return resolvedTypeNames;
     }
 
 
@@ -170,38 +170,50 @@ public class WFSHarvesterExchangeState implements Serializable {
 
         logger.info("Reading feature type '{}' schema structure.",
             parameters.getTypeName());
-        SimpleFeatureType sft = null;
-        try {
-            sft = wfsDatastore.getSchema(parameters.getTypeName());
-            resolvedTypeName = parameters.getTypeName();
-        } catch (IOException e) {
-            String[] typeNames = wfsDatastore.getTypeNames();
-            String typeNamesList = Arrays.stream(typeNames).collect(Collectors.joining(", "));
-            logger.info(String.format(
-                "Type '%s' not found in data store. Available types are %s. Trying to found a match ignoring namespace.",
-                parameters.getTypeName(),
-                typeNamesList
-            ));
-            Optional<String> typeFound = Arrays.stream(typeNames)
-                .filter(t -> t.endsWith(parameters.getTypeName())).findFirst();
-            if (typeFound.isPresent()) {
-                resolvedTypeName = typeFound.get();
-                logger.info("Found a type '{}'.", resolvedTypeName);
-                sft = wfsDatastore.getSchema(resolvedTypeName);
-            } else {
-                throw new NoSuchElementException(String.format(
-                    "No type found for '%s' (with or without namespace match).",
-                    parameters.getTypeName()
+        String typeSeparator = ",";
+        List<String> featureTypeList = Arrays.asList(parameters.getTypeName().split(typeSeparator));
+
+        String[] datastoreTypeNames = wfsDatastore.getTypeNames();
+        String datastoreTypeNamesList = Arrays.stream(datastoreTypeNames)
+            .collect(Collectors.joining(", "));
+
+        for (String type : featureTypeList) {
+            SimpleFeatureType sft = null;
+            String resolvedFeatureTypeName = null;
+            try {
+                sft = wfsDatastore.getSchema(type);
+                resolvedFeatureTypeName = type;
+            } catch (IOException e) {
+                logger.info(String.format(
+                    "Type '%s' not found in data store. Available types are %s. Trying to found a match ignoring namespace.",
+                    parameters.getTypeName(),
+                    datastoreTypeNamesList
                 ));
+                Optional<String> typeFound = Arrays.stream(datastoreTypeNames)
+                    .filter(t -> t.endsWith(type)).findFirst();
+                if (typeFound.isPresent()) {
+                    resolvedFeatureTypeName = typeFound.get();
+                    logger.info("Found a type '{}'.", resolvedFeatureTypeName);
+                    sft = wfsDatastore.getSchema(resolvedFeatureTypeName);
+                } else {
+                    throw new NoSuchElementException(String.format(
+                        "No type found for '%s' (with or without namespace match).",
+                        parameters.getTypeName()
+                    ));
+                }
             }
+            if (sft != null) {
+                List<AttributeDescriptor> attributesDesc = sft.getAttributeDescriptors();
+
+                for (AttributeDescriptor desc : attributesDesc) {
+                    if (!fields.containsKey(desc.getName().getLocalPart())) {
+                        fields.put(desc.getName().getLocalPart(),
+                            OwsUtils.getTypeFromFeatureType(desc));
+                    }
+                }
+            }
+            resolvedTypeNames.add(resolvedFeatureTypeName);
         }
-
-        List<AttributeDescriptor> attributesDesc = sft.getAttributeDescriptors();
-
-        for (AttributeDescriptor desc : attributesDesc) {
-            fields.put(desc.getName().getLocalPart(), OwsUtils.getTypeFromFeatureType(desc));
-        }
-
         logger.info("Successfully analyzed {} attributes in schema.", fields.size());
     }
 }
