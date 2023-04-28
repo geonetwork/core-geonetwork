@@ -89,19 +89,6 @@
     <div class="pull-left" data-translate="">wfsNoOutputFormats</div>
   </div>
   <div data-ng-if="formats.length > 0 && featureTypes.length === 0">
-    <div
-      class="clearfix gn-margin-top gn-margin-bottom text-warning"
-      data-ng-show="typename != ''"
-    >
-      <div class="fa fa-warning fa-2x fa-fw pull-left"></div>
-      <div
-        data-translate=""
-        class="pull-left width-75"
-        data-translate-values="{typename:'{{typename}}'}"
-      >
-        wfsTypenameNotAvailable
-      </div>
-    </div>
     <div class="row">
       <div class="col-md-8 gn-nopadding-left">
         <select
@@ -124,7 +111,7 @@
           >
             <i class="fa fa-fw fa-download"></i>
             <span data-translate="">downloadFeature</span>
-            <span>ftSelected</span>
+            <span>{{ftSelected.name.localPart}}</span>
             <span class="caret"></span>
           </button>
           <ul class="dropdown-menu">
@@ -134,7 +121,7 @@
                         ftSelected.name.prefix + ':' + ftSelected.name.localPart,
                        format)"
               >
-                {{format|lowercase}}
+                {{format | lowercase | translate}}
               </a>
             </li>
             <li data-ng-if="map" role="separator" class="divider"></li>
@@ -147,7 +134,7 @@
                  ftSelected.name.prefix + ':' + ftSelected.name.localPart,
                   true)"
               >
-                {{format|lowercase}}
+                {{format | lowercase | translate}}
               </a>
             </li>
           </ul>
