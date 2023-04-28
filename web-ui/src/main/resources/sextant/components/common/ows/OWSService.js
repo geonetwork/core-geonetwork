@@ -130,7 +130,7 @@
               for (var i = 0, len = layer.length; i < len; i++) {
                 getFlatLayers(layer[i], inheritedCrs);
               }
-            } else if (layer) {
+            } else if (angular.isDefined(layer)) {
               // replace with complete CRS list if available
               if (layer.CRS && layer.CRS.length > inheritedCrs.length) {
                 inheritedCrs = layer.CRS;
@@ -466,11 +466,12 @@
           },
 
           getLayerInfoFromCap: function (layerName, capObj, uuid) {
-            var needles = [];
             var layers = capObj.layers || capObj.Layer;
 
             // Layer name may be a list of comma separated layers
             layerList = layerName.split(",");
+            var needles = new Array(layerList.length);
+
             layersLoop: for (var j = 0; j < layerList.length; j++) {
               var name = layerList[j];
               //non namespaced lowercase name
@@ -494,26 +495,25 @@
                 }
 
                 //either names match or non namespaced names
-                // note: these matches are put at the beginning of the needles array
+                // note: on name match, stop searching this layer
                 if (name == capName || nameNoNamespace == capNameNoNamespace) {
                   layers[i].nameToUse = capName;
                   if (capObj.version) {
                     layers[i].version = capObj.version;
                   }
-                  needles.unshift(layers[i]);
+                  needles[j] = layers[i];
                   break capabilityLayers;
                 }
 
-                //check dataset identifer match
-                // note: these matches are put at the end of the needles array
-                // because they are lower priority than the layername matches
-                // and the loop is not stopping after them
+                //check dataset identifer or metadataURL match
+                // note: the loop is not stopping after them, in case multiple layers
+                // point to same MetadataURL, a name match will take priority.
                 if (uuid != null) {
                   if (angular.isArray(layers[i].Identifier)) {
                     for (var c = 0; c < layers[i].Identifier.length; c++) {
                       if (layers[i].Identifier[c] == uuid) {
-                        needles.push(layers[i]);
-                        break capabilityLayers;
+                        needles[j] = layers[i];
+                        continue;
                       }
                     }
                   }
@@ -525,9 +525,8 @@
                         mdu.OnlineResource &&
                         mdu.OnlineResource.indexOf(uuid) > 0
                       ) {
-                        needles.push(layers[i]);
-                        // SEXTANT SPECIFIC: we don't need this
-                        // break capabilityLayers;
+                        needles[j] = layers[i];
+                        continue;
                       }
                     }
                   }
@@ -535,20 +534,41 @@
               }
             }
 
-            if (needles.length >= layerList.length) {
+            var layersFound = needles.filter(function (l) {
+              return l !== undefined;
+            });
+            if (layersFound.length >= layerList.length) {
               if (capObj.version) {
                 needles[0].version = capObj.version;
               }
               // Multiple layers from the same service
               if (layerName.indexOf(",") !== -1) {
                 // Parameters 'styles' and 'layers' should have the same number of values.
-                // SEXTANT SPECIFIC: disable this as we don't need style switching
-                // needles[0].Name = _.uniq(needles.map(function(l) {return l.Name})).join(',');
-                // needles[0].Title = _.uniq(needles.map(function(l) {return l.Title})).join(', ');
-                // needles[0].Style = new Array(layerList.length).join(',');
+                // needles[0].Name = layerName;
+                needles[0].Name = _.uniq(
+                  layersFound.map(function (l) {
+                    return l.Name;
+                  })
+                ).join(",");
+                needles[0].Title = _.uniq(
+                  layersFound.map(function (l) {
+                    return l.Title;
+                  })
+                ).join(", ");
+                needles[0].Style = new Array(layerList.length).join(",");
               }
               return needles[0];
             } else {
+              for (var i = 0; i < needles.length; i++) {
+                if (needles[i] === undefined) {
+                  console.warn(
+                    "Layer " +
+                      layerList[i] +
+                      " not found in capabilities either using " +
+                      "name, identifier or metadataURL match."
+                  );
+                }
+              }
               return;
             }
           },
