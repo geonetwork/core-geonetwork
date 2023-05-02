@@ -799,7 +799,41 @@
           createOlWMS: function (map, layerParams, layerOptions) {
             var options = layerOptions || {};
 
-            var loadFunction;
+            var convertGetMapRequestToPost = function (url, onLoadCallback) {
+              var p = url.split('?');
+              var action = p[0];
+              var params = p[1].split('&');
+
+              const client = new XMLHttpRequest();
+              client.open('POST', action);
+              var data = new FormData();
+              params.map(function(p) {
+                var token = p.split('=');
+                data.append(token[0], decodeURIComponent(token[1]));
+              });
+              client.responseType = 'arraybuffer';
+              client.onload = onLoadCallback;
+              client.send(data)
+            };
+
+            var loadFunction = function(imageTile, src) {
+              $http.head(src).then(function(r) {
+                imageTile.getImage().src = src;
+              }, function(r) {
+                if (r.status === 414) {
+                  // Request URI too large, try POST
+                  convertGetMapRequestToPost(src, function () {
+                    const arrayBufferView = new Uint8Array(this.response);
+                    const blob = new Blob([arrayBufferView], { type: 'image/png' });
+                    const urlCreator = window.URL || window.webkitURL;
+                    const imageUrl = urlCreator.createObjectURL(blob);
+                    imageTile.getImage().src = imageUrl;
+                  });
+                } else {
+                  console.warn("Error loading image for: " + src, r);
+                }
+              })
+            };
 
             var source, olLayer;
             if (gnViewerSettings.singleTileWMS) {
