@@ -264,9 +264,16 @@
               </mri:pointOfContact>
             </xsl:for-each>
 
-            <mri:topicCategory>
-              <mri:MD_TopicCategoryCode></mri:MD_TopicCategoryCode>
-            </mri:topicCategory>
+            <!-- ODS themes copied as topicCategory -->
+            <xsl:if test="metas/theme">
+                <xsl:for-each select="metas/theme">
+                  <mri:topicCategory>
+                    <mri:MD_TopicCategoryCode>
+                      <xsl:value-of select="."/>
+                    </mri:MD_TopicCategoryCode>
+                  </mri:topicCategory>
+                </xsl:for-each>
+            </xsl:if>
 
             <!-- ODS keywords copied without type -->
             <xsl:variable name="keywords"
@@ -281,25 +288,6 @@
                       </gco:CharacterString>
                     </mri:keyword>
                   </xsl:for-each>
-                </mri:MD_Keywords>
-              </mri:descriptiveKeywords>
-            </xsl:if>
-
-            <!-- ODS themes copied as keywords with type 'theme' -->
-            <xsl:if test="metas/theme">
-              <mri:descriptiveKeywords>
-                <mri:MD_Keywords>
-                  <xsl:for-each select="metas/theme">
-                    <mri:keyword>
-                      <gco:CharacterString>
-                        <xsl:value-of select="."/>
-                      </gco:CharacterString>
-                    </mri:keyword>
-                  </xsl:for-each>
-                  <mri:type>
-                    <mri:MD_KeywordTypeCode codeListValue="theme"
-                                            codeList="./resources/codeList.xml#MD_KeywordTypeCode"/>
-                  </mri:type>
                 </mri:MD_Keywords>
               </mri:descriptiveKeywords>
             </xsl:if>
