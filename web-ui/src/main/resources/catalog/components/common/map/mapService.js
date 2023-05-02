@@ -897,7 +897,7 @@
               var action = p[0];
               var params = p[1].split("&");
 
-              const client = new XMLHttpRequest();
+              var client = new XMLHttpRequest();
               client.open("POST", action);
               var data = new FormData();
               params.map(function (p) {
