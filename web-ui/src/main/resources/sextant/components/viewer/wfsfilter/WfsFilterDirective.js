@@ -382,12 +382,21 @@
 
           scope.checkFeatureTypeInWfs = function () {
             gnWfsService.getCapabilities(scope.url).then(function (capObj) {
-              var capL = gnOwsCapabilities.getLayerInfoFromWfsCap(
-                scope.featureTypeName,
-                capObj,
-                scope.uuid
-              );
-              scope.isFeatureTypeAvailable = angular.isDefined(capL);
+              var featureTypes = scope.featureTypeName.split(","),
+                layersInCapabilities = [];
+
+              featureTypes.forEach(function (featureTypeName) {
+                var layer = gnOwsCapabilities.getLayerInfoFromWfsCap(
+                  featureTypeName,
+                  capObj,
+                  scope.uuid
+                );
+
+                if (layer) {
+                  layersInCapabilities.push(layer);
+                }
+              });
+              scope.isFeatureTypeAvailable = layersInCapabilities.length > 0;
             });
           };
 

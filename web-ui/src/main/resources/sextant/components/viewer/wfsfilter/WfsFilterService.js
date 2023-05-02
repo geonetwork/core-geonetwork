@@ -599,8 +599,23 @@
             });
           }
         } else {
+          var layers = layer.getSource().getParams().LAYERS,
+            isGroupOfNLayers = layers.split(",").length;
+
+          function buildFilterForEachLayers(nbOfLayers, filter) {
+            if (filter == null) {
+              return filter;
+            }
+            var listOfFilters = "";
+            for (var i = 0; i < nbOfLayers; i++) {
+              listOfFilters += "(" + filter + ")";
+            }
+            return listOfFilters;
+          }
           layer.getSource().updateParams({
-            FILTER: filterOrSldUrl
+            FILTER: isGroupOfNLayers
+              ? buildFilterForEachLayers(isGroupOfNLayers, filterOrSldUrl)
+              : filterOrSldUrl
           });
         }
       };
