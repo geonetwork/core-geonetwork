@@ -91,14 +91,14 @@
           }
         },
 
-        // As this is a authorized mapservice lets use the authization load function for loading the images/tiles
+        // As this is a authorized mapservice lets use the authorization load function for loading the images/tiles
         authorizationLoadFunction: function (tile, src) {
           var srcUrl = src;
           var mapservice = this.getMapservice(srcUrl);
           if (mapservice !== null) {
             // If we are using a proxy then adjust the url.
             if (mapservice.useProxy) {
-              // Proxy calls should have been handled withtout load function . So it this occures just log a warning and set the proxy url
+              // Proxy calls should have been handled without load function . So it this occurs just log a warning and set the proxy url
               console.log(
                 "Warning: attempting to get Using authorized Map service to get tile/image via proxy - this should have already been handled."
               );
@@ -892,7 +892,44 @@
           createOlWMS: function (map, layerParams, layerOptions) {
             var options = layerOptions || {};
 
-            var loadFunction;
+            var convertGetMapRequestToPost = function (url, onLoadCallback) {
+              var p = url.split("?");
+              var action = p[0];
+              var params = p[1].split("&");
+
+              const client = new XMLHttpRequest();
+              client.open("POST", action);
+              var data = new FormData();
+              params.map(function (p) {
+                var token = p.split("=");
+                data.append(token[0], decodeURIComponent(token[1]));
+              });
+              client.responseType = "arraybuffer";
+              client.onload = onLoadCallback;
+              client.send(data);
+            };
+
+            var loadFunction = function (imageTile, src) {
+              $http.head(src).then(
+                function (r) {
+                  imageTile.getImage().src = src;
+                },
+                function (r) {
+                  if (r.status === 414) {
+                    // Request URI too large, try POST
+                    convertGetMapRequestToPost(src, function () {
+                      const arrayBufferView = new Uint8Array(this.response);
+                      const blob = new Blob([arrayBufferView], { type: "image/png" });
+                      const urlCreator = window.URL || window.webkitURL;
+                      const imageUrl = urlCreator.createObjectURL(blob);
+                      imageTile.getImage().src = imageUrl;
+                    });
+                  } else {
+                    console.warn("Error loading image for: " + src, r);
+                  }
+                }
+              );
+            };
 
             // If this is an authorized mapservice then we need to adjust the url or add auth headers
             // Only check http url and exclude any urls like data: which should not be changed. Also, there is not need to check prox urls.
