@@ -158,7 +158,6 @@ public class SldApi {
 
         Element root = Xml.loadString(hash.get("content"), false);
 
-
         if (root.getName().equals("ServiceExceptionReport")) {
             throw new ServiceException("The WMS GetStyle request failed.");
         }

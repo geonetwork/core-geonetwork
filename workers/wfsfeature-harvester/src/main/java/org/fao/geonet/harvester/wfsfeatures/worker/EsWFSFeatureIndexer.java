@@ -286,16 +286,20 @@ public class EsWFSFeatureIndexer {
             BulkResutHandler brh = new AsyncBulkResutHandler(phaser, typeName, url, nbOfFeatures, report, state.getParameters().getMetadataUuid());
 
             long begin = System.currentTimeMillis();
-//            FeatureIterator<SimpleFeature> features = wfs.getFeatureSource(typeName).getFeatures(query).features();
+
+
+            String epsg = "urn:ogc:def:crs:OGC:1.3:CRS84";
+            // TODO: With QGIS server, this can be required
+            // for proper coordinate ordering.
+            // Not 100% sure if it always apply or related only
+            // to Ifremer setup
+            if (strategyId.contains("qgis")) {
+               epsg = "EPSG:4326";
+            }
 
             for (String featureType : resolvedTypeNames) {
                 SimpleFeatureCollection fc = wfs.getFeatureSource(featureType).getFeatures();
-                // temp FIX for SEXTANT
-                String epsg = "urn:ogc:def:crs:OGC:1.3:CRS84";
-                if (strategyId.contains("qgis")) {
-                    epsg = "EPSG:4326";
-                }
-                // END
+
                 ReprojectingFeatureCollection rfc = new ReprojectingFeatureCollection(fc, CRS.decode(epsg));
 
                 FeatureIterator<SimpleFeature> features = rfc.features();
