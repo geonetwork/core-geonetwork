@@ -823,10 +823,10 @@
                 if (r.status === 414) {
                   // Request URI too large, try POST
                   convertGetMapRequestToPost(src, function () {
-                    const arrayBufferView = new Uint8Array(this.response);
-                    const blob = new Blob([arrayBufferView], { type: 'image/png' });
-                    const urlCreator = window.URL || window.webkitURL;
-                    const imageUrl = urlCreator.createObjectURL(blob);
+                    var arrayBufferView = new Uint8Array(this.response);
+                    var blob = new Blob([arrayBufferView], { type: 'image/png' });
+                    var urlCreator = window.URL || window.webkitURL;
+                    var imageUrl = urlCreator.createObjectURL(blob);
                     imageTile.getImage().src = imageUrl;
                   });
                 } else {
