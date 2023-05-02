@@ -109,7 +109,7 @@
         /criticalhealthcheck/**,
         /warninghealthcheck/**,
         /expensivehealthcheck/**,
-        /monitor/**
+        /monitor/**,
         /doc/**,
         /map/**,
         /pdf/**,
