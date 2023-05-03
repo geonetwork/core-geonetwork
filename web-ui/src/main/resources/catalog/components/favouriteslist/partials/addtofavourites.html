@@ -6,8 +6,9 @@
   <!--  scope={{scope}}-->
   <!--  $scope={{$scope}}-->
   <!--  SCOPE={{favouritesLists}}-->
-  <div class="list-group" ng-repeat="list in favouritesLists ">
+  <div class="list-group" >
     <a
+      ng-repeat="list in favouritesLists "
       href=""
       class="list-group-item"
       ng-click="select(list)"
