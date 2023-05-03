@@ -34,9 +34,10 @@
 
     ">
 
-  <context:property-placeholder location="${app.properties}"
-                                file-encoding="UTF-8"
-                                ignore-unresolvable="true" />
+  <context:property-placeholder location="${app.properties},file://#{systemEnvironment['geonetwork_dir']}/config/app.properties"
+                                ignore-unresolvable="true"
+                                ignore-resource-not-found="true"
+                                file-encoding="UTF-8"/>
 
   <context:annotation-config/>
   <bean id="ProfileManager" class="jeeves.component.ProfileManager" lazy-init="true"/>

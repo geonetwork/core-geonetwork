@@ -30,9 +30,10 @@
         http://www.springframework.org/schema/context
         http://www.springframework.org/schema/context/spring-context-3.2.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
 
-  <context:property-placeholder location="${app.properties}"
-                                file-encoding="UTF-8"
-                                ignore-unresolvable="true" />
+  <context:property-placeholder location="${app.properties},file://#{systemEnvironment['geonetwork_dir']}/config/app.properties"
+                                ignore-unresolvable="true"
+                                ignore-resource-not-found="true"
+                                file-encoding="UTF-8"/>
 
   <context:component-scan base-package="org.springdoc.webmvc"/>
   <context:component-scan base-package="org.springdoc.core"/>
