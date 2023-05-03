@@ -240,7 +240,10 @@ public class ImageReplacedElementFactory implements ReplacedElementFactory {
 
             return new ITextImageElement(fsImage);
         } catch (Exception e) {
-            Log.error(Geonet.GEONETWORK, "Error writing metadata to PDF", e);
+            Log.warning(Geonet.GEONETWORK,
+                String.format("Error loading image %s for PDF",
+                    imageLoader instanceof UrlImageLoader ?
+                        ((UrlImageLoader) imageLoader).url : ""), e);
 
             try {
                 return superFactory.createReplacedElement(layoutContext, box, userAgentCallback, cssWidth, cssHeight);
