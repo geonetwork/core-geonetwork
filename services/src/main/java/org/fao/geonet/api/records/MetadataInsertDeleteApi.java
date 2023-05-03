@@ -574,7 +574,7 @@ public class MetadataInsertDeleteApi {
         @Parameter(description = API_PARAM_RECORD_GROUP, required = false) @RequestParam(required = false) final String group,
         @Parameter(description = API_PARAM_RECORD_TAGS, required = false) @RequestParam(required = false) final String[] category,
         @Parameter(description = API_PARAM_RECORD_VALIDATE, required = false) @RequestParam(required = false, defaultValue = "false") final boolean rejectIfInvalid,
-        @Parameter(description = "(XML file only) Publish record.", required = false) @RequestParam(required = false, defaultValue = "false") final boolean publishToAll,
+        @Parameter(description = "(XML file only) Publish record.", required = false) @RequestParam(required = false, defaultValue = "false") boolean publishToAll,
         @Parameter(description = "(MEF file only) Assign to current catalog.", required = false) @RequestParam(required = false, defaultValue = "false") final boolean assignToCatalog,
         @Parameter(description = API_PARAM_RECORD_XSL, required = false) @RequestParam(required = false, defaultValue = "_none_") final String transformWith,
         @Parameter(description = API_PARAM_FORCE_SCHEMA, required = false) @RequestParam(required = false) String schema,
@@ -587,6 +587,11 @@ public class MetadataInsertDeleteApi {
 
         if (file == null) {
             throw new IllegalArgumentException(messages.getString("api.metadata.import.errorFileRequired"));
+        }
+
+        boolean isMdWorkflowEnable = settingManager.getValueAsBool(Settings.METADATA_WORKFLOW_ENABLE);
+        if (isMdWorkflowEnable) {
+            publishToAll = false;
         }
 
         SimpleMetadataProcessingReport report = new SimpleMetadataProcessingReport();
@@ -611,8 +616,9 @@ public class MetadataInsertDeleteApi {
                             //This is a catch-for-call for the case when there is no record is imported, to notify the user the import is not successful.
                             throw new BadFormatEx(messages.getString("api.metadata.import.errorInvalidMEF"));
                         }
+                        boolean finalPublishToAll = publishToAll;
                         ids.forEach(e -> {
-                            report.addMetadataInfos(Integer.parseInt(e), e, !publishToAll, false,
+                            report.addMetadataInfos(Integer.parseInt(e), e, !finalPublishToAll, false,
                                     String.format(messages.getString("api.metadata.import.importedWithId"), e));
 
                             try {
