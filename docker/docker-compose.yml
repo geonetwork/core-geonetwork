@@ -58,10 +58,14 @@ services:
       ES_INDEX_RECORDS: geo-records
       ES_INDEX_FEATURES: geo-features
       KB_URL: "http://kibana:5601"
-      POSTGRES_DB_HOST: database
-      POSTGRES_DB_NAME: sextant
-      POSTGRES_DB_USERNAME: sxt
-      POSTGRES_DB_PASSWORD: sxt
+      GEONETWORK_DB_TYPE: postgres
+      GEONETWORK_DB_HOST: database
+      GEONETWORK_DB_PORT: 5432
+      GEONETWORK_DB_NAME: sextant
+      GEONETWORK_DB_USERNAME: sxt
+      GEONETWORK_DB_PASSWORD: sxt
+      GEONETWORK_MICROSERVICESPROXY_TARGETURI: http://ogc-api-records-service:8080
+
       # To be set in accordance with the ldap container
       LDAP_URL: "ldap://ldap:389"
       LDAP_ADMIN_DN: cn=admin,dc=ifremer,dc=fr
@@ -71,7 +75,18 @@ services:
       CAS_TICKET_VALIDATION_URL: "http://cas:8080/cas"
       PANIER_XML_PATH_LOGGED: "/export/home/tomcat/instances_data/sextant-test/panier/folders/aTraiter/intranet"
       PANIER_XML_PATH_ANONYMOUS: "/export/home/tomcat/instances_data/sextant-test/panier/folders/aTraiter/anonymous"
-      JAVA_OPTS: -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005
+      JAVA_OPTS: >
+        -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005
+        -Dldap.host=ldap
+        -Dldap.port=389
+        -Dldap.base=dc=ifremer,dc=fr
+        -Dldap.base.dn.pattern=uid={0},ou=annuaire
+        -Dldap.base.search.filter=(uid={0})
+        -Dldap.base.search.base=ou=annuaire
+        -Dldap.binddn=cn=admin,dc=ifremer,dc=fr
+        -Dldap.bindpw=secret
+        -Dcas.baseURL=https://localhost/cas
+
     volumes:
       - geonetwork:/var/lib/geonetwork_data/
       - geonetwork:/data/mnt/logs/geonetwork.log
@@ -113,6 +128,25 @@ services:
       SERVER_REWRITEBASEPATH: 'false'
       KIBANA_INDEX: .dashboards
       XPACK_MONITORING_UI_CONTAINER_ELASTICSEARCH_ENABLED: 'true'
+    networks:
+      - gn-network
+
+  ogc-api-records-service:
+    image: geonetwork/gn-cloud-ogc-api-records-service:4.2.3-0
+    environment:
+      SPRING_PROFILES_ACTIVE: standalone
+      SPRING_DATASOURCE_URL: jdbc:postgresql://database:5432/sextant
+      SPRING_DATASOURCE_USERNAME: sxt
+      SPRING_DATASOURCE_PASSWORD: sxt
+      GN_BASEURL: http://geonetwork:8080/geonetwork/api
+      GN_LEGACY_URL: http://geonetwork:8080/geonetwork
+      GN_INDEX_URL: http://elasticsearch:9200
+      SERVER_FORWARDHEADERSSTRATEGY: FRAMEWORK
+      JAVA_OPTS: -Dfile.encoding=UTF-8
+
+    depends_on:
+      - database
+      - elasticsearch
     networks:
       - gn-network
 

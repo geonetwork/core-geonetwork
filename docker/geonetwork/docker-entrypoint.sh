@@ -11,32 +11,6 @@ if [ "$1" = 'catalina.sh' ]; then
     #Set geonetwork data dir
     export CATALINA_OPTS="$CATALINA_OPTS -Dgeonetwork.dir=$DATA_DIR"
 
-    #Setting host (use $POSTGRES_DB_HOST if it's set, otherwise use "postgres")
-    db_host="${POSTGRES_DB_HOST:-postgres}"
-    echo "db host: $db_host"
-
-    #Setting port
-    db_port="${POSTGRES_DB_PORT:-5432}"
-    echo "db port: $db_port"
-
-    if [ -z "$POSTGRES_DB_USERNAME" ] || [ -z "$POSTGRES_DB_PASSWORD" ]; then
-        echo >&2 "you must set POSTGRES_DB_USERNAME and POSTGRES_DB_PASSWORD"
-        exit 1
-    fi
-
-    db_gn="${POSTGRES_DB_NAME:-geonetwork}"
-
-    #Write connection string for GN
-    sed -ri '/^jdbc[.](username|password|database|host|port)=/d' "$CATALINA_HOME"/webapps/geonetwork/WEB-INF/config-db/jdbc.properties
-    echo "jdbc.username=$POSTGRES_DB_USERNAME" >> "$CATALINA_HOME"/webapps/geonetwork/WEB-INF/config-db/jdbc.properties
-    echo "jdbc.password=$POSTGRES_DB_PASSWORD" >> "$CATALINA_HOME"/webapps/geonetwork/WEB-INF/config-db/jdbc.properties
-    echo "jdbc.database=$db_gn" >> "$CATALINA_HOME"/webapps/geonetwork/WEB-INF/config-db/jdbc.properties
-    echo "jdbc.host=$db_host" >> "$CATALINA_HOME"/webapps/geonetwork/WEB-INF/config-db/jdbc.properties
-    echo "jdbc.port=$db_port" >> "$CATALINA_HOME"/webapps/geonetwork/WEB-INF/config-db/jdbc.properties
-
-    #Fixing an hardcoded port on the connection string (bug fixed on development branch)
-    sed -i -e 's#5432#${jdbc.port}#g' $CATALINA_HOME/webapps/geonetwork/WEB-INF/config-db/postgres.xml
-
     # Reconfigure Elasticsearch & Kibana if necessary
     if [ "$ES_HOST" != "localhost" ] || [ "$ES_PORT" != "9200" ] || [ "$ES_PROTOCOL" != "http" ] ; then
       sed -i "s#http://localhost:9200#${ES_PROTOCOL}://${ES_HOST}:${ES_PORT}#g" $CATALINA_HOME/webapps/geonetwork/WEB-INF/web.xml ;
