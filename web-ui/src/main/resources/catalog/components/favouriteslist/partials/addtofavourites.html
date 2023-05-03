@@ -2,20 +2,28 @@
   <label class="control-label gn-margin-bottom-sm" data-translate=""
     >Select a favourites list</label
   >
-<!--  this={{this}}-->
-<!--  scope={{scope}}-->
-<!--  $scope={{$scope}}-->
-<!--  SCOPE={{favouritesLists}}-->
+  <!--  this={{this}}-->
+  <!--  scope={{scope}}-->
+  <!--  $scope={{$scope}}-->
+  <!--  SCOPE={{favouritesLists}}-->
   <div class="list-group" ng-repeat="list in favouritesLists ">
-    <a href="" class="list-group-item" ng-click="select(list)"  ng-style="list.id === selectedListId && {'background-color': '#DDDDDD'}">
-      <label class="list-group-item-heading" >{{list.name}}</label>
+    <a
+      href=""
+      class="list-group-item"
+      ng-click="select(list)"
+      ng-style="list.id === selectedListId && {'background-color': '#DDDDDD'}"
+    >
+      <label class="list-group-item-heading">{{list.name}}</label>
     </a>
-
   </div>
 
-
   <div class="btn-toolbar">
-    <button type="button" class="btn btn-success pull-right" ng-disabled="selectedListId <0" ng-click="finish()">
+    <button
+      type="button"
+      class="btn btn-success pull-right"
+      ng-disabled="selectedListId <0"
+      ng-click="finish()"
+    >
       <i class="fa fa-fw fa-save"></i>
       <span data-translate="">Add</span>
     </button>

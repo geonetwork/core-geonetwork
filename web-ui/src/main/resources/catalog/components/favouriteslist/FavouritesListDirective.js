@@ -75,20 +75,17 @@
       // from db or local/session storage.
       FavouriteSelectionController.prototype.init = function (user, localOnly) {
         //var defer = $q.defer();
-
         /*angular.forEach(gnSavedSelectionConfig.localList, function (s) {
           if (!(user && user.id !== undefined && s.isAnonymousOnly)) {
             selections.list.push(s);
           }
         });*/
-
         // return gnFavouritesListService.loadFavourites().then(function (r) {
         //   favouriteLists = r.data;
         //   $rootScope.$broadcast("favouriteSelectionsUpdate", favouriteLists);
         //
         //   return favouriteLists;
         // });
-
         //return defer.promise;
       };
 
@@ -229,7 +226,7 @@
               if (n !== o || scope.favouriteLists === null) {
                 scope.favouriteLists = null;
                 // controller.getSelections(scope.user).then(function (favouriteLists) {
-                gnFavouritesListService.loadFavourites().then( function(result) {
+                gnFavouritesListService.loadFavourites().then(function (result) {
                   var items = result.data;
                   items = _.sortBy(items, function (item) {
                     return item.name;
@@ -270,7 +267,7 @@
           scope.updateFavouritesList = function () {
             scope.selections = [];
             scope.loadFavouritesLists();
-           // scope.$emit("search", {});
+            // scope.$emit("search", {});
           };
 
           scope.edit = function (favouritesList) {
@@ -338,7 +335,6 @@
   //---------------------------------------------------------------------------
   //---------------------------------------------------------------------------
 
-
   module.directive("gnChooseFavouritesList", [
     "gnFavouritesListService",
     "gnConfigService",
@@ -348,22 +344,20 @@
       return {
         restrict: "A",
         replace: true,
-        scope: {
-        },
+        scope: {},
         templateUrl:
           "../../catalog/components/favouriteslist/partials/addtofavourites.html",
         link: function postLink(scope, element, attrs) {
-          scope.favouritesLists =gnFavouritesListService.getCachedLists();
+          scope.favouritesLists = gnFavouritesListService.getCachedLists();
           scope.selectedListId = -1;
 
-          scope.select = function(list) {
-              scope.selectedListId = list.id;
+          scope.select = function (list) {
+            scope.selectedListId = list.id;
           };
 
           scope.finish = function () {
             scope.$emit("Favourites.bulkAdd", scope.selectedListId);
-          }
-
+          };
         }
       };
     }
@@ -567,16 +561,16 @@
           lang: "="
         },
         link: function (scope, element, attrs, controller) {
-          scope.favouriteLists = [1,2,3];
+          scope.favouriteLists = [1, 2, 3];
 
           scope.uuid = scope.record.uuid;
 
           $rootScope.$on("refreshFavouriteLists", function (e, n, o) {
             if (n != o) {
-              console.log("action: got new list for scope.$id="+scope.$id);
+              console.log("action: got new list for scope.$id=" + scope.$id);
               console.log(n);
               scope.favouriteLists = n;
-             // scope.$apply();
+              // scope.$apply();
             }
           });
 
@@ -641,14 +635,18 @@
           }
 
           scope.add = function (favouriteList) {
-            return gnFavouritesListService.addToList(favouriteList,scope.uuid);
+            return gnFavouritesListService.addToList(favouriteList, scope.uuid);
             // controller.add(favouriteList, scope.user, scope.uuid).then(function (data) {
             //   scope.favouriteLists = data;
             // });
           };
 
           scope.remove = function (favouriteList) {
-            return gnFavouritesListService.removeFromFavourites(favouriteList.id,favouriteList.name,[scope.uuid]);
+            return gnFavouritesListService.removeFromFavourites(
+              favouriteList.id,
+              favouriteList.name,
+              [scope.uuid]
+            );
 
             // controller
             //   .remove(favouriteList, scope.user, scope.uuid)

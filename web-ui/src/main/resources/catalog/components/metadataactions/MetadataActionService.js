@@ -195,18 +195,17 @@
         location.replace(url);
       };
 
-      this.addToFavouritesList = function (  searchResults) {
+      this.addToFavouritesList = function (searchResults) {
         gnFavouritesListService.selectListBulkAdd(searchResults.selectionBucket);
       };
 
       $rootScope.$on("Favourites.bulkAdd", function (event, listId) {
-        var list = this.cachedFavouritesLists.find(x=>x.id === listId);
-        var bucket =  event.currentScope.selectionBucket;
-        gnFavouritesListService.getAllSelections(bucket)
-          .then(function(result) {
-            var ids = result.data;
-            return gnFavouritesListService.addManyToList(list,ids)
-          });
+        var list = this.cachedFavouritesLists.find(function(x) { return x.id === listId;});
+        var bucket = event.currentScope.selectionBucket;
+        gnFavouritesListService.getAllSelections(bucket).then(function (result) {
+          var ids = result.data;
+          return gnFavouritesListService.addManyToList(list, ids);
+        });
       });
 
       this.exportCSV = function (bucket) {

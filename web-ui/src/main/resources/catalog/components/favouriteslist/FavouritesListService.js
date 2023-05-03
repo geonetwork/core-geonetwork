@@ -34,7 +34,7 @@
     "gnESClient",
     "$rootScope",
     "gnUtilityService",
-    function ($http, $q, gnESClient,$rootScope,gnUtilityService) {
+    function ($http, $q, gnESClient, $rootScope, gnUtilityService) {
       this.gnESClient = gnESClient;
       cachedFavouritesLists = [];
 
@@ -160,73 +160,75 @@
         return $http.post(url, body);
       };
 
-      this.getCachedLists = function() {
+      this.getCachedLists = function () {
         return cachedFavouritesLists;
-      }
+      };
 
       this.addManyToList = function (favouriteList, uuids) {
-        let thisService = this;
+        var thisService = this;
         if (favouriteList.id > -1) {
-          return thisService.addToFavorites(favouriteList.id, favouriteList.name, uuids)
+          return thisService
+            .addToFavorites(favouriteList.id, favouriteList.name, uuids)
             .then(function (response) {
               return thisService.loadFavourites();
             })
-            .then(function(result) {
+            .then(function (result) {
               $rootScope.$emit("favouriteSelectionsUpdate", result.data);
               $rootScope.$emit("refreshFavouriteLists", result.data);
               return result;
-            })
+            });
         }
-      }
-
+      };
 
       this.addToList = function (favouriteList, uuid) {
-        let thisService = this;
+        var thisService = this;
         if (favouriteList.id > -1) {
-           return thisService.addToFavorites(favouriteList.id, favouriteList.name, [uuid])
+          return thisService
+            .addToFavorites(favouriteList.id, favouriteList.name, [uuid])
             .then(function (response) {
-               return thisService.loadFavourites();
+              return thisService.loadFavourites();
             })
-           .then(function(result) {
-             $rootScope.$emit("favouriteSelectionsUpdate", result.data);
-             $rootScope.$emit("refreshFavouriteLists", result.data);
-             return result;
-           })
-         }
-      }
+            .then(function (result) {
+              $rootScope.$emit("favouriteSelectionsUpdate", result.data);
+              $rootScope.$emit("refreshFavouriteLists", result.data);
+              return result;
+            });
+        }
+      };
 
       // get the favourites lists from server
       // also, caches the results
       this.loadFavourites = function () {
-        return $http.get("../api/favouriteslist")
+        return $http
+          .get("../api/favouriteslist")
           .then(function (result) {
-            result.data = _.sortBy( result.data, function (item) {
+            result.data = _.sortBy(result.data, function (item) {
               return item.name;
             });
             return result;
           })
-          .then( function(result) {
-              cachedFavouritesLists = result.data;
-              return result;
-          } );
-      };
-
-      this.deleteFavouritesList = function (id) {
-        return $http.delete("../api/favouriteslist/" + id)
-          .then( function(result) {
-            cachedFavouritesLists= cachedFavouritesLists.filter(function (item) {
-              return item.id !== id;
-            });
+          .then(function (result) {
+            cachedFavouritesLists = result.data;
             return result;
           });
       };
 
+      this.deleteFavouritesList = function (id) {
+        return $http.delete("../api/favouriteslist/" + id).then(function (result) {
+          cachedFavouritesLists = cachedFavouritesLists.filter(function (item) {
+            return item.id !== id;
+          });
+          return result;
+        });
+      };
+
       this.setFavouritesListStatus = function (id, status) {
-        return $http.put("../api/favouriteslist/" + id + "/status", "public=" + status, {
-          headers: { "Content-Type": "application/x-www-form-urlencoded" }
-        })
-          .then(function(result){
-            cachedFavouritesLists.foreach(function(item) {
+        return $http
+          .put("../api/favouriteslist/" + id + "/status", "public=" + status, {
+            headers: { "Content-Type": "application/x-www-form-urlencoded" }
+          })
+          .then(function (result) {
+            cachedFavouritesLists.foreach(function (item) {
               if (item.id === id) {
                 item.public = !item.public;
               }
@@ -258,29 +260,26 @@
         });
       };
 
-      this.getAllSelections = function(bucket) {
-        return $http.get("../api/selections/"+bucket)
-      }
+      this.getAllSelections = function (bucket) {
+        return $http.get("../api/selections/" + bucket);
+      };
 
-      this.selectListBulkAdd = function(bucket) {
-
+      this.selectListBulkAdd = function (bucket) {
         $rootScope.selectionBucket = bucket;
         gnUtilityService.openModal(
           {
             title: "chooseFavouritesList",
-            content: '<div gn-choose-favourites-list></div>',
+            content: "<div gn-choose-favourites-list></div>",
             className: "gn-choosefavouriteslist-popup",
             onCloseCallback: function () {
-             var t=0;
+              var t = 0;
             }
           },
           $rootScope,
           "Favourites.bulkAdd"
         );
-        var t=0;
-      }
-
-
+        var t = 0;
+      };
 
       //also updates name
       //caller will call loadFavourites()
@@ -290,19 +289,20 @@
           body += "&metadataUuids=";
           body += toDelete.join("&metadataUuids=");
         }
-        let thisService = this;
+        var thisService = this;
 
-        return $http.put("../api/favouriteslist/" + id, body, {
-          headers: { "Content-Type": "application/x-www-form-urlencoded" }
-        })
+        return $http
+          .put("../api/favouriteslist/" + id, body, {
+            headers: { "Content-Type": "application/x-www-form-urlencoded" }
+          })
           .then(function (response) {
             return thisService.loadFavourites();
           })
-          .then(function(result) {
+          .then(function (result) {
             $rootScope.$emit("favouriteSelectionsUpdate", result.data);
             $rootScope.$emit("refreshFavouriteLists", result.data);
             return result;
-          })
+          });
       };
     }
   ]);
