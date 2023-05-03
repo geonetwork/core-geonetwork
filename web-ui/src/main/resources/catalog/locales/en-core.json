@@ -243,6 +243,8 @@
     "resourceProvider": "Resource Provider",
     "rus": "Русский",
     "save": "Save",
+    "savechanges" : "Save Changes",
+    "markdelete": "Mark for Deletion",
     "scrollTop": "Scroll to top",
     "selectAll": "All",
     "selectNone": "None",

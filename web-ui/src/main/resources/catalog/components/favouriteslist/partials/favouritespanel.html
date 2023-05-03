@@ -55,7 +55,7 @@
             title="{{'view' | translate}}"
             aria-label="{{'view' | translate}}"
           >
-            <span class="fa fa-eye"></span>
+            <span class="fa fa-filter"></span>
           </a>
           <!-- publish -->
           <a
@@ -64,7 +64,7 @@
             data-ng-click="toggleStatus(search)"
             title="{{'toggle public/private status' | translate}}"
             aria-label="{{'change status' | translate}}"
-            ng-disabled="!search.editable || search.username ==null"
+            ng-disabled="!search.editable || search.userName ==null"
           >
             <span class="fa fa-unlock" ng-if="search.public"></span>
             <span class="fa fa-lock" ng-if="!search.public"></span>

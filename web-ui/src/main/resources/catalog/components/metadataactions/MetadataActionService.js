@@ -51,6 +51,7 @@
     "$q",
     "$http",
     "gnConfig",
+    "gnFavouritesListService",
     function (
       $rootScope,
       $timeout,
@@ -67,7 +68,8 @@
       $translate,
       $q,
       $http,
-      gnConfig
+      gnConfig,
+      gnFavouritesListService
     ) {
       var windowName = "geonetwork";
       var windowOption = "";
@@ -192,6 +194,20 @@
 
         location.replace(url);
       };
+
+      this.addToFavouritesList = function (  searchResults) {
+        gnFavouritesListService.selectListBulkAdd(searchResults.selectionBucket);
+      };
+
+      $rootScope.$on("Favourites.bulkAdd", function (event, listId) {
+        var list = this.cachedFavouritesLists.find(x=>x.id === listId);
+        var bucket =  event.currentScope.selectionBucket;
+        gnFavouritesListService.getAllSelections(bucket)
+          .then(function(result) {
+            var ids = result.data;
+            return gnFavouritesListService.addManyToList(list,ids)
+          });
+      });
 
       this.exportCSV = function (bucket) {
         window.open("../api/records/csv" + "?bucket=" + bucket, windowName, windowOption);

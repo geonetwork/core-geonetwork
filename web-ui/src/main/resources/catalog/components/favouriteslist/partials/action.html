@@ -20,6 +20,8 @@
     >
       addToSelection
     </li>
+<!--    <div style="color:black" ng-click="doit()">favouriteLists: {{ favouriteLists}}, $id = {{$id}} </div>-->
+
     <li
       data-ng-repeat="s in favouriteLists | filter: s.editable == true"
       data-ng-show="canBeAdded(s)"
@@ -35,6 +37,7 @@
     >
       removeFromSelection
     </li>
+
     <li
       data-ng-repeat="s in favouriteLists | filter: s.editable == true"
       data-ng-show="canBeRemoved(s)"

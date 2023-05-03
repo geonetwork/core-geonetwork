@@ -82,59 +82,67 @@
           }
         });*/
 
-        return gnFavouritesListService.loadFavourites().then(function (r) {
-          favouriteLists = r.data;
-          $rootScope.$broadcast("favouriteSelectionsUpdate", favouriteLists);
-
-          return favouriteLists;
-        });
+        // return gnFavouritesListService.loadFavourites().then(function (r) {
+        //   favouriteLists = r.data;
+        //   $rootScope.$broadcast("favouriteSelectionsUpdate", favouriteLists);
+        //
+        //   return favouriteLists;
+        // });
 
         //return defer.promise;
       };
 
+      $rootScope.$on("refreshFavouriteLists", function (e, n, o) {
+        // if (n != o) {
+        //
+        //   favouriteLists = n;
+        //   // scope.$apply();
+        // }
+      });
+
       FavouriteSelectionController.prototype.getSelections = function (user) {
-        if (user && this.userId !== user.id) {
-          this.userId = user.id;
-          var p = this.init(this.userId);
-          return p;
-        } else if (user === undefined) {
-          this.userId = undefined;
-          return this.init();
-        } else {
-          var defer = $q.defer();
-          defer.resolve(favouriteLists);
-          return defer.promise;
-        }
+        // if (user && this.userId !== user.id) {
+        //   this.userId = user.id;
+        //   var p = this.init(this.userId);
+        //   return p;
+        // } else if (user === undefined) {
+        //   this.userId = undefined;
+        //   return this.init();
+        // } else {
+        //   var defer = $q.defer();
+        //   defer.resolve(favouriteLists);
+        //   return defer.promise;
+        // }
       };
 
       FavouriteSelectionController.prototype.add = function (favouriteList, user, uuid) {
-        var ctrl = this;
-
-        var tooManyItems = favouriteList.selections.length > maxSize;
-        if (tooManyItems) {
-          $rootScope.$broadcast("StatusUpdated", {
-            msg: $translate.instant("tooManyItemsInSelection", { maxSize: maxSize }),
-            timeout: 0,
-            type: "danger"
-          });
-          return;
-        }
-
-        if (favouriteList.id > -1) {
-          if (typeof favouriteList === "string") {
-            favouriteList = this.getSelectionId(favouriteList);
-          }
-
-          return gnFavouritesListService
-            .addToFavorites(favouriteList.id, favouriteList.name, [uuid])
-            .then(function (response) {
-              //scope.selections[0] = response.data;
-              return ctrl.init(ctrl.userId);
-            });
-        } else {
-          this.addToStore(this.getSelection(favouriteList), uuid);
-          return ctrl.init(ctrl.userId, true);
-        }
+        // var ctrl = this;
+        //
+        // var tooManyItems = favouriteList.selections.length > maxSize;
+        // if (tooManyItems) {
+        //   $rootScope.$broadcast("StatusUpdated", {
+        //     msg: $translate.instant("tooManyItemsInSelection", { maxSize: maxSize }),
+        //     timeout: 0,
+        //     type: "danger"
+        //   });
+        //   return;
+        // }
+        //
+        // if (favouriteList.id > -1) {
+        //   if (typeof favouriteList === "string") {
+        //     favouriteList = this.getSelectionId(favouriteList);
+        //   }
+        //
+        //   return gnFavouritesListService
+        //     .addToFavorites(favouriteList.id, favouriteList.name, [uuid])
+        //     .then(function (response) {
+        //       //scope.selections[0] = response.data;
+        //       return ctrl.init(ctrl.userId);
+        //     });
+        // } else {
+        //   this.addToStore(this.getSelection(favouriteList), uuid);
+        //   return ctrl.init(ctrl.userId, true);
+        // }
       };
 
       FavouriteSelectionController.prototype.remove = function (
@@ -142,17 +150,17 @@
         user,
         uuid
       ) {
-        var ctrl = this;
-        if (favouriteList.id > -1) {
-          return gnFavouritesListService
-            .removeFromFavourites(favouriteList.id, favouriteList.name, [uuid])
-            .then(function (response) {
-              //scope.selections[0] = response.data;
-              return ctrl.init(ctrl.userId);
-            });
-        } else {
-          this.removeFromStore(this.getSelection(favouriteList), uuid);
-        }
+        // var ctrl = this;
+        // if (favouriteList.id > -1) {
+        //   return gnFavouritesListService
+        //     .removeFromFavourites(favouriteList.id, favouriteList.name, [uuid])
+        //     .then(function (response) {
+        //       //scope.selections[0] = response.data;
+        //       return ctrl.init(ctrl.userId);
+        //     });
+        // } else {
+        //   this.removeFromStore(this.getSelection(favouriteList), uuid);
+        // }
       };
 
       // For local selection, the storage is in synch with
@@ -171,15 +179,15 @@
 
       // Return the selection object if an id is provided
       FavouriteSelectionController.prototype.getSelection = function (selOrId) {
-        if (typeof selOrId === "number") {
-          for (var i = 0; i < favouriteLists.length; i++) {
-            if (favouriteLists[i].id === selOrId) {
-              return favouriteLists[i];
-            }
-          }
-        } else {
-          return selOrId;
-        }
+        // if (typeof selOrId === "number") {
+        //   for (var i = 0; i < favouriteLists.length; i++) {
+        //     if (favouriteLists[i].id === selOrId) {
+        //       return favouriteLists[i];
+        //     }
+        //   }
+        // } else {
+        //   return selOrId;
+        // }
       };
 
       return {
@@ -220,12 +228,14 @@
             function (n, o) {
               if (n !== o || scope.favouriteLists === null) {
                 scope.favouriteLists = null;
-                controller.getSelections(scope.user).then(function (favouriteLists) {
-                  var items = favouriteLists;
+                // controller.getSelections(scope.user).then(function (favouriteLists) {
+                gnFavouritesListService.loadFavourites().then( function(result) {
+                  var items = result.data;
                   items = _.sortBy(items, function (item) {
                     return item.name;
                   });
                   scope.favouriteLists = items;
+                  $rootScope.$emit("refreshFavouriteLists", scope.favouriteLists);
                 });
               }
             },
@@ -253,14 +263,14 @@
             gnFavouritesListService
               .setFavouritesListStatus(favouritesList.id, !favouritesList.public)
               .then(function (result) {
-                favouritesList.public = result.data.isPublic;
+                favouritesList.public = result.data.public;
               });
           };
 
           scope.updateFavouritesList = function () {
             scope.selections = [];
             scope.loadFavouritesLists();
-            scope.$emit("search", {});
+           // scope.$emit("search", {});
           };
 
           scope.edit = function (favouritesList) {
@@ -276,7 +286,7 @@
                 }
               },
               scope,
-              "addUserSelectionFavourites"
+              "userSelectionFavourites.complete"
             );
           };
 
@@ -328,6 +338,37 @@
   //---------------------------------------------------------------------------
   //---------------------------------------------------------------------------
 
+
+  module.directive("gnChooseFavouritesList", [
+    "gnFavouritesListService",
+    "gnConfigService",
+    "gnConfig",
+    "gnGlobalSettings",
+    function (gnFavouritesListService, gnConfigService, gnConfig, gnGlobalSettings) {
+      return {
+        restrict: "A",
+        replace: true,
+        scope: {
+        },
+        templateUrl:
+          "../../catalog/components/favouriteslist/partials/addtofavourites.html",
+        link: function postLink(scope, element, attrs) {
+          scope.favouritesLists =gnFavouritesListService.getCachedLists();
+          scope.selectedListId = -1;
+
+          scope.select = function(list) {
+              scope.selectedListId = list.id;
+          };
+
+          scope.finish = function () {
+            scope.$emit("Favourites.bulkAdd", scope.selectedListId);
+          }
+
+        }
+      };
+    }
+  ]);
+
   module.directive("gnEditFavouritesList", [
     "gnFavouritesListService",
     "gnConfigService",
@@ -355,7 +396,7 @@
 
           scope.reloadPage = function () {
             scope.loadFavouritesPaged(
-              scope.userSearch.id,
+              scope.favouritesList.id,
               scope.page.page,
               scope.page.pageSize
             );
@@ -450,9 +491,9 @@
 
           scope.save = function () {
             return gnFavouritesListService
-              .updateFavourites(scope.favouritesList.id, scope.name, scope.toDelete)
+              .removeFromFavourites(scope.favouritesList.id, scope.name, scope.toDelete)
               .then(function (response) {
-                scope.$emit("updated", true);
+                scope.$emit("userSelectionFavourites.complete", true);
               });
           };
 
@@ -526,15 +567,22 @@
           lang: "="
         },
         link: function (scope, element, attrs, controller) {
-          scope.favouriteLists = [];
+          scope.favouriteLists = [1,2,3];
 
           scope.uuid = scope.record.uuid;
 
           $rootScope.$on("refreshFavouriteLists", function (e, n, o) {
             if (n != o) {
+              console.log("action: got new list for scope.$id="+scope.$id);
+              console.log(n);
               scope.favouriteLists = n;
+             // scope.$apply();
             }
           });
+
+          // scope.doit = function() {
+          //   var t=scope;
+          // }
 
           $rootScope.$on("favouriteSelectionsUpdate", function (e, n, o) {
             if (n != o) {
@@ -542,9 +590,11 @@
             }
           });
 
-          controller.getSelections(scope.user).then(function (favouriteLists) {
-            scope.favouriteLists = favouriteLists;
-          });
+          scope.favouriteLists = gnFavouritesListService.getCachedLists();
+
+          // controller.getSelections(scope.user).then(function (favouriteLists) {
+          //   scope.favouriteLists = favouriteLists;
+          // });
 
           function check(favouriteList, canBeAdded) {
             // Authenticated user can't use local anymous selections
@@ -591,17 +641,20 @@
           }
 
           scope.add = function (favouriteList) {
-            controller.add(favouriteList, scope.user, scope.uuid).then(function (data) {
-              scope.favouriteLists = data;
-            });
+            return gnFavouritesListService.addToList(favouriteList,scope.uuid);
+            // controller.add(favouriteList, scope.user, scope.uuid).then(function (data) {
+            //   scope.favouriteLists = data;
+            // });
           };
 
           scope.remove = function (favouriteList) {
-            controller
-              .remove(favouriteList, scope.user, scope.uuid)
-              .then(function (data) {
-                scope.favouriteLists = data;
-              });
+            return gnFavouritesListService.removeFromFavourites(favouriteList.id,favouriteList.name,[scope.uuid]);
+
+            // controller
+            //   .remove(favouriteList, scope.user, scope.uuid)
+            //   .then(function (data) {
+            //     scope.favouriteLists = data;
+            //   });
           };
 
           scope.canBeAdded = function (favouriteList) {

@@ -28,7 +28,7 @@
             ng-style="{'background-color': isDeleted(hit) ? '#FFF0F0':'white'}"
           >
             <div class="btn-group btn-group-sm pull-right" role="group">
-              <button ng-click="delete(hit)" class="btn btn-default">
+              <button ng-click="delete(hit)" title="{{'markdelete'|translate}}" class="btn btn-default">
                 <i class="fa fa-trash-o text-danger"></i>
               </button>
             </div>
@@ -133,7 +133,7 @@
       data-gn-click-and-spin="save()"
     >
       <i class="fa fa-fw fa-save"></i>
-      <span data-translate="">save</span>
+      <span data-translate="">savechanges</span>
     </button>
     <button data-dismiss="modal" type="button" class="btn btn-default pull-right">
       <span data-translate="">cancel</span>
