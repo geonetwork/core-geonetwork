@@ -1428,7 +1428,7 @@
     <!--<db.properties>file:/${geonetwork.dir}/jdbc.properties</db.properties>-->
 
     <application.name>geonetwork</application.name>
-    <app.properties>#{systemEnvironment['GEONETWORK_PROPERTIES']?:'WEB-INF/config.properties'}</app.properties>
+    <app.properties>WEB-INF/config.properties</app.properties>
     <!--<app.properties>file:/${geonetwork.dir}/config.properties</app.properties>-->
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
