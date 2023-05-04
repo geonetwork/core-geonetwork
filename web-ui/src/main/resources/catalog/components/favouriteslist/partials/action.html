@@ -1,6 +1,5 @@
 <!-- Single button -->
-<div class=" ">
-  <div>scope:{{$scope}}</div>
+<div class="">
   <button
     type="button"
     class="btn btn-default btn-single dropdown-toggle"
@@ -24,11 +23,12 @@
     </li>
 
     <li
-      data-ng-repeat="s in favouriteLists | filter: s.editable == true"
+      data-ng-repeat="s in favouriteLists "
+      ng-if="s.editable"
       data-ng-show="canBeAdded(s)"
       role="menuitem"
     >
-      <a href="" data-ng-click="add(s)"> {{s.label[lang] || (s.name | translate)}} </a>
+      <a href="" data-ng-click="add(s)"> {{s.name}} </a>
     </li>
     <li
       class="dropdown-header"
@@ -38,13 +38,17 @@
     >
       removeFromSelection
     </li>
+    <!--      data-ng-show="canBeRemoved(s)"
+          data-ng-repeat="s in favouriteLists | filter: s.editable == true"
+-->
 
     <li
-      data-ng-repeat="s in favouriteLists | filter: s.editable == true"
+      data-ng-repeat="s in favouriteLists  "
+      ng-if="s.editable"
       data-ng-show="canBeRemoved(s)"
       role="menuitem"
     >
-      <a href="" data-ng-click="remove(s)"> {{s.label[lang] || (s.name | translate)}} </a>
+      <a href="" data-ng-click="remove(s)"> {{s.name}}</a>
     </li>
   </ul>
 </div>

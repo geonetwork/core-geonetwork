@@ -423,8 +423,8 @@
 
           $rootScope.$on("refreshFavouriteLists", function (e, n, o) {
             if (n != o) {
-              console.log("action: got new list for scope.$id=" + scope.$id);
-              console.log(n);
+              // console.log("action: got new list for scope.$id=" + scope.$id);
+              // console.log(n);
               scope.favouriteLists = n;
               // scope.$apply();
             }
@@ -447,27 +447,13 @@
           // });
 
           function check(favouriteList, canBeAdded) {
-            // Authenticated user can't use local anymous selections
-            if (
-              scope.user &&
-              scope.user.id !== undefined &&
-              favouriteList.isAnonymousOnly === true
-            ) {
+            if  (!favouriteList.editable)
               return false;
-            }
-
-            if (angular.isArray(favouriteList.selections) && canBeAdded) {
-              // Check if record already in current selection
+            if (canBeAdded) {
               return favouriteList.selections.indexOf(scope.record.uuid) === -1;
-            } else if (
-              angular.isArray(favouriteList.selections) &&
-              canBeAdded === false
-            ) {
-              // Check if record not already in current selection
-              return favouriteList.selections.indexOf(scope.record.uuid) !== -1;
-            } else {
-              return false;
             }
+            return favouriteList.selections.indexOf(scope.record.uuid) !== -1;
+            
           }
 
           function checkStatus(favouriteList, addedOrRemoved) {
