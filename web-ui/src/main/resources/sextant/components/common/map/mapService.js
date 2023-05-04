@@ -800,39 +800,43 @@
             var options = layerOptions || {};
 
             var convertGetMapRequestToPost = function (url, onLoadCallback) {
-              var p = url.split('?');
+              var p = url.split("?");
               var action = p[0];
-              var params = p[1].split('&');
-
-              var client = new XMLHttpRequest();
-              client.open('POST', action);
+              var params = p[1].split("&");
               var data = new FormData();
-              params.map(function(p) {
-                var token = p.split('=');
+              params.map(function (p) {
+                var token = p.split("=");
                 data.append(token[0], decodeURIComponent(token[1]));
               });
-              client.responseType = 'arraybuffer';
-              client.onload = onLoadCallback;
-              client.send(data)
+              $http
+                .post(action, data, {
+                  responseType: "arraybuffer",
+                  transformRequest: angular.identity,
+                  headers: { "Content-Type": undefined }
+                })
+                .then(onLoadCallback);
             };
 
-            var loadFunction = function(imageTile, src) {
-              $http.head(src).then(function(r) {
-                imageTile.getImage().src = src;
-              }, function(r) {
-                if (r.status === 414) {
-                  // Request URI too large, try POST
-                  convertGetMapRequestToPost(src, function () {
-                    var arrayBufferView = new Uint8Array(this.response);
-                    var blob = new Blob([arrayBufferView], { type: 'image/png' });
-                    var urlCreator = window.URL || window.webkitURL;
-                    var imageUrl = urlCreator.createObjectURL(blob);
-                    imageTile.getImage().src = imageUrl;
-                  });
-                } else {
-                  console.warn("Error loading image for: " + src, r);
+            var loadFunction = function (imageTile, src) {
+              $http.head(src).then(
+                function (r) {
+                  imageTile.getImage().src = src;
+                },
+                function (r) {
+                  if (r.status === 414) {
+                    // Request URI too large, try POST
+                    convertGetMapRequestToPost(src, function (response) {
+                      var arrayBufferView = new Uint8Array(response.data);
+                      var blob = new Blob([arrayBufferView], { type: "image/png" });
+                      var urlCreator = window.URL || window.webkitURL;
+                      var imageUrl = urlCreator.createObjectURL(blob);
+                      imageTile.getImage().src = imageUrl;
+                    });
+                  } else {
+                    console.warn("Error loading image for: " + src, r);
+                  }
                 }
-              })
+              );
             };
 
             var source, olLayer;
