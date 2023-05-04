@@ -447,13 +447,13 @@
           // });
 
           function check(favouriteList, canBeAdded) {
-            if  (!favouriteList.editable)
+            if (!favouriteList.editable) {
               return false;
+            }
             if (canBeAdded) {
               return favouriteList.selections.indexOf(scope.record.uuid) === -1;
             }
             return favouriteList.selections.indexOf(scope.record.uuid) !== -1;
-            
           }
 
           function checkStatus(favouriteList, addedOrRemoved) {
