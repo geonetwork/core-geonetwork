@@ -214,16 +214,12 @@
       };
 
       this.deleteFavouritesList = function (id) {
-        return $http
-          .delete("../api/favouriteslist/" + id)
-          .then(function (result) {
-            cachedFavouritesLists = cachedFavouritesLists.filter(function (
-              item
-            ) {
-              return item.id !== id;
-            });
-            return result;
+        return $http.delete("../api/favouriteslist/" + id).then(function (result) {
+          cachedFavouritesLists = cachedFavouritesLists.filter(function (item) {
+            return item.id !== id;
           });
+          return result;
+        });
       };
 
       this.setFavouritesListStatus = function (id, status) {

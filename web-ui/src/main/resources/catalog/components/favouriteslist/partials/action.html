@@ -1,8 +1,9 @@
 <!-- Single button -->
-<div class="btn-group">
+<div class=" ">
+  <div>scope:{{$scope}}</div>
   <button
     type="button"
-    class="btn btn-default btn-sm dropdown-toggle"
+    class="btn btn-default btn-single dropdown-toggle"
     data-toggle="dropdown"
     aria-haspopup="true"
     aria-expanded="false"
@@ -27,9 +28,7 @@
       data-ng-show="canBeAdded(s)"
       role="menuitem"
     >
-      <a href="" data-ng-click="add(s)">
-        {{s.label[lang] || (s.name | translate)}}
-      </a>
+      <a href="" data-ng-click="add(s)"> {{s.label[lang] || (s.name | translate)}} </a>
     </li>
     <li
       class="dropdown-header"
@@ -45,9 +44,7 @@
       data-ng-show="canBeRemoved(s)"
       role="menuitem"
     >
-      <a href="" data-ng-click="remove(s)">
-        {{s.label[lang] || (s.name | translate)}}
-      </a>
+      <a href="" data-ng-click="remove(s)"> {{s.label[lang] || (s.name | translate)}} </a>
     </li>
   </ul>
 </div>

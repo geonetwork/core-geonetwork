@@ -49,12 +49,7 @@
     "$location",
     "$rootScope",
     "gnUtilityService",
-    function (
-      gnFavouritesListService,
-      $location,
-      $rootScope,
-      gnUtilityService
-    ) {
+    function (gnFavouritesListService, $location, $rootScope, gnUtilityService) {
       return {
         restrict: "A",
         replace: true,
@@ -81,19 +76,14 @@
               if (n !== o || scope.favouriteLists === null) {
                 scope.favouriteLists = null;
                 // controller.getSelections(scope.user).then(function (favouriteLists) {
-                gnFavouritesListService
-                  .loadFavourites()
-                  .then(function (result) {
-                    var items = result.data;
-                    items = _.sortBy(items, function (item) {
-                      return item.name;
-                    });
-                    scope.favouriteLists = items;
-                    $rootScope.$emit(
-                      "refreshFavouriteLists",
-                      scope.favouriteLists
-                    );
+                gnFavouritesListService.loadFavourites().then(function (result) {
+                  var items = result.data;
+                  items = _.sortBy(items, function (item) {
+                    return item.name;
                   });
+                  scope.favouriteLists = items;
+                  $rootScope.$emit("refreshFavouriteLists", scope.favouriteLists);
+                });
               }
             },
             true
@@ -118,10 +108,7 @@
 
           scope.toggleStatus = function (favouritesList) {
             gnFavouritesListService
-              .setFavouritesListStatus(
-                favouritesList.id,
-                !favouritesList.public
-              )
+              .setFavouritesListStatus(favouritesList.id, !favouritesList.public)
               .then(function (result) {
                 favouritesList.public = result.data.public;
               });
@@ -139,8 +126,7 @@
             gnUtilityService.openModal(
               {
                 title: "userSelectionFavourites",
-                content:
-                  '<div gn-edit-favourites-list="currentFavouritesList"  ></div>',
+                content: '<div gn-edit-favourites-list="currentFavouritesList"  ></div>',
                 className: "gn-savesearch-popup",
                 onCloseCallback: function () {
                   scope.updateFavouritesList();
@@ -155,7 +141,6 @@
             gnFavouritesListService
               .deleteFavouritesList(favouritesList.id)
               .then(function (result) {
-
                 scope.selections = scope.favouriteLists.filter(function (item) {
                   return item.id !== favouritesList.id;
                 });
@@ -204,12 +189,7 @@
     "gnConfigService",
     "gnConfig",
     "gnGlobalSettings",
-    function (
-      gnFavouritesListService,
-      gnConfigService,
-      gnConfig,
-      gnGlobalSettings
-    ) {
+    function (gnFavouritesListService, gnConfigService, gnConfig, gnGlobalSettings) {
       return {
         restrict: "A",
         replace: true,
@@ -238,12 +218,7 @@
     "gnConfig",
     "gnGlobalSettings",
 
-    function (
-      gnFavouritesListService,
-      gnConfigService,
-      gnConfig,
-      gnGlobalSettings
-    ) {
+    function (gnFavouritesListService, gnConfigService, gnConfig, gnGlobalSettings) {
       return {
         restrict: "A",
         replace: true,
@@ -354,9 +329,7 @@
                 scope.hits = response.data.hits.hits;
                 scope.page.count = response.data.hits.total.value;
                 //scope.page.page = 0;
-                scope.page.pages = Math.ceil(
-                  scope.page.count / scope.page.pageSize
-                );
+                scope.page.pages = Math.ceil(scope.page.count / scope.page.pageSize);
                 scope.page.from = scope.page.pageSize * scope.page.page + 1;
                 scope.page.to =
                   scope.page.pageSize * scope.page.page + scope.page.pageSize;
@@ -368,11 +341,7 @@
 
           scope.save = function () {
             return gnFavouritesListService
-              .removeFromFavourites(
-                scope.favouritesList.id,
-                scope.name,
-                scope.toDelete
-              )
+              .removeFromFavourites(scope.favouritesList.id, scope.name, scope.toDelete)
               .then(function (response) {
                 scope.$emit("userSelectionFavourites.complete", true);
               });
@@ -400,12 +369,7 @@
     "gnConfig",
     "gnGlobalSettings",
 
-    function (
-      gnFavouritesListService,
-      gnConfigService,
-      gnConfig,
-      gnGlobalSettings
-    ) {
+    function (gnFavouritesListService, gnConfigService, gnConfig, gnGlobalSettings) {
       return {
         restrict: "A",
         replace: true,
@@ -445,8 +409,7 @@
     function (gnFavouritesListService, $rootScope, gnGlobalSettings) {
       return {
         restrict: "A",
-        templateUrl:
-          "../../catalog/components/favouriteslist/partials/action.html",
+        templateUrl: "../../catalog/components/favouriteslist/partials/action.html",
         //  require: "^gnFavouriteSelections",
         scope: {
           record: "=",
