@@ -1,4 +1,7 @@
-<div class="panel panel-default gn-favourites" data-ng-show="isFavouritesPanelEnabled">
+<div
+  class="panel panel-default gn-favourites"
+  data-ng-show="isFavouritesPanelEnabled"
+>
   <div class="panel-heading" data-gn-slide-toggle="false">
     <i class="fa fa-fw fa-thumb-tack" />&nbsp;
     <span data-translate="">Favourites</span>
@@ -18,15 +21,18 @@
   </div>
   <div class="panel-body">
     <ul class="list-group">
-      <li class="list-group-item clearfix" data-ng-repeat="search in favouriteLists">
-        <div class="gn-favourite pull-left">
+      <li
+        class="list-group-item flex-row flex-align-center flex-wrap"
+        data-ng-repeat="search in favouriteLists"
+      >
+        <div class="gn-favourite flex-grow-4">
           <a ng-click="searchUrl(search)" style="cursor: pointer"
             >{{search.name}}&nbsp;({{search.nItems}})</a
           >
         </div>
 
         <div
-          class="btn-group btn-group-sm pull-right"
+          class="btn-group btn-group-sm"
           role="group"
           ng-disabled="!search.editable"
         >

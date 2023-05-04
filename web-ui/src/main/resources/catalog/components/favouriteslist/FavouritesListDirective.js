@@ -49,11 +49,15 @@
     "$location",
     "$rootScope",
     "gnUtilityService",
-    function (gnFavouritesListService, $location, $rootScope, gnUtilityService) {
+    function (
+      gnFavouritesListService,
+      $location,
+      $rootScope,
+      gnUtilityService
+    ) {
       return {
         restrict: "A",
         replace: true,
-        // require: "^gnFavouriteSelections",
         scope: {
           user: "=gnFavouritesListPanel"
         },
@@ -75,15 +79,19 @@
             function (n, o) {
               if (n !== o || scope.favouriteLists === null) {
                 scope.favouriteLists = null;
-                // controller.getSelections(scope.user).then(function (favouriteLists) {
-                gnFavouritesListService.loadFavourites().then(function (result) {
-                  var items = result.data;
-                  items = _.sortBy(items, function (item) {
-                    return item.name;
+                gnFavouritesListService
+                  .loadFavourites()
+                  .then(function (result) {
+                    var items = result.data;
+                    items = _.sortBy(items, function (item) {
+                      return item.name;
+                    });
+                    scope.favouriteLists = items;
+                    $rootScope.$emit(
+                      "refreshFavouriteLists",
+                      scope.favouriteLists
+                    );
                   });
-                  scope.favouriteLists = items;
-                  $rootScope.$emit("refreshFavouriteLists", scope.favouriteLists);
-                });
               }
             },
             true
@@ -108,7 +116,10 @@
 
           scope.toggleStatus = function (favouritesList) {
             gnFavouritesListService
-              .setFavouritesListStatus(favouritesList.id, !favouritesList.public)
+              .setFavouritesListStatus(
+                favouritesList.id,
+                !favouritesList.public
+              )
               .then(function (result) {
                 favouritesList.public = result.data.public;
               });
@@ -117,7 +128,6 @@
           scope.updateFavouritesList = function () {
             scope.selections = [];
             scope.loadFavouritesLists();
-            // scope.$emit("search", {});
           };
 
           scope.edit = function (favouritesList) {
@@ -126,7 +136,8 @@
             gnUtilityService.openModal(
               {
                 title: "userSelectionFavourites",
-                content: '<div gn-edit-favourites-list="currentFavouritesList"  ></div>',
+                content:
+                  '<div gn-edit-favourites-list="currentFavouritesList"  ></div>',
                 className: "gn-savesearch-popup",
                 onCloseCallback: function () {
                   scope.updateFavouritesList();
@@ -172,9 +183,6 @@
 
             $event.stopPropagation();
           };
-
-          //----
-          //scope.loadFavouritesLists();
         }
       };
     }
@@ -189,7 +197,12 @@
     "gnConfigService",
     "gnConfig",
     "gnGlobalSettings",
-    function (gnFavouritesListService, gnConfigService, gnConfig, gnGlobalSettings) {
+    function (
+      gnFavouritesListService,
+      gnConfigService,
+      gnConfig,
+      gnGlobalSettings
+    ) {
       return {
         restrict: "A",
         replace: true,
@@ -218,7 +231,12 @@
     "gnConfig",
     "gnGlobalSettings",
 
-    function (gnFavouritesListService, gnConfigService, gnConfig, gnGlobalSettings) {
+    function (
+      gnFavouritesListService,
+      gnConfigService,
+      gnConfig,
+      gnGlobalSettings
+    ) {
       return {
         restrict: "A",
         replace: true,
@@ -329,7 +347,9 @@
                 scope.hits = response.data.hits.hits;
                 scope.page.count = response.data.hits.total.value;
                 //scope.page.page = 0;
-                scope.page.pages = Math.ceil(scope.page.count / scope.page.pageSize);
+                scope.page.pages = Math.ceil(
+                  scope.page.count / scope.page.pageSize
+                );
                 scope.page.from = scope.page.pageSize * scope.page.page + 1;
                 scope.page.to =
                   scope.page.pageSize * scope.page.page + scope.page.pageSize;
@@ -341,7 +361,11 @@
 
           scope.save = function () {
             return gnFavouritesListService
-              .removeFromFavourites(scope.favouritesList.id, scope.name, scope.toDelete)
+              .removeFromFavourites(
+                scope.favouritesList.id,
+                scope.name,
+                scope.toDelete
+              )
               .then(function (response) {
                 scope.$emit("userSelectionFavourites.complete", true);
               });
@@ -369,7 +393,12 @@
     "gnConfig",
     "gnGlobalSettings",
 
-    function (gnFavouritesListService, gnConfigService, gnConfig, gnGlobalSettings) {
+    function (
+      gnFavouritesListService,
+      gnConfigService,
+      gnConfig,
+      gnGlobalSettings
+    ) {
       return {
         restrict: "A",
         replace: true,
@@ -386,14 +415,6 @@
                 scope.$emit("updatedUserSelectionFavourites", response.data);
               });
           };
-
-          //------------------------------------------
-
-          /*scope.loadFavouritesPaged(
-            scope.favouritesList.id,
-            scope.page.page,
-            scope.page.pageSize
-          );*/
         }
       };
     }
@@ -409,7 +430,8 @@
     function (gnFavouritesListService, $rootScope, gnGlobalSettings) {
       return {
         restrict: "A",
-        templateUrl: "../../catalog/components/favouriteslist/partials/action.html",
+        templateUrl:
+          "../../catalog/components/favouriteslist/partials/action.html",
         //  require: "^gnFavouriteSelections",
         scope: {
           record: "=",
@@ -423,16 +445,9 @@
 
           $rootScope.$on("refreshFavouriteLists", function (e, n, o) {
             if (n != o) {
-              // console.log("action: got new list for scope.$id=" + scope.$id);
-              // console.log(n);
               scope.favouriteLists = n;
-              // scope.$apply();
             }
           });
-
-          // scope.doit = function() {
-          //   var t=scope;
-          // }
 
           $rootScope.$on("favouriteSelectionsUpdate", function (e, n, o) {
             if (n != o) {
@@ -441,10 +456,6 @@
           });
 
           scope.favouriteLists = gnFavouritesListService.getCachedLists();
-
-          // controller.getSelections(scope.user).then(function (favouriteLists) {
-          //   scope.favouriteLists = favouriteLists;
-          // });
 
           function check(favouriteList, canBeAdded) {
             if (!favouriteList.editable) {
@@ -478,9 +489,6 @@
 
           scope.add = function (favouriteList) {
             return gnFavouritesListService.addToList(favouriteList, scope.uuid);
-            // controller.add(favouriteList, scope.user, scope.uuid).then(function (data) {
-            //   scope.favouriteLists = data;
-            // });
           };
 
           scope.remove = function (favouriteList) {
@@ -489,12 +497,6 @@
               favouriteList.name,
               [scope.uuid]
             );
-
-            // controller
-            //   .remove(favouriteList, scope.user, scope.uuid)
-            //   .then(function (data) {
-            //     scope.favouriteLists = data;
-            //   });
           };
 
           scope.canBeAdded = function (favouriteList) {
