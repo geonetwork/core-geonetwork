@@ -43,156 +43,156 @@
    * @description
    *
    */
-  module.directive("gnFavouriteSelections", [
-    "gnSearchManagerService",
-    "gnFavouritesListService",
-    "$http",
-    "$q",
-    "$rootScope",
-    "$translate",
-    "Metadata",
-    function (
-      gnSearchManagerService,
-      gnFavouritesListService,
-      $http,
-      $q,
-      $rootScope,
-      $translate,
-      Metadata
-    ) {
-      // List of persistent favorite lists
-      // and user records in each favorite lists
-      var favouriteLists = [];
-
-      var user = null;
-      var storagePrefix = "basket";
-      var maxSize = 200;
-
-      function FavouriteSelectionController(scope) {}
-
-      // Load the list of db saved selection + local selection
-      // and then load the content of each selections
-      // from db or local/session storage.
-      FavouriteSelectionController.prototype.init = function (user, localOnly) {
-        //var defer = $q.defer();
-        /*angular.forEach(gnSavedSelectionConfig.localList, function (s) {
-          if (!(user && user.id !== undefined && s.isAnonymousOnly)) {
-            selections.list.push(s);
-          }
-        });*/
-        // return gnFavouritesListService.loadFavourites().then(function (r) {
-        //   favouriteLists = r.data;
-        //   $rootScope.$broadcast("favouriteSelectionsUpdate", favouriteLists);
-        //
-        //   return favouriteLists;
-        // });
-        //return defer.promise;
-      };
-
-      $rootScope.$on("refreshFavouriteLists", function (e, n, o) {
-        // if (n != o) {
-        //
-        //   favouriteLists = n;
-        //   // scope.$apply();
-        // }
-      });
-
-      FavouriteSelectionController.prototype.getSelections = function (user) {
-        // if (user && this.userId !== user.id) {
-        //   this.userId = user.id;
-        //   var p = this.init(this.userId);
-        //   return p;
-        // } else if (user === undefined) {
-        //   this.userId = undefined;
-        //   return this.init();
-        // } else {
-        //   var defer = $q.defer();
-        //   defer.resolve(favouriteLists);
-        //   return defer.promise;
-        // }
-      };
-
-      FavouriteSelectionController.prototype.add = function (favouriteList, user, uuid) {
-        // var ctrl = this;
-        //
-        // var tooManyItems = favouriteList.selections.length > maxSize;
-        // if (tooManyItems) {
-        //   $rootScope.$broadcast("StatusUpdated", {
-        //     msg: $translate.instant("tooManyItemsInSelection", { maxSize: maxSize }),
-        //     timeout: 0,
-        //     type: "danger"
-        //   });
-        //   return;
-        // }
-        //
-        // if (favouriteList.id > -1) {
-        //   if (typeof favouriteList === "string") {
-        //     favouriteList = this.getSelectionId(favouriteList);
-        //   }
-        //
-        //   return gnFavouritesListService
-        //     .addToFavorites(favouriteList.id, favouriteList.name, [uuid])
-        //     .then(function (response) {
-        //       //scope.selections[0] = response.data;
-        //       return ctrl.init(ctrl.userId);
-        //     });
-        // } else {
-        //   this.addToStore(this.getSelection(favouriteList), uuid);
-        //   return ctrl.init(ctrl.userId, true);
-        // }
-      };
-
-      FavouriteSelectionController.prototype.remove = function (
-        favouriteList,
-        user,
-        uuid
-      ) {
-        // var ctrl = this;
-        // if (favouriteList.id > -1) {
-        //   return gnFavouritesListService
-        //     .removeFromFavourites(favouriteList.id, favouriteList.name, [uuid])
-        //     .then(function (response) {
-        //       //scope.selections[0] = response.data;
-        //       return ctrl.init(ctrl.userId);
-        //     });
-        // } else {
-        //   this.removeFromStore(this.getSelection(favouriteList), uuid);
-        // }
-      };
-
-      // For local selection, the storage is in synch with
-      // the selection records property.
-      FavouriteSelectionController.prototype.addToStore = function (
-        favouriteList,
-        uuid
-      ) {};
-
-      FavouriteSelectionController.prototype.removeFromStore = function (
-        selection,
-        uuid
-      ) {};
-
-      FavouriteSelectionController.prototype.getSelectionId = function (name) {};
-
-      // Return the selection object if an id is provided
-      FavouriteSelectionController.prototype.getSelection = function (selOrId) {
-        // if (typeof selOrId === "number") {
-        //   for (var i = 0; i < favouriteLists.length; i++) {
-        //     if (favouriteLists[i].id === selOrId) {
-        //       return favouriteLists[i];
-        //     }
-        //   }
-        // } else {
-        //   return selOrId;
-        // }
-      };
-
-      return {
-        restrict: "A",
-        controller: ["$scope", FavouriteSelectionController]
-      };
-    }
-  ]);
+  // module.directive("gnFavouriteSelections", [
+  //   "gnSearchManagerService",
+  //   "gnFavouritesListService",
+  //   "$http",
+  //   "$q",
+  //   "$rootScope",
+  //   "$translate",
+  //   "Metadata",
+  //   function (
+  //     gnSearchManagerService,
+  //     gnFavouritesListService,
+  //     $http,
+  //     $q,
+  //     $rootScope,
+  //     $translate,
+  //     Metadata
+  //   ) {
+  //     // List of persistent favorite lists
+  //     // and user records in each favorite lists
+  //     var favouriteLists = [];
+  //
+  //     var user = null;
+  //     var storagePrefix = "basket";
+  //     var maxSize = 200;
+  //
+  //     function FavouriteSelectionController(scope) {}
+  //
+  //     // Load the list of db saved selection + local selection
+  //     // and then load the content of each selections
+  //     // from db or local/session storage.
+  //     FavouriteSelectionController.prototype.init = function (user, localOnly) {
+  //       //var defer = $q.defer();
+  //       /*angular.forEach(gnSavedSelectionConfig.localList, function (s) {
+  //         if (!(user && user.id !== undefined && s.isAnonymousOnly)) {
+  //           selections.list.push(s);
+  //         }
+  //       });*/
+  //       // return gnFavouritesListService.loadFavourites().then(function (r) {
+  //       //   favouriteLists = r.data;
+  //       //   $rootScope.$broadcast("favouriteSelectionsUpdate", favouriteLists);
+  //       //
+  //       //   return favouriteLists;
+  //       // });
+  //       //return defer.promise;
+  //     };
+  //
+  //     $rootScope.$on("refreshFavouriteLists", function (e, n, o) {
+  //       // if (n != o) {
+  //       //
+  //       //   favouriteLists = n;
+  //       //   // scope.$apply();
+  //       // }
+  //     });
+  //
+  //     FavouriteSelectionController.prototype.getSelections = function (user) {
+  //       // if (user && this.userId !== user.id) {
+  //       //   this.userId = user.id;
+  //       //   var p = this.init(this.userId);
+  //       //   return p;
+  //       // } else if (user === undefined) {
+  //       //   this.userId = undefined;
+  //       //   return this.init();
+  //       // } else {
+  //       //   var defer = $q.defer();
+  //       //   defer.resolve(favouriteLists);
+  //       //   return defer.promise;
+  //       // }
+  //     };
+  //
+  //     FavouriteSelectionController.prototype.add = function (favouriteList, user, uuid) {
+  //       // var ctrl = this;
+  //       //
+  //       // var tooManyItems = favouriteList.selections.length > maxSize;
+  //       // if (tooManyItems) {
+  //       //   $rootScope.$broadcast("StatusUpdated", {
+  //       //     msg: $translate.instant("tooManyItemsInSelection", { maxSize: maxSize }),
+  //       //     timeout: 0,
+  //       //     type: "danger"
+  //       //   });
+  //       //   return;
+  //       // }
+  //       //
+  //       // if (favouriteList.id > -1) {
+  //       //   if (typeof favouriteList === "string") {
+  //       //     favouriteList = this.getSelectionId(favouriteList);
+  //       //   }
+  //       //
+  //       //   return gnFavouritesListService
+  //       //     .addToFavorites(favouriteList.id, favouriteList.name, [uuid])
+  //       //     .then(function (response) {
+  //       //       //scope.selections[0] = response.data;
+  //       //       return ctrl.init(ctrl.userId);
+  //       //     });
+  //       // } else {
+  //       //   this.addToStore(this.getSelection(favouriteList), uuid);
+  //       //   return ctrl.init(ctrl.userId, true);
+  //       // }
+  //     };
+  //
+  //     FavouriteSelectionController.prototype.remove = function (
+  //       favouriteList,
+  //       user,
+  //       uuid
+  //     ) {
+  //       // var ctrl = this;
+  //       // if (favouriteList.id > -1) {
+  //       //   return gnFavouritesListService
+  //       //     .removeFromFavourites(favouriteList.id, favouriteList.name, [uuid])
+  //       //     .then(function (response) {
+  //       //       //scope.selections[0] = response.data;
+  //       //       return ctrl.init(ctrl.userId);
+  //       //     });
+  //       // } else {
+  //       //   this.removeFromStore(this.getSelection(favouriteList), uuid);
+  //       // }
+  //     };
+  //
+  //     // For local selection, the storage is in synch with
+  //     // the selection records property.
+  //     FavouriteSelectionController.prototype.addToStore = function (
+  //       favouriteList,
+  //       uuid
+  //     ) {};
+  //
+  //     FavouriteSelectionController.prototype.removeFromStore = function (
+  //       selection,
+  //       uuid
+  //     ) {};
+  //
+  //     FavouriteSelectionController.prototype.getSelectionId = function (name) {};
+  //
+  //     // Return the selection object if an id is provided
+  //     FavouriteSelectionController.prototype.getSelection = function (selOrId) {
+  //       // if (typeof selOrId === "number") {
+  //       //   for (var i = 0; i < favouriteLists.length; i++) {
+  //       //     if (favouriteLists[i].id === selOrId) {
+  //       //       return favouriteLists[i];
+  //       //     }
+  //       //   }
+  //       // } else {
+  //       //   return selOrId;
+  //       // }
+  //     };
+  //
+  //     return {
+  //       restrict: "A",
+  //       controller: ["$scope", FavouriteSelectionController]
+  //     };
+  //   }
+  // ]);
 
   module.directive("gnFavouritesListPanel", [
     "gnFavouritesListService",
@@ -203,13 +203,13 @@
       return {
         restrict: "A",
         replace: true,
-        require: "^gnFavouriteSelections",
+       // require: "^gnFavouriteSelections",
         scope: {
           user: "=gnFavouritesListPanel"
         },
         templateUrl:
           "../../catalog/components/favouriteslist/partials/favouritespanel.html",
-        link: function (scope, element, attrs, controller) {
+        link: function (scope, element, attrs) {
           scope.isFavouritesPanelEnabled = true; // gnGlobalSettings.gnCfg.mods.search.usersearches.enabled;
 
           scope.favouriteLists = null;
@@ -554,13 +554,13 @@
       return {
         restrict: "A",
         templateUrl: "../../catalog/components/favouriteslist/partials/action.html",
-        require: "^gnFavouriteSelections",
+      //  require: "^gnFavouriteSelections",
         scope: {
           record: "=",
           user: "=",
           lang: "="
         },
-        link: function (scope, element, attrs, controller) {
+        link: function (scope, element, attrs) {
           scope.favouriteLists = [1, 2, 3];
 
           scope.uuid = scope.record.uuid;

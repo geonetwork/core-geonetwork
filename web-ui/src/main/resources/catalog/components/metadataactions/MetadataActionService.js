@@ -200,7 +200,9 @@
       };
 
       $rootScope.$on("Favourites.bulkAdd", function (event, listId) {
-        var list = this.cachedFavouritesLists.find(function(x) { return x.id === listId;});
+        var list = this.cachedFavouritesLists.find(function (x) {
+          return x.id === listId;
+        });
         var bucket = event.currentScope.selectionBucket;
         gnFavouritesListService.getAllSelections(bucket).then(function (result) {
           var ids = result.data;

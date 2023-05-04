@@ -104,6 +104,10 @@
               data-gn-user-searches-panel="user"
               data-ng-if="isUserSearchesEnabled && user.isConnected()"
             ></div>
+            <div
+              data-gn-favourites-list-panel="user"
+              data-ng-if="isFavouritesListEnabled"
+            ></div>
             <div ng-if="searchResults.facets" data-es-facets="searchResults.facets" />
           </div>
           <div class="col-sm-8 col-md-8 col-lg-7">
