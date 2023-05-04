@@ -78,7 +78,7 @@
             </li>
             <li class="btn-group" data-ng-if="hits.length > 0">
               <!-- A dropdown button to select the number of page
-          and indicating the current page info -->
+                   and indicating the current page info -->
               <div style="padding: 7px">
                 <span ng-show="page.pages > 1">
                   {{page.from}} - {{page.to}}
@@ -90,19 +90,6 @@
                   <span translate>results</span>
                 </span>
               </div>
-              <!--              <ul class="dropdown-menu" role="menu">-->
-              <!--                <li role="presentation" class="dropdown-header" data-translate="">-->
-              <!--                  hitsPerPage-->
-              <!--                </li>-->
-              <!--                <li-->
-              <!--                  data-ng-repeat="nb in values"-->
-              <!--                  role="menuitem"-->
-              <!--                  data-ng-class="nb === page.pageSize ? 'disabled' : ''"-->
-              <!--                >-->
-              <!--                  <a href="" data-ng-click="updateSearch(nb)">{{nb}}</a>-->
-              <!--                </li>-->
-              <!--              </ul>-->
-              <!--            </li>-->
             </li>
 
             <li data-ng-class="page.page == (page.pages-1) ? 'disabled' : ''">
@@ -120,14 +107,6 @@
           </ul>
         </div>
       </div>
-
-      <!--      <div-->
-      <!--        data-gn-pagination="{hitsPerPage:5}"-->
-      <!--        data-hits-values="5"-->
-      <!--        data-enable-hot-keys=""-->
-      <!--        data-enable-events=""-->
-      <!--      >-->
-      <!--      </div>-->
     </div>
   </form>
 
@@ -142,7 +121,11 @@
       <i class="fa fa-fw fa-save"></i>
       <span data-translate="">savechanges</span>
     </button>
-    <button data-dismiss="modal" type="button" class="btn btn-default pull-right">
+    <button
+      data-dismiss="modal"
+      type="button"
+      class="btn btn-default pull-right"
+    >
       <span data-translate="">cancel</span>
     </button>
   </div>

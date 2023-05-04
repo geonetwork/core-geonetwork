@@ -43,163 +43,18 @@
    * @description
    *
    */
-  // module.directive("gnFavouriteSelections", [
-  //   "gnSearchManagerService",
-  //   "gnFavouritesListService",
-  //   "$http",
-  //   "$q",
-  //   "$rootScope",
-  //   "$translate",
-  //   "Metadata",
-  //   function (
-  //     gnSearchManagerService,
-  //     gnFavouritesListService,
-  //     $http,
-  //     $q,
-  //     $rootScope,
-  //     $translate,
-  //     Metadata
-  //   ) {
-  //     // List of persistent favorite lists
-  //     // and user records in each favorite lists
-  //     var favouriteLists = [];
-  //
-  //     var user = null;
-  //     var storagePrefix = "basket";
-  //     var maxSize = 200;
-  //
-  //     function FavouriteSelectionController(scope) {}
-  //
-  //     // Load the list of db saved selection + local selection
-  //     // and then load the content of each selections
-  //     // from db or local/session storage.
-  //     FavouriteSelectionController.prototype.init = function (user, localOnly) {
-  //       //var defer = $q.defer();
-  //       /*angular.forEach(gnSavedSelectionConfig.localList, function (s) {
-  //         if (!(user && user.id !== undefined && s.isAnonymousOnly)) {
-  //           selections.list.push(s);
-  //         }
-  //       });*/
-  //       // return gnFavouritesListService.loadFavourites().then(function (r) {
-  //       //   favouriteLists = r.data;
-  //       //   $rootScope.$broadcast("favouriteSelectionsUpdate", favouriteLists);
-  //       //
-  //       //   return favouriteLists;
-  //       // });
-  //       //return defer.promise;
-  //     };
-  //
-  //     $rootScope.$on("refreshFavouriteLists", function (e, n, o) {
-  //       // if (n != o) {
-  //       //
-  //       //   favouriteLists = n;
-  //       //   // scope.$apply();
-  //       // }
-  //     });
-  //
-  //     FavouriteSelectionController.prototype.getSelections = function (user) {
-  //       // if (user && this.userId !== user.id) {
-  //       //   this.userId = user.id;
-  //       //   var p = this.init(this.userId);
-  //       //   return p;
-  //       // } else if (user === undefined) {
-  //       //   this.userId = undefined;
-  //       //   return this.init();
-  //       // } else {
-  //       //   var defer = $q.defer();
-  //       //   defer.resolve(favouriteLists);
-  //       //   return defer.promise;
-  //       // }
-  //     };
-  //
-  //     FavouriteSelectionController.prototype.add = function (favouriteList, user, uuid) {
-  //       // var ctrl = this;
-  //       //
-  //       // var tooManyItems = favouriteList.selections.length > maxSize;
-  //       // if (tooManyItems) {
-  //       //   $rootScope.$broadcast("StatusUpdated", {
-  //       //     msg: $translate.instant("tooManyItemsInSelection", { maxSize: maxSize }),
-  //       //     timeout: 0,
-  //       //     type: "danger"
-  //       //   });
-  //       //   return;
-  //       // }
-  //       //
-  //       // if (favouriteList.id > -1) {
-  //       //   if (typeof favouriteList === "string") {
-  //       //     favouriteList = this.getSelectionId(favouriteList);
-  //       //   }
-  //       //
-  //       //   return gnFavouritesListService
-  //       //     .addToFavorites(favouriteList.id, favouriteList.name, [uuid])
-  //       //     .then(function (response) {
-  //       //       //scope.selections[0] = response.data;
-  //       //       return ctrl.init(ctrl.userId);
-  //       //     });
-  //       // } else {
-  //       //   this.addToStore(this.getSelection(favouriteList), uuid);
-  //       //   return ctrl.init(ctrl.userId, true);
-  //       // }
-  //     };
-  //
-  //     FavouriteSelectionController.prototype.remove = function (
-  //       favouriteList,
-  //       user,
-  //       uuid
-  //     ) {
-  //       // var ctrl = this;
-  //       // if (favouriteList.id > -1) {
-  //       //   return gnFavouritesListService
-  //       //     .removeFromFavourites(favouriteList.id, favouriteList.name, [uuid])
-  //       //     .then(function (response) {
-  //       //       //scope.selections[0] = response.data;
-  //       //       return ctrl.init(ctrl.userId);
-  //       //     });
-  //       // } else {
-  //       //   this.removeFromStore(this.getSelection(favouriteList), uuid);
-  //       // }
-  //     };
-  //
-  //     // For local selection, the storage is in synch with
-  //     // the selection records property.
-  //     FavouriteSelectionController.prototype.addToStore = function (
-  //       favouriteList,
-  //       uuid
-  //     ) {};
-  //
-  //     FavouriteSelectionController.prototype.removeFromStore = function (
-  //       selection,
-  //       uuid
-  //     ) {};
-  //
-  //     FavouriteSelectionController.prototype.getSelectionId = function (name) {};
-  //
-  //     // Return the selection object if an id is provided
-  //     FavouriteSelectionController.prototype.getSelection = function (selOrId) {
-  //       // if (typeof selOrId === "number") {
-  //       //   for (var i = 0; i < favouriteLists.length; i++) {
-  //       //     if (favouriteLists[i].id === selOrId) {
-  //       //       return favouriteLists[i];
-  //       //     }
-  //       //   }
-  //       // } else {
-  //       //   return selOrId;
-  //       // }
-  //     };
-  //
-  //     return {
-  //       restrict: "A",
-  //       controller: ["$scope", FavouriteSelectionController]
-  //     };
-  //   }
-  // ]);
 
   module.directive("gnFavouritesListPanel", [
     "gnFavouritesListService",
     "$location",
     "$rootScope",
     "gnUtilityService",
-    function (gnFavouritesListService, $location, $rootScope, gnUtilityService) {
+    function (
+      gnFavouritesListService,
+      $location,
+      $rootScope,
+      gnUtilityService
+    ) {
       return {
         restrict: "A",
         replace: true,
@@ -226,14 +81,19 @@
               if (n !== o || scope.favouriteLists === null) {
                 scope.favouriteLists = null;
                 // controller.getSelections(scope.user).then(function (favouriteLists) {
-                gnFavouritesListService.loadFavourites().then(function (result) {
-                  var items = result.data;
-                  items = _.sortBy(items, function (item) {
-                    return item.name;
+                gnFavouritesListService
+                  .loadFavourites()
+                  .then(function (result) {
+                    var items = result.data;
+                    items = _.sortBy(items, function (item) {
+                      return item.name;
+                    });
+                    scope.favouriteLists = items;
+                    $rootScope.$emit(
+                      "refreshFavouriteLists",
+                      scope.favouriteLists
+                    );
                   });
-                  scope.favouriteLists = items;
-                  $rootScope.$emit("refreshFavouriteLists", scope.favouriteLists);
-                });
               }
             },
             true
@@ -258,7 +118,10 @@
 
           scope.toggleStatus = function (favouritesList) {
             gnFavouritesListService
-              .setFavouritesListStatus(favouritesList.id, !favouritesList.public)
+              .setFavouritesListStatus(
+                favouritesList.id,
+                !favouritesList.public
+              )
               .then(function (result) {
                 favouritesList.public = result.data.public;
               });
@@ -276,7 +139,8 @@
             gnUtilityService.openModal(
               {
                 title: "userSelectionFavourites",
-                content: '<div gn-edit-favourites-list="currentFavouritesList"  ></div>',
+                content:
+                  '<div gn-edit-favourites-list="currentFavouritesList"  ></div>',
                 className: "gn-savesearch-popup",
                 onCloseCallback: function () {
                   scope.updateFavouritesList();
@@ -291,7 +155,7 @@
             gnFavouritesListService
               .deleteFavouritesList(favouritesList.id)
               .then(function (result) {
-                ///
+
                 scope.selections = scope.favouriteLists.filter(function (item) {
                   return item.id !== favouritesList.id;
                 });
@@ -340,7 +204,12 @@
     "gnConfigService",
     "gnConfig",
     "gnGlobalSettings",
-    function (gnFavouritesListService, gnConfigService, gnConfig, gnGlobalSettings) {
+    function (
+      gnFavouritesListService,
+      gnConfigService,
+      gnConfig,
+      gnGlobalSettings
+    ) {
       return {
         restrict: "A",
         replace: true,
@@ -369,7 +238,12 @@
     "gnConfig",
     "gnGlobalSettings",
 
-    function (gnFavouritesListService, gnConfigService, gnConfig, gnGlobalSettings) {
+    function (
+      gnFavouritesListService,
+      gnConfigService,
+      gnConfig,
+      gnGlobalSettings
+    ) {
       return {
         restrict: "A",
         replace: true,
@@ -379,7 +253,14 @@
         templateUrl:
           "../../catalog/components/favouriteslist/partials/savefavourite.html",
         link: function postLink(scope, element, attrs) {
-          scope.page = { pageSize: 4, pages: 0, page: 0, from: 0, to: 0, count: 0 };
+          scope.page = {
+            pageSize: 4,
+            pages: 0,
+            page: 0,
+            from: 0,
+            to: 0,
+            count: 0
+          };
           //scope.pageSize = 4;
           // scope.pageNumber = 0;
           scope.updateSearchUrl = false;
@@ -473,7 +354,9 @@
                 scope.hits = response.data.hits.hits;
                 scope.page.count = response.data.hits.total.value;
                 //scope.page.page = 0;
-                scope.page.pages = Math.ceil(scope.page.count / scope.page.pageSize);
+                scope.page.pages = Math.ceil(
+                  scope.page.count / scope.page.pageSize
+                );
                 scope.page.from = scope.page.pageSize * scope.page.page + 1;
                 scope.page.to =
                   scope.page.pageSize * scope.page.page + scope.page.pageSize;
@@ -485,7 +368,11 @@
 
           scope.save = function () {
             return gnFavouritesListService
-              .removeFromFavourites(scope.favouritesList.id, scope.name, scope.toDelete)
+              .removeFromFavourites(
+                scope.favouritesList.id,
+                scope.name,
+                scope.toDelete
+              )
               .then(function (response) {
                 scope.$emit("userSelectionFavourites.complete", true);
               });
@@ -513,7 +400,12 @@
     "gnConfig",
     "gnGlobalSettings",
 
-    function (gnFavouritesListService, gnConfigService, gnConfig, gnGlobalSettings) {
+    function (
+      gnFavouritesListService,
+      gnConfigService,
+      gnConfig,
+      gnGlobalSettings
+    ) {
       return {
         restrict: "A",
         replace: true,
@@ -553,7 +445,8 @@
     function (gnFavouritesListService, $rootScope, gnGlobalSettings) {
       return {
         restrict: "A",
-        templateUrl: "../../catalog/components/favouriteslist/partials/action.html",
+        templateUrl:
+          "../../catalog/components/favouriteslist/partials/action.html",
         //  require: "^gnFavouriteSelections",
         scope: {
           record: "=",

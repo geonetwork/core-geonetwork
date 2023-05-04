@@ -2,10 +2,6 @@
   <label class="control-label gn-margin-bottom-sm" data-translate=""
     >Select a favourites list</label
   >
-  <!--  this={{this}}-->
-  <!--  scope={{scope}}-->
-  <!--  $scope={{$scope}}-->
-  <!--  SCOPE={{favouritesLists}}-->
   <div class="list-group">
     <a
       ng-repeat="list in favouritesLists "
@@ -28,7 +24,11 @@
       <i class="fa fa-fw fa-save"></i>
       <span data-translate="">Add</span>
     </button>
-    <button type="button" class="btn btn-default pull-right" data-dismiss="modal">
+    <button
+      type="button"
+      class="btn btn-default pull-right"
+      data-dismiss="modal"
+    >
       <span data-translate="">cancel</span>
     </button>
   </div>

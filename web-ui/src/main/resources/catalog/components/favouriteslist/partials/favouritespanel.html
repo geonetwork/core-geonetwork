@@ -1,4 +1,7 @@
-<div class="panel panel-default gn-favourites" data-ng-show="isFavouritesPanelEnabled">
+<div
+  class="panel panel-default gn-favourites"
+  data-ng-show="isFavouritesPanelEnabled"
+>
   <div class="panel-heading" data-gn-slide-toggle="false">
     <i class="fa fa-fw fa-thumb-tack" />&nbsp;
     <span data-translate="">Favourites</span>
@@ -13,30 +16,15 @@
         >
           <span class="fa fa-fw fa-plus"></span>
         </button>
-
-        <!--        <button-->
-        <!--          type="button"-->
-        <!--          class="btn btn-default btn-xs"-->
-        <!--          title="{{'manageUserSearches' | translate}}"-->
-        <!--          data-ng-click="openAdminUserSearchPanel()"-->
-        <!--          data-ng-show="canManageUserSearches()"-->
-        <!--        >-->
-        <!--          <span class="fa fa-fw fa-cog"></span>-->
-        <!--        </button>-->
       </div>
     </div>
   </div>
   <div class="panel-body">
-    <!--    <input-->
-    <!--      class="form-control"-->
-    <!--      data-ng-show="userSearches.length > 10"-->
-    <!--      data-ng-model="userSearchesSearch.$"-->
-    <!--      autofocus=""-->
-    <!--      placeholder="{{'filter' | translate}}"-->
-    <!--    />-->
-
     <ul class="list-group">
-      <li class="list-group-item clearfix" data-ng-repeat="search in favouriteLists">
+      <li
+        class="list-group-item clearfix"
+        data-ng-repeat="search in favouriteLists"
+      >
         <div class="gn-favourite pull-left">
           <a ng-click="searchUrl(search)" style="cursor: pointer"
             >{{search.name}}&nbsp;({{search.nItems}})</a
@@ -95,13 +83,5 @@
         </div>
       </li>
     </ul>
-
-    <!--    <span-->
-    <!--      data-gn-pagination-list=""-->
-    <!--      data-get-items-function-name="userSearchesPageItems"-->
-    <!--      data-first-page-function-name="userSearchesFirstPage"-->
-    <!--      data-items="userSearches | filter:userSearchesSearch | orderBy:'label'"-->
-    <!--      data-cache="userSearches"-->
-    <!--    />-->
   </div>
 </div>
