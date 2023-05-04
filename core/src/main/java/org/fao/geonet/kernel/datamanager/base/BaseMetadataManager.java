@@ -712,7 +712,7 @@ public class BaseMetadataManager implements IMetadataManager {
         final AbstractMetadata metadata = metadataUtils.findOne(metadataId);
 
         if (updateDateStamp) {
-            if (changeDate == null) {
+            if (StringUtils.isEmpty(changeDate)) {
                 changeDate = new ISODate().toString();
                 metadata.getDataInfo().setChangeDate(new ISODate());
             } else {
