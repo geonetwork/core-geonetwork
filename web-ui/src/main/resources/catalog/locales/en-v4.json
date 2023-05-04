@@ -149,6 +149,8 @@
   "facet-th_httpinspireeceuropaeumetadatacodelistPriorityDataset-PriorityDataset_tree": "INSPIRE Priority data set",
   "isPublishedToAll-true": "Public records",
   "isPublishedToAll-false": "Restricted records",
+  "dateTypeForStatus": "Date type",
+  "dateValueForStatus": "Date",
   "indexRecordsWithErrors": "Index records with errors",
   "top10IndexingErrors": "Top 10 indexing errors:",
   "facet-indexingErrorMsg": "Indexing errors",
