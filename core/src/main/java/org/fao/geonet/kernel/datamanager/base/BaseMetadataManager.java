@@ -696,7 +696,7 @@ public class BaseMetadataManager implements IMetadataManager {
      */
     @Override
     public synchronized AbstractMetadata updateMetadata(final ServiceContext context, final String metadataId, final Element md,
-                                                        final boolean validate, final boolean ufo, final String lang, final String changeDate,
+                                                        final boolean validate, final boolean ufo, final String lang, String changeDate,
                                                         final boolean updateDateStamp, final IndexingMode indexingMode) throws Exception {
         Log.trace(Geonet.DATA_MANAGER, "Update record with id " + metadataId);
 
@@ -709,12 +709,21 @@ public class BaseMetadataManager implements IMetadataManager {
         }
         String schema = metadataSchemaUtils.getMetadataSchema(metadataId);
 
+        final AbstractMetadata metadata = metadataUtils.findOne(metadataId);
+
+        if (updateDateStamp) {
+            if (StringUtils.isEmpty(changeDate)) {
+                changeDate = new ISODate().toString();
+                metadata.getDataInfo().setChangeDate(new ISODate());
+            } else {
+                metadata.getDataInfo().setChangeDate(new ISODate(changeDate));
+            }
+        }
+
         String uuidBeforeUfo = null;
         if (ufo) {
             String parentUuid = null;
             Integer intId = Integer.valueOf(metadataId);
-
-            final AbstractMetadata metadata = metadataUtils.findOne(metadataId);
 
             uuidBeforeUfo = findUuid(metadataXml, schema, metadata);
 
@@ -724,9 +733,6 @@ public class BaseMetadataManager implements IMetadataManager {
 
         // --- force namespace prefix for iso19139 metadata
         setNamespacePrefixUsingSchemas(schema, metadataXml);
-
-        // Notifies the metadata change to metatada notifier service
-        final AbstractMetadata metadata = metadataUtils.findOne(metadataId);
 
         String uuid = findUuid(metadataXml, schema, metadata);
 
