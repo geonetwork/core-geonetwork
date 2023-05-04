@@ -33,7 +33,10 @@
                 title="{{'markdelete'|translate}}"
                 class="btn btn-default"
               >
-                <i class="fa fa-trash-o text-danger"></i>
+                <i class="fa fa-times text-danger" ng-if="!isDeleted(hit)"></i>
+                <span class="text-danger" ng-if="isDeleted(hit)">
+                  <i class="fa fa-times text-danger"></i> to be deleted</span
+                >
               </button>
             </div>
 
