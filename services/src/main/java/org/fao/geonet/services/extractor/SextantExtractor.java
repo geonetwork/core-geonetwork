@@ -4,6 +4,7 @@ import static org.apache.commons.lang.StringEscapeUtils.escapeXml;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -17,9 +18,11 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.io.FileUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.ApiUtils;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.services.extractor.mapping.ExtractRequestSpec;
 import org.fao.geonet.services.extractor.mapping.LayerSpec;
 import org.fao.geonet.services.extractor.mapping.UserSpec;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.ldap.DefaultSpringSecurityContextSource;
 import org.springframework.stereotype.Controller;
@@ -52,12 +55,19 @@ public class SextantExtractor {
 
     private final String IFREMER_PATTERN = "@ifremer.fr";
 
+    private static org.slf4j.Logger LOGGER = LoggerFactory.getLogger(Geonet.GEONETWORK);
+
     @PostConstruct
     public void init() throws Exception {
         // ensures directories are created
-        FileUtils.forceMkdir(panierXmlPathLogged);
-        FileUtils.forceMkdir(panierXmlPathAnonymous);
-
+        try {
+            FileUtils.forceMkdir(panierXmlPathLogged);
+            FileUtils.forceMkdir(panierXmlPathAnonymous);
+        } catch (IOException e) {
+            LOGGER.error(String.format(
+                "Sextant / Extractor / Failed during creation of folders %s or %s. Error is %s",
+                panierXmlPathAnonymous, panierXmlPathLogged, e.getMessage()));
+        }
     }
 
     @RequestMapping(

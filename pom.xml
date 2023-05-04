@@ -1490,8 +1490,6 @@
      h2, postgres, sqlserver, mysql, oracle, db2, postgres-postgis, jndi
      -->
 
-    <sxt.panier.xml.path.authenticated>#{systemEnvironment['SXT_PANIER_XML_PATH_AUTHENTICATED']?:'/home/sextant/geonetwork/panier/folders/aTraiter/extranet'}</sxt.panier.xml.path.authenticated>
-    <sxt.panier.xml.path.anonymous>#{systemEnvironment['SXT_PANIER_XML_PATH_ANONYMOUS']?:'/home/sextant/geonetwork/panier/folders/aTraiter/anonymous'}</sxt.panier.xml.path.anonymous>
     <!--
     The following environment variable can also be set for connecting to the database.
         GEONETWORK_DB_TYPE=h2
