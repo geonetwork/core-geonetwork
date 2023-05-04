@@ -203,7 +203,7 @@
       return {
         restrict: "A",
         replace: true,
-       // require: "^gnFavouriteSelections",
+        // require: "^gnFavouriteSelections",
         scope: {
           user: "=gnFavouritesListPanel"
         },
@@ -554,7 +554,7 @@
       return {
         restrict: "A",
         templateUrl: "../../catalog/components/favouriteslist/partials/action.html",
-      //  require: "^gnFavouriteSelections",
+        //  require: "^gnFavouriteSelections",
         scope: {
           record: "=",
           user: "=",

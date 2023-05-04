@@ -228,13 +228,12 @@
             headers: { "Content-Type": "application/x-www-form-urlencoded" }
           })
           .then(function (result) {
-            for (var i = 0; i < cachedFavouritesLists.length; i++){
-                var item = cachedFavouritesLists[i];
+            for (var i = 0; i < cachedFavouritesLists.length; i++) {
+              var item = cachedFavouritesLists[i];
               if (item.id === id) {
                 item.public = !item.public;
               }
             }
-
 
             return result;
           });
