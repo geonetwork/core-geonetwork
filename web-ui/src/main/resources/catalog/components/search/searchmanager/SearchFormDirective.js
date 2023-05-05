@@ -184,6 +184,8 @@
       // Compute facet only if search is reset or new filters apply
       // When moving in pages or changing sort,
       // no need to compute aggregations again and again
+      // TODO: Some actions should invalidate search key.
+      //  eg. deletion, changing sharing
       var searchKey = buildSearchKey(esParams),
         dontComputeAggs = $scope.searchResults.searchKey === searchKey,
         lastSearchAggs = undefined;
@@ -208,7 +210,8 @@
           esParams,
           $scope.searchResults.selectionBucket || "metadata",
           $scope.searchObj.configId,
-          types
+          types,
+          $scope.searchInfo.aggregations
         )
         .then(
           function (data) {
@@ -235,6 +238,7 @@
             var records = data.hits.hits.map(function (r) {
               return new Metadata(r);
             });
+
             $scope.searchResults.records = records;
             $scope.searchResults.count = data.hits.total.value;
             $scope.searchResults.facets = dontComputeAggs

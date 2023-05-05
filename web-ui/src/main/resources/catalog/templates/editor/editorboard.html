@@ -3,6 +3,7 @@
     <div data-ng-class="fluidEditorLayout ? 'container-fluid' : 'container'">
       <div
         class="col-sm-12"
+        data-ng-if="searchInfo.aggregations"
         data-ng-search-form=""
         data-runSearch="true"
         data-wait-for-user="true"
