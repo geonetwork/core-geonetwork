@@ -31,7 +31,7 @@ import org.fao.geonet.utils.GeonetHttpRequestFactory;
  *
  * See https://www.medra.org/.
  */
-public class DoiMedraClient extends BaseDoiClient  implements IDoiClient {
+public class DoiMedraClient extends BaseDoiClient implements IDoiClient {
 
     public static final String MEDRA_SEARCH_KEY = "medra.org";
     public static final String MEDRA_NOT_SUPPORTED_EXCEPTION_MESSAGE = "Not supported by European Registration Agency of DOI.";
