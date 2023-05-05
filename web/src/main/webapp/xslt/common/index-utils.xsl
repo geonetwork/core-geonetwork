@@ -390,7 +390,7 @@
     keywordType-place: [{default: France}]-->
     <xsl:for-each-group select="$allKeywords"
                         group-by="thesaurus/info/@type">
-      <xsl:if test="matches(current-grouping-key(), '^[A-Za-z\-_.]+$')">
+      <xsl:if test="matches(current-grouping-key(), '^[A-Za-z\-_]+$')">
         <xsl:element name="keywordType-{current-grouping-key()}">
           <xsl:attribute name="type" select="'object'"/>
           [<xsl:for-each select="$allKeywords/thesaurus[info/@type = current-grouping-key()]/keywords/keyword">
