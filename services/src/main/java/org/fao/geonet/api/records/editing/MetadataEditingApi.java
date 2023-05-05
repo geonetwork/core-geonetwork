@@ -37,6 +37,7 @@ import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.exception.NotAllowedException;
+import org.fao.geonet.api.records.MetadataUtils;
 import org.fao.geonet.api.records.model.Direction;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.constants.Geonet;
@@ -78,6 +79,8 @@ import java.util.*;
 
 import static jeeves.guiservices.session.Get.getSessionAsXML;
 import static org.fao.geonet.api.ApiParams.*;
+import static org.fao.geonet.kernel.setting.Settings.METADATA_WORKFLOW_AUTOMATIC_UNPUBLISH_INVALID_MD;
+import static org.fao.geonet.kernel.setting.Settings.METADATA_WORKFLOW_FORCE_VALIDATION_ON_MD_SAVE;
 import static org.fao.geonet.repository.specification.OperationAllowedSpecs.*;
 import static org.springframework.data.jpa.domain.Specification.where;
 
@@ -366,7 +369,7 @@ public class MetadataEditingApi {
         if (terminate) {
             Log.trace(Geonet.DATA_MANAGER, " > Closing editor");
 
-            boolean forceValidationOnMdSave = sm.getValueAsBool("metadata/workflow/forceValidationOnMdSave");
+            boolean forceValidationOnMdSave = sm.getValueAsBool(METADATA_WORKFLOW_FORCE_VALIDATION_ON_MD_SAVE);
 
             boolean reindex = false;
 
@@ -378,6 +381,22 @@ public class MetadataEditingApi {
 
             // Automatically change the workflow state after save
             if (isEnabledWorkflow) {
+                boolean isAllowedSubmitApproveInvalidMd = sm.getValueAsBool(Settings.METADATA_WORKFLOW_ALLOW_SUBMIT_APPROVE_INVALID_MD);
+                if (((status.equals(StatusValue.Status.SUBMITTED))
+                    || (status.equals(StatusValue.Status.APPROVED)))
+                    && !isAllowedSubmitApproveInvalidMd) {
+
+                    validator.doValidate(metadata, context.getLanguage());
+                    boolean isInvalid = MetadataUtils.retrieveMetadataValidationStatus(metadata, context);
+
+                    if (isInvalid) {
+                        throw new NotAllowedException("Metadata is invalid: can't be submitted or approved")
+                            .withMessageKey("exception.resourceInvalid.metadata")
+                            .withDescriptionKey("exception.resourceInvalid.metadata.description");
+                    }
+                }
+
+
                 if (status.equals(StatusValue.Status.SUBMITTED)) {
                     // Only editors can submit a record
                     if (isEditor || isAdmin) {
@@ -424,7 +443,7 @@ public class MetadataEditingApi {
                 }
             }
 
-            boolean automaticUnpublishInvalidMd = sm.getValueAsBool("metadata/workflow/automaticUnpublishInvalidMd");
+            boolean automaticUnpublishInvalidMd = sm.getValueAsBool(METADATA_WORKFLOW_AUTOMATIC_UNPUBLISH_INVALID_MD);
             boolean isUnpublished = false;
 
             // Unpublish the metadata automatically if the setting

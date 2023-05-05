@@ -133,6 +133,8 @@ public class Settings {
     public static final String METADATA_WORKFLOW_ALLOW_SUBMIT_APPROVE_INVALID_MD = "metadata/workflow/allowSumitApproveInvalidMd";
     public static final String METADATA_WORKFLOW_ALLOW_PUBLISH_INVALID_MD = "metadata/workflow/allowPublishInvalidMd";
     public static final String METADATA_WORKFLOW_ALLOW_PUBLISH_NON_APPROVED_MD = "metadata/workflow/allowPublishNonApprovedMd";
+    public static final String METADATA_WORKFLOW_AUTOMATIC_UNPUBLISH_INVALID_MD = "metadata/workflow/automaticUnpublishInvalidMd";
+    public static final String METADATA_WORKFLOW_FORCE_VALIDATION_ON_MD_SAVE = "metadata/workflow/forceValidationOnMdSave";
     public static final String METADATA_LINK_EXCLUDEPATTERN = "metadata/link/excludedUrlPattern";
     public static final String METADATA_IMPORT_RESTRICT = "metadata/import/restrict";
     public static final String METADATA_IMPORT_USERPROFILE = "metadata/import/userprofile";
