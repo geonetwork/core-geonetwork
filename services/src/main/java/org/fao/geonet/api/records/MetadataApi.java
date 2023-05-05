@@ -32,9 +32,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.server.context.ServiceContext;
 import jeeves.services.ReadWriteController;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.search.SearchHit;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
@@ -694,13 +693,13 @@ public class MetadataApi {
 
     }
 
-    @io.swagger.v3.oas.annotations.Operation(summary = "Check metadata title not duplicated",
+    @io.swagger.v3.oas.annotations.Operation(summary = "Check if metadata title is duplicated",
         description = "Verifies if the metadata title is in use.")
     @PostMapping(value = "/{metadataUuid:.+}/checkDuplicatedTitle",
         produces = {MediaType.APPLICATION_JSON_VALUE})
     @PreAuthorize("hasAuthority('Editor')")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Return if the title is duplicated or not."),
+        @ApiResponse(responseCode = "200", description = "Return true if the title is duplicated or false in other case."),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)
     })
     public ResponseEntity<Boolean> checkMetadataTitleDuplicated(
@@ -712,8 +711,7 @@ public class MetadataApi {
             required = true)
         @RequestBody String title,
         HttpServletRequest request
-    )
-        throws Exception {
+    ) throws Exception {
         try {
             ApiUtils.canViewRecord(metadataUuid, request);
         } catch (SecurityException e) {
@@ -721,9 +719,8 @@ public class MetadataApi {
             throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
         }
 
-        Set<String> uuidsWithSameTitle = retrieveMetadataUuidsFromTitle(esSearchManager, title, metadataUuid);
-
-        return ResponseEntity.ok(!uuidsWithSameTitle.isEmpty());
+        boolean uuidsWithSameTitle = isMetadataTitleExistingInOtherRecords(title, metadataUuid);
+        return ResponseEntity.ok(uuidsWithSameTitle);
     }
 
     private boolean isIncludedAttributeTable(RelatedResponse.Fcat fcat) {
@@ -737,41 +734,34 @@ public class MetadataApi {
 
 
     /**
-     * Retrieves the list of metadata uuids that have the same dataset identifier.
+     * Check if other metadata records exist apart from the one with {code}metadataUuidToExclude{code} with
+     * {code}metadataTitle{code} title in the catalogue.
      *
-     * @param searchMan             ES search manager.
      * @param metadataTitle         Metadata title to check.
      * @param metadataUuidToExclude Metadata identifier to exclude from the search.
-     * @return  A list of metadata uuids that have the same metadata title.
+     * @return A list of metadata uuids that have the same metadata title.
      */
-    private Set<String> retrieveMetadataUuidsFromTitle(EsSearchManager searchMan,
-                                                            String metadataTitle,
-                                                            String metadataUuidToExclude) {
-
-        Set<String> metadataUuids = new HashSet<>();
-
+    private boolean isMetadataTitleExistingInOtherRecords(String metadataTitle, String metadataUuidToExclude) {
+        boolean metadataWithSameTitle = false;
         String jsonQuery = " {" +
             "       \"query_string\": {" +
             "       \"query\": \"+resourceTitleObject.\\\\*.keyword:\\\"%s\\\" -uuid:\\\"%s\\\"\"" +
             "       }" +
             "}";
+
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             JsonNode esJsonQuery = objectMapper.readTree(String.format(jsonQuery, metadataTitle, metadataUuidToExclude));
 
-            final SearchResponse queryResult = searchMan.query(
+            final SearchResponse queryResult = esSearchManager.query(
                 esJsonQuery,
                 FIELDLIST_UUID,
-                0, 1000);
+                0, 5);
 
-            for (SearchHit hit : queryResult.getHits()) {
-                String uuid = hit.getSourceAsMap().get(Geonet.IndexFieldNames.UUID).toString();
-                metadataUuids.add(uuid);
-            }
-
+            metadataWithSameTitle = queryResult.getHits().getHits().length != 0;
         } catch (Exception ex) {
             Log.error(API.LOG_MODULE_NAME, ex.getMessage(), ex);
         }
-        return metadataUuids;
+        return metadataWithSameTitle;
     }
 }
