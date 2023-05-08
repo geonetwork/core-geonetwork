@@ -139,6 +139,21 @@ var OWC_0_3_1_Module_Factory = function () {
         ]
       },
       {
+        ln: "Attribution",
+        ps: [
+          {
+            n: "onlineResource",
+            col: true,
+            en: "OnlineResource",
+            ti: "OWC_0_3_1.OnlineResourceType"
+          },
+          {
+            n: "title",
+            en: "Title"
+          }
+        ]
+      },
+      {
         ln: "DimensionType",
         ps: [
           {
@@ -377,6 +392,12 @@ var OWC_0_3_1_Module_Factory = function () {
             col: true,
             en: "Server",
             ti: "OWC_0_3_1.ServerType"
+          },
+          {
+            n: "attribution",
+            col: true,
+            en: "Attribution",
+            ti: "OWC_0_3_1.Attribution"
           },
           {
             n: "dataURL",

@@ -225,6 +225,23 @@
             var type,
               layer = layers[i];
             if (layer.group == "Background layers") {
+              var layerAttributionArray = undefined;
+              if (layer.attribution) {
+                layerAttributionArray = [];
+                for (var a = 0; a < layer.attribution.length; a++) {
+                  var attribution = layer.attribution[a];
+                  layerAttribution = attribution.title;
+                  // If href exist then make the title a link
+                  if (attribution.onlineResource && attribution.onlineResource[0].href) {
+                    var link = document.createElement("a");
+                    link.href = attribution.onlineResource[0].href;
+                    link.innerHTML = layerAttribution;
+                    layerAttribution = link.outerHTML;
+                  }
+                  layerAttributionArray.push(layerAttribution);
+                }
+              }
+
               // {type=bing_aerial} (mapquest, osm ...)
               // {type=arcgis,name=0,1,2}
               // type=wms,name=lll
@@ -246,6 +263,25 @@
                   olLayer.background = true;
                   olLayer.set("group", "Background layers");
                   olLayer.setVisible(!layer.hidden);
+                  if (layerAttributionArray) {
+                    var attributionLike = olLayer.getSource().getAttributions();
+                    if (typeof attributionLike === "function") {
+                      attributionLike = attributionLike();
+                    }
+                    if (typeof attributionLike === "string") {
+                      attributionLike = [attributionLike];
+                    }
+                    if (
+                      typeof attributionLike === "object" &&
+                      Array.isArray(attributionLike)
+                    ) {
+                      attributionLike.push(...layerAttributionArray);
+                    } else {
+                      attributionLike = layerAttributionArray;
+                    }
+                    olLayer.getSource().setAttributions(attributionLike);
+                  }
+
                   bgLayers.push(olLayer);
 
                   if (!layer.hidden && !isFirstBgLayer) {
