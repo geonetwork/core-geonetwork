@@ -248,6 +248,9 @@
                 group.operations[key] = group.isCheckedAll === true;
               }
               $("[name=" + group.group + "-" + key + "]").addClass("ng-dirty");
+              if (scope.opsForm[group.group + "-" + key]) {
+                scope.opsForm[group.group + "-" + key].$dirty = true;
+              }
             });
             scope.privilegeIsSelected = true;
           };

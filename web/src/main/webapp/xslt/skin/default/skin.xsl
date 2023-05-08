@@ -71,7 +71,7 @@
                       <xsl:if test="not($isLogoInHeader)">
                         <img class="gn-logo"
                              alt="{$i18n/siteLogo}"
-                             src="{/root/gui/url}/images/logos/{$env//system/site/siteId}.png"/>
+                             src="{/root/gui/nodeUrl}../images/logos/{$env//system/site/siteId}.png"/>
                       </xsl:if>
                       <xsl:if test="$isShowGNName">
                         <xsl:value-of select="$env//system/site/name"/>

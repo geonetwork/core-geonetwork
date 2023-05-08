@@ -118,7 +118,10 @@
               data-template-url="resultTemplate"
               data-map="searchObj.searchMap"
             ></div>
-
+          </div>
+        </div>
+        <div class="row gn-row-tools gn-noborder-bottom hidden-print">
+          <div class="col-sm-3">
             <button
               data-ng-show="searchResults.records.length > 9"
               class="btn btn-link hidden-print"
@@ -127,6 +130,15 @@
             >
               <i class="fa fa-fw fa-chevron-up" />
             </button>
+          </div>
+          <div class="col-xs-12 col-sm-6 text-center">
+            <div
+              class=""
+              data-gn-pagination="paginationInfo"
+              data-hits-values="searchObj.hitsperpageValues"
+              data-enable-hot-keys=""
+              data-enable-events=""
+            ></div>
           </div>
         </div>
       </div>

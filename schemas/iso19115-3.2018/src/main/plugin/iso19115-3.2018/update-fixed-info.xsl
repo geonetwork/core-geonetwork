@@ -100,7 +100,16 @@
       </xsl:for-each>
 
       <xsl:apply-templates select="mdb:defaultLocale"/>
-      <xsl:apply-templates select="mdb:parentMetadata"/>
+      
+      <xsl:choose>
+        <xsl:when test="/root/env/parentUuid != ''">
+          <mdb:parentMetadata uuidref="{/root/env/parentUuid}"/>
+        </xsl:when>
+        <xsl:when test="mdb:parentMetadata">
+          <xsl:apply-templates select="mdb:parentMetadata"/>
+        </xsl:when>
+      </xsl:choose>
+      
       <xsl:apply-templates select="mdb:metadataScope"/>
       <xsl:apply-templates select="mdb:contact"/>
 

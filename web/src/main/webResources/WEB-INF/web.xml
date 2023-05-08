@@ -86,18 +86,43 @@
     <url-pattern>/*</url-pattern>
   </filter-mapping>
 
-  <!-- Filter to verify the portal parameter in the url is a valid portal defined in GeoNetwork.
-       If a non-valid value is provided, it redirects to the same url in the default portal (srv).
+  <!-- Filter to verify the portal parameter in the URL is a valid portal defined in GeoNetwork.
+       If a non-valid value is provided, it redirects to the same URL in the default portal (srv).
   -->
   <filter>
     <filter-name>portalCheckFilter</filter-name>
     <filter-class>org.fao.geonet.web.GeoNetworkPortalFilter</filter-class>
     <init-param>
-      <!-- List of url regular expressions that should be not checked -->
+      <!-- List of Ant style patterns that should be not checked for application URL paths -->
+      <!-- https://docs.spring.io/spring-security/site/docs/5.7.3/api/org/springframework/security/web/util/matcher/AntPathRequestMatcher.html -->
       <param-name>excludedPaths</param-name>
-      <param-value>^/catalog/.*,^/jolokia/.*,^/dashboards/.*,^/doc/.*,^/api/.*,^/static/.*,^/images/.*,^/map/.*,^/htmlcache/.*,^/pdf/.*,^/xml/.*,^/xsl/.*,^/config/.*,^/read/.*,^/.*\.jsp,^/.*\.html,^/.*\.css</param-value>
+      <param-value>
+        /catalog/**,
+        /api/**,
+        /static/**,
+        /images/**,
+        /index/features/**,
+        /htmlcache/**,
+        /config/**,
+        /jolokia/**,
+        /dashboards/**,
+        /criticalhealthcheck/**,
+        /warninghealthcheck/**,
+        /expensivehealthcheck/**,
+        /monitor/**,
+        /doc/**,
+        /map/**,
+        /pdf/**,
+        /xml/**,
+        /xsl/**,
+        /read/**,
+        /.*.jsp,
+        /*.html,
+        /*.css
+      </param-value>
     </init-param>
   </filter>
+
   <filter-mapping>
     <filter-name>portalCheckFilter</filter-name>
     <url-pattern>/*</url-pattern>

@@ -83,21 +83,24 @@
     <value>ara</value>
     <value>cat</value>
     <value>chi</value>
+    <value>cze</value>
     <value>dut</value>
+    <value>dan</value>
     <value>eng</value>
     <value>fin</value>
     <value>fre</value>
     <value>ger</value>
-    <value>por</value>
+    <value>ice</value>
     <value>ita</value>
+    <value>kor</value>
     <value>nor</value>
     <value>pol</value>
     <value>por</value>
     <value>rus</value>
     <value>slo</value>
     <value>spa</value>
-    <value>tur</value>
     <value>swe</value>
+    <value>tur</value>
   </util:set>
 
   <util:map id="jpaPropertyMap">

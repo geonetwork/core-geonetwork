@@ -532,7 +532,7 @@
         <version>1.10</version>
       </dependency>
       <!-- logging -->
-      <dependency> 
+      <dependency>
         <!-- usedf for camel -->
         <!-- used for LDAP test dependency in core -->
         <groupId>org.apache.logging.log4j</groupId>
@@ -822,7 +822,7 @@
       <dependency>
         <groupId>org.tmatesoft.svnkit</groupId>
         <artifactId>svnkit</artifactId>
-        <version>1.10.9</version>
+        <version>1.10.11</version>
       </dependency>
       <dependency>
         <groupId>dlib</groupId>  <!--FIXME Handled by local repository -->
@@ -1119,7 +1119,7 @@
       <dependency>
         <groupId>com.google.code.findbugs</groupId>
         <artifactId>jsr305</artifactId>
-        <version>2.0.1</version>
+        <version>2.0.3</version>
       </dependency>
       <dependency>
         <groupId>net.sf.json-lib</groupId>
@@ -1472,7 +1472,7 @@
      when watchlist notifier is triggered (Default 4AM) -->
     <savedselection.watchlist.frequency>0 0 4 * * ?</savedselection.watchlist.frequency>
 
-    <microservices.url></microservices.url>
+    <microservices.url/>
     <!--<microservices.url>http://localhost:9901</microservices.url>-->
 
     <!-- Proxy security configuration:
@@ -1516,11 +1516,11 @@
 
     <!-- If elasticsearch security is on,
     add a read/write user for index features and records: -->
-    <es.username></es.username>
-    <es.password></es.password>
+    <es.username/>
+    <es.password/>
     <!-- and a readonly user for index features access. -->
-    <es.ro.username></es.ro.username>
-    <es.ro.password></es.ro.password>
+    <es.ro.username/>
+    <es.ro.password/>
 
     <kb.platform>linux-x86_64</kb.platform>
     <kb.installer.extension>tar.gz</kb.installer.extension>
@@ -1554,8 +1554,8 @@
     <jts.version>1.18.2</jts.version>
     <pg.version>42.3.3</pg.version>
 
-    <spring.version>5.2.20.RELEASE</spring.version>
-    <spring.security.version>5.7.3</spring.security.version>
+    <spring.version>5.3.27</spring.version>
+    <spring.security.version>5.7.8</spring.security.version>
     <spring.jpa.version>2.2.13.RELEASE</spring.jpa.version>
     <springboot.version>2.7.0</springboot.version>
     <springdoc.version>1.5.9</springdoc.version>

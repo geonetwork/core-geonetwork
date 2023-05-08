@@ -53,6 +53,14 @@
           <artifactId>jruby-core</artifactId>
         </exclusion>
         <exclusion>
+          <groupId>org.jruby</groupId>
+          <artifactId>jruby-stdlib</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.webjars</groupId>
+          <artifactId>handlebars</artifactId>
+        </exclusion>
+        <exclusion>
           <groupId>me.n4u.sass</groupId>
           <artifactId>sass-gems</artifactId>
         </exclusion>

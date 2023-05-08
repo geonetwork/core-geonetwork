@@ -76,5 +76,5 @@ public interface SourceRepository extends GeonetRepository<Source, String>, JpaS
     @Nullable
     List<Source> findByGroupOwnerIn(Set<Integer> groupOwner);
 
-    boolean existsByNameAndType(String name, SourceType type);
+    boolean existsByUuidAndType(String name, SourceType type);
 }
