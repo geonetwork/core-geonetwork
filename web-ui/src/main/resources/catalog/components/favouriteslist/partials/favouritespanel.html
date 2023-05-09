@@ -42,7 +42,7 @@
           <a
             href=""
             class="btn btn-default"
-            data-ng-click="toggleStatus(search)"
+            data-ng-click="(search.editable) && toggleStatus(search)"
             title="{{'toggle public/private status' | translate}}"
             aria-label="{{'change status' | translate}}"
             ng-disabled="!search.editable || search.userName ==null"
@@ -54,7 +54,7 @@
           <a
             href=""
             class="btn btn-default"
-            data-ng-click="edit(search)"
+            data-ng-click="(search.editable) &&  edit(search)"
             title="{{'edit' | translate}}"
             aria-label="{{'edit' | translate}}"
             ng-disabled="!search.editable"
@@ -62,17 +62,17 @@
             <span class="fa fa-pencil"></span>
           </a>
           <!-- delete -->
-          <a
+          <button
             href=""
             class="btn btn-default"
-            data-gn-click-and-spin="delete(search)"
+            data-gn-click-and-spin="(search.editable) && delete(search)"
             data-gn-confirm-click="{{'deleteFavouritesConfirm' | translate}}"
             title="{{'delete' | translate}}"
             aria-label="{{'delete' | translate}}"
             ng-disabled="!search.editable"
           >
             <span class="fa fa-remove text-danger"></span>
-          </a>
+          </button>
         </div>
       </li>
     </ul>
