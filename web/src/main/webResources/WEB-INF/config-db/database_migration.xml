@@ -155,7 +155,7 @@
     </entry>
     <entry key="4.2.4">
       <list>
-        <value>WEB-INF/classes/setup/sql/migrate/v400/migrate-db-</value>
+        <value>WEB-INF/classes/setup/sql/migrate/v424/migrate-db-</value>
       </list>
     </entry>
   </util:map>
