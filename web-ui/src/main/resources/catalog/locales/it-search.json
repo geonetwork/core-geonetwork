@@ -422,6 +422,7 @@
     "mdvalid": "Metadato valido",
     "mdinvalid": "Metadato non valido",
     "mdinvalidcantpublish": "Invalid metadata can't be published",
+    "mdnonapprovedcantpublish": "Non approved metadata can't be published",
     "mdnovalidation": "I metadati non hanno informazioni di validazione",
     "setall": "Imposta tutti i privilegi",
     "print_legend": "Legenda",

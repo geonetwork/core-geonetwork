@@ -422,6 +422,7 @@
     "mdvalid": "Metadata is valide",
     "mdinvalid": "Metadata is niet valide",
     "mdinvalidcantpublish": "Alleen valide records kunnen gepubliceerd worden",
+    "mdnonapprovedcantpublish": "Non approved metadata can't be published",
     "mdnovalidation": "Metadata beschikt niet over validatie informatie",
     "setall": "Zet alle privileges",
     "print_legend": "Legenda",

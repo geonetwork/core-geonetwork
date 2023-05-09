@@ -422,6 +422,7 @@
     "mdvalid": "Lýsigögn eru gild",
     "mdinvalid": "Lýsigögn eru ógild",
     "mdinvalidcantpublish": "Invalid metadata can't be published",
+    "mdnonapprovedcantpublish": "Non approved metadata can't be published",
     "mdnovalidation": "Lýsigögn hafa engar gæðamatsupplýsingar",
     "setall": "Stilla öll sérréttindi",
     "print_legend": "Skýringatexti",

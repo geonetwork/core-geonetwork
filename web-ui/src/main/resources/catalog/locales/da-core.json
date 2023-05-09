@@ -582,5 +582,8 @@
     "facet-mdStatus": "Workflow fremskridt",
     "skipLink": "Spring over og gå videre til indholdet",
     "batchSubmitTitle": "Batch-indsendelse af metadata",
-    "batchSubmitInfo": "Denne indstilling indsender de valgte metadata, der ejes af brugeren."
+    "batchSubmitInfo": "Denne indstilling indsender de valgte metadata, der ejes af brugeren.",
+    "reviewerNotAllowedPublish": "Reviewer not allowed to publish the metadata",
+    "reviewerNotAllowedUnpublish": "Reviewer not allowed to un-publish the metadata",
+    "reviewerNotAllowedPublishUnpublish": "Reviewer not allowed to publish / un-publish the metadata"
 }
