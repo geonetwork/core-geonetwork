@@ -362,9 +362,15 @@
     "gnConfigService",
     "gnConfig",
     "gnGlobalSettings",
-    '$translate',
+    "$translate",
 
-    function (gnFavouritesListService, gnConfigService, gnConfig, gnGlobalSettings, $translate) {
+    function (
+      gnFavouritesListService,
+      gnConfigService,
+      gnConfig,
+      gnGlobalSettings,
+      $translate
+    ) {
       return {
         restrict: "A",
         replace: true,
@@ -375,19 +381,22 @@
           scope.updateSearchUrl = false;
 
           scope.save = function () {
-            return gnFavouritesListService
-              .createFavourites(scope.name)
-              .then(function (response) {
+            return gnFavouritesListService.createFavourites(scope.name).then(
+              function (response) {
                 scope.$emit("updatedUserSelectionFavourites", response.data);
               },
-              function( _error) {
-                 if (_error.data && _error.data.description) {
-                    alert(  $translate.instant("favouriteslistAddError") + ": "+_error.data.description);
-                 }
-                 else {
-                    alert($translate.instant("favouriteslistAddError"));
-                 }
-              })
+              function (_error) {
+                if (_error.data && _error.data.description) {
+                  alert(
+                    $translate.instant("favouriteslistAddError") +
+                      ": " +
+                      _error.data.description
+                  );
+                } else {
+                  alert($translate.instant("favouriteslistAddError"));
+                }
+              }
+            );
           };
         }
       };
