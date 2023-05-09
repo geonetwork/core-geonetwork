@@ -403,7 +403,7 @@
           lang: "="
         },
         link: function (scope, element, attrs) {
-          scope.favouriteLists = [1, 2, 3];
+          scope.favouriteLists = [];
 
           scope.uuid = scope.record.uuid;
 
