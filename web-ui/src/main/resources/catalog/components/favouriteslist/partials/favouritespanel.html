@@ -1,7 +1,4 @@
-<div
-  class="panel panel-default gn-favourites"
-  data-ng-show="isFavouritesPanelEnabled"
->
+<div class="panel panel-default gn-favourites" data-ng-show="isFavouritesPanelEnabled">
   <div class="panel-heading" data-gn-slide-toggle="false">
     <i class="fa fa-fw fa-thumb-tack" />&nbsp;
     <span data-translate="">Favourites</span>
@@ -31,11 +28,7 @@
           >
         </div>
 
-        <div
-          class="btn-group btn-group-sm"
-          role="group"
-          ng-disabled="!search.editable"
-        >
+        <div class="btn-group btn-group-sm" role="group" ng-disabled="!search.editable">
           <!-- view -->
           <a
             ng-click="searchUrl(search)"
