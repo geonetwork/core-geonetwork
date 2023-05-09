@@ -422,6 +422,7 @@
     "mdvalid": "Metaúdaj je validný",
     "mdinvalid": "Metaúdaje je nevalidný",
     "mdinvalidcantpublish": "Invalid metadata can't be published",
+    "mdnonapprovedcantpublish": "Non approved metadata can't be published",
     "mdnovalidation": "Metaúdaje nemajú informácie o validácii",
     "setall": "Nastaviť všetky privilégiá",
     "print_legend": "Legenda",

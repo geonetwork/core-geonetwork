@@ -582,5 +582,8 @@
     "facet-mdStatus": "Vývoj v postupu prací",
     "skipLink": "Přeskočte a přejděte k obsahu",
     "batchSubmitTitle": "Dávkové odeslání metadat",
-    "batchSubmitInfo": "Tato možnost odešle vybraná metadata vlastněná uživatelem."
+    "batchSubmitInfo": "Tato možnost odešle vybraná metadata vlastněná uživatelem.",
+    "reviewerNotAllowedPublish": "Prohlížející nemá oprávnění publikovat metadata",
+    "reviewerNotAllowedUnpublish": "Prohlížející nemůže zrušit publikování metadat",
+    "reviewerNotAllowedPublishUnpublish": "Prohlížející nemá oprávnění publikovat/zrušit publikování metadat"
 }

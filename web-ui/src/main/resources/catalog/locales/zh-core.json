@@ -582,5 +582,8 @@
     "facet-mdStatus": "工作流程进度",
     "skipLink": "Skip and go to the content",
     "batchSubmitTitle": "Batch metadata submission",
-    "batchSubmitInfo": "This option submits the selected metadata owned by the user."
+    "batchSubmitInfo": "This option submits the selected metadata owned by the user.",
+    "reviewerNotAllowedPublish": "Reviewer not allowed to publish the metadata",
+    "reviewerNotAllowedUnpublish": "Reviewer not allowed to un-publish the metadata",
+    "reviewerNotAllowedPublishUnpublish": "Reviewer not allowed to publish / un-publish the metadata"
 }
