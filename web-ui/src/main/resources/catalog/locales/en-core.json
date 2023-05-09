@@ -589,5 +589,6 @@
     "reviewerNotAllowedUnpublish": "Reviewer not allowed to un-publish the metadata",
     "reviewerNotAllowedPublishUnpublish": "Reviewer not allowed to publish / un-publish the metadata",
     "chooseFavouritesList": "Choose a favourites list",
-    "favouriteslist": "Favourites Lists"
+    "favouriteslist": "Favourites Lists",
+    "favouriteslistAddError": "An error occurred when creating a list"
 }
