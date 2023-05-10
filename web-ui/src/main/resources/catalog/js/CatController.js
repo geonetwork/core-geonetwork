@@ -1517,6 +1517,7 @@
     "$cookies",
     "gnExternalViewer",
     "gnAlertService",
+    "gnESFacet",
     function (
       $scope,
       $http,
@@ -1536,7 +1537,8 @@
       gnSearchSettings,
       $cookies,
       gnExternalViewer,
-      gnAlertService
+      gnAlertService,
+      gnESFacet
     ) {
       $scope.version = "0.0.1";
       var defaultNode = "srv";
@@ -1952,6 +1954,7 @@
                   $scope.searchInfo = r.data;
                   var keys = Object.keys(gnGlobalSettings.gnCfg.mods.home.facetConfig);
                   selectedFacet = keys[0];
+
                   for (var i = 0; i < keys.length; i++) {
                     if (
                       $scope.searchInfo.aggregations[keys[i]].buckets.length > 0 ||
@@ -1965,7 +1968,13 @@
                     list: keys,
                     key: selectedFacet,
                     lastKey: keys.length > 1 ? keys[keys.length - 1] : undefined,
-                    config: gnGlobalSettings.gnCfg.mods.home.facetConfig
+                    config: gnGlobalSettings.gnCfg.mods.home.facetConfig,
+                    facets: gnESFacet.createFacetModel(
+                      gnGlobalSettings.gnCfg.mods.home.facetConfig,
+                      r.data.aggregations,
+                      undefined,
+                      undefined
+                    )
                   };
                 });
             }
