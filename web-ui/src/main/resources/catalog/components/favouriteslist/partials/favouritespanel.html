@@ -1,7 +1,7 @@
 <div class="panel panel-default gn-favourites" data-ng-show="isFavouritesPanelEnabled">
   <div class="panel-heading" data-gn-slide-toggle="false">
     <i class="fa fa-fw fa-thumb-tack" />&nbsp;
-    <span data-translate="">Favourites</span>
+    <span data-translate="">{{'favourites' | translate}}</span>
 
     <div class="pull-right">
       <div class="btn-group" role="group">
@@ -33,17 +33,17 @@
           <a
             ng-click="searchUrl(search)"
             class="btn btn-default"
-            title="{{'view' | translate}}"
-            aria-label="{{'view' | translate}}"
+            title="{{'View' | translate}}"
+            aria-label="{{'View' | translate}}"
           >
             <span class="fa fa-filter"></span>
           </a>
-          <!-- publish -->
+          <!-- private/public status -->
           <a
             href=""
             class="btn btn-default"
             data-ng-click="(search.editable) && toggleStatus(search)"
-            title="{{'toggle public/private status' | translate}}"
+            title="{{'favouriteToggleStatus' | translate}}"
             aria-label="{{'change status' | translate}}"
             ng-disabled="!search.editable || search.userName ==null"
           >
