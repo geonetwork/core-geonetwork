@@ -321,8 +321,8 @@ public class MetadataWorkflowApi {
     MetadataProcessingReport submit(@RequestBody MetadataBatchSubmitParameter submitParameter,
                                     @Parameter(hidden = true) HttpSession session,
                                     @Parameter(hidden = true) HttpServletRequest request) throws Exception {
-        ServiceContext context = ApiUtils.createServiceContext(request,
-                languageUtils.getIso3langCode(request.getLocales()));
+        String language = languageUtils.getIso3langCode(request.getLocales());
+        ServiceContext context = ApiUtils.createServiceContext(request, language);
 
         checkWorkflowEnabled();
 
@@ -351,14 +351,17 @@ public class MetadataWorkflowApi {
                     if (currentStatus == null) {
                         // Metadata not in the workflow
                         report.addMetadataInfos(metadata.getId(), metadata.getUuid(),
-                                true, false, "Metadata workflow is not enabled");
+                                true, false,
+                            "Record has no status. It can't be submitted.");
                         continue;
                     } else if (currentStatus.getStatusValue().getId() != Integer.parseInt(StatusValue.Status.DRAFT)) {
                         // Metadata not in draft status
                         report.addMetadataInfos(metadata.getId(), metadata.getUuid(),
                                 this.metadataUtils.isMetadataDraft(metadata.getId()),
                                 this.metadataUtils.isMetadataApproved(metadata.getId()),
-                                "Metadata is not in draft status.");
+                                String.format(
+                                    "Record status is %s. Only draft can be submitted.",
+                                    currentStatus.getStatusValue().getLabel(language)));
                         continue;
                     }
 
