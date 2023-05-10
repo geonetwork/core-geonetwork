@@ -34,9 +34,13 @@
     "gnESClient",
     "$rootScope",
     "gnUtilityService",
-    function ($http, $q, gnESClient, $rootScope, gnUtilityService) {
+    "gnGlobalSettings",
+    function ($http, $q, gnESClient, $rootScope, gnUtilityService, gnGlobalSettings) {
       this.gnESClient = gnESClient;
       cachedFavouritesLists = [];
+
+      this.isFavouritesPanelEnabled =
+        gnGlobalSettings.gnCfg.mods.search.favouriteslists.enabled;
 
       this.loadFavouritesListItemsPaged = function (
         favouritesListId,

@@ -74,7 +74,7 @@
 
       <li class="divider"></li>
 
-      <li>
+      <li ng-if="mdService.isFavouritesPanelEnabled">
         <a href="" data-ng-click="mdService.addToFavouritesList(searchResults)">
           <i class="fa fa-fw fa-thumb-tack"></i>&nbsp;<span translate
             >addToFavouritesList</span

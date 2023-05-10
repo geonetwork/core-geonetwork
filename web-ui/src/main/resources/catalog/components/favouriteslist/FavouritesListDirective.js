@@ -49,7 +49,14 @@
     "$location",
     "$rootScope",
     "gnUtilityService",
-    function (gnFavouritesListService, $location, $rootScope, gnUtilityService) {
+    "gnGlobalSettings",
+    function (
+      gnFavouritesListService,
+      $location,
+      $rootScope,
+      gnUtilityService,
+      gnGlobalSettings
+    ) {
       return {
         restrict: "A",
         replace: true,
@@ -59,7 +66,8 @@
         templateUrl:
           "../../catalog/components/favouriteslist/partials/favouritespanel.html",
         link: function (scope, element, attrs) {
-          scope.isFavouritesPanelEnabled = true; // gnGlobalSettings.gnCfg.mods.search.usersearches.enabled;
+          scope.isFavouritesPanelEnabled =
+            gnFavouritesListService.isFavouritesPanelEnabled;
 
           scope.favouriteLists = null;
 
@@ -421,6 +429,9 @@
           lang: "="
         },
         link: function (scope, element, attrs) {
+          scope.isFavouritesPanelEnabled =
+            gnFavouritesListService.isFavouritesPanelEnabled;
+
           scope.favouriteLists = [];
 
           scope.uuid = scope.record.uuid;

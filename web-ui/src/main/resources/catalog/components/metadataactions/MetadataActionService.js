@@ -195,6 +195,8 @@
         location.replace(url);
       };
 
+      this.isFavouritesPanelEnabled = gnFavouritesListService.isFavouritesPanelEnabled;
+
       this.addToFavouritesList = function (searchResults) {
         gnFavouritesListService.selectListBulkAdd(searchResults.selectionBucket);
       };

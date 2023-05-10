@@ -1,5 +1,8 @@
 <!-- Single button -->
-<div class="" ng-if="record.isTemplate != 'y' &&  favouriteLists.length>0">
+<div
+  class=""
+  ng-if="isFavouritesPanelEnabled && record.isTemplate != 'y' &&  favouriteLists.length>0"
+>
   <button
     type="button"
     class="btn btn-default btn-single dropdown-toggle"
