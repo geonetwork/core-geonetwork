@@ -1,0 +1,19 @@
+================================================================================
+===
+=== GeoNetwork 3.12.10: List of changes
+===
+================================================================================
+- [BP] Metadata editor / fix disable link to parent button. (#7045)
+- [BP] Update publish link so that it is disabled if the metadata has not been approved. (#7009)
+- [BP] Metadata editor / Use created, modified, issued date from thesaurus when adding keywords (#6972)
+- [BP] Fix admin setting error with duplicate id="metadata/workflow/draftWhenInGroup" (#6980)
+- [BP] Metadata publication mail - support additional fields (#6906)
+- [BP] Metadata file downloads report - fix check to retrieve user related information (#6971)
+- [BP] Fix issue with initial db creation not having language list when @PostConstruct was called (#6870)
+- [BP] Remove requirement for gmd:fileDescription so that thumbnail urls are transformed when migrating records
+- [BP] Update the password min length check (#6953)
+- [BP] Update validation report to include more information in the report. #6900 (#6902)
+- Update Geotools to v24.7 (#6926)
+- reload4j drop-in replacement for Log4J 1.2 API (#6896)
+- Support withheld to filter out elements defined in the schema filters configurations in Lucene query output (#6897)
+- [BP] Cmis performance enhancements (#6893)
