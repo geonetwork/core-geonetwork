@@ -394,11 +394,12 @@ public class MetadataWorkflowApi {
     @io.swagger.v3.oas.annotations.Operation(summary = "Set the record status", description = "")
     @RequestMapping(value = "/{metadataUuid}/status", method = RequestMethod.PUT)
     @PreAuthorize("hasAuthority('Editor')")
-    @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Status updated."),
+    @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "Status updated."),
             @ApiResponse(responseCode = "400", description = "Metadata workflow not enabled."),
             @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)})
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void setStatus(@Parameter(description = API_PARAM_RECORD_UUID, required = true) @PathVariable String metadataUuid,
+    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseBody
+    public Map<Integer, StatusChangeType> setStatus(@Parameter(description = API_PARAM_RECORD_UUID, required = true) @PathVariable String metadataUuid,
                           @Parameter(description = "Metadata status", required = true) @RequestBody(required = true) MetadataStatusParameter status,
                           HttpServletRequest request,
                           HttpServletResponse response) throws Exception {
@@ -428,7 +429,6 @@ public class MetadataWorkflowApi {
         boolean isAllowedSubmitApproveInvalidMd = settingManager
                 .getValueAsBool(Settings.METADATA_WORKFLOW_ALLOW_SUBMIT_APPROVE_INVALID_MD);
         if (((status.getStatus() == Integer.parseInt(StatusValue.Status.SUBMITTED))
-                || (status.getStatus() == Integer.parseInt(StatusValue.Status.APPROVED_FOR_PUBLISHED))
                 || (status.getStatus() == Integer.parseInt(StatusValue.Status.APPROVED)))
                 && !isAllowedSubmitApproveInvalidMd) {
 
@@ -464,6 +464,7 @@ public class MetadataWorkflowApi {
                 }
             }
         }
+        return statusUpdate;
     }
 
     @io.swagger.v3.oas.annotations.Operation(
