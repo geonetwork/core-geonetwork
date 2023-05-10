@@ -499,6 +499,7 @@
   "addToFavouritesList": "Add to a Favourites list",
   "chooseFavouritesList": "Choose a favourites list",
   "favouriteslist": "Favourites Lists",
+  "favouritelist": "Favourite List",
   "favouriteslistAddError": "An error occurred when creating a list",
   "favourites": "Favourites",
   "favouriteToggleStatus": "Toggle public/private status",

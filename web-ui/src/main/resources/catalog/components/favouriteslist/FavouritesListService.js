@@ -164,6 +164,16 @@
         return $http.post(url, body);
       };
 
+      this.getFavouriteListById = function(id) {
+        id = parseInt(id);
+        for (var i = 0; i < cachedFavouritesLists.length; i++) {
+          var item = cachedFavouritesLists[i];
+          if (item.id === id)
+            return item;
+        }
+        return null;
+      };
+
       this.getCachedLists = function () {
         return cachedFavouritesLists;
       };
