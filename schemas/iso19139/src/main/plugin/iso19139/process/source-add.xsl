@@ -60,6 +60,14 @@ Stylesheet used to update metadata adding a reference to a source record.
         <xsl:otherwise>
           <gmd:dataQualityInfo>
             <gmd:DQ_DataQuality>
+              <gmd:scope>
+                <gmd:DQ_Scope>
+                  <gmd:level>
+                    <gmd:MD_ScopeCode codeListValue="dataset"
+                                      codeList="http://nap.geogratis.gc.ca/metadata/register/napMetadataRegister.xml#IC_108"/>
+                  </gmd:level>
+                </gmd:DQ_Scope>
+              </gmd:scope>
               <gmd:lineage>
                 <gmd:LI_Lineage>
                   <xsl:call-template name="make-source-link"/>
