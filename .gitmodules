@@ -10,3 +10,4 @@
 [submodule "docs/manuals"]
 	path = docs/manuals
 	url = https://github.com/geonetwork/doc.git
+        branch = 3.12.x
