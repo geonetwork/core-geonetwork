@@ -27,6 +27,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jeeves.config.springutil.JeevesNodeAwareRedirectStrategy;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.services.ReadWriteController;
@@ -58,6 +59,7 @@ import org.fao.geonet.kernel.datamanager.IMetadataStatus;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.metadata.StatusActions;
 import org.fao.geonet.kernel.metadata.StatusActionsFactory;
+import org.fao.geonet.kernel.metadata.StatusChangeType;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.kernel.setting.SettingManager;
@@ -79,6 +81,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.*;
 
@@ -397,7 +400,8 @@ public class MetadataWorkflowApi {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void setStatus(@Parameter(description = API_PARAM_RECORD_UUID, required = true) @PathVariable String metadataUuid,
                           @Parameter(description = "Metadata status", required = true) @RequestBody(required = true) MetadataStatusParameter status,
-                          HttpServletRequest request) throws Exception {
+                          HttpServletRequest request,
+                          HttpServletResponse response) throws Exception {
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
         ServiceContext context = ApiUtils.createServiceContext(request,
             languageUtils.getIso3langCode(request.getLocales()));
@@ -442,18 +446,20 @@ public class MetadataWorkflowApi {
 
         List<MetadataStatus> listOfStatusChange = new ArrayList<>(1);
         listOfStatusChange.add(metadataStatus);
-        sa.onStatusChange(listOfStatusChange);
+        Map<Integer, StatusChangeType> statusUpdate = sa.onStatusChange(listOfStatusChange);
 
-        //--- reindex metadata
-        metadataIndexer.indexMetadata(String.valueOf(metadata.getId()), true, IndexingMode.full);
+        if (statusUpdate.get(metadata.getId()) == StatusChangeType.UPDATED) {
+            //--- reindex metadata
+            metadataIndexer.indexMetadata(String.valueOf(metadata.getId()), true, IndexingMode.full);
 
-        // Reindex the metadata table record to update the field _statusWorkflow that contains the composite
-        // status of the published and draft versions
-        if (metadata instanceof MetadataDraft) {
-            Metadata metadataApproved = metadataRepository.findOneByUuid(metadata.getUuid());
+            // Reindex the metadata table record to update the field _statusWorkflow that contains the composite
+            // status of the published and draft versions
+            if (metadata instanceof MetadataDraft) {
+                Metadata metadataApproved = metadataRepository.findOneByUuid(metadata.getUuid());
 
-            if (metadataApproved != null) {
-                metadataIndexer.indexMetadata(String.valueOf(metadataApproved.getId()), true, IndexingMode.full);
+                if (metadataApproved != null) {
+                    metadataIndexer.indexMetadata(String.valueOf(metadataApproved.getId()), true, IndexingMode.full);
+                }
             }
         }
     }
