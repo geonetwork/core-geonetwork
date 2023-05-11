@@ -33,9 +33,9 @@ import jeeves.server.context.ServiceContext;
 import jeeves.services.ReadWriteController;
 import org.apache.commons.lang3.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
-import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
+import org.fao.geonet.util.MetadataPublicationMailNotifier;
 import org.fao.geonet.api.exception.NotAllowedException;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.api.processing.report.MetadataProcessingReport;
@@ -50,7 +50,6 @@ import org.fao.geonet.events.history.RecordPrivilegesChangeEvent;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.datamanager.*;
-import org.fao.geonet.kernel.metadata.DefaultStatusActions;
 import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
@@ -58,10 +57,8 @@ import org.fao.geonet.repository.*;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.repository.specification.MetadataValidationSpecs;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
-import org.fao.geonet.util.MailUtil;
 import org.fao.geonet.util.UserUtil;
 import org.fao.geonet.util.WorkflowUtil;
-import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
@@ -148,6 +145,9 @@ public class MetadataSharingApi {
 
     @Autowired
     RoleHierarchy roleHierarchy;
+
+    @Autowired
+    MetadataPublicationMailNotifier metadataPublicationMailNotifier;
 
     /**
      * What does publish mean?
@@ -283,6 +283,7 @@ public class MetadataSharingApi {
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
         ApplicationContext appContext = ApplicationContextHolder.get();
         ServiceContext context = ApiUtils.createServiceContext(request);
+        ResourceBundle messages = ApiUtils.getMessagesResourceBundle(request.getLocales());
 
         boolean skipAllReservedGroup = false;
 
@@ -308,7 +309,8 @@ public class MetadataSharingApi {
         metadataIndexer.indexMetadataPrivileges(metadata.getUuid(), metadata.getId());
 
         if (notifyByEmail && !metadataListToNotifyPublication.isEmpty()) {
-            notifyPublication(context, request, metadataListToNotifyPublication);
+            metadataPublicationMailNotifier.notifyPublication(messages, context.getLanguage(),
+                metadataListToNotifyPublication);
         }
     }
 
@@ -1095,10 +1097,9 @@ public class MetadataSharingApi {
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
         ApplicationContext appContext = ApplicationContextHolder.get();
         ServiceContext context = ApiUtils.createServiceContext(request);
+        ResourceBundle messages = ApiUtils.getMessagesResourceBundle(request.getLocales());
 
         if (!accessManager.hasReviewPermission(context, Integer.toString(metadata.getId()))) {
-            ResourceBundle messages = ApiUtils.getMessagesResourceBundle(request.getLocales());
-
             throw new Exception(String.format(messages.getString("api.metadata.share.ErrorUserNotAllowedToPublish"),
                 metadataUuid, messages.getString(accessManager.getReviewerRule()) ));
 
@@ -1122,7 +1123,8 @@ public class MetadataSharingApi {
         metadataIndexer.indexMetadata(String.valueOf(metadata.getId()), true, IndexingMode.full);
 
         if (notifyByEmail && !metadataListToNotifyPublication.isEmpty()) {
-            notifyPublication(context, request, metadataListToNotifyPublication);
+            metadataPublicationMailNotifier.notifyPublication(messages, context.getLanguage(),
+                metadataListToNotifyPublication);
         }
     }
 
@@ -1150,6 +1152,7 @@ public class MetadataSharingApi {
             final ApplicationContext appContext = ApplicationContextHolder.get();
 
             ServiceContext context = ApiUtils.createServiceContext(request);
+            ResourceBundle messages = ApiUtils.getMessagesResourceBundle(request.getLocales());
 
             List<String> listOfUpdatedRecords = new ArrayList<>();
             List<MetadataPublicationNotificationInfo> metadataListToNotifyPublication = new ArrayList<>();
@@ -1192,7 +1195,8 @@ public class MetadataSharingApi {
             }
 
             if (!metadataListToNotifyPublication.isEmpty()) {
-                notifyPublication(context, request, metadataListToNotifyPublication);
+                metadataPublicationMailNotifier.notifyPublication(messages, context.getLanguage(),
+                    metadataListToNotifyPublication);
             }
 
             metadataManager.flush();
@@ -1248,130 +1252,6 @@ public class MetadataSharingApi {
         this.publicationConfig = publicationConfig;
     }
 
-    private void notifyPublication(ServiceContext context, HttpServletRequest request,
-                                   List<MetadataPublicationNotificationInfo> metadataListToNotifyPublication) {
-        String notificationSetting = sm.getValue(SYSTEM_METADATAPRIVS_PUBLICATION_NOTIFICATIONLEVEL);
-        if (StringUtils.isNotEmpty(notificationSetting)) {
-            StatusValueNotificationLevel notificationLevel =
-                StatusValueNotificationLevel.valueOf(notificationSetting);
-            if (notificationLevel != null) {
-
-                if (notificationLevel == StatusValueNotificationLevel.recordProfileReviewer) {
-                    Map<Integer, List<MetadataPublicationNotificationInfo>> metadataListToNotifyPublicationPerGroup =
-                        metadataListToNotifyPublication.stream()
-                            .collect(Collectors.groupingBy(MetadataPublicationNotificationInfo::getGroupId));
-
-                    // Process the metadata published by group owner
-                    metadataListToNotifyPublicationPerGroup.forEach((groupId, metadataNotificationInfoList) -> {
-                        Set<Integer> metadataIds = metadataNotificationInfoList
-                            .stream().map(m -> m.getMetadataId()).collect(Collectors.toSet());
-
-                        List<User> userToNotify = DefaultStatusActions.getUserToNotify(notificationLevel,
-                            metadataIds,
-                            null);
-
-                        List<String> toAddress1 = userToNotify.stream()
-                            .filter(u -> StringUtils.isNotEmpty(u.getEmail()))
-                            .map(User::getEmail)
-                            .collect(Collectors.toList());
-
-                        sendMailPublicationNotification(context, request, toAddress1, metadataNotificationInfoList);
-                    });
-
-                } else {
-                    List<String> toAddress;
-
-                    if (notificationLevel == StatusValueNotificationLevel.recordGroupEmail) {
-                        List<Group> groupToNotify = DefaultStatusActions.getGroupToNotify(notificationLevel,
-                            Arrays.asList(sm.getValue(SYSTEM_METADATAPRIVS_PUBLICATION_NOTIFICATIONGROUPS).split("\\|")));
-
-                        toAddress = groupToNotify.stream()
-                            .filter(g -> StringUtils.isNotEmpty(g.getEmail()))
-                            .map(Group::getEmail)
-                            .collect(Collectors.toList());
-                    } else {
-                        Set<Integer> metadataIds = metadataListToNotifyPublication
-                            .stream().map(m -> m.getMetadataId()).collect(Collectors.toSet());
-
-                        List<User> userToNotify = DefaultStatusActions.getUserToNotify(notificationLevel,
-                            metadataIds,
-                            null);
-
-                        toAddress = userToNotify.stream()
-                            .filter(u -> StringUtils.isNotEmpty(u.getEmail()))
-                            .map(User::getEmail)
-                            .collect(Collectors.toList());
-
-                    }
-
-                    sendMailPublicationNotification(context, request, toAddress, metadataListToNotifyPublication);
-                }
-            }
-        }
-    }
-
-    private void sendMailPublicationNotification(ServiceContext context, HttpServletRequest request,
-                                                 List<String> toAddress, List<MetadataPublicationNotificationInfo> metadataListToNotifyPublication) {
-        if (toAddress.isEmpty()) {
-            return;
-        }
-
-        ResourceBundle messages = ApiUtils.getMessagesResourceBundle(request.getLocales());
-
-        String subject = String.format(
-            messages.getString("metadata_published_subject"),
-            sm.getSiteName());
-
-        String message = messages.getString("metadata_published_text");
-        String recordPublishedMessage = messages.getString("metadata_published_record_text")
-            .replace("{{link}}", sm.getNodeURL()+ "api/records/{{index:uuid}}");
-
-        String recordUnpublishedMessage = messages.getString("metadata_unpublished_record_text")
-            .replace("{{link}}", sm.getNodeURL()+ "api/records/{{index:uuid}}");
-
-        StringBuilder listOfProcessedMetadataMessage = new StringBuilder();
-
-        metadataListToNotifyPublication.forEach( metadata -> {
-            java.util.Optional<Group> group = groupRepository.findById(metadata.getGroupId());
-
-            if (Boolean.TRUE.equals(metadata.getPublished())) {
-                String recordPublishedMessageAux = recordPublishedMessage
-                    .replace("{{publisherUser}}", metadata.getPublisherUser())
-                    .replace("{{submitterUser}}", metadata.getSubmitterUser())
-                    .replace("{{reviewerUser}}", metadata.getReviewerUser())
-                    .replace("{{timeStamp}}", metadata.getPublicationDateStamp().getDateAndTime());
-
-                if (group.isPresent()) {
-                    recordPublishedMessageAux = recordPublishedMessageAux.replace("{{group}}", group.get().getName());
-                }
-
-                listOfProcessedMetadataMessage.append(
-                    MailUtil.compileMessageWithIndexFields(recordPublishedMessageAux, metadata.getMetadataUuid(), context.getLanguage()));
-            } else {
-                String recordUnpublishedMessageAux = recordUnpublishedMessage
-                    .replace("{{publisherUser}}", metadata.getPublisherUser())
-                    .replace("{{submitterUser}}", metadata.getSubmitterUser())
-                    .replace("{{reviewerUser}}", metadata.getReviewerUser())
-                    .replace("{{timeStamp}}", metadata.getPublicationDateStamp().getDateAndTime());
-
-                if (group.isPresent()) {
-                    recordUnpublishedMessageAux = recordUnpublishedMessageAux.replace("{{group}}", group.get().getName());
-                }
-
-                listOfProcessedMetadataMessage.append(
-                    MailUtil.compileMessageWithIndexFields(recordUnpublishedMessageAux, metadata.getMetadataUuid(), context.getLanguage()));
-            }
-        });
-
-        String htmlMessage = String.format(message, listOfProcessedMetadataMessage);
-
-        // Send mail to notify about metadata publication / un-publication
-        try {
-            MailUtil.sendHtmlMail(toAddress, subject, htmlMessage, sm);
-        } catch (IllegalArgumentException ex) {
-            Log.warning(API.LOG_MODULE_NAME, ex.getMessage(), ex);
-        }
-    }
 
     /**
      * Verifies if the user profile can make the privileges changes for reserved groups.

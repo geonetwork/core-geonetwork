@@ -27,7 +27,6 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jeeves.config.springutil.JeevesNodeAwareRedirectStrategy;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.services.ReadWriteController;
@@ -39,6 +38,8 @@ import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
+import org.fao.geonet.kernel.datamanager.*;
+import org.fao.geonet.util.MetadataPublicationMailNotifier;
 import org.fao.geonet.api.exception.FeatureNotEnabledException;
 import org.fao.geonet.api.exception.NotAllowedException;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
@@ -52,7 +53,6 @@ import org.fao.geonet.domain.utils.ObjectJSONUtils;
 import org.fao.geonet.events.history.RecordRestoredEvent;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.datamanager.*;
 import org.fao.geonet.kernel.metadata.StatusActions;
 import org.fao.geonet.kernel.metadata.StatusActionsFactory;
 import org.fao.geonet.kernel.metadata.StatusChangeType;
@@ -82,6 +82,7 @@ import javax.servlet.http.HttpSession;
 import java.util.*;
 
 import static org.fao.geonet.api.ApiParams.*;
+import static org.fao.geonet.kernel.setting.Settings.SYSTEM_METADATAPRIVS_PUBLICATION_NOTIFICATIONLEVEL;
 
 @RequestMapping(value = {"/{portal}/api/records"})
 @Tag(name = API_CLASS_RECORD_TAG, description = API_CLASS_RECORD_OPS)
@@ -129,6 +130,9 @@ public class MetadataWorkflowApi {
     IMetadataUtils metadataUtils;
 
     @Autowired
+    IMetadataManager metadataManager;
+
+    @Autowired
     private EsSearchManager searchManager;
 
     @Autowired
@@ -136,6 +140,15 @@ public class MetadataWorkflowApi {
 
     @Autowired
     private IMetadataValidator metadataValidator;
+
+    @Autowired
+    private OperationAllowedRepository operationAllowedRepository;
+
+    @Autowired
+    private MetadataCategoryRepository categoryRepository;
+
+    @Autowired
+    MetadataPublicationMailNotifier metadataPublicationMailNotifier;
 
     // The restore function currently supports these states
     static final Integer[] supportedRestoreStatuses = {
@@ -166,11 +179,9 @@ public class MetadataWorkflowApi {
         List<MetadataStatus> listOfStatus = metadataStatusRepository.findAllByMetadataId(metadata.getId(),
             Sort.by(sortOrder, sortField));
 
-        List<MetadataStatusResponse> response = buildMetadataStatusResponses(listOfStatus, details,
-            context.getLanguage());
-
         // TODO: Add paging
-        return response;
+        return buildMetadataStatusResponses(listOfStatus, details,
+            context.getLanguage());
     }
 
     @io.swagger.v3.oas.annotations.Operation(summary = "Get record status history by type", description = "")
@@ -191,11 +202,9 @@ public class MetadataWorkflowApi {
         List<MetadataStatus> listOfStatus = metadataStatusRepository.findAllByMetadataIdAndByType(metadata.getId(), type,
             Sort.by(sortOrder, sortField));
 
-        List<MetadataStatusResponse> response = buildMetadataStatusResponses(listOfStatus, details,
-            context.getLanguage());
-
         // TODO: Add paging
-        return response;
+        return buildMetadataStatusResponses(listOfStatus, details,
+            context.getLanguage());
     }
 
     @io.swagger.v3.oas.annotations.Operation(summary = "Get last workflow status for a record", description = "")
@@ -210,14 +219,13 @@ public class MetadataWorkflowApi {
         @Parameter(description = API_PARAM_RECORD_UUID, required = true) @PathVariable String metadataUuid,
         HttpServletRequest request) throws Exception {
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
-        ApplicationContext appContext = ApplicationContextHolder.get();
         Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
         ServiceContext context = ApiUtils.createServiceContext(request, locale.getISO3Language());
 
         // --- only allow the owner of the record to set its status
         if (!accessManager.isOwner(context, String.valueOf(metadata.getId()))) {
-            throw new SecurityException(String.format(
-                "Only the owner of the metadata can get the status. User is not the owner of the metadata"));
+            throw new SecurityException(
+                "Only the owner of the metadata can get the status. User is not the owner of the metadata");
         }
 
         MetadataStatus recordStatus = metadataStatus.getStatus(metadata.getId());
@@ -225,7 +233,7 @@ public class MetadataWorkflowApi {
         List<StatusValue> elStatus = statusValueRepository.findAllByType(StatusValueType.workflow);
 
         // --- get the list of content reviewers for this metadata record
-        Set<Integer> ids = new HashSet<Integer>();
+        Set<Integer> ids = new HashSet<>();
         ids.add(Integer.valueOf(metadata.getId()));
         List<Pair<Integer, User>> reviewers = userRepository.findAllByGroupOwnerNameAndProfile(ids, Profile.Reviewer);
         Collections.sort(reviewers, Comparator.comparing(s -> s.two().getName()));
@@ -251,11 +259,16 @@ public class MetadataWorkflowApi {
         ServiceContext context = ApiUtils.createServiceContext(request,
             languageUtils.getIso3langCode(request.getLocales()));
 
+        ResourceBundle messages = ApiUtils.getMessagesResourceBundle(request.getLocales());
+
         checkWorkflowEnabled();
 
         MetadataProcessingReport report = new SimpleMetadataProcessingReport();
 
         try {
+            List<MetadataPublicationNotificationInfo> metadataListToNotifyPublication = new ArrayList<>();
+            boolean notifyByEmail = StringUtils.isNoneEmpty(settingManager.getValue(SYSTEM_METADATAPRIVS_PUBLICATION_NOTIFICATIONLEVEL));
+
             Set<String> records = ApiUtils.getUuidsParameterOrSelection(approveParameter.getUuids(),
                 approveParameter.getBucket(), ApiUtils.getUserSession(session));
             report.setTotalRecords(records.size());
@@ -298,10 +311,39 @@ public class MetadataWorkflowApi {
 
                     report.incrementProcessedRecords();
                     listOfUpdatedRecords.add(String.valueOf(metadata.getId()));
+
+                    // Check if it's published to send a mail notification
+                    if (notifyByEmail) {
+                        int metadataIdApproved = metadata.getId();
+                        if (metadata instanceof MetadataDraft) {
+                            Metadata metadataApproved = metadataRepository.findOneByUuid(metadata.getUuid());
+
+                            if (metadataApproved != null) {
+                                metadataIdApproved = metadataApproved.getId();
+                            }
+                        }
+                        // Status has change to APPROVED and the metadata is published
+                        if ((currentStatus.getStatusValue().getId() != Integer.parseInt(StatusValue.Status.APPROVED)) &&
+                            this.metadataUtils.isMetadataPublished(metadataIdApproved)) {
+                            MetadataPublicationNotificationInfo metadataNotificationInfo = new MetadataPublicationNotificationInfo();
+                            metadataNotificationInfo.setMetadataUuid(metadata.getUuid());
+                            metadataNotificationInfo.setMetadataId(metadataIdApproved);
+                            metadataNotificationInfo.setGroupId(metadata.getSourceInfo().getGroupOwner());
+                            metadataNotificationInfo.setPublished(true);
+                            metadataNotificationInfo.setPublicationDateStamp(new ISODate());
+                            metadataNotificationInfo.setReapproval(true);
+
+                            metadataListToNotifyPublication.add(metadataNotificationInfo);
+                        }
+                    }
                 }
             }
             dataManager.flush();
-            dataManager.indexMetadata(listOfUpdatedRecords);
+            metadataIndexer.indexMetadata(listOfUpdatedRecords);
+
+            if (notifyByEmail && !metadataListToNotifyPublication.isEmpty()) {
+                metadataPublicationMailNotifier.notifyPublication(messages, context.getLanguage(), metadataListToNotifyPublication);
+            }
 
         } catch (Exception exception) {
             report.addError(exception);
@@ -384,7 +426,7 @@ public class MetadataWorkflowApi {
                 }
             }
             dataManager.flush();
-            dataManager.indexMetadata(listOfUpdatedRecords);
+            metadataIndexer.indexMetadata(listOfUpdatedRecords);
 
         } catch (Exception exception) {
             report.addError(exception);
@@ -410,13 +452,16 @@ public class MetadataWorkflowApi {
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
         ServiceContext context = ApiUtils.createServiceContext(request,
             languageUtils.getIso3langCode(request.getLocales()));
+        ResourceBundle messages = ApiUtils.getMessagesResourceBundle(request.getLocales());
 
         boolean isMdWorkflowEnable = settingManager.getValueAsBool(Settings.METADATA_WORKFLOW_ENABLE);
+        List<MetadataPublicationNotificationInfo> metadataListToNotifyPublication = new ArrayList<>();
+        boolean notifyByEmail = StringUtils.isNoneEmpty(settingManager.getValue(SYSTEM_METADATAPRIVS_PUBLICATION_NOTIFICATIONLEVEL));
 
         int author = context.getUserSession().getUserIdAsInt();
-        MetadataStatus metadataStatus = convertParameter(metadata.getId(), metadata.getUuid(), status, author);
+        MetadataStatus metadataStatusValue = convertParameter(metadata.getId(), metadata.getUuid(), status, author);
 
-        if (metadataStatus.getStatusValue().getType() == StatusValueType.workflow
+        if (metadataStatusValue.getStatusValue().getType() == StatusValueType.workflow
             && !isMdWorkflowEnable) {
             throw new FeatureNotEnabledException(
                 "Metadata workflow is disabled, can not be set the status of metadata")
@@ -426,8 +471,8 @@ public class MetadataWorkflowApi {
 
         // --- only allow the owner of the record to set its status
         if (!accessManager.isOwner(context, String.valueOf(metadata.getId()))) {
-            throw new SecurityException(String.format(
-                "Only the owner of the metadata can set the status of this record. User is not the owner of the metadata."));
+            throw new SecurityException(
+                "Only the owner of the metadata can set the status of this record. User is not the owner of the metadata.");
         }
 
         boolean isAllowedSubmitApproveInvalidMd = settingManager
@@ -451,11 +496,13 @@ public class MetadataWorkflowApi {
         StatusActions sa = statusActionFactory.createStatusActions(context);
 
         String metadataCurrentStatus = dataManager.getCurrentStatus(metadata.getId());
-        metadataStatus.setPreviousState(metadataCurrentStatus);
+        metadataStatusValue.setPreviousState(metadataCurrentStatus);
 
         List<MetadataStatus> listOfStatusChange = new ArrayList<>(1);
-        listOfStatusChange.add(metadataStatus);
+        listOfStatusChange.add(metadataStatusValue);
         Map<Integer, StatusChangeType> statusUpdate = sa.onStatusChange(listOfStatusChange);
+
+        int metadataIdApproved = metadata.getId();
 
         if (statusUpdate.get(metadata.getId()) == StatusChangeType.UPDATED) {
             //--- reindex metadata
@@ -467,8 +514,25 @@ public class MetadataWorkflowApi {
                 Metadata metadataApproved = metadataRepository.findOneByUuid(metadata.getUuid());
 
                 if (metadataApproved != null) {
+                    metadataIdApproved = metadataApproved.getId();
                     metadataIndexer.indexMetadata(String.valueOf(metadataApproved.getId()), true, IndexingMode.full);
                 }
+            }
+        }
+
+        if ((status.getStatus() == Integer.parseInt(StatusValue.Status.APPROVED) && notifyByEmail)) {
+            if (this.metadataUtils.isMetadataPublished(metadataIdApproved)) {
+                MetadataPublicationNotificationInfo metadataNotificationInfo = new MetadataPublicationNotificationInfo();
+                metadataNotificationInfo.setMetadataUuid(metadata.getUuid());
+                metadataNotificationInfo.setMetadataId(metadataIdApproved);
+                metadataNotificationInfo.setGroupId(metadata.getSourceInfo().getGroupOwner());
+                metadataNotificationInfo.setPublished(true);
+                metadataNotificationInfo.setPublicationDateStamp(new ISODate());
+                metadataNotificationInfo.setReapproval(metadataIdApproved != metadata.getId());
+
+                metadataListToNotifyPublication.add(metadataNotificationInfo);
+
+                metadataPublicationMailNotifier.notifyPublication(messages, context.getLanguage(), metadataListToNotifyPublication);
             }
         }
         return statusUpdate;
@@ -494,15 +558,15 @@ public class MetadataWorkflowApi {
         throws Exception {
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
 
-        MetadataStatus metadataStatus = metadataStatusRepository
+        MetadataStatus metadataStatusValue = metadataStatusRepository
             .findOneByMetadataIdAndStatusValue_IdAndUserIdAndChangeDate(metadata.getId(), statusId, userId, new ISODate(changeDate));
 
-        if (metadataStatus != null) {
-            metadataStatusRepository.update(metadataStatus.getId(),
+        if (metadataStatusValue != null) {
+            metadataStatusRepository.update(metadataStatusValue.getId(),
                 entity -> entity.setCloseDate(new ISODate(closeDate)));
         } else {
             throw new ResourceNotFoundException(
-                String.format("Can't find metadata status for record '%d', user '%s' at date '%s'", metadataUuid,
+                String.format("Can't find metadata status for record '%s', user '%d' at date '%s'", metadataUuid,
                     userId, changeDate));
         }
     }
@@ -522,14 +586,14 @@ public class MetadataWorkflowApi {
         HttpServletRequest request) throws Exception {
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
 
-        MetadataStatus metadataStatus = metadataStatusRepository
+        MetadataStatus metadataStatusValue = metadataStatusRepository
             .findOneByMetadataIdAndStatusValue_IdAndUserIdAndChangeDate(metadata.getId(), statusId, userId, new ISODate(changeDate));
-        if (metadataStatus != null) {
-            metadataStatusRepository.delete(metadataStatus);
+        if (metadataStatusValue != null) {
+            metadataStatusRepository.delete(metadataStatusValue);
             // TODO: Reindex record ?
         } else {
             throw new ResourceNotFoundException(
-                String.format("Can't find metadata status for record '%d', user '%s' at date '%s'", metadataUuid,
+                String.format("Can't find metadata status for record '%s', user '%d' at date '%s'", metadataUuid,
                     userId, changeDate));
         }
     }
@@ -581,7 +645,7 @@ public class MetadataWorkflowApi {
         @Parameter(description = "One or more metadata record identifier. Default is all.",
             required = false)
         @RequestParam(required = false)
-        List<Integer> record,
+        List<Integer> recordIdentifier,
         @Parameter(description = "One or more metadata uuid. Default is all.",
             required = false)
         @RequestParam(required = false)
@@ -611,17 +675,16 @@ public class MetadataWorkflowApi {
 
         Profile profile = context.getUserSession().getProfile();
         if (profile != Profile.Administrator) {
-            if (CollectionUtils.isEmpty(record) &&
+            if (CollectionUtils.isEmpty(recordIdentifier) &&
                 CollectionUtils.isEmpty(uuid)) {
                 throw new NotAllowedException(
                     "Non administrator user must use a id or uuid parameter to search for status.");
             }
 
-            if (!CollectionUtils.isEmpty(record)) {
-                for (Integer recordId : record) {
-                    AbstractMetadata md;
+            if (!CollectionUtils.isEmpty(recordIdentifier)) {
+                for (Integer recordId : recordIdentifier) {
                     try {
-                        md = ApiUtils.canEditRecord(recordId + "", request);
+                        ApiUtils.canEditRecord(recordId + "", request);
                     } catch (SecurityException e) {
                         throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT);
                     }
@@ -629,9 +692,8 @@ public class MetadataWorkflowApi {
             }
             if (!CollectionUtils.isEmpty(uuid)) {
                 for (String recordId : uuid) {
-                    AbstractMetadata md;
                     try {
-                        md = ApiUtils.canEditRecord(recordId, request);
+                        ApiUtils.canEditRecord(recordId, request);
                     } catch (SecurityException e) {
                         throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT);
                     }
@@ -654,10 +716,10 @@ public class MetadataWorkflowApi {
             CollectionUtils.isNotEmpty(type) ||
             CollectionUtils.isNotEmpty(author) ||
             CollectionUtils.isNotEmpty(owner) ||
-            CollectionUtils.isNotEmpty(record) ||
+            CollectionUtils.isNotEmpty(recordIdentifier) ||
             CollectionUtils.isNotEmpty(statusIds)) {
             metadataStatuses = metadataStatusRepository.searchStatus(
-                id, uuid, type, author, owner, record, statusIds,
+                id, uuid, type, author, owner, recordIdentifier, statusIds,
                 dateFrom, dateTo, pageRequest);
         } else {
             metadataStatuses = metadataStatusRepository.findAll(pageRequest).getContent();
@@ -672,27 +734,27 @@ public class MetadataWorkflowApi {
     private MetadataStatus convertParameter(int id, String uuid, MetadataStatusParameter parameter, int author) throws Exception {
         StatusValue statusValue = statusValueRepository.findById(parameter.getStatus()).get();
 
-        MetadataStatus metadataStatus = new MetadataStatus();
+        MetadataStatus metadataStatusValue = new MetadataStatus();
 
-        metadataStatus.setMetadataId(id);
-        metadataStatus.setUuid(uuid);
-        metadataStatus.setChangeDate(new ISODate());
-        metadataStatus.setUserId(author);
-        metadataStatus.setStatusValue(statusValue);
+        metadataStatusValue.setMetadataId(id);
+        metadataStatusValue.setUuid(uuid);
+        metadataStatusValue.setChangeDate(new ISODate());
+        metadataStatusValue.setUserId(author);
+        metadataStatusValue.setStatusValue(statusValue);
 
         if (parameter.getChangeMessage() != null) {
-            metadataStatus.setChangeMessage(parameter.getChangeMessage());
+            metadataStatusValue.setChangeMessage(parameter.getChangeMessage());
         }
         if (StringUtils.isNotEmpty(parameter.getDueDate())) {
-            metadataStatus.setDueDate(new ISODate(parameter.getDueDate()));
+            metadataStatusValue.setDueDate(new ISODate(parameter.getDueDate()));
         }
         if (StringUtils.isNotEmpty(parameter.getCloseDate())) {
-            metadataStatus.setCloseDate(new ISODate(parameter.getCloseDate()));
+            metadataStatusValue.setCloseDate(new ISODate(parameter.getCloseDate()));
         }
         if (parameter.getOwner() != null) {
-            metadataStatus.setOwner(parameter.getOwner());
+            metadataStatusValue.setOwner(parameter.getOwner());
         }
-        return metadataStatus;
+        return metadataStatusValue;
     }
 
     @io.swagger.v3.oas.annotations.Operation(
@@ -720,9 +782,9 @@ public class MetadataWorkflowApi {
     )
         throws Exception {
 
-        MetadataStatus metadataStatus = getMetadataStatus(metadataUuid, statusId, userId, changeDate);
+        MetadataStatus metadataStatusValue = getMetadataStatus(metadataUuid, statusId, userId, changeDate);
 
-        return getValidatedStateText(metadataStatus, State.BEFORE, request, httpSession);
+        return getValidatedStateText(metadataStatusValue, State.BEFORE, request, httpSession);
 
     }
 
@@ -751,9 +813,9 @@ public class MetadataWorkflowApi {
     )
         throws Exception {
 
-        MetadataStatus metadataStatus = getMetadataStatus(metadataUuid, statusId, userId, changeDate);
+        MetadataStatus metadataStatusValue = getMetadataStatus(metadataUuid, statusId, userId, changeDate);
 
-        return getValidatedStateText(metadataStatus, State.AFTER, request, httpSession);
+        return getValidatedStateText(metadataStatusValue, State.AFTER, request, httpSession);
     }
 
     @io.swagger.v3.oas.annotations.Operation(
@@ -779,18 +841,17 @@ public class MetadataWorkflowApi {
         throws Exception {
 
         ApplicationContext applicationContext = ApplicationContextHolder.get();
-        DataManager dataMan = applicationContext.getBean(DataManager.class);
 
-        MetadataStatus metadataStatus = getMetadataStatus(metadataUuid, statusId, userId, changeDate);
+        MetadataStatus metadataStatusValue = getMetadataStatus(metadataUuid, statusId, userId, changeDate);
 
         // Try to get previous state text this will also check to ensure that user is allowed to access the data.
-        String previousStateText = getValidatedStateText(metadataStatus, State.BEFORE, request, httpSession);
+        String previousStateText = getValidatedStateText(metadataStatusValue, State.BEFORE, request, httpSession);
 
         // For cases where the records was not deleted, we will attempt to get the metadata record.
         // If it remains as null then the record did not exists and this is a recovery.
         AbstractMetadata metadata;
         try {
-            metadata = ApiUtils.canEditRecord(metadataStatus.getUuid(), request);
+            metadata = ApiUtils.canEditRecord(metadataStatusValue.getUuid(), request);
         } catch (ResourceNotFoundException e) {
             // resource not found so lets set it to null;
             metadata = null;
@@ -804,7 +865,7 @@ public class MetadataWorkflowApi {
         Element beforeMetadata = null;
         String xmlBefore = null;
         if (metadata != null) {
-            beforeMetadata = dataMan.getMetadata(context, String.valueOf(metadata.getId()), false, false, false);
+            beforeMetadata = dataManager.getMetadata(context, String.valueOf(metadata.getId()), false, false, false);
 
             XMLOutputter outp = new XMLOutputter();
             if (beforeMetadata != null) {
@@ -817,13 +878,12 @@ public class MetadataWorkflowApi {
         }
 
         // Now begin the recovery
-        IMetadataManager iMetadataManager = context.getBean(IMetadataManager.class);
         Integer recoveredMetadataId = null;
         if (metadata != null) {
             Element md = Xml.loadString(previousStateText, false);
             Element mdNoGeonetInfo = metadataUtils.removeMetadataInfo(md);
 
-            iMetadataManager.updateMetadata(context, String.valueOf(metadata.getId()), mdNoGeonetInfo, false, true, context.getLanguage(),
+            metadataManager.updateMetadata(context, String.valueOf(metadata.getId()), mdNoGeonetInfo, false, true, context.getLanguage(),
                 null, false, IndexingMode.full);
             recoveredMetadataId = metadata.getId();
         } else {
@@ -835,18 +895,18 @@ public class MetadataWorkflowApi {
                 throw new IllegalArgumentException(
                     String.format("XML fragment is invalid. Error is %s", ex.getMessage()));
             }
-            recoveredMetadataId = reloadRecord(metadataStatus, element, iMetadataManager, httpSession, request);
+            recoveredMetadataId = reloadRecord(element, metadataManager, httpSession, request);
         }
 
-        dataManager.indexMetadata(String.valueOf(recoveredMetadataId), true);
+        metadataIndexer.indexMetadata(String.valueOf(recoveredMetadataId), true, IndexingMode.full);
 
         UserSession session = ApiUtils.getUserSession(request.getSession());
         if (session != null) {
             // Create a new event
-            Element afterMetadata = dataMan.getMetadata(context, String.valueOf(recoveredMetadataId), false, false, false);
+            Element afterMetadata = dataManager.getMetadata(context, String.valueOf(recoveredMetadataId), false, false, false);
             XMLOutputter outp = new XMLOutputter();
             String xmlAfter = outp.outputString(afterMetadata);
-            new RecordRestoredEvent(recoveredMetadataId, metadataStatus.getUuid(), session.getUserIdAsInt(), xmlBefore, xmlAfter, metadataStatus).publish(applicationContext);
+            new RecordRestoredEvent(recoveredMetadataId, metadataStatusValue.getUuid(), session.getUserIdAsInt(), xmlBefore, xmlAfter, metadataStatusValue).publish(applicationContext);
         }
     }
 
@@ -875,7 +935,6 @@ public class MetadataWorkflowApi {
         }
 
         Map<Integer, String> titles = new HashMap<>();
-        Map<Integer, String> uuids = new HashMap<>();
 
         // Add all user info and record title to response
         for (MetadataStatus s : listOfStatus) {
@@ -987,7 +1046,7 @@ public class MetadataWorkflowApi {
         }
     }
 
-    private void checkCanViewStatus(String metadata, MetadataStatus metadataStatus, HttpSession httpSession, HttpServletRequest request) throws Exception {
+    private void checkCanViewStatus(String metadata, HttpSession httpSession) throws Exception {
         Element xmlElement = null;
         try {
             xmlElement = Xml.loadString(metadata, false);
@@ -1017,7 +1076,7 @@ public class MetadataWorkflowApi {
                 final List<Integer> editingGroupList = AccessManager.getGroups(userSession, Profile.Editor);
                 if (!editingGroupList.contains(Integer.valueOf(groupId))) {
                     throw new SecurityException(
-                        String.format("You can't view history from this group (" + groupOwnerName + "). User MUST be an Editor in that group"));
+                            String.format("You can't view history from this group (%s). User MUST be an Editor in that group", groupOwnerName));
                 }
             } else {
                 throw new SecurityException(
@@ -1026,7 +1085,7 @@ public class MetadataWorkflowApi {
         }
     }
 
-    private int reloadRecord(MetadataStatus metadataStatus, Element md, IMetadataManager iMetadataManager, HttpSession httpSession, HttpServletRequest request) throws Exception {
+    private int reloadRecord(Element md, IMetadataManager iMetadataManager, HttpSession httpSession, HttpServletRequest request) throws Exception {
 
         Element info = md.getChild(Edit.RootChild.INFO, Edit.NAMESPACE);
         if (info == null) {
@@ -1051,7 +1110,7 @@ public class MetadataWorkflowApi {
                 final List<Integer> editingGroupList = AccessManager.getGroups(userSession, Profile.Editor);
                 if (!editingGroupList.contains(Integer.valueOf(groupId))) {
                     throw new SecurityException(
-                        String.format("You can't create a record in this group (" + groupOwnerName + "). User MUST be an Editor in that group"));
+                            String.format("You can't create a record in this group (%s). User MUST be an Editor in that group", groupOwnerName));
                 }
             }
         }
@@ -1068,7 +1127,7 @@ public class MetadataWorkflowApi {
         String uuid = info.getChildText(Edit.Info.Elem.UUID);
         if (uuid == null) {
             // --- if the uuid does not exist we generate it for metadata and templates
-            uuid = dataManager.extractUUID(schema, md);
+            uuid = metadataUtils.extractUUID(schema, md);
             if (uuid.length() == 0) {
                 throw new IllegalArgumentException("Could not locate the UUID for the document being restored.");
             }
@@ -1090,8 +1149,7 @@ public class MetadataWorkflowApi {
         int id = Integer.parseInt(metadataId);
 
         List<Element> categoryList = info.getChildren(Edit.Info.Elem.CATEGORY);
-        if (categoryList != null && categoryList.size() > 0) {
-            final MetadataCategoryRepository categoryRepository = context.getBean(MetadataCategoryRepository.class);
+        if (categoryList != null && !categoryList.isEmpty()) {
             for (Element cat : categoryList) {
                 String catName = cat.getText();
                 final MetadataCategory metadataCategory = categoryRepository.findOneByName(catName);
@@ -1105,20 +1163,20 @@ public class MetadataWorkflowApi {
     }
 
     private MetadataStatus getMetadataStatus(String uuidOrInternalId, int statusId, int userId, String changeDate) throws ResourceNotFoundException {
-        MetadataStatus metadataStatus;
+        MetadataStatus metadataStatusValue;
         if (uuidOrInternalId.matches("\\d+")) {
-            metadataStatus = metadataStatusRepository.findOneByMetadataIdAndStatusValue_IdAndUserIdAndChangeDate(Integer.valueOf(uuidOrInternalId), statusId, userId, new ISODate(changeDate));
+            metadataStatusValue = metadataStatusRepository.findOneByMetadataIdAndStatusValue_IdAndUserIdAndChangeDate(Integer.valueOf(uuidOrInternalId), statusId, userId, new ISODate(changeDate));
         } else {
-            metadataStatus = metadataStatusRepository.findOneByUuidAndStatusValue_IdAndUserIdAndChangeDate(uuidOrInternalId, statusId, userId, new ISODate(changeDate));
+            metadataStatusValue = metadataStatusRepository.findOneByUuidAndStatusValue_IdAndUserIdAndChangeDate(uuidOrInternalId, statusId, userId, new ISODate(changeDate));
         }
 
-        if (metadataStatus == null) {
+        if (metadataStatusValue == null) {
             throw new ResourceNotFoundException(
                 String.format("Can't find metadata status for record '%s', user '%d', status, '%d' at date '%s'", uuidOrInternalId,
                     userId, statusId, changeDate));
         }
 
-        return metadataStatus;
+        return metadataStatusValue;
     }
 
     private String getValidatedStateText(MetadataStatus metadataStatus, State state, HttpServletRequest request, HttpSession httpSession) throws Exception {
@@ -1128,17 +1186,17 @@ public class MetadataWorkflowApi {
                 StatusValueType.event + "' with the status id '" + Arrays.toString(supportedRestoreStatuses) + "'.");
         }
 
-        String StateText;
+        String stateText;
         if (state.equals(State.AFTER)) {
-            StateText = metadataStatus.getCurrentState();
+            stateText = metadataStatus.getCurrentState();
         } else {
-            StateText = metadataStatus.getPreviousState();
+            stateText = metadataStatus.getPreviousState();
         }
 
-        if (StateText == null) {
+        if (stateText == null) {
             throw new ResourceNotFoundException(
-                String.format("No data exists for previous state on metadata record '%d', user '%s' at date '%s'", metadataStatus.getUuid(),
-                    metadataStatus.getUserId(), metadataStatus.getChangeDate()));
+                    String.format("No data exists for previous state on metadata record '%s', user '%d' at date '%s'", metadataStatus.getUuid(),
+                            metadataStatus.getUserId(), metadataStatus.getChangeDate()));
         }
 
         // If record exists then check if user has access.
@@ -1150,10 +1208,10 @@ public class MetadataWorkflowApi {
         } catch (ResourceNotFoundException e) {
             // If metadata record does not exists then it was deleted so
             // we will only allow the administrator, owner to view the contents
-            checkCanViewStatus(StateText, metadataStatus, httpSession, request);
+            checkCanViewStatus(stateText, httpSession);
         }
 
-        return StateText;
+        return stateText;
     }
 
     /**
@@ -1174,7 +1232,7 @@ public class MetadataWorkflowApi {
 
     /**
      * Checks if the metadata status can be changed.
-     * <p>
+     *
      * If the setting to allow only to submit / approve valid metadata only is enabled,
      * the metadata should be valid, to allow the status change.
      *
@@ -1221,10 +1279,10 @@ public class MetadataWorkflowApi {
         status.setChangeMessage(changeMessage);
 
         int author = context.getUserSession().getUserIdAsInt();
-        MetadataStatus metadataStatus = convertParameter(metadata.getId(), metadata.getUuid(), status, author);
-        metadataStatus.setPreviousState(previousStatus);
+        MetadataStatus metadataStatusValue = convertParameter(metadata.getId(), metadata.getUuid(), status, author);
+        metadataStatusValue.setPreviousState(previousStatus);
         List<MetadataStatus> listOfStatusChange = new ArrayList<>(1);
-        listOfStatusChange.add(metadataStatus);
+        listOfStatusChange.add(metadataStatusValue);
         sa.onStatusChange(listOfStatusChange);
     }
 }
