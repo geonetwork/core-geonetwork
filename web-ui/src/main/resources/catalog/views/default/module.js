@@ -200,7 +200,7 @@
       $scope.showMosaic = gnGlobalSettings.gnCfg.mods.home.showMosaic;
       $scope.isFilterTagsDisplayedInSearch =
         gnGlobalSettings.gnCfg.mods.search.isFilterTagsDisplayedInSearch;
-      $scope.showMapInFacet = gnGlobalSettings.gnCfg.mods.search.showMapInFacet;
+      $scope.searchMapPlacement = gnGlobalSettings.gnCfg.mods.search.searchMapPlacement;
       $scope.showStatusFooterFor = gnGlobalSettings.gnCfg.mods.search.showStatusFooterFor;
       $scope.showBatchDropdown = gnGlobalSettings.gnCfg.mods.search.showBatchDropdown;
       $scope.exactMatchToggle = gnGlobalSettings.gnCfg.mods.search.exactMatchToggle;

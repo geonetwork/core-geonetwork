@@ -14,7 +14,7 @@
         data-ng-class="(isFilterTagsDisplayedInSearch === true
             || searchResults.facets.length > 0) ? 'col-md-3': 'hidden'"
       >
-        <div ng-if="showMapInFacet">
+        <div ng-if="searchMapPlacement === 'facets'">
           <div class="panel panel-default">
             <div class="panel-heading" data-gn-slide-toggle="">
               <span translate="" class="ng-scope">map</span>
@@ -144,7 +144,7 @@
       </div>
     </div>
 
-    <div ng-if="!showMapInFacet" class="hidden-print">
+    <div ng-if="searchMapPlacement === 'results'" class="hidden-print">
       <div
         data-gn-map-field="searchObj.searchMap"
         data-gn-map-field-geom="searchObj.params.geometry"
