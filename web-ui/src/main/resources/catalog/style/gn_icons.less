@@ -1,6 +1,6 @@
 /* this is a set of icons used in geonetwork, they either map to fa-variables or can be defined here (as font symbol or background image) */
-@import "../lib/style/font-awesome/less/variables";
-@import "../lib/style/font-awesome/less/mixins";
+@import "fa_variables";
+@import "../lib/style/font-awesome/less/_shims";
 @import "../lib/style/bootstrap/less/variables.less";
 
 /* used to display icons with resource types - iso19139 hierarchylevel */
@@ -14,7 +14,7 @@
 .gn-icon-map:before,
 .gn-icon-staticMap:before,
 .gn-icon-maps:before {
-  content: @fa-var-map-o;
+  content: @fa-var-map;
 }
 .gn-icon-interactiveMap:before {
   content: @fa-var-globe;
@@ -38,13 +38,13 @@
   content: @fa-var-podcast;
 }
 .gn-icon-series:before {
-  content: @fa-var-files-o;
+  content: @fa-var-copy;
 }
 .gn-icon-nonGeographicDataset:before {
-  content: @fa-var-bar-chart-o;
+  content: @fa-var-chart-column;
 }
 .gn-icon-dimensionGroup:before {
-  content: @fa-var-star-half-o;
+  content: @fa-var-star-half-stroke;
 }
 .gn-icon-feature:before {
   content: @fa-var-map-pin;
@@ -59,20 +59,20 @@
   content: @fa-var-calendar;
 }
 .gn-icon-software:before {
-  content: @fa-var-floppy-o;
+  content: @fa-var-floppy-disk;
 }
 .gn-icon-model:before {
   content: @fa-var-dashboard;
 }
 .gn-icon-application:before {
-  content: @fa-var-floppy-o;
+  content: @fa-var-floppy-disk;
 }
 /* GN-categories */
 .gn-icon-audioVideo:before {
   content: @fa-var-headphones;
 }
 .gn-icon-applications:before {
-  content: @fa-var-floppy-o;
+  content: @fa-var-floppy-disk;
 }
 .gn-icon-publication:before {
   content: @fa-var-book;
@@ -105,32 +105,32 @@
   content: @fa-var-desktop;
 }
 .gn-icon-inspire:before {
-  content: @fa-var-lemon-o;
+  content: @fa-var-lemon;
 }
 /* topiccats */
 .gn-icon-farming:before {
-  content: @fa-var-lemon-o;
+  content: @fa-var-tractor;
 }
 .gn-icon-biota:before {
-  content: @fa-var-leaf;
+  content: @fa-var-seedling;
 }
 .gn-icon-boundaries:before {
   content: @fa-var-ellipsis-h;
 }
 .gn-icon-climatologyMeteorologyAtmosphere:before {
-  content: @fa-var-cloud;
+  content: @fa-var-cloud-sun-rain;
 }
 .gn-icon-economy:before {
-  content: @fa-var-shopping-cart;
+  content: @fa-var-landmark;
 }
 .gn-icon-elevation:before {
-  content: @fa-var-flag;
+  content: @fa-var-mountain;
 }
 .gn-icon-environment:before {
   content: @fa-var-tree;
 }
 .gn-icon-geoscientificInformation:before {
-  content: @fa-var-bullseye;
+  content: @fa-var-flask-vial;
 }
 .gn-icon-health:before {
   content: @fa-var-stethoscope;
@@ -142,35 +142,41 @@
   content: @fa-var-fighter-jet;
 }
 .gn-icon-inlandWaters:before {
-  content: @fa-var-tint;
+  content: @fa-var-bridge-water;
 }
 .gn-icon-location:before {
   content: @fa-var-map-marker;
 }
 .gn-icon-oceans:before {
-  content: @fa-var-anchor;
+  content: @fa-var-water;
 }
 .gn-icon-planningCadastre:before {
   content: @fa-var-home;
 }
 .gn-icon-society:before {
-  content: @fa-var-comments;
+  content: @fa-var-city;
 }
 .gn-icon-structure:before {
   content: @fa-var-building;
 }
 .gn-icon-transportation:before {
-  content: @fa-var-truck;
+  content: @fa-var-truck-plane;
 }
 .gn-icon-utilitiesCommunication:before {
-  content: @fa-var-phone;
+  content: @fa-var-satellite-dish;
+}
+.gn-icon-extraTerrestrial:before {
+  content: @fa-var-user-astronaut;
+}
+.gn-icon-disaster:before {
+  content: @fa-var-burst;
 }
 
 .gn-icon-fcats:before {
   content: @fa-var-table;
 }
 .gn-icon-thumbnail:before {
-  content: @fa-var-picture-o;
+  content: @fa-var-image;
 }
 .gn-icon-onlinesrc:before {
   content: @fa-var-link;
@@ -183,7 +189,7 @@
 .gn-icon-geojson:before,
 .gn-icon-wms:before,
 .gn-icon-arcgis-mapservice:before {
-  content: @fa-var-map-o;
+  content: @fa-var-map;
 }
 
 .gn-icon-tif:before,
@@ -219,7 +225,7 @@
 }
 
 .gn-icon-pdf:before {
-  content: @fa-var-file-pdf-o;
+  content: @fa-var-file-pdf;
 }
 
 .gn-icon-mp3:before {
@@ -227,16 +233,16 @@
 }
 
 .gn-icon-ogc-gml:before {
-  content: @fa-var-file-code-o;
+  content: @fa-var-file-code;
 }
 
 .gn-icon-json:before {
-  content: @fa-var-file-text-o;
+  content: @fa-var-file-text;
 }
 
 .gn-icon-zip-shape,
 .gn-icon-zip-shape {
-  content: @fa-var-file-zip-o;
+  content: @fa-var-file-zipper;
 }
 
 .gn-icon-doi:before {
@@ -251,7 +257,7 @@
   content: @fa-var-sitemap;
 }
 .gn-icon-source {
-  .fa-icon-rotate(180deg, 2);
+  transform: rotate(180deg);
 }
 .gn-icon-sibling:before,
 .gn-icon-siblings:before {
