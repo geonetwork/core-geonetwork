@@ -203,7 +203,7 @@
     <div>Either 'aggregateDataSetName' or 'aggregateDataSetIdentifier' must be documented.</div>
   </alert.M23>
   <report.M23>aggregateDataSetName of aggregateDataSetIdentifier is gedocumenteerd.</report.M23>
-  <report.M23-dup>An associated resource is declared multiple time with same association and initiative type.</report.M23-dup>
+  <report.M23-dup>Een gerelateerde resource is meermaals gedeclareerd met hetzelfde type van associatie en initiatief.</report.M23-dup>
   <alert.M24>
     <div>language not present.</div>
   </alert.M24>
