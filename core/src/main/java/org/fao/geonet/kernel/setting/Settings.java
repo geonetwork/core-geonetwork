@@ -130,7 +130,7 @@ public class Settings {
     public static final String REGION_GETMAP_SUMMARY_WIDTH = "region/getmap/summaryWidth";
     public static final String METADATA_WORKFLOW_ENABLE = "metadata/workflow/enable";
     public static final String METADATA_WORKFLOW_DRAFT_WHEN_IN_GROUP = "metadata/workflow/draftWhenInGroup";
-    public static final String METADATA_WORKFLOW_ALLOW_SUBMIT_APPROVE_INVALID_MD = "metadata/workflow/allowSumitApproveInvalidMd";
+    public static final String METADATA_WORKFLOW_ALLOW_SUBMIT_APPROVE_INVALID_MD = "metadata/workflow/allowSubmitApproveInvalidMd";
     public static final String METADATA_WORKFLOW_ALLOW_PUBLISH_INVALID_MD = "metadata/workflow/allowPublishInvalidMd";
     public static final String METADATA_WORKFLOW_ALLOW_PUBLISH_NON_APPROVED_MD = "metadata/workflow/allowPublishNonApprovedMd";
     public static final String METADATA_LINK_EXCLUDEPATTERN = "metadata/link/excludedUrlPattern";
