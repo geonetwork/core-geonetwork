@@ -479,6 +479,7 @@ relevant to have parent defined to have more control over the list.
     <xs:complexType>
       <xs:sequence>
         <xs:element ref="directiveAttributes" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="template" minOccurs="0" maxOccurs="1"/>
       </xs:sequence>
       <xs:attribute name="name" type="xs:string" use="required">
         <xs:annotation>
