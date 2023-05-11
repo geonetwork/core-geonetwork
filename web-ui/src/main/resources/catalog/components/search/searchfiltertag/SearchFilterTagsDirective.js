@@ -46,7 +46,7 @@
   module.directive("searchFilterTags", [
     "$location",
     "gnFavouritesListService",
-    function ($location,gnFavouritesListService) {
+    function ($location, gnFavouritesListService) {
       return {
         restrict: "EA",
         require: "^ngSearchForm",
@@ -186,7 +186,7 @@
 
                 if (filterKey === "favouritesList") {
                   scope.currentFilters.push({
-                    key:"favouritesList",
+                    key: "favouritesList",
                     value: value
                   });
                   continue;
@@ -251,9 +251,9 @@
             true
           );
 
-          scope.getFavouritesListName = function(id) {
+          scope.getFavouritesListName = function (id) {
             var item = gnFavouritesListService.getFavouriteListById(id);
-            return "(#"+id+") "+item.name;
+            return item.name;
           };
 
           scope.isSpecificParameter = function (key) {
@@ -272,8 +272,7 @@
               return "GEOMETRY";
             } else if (filter.key === "favouritesList") {
               return "favouritesList";
-            }
-            else {
+            } else {
               return undefined;
             }
           };
