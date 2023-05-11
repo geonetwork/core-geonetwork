@@ -205,7 +205,7 @@
   <report.M23>aggregateDataSetName of aggregateDataSetIdentifier is gedocumenteerd.</report.M23>
   <report.M23-dup>Een gerelateerde resource is meermaals gedeclareerd met hetzelfde type van associatie en initiatief.</report.M23-dup>
   <alert.M24>
-    <div>language not present.</div>
+    <div>taal niet aanwezig.</div>
   </alert.M24>
   <alert.M26.obligation>
     <div>if 'dataType' notEqual 'codelist', 'enumeration' or 'codelistElement' then 'obligation' is
