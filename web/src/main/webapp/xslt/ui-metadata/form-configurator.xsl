@@ -509,7 +509,7 @@
               <template>
                 <xsl:copy-of select="$template/values"/>
                 <snippet>
-                  <xsl:apply-templates mode="gn-merge" select="$template/snippet/*">
+                  <xsl:apply-templates mode="gn-merge" select="$template/snippet/*|$editorConfig/editor/snippets/list[@name = $template/snippets/@name]/snippet/*">
                     <xsl:with-param name="node-to-merge" select="$currentNode"/>
                   </xsl:apply-templates>
                 </snippet>
@@ -564,7 +564,7 @@
 
             <xsl:variable name="currentNode">
               <xsl:apply-templates mode="gn-element-cleaner"
-                                   select="$template/snippet/*"/>
+                                   select="$template/snippet/*|$editorConfig/editor/snippets/list[@name = $template/snippets/@name]/snippet/*"/>
             </xsl:variable>
 
             <xsl:variable name="keyValues">
