@@ -343,6 +343,9 @@ public class FavouriteMetadataListApi {
                 if (md == null) {
                     throw new IllegalArgumentException("metadataUuids: "+uuid+" is not in DB");
                 }
+                if (md.getDataInfo().getType().codeString.equals("y")) {
+                    continue; //don't add templates
+                }
                 boolean alreadyInList = list.getSelections().stream()
                     .anyMatch(x->x.getMetadataUuid().equals(uuid));
                 if (!alreadyInList) {
@@ -569,6 +572,9 @@ public class FavouriteMetadataListApi {
                     Metadata md = metadataRepository.findOneByUuid(uuid);
                     if (md == null) {
                         throw new IllegalArgumentException("metadataUuids: "+uuid+" is not in DB");
+                    }
+                    if (md.getDataInfo().getType().codeString.equals("y")) {
+                        continue; //don't add templates
                     }
                     FavouriteMetadataListItem selection = new FavouriteMetadataListItem();
                     selection.setMetadataUuid(uuid);
