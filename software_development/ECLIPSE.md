@@ -86,8 +86,8 @@ Tomcat Plugin for controlling a Tomcat Service.
 
 ## Remote Debugging
 
-* [How do I configure Tomcat to support remote debugging?](http://wiki.apache.org/tomcat/FAQ/Developing#Q1)
-* [How do I remotely debug Tomcat using Eclipse?](http://wiki.apache.org/tomcat/FAQ/Developing#Q2)
+* [How do I configure Tomcat to support remote debugging?](https://cwiki.apache.org/confluence/display/TOMCAT/Developing#Developing-Q1)
+* [How do I remotely debug Tomcat using Eclipse?](https://cwiki.apache.org/confluence/display/TOMCAT/Developing#Developing-Q2)
 
 ## Code Quality Tools in Eclipse
 
