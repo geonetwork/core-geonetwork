@@ -900,18 +900,27 @@
                 // Compute default name and add a
                 // tokens element which is used for filter
                 angular.forEach(data, function (lang) {
-                  var defaultName = lang.label["eng"];
-                  lang.name = lang.label[scope.lang] || defaultName;
+                  lang.english = lang.label["eng"];
+                  lang.name = lang.label[scope.lang] || lang.english;
                   lang.code = scope.prefix + lang.code;
-                  lang.tokens = [lang.name, lang.code, defaultName];
+                  lang.tokens = [lang.name, lang.code, lang.english];
                 });
                 var source = new Bloodhound({
-                  datumTokenizer: Bloodhound.tokenizers.obj.whitespace("name"),
+                  datumTokenizer: Bloodhound.tokenizers.obj.whitespace("name", "code", "english"),
                   queryTokenizer: Bloodhound.tokenizers.whitespace,
                   local: data,
                   limit: 30
                 });
                 source.initialize();
+
+                function allOrSearchFn(q, sync) {
+                  if (q === "") {
+                    sync(source.all());
+                  } else {
+                    source.search(q, sync);
+                  }
+                }
+
                 $(element).typeahead(
                   {
                     minLength: 0,
@@ -920,7 +929,7 @@
                   {
                     name: "isoLanguages",
                     displayKey: "code",
-                    source: source.ttAdapter(),
+                    source: allOrSearchFn,
                     templates: {
                       suggestion: function (datum) {
                         return "<p>" + datum.name + " (" + datum.code + ")</p>";
