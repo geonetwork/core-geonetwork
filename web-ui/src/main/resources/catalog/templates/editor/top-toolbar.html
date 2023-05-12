@@ -12,9 +12,10 @@
       {{gnCurrentEdit.mdTitle | limitTo: 50 }} {{gnCurrentEdit.mdTitle.length > 50 ? '...'
       : ''}}
     </h1>
-    <br/>
-    <span class="label label-default"
-          data-ng-class="saveError ? 'text-danger' : ''">{{savedStatus}}</span>
+    <br />
+    <span class="label label-default" data-ng-class="saveError ? 'text-danger' : ''"
+      >{{savedStatus}}</span
+    >
   </div>
 
   <div class="gn-btn-toolbar navbar-right">
