@@ -73,6 +73,7 @@ a set of views with at least one defined view.
         <xs:element minOccurs="0" maxOccurs="1" ref="multilingualFields"/>
         <xs:element minOccurs="0" maxOccurs="1" ref="tableFields"/>
         <xs:element minOccurs="1" maxOccurs="1" ref="views"/>
+        <xs:element minOccurs="0" maxOccurs="1" ref="snippets"/>
         <xs:element minOccurs="0" maxOccurs="1" ref="batchEditing"/>
       </xs:sequence>
     </xs:complexType>
@@ -341,6 +342,60 @@ Element to match for creating the table.
     </xs:complexType>
   </xs:element>
 
+
+  <xs:element name="snippets">
+    <xs:annotation>
+      <xs:documentation>
+        <![CDATA[
+
+Defining reusable list of snippets which can be referenced in templates.
+----------------------------------------------------------------------------------
+
+Defining reusable list of snippets which can be referenced in templates.
+
+.. code-block:: xml
+
+    <editor>
+        <snippets>
+            <list name="reports">
+                <snippet label="inspire-address">
+                    <gmd:report>...</gmd:report>
+                </snippet>
+                <snippet label="inspire-administrative-units">
+                    <gmd:report>...</gmd:report>
+                </snippet>
+            </list>
+        </snippets>
+
+        <!-- ... -->
+        <action type="add" ...>
+            <template>
+                <snippets name="reports"/>
+            <template>
+        </action>
+        ]]></xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="list">
+          <xs:complexType>
+            <xs:attribute name="name" use="required">
+              <xs:annotation>
+                <xs:documentation>
+                  <![CDATA[
+Snippet list name to be used as a reference.
+                  ]]>
+                </xs:documentation>
+              </xs:annotation>
+            </xs:attribute>
+            <xs:sequence>
+              <xs:element minOccurs="1" maxOccurs="unbounded" ref="snippet"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
 
   <xs:element name="header">
     <xs:annotation>
@@ -1375,7 +1430,14 @@ Warning: Template based field does not support multilingual editing for ISO stan
             <xs:documentation>The list of values to match from the template.</xs:documentation>
           </xs:annotation>
         </xs:element>
-        <xs:element minOccurs="1" maxOccurs="unbounded" ref="snippet"/>
+        <xs:choice>
+          <xs:element minOccurs="1" maxOccurs="unbounded" ref="snippet"/>
+          <xs:element minOccurs="1" maxOccurs="1" name="snippets">
+            <xs:complexType>
+              <xs:attribute name="name" use="required" type="xs:string"/>
+            </xs:complexType>
+          </xs:element>
+        </xs:choice>
       </xs:sequence>
     </xs:complexType>
   </xs:element>
