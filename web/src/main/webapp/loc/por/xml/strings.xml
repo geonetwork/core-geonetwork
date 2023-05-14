@@ -1,19 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
   <accept>Enviar</accept>
-  <atom>
-    <results>
-      <header>Atom feeds</header>
-      <noresults>No atom feed available</noresults>
-      <title>Title</title>
-      <content>Content</content>
-      <id>Identifier</id>
-      <rights>Rights</rights>
-      <describedby>Described by</describedby>
-      <author>Author</author>
-      <updated>Updated</updated>
-    </results>
-  </atom>
   <bookmarkDelicious>Estabelecer marcador no Delicious</bookmarkDelicious>
   <bookmarkDigg>Estabelecer marcador no Digg</bookmarkDigg>
   <bookmarkEmail>Enviar uma referência a este registo por email</bookmarkEmail>

@@ -49,6 +49,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static org.fao.geonet.utils.Xml.getSAXBuilder;
+
 //=============================================================================
 
 /**
@@ -274,7 +276,7 @@ public class Get implements Service {
         final byte[] xmlBytes = xml.getBytes(StandardCharsets.UTF_8);
         InputStream is = new ByteArrayInputStream(xmlBytes);
         InputStreamReader isr = new InputStreamReader(is, StandardCharsets.UTF_8);
-        SAXBuilder sb = new SAXBuilder();
+        SAXBuilder sb = getSAXBuilder(false);
         Document doc;
         doc = sb.build(isr);
         Element element = doc.getRootElement();

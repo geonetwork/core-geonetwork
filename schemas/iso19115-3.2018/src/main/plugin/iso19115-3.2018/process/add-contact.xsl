@@ -57,11 +57,11 @@
                   target="metadata">
         <name><xsl:value-of select="geonet:i18n($add-contact-loc, 'a', $guiLang)"/></name>
         <operational>true</operational>
-        <params>{contactRole:{type:'codelist', codelist: 'roleCode', defaultValue:'<xsl:value-of select="$contactRole"/>'},
-                 contactId:{type:'expression', defaultValue:'{{user.id}}'},
-                 contactReplace:{type:'boolean', defaultValue:'<xsl:value-of select="$contactReplace"/>'},
-                  contactSetForMetadata:{type:'boolean', defaultValue:'<xsl:value-of select="$contactSetForMetadata"/>'},
-                  contactSetForResource:{type:'boolean', defaultValue:'<xsl:value-of select="$contactSetForResource"/>'}}</params>
+        <params>{"contactRole":{"type":"codelist", "codelist": "roleCode", "defaultValue": "<xsl:value-of select="$contactRole"/>"},
+                 "contactId":{"type": "expression", "defaultValue":"{{user.id}}"},
+                 "contactReplace":{"type": "boolean", "defaultValue": "<xsl:value-of select="$contactReplace"/>"},
+                  "contactSetForMetadata": {"type": "boolean", "defaultValue": "<xsl:value-of select="$contactSetForMetadata"/>"},
+                  "contactSetForResource": {"type": "boolean", "defaultValue": "<xsl:value-of select="$contactSetForResource"/>"}}</params>
       </suggestion>
     </xsl:if>
 

@@ -34,33 +34,34 @@
     -->
 
   <xsl:template mode="form-builder" match="directive">
-    <div>
-      <xsl:copy-of select="@*"/>
-    </div>
+
+    <xsl:variable name="isDisplayed"
+                  as="xs:boolean"
+                  select="gn-fn-metadata:check-elementandsession-visibility(
+                  $schema, $metadata, $serviceInfo, @displayIfRecord, @displayIfServiceInfo)"/>
+
+    <xsl:if test="$isDisplayed">
+      <div>
+        <xsl:copy-of select="@*"/>
+      </div>
+    </xsl:if>
   </xsl:template>
 
 
   <!-- Create a fieldset in the editor with custom
     legend if attribute name is defined or default
     legend according to the matching element. -->
-  <xsl:template mode="form-builder" match="section[@name]|fieldset">
+  <xsl:template mode="form-builder"
+                match="section[not(@xpath) and not(@template)]
+                      |fieldset">
     <xsl:param name="base" as="node()"/>
 
-    <xsl:variable name="match">
-      <xsl:choose>
-        <xsl:when test="@displayIfRecord">
-          <saxon:call-template name="{concat('evaluate-', $schema, '-boolean')}">
-            <xsl:with-param name="base" select="$metadata"/>
-            <xsl:with-param name="in" select="concat('/../', @displayIfRecord)"/>
-          </saxon:call-template>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:value-of select="true()"/>
-        </xsl:otherwise>
-      </xsl:choose>
-    </xsl:variable>
+    <xsl:variable name="isDisplayed"
+                  as="xs:boolean"
+                  select="gn-fn-metadata:check-elementandsession-visibility(
+                  $schema, $metadata, $serviceInfo, @displayIfRecord, @displayIfServiceInfo)"/>
 
-    <xsl:if test="$match = true()">
+    <xsl:if test="$isDisplayed">
       <xsl:variable name="sectionName" select="@name"/>
 
       <xsl:choose>
@@ -68,11 +69,16 @@
           <fieldset data-gn-field-highlight="" class="gn-{@name}">
             <!-- Get translation for labels.
             If labels contains ':', search into labels.xml. -->
-            <legend data-gn-slide-toggle="">
+            <legend>
+              <xsl:if test="not(@collapsible)">
+                <xsl:attribute name="data-gn-slide-toggle" select="exists(@collapsed)"/>
+              </xsl:if>
               <xsl:value-of
                 select="if (contains($sectionName, ':'))
                   then gn-fn-metadata:getLabel($schema, $sectionName, $labels)/label
-                  else $strings/*[name() = $sectionName]"
+                  else if ($strings/*[name() = $sectionName] != '')
+                  then $strings/*[name() = $sectionName]
+                  else $sectionName"
               />
             </legend>
             <xsl:apply-templates mode="form-builder" select="@*[name() != 'displayIfRecord']|*">
@@ -90,47 +96,111 @@
   </xsl:template>
 
 
+  <xsl:template mode="form-builder"
+                match="section[@forEach]">
+    <xsl:param name="base" as="node()"/>
+
+    <xsl:variable name="isDisplayed"
+                  as="xs:boolean"
+                  select="gn-fn-metadata:check-elementandsession-visibility(
+                  $schema, $metadata, $serviceInfo, @displayIfRecord, @displayIfServiceInfo)"/>
+
+    <xsl:variable name="xpathPrefix"
+                  select="if (starts-with(@forEach, '/'))
+                                    then '/..'
+                                    else '/'"/>
+    <xsl:if test="$isDisplayed">
+      <xsl:variable name="del" select="@del"/>
+
+      <xsl:variable name="nodes">
+        <saxon:call-template name="{concat('evaluate-', $schema)}">
+          <xsl:with-param name="base" select="$base"/>
+          <xsl:with-param name="in" select="concat($xpathPrefix, @forEach)"/>
+        </saxon:call-template>
+      </xsl:variable>
+
+      <xsl:variable name="sectionName" select="@name"/>
+      <xsl:variable name="sectionConfig" select="."/>
+      <xsl:variable name="sectionContent" select="*"/>
+
+      <xsl:for-each select="$nodes/*">
+        <xsl:variable name="base" select="."/>
+
+        <xsl:choose>
+          <xsl:when test="$sectionName">
+            <fieldset data-gn-field-highlight="" class="gn-{$sectionName}">
+              <!-- Get translation for labels.
+              If labels contains ':', search into labels.xml. -->
+              <legend>
+                <xsl:if test="not($sectionConfig/@collapsible)">
+                  <xsl:attribute name="data-gn-slide-toggle" select="exists($sectionConfig/@collapsed)"/>
+                </xsl:if>
+                <xsl:value-of
+                  select="if (contains($sectionName, ':'))
+                    then gn-fn-metadata:getLabel($schema, $sectionName, $labels)/label
+                    else if ($strings/*[name() = $sectionName] != '')
+                    then $strings/*[name() = $sectionName]
+                    else $sectionName"
+                />
+
+                <xsl:if test="$del != ''">
+                  <xsl:variable name="originalNode"
+                                select="gn-fn-metadata:getOriginalNode($metadata, .)"/>
+
+                  <xsl:variable name="refToDelete">
+                    <xsl:call-template name="get-ref-element-to-delete">
+                      <xsl:with-param name="node" select="$originalNode"/>
+                      <xsl:with-param name="delXpath" select="$del"/>
+                    </xsl:call-template>
+                  </xsl:variable>
+
+                  <xsl:call-template name="render-form-field-control-remove">
+                    <xsl:with-param name="editInfo" select="gn:element"/>
+                  </xsl:call-template>
+                </xsl:if>
+              </legend>
+              <xsl:apply-templates mode="form-builder" select="$sectionContent">
+                <xsl:with-param name="base" select="$base"/>
+              </xsl:apply-templates>
+            </fieldset>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:apply-templates mode="form-builder" select="$sectionContent">
+              <xsl:with-param name="base" select="$base"/>
+            </xsl:apply-templates>
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:for-each>
+    </xsl:if>
+  </xsl:template>
+
+
   <!-- Insert a HTML fragment in the editor from the
   localization files. -->
   <xsl:template mode="form-builder" match="text">
     <xsl:variable name="id" select="@ref"/>
-    <xsl:variable name="text" select="$strings/*[name() = $id]"/>
+    <xsl:variable name="translation" select="$strings/*[name() = $id]"/>
+    <xsl:variable name="text"
+                  select="if ($translation) then $translation else ."/>
 
-    <xsl:variable name="match">
-      <xsl:choose>
-        <xsl:when test="@if">
-          <saxon:call-template name="{concat('evaluate-', $schema, '-boolean')}">
-            <xsl:with-param name="base" select="$metadata"/>
-            <xsl:with-param name="in" select="concat('/../', @if)"/>
-          </saxon:call-template>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:value-of select="true()"/>
-        </xsl:otherwise>
-      </xsl:choose>
-    </xsl:variable>
-    <xsl:if test="$match = true()">
-      <xsl:if test="$text">
-        <xsl:copy-of select="$text/*" copy-namespaces="no"/>
-      </xsl:if>
+    <xsl:variable name="isDisplayed"
+                  as="xs:boolean"
+                  select="gn-fn-metadata:check-elementandsession-visibility(
+                  $schema, $metadata, $serviceInfo, @if, @displayIfServiceInfo)"/>
+
+    <xsl:if test="$isDisplayed and $text">
+      <xsl:copy-of select="$text/*" copy-namespaces="no"/>
     </xsl:if>
   </xsl:template>
 
   <xsl:template mode="form-builder" match="action">
-    <xsl:variable name="match">
-      <xsl:choose>
-        <xsl:when test="@if">
-          <saxon:call-template name="{concat('evaluate-', $schema, '-boolean')}">
-            <xsl:with-param name="base" select="$metadata"/>
-            <xsl:with-param name="in" select="concat('/../', @if)"/>
-          </saxon:call-template>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:value-of select="true()"/>
-        </xsl:otherwise>
-      </xsl:choose>
-    </xsl:variable>
-    <xsl:if test="$match = true()">
+
+    <xsl:variable name="isDisplayed"
+                  as="xs:boolean"
+                  select="gn-fn-metadata:check-elementandsession-visibility(
+                  $schema, $metadata, $serviceInfo, @if, @displayIfServiceInfo)"/>
+
+    <xsl:if test="$isDisplayed">
       <xsl:choose>
         <xsl:when test="@type = 'process' and @process">
           <xsl:call-template name="render-batch-process-button">
@@ -190,20 +260,31 @@
 
 
   <!-- Element to ignore in that mode -->
-  <xsl:template mode="form-builder" match="@name"/>
+  <xsl:template mode="form-builder" match="@name|@collapsed|@collapsible"/>
 
   <!-- For each field, fieldset and section, check the matching xpath
     is in the current document. In that case dispatch to the schema mode
     or create an XML snippet editor for non matching document based on the
     template element. -->
-  <xsl:template mode="form-builder" match="field|fieldset|section[@xpath]">
+  <xsl:template mode="form-builder"
+                match="field
+                      |fieldset
+                      |section[@xpath]">
     <!-- The XML document to edit -->
     <xsl:param name="base" as="node()"/>
 
     <xsl:if test="@xpath">
       <xsl:variable name="config" select="."/>
 
-      <!-- Seach any nodes in the metadata matching the XPath.
+      <!-- Depending on the context, we need to prefix the xpath
+      to work in evaluate function. If root element eg. /gmd:MD_Metadata...
+      then we prepend /.. if a child node, we use current. -->
+      <xsl:variable name="xpathPrefix"
+                    select="if (starts-with(@xpath, '/'))
+                                    then '/..'
+                                    else '/'"/>
+
+      <!-- Search any nodes in the metadata matching the XPath.
 
       We could have called saxon-evaluate from here like:
       <xsl:variable name="nodes"
@@ -217,7 +298,8 @@
       <xsl:variable name="nodes">
         <saxon:call-template name="{concat('evaluate-', $schema)}">
           <xsl:with-param name="base" select="$base"/>
-          <xsl:with-param name="in" select="concat('/../', @xpath)"/>
+          <xsl:with-param name="in"
+                          select="concat($xpathPrefix, @xpath)"/>
         </saxon:call-template>
       </xsl:variable>
 
@@ -228,7 +310,7 @@
           <saxon:call-template name="{concat('evaluate-', $schema)}">
             <xsl:with-param name="base" select="$base"/>
             <xsl:with-param name="in"
-                            select="concat('/../', @in, '[gn:child/@name=''', @or, ''']')"/>
+                            select="concat($xpathPrefix, @in, '[gn:child/@name=''', @or, ''']')"/>
           </saxon:call-template>
         </xsl:if>
       </xsl:variable>
@@ -237,19 +319,10 @@
       <!-- Check if this field is controlled by a condition
           (eg. display that field for service metadata record only).
           If @if expression return false, the field is not displayed. -->
-      <xsl:variable name="isDisplayed">
-        <xsl:choose>
-          <xsl:when test="@if">
-            <saxon:call-template name="{concat('evaluate-', $schema, '-boolean')}">
-              <xsl:with-param name="base" select="$base"/>
-              <xsl:with-param name="in" select="concat('/../', @if)"/>
-            </saxon:call-template>
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:value-of select="true()"/>
-          </xsl:otherwise>
-        </xsl:choose>
-      </xsl:variable>
+      <xsl:variable name="isDisplayed"
+                    as="xs:boolean"
+                    select="gn-fn-metadata:check-elementandsession-visibility(
+                  $schema, $base, $serviceInfo, @if, @displayIfServiceInfo)"/>
 
       <!--
       <xsl:message> Field: <xsl:value-of select="@name"/></xsl:message>
@@ -271,15 +344,20 @@
         In that case, a geonet:child element should exist in the document.
         -->
       <xsl:choose>
-        <xsl:when test="$isDisplayed = 'true' and not(@templateModeOnly)">
+        <xsl:when test="$isDisplayed and not(@templateModeOnly)">
           <xsl:variable name="configName" select="@name"/>
 
 
           <!-- Display the matching node using standard editor mode
           propagating to the schema mode ... -->
           <xsl:for-each select="$nodes">
+            <xsl:variable name="translation"
+                          select="$strings/*[name() = $configName]"/>
+            <xsl:variable name="overrideLabel"
+                          select="if ($translation != '')
+                                  then $translation
+                                  else $configName"/>
 
-            <xsl:variable name="overrideLabel" select="$strings/*[name() = $configName]"/>
             <xsl:if test="$configName != '' and not($overrideLabel)">
               <xsl:message>Label not defined for field name <xsl:value-of select="$configName"/> in loc/{language}/strings.xml.</xsl:message>
             </xsl:if>
@@ -369,7 +447,7 @@
           </xsl:if>
 
         </xsl:when>
-        <xsl:when test="$isDisplayed = 'true' and (@templateModeOnly or template)">
+        <xsl:when test="$isDisplayed and (@templateModeOnly or template)">
           <!--
               templateModeOnly
 
@@ -377,7 +455,10 @@
             metadocument. This mode will probably take precedence over the others
             if defined in a view.
             -->
-          <xsl:variable name="name" select="@name"/>
+          <xsl:variable name="name"
+                        select="if (@name and $strings/*[name() = @name] != '')
+                                then $strings/*[name() = @name]
+                                else @name"/>
           <xsl:variable name="del" select="@del"/>
           <xsl:variable name="template" select="template"/>
           <xsl:variable name="forceLabel" select="@forceLabel"/>
@@ -457,7 +538,7 @@
                   correct location. -->
             <xsl:variable name="id" select="concat('_X', gn:element/@ref, '_replace')"/>
             <xsl:call-template name="render-element-template-field">
-              <xsl:with-param name="name" select="$strings/*[name() = $name]"/>
+              <xsl:with-param name="name" select="$name"/>
               <xsl:with-param name="id" select="$id"/>
               <xsl:with-param name="isExisting" select="true()"/>
               <xsl:with-param name="template" select="$templateCombinedWithNode"/>
@@ -639,13 +720,20 @@
 
   <xsl:template mode="form-builder" match="action[@type='add']">
     <xsl:param name="base" as="node()"/>
+
+
+    <xsl:variable name="xpathPrefix"
+                  select="if (starts-with(@in, '/'))
+                          then '/..'
+                          else '/'"/>
+
     <!-- Match any gn:child nodes from the metadocument which
       correspond to non existing node but available in the schema. -->
     <xsl:variable name="nonExistingChildParent">
       <xsl:if test="@or and @in">
         <saxon:call-template name="{concat('evaluate-', $schema)}">
           <xsl:with-param name="base" select="$base"/>
-          <xsl:with-param name="in" select="concat('/../', @in, '[gn:child/@name=''', @or, ''']')"/>
+          <xsl:with-param name="in" select="concat($xpathPrefix, @in, '[gn:child/@name=''', @or, ''']')"/>
         </saxon:call-template>
       </xsl:if>
     </xsl:variable>
@@ -655,7 +743,7 @@
         <saxon:call-template name="{concat('evaluate-', $schema)}">
           <xsl:with-param name="base" select="$base"/>
           <xsl:with-param name="in"
-                          select="concat('/../', @in,
+                          select="concat($xpathPrefix, @in,
                             '/*[local-name() = ''', @or, ''']')"/>
         </saxon:call-template>
       </xsl:if>
@@ -664,26 +752,17 @@
     <!-- Check if this field is controlled by a condition (eg. display that field for
               service metadata record only).
               If @if expression return false, the field is not displayed. -->
-    <xsl:variable name="isDisplayed">
-      <xsl:choose>
-        <xsl:when test="@if">
-          <saxon:call-template name="{concat('evaluate-', $schema, '-boolean')}">
-            <xsl:with-param name="base" select="$base"/>
-            <xsl:with-param name="in" select="concat('/../', @if)"/>
-          </saxon:call-template>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:value-of select="true()"/>
-        </xsl:otherwise>
-      </xsl:choose>
-    </xsl:variable>
+    <xsl:variable name="isDisplayed"
+                  as="xs:boolean"
+                  select="gn-fn-metadata:check-elementandsession-visibility(
+                  $schema, $base, $serviceInfo, @if, @displayIfServiceInfo)"/>
 
     <!--<xsl:message>## Add action</xsl:message>
     <xsl:message><xsl:copy-of select="."/></xsl:message>
     <xsl:message>Is displayed: <xsl:copy-of select="$isDisplayed"/> because no if provided or if attribute XPath '<xsl:value-of select="@if"/>' expression found a match.</xsl:message>
     <xsl:message> = Display action <xsl:value-of select="$nonExistingChildParent/* and $isDisplayed = 'true'"/></xsl:message>-->
 
-    <xsl:if test="$nonExistingChildParent/* and $isDisplayed = 'true'">
+    <xsl:if test="$nonExistingChildParent/* and $isDisplayed">
       <xsl:variable name="childName" select="@or"/>
 
       <!-- Get label from action or from gn:child -->
@@ -692,9 +771,9 @@
       <xsl:variable name="btnOverrideName"
                     select="@name"/>
       <xsl:variable name="btnName"
-                    select="if ($btnOverrideName)
+                    select="if ($btnOverrideName and $strings/*[name() = $btnOverrideName] != '')
                             then $strings/*[name() = $btnOverrideName]
-                            else ''"/>
+                            else $btnOverrideName"/>
 
       <!-- If multiple elements $elementName contains multiple values. Use the first one in getLabel to avoid failure. -->
       <xsl:variable name="labelConfig"

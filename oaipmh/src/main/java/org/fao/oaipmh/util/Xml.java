@@ -38,6 +38,8 @@ import org.jdom.input.SAXBuilder;
 import org.jdom.output.SAXOutputter;
 import org.xml.sax.SAXException;
 
+import static org.fao.geonet.utils.Xml.getSAXBuilder;
+
 //=============================================================================
 
 /**
@@ -69,7 +71,7 @@ public class Xml {
 
     public static Element loadStream(InputStream input) throws IOException,
         JDOMException {
-        SAXBuilder builder = new SAXBuilder();
+        SAXBuilder builder = getSAXBuilder(false);
         Document jdoc = builder.build(input);
 
         return (Element) jdoc.getRootElement().detach();

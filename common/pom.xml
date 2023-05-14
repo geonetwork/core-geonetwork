@@ -31,7 +31,7 @@
   <parent>
     <groupId>org.geonetwork-opensource</groupId>
     <artifactId>geonetwork</artifactId>
-    <version>4.0.7-SNAPSHOT</version>
+    <version>4.2.5-SNAPSHOT</version>
   </parent>
 
 
@@ -74,9 +74,13 @@
       <artifactId>jdbm</artifactId>
     </dependency>
     <dependency>
-      <groupId>log4j</groupId>
-      <artifactId>log4j</artifactId>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-core</artifactId>
     </dependency>
+      <dependency>
+        <groupId>org.apache.logging.log4j</groupId>
+        <artifactId>log4j-1.2-api</artifactId>
+      </dependency>
     <dependency>
       <groupId>org.apache.jcs</groupId>
       <artifactId>jcs</artifactId>
@@ -169,6 +173,10 @@
       <artifactId>json</artifactId>
       <version>20140107</version>
       <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.bitbucket.cowwoc</groupId>
+      <artifactId>diff-match-patch</artifactId>
     </dependency>
   </dependencies>
 

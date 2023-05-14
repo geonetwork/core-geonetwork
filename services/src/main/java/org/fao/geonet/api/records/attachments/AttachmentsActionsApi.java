@@ -1,6 +1,6 @@
 /*
  * =============================================================================
- * ===	Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * ===	Copyright (C) 2001-2023 Food and Agriculture Organization of the
  * ===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * ===	and United Nations Environment Programme (UNEP)
  * ===
@@ -30,15 +30,14 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.server.context.ServiceContext;
+import org.apache.commons.io.FileUtils;
 import org.fao.geonet.ApplicationContextHolder;
-import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.domain.MetadataResource;
 import org.fao.geonet.domain.MetadataResourceVisibility;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.thumbnail.ThumbnailMaker;
-import org.fao.geonet.lib.Lib;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
@@ -122,13 +121,19 @@ public class AttachmentsActionsApi {
         throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
 
-        String metadataId = dataMan.getMetadataId(metadataUuid);
-        Lib.resource.checkEditPrivilege(context, metadataId);
+        ApiUtils.canEditRecord(metadataUuid, request);
 
-        Path thumbnailFile = thumbnailMaker.generateThumbnail(
-            jsonConfig,
-            rotationAngle);
+        Path thumbnailFile = null;
+        try {
+            thumbnailFile = thumbnailMaker.generateThumbnail(
+                jsonConfig,
+                rotationAngle);
 
-        return store.putResource(context, metadataUuid, thumbnailFile, MetadataResourceVisibility.PUBLIC);
+            return store.putResource(context, metadataUuid, thumbnailFile, MetadataResourceVisibility.PUBLIC, false);
+        } finally {
+            if (thumbnailFile != null) {
+                FileUtils.deleteQuietly(thumbnailFile.toFile());
+            }
+        }
     }
 }

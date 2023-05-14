@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2023 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -36,12 +36,15 @@ import jeeves.server.context.ServiceContext;
 import jeeves.server.sources.http.ServletPathFinder;
 import jeeves.services.ReadWriteController;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.text.StrSubstitutor;
 import org.elasticsearch.action.search.SearchResponse;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
-import org.fao.geonet.api.es.EsHTTPProxy;
+import org.fao.geonet.api.records.model.related.AssociatedRecord;
+import org.fao.geonet.api.records.model.related.RelatedItemType;
 import org.fao.geonet.api.records.rdf.RdfOutputManager;
 import org.fao.geonet.api.records.rdf.RdfSearcher;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
@@ -50,6 +53,7 @@ import org.fao.geonet.guiapi.search.XsltResponseWriter;
 import org.fao.geonet.kernel.*;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.mef.MEFLib;
+import org.fao.geonet.kernel.search.EsFilterBuilder;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
@@ -82,7 +86,6 @@ import static org.fao.geonet.api.ApiParams.*;
 import static org.fao.geonet.kernel.mef.MEFLib.Version.Constants.MEF_V1_ACCEPT_TYPE;
 import static org.fao.geonet.kernel.mef.MEFLib.Version.Constants.MEF_V2_ACCEPT_TYPE;
 import static org.fao.geonet.kernel.search.EsSearchManager.FIELDLIST_CORE;
-import static org.fao.geonet.kernel.search.EsSearchManager.FIELDLIST_UUID;
 import static org.fao.geonet.kernel.search.IndexFields.SOURCE_CATALOGUE;
 
 @RequestMapping(value = {
@@ -134,26 +137,23 @@ public class CatalogApi {
     @Autowired
     SettingInfo settingInfo;
     @Autowired
-    private ServletContext servletContext;
-    @Autowired
-    EsHTTPProxy esHTTPProxy;
-    @Autowired
     LanguageUtils languageUtils;
     @Autowired
     IsoLanguagesMapper isoLanguagesMapper;
+    @Autowired
+    private ServletContext servletContext;
+
     /*
      * <p>Retrieve all parameters (except paging parameters) as a string.</p>
      */
     private static String paramsAsString(Map<String, String> requestParams) {
-        String paramNonPaging = "";
-        Iterator<Entry<String, String>> it = requestParams.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry<String, String> pair = it.next();
+        StringBuilder paramNonPaging = new StringBuilder();
+        for (Entry<String, String> pair : requestParams.entrySet()) {
             if (!pair.getKey().equals("from") && !pair.getKey().equals("to")) {
-                paramNonPaging = paramNonPaging + (paramNonPaging.equals("") ? "" : "&") + pair.getKey() + "=" + pair.getValue();
+                paramNonPaging.append(paramNonPaging.toString().equals("") ? "" : "&").append(pair.getKey()).append("=").append(pair.getValue());
             }
         }
-        return paramNonPaging;
+        return paramNonPaging.toString();
     }
 
     @io.swagger.v3.oas.annotations.Operation(
@@ -181,61 +181,61 @@ public class CatalogApi {
             required = false,
             example = "")
         @RequestParam(required = false)
-            String[] uuids,
+        String[] uuids,
         @Parameter(
             description = ApiParams.API_PARAM_BUCKET_NAME,
             required = false)
         @RequestParam(
             required = false
         )
-            String bucket,
+        String bucket,
         @Parameter(
             description = "MEF file format.",
             required = false)
         @RequestParam(
             required = false,
             defaultValue = "FULL")
-            MEFLib.Format format,
+        MEFLib.Format format,
         @Parameter(
             description = "With related records (parent and service).",
             required = false)
         @RequestParam(
             required = false,
             defaultValue = "false")
-            boolean withRelated,
+        boolean withRelated,
         @Parameter(
             description = "Resolve XLinks in the records.",
             required = false)
         @RequestParam(
             required = false,
             defaultValue = "true")
-            boolean withXLinksResolved,
+        boolean withXLinksResolved,
         @Parameter(
             description = "Preserve XLink URLs in the records.",
             required = false)
         @RequestParam(
             required = false,
             defaultValue = "false")
-            boolean withXLinkAttribute,
+        boolean withXLinkAttribute,
         @RequestParam(
             required = false,
             defaultValue = "true")
-            boolean addSchemaLocation,
+        boolean addSchemaLocation,
         @Parameter(description = "Download the approved version",
             required = false)
         @RequestParam(required = false, defaultValue = "true")
-            boolean approved,
+        boolean approved,
         @RequestHeader(
             value = HttpHeaders.ACCEPT,
             defaultValue = "application/x-gn-mef-2-zip"
         )
-            String acceptHeader,
+        String acceptHeader,
         @Parameter(hidden = true)
-            HttpSession httpSession,
+        HttpSession httpSession,
         @Parameter(hidden = true)
-            HttpServletResponse response,
+        HttpServletResponse response,
         @Parameter(hidden = true)
-            HttpServletRequest request)
+        HttpServletRequest request)
         throws Exception {
 
         // Get parameters
@@ -256,8 +256,7 @@ public class CatalogApi {
             throw new IllegalArgumentException("MEF version 1 only support one record. Use the /records/{uuid}/formatters/zip to retrieve that format");
         } else {
             Set<String> allowedUuid = new HashSet<String>();
-            for (Iterator<String> iter = uuidList.iterator(); iter.hasNext(); ) {
-                String uuid = iter.next();
+            for (String uuid : uuidList) {
                 try {
                     ApiUtils.canViewRecord(uuid, request);
                     allowedUuid.add(uuid);
@@ -277,18 +276,17 @@ public class CatalogApi {
                 int maxhits = Integer.parseInt(settingInfo.getSelectionMaxRecords());
 
                 Set<String> tmpUuid = new HashSet<String>();
-                for (Iterator<String> iter = allowedUuid.iterator(); iter.hasNext(); ) {
-                    String uuid = iter.next();
+                for (String uuid : allowedUuid) {
+                    Map<RelatedItemType, List<AssociatedRecord>> associated =
+                        MetadataUtils.getAssociated(context,
+                            metadataRepository.findOneByUuid(uuid),
+                            RelatedItemType.values(), 0, maxhits);
 
-                    // Search for children records
-                    // and service record. At some point this might be extended to all type of relations.
-                    final SearchResponse searchResponse = searchManager.query(
-                        String.format("parentUuid:\"%s\" recordOperateOn:\"%s\"", uuid, uuid),
-                        esHTTPProxy.buildPermissionsFilter(ApiUtils.createServiceContext(request)),
-                        FIELDLIST_UUID, 0, maxhits);
-
-                    Arrays.asList(searchResponse.getHits().getHits()).forEach(h ->
-                        tmpUuid.add((String) h.getSourceAsMap().get(Geonet.IndexFieldNames.UUID)));
+                    associated.forEach((type, list) -> {
+                        list.forEach(r -> {
+                            tmpUuid.add(r.getUuid());
+                        });
+                    });
                 }
 
                 if (selectionManger.addAllSelection(SelectionManager.SELECTION_METADATA, tmpUuid)) {
@@ -320,6 +318,10 @@ public class CatalogApi {
             } finally {
                 // -- Reset selection manager
                 selectionManger.close(SelectionManager.SELECTION_METADATA);
+                // Delete the temporary file
+                if (file != null) {
+                    FileUtils.deleteQuietly(file.toFile());
+                }
             }
         }
     }
@@ -345,23 +347,23 @@ public class CatalogApi {
             required = false,
             example = "")
         @RequestParam(required = false)
-            String[] uuids,
+        String[] uuids,
         @Parameter(
             description = ApiParams.API_PARAM_BUCKET_NAME,
             required = false)
         @RequestParam(
             required = false
         )
-            String bucket,
+        String bucket,
         @Parameter(hidden = true)
         @RequestParam
-            Map<String, String> allRequestParams,
+        Map<String, String> allRequestParams,
         @Parameter(hidden = true)
-            HttpSession httpSession,
+        HttpSession httpSession,
         @Parameter(hidden = true)
-            HttpServletResponse httpResponse,
+        HttpServletResponse httpResponse,
         @Parameter(hidden = true)
-            HttpServletRequest httpRequest)
+        HttpServletRequest httpRequest)
         throws Exception {
 
 
@@ -375,7 +377,7 @@ public class CatalogApi {
             String.format(
                 "uuid:(\"%s\")",
                 String.join("\" or \"", uuidList)),
-            esHTTPProxy.buildPermissionsFilter(ApiUtils.createServiceContext(httpRequest)),
+            EsFilterBuilder.buildPermissionsFilter(ApiUtils.createServiceContext(httpRequest)),
             FIELDLIST_PDF, 0, maxhits);
 
 
@@ -435,9 +437,9 @@ public class CatalogApi {
                     });
                 } else if (v instanceof HashMap && e.getKey().equals("geom")) {
                     Element t = new Element(e.getKey());
-                    t.setText(((HashMap)v).get("coordinates").toString());
+                    t.setText(((HashMap) v).get("coordinates").toString());
                     r.addContent(t);
-                }  else if (v instanceof HashMap) {
+                } else if (v instanceof HashMap) {
                     // Skip.
                 } else {
                     Element t = new Element(e.getKey());
@@ -449,7 +451,7 @@ public class CatalogApi {
         });
 
         Locale locale = languageUtils.parseAcceptLanguage(httpRequest.getLocales());
-        String language = isoLanguagesMapper.iso639_2T_to_iso639_2B(locale.getISO3Language());
+        String language = IsoLanguagesMapper.iso639_2T_to_iso639_2B(locale.getISO3Language());
         language = XslUtil.twoCharLangCode(language, "eng").toLowerCase();
 
         new XsltResponseWriter("env", "search")
@@ -459,7 +461,8 @@ public class CatalogApi {
             .withXml(response)
             .withParams(params)
             .withXsl("xslt/services/pdf/portal-present-fop.xsl")
-            .asPdf(httpResponse, settingManager.getValue("metadata/pdfReport/pdfName"));
+            .asPdf(httpResponse, replaceFilenamePlaceholder(settingManager.getValue("metadata/pdfReport/pdfName"), "pdf"));
+
     }
 
     @io.swagger.v3.oas.annotations.Operation(
@@ -483,23 +486,23 @@ public class CatalogApi {
             required = false,
             example = "")
         @RequestParam(required = false)
-            String[] uuids,
+        String[] uuids,
         @Parameter(
             description = ApiParams.API_PARAM_BUCKET_NAME,
             required = false)
         @RequestParam(
             required = false
         )
-            String bucket,
+        String bucket,
         @Parameter(hidden = true)
         @RequestParam
-            Map<String, String> allRequestParams,
+        Map<String, String> allRequestParams,
         @Parameter(hidden = true)
-            HttpSession httpSession,
+        HttpSession httpSession,
         @Parameter(hidden = true)
-            HttpServletResponse httpResponse,
+        HttpServletResponse httpResponse,
         @Parameter(hidden = true)
-            HttpServletRequest httpRequest)
+        HttpServletRequest httpRequest)
         throws Exception {
         final UserSession session = ApiUtils.getUserSession(httpSession);
         Set<String> uuidList = ApiUtils.getUuidsParameterOrSelection(
@@ -510,7 +513,7 @@ public class CatalogApi {
 
         final SearchResponse searchResponse = searchManager.query(
             String.format("uuid:(\"%s\")", String.join("\" or \"", uuidList)),
-            esHTTPProxy.buildPermissionsFilter(ApiUtils.createServiceContext(httpRequest)),
+            EsFilterBuilder.buildPermissionsFilter(ApiUtils.createServiceContext(httpRequest)),
             FIELDLIST_CORE, 0, maxhits);
 
         Element response = new Element("response");
@@ -521,14 +524,21 @@ public class CatalogApi {
                         context,
                         (String) h.getSourceAsMap().get("id"),
                         false, false, false));
-            } catch (Exception e) {
+            } catch (Exception ignored) {
             }
         });
 
-        Element r = new XsltResponseWriter(null,"search")
+        Element r = new XsltResponseWriter(null, "search")
             .withXml(response)
             .withXsl("xslt/services/csv/csv-search.xsl")
             .asElement();
+
+        // Determine filename to use
+        String fileName = replaceFilenamePlaceholder(settingManager.getValue("metadata/csvReport/csvName"), "csv");
+
+        httpResponse.setContentType("text/csv");
+        httpResponse.addHeader("Content-Disposition", "attachment; filename=" + fileName);
+        httpResponse.setContentLength(r.getText().length());
         httpResponse.getWriter().write(r.getText());
     }
 
@@ -585,7 +595,7 @@ public class CatalogApi {
     void getAsRdf(
         @Parameter(hidden = true)
         @RequestParam
-            Map<String, String> allRequestParams,
+        Map<String, String> allRequestParams,
         HttpServletResponse response,
         HttpServletRequest request
     ) throws Exception {
@@ -706,7 +716,10 @@ public class CatalogApi {
             Log.error(API.LOG_MODULE_NAME, "Get catalog content as RDF. Error: " + e.getMessage(), e);
         } catch (IOException e) {
             Log.error(API.LOG_MODULE_NAME, "Get catalog content as RDF. Error: " + e.getMessage(), e);
+        } finally {
+            FileUtils.deleteQuietly(rdfFile);
         }
+
     }
 
     /*
@@ -719,5 +732,39 @@ public class CatalogApi {
         ServletPathFinder pathFinder = new ServletPathFinder(servletContext);
         return sm.getBaseURL().replaceAll(pathFinder.getBaseUrl() + "/", "");
 
+    }
+
+    private String replaceFilenamePlaceholder(String fileName, String extension) {
+        // Checks for a parameter documentFileName with the document file name,
+        // otherwise uses a default value
+        if (StringUtils.isEmpty(fileName)) {
+            fileName = "document." + extension;
+
+        } else {
+            if (!fileName.endsWith("." + extension)) {
+                fileName = fileName + "." + extension;
+            }
+
+            Map<String, String> values = new HashMap<String, String>();
+            values.put("siteName", settingManager.getSiteName());
+
+            Calendar c = Calendar.getInstance();
+            values.put("year", c.get(Calendar.YEAR) + "");
+            values.put("month", c.get(Calendar.MONTH) + "");
+            values.put("day", c.get(Calendar.DAY_OF_MONTH) + "");
+
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+            SimpleDateFormat datetimeFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+            values.put("date", dateFormat.format(c.getTime()));
+            values.put("datetime", datetimeFormat.format(c.getTime()));
+
+            DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HHmmss");
+            values.put("ISOdatetime", df.format(new Date()));
+
+            StrSubstitutor sub = new StrSubstitutor(values, "{", "}");
+            fileName = sub.replace(fileName);
+
+        }
+        return fileName;
     }
 }

@@ -1,0 +1,16 @@
+<li data-ng-class="{'active': ctrl.isInSearch(ctrl.facet, ctrl.item)}">
+  <a
+    href
+    ng-class="ctrl.isInSearch(ctrl.facet, ctrl.item) ? 'gn-facet-checked' + (ctrl.item.inverted ? '-inverted' : '') : ''"
+    title="{{::ctrl.item.value}}"
+    ng-click="ctrl.filter(ctrl.facet, ctrl.item)"
+  >
+    <span
+      data-ng-if="ctrl.facet.meta && ctrl.facet.meta.decorator"
+      data-es-facet-decorator="ctrl.facet.meta.decorator"
+      data-key="ctrl.item.value"
+    />
+    {{::ctrl.item.count}} {{::ctrl.item.value | facetTranslator: (ctrl.facet.meta &&
+    ctrl.facet.meta.field) || ctrl.facet.key | capitalize}}
+  </a>
+</li>

@@ -115,7 +115,7 @@ public class GeonetHttpRequestFactory {
     }
 
     /**
-     * Ceate an XmlRequest from a url.
+     * Create an XmlRequest from a url.
      *
      * @param url the url of the request.
      * @return the XmlRequest.

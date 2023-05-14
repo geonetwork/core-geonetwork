@@ -26,7 +26,8 @@ var gnHarvestersimpleurl = {
         "toISOConversion": ""
       },
       "content" : {
-        "validate" : "NOVALIDATION"
+        "validate" : "NOVALIDATION",
+        "batchEdits" : ""
       },
       "options" : {
         "every" : "0 0 0 ? * *",
@@ -101,6 +102,7 @@ var gnHarvestersimpleurl = {
       + '  </options>'
       + '  <content>'
       + '    <validate>' + h.content.validate + '</validate>'
+      + '    <batchEdits><![CDATA[' + (h.content.batchEdits == '' ? '[]' : h.content.batchEdits) + ']]></batchEdits>'
       + '  </content>'
       + $scope.buildResponseGroup(h)
       + $scope.buildResponseCategory(h) + '</node>';

@@ -356,16 +356,25 @@ public class ServiceManager {
         return context;
     }
 
+    /**
+     * If we do have the optional x-forwarded-for request header then
+     * use whatever is in it to record ip address of client
+     */
+    public static String getRequestIpAddress(HttpServletRequest request) {
+        String xForwardedForHeader = request.getHeader("x-forwarded-for");
+        return StringUtils.isNotEmpty(xForwardedForHeader)
+            ? xForwardedForHeader : request.getRemoteAddr();
+    }
+
+
     public ServiceContext createServiceContext(String name, String lang, HttpServletRequest request) {
         ServiceContext context = new ServiceContext(name, ApplicationContextHolder.get(), htContexts, entityManager);
 
         context.setBaseUrl(baseUrl);
         context.setLanguage(lang);
-        context.setIpAddress(request.getRemoteAddr());
+        context.setIpAddress(getRequestIpAddress(request));
         context.setMaxUploadSize(maxUploadSize);
         context.setServlet(servlet);
-
-        String ip = request.getRemoteAddr();
 
         // Session is created by ApiInterceptor when needed
         // Save the session here in the ServiceContext (not used in the API package).
@@ -749,7 +758,7 @@ public class ServiceManager {
                 String contentDisposition = binaryFile.getContentDisposition();
                 String contentLength = binaryFile.getContentLength();
 
-                int cl = (contentLength == null) ? -1 : Integer.parseInt(contentLength);
+                long cl = (contentLength == null) ? -1 : Long.parseLong(contentLength);
 
                 // Did we set up a status code for the response?
                 if (context.getStatusCode() != null) {
@@ -772,7 +781,7 @@ public class ServiceManager {
                 String contentDisposition = BLOB.getContentDisposition(response);
                 String contentLength = BLOB.getContentLength(response);
 
-                int cl = (contentLength == null) ? -1 : Integer.parseInt(contentLength);
+                long cl = (contentLength == null) ? -1 : Long.parseLong(contentLength);
 
                 req.beginStream(contentType, cl, contentDisposition, cache);
                 BLOB.write(response, req.getOutputStream());
@@ -844,7 +853,7 @@ public class ServiceManager {
                                 } finally {
                                     timerContext.stop();
                                 }
-                                
+
                                 if (outPage.getContentType() != null
                                     && outPage.getContentType().startsWith("text/plain")) {
                                     req.beginStream(outPage.getContentType(), -1, "attachment;", cache);

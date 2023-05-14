@@ -92,5 +92,14 @@ public class AccessManagerTest extends AbstractCoreIntegrationTest {
             assertTrue("IP " + ipToTest +" is in the intranet", accessManager.isIntranet(ipToTest));
         }
         assertFalse("IP " + "192.168.2.1" +" is not in the intranet", accessManager.isIntranet("192.168.2.1"));
+
+        settingManager.setValue(Settings.SYSTEM_INTRANET_NETMASK, "255.255.255.255,255.255.255.255");
+        settingManager.setValue(Settings.SYSTEM_INTRANET_NETWORK, "192.168.1.1,194.168.1.1");
+        assertTrue(accessManager.isIntranet("192.168.1.1"));
+        assertTrue(accessManager.isIntranet("194.168.1.1"));
+        assertFalse(accessManager.isIntranet("192.168.1.2"));
+        assertFalse(accessManager.isIntranet("194.168.1.2"));
+        assertFalse(accessManager.isIntranet("192.168.1.0"));
+        assertFalse(accessManager.isIntranet("194.168.1.0"));
     }
 }

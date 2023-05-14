@@ -389,7 +389,7 @@
     </entry>
     <entry>
       <code>originator</code>
-      <label>A l’origine de</label>
+      <label>Producteur</label>
       <description>Organisme qui a commandé la ressource. Acteur qui a été
         habilité à créer la ressource et qui a mis en place les moyens pour la
         constituer
@@ -405,7 +405,7 @@
     </entry>
     <entry>
       <code>principalInvestigator</code>
-      <label>Point de recherche</label>
+      <label>Investigateur principal</label>
       <description>Personne clé pour obtenir des informations sur la ressource
         et les recherches conduites autour de la ressource&#xA;Acteur qui a
         assuré la réalisation de la ressource,éventuellement en faisant appel à
@@ -485,7 +485,7 @@
     </entry>
     <entry>
       <code>funder</code>
-      <label>Investisseur</label>
+      <label>Financeur</label>
       <description>Partie offrant un soutien financier pour la ressource
       </description>
     </entry>
@@ -1782,7 +1782,7 @@
     <entry>
       <code>farming</code>
       <label>Agriculture</label>
-      <description>Elevage et/ou cultures. Exemples : agriculture, irrigation,
+      <description>Élevage et/ou cultures. Exemples : agriculture, irrigation,
         aquaculture, plantations
       </description>
     </entry>
@@ -1895,7 +1895,7 @@
       <code>society</code>
       <label>Société</label>
       <description>Caractéristiques des sociétés et des cultures. Exemples
-        :lois, anthropologie, éducation, données démographiques, archéologique,
+        : lois, anthropologie, éducation, données démographiques, archéologique,
         suivi des systèmes sociaux, croyances, us et coutumes, crimes et
         justices
       </description>
@@ -1911,7 +1911,7 @@
       <code>transportation</code>
       <label>Infrastructures de transport</label>
       <description>Moyens de transports des personnes et des biens. Exemples :
-        routes, aéroports, tunnels, viaducs, ponts, chemin de fer
+       routes, aéroports, tunnels, viaducs, ponts, chemin de fer
       </description>
     </entry>
     <entry>
@@ -2037,7 +2037,7 @@
     <entry>
       <code>wayPoint</code>
       <label>Way Point</label>
-      <description>Event related to general collectio</description>
+      <description>Event related to general collection</description>
     </entry>
   </codelist>
   <codelist name="mac:MI_ObjectiveTypeCode">

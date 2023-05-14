@@ -83,21 +83,24 @@
     <value>ara</value>
     <value>cat</value>
     <value>chi</value>
+    <value>cze</value>
     <value>dut</value>
+    <value>dan</value>
     <value>eng</value>
     <value>fin</value>
     <value>fre</value>
     <value>ger</value>
-    <value>por</value>
+    <value>ice</value>
     <value>ita</value>
+    <value>kor</value>
     <value>nor</value>
     <value>pol</value>
     <value>por</value>
     <value>rus</value>
     <value>slo</value>
     <value>spa</value>
-    <value>tur</value>
     <value>swe</value>
+    <value>tur</value>
   </util:set>
 
   <util:map id="jpaPropertyMap">
@@ -157,6 +160,64 @@
           p:proportion=".015" p:factor=".2"/>
   </util:set>
 
+
+  <!--
+   WMS:
+   ====
+
+     The configuration URL will have the following placeholders replaced with actual values;
+
+        + {minx} and {MINX}
+        + {miny} and {MINY}
+        + {maxx} and {MAXX}
+        + {maxy} and {MAXY}
+        + {srs}  and {SRS}
+        + {width} and {WIDTH}
+        + {height} and {HEIGHT}
+
+     with the necessary values from the request.
+
+     For example, the URL might look like this;
+     https://ows.terrestris.de/osm/service?SERVICE=WMS&REQUEST=GetMap&VERSION=1.1.0&LAYERS=OSM-WMS&STYLES=default&SRS={srs}&BBOX={minx},{miny},{maxx},{maxy}&WIDTH={width}&HEIGHT={height}&FORMAT=image/png
+
+    WMTS:
+    =====
+
+    The configuration should be a json string with the following attributes;
+
+    wmtsGetCapabilitiesURL - (required) URL to the GetCapabilities for the WMTS service
+    layerName - (required)  Name of the layer to use (in the WMTS GetCapabilities)
+
+    matrixSet - (optional, default is the same as SRID) Name of the WMTS GetCapabilities matrixSet to use (hardcoded for all requests)
+    SRID2MatrixSet - (optional, default is no translation)
+    flip4326 - (optional, default is NO)
+
+    Typically, you should just need to set the `wmtsGetCapabilitiesURL` and `layerName`.
+    In this case, it will use the WMTS matrixSet with the same name as the SRS.
+
+    If you want to ALWAYS (!!) use a specific matrixSet, you can use the `matrixSet` parameter.
+
+    If the WMTS doesn't use the SRS as the name of the matrixSets, you can use the SRID2MatrixSet to convert the SRID
+    to a matrixSet.
+
+    Most WMTS systems will use YX ordering for EPSG:4326.  If you are supplying coordinates in XY ordering, you will
+    likely need to set flip4326 to true.
+
+    EXAMPLE
+
+    {
+        "wmtsGetCapabilitiesURL":"URL",
+        "layerName":"LAYERNAME",
+        "SRID2MatrixSet": {
+             "EPSG:900913":"EPSG:3857"
+        },
+        "flip4326": true
+    }
+
+    A request for SRID EPSG:1234 will use the "EPSG:1234" matrixSet.
+    A request for SRID EPSG:900913 will use the "EPSG:3857" matrixSet (SRID2MatrixSet).
+    If the request is for EPSG:4326, the request bbox (AOI) will be flipped from XY to YX.
+  -->
   <util:map id="regionGetMapBackgroundLayers">
     <entry key="osm"
            value="\${map.bbox.background.service}"/>
@@ -191,4 +252,44 @@
           p:url="http:\/\/map1[A-Z].com" p:useProxy="true" p:authType="BASIC" p:urlType="REGEXP" p:username="test" p:password="testpass"/-->
   </util:list>
 
+  <util:map id="translationPacks">
+    <entry key="gnui">
+      <util:list>
+        <value>json/gnui</value>
+        <value>standards/iso19139/codelists/gmd:MD_TopicCategoryCode+gmd:MD_ScopeCode+gmd:MD_MaintenanceFrequencyCode+gmd:MD_ProgressCode+gmd:DS_InitiativeTypeCode+gmd:MD_SpatialRepresentationTypeCode</value>
+        <value>standards/iso19115-3.2018/codelists/cit:CI_DateTypeCode</value>
+        <value>db/MetadataCategory+Operation+Group+StatusValue+Source+Translations</value>
+      </util:list>
+    </entry>
+    <entry key="login">
+      <util:list>
+        <value>json/core</value>
+      </util:list>
+    </entry>
+    <entry key="search">
+      <util:list>
+        <value>json/core+search+v4+custom</value>
+        <value>json/schemas</value>
+        <value>standards/iso19139/codelists/gmd:MD_TopicCategoryCode+gmd:MD_ScopeCode+gmd:MD_MaintenanceFrequencyCode+gmd:MD_ProgressCode+gmd:MD_SpatialRepresentationTypeCode</value>
+        <value>standards/iso19115-3.2018/codelists/cit:CI_DateTypeCode+indeterminatePosition+mri:DS_InitiativeTypeCode+mri:DS_AssociationTypeCode</value>
+        <value>db/MetadataCategory+Operation+Group+StatusValue+Source+Translations</value>
+      </util:list>
+    </entry>
+    <entry key="admin">
+      <util:list>
+        <value>json/core+search+admin+v4+custom</value>
+        <value>json/schemas</value>
+        <value>db/MetadataCategory+Operation+Group+StatusValue+Source+Translations</value>
+      </util:list>
+    </entry>
+    <entry key="editor">
+      <util:list>
+        <value>json/core+search+editor+v4+custom</value>
+        <value>json/schemas</value>
+        <value>standards/iso19139/codelists/gmd:MD_TopicCategoryCode+gmd:MD_ScopeCode+gmd:MD_MaintenanceFrequencyCode+gmd:MD_ProgressCode+gmd:MD_SpatialRepresentationTypeCode</value>
+        <value>standards/iso19115-3.2018/codelists/cit:CI_DateTypeCode+indeterminatePosition+mri:DS_InitiativeTypeCode+mri:DS_AssociationTypeCode</value>
+        <value>db/MetadataCategory+Operation+Group+StatusValue+Source+Translations</value>
+      </util:list>
+    </entry>
+  </util:map>
 </beans>

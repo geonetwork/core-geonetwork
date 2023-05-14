@@ -25,7 +25,7 @@ package org.fao.geonet.api.records.formatters;
 
 import com.google.common.collect.Sets;
 import com.google.common.io.Files;
-import com.itextpdf.text.Image;
+import com.lowagie.text.Image;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.api.ApiUtils;
@@ -240,7 +240,10 @@ public class ImageReplacedElementFactory implements ReplacedElementFactory {
 
             return new ITextImageElement(fsImage);
         } catch (Exception e) {
-            Log.error(Geonet.GEONETWORK, "Error writing metadata to PDF", e);
+            Log.warning(Geonet.GEONETWORK,
+                String.format("Error loading image %s for PDF",
+                    imageLoader instanceof UrlImageLoader ?
+                        ((UrlImageLoader) imageLoader).url : ""), e);
 
             try {
                 return superFactory.createReplacedElement(layoutContext, box, userAgentCallback, cssWidth, cssHeight);

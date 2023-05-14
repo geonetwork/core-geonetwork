@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="warn" dest="out">
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%date{HH:mm:ss.SSS} %-6level [%logger{2}] - %msg%n"/>
+        </Console>
+    </Appenders>
+    <Loggers>
+        <Logger name="org.springframework.aop.framework.CglibAopProxy" level="error"/>
+        <Logger name="net.sf.ehcache.config.ConfigurationFactory" level="error"/>
+        <Logger name="org.apache.jcs.auxiliary" level="error"/>
+        <Logger name="org.hibernate" level="error"/>
+        <Logger name="org.hibernate.SQL" level="warn"/>
+
+        <Logger name="org.fao.geonet.database" level="warn"/>
+        <Logger name="org.fao.geonet.type" level="warn"/>
+        <Logger name="org.fao.geonet.formatter" level="warn"/>
+        <Logger name="org.xhtmlrenderer" level="off"/>
+
+        <Root level="warn">
+            <AppenderRef ref="Console"/>
+        </Root>
+    </Loggers>
+</Configuration>

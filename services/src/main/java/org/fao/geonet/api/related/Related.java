@@ -121,7 +121,7 @@ public class Related implements ApplicationContextAware {
                         new Element("language").setText(language.getISO3Language()),
                         new Element("url").setText(context.getBaseUrl())
                     )),
-                    MetadataUtils.getRelated(context, md.getId(), md.getUuid(), types, 0, 100, true)
+                    MetadataUtils.getRelated(context, md.getId(), md.getUuid(), types, 0, 100)
                 ));
                 final Element transform = Xml.transform(raw, relatedXsl);
                 RelatedResponse response = (RelatedResponse) Xml.unmarshall(transform, RelatedResponse.class);

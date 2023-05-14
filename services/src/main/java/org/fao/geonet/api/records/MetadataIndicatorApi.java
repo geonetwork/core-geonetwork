@@ -12,6 +12,7 @@ import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataIndicator;
 import org.fao.geonet.kernel.datamanager.IMetadataIndexer;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
+import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.repository.MetadataIndicatorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -135,7 +136,7 @@ public class MetadataIndicatorApi {
         });
 
         metadataManager.save(metadata);
-        metadataIndexer.indexMetadata(String.valueOf(metadata.getId()), true);
+        metadataIndexer.indexMetadata(String.valueOf(metadata.getId()), true, IndexingMode.full);
     }
 
 
@@ -182,6 +183,6 @@ public class MetadataIndicatorApi {
         }
 
         metadataManager.save(metadata);
-        metadataIndexer.indexMetadata(String.valueOf(metadata.getId()), true);
+        metadataIndexer.indexMetadata(String.valueOf(metadata.getId()), true, IndexingMode.full);
     }
 }

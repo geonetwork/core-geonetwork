@@ -174,8 +174,8 @@
         -->
         <xsl:variable name="keywords" select="string-join(
                   if ($guiLangId and mri:keyword//*[@locale = concat('#', $guiLangId)])
-                  then mri:keyword//*[@locale = concat('#', $guiLangId)]/replace(text(), ',', ',,')
-                  else mri:keyword/*[1]/replace(text(), ',', ',,'), ',')"/>
+                  then mri:keyword//*[@locale = concat('#', $guiLangId)][. != '']/replace(text(), ',', ',,')
+                  else mri:keyword/*[1][. != '']/replace(text(), ',', ',,'), ',')"/>
 
         <!-- Define the list of transformation mode available. -->
         <xsl:variable name="transformations"
@@ -237,6 +237,8 @@
              data-transformations="{$transformations}"
              data-current-transformation="{$transformation}"
              data-max-tags="{$maxTags}"
+             data-browsable="{not($thesaurusConfig/@browsable)
+                              or $thesaurusConfig/@browsable != 'false'}"
              data-order-by-id="{$orderById}"
              data-lang="{$metadataOtherLanguagesAsJson}"
              data-textgroup-only="false">

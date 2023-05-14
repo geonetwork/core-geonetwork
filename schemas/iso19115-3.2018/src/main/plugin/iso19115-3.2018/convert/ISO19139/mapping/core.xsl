@@ -1,4 +1,7 @@
-<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                xmlns:gfcold="http://www.isotc211.org/2005/gfc"
+                xmlns:gfc="http://standards.iso.org/iso/19110/gfc/1.1"
   xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gcoold="http://www.isotc211.org/2005/gco" xmlns:gmi="http://www.isotc211.org/2005/gmi" xmlns:gmx="http://www.isotc211.org/2005/gmx"
   xmlns:gsr="http://www.isotc211.org/2005/gsr" xmlns:gss="http://www.isotc211.org/2005/gss" xmlns:gts="http://www.isotc211.org/2005/gts" xmlns:srvold="http://www.isotc211.org/2005/srv"
   xmlns:gml30="http://www.opengis.net/gml" xmlns:cat="http://standards.iso.org/iso/19115/-3/cat/1.0" xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/2.0"
@@ -57,6 +60,26 @@
       </mcc:MD_Identifier>
     </xsl:element>
   </xsl:template>
+
+
+  <xsl:template match="gfcold:FC_FeatureCatalogue/@uuid" priority="5" mode="from19139to19115-3.2018">
+    <xsl:element name="mdb:metadataIdentifier">
+      <mcc:MD_Identifier>
+        <mcc:code>
+          <gco:CharacterString><xsl:value-of select="."/></gco:CharacterString>
+        </mcc:code>
+      </mcc:MD_Identifier>
+    </xsl:element>
+  </xsl:template>
+
+  <xsl:template match="gfcold:typeName/gcoold:LocalName
+                      |gfcold:aliases/gcoold:LocalName
+                      |gfcold:memberName/gcoold:LocalName" priority="5"
+                mode="from19139to19115-3.2018">
+    <xsl:value-of select="."/>
+  </xsl:template>
+
+
   <xsl:template match="gmd:language|gmd:locale" priority="5" mode="from19139to19115-3.2018">
     <xsl:variable name="nameSpacePrefix">
       <xsl:call-template name="getNamespacePrefix"/>
@@ -222,27 +245,42 @@
             <xsl:call-template name="writeCodelistElement">
               <xsl:with-param name="elementName" select="'cit:dateType'"/>
               <xsl:with-param name="codeListName" select="'cit:CI_DateTypeCode'"/>
-              <xsl:with-param name="codeListValue" select="'creation'"/>
+              <xsl:with-param name="codeListValue" select="'revision'"/>
             </xsl:call-template>
           </cit:CI_Date>
         </mdb:dateInfo>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
-  <xsl:template match="gmd:metadataStandardName" priority="5" mode="from19139to19115-3.2018">
-    <!--
-      metadataStandardName and gmd:metadataStandardVersion are combined into a CI_Citation
-    -->
+  <xsl:template match="gmd:metadataStandardName" priority="5"
+                mode="from19139to19115-3.2018">
     <mdb:metadataStandard>
       <cit:CI_Citation>
-        <xsl:call-template name="writeCharacterStringElement">
-          <xsl:with-param name="elementName" select="'cit:title'"/>
-          <xsl:with-param name="nodeWithStringToWrite" select="."/>
-        </xsl:call-template>
-        <xsl:call-template name="writeCharacterStringElement">
-          <xsl:with-param name="elementName" select="'cit:edition'"/>
-          <xsl:with-param name="nodeWithStringToWrite" select="../gmd:metadataStandardVersion"/>
-        </xsl:call-template>
+        <xsl:choose>
+          <!-- Replace default standard name with fixed value ....-->
+          <xsl:when test="matches(gcoold:CharacterString, '^ISO\s?191(15|39)((:|\.)2003/19139)?$', 'i')">
+            <cit:title>
+              <gco:CharacterString>ISO 19115-3:2018</gco:CharacterString>
+            </cit:title>
+            <cit:edition>
+              <gco:CharacterString>1.0</gco:CharacterString>
+            </cit:edition>
+          </xsl:when>
+          <!--
+            or combined custom ones metadataStandardName and gmd:metadataStandardVersion
+            into a CI_Citation
+          -->
+          <xsl:otherwise>
+            <xsl:call-template name="writeCharacterStringElement">
+              <xsl:with-param name="elementName" select="'cit:title'"/>
+              <xsl:with-param name="nodeWithStringToWrite" select="."/>
+            </xsl:call-template>
+            <xsl:call-template name="writeCharacterStringElement">
+              <xsl:with-param name="elementName" select="'cit:edition'"/>
+              <xsl:with-param name="nodeWithStringToWrite" select="../gmd:metadataStandardVersion"/>
+            </xsl:call-template>
+          </xsl:otherwise>
+        </xsl:choose>
       </cit:CI_Citation>
     </mdb:metadataStandard>
   </xsl:template>
@@ -486,10 +524,10 @@
       </gml:TimeInstant>
     </mri:usageDateTime>
   </xsl:template>
-	
-	
-	
-	
+
+
+
+
 
   <xsl:variable name="associatedResourceAsMetadataReferenceOnly"
                 select="true()"/>
@@ -551,13 +589,18 @@
         </xsl:call-template>
 
         <xsl:if test="$associatedResourceAsMetadataReferenceOnly">
-          <mri:metadataReference uuidref="{gmd:MD_AggregateInformation/gmd:aggregateDataSetIdentifier/*/gmd:code/*/text()}"/>
+          <xsl:variable name="uuidref"
+                        select="gmd:MD_AggregateInformation/gmd:aggregateDataSetIdentifier/*/gmd:code/*/@uuidref"/>
+          <mri:metadataReference>
+            <xsl:copy-of select="gmd:MD_AggregateInformation/gmd:aggregateDataSetIdentifier/*/gmd:code/gmx:Anchor/@xlink:href"/>
+            <xsl:copy-of select="if ($uuidref != '') then $uuidref else gmd:MD_AggregateInformation/gmd:aggregateDataSetIdentifier/*/gmd:code/*/text()"/>
+          </mri:metadataReference>
         </xsl:if>
 
       </xsl:element>
     </mri:associatedResource>
   </xsl:template>
-	
+
   <xsl:template match="gmd:aggregationInfo/gmd:MD_AggregateInformation/gmd:aggregateDataSetName/gmd:CI_Citation/gmd:citedResponsibleParty" mode="from19139to19115-3.2018">
     <xsl:if test="not(preceding-sibling::gmd:citedResponsibleParty) and ancestor::gmd:MD_AggregateInformation/gmd:aggregateDataSetIdentifier">
       <!-- **********************************************************************

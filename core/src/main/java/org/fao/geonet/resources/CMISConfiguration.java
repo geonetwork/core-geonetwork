@@ -23,11 +23,15 @@
 
 package org.fao.geonet.resources;
 
+import org.apache.chemistry.opencmis.client.api.Folder;
 import org.apache.chemistry.opencmis.client.api.Repository;
+import org.apache.chemistry.opencmis.client.api.SecondaryType;
 import org.apache.chemistry.opencmis.client.api.Session;
 import org.apache.chemistry.opencmis.client.api.SessionFactory;
 import org.apache.chemistry.opencmis.client.runtime.SessionFactoryImpl;
+import org.apache.chemistry.opencmis.commons.PropertyIds;
 import org.apache.chemistry.opencmis.commons.SessionParameter;
+import org.apache.chemistry.opencmis.commons.definitions.PropertyDefinition;
 import org.apache.chemistry.opencmis.commons.enums.BindingType;
 import org.apache.chemistry.opencmis.commons.enums.IncludeRelationships;
 import org.apache.chemistry.opencmis.commons.enums.VersioningState;
@@ -36,11 +40,15 @@ import org.apache.chemistry.opencmis.commons.exceptions.CmisRuntimeException;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.MetadataResourceExternalManagementProperties;
 import org.fao.geonet.utils.Log;
 
 import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
+
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.regex.Pattern;
 
@@ -51,8 +59,9 @@ import java.util.regex.Pattern;
 public class CMISConfiguration {
     private Session client = null;
 
-    private final String CMIS_FOLDER_DELIMITER = "/"; // Specs indicate that "/" is the folder delimiter/separator - not sure if other delimiter can be used?.
-    private final String CMIS_SECONDARY_PROPERTY_SEPARATOR = "->";
+    public final static Integer CMIS_MAX_ITEMS_PER_PAGE = 1000;
+    public final static String CMIS_FOLDER_DELIMITER = "/"; // Specs indicate that "/" is the folder delimiter/separator - not sure if other delimiter can be used?.
+    public final static String CMIS_SECONDARY_PROPERTY_SEPARATOR = "->";
     private final String CMIS_DEFAULT_WEBSERVICES_ACL_SERVICE = "/services/ACLService?wsdl";
     private final String CMIS_DEFAULT_WEBSERVICES_DISCOVERY_SERVICE = "/services/DiscoveryService?wsdl";
     private final String CMIS_DEFAULT_WEBSERVICES_MULTIFILING_SERVICE = "/services/MultiFilingService?wsdl";
@@ -78,7 +87,17 @@ public class CMISConfiguration {
     private String password;
     private String repositoryId;
     private String repositoryName;
+
+    /**
+     * Property name for storing the metadata uuid that is expected to be a String
+     * It is expected to be in one of the following formats
+     * {Aspect}->{property_name}  - for secondary properties - i.e. P:cm:titled->cm:title
+     * {property_name}  - for primary properties - i.e. cmis:description
+     */
     private String cmisMetadataUUIDPropertyName;
+    private String parsedCmisMetadataUUIDPropertyName =  null;
+    private boolean cmisMetadataUUIDSecondaryProperty = false;
+
     /**
      * Url used for managing enhanced resource properties related to the metadata.
      */
@@ -87,6 +106,24 @@ public class CMISConfiguration {
     private Boolean externalResourceManagementModalEnabled;
     private Boolean externalResourceManagementFolderEnabled;
     private String externalResourceManagementFolderRoot;
+
+    /**
+     * Property name for validation status that is expected to be an integer with values of null, 0, 1, 2
+     * (See MetadataResourceExternalManagementProperties.ValidationStatus for code meaning)
+     * Property name follows the same format as cmisMetadataUUIDPropertyName
+     *
+     * If null then validation status will default to UNKNOWN.
+     */
+    private String externalResourceManagementValidationStatusPropertyName;
+    private String parsedExternalResourceManagementValidationStatusPropertyName =  null;
+    /**
+     * Default value to be used for the validation status.
+     * If null then it will use INCOMPLETE as the default.
+     * Note that if property name is not supplied then it will always default to UNKNOWN
+     */
+    private String externalResourceManagementValidationStatusDefaultValue;
+    private boolean externalResourceManagementValidationStatusSecondaryProperty = false;
+    private MetadataResourceExternalManagementProperties.ValidationStatus defaultStatus = null;
 
     /*
      * Enable option to add versioning in the link to the resource.
@@ -110,8 +147,6 @@ public class CMISConfiguration {
     private String browserUrl;
 
     private String atompubUrl;
-
-    private boolean secondaryPropertyExists = false;
 
     @Nonnull
     public String getServicesBaseUrl() {
@@ -245,6 +280,14 @@ public class CMISConfiguration {
         }
 
         this.externalResourceManagementFolderRoot = folderRoot;
+    }
+
+    public String getExternalResourceManagementValidationStatusDefaultValue() {
+        return externalResourceManagementValidationStatusDefaultValue;
+    }
+
+    public void setExternalResourceManagementValidationStatusDefaultValue(String externalResourceManagementValidationStatusDefaultValue) {
+        this.externalResourceManagementValidationStatusDefaultValue = externalResourceManagementValidationStatusDefaultValue;
     }
 
     @Nonnull
@@ -420,7 +463,12 @@ public class CMISConfiguration {
     }
 
     public String getCmisMetadataUUIDPropertyName() {
-        return cmisMetadataUUIDPropertyName;
+        // If we were able to parse the field on startup then return the parsed version.
+        if (parsedCmisMetadataUUIDPropertyName != null) {
+            return parsedCmisMetadataUUIDPropertyName;
+        } else {
+            return cmisMetadataUUIDPropertyName;
+        }
     }
 
     public void setCmisMetadataUUIDPropertyName(String cmisMetadataUUIDPropertyName) {
@@ -430,13 +478,54 @@ public class CMISConfiguration {
                 Log.error(Geonet.RESOURCES,
                     String.format("Invalid format for property name %s property will not be used", cmisMetadataUUIDPropertyName));
                 this.cmisMetadataUUIDPropertyName = null;
-                this.secondaryPropertyExists = false;
+                this.cmisMetadataUUIDSecondaryProperty = false;
                 return;
             } else {
-                this.secondaryPropertyExists = true;
+                this.cmisMetadataUUIDSecondaryProperty = true;
             }
         }
         this.cmisMetadataUUIDPropertyName = cmisMetadataUUIDPropertyName;
+    }
+
+    public String getExternalResourceManagementValidationStatusPropertyName() {
+        // If we were able to parse the field on startup then return the parsed version.
+        if (parsedExternalResourceManagementValidationStatusPropertyName != null) {
+            return parsedExternalResourceManagementValidationStatusPropertyName;
+        } else {
+            return externalResourceManagementValidationStatusPropertyName;
+        }
+    }
+
+    public void setExternalResourceManagementValidationStatusPropertyName(String externalResourceManagementValidationStatusPropertyName) {
+        this.externalResourceManagementValidationStatusPropertyName = externalResourceManagementValidationStatusPropertyName;
+        if (!StringUtils.isEmpty(externalResourceManagementValidationStatusPropertyName) && externalResourceManagementValidationStatusPropertyName.contains(CMIS_SECONDARY_PROPERTY_SEPARATOR)) {
+            String[] splitPropertyNames = externalResourceManagementValidationStatusPropertyName.split(Pattern.quote(CMIS_SECONDARY_PROPERTY_SEPARATOR));
+            if (splitPropertyNames.length != 2) {
+                Log.error(Geonet.RESOURCES,
+                    String.format("Invalid format for property name %s property will not be used", externalResourceManagementValidationStatusPropertyName));
+                this.externalResourceManagementValidationStatusPropertyName = null;
+                this.externalResourceManagementValidationStatusSecondaryProperty = false;
+                return;
+            } else {
+                this.externalResourceManagementValidationStatusSecondaryProperty = true;
+            }
+        }
+    }
+
+    public MetadataResourceExternalManagementProperties.ValidationStatus getValidationStatusDefaultValue() {
+        // We only need to set the default if there is a status property supplied, and it is not already set
+        if (this.defaultStatus == null &&  !org.springframework.util.StringUtils.isEmpty(getExternalResourceManagementValidationStatusPropertyName())) {
+            if (getExternalResourceManagementValidationStatusDefaultValue() != null) {
+                // If a default property name does exist then use it
+                this.defaultStatus = MetadataResourceExternalManagementProperties.ValidationStatus.valueOf(getExternalResourceManagementValidationStatusDefaultValue());
+            } else {
+                // Otherwise let's default to incomplete.
+                // Reason - as the administrator decided to use the status, it most likely means that there are extra properties that need to be set after a file is uploaded so defaulting it to
+                // incomplete seems reasonable.
+                this.defaultStatus = MetadataResourceExternalManagementProperties.ValidationStatus.INCOMPLETE;
+            }
+        }
+        return this.defaultStatus;
     }
 
     @PostConstruct
@@ -544,6 +633,10 @@ public class CMISConfiguration {
                     repositoryUrl + "' using product '" + client.getRepositoryInfo().getProductName() + "' version '" +
                     client.getRepositoryInfo().getProductVersion() + "'.");
 
+                // Check if we can parse the secondary parameters from human readable to secondary ids.
+                parsedCmisMetadataUUIDPropertyName = parseSecondaryProperty(client, cmisMetadataUUIDPropertyName);
+                parsedExternalResourceManagementValidationStatusPropertyName = parseSecondaryProperty(client, externalResourceManagementValidationStatusPropertyName);
+
                 // Setup default options
                 // Ensure caching is on.
                 if (!client.getDefaultContext().isCacheEnabled()) {
@@ -571,10 +664,44 @@ public class CMISConfiguration {
                     client.getDefaultContext().setIncludePolicies(false);
                 }
                 // IncludeRelationships should be NONE
-                if (client.getDefaultContext().getIncludeRelationships().equals(IncludeRelationships.NONE)) {
+                if (!client.getDefaultContext().getIncludeRelationships().equals(IncludeRelationships.NONE)) {
                     Log.debug(Geonet.RESOURCES, "Changing default CMIS operational context to not include relationships.");
                     client.getDefaultContext().setIncludeRelationships(IncludeRelationships.NONE);
                 }
+
+                if (client.getDefaultContext().getMaxItemsPerPage() != CMIS_MAX_ITEMS_PER_PAGE) {
+                    Log.debug(Geonet.RESOURCES, "Changing default CMIS max items per page to " + CMIS_MAX_ITEMS_PER_PAGE + ".");
+                    client.getDefaultContext().setMaxItemsPerPage(CMIS_MAX_ITEMS_PER_PAGE);
+                }
+
+                // Setup default filter. Only include properties that are used by the application.
+                // Having too many may cause performance issues on some systems.
+                // The default is generally an empty string meaning all properties are used.
+                if (StringUtils.isEmpty(client.getDefaultContext().getFilterString())) {
+                    Log.debug(Geonet.RESOURCES, "Changing default CMIS operational context filter.");
+                    // excluding "cmis:secondaryObjectTypeIds" from the list as it could decrease performance on some systems.
+                    client.getDefaultContext().setFilter(new HashSet<>(Arrays.asList(
+                        PropertyIds.NAME,
+                        PropertyIds.OBJECT_ID,
+                        PropertyIds.OBJECT_TYPE_ID,
+                        PropertyIds.BASE_TYPE_ID,
+                        PropertyIds.CREATED_BY,
+                        PropertyIds.CREATION_DATE,
+                        PropertyIds.LAST_MODIFIED_BY,
+                        PropertyIds.LAST_MODIFICATION_DATE,
+                        PropertyIds.CHANGE_TOKEN,
+                        PropertyIds.DESCRIPTION,
+                        PropertyIds.IS_LATEST_VERSION,
+                        PropertyIds.IS_MAJOR_VERSION,
+                        PropertyIds.IS_LATEST_MAJOR_VERSION,
+                        PropertyIds.VERSION_LABEL,
+                        PropertyIds.VERSION_SERIES_ID,
+                        PropertyIds.CONTENT_STREAM_LENGTH,
+                        PropertyIds.CONTENT_STREAM_MIME_TYPE,
+                        PropertyIds.CONTENT_STREAM_FILE_NAME,
+                        PropertyIds.CONTENT_STREAM_ID)));
+                }
+
             } catch (CmisRuntimeException | CmisConnectionException e) {
                 client = null;
                 Log.error(Geonet.RESOURCES,
@@ -604,7 +731,15 @@ public class CMISConfiguration {
     }
 
     public boolean existSecondaryProperty() {
-        return secondaryPropertyExists;
+        return cmisMetadataUUIDSecondaryProperty || externalResourceManagementValidationStatusSecondaryProperty;
+    }
+
+    public boolean existMetadataUUIDSecondaryProperty() {
+        return cmisMetadataUUIDSecondaryProperty;
+    }
+
+    public boolean existExternalResourceManagementValidationStatusSecondaryProperty() {
+        return externalResourceManagementValidationStatusSecondaryProperty;
     }
 
     /**
@@ -626,5 +761,54 @@ public class CMISConfiguration {
         } else {
             return serviceUrl;
         }
+    }
+
+    /**
+     * On certain cmis system the secondary property name/id is a bunch of codes that get changed each time the application is deployed.
+     *  Example from Open Text CMIS -   otCat:43102->otCat:43102:43102_5
+     *  This can cause issues for system that are re-deployed and the new codes need to be entered.
+     *  This function help convert a human-readable entry like
+     *     Catalogue->GeoNetwork Catalogue ID
+     *  to
+     *     otCat:43102->otCat:43102:43102_5
+     *  The parsing is done by using the property display name.
+     *
+     *  Note that using the display name means that it will stop on the next restart if the display name for the property is changed.
+     *  so care should be taken in changing the display names if using this option.
+     *
+     * @param client connection to use to access CMIS server.
+     * @param propertyName to be parsed
+     * @return null if the property name cannot be parsed otherwise it will return the parsed value.
+     */
+    private String parseSecondaryProperty(Session client, String propertyName) {
+        if (!StringUtils.isEmpty(propertyName) && propertyName.contains(CMIS_SECONDARY_PROPERTY_SEPARATOR)) {
+            String[] splitPropertyNames = propertyName.split(Pattern.quote(CMIS_SECONDARY_PROPERTY_SEPARATOR));
+            if (splitPropertyNames.length == 2) {
+                Folder baseFolder = (Folder) client.getObjectByPath(this.baseRepositoryPath);
+
+                for (SecondaryType secondaryType : baseFolder.getSecondaryTypes()) {
+                    if (secondaryType.getId().equals(splitPropertyNames[0]) || secondaryType.getDisplayName().equals(splitPropertyNames[0])) {
+                        for (Map.Entry<String, PropertyDefinition<?>> entry : secondaryType.getPropertyDefinitions().entrySet()) {
+                            if (entry.getValue().getId().equals(splitPropertyNames[1]) || entry.getValue().getDisplayName().equals(splitPropertyNames[1])) {
+                                String parsedPropertyName = secondaryType.getId() + CMIS_SECONDARY_PROPERTY_SEPARATOR + entry.getKey();
+                                // The parsed property equals to the original property then we can simply return null as there were no changes.
+                                if (parsedPropertyName.equals(propertyName)) {
+                                    return null;
+                                } else {
+                                    Log.info(Geonet.RESOURCES,
+                                        String.format("Parsed CMIS secondary properties from '%s' to '%s'", propertyName, parsedPropertyName));
+                                    return parsedPropertyName;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // If we make it here then it means that we were not able to parse the value, so it is most likely invalid.
+                Log.error(Geonet.RESOURCES,
+                    String.format("Unable to locate secondary property name '%s'", propertyName));
+            }
+        }
+        return null;
     }
 }

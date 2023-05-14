@@ -30,7 +30,7 @@
   <parent>
     <groupId>org.geonetwork-opensource</groupId>
     <artifactId>geonetwork</artifactId>
-    <version>4.0.7-SNAPSHOT</version>
+    <version>4.2.5-SNAPSHOT</version>
   </parent>
 
 
@@ -54,20 +54,20 @@
   <!-- FIXME set common dependencies to the root pom.xml  -->
   <dependencies>
     <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-log4j12</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>log4j</groupId>
-      <artifactId>log4j</artifactId>
-    </dependency>
-    <dependency>
       <groupId>org.apache.logging.log4j</groupId>
       <artifactId>log4j-api</artifactId>
     </dependency>
     <dependency>
       <groupId>org.apache.logging.log4j</groupId>
       <artifactId>log4j-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-slf4j-impl</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-jul</artifactId>
     </dependency>
     <dependency>
       <groupId>org.tuckey</groupId>
@@ -282,9 +282,17 @@
 
     <!-- Print service: MapFish -->
     <dependency>
+      <groupId>com.github.librepdf</groupId>
+      <artifactId>openpdf</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.mapfish.print</groupId>
       <artifactId>print-lib</artifactId>
       <exclusions>
+        <exclusion>
+          <groupId>com.lowagie</groupId>
+          <artifactId>itext</artifactId>
+        </exclusion>
         <exclusion>
           <groupId>commons-httpclient</groupId>
           <artifactId>commons-httpclient</artifactId>
@@ -436,7 +444,6 @@
     <dependency>
       <groupId>edu.ucar</groupId>
       <artifactId>netcdf</artifactId>
-      <version>4.3.23</version>
     </dependency>
 
     <!-- Monitoring libraries -->
@@ -544,7 +551,7 @@
     <dependency>
       <groupId>org.mitre.dsmiley.httpproxy</groupId>
       <artifactId>smiley-http-proxy-servlet</artifactId>
-      <version>1.9</version>
+      <version>1.12.1</version>
     </dependency>
 
     <!--Detect urls in String and transform to html format-->
@@ -609,88 +616,86 @@
   </dependencies>
 
   <build>
-
     <plugins>
       <!-- Generate a properties file with the commit hash to be displayed on the admin.console -->
 	    <plugin>
-	        <groupId>pl.project13.maven</groupId>
-	        <artifactId>git-commit-id-plugin</artifactId>
-	        <version>4.0.5</version>
-	        <executions>
-                  <execution>
-                    <phase>initialize</phase>
-	                <id>get-the-git-infos</id>
-	                <goals>
-	                    <goal>revision</goal>
-	                </goals>
-	            </execution>
-	        </executions>
+        <groupId>io.github.git-commit-id</groupId>
+        <artifactId>git-commit-id-maven-plugin</artifactId>
+        <version>4.9.9</version>
+        <executions>
+          <execution>
+            <phase>initialize</phase>
+            <id>get-the-git-infos</id>
+            <goals>
+                <goal>revision</goal>
+            </goals>
+          </execution>
+        </executions>
 
-	        <configuration>
-	            <dotGitDirectory>${project.basedir}/../.git</dotGitDirectory>
-	            <prefix>git</prefix>
-	            <dateFormat>yyyy-MM-dd'T'HH:mm:ssZ</dateFormat>
-	            <dateFormatTimeZone>${user.timezone}</dateFormatTimeZone>
-	            <verbose>false</verbose>
-	            <generateGitPropertiesFile>true</generateGitPropertiesFile>
-	            <generateGitPropertiesFilename>src/main/webResources/WEB-INF/classes/git.properties</generateGitPropertiesFilename>
-	            <!-- Denotes the format to save properties in. Valid options are "properties" (default) and "json". Properties will be saved to the generateGitPropertiesFilename if generateGitPropertiesFile is set to `true`. -->
-	            <format>properties</format>
-	            <skipPoms>true</skipPoms>
-	            <injectAllReactorProjects>true</injectAllReactorProjects>
-	            <failOnNoGitDirectory>false</failOnNoGitDirectory>
-	            <failOnUnableToExtractRepoInfo>false</failOnUnableToExtractRepoInfo>
-	            <skip>false</skip>
-	            <runOnlyOnce>false</runOnlyOnce>
-	            <excludeProperties>
-	            </excludeProperties>
-							<includeOnlyProperties>
-								<includeOnlyProperty>^git.tags$</includeOnlyProperty>
-								<includeOnlyProperty>^git.branch$</includeOnlyProperty>
-								<includeOnlyProperty>^git.commit.id$</includeOnlyProperty>
-								<includeOnlyProperty>^git.commit.id.describe.short$</includeOnlyProperty>
-								<includeOnlyProperty>^git.build.time$</includeOnlyProperty>
-							</includeOnlyProperties>
-	            <replacementProperties>
-	            </replacementProperties>
-	            <useNativeGit>false</useNativeGit>
-	            <abbrevLength>7</abbrevLength>
-	            <commitIdGenerationMode>flat</commitIdGenerationMode>
-	            <gitDescribe>
-	                <skip>false</skip>
-	                <always>false</always>
-	                <abbrev>7</abbrev>
-	                <dirty>-dirty</dirty>
-	                <match>*</match>
-	                <tags>true</tags>
-	                <forceLongFormat>false</forceLongFormat>
-	            </gitDescribe>
-	            <!-- @since 2.2.2 -->
-	            <!--
-	                Since version **2.2.2** the maven-git-commit-id-plugin comes equipped with an additional validation utility which can be used to verify if your project properties are set as you would like to have them set.
-	                *Note*: This configuration will only be taken into account when the additional goal `validateRevision` is configured inside an execution.
-	            -->
-	            <validationProperties>
-	                <validationProperty>
-	                    <!--
-	                         A descriptive name that will be used to be able to identify the validation that does not match up (will be displayed in the error message).
-	                    -->
-	                    <name>validating project version</name>
-	                    <!--
-	                         the value that needs the validation
-	                         *Note* : In order to be able to validate the generated git-properties inside the pom itself you may need to set the configuration `<injectAllReactorProjects>true</injectAllReactorProjects>`.
-	                    -->
-	                    <value>${project.version}</value>
-	                    <!--
-	                        the expected value
-	                    -->
-	                    <shouldMatchTo><![CDATA[^.*(?<!-SNAPSHOT)$]]></shouldMatchTo>
-	                </validationProperty>
-	                <!-- the next validationProperty you would like to validate -->
-	            </validationProperties>
-	            <validationShouldFailIfNoMatch>false</validationShouldFailIfNoMatch>
-	        </configuration>
-
+        <configuration>
+          <dotGitDirectory>${project.basedir}/../.git</dotGitDirectory>
+          <prefix>git</prefix>
+          <dateFormat>yyyy-MM-dd'T'HH:mm:ssZ</dateFormat>
+          <dateFormatTimeZone>${user.timezone}</dateFormatTimeZone>
+          <verbose>false</verbose>
+          <generateGitPropertiesFile>true</generateGitPropertiesFile>
+          <generateGitPropertiesFilename>src/main/webResources/WEB-INF/classes/git.properties</generateGitPropertiesFilename>
+          <!-- Denotes the format to save properties in. Valid options are "properties" (default) and "json". Properties will be saved to the generateGitPropertiesFilename if generateGitPropertiesFile is set to `true`. -->
+          <format>properties</format>
+          <skipPoms>true</skipPoms>
+          <injectAllReactorProjects>true</injectAllReactorProjects>
+          <failOnNoGitDirectory>false</failOnNoGitDirectory>
+          <failOnUnableToExtractRepoInfo>false</failOnUnableToExtractRepoInfo>
+          <skip>false</skip>
+          <runOnlyOnce>false</runOnlyOnce>
+          <excludeProperties>
+          </excludeProperties>
+          <includeOnlyProperties>
+            <includeOnlyProperty>^git.tags$</includeOnlyProperty>
+            <includeOnlyProperty>^git.branch$</includeOnlyProperty>
+            <includeOnlyProperty>^git.commit.id$</includeOnlyProperty>
+            <includeOnlyProperty>^git.commit.id.describe.*$</includeOnlyProperty>
+            <includeOnlyProperty>^git.build.time$</includeOnlyProperty>
+          </includeOnlyProperties>
+          <replacementProperties>
+          </replacementProperties>
+          <useNativeGit>false</useNativeGit>
+          <abbrevLength>7</abbrevLength>
+          <commitIdGenerationMode>flat</commitIdGenerationMode>
+          <gitDescribe>
+            <skip>false</skip>
+            <always>false</always>
+            <abbrev>7</abbrev>
+            <dirty>-dirty</dirty>
+            <match>*</match>
+            <tags>true</tags>
+            <forceLongFormat>false</forceLongFormat>
+          </gitDescribe>
+          <!-- @since 2.2.2 -->
+          <!--
+              Since version **2.2.2** the maven-git-commit-id-plugin comes equipped with an additional validation utility which can be used to verify if your project properties are set as you would like to have them set.
+              *Note*: This configuration will only be taken into account when the additional goal `validateRevision` is configured inside an execution.
+          -->
+          <validationProperties>
+            <validationProperty>
+              <!--
+                   A descriptive name that will be used to be able to identify the validation that does not match up (will be displayed in the error message).
+              -->
+              <name>validating project version</name>
+              <!--
+                   the value that needs the validation
+                   *Note* : In order to be able to validate the generated git-properties inside the pom itself you may need to set the configuration `<injectAllReactorProjects>true</injectAllReactorProjects>`.
+              -->
+              <value>${project.version}</value>
+              <!--
+                  the expected value
+              -->
+              <shouldMatchTo><![CDATA[^.*(?<!-SNAPSHOT)$]]></shouldMatchTo>
+            </validationProperty>
+            <!-- the next validationProperty you would like to validate -->
+          </validationProperties>
+          <validationShouldFailIfNoMatch>false</validationShouldFailIfNoMatch>
+        </configuration>
 	    </plugin>
       <plugin>
         <artifactId>maven-clean-plugin</artifactId>
@@ -705,6 +710,71 @@
             </fileset>
           </filesets>
         </configuration>
+        <executions>
+          <execution>
+            <id>reset</id>
+            <goals><goal>clean</goal></goals>
+            <configuration>
+              <filesets>
+                <fileset>
+                  <directory>${user.home}</directory>
+                  <includes>
+                    <include>gn.mv.db</include>
+                    <include>gn.trace.db</include>
+                  </includes>
+                </fileset>
+                <!-- reset working files covered by .gitignore -->
+                <fileset>
+                  <directory>.</directory>
+                  <includes>
+                    <include>*.db</include>
+                    <include>*.db.old</include>
+                    <include>images/**</include>
+                    <include>jcs_caching/**</include>
+                    <include>logs/**</include>
+                  </includes>
+                </fileset>
+                <fileset>
+                  <directory>src/main/webapp/</directory>
+                  <includes>
+                    <include>META-INF/MANIFEST.MF</include>
+                    <include>data/**</include>
+                    <include>doc/en/**</include>
+                    <include>doc/fr/**</include>
+                    <include>images/logos/*</include>
+                    <include>images/logos/statTmp</include>
+                    <include>scripts/lib/**</include>
+                  </includes>
+                </fileset>
+                <fileset>
+                  <directory>src/main/webapp/WEB-INF/</directory>
+                  <includes>
+                    <include>data/0*</include>
+                    <include>data/config/schema_plugins/**</include>
+                    <include>data/config/schemaplugin-uri-catalog.xml</include>
+                    <include>data/data/backup/**</include>
+                    <include>data/data/metadata_data/**</include>
+                    <include>data/data/metadata_subversion/**</include>
+                    <include>data/data/resources/htmlcache/**</include>
+                    <!--include>data/data/resources/images/**</include-->
+                    <include>data/data/schema_plugins/**</include>
+                    <include>data/data/resources/xml/**</include>
+                    <include>data/data/upload/**</include>
+                    <include>data/harvester_*</include>
+                    <include>data/index/**</include>
+                    <include>data/node_less_files/**</include>
+                    <include>data/removed/**</include>
+                    <include>data/wro4j*.db</include>
+                    <include>data/wro4j-cache*</include>
+                    <include>data/data_*</include>
+                    <include>data/lucene/**</include>
+                    <include>metadata_subversion/</include>
+                  </includes>
+                </fileset>
+              </filesets>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
 
       <plugin>
@@ -814,6 +884,25 @@
               <overwrite>false</overwrite>
             </configuration>
           </execution>
+          <execution>
+            <id>copy-web-ui-wro-sources</id>
+            <phase>process-resources</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${project.build.outputDirectory}</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>${project.basedir}/../web-ui/src/main/resources/WEB-INF/classes</directory>
+                  <filtering>false</filtering>
+                  <includes>
+                    <include>web-ui-wro-sources.xml</include>
+                  </includes>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
         </executions>
       </plugin>
 
@@ -845,8 +934,16 @@
             <resource>
               <directory>${build.webapp.resources}</directory>
             </resource>
+            <resource>
+              <directory>${project.build.directory}</directory>
+              <includes>
+                <include>wro4j-cache.mv.db</include>
+              </includes>
+              <targetPath>WEB-INF/prebuilt</targetPath>
+            </resource>
           </webResources>
           <!-- <packagingExcludes>WEB-INF/data/**</packagingExcludes> -->
+
           <packagingExcludes>
             xml/schemas/**,
             WEB-INF/data/*.db,
@@ -891,7 +988,7 @@
           <contextXml>${basedir}/jetty-context.xml</contextXml>
           <webAppSourceDirectory>${project.build.directory}/geonetwork</webAppSourceDirectory>
           <webApp>
-            <contextPath>/${application.name}</contextPath>
+            <contextPath>${geonetwork.webapp.contextpath}</contextPath>
             <descriptor>${project.build.directory}/WEB-INF/web.xml</descriptor>
             <baseResource implementation="org.eclipse.jetty.util.resource.ResourceCollection">
               <resourcesAsCSV>
@@ -918,10 +1015,47 @@
           <stopPort>${jetty.stop.port}</stopPort>
         </configuration>
       </plugin>
+
+
     </plugins>
   </build>
 
   <profiles>
+    <profile>
+      <id>wro4j-prebuild-cache</id>
+      <activation>
+        <property>
+          <name>prebuild-cache</name>
+          <value>true</value>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <!-- build WRO4J Cache during build time -->
+          <plugin>
+            <groupId>ro.isdc.wro4j</groupId>
+            <artifactId>wro4j-maven-plugin</artifactId>
+            <version>${wro.version}</version>
+            <executions>
+              <execution>
+                <id>wro4j-prebuild-cache</id>
+                <phase>prepare-package</phase>
+                <goals>
+                  <goal>run</goal>
+                </goals>
+                <configuration>
+                  <wroManagerFactory>org.fao.geonet.wro4j.GeonetworkMavenNoTestsWrojManagerFactory</wroManagerFactory>
+                  <extraConfigFile>${build.webapp.resources}/WEB-INF/wro-maven.properties</extraConfigFile>
+                  <wroFile>${project.build.directory}/geonetwork/WEB-INF/wro-sources-maven.xml</wroFile>
+                  <destinationFolder>${wro4jOutput}</destinationFolder>
+                  <targetGroups>lib,lib3d,gn_search,gn_search_default,gn_login,gn_login_default,gn_editor,gn_editor_default,gn_admin,gn_admin_default,nv.d3,gn_fonts,gn_inspire,gn_pickers,gn_print_default,ng-skos,bootstrap-table.min</targetGroups>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
 
     <!-- Unpack schema resources from maven artifacts -->
     <profile>
@@ -1152,6 +1286,17 @@
         </dependency>
       </dependencies>
     </profile>
+
+    <profile>
+      <id>war</id>
+      <dependencies>
+        <dependency>
+          <groupId>org.slf4j</groupId>
+          <artifactId>slf4j-api</artifactId>
+          <version>1.7.36</version>
+        </dependency>
+      </dependencies>
+    </profile>
   </profiles>
 
   <properties>
@@ -1160,6 +1305,7 @@
     <geonetwork.webapp.dir>${basedir}/src/main/webapp</geonetwork.webapp.dir>
     <geonetwork.webapp.js.dir>${geonetwork.webapp.dir}/scripts</geonetwork.webapp.js.dir>
     <geonetwork.build.dir>${project.build.directory}/${project.build.finalName}</geonetwork.build.dir>
+    <geonetwork.webapp.contextpath>/${application.name}</geonetwork.webapp.contextpath>
     <schema-plugins.dir>${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins</schema-plugins.dir>
     <geonetwork.webapp.css.dir>${geonetwork.webapp.dir}</geonetwork.webapp.css.dir>
     <minify.verbose>false</minify.verbose>

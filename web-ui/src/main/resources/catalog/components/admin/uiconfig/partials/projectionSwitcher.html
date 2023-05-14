@@ -1,117 +1,180 @@
 <table class="table table-striped table-bordered">
-	<tr data-ng-repeat="opt in mCfg[key] track by $index"
-		ng-init="parentIndex=$index">
-		<td>
-			<div class="input-group">
-				<span class="input-group-addon" data-translate="">ui-code</span> 
-				<input type="text" class="form-control" data-ng-model="opt.code" 
-					data-ng-required="!epsgHelpers.isValidEpsgCode(opt.code)" />
-				<span class="input-group-btn">
-					<button class="btn btn-default" type="button" 
-						title="{{'ui-getProj' | translate:epsgHelpers.getServiceName()}}"
-						data-ng-click="populateProjSettings(mCfg[key][$index])">
-						<i class="fa fa-globe" />
-					</button>
-				</span>
-			</div>
-			<div class="input-group">
-				<p class="help-block" data-translate="">ui-code-help</p>
-			</div>
-			<div class="input-group">
-				<span class="input-group-addon" data-translate="">ui-label</span> <input
-					type="text" class="form-control" data-ng-model="opt.label" required />
-			</div>
-			<div class="input-group">
-				<p class="help-block" data-translate="">ui-label-help</p>
-			</div>
-			<div class="input-group">
-				<span class="input-group-addon" data-translate="">ui-definition</span>
-				<input type="text" class="form-control" data-ng-model="opt.def" 
-					data-ng-required="!epsgHelpers.isDefaultProjection(opt.code)" />
-			</div>
-			<div class="input-group">
-				<p class="help-block" data-translate="">ui-definition-help</p>
-			</div>
-			<div class="input-group">
-				<span class="input-group-addon" data-translate="">ui-minx</span> <input
-					type="number" step="any" class="form-control" data-ng-model="opt.extent[0]" 
-						data-ng-required="!epsgHelpers.isDefaultProjection(opt.code)" />
-				<span class="input-group-addon" data-translate="">ui-miny</span> <input
-					type="number" step="any" class="form-control" data-ng-model="opt.extent[1]" 
-						data-ng-required="!epsgHelpers.isDefaultProjection(opt.code)" />
-				<span class="input-group-addon" data-translate="">ui-maxx</span> <input
-					type="number" step="any" class="form-control" data-ng-model="opt.extent[2]" 
-						data-ng-required="!epsgHelpers.isDefaultProjection(opt.code)" />
-				<span class="input-group-addon" data-translate="">ui-maxy</span> <input
-					type="number" step="any" class="form-control" data-ng-model="opt.extent[3]" 
-						data-ng-required="!epsgHelpers.isDefaultProjection(opt.code)" />
-			</div>
-			<div class="input-group">
-				<p class="help-block" data-translate="">ui-extent-help</p>
-			</div>
-			<div class="input-group">
-				<span class="input-group-addon" data-translate="">ui-minlon</span> <input
-					type="number" step="any" class="form-control" data-ng-model="opt.worldExtent[0]" 
-						data-ng-required="!epsgHelpers.isDefaultProjection(opt.code)" /> 
-				<span class="input-group-addon" data-translate="">ui-minlat</span> <input 
-					type="number" step="any" class="form-control" data-ng-model="opt.worldExtent[1]" 
-						data-ng-required="!epsgHelpers.isDefaultProjection(opt.code)" /> 
-				<span class="input-group-addon" data-translate="">ui-maxlon</span> <input
-					type="number" step="any" class="form-control" data-ng-model="opt.worldExtent[2]" 
-						data-ng-required="!epsgHelpers.isDefaultProjection(opt.code)" /> 
-				<span class="input-group-addon" data-translate="">ui-maxlat</span> <input
-					type="number" step="any" class="form-control" data-ng-model="opt.worldExtent[3]" 
-						data-ng-required="!epsgHelpers.isDefaultProjection(opt.code)" />
-			</div>
-			<div class="input-group">
-				<p class="help-block" data-translate="">ui-worldExtent-help</p>
-			</div>
-			<div class="input-group">
-				<span class="input-group-addon" data-translate="">ui-resolutions</span>
-				<table class="table table-striped table-bordered">
-					<tr data-ng-repeat="resolution in opt.resolutions track by $index">
-						<td>
-							<input type="number"
-										 class="form-control"
-							       data-ng-model="opt.resolutions[$index]" />
-						</td>
-						<td>
-							<a class="btn btn-link text-danger"
-							   title="{{'remove' | translate}}"
-							   data-ng-click="removeItem(mCfg[key][parentIndex].resolutions, $index)">
-								<i class="fa fa-times text-danger" />
-						</a></td>
-					</tr>
-					<tr>
-						<td colspan="2">
-							<a class="btn btn-default"
-								 title="{{'add' | translate}}"
-							   data-ng-click="addItem(mCfg[key][$index].resolutions, '')">
-								<i class="fa fa-fw fa-plus" />
-							  <span translate="add"></span>
-						  </a>
-						</td>
-					</tr>
-				</table>
-			</div>
-			<div class="input-group">
-				<p class="help-block" data-translate="">ui-resolutions-help</p>
-			</div>
-		</td>
-		<td><a class="btn btn-link text-danger"
-			title="{{'remove' | translate}}"
-			data-ng-click="removeItem(mCfg[key], $index)"> <i
-				class="fa fa-times text-danger" />
-		</a></td>
-	</tr>
-	<tr>
-		<td colspan="2">
-			<a class="btn btn-default"
-			   title="{{'add' | translate}}"
-			   data-ng-click="addItem(mCfg[key], {'label': '', 'code': 'EPSG:', 'extent': [], worldExtent: [], resolutions: []})">
-				<i class="fa fa-fw fa-plus" />
-				<span translate="add"></span>
-			</a>
-		</td>
-	</tr>
+  <tr data-ng-repeat="opt in mCfg[key] track by $index" ng-init="parentIndex=$index">
+    <td>
+      <div class="input-group">
+        <span class="input-group-addon" data-translate="">ui-code</span>
+        <input
+          type="text"
+          class="form-control"
+          data-ng-model="opt.code"
+          data-ng-required="!epsgHelpers.isValidEpsgCode(opt.code)"
+        />
+        <span class="input-group-btn">
+          <button
+            class="btn btn-default"
+            type="button"
+            title="{{'ui-getProj' | translate:epsgHelpers.getServiceName()}}"
+            data-ng-click="populateProjSettings(mCfg[key][$index])"
+          >
+            <i class="fa fa-globe" />
+          </button>
+        </span>
+      </div>
+      <div class="input-group">
+        <p class="help-block" data-translate="">ui-code-help</p>
+      </div>
+      <div class="input-group">
+        <span class="input-group-addon" data-translate="">ui-label</span>
+        <input type="text" class="form-control" data-ng-model="opt.label" required />
+      </div>
+      <div class="input-group">
+        <p class="help-block" data-translate="">ui-label-help</p>
+      </div>
+      <div class="input-group">
+        <span class="input-group-addon" data-translate="">ui-definition</span>
+        <input
+          type="text"
+          class="form-control"
+          data-ng-model="opt.def"
+          data-ng-required="!epsgHelpers.isDefaultProjection(opt.code)"
+        />
+      </div>
+      <div class="input-group">
+        <p class="help-block" data-translate="">ui-definition-help</p>
+      </div>
+      <div class="input-group">
+        <span class="input-group-addon" data-translate="">ui-minx</span>
+        <input
+          type="number"
+          step="any"
+          class="form-control"
+          data-ng-model="opt.extent[0]"
+          data-ng-required="!epsgHelpers.isDefaultProjection(opt.code)"
+        />
+        <span class="input-group-addon" data-translate="">ui-miny</span>
+        <input
+          type="number"
+          step="any"
+          class="form-control"
+          data-ng-model="opt.extent[1]"
+          data-ng-required="!epsgHelpers.isDefaultProjection(opt.code)"
+        />
+        <span class="input-group-addon" data-translate="">ui-maxx</span>
+        <input
+          type="number"
+          step="any"
+          class="form-control"
+          data-ng-model="opt.extent[2]"
+          data-ng-required="!epsgHelpers.isDefaultProjection(opt.code)"
+        />
+        <span class="input-group-addon" data-translate="">ui-maxy</span>
+        <input
+          type="number"
+          step="any"
+          class="form-control"
+          data-ng-model="opt.extent[3]"
+          data-ng-required="!epsgHelpers.isDefaultProjection(opt.code)"
+        />
+      </div>
+      <div class="input-group">
+        <p class="help-block" data-translate="">ui-extent-help</p>
+      </div>
+      <div class="input-group">
+        <span class="input-group-addon" data-translate="">ui-minlon</span>
+        <input
+          type="number"
+          step="any"
+          class="form-control"
+          data-ng-model="opt.worldExtent[0]"
+          data-ng-required="!epsgHelpers.isDefaultProjection(opt.code)"
+        />
+        <span class="input-group-addon" data-translate="">ui-minlat</span>
+        <input
+          type="number"
+          step="any"
+          class="form-control"
+          data-ng-model="opt.worldExtent[1]"
+          data-ng-required="!epsgHelpers.isDefaultProjection(opt.code)"
+        />
+        <span class="input-group-addon" data-translate="">ui-maxlon</span>
+        <input
+          type="number"
+          step="any"
+          class="form-control"
+          data-ng-model="opt.worldExtent[2]"
+          data-ng-required="!epsgHelpers.isDefaultProjection(opt.code)"
+        />
+        <span class="input-group-addon" data-translate="">ui-maxlat</span>
+        <input
+          type="number"
+          step="any"
+          class="form-control"
+          data-ng-model="opt.worldExtent[3]"
+          data-ng-required="!epsgHelpers.isDefaultProjection(opt.code)"
+        />
+      </div>
+      <div class="input-group">
+        <p class="help-block" data-translate="">ui-worldExtent-help</p>
+      </div>
+      <div class="input-group">
+        <span class="input-group-addon" data-translate="">ui-resolutions</span>
+        <table class="table table-striped table-bordered">
+          <tr data-ng-repeat="resolution in opt.resolutions track by $index">
+            <td>
+              <input
+                type="number"
+                class="form-control"
+                data-ng-model="opt.resolutions[$index]"
+              />
+            </td>
+            <td>
+              <a
+                class="btn btn-link text-danger"
+                title="{{'remove' | translate}}"
+                data-ng-click="removeItem(mCfg[key][parentIndex].resolutions, $index)"
+              >
+                <i class="fa fa-times text-danger" />
+              </a>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="2">
+              <a
+                class="btn btn-default"
+                title="{{'add' | translate}}"
+                data-ng-click="addItem(mCfg[key][$index].resolutions, '')"
+              >
+                <i class="fa fa-fw fa-plus" />
+                <span translate="add"></span>
+              </a>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div class="input-group">
+        <p class="help-block" data-translate="">ui-resolutions-help</p>
+      </div>
+    </td>
+    <td class="w-30-px">
+      <a
+        class="btn btn-link text-danger"
+        title="{{'remove' | translate}}"
+        data-ng-click="removeItem(mCfg[key], $index)"
+      >
+        <i class="fa fa-times text-danger" />
+      </a>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2">
+      <a
+        class="btn btn-default"
+        title="{{'add' | translate}}"
+        data-ng-click="addItem(mCfg[key], {'label': '', 'code': 'EPSG:', 'extent': [], worldExtent: [], resolutions: []})"
+      >
+        <i class="fa fa-fw fa-plus" />
+        <span translate="add"></span>
+      </a>
+    </td>
+  </tr>
 </table>

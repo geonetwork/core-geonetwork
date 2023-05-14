@@ -21,7 +21,7 @@ var gnHarvesteroaipmh = {
               "icon" : "blank.png"
             },
             "content":   {
-              "validate": "NOVALIDATION",
+              "validate": "NOVALIDATION"
             },
             "options":   {
               "every": "0 0 0 ? * *",

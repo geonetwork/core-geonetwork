@@ -2,41 +2,54 @@
   <div class="col-md-12">
     <div class="navbar btn-toolbar">
       <form class="form-inline">
-        <input type="hidden" name="_csrf" value="{{csrf}}"/>
+        <input type="hidden" name="_csrf" value="{{csrf}}" />
         <div class="pull-left">
           <label for="filter-settings" data-translate="">filterSettings</label>
           <div class="input-group">
             <span class="input-group-addon">
               <i class="fa fa-filter" aria-hidden="true"></i>
             </span>
-            <input class="form-control"
-                  type="text"
-                  id="filter-settings"
-                  placeholder="{{'filterPlaceHolder' | translate}}"
-                  data-ng-keyup="filterForm($event,'#gn-settings')" />
+            <input
+              class="form-control"
+              type="text"
+              id="filter-settings"
+              placeholder="{{'filterPlaceHolder' | translate}}"
+              data-ng-keyup="filterForm($event,'#gn-settings')"
+            />
             <span class="input-group-btn">
-              <button class="btn btn-default"
-                      type="button"
-                      title="{{'filterReset' | translate}}"
-                      data-ng-click="resetFilter('#gn-settings')">
+              <button
+                class="btn btn-default"
+                type="button"
+                title="{{'filterReset' | translate}}"
+                data-ng-click="resetFilter('#gn-settings')"
+              >
                 <i class="fa fa-close" aria-hidden="true"></i>
               </button>
             </span>
           </div>
         </div>
         <div class="navbar-right">
-
-          <select ng-change="updateProfile()" class="form-control"
-                  data-ng-model="systemInfo.stagingProfile">
-            <option data-ng-repeat="p in stagingProfiles" value="{{p}}"
-                    ng-selected="p === systemInfo.stagingProfile">{{p | translate}}
+          <select
+            ng-change="updateProfile()"
+            class="form-control"
+            data-ng-model="systemInfo.stagingProfile"
+          >
+            <option
+              data-ng-repeat="p in stagingProfiles"
+              value="{{p}}"
+              ng-selected="p === systemInfo.stagingProfile"
+            >
+              {{p | translate}}
             </option>
           </select>
           &nbsp;
-          <button type="submit" class="btn btn-primary"
-                  id="gn-btn-settings-save"
-                  data-ng-disabled="!gnSettings.$valid"
-                  data-ng-click="saveSettings('#gn-settings')">
+          <button
+            type="submit"
+            class="btn btn-primary"
+            id="gn-btn-settings-save"
+            data-ng-disabled="!gnSettings.$valid"
+            data-ng-click="saveSettings('#gn-settings')"
+          >
             <span class="fa fa-save"></span>
             {{"saveSettings"|translate}}
           </button>
@@ -46,345 +59,661 @@
   </div>
   <div class="col-md-12">
     <div class="panel panel-default">
-      <div class="gn-scroll-spy" data-gn-scroll-spy="gn-settings-spy-target"
-           data-watch="sectionsLevel1"
-           data-all-depth="true"/>
+      <div
+        class="gn-scroll-spy"
+        data-gn-scroll-spy="gn-settings-spy-target"
+        data-watch="sectionsLevel1"
+        data-all-depth="true"
+      />
       <div class="panel-heading">
         <h1 data-translate="">settings</h1>
 
-        <div data-gn-need-help="administrator-guide/configuring-the-catalog/system-configuration.html"
-             class="pull-right"></div>
+        <div data-gn-need-help="system-configuration" class="pull-right"></div>
       </div>
       <div class="panel-body">
         <form id="gn-settings" name="gnSettings" class="form-horizontal">
           <div id="gn-settings-spy-target">
-          <fieldset data-ng-repeat="(key, section1) in sectionsLevel1 | orderObjectBy:'position'"
-                    id="gn-settings-spy-target-{{section1.name}}">
-            <legend><h2>{{section1.name | translate}}</h2></legend>
-            <fieldset data-ng-repeat="section2 in section1.children | orderObjectBy:'position'"
-                      id="{{section2.name.replace('/', '-')}}"
-                      data-ng-show="section2.name">
-              <legend><h3>{{section2.name | translate}}</h3>
+            <fieldset
+              data-ng-repeat="(key, section1) in sectionsLevel1 | orderObjectBy:'position'"
+              id="gn-settings-spy-target-{{section1.name}}"
+            >
+              <legend><h2>{{section1.name | translate}}</h2></legend>
+              <fieldset
+                data-ng-repeat="section2 in section1.children | orderObjectBy:'position'"
+                id="{{section2.name.replace('/', '-')}}"
+                data-ng-show="section2.name"
+              >
+                <legend>
+                  <h3>{{section2.name | translate}}</h3>
 
-                <div data-ng-if="::section2.name === 'system/inspire'"
-                     data-gn-need-help="administrator-guide/configuring-the-catalog/inspire-configuration.html"
-                     class="pull-right"></div>
-                <div data-ng-if="::section2.name === 'system/publication'"
-                     data-gn-need-help="user-guide/associating-resources/doi.html"
-                     class="pull-right"></div>
-                <div data-ng-if="::section2.name === 'metadata/workflow'"
-                     data-gn-need-help="user-guide/workflow/life-cycle.html"
-                     class="pull-right"></div>
-                <div data-ng-if="::section2.name === 'system/userSelfRegistration'"
-                     data-gn-need-help="administrator-guide/managing-users-and-groups/user-self-registration.html"
-                     class="pull-right"></div>
-                <div data-ng-if="::section2.name === 'system/csw'"
-                     data-gn-need-help="administrator-guide/configuring-the-catalog/csw-configuration.html"
-                     class="pull-right"></div>
-              </legend>
-              <!-- According to data type -->
-              <div data-ng-repeat="s in section2.children | hideLanguages | hideGeoNetworkInternalSettings | orderObjectBy:'position'"
+                  <div
+                    data-ng-if="::section2.name === 'system/inspire'"
+                    data-gn-need-help="inspire-configuration"
+                    class="pull-right"
+                  ></div>
+                  <div
+                    data-ng-if="::section2.name === 'system/publication'"
+                    data-gn-need-help="doi"
+                    class="pull-right"
+                  ></div>
+                  <div
+                    data-ng-if="::section2.name === 'metadata/workflow'"
+                    data-gn-need-help="life-cycle"
+                    class="pull-right"
+                  ></div>
+                  <div
+                    data-ng-if="::section2.name === 'system/userSelfRegistration'"
+                    data-gn-need-help="user-self-registration"
+                    class="pull-right"
+                  ></div>
+                  <div
+                    data-ng-if="::section2.name === 'system/csw'"
+                    data-gn-need-help="csw-configuration"
+                    class="pull-right"
+                  ></div>
+                </legend>
+                <!-- According to data type -->
+                <div
+                  data-ng-repeat="s in section2.children | hideLanguages | hideGeoNetworkNonEditableSettings | orderObjectBy:'position'"
                   data-ng-switch="s.dataType"
-                  data-ng-if="s.name != ''">
+                  data-ng-if="s.name != ''"
+                >
+                  <div data-ng-switch-when="BOOLEAN" class="form-group">
+                    <div class="col-sm-5 gn-nopadding-left">
+                      <label class="control-label" for="{{s['name']}}">
+                        {{s['name'] | translate}}
+                      </label>
 
-                <div data-ng-switch-when="BOOLEAN" class="form-group">
-                  <label class="col-sm-4 control-label" for="{{s['name']}}"> {{s['name'] |
-                    translate}} </label>
-                  <div class="col-sm-8">
-                    <input type="checkbox" id="{{s['name']}}" name="{{s.name}}"
-                          data-ng-model="s.value"/>
-
-                    <p class="help-block">
-                      <span
-                        data-ng-show="(s['name'] + '-help' | translate) !== (s['name'] + '-help')"
-                        data-translate="">
-                        {{(s['name'] + '-help')}}
-                      </span>
-                    </p>
-                  </div>
-                </div>
-                <div data-ng-switch-default=""
-                    data-ng-class="gnSettings[s.name].$error.required ||
-                                    gnSettings[s.name].$error.json ? 'has-error' : ''"
-                    class="form-group">
-                  <label class="col-sm-4 control-label" for="{{s['name']}}">{{s['name'] |
-                    translate}}</label>
-                  <!-- According to entry -->
-                  <div class="col-sm-8" data-ng-switch="s['name']">
-
-                    <div data-ng-switch-when="metadata/workflow/draftWhenInGroup">
-                      <input type="radio" class="gn-no-setting" data-ng-model="draftInAllGroups"
-                             data-ng-value="true" /> {{'draftWhenInGroup-all' | translate}}<br>
-                      <input type="radio" class="gn-no-setting" data-ng-model="draftInAllGroups"
-                             data-ng-value="false" /> {{'draftWhenInGroup-selection' | translate}}<br>
-
-                      <input type="hidden"
-                             class="form-control" id="{{s['name']}}" name="{{s.name}}" value=".*"
-                             data-ng-disabled="draftInAllGroups != true" />
-
-                      <input type="text"
-                             class="form-control" id="{{s['name']}}" name="{{s.name}}" value="{{s.value}}"
-                             data-ng-disabled="draftInAllGroups == true" />
+                      <p class="help-block">
+                        <span
+                          data-ng-show="(s['name'] + '-help' | translate) !== (s['name'] + '-help')"
+                          data-translate=""
+                        >
+                          {{(s['name'] + '-help')}}
+                        </span>
+                      </p>
                     </div>
 
-                    <input data-ng-switch-when="system/server/timeZone"
-                           type="input"
-                           id="{{s.name}}"
-                           data-gn-timezone-selector=""
-                           data-element-timezone="{{s.value}}"
-                           class="form-control" name="{{s.name}}">
+                    <div class="col-sm-7">
+                      <input
+                        type="checkbox"
+                        id="{{s['name']}}"
+                        name="{{s.name}}"
+                        data-ng-model="s.value"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    data-ng-switch-default=""
+                    data-ng-class="gnSettings[s.name].$error.required ||
+                                    gnSettings[s.name].$error.json ? 'has-error' : ''"
+                    class="form-group"
+                  >
+                    <div class="col-sm-5 gn-nopadding-left">
+                      <label class="control-label" for="{{s['name']}}"
+                        >{{s['name'] | translate}}</label
+                      >
 
-                    <textarea
-                      data-gn-autogrow=""
-                      data-ng-switch-when="system/harvesting/mail/template" type="text"
-                      class="form-control" id="{{s['name']}}" name="{{s.name}}"
-                    >{{s.value}}</textarea>
-                    <textarea
-                      data-gn-autogrow=""
-                      data-ng-switch-when="system/harvesting/mail/templateError" type="text"
-                      class="form-control" id="{{s['name']}}" name="{{s.name}}"
-                    >{{s.value}}</textarea>
-                    <textarea
-                      data-gn-autogrow=""
-                      data-ng-switch-when="system/harvesting/mail/templateWarning" type="text"
-                      class="form-control" id="{{s['name']}}" name="{{s.name}}"
-                    >{{s.value}}</textarea>
+                      <p class="help-block">
+                        <span
+                          data-ng-show="(s['name'] + '-help' | translate) !== (s['name'] + '-help')"
+                          data-translate=""
+                        >
+                          {{(s['name'] + '-help')}}
+                        </span>
+                      </p>
+                    </div>
+                    <!-- According to entry -->
+                    <div class="col-sm-7" data-ng-switch="s['name']">
+                      <select
+                        data-ng-switch-when="metadata/import/userprofile"
+                        class="form-control"
+                        name="{{s.name}}"
+                      >
+                        <option value="Editor" ng-selected="'Editor' == s.value">
+                          {{'Editor' | translate}}
+                        </option>
+                        <option value="Reviewer" ng-selected="'Reviewer' == s.value">
+                          {{'Reviewer' | translate}}
+                        </option>
+                        <option
+                          value="Administrator"
+                          ng-selected="'Administrator' == s.value"
+                        >
+                          {{'Administrator' | translate}}
+                        </option>
+                      </select>
 
-                    <select data-ng-switch-when="system/server/protocol"
-                            class="form-control"
-                            name="{{s.name}}">
-                      <option value="http"
-                              ng-selected="'http' == s.value">http
-                      </option>
-                      <option value="https"
-                              ng-selected="'https' == s.value">https
-                      </option>
-                    </select>
-                    <select data-ng-switch-when="system/server/log" class="form-control"
-                            name="{{s.name}}">
-                      <option data-ng-repeat="log in logfiles" value="{{log.file}}"
-                              ng-selected="log.file === s.value">{{log.name}}
-                      </option>
-                    </select>
-                    <select data-ng-switch-when="system/oai/mdmode" class="form-control"
-                            name="{{s.name}}">
-                      <option value="1"
-                              ng-selected="'1' == s.value">{{'system/oai/mdmode-valueTemporaExtent' |
-                        translate}}
-                      </option>
-                      <option value="2"
-                              ng-selected="'2' == s.value">
-                        {{'system/oai/mdmode-valueModificationDate' | translate}}
-                      </option>
-                    </select>
-                    <select data-ng-switch-when="system/localrating/enable" class="form-control"
-                            name="{{s.name}}">
-                      <option value=""
-                              ng-selected="'' == s.value">{{'off' | translate}}
-                      </option>
-                      <option value="basic"
-                              ng-selected="'basic' == s.value">{{'basic' | translate}}
-                      </option>
-                      <option value="advanced"
-                              ng-selected="'advanced' == s.value">{{'advanced' | translate}}
-                      </option>
-                    </select>
+                      <select
+                        data-ng-switch-when="metadata/delete/profilePublishedMetadata"
+                        class="form-control"
+                        name="{{s.name}}"
+                      >
+                        <option value="Editor" ng-selected="'Editor' == s.value">
+                          {{'Editor' | translate}}
+                        </option>
+                        <option value="Reviewer" ng-selected="'Reviewer' == s.value">
+                          {{'Reviewer' | translate}}
+                        </option>
+                        <option
+                          value="Administrator"
+                          ng-selected="'Administrator' == s.value"
+                        >
+                          {{'Administrator' | translate}}
+                        </option>
+                      </select>
 
-                    <select data-ng-switch-when="system/inspire/atom" class="form-control"
-                            name="{{s.name}}" data-ng-model="atomFeedType">
-                      <option value="disabled"
-                              ng-selected="'disabled' == s.value">{{'system/inspire/atomDisabled' |
-                        translate}}
-                      </option>
-                      <option value="local" disabled="disabled"
-                              ng-selected="'local' == s.value">{{'system/inspire/atomLocal' |
-                        translate}}
-                      </option>
-                      <option value="remote"
-                              ng-selected="'remote' == s.value">{{'system/inspire/atomRemote' |
-                        translate}}
-                      </option>
-                    </select>
+                      <select
+                        data-ng-switch-when="metadata/publication/profilePublishMetadata"
+                        class="form-control"
+                        name="{{s.name}}"
+                      >
+                        <option value="Reviewer" ng-selected="'Reviewer' == s.value">
+                          {{'Reviewer' | translate}}
+                        </option>
+                        <option
+                          value="Administrator"
+                          ng-selected="'Administrator' == s.value"
+                        >
+                          {{'Administrator' | translate}}
+                        </option>
+                      </select>
 
-                    <button class="btn btn-primary pull-right ng-scope"
-                            data-ng-switch-when="system/inspire/atom"
-                            data-gn-click-and-spin="executeAtomHarvester()">
-                      <span class="fa fa-refresh"></span>&nbsp;
-                      {{'system/inspire/atomExecute' | translate}}
-                    </button>
+                      <select
+                        data-ng-switch-when="metadata/publication/profileUnpublishMetadata"
+                        class="form-control"
+                        name="{{s.name}}"
+                      >
+                        <option value="Reviewer" ng-selected="'Reviewer' == s.value">
+                          {{'Reviewer' | translate}}
+                        </option>
+                        <option
+                          value="Administrator"
+                          ng-selected="'Administrator' == s.value"
+                        >
+                          {{'Administrator' | translate}}
+                        </option>
+                      </select>
+                      <div data-ng-switch-when="system/metadatacreate/preferredGroup">
+                        <input
+                          type="hidden"
+                          id="{{s.name}}"
+                          name="{{s.name}}"
+                          value="{{s.value}}"
+                        />
 
-                    <div class="modal fade" id="atomHarvesterModal" tabindex="-1" role="dialog"
-                        aria-labelledby="{{'loadAtomHarvesterReport' | translate}}" aria-hidden="true">
-                      <div class="modal-dialog">
-                        <div class="modal-content">
-                          <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
-                            >&times;</button>
-                            <h4 class="modal-title" data-translate="">
-                              inspireatom-loadAtomHarvesterReport</h4>
-                          </div>
-                          <div class="modal-body">
-                            <div data-ng-show="loadTplReport">
-                              <p data-ng-show="loadTplReport['error']">
-                                <strong>{{loadTplReport['error']}}</strong>
-                              </p>
+                        <div
+                          data-groups-combo=""
+                          data-optional="true"
+                          data-owner-group="s.value"
+                          lang="lang"
+                          data-groups="groups"
+                          data-exclude-special-groups="true"
+                        />
+                      </div>
 
-                              <p><span data-translate="">inspireatom-totalprocessed</span>
-                                {{loadTplReport.length}}</p>
+                      <div data-ng-switch-when="system/metadatacreate/preferredTemplate">
+                        <input
+                          type="hidden"
+                          id="{{s.name}}"
+                          name="{{s.name}}"
+                          value="{{s.value}}"
+                        />
+                        <div
+                          data-gn-suggest="metadataTemplateSearchObj"
+                          data-gn-suggest-model="s.value"
+                          data-gn-suggest-property="_id"
+                          data-gn-suggest-display-title="span"
+                        />
+                      </div>
 
-                              <p data-translate="">inspireatom-harvestedfeeds</p>
+                      <div data-ng-switch-when="metadata/workflow/draftWhenInGroup">
+                        <input
+                          type="radio"
+                          class="gn-no-setting"
+                          data-ng-model="draftInAllGroups"
+                          data-ng-value="true"
+                        />
+                        {{'draftWhenInGroup-all' | translate}}<br />
+                        <input
+                          type="radio"
+                          class="gn-no-setting"
+                          data-ng-model="draftInAllGroups"
+                          data-ng-value="false"
+                        />
+                        {{'draftWhenInGroup-selection' | translate}}<br />
 
-                              <ul class="icons-ul">
-                                <li data-ng-repeat="record in loadTplReport"
-                                    ng-if="record['@status'] == 'ok'">
-                                  {{record['@uuid']}} - {{record['@feed']}}
-                                </li>
-                              </ul>
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="{{s['name']}}"
+                          name="{{s.name}}"
+                          data-ng-model="draftInAllGroupsUserValue"
+                          data-ng-init="draftInAllGroupsInputValue=s.value || '.*'"
+                          data-ng-change="draftInAllGroups == true?null:draftInAllGroupsInputValue=draftInAllGroupsUserValue"
+                          data-ng-readonly="draftInAllGroups == true"
+                          data-ng-value="draftInAllGroups == true ? '.*' : draftInAllGroupsInputValue"
+                        />
+                      </div>
 
-                              <p data-translate="">inspireatom-errors</p>
+                      <input
+                        data-ng-switch-when="system/server/timeZone"
+                        type="input"
+                        id="{{s.name}}"
+                        data-gn-timezone-selector=""
+                        data-element-timezone="{{s.value}}"
+                        class="form-control"
+                        name="{{s.name}}"
+                      />
 
-                              <ul class="icons-ul">
-                                <li data-ng-repeat="record in loadTplReport"
-                                    ng-if="record['@status'] == 'error'">
-                                  {{record['@uuid']}} - {{record['@error']}}
-                                </li>
-                              </ul>
+                      <textarea
+                        data-gn-autogrow=""
+                        data-ng-switch-when="system/harvesting/mail/template"
+                        type="text"
+                        class="form-control"
+                        id="{{s['name']}}"
+                        name="{{s.name}}"
+                      >
+{{s.value}}</textarea
+                      >
+                      <textarea
+                        data-gn-autogrow=""
+                        data-ng-switch-when="system/harvesting/mail/templateError"
+                        type="text"
+                        class="form-control"
+                        id="{{s['name']}}"
+                        name="{{s.name}}"
+                      >
+{{s.value}}</textarea
+                      >
+                      <textarea
+                        data-gn-autogrow=""
+                        data-ng-switch-when="system/harvesting/mail/templateWarning"
+                        type="text"
+                        class="form-control"
+                        id="{{s['name']}}"
+                        name="{{s.name}}"
+                      >
+{{s.value}}</textarea
+                      >
+
+                      <select
+                        data-ng-switch-when="system/server/protocol"
+                        class="form-control"
+                        name="{{s.name}}"
+                      >
+                        <option value="http" ng-selected="'http' == s.value">http</option>
+                        <option value="https" ng-selected="'https' == s.value">
+                          https
+                        </option>
+                      </select>
+                      <select
+                        data-ng-switch-when="system/server/log"
+                        class="form-control"
+                        name="{{s.name}}"
+                      >
+                        <option
+                          data-ng-repeat="log in logfiles"
+                          value="{{log.file}}"
+                          ng-selected="log.file === s.value"
+                        >
+                          {{log.name}}
+                        </option>
+                      </select>
+                      <select
+                        data-ng-switch-when="system/localrating/notificationLevel"
+                        class="form-control"
+                        name="{{s.name}}"
+                        data-ng-model="s.value"
+                        data-ng-change="changeLocalRatingNotificationLevel(s.value)"
+                      >
+                        <option
+                          data-ng-repeat="l in notificationLevels"
+                          value="{{l}}"
+                          ng-selected="l === s.value"
+                          data-translate=""
+                        >
+                          {{l !== ''?'notificationLevel-' + l: ''}}
+                        </option>
+                      </select>
+                      <select
+                        data-ng-switch-when="system/metadataprivs/publication/notificationLevel"
+                        class="form-control"
+                        name="{{s.name}}"
+                        data-ng-model="s.value"
+                        data-ng-change="changePublicationNotificationLevel(s.value)"
+                      >
+                        <option
+                          data-ng-repeat="l in notificationLevels"
+                          value="{{l}}"
+                          ng-selected="l === s.value"
+                          data-translate=""
+                        >
+                          {{l !== ''?'notificationLevel-' + l: ''}}
+                        </option>
+                      </select>
+                      <select
+                        data-ng-switch-when="system/oai/mdmode"
+                        class="form-control"
+                        name="{{s.name}}"
+                      >
+                        <option value="1" ng-selected="'1' == s.value">
+                          {{'system/oai/mdmode-valueTemporaExtent' | translate}}
+                        </option>
+                        <option value="2" ng-selected="'2' == s.value">
+                          {{'system/oai/mdmode-valueModificationDate' | translate}}
+                        </option>
+                      </select>
+                      <select
+                        data-ng-switch-when="system/localrating/enable"
+                        class="form-control"
+                        name="{{s.name}}"
+                      >
+                        <option value="" ng-selected="'' == s.value">
+                          {{'off' | translate}}
+                        </option>
+                        <option value="basic" ng-selected="'basic' == s.value">
+                          {{'basic' | translate}}
+                        </option>
+                        <option value="advanced" ng-selected="'advanced' == s.value">
+                          {{'advanced' | translate}}
+                        </option>
+                      </select>
+
+                      <select
+                        data-ng-switch-when="system/inspire/atom"
+                        class="form-control"
+                        name="{{s.name}}"
+                        data-ng-model="atomFeedType"
+                      >
+                        <option value="disabled" ng-selected="'disabled' == s.value">
+                          {{'system/inspire/atomDisabled' | translate}}
+                        </option>
+                        <option value="remote" ng-selected="'remote' == s.value">
+                          {{'system/inspire/atomRemote' | translate}}
+                        </option>
+                      </select>
+
+                      <button
+                        class="btn btn-primary pull-right ng-scope"
+                        data-ng-switch-when="system/inspire/atom"
+                        data-gn-click-and-spin="executeAtomHarvester()"
+                      >
+                        <span class="fa fa-refresh"></span>&nbsp;
+                        {{'system/inspire/atomExecute' | translate}}
+                      </button>
+
+                      <div
+                        class="modal fade"
+                        id="atomHarvesterModal"
+                        tabindex="-1"
+                        role="dialog"
+                        aria-labelledby="{{'loadAtomHarvesterReport' | translate}}"
+                        aria-hidden="true"
+                      >
+                        <div class="modal-dialog">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <button
+                                type="button"
+                                class="close"
+                                data-dismiss="modal"
+                                aria-hidden="true"
+                              >
+                                &times;
+                              </button>
+                              <h4 class="modal-title" data-translate="">
+                                inspireatom-loadAtomHarvesterReport
+                              </h4>
                             </div>
-                          </div>
-                          <div class="modal-footer">
-                            <button type="button" class="btn" data-dismiss="modal">
-                              <i class="fa fa-ban-circle"></i>&nbsp;
-                              <span data-translate="">close</span>
-                            </button>
+                            <div class="modal-body">
+                              <div data-ng-show="loadTplReport">
+                                <p data-ng-show="loadTplReport['error']">
+                                  <strong>{{loadTplReport['error']}}</strong>
+                                </p>
+
+                                <p>
+                                  <span data-translate=""
+                                    >inspireatom-totalprocessed</span
+                                  >
+                                  {{loadTplReport.length}}
+                                </p>
+
+                                <p data-translate="">inspireatom-harvestedfeeds</p>
+
+                                <ul class="icons-ul">
+                                  <li
+                                    data-ng-repeat="record in loadTplReport"
+                                    ng-if="record['@status'] == 'ok'"
+                                  >
+                                    {{record['@uuid']}} - {{record['@feed']}}
+                                  </li>
+                                </ul>
+
+                                <p data-translate="">inspireatom-errors</p>
+
+                                <ul class="icons-ul">
+                                  <li
+                                    data-ng-repeat="record in loadTplReport"
+                                    ng-if="record['@status'] == 'error'"
+                                  >
+                                    {{record['@uuid']}} - {{record['@error']}}
+                                  </li>
+                                </ul>
+                              </div>
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn" data-dismiss="modal">
+                                <i class="fa fa-ban-circle"></i>&nbsp;
+                                <span data-translate="">close</span>
+                              </button>
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
 
-
-                    <!-- Read only fields -->
-                    <input data-ng-switch-when="system/platform/version" type="text"
-                          class="form-control"
-                          id="{{s['name']}}" name="{{s.name}}" value="{{s.value}}"
-                          readonly="readonly"/>
-                    <input data-ng-switch-when="system/platform/subVersion" type="text"
-                          class="form-control"
-                          id="{{s['name']}}" name="{{s.name}}" value="{{s.value}}"
-                          readonly="readonly"/>
-                    <input data-ng-switch-when="system/site/svnUuid" type="text" class="form-control"
-                          id="{{s['name']}}" name="{{s.name}}" value="{{s.value}}"
-                          readonly="readonly"/>
-                    <input data-ng-switch-when="system/proxy/password"
-                          type="password"
-                          class="form-control"
-                          id="{{s['name']}}"
-                          name="{{s.name}}"
-                          value="{{s.value}}"/>
-                    <input data-ng-switch-when="system/feedback/mailServer/password"
-                          type="password"
-                          class="form-control"
-                          id="{{s['name']}}"
-                          name="{{s.name}}"
-                          value="{{s.value}}"/>
-                    <input data-ng-switch-when="system/publication/doi/doipassword"
-                           type="password"
-                           class="form-control"
-                           id="{{s['name']}}"
-                           name="{{s.name}}"
-                           value="{{s.value}}"/>
-                    <div data-ng-switch-when="system/feedback/mailServer/host">
-                      <div class="input-group">
-                        <input type="text" class="form-control"
-                              id="{{s['name']}}" name="{{s.name}}" value="{{s.value}}"
-                              data-ng-model="s.value"/>
-                        <span class="input-group-btn">
-                            <button type="submit"
-                                    class="btn btn-default"
-                                    data-ng-disabled="s.value == ''"
-                                    data-gn-click-and-spin="testMailConfiguration()">
+                      <!-- Read only fields -->
+                      <input
+                        data-ng-switch-when="system/platform/version"
+                        type="text"
+                        class="form-control"
+                        id="{{s['name']}}"
+                        name="{{s.name}}"
+                        value="{{s.value}}"
+                        readonly="readonly"
+                      />
+                      <input
+                        data-ng-switch-when="system/platform/subVersion"
+                        type="text"
+                        class="form-control"
+                        id="{{s['name']}}"
+                        name="{{s.name}}"
+                        value="{{s.value}}"
+                        readonly="readonly"
+                      />
+                      <input
+                        data-ng-switch-when="system/site/svnUuid"
+                        type="text"
+                        class="form-control"
+                        id="{{s['name']}}"
+                        name="{{s.name}}"
+                        value="{{s.value}}"
+                        readonly="readonly"
+                      />
+                      <input
+                        data-ng-switch-when="system/proxy/password"
+                        type="password"
+                        autocomplete="new-password"
+                        class="form-control"
+                        id="{{s['name']}}"
+                        name="{{s.name}}"
+                        value="{{s.value}}"
+                      />
+                      <input
+                        data-ng-switch-when="system/feedback/mailServer/password"
+                        type="password"
+                        class="form-control"
+                        id="{{s['name']}}"
+                        name="{{s.name}}"
+                        value="{{s.value}}"
+                      />
+                      <input
+                        data-ng-switch-when="system/publication/doi/doipassword"
+                        type="password"
+                        class="form-control"
+                        id="{{s['name']}}"
+                        name="{{s.name}}"
+                        value="{{s.value}}"
+                      />
+                      <div data-ng-switch-when="system/feedback/mailServer/host">
+                        <div class="input-group">
+                          <input
+                            type="text"
+                            class="form-control"
+                            id="{{s['name']}}"
+                            name="{{s.name}}"
+                            value="{{s.value}}"
+                            data-ng-model="s.value"
+                          />
+                          <span class="input-group-btn">
+                            <button
+                              type="submit"
+                              class="btn btn-default"
+                              data-ng-disabled="s.value == ''"
+                              data-gn-click-and-spin="testMailConfiguration()"
+                            >
                               <i class="fa fa-envelope"></i>&nbsp;
                               <span data-translate="">testMailConfiguration</span>
                             </button>
                           </span>
+                        </div>
                       </div>
-                    </div>
-                    <div data-ng-switch-when="system/server/host">
-                      <div data-ng-class="processName !== null ? 'input-group' : ''">
-                        <input type="text" class="form-control"
-                              id="{{s['name']}}" name="{{s.name}}" value="{{s.value}}"
-                              data-ng-model="s.value"
-                              data-ng-change="processRecommended('siteIdChange', s['name'])"/>
-                        <span class="input-group-btn" data-ng-show="processName !== null">
-                            <button type="submit" class="btn btn-warning"
-                                    title="{{processTitle}}"
-                                    data-ng-click="saveAndProcessSettings('#gn-settings', 'url-host-relocator')">
-                              <i class="fa fa-medkit"></i>&nbsp;<span data-translate=""
-                            >processRecommendedOnHostChange</span></button>
-                          </span>
-                      </div>
-                    </div>
-
-                    <div data-ng-switch-when="metadata/resourceIdentifierPrefix">
-                      <div data-ng-class="resourceIdProcessName !== null ? 'input-group' : ''">
-                        <input type="text" class="form-control"
-                              id="{{s['name']}}" name="{{s.name}}" value="{{s.value}}"
-                              data-ng-model="s.value"
-                              data-ng-change="processRecommendedForId('resourceIdentifierChange', s['name'])"/>
-                        <span class="input-group-btn" data-ng-show="resourceIdProcessName !== null">
-                            <button type="submit" class="btn btn-warning"
-                                    title="{{processTitle}}"
-                                    data-ng-click="saveAndProcessSettings('#gn-settings', 'add-resource-id')">
-                              <i class="fa fa-medkit"></i>&nbsp;<span data-translate=""
-                            >processRecommendedOnPrefixChange</span></button>
-                          </span>
-                      </div>
-                    </div>
-
-                    <div data-ng-switch-when="system/server/port">
-                      <input type="text" class="form-control"
-                            id="{{s['name']}}" name="{{s.name}}" value="{{s.value}}"
+                      <div data-ng-switch-when="system/server/host">
+                        <div>
+                          <input
+                            type="text"
+                            class="form-control"
+                            id="{{s['name']}}"
+                            name="{{s.name}}"
+                            value="{{s.value}}"
                             data-ng-model="s.value"
-                            data-ng-change="processRecommended('siteIdChange', s['name'])"/>
+                          />
+                        </div>
+                      </div>
+
+                      <div data-ng-switch-when="metadata/resourceIdentifierPrefix">
+                        <div>
+                          <input
+                            type="text"
+                            class="form-control"
+                            id="{{s['name']}}"
+                            name="{{s.name}}"
+                            value="{{s.value}}"
+                            data-ng-model="s.value"
+                          />
+                        </div>
+                      </div>
+
+                      <div data-ng-switch-when="system/server/port">
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="{{s['name']}}"
+                          name="{{s.name}}"
+                          value="{{s.value}}"
+                          data-ng-model="s.value"
+                          data-ng-change="processRecommended('siteIdChange', s['name'])"
+                        />
+                      </div>
+
+                      <div
+                        class="input-group"
+                        data-ng-switch-when="system/inspire/remotevalidation/url"
+                      >
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="{{s['name']}}"
+                          name="{{s.name}}"
+                          value="{{s.value}}"
+                          placeholder="{{'system/inspire/remotevalidation/url-placeholder' | translate}}"
+                        />
+                        <span class="input-group-btn">
+                          <div
+                            class="btn btn-default"
+                            onClick="document.getElementById('system/inspire/remotevalidation/url').value = 'https://inspire.ec.europa.eu/validator/';"
+                            data-translate=""
+                          >
+                            validatorUseInspireOne
+                          </div>
+                        </span>
+                      </div>
+
+                      <div
+                        class="input-group"
+                        data-ng-switch-when="system/inspire/remotevalidation/urlquery"
+                      >
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="{{s['name']}}"
+                          name="{{s.name}}"
+                          value="{{s.value}}"
+                          placeholder="{{'system/inspire/remotevalidation/urlquery-placeholder' | translate}}"
+                        />
+                        <span class="input-group-btn">
+                          <div
+                            class="btn btn-default"
+                            onClick="document.getElementById('system/inspire/remotevalidation/urlquery').value = 'https://inspire.ec.europa.eu/validator/';"
+                            data-translate=""
+                          >
+                            validatorUseInspireOne
+                          </div>
+                        </span>
+                      </div>
+
+                      <input
+                        data-ng-switch-when="system/metadataprivs/publication/notificationGroups"
+                        type="text"
+                        class="form-control"
+                        id="{{s['name']}}"
+                        name="{{s.name}}"
+                        value="{{s.value}}"
+                        data-ng-disabled="!isGroupPublicationNotificationLevel"
+                      />
+
+                      <input
+                        data-ng-switch-when="system/localrating/notificationGroups"
+                        type="text"
+                        class="form-control"
+                        id="{{s['name']}}"
+                        name="{{s.name}}"
+                        value="{{s.value}}"
+                        data-ng-disabled="!isGroupLocalRatingNotificationLevel"
+                      />
+
+                      <!-- Default -->
+                      <input
+                        data-ng-switch-default=""
+                        type="text"
+                        class="form-control"
+                        id="{{s['name']}}"
+                        name="{{s.name}}"
+                        value="{{s.value}}"
+                      />
                     </div>
-
-                    <div class="input-group"
-                         data-ng-switch-when="system/inspire/remotevalidation/url" >
-                      <input type="text" class="form-control"
-                             id="{{s['name']}}" name="{{s.name}}" value="{{s.value}}"
-                             placeholder="{{'system/inspire/remotevalidation/url-placeholder' | translate}}" />
-                      <span class="input-group-btn">
-                      <div class="btn btn-default"
-                           onClick="document.getElementById('system/inspire/remotevalidation/url').value = 'https://inspire.ec.europa.eu/validator/';"
-                           data-translate="">validatorUseInspireOne</div>
-                    </span>
-                    </div>
-
-
-                    <!-- Default -->
-                    <input data-ng-switch-default="" type="text" class="form-control"
-                          id="{{s['name']}}" name="{{s.name}}" value="{{s.value}}"/>
-
-                    <p class="help-block">
-                      <span
-                        data-ng-show="(s['name'] + '-help' | translate) !== (s['name'] + '-help')"
-                        data-translate="">
-                          {{(s['name'] + '-help')}}
-                      </span>
-                    </p>
                   </div>
-
                 </div>
-              </div>
-
+              </fieldset>
+              <button
+                type="submit"
+                class="btn btn-primary pull-right"
+                data-ng-disabled="!gnSettings.$valid"
+                data-ng-click="saveSettings('#gn-settings')"
+              >
+                <span class="fa fa-save"></span>&nbsp; {{"saveSettings"|translate}}
+              </button>
             </fieldset>
-            <button type="submit"
-                    class="btn btn-primary pull-right"
-                    data-ng-disabled="!gnSettings.$valid"
-                    data-ng-click="saveSettings('#gn-settings')">
-              <span class="fa fa-save"></span>&nbsp;
-              {{"saveSettings"|translate}}
-            </button>
-          </fieldset>
           </div>
         </form>
       </div>

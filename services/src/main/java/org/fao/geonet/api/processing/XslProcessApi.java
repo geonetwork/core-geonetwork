@@ -25,6 +25,7 @@ package org.fao.geonet.api.processing;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.base.Optional;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -33,16 +34,21 @@ import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.services.ReadWriteController;
 import org.fao.geonet.ApplicationContextHolder;
-import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.processing.report.XsltMetadataProcessingReport;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.events.history.RecordProcessingChangeEvent;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MetadataIndexerProcessor;
 import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.UpdateDatestamp;
+import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.specification.MetadataSpecs;
+import org.fao.geonet.utils.Diff;
+import org.fao.geonet.utils.DiffType;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
@@ -97,6 +103,12 @@ public class XslProcessApi {
     @Autowired
     SchemaManager schemaMan;
 
+    @Autowired
+    private IMetadataManager metadataManager;
+
+    @Autowired
+    SettingManager settingManager;
+
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Preview process result applied to one or more records",
         description = ApiParams.API_OP_NOTE_PROCESS_PREVIEW +
@@ -124,6 +136,14 @@ public class XslProcessApi {
         )
         @PathVariable
             String process,
+        @Parameter(
+            description = "Return differences with diff, diffhtml or patch",
+            required = false
+        )
+        @RequestParam(
+            required = false
+        )
+            DiffType diffType,
         @Parameter(description = API_PARAM_RECORD_UUIDS_OR_SELECTION,
             required = false,
             example = "")
@@ -141,6 +161,11 @@ public class XslProcessApi {
             example = "false")
         @RequestParam(required = false, defaultValue = "false")
             boolean appendFirst,
+        @Parameter(description = "Apply update fixed info",
+            required = false,
+            example = "false")
+        @RequestParam(required = false, defaultValue = "true")
+        boolean applyUpdateFixedInfo,
         @Parameter(hidden = true)
             HttpSession httpSession,
         @Parameter(hidden = true)
@@ -186,17 +211,29 @@ public class XslProcessApi {
                     mergedDocuments.addContent(dataMan.getMetadata(id));
                 } else {
                     // Save processed metadata
+                    ServiceContext serviceContext = ApiUtils.createServiceContext(request);
                     if (isText) {
-                        output.append(XslProcessUtils.processAsText(ApiUtils.createServiceContext(request),
+                        output.append(XslProcessUtils.processAsText(serviceContext,
                             id, process, false,
                             xslProcessingReport, siteURL, request.getParameterMap())
                         );
                     } else {
-                        Element record = XslProcessUtils.process(ApiUtils.createServiceContext(request),
+                        Element record = XslProcessUtils.process(serviceContext,
                             id, process, false, false,
                             false, xslProcessingReport, siteURL, request.getParameterMap());
                         if (record != null) {
-                            preview.addContent(record.detach());
+                            if (applyUpdateFixedInfo) {
+                                record = metadataManager.updateFixedInfo(dataMan.getMetadataSchema(id),
+                                    Optional.<Integer>absent(), uuid, record, null, UpdateDatestamp.NO, serviceContext);
+                            }
+                            if (diffType != null) {
+                                IMetadataUtils metadataUtils = serviceContext.getBean(IMetadataUtils.class);
+                                AbstractMetadata metadata = metadataUtils.findOne(id);
+                                preview.addContent(
+                                    Diff.diff(metadata.getData(), Xml.getString(record), diffType));
+                            } else {
+                                preview.addContent(record.detach());
+                            }
                         }
                     }
                 }
@@ -302,7 +339,7 @@ public class XslProcessApi {
                 ApiUtils.createServiceContext(request),
                 dataMan, records, process, httpSession, siteURL,
                 xslProcessingReport, request, index, updateDateStamp, userSession.getUserIdAsInt());
-            m.process();
+            m.process(settingManager.getSiteId());
 
         } catch (Exception exception) {
             xslProcessingReport.addError(exception);
@@ -349,7 +386,7 @@ public class XslProcessApi {
         }
 
         @Override
-        public void process() throws Exception {
+        public void process(String catalogueId) throws Exception {
             DataManager dataMan = context.getBean(DataManager.class);
             IMetadataUtils metadataUtils = context.getBean(IMetadataUtils.class);
 

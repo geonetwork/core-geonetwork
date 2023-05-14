@@ -81,9 +81,8 @@
     }
   }
   .gn-editor-board {
+    padding-top: @gn-header-height;
     .gn-top-search {
-      padding-top: 0;
-      padding-bottom: 0;
       background-color: #fff;
     }
   }
@@ -440,6 +439,29 @@
   // attribution on the 'make thumbnail' map
   .ol-attribution {
     .gn-attribution();
+  }
+}
+#gn-addonlinesrc-description-row {
+  .form-control {
+    background: #fff !important;
+  }
+  .tt-menu {
+    top: auto !important;
+    width: calc(~"100% - 30px");
+    margin-left: 15px;
+  }
+  .twitter-typeahead .tt-menu {
+    width: 100%;
+    margin-left: 0;
+  }
+  .tt-menu + .twitter-typeahead {
+    display: none !important;
+  }
+  .tt-suggestion {
+    &:hover {
+      cursor: pointer;
+      background-color: @dropdown-link-hover-bg;
+    }
   }
 }
 

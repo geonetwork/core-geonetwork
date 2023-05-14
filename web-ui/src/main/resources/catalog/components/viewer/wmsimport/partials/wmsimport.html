@@ -1,24 +1,43 @@
 <div class="layerTree">
   <form role="form">
-    <input type="hidden" name="_csrf" value="{{csrf}}"/>
-    <div data-ng-show="catServicesList.length > 0 || servicesList.length > 0">
+    <input type="hidden" name="_csrf" value="{{csrf}}" />
+    <div
+      class="gn-services-dropdown"
+      data-ng-show="catServicesList.length > 0 || servicesList.length > 0"
+    >
       <div class="dropdown">
-        <button data-ng-attr-id="addServiceChooseAServiceButton-{{format}}" class="btn btn-block btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="true">
-          <span data-ng-hide="serviceDesc"
-                title="{{'chooseAserviceHelp' | translate}}">{{'chooseAservice' | translate}}</span>
+        <button
+          data-ng-attr-id="addServiceChooseAServiceButton-{{format}}"
+          class="btn btn-block btn-default dropdown-toggle"
+          type="button"
+          data-toggle="dropdown"
+          aria-expanded="true"
+        >
+          <span data-ng-hide="serviceDesc" title="{{'chooseAserviceHelp' | translate}}"
+            >{{'chooseAservice' | translate}}</span
+          >
           <span data-ng-show="serviceDesc">{{serviceDesc.title}}</span>
           <span class="caret"></span>
         </button>
-        <ul class="dropdown-menu" role="listbox" aria-labelledby="addServiceChooseAServiceButton-{{format}}">
+        <ul
+          class="dropdown-menu"
+          role="listbox"
+          aria-labelledby="addServiceChooseAServiceButton-{{format}}"
+        >
           <li data-ng-repeat="srv in servicesList | orderBy: 'name'">
             <a href="" data-ng-click="setUrl(srv)" title="{{srv.url}}">
               {{srv.name}} ({{srv.url}})
             </a>
           </li>
           <li data-ng-repeat="srv in catServicesList | orderBy: 'title'">
-            <a href="" data-ng-click="setUrl(srv)"
-               title="{{srv.desc}} ({{srv.url}}) - {{srv.type}}">
-              {{srv.title}} ({{srv.url}}))
+            <a
+              href=""
+              data-ng-click="setUrl(srv)"
+              title="{{srv.title}} ({{srv.url}})"
+              class="flex-row flex-gap-10"
+            >
+              <span class="label label-success text-uppercase">{{srv.type}}</span>
+              <span>{{srv.title}} ({{srv.url}})</span>
             </a>
           </li>
         </ul>
@@ -29,14 +48,21 @@
       <span data-ng-show="catServicesList.length > 0 || servicesList.length > 0">
         <span data-translate="">or</span>&nbsp;
       </span>
-      <span data-translate="" data-translate-values="{type: '{{format.toUpperCase()}}'}">orTypeAServiceUrl</span>
+      <span data-translate="" data-translate-values="{type: '{{format.toUpperCase()}}'}"
+        >orTypeAServiceUrl</span
+      >
     </label>
     <div>
       <div class="input-group">
-        <input class="form-control" type="text"
-               data-ng-model="url" data-ng-change="load()" data-ng-model-options="{debounce:500}"
-               aria-label="{{format.toUpperCase()}} {{'serviceUrlLabel' | translate }}"
-               placeholder="{{'serviceUrl' | translate}}"/>
+        <input
+          class="form-control"
+          type="text"
+          data-ng-model="url"
+          data-ng-change="load()"
+          data-ng-model-options="{debounce:500}"
+          aria-label="{{format.toUpperCase()}} {{'serviceUrlLabel' | translate }}"
+          placeholder="{{'serviceUrl' | translate}}"
+        />
         <span class="input-group-btn">
           <button class="btn btn-default" type="button" data-ng-click="reset()">
             <i class="fa fa-close"></i>
@@ -55,7 +81,14 @@
     {{ error[format] }}
   </div>
 
-  <gn-cap-tree-col collection='capability.Layer' selection="selection"></gn-cap-tree-col>
-  <gn-cap-tree-col collection='capability.featureTypeList.featureType' selection="selection"></gn-cap-tree-col>
-  <gn-esri-rest-cap-tree-col collection='capabilityEsriRest.layers' selection="selection" filter-label="{{ 'filter' | translate }}"></gn-esri-rest-cap-tree-col>
+  <gn-cap-tree-col collection="capability.Layer" selection="selection"></gn-cap-tree-col>
+  <gn-cap-tree-col
+    collection="capability.featureTypeList.featureType"
+    selection="selection"
+  ></gn-cap-tree-col>
+  <gn-esri-rest-cap-tree-col
+    collection="capabilityEsriRest.layers"
+    selection="selection"
+    filter-label="{{ 'filter' | translate }}"
+  ></gn-esri-rest-cap-tree-col>
 </div>

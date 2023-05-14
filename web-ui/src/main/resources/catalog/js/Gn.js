@@ -24,13 +24,12 @@
 // Define root geonetwork namespace
 var geonetwork = {};
 
-(function() {
-  goog.provide('gn');
+(function () {
+  goog.provide("gn");
 
-
-  goog.require('gn_locale');
-  goog.require('gn_count_watchers');
-  goog.require('gn_polyfills');
+  goog.require("gn_locale");
+  goog.require("gn_count_watchers");
+  goog.require("gn_polyfills");
 
   /**
    * Main gn module.
@@ -42,8 +41,14 @@ var geonetwork = {};
    *
    * @type {module|*}
    */
-  var module = angular.module('gn', [
-    'gn_locale', 'gn_config', 'cfp.hotkeys'
-  ]);
+  var module = angular.module("gn", ["gn_locale", "gn_config", "cfp.hotkeys"]);
 
+  // See https://docs.angularjs.org/guide/migration#commit-aa077e8
+  module.config([
+    "$locationProvider",
+    function ($locationProvider) {
+      // Configure existing providers
+      $locationProvider.hashPrefix("");
+    }
+  ]);
 })();

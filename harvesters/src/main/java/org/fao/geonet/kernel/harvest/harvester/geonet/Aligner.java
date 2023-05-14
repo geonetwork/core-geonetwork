@@ -1,5 +1,5 @@
 //=============================================================================
-//===    Copyright (C) 2001-2007 Food and Agriculture Organization of the
+//===    Copyright (C) 2001-2023 Food and Agriculture Organization of the
 //===    United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===    and United Nations Environment Programme (UNEP)
 //===
@@ -25,18 +25,14 @@ package org.fao.geonet.kernel.harvest.harvester.geonet;
 
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Logger;
+import org.fao.geonet.MetadataResourceDatabaseMigration;
 import org.fao.geonet.api.records.attachments.Store;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.AbstractMetadata;
-import org.fao.geonet.domain.ISODate;
-import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.domain.MetadataResource;
-import org.fao.geonet.domain.MetadataResourceVisibility;
-import org.fao.geonet.domain.MetadataType;
-import org.fao.geonet.domain.Pair;
+import org.fao.geonet.domain.*;
 import org.fao.geonet.domain.userfeedback.RatingsSetting;
 import org.fao.geonet.exceptions.NoSchemaMatchesException;
 import org.fao.geonet.kernel.DataManager;
@@ -44,23 +40,14 @@ import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.harvest.BaseAligner;
-import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
-import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
-import org.fao.geonet.kernel.harvest.harvester.HarvestError;
-import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
-import org.fao.geonet.kernel.harvest.harvester.HarvesterUtil;
-import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
-import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
-import org.fao.geonet.kernel.mef.IMEFVisitor;
-import org.fao.geonet.kernel.mef.IVisitor;
-import org.fao.geonet.kernel.mef.Importer;
-import org.fao.geonet.kernel.mef.MEF2Visitor;
-import org.fao.geonet.kernel.mef.MEFLib;
-import org.fao.geonet.kernel.mef.MEFVisitor;
+import org.fao.geonet.kernel.harvest.harvester.*;
+import org.fao.geonet.kernel.mef.*;
+import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.schema.iso19139.ISO19139SchemaPlugin;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.fao.geonet.utils.XmlRequest;
@@ -72,15 +59,7 @@ import java.io.InputStream;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 
@@ -100,7 +79,8 @@ public class Aligner extends BaseAligner<GeonetParams> {
     private String preferredSchema;
     private Map<String, Object> processParams = new HashMap<String, Object>();
     private MetadataRepository metadataRepository;
-    private HashMap<String, HashMap<String, String>> hmRemoteGroups = new HashMap<String, HashMap<String, String>>();
+    private Map<String, Map<String, String>> hmRemoteGroups = new HashMap<String, Map<String, String>>();
+    private SettingManager settingManager;
 
     public Aligner(AtomicBoolean cancelMonitor, Logger log, ServiceContext context, XmlRequest req,
                    GeonetParams params, Element remoteInfo) {
@@ -114,6 +94,8 @@ public class Aligner extends BaseAligner<GeonetParams> {
         dataMan = gc.getBean(DataManager.class);
         metadataManager = gc.getBean(IMetadataManager.class);
         metadataRepository = gc.getBean(MetadataRepository.class);
+        settingManager = gc.getBean(SettingManager.class);
+
         result = new HarvestResult();
 
         //--- save remote categories and groups into hashmaps for a fast access
@@ -132,12 +114,12 @@ public class Aligner extends BaseAligner<GeonetParams> {
 
     //--------------------------------------------------------------------------
 
-    private void setupLocEntity(List<Element> list, HashMap<String, HashMap<String, String>> hmEntity) {
+    private void setupLocEntity(List<Element> list, Map<String, Map<String, String>> hmEntity) {
 
         for (Element entity : list) {
             String name = entity.getChildText("name");
 
-            HashMap<String, String> hm = new HashMap<String, String>();
+            Map<String, String> hm = new HashMap<String, String>();
             hmEntity.put(name, hm);
 
             @SuppressWarnings("unchecked")
@@ -376,9 +358,10 @@ public class Aligner extends BaseAligner<GeonetParams> {
 
         //--- import metadata from MEF file
 
-        Path mefFile = retrieveMEF(ri.uuid);
+        Path mefFile = null;
 
         try {
+            mefFile = retrieveMEF(ri.uuid);
             String fileType = "mef";
             MEFLib.Version version = MEFLib.getMEFVersion(mefFile);
             if (version != null && version.equals(MEFLib.Version.V2)) {
@@ -458,10 +441,8 @@ public class Aligner extends BaseAligner<GeonetParams> {
             result.unretrievable++;
             log.error(e);
         } finally {
-            try {
-                Files.deleteIfExists(mefFile);
-            } catch (IOException e) {
-                log.warning("Unable to delete mefFile: " + mefFile);
+            if (mefFile != null) {
+                FileUtils.deleteQuietly(mefFile.toFile());
             }
         }
     }
@@ -494,10 +475,18 @@ public class Aligner extends BaseAligner<GeonetParams> {
             return null;
         }
 
+        if (params.mefFormatFull && ri.schema.startsWith(ISO19139SchemaPlugin.IDENTIFIER)) {
+            // In GeoNetwork 3.x, links to resources changed:
+            // * thumbnails contains full URL instead of file name only
+            // * API mode change old URL structure.
+            MetadataResourceDatabaseMigration.updateMetadataResourcesLink(md, null, settingManager);
+        }
+
         if (!params.xslfilter.equals("")) {
             md = HarvesterUtil.processMetadata(dataMan.getSchema(schema),
                 md, processName, processParams);
         }
+
         // insert metadata
         // If MEF format is full, private file links needs to be updated
         boolean ufo = params.mefFormatFull;
@@ -523,7 +512,7 @@ public class Aligner extends BaseAligner<GeonetParams> {
 
         addCategories(metadata, params.getCategories(), localCateg, context, null, false);
 
-        metadata = metadataManager.insertMetadata(context, metadata, md, false, ufo, UpdateDatestamp.NO, false, false);
+        metadata = metadataManager.insertMetadata(context, metadata, md, IndexingMode.none, ufo, UpdateDatestamp.NO, false, false);
 
         String id = String.valueOf(metadata.getId());
 
@@ -682,9 +671,11 @@ public class Aligner extends BaseAligner<GeonetParams> {
                 log.debug("  - Skipped metadata managed by another harvesting node. uuid:" + ri.uuid + ", name:" + params.getName());
         } else {
             if (force || !useChangeDate || ri.isMoreRecentThan(localChangeDate)) {
-                Path mefFile = retrieveMEF(ri.uuid);
+                Path mefFile = null;
 
                 try {
+                    mefFile = retrieveMEF(ri.uuid);
+
                     String fileType = "mef";
                     MEFLib.Version version = MEFLib.getMEFVersion(mefFile);
                     if (version != null && version.equals(MEFLib.Version.V2)) {
@@ -737,12 +728,9 @@ public class Aligner extends BaseAligner<GeonetParams> {
                     //--- we ignore the exception here. Maybe the metadata has been removed just now
                     result.unretrievable++;
                 } finally {
-                    try {
-                        Files.deleteIfExists(mefFile);
-                    } catch (IOException e) {
-                        log.warning("Unable to delete mefFile: " + mefFile);
+                    if (mefFile != null) {
+                        FileUtils.deleteQuietly(mefFile.toFile());
                     }
-
                 }
             } else {
                 result.unchangedMetadata++;
@@ -779,6 +767,13 @@ public class Aligner extends BaseAligner<GeonetParams> {
                 throw new NoSuchElementException("Unable to find a metadata with ID: " + id);
             }
         } else {
+            if (params.mefFormatFull && ri.schema.startsWith(ISO19139SchemaPlugin.IDENTIFIER)) {
+                // In GeoNetwork 3.x, links to resources changed:
+                // * thumbnails contains full URL instead of file name only
+                // * API mode change old URL structure.
+                MetadataResourceDatabaseMigration.updateMetadataResourcesLink(md, null, settingManager);
+            }
+
             if (!params.xslfilter.equals("")) {
                 md = HarvesterUtil.processMetadata(dataMan.getSchema(ri.schema),
                     md, processName, processParams);
@@ -789,11 +784,10 @@ public class Aligner extends BaseAligner<GeonetParams> {
 
             boolean validate = false;
             boolean ufo = params.mefFormatFull;
-            boolean index = false;
             boolean updateDateStamp = true;
             String language = context.getLanguage();
-            metadataManager.updateMetadata(context, id, md, validate, ufo, index, language, ri.changeDate,
-                updateDateStamp);
+            metadataManager.updateMetadata(context, id, md, validate, ufo, language, ri.changeDate,
+                updateDateStamp, IndexingMode.none);
             metadata = metadataRepository.findOneById(Integer.valueOf(id));
             result.updatedMetadata++;
             if (force) {

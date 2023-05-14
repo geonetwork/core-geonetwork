@@ -1,172 +1,276 @@
-<form name="harvesterForm"
-      data-ng-keypress="updatingHarvester()">
-  <input type="hidden" name="_csrf" value="{{csrf}}"/>
-
-
+<form name="harvesterForm" data-ng-keypress="updatingHarvester()">
+  <input type="hidden" name="_csrf" value="{{csrf}}" />
 
   <div class="row">
-    <div id="gn-harvest-settings-selected-id" class="col-lg-6 gn-nopadding-left" data-gn-harvester-identification="harvesterSelected"/>
+    <div
+      id="gn-harvest-settings-selected-id"
+      class="col-lg-6 gn-nopadding-left"
+      data-gn-harvester-identification="harvesterSelected"
+    />
     <!--<div id="gn-harvest-settings-selected-schedule" class="col-lg-6 gn-nopadding-right" data-gn-harvester-schedule="harvesterSelected"/>-->
   </div>
 
-
   <fieldset id="gn-harvest-settings-csw-basic-row">
-    <legend id="gn-harvest-settings-csw-basic-title"><span data-translate="">harvesterMainConfigurationFor</span> {{('harvester-' +
+    <legend id="gn-harvest-settings-csw-basic-title">
+      <span data-translate="">harvesterMainConfigurationFor</span> {{('harvester-' +
       harvesterSelected['@type']) | translate}}
     </legend>
-    <div id="gn-harvest-settings-csw-basic-service-row" data-ng-class="harvesterSelected.site.url == '' ? 'has-error' : ''">
-      <label id="gn-harvest-settings-csw-basic-service-label" class="control-label" data-translate="">serviceUrl</label>
-      <input id="gn-harvest-settings-csw-basic-service-input"
-             type="text"
-             class="form-control"
-             data-ng-model="harvesterSelected.site.capabilitiesUrl"/>
+    <div
+      id="gn-harvest-settings-csw-basic-service-row"
+      data-ng-class="harvesterSelected.site.url == '' ? 'has-error' : ''"
+    >
+      <label
+        id="gn-harvest-settings-csw-basic-service-label"
+        class="control-label"
+        data-translate=""
+        >serviceUrl</label
+      >
+      <input
+        id="gn-harvest-settings-csw-basic-service-input"
+        type="text"
+        class="form-control"
+        data-ng-model="harvesterSelected.site.capabilitiesUrl"
+      />
       <p class="help-block" data-translate="">csw-capabilitiesUrlHelp</p>
     </div>
 
-    <hr/>
+    <hr />
 
-    <div id="gn-harvest-settings-csw-remote-process-nested-row" >
+    <div id="gn-harvest-settings-csw-remote-process-nested-row">
       <label class="control-label">
-        <input id="gn-harvest-settings-gn-remote-process-nested-checkbox"
-               type="checkbox"
-               data-ng-model="harvesterSelected.options.remoteHarvesterNestedServices"/>
-        <span id="gn-harvest-settings-gn-remote-process-nested-label" data-translate="">csw-remoteHarvesterNestedServices</span>
+        <input
+          id="gn-harvest-settings-gn-remote-process-nested-checkbox"
+          type="checkbox"
+          data-ng-model="harvesterSelected.options.remoteHarvesterNestedServices"
+        />
+        <span id="gn-harvest-settings-gn-remote-process-nested-label" data-translate=""
+          >csw-remoteHarvesterNestedServices</span
+        >
       </label>
       <p class="help-block" data-translate="">csw-remoteHarvesterNestedServicesHelp</p>
     </div>
 
-    <div id="gn-harvest-settings-csw-remote-number-records-request-row" >
-      <label id=gn-harvest-settings-gn-number-records-request-label" class="control-label" data-translate="">csw-numberOfRecordsPerRequest</label>
-      <input id="gn-harvest-settings-gn-number-records-request-input"
-             type="text"
-             class="form-control"
-             data-ng-model="harvesterSelected.options.numberOfRecordsPerRequest"/>
+    <div id="gn-harvest-settings-csw-remote-number-records-request-row">
+      <label
+        id="gn-harvest-settings-gn-number-records-request-label"
+        class="control-label"
+        data-translate=""
+        >csw-numberOfRecordsPerRequest</label
+      >
+      <input
+        id="gn-harvest-settings-gn-number-records-request-input"
+        type="text"
+        class="form-control"
+        data-ng-model="harvesterSelected.options.numberOfRecordsPerRequest"
+      />
       <p class="help-block" data-translate="">csw-numberOfRecordsPerRequestHelp</p>
     </div>
 
-    <div id="gn-harvest-settings-csw-remote-process-donotsort-row" >
+    <div id="gn-harvest-settings-csw-remote-process-donotsort-row">
       <label class="control-label">
-        <input id="gn-harvest-settings-gn-remote-process-donotsort-checkbox"
-               type="checkbox"
-               data-ng-model="harvesterSelected.options.doNotSort"/>
-        <span id="gn-harvest-settings-gn-remote-process-donotsort-label" data-translate="">csw-remoteHarvesterDoNotSort</span>
+        <input
+          id="gn-harvest-settings-gn-remote-process-donotsort-checkbox"
+          type="checkbox"
+          data-ng-model="harvesterSelected.options.doNotSort"
+        />
+        <span id="gn-harvest-settings-gn-remote-process-donotsort-label" data-translate=""
+          >csw-remoteHarvesterDoNotSort</span
+        >
       </label>
       <p class="help-block" data-translate="">csw-remoteHarvesterDoNotSortHelp</p>
     </div>
 
-    <div id="gn-harvest-settings-csw-remote-process-executelinkchecker-row" >
+    <div id="gn-harvest-settings-csw-remote-process-executelinkchecker-row">
       <label class="control-label">
-        <input id="gn-harvest-settings-gn-remote-process-executelinkchecker-checkbox"
-               type="checkbox"
-               data-ng-model="harvesterSelected.options.executeLinkChecker"/>
-        <span id="gn-harvest-settings-gn-remote-process-executelinkchecker-label" data-translate="">csw-remoteHarvesterExecuteLinkChecker</span>
+        <input
+          id="gn-harvest-settings-gn-remote-process-executelinkchecker-checkbox"
+          type="checkbox"
+          data-ng-model="harvesterSelected.options.executeLinkChecker"
+        />
+        <span
+          id="gn-harvest-settings-gn-remote-process-executelinkchecker-label"
+          data-translate=""
+          >csw-remoteHarvesterExecuteLinkChecker</span
+        >
       </label>
-      <p class="help-block" data-translate="">csw-remoteHarvesterExecuteLinkCheckerHelp</p>
+      <p class="help-block" data-translate="">
+        csw-remoteHarvesterExecuteLinkCheckerHelp
+      </p>
     </div>
 
-    <div id="gn-harvest-settings-csw-remote-process-queue-type-row" >
-      <label id=gn-harvest-settings-gn-process-queue-type-label" class="control-label" data-translate="">csw-processQueueType</label>
-      <select id="gn-harvest-settings-gn-process-queue-type-list" class="form-control" data-ng-model="harvesterSelected.options.processQueueType">
+    <div id="gn-harvest-settings-csw-remote-process-queue-type-row">
+      <label
+        id="gn-harvest-settings-gn-process-queue-type-label"
+        class="control-label"
+        data-translate=""
+        >csw-processQueueType</label
+      >
+      <select
+        id="gn-harvest-settings-gn-process-queue-type-list"
+        class="form-control"
+        data-ng-model="harvesterSelected.options.processQueueType"
+      >
         <option value="auto">{{'csw-processQueueType-auto' | translate}}</option>
-        <option value="PARALLEL2">{{'csw-processQueueType-parallel-2' | translate}}</option>
-        <option value="PARALLEL3">{{'csw-processQueueType-parallel-3' | translate}}</option>
-        <option value="PARALLEL4">{{'csw-processQueueType-parallel-4' | translate}}</option>
+        <option value="PARALLEL2">
+          {{'csw-processQueueType-parallel-2' | translate}}
+        </option>
+        <option value="PARALLEL3">
+          {{'csw-processQueueType-parallel-3' | translate}}
+        </option>
+        <option value="PARALLEL4">
+          {{'csw-processQueueType-parallel-4' | translate}}
+        </option>
       </select>
 
       <p class="help-block" data-translate="">csw-processQueueTypeHelp</p>
     </div>
 
-
-    <fieldset id="gn-harvest-settings-csw-errorconfig-row" class="form-horizontal cswCriteriaInfo">
-      <legend id="gn-harvest-settings-csw-errorconfig-title" data-translate="">csw-errorManagement</legend>
+    <fieldset
+      id="gn-harvest-settings-csw-errorconfig-row"
+      class="form-horizontal cswCriteriaInfo"
+    >
+      <legend id="gn-harvest-settings-csw-errorconfig-title" data-translate="">
+        csw-errorManagement
+      </legend>
       <label class="control-label">
-        <input id="gn-harvest-errorconfig-next-record-not-zero-checkbox"
-               type="checkbox"
-               data-ng-model="harvesterSelected.options.errorConfigNextRecordsNotZero"/>
-        <span id="gn-harvest-errorconfig-next-record-label" data-translate="">csw-errorconfigNextRecord</span>
+        <input
+          id="gn-harvest-errorconfig-next-record-not-zero-checkbox"
+          type="checkbox"
+          data-ng-model="harvesterSelected.options.errorConfigNextRecordsNotZero"
+        />
+        <span id="gn-harvest-errorconfig-next-record-label" data-translate=""
+          >csw-errorconfigNextRecord</span
+        >
       </label>
       <p class="help-block" data-translate="">csw-errorconfigNextRecordHelp</p>
 
       <label class="control-label">
-        <input id="gn-harvest-errorconfig-next-record-bad-value-checkbox"
-               type="checkbox"
-               data-ng-model="harvesterSelected.options.errorConfigNextRecordsBadValue"/>
-        <span id="gn-harvest-errorconfig-next-record-label" data-translate="">csw-errorconfigNextRecordsBadValue</span>
+        <input
+          id="gn-harvest-errorconfig-next-record-bad-value-checkbox"
+          type="checkbox"
+          data-ng-model="harvesterSelected.options.errorConfigNextRecordsBadValue"
+        />
+        <span id="gn-harvest-errorconfig-next-record-label" data-translate=""
+          >csw-errorconfigNextRecordsBadValue</span
+        >
       </label>
       <p class="help-block" data-translate="">csw-errorconfigNextRecordsBadValueHelp</p>
 
       <label class="control-label">
-        <input id="gn-harvest-errorconfig-response-fewer-records-than-requested-checkbox"
-               type="checkbox"
-               data-ng-model="harvesterSelected.options.errorConfigFewerRecordsThanRequested"/>
-        <span id="gn-harvest-errorconfig-next-record-label" data-translate="">csw-errorconfigFewerRecordsThanRequested</span>
+        <input
+          id="gn-harvest-errorconfig-response-fewer-records-than-requested-checkbox"
+          type="checkbox"
+          data-ng-model="harvesterSelected.options.errorConfigFewerRecordsThanRequested"
+        />
+        <span id="gn-harvest-errorconfig-next-record-label" data-translate=""
+          >csw-errorconfigFewerRecordsThanRequested</span
+        >
       </label>
-      <p class="help-block" data-translate="">csw-errorconfigFewerRecordsThanRequestedHelp</p>
+      <p class="help-block" data-translate="">
+        csw-errorconfigFewerRecordsThanRequestedHelp
+      </p>
 
       <label class="control-label">
-        <input id="gn-harvest-errorconfig-total-records-changed-checkbox"
-               type="checkbox"
-               data-ng-model="harvesterSelected.options.errorConfigTotalRecordsChanged"/>
-        <span id="gn-harvest-errorconfig-next-record-label" data-translate="">csw-errorconfigTotalRecordsChanged</span>
+        <input
+          id="gn-harvest-errorconfig-total-records-changed-checkbox"
+          type="checkbox"
+          data-ng-model="harvesterSelected.options.errorConfigTotalRecordsChanged"
+        />
+        <span id="gn-harvest-errorconfig-next-record-label" data-translate=""
+          >csw-errorconfigTotalRecordsChanged</span
+        >
       </label>
       <p class="help-block" data-translate="">csw-errorconfigTotalRecordsChangedHelp</p>
 
       <label class="control-label">
-        <span id="gn-harvest-errorconfig-max-percent-totalrecords-allowed-label" data-translate="">csw-errorconfigMaxPercentTotalRecordsChangedAllowed</span>
+        <span
+          id="gn-harvest-errorconfig-max-percent-totalrecords-allowed-label"
+          data-translate=""
+          >csw-errorconfigMaxPercentTotalRecordsChangedAllowed</span
+        >
       </label>
-      <input id="gn-harvest-errorconfig-max-percent-totalrecords-allowed-input"
-             type="number" min="0" max="100" data-gn-string-to-number
-             class="form-control"
-             data-ng-model="harvesterSelected.options.errorConfigMaxPercentTotalRecordsChangedAllowed"/>
-      <p class="help-block" data-translate="">csw-errorconfigMaxPercentTotalRecordsChangedAllowedHelp</p>
+      <input
+        id="gn-harvest-errorconfig-max-percent-totalrecords-allowed-input"
+        type="number"
+        min="0"
+        max="100"
+        data-gn-string-to-number
+        class="form-control"
+        data-ng-model="harvesterSelected.options.errorConfigMaxPercentTotalRecordsChangedAllowed"
+      />
+      <p class="help-block" data-translate="">
+        csw-errorconfigMaxPercentTotalRecordsChangedAllowedHelp
+      </p>
 
       <label class="control-label">
-        <input id="gn-harvest-errorconfig-duplicated-uuids-checkbox"
-               type="checkbox"
-               data-ng-model="harvesterSelected.options.errorConfigDuplicatedUuids"/>
-        <span id="gn-harvest-errorconfig-next-record-label" data-translate="">csw-errorConfigDuplicatedUuids</span>
+        <input
+          id="gn-harvest-errorconfig-duplicated-uuids-checkbox"
+          type="checkbox"
+          data-ng-model="harvesterSelected.options.errorConfigDuplicatedUuids"
+        />
+        <span id="gn-harvest-errorconfig-next-record-label" data-translate=""
+          >csw-errorConfigDuplicatedUuids</span
+        >
       </label>
       <p class="help-block" data-translate="">csw-errorConfigDuplicatedUuidsHelp</p>
-
     </fieldset>
 
-    <fieldset id="gn-harvest-settings-csw-basic-service-criteria-row" class="form-horizontal cswCriteriaInfo">
-      <legend id="gn-harvest-settings-csw-basic-service-criteria-title" data-translate="">harvesterFilter</legend>
+    <fieldset
+      id="gn-harvest-settings-csw-basic-service-criteria-row"
+      class="form-horizontal cswCriteriaInfo"
+    >
+      <legend id="gn-harvest-settings-csw-basic-service-criteria-title" data-translate="">
+        harvesterFilter
+      </legend>
 
-      <div class="alert alert-warning"
-           data-ng-show="errorRetrievingCswCapabilities === true"
-           data-translate=""
-           data-translate-values="{url: '{{cswCapabilitiesUrl}}'}">
+      <div
+        class="alert alert-warning"
+        data-ng-show="errorRetrievingCswCapabilities === true"
+        data-translate=""
+        data-translate-values="{url: '{{cswCapabilitiesUrl}}'}"
+      >
         errorRetrievingCswCapabilities
       </div>
 
-      <div class="alert alert-warning"
-           data-ng-show="cswCriteriaInfo !== null">
+      <div class="alert alert-warning" data-ng-show="cswCriteriaInfo !== null">
         {{cswCriteriaInfo}}
       </div>
 
-      <div class="alert alert-warning"
-           data-ng-show="errorRetrievingCswCapabilities === false && cswCriteria.length === 0 && cswCapabilitiesUrl"
-           data-translate=""
-           data-translate-values="{url: '{{cswCapabilitiesUrl}}'}">
+      <div
+        class="alert alert-warning"
+        data-ng-show="errorRetrievingCswCapabilities === false && cswCriteria.length === 0 && cswCapabilitiesUrl"
+        data-translate=""
+        data-translate-values="{url: '{{cswCapabilitiesUrl}}'}"
+      >
         noCswCriteriaFoundInCapabilities
       </div>
 
-      <div class="alert alert-info"
-           data-ng-show="cswCriteria.length > 0"
-           data-translate="">
+      <div
+        class="alert alert-info"
+        data-ng-show="cswCriteria.length > 0"
+        data-translate=""
+      >
         CswCriteriaFoundInCapabilities
       </div>
 
-      <div data-gn-csw-harvester-filter="harvesterSelected"
-           data-csw-criteria="cswCriteria" />
+      <div
+        data-gn-csw-harvester-filter="harvesterSelected"
+        data-csw-criteria="cswCriteria"
+      />
 
       <div>
-        <label id="gn-harvest-settings-csw2-raw-csw-filter-label" class="control-label" data-translate="">csw-harvesterRawFilter</label>
-        <textarea id="gn-harvest-settings-csw2-raw-csw-filter-textarea"
-               type="text"
-               class="form-control"
-               data-ng-model="harvesterSelected.rawFilter"/>
+        <label
+          id="gn-harvest-settings-csw2-raw-csw-filter-label"
+          class="control-label"
+          data-translate=""
+          >csw-harvesterRawFilter</label
+        >
+        <textarea
+          id="gn-harvest-settings-csw2-raw-csw-filter-textarea"
+          type="text"
+          class="form-control"
+          data-ng-model="harvesterSelected.rawFilter"
+        />
         <p class="help-block" data-translate="">csw-harvesterRawFilterHelp</p>
       </div>
 
@@ -179,19 +283,23 @@
       </div>-->
       <div data-ng-show="cswBboxFilter">
         <label class="control-label" data-translate="">csw-harvesterBboxFilter</label>
-          <div data-gn-draw-bbox=""
-               data-extent="extent"
-               data-hleft=""
-               data-hright=""
-               data-hbottom=""
-               data-htop=""
-               data-show-clear-button="true"
-               data-lang="$parent.$parent.lang">
-          </div>
+        <div
+          data-gn-draw-bbox=""
+          data-extent="extent"
+          data-hleft=""
+          data-hright=""
+          data-hbottom=""
+          data-htop=""
+          data-show-clear-button="true"
+          data-lang="$parent.$parent.lang"
+        ></div>
       </div>
     </fieldset>
   </fieldset>
 
-
-  <div id="gn-harvest-settings-csw-privileges-row" data-gn-harvester-privileges="harvesterSelected" data-lang="{{lang}}"/>
+  <div
+    id="gn-harvest-settings-csw-privileges-row"
+    data-gn-harvester-privileges="harvesterSelected"
+    data-lang="{{lang}}"
+  />
 </form>

@@ -30,7 +30,7 @@
   <parent>
     <groupId>org.geonetwork-opensource</groupId>
     <artifactId>geonetwork</artifactId>
-    <version>4.0.7-SNAPSHOT</version>
+    <version>4.2.5-SNAPSHOT</version>
   </parent>
 
   <groupId>org.geonetwork-opensource</groupId>
@@ -79,134 +79,42 @@
         </excludes>
       </resource>
     </resources>
+    <plugins>
+      <plugin>
+        <groupId>com.hubspot.maven.plugins</groupId>
+        <artifactId>prettier-maven-plugin</artifactId>
+        <version>0.16</version>
+        <configuration>
+          <prettierJavaVersion>1.5.0</prettierJavaVersion>
+          <printWidth>90</printWidth>
+          <tabWidth>2</tabWidth>
+          <useTabs>false</useTabs>
+          <ignoreConfigFile>false</ignoreConfigFile>
+          <ignoreEditorConfig>true</ignoreEditorConfig>
+          <inputGlobs>
+            <inputGlob>src/main/resources/catalog/style/**/*.less</inputGlob>
+            <inputGlob>src/main/resources/catalog/components/**/*.js</inputGlob>
+            <inputGlob>src/main/resources/catalog/components/**/*.html</inputGlob>
+            <inputGlob>src/main/resources/catalog/js/**/*.js</inputGlob>
+            <inputGlob>src/main/resources/catalog/templates/**/*.html</inputGlob>
+            <inputGlob>src/main/resources/catalog/views/**/*.js</inputGlob>
+            <inputGlob>src/main/resources/catalog/views/**/*.html</inputGlob>
+          </inputGlobs>
+        </configuration>
+        <executions>
+          <execution>
+            <phase>validate</phase>
+            <goals>
+              <goal>write</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
   </build>
   <properties>
     <geonetwork.build.dir>${project.build.directory}/${project.build.finalName}
     </geonetwork.build.dir>
     <closure.compile.level/>
   </properties>
-  <profiles>
-    <profile>
-      <id>jslint</id>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>exec-maven-plugin</artifactId>
-            <executions>
-              <!-- Fix JS style based on fixjsstyle.
-          See https://developers.google.com/closure/utilities/docs/linter_howto for installation -->
-              <execution>
-                <id>fixjsstyle</id>
-                <phase>validate</phase>
-                <goals>
-                  <goal>exec</goal>
-                </goals>
-                <configuration>
-                  <executable>fixjsstyle</executable>
-                  <arguments>
-                    <argument>--strict</argument>
-                    <argument>-r</argument>
-                    <argument>src/main/resources/catalog/js</argument>
-                    <argument>-r</argument>
-                    <argument>src/main/resources/catalog/components</argument>
-                  </arguments>
-                </configuration>
-              </execution>
-              <!-- Check JS style based on gjslint.
-          See https://developers.google.com/closure/utilities/docs/linter_howto for installation -->
-              <execution>
-                <id>gjslint</id>
-                <phase>validate</phase>
-                <goals>
-                  <goal>exec</goal>
-                </goals>
-                <configuration>
-                  <executable>gjslint</executable>
-                  <arguments>
-                    <argument>--strict</argument>
-                    <argument>--custom_jsdoc_tags</argument>
-                    <argument>
-                      attribute,ngdoc,methodOf,deprecated,directiveInfo,restrict,requires,kind,name,function,description,example,abstract
-                    </argument>
-                    <argument>-r</argument>
-                    <!-- Each source file in this directory will be checked. -->
-                    <argument>src/main/resources/catalog/js</argument>
-                    <argument>-r</argument>
-                    <argument>src/main/resources/catalog/components</argument>
-                  </arguments>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-    <profile>
-      <id>tests-and-static-analysis</id>
-      <activation>
-        <property>
-          <name>!skipTests</name>
-        </property>
-      </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>com.github.searls</groupId>
-            <artifactId>jasmine-maven-plugin</artifactId>
-            <version>1.3.1.3</version>
-            <executions>
-              <execution>
-                <id>jasmine-javascript-tests</id>
-                <phase>test</phase>
-                <!-- disable for now
-                                               <goals>
-                                                    <goal>test</goal>
-                                                </goals> -->
-              </execution>
-            </executions>
-            <configuration>
-              <preloadSources></preloadSources>
-              <jsSrcDir>${project.basedir}/src/main/resources/catalog/js</jsSrcDir>
-              <jsTestSrcDir>${project.basedir}/src/test/jasmine</jsTestSrcDir>
-              <browserVersion>INTERNET_EXPLORER_9</browserVersion>
-              <debug>true</debug>
-            </configuration>
-          </plugin>
-          <!--<plugin>-->
-          <!--<groupId>org.codehaus.mojo</groupId>-->
-          <!--<artifactId>jslint-maven-plugin</artifactId>-->
-          <!--<executions>-->
-          <!--<execution>-->
-          <!--<goals>-->
-          <!--<goal>jslint</goal>-->
-          <!--</goals>-->
-          <!--<configuration>-->
-          <!--<excludes>-->
-          <!--<exclude>**/catalog/lib/**</exclude>-->
-          <!--<exclude>**/catalog/components/admin/dbtranslation/DbTranslationDirective.js</exclude>-->
-          <!--</excludes>-->
-          <!--<assumeABrowser>true</assumeABrowser>-->
-          <!--<failOnIssues>true</failOnIssues>-->
-          <!--<sourceJsFolder>${project.basedir}/src/main/resources</sourceJsFolder>-->
-          <!--<encoding>UTF-8</encoding>-->
-          <!--<allowOneVarStatementPerFunction>false</allowOneVarStatementPerFunction>-->
-          <!--<disallowBitwiseOperators>false</disallowBitwiseOperators>-->
-          <!--<disallowDanglingUnderbarInIdentifiers>false</disallowDanglingUnderbarInIdentifiers>-->
-          <!--<predefinedVars>goog,angular,loadLogo,$,loadLogoError</predefinedVars>-->
-          <!--<assumeConsoleAlertEtc>true</assumeConsoleAlertEtc>-->
-          <!--<disallowUndefinedVariables>false</disallowUndefinedVariables>-->
-          <!--<assumeABrowser>true</assumeABrowser>-->
-          <!--<disallowInsecureCharsInRegExp>true</disallowInsecureCharsInRegExp>-->
-          <!--</configuration>-->
-          <!--</execution>-->
-          <!--</executions>-->
-          <!--<configuration>-->
-
-          <!--</configuration>-->
-          <!--</plugin>-->
-        </plugins>
-      </build>
-    </profile>
-  </profiles>
 </project>

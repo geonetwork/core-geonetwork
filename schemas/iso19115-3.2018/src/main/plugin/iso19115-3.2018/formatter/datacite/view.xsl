@@ -111,11 +111,10 @@
               indent="yes"/>
 
   <!-- Before attribution of a DOI the ISO19139 record does not contain yet
-  the DOI value. It is built from the DOI prefix provided as parameter
-  and the UUID of the record.
+  the DOI value. It is built from the DOI id provided as parameter.
   If the DOI already exist in the record, this parameter is not set and the DOI
   is returned as datacite:identifier -->
-  <xsl:param name="doiPrefix"
+  <xsl:param name="doiId"
              select="''"/>
   <xsl:param name="defaultDoiPrefix"
              select="'https://doi.org/'"/>
@@ -124,6 +123,8 @@
 
   <xsl:variable name="metadata"
                 select="//mdb:MD_Metadata"/>
+  <xsl:variable name="metadataUuid"
+                select="$metadata/mdb:metadataIdentifier/*/mcc:code/*/text()"/>
 
   <!-- TODO: Convert language code eng > en_US ? -->
   <xsl:variable name="metadataLanguage"
@@ -156,14 +157,14 @@
     <datacite:identifier identifierType="DOI">
       <!-- Return existing one -->
       <xsl:choose>
-        <xsl:when test="$doiPrefix = ''">
+        <xsl:when test="$doiId = ''">
           <xsl:variable name="doiFromMetadataLinkage"
                         select="normalize-space(ancestor::mdb:MD_Metadata/mdb:metadataLinkage/*/cit:linkage/gco:CharacterString[starts-with(., $defaultDoiPrefix) or ../../cit:function/*/@codeListValue = 'doi'])"/>
           <xsl:value-of select="$doiFromMetadataLinkage"/>
         </xsl:when>
         <xsl:otherwise>
           <!-- Build a new one -->
-          <xsl:value-of select="concat($doiPrefix, '/', .)"/>
+          <xsl:value-of select="$doiId"/>
         </xsl:otherwise>
       </xsl:choose>
     </datacite:identifier>
@@ -354,9 +355,18 @@
           <!--
           Expect the entry point to be CI_Organisation
           The full name of the creator. -->
-          <datacite:creatorName nameType="Personal">
-            <xsl:value-of select="cit:party/*/cit:individual/*/cit:name/*/text()"/>
-          </datacite:creatorName>
+          <xsl:choose>
+            <xsl:when test="cit:party/*/cit:individual/*/cit:name/*/text() != ''">
+              <datacite:creatorName nameType="Personal">
+                <xsl:value-of select="cit:party/*/cit:individual/*/cit:name/*/text()"/>
+              </datacite:creatorName>
+            </xsl:when>
+            <xsl:otherwise>
+              <datacite:creatorName nameType="Organizational">
+              <xsl:value-of select="cit:party/*/cit:name/*/text()"/>
+              </datacite:creatorName>
+            </xsl:otherwise>
+          </xsl:choose>
 
           <!--
           <datacite:givenName>Elizabeth</datacite:givenName>
@@ -452,12 +462,17 @@ eg.
       <datacite:publisher>DataCite</datacite:publisher>
       <datacite:publicationYear>2014</datacite:publicationYear>
 
-      TODO: Define who is the publisher ? Only one allowed.
+  publisher is the first distributor contact
+  or the first point of contact having the role "distributor"
   -->
   <xsl:template mode="toDatacite"
                 match="mdb:distributionInfo[1]">
     <datacite:publisher>
-      <xsl:value-of select="($metadata//mrd:distributorContact)[1]/*/cit:party//cit:CI_Organisation/cit:name/gco:CharacterString"/>
+      <xsl:variable name="publisher"
+                    select="if ($metadata//mrd:distributorContact)
+                            then $metadata//mrd:distributorContact
+                            else $metadata/mdb:identificationInfo/*/mri:pointOfContact[*/cit:role/*/@codeListValue = 'distributor']"/>
+      <xsl:value-of select="$publisher[1]/*/cit:party//cit:CI_Organisation/cit:name/*/text()"/>
     </datacite:publisher>
 
     <!--

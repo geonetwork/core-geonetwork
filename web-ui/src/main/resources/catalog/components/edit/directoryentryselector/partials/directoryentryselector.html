@@ -1,74 +1,79 @@
 <span data-ng-search-form="">
   <!-- Form input mode -->
-  <div class="input-group width-100"
-       data-ng-hide="insertAsTags">
-    <div class="input-group-btn">
-      <span data-ng-show="templateAddAction"
-            data-ng-transclude=""></span>
+  <div class="input-group width-100" data-ng-hide="insertAsTags">
+    <input
+      type="text"
+      class="form-control"
+      placeholder="{{('searchA' + templateType) | translate}}"
+      data-ng-show="searchAction"
+      data-ng-model="searchObj.any"
+      data-ng-model-options="{debounce: 200}"
+      ng-focus="updateParams(); triggerSearch()"
+      data-ng-change="updateParams(); triggerSearch()"
+      autocomplete="false"
+    />
 
-      <button class="btn btn-default" type="button"
-              data-ng-show="popupAction"
-              data-ng-click="openSelector()">
-        <i class="fa fa-search"/>&nbsp;
-        <span data-ng-hide="searchAction">
-          {{('searchA' + templateType) | translate}}
-        </span>
-      </button>
-    </div>
-
-    <input type="text" class="form-control"
-           placeholder="{{('searchA' + templateType) | translate}}"
-           data-ng-show="searchAction"
-           data-ng-model="searchObj.any"
-           data-ng-model-options="{debounce: 200}"
-           ng-focus="updateParams(); triggerSearch()"
-           data-ng-change="updateParams(); triggerSearch()"
-           autocomplete="false"/>
+    <span
+      class="input-group-addon"
+      ng-show="entryFound === false
+                   || (entryFound && searchResults.records.length === 0 && !searching)"
+      data-translate=""
+      >noRecordFound</span
+    >
 
     <!-- spinner while searching -->
     <div ng-show="searching" class="list-group tt-menu gn-autocomplete-list text-center">
-      <br />
       <i class="fa fa-spinner fa-spin" />
-      <br /><br />
     </div>
 
     <!-- The autocomplete list -->
-    <div class="list-group tt-menu gn-autocomplete-list"
-         data-ng-show="searchResults.records.length > 0 && !searching">
+    <div
+      class="list-group tt-menu gn-autocomplete-list"
+      data-ng-show="searchResults.records.length > 0 && !searching"
+    >
       <span class="tt-suggestions">
-        <div class="tt-suggestion flex-row"
-          data-ng-repeat="r in searchResults.records">
-
+        <div class="tt-suggestion flex-row" data-ng-repeat="r in searchResults.records">
           <!-- Add action for simple subtemplates -->
           <gn-md-type-widget metadata="r"></gn-md-type-widget>
 
           <div class="flex-spacer" />
 
-          <div class="text flex-grow"> {{r.resourceTitle}}</div>
+          <div class="text flex-grow">{{r.resourceTitle}}</div>
 
-                    <div class="btn btn-default btn-sm pull-right"
-                         data-ng-if="insertAsXlink && !hasDynamicVariable"
-                         data-ng-click="addEntry(r, undefined, true, true)">
+          <div
+            class="btn btn-default btn-sm pull-right"
+            data-ng-if="insertAsXlink && !hasDynamicVariable"
+            data-ng-click="addEntry(r, undefined, true, true)"
+          >
             <i class="fa fa-link"></i>
           </div>
-          <div class="btn btn-default btn-sm pull-right"
-               data-ng-if="insertAsText && !hasDynamicVariable"
-               data-ng-click="addEntry(r, undefined, false, true)">
+          <div
+            class="btn btn-default btn-sm pull-right"
+            data-ng-if="insertAsText && !hasDynamicVariable"
+            data-ng-click="addEntry(r, undefined, false, true)"
+          >
             <i class="fa fa-plus"></i>
           </div>
 
           <!--Add contact as Xlink with dynamic variable -->
-          <div gn-popover class="pull-right"
-                gn-popover-dismiss=".content"
-                data-ng-if="::gnConfig[gnConfig.key.isXLinkEnabled] && insertAsXlink  && hasDynamicVariable"
-                title="{{'addContactAsLink-help' | translate}}">
-              <button gn-popover-anchor type="button" class="btn btn-default btn-sm">
+          <div
+            gn-popover
+            class="pull-right"
+            gn-popover-dismiss=".content"
+            data-ng-if="::insertAsXlink && hasDynamicVariable"
+            title="{{'addContactAsLink-help' | translate}}"
+          >
+            <button gn-popover-anchor type="button" class="btn btn-default btn-sm">
               <i class="fa fa-link"></i>&nbsp;<span class="caret"></span>
             </button>
             <div gn-popover-content>
               <ul>
                 <li data-ng-repeat="role in roles" data-ng-hide="role['@hideInEditMode']">
-                  <a href="" data-ng-click="addEntry(r, role.code, true, true)" title="{{role.description}}">
+                  <a
+                    href=""
+                    data-ng-click="addEntry(r, role.code, true, true)"
+                    title="{{role.description}}"
+                  >
                     {{role.label}}
                   </a>
                 </li>
@@ -77,20 +82,24 @@
           </div>
 
           <!-- Add contact as text block with dynamic variable -->
-          <div gn-popover class="pull-right"
-                gn-popover-dismiss=".content"
-                data-ng-if="isContact && hasDynamicVariable && insertAsText"
-                title="{{'addContactAsText-help' | translate}}">
-              <button gn-popover-anchor type="button"
-                      class="btn btn-default btn-sm">
+          <div
+            gn-popover
+            class="pull-right"
+            gn-popover-dismiss=".content"
+            data-ng-if="isContact && hasDynamicVariable && insertAsText"
+            title="{{'addContactAsText-help' | translate}}"
+          >
+            <button gn-popover-anchor type="button" class="btn btn-default btn-sm">
               <i class="fa fa-plus"></i>&nbsp;<span class="caret"></span>
             </button>
             <div gn-popover-content>
               <ul>
-                <li data-ng-repeat="role in roles"
-                    data-ng-hide="role['@hideInEditMode']">
-                  <a href="" data-ng-click="addEntry(r, role.code, false, true)"
-                      title="{{role.description}}">
+                <li data-ng-repeat="role in roles" data-ng-hide="role['@hideInEditMode']">
+                  <a
+                    href=""
+                    data-ng-click="addEntry(r, role.code, false, true)"
+                    title="{{role.description}}"
+                  >
                     {{role.label}}
                   </a>
                 </li>
@@ -102,32 +111,66 @@
     </div>
 
     <div class="input-group-btn">
-      <button class="btn btn-default" type="button"
-              data-ng-show="searchResults.records.length != 0"
-              data-ng-click="searchResults.records = []">
+      <button
+        class="btn btn-default"
+        type="button"
+        data-ng-show="searchResults.records.length != 0"
+        data-ng-click="searchResults.records = []"
+      >
         <i class="fa fa-times"></i>
         <span>&nbsp;</span>
       </button>
     </div>
 
-      <!-- The contact to insert once received.
+    <div class="input-group-btn">
+      <button
+        class="btn btn-default"
+        type="button"
+        data-ng-show="popupAction"
+        data-ng-click="openSelector()"
+      >
+        <i class="fa fa-search" />&nbsp;
+        <span data-ng-hide="searchAction">
+          {{('searchA' + templateType) | translate}}
+        </span>
+      </button>
+
+      <span data-ng-show="templateAddAction" data-ng-transclude=""></span>
+
+      <button
+        data-ng-show="templateAddSnippet"
+        class="btn btn-default"
+        data-ng-click="addEntry(templateAddSnippet, undefined, false, true)"
+      >
+        <i class="fa fa-fw fa-plus" />
+      </button>
+    </div>
+
+    <!-- The contact to insert once received.
        When using tagsinput mode, empty snippet means remove element. -->
     <div data-ng-if="snippet && !insertAsTags">
-      <input name="{{snippetRef}}" type="hidden" value="{{snippet}}"/>
+      <input name="{{snippetRef}}" type="hidden" value="{{snippet}}" />
     </div>
   </div>
 
   <!-- Keyword like input mode -->
-  <div data-ng-show="insertAsTags"
-       data-ng-class="maxTags && selected.length == maxTags ? 'gn-maxtags' : ''">
-    <input type="text"
-           id="tagsinput_{{elementRef}}{{elementName.replace(':', '')}}"
-           class="form-control"></input>
+  <div
+    data-ng-show="insertAsTags"
+    data-ng-class="maxTags && selected.length == maxTags ? 'gn-maxtags' : ''"
+  >
+    <input
+      type="text"
+      id="tagsinput_{{elementRef}}{{elementName.replace(':', '')}}"
+      class="form-control"
+    />
 
     <div data-ng-if="insertAsTags">
-      <input name="{{snippetRef}}_xml"
-             type="hidden" value="<gn_replace_all>{{snippet}}</gn_replace_all>"/>
-      <input name="{{snippetRef}}" type="hidden" value="{{elementXpath}}"/>
+      <input
+        name="{{snippetRef}}_xml"
+        type="hidden"
+        value="<gn_replace_all>{{snippet}}</gn_replace_all>"
+      />
+      <input name="{{snippetRef}}" type="hidden" value="{{elementXpath}}" />
     </div>
   </div>
 </span>

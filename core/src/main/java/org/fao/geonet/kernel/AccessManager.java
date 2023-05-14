@@ -23,39 +23,16 @@
 
 package org.fao.geonet.kernel;
 
-import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasMetadataId;
-import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasOperation;
-import static org.springframework.data.jpa.domain.Specification.where;
-
-import java.sql.SQLException;
-import java.util.*;
-
+import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.AbstractMetadata;
-import org.fao.geonet.domain.Group;
-import org.fao.geonet.domain.MetadataSourceInfo;
-import org.fao.geonet.domain.Operation;
-import org.fao.geonet.domain.OperationAllowed;
-import org.fao.geonet.domain.Pair;
-import org.fao.geonet.domain.Profile;
-import org.fao.geonet.domain.ReservedGroup;
-import org.fao.geonet.domain.ReservedOperation;
-import org.fao.geonet.domain.Setting;
-import org.fao.geonet.domain.User;
-import org.fao.geonet.domain.UserGroup;
-import org.fao.geonet.domain.User_;
+import org.fao.geonet.domain.*;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
-import org.fao.geonet.repository.GroupRepository;
-import org.fao.geonet.repository.GroupRepositoryCustom;
-import org.fao.geonet.repository.OperationAllowedRepository;
-import org.fao.geonet.repository.OperationRepository;
-import org.fao.geonet.repository.SettingRepository;
-import org.fao.geonet.repository.SortUtils;
-import org.fao.geonet.repository.UserGroupRepository;
-import org.fao.geonet.repository.UserRepository;
+import org.fao.geonet.repository.*;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.fao.geonet.utils.Log;
 import org.jdom.Element;
@@ -63,15 +40,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.jpa.domain.Specification;
 
-import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
+import java.sql.SQLException;
+import java.util.*;
+
+import static org.fao.geonet.kernel.setting.Settings.SYSTEM_INTRANET_IP_SEPARATOR;
+import static org.fao.geonet.kernel.setting.Settings.SYSTEM_METADATAPRIVS_PUBLICATIONBYGROUPOWNERONLY;
+import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasMetadataId;
+import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasOperation;
+import static org.springframework.data.jpa.domain.Specification.where;
 
 /**
  * Handles the access to a metadata depending on the metadata/group.
  */
 public class AccessManager {
+
+    @Autowired
+    SettingManager settingManager;
 
     @Autowired
     SettingRepository settingRepository;
@@ -252,8 +237,11 @@ public class AccessManager {
     }
 
     /**
-     * Returns true if, and only if, at least one of these conditions is satisfied: <ul> <li>the
-     * user is owner (@see #isOwner)</li> <li>the user has edit rights over the metadata</li> </ul>
+     * Returns true if, and only if, at least one of these conditions is satisfied:
+     * <ul>
+     *     <li>the user is owner (@see #isOwner)</li>
+     *     <li>the user has edit rights over the metadata</li>
+     * </ul>
      *
      * @param id The metadata internal identifier
      */
@@ -262,34 +250,12 @@ public class AccessManager {
     }
 
     /**
-     * Returns true if, and only if, at least one of these conditions is satisfied: <ul> <li>the
-     * user is owner (@see #isOwner)</li> <li>the user has reviewing rights over the metadata</li> </ul>
-     *
-     * @param id The metadata internal identifier
-     */
-    public boolean canReview(final ServiceContext context, final String id) throws Exception {
-        if (!isUserAuthenticated(context.getUserSession())) {
-            return false;
-        }
-
-        //--- retrieve metadata info
-        AbstractMetadata info = context.getBean(IMetadataUtils.class).findOne(id);
-
-        if (info == null)
-            return false;
-        final MetadataSourceInfo sourceInfo = info.getSourceInfo();
-
-        return isOwner(context, sourceInfo) || hasReviewPermission(context, info);
-    }
-
-    /**
-     * Returns true if, and only if, at least one of these conditions is satisfied: <ul> <li>the
-     * user is owner (@see #isOwner)</li> <li>the user has reviewing rights over owning group of the metadata</li> </ul>
+     * Returns true if user is reviewer
      *
      * @param id The metadata internal identifier
      */
     public boolean canChangeStatus(final ServiceContext context, final String id) throws Exception {
-        return hasOnwershipReviewPermission(context, id) || hasReviewPermission(context, id);
+        return hasReviewPermission(context, id);
     }
 
     /**
@@ -357,20 +323,6 @@ public class AccessManager {
                 return true;
         }
         return false;
-    }
-
-    /**
-     * TODO javadoc.
-     */
-    private String join(Set<Integer> set, String delim) {
-        StringBuilder sb = new StringBuilder();
-        String loopDelim = "";
-        for (Integer s : set) {
-            sb.append(loopDelim);
-            sb.append(s + "");
-            loopDelim = delim;
-        }
-        return sb.toString();
     }
 
     /**
@@ -464,28 +416,36 @@ public class AccessManager {
     }
 
     /**
-     * Check if current user can review the metadata if
-     * the user is a reviewer in the metadata owners group.
-     *
-     * @param id The metadata internal identifier
+     * See {@link #hasReviewPermission(ServiceContext, AbstractMetadata)}
      */
     public boolean hasReviewPermission(final ServiceContext context, final String id) throws Exception {
         if (!isUserAuthenticated(context.getUserSession())) {
             return false;
         }
-
-        //--- retrieve metadata info
         AbstractMetadata info = context.getBean(IMetadataUtils.class).findOne(id);
-
-        if (info == null)
+        if (info == null) {
             return false;
-
+        }
         return hasReviewPermission(context, info);
+    }
+
+    private String GROUPOWNERONLY_STRATEGY =
+        "api.metadata.share.strategy.groupOwnerOnly";
+    private String REVIEWERINGROUP_STRATEGY =
+        "api.metadata.share.strategy.reviewerInGroup";
+
+    public String getReviewerRule() {
+        return settingManager.getValueAsBool(
+            SYSTEM_METADATAPRIVS_PUBLICATIONBYGROUPOWNERONLY, true) ?
+            GROUPOWNERONLY_STRATEGY :
+            REVIEWERINGROUP_STRATEGY;
     }
 
     /**
      * Check if current user can review the metadata if
-     * the user is a reviewer in the metadata owners group.
+     * the user is a reviewer in the metadata owners group if
+     * SYSTEM_METADATAPRIVS_PUBLICATIONBYGROUPOWNERONLY is true
+     * otherwise, check also if user can edit in a group with a reviewer profile.
      *
      * @param context Service context.
      * @param metadata The metadata info.
@@ -495,6 +455,9 @@ public class AccessManager {
         if (!isUserAuthenticated(us)) {
             return false;
         }
+        if (Profile.Administrator == us.getProfile()) {
+            return true;
+        }
 
         // Check if the user is a reviewer in the metadata owners group.
         Specification<UserGroup> hasUserIdAndGroupAndProfile = where(UserGroupSpecs.hasProfile(Profile.Reviewer))
@@ -502,9 +465,17 @@ public class AccessManager {
             .and(UserGroupSpecs.hasUserId(us.getUserIdAsInt()));
 
         UserGroupRepository userGroupRepo = context.getBean(UserGroupRepository.class);
-        long count = userGroupRepo.count(hasUserIdAndGroupAndProfile);
+        boolean userIsReviewerOfOwnerGroup =
+            !userGroupRepo.findAll(hasUserIdAndGroupAndProfile).isEmpty();
 
-        return  (count > 0);
+        if (settingManager.getValueAsBool(
+                SYSTEM_METADATAPRIVS_PUBLICATIONBYGROUPOWNERONLY, true)) {
+            return userIsReviewerOfOwnerGroup;
+        } else {
+            return userIsReviewerOfOwnerGroup
+                || hasEditingPermissionWithProfile(
+                    context, String.valueOf(metadata.getId()), Profile.Reviewer);
+        }
     }
 
     /**
@@ -538,30 +509,6 @@ public class AccessManager {
 
     }
 
-    /**
-     * Check if current user is reviewer of the owner group for this metadata
-     *
-     * @param id The metadata internal identifier
-     */
-    public boolean hasOnwershipReviewPermission(final ServiceContext context, final String id) throws Exception {
-        UserSession us = context.getUserSession();
-        if (!isUserAuthenticated(us)) {
-            return false;
-        }
-
-        UserGroupRepository userGroupRepository = context.getBean(UserGroupRepository.class);
-        IMetadataUtils metadataUtils = context.getBean(IMetadataUtils.class);
-
-        Specification spec = where(UserGroupSpecs.hasProfile(Profile.Reviewer)).and(UserGroupSpecs.hasUserId(us.getUserIdAsInt()));
-
-        List<Integer> opAlloweds = new ArrayList<Integer>();
-        opAlloweds.add(metadataUtils.findOne(id).getSourceInfo().getGroupOwner());
-
-        spec = spec.and(UserGroupSpecs.hasGroupIds(opAlloweds));
-
-        return (!userGroupRepository.findAll(spec).isEmpty());
-    }
-
     public int getPrivilegeId(final String name) {
         final Operation op = operationRepository.findByName(name);
         if (op == null) {
@@ -576,11 +523,29 @@ public class AccessManager {
         return operation.isPresent()?operation.get().getName():"";
     }
 
+    public boolean isLocalhost(String ip) {
+        return ip.startsWith("0:0:0:0:0:0:0:1") || ip.equals("127.0.0.1");
+    }
+
+    private boolean isValidIntranetSettings(
+        String[] networkArray,
+        String[] netmaskArray
+    ) {
+        if (networkArray.length != netmaskArray.length) {
+            Log.error(Geonet.ACCESS_MANAGER,
+                String.format(
+                    "Invalid intranet configuration. Define as many network mask (currently %d) as network ip (currently %d). Check Settings > Intranet.",
+                    netmaskArray.length, networkArray.length));
+            return false;
+        } else {
+            return true;
+        }
+    }
+
     public boolean isIntranet(String ip) {
         //--- consider IPv4 & IPv6 loopback
         //--- we use 'startsWith' because some addresses can be 0:0:0:0:0:0:0:1%0
-
-        if (ip.startsWith("0:0:0:0:0:0:0:1") || ip.equals("127.0.0.1")) return true;
+        if (isLocalhost(ip)) return true;
 
         // IPv6 link-local
         String ipv6LinkLocalPrefix = "fe80:";
@@ -597,12 +562,26 @@ public class AccessManager {
         Optional<Setting> netmask = settingRepository.findById(Settings.SYSTEM_INTRANET_NETMASK);
 
         try {
-            if (network.isPresent() && netmask.isPresent() &&
-                StringUtils.isNotEmpty(network.get().getValue()) && StringUtils.isNotEmpty(netmask.get().getValue())) {
-                long lIntranetNet = getAddress(network.get().getValue());
-                long lIntranetMask = getAddress(netmask.get().getValue());
+            if (network.isPresent()
+                && netmask.isPresent()
+                && StringUtils.isNotEmpty(network.get().getValue())
+                && StringUtils.isNotEmpty(netmask.get().getValue())) {
                 long lAddress = getAddress(ip.split(",")[0]);
-                return (lAddress & lIntranetMask) == (lIntranetNet & lIntranetMask);
+                String[] networkArray = network
+                    .get().getValue().split(SYSTEM_INTRANET_IP_SEPARATOR);
+                String[] netmaskArray = netmask
+                    .get().getValue().split(SYSTEM_INTRANET_IP_SEPARATOR);
+
+                if (isValidIntranetSettings(networkArray, netmaskArray)) {
+                    for (int i = 0; i < networkArray.length; i++) {
+                        long lIntranetNet = getAddress(networkArray[i]);
+                        long lIntranetMask = getAddress(netmaskArray[i]);
+                        if ((lAddress & lIntranetMask) == (lIntranetNet & lIntranetMask)) {
+                            return true;
+                        }
+                    }
+                }
+                return false;
             }
         } catch (Exception nfe) {
             Log.error(Geonet.ACCESS_MANAGER,"isIntranet error: " + nfe.getMessage(), nfe);
@@ -645,10 +624,6 @@ public class AccessManager {
      * @return      True if there's an uthenticated session, False otherwise.
      */
     private boolean isUserAuthenticated(UserSession us) {
-        if (us == null || !us.isAuthenticated()) {
-            return false;
-        } else {
-            return true;
-        }
+        return us != null && us.isAuthenticated();
     }
 }

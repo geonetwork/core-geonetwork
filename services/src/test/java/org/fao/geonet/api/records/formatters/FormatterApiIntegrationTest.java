@@ -25,7 +25,7 @@ package org.fao.geonet.api.records.formatters;
 
 import com.google.common.collect.Lists;
 
-import org.apache.log4j.Level;
+import org.apache.logging.log4j.Level;
 import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.MockRequestFactoryGeonet;
 import org.fao.geonet.SystemInfo;
@@ -37,6 +37,7 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.UpdateDatestamp;
+import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.SourceRepository;
@@ -131,7 +132,7 @@ public class FormatterApiIntegrationTest extends AbstractServiceIntegrationTest 
         metadata.getSourceInfo().setOwner(1).setSourceId(source);
         metadata.getHarvestInfo().setHarvested(false);
 
-        this.id = dataManager.insertMetadata(serviceContext, metadata, sampleMetadataXml, false, false, UpdateDatestamp.NO,
+        this.id = dataManager.insertMetadata(serviceContext, metadata, sampleMetadataXml, IndexingMode.none, false, UpdateDatestamp.NO,
             false, false).getId();
 
         dataManager.indexMetadata(Lists.newArrayList("" + this.id));
@@ -166,9 +167,9 @@ public class FormatterApiIntegrationTest extends AbstractServiceIntegrationTest 
     @Ignore
     @Test
     public void testLoggingNullPointerBug() throws Exception {
-        final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(Geonet.FORMATTER);
+        final org.apache.logging.log4j.Logger logger = org.apache.logging.log4j.LogManager.getLogger(Geonet.FORMATTER);
         Level level = logger.getLevel();
-        logger.setLevel(Level.ALL);
+        org.apache.logging.log4j.core.config.Configurator.setLevel(logger,Level.ALL);
         try {
             MockHttpServletRequest webRequest = new MockHttpServletRequest();
             webRequest.getSession();
@@ -194,7 +195,7 @@ public class FormatterApiIntegrationTest extends AbstractServiceIntegrationTest 
 
             // no Error is success
         } finally {
-            logger.setLevel(level);
+            org.apache.logging.log4j.core.config.Configurator.setLevel(logger,level);
         }
     }
 

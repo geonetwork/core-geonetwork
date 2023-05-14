@@ -226,10 +226,11 @@
         <xsl:variable name="name" select="tokenize(., '/')[last()]"/>
         <!-- Index link where last token after the last / is the link name. -->
         <link type="object">{
-          "protocol":"<xsl:value-of select="'WWW-LINK'"/>",
-          "url":"<xsl:value-of select="gn-fn-index:json-escape(.)"/>",
-          "name":"<xsl:value-of select="gn-fn-index:json-escape($name)"/>",
-          "description":""
+          "protocol":"<xsl:value-of select="'WWW:LINK'"/>",
+          "urlObject":{"default": "<xsl:value-of select="gn-fn-index:json-escape(.)"/>"},
+          "nameObject":{"default": "<xsl:value-of select="gn-fn-index:json-escape($name)"/>"},
+          "descriptionObject":{"default": ""},
+          "function": ""
           }</link>
       </xsl:for-each>
 

@@ -45,6 +45,12 @@ public class IsoLanguagesMapper {
      */
     protected BiMap<String, String> _isoLanguagesMap639 = HashBiMap.create();
 
+    /**
+     * Flag used to check if the init is valid.
+     * It may not be valid during initial database creation.
+     */
+    private boolean validInit = false;
+
     @Autowired
     private IsoLanguageRepository _langRepo;
 
@@ -69,9 +75,13 @@ public class IsoLanguagesMapper {
 
     /**
      * Creates mapping to of ISO 639-1 to ISO 639-2 for all languages defined in IsoLanguages table
+     *
+     * Note @PostConstruct may not work on initial setup because the database is may not be loaded when the @PostConstruct is called so it may creates an empty array.
+     *      So we will use a verifiedLoaded flag to check if it successfully loaded.
      */
     @PostConstruct
     public void init() {
+        validInit = false;
         for (IsoLanguage record : _langRepo.findAll()) {
             final String shortCode = toLowerCase(record.getShortCode());
             final String code = toLowerCase(record.getCode());
@@ -89,6 +99,29 @@ public class IsoLanguagesMapper {
     }
 
 
+    /**
+     * Verify that the init loaded some data, if so then set verifiedLoaded to true so that we don't need to check again.
+     * Otherwise re-run the init() to try loading the object again.
+     */
+    public void checkInit() {
+        if (!validInit) {
+            // _langRepo will be null if this is not a bean - in which case the @PostConstruct is not expected to be executed so just mark validInit as true and return.
+            // This currenly only occurs in the unit tests.
+            if (_langRepo == null) {
+                validInit=true;
+                return;
+            }
+            // Re-init if the array size is 0
+            if (_isoLanguagesMap639.size() == 0) {
+               init();
+            }
+            // If there is data then mark it as valid.
+            if (_isoLanguagesMap639.size() > 0) {
+                validInit = true;
+            }
+        }
+    }
+
     private String toLowerCase(String code) {
         if (code == null) {
             return null;
@@ -101,6 +134,7 @@ public class IsoLanguagesMapper {
      * Retrieves 639-2 code from a 639-1 code
      */
     public String iso639_1_to_iso639_2(String iso639_1) {
+        checkInit();
         if (_isoLanguagesMap639.containsValue(iso639_1.toLowerCase())) {
             return iso639_1.toLowerCase();
         } else {
@@ -112,6 +146,7 @@ public class IsoLanguagesMapper {
      * Retrieves 639-1 code from a 639-2 code
      */
     public String iso639_2_to_iso639_1(String iso639_2) {
+        checkInit();
         if (_isoLanguagesMap639.containsKey(iso639_2.toLowerCase())) {
             return iso639_2.toLowerCase();
         } else {

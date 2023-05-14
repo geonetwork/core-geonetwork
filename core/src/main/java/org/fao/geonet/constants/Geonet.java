@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2021 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2023 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -104,6 +104,7 @@ public final class Geonet {
         public static final String SET_UUID = "set-uuid.xsl";
         public static final String SET_CREATIVECOMMONS = "set-creativecommons.xsl";
         public static final String SET_DATACOMMONS = "set-datacommons.xsl";
+        public static final String DUPLICATE_METADATA = "duplicate-metadata.xsl";
         public static final String SCHEMA_SUGGESTIONS = "schema-suggestions.xml";
         public static final String SCHEMA_SUBSTITUTES = "schema-substitutes.xml";
         public static final String SCHEMA_CONVERSIONS = "schema-conversions.xml";
@@ -182,6 +183,7 @@ public final class Geonet {
         public static final String XSLT_FOLDER = "xslt";
         public static final String CONV_STYLESHEETS = STYLESHEETS + "/conversion";
         public static final String IMPORT_STYLESHEETS = CONV_STYLESHEETS + "/import";
+        public static final String IMPORT_STYLESHEETS_SCHEMA_PREFIX = "schema:";
         public static final String WFS_STYLESHEETS = "convert/WFSToFragments";
         public static final String TDS_STYLESHEETS = "convert/ThreddsToFragments";
         public static final String TDS_19119_19139_STYLESHEETS = "convert/ThreddsCatalogto19119";
@@ -649,8 +651,8 @@ public final class Geonet {
         public static final String GROUP_WEBSITE = "_groupWebsite";
         public static final String LOGO = "_logo";
         public static final String OP_PREFIX = "op";
-        public static final String GROUP_PUBLISHED = "_groupPublished";
-        public static final String CAT = "_cat";
+        public static final String GROUP_PUBLISHED = "groupPublished";
+        public static final String CAT = "cat";
         public static final String STATUS = "mdStatus";
         public static final String STATUS_CHANGE_DATE = "mdStatusChangeDate";
         public static final String VALID = "_valid";
@@ -658,9 +660,10 @@ public final class Geonet {
         public static final String VALID_INSPIRE = "_valid_inspire";
         public static final String ANY = "any";
         public static final String LOCALE = "locale";
-        public static final String IS_PUBLISHED_TO_ALL = "_isPublishedToAll";
+        public static final String IS_PUBLISHED_TO_ALL = "isPublishedToAll";
         public static final String FEEDBACKCOUNT = "feedbackCount";
         public static final String DRAFT = "draft";
+        public static final String DRAFT_ID = "draftId";
         public static final String RESOURCETITLE = "resourceTitle";
         public static final String RESOURCEABSTRACT = "resourceAbstract";
         public static final String PARENTUUID = "parentUuid";
@@ -677,6 +680,9 @@ public final class Geonet {
         }
         public static final String INSPIRE_REPORT_URL = "_inspireReportUrl";
         public static final String INSPIRE_VALIDATION_DATE = "_inspireValidationDate";
+        public static final String STATUS_WORKFLOW = "statusWorkflow";
+        public static final String USER_SAVED_COUNT = "userSavedCount";
+        public static final String INDEXING_DATE = "indexingDate";
     }
 
     public static class SearchConfig {

@@ -28,8 +28,8 @@
         http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-  <bean class="org.fao.geonet.camelPeriodicProducer.MessageProducerFactory"/>
   <bean class="org.apache.camel.component.quartz2.QuartzComponent"/>
-  <bean class="org.fao.geonet.camelPeriodicProducer.MessageProducerService"/>"
-
+  <bean class="org.fao.geonet.camelPeriodicProducer.MessageProducerFactory"
+        destroy-method="shutdown"/>
+  <bean class="org.fao.geonet.camelPeriodicProducer.MessageProducerService"/>
 </beans>

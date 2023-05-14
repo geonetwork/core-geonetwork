@@ -1,15 +1,35 @@
+/*
+ * =============================================================================
+ * ===	Copyright (C) 2001-2023 Food and Agriculture Organization of the
+ * ===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
+ * ===	and United Nations Environment Programme (UNEP)
+ * ===
+ * ===	This program is free software; you can redistribute it and/or modify
+ * ===	it under the terms of the GNU General Public License as published by
+ * ===	the Free Software Foundation; either version 2 of the License, or (at
+ * ===	your option) any later version.
+ * ===
+ * ===	This program is distributed in the hope that it will be useful, but
+ * ===	WITHOUT ANY WARRANTY; without even the implied warranty of
+ * ===	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * ===	General Public License for more details.
+ * ===
+ * ===	You should have received a copy of the GNU General Public License
+ * ===	along with this program; if not, write to the Free Software
+ * ===	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+ * ===
+ * ===	Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+ * ===	Rome - Italy. email: geonetwork@osgeo.org
+ * ==============================================================================
+ */
 package org.fao.geonet.resources;
 
 import com.amazonaws.AmazonServiceException;
-import com.amazonaws.services.s3.model.AmazonS3Exception;
-import com.amazonaws.services.s3.model.ListObjectsV2Result;
-import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.amazonaws.services.s3.model.S3Object;
-import com.amazonaws.services.s3.model.S3ObjectInputStream;
-import com.amazonaws.services.s3.model.S3ObjectSummary;
+import com.amazonaws.services.s3.model.*;
 import jeeves.config.springutil.JeevesDelegatingFilterProxy;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.httpclient.HttpStatus;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.utils.IO;
@@ -18,22 +38,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.imageio.ImageIO;
+import javax.servlet.ServletContext;
 import java.awt.image.BufferedImage;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.nio.file.DirectoryStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
+import java.nio.file.*;
 import java.nio.file.attribute.FileTime;
 import java.util.HashSet;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.imageio.ImageIO;
-import javax.servlet.ServletContext;
 
 public class S3Resources extends Resources {
     @Autowired
@@ -282,11 +298,11 @@ public class S3Resources extends Resources {
             }
             final String[] splittedKey = key.split("/");
             try {
-                path = java.nio.file.Files.createTempFile("", splittedKey[splittedKey.length - 1]);
+                path = Files.createTempFile("", splittedKey[splittedKey.length - 1]);
                 try {
                     final S3Object object = s3.getClient().getObject(s3.getBucket(), key);
                     try (S3ObjectInputStream in = object.getObjectContent()) {
-                        java.nio.file.Files.copy(in, path,
+                        Files.copy(in, path,
                                                  StandardCopyOption.REPLACE_EXISTING);
                     }
                 } catch (AmazonServiceException e) {
@@ -327,7 +343,16 @@ public class S3Resources extends Resources {
             if (writeOnClose && Files.isReadable(path)) {
                 s3.getClient().putObject(s3.getBucket(), key, path.toFile());
             }
-            java.nio.file.Files.delete(path);
+            FileUtils.deleteQuietly(path.toFile());
+        }
+
+        /** Cleanup temporary file. */
+        @Override
+        protected void finalize() throws Throwable {
+            super.finalize();
+            if (path != null) {
+                FileUtils.deleteQuietly(path.toFile());
+            }
         }
     }
 }

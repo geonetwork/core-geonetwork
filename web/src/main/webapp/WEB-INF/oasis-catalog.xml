@@ -66,6 +66,9 @@
   <uri name="common/utility-tpl.xsl"
        uri="../xslt/common/utility-tpl.xsl"/>
 
+  <uri name="common/menu-fn.xsl"
+       uri="../xslt/ui-metadata/menu-fn.xsl"/>
+
   <uri name="common/render-html.xsl"
        uri="../xslt/common/render-html.xsl"/>
 
@@ -74,4 +77,7 @@
 
   <uri name="common/functions-metadata.xsl"
        uri="../xslt/common/functions-metadata.xsl"/>
+
+  <uri name="common/functions-sparql.xsl"
+       uri="../xslt/common/functions-sparql.xsl"/>
 </catalog>

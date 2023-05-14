@@ -76,7 +76,7 @@ var gnHarvestergeoPREST = {
                 + '  </options>'
                 + '  <content>'
                 + '    <validate>' + h.content.validate + '</validate>'
-                + '    <importxslt>' + h.content.importxslt + '</importxslt>'
+                + '    <importxslt>' + _.escape(h.content.importxslt) + '</importxslt>'
                 + '  </content>'
                 + $scope.buildResponseGroup(h)
                 + $scope.buildResponseCategory(h) + '</node>';

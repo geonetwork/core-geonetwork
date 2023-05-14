@@ -1,0 +1,314 @@
+<div
+  class="row"
+  data-ng-controller="GnStaticPagesController"
+  id="gn-static-pages-container"
+>
+  <div class="col-lg-4">
+    <div class="panel panel-default">
+      <div class="panel-heading" data-translate="">manageStaticPages</div>
+      <div class="panel-body">
+        <input
+          class="form-control"
+          data-ng-model="staticPagesSearch.$"
+          autofocus=""
+          placeholder="{{'filter' | translate}}"
+        />
+        <input type="hidden" data-ng-model="staticPageSelected.id" />
+
+        <div class="list-group">
+          <a
+            href=""
+            class="list-group-item"
+            data-ng-repeat="v in staticPages | filter:staticPagesSearch | orderBy:'linkText'"
+            data-ng-class="v.pageId === staticPageSelected.pageId && v.language === staticPageSelected.language ? 'active' : ''"
+            data-ng-click="selectStaticPage(v)"
+            title="{{v.pageId}}"
+          >
+            {{v.pageId}} ({{v.language}})
+          </a>
+        </div>
+
+        <button
+          type="button"
+          class="btn btn-primary btn-block"
+          data-ng-click="addStaticPage()"
+        >
+          <i class="fa fa-plus" />
+          <span data-translate="">newStaticPage</span>
+        </button>
+      </div>
+    </div>
+
+    <div data-gn-need-help="static-page-configuration"></div>
+  </div>
+
+  <div class="col-lg-8" data-ng-show="staticPageSelected !== null">
+    <form
+      id="gn-static-page-edit"
+      name="gnStaticPageEdit"
+      class="form-horizontal"
+      method="POST"
+      enctype="{{enctype}}"
+      action="{{action}}"
+      role="form"
+      data-file-upload="mdStaticPageFileUploadOptions"
+    >
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <span data-ng-hide="!isUpdate" data-translate="">updateStaticPage</span>
+          <span data-ng-hide="isUpdate" data-translate="">newStaticPage</span>
+
+          <div class="btn-toolbar pull-right">
+            <button
+              type="button"
+              class="btn btn-primary"
+              data-ng-disabled="!gnStaticPageEdit.$valid && !gnStaticPageEdit.dirty"
+              data-gn-click-and-spin="saveStaticPage('#gn-static-page-edit')"
+            >
+              <i class="fa fa-save"></i>&nbsp;
+              <span data-translate="">save</span>
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary btn-danger"
+              data-ng-hide="!isUpdate"
+              data-ng-click="deleteStaticPageConfig()"
+            >
+              <i class="fa fa-times"></i>&nbsp;
+              <span data-translate="">delete</span>
+            </button>
+          </div>
+        </div>
+        <div class="panel-body">
+          <input type="hidden" name="_csrf" value="{{csrf}}" />
+
+          <div class="form-group">
+            <label class="control-label col-sm-3" data-translate="">language</label>
+
+            <div class="col-sm-9">
+              <select
+                name="language"
+                class="form-control"
+                required=""
+                data-ng-readonly="isUpdate"
+                data-ng-model="staticPageSelected.language"
+              >
+                <option data-ng-repeat="l in dbLanguages" value="{{l.id}}">
+                  {{l.name}}
+                </option>
+              </select>
+
+              <input
+                type="hidden"
+                name="newLanguage"
+                value="{{staticPageSelected.language}}"
+                data-ng-if="isUpdate"
+              />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="control-label col-sm-3" data-translate="">pageId</label>
+
+            <div class="col-sm-9">
+              <input
+                type="text"
+                name="pageId"
+                class="form-control"
+                required=""
+                data-ng-readonly="isUpdate"
+                data-ng-model="staticPageSelected.pageId"
+              />
+
+              <input
+                type="hidden"
+                name="newPageId"
+                value="{{staticPageSelected.pageId}}"
+                data-ng-if="isUpdate"
+              />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="control-label col-sm-3" data-translate="">pageLabel</label>
+
+            <div class="col-sm-9">
+              <input
+                type="text"
+                name="label"
+                class="form-control"
+                required=""
+                data-ng-model="staticPageSelected.label"
+              />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="control-label col-sm-3" data-translate="">format</label>
+
+            <div class="col-sm-9">
+              <select
+                name="format"
+                class="form-control"
+                required=""
+                data-ng-readonly="isUpdate"
+                data-ng-model="staticPageSelected.format"
+              >
+                <option data-ng-repeat="f in formats" value="{{f}}">
+                  {{'staticPageFormat-' + f | translate }}
+                </option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group" data-ng-show="staticPageSelected.format === 'LINK'">
+            <label class="control-label col-sm-3" data-translate="">pageLink</label>
+
+            <div class="col-sm-9">
+              <input
+                type="text"
+                name="link"
+                class="form-control"
+                data-ng-required="staticPageSelected.format === 'LINK'"
+                data-ng-model="staticPageSelected.link"
+              />
+            </div>
+          </div>
+
+          <!-- Upload panel -->
+          <div
+            data-ng-show="staticPageSelected.format !== 'LINK'"
+            id="gn-staticpage-uploadfile-row"
+            class="form-group"
+          >
+            <div class="row">
+              <label
+                id="gn-import-uploadfile-label"
+                for="md-staticpage-file"
+                class="col-sm-3 control-label"
+                data-translate=""
+                >pageContentFile</label
+              >
+
+              <div
+                class="col-sm-9 gn-padding-top"
+                data-ng-show="staticPageSelected.link !== ''"
+              >
+                {{staticPageSelected.link}}
+                <a href="" data-ng-click="deleteContent()"
+                  ><i class="fa fa-fw fa-trash"
+                /></a>
+              </div>
+            </div>
+
+            <div class="row" data-ng-show="pageApiLink !== ''">
+              <label class="col-sm-3 control-label" data-translate="">pageApiLink</label>
+
+              <div class="col-sm-9 gn-padding-top">
+                <a href="{{pageApiLink}}">{{pageApiLink}}</a>
+              </div>
+            </div>
+
+            <div
+              id="gn-import-uploadfile-panel"
+              class="col-sm-9 col-sm-offset-3"
+              data-ng-show="staticPageSelected.link === ''"
+            >
+              <div class="panel panel-default">
+                <div class="panel-body">
+                  <span class="btn btn-success btn-block fileinput-button">
+                    <i class="fa fa-plus fa-white" />
+                    <span data-translate="">chooseStaticPageFile</span>
+                    <input type="file" id="md-staticpage-file" name="data" />
+                  </span>
+
+                  <ul style="list-style: none">
+                    <li data-ng-repeat="file in queue">
+                      <div class="preview" data-file-upload-preview="file"></div>
+                      {{file.name}} ({{file.type}} / {{file.size | formatFileSize}})
+                      <i class="fa fa-trash-o" data-ng-click="clear(file)"></i>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              <div
+                id="gn-import-uploadfile-alert"
+                class="alert alert-warning"
+                data-ng-show="unsupportedFile"
+                data-translate=""
+              >
+                unsupportedFileExtension
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group" data-ng-show="staticPageSelected.format !== 'LINK'">
+            <label class="control-label col-sm-3" data-translate="">pageContent</label>
+
+            <div class="col-sm-9">
+              <input
+                type="hidden"
+                name="content"
+                data-ng-model="staticPageSelected.content"
+              />
+              <div
+                id="contenteditor"
+                style="height: 300px"
+                ui-ace="{useWrapMode:true,showGutter:true,mode:'html'}"
+                data-ng-model="staticPageSelected.content"
+              ></div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="control-label col-sm-3" data-translate="">pageSection</label>
+
+            <div class="col-sm-9">
+              <select
+                name="sections"
+                class="form-control"
+                multiple
+                data-ng-model="staticPageSelected.sections"
+              >
+                <option data-ng-repeat="s in sections" value="{{s}}">{{s}}</option>
+              </select>
+            </div>
+
+            <div class="col-sm-9 col-sm-offset-3">
+              <p class="help-block" data-translate="">pageSection-help</p>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="control-label col-sm-3" data-translate="">status</label>
+
+            <div class="col-sm-9">
+              <select
+                name="status"
+                class="form-control"
+                required=""
+                data-ng-model="staticPageSelected.status"
+              >
+                <option value="HIDDEN">{{'staticPageStatus-HIDDEN' | translate }}</option>
+                <option value="PRIVATE">
+                  {{'staticPageStatus-PRIVATE' | translate }}
+                </option>
+                <option value="PUBLIC">{{'staticPageStatus-PUBLIC' | translate }}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div
+    gn-modal
+    class="gn-confirm-delete"
+    gn-popup-options="{title: 'confirmDialogTitle', confirmCallback: confirmDeleteStaticPageConfig}"
+    id="gn-confirm-remove-static-page"
+  >
+    <p translate>confirmStaticPageDelete</p>
+  </div>
+</div>

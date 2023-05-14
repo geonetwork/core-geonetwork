@@ -1,32 +1,43 @@
 <div>
-  <div id="{{facet.key}}"
-       title="{{'facets.temporalRange.help' | translate}}"></div>
-  <div class="input-daterange input-group input-group-sm"
-       gn-bootstrap-datepicker="range"
-       data-config="dateRangeConfig"
-       on-change-fn="setRange({from: range.from, to: range.to})"
-       date-only-highlight="true">
-    <input type="text" class="input-sm form-control"
-           data-ng-model="range.from"
-           data-ng-model-options="{debounce: 500}"
-           name="start"/>
+  <div id="{{facet.key}}" title="{{'facets.temporalRange.help' | translate}}"></div>
+  <div
+    class="input-daterange input-group input-group-sm"
+    gn-bootstrap-datepicker="range"
+    data-config="dateRangeConfig"
+    on-change-fn="setRange({from: range.from, to: range.to})"
+    date-only-highlight="true"
+  >
+    <input
+      type="text"
+      class="input-sm form-control"
+      data-ng-model="range.from"
+      data-ng-model-options="{debounce: 500}"
+      name="start"
+    />
     <span class="input-group-addon">
-      <icon class="fa fa-fw fa-chevron-right"/>
+      <icon class="fa fa-fw fa-chevron-right" />
     </span>
-    <input type="text" class="input-sm form-control"
-           data-ng-model="range.to"
-           data-ng-model-options="{debounce: 500}"
-           name="end"/>
+    <input
+      type="text"
+      class="input-sm form-control"
+      data-ng-model="range.to"
+      data-ng-model-options="{debounce: 500}"
+      name="end"
+    />
     <span class="input-group-btn">
-      <button class="btn btn-default"
-              data-ng-click="reset()"
-              title="{{'reset' | translate}}">
-        <icon class="fa fa-fw fa-times"/>
+      <button
+        class="btn btn-default"
+        data-ng-click="reset()"
+        title="{{'reset' | translate}}"
+      >
+        <icon class="fa fa-fw fa-times" />
       </button>
-      <button class="btn btn-default"
-              data-ng-click="filter()"
-              title="{{'apply' | translate}}">
-        <icon class="fa fa-fw fa-filter"/>
+      <button
+        class="btn btn-default"
+        data-ng-click="filter()"
+        title="{{'apply' | translate}}"
+      >
+        <icon class="fa fa-fw fa-filter" />
       </button>
     </span>
   </div>

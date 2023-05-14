@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2023 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -28,7 +28,6 @@ import com.google.common.collect.Maps;
 import org.fao.geonet.exceptions.TermNotFoundException;
 import org.fao.geonet.kernel.search.keyword.KeywordRelation;
 import org.fao.geonet.kernel.search.keyword.KeywordSearchParamsBuilder;
-import org.fao.geonet.utils.IO;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -41,7 +40,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -66,7 +64,7 @@ public class AllThesaurusTest extends AbstractThesaurusBasedTest {
     public void setUp() throws Exception {
         Path gcThesaurusFile = this.folder.getRoot().toPath().resolve("secondThesaurus.rdf");
         this.secondThesaurus = new Thesaurus(isoLangMapper, gcThesaurusFile.getFileName().toString(), null, null, "external",
-            "local", gcThesaurusFile, "http://org.fao.geonet", true);
+            "local", gcThesaurusFile, "http://org.fao.geonet", true, 0);
         final boolean thesauriExist = Files.exists(gcThesaurusFile);
         if (!thesauriExist) {
             String thesaurusName = "secondThesaurus";
@@ -156,7 +154,7 @@ public class AllThesaurusTest extends AbstractThesaurusBasedTest {
 
     @Test
     public void testRetrieveThesaurusTitle() throws Exception {
-        this.allThesaurus.retrieveThesaurusTitle(); // does nothing, assure there is no error
+        this.allThesaurus.retrieveThesaurusInformation(); // does nothing, assure there is no error
     }
 
     @Test(expected = UnsupportedOperationException.class)
@@ -244,7 +242,7 @@ public class AllThesaurusTest extends AbstractThesaurusBasedTest {
 
     @Test(expected = UnsupportedOperationException.class)
     public void testAddTitleElement() throws Exception {
-        this.allThesaurus.addTitleElement("newTitle");
+        this.allThesaurus.writeConceptScheme("newTitle", this.allThesaurus.getDefaultNamespace());
     }
 
     @Test
@@ -278,7 +276,7 @@ public class AllThesaurusTest extends AbstractThesaurusBasedTest {
         final String regionsPath = "/org/fao/geonet/services/region/external/thesauri/place/regions.rdf";
         Path regionsFile = Paths.get(AllThesaurusTest.class.getResource(regionsPath).toURI());
         final Thesaurus regionsThesaurus = new Thesaurus(isoLangMapper, regionsFile.getFileName().toString(), null, null, "external",
-            "place", regionsFile, "http://org.fao.geonet", false);
+            "place", regionsFile, "http://org.fao.geonet", false, 0);
         regionsThesaurus.initRepository();
         final HashMap<String, Thesaurus> thesauri = Maps.newHashMap();
         thesauri.put(regionsThesaurus.getKey(), regionsThesaurus);
@@ -332,33 +330,6 @@ public class AllThesaurusTest extends AbstractThesaurusBasedTest {
     @Test(expected = TermNotFoundException.class)
     public void testGetKeywordWithLabelCantFind() throws Exception {
         this.allThesaurus.getKeywordWithLabel("jkdjfdklsdj", "eng");
-    }
-
-    @SuppressWarnings("deprecation")
-    @Test(expected = UnsupportedOperationException.class)
-    public void testAddElement1() throws Exception {
-        this.allThesaurus.addElement("code", "prefLab", "note", "lang");
-    }
-
-    @SuppressWarnings("deprecation")
-    @Test(expected = UnsupportedOperationException.class)
-    public void testAddElement2() throws Exception {
-        this.allThesaurus.addElement("code", "prefLab", "note", "east", "west", "south", "north", "lang");
-
-    }
-
-    @SuppressWarnings("deprecation")
-    @Test(expected = UnsupportedOperationException.class)
-    public void testUpdateElement1() throws Exception {
-        this.allThesaurus.updateElement("namespace", "id", "prefLab", "note", "lang");
-    }
-
-    @SuppressWarnings("deprecation")
-    @Test(expected = UnsupportedOperationException.class)
-    public void testUpdateElement2() throws Exception {
-        this.allThesaurus.updateElement("namespace", "id", "prefLab", "note", "east", "west",
-            "south", "north", "lang");
-
     }
 
     @Test(expected = UnsupportedOperationException.class)

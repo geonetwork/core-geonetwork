@@ -94,7 +94,7 @@
               <div class="gn-md-contents">
                 <div class="gn-md-thumbnail">
                   <div class="gn-img-thumbnail"
-                       style="background-image: url(../../images/harvesting/{if (logo != '') then logo else 'blank.png'})">
+                       style="background-image: url(../../images/harvesting/{if (logo != '') then logo else 'blank.png'}) !important">
                   </div>
                 </div>
                 <div class="gn-md-details">

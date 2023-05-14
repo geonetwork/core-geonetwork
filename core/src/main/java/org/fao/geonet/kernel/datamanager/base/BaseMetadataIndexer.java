@@ -25,6 +25,11 @@ package org.fao.geonet.kernel.datamanager.base;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
+import com.yammer.metrics.core.TimerContext;
+import jeeves.monitor.MonitorManager;
+import jeeves.monitor.timer.IndexingRecordMeter;
+import jeeves.monitor.timer.IndexingRecordTimer;
+import jeeves.monitor.timer.ServiceManagerXslOutputTransformTimer;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.xlink.Processor;
@@ -45,6 +50,7 @@ import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.datamanager.draft.DraftMetadataIndexer;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.search.IndexFields;
+import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.*;
@@ -72,16 +78,18 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static org.fao.geonet.resources.Resources.DEFAULT_LOGO_EXTENSION;
+
 
 public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPublisherAware {
-
     @Autowired
-	private EsSearchManager searchManager;
+    private EsSearchManager searchManager;
     @Autowired
-    private GeonetworkDataDirectory geonetworkDataDirectory;
+    private SourceRepository sourceRepository;
     @Autowired
-    private MetadataStatusRepository statusRepository;
-
+    protected MetadataStatusRepository statusRepository;
+    @Autowired
+    MonitorManager monitorManager;
     private IMetadataUtils metadataUtils;
     private IMetadataManager metadataManager;
     @Autowired
@@ -115,6 +123,9 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
     private ServiceContext servContext;
 
     private ApplicationEventPublisher publisher;
+
+    @Autowired
+    private UserSavedSelectionRepository userSavedSelectionRepository;
 
     public BaseMetadataIndexer() {
     }
@@ -179,10 +190,10 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
                 Log.warning(Geonet.DATA_MANAGER, String.format(
 
                     "Error during removal of metadata %s part of batch delete operation. " +
-                    "This error may create a ghost record (ie. not in the index " +
-                    "but still present in the database). " +
-                    "You can reindex the catalogue to see it again. " +
-                    "Error was: %s.", md.getUuid(), e.getMessage()));
+                        "This error may create a ghost record (ie. not in the index " +
+                        "but still present in the database). " +
+                        "You can reindex the catalogue to see it again. " +
+                        "Error was: %s.", md.getUuid(), e.getMessage()));
                 e.printStackTrace();
             }
         });
@@ -316,15 +327,19 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
     @Override
     public void indexMetadata(final List<String> metadataIds) throws Exception {
         for (String metadataId : metadataIds) {
-            indexMetadata(metadataId, true);
+            indexMetadata(metadataId, true, IndexingMode.full);
         }
     }
 
     @Override
-    public void indexMetadata(final String metadataId, final boolean forceRefreshReaders)
+    public void indexMetadata(final String metadataId,
+                              final boolean forceRefreshReaders,
+                              final IndexingMode indexingMode)
         throws Exception {
         AbstractMetadata fullMd;
-
+        monitorManager.getMeter(IndexingRecordMeter.class).mark();
+        TimerContext timerContext = monitorManager.getTimer(IndexingRecordTimer.class).time();
+        long start = System.currentTimeMillis();
         try {
             Multimap<String, Object> fields = ArrayListMultimap.create();
             int id$ = Integer.parseInt(metadataId);
@@ -398,7 +413,8 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
                     "Schema '%s' is not registerd in this catalog. Install it or remove those records",
                     schema
                 ));
-                searchManager.index(null, md, indexKey, fields, metadataType, forceRefreshReaders);
+                searchManager.index(null, md, indexKey, fields, metadataType,
+                    forceRefreshReaders, indexingMode);
                 Log.error(Geonet.DATA_MANAGER, String.format(
                     "Record %s / Schema '%s' is not registerd in this catalog. Install it or remove those records. Record is indexed indexing error flag.",
                     metadataId, schema));
@@ -419,8 +435,7 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
                 InspireAtomFeed feed = inspireAtomFeedRepository.findByMetadataId(id$);
 
                 if ((feed != null) && StringUtils.isNotEmpty(feed.getAtom())) {
-                    fields.put("has_atom", "y");
-                    fields.put("any", feed.getAtom());
+                    fields.put("atomfeed", feed.getAtom());
                 }
 
                 if (owner != null) {
@@ -465,7 +480,11 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
 
                 // If not available, use the local catalog logo
                 if (!added) {
-                    logoUUID = source + ".png";
+                    Source sourceCatalogue = sourceRepository.findOneByUuid(source);
+                    logoUUID =
+                        sourceCatalogue != null
+                            && StringUtils.isNotEmpty(sourceCatalogue.getLogo())
+                        ? sourceCatalogue.getLogo() : source + DEFAULT_LOGO_EXTENSION;
                     final Path logosDir = resources.locateLogosDir(getServiceContext());
                     try (Resources.ResourceHolder image = resources.getImage(getServiceContext(), logoUUID, logosDir)) {
                         if (image != null) {
@@ -526,6 +545,10 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
                     }
                 }
 
+                // index the amount of users that have saved this record in the "Preferred Records" list (id=0)
+                int savedCount = userSavedSelectionRepository.countTimesUserSavedMetadata(uuid, 0);
+                fields.put(Geonet.IndexFieldNames.USER_SAVED_COUNT, savedCount);
+
                 // Index metadata indicators
                 fullMd.getIndicators().forEach(indicator -> {
                     fields.put(String.format("indicator_%s", indicator.getName()), indicator.getValue());
@@ -537,16 +560,21 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
                     this.publisher.publishEvent(new MetadataIndexStarted(fullMd, fields));
                 }
 
-                searchManager.index(schemaManager.getSchemaDir(schema), md, indexKey, fields, metadataType, forceRefreshReaders);
+                searchManager.index(schemaManager.getSchemaDir(schema), md, indexKey, fields, metadataType,
+                    forceRefreshReaders, indexingMode);
             }
         } catch (Exception x) {
             Log.error(Geonet.DATA_MANAGER, "The metadata document index with id=" + metadataId
                 + " is corrupt/invalid - ignoring it. Error: " + x.getMessage(), x);
             fullMd = null;
+        } finally {
+            timerContext.stop();
         }
         if (fullMd != null) {
             this.publisher.publishEvent(new MetadataIndexCompleted(fullMd));
         }
+        Log.warning(Geonet.INDEX_ENGINE, String.format("Record #%s (mode: %s) indexed in %dms",
+            metadataId, indexingMode, System.currentTimeMillis() - start));
     }
 
     @Override
@@ -574,6 +602,7 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
                 Optional<Group> g = groupRepository.findById(groupId);
                 if (g.isPresent()) {
                     privilegesFields.put(Geonet.IndexFieldNames.GROUP_PUBLISHED, g.get().getName());
+                    privilegesFields.put(Geonet.IndexFieldNames.GROUP_PUBLISHED + "Id", g.get().getId());
 
 
                     if (g.get().getId() == ReservedGroup.all.getId()) {

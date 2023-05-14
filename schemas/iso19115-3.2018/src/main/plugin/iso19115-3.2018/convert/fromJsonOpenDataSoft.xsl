@@ -42,6 +42,7 @@
                 xmlns:gml="http://www.opengis.net/gml/3.2"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
                 xmlns:xd="http://www.oxygenxml.com/ns/doc/xsl"
+                xmlns:java-xsl-util="java:org.fao.geonet.util.XslUtil"
                 exclude-result-prefixes="#all">
 
   <xsl:import href="protocol-mapping.xsl"></xsl:import>
@@ -72,7 +73,7 @@
           <mcc:MD_Identifier>
             <mcc:code>
               <gco:CharacterString>
-                <xsl:value-of select="datasetid"/>
+                <xsl:value-of select="(datasetid|dataset/dataset_id)[1]"/>
               </gco:CharacterString>
             </mcc:code>
           </mcc:MD_Identifier>
@@ -80,18 +81,21 @@
         <mdb:defaultLocale>
           <lan:PT_Locale>
             <lan:language>
-              <lan:LanguageCode codeList="codeListLocation#LanguageCode" codeListValue="{metas/language}"/>
+              <lan:LanguageCode codeList="codeListLocation#LanguageCode"
+                                codeListValue="{java-xsl-util:threeCharLangCode(
+                                (metas/language|dataset/metas/default/metadata_languages)[1])}"/>
             </lan:language>
             <lan:characterEncoding>
               <lan:MD_CharacterSetCode codeList="codeListLocation#MD_CharacterSetCode"
-                                       codeListValue=""/>
+                                       codeListValue="utf8"/>
             </lan:characterEncoding>
           </lan:PT_Locale>
         </mdb:defaultLocale>
         <mdb:metadataScope>
           <mdb:MD_MetadataScope>
             <mdb:resourceScope>
-              <mcc:MD_ScopeCode codeList="" codeListValue="{@type}"/>
+              <mcc:MD_ScopeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_ScopeCode"
+                                codeListValue="{if (@type) then @type else 'dataset'}"/>
             </mdb:resourceScope>
           </mdb:MD_MetadataScope>
         </mdb:metadataScope>
@@ -105,7 +109,7 @@
               <cit:CI_Organisation>
                 <cit:name>
                   <gco:CharacterString>
-                    <xsl:value-of select="metas/publisher"/>
+                    <xsl:value-of select="(metas/publisher|dataset/metas/default/publisher)[1]"/>
                   </gco:CharacterString>
                 </cit:name>
                 <cit:contactInfo>
@@ -129,17 +133,17 @@
         <mdb:dateInfo>
           <cit:CI_Date>
             <cit:date>
-              <gco:DateTime><xsl:value-of select="metas/modified"/></gco:DateTime>
+              <gco:DateTime><xsl:value-of select="(metas/modified|dataset/metas/default/metadata_processed)[1]"/></gco:DateTime>
             </cit:date>
             <cit:dateType>
-              <cit:CI_DateTypeCode codeList="codeListLocation#CI_DateTypeCode" codeListValue="creation"/>
+              <cit:CI_DateTypeCode codeList="codeListLocation#CI_DateTypeCode" codeListValue="publication"/>
             </cit:dateType>
           </cit:CI_Date>
         </mdb:dateInfo>
         <mdb:dateInfo>
           <cit:CI_Date>
             <cit:date>
-              <gco:DateTime><xsl:value-of select="metas/modified"/></gco:DateTime>
+              <gco:DateTime><xsl:value-of select="metas/metadata_processed"/></gco:DateTime>
             </cit:date>
             <cit:dateType>
               <cit:CI_DateTypeCode codeList="codeListLocation#CI_DateTypeCode" codeListValue="revision"/>
@@ -153,33 +157,34 @@
             </cit:title>
           </cit:CI_Citation>
         </mdb:metadataStandard>
-        <!--<mdb:referenceSystemInfo>
-          <mrs:MD_ReferenceSystem>
-            <mrs:referenceSystemIdentifier>
-              <mcc:MD_Identifier>
-                <mcc:code>
-                  <gco:CharacterString>WGS 1984</gco:CharacterString>
-                </mcc:code>
-              </mcc:MD_Identifier>
-            </mrs:referenceSystemIdentifier>
-          </mrs:MD_ReferenceSystem>
-        </mdb:referenceSystemInfo>-->
         <mdb:identificationInfo>
           <mri:MD_DataIdentification>
             <mri:citation>
               <cit:CI_Citation>
                 <cit:title>
                   <gco:CharacterString>
-                    <xsl:value-of select="metas/title"/>
+                    <xsl:value-of select="(metas/title|dataset/metas/default/title)[1]"/>
                   </gco:CharacterString>
                 </cit:title>
                 <cit:date>
                   <cit:CI_Date>
                     <cit:date>
-                      <gco:DateTime/>
+                      <gco:DateTime>
+                        <xsl:value-of select="(metas/modified|dataset/metas/default/modified)[1]"/>
+                      </gco:DateTime>
                     </cit:date>
                     <cit:dateType>
-                      <cit:CI_DateTypeCode codeList="codeListLocation#CI_DateTypeCode" codeListValue="creation"/>
+                      <cit:CI_DateTypeCode codeList="codeListLocation#CI_DateTypeCode" codeListValue="publication"/>
+                    </cit:dateType>
+                  </cit:CI_Date>
+                </cit:date>
+                <cit:date>
+                  <cit:CI_Date>
+                    <cit:date>
+                      <gco:DateTime><xsl:value-of select="metas/data_processed"/></gco:DateTime>
+                    </cit:date>
+                    <cit:dateType>
+                      <cit:CI_DateTypeCode codeList="codeListLocation#CI_DateTypeCode" codeListValue="revision"/>
                     </cit:dateType>
                   </cit:CI_Date>
                 </cit:date>
@@ -187,7 +192,7 @@
             </mri:citation>
             <mri:abstract>
               <gco:CharacterString>
-                <xsl:value-of select="metas/description"/>
+                <xsl:value-of select="(metas/description|dataset/metas/default/description)[1]"/>
               </gco:CharacterString>
             </mri:abstract>
             <!-- TODO: Check state definition-->
@@ -195,6 +200,38 @@
               <mcc:MD_ProgressCode codeList="codeListLocation#MD_ProgressCode" codeListValue="{state}"/>
             </mri:status>-->
 
+            <!-- add publisher to resource organisation as well-->
+            <xsl:if test="not(organization)">
+              <mri:pointOfContact>
+                <cit:CI_Responsibility>
+                  <cit:role>
+                    <cit:CI_RoleCode codeList="codeListLocation#CI_RoleCode" codeListValue="originator">publisher</cit:CI_RoleCode>
+                  </cit:role>
+                  <cit:party>
+                    <cit:CI_Organisation>
+                      <cit:name>
+                        <gco:CharacterString>
+                          <xsl:value-of select="metas/publisher"/>
+                        </gco:CharacterString>
+                      </cit:name>
+                      <cit:contactInfo>
+                        <cit:CI_Contact>
+                          <cit:address>
+                            <cit:CI_Address>
+                              <cit:electronicMailAddress>
+                                <gco:CharacterString>
+                                  <xsl:value-of select="author_email"/>
+                                </gco:CharacterString>
+                              </cit:electronicMailAddress>
+                            </cit:CI_Address>
+                          </cit:address>
+                        </cit:CI_Contact>
+                      </cit:contactInfo>
+                    </cit:CI_Organisation>
+                  </cit:party>
+                </cit:CI_Responsibility>
+              </mri:pointOfContact>
+            </xsl:if>
             <xsl:for-each select="organization">
               <mri:pointOfContact>
                 <cit:CI_Responsibility>
@@ -227,110 +264,30 @@
               </mri:pointOfContact>
             </xsl:for-each>
 
-
-            <!--<mri:spatialRepresentationType>
-              <mcc:MD_SpatialRepresentationTypeCode codeList="" codeListValue=""/>
-            </mri:spatialRepresentationType>
-            <mri:spatialResolution>
-              <mri:MD_Resolution>
-                <mri:equivalentScale>
-                  <mri:MD_RepresentativeFraction>
-                    <mri:denominator>
-                      <gco:Integer/>
-                    </mri:denominator>
-                  </mri:MD_RepresentativeFraction>
-                </mri:equivalentScale>
-              </mri:MD_Resolution>
-            </mri:spatialResolution>-->
-            <mri:topicCategory>
-              <mri:MD_TopicCategoryCode></mri:MD_TopicCategoryCode>
-            </mri:topicCategory>
-            <!--<mri:extent>
-              <gex:EX_Extent>
-                <gex:temporalElement>
-                  <gex:EX_TemporalExtent>
-                    <gex:extent>
-                      <gml:TimePeriod gml:id="A1234">
-                        <gml:beginPosition>
-                        </gml:beginPosition>
-                        <gml:endPosition>
-                        </gml:endPosition>
-                      </gml:TimePeriod>
-                    </gex:extent>
-                  </gex:EX_TemporalExtent>
-                </gex:temporalElement>
-              </gex:EX_Extent>
-            </mri:extent>-->
-            <!--
-            geographic_area: {
-              type: "Polygon",
-              coordinates: [
-              [
-              [
-              2.3642042812,
-              48.816398324
-
-            <mri:extent>
-              <gex:EX_Extent>
-                <gex:geographicElement>
-                  <gex:EX_GeographicBoundingBox>
-                    <gex:westBoundLongitude>
-                      <gco:Decimal>-180</gco:Decimal>
-                    </gex:westBoundLongitude>
-                    <gex:eastBoundLongitude>
-                      <gco:Decimal>180</gco:Decimal>
-                    </gex:eastBoundLongitude>
-                    <gex:southBoundLatitude>
-                      <gco:Decimal>-90</gco:Decimal>
-                    </gex:southBoundLatitude>
-                    <gex:northBoundLatitude>
-                      <gco:Decimal>90</gco:Decimal>
-                    </gex:northBoundLatitude>
-                  </gex:EX_GeographicBoundingBox>
-                </gex:geographicElement>
-              </gex:EX_Extent>
-            </mri:extent>-->
-
-
-            <!--<mri:resourceMaintenance>
-              <mmi:MD_MaintenanceInformation>
-                <mmi:maintenanceAndUpdateFrequency>
-                  <mmi:MD_MaintenanceFrequencyCode codeListValue="asNeeded"
-                                                   codeList="./resources/codeList.xml#MD_MaintenanceFrequencyCode"/>
-                </mmi:maintenanceAndUpdateFrequency>
-              </mmi:MD_MaintenanceInformation>
-            </mri:resourceMaintenance>-->
-
-            <!-- ODS keywords copied without type -->
-            <xsl:if test="metas/keyword">
-              <mri:descriptiveKeywords>
-                <mri:MD_Keywords>
-                  <xsl:for-each select="metas/keyword">
-                    <mri:keyword>
-                      <gco:CharacterString>
-                        <xsl:value-of select="."/>
-                      </gco:CharacterString>
-                    </mri:keyword>
-                  </xsl:for-each>
-                </mri:MD_Keywords>
-              </mri:descriptiveKeywords>
+            <!-- ODS themes copied as topicCategory -->
+            <xsl:if test="metas/theme">
+                <xsl:for-each select="metas/theme">
+                  <mri:topicCategory>
+                    <mri:MD_TopicCategoryCode>
+                      <xsl:value-of select="."/>
+                    </mri:MD_TopicCategoryCode>
+                  </mri:topicCategory>
+                </xsl:for-each>
             </xsl:if>
 
-            <!-- ODS themes copied as keywords with type 'theme' -->
-            <xsl:if test="metas/theme">
+            <!-- ODS keywords copied without type -->
+            <xsl:variable name="keywords"
+                          select="metas/keyword|dataset/metas/default/keyword"/>
+            <xsl:if test="$keywords">
               <mri:descriptiveKeywords>
                 <mri:MD_Keywords>
-                  <xsl:for-each select="metas/theme">
+                  <xsl:for-each select="$keywords">
                     <mri:keyword>
                       <gco:CharacterString>
                         <xsl:value-of select="."/>
                       </gco:CharacterString>
                     </mri:keyword>
                   </xsl:for-each>
-                  <mri:type>
-                    <mri:MD_KeywordTypeCode codeListValue="theme"
-                                            codeList="./resources/codeList.xml#MD_KeywordTypeCode"/>
-                  </mri:type>
                 </mri:MD_Keywords>
               </mri:descriptiveKeywords>
             </xsl:if>
@@ -344,14 +301,14 @@
                   <cit:CI_Citation>
                     <cit:title>
                       <gco:CharacterString>
-                        <xsl:value-of select="metas/license"/>
+                        <xsl:value-of select="metas/license|dataset/meta/default/license"/>
                       </gco:CharacterString>
                     </cit:title>
                     <cit:onlineResource>
                       <cit:CI_OnlineResource>
                         <cit:linkage>
                           <gco:CharacterString>
-                            <xsl:value-of select="metas/license_url"/>
+                            <xsl:value-of select="metas/license_url|dataset/meta/default/license_url"/>
                           </gco:CharacterString>
                         </cit:linkage>
                       </cit:CI_OnlineResource>
@@ -368,7 +325,7 @@
                 </mco:useConstraints>
                 <mco:otherConstraints>
                   <gco:CharacterString>
-                    <xsl:value-of select="metas/license"/>
+                    <xsl:value-of select="metas/license|dataset/meta/default/license"/>
                   </gco:CharacterString>
                 </mco:otherConstraints>
               </mco:MD_LegalConstraints>
@@ -378,7 +335,7 @@
             <mri:defaultLocale>
               <lan:PT_Locale>
                 <lan:language>
-                  <lan:LanguageCode codeList="codeListLocation#LanguageCode" codeListValue="{metas/language}"/>
+                  <lan:LanguageCode codeList="codeListLocation#LanguageCode" codeListValue="{java-xsl-util:threeCharLangCode((metas/language|dataset/meta/default/language)[1])}"/>
                 </lan:language>
                 <lan:characterEncoding>
                   <lan:MD_CharacterSetCode codeList="codeListLocation#MD_CharacterSetCode"
@@ -399,7 +356,7 @@
           name: "n_sq_fil"
           },
         -->
-        <xsl:if test="count(fields) > 0">
+        <xsl:if test="count(fields|dataset/fields) > 0">
           <mdb:contentInfo>
             <mrc:MD_FeatureCatalogue>
               <mrc:featureCatalogue>
@@ -407,11 +364,13 @@
                   <gfc:producer></gfc:producer>
                   <gfc:featureType>
                     <gfc:FC_FeatureType>
-                      <gfc:typeName><xsl:value-of select="metas/title"/></gfc:typeName>
+                      <gfc:typeName>
+                        <xsl:value-of select="(metas/title|dataset/metas/default/title)[1]"/>
+                      </gfc:typeName>
                       <gfc:isAbstract>
                         <gco:Boolean>false</gco:Boolean>
                       </gfc:isAbstract>
-                      <xsl:for-each select="fields">
+                      <xsl:for-each select="fields|dataset/fields">
                         <gfc:carrierOfCharacteristics>
                           <gfc:FC_FeatureAttribute>
                             <gfc:memberName>
@@ -472,10 +431,29 @@
                 </mrd:MD_Format>
               </mrd:distributionFormat>
             </xsl:for-each-group>
+            <xsl:if test="metas/records_count > 0">
+              <xsl:call-template name="dataFormat">
+                <xsl:with-param name="format">csv</xsl:with-param>
+              </xsl:call-template>
+              <xsl:call-template name="dataFormat">
+                <xsl:with-param name="format">json</xsl:with-param>
+              </xsl:call-template>
+              <xsl:if test="count(features[. = 'geo']) > 0">
+                <xsl:call-template name="dataFormat">
+                  <xsl:with-param name="format">geojson</xsl:with-param>
+                </xsl:call-template>
+                <xsl:if test="metas/records_count &lt; 5000">
+                  <xsl:call-template name="dataFormat">
+                    <xsl:with-param name="format">shapefile</xsl:with-param>
+                  </xsl:call-template>
+                </xsl:if>
+              </xsl:if>
+            </xsl:if>
+
 
             <mrd:transferOptions>
               <mrd:MD_DigitalTransferOptions>
-                <xsl:for-each select="attachments">
+                <xsl:for-each select="attachments|dataset/attachments">
                   <mrd:onLine>
                     <cit:CI_OnlineResource>
                       <cit:linkage>
@@ -503,18 +481,20 @@
                 </xsl:for-each>
 
                 <!-- Data download links are inferred from the record metadata -->
-                <xsl:if test="metas/records_count > 0">
+                <xsl:variable name="count"
+                              select="dataset/metas/default/records_count"/>
+                <xsl:if test="$count > 0">
                   <xsl:call-template name="dataLink">
                     <xsl:with-param name="format">csv</xsl:with-param>
                   </xsl:call-template>
                   <xsl:call-template name="dataLink">
                     <xsl:with-param name="format">json</xsl:with-param>
                   </xsl:call-template>
-                  <xsl:if test="count(features[. = 'geo']) > 0">
+                  <xsl:if test="count(.//features[. = 'geo']) > 0">
                     <xsl:call-template name="dataLink">
                       <xsl:with-param name="format">geojson</xsl:with-param>
                     </xsl:call-template>
-                    <xsl:if test="metas/records_count &lt; 5000">
+                    <xsl:if test="$count &lt; 5000">
                       <xsl:call-template name="dataLink">
                         <xsl:with-param name="format">shapefile</xsl:with-param>
                       </xsl:call-template>
@@ -530,7 +510,10 @@
                   <cit:CI_OnlineResource>
                     <cit:linkage>
                       <gco:CharacterString>
-                        <xsl:value-of select="concat(nodeUrl, '/explore/dataset/', datasetid, '/information/')" />
+                        <xsl:value-of select="concat(nodeUrl,
+                                          '/explore/dataset/',
+                                          (datasetid|dataset/dataset_id)[1],
+                                           '/information/')" />
                       </gco:CharacterString>
                     </cit:linkage>
                     <cit:protocol>
@@ -578,7 +561,11 @@
         <cit:CI_OnlineResource>
           <cit:linkage>
             <gco:CharacterString>
-              <xsl:value-of select="concat(nodeUrl, '/explore/dataset/', datasetid, '/download?format=', $format, '&amp;timezone=Europe/Berlin&amp;use_labels_for_header=false')" />
+              <xsl:value-of select="concat(nodeUrl,
+                                   '/explore/dataset/',
+                                   (datasetid|dataset/dataset_id)[1],
+                                   '/download?format=', $format,
+                                   '&amp;timezone=Europe/Berlin&amp;use_labels_for_header=false')" />
             </gco:CharacterString>
           </cit:linkage>
           <cit:protocol>
@@ -598,10 +585,27 @@
           </cit:description>
           <cit:function>
             <cit:CI_OnLineFunctionCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_OnLineFunctionCode"
-                                       codeListValue="fileAccess"/>
+                                       codeListValue="download"/>
           </cit:function>
         </cit:CI_OnlineResource>
       </mrd:onLine>
+    </xsl:template>
+
+    <xsl:template name="dataFormat">
+      <xsl:param name="format" />
+      <mrd:distributionFormat>
+        <mrd:MD_Format>
+          <mrd:formatSpecificationCitation>
+            <cit:CI_Citation>
+              <cit:title>
+                <gco:CharacterString>
+                  <xsl:value-of select="$format"/>
+                </gco:CharacterString>
+              </cit:title>
+            </cit:CI_Citation>
+          </mrd:formatSpecificationCitation>
+        </mrd:MD_Format>
+      </mrd:distributionFormat>
     </xsl:template>
 
 </xsl:stylesheet>

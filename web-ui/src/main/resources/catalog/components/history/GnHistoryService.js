@@ -21,68 +21,97 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
-  goog.provide('gn_history_service');
+(function () {
+  goog.provide("gn_history_service");
 
-  var module = angular.module('gn_history_service', []);
+  var module = angular.module("gn_history_service", []);
 
   /**
    * Service to deal with record history.
    */
-  module
-    .service(
-      'gnRecordHistoryService', [
-        '$http', '$filter',
-      function($http, $filter) {
-        this.delete = function (step) {
-          return $http.delete('../api/records/' + step.metadataId + '/status/' +
-            step.statusId + '.' + step.userId + '.' + step.dateChange);
-        };
+  module.service("gnRecordHistoryService", [
+    "$http",
+    "$filter",
+    function ($http, $filter) {
+      this.delete = function (step) {
+        return $http.delete(
+          "../api/records/" +
+            step.metadataId +
+            "/status/" +
+            step.statusId +
+            "." +
+            step.userId +
+            "." +
+            step.dateChange
+        );
+      };
 
-        this.close = function (step, optionalDateOrNow) {
-          return $http.put('../api/records/' + step.metadataId + '/status/' +
-            step.statusId + '.' + step.userId + '.' +
+      this.close = function (step, optionalDateOrNow) {
+        return $http.put(
+          "../api/records/" +
+            step.metadataId +
+            "/status/" +
+            step.statusId +
+            "." +
+            step.userId +
+            "." +
             step.dateChange +
-            '/close?closeDate=' + (optionalDateOrNow || moment().format('YYYY-MM-DDTHH:mm:ss')));
-        };
+            "/close?closeDate=" +
+            (optionalDateOrNow || moment().format("YYYY-MM-DDTHH:mm:ss"))
+        );
+      };
 
-        this.restoreHistoryElement = function(step) {
-          return $http.post('../api/records/' + step.metadataId + '/status/' +
-              step.statusId + '.' + step.userId + '.' +
-              step.dateChange + '/restore');
-        };
+      this.restoreHistoryElement = function (step) {
+        return $http.post(
+          "../api/records/" +
+            step.metadataId +
+            "/status/" +
+            step.statusId +
+            "." +
+            step.userId +
+            "." +
+            step.dateChange +
+            "/restore"
+        );
+      };
 
-        function buildFilter(filter) {
-          var filters = [];
-          angular.forEach(filter.types, function (v, k) {
-            if (v) {
-              filters.push('type=' + k);
-            }
-          });
-          if (filter.authorFilter && filter.authorFilter.id) {
-            filters.push('author=' + filter.authorFilter.id);
+      function buildFilter(filter) {
+        var filters = [];
+        angular.forEach(filter.types, function (v, k) {
+          if (v) {
+            filters.push("type=" + k);
           }
-          if (filter.ownerFilter && filter.ownerFilter.id) {
-            filters.push('owner=' + filter.ownerFilter.id);
-          }
-          if (filter.recordFilter) {
-            filters.push('record=' + filter.recordFilter);
-          }
-          if (filter.dateFromFilter) {
-            filters.push('dateFrom=' + $filter('date')(filter.dateFromFilter, 'yyyy-MM-dd'));
-          }
-          if (filter.dateToFilter) {
-            filters.push('dateTo=' + $filter('date')(filter.dateToFilter, 'yyyy-MM-dd'));
-          }
+        });
+        if (filter.authorFilter && filter.authorFilter.id) {
+          filters.push("author=" + filter.authorFilter.id);
+        }
+        if (filter.ownerFilter && filter.ownerFilter.id) {
+          filters.push("owner=" + filter.ownerFilter.id);
+        }
+        if (filter.recordFilter) {
+          filters.push("record=" + filter.recordFilter);
+        }
+        if (filter.uuid) {
+          filters.push("uuid=" + filter.uuid);
+        }
+        if (filter.dateFromFilter) {
+          filters.push(
+            "dateFrom=" + $filter("date")(filter.dateFromFilter, "yyyy-MM-dd")
+          );
+        }
+        if (filter.dateToFilter) {
+          filters.push("dateTo=" + $filter("date")(filter.dateToFilter, "yyyy-MM-dd"));
+        }
 
-          filters.push('from=' + (filter.from || 0));
-          filters.push('size=' + (filter.size || 20));
+        filters.push("from=" + (filter.from || 0));
+        filters.push("size=" + (filter.size || 20));
 
-          return filters.length > 0 ? '?' + filters.join('&') : '';
-        };
+        return filters.length > 0 ? "?" + filters.join("&") : "";
+      }
 
-        this.search = function(filter) {
-          return $http.get('../api/records/status/search' + buildFilter(filter));
-        };
-      }]);
+      this.search = function (filter) {
+        return $http.get("../api/records/status/search" + buildFilter(filter));
+      };
+    }
+  ]);
 })();

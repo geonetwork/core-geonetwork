@@ -153,7 +153,7 @@ public abstract class AbstractOperation {
     }
 
     protected Map<String, String> retrieveNamespaces(String namespaces) {
-        HashMap<String, String> hm = new HashMap<String, String>();
+        Map<String, String> hm = new HashMap<String, String>();
 
         if (namespaces != null) {
             StringTokenizer st = new StringTokenizer(namespaces, ",");

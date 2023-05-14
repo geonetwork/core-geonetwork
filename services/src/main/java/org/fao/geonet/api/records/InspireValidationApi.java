@@ -212,6 +212,11 @@ public class InspireValidationApi {
         String id = String.valueOf(metadata.getId());
 
         String URL = settingManager.getValue(Settings.SYSTEM_INSPIRE_REMOTE_VALIDATION_URL);
+        String URL_QUERY = settingManager.getValue(Settings.SYSTEM_INSPIRE_REMOTE_VALIDATION_URL_QUERY);
+        if (StringUtils.isEmpty(URL_QUERY)) {
+            URL_QUERY = URL;
+        }
+
         ServiceContext context = ApiUtils.createServiceContext(request);
         String getRecordByIdUrl = null;
         String testId = null;
@@ -263,7 +268,7 @@ public class InspireValidationApi {
 
 
             InputStream metadataToTest = convertElement2InputStream(md);
-            testId = inspireValidatorUtils.submitFile(context, URL, metadataToTest, testsuite, metadata.getUuid());
+            testId = inspireValidatorUtils.submitFile(context, URL, URL_QUERY, metadataToTest, testsuite, metadata.getUuid());
         } else {
             String portal = NodeInfo.DEFAULT_NODE;
             if (!NodeInfo.DEFAULT_NODE.equals(mode)) {
@@ -283,7 +288,7 @@ public class InspireValidationApi {
                 portal,
                 ISO19139Namespaces.GMD.getURI(),
                 metadataUuid);
-            testId = inspireValidatorUtils.submitUrl(context, URL, getRecordByIdUrl, testsuite, metadata.getUuid());
+            testId = inspireValidatorUtils.submitUrl(context, URL, URL_QUERY, getRecordByIdUrl, testsuite, metadata.getUuid());
         }
 
         threadPool.runTask(new InspireValidationRunnable(context, URL, testId, metadata.getId()));

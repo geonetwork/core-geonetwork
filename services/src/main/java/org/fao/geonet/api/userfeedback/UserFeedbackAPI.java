@@ -39,9 +39,14 @@ import org.fao.geonet.api.userfeedback.UserFeedbackUtils.RatingAverage;
 import org.fao.geonet.api.userfeedback.service.IUserFeedbackService;
 import org.fao.geonet.api.users.recaptcha.RecaptchaChecker;
 import org.fao.geonet.domain.AbstractMetadata;
+import org.fao.geonet.domain.Group;
+import org.fao.geonet.domain.StatusValueNotificationLevel;
+import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.userfeedback.RatingCriteria;
 import org.fao.geonet.domain.userfeedback.RatingsSetting;
 import org.fao.geonet.domain.userfeedback.UserFeedback;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.kernel.metadata.DefaultStatusActions;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.MetadataRepository;
@@ -65,8 +70,7 @@ import java.io.PrintWriter;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static org.fao.geonet.kernel.setting.Settings.SYSTEM_FEEDBACK_EMAIL;
-import static org.fao.geonet.kernel.setting.Settings.SYSTEM_SITE_NAME_PATH;
+import static org.fao.geonet.kernel.setting.Settings.*;
 
 
 /**
@@ -89,6 +93,9 @@ public class UserFeedbackAPI {
 
     @Autowired
     MetadataRepository metadataRepository;
+
+    @Autowired
+    IMetadataUtils metadataUtils;
 
     /**
      * Gets rating criteria
@@ -473,6 +480,52 @@ public class UserFeedbackAPI {
                 .saveUserFeedback(UserFeedbackUtils.convertFromDto(userFeedbackDto, session != null ? session.getPrincipal() : null),
                     request.getRemoteAddr());
 
+
+            String notificationSetting = settingManager.getValue(SYSTEM_LOCALRATING_NOTIFICATIONLEVEL);
+            if (StringUtils.isNotEmpty(notificationSetting)) {
+                StatusValueNotificationLevel notificationLevel =
+                    StatusValueNotificationLevel.valueOf(notificationSetting);
+                if (notificationLevel != null) {
+                    List<String> toAddress;
+
+                    if (notificationLevel == StatusValueNotificationLevel.recordGroupEmail) {
+                        List<Group> groupToNotify = DefaultStatusActions.getGroupToNotify(notificationLevel,
+                            Arrays.asList(settingManager.getValue(SYSTEM_LOCALRATING_NOTIFICATIONGROUPS).split("\\|")));
+
+                        toAddress = groupToNotify.stream()
+                            .filter(g -> StringUtils.isNotEmpty(g.getEmail()))
+                            .map(Group::getEmail)
+                            .collect(Collectors.toList());
+                    } else {
+                        List<User> userToNotify = DefaultStatusActions.getUserToNotify(notificationLevel,
+                            Collections.singleton(
+                                Integer.parseInt(
+                                    metadataUtils.getMetadataId(userFeedbackDto.getMetadataUUID()))
+                            ),
+                            null);
+
+                       toAddress = userToNotify.stream()
+                            .filter(u -> StringUtils.isNotEmpty(u.getEmail()))
+                            .map(User::getEmail)
+                            .collect(Collectors.toList());
+                    }
+
+                    String catalogueName = settingManager.getValue(SYSTEM_SITE_NAME_PATH);
+                    String title = XslUtil.getIndexField(null, userFeedbackDto.getMetadataUUID(), "resourceTitleObject", "");
+
+                    if (toAddress.size() > 0) {
+                        MailUtil.sendMail(toAddress,
+                            String.format(
+                                messages.getString("new_user_rating"),
+                                catalogueName, title),
+                            String.format(
+                                messages.getString("new_user_rating_text"),
+                                metadataUtils.getDefaultUrl(userFeedbackDto.getMetadataUUID(), locale.getISO3Language())),
+                            settingManager);
+                    }
+                }
+            }
+
             return new ResponseEntity(HttpStatus.CREATED);
         } catch (final Exception e) {
             Log.error(API.LOG_MODULE_NAME, "UserFeedbackAPI - newUserFeedback: " + e.getMessage(), e);
@@ -551,7 +604,8 @@ public class UserFeedbackAPI {
         )
         @RequestParam(required = false, defaultValue = "") final String metadataEmail,
         @Parameter(hidden = true) final HttpServletRequest request
-    ) throws IOException {
+    ) throws Exception {
+        AbstractMetadata md = ApiUtils.canViewRecord(metadataUuid, request);
 
         Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
         ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages", locale);
@@ -575,7 +629,6 @@ public class UserFeedbackAPI {
         toAddress.add(to);
         if (StringUtils.isNotBlank(metadataEmail)) {
             //Check metadata email belongs to metadata security!!
-            AbstractMetadata md = metadataRepository.findOneByUuid(metadataUuid);
             String[] metadataAddresses = StringUtils.split(metadataEmail, ",");
             for (String metadataAddress : metadataAddresses) {
                 String cleanMetadataAddress = StringUtils.trimToEmpty(metadataAddress);
@@ -585,7 +638,7 @@ public class UserFeedbackAPI {
             }
         }
 
-        String title = XslUtil.getIndexField(null, metadataUuid, "resourceTitle", "");
+        String title = XslUtil.getIndexField(null, metadataUuid, "resourceTitleObject", "");
 
         MailUtil.sendMail(new ArrayList<>(toAddress),
             String.format(
@@ -594,7 +647,7 @@ public class UserFeedbackAPI {
             String.format(
                 messages.getString("user_feedback_text"),
                 name, org, function, email, phone, title, type, category, comments,
-                settingManager.getNodeURL(), metadataUuid),
+                metadataUtils.getDefaultUrl(metadataUuid, locale.getISO3Language())),
             settingManager);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }

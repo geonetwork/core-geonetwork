@@ -25,8 +25,6 @@ package org.fao.geonet.inspireatom.harvester;
 
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.EnhancedPatternLayout;
-import org.apache.log4j.FileAppender;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
@@ -37,7 +35,6 @@ import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.inspireatom.model.DatasetFeedInfo;
 import org.fao.geonet.inspireatom.util.InspireAtomUtil;
 import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.setting.SettingManager;
@@ -45,13 +42,12 @@ import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.InspireAtomFeedRepository;
 import org.fao.geonet.repository.specification.InspireAtomFeedSpecs;
 import org.fao.geonet.repository.specification.MetadataSpecs;
+import org.fao.geonet.util.LogUtil;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.springframework.data.jpa.domain.Specification;
 
-import java.io.File;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 
@@ -61,8 +57,6 @@ import java.util.*;
  * @author Jose García
  */
 public class InspireAtomHarvester {
-    private final static String EXTRACT_DATASETS_FROM_SERVICE_XSLT = "extract-datasetinfo-from-service-feed.xsl";
-    private final static String EXTRACT_DATASET_ID_XSLT = "extract-datasetid.xsl";
     private Logger logger = Log.createLogger(Geonet.ATOM);
     /**
      * GeoNetwork context.
@@ -84,7 +78,7 @@ public class InspireAtomHarvester {
      * document is retrieved and stored in the metadata table.
      */
     public final Element harvest() {
-        initializeLog();
+        LogUtil.initializeHarvesterLog("atom", "atomharvester");
         EsSearchManager searchManager = gc.getBean(EsSearchManager.class);
         SettingManager sm = gc.getBean(SettingManager.class);
         DataManager dataMan = gc.getBean(DataManager.class);
@@ -125,7 +119,7 @@ public class InspireAtomHarvester {
                 processServiceMetadataFeeds(dataMan, serviceMetadataWithAtomFeeds, result);
 
             // Process DATASET metadata feeds related to the service metadata
-            logger.info("ATOM feed harvest : processing dataset metadata feeds (" + datasetsInformation.size() + ")");
+            logger.info("ATOM feed harvest: processing dataset metadata feeds (" + datasetsInformation.size() + ")");
             processDatasetsMetadataFeeds(dataMan, datasetsInformation, result);
 
             logger.info("ATOM feed harvest finished");
@@ -222,10 +216,9 @@ public class InspireAtomHarvester {
             String metadataUuid = dataMan.getMetadataUuid(metadataId);
 
             try {
-                logger.info("Processing feed (" + i++ + "/"+ total + ") for service metadata with uuid:" + metadataUuid);
-
                 String atomUrl = entry.getValue();
-                logger.debug("Atom feed Url for service metadata (" + metadataUuid + "): " + atomUrl);
+                logger.info("Processing feed (" + i++ + "/"+ total + ") for service metadata with uuid:" + metadataUuid);
+                logger.info("Atom feed Url for service metadata (" + metadataUuid + "): " + atomUrl);
 
                 String atomFeedDocument = InspireAtomUtil.retrieveRemoteAtomFeedDocument(gc, atomUrl);
                 logger.debug("Atom feed Document for service metadata (" + metadataUuid + "): " + atomFeedDocument);
@@ -434,49 +427,5 @@ public class InspireAtomHarvester {
 
             }
         }
-    }
-
-    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmm");
-
-    private String initializeLog() {
-
-        // configure personalized logger
-        String packagename = getClass().getPackage().getName();
-        String[] packages = packagename.split("\\.");
-        String packageType = packages[packages.length - 1];
-        final String harvesterName = "inspireatom";
-        logger = Log.createLogger("inspireatom", "geonetwork.atom");
-
-        String directory = logger.getFileAppender();
-        if (directory == null || directory.isEmpty()) {
-            directory = gc.getBean(GeonetworkDataDirectory.class).getSystemDataDir() + "/harvester_logs/";
-        }
-        File d = new File(directory);
-        if (!d.isDirectory()) {
-            directory = d.getParent() + File.separator;
-        }
-
-        FileAppender fa = new FileAppender();
-        fa.setName(harvesterName);
-        String logfile = directory + "atomharvester_" + packageType + "_"
-            + dateFormat.format(new Date(System.currentTimeMillis()))
-            + ".log";
-        fa.setFile(logfile);
-
-        SettingManager settingManager = gc.getBean(SettingManager.class);
-
-        String timeZoneSetting = settingManager.getValue(Settings.SYSTEM_SERVER_TIMEZONE);
-        if (StringUtils.isBlank(timeZoneSetting)) {
-            timeZoneSetting = TimeZone.getDefault().getID();
-        }
-        fa.setLayout(new EnhancedPatternLayout("%d{yyyy-MM-dd'T'HH:mm:ss,SSSZ}{" + timeZoneSetting +"} %-5p [%c] - %m%n"));
-
-        fa.setThreshold(logger.getThreshold());
-        fa.setAppend(true);
-        fa.activateOptions();
-
-        logger.setAppender(fa);
-
-        return logfile;
     }
 }

@@ -21,27 +21,30 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
-  goog.provide('gn_registry_directive');
+(function () {
+  goog.provide("gn_registry_directive");
 
-  var module = angular.module('gn_registry_directive', []);
+  var module = angular.module("gn_registry_directive", []);
 
   /**
-     * Provide a Registry element selector.
+   * Provide a Registry element selector.
    *
-     * Usage:
-     * <div data-gn-registry-browser="registryUrl"></div>
-     */
-  module.directive('gnRegistryBrowser', [
-    'gnLangs', 'gnRegistryService', '$rootScope', '$translate',
-    function(gnLangs, gnRegistryService, $rootScope, $translate) {
+   * Usage:
+   * <div data-gn-registry-browser="registryUrl"></div>
+   */
+  module.directive("gnRegistryBrowser", [
+    "gnLangs",
+    "gnRegistryService",
+    "$rootScope",
+    "$translate",
+    function (gnLangs, gnRegistryService, $rootScope, $translate) {
       return {
-        restrict: 'A',
+        restrict: "A",
         replace: true,
         // scope: {},
-        templateUrl: '../../catalog/components/admin/registry/partials/' +
-            'registrybrowser.html',
-        link: function(scope, element, attrs) {
+        templateUrl:
+          "../../catalog/components/admin/registry/partials/" + "registrybrowser.html",
+        link: function (scope, element, attrs) {
           scope.itemClass = [];
           scope.languages = [];
           scope.itemCollection = [];
@@ -51,31 +54,41 @@
           scope.selectedLanguages = {};
           scope.loadingCollection = false;
 
-          scope.registryUrl = '';
+          scope.registryUrl = "";
           // Can be re3gistry or ldRegistry
           scope.registryType = null;
-          scope.registries = [{
-              name: 'INSPIRE',
-              url: 'https://inspire.ec.europa.eu/registry'
+          scope.registries = [
+            {
+              name: "INSPIRE",
+              url: "https://inspire.ec.europa.eu/registry"
             },
             {
-              name: 'BRGM',
-              url: 'https://data.geoscience.fr/ncl/'
-            }];
+              name: "BRGM",
+              url: "https://data.geoscience.fr/ncl/"
+            }
+          ];
 
-          scope.setDefault = function(url) {
+          scope.setDefault = function (url) {
             scope.registryUrl = url;
-          }
+          };
+
+          scope.selectAllRegistryLanguages = function (selectValues) {
+            for (var i = 0; i < scope.languages.length; i++) {
+              scope.selectedLanguages[scope.languages[i].key] = selectValues;
+            }
+          };
 
           function getMainLanguage() {
             for (var p in scope.selectedLanguages) {
-              if (scope.selectedLanguages.hasOwnProperty(p) &&
-                  scope.selectedLanguages[p] === true) {
+              if (
+                scope.selectedLanguages.hasOwnProperty(p) &&
+                scope.selectedLanguages[p] === true
+              ) {
                 return p;
               }
             }
             return null;
-          };
+          }
 
           /**
            * Select the UI language if available or
@@ -84,17 +97,17 @@
           function selectPreferredLanguage() {
             var preferredLang = gnLangs.getIso2Lang(gnLangs.getCurrent());
 
-            for (var i = 0; i < scope.languages.length; i ++) {
+            for (var i = 0; i < scope.languages.length; i++) {
               if (preferredLang === scope.languages[i].key) {
                 scope.selectedLanguages[scope.languages[i].key] = true;
                 return;
               }
             }
             scope.selectedLanguages[scope.languages[0].key] = true;
-          };
+          }
 
           function init() {
-            if (scope.registryUrl === '') {
+            if (scope.registryUrl === "") {
               return;
             }
 
@@ -102,69 +115,77 @@
             scope.selectedCollection = null;
             scope.itemCollection = [];
 
-            scope.registryType = gnRegistryService.guessTool(scope.registryUrl)
-              .then(function(TYPE) {
-              scope.registryType = TYPE;
-              // On init,
-              // * load language first (select the first one)
-              // * load available itemClass (select the firs one)
-              gnRegistryService.loadLanguages(scope.registryUrl).then(
-                function (languages) {
-                  scope.languages = languages;
+            scope.registryType = gnRegistryService
+              .guessTool(scope.registryUrl)
+              .then(function (TYPE) {
+                scope.registryType = TYPE;
+                // On init,
+                // * load language first (select the first one)
+                // * load available itemClass (select the firs one)
+                gnRegistryService
+                  .loadLanguages(scope.registryUrl)
+                  .then(function (languages) {
+                    scope.languages = languages;
 
-                  if (languages.length > 0) {
-                    selectPreferredLanguage();
+                    if (languages.length > 0) {
+                      selectPreferredLanguage();
 
-                    gnRegistryService.loadItemClass(
-                      scope.registryUrl, scope.registryType, getMainLanguage()).then(
-                      function (itemClass) {
-                        scope.itemClass = itemClass;
+                      gnRegistryService
+                        .loadItemClass(
+                          scope.registryUrl,
+                          scope.registryType,
+                          getMainLanguage()
+                        )
+                        .then(
+                          function (itemClass) {
+                            scope.itemClass = itemClass;
 
-                        if (itemClass.length > 0) {
-                          scope.selectedClassUrl = itemClass[0];
-                          loadCollection();
-                        } else {
-                          $rootScope.$broadcast('StatusUpdated', {
-                            title: $translate.instant('registryNoClassFound'),
-                            timeout: 3,
-                            type: 'warning'});
-                        }
-                      }, function () {
-                        $rootScope.$broadcast('StatusUpdated', {
-                          title: $translate.instant('registryFailedToLoadClass'),
-                          timeout: 3,
-                          type: 'danger'});
-                      }
-                    );
-                  } else {
-                    $rootScope.$broadcast('StatusUpdated', {
-                      title: $translate.instant('registryNoLanguage'),
-                      timeout: 3,
-                      type: 'warning'});
-                  }
-                }
-              );
-            });
+                            if (itemClass.length > 0) {
+                              scope.selectedClassUrl = itemClass[0];
+                              loadCollection();
+                            } else {
+                              $rootScope.$broadcast("StatusUpdated", {
+                                title: $translate.instant("registryNoClassFound"),
+                                timeout: 3,
+                                type: "warning"
+                              });
+                            }
+                          },
+                          function () {
+                            $rootScope.$broadcast("StatusUpdated", {
+                              title: $translate.instant("registryFailedToLoadClass"),
+                              timeout: 3,
+                              type: "danger"
+                            });
+                          }
+                        );
+                    } else {
+                      $rootScope.$broadcast("StatusUpdated", {
+                        title: $translate.instant("registryNoLanguage"),
+                        timeout: 3,
+                        type: "warning"
+                      });
+                    }
+                  });
+              });
           }
 
-          scope.$watch('registryUrl', function (n, o) {
+          scope.$watch("registryUrl", function (n, o) {
             if (n !== o && n != null) {
               init();
             }
           });
 
-          scope.$watch('selectedClassUrl', function (n, o) {
-            if (scope.registryUrl != '' && n !== o && n != null) {
+          scope.$watch("selectedClassUrl", function (n, o) {
+            if (scope.registryUrl != "" && n !== o && n != null) {
               loadCollection();
             }
           });
 
-          function compareItem(a,b) {
-            if (a[scope.selectedClass].label.text <
-              b[scope.selectedClass].label.text)
+          function compareItem(a, b) {
+            if (a[scope.selectedClass].label.text < b[scope.selectedClass].label.text)
               return -1;
-            if (a[scope.selectedClass].label.text >
-              b[scope.selectedClass].label.text)
+            if (a[scope.selectedClass].label.text > b[scope.selectedClass].label.text)
               return 1;
             return 0;
           }
@@ -174,11 +195,14 @@
           // TODO: Should be identified by analysing registry response ?
           scope.isSimple = false;
           function isSimpleList() {
-            if (scope.registryType === 'ldRegistry') {
+            if (scope.registryType === "ldRegistry") {
               scope.isSimple = true;
-            } else if (scope.selectedClass.match(
-              'theme|applicationschema|featureconcept|' +
-                'document|glossary|layer|media-types|producers')) {
+            } else if (
+              scope.selectedClass.match(
+                "theme|applicationschema|featureconcept|" +
+                  "document|glossary|layer|media-types|producers"
+              )
+            ) {
               scope.isSimple = true;
             } else {
               scope.isSimple = false;
@@ -188,46 +212,48 @@
 
           function loadCollection() {
             scope.loadingCollection = true;
-            scope.selectedClass =
-              scope.selectedClassUrl.key.substring(
-                scope.selectedClassUrl.key.lastIndexOf('/') + 1);
-
+            scope.selectedClass = scope.selectedClassUrl.key.substring(
+              scope.selectedClassUrl.key.lastIndexOf("/") + 1
+            );
 
             if (isSimpleList()) {
               scope.selectedCollection = scope.selectedClassUrl.key;
               scope.loadingCollection = false;
             } else {
               scope.itemCollection = [];
-              gnRegistryService.loadItemCollection(
-                scope.selectedClassUrl.key,
-                getMainLanguage()).then(
-                function (itemCollection) {
-                  if (angular.isUndefined(itemCollection.data.register)) {
-                    $rootScope.$broadcast('StatusUpdated', {
-                      title: $translate.instant('registryNoItemFound'),
+              gnRegistryService
+                .loadItemCollection(scope.selectedClassUrl.key, getMainLanguage())
+                .then(
+                  function (itemCollection) {
+                    if (angular.isUndefined(itemCollection.data.register)) {
+                      $rootScope.$broadcast("StatusUpdated", {
+                        title: $translate.instant("registryNoItemFound"),
+                        timeout: 3,
+                        type: "warning"
+                      });
+                    } else {
+                      scope.itemCollection = itemCollection.data.register.containeditems;
+                      scope.itemCollection.sort(compareItem);
+                      scope.selectedCollection =
+                        scope.itemCollection[0][scope.selectedClass].id;
+                    }
+                    scope.loadingCollection = false;
+                  },
+                  function (error) {
+                    scope.loadingCollection = false;
+                    $rootScope.$broadcast("StatusUpdated", {
+                      title: $translate.instant("registryFailedToLoadItem"),
                       timeout: 3,
-                      type: 'warning'});
-                  } else {
-                    scope.itemCollection =
-                      itemCollection.data.register.containeditems;
-                    scope.itemCollection.sort(compareItem);
-                    scope.selectedCollection =
-                      scope.itemCollection[0][scope.selectedClass].id;
+                      type: "danger"
+                    });
                   }
-                  scope.loadingCollection = false;
-                }, function(error) {
-                  scope.loadingCollection = false;
-                  $rootScope.$broadcast('StatusUpdated', {
-                    title: $translate.instant('registryFailedToLoadItem'),
-                    timeout: 3,
-                    type: 'danger'});
-                }
-              );
+                );
             }
           }
 
           init();
         }
       };
-    }]);
+    }
+  ]);
 })();

@@ -87,11 +87,10 @@
               indent="yes"/>
 
   <!-- Before attribution of a DOI the ISO19139 record does not contain yet
-  the DOI value. It is built from the DOI prefix provided as parameter
-  and the UUID of the record.
+  the DOI value. It is built from the DOI id provided as parameter.
   If the DOI already exist in the record, this parameter is not set and the DOI
   is returned as datacite:identifier -->
-  <xsl:param name="doiPrefix"
+  <xsl:param name="doiId"
              select="''"/>
   <xsl:param name="defaultDoiPrefix"
              select="'https://doi.org/'"/>
@@ -100,6 +99,8 @@
 
   <xsl:variable name="metadata"
                 select="//gmd:MD_Metadata"/>
+  <xsl:variable name="metadataUuid"
+                select="$metadata/gmd:fileIdentifier/*/text()"/>
 
   <!-- TODO: Convert language code eng > en_US ? -->
   <xsl:variable name="metadataLanguage"
@@ -132,7 +133,7 @@
     <datacite:identifier identifierType="DOI">
       <!-- Return existing one -->
       <xsl:choose>
-        <xsl:when test="$doiPrefix = ''">
+        <xsl:when test="$doiId = ''">
           <!-- DOI can be located in different places depending on user practice.
           At least we know two:
           * citation identifier
@@ -151,8 +152,7 @@
           </xsl:if>
         </xsl:when>
         <xsl:otherwise>
-          <!-- Build a new one -->
-          <xsl:value-of select="concat($doiPrefix, '/', .)"/>
+          <xsl:value-of select="$doiId"/>
         </xsl:otherwise>
       </xsl:choose>
     </datacite:identifier>
@@ -341,15 +341,18 @@
       <xsl:for-each select="../gmd:pointOfContact/*[gmd:role/gmd:CI_RoleCode/@codeListValue = ('pointOfContact', 'custodian')]">
         <datacite:creator>
           <!-- The full name of the creator. -->
-          <datacite:creatorName nameType="Personal">
-            <xsl:value-of select="gmd:individualName/*/text()"/>
-          </datacite:creatorName>
-          <!--<xsl:apply-templates mode="toDataciteLocalized" select="gmd:individualName">
-            <xsl:with-param name="template">
-              <datacite:creatorName nameType="Personal"/>
-            </xsl:with-param>
-          </xsl:apply-templates>-->
-
+          <xsl:choose>
+            <xsl:when test="gmd:individualName/*/text() != ''">
+              <datacite:creatorName nameType="Personal">
+                <xsl:value-of select="gmd:individualName/*/text()"/>
+              </datacite:creatorName>
+            </xsl:when>
+            <xsl:otherwise>
+              <datacite:creatorName nameType="Organizational">
+                <xsl:value-of select="gmd:organisationName/*/text()"/>
+              </datacite:creatorName>
+            </xsl:otherwise>
+          </xsl:choose>
           <!--
           <datacite:givenName>Elizabeth</datacite:givenName>
           <datacite:familyName>Miller</datacite:familyName>
@@ -444,12 +447,17 @@ eg.
       <datacite:publisher>DataCite</datacite:publisher>
       <datacite:publicationYear>2014</datacite:publicationYear>
 
-      TODO: Define who is the publisher ? Only one allowed.
+  publisher is the first distributor contact
+  or the first point of contact having the role "distributor"
   -->
   <xsl:template mode="toDatacite"
                 match="gmd:distributionInfo[1]">
     <datacite:publisher>
-      <xsl:value-of select="($metadata//gmd:distributorContact)[1]/*/gmd:organisationName/gco:CharacterString"/>
+      <xsl:variable name="publisher"
+                    select="if ($metadata//gmd:distributorContact)
+                            then $metadata//gmd:distributorContact
+                            else $metadata/gmd:identificationInfo/*/gmd:pointOfContact[*/gmd:role/*/@codeListValue = 'distributor']"/>
+      <xsl:value-of select="$publisher[1]/*/gmd:organisationName/*/text()"/>
     </datacite:publisher>
 
     <!--

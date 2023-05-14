@@ -200,7 +200,7 @@ public class UserFeedbackUtils {
             userfeedbackDto.setPublished(false);
         }
 
-        userfeedbackDto.setMetadataTitle(XslUtil.getIndexField(null, userfeedbackDto.getMetadataUUID(), "title", ""));
+        userfeedbackDto.setMetadataTitle(XslUtil.getIndexField(null, userfeedbackDto.getMetadataUUID(), "resourceTitleObject", ""));
 
         return userfeedbackDto;
     }

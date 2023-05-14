@@ -108,6 +108,8 @@ import static org.springframework.data.jpa.domain.Specification.where;
 public class FormatterApi extends AbstractFormatService implements ApplicationListener {
     private static final Set<String> ALLOWED_PARAMETERS = Sets.newHashSet("id", "uuid", "xsl", "skippopularity", "hide_withheld");
 
+    private static final String PARAM_LANGUAGE_ALL_VALUES = "all";
+
     @Autowired
     LanguageUtils languageUtils;
 
@@ -169,7 +171,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
     }
 
     @RequestMapping(value = {
-        "/{portal}/api/records/{metadataUuid}/formatters/{formatterId}"
+        "/{portal}/api/records/{metadataUuid}/formatters/{formatterId:.+}"
     },
         method = RequestMethod.GET,
         produces = {
@@ -243,9 +245,17 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
             formatType = FormatType.xml;
         }
 
-        String language = isoLanguagesMapper.iso639_2T_to_iso639_2B(locale.getISO3Language());
+        String language;
         if (StringUtils.isNotEmpty(iso3lang)) {
-            language = isoLanguagesMapper.iso639_2T_to_iso639_2B(iso3lang);
+            if (PARAM_LANGUAGE_ALL_VALUES.equalsIgnoreCase(iso3lang)) {
+                language = iso3lang;
+            } else if (languageUtils.getUiLanguages().contains(iso3lang)) {
+                language = isoLanguagesMapper.iso639_2T_to_iso639_2B(iso3lang);
+            } else {
+                language = languageUtils.getDefaultUiLanguage();
+            }
+        } else {
+            language = isoLanguagesMapper.iso639_2T_to_iso639_2B(locale.getISO3Language());
         }
 
         AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, servletRequest);
@@ -527,7 +537,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
         return new String(ByteStreams.toByteArray(execute.getBody()), Constants.CHARSET);
     }
 
-    private void writerAsPDF(ServiceContext context, HttpServletResponse response, byte[] bytes, String lang) throws IOException, com.itextpdf.text.DocumentException {
+    private void writerAsPDF(ServiceContext context, HttpServletResponse response, byte[] bytes, String lang) throws IOException, com.lowagie.text.DocumentException {
         final String htmlContent = new String(bytes, Constants.CHARSET);
         try {
             XslUtil.setNoScript();

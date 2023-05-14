@@ -7,6 +7,7 @@ import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.search.EsSearchManager;
+import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.SourceRepository;
@@ -14,7 +15,6 @@ import org.fao.geonet.utils.Xml;
 import org.jdom.Attribute;
 import org.jdom.Element;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -33,7 +33,6 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
 
-@Ignore
 public class LocalXLinksUpdateDeleteTest extends AbstractIntegrationTestWithMockedSingletons {
 
     private static final int TEST_OWNER = 42;
@@ -59,6 +58,7 @@ public class LocalXLinksUpdateDeleteTest extends AbstractIntegrationTestWithMock
     public void setUp() throws Exception {
         this.context = createServiceContext();
         settingManager.setValue(Settings.SYSTEM_XLINKRESOLVER_ENABLE, true);
+        resetAndGetMockInvoker();
     }
 
     @Test
@@ -78,10 +78,10 @@ public class LocalXLinksUpdateDeleteTest extends AbstractIntegrationTestWithMock
             contactElement,
             false,
             false,
-            true,
             null,
             null,
-            false);
+            false,
+            IndexingMode.full);
 
 //     TODOES   assertEquals(vicinityMapMetadata.getUuid(), document.getField("_uuid").stringValue());
 //        assertTrue(context.getBean(IndexingList.class).getIdentifiers().contains(vicinityMapMetadata.getId()));
@@ -144,11 +144,11 @@ public class LocalXLinksUpdateDeleteTest extends AbstractIntegrationTestWithMock
             context,
             metadata,
             element,
-                true,
+            IndexingMode.full,
             false,
             NO,
             false,
-            false);
+            true);
 
         return dbInsertedMetadata;
     }

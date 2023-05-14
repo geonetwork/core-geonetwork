@@ -1,4 +1,50 @@
+//=============================================================================
+//===	Copyright (C) 2001-2023 Food and Agriculture Organization of the
+//===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
+//===	and United Nations Environment Programme (UNEP)
+//===
+//===	This program is free software; you can redistribute it and/or modify
+//===	it under the terms of the GNU General Public License as published by
+//===	the Free Software Foundation; either version 2 of the License, or (at
+//===	your option) any later version.
+//===
+//===	This program is distributed in the hope that it will be useful, but
+//===	WITHOUT ANY WARRANTY; without even the implied warranty of
+//===	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+//===	General Public License for more details.
+//===
+//===	You should have received a copy of the GNU General Public License
+//===	along with this program; if not, write to the Free Software
+//===	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+//===
+//===	Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+//===	Rome - Italy. email: geonetwork@osgeo.org
+//==============================================================================
 package org.fao.geonet.wro4j;
+
+import com.github.sommeri.less4j.Less4jException;
+import com.github.sommeri.less4j.LessCompiler;
+import com.github.sommeri.less4j.LessCompiler.CompilationResult;
+import com.github.sommeri.less4j.LessCompiler.Problem;
+import com.github.sommeri.less4j.LessSource;
+import com.github.sommeri.less4j.core.DefaultLessCompiler;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.Validate;
+import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
+import org.springframework.context.ApplicationContext;
+import ro.isdc.wro.WroRuntimeException;
+import ro.isdc.wro.extensions.processor.css.Less4jProcessor;
+import ro.isdc.wro.model.group.Inject;
+import ro.isdc.wro.model.resource.Resource;
+import ro.isdc.wro.model.resource.ResourceType;
+import ro.isdc.wro.model.resource.SupportedResourceType;
+import ro.isdc.wro.model.resource.locator.factory.UriLocatorFactory;
+import ro.isdc.wro.util.WroUtil;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -9,31 +55,6 @@ import java.nio.file.Paths;
 import java.util.Iterator;
 import java.util.logging.Logger;
 
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.Validate;
-import org.fao.geonet.ApplicationContextHolder;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.GeonetworkDataDirectory;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.springframework.beans.factory.NoSuchBeanDefinitionException;
-
-import com.github.sommeri.less4j.Less4jException;
-import com.github.sommeri.less4j.LessCompiler;
-import com.github.sommeri.less4j.LessCompiler.CompilationResult;
-import com.github.sommeri.less4j.LessCompiler.Problem;
-import com.github.sommeri.less4j.LessSource;
-import com.github.sommeri.less4j.core.DefaultLessCompiler;
-
-import ro.isdc.wro.WroRuntimeException;
-import ro.isdc.wro.extensions.processor.css.Less4jProcessor;
-import ro.isdc.wro.model.group.Inject;
-import ro.isdc.wro.model.resource.Resource;
-import ro.isdc.wro.model.resource.ResourceType;
-import ro.isdc.wro.model.resource.SupportedResourceType;
-import ro.isdc.wro.model.resource.locator.factory.UriLocatorFactory;
-import ro.isdc.wro.util.WroUtil;
-
 /**
  * Custom Geonetwork implementation for importing stylesheets. Main factor is to make it more forgiving.
  * <p/>
@@ -42,91 +63,29 @@ import ro.isdc.wro.util.WroUtil;
 @SupportedResourceType(ResourceType.CSS)
 public class GeonetLessCompilerProcessor extends Less4jProcessor {
 
-    /** The Constant ALIAS. */
+    /**
+     * The Constant ALIAS.
+     */
     public static final String ALIAS = "geonetLessCompiler";
-    
-    /** The Constant LESS_EXT. */
-    private static final String LESS_EXT = ".less";
-
-    /** The Constant LOG. */
-    private static final Logger LOG = Logger.getLogger(GeonetLessCompilerProcessor.class.getPackage().getName());
 
     /**
-     * Required to use the less4j import mechanism.
+     * The Constant LESS_EXT.
      */
-    private static class RelativeAwareLessSource extends LessSource.StringSource {
-        
-        /** The resource. */
-        private final Resource resource;
-        
-        /** The locator factory. */
-        private final UriLocatorFactory locatorFactory;
+    private static final String LESS_EXT = ".less";
 
-        /**
-         * Instantiates a new relative aware less source.
-         *
-         * @param resource the resource
-         * @param content the content
-         * @param locatorFactory the locator factory
-         */
-        public RelativeAwareLessSource(final Resource resource, final String content, final UriLocatorFactory locatorFactory) {
-            super(content);
-            this.resource = resource;
-            Validate.notNull(locatorFactory);
-            this.locatorFactory = locatorFactory;
-        }
-
-        /**
-         * Relative source.
-         *
-         * @param relativePath the relative path
-         * @return the less source
-         * @throws StringSourceException the string source exception
-         */
-        @Override
-        public LessSource relativeSource(final String relativePath) throws StringSourceException {
-            return resource != null ? computeRelative(resource, relativePath) : super.relativeSource(relativePath);
-        }
-
-        /**
-         * Compute relative.
-         *
-         * @param resource the resource
-         * @param relativePath the relative path
-         * @return the less source
-         * @throws StringSourceException the string source exception
-         */
-        private LessSource computeRelative(final Resource resource, final String relativePath) throws StringSourceException {
-            try {
-                final String relativeResourceUri = computeRelativeResourceUri(resource.getUri(), relativePath);
-                final Resource relativeResource = Resource.create(relativeResourceUri, ResourceType.CSS);
-                final String relativeResourceContent = IOUtils.toString(locatorFactory.locate(relativeResourceUri), "UTF-8");
-                return new RelativeAwareLessSource(relativeResource, relativeResourceContent, locatorFactory);
-            } catch (final IOException e) {
-                GeonetLessCompilerProcessor.LOG.fine("Failed to compute relative resource: " + resource);
-                throw new StringSourceException();
-            }
-        }
-
-        /**
-         * Compute relative resource uri.
-         *
-         * @param originalResourceUri the original resource uri
-         * @param relativePath the relative path
-         * @return the string
-         */
-        public String computeRelativeResourceUri(final String originalResourceUri, final String relativePath) {
-            final String fullPath = WroUtil.getFullPath(originalResourceUri) + relativePath;
-            return WroUtil.normalize(fullPath);
-        }
-    }
-
-    /** The locator factory. */
+    /**
+     * The Constant LOG.
+     */
+    private static final Logger LOG = Logger.getLogger(GeonetLessCompilerProcessor.class.getPackage().getName());
+    /**
+     * The compiler.
+     */
+    private final LessCompiler compiler = new DefaultLessCompiler();
+    /**
+     * The locator factory.
+     */
     @Inject
     private UriLocatorFactory locatorFactory;
-
-    /** The compiler. */
-    private final LessCompiler compiler = new DefaultLessCompiler();
 
     /**
      * Process.
@@ -164,8 +123,8 @@ public class GeonetLessCompilerProcessor extends Less4jProcessor {
      * Process.
      *
      * @param resource the resource
-     * @param reader the reader
-     * @param writer the writer
+     * @param reader   the reader
+     * @param writer   the writer
      * @throws IOException Signals that an I/O exception has occurred.
      */
     @Override
@@ -179,13 +138,17 @@ public class GeonetLessCompilerProcessor extends Less4jProcessor {
                 logWarnings(result);
                 writer.write(result.getCss());
             } catch (final Less4jException e) {
-                GeonetLessCompilerProcessor.LOG.fine("Failed to compile less resource: {}.");
+                GeonetLessCompilerProcessor.LOG.warning(String.format(
+                    "Failed to compile less resource: %s.",
+                    resource.getUri()));
                 for (final Problem problem : e.getErrors()) {
-                    GeonetLessCompilerProcessor.LOG.fine(problemAsString(problem));
+                    GeonetLessCompilerProcessor.LOG.warning(problemAsString(problem));
                 }
                 throw WroRuntimeException.wrap(e);
             } catch (final Exception e) {
-                GeonetLessCompilerProcessor.LOG.fine("Exception while compiling less resource: {}.");
+                GeonetLessCompilerProcessor.LOG.warning(String.format(
+                    "Exception while compiling less resource: %s.",
+                    resource.getUri()));
                 throw WroRuntimeException.wrap(e);
             }
         } else {
@@ -210,12 +173,12 @@ public class GeonetLessCompilerProcessor extends Less4jProcessor {
      * Read custom less file.
      *
      * @param customLessFile the custom less file
-     * @return the string
+     * @return the content of the custom less file originally in JSON format transformed in a less file content.
      * @throws IOException Signals that an I/O exception has occurred.
      */
 
     private String readCustomLessFile(Path customLessFile) throws IOException {
-        String customLessVariables = new String();
+        StringBuilder customLessVariables = new StringBuilder();
         if (customLessFile != null) {
             final String content = new String(Files.readAllBytes(customLessFile));
             try {
@@ -224,39 +187,45 @@ public class GeonetLessCompilerProcessor extends Less4jProcessor {
                 while (iter.hasNext()) {
                     final String key = iter.next();
                     if (jObject.getString(key) != null && !jObject.getString(key).trim().equals("")) {
-                        customLessVariables += "\n @" + key.trim() + " : " + jObject.getString(key).trim() + ";";
+                        customLessVariables.append("\n @").append(key.trim()).append(" : ")
+                            .append(jObject.getString(key).trim()).append(";");
                     }
                 }
             } catch (final JSONException e) {
                 throw WroRuntimeException.wrap(e);
             }
         }
-        return customLessVariables;
+        return customLessVariables.toString();
     }
 
     /**
-     * Gets the custom less file.
+     * Gets the custom less file from the GeoNetwork data directory. Returns null if running from a maven build.
      *
-     * @return the custom less file
+     * @return the path to the custom less file.
      * @throws IOException Signals that an I/O exception has occurred.
      */
     private Path getCustomLessFile() throws IOException {
-        
+
+        Path customLessFile = null;
         try {
-            final GeonetworkDataDirectory geonetworkDataDirectory = ApplicationContextHolder.get().getBean(GeonetworkDataDirectory.class);
-            
-            if(geonetworkDataDirectory!=null && geonetworkDataDirectory.getSystemDataDir()!=null) {
-                final String path = geonetworkDataDirectory.getSystemDataDir().resolve(Geonet.Config.NODE_LESS_DIR).toString();
-                final Path customLessFile = openFileWithCustomStyle(path);
-                return customLessFile;
+            ApplicationContext applicationContext = ApplicationContextHolder.get();
+            if (applicationContext != null) {
+                final GeonetworkDataDirectory geonetworkDataDirectory = ApplicationContextHolder.get()
+                    .getBean(GeonetworkDataDirectory.class);
+
+                if (geonetworkDataDirectory.getSystemDataDir() != null) {
+                    final String path = geonetworkDataDirectory.getSystemDataDir().resolve(Geonet.Config.NODE_LESS_DIR).toString();
+                    customLessFile = openFileWithCustomStyle(path);
+                }
             } else {
-                return null;
+                LOG.warning("Executing Less Compiler from Maven. Cannot locate the custom less variable files at " +
+                    "$DATA_DIR/" + Geonet.Config.NODE_LESS_DIR);
             }
         } catch (NoSuchBeanDefinitionException e) {
-           LOG.fine("org.fao.geonet.kernel.GeonetworkDataDirectory bean not found"); 
+            LOG.severe("org.fao.geonet.kernel.GeonetworkDataDirectory bean not found");
         }
-        
-        return null;
+
+        return customLessFile;
     }
 
     /**
@@ -281,6 +250,80 @@ public class GeonetLessCompilerProcessor extends Less4jProcessor {
      */
     private String problemAsString(final Problem problem) {
         return String.format("%s:%s %s.", problem.getLine(), problem.getCharacter(), problem.getMessage());
+    }
+
+    /**
+     * Required to use the less4j import mechanism.
+     */
+    private static class RelativeAwareLessSource extends LessSource.StringSource {
+
+        /**
+         * The resource.
+         */
+        private final Resource resource;
+
+        /**
+         * The locator factory.
+         */
+        private final UriLocatorFactory locatorFactory;
+
+        /**
+         * Instantiates a new relative aware less source.
+         *
+         * @param resource       the resource
+         * @param content        the content
+         * @param locatorFactory the locator factory
+         */
+        public RelativeAwareLessSource(final Resource resource, final String content, final UriLocatorFactory locatorFactory) {
+            super(content);
+            this.resource = resource;
+            Validate.notNull(locatorFactory);
+            this.locatorFactory = locatorFactory;
+        }
+
+        /**
+         * Relative source.
+         *
+         * @param relativePath the relative path
+         * @return the less source
+         * @throws StringSourceException the string source exception
+         */
+        @Override
+        public LessSource relativeSource(final String relativePath) throws StringSourceException {
+            return resource != null ? computeRelative(resource, relativePath) : super.relativeSource(relativePath);
+        }
+
+        /**
+         * Compute relative.
+         *
+         * @param resource     the resource
+         * @param relativePath the relative path
+         * @return the less source
+         * @throws StringSourceException the string source exception
+         */
+        private LessSource computeRelative(final Resource resource, final String relativePath) throws StringSourceException {
+            try {
+                final String relativeResourceUri = computeRelativeResourceUri(resource.getUri(), relativePath);
+                final Resource relativeResource = Resource.create(relativeResourceUri, ResourceType.CSS);
+                final String relativeResourceContent = IOUtils.toString(locatorFactory.locate(relativeResourceUri), "UTF-8");
+                return new RelativeAwareLessSource(relativeResource, relativeResourceContent, locatorFactory);
+            } catch (final IOException e) {
+                GeonetLessCompilerProcessor.LOG.fine("Failed to compute relative resource: " + resource);
+                throw new StringSourceException();
+            }
+        }
+
+        /**
+         * Compute relative resource uri.
+         *
+         * @param originalResourceUri the original resource uri
+         * @param relativePath        the relative path
+         * @return the string
+         */
+        public String computeRelativeResourceUri(final String originalResourceUri, final String relativePath) {
+            final String fullPath = WroUtil.getFullPath(originalResourceUri) + relativePath;
+            return WroUtil.normalize(fullPath);
+        }
     }
 
 }

@@ -218,8 +218,8 @@
 
     <!--<xsl:message>gn-fn-index:add-field <xsl:value-of select="$fieldName"/></xsl:message>
     <xsl:message>gn-fn-index:add-field elements <xsl:copy-of select="$elements"/></xsl:message>
-    <xsl:message>gn-fn-index:add-field languages <xsl:copy-of select="$languages"/></xsl:message>
--->
+    <xsl:message>gn-fn-index:add-field languages <xsl:copy-of select="$languages"/></xsl:message>-->
+
     <xsl:variable name="isArray"
                   select="count($elements[not(@xml:lang)]) > 1"/>
     <xsl:for-each select="$elements">
@@ -242,17 +242,32 @@
             <xsl:for-each select="$element//(*:CharacterString|*:Anchor)[. != '']">
               <value><xsl:value-of select="concat($doubleQuote, 'default', $doubleQuote, ':',
                                            $doubleQuote, gn-fn-index:json-escape(.), $doubleQuote)"/></value>
-            <value><xsl:value-of select="concat($doubleQuote, 'lang', $mainLanguage, $doubleQuote, ':',
+              <value><xsl:value-of select="concat($doubleQuote, 'lang', $mainLanguage, $doubleQuote, ':',
                                            $doubleQuote, gn-fn-index:json-escape(.), $doubleQuote)"/></value>
             </xsl:for-each>
 
-            <xsl:for-each select="$element//*:LocalisedCharacterString[. != '']">
+            <xsl:variable name="translations"
+                          select="$element//*:LocalisedCharacterString[. != '']"/>
+
+            <xsl:if test="count($element//(*:CharacterString|*:Anchor)[. != '']) = 0
+                          and count($translations) > 0">
+
+              <xsl:variable name="mainLanguageId"
+                            select="concat('#', $languages/lang[@id != 'default' and @value = $mainLanguage]/@id)"/>
+
+              <value><xsl:value-of select="concat($doubleQuote, 'default', $doubleQuote, ':',
+                                           $doubleQuote, gn-fn-index:json-escape(
+                                           if ($translations[@local = $mainLanguageId])
+                                           then $translations[@local = $mainLanguageId]
+                                           else $translations[1]), $doubleQuote)"/></value>
+            </xsl:if>
+
+            <xsl:for-each select="$translations">
               <xsl:variable name="elementLanguage"
                             select="replace(@locale, '#', '')"/>
               <xsl:variable name="elementLanguage3LetterCode"
                             select="$languages/lang[@id = $elementLanguage]/@value"/>
-
-              <xsl:if test="$elementLanguage3LetterCode != ''">
+              <xsl:if test="$elementLanguage3LetterCode != '' and ($elementLanguage3LetterCode !=$mainLanguage or count($element//(*:CharacterString|*:Anchor)[. != ''])=0) ">
                 <xsl:variable name="field"
                               select="concat('lang', $elementLanguage3LetterCode)"/>
                 <value><xsl:value-of select="concat(
@@ -279,27 +294,54 @@
         </xsl:for-each>
       </xsl:variable>
 
-      <xsl:if test="count($textObject[. != '']) > 0">
-        <xsl:choose>
-          <xsl:when test="$asJson">
-            <xsl:if test="$isArray and position() = 1">[</xsl:if>
-            {<xsl:value-of select="string-join($textObject/text(), ', ')"/>}
-            <xsl:if test="$isArray and position() != last()">,</xsl:if>
-            <xsl:if test="$isArray and position() = last()">]</xsl:if>
-          </xsl:when>
-          <xsl:when test="$asXml">
-            <xsl:copy-of select="$textObject"/>
-          </xsl:when>
-          <xsl:otherwise>
+      <xsl:choose>
+        <xsl:when test="count($textObject[. != '']) > 0">
+          <xsl:choose>
+            <xsl:when test="$asJson">
+              <xsl:if test="$isArray and position() = 1">[</xsl:if>
+              {<xsl:value-of select="string-join($textObject/text(), ', ')"/>}
+              <xsl:if test="$isArray and position() != last()">,</xsl:if>
+              <xsl:if test="$isArray and position() = last()">]</xsl:if>
+            </xsl:when>
+            <xsl:when test="$asXml">
+              <xsl:copy-of select="$textObject"/>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:element name="{$fieldName}Object">
+                <xsl:attribute name="type" select="'object'"/>
+                {<xsl:value-of select="string-join($textObject/text(), ', ')"/>}
+              </xsl:element>
+            </xsl:otherwise>
+          </xsl:choose>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:if test="not($asJson) and not($asXml)">
             <xsl:element name="{$fieldName}Object">
               <xsl:attribute name="type" select="'object'"/>
-              {<xsl:value-of select="string-join($textObject/text(), ', ')"/>}
+              {}
             </xsl:element>
-          </xsl:otherwise>
-        </xsl:choose>
-      </xsl:if>
+          </xsl:if>
+        </xsl:otherwise>
+      </xsl:choose>
     </xsl:for-each>
   </xsl:function>
+
+
+  <!-- Convert to ASCII,
+       Replace . by -,
+       Keep only letters, numbers and _ and -. -->
+  <xsl:function name="gn-fn-index:build-field-name">
+    <xsl:param name="value"/>
+
+    <xsl:value-of select="replace(
+                            replace(
+                              replace(
+                                normalize-unicode($value, 'NFKD'),
+                                '\P{IsBasicLatin}', '')
+                              , '\.', '-'),
+                            '[^a-zA-Z0-9_-]', '')"/>
+  </xsl:function>
+
 
   <!-- Template to build the following index fields for the metadata keywords:
           - tag: contains all the keywords.
@@ -325,7 +367,7 @@
     </xsl:for-each>]
     </tag>
 
-    <!-- Total number of keywords. -->
+    <!-- Total number of keywords -->
     <tagNumber>
       <xsl:value-of select="count($allKeywords//keyword)"/>
     </tagNumber>
@@ -343,19 +385,23 @@
                           'NFKC'),
                         $openDataKeywords)]) > 0"/></isOpenData>
 
+
     <!-- Build index field for type
     keywordType-place: [{default: France}]-->
-    <xsl:for-each-group select="$allKeywords" group-by="thesaurus/info/@type">
-      <xsl:element name="keywordType-{current-grouping-key()}">
-        <xsl:attribute name="type" select="'object'"/>
-        [<xsl:for-each select="$allKeywords/thesaurus[info/@type = current-grouping-key()]/keywords/keyword">
-        {
-        <xsl:value-of select="string-join(values/value, ', ')"/>
-        <xsl:if test="@uri != ''">, "key": "<xsl:value-of select="@uri"/>"</xsl:if>
-        }
-        <xsl:if test="position() != last()">,</xsl:if>
-      </xsl:for-each>]
-      </xsl:element>
+    <xsl:for-each-group select="$allKeywords"
+                        group-by="thesaurus/info/@type">
+      <xsl:if test="matches(current-grouping-key(), '^[A-Za-z\-_]+$')">
+        <xsl:element name="keywordType-{current-grouping-key()}">
+          <xsl:attribute name="type" select="'object'"/>
+          [<xsl:for-each select="$allKeywords/thesaurus[info/@type = current-grouping-key()]/keywords/keyword">
+          {
+          <xsl:value-of select="string-join(values/value, ', ')"/>
+          <xsl:if test="@uri != ''">, "link": "<xsl:value-of select="@uri"/>"</xsl:if>
+          }
+          <xsl:if test="position() != last()">,</xsl:if>
+        </xsl:for-each>]
+        </xsl:element>
+      </xsl:if>
     </xsl:for-each-group>
 
     <!-- Fields with keywords and keyword count of a thesaurus, eg. th_regions, th_regionsNumber -->
@@ -394,7 +440,7 @@
         <xsl:for-each select="keywords/keyword">
           {
           <xsl:value-of select="string-join(values/value, ', ')"/>
-          <xsl:if test="@uri != ''">, "key": "<xsl:value-of select="@uri"/>"</xsl:if>
+          <xsl:if test="@uri != ''">, "link": "<xsl:value-of select="@uri"/>"</xsl:if>
           }
           <xsl:if test="position() != last()">,</xsl:if>
         </xsl:for-each>
@@ -554,16 +600,22 @@
     <xsl:param name="end" as="node()?"/>
 
     <xsl:variable name="rangeStartDetails">
-      <xsl:if test="$start castable as xs:date or $start castable as xs:dateTime">
-        <value><xsl:value-of select="concat('&quot;date&quot;: &quot;', $start, '&quot;')"/></value>
+      <xsl:if test="$start/text() castable as xs:date
+                    or $start/text() castable as xs:dateTime
+                    or $start/text() castable as xs:gYearMonth
+                    or $start/text() castable as xs:gYear">
+        <value><xsl:value-of select="concat('&quot;date&quot;: &quot;', $start/text(), '&quot;')"/></value>
       </xsl:if>
       <xsl:for-each select="$start/@*[. != '']">
         <value><xsl:value-of select="concat('&quot;', name(.), '&quot;: &quot;', gn-fn-index:json-escape(.), '&quot;')"/></value>
       </xsl:for-each>
     </xsl:variable>
     <xsl:variable name="rangeEndDetails">
-      <xsl:if test="$end castable as xs:date or $end castable as xs:dateTime">
-        <value><xsl:value-of select="concat('&quot;date&quot;: &quot;', $end, '&quot;')"/></value>
+      <xsl:if test="$end/text() castable as xs:date
+                    or $end/text() castable as xs:dateTime
+                    or $end/text() castable as xs:gYearMonth
+                    or $end/text() castable as xs:gYear">
+        <value><xsl:value-of select="concat('&quot;date&quot;: &quot;', $end/text(), '&quot;')"/></value>
       </xsl:if>
       <xsl:for-each select="$end/@*[. != '']">
         <value><xsl:value-of select="concat('&quot;', name(.), '&quot;: &quot;', gn-fn-index:json-escape(.), '&quot;')"/></value>
@@ -583,13 +635,14 @@
   </xsl:template>
 
 
+
   <!-- Produce a thesaurus field name valid in an XML document
   and as an Elasticsearch field name. -->
   <xsl:function name="gn-fn-index:build-thesaurus-index-field-name">
     <xsl:param name="thesaurusId" as="xs:string?"/>
     <xsl:param name="thesaurusName" as="xs:string?"/>
 
-    <xsl:variable name="mappingThesaurus" as="node()*">
+    <xsl:variable name="oldFieldNameMapping" as="node()*">
       <!-- INSPIRE themes are loaded from INSPIRE registry. The thesaurus key changed. -->
       <thesaurus old="th_inspire-theme"
                  new="th_httpinspireeceuropaeutheme-theme"/>
@@ -609,7 +662,6 @@
       <thesaurus old="th_httpinspire-ec-europa-eumetadata-codelistPriorityDataset"
                  new="th_httpinspireeceuropaeumetadatacodelistPriorityDataset-PriorityDataset"/>
     </xsl:variable>
-
 
     <xsl:variable name="key">
       <xsl:choose>
@@ -633,8 +685,8 @@
     <xsl:variable name="fieldName"
                   select="concat('th_', replace($keyWithoutDot, '[^a-zA-Z0-9_-]', ''))"/>
 
-    <xsl:value-of select="if($mappingThesaurus[@old = $fieldName])
-                          then $mappingThesaurus[@old = $fieldName]/@new
+    <xsl:value-of select="if($oldFieldNameMapping[@old = $fieldName])
+                          then $oldFieldNameMapping[@old = $fieldName]/@new
                           else $fieldName"/>
   </xsl:function>
 

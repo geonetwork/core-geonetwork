@@ -30,6 +30,7 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.commons.lang.StringUtils;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
@@ -38,6 +39,7 @@ import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
@@ -48,6 +50,7 @@ import org.fao.geonet.kernel.harvest.harvester.HarvestError;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
 import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
+import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.geonet.utils.Xml;
@@ -56,7 +59,6 @@ import org.jdom.Element;
 
 import jeeves.server.context.ServiceContext;
 
-//=============================================================================
 
 public class Aligner extends BaseAligner<GeoPRESTParams> {
 
@@ -189,7 +191,7 @@ public class Aligner extends BaseAligner<GeoPRESTParams> {
 
         addCategories(metadata, params.getCategories(), localCateg, context, null, false);
 
-        metadata = metadataManager.insertMetadata(context, metadata, md, false, false, UpdateDatestamp.NO, false, false);
+        metadata = metadataManager.insertMetadata(context, metadata, md, IndexingMode.none, false, UpdateDatestamp.NO, false, false);
 
         String id = String.valueOf(metadata.getId());
 
@@ -228,9 +230,8 @@ public class Aligner extends BaseAligner<GeoPRESTParams> {
                 //
                 boolean validate = false;
                 boolean ufo = false;
-                boolean index = false;
                 String language = context.getLanguage();
-                final AbstractMetadata metadata = metadataManager.updateMetadata(context, id, md, validate, ufo, index, language, ri.changeDate, false);
+                final AbstractMetadata metadata = metadataManager.updateMetadata(context, id, md, validate, ufo, language, ri.changeDate, false, IndexingMode.none);
 
                 OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
                 repository.deleteAllByMetadataId(Integer.parseInt(id));
@@ -302,8 +303,8 @@ public class Aligner extends BaseAligner<GeoPRESTParams> {
 
             // transform it here if requested
             if (!params.getImportXslt().equals("none")) {
-                Path thisXslt = context.getAppPath().resolve(Geonet.Path.IMPORT_STYLESHEETS).
-                    resolve(params.getImportXslt());
+                Path thisXslt = ApplicationContextHolder.get().getBean(GeonetworkDataDirectory.class)
+                    .getXsltConversion(params.getImportXslt());
                 try {
                     response = Xml.transform(response, thisXslt);
                 } catch (Exception e) {

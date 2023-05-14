@@ -1,0 +1,193 @@
+================================================================================
+===
+=== GeoNetwork 4.2.3: List of changes
+===
+================================================================================
+- Update version to 4.2.3-0
+- Harvester / SimpleURL / RDF / Avoid to create a CatalogRecord with the same uuid as the Dataset.
+- Harvester / DCAT / Improve RDF doc detection.
+- Workflow / Restrict search by status to record that user can edit (#6889)
+- Record view / Related records / Status badge. (#6853)
+- Simplify regular expression for valid formatter identifiers
+- Indexing / Avoid malformed JSON on empty overview description.
+- Collection updater
+- Formatter id may contains . eg. iso19115-3.2018. It will not contains /.
+- Editor / Online links / Display full URL. (#6784)
+- Index / Feature catalogue / Add type and column names in full text search.
+- i18n / Updates from transifex
+- API / Record / Popularity / GET (#6824)
+- [gn]: fix related template if resource has no name
+- Record view / Align thumbnail with the optional label (#6863)
+- Return license elements as an array in ElasticSearch queries
+- KeyCloak / set the user profile retrieved from KeyCloak only for new users or if the configuration option KEYCLOACK_UPDATEPROFILE is enabled (#6871)
+- Merge pull request #6882 from cmangeat/need_records_json_for_core_it_test
+- need records.json for test fixture to build index when it tests in core for example
+- Merge pull request #6880 from cmangeat/remove_dead_indirection
+- Merge pull request #6796 from cmangeat/geocat_v4.2.3_forbid_used_template_deletion
+- remove dead/duplicate indirection
+- [gn]: entries, add a danger alert if the subtemplate removal fails
+- [gn]: subtemplates, check for reference while removing
+- Revert "Merge pull request #6652 from geonetwork/fix-subtemplate"
+- Metadata full view - fix display of related metadata titles
+- Fix display of user groups in users maintenance (#6875)
+- Merge pull request #6652 from geonetwork/fix-subtemplate
+- Merge pull request #6718 from geonetwork/od-orgforresource
+- Merge branch 'main' into od-orgforresource
+- Record view / Display alternate title if any.
+- Fix language in the directive to display facet cards
+- Automatic formatting
+- Fix compilation error
+- Don't use nested ternary operators
+- Workflow / Avoid NPE on null current validation state
+- Update INSPIRE Atom harvester log configuration to use log4j2 (#6827)
+- Advanced search form: reset date filter fields (#6858)
+- Schema plugins / iso19139 / Fix alt title indexing
+- Fix Pages API in migrated databases - add migration configuration. Related to #6683 (#6811)
+- Update metadata schemas xpath filters to avoid skipping the elements at the first level
+- ISO19115-3 / Metadata editor / Support gex:EX_BoundingPolygon with multiple gex:polygon elements
+- [gn]: ignore malformed geoshape
+- CSW harvester - migrate to ElasticSearch the found duplicated resource feature (#6832)
+- [FP] Add logout option for a logged-in user
+- [gn]: avoid md main language to be indexed twice
+- [gn]: need ascii folding for en
+- Bump actions/setup-java from 3.8.0 to 3.10.0
+- Update GH Actions base image to Ubuntu 22.04
+- Update OnlineSrcDirective.js (#6833)
+- [gn]: refactor, remove unused SearchParameter file
+- [gn]: rely on jdom xml outputter to interpret jdom default namespace and attributes behaviour
+- CSW Harvester / Add metadata - fix code to assign the metadata uuid, if changed in the xslt filter process
+- Admin / Thesaurus / Fix navigation between keywords (#6829)
+- CORS / Set headers before rewriting URL
+- CORS Filter / Unset list of host when db settings is empty
+- Transfer ownership / Fix JS error. (#6813)
+- Proxy / Add a custom proxy for secured Elasticsearch instances / Fallback to web.xml config. (#6783)
+- Harvester / WFS features / Debug, Instant NPE, cleanup. (#6786)
+- Indexing / Build overview data also when commiting one document (#6758)
+- Standard / ISO19115-3 / Indexing multiple quality reports (#6782)
+- Batch editing / Add condition API parameter. (#6805)
+- Standard / ISO19115-3 / Index main resource type first (#6807)
+- Record view / Remove create child option (#6769)
+- Indexing / Add option to configure ignore_above. (#6773)
+- API / XSL process / Apply update fixed info on preview (#6780)
+- Subtemplate / Indexing / Do not add () on title if no name and no mail. (#6787)
+- Standard / ISO19139 / Indexing / Add ordering instruction (#6804)
+- Conversion / Don't set extension in conversion id. (#6810)
+- Map / Feature table / When identifying on a layer from a metadata with a linked feature catalog record, use case insensitive comparison between the feature catalog column definitions and the WMS FeatureInfo response. (#6801)
+- Export / CSV / Add resource identifier.
+- Fix spg_sections table column names (#6683)
+- Permalink improvement (#6792)
+- Standard / ISO19139 / Indexing distribution format encoded using Anchor
+- Utils / XML / Improve detection.
+- Harvester / Simple URL / Updates based on 0763d14761a370b418fe3160e023d376fc2ae070.
+- Harvester / Simple URL / Add batch edit support.
+- Harvester / Simple URL / Add sample configuration. Reset to main tab on harvester selection.
+- Harvester / Simple URL / isXMLLike is super slow on large document. Add a quicker check for XML header. Reset properly harvester params.
+- Harvester / URL / Add RDF DCAT harvester.
+- Merge pull request #6785 from cmangeat/geocat_v4.2.3_running_itest_locally
+- Add `href` to the `<a>` element to make the link accessible by keyboard (#6793)
+- Integration test / API / Associated / Fix test and error on Elasticsearch 7.15 index creation.
+- it tests: give a try with ci
+- [gn]: mock esSearchManager when harvester tests
+- skip tests, iso19115-3.2018
+- fix test, extra formatter has been added
+- need to be authenticated to ask for a delete
+- fix tests
+- wonder why signatures have changed, however pictures look good
+- fix test:
+- need this properties to be defined
+- fix tests:
+- [gn]: fix one integration test
+- there is not thesaurus table to clean
+- Sharing / Fix check all options. (#6791)
+- Skip indexing empty topic categories values
+- API / User feedback only allowed on record user can view (#6781)
+- Metadata status change: don't execute mail notification logic if there are no users to notify
+- JS & CSS / Cache / Add a profile to prebuilt the wro4j-cache (#6774)
+- Admin / Indexing errors / Add copy uuids to clipboard.
+- Editor / Bounding polygon / More consistent layout
+- Search map - if the metadata results extent is bigger than the map view extent, zoom to the view extent
+- Fix status workflow facet labels
+- Thesarus manager: don't create non-multilingual title/description if multilingual elements are defined
+- Map / PDF / Extent not always correct (#6775)
+- Fix sonarcloud analysis
+- Thesaurus manager / Add support for multilingual titles and descriptions
+- XSLT / Conversions are dispatched in each schemas (#6772)
+- Harvester / Simple URL / Improvements (#6677)
+- simple URL harvester: set default encoding=utf8 and scope=dataset
+- Proxy / Add a custom proxy for secured Elasticsearch instances. (#6765)
+- Use dot as decimal separators when the system is not in English
+- CSW / Test / Updates for multilingual search support
+- Standard / ISO / Collection updater / Sort by merging key.
+- Standard / ISO / Collection updater / Sort by merging key.
+- Standard / ISO / Collection updater / Better grouping of various type of extent.
+- AngularJs upgrade to version 1.8.2 (#6693)
+- Merge pull request #6588 from geonetwork/422-multilingualcontact
+- Update userapi so that it will allow administrators to pre-create/update user profile information when using service provider (#6712)
+- Fix keyword badges filters with multilingual metadata
+- create resource folder if missing during metadata loading. (#6750)
+- changes for WMTS /extents.png and /geom.png (#6650)
+- WRO4J / Do not chain filters on exception (#6726)
+- CSW / Improve search on multilingual content.
+- Aggregation / Add what value is set for aggLanguage depending on config.
+- Standard / ISO19115-3 / Add some doc about specific use case in XSL templates.
+- Formatter / Multilingual / Organisation name not translated. (#6700)
+- Fix retrieve of  metadata bbox to display in the search map when the metadata doesn't have a bounding box
+- Editor / Configuration / Override label is optional.
+- Standard / ISO19115-3 / Indexing / Index also link which can be in a distributor.
+- Standard / ISO19115-3 / Formatter / Fix citation.
+- fix: index contact organisation as keyword
+- [FP] Update user - verify user groups when updating a user by a UserAdmin. Fixes #5537 (#6003)
+- Improve temporary file management (#6686)
+- Report file download - check if related file upload is available (#6722)
+- Harvesting / Features / Check if index exist (#6492)
+- Record view / Series member statistics improvement (#6743)
+- Permalink / Set link URL as in sitemap. (#6738)
+- Indexing / Multilingual records / Ensure default field contains a value (#6733)
+- Index / Force linkProtocol to be an array (#6727)
+- Map / Profile directive / remove goog calls (#6752)
+- Module / web-ui / Cleaning (#6739)
+- Aggregation / Improve display of number range in filter list.
+- Aggregation / Improve display of number range in filter list.
+- Cleaning / Remove unused function.
+- Admin / Cleanup old stats not displayed anymore.
+- Aggregation / Tab / Add decorator.
+- Aggregation / Move format to a dedicated field as it was somehow misleading for most user. Only the 10 first were displayed with no option to see more as it was a nested facet.
+- Aggregations improvement / Update label based on inverted or not status.
+- Aggregations improvement / No need to compute aggs for home page latest.
+- CSW / GetCapabilities created from service metadata record had incorrect Transaction endpoint (#6748)
+- Add support to geopublish geopackage and zipped geopackage (#6490)
+- Directory / Select preferredGroup or the first one
+- Admin / Metadata identifier / Add link to doc.
+- [FP] INSPIRE Atom fixes (#6723)
+- Allow for null passwords when creating user via api. (#6711)
+- Aggregation / Translate bucket value based on search field
+- Home page / Add support for filter aggregation
+- Record view / Display bounding polygon if set
+- ISO19139 / ISO19115-3.2018 datacite export - support organisation name anchor for datacite:publisher
+- Record view / PDF export based on browser capability (#6734)
+- Make the record link button accessible by adding a `href` (#6719)
+- esri harvester: fix resource contact
+- Bump jsoup from 1.14.3 to 1.15.3 (#6528)
+- simple harvester: add implicit formats for ODS resources
+- url harvester: add org for resource if none
+- Bump actions/setup-java from 3.5.1 to 3.8.0
+- Bump aws-java-sdk-s3 from 1.11.618 to 1.12.261 in /core
+- Bump svnkit from 1.7.8 to 1.10.9
+- Bump commons-net from 3.0.1 to 3.9.0
+- Update IndexationTest.java
+- Bump metrics.version from 2.1.1 to 2.2.0
+- Bump xbean-spring from 3.18 to 4.22
+- Bump springboot.version from 2.2.2.RELEASE to 2.7.0
+- Update version to 4.2.3-SNAPSHOT
+- Merge remote-tracking branch 'origin/main' into 422-multilingualcontact
+- Standard / ISO19115-3 / Fix update of multilingual documents (not in distribution).
+- feat(entries): add a danger alert if the subtemplate removal fails
+- feat(subtemplates): check for reference while removing
+- refactor: remove unused SearchParameter file
+- Indexing / ISO19115-3 / Also index multilingual document (not in distribution).
+- Index / Fix creation. copy_to can't be used on object.
+- Indexing / Fix overview multilingual description and display it when provided.
+- Index / Add support for multilingual links
+- Search / Multilingual aggregation support
+- gn: allow multilingual facet search
+- gn: catalogService: translate MD fields recursively

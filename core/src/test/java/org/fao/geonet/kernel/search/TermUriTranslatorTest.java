@@ -96,7 +96,7 @@ public class TermUriTranslatorTest {
 
     private Thesaurus loadThesaurusFile(IsoLanguagesMapper isoLanguagesMapper, Path thesaurusFile)
         throws ConfigurationException, IOException {
-        Thesaurus thesaurus = new Thesaurus(isoLanguagesMapper, thesaurusFile.getFileName().toString(), "external", "theme", thesaurusFile, "http://dummy.org/geonetwork");
+        Thesaurus thesaurus = new Thesaurus(isoLanguagesMapper, thesaurusFile.getFileName().toString(), "external", "theme", thesaurusFile, "http://dummy.org/geonetwork", 0);
         thesaurus.initRepository();
         return thesaurus;
     }

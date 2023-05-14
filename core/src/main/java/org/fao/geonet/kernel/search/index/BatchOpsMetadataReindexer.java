@@ -47,10 +47,12 @@ import com.google.common.cache.RemovalNotification;
 import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.MoreExecutors;
 import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MetadataIndexerProcessor;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.util.ThreadUtils;
+import org.fao.geonet.utils.Log;
 import org.springframework.jmx.export.MBeanExporter;
 import org.springframework.jmx.export.annotation.ManagedAttribute;
 import org.springframework.jmx.export.annotation.ManagedResource;
@@ -110,17 +112,19 @@ public class BatchOpsMetadataReindexer extends MetadataIndexerProcessor implemen
         return inError.intValue();
     }
 
-    public void process(boolean runInCurrentThread) throws Exception {
-        wrapAsyncProcess(runInCurrentThread);
+    public void process(String catalogueId, boolean runInCurrentThread) throws Exception {
+        wrapAsyncProcess(catalogueId, runInCurrentThread);
         allCompleted.get();
     }
 
-    public void process() throws Exception {
-        process(false);
+    public void process(String catalogueId) throws Exception {
+        process(catalogueId, false);
     }
 
-    public String wrapAsyncProcess(boolean runInCurrentThread) throws Exception {
-        probeName = new ObjectName(String.format("geonetwork:name=indexing-task,idx=%s", this.hashCode()));
+    public String wrapAsyncProcess(String catalogueId, boolean runInCurrentThread) throws Exception {
+        probeName = new ObjectName(String.format(
+            "geonetwork-%s:name=indexing-task,idx=%s",
+            catalogueId, this.hashCode()));
         exporter.registerManagedResource(this, probeName);
         return processAsync(runInCurrentThread);
     }
@@ -141,6 +145,10 @@ public class BatchOpsMetadataReindexer extends MetadataIndexerProcessor implemen
         else perThread = ids.length / threadCount;
 
         int index = 0;
+
+        Log.warning(Geonet.INDEX_ENGINE, String.format(
+            "Indexing %d records with %d threads.",
+            ids.length, threadCount));
 
         List<BatchOpsCallable> jobs = Lists.newArrayList();
         while (index < ids.length) {
@@ -196,6 +204,10 @@ public class BatchOpsMetadataReindexer extends MetadataIndexerProcessor implemen
 
         @Override
         public void run() {
+            Log.warning(Geonet.INDEX_ENGINE, String.format(
+                "Indexing range [%d-%d]/%d by threads %s.",
+                beginIndex, beginIndex + count, ids.length, Thread.currentThread().getId()));
+            long start = System.currentTimeMillis();
             for (int i = beginIndex; i < beginIndex + count; i++) {
                 try {
                     dm.indexMetadata(ids[i] + "", false);
@@ -204,6 +216,11 @@ public class BatchOpsMetadataReindexer extends MetadataIndexerProcessor implemen
                     inError.incrementAndGet();
                 }
             }
+            Log.warning(Geonet.INDEX_ENGINE, String.format(
+                "Indexing range [%d-%d]/%d completed in %dms by threads %s.",
+                beginIndex, beginIndex + count, ids.length,
+                System.currentTimeMillis() - start,
+                Thread.currentThread().getId()));
             ApplicationContextHolder.get().getBean(EsSearchManager.class).forceIndexChanges();
         }
     }
