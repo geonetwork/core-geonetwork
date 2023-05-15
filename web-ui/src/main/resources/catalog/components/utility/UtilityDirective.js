@@ -906,7 +906,11 @@
                   lang.tokens = [lang.name, lang.code, lang.english];
                 });
                 var source = new Bloodhound({
-                  datumTokenizer: Bloodhound.tokenizers.obj.whitespace("name", "code", "english"),
+                  datumTokenizer: Bloodhound.tokenizers.obj.whitespace(
+                    "name",
+                    "code",
+                    "english"
+                  ),
                   queryTokenizer: Bloodhound.tokenizers.whitespace,
                   local: data,
                   limit: 30
