@@ -443,6 +443,17 @@ public final class XslUtil {
         return source.isPresent() ? source.get().getLogo() : "";
     }
 
+    public static String getDiscoveryServiceUuid(String key) {
+        Optional<Source> source = getSource(key);
+        if (source.isPresent() && source.get().getType() == SourceType.subportal) {
+            return source.get().getServiceRecord();
+        } else {
+            SettingManager settingsMan = ApplicationContextHolder.get().getBean(SettingManager.class);
+            String uuid = settingsMan.getValue(SYSTEM_CSW_CAPABILITY_RECORD_UUID);
+            return "-1".equals(uuid) ? "" : uuid;
+        }
+    }
+
     private static Optional<Source> getSource(String idOrUuid) {
         SettingManager settingsMan = ApplicationContextHolder.get().getBean(SettingManager.class);
         if (StringUtils.isEmpty(idOrUuid)) {
