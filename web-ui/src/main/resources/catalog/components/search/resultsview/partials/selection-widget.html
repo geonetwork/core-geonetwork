@@ -93,25 +93,31 @@
         </a>
       </li>
       <li
+        data-ng-repeat="pubOption in publicationOptions"
         data-ng-show="!excludePattern.test('publish')"
         data-ng-if="user.isReviewerOrMore()"
       >
         <a
           href=""
-          data-ng-click="mdService.publish(undefined, searchResults.selectionBucket, 'on', getCatScope())"
+          data-ng-click="mdService.publish(undefined, searchResults.selectionBucket, 'on', getCatScope(), pubOption)"
         >
-          <i class="fa fa-fw fa-unlock"></i>&nbsp;<span translate>publish</span>
+          <i class="fa fa-fw fa-unlock"></i>&nbsp;<span translate
+            >{{ 'publish' + (pubOption.name === 'default'? '': pubOption.name)}}</span
+          >
         </a>
       </li>
       <li
+        data-ng-repeat="pubOption in publicationOptions"
         data-ng-show="!excludePattern.test('unpublish')"
         data-ng-if="user.isReviewerOrMore()"
       >
         <a
           href=""
-          data-ng-click="mdService.publish(undefined, searchResults.selectionBucket, 'off', getCatScope())"
+          data-ng-click="mdService.publish(undefined, searchResults.selectionBucket, 'off', getCatScope(), pubOption)"
         >
-          <i class="fa fa-fw fa-lock"></i>&nbsp;<span translate>unpublish</span>
+          <i class="fa fa-fw fa-lock"></i>&nbsp;<span translate
+            >{{ 'unpublish' + (pubOption.name === 'default'? '': pubOption.name)}}</span
+          >
         </a>
       </li>
       <li

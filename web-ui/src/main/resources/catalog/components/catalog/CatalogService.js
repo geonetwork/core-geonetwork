@@ -761,8 +761,24 @@
         getUuid: function () {
           return this.uuid;
         },
-        isPublished: function () {
+        isPublished: function (pubOption) {
+          if (pubOption) {
+            if (pubOption.publicationGroup === "all") {
+              return JSON.parse(this.isPublishedToAll) === true;
+            } else if (pubOption.publicationGroup === "intranet") {
+              return this.isPublishedInternal();
+            } else if (pubOption.publicationGroup === "guest") {
+              return this.isPublishedGuest();
+            }
+          }
+
           return JSON.parse(this.isPublishedToAll) === true;
+        },
+        isPublishedInternal: function () {
+          return JSON.parse(this.isPublishedToIntranet) === true;
+        },
+        isPublishedGuest: function () {
+          return JSON.parse(this.isPublishedToGuest) === true;
         },
         isValid: function () {
           return this.valid === "1";
@@ -782,8 +798,20 @@
         getSchema: function () {
           return this.schema;
         },
-        publish: function () {
-          this.isPublishedToAll = this.isPublished() ? false : true;
+        publish: function (pubOption) {
+          if (pubOption) {
+            if (pubOption.publicationGroup === "all") {
+              this.isPublishedToAll = this.isPublished(pubOption) ? false : true;
+            } else if (pubOption.publicationGroup === "intranet") {
+              this.isPublishedToIntranet = this.isPublished(pubOption) ? false : true;
+            } else if (pubOption.publicationGroup === "guest") {
+              this.isPublishedToGuest = this.isPublished(pubOption) ? false : true;
+            }
+
+            return;
+          }
+
+          this.isPublishedToAll = this.isPublished(pubOption) ? false : true;
         },
         getFields: function (filter) {
           var values = {},

@@ -32,10 +32,10 @@
         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
   <context:annotation-config/>
 
-  <context:property-placeholder location="${app.properties},file://#{systemEnvironment['geonetwork_dir']}/config/app.properties"
-                                ignore-unresolvable="true"
-                                ignore-resource-not-found="true"
-                                file-encoding="UTF-8"/>
+  <context:property-placeholder location="${app.properties}"
+                                order="1"
+                                file-encoding="UTF-8"
+                                ignore-unresolvable="true"/>
 
   <import resource="config-spring-env.xml"/>
   <import resource="config-security/config-security.xml"/>
@@ -116,10 +116,6 @@
     <entry key="hibernate.jdbc.batch_size" value="3"/>
     <entry key="hibernate.jdbc.batch_versioned_data" value="true"/>
     <entry key="hibernate.enable_lazy_load_no_trans" value="true"/>
-    <!-- If db migration is off, disable automatic updates, but notify changes using validate -->
-    <!-- options: none, validate, update, create, create-drop, create-only -->
-    <entry key="hibernate.hbm2ddl.auto" value="#{'\${db.migration_onstartup}' ? 'update' : 'validate'}"/>
-
     <!-- If a specific schema has to be used
     <entry key="hibernate.default_schema" value="catalog"/>
 
@@ -229,13 +225,7 @@
 
     <bean class="org.fao.geonet.kernel.datamanager.draft.DraftMetadataIndexer"/>
     <bean class="org.fao.geonet.kernel.datamanager.draft.DraftMetadataManager"/>
-    <bean class="org.fao.geonet.kernel.datamanager.draft.DraftMetadataUtils">
-      <property name="listOfStatusCreatingDraft">
-        <util:set>
-          <util:constant static-field="org.fao.geonet.domain.StatusValue.Status.APPROVED"/>
-        </util:set>
-      </property>
-    </bean>
+    <bean class="org.fao.geonet.kernel.datamanager.draft.DraftMetadataUtils"/>
 
   <!-- In order to get non-draft metadata  uncomment the definitions below,
     or make them available in an external override file -->
@@ -302,4 +292,10 @@
       </util:list>
     </entry>
   </util:map>
+
+  <!--
+    Bean with the default publication configuration.
+    The default publication options publishes the metadata to the ALL group and the INTRANET group.
+  -->
+  <bean class="org.fao.geonet.config.DefaultPublicationConfig" name="publicationConfig" />
 </beans>

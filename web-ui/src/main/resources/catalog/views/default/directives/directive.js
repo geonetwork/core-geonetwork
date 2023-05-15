@@ -124,6 +124,11 @@
             scope.workFlowApps =
               gnGlobalSettings.gnCfg.mods.workflowHelper.workflowAssistApps;
             scope.iso2Lang = gnLangs.getIso2Lang(gnLangs.getCurrent());
+
+            scope.isPublishToIntranetEnabled =
+              gnConfig["metadata.publication.publishToIntranet"];
+            scope.isPublishToGuestEnabled =
+              gnConfig["metadata.publication.publishToGuestUsers"];
           });
 
           scope.status = undefined;
@@ -243,13 +248,13 @@
            * @param user
            * @returns {*|boolean|false|boolean}
            */
-          scope.displayPublicationOption = function (md, user) {
+          scope.displayPublicationOption = function (md, user, pubOption) {
             return (
               md.canReview &&
               md.draft != "y" &&
               md.mdStatus != 3 &&
-              ((md.isPublished() && user.canUnpublishMetadata()) ||
-                (!md.isPublished() && user.canPublishMetadata()))
+              ((md.isPublished(pubOption) && user.canUnpublishMetadata()) ||
+                (!md.isPublished(pubOption) && user.canPublishMetadata()))
             );
           };
 

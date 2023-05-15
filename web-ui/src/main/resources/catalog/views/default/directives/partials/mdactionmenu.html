@@ -58,31 +58,36 @@
       </li>
       <!-- Retired metadata can't be published -->
       <li
+        data-ng-repeat="pubOption in publicationOptions"
         role="menuitem"
-        data-ng-if="displayPublicationOption(md, user)"
-        data-ng-class="getPublicationOptionClass(md, user, isMdWorkflowEnable)"
-        title="{{getPublicationOptionTitle(md, user, isMdWorkflowEnable) | translate}}"
+        data-ng-if="displayPublicationOption(md, user, pubOption)"
+        data-ng-class="getPublicationOptionClass(md, user, isMdWorkflowEnable, pubOption)"
+        title="{{getPublicationOptionTitle(md, user, isMdWorkflowEnable, pubOption) | translate}}"
       >
         <a
           href=""
-          data-ng-click="mdService.publish(md, undefined, undefined, getCatScope())"
+          data-ng-click="mdService.publish(md, undefined, undefined, getCatScope(), pubOption)"
         >
           <span
             class="fa fa-fw"
-            data-ng-class="md.isPublished() ? 'fa-lock' : 'fa-unlock'"
+            data-ng-class="md.isPublished(pubOption) ? 'fa-lock' : 'fa-unlock'"
           ></span
           >&nbsp;
-          <span data-ng-if="md.isPublished()" data-translate="">unpublish</span>
-          <span data-ng-if="!md.isPublished()" data-translate="">publish</span>&nbsp;
+          <span data-ng-if="md.isPublished(pubOption)" data-translate=""
+            >{{ 'unpublish' + (pubOption.name === 'default'? '': pubOption.name)}}</span
+          >
+          <span data-ng-if="!md.isPublished(pubOption)" data-translate=""
+            >{{ 'publish' + (pubOption.name === 'default'? '': pubOption.name)}}</span
+          >&nbsp;
 
           <span
             class="fa fa-fw"
-            data-ng-if="!md.isPublished() && md.hasValidation()"
+            data-ng-if="pubOption.name === 'default' && !md.isPublished(pubOption) && md.hasValidation()"
             data-ng-class="md.isValid() ? 'gn-recordtype-n text-success' : 'gn-recordtype-n text-danger'"
           ></span>
           <span
             class="fa fa-fw gn-recordtype-n text-muted"
-            data-ng-if="!md.isPublished() && !md.hasValidation()"
+            data-ng-if="pubOption.name === 'default' && !md.isPublished(pubOption) && !md.hasValidation()"
           ></span>
         </a>
       </li>
