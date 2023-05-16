@@ -94,12 +94,12 @@ public interface FavouriteMetadataListRepository extends GeonetRepository<Favour
             return null;
         }
         if (user !=null && sessionId !=null) {
-            return findByNameAndUserOrSessionId(name,user,sessionId);
+            return findByNameAndUserOrSessionId(name, user, sessionId);
         }
         if (user != null) {
-            return findByNameAndUser(name,user);
+            return findByNameAndUser(name, user);
         }
-        return findByNameAndSessionId(name,sessionId);
+        return findByNameAndSessionId(name, sessionId);
     }
 
     /**
@@ -110,12 +110,12 @@ public interface FavouriteMetadataListRepository extends GeonetRepository<Favour
      *    c) User only
      *    d) Session cookie only
      */
-    default  List<FavouriteMetadataList> findPublic(User user, String sessionId) {
+    default List<FavouriteMetadataList> findPublic(User user, String sessionId) {
         if (user == null && sessionId == null) {
             return findPublic();
         }
         if (user !=null && sessionId !=null) {
-            return findByUserOrSessionOrPublic(user,sessionId);
+            return findByUserOrSessionOrPublic(user, sessionId);
         }
         if (user != null) {
             return findByUserOrPublic(user);

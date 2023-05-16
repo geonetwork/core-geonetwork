@@ -240,7 +240,7 @@ public class FavouriteMetadataListApi {
 
         Optional<FavouriteMetadataList> list = favouriteMetadataListRepository.findById(favouriteListIdentifier);
         if (!list.isPresent()) {
-            throw new ResourceNotFoundException("cannot find favouriteListIdentifier, based on id"+favouriteListIdentifier);
+            throw new ResourceNotFoundException(String.format("cannot find favouriteListIdentifier, based on id %d", favouriteListIdentifier));
         }
         FavouriteMetadataList result = list.get();
 
@@ -306,7 +306,7 @@ public class FavouriteMetadataListApi {
 
         Optional<FavouriteMetadataList> list1 = favouriteMetadataListRepository.findById(favouriteListIdentifier);
         if (!list1.isPresent()) {
-            throw new ResourceNotFoundException("cannot find favouriteListIdentifier, based on id" + favouriteListIdentifier);
+            throw new ResourceNotFoundException(String.format("cannot find favouriteListIdentifier, based on id %d", favouriteListIdentifier));
         }
         FavouriteMetadataList list = list1.get();
 
@@ -327,7 +327,7 @@ public class FavouriteMetadataListApi {
             //is this valid?
             FavouriteMetadataList item = favouriteMetadataListRepository.findName(name,user,sessionId);
             if (item != null) {
-                throw new IllegalArgumentException("name '"+name+"' is already in use!");
+                throw new IllegalArgumentException(String.format("name '%s' is already in use!", name));
             }
             list.setName(name.trim());
         }
@@ -341,7 +341,7 @@ public class FavouriteMetadataListApi {
             for(String uuid : metadataUuids) {
                 Metadata md = metadataRepository.findOneByUuid(uuid);
                 if (md == null) {
-                    throw new IllegalArgumentException("metadataUuids: "+uuid+" is not in DB");
+                    throw new IllegalArgumentException(String.format("Metadata with uuid %s is not found", uuid));
                 }
                 if (md.getDataInfo().getType().codeString.equals("y")) {
                     continue; //don't add templates
@@ -475,7 +475,7 @@ public class FavouriteMetadataListApi {
 
         Optional<FavouriteMetadataList> list1 = favouriteMetadataListRepository.findById(favouriteListIdentifier);
         if (!list1.isPresent()) {
-            throw new ResourceNotFoundException("cannot find favouriteListIdentifier, based on id" + favouriteListIdentifier);
+            throw new ResourceNotFoundException(String.format("cannot find favouriteListIdentifier, based on id %d", favouriteListIdentifier));
         }
         FavouriteMetadataList list = list1.get();
 

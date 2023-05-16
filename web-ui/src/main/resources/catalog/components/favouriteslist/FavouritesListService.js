@@ -128,35 +128,8 @@
           '  "_source": {\n' +
           '    "includes": [\n' +
           '      "uuid",\n' +
-          '      "id",\n' +
-          '      "creat*",\n' +
-          '      "group*",\n' +
-          '      "logo",\n' +
-          '      "category",\n' +
-          '      "cl_topic*",\n' +
-          '      "inspire*",\n' +
           '      "resource*",\n' +
-          '      "draft*",\n' +
-          '      "overview.*",\n' +
-          '      "owner*",\n' +
-          '      "link*",\n' +
-          '      "image*",\n' +
-          '      "status*",\n' +
-          '      "rating",\n' +
-          '      "tag*",\n' +
-          '      "geom",\n' +
-          '      "contact*",\n' +
-          '      "*Org*",\n' +
-          '      "hasBoundingPolygon",\n' +
-          '      "isTemplate",\n' +
-          '      "valid",\n' +
-          '      "isHarvested",\n' +
-          '      "dateStamp",\n' +
-          '      "documentStandard",\n' +
-          '      "standardNameObject.default",\n' +
-          '      "cl_status*",\n' +
-          '      "mdStatus*",\n' +
-          '      "recordLink"\n' +
+          '      "isTemplate" \n' +
           "    ]\n" +
           "  },\n" +
           '  "track_total_hits": true\n' +

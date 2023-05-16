@@ -40,7 +40,6 @@ import java.io.Serializable;
 @Access(AccessType.PROPERTY)
 @Table(
     name = "FavouriteMetadataListItem"
-    // ,indexes = {@Index(name = "idx_usersavedselections_metadatauuid", columnList = "metadataUuid")}
 )
 @SequenceGenerator(name = FavouriteMetadataListItem.ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
 @EntityListeners(FavouriteMetadataListItemListenerManager.class)

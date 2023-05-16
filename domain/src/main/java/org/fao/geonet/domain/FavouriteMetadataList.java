@@ -50,7 +50,6 @@ import java.util.List;
 @Access(AccessType.PROPERTY)
 @Table(
     name = "FavouriteMetadataList"
-    // ,indexes = {@Index(name = "idx_usersavedselections_metadatauuid", columnList = "metadataUuid")}
 )
 @SequenceGenerator(name = FavouriteMetadataList.ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
 @EntityListeners(FavouriteMetadataListListenerManager.class)
@@ -67,37 +66,37 @@ public class FavouriteMetadataList extends GeonetEntity implements Serializable 
     /**
      * name of the list (what the user entered)
      */
-    private String _name;
+    private String name;
     /**
      * If the list was created when the user is logged in, then this will be the user who created it.
      * NOTE: if this is set, sessionID is null (and visa-versa)
      */
-    private User _user;
+    private User user;
     /**
      * If the list was created when the user is NOT logged in, then this will be the value of the cookie used.
      * NOTE: if this is set, user is null (and visa-versa)
      */
-    private String _sessionId;
+    private String sessionId;
     /**
      * type of the list
      */
-    private ListType _listType;
+    private ListType listType;
     /**
      * if its public, then other people can see (but not edit it).
      */
-    private boolean _isPublic;
+    private boolean isPublic;
     /**
      * when the list was created.
      */
-    private ISODate _createDate;
+    private ISODate createDate;
     /**
      * when the list was last updated.
      */
-    private ISODate _changeDate;
+    private ISODate changeDate;
     /**
      *  list of metadata UUIDs.  Should be unique.
      */
-    private List<FavouriteMetadataListItem> _selections;
+    private List<FavouriteMetadataListItem> selections;
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = ID_SEQ_NAME)
@@ -111,64 +110,64 @@ public class FavouriteMetadataList extends GeonetEntity implements Serializable 
     }
 
     public String getName() {
-        return _name;
+        return name;
     }
 
     public void setName(String name) {
-        this._name = name;
+        this.name = name;
     }
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "userId", referencedColumnName = "id")
     public User getUser() {
-        return _user;
+        return user;
     }
 
     public void setUser(User user) {
-        this._user = user;
+        this.user = user;
     }
 
     public String getSessionId() {
-        return _sessionId;
+        return sessionId;
     }
 
     public void setSessionId(String sessionId) {
-        this._sessionId = sessionId;
+        this.sessionId = sessionId;
     }
 
     @Enumerated(EnumType.STRING)
     public ListType getListType() {
-        return _listType;
+        return listType;
     }
 
     public void setListType(ListType listType) {
-        this._listType = listType;
+        this.listType = listType;
     }
 
     public boolean getIsPublic() {
-        return _isPublic;
+        return isPublic;
     }
 
     public void setIsPublic(boolean isPublic) {
-        this._isPublic = isPublic;
+        this.isPublic = isPublic;
     }
 
     @AttributeOverride(name = "dateAndTimeUtc", column = @Column(name = CREATE_DATE_COLUMN_NAME, nullable = false, length = 30))
     public ISODate getCreateDate() {
-        return _createDate;
+        return createDate;
     }
 
     public void setCreateDate(ISODate createDate) {
-        this._createDate = createDate;
+        this.createDate = createDate;
     }
 
     @AttributeOverride(name = "dateAndTimeUtc", column = @Column(name = CHANGE_DATE_COLUMN_NAME, nullable = false, length = 30))
     public ISODate getChangeDate() {
-        return _changeDate;
+        return changeDate;
     }
 
     public void setChangeDate(ISODate changeDate) {
-        this._changeDate = changeDate;
+        this.changeDate = changeDate;
     }
 
     @OneToMany(
@@ -179,11 +178,11 @@ public class FavouriteMetadataList extends GeonetEntity implements Serializable 
         name = "selection_id",
         nullable = false)
     public List<FavouriteMetadataListItem> getSelections() {
-        return _selections;
+        return selections;
     }
 
     public void setSelections(List<FavouriteMetadataListItem> selections) {
-        this._selections = selections;
+        this.selections = selections;
     }
 
     public enum ListType {PreferredList, WatchList}

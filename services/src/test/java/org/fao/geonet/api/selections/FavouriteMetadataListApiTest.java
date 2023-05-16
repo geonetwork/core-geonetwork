@@ -64,7 +64,7 @@ public class FavouriteMetadataListApiTest extends FavouriteMetadataListApiSuppor
         assertNotNull(returnedSessionId);
 
         //1b. call "all" -- should just see the list we created
-        all = Arrays.asList(getAllLists(session,returnedSessionId));
+        all = Arrays.asList(getAllLists(session, returnedSessionId));
         assertEquals(1, all.size());
         areSame(list, all.get(0));
 
@@ -80,11 +80,11 @@ public class FavouriteMetadataListApiTest extends FavouriteMetadataListApiSuppor
         returnedSessionId = createResult.two();
 
         //2a. get "by id" - should get our original id
-        one = getList(session, returnedSessionId,list2.getId());
+        one = getList(session, returnedSessionId, list2.getId());
         areSame(list2, one);
 
         //2c. get all -- should get both (we keep the same  session id)
-        all = Arrays.asList(getAllLists(session,returnedSessionId));
+        all = Arrays.asList(getAllLists(session, returnedSessionId));
         assertEquals(2, all.size());
         areSame(Arrays.asList(list, list2), all);
     }
@@ -198,11 +198,11 @@ public class FavouriteMetadataListApiTest extends FavouriteMetadataListApiSuppor
         // try by id
         MockHttpSession finalSession = session;
         assertThrows(Exception.class, () -> {
-            getList(finalSession,null, list.getId());
+            getList(finalSession, null, list.getId());
         });
 
         //get all (for user) contain it?
-        all = Arrays.asList(getAllLists(session,null));
+        all = Arrays.asList(getAllLists(session, null));
         doesNotContain(all, list);
 
 
@@ -211,11 +211,11 @@ public class FavouriteMetadataListApiTest extends FavouriteMetadataListApiSuppor
         // try by id
         MockHttpSession finalSession2 = session;
         assertThrows(Exception.class, () -> {
-            getList(finalSession2,null, list.getId());
+            getList(finalSession2, null, list.getId());
         });
 
         //get all (for user) contain it?
-        all = Arrays.asList(getAllLists(session,null));
+        all = Arrays.asList(getAllLists(session, null));
         doesNotContain(all, list);
     }
 
@@ -245,11 +245,11 @@ public class FavouriteMetadataListApiTest extends FavouriteMetadataListApiSuppor
         // try by id
         MockHttpSession finalSession = session;
         assertThrows(Exception.class, () -> {
-            getList(finalSession,null, list.getId());
+            getList(finalSession, null, list.getId());
         });
 
         //get all (for user) contain it?
-        all = Arrays.asList(getAllLists(session,returnedSessionId));
+        all = Arrays.asList(getAllLists(session, returnedSessionId));
         doesNotContain(all, list);
 
 
@@ -258,11 +258,11 @@ public class FavouriteMetadataListApiTest extends FavouriteMetadataListApiSuppor
         // try by id
         MockHttpSession finalSession2 = session;
         assertThrows(Exception.class, () -> {
-            getList(finalSession2,null, list.getId());
+            getList(finalSession2, null, list.getId());
         });
 
         //get all (for user) contain it?
-        all = Arrays.asList(getAllLists(session,null));
+        all = Arrays.asList(getAllLists(session, null));
         doesNotContain(all, list);
     }
 
@@ -327,7 +327,7 @@ public class FavouriteMetadataListApiTest extends FavouriteMetadataListApiSuppor
         FavouriteMetadataListVM finalList = list2;
         String finalReturnedSessionId = returnedSessionId;
         assertThrows(Exception.class, () -> {
-            update(session, finalReturnedSessionId,finalList.getId(), "testcase", new String[0], FavouriteMetadataListApi.ActionType.add);
+            update(session, finalReturnedSessionId, finalList.getId(), "testcase", new String[0], FavouriteMetadataListApi.ActionType.add);
         });
     }
 
@@ -414,11 +414,11 @@ public class FavouriteMetadataListApiTest extends FavouriteMetadataListApiSuppor
         list1 = createResult.one();
         String returnedSessionId = createResult.two();
 
-        list2 = update(session,returnedSessionId, list1.getId(), "testcase", new String[]{uuid3}, FavouriteMetadataListApi.ActionType.replace);
+        list2 = update(session, returnedSessionId, list1.getId(), "testcase", new String[]{uuid3}, FavouriteMetadataListApi.ActionType.replace);
         areSameUuids(Arrays.asList(uuid3), list2);
 
 
-        list3 = update(session, returnedSessionId,list1.getId(), "testcase", new String[]{}, FavouriteMetadataListApi.ActionType.replace);
+        list3 = update(session, returnedSessionId, list1.getId(), "testcase", new String[]{}, FavouriteMetadataListApi.ActionType.replace);
         areSameUuids(Arrays.asList(), list3);
     }
 
@@ -441,11 +441,11 @@ public class FavouriteMetadataListApiTest extends FavouriteMetadataListApiSuppor
 
         assertEquals(false, list1.isPublic());
 
-        list2 = setstatus(session, returnedSessionId,list1.getId(), true);
+        list2 = setstatus(session, returnedSessionId, list1.getId(), true);
         assertEquals(true, list2.isPublic());
         assertNotEquals(list1.getChangeDate(), list2.getChangeDate());
 
-        list2 = setstatus(session, returnedSessionId,list1.getId(), false);
+        list2 = setstatus(session, returnedSessionId, list1.getId(), false);
         assertEquals(false, list2.isPublic());
     }
 
@@ -470,7 +470,7 @@ public class FavouriteMetadataListApiTest extends FavouriteMetadataListApiSuppor
 
 
         assertThrows(Exception.class, () -> {
-            list1[0] = setstatus(sessionUser1,returnedSessionId, list1[0].getId(), true);
+            list1[0] = setstatus(sessionUser1, returnedSessionId, list1[0].getId(), true);
         });
 
     }
@@ -499,16 +499,16 @@ public class FavouriteMetadataListApiTest extends FavouriteMetadataListApiSuppor
         String returnedSessionId = createResult.two();
 
         //user1 can retrieve and see
-        all = Arrays.asList(getAllLists(sessionUser1,returnedSessionId));
+        all = Arrays.asList(getAllLists(sessionUser1, returnedSessionId));
         contains(all, list1.getId());
-        list2 = getList(sessionUser1,returnedSessionId, list1.getId());
+        list2 = getList(sessionUser1, returnedSessionId, list1.getId());
         assertEquals(list1.getId(), list2.getId());
 
 
         sessionUser2 = loginAs(user2);
 
         //user2 cannot see/retrieve
-        all = Arrays.asList(getAllLists(sessionUser2,null));
+        all = Arrays.asList(getAllLists(sessionUser2, null));
         notContains(all, list1.getId());
         FavouriteMetadataListVM finalList = list1;
         MockHttpSession finalSessionUser = sessionUser2;
@@ -524,7 +524,7 @@ public class FavouriteMetadataListApiTest extends FavouriteMetadataListApiSuppor
         FavouriteMetadataListVM finalList2 = list1;
         MockHttpSession finalSessionUser1 = sessionUser2;
         assertThrows(Exception.class, () -> {
-            getList(finalSessionUser1, null,finalList2.getId());
+            getList(finalSessionUser1, null, finalList2.getId());
         });
 
         sessionUser1 = loginAs(user1);
@@ -532,23 +532,23 @@ public class FavouriteMetadataListApiTest extends FavouriteMetadataListApiSuppor
         assertEquals(true, list1.isPublic());
 
         //user1 can retrieve and see
-        all = Arrays.asList(getAllLists(sessionUser1,returnedSessionId));
+        all = Arrays.asList(getAllLists(sessionUser1, returnedSessionId));
         contains(all, list1.getId());
         list2 = getList(sessionUser1,returnedSessionId, list1.getId());
         assertEquals(list1.getId(), list2.getId());
 
         sessionUser2 = loginAs(user2);
         //user2 can retrieve and see
-        all = Arrays.asList(getAllLists(sessionUser2,null));
+        all = Arrays.asList(getAllLists(sessionUser2, null));
         contains(all, list1.getId());
-        list2 = getList(sessionUser2,null, list1.getId());
+        list2 = getList(sessionUser2, null, list1.getId());
         assertEquals(list1.getId(), list2.getId());
 
         sessionAnonymous = loginAsAnonymous();
         //Anonymous can retrieve and see
-        all = Arrays.asList(getAllLists(sessionAnonymous,null));
+        all = Arrays.asList(getAllLists(sessionAnonymous, null));
         contains(all, list1.getId());
-        list2 = getList(sessionAnonymous,null, list1.getId());
+        list2 = getList(sessionAnonymous, null, list1.getId());
         assertEquals(list1.getId(), list2.getId());
     }
 
@@ -569,7 +569,7 @@ public class FavouriteMetadataListApiTest extends FavouriteMetadataListApiSuppor
         list1 = createResult.one();
         String returnedSessionId = createResult.two();
 
-        result = deleteItem(session,returnedSessionId, list1.getId());
+        result = deleteItem(session, returnedSessionId, list1.getId());
         assertEquals(true, result);
 
         MockHttpSession finalSession = session;
@@ -607,25 +607,25 @@ public class FavouriteMetadataListApiTest extends FavouriteMetadataListApiSuppor
         });
 
         assertThrows(Exception.class, () -> {
-            update(sessionUser2, null,list1.getId(), "newname", new String[0], FavouriteMetadataListApi.ActionType.add);
+            update(sessionUser2, null, list1.getId(), "newname", new String[0], FavouriteMetadataListApi.ActionType.add);
         });
 
         assertThrows(Exception.class, () -> {
-            setstatus(sessionUser2,null, list1.getId(), true);
+            setstatus(sessionUser2, null, list1.getId(), true);
         });
 
 
         sessionAnonymous = loginAsAnonymous();
 
         assertThrows(Exception.class, () -> {
-            deleteItem(sessionAnonymous,null, list1.getId());
+            deleteItem(sessionAnonymous, null, list1.getId());
         });
         assertThrows(Exception.class, () -> {
-            update(sessionAnonymous,null, list1.getId(), "newname", new String[0], FavouriteMetadataListApi.ActionType.add);
+            update(sessionAnonymous, null, list1.getId(), "newname", new String[0], FavouriteMetadataListApi.ActionType.add);
         });
 
         assertThrows(Exception.class, () -> {
-            setstatus(sessionAnonymous,null, list1.getId(), true);
+            setstatus(sessionAnonymous, null, list1.getId(), true);
         });
     }
 
@@ -666,10 +666,10 @@ public class FavouriteMetadataListApiTest extends FavouriteMetadataListApiSuppor
         assertNotNull(list2.getUserName()); // user takes preference over session
         assertEquals("cookie", sessionIDB); //cookie doesn't change
 
-        List<FavouriteMetadataListVM> all = Arrays.asList(getAllLists(session,sessionIDB));
+        List<FavouriteMetadataListVM> all = Arrays.asList(getAllLists(session, sessionIDB));
 
         //user1 (regardless of session id) can see both
-        areSame(Arrays.asList(list1,list2),all);
+        areSame(Arrays.asList(list1, list2),all);
 
 
         session = loginAsAnonymous();
@@ -683,13 +683,13 @@ public class FavouriteMetadataListApiTest extends FavouriteMetadataListApiSuppor
         assertNull(list3.getUserName()); //  no user
         assertNotNull(sessionIDC);
 
-        all = Arrays.asList(getAllLists(session,sessionIDC));
+        all = Arrays.asList(getAllLists(session, sessionIDC));
 
 
-        areSame(Arrays.asList(list3),all);
+        areSame(Arrays.asList(list3), all);
 
-        all = Arrays.asList(getAllLists(session,sessionIDA));
-        assertEquals(0,all.size());
+        all = Arrays.asList(getAllLists(session, sessionIDA));
+        assertEquals(0, all.size());
     }
 
 
@@ -724,18 +724,18 @@ public class FavouriteMetadataListApiTest extends FavouriteMetadataListApiSuppor
         assertEquals(sessionIDA, createResult.two());
         assertNotNull(list2.getUserName()); //    user
 
-        List<FavouriteMetadataListVM> all = Arrays.asList(getAllLists(session,sessionIDA));
+        List<FavouriteMetadataListVM> all = Arrays.asList(getAllLists(session, sessionIDA));
 
         //user1 (with the sessionID) can see both
         areSame(Arrays.asList(list1,list2),all);
 
         session = loginAsAnonymous();
-        all = Arrays.asList(getAllLists(session,sessionIDA));
+        all = Arrays.asList(getAllLists(session, sessionIDA));
         //user1 (with the sessionID) can see list1
-        areSame(Arrays.asList(list1),all);
+        areSame(Arrays.asList(list1), all);
 
         session = loginAs(user1);
-        all = Arrays.asList(getAllLists(session,null));
-        areSame(Arrays.asList(list2),all);
+        all = Arrays.asList(getAllLists(session, null));
+        areSame(Arrays.asList(list2), all);
     }
 }

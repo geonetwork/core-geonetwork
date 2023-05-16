@@ -287,7 +287,7 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
      *   Call this with sessionId = null to create a new session id.
      */
     public MockHttpSession loginAs(User user,String sessionId) {
-        MockHttpSession session = new MockHttpSession(null,sessionId);
+        MockHttpSession session = new MockHttpSession(null, sessionId);
 
         UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
             user, null, user.getAuthorities());

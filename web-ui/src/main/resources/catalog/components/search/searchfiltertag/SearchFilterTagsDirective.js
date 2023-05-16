@@ -186,7 +186,7 @@
 
                 if (filterKey === "favouritesList") {
                   scope.currentFilters.push({
-                    key: "favouritesList",
+                    key: filterKey,
                     value: value
                   });
                   continue;
@@ -271,7 +271,7 @@
             } else if (filter.key === "geometry") {
               return "GEOMETRY";
             } else if (filter.key === "favouritesList") {
-              return "favouritesList";
+              return filter.key;
             } else {
               return undefined;
             }

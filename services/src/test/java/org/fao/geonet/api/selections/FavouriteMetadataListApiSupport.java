@@ -207,7 +207,7 @@ public abstract class FavouriteMetadataListApiSupport extends AbstractServiceInt
         assertEquals(listType, resultListObj.getListType());
 
         //has all the same metadata uuids
-        assertTrue(CollectionUtils.isEqualCollection( resultListObj.getSelections(), Arrays.asList(uuids)));
+        assertTrue(CollectionUtils.isEqualCollection(resultListObj.getSelections(), Arrays.asList(uuids)));
 
         UserSession userSession = ApiUtils.getUserSession(mockHttpSession);
         String userName = userSession.getUsername();
@@ -224,7 +224,7 @@ public abstract class FavouriteMetadataListApiSupport extends AbstractServiceInt
         assertTrue(resultListObj.getSessionId() == null || resultListObj.getUserName() == null);
         //verify user or session is correct
         if (userName != null) {
-            assertEquals( resultListObj.getUserName()  , userName);
+            assertEquals( resultListObj.getUserName(), userName);
         }
         else {
             assertEquals(sessionId,resultListObj.getSessionId());
@@ -262,8 +262,7 @@ public abstract class FavouriteMetadataListApiSupport extends AbstractServiceInt
     FavouriteMetadataListVM getList(MockHttpSession session, String cookieValue, int id) throws Exception {
 
 
-        MockHttpServletRequestBuilder requestBuilder =        get(apiBaseURL+"/"+id)
-            //.content(requestContent.toString())
+        MockHttpServletRequestBuilder requestBuilder = get(apiBaseURL+"/"+id)
             .session(session)
             .contentType("application/x-www-form-urlencoded")
             .accept(MediaType.parseMediaType(API_JSON_EXPECTED_ENCODING));
@@ -285,7 +284,7 @@ public abstract class FavouriteMetadataListApiSupport extends AbstractServiceInt
                                       boolean isPublic) throws Exception {
         StringBuilder requestContent = new StringBuilder("public="+Boolean.toString(isPublic));
 
-        MockHttpServletRequestBuilder requestBuilder =          put(apiBaseURL+"/"+id+"/status")
+        MockHttpServletRequestBuilder requestBuilder = put(apiBaseURL+"/"+id+"/status")
             .content(requestContent.toString())
             .session(session)
             .contentType("application/x-www-form-urlencoded")
@@ -307,7 +306,6 @@ public abstract class FavouriteMetadataListApiSupport extends AbstractServiceInt
     Boolean deleteItem(MockHttpSession session, String cookieValue, int id) throws Exception {
 
         MockHttpServletRequestBuilder requestBuilder = delete(apiBaseURL+"/"+id)
-            //   .content(requestContent.toString())
             .session(session)
             .contentType("application/x-www-form-urlencoded")
             .accept(MediaType.parseMediaType(API_JSON_EXPECTED_ENCODING));
@@ -331,7 +329,7 @@ public abstract class FavouriteMetadataListApiSupport extends AbstractServiceInt
         StringBuilder requestContent = new StringBuilder("name="+name+"&action="+actionType.toString());
         Arrays.stream(uuids).forEach(x->requestContent.append("&metadataUuids="+x));
 
-        MockHttpServletRequestBuilder requestBuilder =   put(apiBaseURL+"/"+id)
+        MockHttpServletRequestBuilder requestBuilder = put(apiBaseURL+"/"+id)
             .content(requestContent.toString())
             .session(session)
             .contentType("application/x-www-form-urlencoded")
@@ -385,19 +383,19 @@ public abstract class FavouriteMetadataListApiSupport extends AbstractServiceInt
 
     //Tests that two UserMetadataSelectionLists are the same.
     public void areSame(FavouriteMetadataList l1, FavouriteMetadataList l2) {
-        assertEquals(l1.getId(),l2.getId());
-        assertEquals(l1.getName(),l2.getName());
-        assertEquals(l1.getIsPublic(),l2.getIsPublic());
-        assertEquals(l1.getCreateDate(),l2.getCreateDate());
-        assertEquals(l1.getChangeDate(),l2.getChangeDate());
-        assertEquals(l1.getListType(),l2.getListType());
+        assertEquals(l1.getId(), l2.getId());
+        assertEquals(l1.getName(), l2.getName());
+        assertEquals(l1.getIsPublic(), l2.getIsPublic());
+        assertEquals(l1.getCreateDate(), l2.getCreateDate());
+        assertEquals(l1.getChangeDate(), l2.getChangeDate());
+        assertEquals(l1.getListType(), l2.getListType());
 
         if (l1.getUser() != null) {
             assertNotNull(l2.getUser());
-            assertEquals(l1.getUser().getId(),l2.getUser().getId());
+            assertEquals(l1.getUser().getId(), l2.getUser().getId());
         }
         else {
-            assertEquals(l1.getSessionId(),l2.getSessionId());
+            assertEquals(l1.getSessionId(), l2.getSessionId());
         }
 
         assertTrue(CollectionUtils.isEqualCollection(
@@ -406,24 +404,24 @@ public abstract class FavouriteMetadataListApiSupport extends AbstractServiceInt
     }
 
     public void areSame(FavouriteMetadataListVM l1, FavouriteMetadataListVM l2) {
-        assertEquals(l1.getId(),l2.getId());
-        assertEquals(l1.getName(),l2.getName());
-        assertEquals(l1.isPublic(),l2.isPublic());
-        assertEquals(l1.getCreateDate(),l2.getCreateDate());
-        assertEquals(l1.getChangeDate(),l2.getChangeDate());
-        assertEquals(l1.getListType(),l2.getListType());
+        assertEquals(l1.getId(), l2.getId());
+        assertEquals(l1.getName(), l2.getName());
+        assertEquals(l1.isPublic(), l2.isPublic());
+        assertEquals(l1.getCreateDate(), l2.getCreateDate());
+        assertEquals(l1.getChangeDate(), l2.getChangeDate());
+        assertEquals(l1.getListType(), l2.getListType());
 
         if (l1.getUserName() != null) {
             assertNotNull(l2.getUserName());
-            assertEquals(l1.getUserName(),l2.getUserName());
+            assertEquals(l1.getUserName(), l2.getUserName());
         }
         else {
             assertEquals(l1.getSessionId(),l2.getSessionId());
         }
 
         assertTrue(CollectionUtils.isEqualCollection(
-            l1.getSelections() ,
-            l2.getSelections() ));
+            l1.getSelections(),
+            l2.getSelections()));
     }
 
     public void areSameUuids(List<String> list1, FavouriteMetadataListVM item){
@@ -431,7 +429,7 @@ public abstract class FavouriteMetadataListApiSupport extends AbstractServiceInt
         Collections.sort(list1);
         Collections.sort(list2);
 
-       assertEquals(list1,list2);
+       assertEquals(list1, list2);
     }
 
 

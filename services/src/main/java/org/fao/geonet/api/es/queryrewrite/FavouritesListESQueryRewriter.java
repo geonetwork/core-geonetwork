@@ -164,13 +164,10 @@ public class FavouritesListESQueryRewriter implements ESQueryRewriter{
                     continue;
                 }
                 int selectionId =  ((IntNode)termsNode.get("favouritesList").get(0)).asInt();
-//                int from = root.get("from").asInt();
-//                int size = root.get("size").asInt();
                 ObjectNode queryString = replacement(selectionId,mapper, httpSession, request);
                 queryItems.remove(index);
                 queryItems.add(queryString);
                 fixsort((ObjectNode) root);
-               // ((ObjectNode)root).putArray("sort").add("_id");
                 String result = mapper.writeValueAsString(root);
                 return result;
             }
