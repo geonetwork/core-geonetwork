@@ -450,6 +450,17 @@
 
           scope.favouriteLists = gnFavouritesListService.getCachedLists();
 
+          scope.areEditableLists = function () {
+            if (this.favouriteLists == null || this.favouriteLists.length === 0)
+              return false;
+            //make sure at least one list is editable
+            for (var i = 0; i < scope.favouriteLists.length; i++) {
+              var item = scope.favouriteLists[i];
+              if (item.editable) return true;
+            }
+            return false;
+          };
+
           function check(favouriteList, canBeAdded) {
             if (!favouriteList.editable) {
               return false;

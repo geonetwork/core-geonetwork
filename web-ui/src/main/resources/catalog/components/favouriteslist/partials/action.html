@@ -1,7 +1,7 @@
 <!-- Single button -->
 <div
   class=""
-  ng-if="isFavouritesPanelEnabled && record.isTemplate != 'y' &&  favouriteLists.length>0"
+  ng-if="isFavouritesPanelEnabled && record.isTemplate != 'y' &&  areEditableLists()"
 >
   <button
     type="button"
