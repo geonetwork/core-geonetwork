@@ -39,15 +39,16 @@ import org.fao.geonet.Constants;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.NodeInfo;
 import org.fao.geonet.api.es.EsHTTPProxy;
+import org.fao.geonet.api.processing.XslProcessUtils;
+import org.fao.geonet.api.processing.report.XsltMetadataProcessingReport;
 import org.fao.geonet.api.records.model.related.AssociatedRecord;
 import org.fao.geonet.api.records.model.related.RelatedItemOrigin;
 import org.fao.geonet.api.records.model.related.RelatedItemType;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.AbstractMetadata;
-import org.fao.geonet.domain.ReservedOperation;
-import org.fao.geonet.domain.Source;
+import org.fao.geonet.domain.*;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.kernel.datamanager.IMetadataValidator;
 import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.kernel.schema.AssociatedResource;
@@ -56,6 +57,7 @@ import org.fao.geonet.kernel.schema.SchemaPlugin;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataValidationRepository;
 import org.fao.geonet.repository.SourceRepository;
@@ -92,6 +94,10 @@ public class MetadataUtils {
     public static final boolean KEEP_XLINK_ATTRIBUTES = false;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Geonet.SEARCH_ENGINE);
+
+    private MetadataUtils() {
+
+    }
 
     public static class RelatedTypeDetails {
         private String query;
@@ -954,4 +960,46 @@ public class MetadataUtils {
         }
     }
 
+    /**
+     * Retrieve the series metadata record(s) that a metadata is part of, to update the series metadata information.
+     *
+     * @param context
+     * @param metadata
+     * @param siteURL
+     *
+     * @throws Exception
+     */
+    public static void processRelatedMetadataSeries(ServiceContext context,
+                                                    AbstractMetadata metadata,
+                                                    String metadataStatus,
+                                                    String siteURL) throws Exception {
+        String seriesQuery = String.format("+agg_associated_isComposedOf:\"%s\"", metadata.getUuid());
+        EsSearchManager searchManager = context.getBean(EsSearchManager.class);
+        SettingManager settingManager = context.getBean(SettingManager.class);
+        boolean isEnabledWorkflow = settingManager.getValueAsBool(Settings.METADATA_WORKFLOW_ENABLE);
+
+        if ((isEnabledWorkflow) && (metadataStatus.equals(StatusValue.Status.DRAFT))) {
+            seriesQuery += " AND (draft:y)";
+        } else {
+            seriesQuery += " AND (draft:n OR draft:e)";
+        }
+
+        final SearchResponse result = searchManager.query(
+            seriesQuery,
+            null,
+            FIELDLIST_CORE,
+            new HashMap<>(),
+            0, SelectionManager.DEFAULT_MAXHITS);
+
+        for (SearchHit hit : result.getHits()) {
+            String metadataSeriesId = hit.getSourceAsMap().get(Geonet.IndexFieldNames.ID).toString();
+
+            String process = "collection-updater";
+            XsltMetadataProcessingReport xslProcessingReport =
+                new XsltMetadataProcessingReport(process);
+
+            XslProcessUtils.process(context, metadataSeriesId, process, true, true, true,
+                xslProcessingReport, siteURL, new HashMap<>());
+        }
+    }
 }

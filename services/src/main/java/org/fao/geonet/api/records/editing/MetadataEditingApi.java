@@ -37,6 +37,7 @@ import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.exception.NotAllowedException;
+import org.fao.geonet.api.records.MetadataUtils;
 import org.fao.geonet.api.records.model.Direction;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.constants.Geonet;
@@ -397,7 +398,7 @@ public class MetadataEditingApi {
                         listOfStatusChange.add(metadataStatus);
                         sa.onStatusChange(listOfStatusChange);
                     } else {
-                        throw new SecurityException(String.format("Only users with editor profile can submit."));
+                        throw new SecurityException("Only users with editor profile can submit.");
                     }
                 }
                 if (status.equals(StatusValue.Status.APPROVED)) {
@@ -419,7 +420,7 @@ public class MetadataEditingApi {
                         listOfStatusChange.add(metadataStatus);
                         sa.onStatusChange(listOfStatusChange);
                     } else {
-                        throw new SecurityException(String.format("Only users with review profile can approve."));
+                        throw new SecurityException("Only users with review profile can approve.");
                     }
                 }
             }
@@ -472,6 +473,10 @@ public class MetadataEditingApi {
 
             ajaxEditUtils.removeMetadataEmbedded(session, id);
             dataMan.endEditingSession(id, session);
+
+            // Check if the metadata is part of a series, to update it
+            final String siteURL = request.getRequestURL().toString() + "?" + request.getQueryString();
+            MetadataUtils.processRelatedMetadataSeries(context, metadata, status, siteURL);
 
             if (isEnabledWorkflow) {
                 // After saving & close remove the information to remove the draft copy if the user cancels the editor
