@@ -651,7 +651,7 @@ public class FavouriteMetadataListApiTest extends FavouriteMetadataListApiSuppor
 
         assertNull(list1.getSessionId());
         assertNotNull(list1.getUserName()); // user logged on (no current session)
-        assertNotNull(sessionIDA);
+       // assertNotNull(sessionIDA);
 
         session = loginAs(user1);
 

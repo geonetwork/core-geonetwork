@@ -150,7 +150,7 @@ public class FavouriteMetadataListApi {
 
         @Parameter(hidden = true)
             HttpServletRequest httpServletRequest,
-        @CookieValue(SESSION_COOKIE_NAME)
+        @CookieValue(name = SESSION_COOKIE_NAME, required = false)
             String sessionId
     )
         throws Exception {
@@ -208,7 +208,7 @@ public class FavouriteMetadataListApi {
             HttpSession httpSession,
         @Parameter(hidden = true)
             HttpServletRequest httpServletRequest,
-        @CookieValue(SESSION_COOKIE_NAME)
+        @CookieValue(name = SESSION_COOKIE_NAME, required = false)
             String sessionId
     )
         throws Exception {
@@ -274,7 +274,7 @@ public class FavouriteMetadataListApi {
             HttpSession httpSession,
         @Parameter(hidden = true)
             HttpServletRequest httpServletRequest,
-        @CookieValue(SESSION_COOKIE_NAME)
+        @CookieValue(name = SESSION_COOKIE_NAME, required = false)
             String sessionId
     )
         throws Exception {
@@ -383,7 +383,7 @@ public class FavouriteMetadataListApi {
             HttpSession httpSession,
         @Parameter(hidden = true)
             HttpServletRequest httpServletRequest,
-        @CookieValue(SESSION_COOKIE_NAME) String sessionId
+        @CookieValue(name = SESSION_COOKIE_NAME, required = false) String sessionId
     )
         throws Exception {
 
@@ -441,7 +441,7 @@ public class FavouriteMetadataListApi {
             HttpSession httpSession,
         @Parameter(hidden = true)
             HttpServletRequest httpServletRequest,
-        @CookieValue(SESSION_COOKIE_NAME) String sessionId
+        @CookieValue(name = SESSION_COOKIE_NAME, required = false) String sessionId
     )
         throws Exception {
 
@@ -511,7 +511,7 @@ public class FavouriteMetadataListApi {
             HttpServletRequest httpServletRequest,
         @Parameter(hidden = true)
             HttpServletResponse httpServletResponse,
-        @CookieValue(SESSION_COOKIE_NAME)
+        @CookieValue(value = SESSION_COOKIE_NAME, required = false)
             String sessionId
     )
         throws Exception {
