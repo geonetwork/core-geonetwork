@@ -133,7 +133,7 @@ public class FavouritesListESQueryRewriter implements ESQueryRewriter{
     UserRepository userRepository;
 
     /**
-     * rewrites an elasticsearch query.
+     * Rewrites an elasticsearch query.
      *
      * If there is an exception, it is logged.  However, this will return with an unmodified query.
      *
@@ -209,7 +209,7 @@ public class FavouritesListESQueryRewriter implements ESQueryRewriter{
      *
      *   This checks security (i.e. does the user/session have read permission on the favourites list?)
      */
-    ObjectNode replacement(int favouritesListId, ObjectMapper mapper, HttpSession httpSession, HttpServletRequest request) throws Exception {
+    private ObjectNode replacement(int favouritesListId, ObjectMapper mapper, HttpSession httpSession, HttpServletRequest request) throws Exception {
         Optional<FavouriteMetadataList> selectionList= userMetadataSelectionListRepo.findById(favouritesListId);
         if (!selectionList.isPresent()) {
             throw new Exception("could not find favouritesListId="+ favouritesListId);
@@ -251,7 +251,7 @@ public class FavouritesListESQueryRewriter implements ESQueryRewriter{
     /**
      * returns true if the session represents an admin
      */
-    boolean isAdmin(HttpSession httpSession) {
+    private boolean isAdmin(HttpSession httpSession) {
         UserSession session = ApiUtils.getUserSession(httpSession);
         return Profile.Administrator.equals(session.getProfile());
     }

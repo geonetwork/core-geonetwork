@@ -289,7 +289,7 @@ public class EsHTTPProxy {
         @Parameter(hidden = true)
         HttpEntity<String> httpEntity) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
-        call(context, httpSession, request, response, SEARCH_ENDPOINT, esQueryRewriter.rewriteQuery(httpSession, request,httpEntity.getBody()), bucket, relatedTypes);
+        call(context, httpSession, request, response, SEARCH_ENDPOINT, esQueryRewriter.rewriteQuery(httpSession, request, httpEntity.getBody()), bucket, relatedTypes);
     }
 
     @Autowired

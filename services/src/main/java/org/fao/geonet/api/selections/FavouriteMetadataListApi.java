@@ -42,6 +42,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -120,7 +121,7 @@ public class FavouriteMetadataListApi {
     @Autowired
     MetadataRepository metadataRepository;
 
-    public static String SESSION_COOKIE_NAME="not-logged-in-FavouritesList-sessionid";
+    public static final  String SESSION_COOKIE_NAME="not-logged-in-FavouritesList-sessionid";
 
     enum ActionType {add, replace, remove}
 
@@ -153,10 +154,11 @@ public class FavouriteMetadataListApi {
         HttpSession httpSession,
 
         @Parameter(hidden = true)
-            HttpServletRequest  httpServletRequest
+            HttpServletRequest  httpServletRequest,
+        @CookieValue(SESSION_COOKIE_NAME)
+        String sessionId
     )
         throws Exception {
-        String sessionId = getSessionId(httpServletRequest);
         User user =  getUser(httpSession);
         boolean isAdmin = isAdmin(httpSession);
         return favouriteMetadataListRepository.findPublic(user,sessionId)
@@ -167,21 +169,7 @@ public class FavouriteMetadataListApi {
             .collect(Collectors.toList());
     }
 
-    /**
-     *   Get the `SESSION_COOKIE_NAME` cookie value from the request.
-     *   If there isn't one, then returns null.
-     */
-    String getSessionId(HttpServletRequest request) {
-        Cookie[] cookies = request.getCookies();
-        if (cookies ==null) {
-            return null;
-        }
-        Optional<Cookie> sessionCookie = Arrays.stream(cookies)
-            .filter(x->x.getName().equals(SESSION_COOKIE_NAME))
-            .findFirst();
 
-        return sessionCookie.isPresent() ?  sessionCookie.get().getValue() : null;
-    }
 
     /**
      *   adds a new SESSION_COOKIE_NAME cookie (set-cookie) to the response.
@@ -189,8 +177,8 @@ public class FavouriteMetadataListApi {
      *
      * @return the SESSION_COOKIE_NAME value (uuid)
      */
-    String setSessionId(HttpServletResponse response) {
-        return setSessionId(response, UUID.randomUUID().toString());
+    String setSessionId(HttpServletResponse response, String path, boolean isSecure) {
+        return setSessionId(response, UUID.randomUUID().toString(), path, isSecure);
     }
 
     /**
@@ -198,8 +186,11 @@ public class FavouriteMetadataListApi {
      *
      * @return the SESSION_COOKIE_NAME value (uuid)
      */
-    String setSessionId(HttpServletResponse response, String value) {
-        response.addCookie(new Cookie(SESSION_COOKIE_NAME,value));
+    String setSessionId(HttpServletResponse response,  String value, String path, boolean isSecure) {
+        Cookie cookie = new Cookie(SESSION_COOKIE_NAME,value);
+        cookie.setPath(path);
+        cookie.setSecure(isSecure);
+        response.addCookie(cookie);
         return value;
     }
 
@@ -223,7 +214,9 @@ public class FavouriteMetadataListApi {
         @Parameter(hidden = true)
         HttpSession httpSession,
         @Parameter(hidden = true)
-        HttpServletRequest  httpServletRequest
+        HttpServletRequest  httpServletRequest,
+        @CookieValue(SESSION_COOKIE_NAME)
+        String sessionId
     )
         throws Exception {
 
@@ -235,7 +228,6 @@ public class FavouriteMetadataListApi {
         }
 
         boolean isAdmin = isAdmin(httpSession);
-        String sessionId = getSessionId(httpServletRequest);
         User user =  getUser(httpSession);
 
         Optional<FavouriteMetadataList> list = favouriteMetadataListRepository.findById(favouriteListIdentifier);
@@ -289,7 +281,9 @@ public class FavouriteMetadataListApi {
         @Parameter(hidden = true)
             HttpSession httpSession,
         @Parameter(hidden = true)
-            HttpServletRequest  httpServletRequest
+            HttpServletRequest  httpServletRequest,
+        @CookieValue(SESSION_COOKIE_NAME)
+            String sessionId
     )
         throws Exception {
 
@@ -301,7 +295,6 @@ public class FavouriteMetadataListApi {
         }
 
         boolean isAdmin = isAdmin(httpSession);
-        String sessionId = getSessionId(httpServletRequest);
         User user = getUser(httpSession);
 
         Optional<FavouriteMetadataList> list1 = favouriteMetadataListRepository.findById(favouriteListIdentifier);
@@ -310,7 +303,7 @@ public class FavouriteMetadataListApi {
         }
         FavouriteMetadataList list = list1.get();
 
-        if (!permittedWrite(list,user,sessionId,isAdmin)) {
+        if (!permittedWrite(list, user, sessionId, isAdmin)) {
             throw new NotAllowedException("You do not have permission to modify this list");
         }
 
@@ -400,7 +393,8 @@ public class FavouriteMetadataListApi {
         @Parameter(hidden = true)
             HttpSession httpSession,
         @Parameter(hidden = true)
-            HttpServletRequest  httpServletRequest
+            HttpServletRequest  httpServletRequest,
+        @CookieValue(SESSION_COOKIE_NAME) String sessionId
     )
         throws Exception {
 
@@ -413,7 +407,6 @@ public class FavouriteMetadataListApi {
 
         boolean isAdmin = isAdmin(httpSession);
 
-        String sessionId = getSessionId(httpServletRequest);
         User user = getUser(httpSession);
 
         Optional<FavouriteMetadataList> list1 = favouriteMetadataListRepository.findById(favouriteListIdentifier);
@@ -458,7 +451,8 @@ public class FavouriteMetadataListApi {
         @Parameter(hidden = true)
             HttpSession httpSession,
         @Parameter(hidden = true)
-            HttpServletRequest  httpServletRequest
+            HttpServletRequest  httpServletRequest,
+        @CookieValue(SESSION_COOKIE_NAME) String sessionId
     )
         throws Exception {
 
@@ -470,7 +464,6 @@ public class FavouriteMetadataListApi {
         }
 
         boolean isAdmin = isAdmin(httpSession);
-        String sessionId = getSessionId(httpServletRequest);
         User user = getUser(httpSession);
 
         Optional<FavouriteMetadataList> list1 = favouriteMetadataListRepository.findById(favouriteListIdentifier);
@@ -530,7 +523,9 @@ public class FavouriteMetadataListApi {
         @Parameter(hidden = true)
             HttpServletRequest  httpServletRequest,
         @Parameter(hidden = true)
-            HttpServletResponse httpServletResponse
+            HttpServletResponse httpServletResponse,
+         @CookieValue(SESSION_COOKIE_NAME)
+            String sessionId
     )
         throws Exception {
             if (!StringUtils.hasText(name)) {
@@ -539,12 +534,11 @@ public class FavouriteMetadataListApi {
             name = name.trim();
 
             User user = getUser(httpSession);
-            String sessionId = getSessionId(httpServletRequest);
-            if (sessionId == null) {
+            if (sessionId == null && user == null) {
                 //create a new session
-                sessionId = setSessionId(httpServletResponse);
+                sessionId = setSessionId(httpServletResponse,httpServletRequest.getContextPath(),httpServletRequest.getServletContext().getSessionCookieConfig().isSecure());
             }
-            FavouriteMetadataList alreadyExistsList = favouriteMetadataListRepository.findName(name,user,sessionId);
+            FavouriteMetadataList alreadyExistsList = favouriteMetadataListRepository.findName(name, user, sessionId);
 
             if (alreadyExistsList != null) {
                 throw new IllegalArgumentException("There is already a list of that name");

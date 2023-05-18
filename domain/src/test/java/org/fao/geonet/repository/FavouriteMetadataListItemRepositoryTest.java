@@ -34,7 +34,7 @@ import static org.junit.Assert.assertTrue;
 public class FavouriteMetadataListItemRepositoryTest extends AbstractSpringDataTest {
 
     @Autowired
-    FavouriteMetadataListItemRepository _repo;
+    FavouriteMetadataListItemRepository repo;
 
     @Autowired
     FavouriteMetadataListRepository favouriteMetadataListRepository;
@@ -47,13 +47,13 @@ public class FavouriteMetadataListItemRepositoryTest extends AbstractSpringDataT
         list= favouriteMetadataListRepository.save(list);
         list2= favouriteMetadataListRepository.save(list2);
 
-        List<String> items = _repo.queryByParent(list.getId());
+        List<String> items = repo.queryByParent(list.getId());
         assertEquals(2, items.size());
         assertTrue(items.contains("list.metadataid1"));
         assertTrue(items.contains("list.metadataid2"));
 
 
-        List<String> items2 = _repo.queryByParent(list2.getId());
+        List<String> items2 = repo.queryByParent(list2.getId());
         assertEquals(2, items2.size());
         assertTrue(items2.contains("list2.metadataid1"));
         assertTrue(items2.contains("list2.metadataid2"));
