@@ -94,7 +94,7 @@ public class FavouriteMetadataList extends GeonetEntity implements Serializable 
      */
     private ISODate changeDate;
     /**
-     *  list of metadata UUIDs.  Should be unique.
+     * list of metadata UUIDs.  Should be unique.
      */
     private List<FavouriteMetadataListItem> selections;
 

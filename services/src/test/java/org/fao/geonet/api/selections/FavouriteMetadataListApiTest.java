@@ -49,17 +49,17 @@ public class FavouriteMetadataListApiTest extends FavouriteMetadataListApiSuppor
     @Test
     public void testCreateGetSimple() throws Exception {
         MockHttpSession session;
-        FavouriteMetadataListVM list,list2;
+        FavouriteMetadataListVM list, list2;
         FavouriteMetadataListVM one;
         List<FavouriteMetadataListVM> all;
-        Pair<FavouriteMetadataListVM,String> createResult;
+        Pair<FavouriteMetadataListVM, String> createResult;
 
 
         //1. anonymous creates a list
         session = loginAsAnonymous();
-        createResult= create(session, null,
+        createResult = create(session, null,
             "testcase1", FavouriteMetadataList.ListType.WatchList, new String[]{uuid1, uuid2});
-        list=createResult.one();
+        list = createResult.one();
         String returnedSessionId = createResult.two();
         assertNotNull(returnedSessionId);
 
@@ -69,7 +69,7 @@ public class FavouriteMetadataListApiTest extends FavouriteMetadataListApiSuppor
         areSame(list, all.get(0));
 
         //1c. call "get by id" -- should get the list we created
-        one = getList(session,returnedSessionId, list.getId());
+        one = getList(session, returnedSessionId, list.getId());
         areSame(list, one);
 
         //2. user1 creates a  list
@@ -99,7 +99,7 @@ public class FavouriteMetadataListApiTest extends FavouriteMetadataListApiSuppor
     public void testSessionSameName() throws Exception {
         MockHttpSession session;
         FavouriteMetadataListVM list;
-        Pair<FavouriteMetadataListVM,String> createResult;
+        Pair<FavouriteMetadataListVM, String> createResult;
 
         //1. anonymous creates a list
         session = loginAsAnonymous();
@@ -110,7 +110,7 @@ public class FavouriteMetadataListApiTest extends FavouriteMetadataListApiSuppor
 
         //2 try to create list with the same name
         assertThrows(Exception.class, () -> {
-            create(session, returnedSessionId,"testcase", FavouriteMetadataList.ListType.WatchList, new String[]{uuid1, uuid2});
+            create(session, returnedSessionId, "testcase", FavouriteMetadataList.ListType.WatchList, new String[]{uuid1, uuid2});
         });
     }
 
@@ -123,7 +123,7 @@ public class FavouriteMetadataListApiTest extends FavouriteMetadataListApiSuppor
     public void testUserSameName() throws Exception {
         MockHttpSession session;
         FavouriteMetadataListVM list;
-        Pair<FavouriteMetadataListVM,String> createResult;
+        Pair<FavouriteMetadataListVM, String> createResult;
 
         //1. anonymous creates a list
         session = loginAs(user1);
@@ -134,12 +134,12 @@ public class FavouriteMetadataListApiTest extends FavouriteMetadataListApiSuppor
 
         //2 try to create list with the same name
         assertThrows(Exception.class, () -> {
-            create(session, returnedSessionId,"testcase", FavouriteMetadataList.ListType.WatchList, new String[]{uuid1, uuid2});
+            create(session, returnedSessionId, "testcase", FavouriteMetadataList.ListType.WatchList, new String[]{uuid1, uuid2});
         });
 
         //no sessionId cookie --> should still throw
         assertThrows(Exception.class, () -> {
-            create(session, null,"testcase", FavouriteMetadataList.ListType.WatchList, new String[]{uuid1, uuid2});
+            create(session, null, "testcase", FavouriteMetadataList.ListType.WatchList, new String[]{uuid1, uuid2});
         });
     }
 
@@ -153,7 +153,7 @@ public class FavouriteMetadataListApiTest extends FavouriteMetadataListApiSuppor
     public void testSessionUserSameName() throws Exception {
         MockHttpSession session;
         FavouriteMetadataListVM list;
-        Pair<FavouriteMetadataListVM,String> createResult;
+        Pair<FavouriteMetadataListVM, String> createResult;
 
         //1. anonymous creates a list
         session = loginAsAnonymous();
@@ -168,7 +168,7 @@ public class FavouriteMetadataListApiTest extends FavouriteMetadataListApiSuppor
         //2 try to create list with the same name
         MockHttpSession finalSession = session;
         assertThrows(Exception.class, () -> {
-            create(finalSession, returnedSessionId,"testcase", FavouriteMetadataList.ListType.WatchList, new String[]{uuid1, uuid2});
+            create(finalSession, returnedSessionId, "testcase", FavouriteMetadataList.ListType.WatchList, new String[]{uuid1, uuid2});
         });
     }
 
@@ -183,7 +183,7 @@ public class FavouriteMetadataListApiTest extends FavouriteMetadataListApiSuppor
         MockHttpSession session;
         FavouriteMetadataListVM list;
         List<FavouriteMetadataListVM> all;
-        Pair<FavouriteMetadataListVM,String> createResult;
+        Pair<FavouriteMetadataListVM, String> createResult;
 
         //1. anonymous creates a list (private)
         session = loginAsAnonymous();
@@ -230,11 +230,11 @@ public class FavouriteMetadataListApiTest extends FavouriteMetadataListApiSuppor
         MockHttpSession session;
         FavouriteMetadataListVM list;
         List<FavouriteMetadataListVM> all;
-        Pair<FavouriteMetadataListVM,String> createResult;
+        Pair<FavouriteMetadataListVM, String> createResult;
 
         //1. anonymous creates a list (private)
         session = loginAs(user1);
-        createResult = create(session,null,
+        createResult = create(session, null,
             "testcase", FavouriteMetadataList.ListType.WatchList, new String[]{uuid1, uuid2});
         list = createResult.one();
         String returnedSessionId = createResult.two();
@@ -277,7 +277,7 @@ public class FavouriteMetadataListApiTest extends FavouriteMetadataListApiSuppor
         MockHttpSession session;
         FavouriteMetadataListVM list, list2;
         List<FavouriteMetadataListVM> all;
-        Pair<FavouriteMetadataListVM,String> createResult;
+        Pair<FavouriteMetadataListVM, String> createResult;
 
         session = loginAs(user1);
         createResult = create(session, null,
@@ -285,12 +285,12 @@ public class FavouriteMetadataListApiTest extends FavouriteMetadataListApiSuppor
         list = createResult.one();
         String returnedSessionId = createResult.two();
 
-        list2 = update(session,returnedSessionId, list.getId(), "TESTCASE2", new String[0], FavouriteMetadataListApi.ActionType.add);
+        list2 = update(session, returnedSessionId, list.getId(), "TESTCASE2", new String[0], FavouriteMetadataListApi.ActionType.add);
         assertNotEquals(list.getChangeDate(), list2.getChangeDate());
         assertEquals("TESTCASE2", list2.getName());
 
         //get the list to make sure its fully saved
-        list2 = getList(session,returnedSessionId, list.getId());
+        list2 = getList(session, returnedSessionId, list.getId());
         assertEquals("TESTCASE2", list2.getName());
     }
 
@@ -308,7 +308,7 @@ public class FavouriteMetadataListApiTest extends FavouriteMetadataListApiSuppor
         FavouriteMetadataListVM list1;
         FavouriteMetadataListVM list2;
         List<FavouriteMetadataListVM> all;
-        Pair<FavouriteMetadataListVM,String> createResult;
+        Pair<FavouriteMetadataListVM, String> createResult;
 
         session = loginAs(user1);
         createResult = create(session, null,
@@ -316,10 +316,10 @@ public class FavouriteMetadataListApiTest extends FavouriteMetadataListApiSuppor
         list1 = createResult.one();
         String returnedSessionId = createResult.two();
 
-        createResult = create(session,returnedSessionId,
+        createResult = create(session, returnedSessionId,
             "testcase2", FavouriteMetadataList.ListType.WatchList, new String[]{uuid1, uuid2});
         list2 = createResult.one();
-        assertEquals(returnedSessionId,createResult.two());
+        assertEquals(returnedSessionId, createResult.two());
         returnedSessionId = createResult.two();
 
 
@@ -343,7 +343,7 @@ public class FavouriteMetadataListApiTest extends FavouriteMetadataListApiSuppor
         FavouriteMetadataListVM list1;
         FavouriteMetadataListVM list2;
         FavouriteMetadataListVM list3;
-        Pair<FavouriteMetadataListVM,String> createResult;
+        Pair<FavouriteMetadataListVM, String> createResult;
 
         session = loginAs(user1);
         createResult = create(session, null,
@@ -351,16 +351,16 @@ public class FavouriteMetadataListApiTest extends FavouriteMetadataListApiSuppor
         list1 = createResult.one();
         String returnedSessionId = createResult.two();
 
-        list2 = update(session,returnedSessionId, list1.getId(), "testcase", new String[]{uuid3}, FavouriteMetadataListApi.ActionType.add);
+        list2 = update(session, returnedSessionId, list1.getId(), "testcase", new String[]{uuid3}, FavouriteMetadataListApi.ActionType.add);
         assertEquals(3, list2.getSelections().size());
         areSameUuids(Arrays.asList(uuid1, uuid2, uuid3), list2);
         assertNotEquals(list1.getChangeDate(), list2.getChangeDate());
 
-        list2 = update(session,returnedSessionId, list1.getId(), "testcase", new String[]{uuid2, uuid2, uuid3}, FavouriteMetadataListApi.ActionType.add);
+        list2 = update(session, returnedSessionId, list1.getId(), "testcase", new String[]{uuid2, uuid2, uuid3}, FavouriteMetadataListApi.ActionType.add);
         assertEquals(3, list2.getSelections().size());
         areSameUuids(Arrays.asList(uuid1, uuid2, uuid3), list2);
 
-        list3 = update(session,returnedSessionId, list1.getId(), "testcase", new String[]{}, FavouriteMetadataListApi.ActionType.add);
+        list3 = update(session, returnedSessionId, list1.getId(), "testcase", new String[]{}, FavouriteMetadataListApi.ActionType.add);
         assertEquals(3, list3.getSelections().size());
         areSameUuids(Arrays.asList(uuid1, uuid2, uuid3), list3);
     }
@@ -377,7 +377,7 @@ public class FavouriteMetadataListApiTest extends FavouriteMetadataListApiSuppor
         FavouriteMetadataListVM list1;
         FavouriteMetadataListVM list2;
         FavouriteMetadataListVM list3;
-        Pair<FavouriteMetadataListVM,String> createResult;
+        Pair<FavouriteMetadataListVM, String> createResult;
 
         session = loginAs(user1);
         createResult = create(session, null,
@@ -385,13 +385,13 @@ public class FavouriteMetadataListApiTest extends FavouriteMetadataListApiSuppor
         list1 = createResult.one();
         String returnedSessionId = createResult.two();
 
-        list2 = update(session,returnedSessionId, list1.getId(), "testcase", new String[]{uuid3}, FavouriteMetadataListApi.ActionType.remove);
+        list2 = update(session, returnedSessionId, list1.getId(), "testcase", new String[]{uuid3}, FavouriteMetadataListApi.ActionType.remove);
         areSameUuids(Arrays.asList(uuid1, uuid2), list2);
 
-        list2 = update(session, returnedSessionId,list1.getId(), "testcase", new String[]{uuid2, uuid2}, FavouriteMetadataListApi.ActionType.remove);
+        list2 = update(session, returnedSessionId, list1.getId(), "testcase", new String[]{uuid2, uuid2}, FavouriteMetadataListApi.ActionType.remove);
         areSameUuids(Arrays.asList(uuid1), list2);
 
-        list3 = update(session,returnedSessionId, list1.getId(), "testcase", new String[]{}, FavouriteMetadataListApi.ActionType.remove);
+        list3 = update(session, returnedSessionId, list1.getId(), "testcase", new String[]{}, FavouriteMetadataListApi.ActionType.remove);
         areSameUuids(Arrays.asList(uuid1), list3);
     }
 
@@ -406,7 +406,7 @@ public class FavouriteMetadataListApiTest extends FavouriteMetadataListApiSuppor
         FavouriteMetadataListVM list1;
         FavouriteMetadataListVM list2;
         FavouriteMetadataListVM list3;
-        Pair<FavouriteMetadataListVM,String> createResult;
+        Pair<FavouriteMetadataListVM, String> createResult;
 
         session = loginAs(user1);
         createResult = create(session, null,
@@ -431,10 +431,10 @@ public class FavouriteMetadataListApiTest extends FavouriteMetadataListApiSuppor
     public void changeStatus() throws Exception {
         MockHttpSession session;
         FavouriteMetadataListVM list1, list2;
-        Pair<FavouriteMetadataListVM,String> createResult;
+        Pair<FavouriteMetadataListVM, String> createResult;
 
         session = loginAs(user1);
-        createResult = create(session,null,
+        createResult = create(session, null,
             "testcase", FavouriteMetadataList.ListType.WatchList, new String[]{uuid1, uuid2});
         list1 = createResult.one();
         String returnedSessionId = createResult.two();
@@ -458,12 +458,12 @@ public class FavouriteMetadataListApiTest extends FavouriteMetadataListApiSuppor
     public void changeStatusAnonymous() throws Exception {
         MockHttpSession sessionUser1;
         final FavouriteMetadataListVM[] list1 = new FavouriteMetadataListVM[1];
-        Pair<FavouriteMetadataListVM,String> createResult;
+        Pair<FavouriteMetadataListVM, String> createResult;
 
 
         sessionUser1 = loginAsAnonymous();
 
-        createResult = create(sessionUser1,null,
+        createResult = create(sessionUser1, null,
             "testcase", FavouriteMetadataList.ListType.WatchList, new String[]{uuid1, uuid2});
         list1[0] = createResult.one();
         String returnedSessionId = createResult.two();
@@ -486,14 +486,13 @@ public class FavouriteMetadataListApiTest extends FavouriteMetadataListApiSuppor
         MockHttpSession sessionUser1, sessionUser2, sessionAnonymous;
         FavouriteMetadataListVM list1, list2;
         List<FavouriteMetadataListVM> all;
-        Pair<FavouriteMetadataListVM,String> createResult;
+        Pair<FavouriteMetadataListVM, String> createResult;
 
 
         sessionUser1 = loginAs(user1);
 
 
-
-        createResult = create(sessionUser1,null,
+        createResult = create(sessionUser1, null,
             "testcase", FavouriteMetadataList.ListType.WatchList, new String[]{uuid1, uuid2});
         list1 = createResult.one();
         String returnedSessionId = createResult.two();
@@ -517,9 +516,8 @@ public class FavouriteMetadataListApiTest extends FavouriteMetadataListApiSuppor
         });
 
 
-
         //Anonymous cannot see/retrieve
-        all = Arrays.asList(getAllLists(sessionUser2,null));
+        all = Arrays.asList(getAllLists(sessionUser2, null));
         notContains(all, list1.getId());
         FavouriteMetadataListVM finalList2 = list1;
         MockHttpSession finalSessionUser1 = sessionUser2;
@@ -528,13 +526,13 @@ public class FavouriteMetadataListApiTest extends FavouriteMetadataListApiSuppor
         });
 
         sessionUser1 = loginAs(user1);
-        list1 = setstatus(sessionUser1,returnedSessionId, list1.getId(), true);
+        list1 = setstatus(sessionUser1, returnedSessionId, list1.getId(), true);
         assertEquals(true, list1.isPublic());
 
         //user1 can retrieve and see
         all = Arrays.asList(getAllLists(sessionUser1, returnedSessionId));
         contains(all, list1.getId());
-        list2 = getList(sessionUser1,returnedSessionId, list1.getId());
+        list2 = getList(sessionUser1, returnedSessionId, list1.getId());
         assertEquals(list1.getId(), list2.getId());
 
         sessionUser2 = loginAs(user2);
@@ -561,7 +559,7 @@ public class FavouriteMetadataListApiTest extends FavouriteMetadataListApiSuppor
         MockHttpSession session;
         FavouriteMetadataListVM list1;
         Boolean result;
-        Pair<FavouriteMetadataListVM,String> createResult;
+        Pair<FavouriteMetadataListVM, String> createResult;
 
         session = loginAs(user1);
         createResult = create(session, null,
@@ -574,7 +572,7 @@ public class FavouriteMetadataListApiTest extends FavouriteMetadataListApiSuppor
 
         MockHttpSession finalSession = session;
         assertThrows(Exception.class, () -> {
-            getList(finalSession, returnedSessionId,list1.getId());
+            getList(finalSession, returnedSessionId, list1.getId());
         });
     }
 
@@ -587,7 +585,7 @@ public class FavouriteMetadataListApiTest extends FavouriteMetadataListApiSuppor
     public void permissionOnPublic() throws Exception {
         MockHttpSession sessionUser1, sessionUser2, sessionAnonymous;
         FavouriteMetadataListVM list1, list2;
-        Pair<FavouriteMetadataListVM,String> createResult;
+        Pair<FavouriteMetadataListVM, String> createResult;
 
         sessionUser1 = loginAs(user1);
 
@@ -597,13 +595,13 @@ public class FavouriteMetadataListApiTest extends FavouriteMetadataListApiSuppor
         list1 = createResult.one();
         String returnedSessionId = createResult.two();
 
-        list2 = setstatus(sessionUser1,returnedSessionId, list1.getId(), true);
+        list2 = setstatus(sessionUser1, returnedSessionId, list1.getId(), true);
         assertEquals(true, list2.isPublic());
 
         sessionUser2 = loginAs(user2);
 
         assertThrows(Exception.class, () -> {
-            deleteItem(sessionUser2, null,list1.getId());
+            deleteItem(sessionUser2, null, list1.getId());
         });
 
         assertThrows(Exception.class, () -> {
@@ -630,18 +628,18 @@ public class FavouriteMetadataListApiTest extends FavouriteMetadataListApiSuppor
     }
 
     /**
-     *  1. login as user1 and create  list1 (session A)
-     *  2. login as user1 and create  list2 (session B)
-     *  3. user1 can see both lists (created by user)
-     *  4. login as anonymous and create  list3 (session C)
-     *  5. anonymous should just be able to see list3 (by session)
-     *  6. attach Session A cookie to anonymous --> should see nothing
+     * 1. login as user1 and create  list1 (session A)
+     * 2. login as user1 and create  list2 (session B)
+     * 3. user1 can see both lists (created by user)
+     * 4. login as anonymous and create  list3 (session C)
+     * 5. anonymous should just be able to see list3 (by session)
+     * 6. attach Session A cookie to anonymous --> should see nothing
      */
     @Test
     public void session1() throws Exception {
         MockHttpSession session;
-        FavouriteMetadataListVM list1, list2,list3;
-        Pair<FavouriteMetadataListVM,String> createResult;
+        FavouriteMetadataListVM list1, list2, list3;
+        Pair<FavouriteMetadataListVM, String> createResult;
         String sessionIDA, sessionIDB, sessionIDC;
 
         session = loginAs(user1);
@@ -669,7 +667,7 @@ public class FavouriteMetadataListApiTest extends FavouriteMetadataListApiSuppor
         List<FavouriteMetadataListVM> all = Arrays.asList(getAllLists(session, sessionIDB));
 
         //user1 (regardless of session id) can see both
-        areSame(Arrays.asList(list1, list2),all);
+        areSame(Arrays.asList(list1, list2), all);
 
 
         session = loginAsAnonymous();
@@ -727,7 +725,7 @@ public class FavouriteMetadataListApiTest extends FavouriteMetadataListApiSuppor
         List<FavouriteMetadataListVM> all = Arrays.asList(getAllLists(session, sessionIDA));
 
         //user1 (with the sessionID) can see both
-        areSame(Arrays.asList(list1,list2),all);
+        areSame(Arrays.asList(list1, list2), all);
 
         session = loginAsAnonymous();
         all = Arrays.asList(getAllLists(session, sessionIDA));

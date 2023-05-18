@@ -34,8 +34,8 @@ import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.User;
-import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.FavouriteMetadataListRepository;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -63,46 +63,46 @@ import java.util.stream.Collectors;
 
 /**
  * The API for FavouriteMaetadataList.
- *
+ * <p>
  * session:
- *    a. usually null
- *    b. when you create a list, you are given a cookie with your session ID
- *    c. if you are logged in, then your created lists are owned by a user
- *    d. if you are not logged in, then your created lists are owned by the session cookie.
- *
- *
- *    1. get all viewable by user (getFavouritesLists)
- *        This returns a list of FavouriteMetadataListVM that are visible.
- *        1. If logged in, then all lists "owned" by that user
- *        2. If not logged in, then all list "owned" by that session
- *        3. Any lists (user or session) that are "public"
- *
- *    2. Get FavouriteMetadataListVM by id (getFavouritesList)
- *        Gets a single FavouriteMetadataListVM by ID.  This must be visible;
- *           1. If logged in, "owned" by that user
- *           2. If not logged in, then "owned" by that session
- *           3. list must be "public"
- *
- *    3. Modify a list (name or metadataUuids) - updateFavourtiesList
- *        The list must be owned by the user (either the same sessionId or same User).
- *        If there is a new "name" given, the list's name will be updated (cannot conflict with other named lists that the user/session owns).
- *        The set of MetadataUuids can be (ActionType) added to, removed from, or replaced.
- *
- *    4. Change status (public/private) - updateStatus
- *       The list must be owned by the user (either the same sessionId or same User).
- *       The isPublic property can be set.  Making a list public makes it visible to everyone (Anonymous and all users).
- *
- *    5. Delete a list - deleteItem
- *       The list must be owned by the user (either the same sessionId or same User).
- *       The list is deleted.
- *
- *    6. Create a list - createNewFavourtiesList
- *       Creates a new list with the given name and set of metadatauuids.
- *       List is owned by the user/session.
- *       Name must be unique for the user/session.
- *
- *   Note - the administrator can see all items.
- *   Note - all uuids in a list must exist in the database.
+ * a. usually null
+ * b. when you create a list, you are given a cookie with your session ID
+ * c. if you are logged in, then your created lists are owned by a user
+ * d. if you are not logged in, then your created lists are owned by the session cookie.
+ * <p>
+ * <p>
+ * 1. get all viewable by user (getFavouritesLists)
+ * This returns a list of FavouriteMetadataListVM that are visible.
+ * 1. If logged in, then all lists "owned" by that user
+ * 2. If not logged in, then all list "owned" by that session
+ * 3. Any lists (user or session) that are "public"
+ * <p>
+ * 2. Get FavouriteMetadataListVM by id (getFavouritesList)
+ * Gets a single FavouriteMetadataListVM by ID.  This must be visible;
+ * 1. If logged in, "owned" by that user
+ * 2. If not logged in, then "owned" by that session
+ * 3. list must be "public"
+ * <p>
+ * 3. Modify a list (name or metadataUuids) - updateFavourtiesList
+ * The list must be owned by the user (either the same sessionId or same User).
+ * If there is a new "name" given, the list's name will be updated (cannot conflict with other named lists that the user/session owns).
+ * The set of MetadataUuids can be (ActionType) added to, removed from, or replaced.
+ * <p>
+ * 4. Change status (public/private) - updateStatus
+ * The list must be owned by the user (either the same sessionId or same User).
+ * The isPublic property can be set.  Making a list public makes it visible to everyone (Anonymous and all users).
+ * <p>
+ * 5. Delete a list - deleteItem
+ * The list must be owned by the user (either the same sessionId or same User).
+ * The list is deleted.
+ * <p>
+ * 6. Create a list - createNewFavourtiesList
+ * Creates a new list with the given name and set of metadatauuids.
+ * List is owned by the user/session.
+ * Name must be unique for the user/session.
+ * <p>
+ * Note - the administrator can see all items.
+ * Note - all uuids in a list must exist in the database.
  */
 @RequestMapping(value = {
     "/{portal}/api/favouriteslist"
@@ -112,29 +112,24 @@ import java.util.stream.Collectors;
 @Controller("favouriteslist")
 public class FavouriteMetadataListApi {
 
+    public static final String SESSION_COOKIE_NAME = "not-logged-in-FavouritesList-sessionid";
     @Autowired
     FavouriteMetadataListRepository favouriteMetadataListRepository;
-
     @Autowired
     UserRepository userRepository;
-
     @Autowired
     MetadataRepository metadataRepository;
-
-    public static final  String SESSION_COOKIE_NAME="not-logged-in-FavouritesList-sessionid";
-
-    enum ActionType {add, replace, remove}
 
     /**
      * This will retrieve a list of FavouriteMetadataListVM
      * included;
-     *      + all public lists (from other users or other sessions)
-     *      + all private lists for the user
-     *      + all private lists for the session
-     *
+     * + all public lists (from other users or other sessions)
+     * + all private lists for the user
+     * + all private lists for the session
+     * <p>
      * not included;
-     *     + private lists for other users
-     *     + private lists for other sessions
+     * + private lists for other users
+     * + private lists for other sessions
      *
      * @param httpSession
      * @return
@@ -151,29 +146,27 @@ public class FavouriteMetadataListApi {
     @ResponseStatus(HttpStatus.OK)
     List<FavouriteMetadataListVM> getFavouritesLists(
         @Parameter(hidden = true)
-        HttpSession httpSession,
+            HttpSession httpSession,
 
         @Parameter(hidden = true)
-            HttpServletRequest  httpServletRequest,
+            HttpServletRequest httpServletRequest,
         @CookieValue(SESSION_COOKIE_NAME)
-        String sessionId
+            String sessionId
     )
         throws Exception {
-        User user =  getUser(httpSession);
+        User user = getUser(httpSession);
         boolean isAdmin = isAdmin(httpSession);
-        return favouriteMetadataListRepository.findPublic(user,sessionId)
+        return favouriteMetadataListRepository.findPublic(user, sessionId)
             .stream()
-            .map(x->new FavouriteMetadataListVM(x
-                ,permittedWrite(x,user,sessionId,isAdmin),
-                ownedByMe(x,user,sessionId)))
+            .map(x -> new FavouriteMetadataListVM(x
+                , permittedWrite(x, user, sessionId, isAdmin),
+                ownedByMe(x, user, sessionId)))
             .collect(Collectors.toList());
     }
 
-
-
     /**
-     *   adds a new SESSION_COOKIE_NAME cookie (set-cookie) to the response.
-     *   Value will be a random UUID.
+     * adds a new SESSION_COOKIE_NAME cookie (set-cookie) to the response.
+     * Value will be a random UUID.
      *
      * @return the SESSION_COOKIE_NAME value (uuid)
      */
@@ -182,12 +175,12 @@ public class FavouriteMetadataListApi {
     }
 
     /**
-     *   adds a new SESSION_COOKIE_NAME cookie (set-cookie) to the response.
+     * adds a new SESSION_COOKIE_NAME cookie (set-cookie) to the response.
      *
      * @return the SESSION_COOKIE_NAME value (uuid)
      */
-    String setSessionId(HttpServletResponse response,  String value, String path, boolean isSecure) {
-        Cookie cookie = new Cookie(SESSION_COOKIE_NAME,value);
+    String setSessionId(HttpServletResponse response, String value, String path, boolean isSecure) {
+        Cookie cookie = new Cookie(SESSION_COOKIE_NAME, value);
         cookie.setPath(path);
         cookie.setSecure(isSecure);
         response.addCookie(cookie);
@@ -195,7 +188,7 @@ public class FavouriteMetadataListApi {
     }
 
     /**
-     *  Get a FavouriteMetadataListVM by id.
+     * Get a FavouriteMetadataListVM by id.
      */
     @io.swagger.v3.oas.annotations.Operation(summary = "Get a specific (by DB id) of FavouriteList list")
     @RequestMapping(
@@ -208,27 +201,27 @@ public class FavouriteMetadataListApi {
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     FavouriteMetadataListVM getFavouritesList(
-        @Parameter(description = "FavouritesList DB id (int)",required = true)
+        @Parameter(description = "FavouritesList DB id (int)", required = true)
         @PathVariable
-        Integer favouriteListIdentifier,
+            Integer favouriteListIdentifier,
         @Parameter(hidden = true)
-        HttpSession httpSession,
+            HttpSession httpSession,
         @Parameter(hidden = true)
-        HttpServletRequest  httpServletRequest,
+            HttpServletRequest httpServletRequest,
         @CookieValue(SESSION_COOKIE_NAME)
-        String sessionId
+            String sessionId
     )
         throws Exception {
 
         if (favouriteListIdentifier == null) {
             throw new IllegalArgumentException("no favouriteListIdentifier given");
         }
-        if (favouriteListIdentifier <=0) {
+        if (favouriteListIdentifier <= 0) {
             throw new IllegalArgumentException("invalid favouriteListIdentifier given");
         }
 
         boolean isAdmin = isAdmin(httpSession);
-        User user =  getUser(httpSession);
+        User user = getUser(httpSession);
 
         Optional<FavouriteMetadataList> list = favouriteMetadataListRepository.findById(favouriteListIdentifier);
         if (!list.isPresent()) {
@@ -236,7 +229,7 @@ public class FavouriteMetadataListApi {
         }
         FavouriteMetadataList result = list.get();
 
-        if (permittedRead(result,user,sessionId,isAdmin)) {
+        if (permittedRead(result, user, sessionId, isAdmin)) {
             return new FavouriteMetadataListVM(result);
         }
 
@@ -244,12 +237,11 @@ public class FavouriteMetadataListApi {
     }
 
     /**
-     *  update a FavouriteMetadataList
-     *  user or session must own the FavouriteMetadataList.
-     *  change name - name must be unique for the user/session.
-     *
-     *  update the set of metadataUuuids (add/remove/replace)
-     *
+     * update a FavouriteMetadataList
+     * user or session must own the FavouriteMetadataList.
+     * change name - name must be unique for the user/session.
+     * <p>
+     * update the set of metadataUuuids (add/remove/replace)
      */
     @io.swagger.v3.oas.annotations.Operation(summary = "Update a specific (by DB id) of FavouriteList list")
     @RequestMapping(
@@ -262,26 +254,26 @@ public class FavouriteMetadataListApi {
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     FavouriteMetadataListVM updateFavouriteList(
-        @Parameter(description = "favouriteList DB id (int)",required = true)
+        @Parameter(description = "favouriteList DB id (int)", required = true)
         @PathVariable
             Integer favouriteListIdentifier,
 
-        @Parameter(description = "new name of list",required = false)
-        @RequestParam(name="name",required = false)
+        @Parameter(description = "new name of list", required = false)
+        @RequestParam(name = "name", required = false)
             String name,
 
-        @Parameter(description = "action - add, replace, or remove",required = true)
-        @RequestParam(name="action",required = true)
+        @Parameter(description = "action - add, replace, or remove", required = true)
+        @RequestParam(name = "action", required = true)
             ActionType action,
 
-        @Parameter(description = "List of metadata uuids to replace in the list",required = false)
-        @RequestParam(name="metadataUuids",required = false)
+        @Parameter(description = "List of metadata uuids to replace in the list", required = false)
+        @RequestParam(name = "metadataUuids", required = false)
             String[] metadataUuids,
 
         @Parameter(hidden = true)
             HttpSession httpSession,
         @Parameter(hidden = true)
-            HttpServletRequest  httpServletRequest,
+            HttpServletRequest httpServletRequest,
         @CookieValue(SESSION_COOKIE_NAME)
             String sessionId
     )
@@ -307,18 +299,17 @@ public class FavouriteMetadataListApi {
             throw new NotAllowedException("You do not have permission to modify this list");
         }
 
-        if (metadataUuids !=null) {
+        if (metadataUuids != null) {
             //no duplicates
-            metadataUuids =  Arrays.stream(metadataUuids).distinct().toArray(String[]::new);
-        }
-        else {
+            metadataUuids = Arrays.stream(metadataUuids).distinct().toArray(String[]::new);
+        } else {
             metadataUuids = new String[0];
         }
 
         //update name
         if (StringUtils.hasText(name) && !name.equals(list.getName())) {
             //is this valid?
-            FavouriteMetadataList item = favouriteMetadataListRepository.findName(name,user,sessionId);
+            FavouriteMetadataList item = favouriteMetadataListRepository.findName(name, user, sessionId);
             if (item != null) {
                 throw new IllegalArgumentException(String.format("name '%s' is already in use!", name));
             }
@@ -329,9 +320,9 @@ public class FavouriteMetadataListApi {
             list.getSelections().clear();
         }
 
-        if (action==ActionType.replace || action==ActionType.add) {
+        if (action == ActionType.replace || action == ActionType.add) {
             //add metadataUuids
-            for(String uuid : metadataUuids) {
+            for (String uuid : metadataUuids) {
                 Metadata md = metadataRepository.findOneByUuid(uuid);
                 if (md == null) {
                     throw new IllegalArgumentException(String.format("Metadata with uuid %s is not found", uuid));
@@ -340,19 +331,18 @@ public class FavouriteMetadataListApi {
                     continue; //don't add templates
                 }
                 boolean alreadyInList = list.getSelections().stream()
-                    .anyMatch(x->x.getMetadataUuid().equals(uuid));
+                    .anyMatch(x -> x.getMetadataUuid().equals(uuid));
                 if (!alreadyInList) {
                     FavouriteMetadataListItem selection = new FavouriteMetadataListItem();
                     selection.setMetadataUuid(uuid);
                     list.getSelections().add(selection);
                 }
             }
-        }
-        else {
+        } else {
             //action = remove
-            for(String uuid : metadataUuids) {
+            for (String uuid : metadataUuids) {
                 Optional<FavouriteMetadataListItem> existing = list.getSelections().stream()
-                    .filter(x->x.getMetadataUuid().equals(uuid))
+                    .filter(x -> x.getMetadataUuid().equals(uuid))
                     .findFirst();
                 if (existing.isPresent()) {
                     list.getSelections().remove(existing.get());
@@ -366,10 +356,9 @@ public class FavouriteMetadataListApi {
         return new FavouriteMetadataListVM(list);
     }
 
-
     /**
-     *  Change the FavouriteMetadataList's IsPublic Attribute.
-     *  User or session must own the FavouriteMetadataList.
+     * Change the FavouriteMetadataList's IsPublic Attribute.
+     * User or session must own the FavouriteMetadataList.
      */
     @io.swagger.v3.oas.annotations.Operation(summary = "Update a specific (by DB id) List's IsPublic attribute")
     @RequestMapping(
@@ -382,18 +371,18 @@ public class FavouriteMetadataListApi {
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     FavouriteMetadataListVM updateStatus(
-        @Parameter(description = "favouriteListIdentifier DB id (int)",required = true)
+        @Parameter(description = "favouriteListIdentifier DB id (int)", required = true)
         @PathVariable
             Integer favouriteListIdentifier,
 
-        @Parameter(description = "new isPublic status",required = false)
-        @RequestParam(name="public",required = true)
+        @Parameter(description = "new isPublic status", required = false)
+        @RequestParam(name = "public", required = true)
             boolean isPublic,
 
         @Parameter(hidden = true)
             HttpSession httpSession,
         @Parameter(hidden = true)
-            HttpServletRequest  httpServletRequest,
+            HttpServletRequest httpServletRequest,
         @CookieValue(SESSION_COOKIE_NAME) String sessionId
     )
         throws Exception {
@@ -419,7 +408,7 @@ public class FavouriteMetadataListApi {
             throw new NotAllowedException("You do not have permission to modify this list");
         }
 
-        if (list.getUser()==null) {
+        if (list.getUser() == null) {
             throw new Exception("anonymous lists cannot be made public!");
         }
 
@@ -444,14 +433,14 @@ public class FavouriteMetadataListApi {
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     boolean deleteFavouriteList(
-        @Parameter(description = "FavouritesList DB id (int)",required = true)
+        @Parameter(description = "FavouritesList DB id (int)", required = true)
         @PathVariable
             Integer favouriteListIdentifier,
 
         @Parameter(hidden = true)
             HttpSession httpSession,
         @Parameter(hidden = true)
-            HttpServletRequest  httpServletRequest,
+            HttpServletRequest httpServletRequest,
         @CookieValue(SESSION_COOKIE_NAME) String sessionId
     )
         throws Exception {
@@ -479,21 +468,19 @@ public class FavouriteMetadataListApi {
         return true;
     }
 
-
     /**
      * A favouriteList is created, for logged users are assigned to the user and reused between sessions.
-     *
+     * <p>
      * For unlogged users, are assigned to the user session.
-     *
+     * <p>
      * Create as private.
-     *
+     * <p>
      * example:
      * curl -X POST "http://localhost:8080/geonetwork/srv/api/favouritelist"
-     *     -H "accept: application/json"
-     *     -H "X-XSRF-TOKEN: ccc"
-     *     -H $'Cookie: XSRF-TOKEN=ccc'
-     *     -d "name=dave&metadataUuids=1&metadataUuids=2&listType=WatchList"
-     *
+     * -H "accept: application/json"
+     * -H "X-XSRF-TOKEN: ccc"
+     * -H $'Cookie: XSRF-TOKEN=ccc'
+     * -d "name=dave&metadataUuids=1&metadataUuids=2&listType=WatchList"
      */
     @io.swagger.v3.oas.annotations.Operation(summary = "Create a new FavouritesList")
     @RequestMapping(
@@ -505,84 +492,79 @@ public class FavouriteMetadataListApi {
     @ResponseBody
     @ResponseStatus(HttpStatus.CREATED)
     FavouriteMetadataListVM createNewFavouritesList(
-        @Parameter(description = "Name of the list to be created",required = true)
-        @RequestParam(name="name",required = true)
-        String name,
+        @Parameter(description = "Name of the list to be created", required = true)
+        @RequestParam(name = "name", required = true)
+            String name,
 
-        @Parameter(description = "List of metadata to add to the FavourtiesList",required = false)
-        @RequestParam(name="metadataUuids",required = false)
-        String[] metadataUuids,
+        @Parameter(description = "List of metadata to add to the FavourtiesList", required = false)
+        @RequestParam(name = "metadataUuids", required = false)
+            String[] metadataUuids,
 
-        @Parameter(description = "Type of list to create (Watch or Preferred)",required = true)
-        @RequestParam(name="listType",required = true)
-        FavouriteMetadataList.ListType listType,
-
-        @Parameter(hidden = true)
-        HttpSession httpSession,
+        @Parameter(description = "Type of list to create (Watch or Preferred)", required = true)
+        @RequestParam(name = "listType", required = true)
+            FavouriteMetadataList.ListType listType,
 
         @Parameter(hidden = true)
-            HttpServletRequest  httpServletRequest,
+            HttpSession httpSession,
+
+        @Parameter(hidden = true)
+            HttpServletRequest httpServletRequest,
         @Parameter(hidden = true)
             HttpServletResponse httpServletResponse,
-         @CookieValue(SESSION_COOKIE_NAME)
+        @CookieValue(SESSION_COOKIE_NAME)
             String sessionId
     )
         throws Exception {
-            if (!StringUtils.hasText(name)) {
-                throw new IllegalArgumentException("no name given");
-            }
-            name = name.trim();
+        if (!StringUtils.hasText(name)) {
+            throw new IllegalArgumentException("no name given");
+        }
+        name = name.trim();
 
-            User user = getUser(httpSession);
-            if (sessionId == null && user == null) {
-                //create a new session
-                sessionId = setSessionId(httpServletResponse,httpServletRequest.getContextPath(),httpServletRequest.getServletContext().getSessionCookieConfig().isSecure());
-            }
-            FavouriteMetadataList alreadyExistsList = favouriteMetadataListRepository.findName(name, user, sessionId);
+        User user = getUser(httpSession);
+        if (sessionId == null && user == null) {
+            //create a new session
+            sessionId = setSessionId(httpServletResponse, httpServletRequest.getContextPath(), httpServletRequest.getServletContext().getSessionCookieConfig().isSecure());
+        }
+        FavouriteMetadataList alreadyExistsList = favouriteMetadataListRepository.findName(name, user, sessionId);
 
-            if (alreadyExistsList != null) {
-                throw new IllegalArgumentException("There is already a list of that name");
-            }
-            FavouriteMetadataList list = new FavouriteMetadataList();
-            list.setName(name);
-            list.setIsPublic(false);
-            list.setListType(listType);
-            list.setCreateDate(new ISODate());
-            list.setChangeDate(list.getCreateDate());
-            if (user != null) {
-                //user-based
-                list.setUser(user);
-            }
-            else {
-                //session-based
-                list.setSessionId(sessionId);
-            }
-            if ( (metadataUuids!=null) && (metadataUuids.length >0)) {
-                //set metadataUuids
-                //don't add duplicates
-                metadataUuids =   Arrays.stream(metadataUuids).distinct().toArray(String[]::new);
-                list.setSelections(new ArrayList<>());
-                for(String uuid : metadataUuids) {
-                    Metadata md = metadataRepository.findOneByUuid(uuid);
-                    if (md == null) {
-                        throw new IllegalArgumentException("metadataUuids: "+uuid+" is not in DB");
-                    }
-                    if (md.getDataInfo().getType().codeString.equals("y")) {
-                        continue; //don't add templates
-                    }
-                    FavouriteMetadataListItem selection = new FavouriteMetadataListItem();
-                    selection.setMetadataUuid(uuid);
-                    list.getSelections().add(selection);
+        if (alreadyExistsList != null) {
+            throw new IllegalArgumentException("There is already a list of that name");
+        }
+        FavouriteMetadataList list = new FavouriteMetadataList();
+        list.setName(name);
+        list.setIsPublic(false);
+        list.setListType(listType);
+        list.setCreateDate(new ISODate());
+        list.setChangeDate(list.getCreateDate());
+        if (user != null) {
+            //user-based
+            list.setUser(user);
+        } else {
+            //session-based
+            list.setSessionId(sessionId);
+        }
+        if ((metadataUuids != null) && (metadataUuids.length > 0)) {
+            //set metadataUuids
+            //don't add duplicates
+            metadataUuids = Arrays.stream(metadataUuids).distinct().toArray(String[]::new);
+            list.setSelections(new ArrayList<>());
+            for (String uuid : metadataUuids) {
+                Metadata md = metadataRepository.findOneByUuid(uuid);
+                if (md == null) {
+                    throw new IllegalArgumentException("metadataUuids: " + uuid + " is not in DB");
                 }
+                if (md.getDataInfo().getType().codeString.equals("y")) {
+                    continue; //don't add templates
+                }
+                FavouriteMetadataListItem selection = new FavouriteMetadataListItem();
+                selection.setMetadataUuid(uuid);
+                list.getSelections().add(selection);
             }
-            //save
-            list = favouriteMetadataListRepository.save(list);
-            return new FavouriteMetadataListVM(list);
+        }
+        //save
+        list = favouriteMetadataListRepository.save(list);
+        return new FavouriteMetadataListVM(list);
     }
-
-
-    //-----------------------------------------------------------------------------------------
-    //-----------------------------------------------------------------------------------------
 
     /**
      * returns true if the session represents an admin
@@ -593,6 +575,8 @@ public class FavouriteMetadataListApi {
     }
 
 
+    //-----------------------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------------------
 
     /**
      * @return true if the user/session is permitted to read the list
@@ -603,33 +587,26 @@ public class FavouriteMetadataListApi {
             return true;
         }
         //owned by same user
-        if ( (user != null) && (list.getUser() !=null) && (user.equals(list.getUser()))) {
+        if ((user != null) && (list.getUser() != null) && (user.equals(list.getUser()))) {
             return true;
         }
         //owned by same session
-        if ( (sessionId != null) && (list.getSessionId() !=null) && (sessionId.equals(list.getSessionId()))) {
+        if ((sessionId != null) && (list.getSessionId() != null) && (sessionId.equals(list.getSessionId()))) {
             return true;
         }
         //public
-        if (list.getIsPublic()) {
-            return true;
-        }
+        return list.getIsPublic();
         //otherwise its private and owned by someone else
-        return false;
     }
-
 
     boolean ownedByMe(FavouriteMetadataList list, User user, String sessionId) {
         //owned by same user
-        if ( (user != null) && (list.getUser() !=null) && (user.equals(list.getUser()))) {
+        if ((user != null) && (list.getUser() != null) && (user.equals(list.getUser()))) {
             return true;
         }
         //owned by same session
-        if ( (sessionId != null) && (list.getSessionId() !=null) && (sessionId.equals(list.getSessionId()))) {
-            return true;
-        }
+        return (sessionId != null) && (list.getSessionId() != null) && (sessionId.equals(list.getSessionId()));
         //otherwise its private and owned by someone else
-        return false;
     }
 
     /**
@@ -641,19 +618,14 @@ public class FavouriteMetadataListApi {
             return true;
         }
         //owned by same user
-        if ( (user != null) && (list.getUser() !=null) && (user.equals(list.getUser()))) {
+        if ((user != null) && (list.getUser() != null) && (user.equals(list.getUser()))) {
             return true;
         }
         //owned by same session
-        if ( (sessionId != null) && (list.getSessionId() !=null) && (sessionId.equals(list.getSessionId()))) {
-            return true;
-        }
+        return (sessionId != null) && (list.getSessionId() != null) && (sessionId.equals(list.getSessionId()));
         //note - don't allow public ones to be edited by anyone????
         //otherwise its private and owned by someone else
-        return false;
     }
-
-
 
     /**
      * Gets the user in the httpSession
@@ -672,5 +644,7 @@ public class FavouriteMetadataListApi {
         list.setChangeDate(new ISODate());
         return list;
     }
+
+    enum ActionType {add, replace, remove}
 
 }

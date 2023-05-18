@@ -25,20 +25,19 @@ package org.fao.geonet.api.selections;
 import org.fao.geonet.domain.FavouriteMetadataList;
 import org.fao.geonet.domain.ISODate;
 
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 /**
  * View Model for UserMetadataSelectionList.
- *
+ * <p>
  * Changes:
- *    + User -> just the userName
- *    + Selection -> just a list of metadata UUIDs
- *    + isEditable -> boolean: if owned by the requester (or requester is admin)
- *    + isMyList -> boolean: if owned by the requester
- *    + nItems -> number of items in the selection list.
+ * + User -> just the userName
+ * + Selection -> just a list of metadata UUIDs
+ * + isEditable -> boolean: if owned by the requester (or requester is admin)
+ * + isMyList -> boolean: if owned by the requester
+ * + nItems -> number of items in the selection list.
  */
 public class FavouriteMetadataListVM {
 
@@ -52,32 +51,33 @@ public class FavouriteMetadataListVM {
     private ISODate changeDate;
     private List<String> selections;
     private boolean isEditable;
-    private  boolean isMyList;
+    private boolean isMyList;
     private int nItems;
 
 
     public FavouriteMetadataListVM() {
         this.selections = new ArrayList<>();
     }
+
     /**
      * doesn't set isEditable
+     *
      * @param model
      */
     public FavouriteMetadataListVM(FavouriteMetadataList model) {
         this.id = model.getId();
         this.name = model.getName();
-        this.userName = model.getUser() !=null ? model.getUser().getUsername() : null;
+        this.userName = model.getUser() != null ? model.getUser().getUsername() : null;
         this.sessionId = model.getSessionId();
         this.listType = model.getListType();
         this.isPublic = model.getIsPublic();
         this.createDate = model.getCreateDate();
         this.changeDate = model.getChangeDate();
-        if (model.getSelections() !=null) {
-            this.selections = model.getSelections() .stream()
-                .map(x->x.getMetadataUuid())
+        if (model.getSelections() != null) {
+            this.selections = model.getSelections().stream()
+                .map(x -> x.getMetadataUuid())
                 .collect(Collectors.toList());
-        }
-        else {
+        } else {
             this.selections = new ArrayList<>();
         }
         this.nItems = this.selections.size();

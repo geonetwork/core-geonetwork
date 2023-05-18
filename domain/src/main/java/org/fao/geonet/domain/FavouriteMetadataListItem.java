@@ -56,9 +56,9 @@ public class FavouriteMetadataListItem extends GeonetEntity implements Serializa
     private String metadataUuid;
 
     /**
-     *  do not modify.  This is a back link (via id) to the FavouriteMetadataList this belongs to.
-     *  This is managed by hibernate/JPA by the one-to-many relationship.  Its exposed because it's need
-     *  by the repository.
+     * do not modify.  This is a back link (via id) to the FavouriteMetadataList this belongs to.
+     * This is managed by hibernate/JPA by the one-to-many relationship.  Its exposed because it's need
+     * by the repository.
      */
     private int selection_id;
 

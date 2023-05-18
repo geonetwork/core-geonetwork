@@ -36,9 +36,9 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.kernel.search.IndexingMode;
+import org.fao.geonet.repository.FavouriteMetadataListRepository;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.SourceRepository;
-import org.fao.geonet.repository.FavouriteMetadataListRepository;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
@@ -75,48 +75,35 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 /**
  * this is specifically for UserSelectionApiTest to make that class just have the tests in it
  * and this class to have support methods.
- *
+ * <p>
  * This makes the test cases simpler.
- *
+ * <p>
  * 1. inserts 3 metadata records (uuid1,uuid2, uuid3)
  * 2. creates 3 users (user1, user2, user3)
- *
  */
 public abstract class FavouriteMetadataListApiSupport extends AbstractServiceIntegrationTest {
-    @Autowired
-    FavouriteMetadataListApi favouriteMetadataListApi;
-
-    @Autowired
-    FavouriteMetadataListRepository metadataSelectionListRepository;
-
-    @Autowired
-    MetadataRepository metadataRepository;
-
-    @Autowired
-    WebApplicationContext wac;
-
-    @Autowired
-    SourceRepository sourceRepository;
-
-    @Autowired
-    SchemaManager schemaManager;
-
-    @Autowired
-    DataManager dataManager;
-
-    MockMvc mockMvc;
-
-    MockHttpSession mockHttpSession;
-
-    ServiceContext context;
-
     static String apiBaseURL = "/srv/api/favouriteslist";
-
     ///-- UUIDS of metadata documents
     public String uuid1;
     public String uuid2;
     public String uuid3;
-
+    @Autowired
+    FavouriteMetadataListApi favouriteMetadataListApi;
+    @Autowired
+    FavouriteMetadataListRepository metadataSelectionListRepository;
+    @Autowired
+    MetadataRepository metadataRepository;
+    @Autowired
+    WebApplicationContext wac;
+    @Autowired
+    SourceRepository sourceRepository;
+    @Autowired
+    SchemaManager schemaManager;
+    @Autowired
+    DataManager dataManager;
+    MockMvc mockMvc;
+    MockHttpSession mockHttpSession;
+    ServiceContext context;
     //-- USERS
     User user1;
     User user2;
@@ -150,7 +137,7 @@ public abstract class FavouriteMetadataListApiSupport extends AbstractServiceInt
     /**
      * puts a metadata document in the database, returns the UUID of it.
      */
-    String insertSampleMetadata() throws  Exception {
+    String insertSampleMetadata() throws Exception {
         final Element sampleMetadataXml = getSampleMetadataXml();
         String uuid = UUID.randomUUID().toString();
         Xml.selectElement(sampleMetadataXml, "gmd:fileIdentifier/gco:CharacterString", Arrays.asList(GMD, GCO)).setText(uuid);
@@ -175,29 +162,29 @@ public abstract class FavouriteMetadataListApiSupport extends AbstractServiceInt
      * uses the webapi to create a UserMetadataSelectionList.
      * The result is validated against what was inserted.
      */
-    public Pair<FavouriteMetadataListVM,String> create(MockHttpSession session,
-                                                       String cookieValue,
-                                                       String name, FavouriteMetadataList.ListType listType, String[] uuids)
+    public Pair<FavouriteMetadataListVM, String> create(MockHttpSession session,
+                                                        String cookieValue,
+                                                        String name, FavouriteMetadataList.ListType listType, String[] uuids)
         throws Exception {
 
         // create the x-www-form-urlencoded for the parameters
-        StringBuilder requestContent = new StringBuilder("name="+name+"&listType="+listType.toString());
-        Arrays.stream(uuids).forEach(x->requestContent.append("&metadataUuids="+x));
+        StringBuilder requestContent = new StringBuilder("name=" + name + "&listType=" + listType.toString());
+        Arrays.stream(uuids).forEach(x -> requestContent.append("&metadataUuids=" + x));
 
         // actually call api
-        MockHttpServletRequestBuilder requestBuilder =   post(apiBaseURL)
+        MockHttpServletRequestBuilder requestBuilder = post(apiBaseURL)
             .content(requestContent.toString())
             .session(session)
             .contentType("application/x-www-form-urlencoded")
             .accept(MediaType.parseMediaType(API_JSON_EXPECTED_ENCODING));
-        if (cookieValue !=null) {
-            requestBuilder.cookie(new Cookie(SESSION_COOKIE_NAME,cookieValue));
+        if (cookieValue != null) {
+            requestBuilder.cookie(new Cookie(SESSION_COOKIE_NAME, cookieValue));
         }
 
-        ResultActions result =  this.mockMvc.perform(requestBuilder);
+        ResultActions result = this.mockMvc.perform(requestBuilder);
 
         // get the result of the api call as string (json text) and convert to an actual object
-        String jsonStr= result.andReturn().getResponse().getContentAsString();
+        String jsonStr = result.andReturn().getResponse().getContentAsString();
         ObjectMapper objectMapper = new ObjectMapper();
         FavouriteMetadataListVM resultListObj = objectMapper.readValue(jsonStr, FavouriteMetadataListVM.class);
 
@@ -214,9 +201,8 @@ public abstract class FavouriteMetadataListApiSupport extends AbstractServiceInt
         String sessionId;
         if (result.andReturn().getResponse().getCookie(SESSION_COOKIE_NAME) != null) {
             //cookie was set in response
-            sessionId =result.andReturn().getResponse().getCookie(SESSION_COOKIE_NAME).getValue();
-        }
-        else {
+            sessionId = result.andReturn().getResponse().getCookie(SESSION_COOKIE_NAME).getValue();
+        } else {
             sessionId = cookieValue;// value sent in request
         }
 
@@ -224,35 +210,33 @@ public abstract class FavouriteMetadataListApiSupport extends AbstractServiceInt
         assertTrue(resultListObj.getSessionId() == null || resultListObj.getUserName() == null);
         //verify user or session is correct
         if (userName != null) {
-            assertEquals( resultListObj.getUserName(), userName);
-        }
-        else {
-            assertEquals(sessionId,resultListObj.getSessionId());
+            assertEquals(resultListObj.getUserName(), userName);
+        } else {
+            assertEquals(sessionId, resultListObj.getSessionId());
             assertNotNull(sessionId);
         }
 
 
-
-        return Pair.read(resultListObj,sessionId);
+        return Pair.read(resultListObj, sessionId);
     }
 
     //calls the API to get all lists for the user  (cf UserSelectionApi#getSelectionLists)
-    FavouriteMetadataListVM[] getAllLists(MockHttpSession session, String cookieValue ) throws  Exception {
+    FavouriteMetadataListVM[] getAllLists(MockHttpSession session, String cookieValue) throws Exception {
 
         MockHttpServletRequestBuilder requestBuilder = get(apiBaseURL)
             //.content(requestContent.toString())
             .session(session)
             .contentType("application/x-www-form-urlencoded")
             .accept(MediaType.parseMediaType(API_JSON_EXPECTED_ENCODING));
-        if (cookieValue !=null) {
-            requestBuilder.cookie(new Cookie(SESSION_COOKIE_NAME,cookieValue));
+        if (cookieValue != null) {
+            requestBuilder.cookie(new Cookie(SESSION_COOKIE_NAME, cookieValue));
         }
 
 
-        ResultActions result =  this.mockMvc.perform(requestBuilder);
+        ResultActions result = this.mockMvc.perform(requestBuilder);
 
         // get the result of the api call as string (json text) and convert to an actual object
-        String jsonStr= result.andReturn().getResponse().getContentAsString();
+        String jsonStr = result.andReturn().getResponse().getContentAsString();
         ObjectMapper objectMapper = new ObjectMapper();
         FavouriteMetadataListVM[] resultListObj = objectMapper.readValue(jsonStr, FavouriteMetadataListVM[].class);
         return resultListObj;
@@ -262,18 +246,18 @@ public abstract class FavouriteMetadataListApiSupport extends AbstractServiceInt
     FavouriteMetadataListVM getList(MockHttpSession session, String cookieValue, int id) throws Exception {
 
 
-        MockHttpServletRequestBuilder requestBuilder = get(apiBaseURL+"/"+id)
+        MockHttpServletRequestBuilder requestBuilder = get(apiBaseURL + "/" + id)
             .session(session)
             .contentType("application/x-www-form-urlencoded")
             .accept(MediaType.parseMediaType(API_JSON_EXPECTED_ENCODING));
-        if (cookieValue !=null) {
-            requestBuilder.cookie(new Cookie(SESSION_COOKIE_NAME,cookieValue));
+        if (cookieValue != null) {
+            requestBuilder.cookie(new Cookie(SESSION_COOKIE_NAME, cookieValue));
         }
 
-        ResultActions result =  this.mockMvc.perform(requestBuilder);
+        ResultActions result = this.mockMvc.perform(requestBuilder);
 
         // get the result of the api call as string (json text) and convert to an actual object
-        String jsonStr= result.andReturn().getResponse().getContentAsString();
+        String jsonStr = result.andReturn().getResponse().getContentAsString();
         ObjectMapper objectMapper = new ObjectMapper();
         FavouriteMetadataListVM resultListObj = objectMapper.readValue(jsonStr, FavouriteMetadataListVM.class);
         return resultListObj;
@@ -282,42 +266,42 @@ public abstract class FavouriteMetadataListApiSupport extends AbstractServiceInt
     FavouriteMetadataListVM setstatus(MockHttpSession session, String cookieValue,
                                       int id,
                                       boolean isPublic) throws Exception {
-        StringBuilder requestContent = new StringBuilder("public="+Boolean.toString(isPublic));
+        StringBuilder requestContent = new StringBuilder("public=" + isPublic);
 
-        MockHttpServletRequestBuilder requestBuilder = put(apiBaseURL+"/"+id+"/status")
+        MockHttpServletRequestBuilder requestBuilder = put(apiBaseURL + "/" + id + "/status")
             .content(requestContent.toString())
             .session(session)
             .contentType("application/x-www-form-urlencoded")
             .accept(MediaType.parseMediaType(API_JSON_EXPECTED_ENCODING));
-        if (cookieValue !=null) {
-            requestBuilder.cookie(new Cookie(SESSION_COOKIE_NAME,cookieValue));
+        if (cookieValue != null) {
+            requestBuilder.cookie(new Cookie(SESSION_COOKIE_NAME, cookieValue));
         }
 
 
-        ResultActions result =  this.mockMvc.perform(requestBuilder);
+        ResultActions result = this.mockMvc.perform(requestBuilder);
 
-        String jsonStr= result.andReturn().getResponse().getContentAsString();
+        String jsonStr = result.andReturn().getResponse().getContentAsString();
         ObjectMapper objectMapper = new ObjectMapper();
         FavouriteMetadataListVM resultListObj = objectMapper.readValue(jsonStr, FavouriteMetadataListVM.class);
 
-        return  resultListObj;
+        return resultListObj;
     }
 
     Boolean deleteItem(MockHttpSession session, String cookieValue, int id) throws Exception {
 
-        MockHttpServletRequestBuilder requestBuilder = delete(apiBaseURL+"/"+id)
+        MockHttpServletRequestBuilder requestBuilder = delete(apiBaseURL + "/" + id)
             .session(session)
             .contentType("application/x-www-form-urlencoded")
             .accept(MediaType.parseMediaType(API_JSON_EXPECTED_ENCODING));
-        if (cookieValue !=null) {
-            requestBuilder.cookie(new Cookie(SESSION_COOKIE_NAME,cookieValue));
+        if (cookieValue != null) {
+            requestBuilder.cookie(new Cookie(SESSION_COOKIE_NAME, cookieValue));
         }
 
-        ResultActions result =  this.mockMvc.perform(requestBuilder);
+        ResultActions result = this.mockMvc.perform(requestBuilder);
 
-        String jsonStr= result.andReturn().getResponse().getContentAsString();
+        String jsonStr = result.andReturn().getResponse().getContentAsString();
         ObjectMapper objectMapper = new ObjectMapper();
-        return objectMapper.readValue(jsonStr,Boolean.class);
+        return objectMapper.readValue(jsonStr, Boolean.class);
     }
 
 
@@ -326,59 +310,59 @@ public abstract class FavouriteMetadataListApiSupport extends AbstractServiceInt
                                    String name,
                                    String[] uuids,
                                    FavouriteMetadataListApi.ActionType actionType) throws Exception {
-        StringBuilder requestContent = new StringBuilder("name="+name+"&action="+actionType.toString());
-        Arrays.stream(uuids).forEach(x->requestContent.append("&metadataUuids="+x));
+        StringBuilder requestContent = new StringBuilder("name=" + name + "&action=" + actionType.toString());
+        Arrays.stream(uuids).forEach(x -> requestContent.append("&metadataUuids=" + x));
 
-        MockHttpServletRequestBuilder requestBuilder = put(apiBaseURL+"/"+id)
+        MockHttpServletRequestBuilder requestBuilder = put(apiBaseURL + "/" + id)
             .content(requestContent.toString())
             .session(session)
             .contentType("application/x-www-form-urlencoded")
             .accept(MediaType.parseMediaType(API_JSON_EXPECTED_ENCODING));
-        if (cookieValue !=null) {
-            requestBuilder.cookie(new Cookie(SESSION_COOKIE_NAME,cookieValue));
+        if (cookieValue != null) {
+            requestBuilder.cookie(new Cookie(SESSION_COOKIE_NAME, cookieValue));
         }
 
 
-        ResultActions result =  this.mockMvc.perform(requestBuilder);
+        ResultActions result = this.mockMvc.perform(requestBuilder);
 
-        String jsonStr= result.andReturn().getResponse().getContentAsString();
+        String jsonStr = result.andReturn().getResponse().getContentAsString();
         ObjectMapper objectMapper = new ObjectMapper();
         FavouriteMetadataListVM resultListObj = objectMapper.readValue(jsonStr, FavouriteMetadataListVM.class);
 
-        return  resultListObj;
+        return resultListObj;
     }
 
 
     //list should not contain specified item (by id)
     public void doesNotContain(List<FavouriteMetadataListVM> list1, FavouriteMetadataListVM item) {
-        boolean contains= list1.stream()
-            .anyMatch(x->x.getId() == item.getId());
+        boolean contains = list1.stream()
+            .anyMatch(x -> x.getId() == item.getId());
         assertFalse(contains);
     }
 
     //given two lists of UserMetadataSelectionList check that they are the same
     // cf areSame(UserMetadataSelectionList,UserMetadataSelectionList)
     public void areSame(List<FavouriteMetadataListVM> list1, List<FavouriteMetadataListVM> list2) {
-        assertEquals(list1.size(),list2.size());
+        assertEquals(list1.size(), list2.size());
 
         list1.sort(Comparator.comparing(FavouriteMetadataListVM::getId));
         list2.sort(Comparator.comparing(FavouriteMetadataListVM::getId));
 
-        for (int t=0;t<list1.size();t++){
+        for (int t = 0; t < list1.size(); t++) {
             FavouriteMetadataListVM e1 = list1.get(t);
             FavouriteMetadataListVM e2 = list2.get(t);
-            areSame(e1,e2);
+            areSame(e1, e2);
         }
     }
 
-    public void contains(List<FavouriteMetadataListVM> list, int id){
-       assertTrue(list.stream()
-            .anyMatch(x->x.getId()==id));
+    public void contains(List<FavouriteMetadataListVM> list, int id) {
+        assertTrue(list.stream()
+            .anyMatch(x -> x.getId() == id));
     }
 
-    public void notContains(List<FavouriteMetadataListVM> list, int id){
+    public void notContains(List<FavouriteMetadataListVM> list, int id) {
         assertFalse(list.stream()
-            .anyMatch(x->x.getId()==id));
+            .anyMatch(x -> x.getId() == id));
     }
 
     //Tests that two UserMetadataSelectionLists are the same.
@@ -393,14 +377,13 @@ public abstract class FavouriteMetadataListApiSupport extends AbstractServiceInt
         if (l1.getUser() != null) {
             assertNotNull(l2.getUser());
             assertEquals(l1.getUser().getId(), l2.getUser().getId());
-        }
-        else {
+        } else {
             assertEquals(l1.getSessionId(), l2.getSessionId());
         }
 
         assertTrue(CollectionUtils.isEqualCollection(
-            l1.getSelections().stream().map(x->x.getMetadataUuid()).collect(Collectors.toList()),
-            l2.getSelections().stream().map(x->x.getMetadataUuid()).collect(Collectors.toList())));
+            l1.getSelections().stream().map(x -> x.getMetadataUuid()).collect(Collectors.toList()),
+            l2.getSelections().stream().map(x -> x.getMetadataUuid()).collect(Collectors.toList())));
     }
 
     public void areSame(FavouriteMetadataListVM l1, FavouriteMetadataListVM l2) {
@@ -414,9 +397,8 @@ public abstract class FavouriteMetadataListApiSupport extends AbstractServiceInt
         if (l1.getUserName() != null) {
             assertNotNull(l2.getUserName());
             assertEquals(l1.getUserName(), l2.getUserName());
-        }
-        else {
-            assertEquals(l1.getSessionId(),l2.getSessionId());
+        } else {
+            assertEquals(l1.getSessionId(), l2.getSessionId());
         }
 
         assertTrue(CollectionUtils.isEqualCollection(
@@ -424,14 +406,13 @@ public abstract class FavouriteMetadataListApiSupport extends AbstractServiceInt
             l2.getSelections()));
     }
 
-    public void areSameUuids(List<String> list1, FavouriteMetadataListVM item){
-        List<String> list2 = item.getSelections() ;
+    public void areSameUuids(List<String> list1, FavouriteMetadataListVM item) {
+        List<String> list2 = item.getSelections();
         Collections.sort(list1);
         Collections.sort(list2);
 
-       assertEquals(list1, list2);
+        assertEquals(list1, list2);
     }
-
 
 
 }

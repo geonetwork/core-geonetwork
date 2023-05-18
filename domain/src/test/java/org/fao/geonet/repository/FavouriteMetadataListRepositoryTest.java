@@ -42,15 +42,12 @@ import static org.junit.Assert.assertTrue;
 
 public class FavouriteMetadataListRepositoryTest extends AbstractSpringDataTest {
 
+    private static final ISODate date1 = new ISODate("2023-06-01T01:02:02");
+    private static final ISODate date2 = new ISODate("2023-06-01T01:03:03");
     @Autowired
     FavouriteMetadataListRepository repo;
-
     @Autowired
     UserRepository userRepository;
-
-
-    private static ISODate date1 = new ISODate("2023-06-01T01:02:02");
-    private static ISODate date2 = new ISODate("2023-06-01T01:03:03");
 
     public static FavouriteMetadataList createSimpleList() {
         FavouriteMetadataList list = new FavouriteMetadataList();
@@ -64,16 +61,16 @@ public class FavouriteMetadataListRepositoryTest extends AbstractSpringDataTest 
     }
 
     public static FavouriteMetadataList createListWithItems(String name) {
-        return createListWithItems(name,"");
+        return createListWithItems(name, "");
     }
 
-        public static FavouriteMetadataList createListWithItems(String name, String prefix) {
+    public static FavouriteMetadataList createListWithItems(String name, String prefix) {
         FavouriteMetadataList list = createSimpleList();
         list.setName(name);
         FavouriteMetadataListItem item1 = new FavouriteMetadataListItem();
-        item1.setMetadataUuid(prefix+"metadataid1");
+        item1.setMetadataUuid(prefix + "metadataid1");
         FavouriteMetadataListItem item2 = new FavouriteMetadataListItem();
-        item2.setMetadataUuid(prefix+"metadataid2");
+        item2.setMetadataUuid(prefix + "metadataid2");
 
         list.setSelections(Arrays.asList(item1, item2));
         return list;
@@ -219,13 +216,13 @@ public class FavouriteMetadataListRepositoryTest extends AbstractSpringDataTest 
         list_session2.setIsPublic(false);
         repo.save(list_session2);
 
-        List<FavouriteMetadataList> byUser1SessionId = repo.findByUserOrSessionOrPublic( user1, sessionId);
+        List<FavouriteMetadataList> byUser1SessionId = repo.findByUserOrSessionOrPublic(user1, sessionId);
         assertNotNull(byUser1SessionId);
         assertEquals(5, byUser1SessionId.size());
         assertTrue(!byUser1SessionId.contains(list_user3));  // private
         assertTrue(!byUser1SessionId.contains(list_session2)); // private
 
-        List<FavouriteMetadataList> byUser2 = repo.findByUserOrSessionOrPublic( user2, "BAD SESSION");
+        List<FavouriteMetadataList> byUser2 = repo.findByUserOrSessionOrPublic(user2, "BAD SESSION");
         assertNotNull(byUser2);
         assertEquals(4, byUser2.size());
         assertTrue(!byUser2.contains(list_user1c));  // private
@@ -233,14 +230,14 @@ public class FavouriteMetadataListRepositoryTest extends AbstractSpringDataTest 
         assertTrue(!byUser2.contains(list_session2)); // private
 
 
-        List<FavouriteMetadataList> bySession2 = repo.findByUserOrSessionOrPublic( null, sessionId2);
+        List<FavouriteMetadataList> bySession2 = repo.findByUserOrSessionOrPublic(null, sessionId2);
         assertNotNull(bySession2);
         assertEquals(5, bySession2.size());
         assertTrue(!bySession2.contains(list_user1c));  // private
         assertTrue(!bySession2.contains(list_user3)); // private
 
 
-        List<FavouriteMetadataList> bySession1 = repo.findByUserOrSessionOrPublic( null, sessionId);
+        List<FavouriteMetadataList> bySession1 = repo.findByUserOrSessionOrPublic(null, sessionId);
         assertNotNull(bySession1);
         assertEquals(4, bySession1.size());
         assertTrue(!bySession1.contains(list_user1c));  // private

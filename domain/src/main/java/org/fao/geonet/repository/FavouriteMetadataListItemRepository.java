@@ -23,7 +23,6 @@
 package org.fao.geonet.repository;
 
 import org.fao.geonet.domain.FavouriteMetadataListItem;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -32,7 +31,7 @@ import java.util.List;
 /**
  * repository for FavouriteMetadataListItem
  */
-public interface FavouriteMetadataListItemRepository extends GeonetRepository<FavouriteMetadataListItem, Integer>   {
+public interface FavouriteMetadataListItemRepository extends GeonetRepository<FavouriteMetadataListItem, Integer> {
 
 
     /**

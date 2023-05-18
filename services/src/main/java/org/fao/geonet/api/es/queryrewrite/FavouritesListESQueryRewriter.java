@@ -30,11 +30,11 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import jeeves.server.UserSession;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.FavouriteMetadataList;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.User;
-import org.fao.geonet.domain.FavouriteMetadataList;
-import org.fao.geonet.repository.FavouriteMetadataListRepository;
 import org.fao.geonet.repository.FavouriteMetadataListItemRepository;
+import org.fao.geonet.repository.FavouriteMetadataListRepository;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,74 +53,74 @@ import static org.fao.geonet.api.selections.FavouriteMetadataListApi.SESSION_COO
 /**
  * typically, an incoming elastic request will be very large (see below for an example, with 90% removed).
  * The important part is:
- *           {
- *                 "terms": {
- *                   "favouritesList": [
- *                        104
- *                    ]
- *                }
- *            }
- *
- *  If this is seen in the elastic query, that section will be removed and replaced with something like this:
- *
- *  {
- *    query:
- *     {
- *         query_string: "_id(uuid1) OR _id(uuid2) ..."
- *     }
- *  }
- *
- *  If the there is no sort, then an _id sort is added (for paging).
- *
+ * {
+ * "terms": {
+ * "favouritesList": [
+ * 104
+ * ]
+ * }
+ * }
+ * <p>
+ * If this is seen in the elastic query, that section will be removed and replaced with something like this:
+ * <p>
+ * {
+ * query:
+ * {
+ * query_string: "_id(uuid1) OR _id(uuid2) ..."
+ * }
+ * }
+ * <p>
+ * If the there is no sort, then an _id sort is added (for paging).
+ * <p>
  * None of the rest of the query is changed.  This means you can add more queries (in the GN4 UI) and they will
  * work on the backend.
- *
- *
-
-{
-    "from": 0,
-    "size": 30,
-    "sort": [
-    "_score"
-    ],
-    "query": {
-    "function_score": {
-    ...
-    "score_mode": "multiply",
-    "query": {
-       "bool": {
-          "must": [
-             {
-               "terms": {
-                  "isTemplate": [
-                     "n"
-                  ]
-               }
-            },
-            {
-                "terms": {
-                  "favouritesList": [
-                       104
-                   ]
-               }
-           }
-    ]
-    }
-    }
-    }
-    },
-    "aggregations": {
-    ...
-    },
-    "_source": {
-    ...
-
-    },
-    "track_total_hits": true
-    }
+ * <p>
+ * <p>
+ * <p>
+ * {
+ * "from": 0,
+ * "size": 30,
+ * "sort": [
+ * "_score"
+ * ],
+ * "query": {
+ * "function_score": {
+ * ...
+ * "score_mode": "multiply",
+ * "query": {
+ * "bool": {
+ * "must": [
+ * {
+ * "terms": {
+ * "isTemplate": [
+ * "n"
+ * ]
+ * }
+ * },
+ * {
+ * "terms": {
+ * "favouritesList": [
+ * 104
+ * ]
+ * }
+ * }
+ * ]
+ * }
+ * }
+ * }
+ * },
+ * "aggregations": {
+ * ...
+ * },
+ * "_source": {
+ * ...
+ * <p>
+ * },
+ * "track_total_hits": true
+ * }
  */
 @Component
-public class FavouritesListESQueryRewriter implements ESQueryRewriter{
+public class FavouritesListESQueryRewriter implements ESQueryRewriter {
 
 
     @Autowired
@@ -134,23 +134,23 @@ public class FavouritesListESQueryRewriter implements ESQueryRewriter{
 
     /**
      * Rewrites an elasticsearch query.
-     *
+     * <p>
      * If there is an exception, it is logged.  However, this will return with an unmodified query.
      *
      * @param httpSession - used to get the current User (for security)
-     * @param request - used to get the current http session (for security)
+     * @param request     - used to get the current http session (for security)
      * @param jsonESQuery - original query
      * @return
      */
     @Override
-    public String rewriteQuery(HttpSession httpSession, HttpServletRequest request, String jsonESQuery)  {
+    public String rewriteQuery(HttpSession httpSession, HttpServletRequest request, String jsonESQuery) {
         try {
             ObjectMapper mapper = new ObjectMapper();
             JsonNode root = mapper.readTree(jsonESQuery);
 
             ArrayNode queryItems = (ArrayNode) root.get("query").get("function_score").get("query").get("bool").get("must");
             int index = -1;
-            for (JsonNode node: queryItems) {
+            for (JsonNode node : queryItems) {
                 index++;
                 if (!node.isObject()) {
                     continue;
@@ -163,8 +163,8 @@ public class FavouritesListESQueryRewriter implements ESQueryRewriter{
                 if (!termsNode.has("favouritesList")) {
                     continue;
                 }
-                int selectionId =  ((IntNode)termsNode.get("favouritesList").get(0)).asInt();
-                ObjectNode queryString = replacement(selectionId,mapper, httpSession, request);
+                int selectionId = termsNode.get("favouritesList").get(0).asInt();
+                ObjectNode queryString = replacement(selectionId, mapper, httpSession, request);
                 queryItems.remove(index);
                 queryItems.add(queryString);
                 fixsort((ObjectNode) root);
@@ -172,10 +172,9 @@ public class FavouritesListESQueryRewriter implements ESQueryRewriter{
                 return result;
             }
             return jsonESQuery;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             //don't modify
-            Log.debug(Geonet.SEARCH_ENGINE, "FavouritesListESQueryRewriter",e);
+            Log.debug(Geonet.SEARCH_ENGINE, "FavouritesListESQueryRewriter", e);
             return jsonESQuery;
         }
     }
@@ -189,49 +188,49 @@ public class FavouritesListESQueryRewriter implements ESQueryRewriter{
 
     /**
      * constructs the
-     *
-     *  {
-     *    query:
-     *     {
-     *         query_string: "_id(uuid1) OR _id(uuid2) ..."
-     *     }
-     *  }
-     *
-     *  that will replace the
-     *
-     *           {
-     *                 "terms": {
-     *                   "favouritesList": [
-     *                        104
-     *                    ]
-     *                }
-     *            }
-     *
-     *   This checks security (i.e. does the user/session have read permission on the favourites list?)
+     * <p>
+     * {
+     * query:
+     * {
+     * query_string: "_id(uuid1) OR _id(uuid2) ..."
+     * }
+     * }
+     * <p>
+     * that will replace the
+     * <p>
+     * {
+     * "terms": {
+     * "favouritesList": [
+     * 104
+     * ]
+     * }
+     * }
+     * <p>
+     * This checks security (i.e. does the user/session have read permission on the favourites list?)
      */
     private ObjectNode replacement(int favouritesListId, ObjectMapper mapper, HttpSession httpSession, HttpServletRequest request) throws Exception {
-        Optional<FavouriteMetadataList> selectionList= userMetadataSelectionListRepo.findById(favouritesListId);
+        Optional<FavouriteMetadataList> selectionList = userMetadataSelectionListRepo.findById(favouritesListId);
         if (!selectionList.isPresent()) {
-            throw new Exception("could not find favouritesListId="+ favouritesListId);
+            throw new Exception("could not find favouritesListId=" + favouritesListId);
         }
         //check security
         boolean isAdmin = isAdmin(httpSession);
         String sessionId = getSessionId(request);
-        User user =  getUser(httpSession);
+        User user = getUser(httpSession);
 
-        if (!permittedRead(selectionList.get(),user,sessionId,isAdmin)) {
+        if (!permittedRead(selectionList.get(), user, sessionId, isAdmin)) {
             throw new Exception("not permitted to read");
         }
 
-        List<String>  uuids = userMetadataSelectionRepo.queryByParent(favouritesListId);
+        List<String> uuids = userMetadataSelectionRepo.queryByParent(favouritesListId);
         List<String> statements = uuids.stream()
-            .map(x->"_id:("+x+")")
+            .map(x -> "_id:(" + x + ")")
             .collect(Collectors.toList());
-        String queryText = String.join(" OR ",statements);
+        String queryText = String.join(" OR ", statements);
         ObjectNode query = mapper.createObjectNode();
         ObjectNode queryString = mapper.createObjectNode();
-        queryString.put("query",queryText);
-        query.put("query_string",queryString);
+        queryString.put("query", queryText);
+        query.put("query_string", queryString);
         return query;
     }
 
@@ -257,19 +256,19 @@ public class FavouritesListESQueryRewriter implements ESQueryRewriter{
     }
 
     /**
-     *   Get the `SESSION_COOKIE_NAME` cookie value from the request.
-     *   If there isn't one, then returns null.
+     * Get the `SESSION_COOKIE_NAME` cookie value from the request.
+     * If there isn't one, then returns null.
      */
     String getSessionId(HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();
-        if (cookies ==null) {
+        if (cookies == null) {
             return null;
         }
         Optional<Cookie> sessionCookie = Arrays.stream(cookies)
-            .filter(x->x.getName().equals(SESSION_COOKIE_NAME))
+            .filter(x -> x.getName().equals(SESSION_COOKIE_NAME))
             .findFirst();
 
-        return sessionCookie.isPresent() ?  sessionCookie.get().getValue() : null;
+        return sessionCookie.isPresent() ? sessionCookie.get().getValue() : null;
     }
 
     /**
@@ -281,19 +280,16 @@ public class FavouritesListESQueryRewriter implements ESQueryRewriter{
             return true;
         }
         //owned by same user
-        if ( (user != null) && (list.getUser() !=null) && (user.equals(list.getUser()))) {
+        if ((user != null) && (list.getUser() != null) && (user.equals(list.getUser()))) {
             return true;
         }
         //owned by same session
-        if ( (sessionId != null) && (list.getSessionId() !=null) && (sessionId.equals(list.getSessionId()))) {
+        if ((sessionId != null) && (list.getSessionId() != null) && (sessionId.equals(list.getSessionId()))) {
             return true;
         }
         //public
-        if (list.getIsPublic()) {
-            return true;
-        }
+        return list.getIsPublic();
         //otherwise its private and owned by someone else
-        return false;
     }
 
 }

@@ -42,10 +42,10 @@ public class FavouriteMetadataListItemRepositoryTest extends AbstractSpringDataT
 
     @Test
     public void testQueryByParent() {
-        FavouriteMetadataList list = FavouriteMetadataListRepositoryTest.createListWithItems("testcase1","list.");
-        FavouriteMetadataList list2 = FavouriteMetadataListRepositoryTest.createListWithItems("testcase2","list2.");
-        list= favouriteMetadataListRepository.save(list);
-        list2= favouriteMetadataListRepository.save(list2);
+        FavouriteMetadataList list = FavouriteMetadataListRepositoryTest.createListWithItems("testcase1", "list.");
+        FavouriteMetadataList list2 = FavouriteMetadataListRepositoryTest.createListWithItems("testcase2", "list2.");
+        list = favouriteMetadataListRepository.save(list);
+        list2 = favouriteMetadataListRepository.save(list2);
 
         List<String> items = repo.queryByParent(list.getId());
         assertEquals(2, items.size());
