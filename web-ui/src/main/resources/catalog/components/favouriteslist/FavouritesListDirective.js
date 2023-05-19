@@ -63,9 +63,12 @@
         scope: {
           user: "=gnFavouritesListPanel"
         },
+        require: "^ngSearchForm",
+
         templateUrl:
           "../../catalog/components/favouriteslist/partials/favouritespanel.html",
-        link: function (scope, element, attrs) {
+        link: function (scope, element, attrs, ngSearchForm) {
+          scope.ngSearchForm = ngSearchForm;
           scope.isFavouritesPanelEnabled =
             gnFavouritesListService.isFavouritesPanelEnabled;
 
@@ -157,7 +160,7 @@
           scope.searchUrl = function (favouritesList) {
             var id = favouritesList.id;
             var params = { favouritesList: id, from: 1, to: 30 };
-            $location.search(params);
+            scope.ngSearchForm.resetSearch(params);
           };
 
           scope.createNewList = function ($event) {
