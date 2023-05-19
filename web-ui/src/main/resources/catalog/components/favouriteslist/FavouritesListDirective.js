@@ -159,7 +159,23 @@
 
           scope.searchUrl = function (favouritesList) {
             var id = favouritesList.id;
-            var params = { favouritesList: id, from: 1, to: 30 };
+            // we need to add the resourceTemporalDateRange or the search update doen't work (it will not remove the 'favouritesList=id' from the URL)
+            var params = {
+              favouritesList: id,
+              from: 1,
+              to: 30,
+              sortBy: "relevance",
+              isTemplate: "n",
+              resourceTemporalDateRange: {
+                range: {
+                  resourceTemporalDateRange: {
+                    gte: null,
+                    lte: null,
+                    relation: "intersects"
+                  }
+                }
+              }
+            };
             scope.ngSearchForm.resetSearch(params);
           };
 
