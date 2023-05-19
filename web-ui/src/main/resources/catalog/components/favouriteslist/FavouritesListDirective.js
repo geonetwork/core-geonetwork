@@ -159,7 +159,7 @@
 
           scope.searchUrl = function (favouritesList) {
             var id = favouritesList.id;
-            // we need to add the resourceTemporalDateRange or the search update doen't work (it will not remove the 'favouritesList=id' from the URL)
+            // we need to add the resourceTemporalDateRange or the search update doesn't work (it will not remove the 'favouritesList=id' from the URL)
             var params = {
               favouritesList: id,
               from: 1,
@@ -320,6 +320,9 @@
 
           scope.getTitle = function (hit) {
             var obj = hit._source.resourceTitleObject;
+            if (obj == null) {
+              return "-";
+            }
             if (obj["default"]) {
               return obj["default"];
             }
@@ -328,7 +331,10 @@
 
           scope.getAbstract = function (hit) {
             var obj = hit._source.resourceAbstractObject;
-            var result = "No Title";
+            var result = "-";
+            if (obj == null) {
+              return result;
+            }
             if (obj["default"]) {
               result = obj["default"];
             } else {
