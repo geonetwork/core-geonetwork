@@ -1557,7 +1557,7 @@
     <spring.version>5.3.27</spring.version>
     <spring.security.version>5.7.8</spring.security.version>
     <spring.jpa.version>2.2.13.RELEASE</spring.jpa.version>
-    <springboot.version>2.7.0</springboot.version>
+    <springboot.version>2.7.12</springboot.version>
     <springdoc.version>1.5.9</springdoc.version>
 
     <metrics.version>2.2.0</metrics.version>
