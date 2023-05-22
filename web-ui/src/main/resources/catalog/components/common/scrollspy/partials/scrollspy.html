@@ -33,9 +33,7 @@
       data-ng-class="s.active ? 'active' : ''"
       role="menuitem"
     >
-      <a href="" aria-label="{{s.label}}" data-ng-click="scrollTo(s.id)">
-        {{s.label}}
-      </a>
+      <a href="" aria-label="{{s.label}}" data-ng-click="scrollTo(s.id)"> {{s.label}} </a>
       <ul class="nav" role="menu">
         <li
           data-ng-repeat="ss in s.children"
