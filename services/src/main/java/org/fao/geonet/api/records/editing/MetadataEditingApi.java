@@ -386,7 +386,9 @@ public class MetadataEditingApi {
                     || (status.equals(StatusValue.Status.APPROVED)))
                     && !isAllowedSubmitApproveInvalidMd) {
 
-                    validator.doValidate(metadata, context.getLanguage());
+                    if (!forceValidationOnMdSave) {
+                        validator.doValidate(metadata, context.getLanguage());
+                    }
                     boolean isInvalid = MetadataUtils.retrieveMetadataValidationStatus(metadata, context);
 
                     if (isInvalid) {
@@ -441,6 +443,7 @@ public class MetadataEditingApi {
                         throw new SecurityException(String.format("Only users with review profile can approve."));
                     }
                 }
+                reindex = true;
             }
 
             boolean automaticUnpublishInvalidMd = sm.getValueAsBool(METADATA_WORKFLOW_AUTOMATIC_UNPUBLISH_INVALID_MD);
