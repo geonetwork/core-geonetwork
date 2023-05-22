@@ -152,6 +152,7 @@ public class Settings {
     public static final String SYSTEM_SECURITY_PASSWORDENFORCEMENT_PATTERN = "system/security/passwordEnforcement/pattern";
     public static final String SYSTEM_SECURITY_PASSWORD_ALLOWADMINRESET = "system/security/password/allowAdminReset";
 
+    public static final String MICROSERVICES_ENABLED = "microservices/enabled";
 
     public static class GNSetting {
         private String name;

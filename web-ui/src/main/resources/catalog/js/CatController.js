@@ -77,7 +77,18 @@
             enabled: true,
             showSocialBarInFooter: true,
             showApplicationInfoAndLinksInFooter: true,
-            footerCustomMenu: [] // List of static pages identifiers to display
+            footerCustomMenu: [], // List of static pages identifiers to display
+            rssFeeds: [
+              {
+                // List of rss feeds links to display when the OGC API Records service is enabled
+                url: "f=rss&sortby=-createDate&size=30",
+                label: "lastCreatedRecords"
+              }
+              // , {
+              //   url: "f=rss&sortby=-publicationDateForResource&size=30",
+              //   label: "lastPublishedRecords"
+              // }
+            ]
           },
           header: {
             enabled: true,
@@ -1560,6 +1571,8 @@
       $scope.langs = gnGlobalSettings.gnCfg.mods.header.languages;
       $scope.lang = gnLangs.detectLang(null, gnGlobalSettings);
       $scope.iso2lang = gnLangs.getIso2Lang($scope.lang);
+
+      $scope.rssFeeds = gnGlobalSettings.gnCfg.mods.footer.rssFeeds;
 
       $scope.getSocialLinksVisible = function () {
         var onMdView = $location.absUrl().indexOf("/metadata/") > -1;

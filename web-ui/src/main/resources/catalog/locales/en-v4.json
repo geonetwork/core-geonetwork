@@ -397,5 +397,6 @@
   "staticPageStatus-PRIVATE": "Visible to logged users",
   "staticPageStatus-PUBLIC": "Visible to everyone",
   "pageLink": "Link",
-  "pageSection-help": "Currently, the default UI view only supports TOP and FOOTER values. Custom UI views can make use of additional values."
+  "pageSection-help": "Currently, the default UI view only supports TOP and FOOTER values. Custom UI views can make use of additional values.",
+  "lastCreatedRecords": "Last created records"
 }
