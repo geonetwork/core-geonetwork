@@ -33,7 +33,6 @@
   goog.require("gn_alert");
   goog.require("gn_es");
 
-
   var module = angular.module("gn_cat_controller", [
     "gn_search_manager",
     "gn_session_service",
