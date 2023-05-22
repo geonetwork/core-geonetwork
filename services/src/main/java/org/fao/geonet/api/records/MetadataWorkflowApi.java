@@ -46,7 +46,6 @@ import org.fao.geonet.api.processing.report.SimpleMetadataProcessingReport;
 import org.fao.geonet.api.records.model.*;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.constants.Edit;
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.domain.utils.ObjectJSONUtils;
 import org.fao.geonet.events.history.RecordRestoredEvent;
@@ -291,7 +290,8 @@ public class MetadataWorkflowApi {
                     }
 
                     // Change the metadata status to approved
-                    changeMetadataStatus(context, metadata, StatusValue.Status.APPROVED, approveParameter.getMessage());
+                    changeMetadataStatus(context, metadata, currentStatus.getCurrentState(),
+                        StatusValue.Status.APPROVED, approveParameter.getMessage());
 
                     report.incrementProcessedRecords();
                     listOfUpdatedRecords.add(String.valueOf(metadata.getId()));
@@ -360,7 +360,8 @@ public class MetadataWorkflowApi {
                     }
 
                     // Change the metadata status to submitted
-                    changeMetadataStatus(context, metadata, StatusValue.Status.SUBMITTED, submitParameter.getMessage());
+                    changeMetadataStatus(context, metadata, currentStatus.getCurrentState(),
+                        StatusValue.Status.SUBMITTED, submitParameter.getMessage());
 
                     // Reindex the metadata table record to update the field _statusWorkflow that contains the composite
                     // status of the published and draft versions
@@ -439,6 +440,9 @@ public class MetadataWorkflowApi {
         // --- use StatusActionsFactory and StatusActions class to
         // --- change status and carry out behaviours for status changes
         StatusActions sa = statusActionFactory.createStatusActions(context);
+
+        String metadataCurrentStatus = dataManager.getCurrentStatus(metadata.getId());
+        metadataStatus.setPreviousState(metadataCurrentStatus);
 
         List<MetadataStatus> listOfStatusChange = new ArrayList<>(1);
         listOfStatusChange.add(metadataStatus);
@@ -1188,11 +1192,13 @@ public class MetadataWorkflowApi {
      *
      * @param context
      * @param metadata
+     * @param previousStatus
      * @param newStatus
      * @param changeMessage
      * @throws Exception
      */
-    private void changeMetadataStatus(ServiceContext context, AbstractMetadata metadata, String newStatus, String changeMessage)
+    private void changeMetadataStatus(ServiceContext context, AbstractMetadata metadata,
+                                      String previousStatus, String newStatus, String changeMessage)
         throws Exception {
         // --- use StatusActionsFactory and StatusActions class to
         // --- change status and carry out behaviours for status changes
@@ -1204,6 +1210,7 @@ public class MetadataWorkflowApi {
 
         int author = context.getUserSession().getUserIdAsInt();
         MetadataStatus metadataStatus = convertParameter(metadata.getId(), metadata.getUuid(), status, author);
+        metadataStatus.setPreviousState(previousStatus);
         List<MetadataStatus> listOfStatusChange = new ArrayList<>(1);
         listOfStatusChange.add(metadataStatus);
         sa.onStatusChange(listOfStatusChange);
