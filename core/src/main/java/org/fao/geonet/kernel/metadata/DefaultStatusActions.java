@@ -302,6 +302,16 @@ public class DefaultStatusActions implements StatusActions {
      */
     protected List<User> getUserToNotify(MetadataStatus status) {
         StatusValueNotificationLevel notificationLevel = status.getStatusValue().getNotificationLevel();
+
+        // If new status is DRAFT and previous status is not SUBMITTED (which means a rejection),
+        // ignore notifications as the DRAFT status is used also when creating the working copy.
+        // We don't want to notify when creating a working copy.
+        if (status.getStatusValue().getId() == Integer.parseInt(StatusValue.Status.DRAFT) &&
+            ((StringUtils.isEmpty(status.getPreviousState())) ||
+                (Integer.parseInt(status.getPreviousState()) != Integer.parseInt(StatusValue.Status.SUBMITTED)))) {
+                return new ArrayList<>();
+        }
+
         // TODO: Status does not provide batch update
         // So taking care of one record at a time.
         // Currently the code could notify a mix of reviewers
