@@ -57,9 +57,11 @@
         <xsl:if test="$env/system/microservicesEnabled = 'true'">
           <link href="../../api/collections/main/items?f=rss&amp;sortby=-createDate&amp;size=30" rel="alternate" type="application/rss+xml"
                 title="{concat($env/system/site/name, ' - ', $env/system/site/organization)}"/>
+
+          <link href="../../api/collections/main?f=opensearch" rel="search" type="application/opensearchdescription+xml"
+                title="{concat($env/system/site/name, ' - ', $env/system/site/organization)}"/>
         </xsl:if>
-        <link href="portal.opensearch" rel="search" type="application/opensearchdescription+xml"
-              title="{concat($env/system/site/name, ' - ', $env/system/site/organization)}"/>
+
 
         <xsl:call-template name="css-load"/>
       </head>
