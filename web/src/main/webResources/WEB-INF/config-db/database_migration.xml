@@ -33,10 +33,12 @@
   <bean id="database-migration-bean" class="org.fao.geonet.DatabaseMigration">
     <property name="migration" ref="migrationMap"/>
     <property name="initAfter" value="javax.sql.DataSource"/>
+    <property name="dbMigrationOnStartup" value="\${db.migration_onstartup}"/>
   </bean>
   <bean id="database-data-migration-bean" class="org.fao.geonet.DatabaseMigration">
     <property name="migration" ref="dataMigrationMap"/>
     <property name="initAfter" value="org.springframework.orm.jpa.JpaTransactionManager"/>
+    <property name="dbMigrationOnStartup" value="\${db.migration_onstartup}"/>
   </bean>
 
   <util:map id="migrationMap"

@@ -6,6 +6,7 @@ UPDATE settings_ui
   SET  configuration = replace(configuration,
     '"showMapInFacet": true', '"searchMapPlacement": "facets"')
   WHERE configuration LIKE '%"showMapInFacet": true%';
+
 UPDATE settings_ui
   SET  configuration = replace(configuration,
     '"showMapInFacet": false', '"searchMapPlacement": "results"')
