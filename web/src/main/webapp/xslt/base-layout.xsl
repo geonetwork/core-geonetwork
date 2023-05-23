@@ -55,10 +55,10 @@
         <link rel="icon" sizes="16x16 32x32 48x48" type="image/png"
               href="../../images/logos/favicon.png"/>
         <xsl:if test="$env/system/microservicesEnabled = 'true'">
-          <link href="../../api/collections/main/items?f=rss&amp;sortby=-createDate&amp;size=30" rel="alternate" type="application/rss+xml"
+          <link href="{/root/gui/url}/api/collections/main/items?f=rss&amp;sortby=-createDate&amp;size=30" rel="alternate" type="application/rss+xml"
                 title="{concat($env/system/site/name, ' - ', $env/system/site/organization)}"/>
 
-          <link href="../../api/collections/main?f=opensearch" rel="search" type="application/opensearchdescription+xml"
+          <link href="{/root/gui/url}/api/collections/main?f=opensearch" rel="search" type="application/opensearchdescription+xml"
                 title="{concat($env/system/site/name, ' - ', $env/system/site/organization)}"/>
         </xsl:if>
 
