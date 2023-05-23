@@ -54,8 +54,10 @@
 
         <link rel="icon" sizes="16x16 32x32 48x48" type="image/png"
               href="../../images/logos/favicon.png"/>
-        <link href="rss.search?sortBy=changeDate" rel="alternate" type="application/rss+xml"
-              title="{concat($env/system/site/name, ' - ', $env/system/site/organization)}"/>
+        <xsl:if test="$env/system/microservicesEnabled = 'true'">
+          <link href="../../api/collections/main/items?f=rss&amp;sortby=-createDate&amp;size=30" rel="alternate" type="application/rss+xml"
+                title="{concat($env/system/site/name, ' - ', $env/system/site/organization)}"/>
+        </xsl:if>
         <link href="portal.opensearch" rel="search" type="application/opensearchdescription+xml"
               title="{concat($env/system/site/name, ' - ', $env/system/site/organization)}"/>
 

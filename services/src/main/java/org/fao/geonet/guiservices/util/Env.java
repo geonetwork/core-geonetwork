@@ -26,12 +26,14 @@ package org.fao.geonet.guiservices.util;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.XmlSerializer;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.jdom.Element;
 
+import javax.servlet.ServletRegistration;
 import java.nio.file.Path;
 
 /**
@@ -67,6 +69,21 @@ public class Env implements Service {
         if (response.getChild("map") != null) {
             system.addContent(response.getChild("map").detach());
         }
+
+        // Setting for OGC API Records service enabled
+        String microservicesTargetUri = "";
+
+        ServletRegistration microServicesProxyServlet =
+            context.getServlet().getServletContext().getServletRegistrations().get("MicroServicesProxy");
+
+        if (microServicesProxyServlet != null) {
+            microservicesTargetUri = microServicesProxyServlet.getInitParameter("targetUri");
+        }
+
+        Element microservicesEnabled = new Element("microservicesEnabled");
+        microservicesEnabled.setText(Boolean.toString(StringUtils.isNotEmpty(microservicesTargetUri)));
+        system.addContent(microservicesEnabled);
+
         return (Element) system.clone();
     }
 }
