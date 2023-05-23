@@ -472,7 +472,7 @@ public class SiteApi {
 
         SettingInfo settingInfo = applicationContext.getBean(SettingInfo.class);
         ServiceContext context = ApiUtils.createServiceContext(request);
-        ServerBeanPropertyUpdater.updateURL(settingUnfo.getSiteUrl() +
+        ServerBeanPropertyUpdater.updateURL(settingInfo.getSiteUrl() +
                 context.getBaseUrl(),
             applicationContext);
 
