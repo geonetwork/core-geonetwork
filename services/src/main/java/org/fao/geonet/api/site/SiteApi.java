@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2021 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2023 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -32,7 +32,7 @@ import jeeves.config.springutil.ServerBeanPropertyUpdater;
 import jeeves.server.JeevesProxyInfo;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.core.CountRequest;
 import org.elasticsearch.client.core.CountResponse;
@@ -235,17 +235,11 @@ public class SiteApi {
         }
 
         // Setting for OGC API Records service enabled
-        String microservicesTargetUri = "";
-        ServletRegistration microServicesProxyServlet =
-            request.getServletContext().getServletRegistrations().get("MicroServicesProxy");
-
-        if (microServicesProxyServlet != null) {
-            microservicesTargetUri = microServicesProxyServlet.getInitParameter("targetUri");
-        }
+        String microservicesTargetUri = (String) request.getServletContext().getAttribute("MicroServicesProxy.targetUri");
 
         response.getSettings().add(
             new Setting().setName(Settings.MICROSERVICES_ENABLED)
-                .setValue(Boolean.toString(StringUtils.isNotEmpty(microservicesTargetUri)))
+                .setValue(Boolean.toString(StringUtils.isNotBlank(microservicesTargetUri)))
                 .setDataType(SettingDataType.BOOLEAN));
 
         return response;

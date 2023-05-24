@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2022 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2023 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -67,45 +67,14 @@ import java.util.*;
  * @author delawen
  */
 public class URITemplateProxyServlet extends org.mitre.dsmiley.httpproxy.URITemplateProxyServlet {
-    private static final Logger LOGGER = Log.createLogger("URITemplateProxyServlet");
-
-    private static final long serialVersionUID = 4847856943273604410L;
-    private static final String P_SECURITY_MODE = "securityMode";
     public static final String P_FORWARDEDHOST = "forwardHost";
     public static final String P_FORWARDEDHOSTPREFIXPATH = "forwardHostPrefixPath";
+    private static final Logger LOGGER = Log.createLogger("URITemplateProxyServlet");
+    private static final long serialVersionUID = 4847856943273604410L;
+    private static final String P_SECURITY_MODE = "securityMode";
     private static final String P_IS_SECURED = "isSecured";
 
     private static final String TARGET_URI_NAME = "targetUri";
-
-    protected boolean doForwardHost = false;
-    protected String doForwardHostPrefixPath = "";
-
-    protected boolean isSecured = false;
-
-    private String username;
-
-    private String password;
-
-    private enum SECURITY_MODE {
-        NONE,
-        /**
-         * Check if the host of the requested URL is registered in
-         * at least one analyzed link in a metadata record.
-         */
-        DB_LINK_CHECK;
-
-        public static SECURITY_MODE parse(String value) {
-            if ("DB_LINK_CHECK".equals(value)) {
-                return DB_LINK_CHECK;
-            }
-            return NONE;
-        }
-    }
-
-    protected SECURITY_MODE securityMode;
-
-    @Autowired
-    MetadataLinkRepository metadataLinkRepository;
 
     /*
      * These are the "hop-by-hop" headers that should not be copied.
@@ -125,6 +94,15 @@ public class URITemplateProxyServlet extends org.mitre.dsmiley.httpproxy.URITemp
         }
     }
 
+    protected boolean doForwardHost = false;
+    protected String doForwardHostPrefixPath = "";
+    protected boolean isSecured = false;
+    protected SECURITY_MODE securityMode;
+    @Autowired
+    MetadataLinkRepository metadataLinkRepository;
+    private String username;
+    private String password;
+
     /**
      * Init some properties from the servlet's init parameters. They try to be resolved the same way other GeoNetwork
      * configuration properties are resolved. If after checking externally no configuration can be found it relies into
@@ -138,13 +116,14 @@ public class URITemplateProxyServlet extends org.mitre.dsmiley.httpproxy.URITemp
      *      for example {@code mywebapp.MicroservicesProxy.targetUri}</li>
      * <li> {@code GEONETWORK_${SERVLET_NAME}_TARGETURI}: Look for an environment variable starting by GEONETWORK, for example
      *      {@code GEONETWORK_MICROSERVICESPROXY_TARGETURI}</li>
-     * <li> {@code geonetwork.${SERVLET_NAME}.targetUri}: Look for a property in {@code>config.properties} starting by geonetwork,
+     * <li> {@code geonetwork.${SERVLET_NAME}.targetUri}: Look for a property in {@code config.properties} starting by geonetwork,
      *      for example {@code geonetwork.MicroservicesProxy.targetUri}</li>
      * <li> {@code geonetwork.${SERVLET_NAME}.targetUri}: Look for a property in {@code config.properties} starting by geonetwork,
      *      for example {@code geonetwork.MicroservicesProxy.targetUri}</li>
      * </ol>
      * <p>
      * Finally, it checks the value of {@code targetUri} in web.xml if no external config has been found.
+     * It stores the targetUri value found as an attribute in the ServletContext with the name $SERVLET_NAME.targetUri.
      *
      * @throws ServletException if the targetUri is not defined externally and the parameter is not even in web.xml.
      */
@@ -171,6 +150,8 @@ public class URITemplateProxyServlet extends org.mitre.dsmiley.httpproxy.URITemp
             throw new ServletException(P_TARGET_URI + " is required in web.xml or set externally");
         }
 
+        this.getServletContext().setAttribute(this.getServletName() + "." + P_TARGET_URI, targetUriTemplate);
+
         this.username = getConfigValue("username");
         this.password = getConfigValue("password");
         if (StringUtils.isBlank(this.username)) {
@@ -185,29 +166,29 @@ public class URITemplateProxyServlet extends org.mitre.dsmiley.httpproxy.URITemp
 
     }
 
-    private String getConfigValue(String sufix) {
+    private String getConfigValue(String suffix) {
         String result;
 
         // Property defined according to webapp name
         ServletPathFinder pathFinder = new ServletPathFinder(getServletContext());
         String baseUrl = pathFinder.getBaseUrl();
         String webappName = "";
-        if (org.apache.commons.lang.StringUtils.isNotEmpty(baseUrl)) {
+        if (StringUtils.isNotEmpty(baseUrl)) {
             webappName = baseUrl.substring(1);
         }
         LOGGER.info(
-            "Looking for " + webappName + "." + getServletName() + "." + sufix + " in Environment variables, " +
+            "Looking for " + webappName + "." + getServletName() + "." + suffix + " in Environment variables, " +
                 "System properties and config.properties entries");
-        result = resolveConfigValue(webappName + "." + getServletName() + "." + sufix);
+        result = resolveConfigValue(webappName + "." + getServletName() + "." + suffix);
 
 
         if (StringUtils.isBlank(result)) {
             // GEONETWORK is the default prefix
 
             LOGGER.info(
-                "Looking for geonetwork." + getServletName() + "." + sufix + "  in Environment variables, " +
+                "Looking for geonetwork." + getServletName() + "." + suffix + "  in Environment variables, " +
                     "System properties and config.properties entries");
-            result = resolveConfigValue("geonetwork." + getServletName() + "." + sufix);
+            result = resolveConfigValue("geonetwork." + getServletName() + "." + suffix);
         }
         return result;
     }
@@ -255,7 +236,7 @@ public class URITemplateProxyServlet extends org.mitre.dsmiley.httpproxy.URITemp
             clientBuilder.disableContentCompression();
         }
 
-        if (org.apache.commons.lang.StringUtils.isNotEmpty(username) && org.apache.commons.lang.StringUtils.isNotEmpty(password)) {
+        if (StringUtils.isNotEmpty(username) && StringUtils.isNotEmpty(password)) {
             CredentialsProvider credentialsProvider =
                 new BasicCredentialsProvider();
             credentialsProvider.setCredentials(
@@ -420,6 +401,22 @@ public class URITemplateProxyServlet extends org.mitre.dsmiley.httpproxy.URITemp
                     super.service(servletRequest, servletResponse);
                 }
                 break;
+        }
+    }
+
+    private enum SECURITY_MODE {
+        NONE,
+        /**
+         * Check if the host of the requested URL is registered in
+         * at least one analyzed link in a metadata record.
+         */
+        DB_LINK_CHECK;
+
+        public static SECURITY_MODE parse(String value) {
+            if ("DB_LINK_CHECK".equals(value)) {
+                return DB_LINK_CHECK;
+            }
+            return NONE;
         }
     }
 }
