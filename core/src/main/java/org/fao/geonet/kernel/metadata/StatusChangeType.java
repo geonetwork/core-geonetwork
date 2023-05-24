@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2011 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2023 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -20,24 +20,10 @@
 //===	Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
 //===	Rome - Italy. email: geonetwork@osgeo.org
 //==============================================================================
-
 package org.fao.geonet.kernel.metadata;
 
-import jeeves.server.context.ServiceContext;
-
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import org.fao.geonet.domain.ISODate;
-import org.fao.geonet.domain.MetadataStatus;
-
-public interface StatusActions {
-
-    public void init(ServiceContext context) throws Exception;
-
-    public void onEdit(int id, boolean minorEdit) throws Exception;
-
-    public Map<Integer, StatusChangeType> onStatusChange(List<MetadataStatus> status) throws Exception;
-
+public enum StatusChangeType {
+    UPDATED,
+    UNCHANGED,
+    DELETED
 }

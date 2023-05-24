@@ -34,13 +34,17 @@ import jeeves.transaction.TransactionTask;
 import jeeves.xlink.Processor;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.api.records.attachments.Store;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.*;
+import org.fao.geonet.events.history.RecordDeletedEvent;
+import org.fao.geonet.events.md.MetadataPreRemove;
 import org.fao.geonet.exceptions.UnAuthorizedException;
 import org.fao.geonet.kernel.*;
 import org.fao.geonet.kernel.datamanager.*;
+import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.schema.SchemaPlugin;
 import org.fao.geonet.kernel.search.EsSearchManager;
@@ -346,6 +350,36 @@ public class BaseMetadataManager implements IMetadataManager {
     }
 
     /**
+     * Delete the record with the id metadataId and additionally take care of cleaning up resources, send events, ...
+     */
+    @Override
+    public void purgeMetadata(ServiceContext context, String metadataId, boolean withBackup) throws Exception {
+        AbstractMetadata metadata = metadataUtils.findOne(metadataId);
+        Store store = context.getBean("resourceStore", Store.class);
+
+        MetadataPreRemove preRemoveEvent = new MetadataPreRemove(metadata);
+        ApplicationContextHolder.get().publishEvent(preRemoveEvent);
+
+        if (metadata.getDataInfo().getType() != MetadataType.SUB_TEMPLATE
+            && metadata.getDataInfo().getType() != MetadataType.TEMPLATE_OF_SUB_TEMPLATE && withBackup) {
+            MEFLib.backupRecord(metadata, context);
+        }
+
+        boolean approved = true;
+        if (metadata instanceof MetadataDraft) {
+            approved = false;
+        }
+
+        store.delResources(context, metadata.getUuid(), approved);
+
+        RecordDeletedEvent recordDeletedEvent = new RecordDeletedEvent(
+            metadata.getId(), metadata.getUuid(), new LinkedHashMap<>(),
+            context.getUserSession().getUserIdAsInt(), metadata.getData());
+        deleteMetadata(context, metadataId);
+        recordDeletedEvent.publish(ApplicationContextHolder.get());
+    }
+
+    /**
      * @param context
      * @param metadataId
      * @throws Exception
@@ -400,7 +434,7 @@ public class BaseMetadataManager implements IMetadataManager {
 
             xml = duplicateMetadata(schema, xml, context);
         } else if (type == MetadataType.SUB_TEMPLATE
-                   || type == MetadataType.TEMPLATE_OF_SUB_TEMPLATE) {
+            || type == MetadataType.TEMPLATE_OF_SUB_TEMPLATE) {
             xml.setAttribute("uuid", uuid);
         }
 
@@ -494,7 +528,7 @@ public class BaseMetadataManager implements IMetadataManager {
      * @param createDate   date of creation
      * @param changeDate   date of modification
      * @param ufo          whether to apply automatic changes
-     * @param indexingMode        whether to index this metadata
+     * @param indexingMode whether to index this metadata
      * @return id, as a string
      * @throws Exception hmm
      */
@@ -936,8 +970,7 @@ public class BaseMetadataManager implements IMetadataManager {
                 if (metadata != null) {
                     changeDate = metadata.getDataInfo().getChangeDate().getDateAndTime();
                     createDate = metadata.getDataInfo().getCreateDate().getDateAndTime();
-                }
-                else {
+                } else {
                     createDate = new ISODate().toString();
                 }
                 env.addContent(new Element("changeDate").setText(changeDate));
@@ -992,8 +1025,8 @@ public class BaseMetadataManager implements IMetadataManager {
             Path styleSheet = metadataSchemaUtils.getSchemaDir(schema).resolve(
                 metadata != null
                     && (
-                        metadata.getDataInfo().getType() == MetadataType.SUB_TEMPLATE
-                        || metadata.getDataInfo().getType() == MetadataType.TEMPLATE_OF_SUB_TEMPLATE)?
+                    metadata.getDataInfo().getType() == MetadataType.SUB_TEMPLATE
+                        || metadata.getDataInfo().getType() == MetadataType.TEMPLATE_OF_SUB_TEMPLATE) ?
                     Geonet.File.UPDATE_FIXED_INFO_SUBTEMPLATE :
                     Geonet.File.UPDATE_FIXED_INFO);
             result = Xml.transform(result, styleSheet);
@@ -1207,13 +1240,13 @@ public class BaseMetadataManager implements IMetadataManager {
      * Applies a xslt process when duplicating a metadata, typically to remove identifiers
      * or other information like DOI (Digital Object Identifiers) and returns the updated metadata.
      *
-     * @param schema        Metadata schema.
-     * @param md            Metadata to duplicate.
+     * @param schema     Metadata schema.
+     * @param md         Metadata to duplicate.
      * @param srvContext
-     * @return              If the xslt process exists, the metadata processed, otherwise the original metadata.
+     * @return If the xslt process exists, the metadata processed, otherwise the original metadata.
      * @throws Exception
      */
-    private Element duplicateMetadata(String schema,  Element md, ServiceContext srvContext) throws Exception {
+    private Element duplicateMetadata(String schema, Element md, ServiceContext srvContext) throws Exception {
         Path styleSheet = metadataSchemaUtils.getSchemaDir(schema).resolve(
             Geonet.File.DUPLICATE_METADATA);
 
