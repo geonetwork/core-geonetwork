@@ -2000,7 +2000,6 @@
 
               // ---- Functions available in parent scope -----
 
-
               scope.$parent[firstPageFunctionName] = function () {
                 scope.firstPage();
               };
@@ -2202,20 +2201,29 @@
       };
     }
   ]);
-  module.filter("getStatusLabel", ["$translate",
+  /**
+   * Compute a translated status label for a record, based on the index field
+   * 'statusWorkflow'.
+   * The result can be a single status for records that have no draft,
+   * or a combined label for records with draft.
+   */
+  module.filter("getStatusLabel", [
+    "$translate",
     function ($translate) {
       return function (workflowStatus) {
         var split = workflowStatus.split("-");
-        var from = $translate.instant("status-" + split[0]);
-        var to = "";
+        // the status of the record
+        var metadataStatus = $translate.instant("status-" + split[0]);
         if (split.length === 2) {
-          to = $translate.instant("status-" + split[1]);
-          copy = $translate.instant("workingCopy");
-          result = from + " (" + copy + ": " + to + ")";
-        } else {
-          result = from;
+          // if there is a draft status present,
+          // incorporate this into the resulting string
+          var draftStatus = $translate.instant("status-" + split[1]);
+          return $translate.instant("mdStatusWorkflowWithDraft", {
+            metadataStatus: metadataStatus,
+            draftStatus: draftStatus
+          });
         }
-        return result;
+        return metadataStatus;
       };
     }
   ]);
