@@ -2000,6 +2000,7 @@
 
               // ---- Functions available in parent scope -----
 
+
               scope.$parent[firstPageFunctionName] = function () {
                 scope.firstPage();
               };
@@ -2198,6 +2199,23 @@
     function () {
       return function (mail) {
         return mail && mail.indexOf("@") !== -1 ? mail.replace(/.*@(.*)/, "$1") : "";
+      };
+    }
+  ]);
+  module.filter("getStatusLabel", ["$translate",
+    function ($translate) {
+      return function (workflowStatus) {
+        var split = workflowStatus.split("-");
+        var from = $translate.instant("status-" + split[0]);
+        var to = "";
+        if (split.length === 2) {
+          to = $translate.instant("status-" + split[1]);
+          copy = $translate.instant("workingCopy");
+          result = from + " (" + copy + ": " + to + ")";
+        } else {
+          result = from;
+        }
+        return result;
       };
     }
   ]);
