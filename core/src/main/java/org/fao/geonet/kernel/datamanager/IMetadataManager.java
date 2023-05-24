@@ -62,6 +62,9 @@ public interface IMetadataManager {
 
     /**
      * Removes the record with the id metadataId
+     * from the database and index without sending events.
+     *
+     * This is useful for harvesting tasks.
      *
      * @param context
      * @param metadataId
@@ -70,7 +73,9 @@ public interface IMetadataManager {
     void deleteMetadata(ServiceContext context, String metadataId) throws Exception;
 
     /**
-     * Delete the record with the id metadataId and additionally take care of cleaning up resources, send events, ...
+     * Delete the record with the id metadataId
+     * from the database and index
+     * and additionally take care of cleaning up resources, send events, ...
      *
      * @param context
      * @param metadataId
