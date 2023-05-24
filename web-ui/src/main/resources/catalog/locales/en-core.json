@@ -542,7 +542,7 @@
     "mdStatusTitle-approved-to-retired-editor": "Retire metadata",
     "mdStatusTitle-approved-to-retired-reviewer": "Retire metadata",
     "mdStatusTitle-draft-to-approved-reviewer": "Directly approve metadata",
-    "mdStatusWorkflowWithDraft": "{{metadataStatus}} (Working copy in {{draftStatus}})",
+    "mdStatusWorkflowWithDraft": "{{metadataStatus}} (Working copy is {{draftStatus}})",
     "cancel": "Cancel",
     "workflow": "Workflow",
     "metadataPublished": "Metadata published.",
