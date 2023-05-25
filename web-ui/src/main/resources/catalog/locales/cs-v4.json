@@ -76,7 +76,7 @@
   "ui-sortBy-help": "Definujte výchozí řazení podle možnosti. např. 'relevance'  k vypočítání skóre vyhledávání (viz konfigurace skóre) nebo 'dateStamp#desc' k vrácení posledního aktualizovaného záznamu na prvním místě.",
   "sortBy-dateStampDesc": "poslední aktualizace",
   "sortBy-createDateDesc": "nové záznamy",
-  "sortBy-resourceTitleObject.default.keyword": "název",
+  "sortBy-resourceTitleObject.default.sort": "název",
   "sortBy-relevance": "důležitost",
   "sortBy-ratingDesc": "hodnocení",
   "sortBy-validDesc": "stav ověření",

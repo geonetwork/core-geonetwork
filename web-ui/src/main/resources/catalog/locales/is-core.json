@@ -188,7 +188,7 @@
     "sortedBy": "Raðað eftir {{field}}",
     "sortBy-dateStampDesc": "last updates",
     "sortBy-createDateDesc": "new records",
-    "sortBy-resourceTitleObject.default.keyword": "titill",
+    "sortBy-resourceTitleObject.default.sort": "titill",
     "sortBy-relevance": "mikilvægi",
     "sortBy-ratingDesc": "stigagjöf",
     "rating": "stigagjöf",

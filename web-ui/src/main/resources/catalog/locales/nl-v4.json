@@ -76,7 +76,7 @@
   "ui-sortBy-help": "Definieer standaard sorteren op optie. bijv. &#39;relevantie&#39; om de berekende zoekscore te gebruiken (zie scoreconfiguratie) of &#39;dateStamp # desc&#39; om als eerste het laatst bijgewerkte record te retourneren.",
   "sortBy-dateStampDesc": "Laatste wijziging",
   "sortBy-createDateDesc": "Aanmaak datum",
-  "sortBy-resourceTitleObject.default.keyword": "Titel",
+  "sortBy-resourceTitleObject.default.sort": "Titel",
   "sortBy-relevance": "relevantie",
   "sortBy-ratingDesc": "beoordeling",
   "sortBy-validDesc": "validation status",

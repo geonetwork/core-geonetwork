@@ -76,7 +76,7 @@
   "ui-sortBy-help": "Definer standard sortering indenfor optionerne som f. eks. 'relevans' for at benytte den beregnede søgescore (se scorekonfiguration) eller 'dateStamp#desc' for at returnere den sidst opdaterede instans først.",
   "sortBy-dateStampDesc": "sidste opdateringer",
   "sortBy-createDateDesc": "nye poster",
-  "sortBy-resourceTitleObject.default.keyword": "titel",
+  "sortBy-resourceTitleObject.default.sort": "titel",
   "sortBy-relevance": "relevans",
   "sortBy-ratingDesc": "bedømmelse",
   "sortBy-validDesc": "valideringsstatus",

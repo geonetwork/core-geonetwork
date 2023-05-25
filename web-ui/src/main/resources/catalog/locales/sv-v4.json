@@ -76,7 +76,7 @@
   "ui-sortBy-help": "Definiera standardsortering t.ex. &#39;relevans&#39; för att använda den beräknade sökpoängen (se poängkonfiguration) eller &#39;dateStamp # desc&#39; för att returnera senast uppdaterad post först.",
   "sortBy-dateStampDesc": "senaste uppdateringar",
   "sortBy-createDateDesc": "nya poster",
-  "sortBy-resourceTitleObject.default.keyword": "titel",
+  "sortBy-resourceTitleObject.default.sort": "titel",
   "sortBy-relevance": "relevans",
   "sortBy-ratingDesc": "betyg",
   "sortBy-validDesc": "valideringsstatus",

@@ -76,7 +76,7 @@
   "ui-sortBy-help": "Définir l'option de tri. eg. 'relevance' pour utiliser la configuration du score ci-dessus, ou bien 'dateStamp#desc' pour les dernières fiches mises à jour.",
   "sortBy-dateStampDesc": "dernières mises à jour",
   "sortBy-createDateDesc": "nouvelles fiches",
-  "sortBy-resourceTitleObject.default.keyword": "titre",
+  "sortBy-resourceTitleObject.default.sort": "titre",
   "sortBy-relevance": "pertinence",
   "sortBy-ratingDesc": "note",
   "sortBy-validDesc": "status de validation",

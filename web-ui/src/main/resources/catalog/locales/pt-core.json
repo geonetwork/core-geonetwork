@@ -188,7 +188,7 @@
     "sortedBy": "Ordenado por {{field}}",
     "sortBy-dateStampDesc": "ultimas atualizações",
     "sortBy-createDateDesc": "novos registros",
-    "sortBy-resourceTitleObject.default.keyword": "título",
+    "sortBy-resourceTitleObject.default.sort": "título",
     "sortBy-relevance": "relevância",
     "sortBy-ratingDesc": "avaliação",
     "rating": "avaliação",
