@@ -49,6 +49,7 @@ import org.fao.geonet.repository.specification.LinkSpecs;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.SystemEnvironmentPropertySource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import javax.servlet.ServletConfig;
@@ -127,6 +128,7 @@ public class URITemplateProxyServlet extends org.mitre.dsmiley.httpproxy.URITemp
      *
      * @throws ServletException if the targetUri is not defined externally and the parameter is not even in web.xml.
      */
+    @Override
     protected void initTarget() throws ServletException {
         securityMode = SECURITY_MODE.parse(getConfigParam(P_SECURITY_MODE));
         String doForwardHostString = getConfigParam(P_FORWARDEDHOST);
@@ -280,7 +282,7 @@ public class URITemplateProxyServlet extends org.mitre.dsmiley.httpproxy.URITemp
         proxyRequest.removeHeaders("Host");
 
         // Only attempt this logic is the Authorization is currently not used.
-        if (StringUtils.isEmpty(servletRequest.getHeader("Authorization"))) {
+        if (StringUtils.isEmpty(servletRequest.getHeader(HttpHeaders.AUTHORIZATION))) {
 
             // List of authentication url to apply the logic.
             List<MapService> mapServiceList = ApplicationContextHolder.get().getBean("securedMapServices", List.class);
@@ -292,7 +294,7 @@ public class URITemplateProxyServlet extends org.mitre.dsmiley.httpproxy.URITemp
             ).findFirst();
             if (result.isPresent()) {
                 if (MapService.AuthType.valueOf(result.get().getAuthType()).equals(MapService.AuthType.BASIC)) {
-                    proxyRequest.setHeader("Authorization", "Basic " + Base64.getEncoder().encodeToString((result.get().getUsername() + ":" + result.get().getPassword()).getBytes()));
+                    proxyRequest.setHeader(HttpHeaders.AUTHORIZATION, "Basic " + Base64.getEncoder().encodeToString((result.get().getUsername() + ":" + result.get().getPassword()).getBytes()));
                 } else {
                     if (MapService.AuthType.valueOf(result.get().getAuthType()).equals(MapService.AuthType.BEARER)) {
                         // In order to get a bearer token the user needs to be authenticated. - If not authenticated then we skip and the request will be made as anonymous.
@@ -302,7 +304,7 @@ public class URITemplateProxyServlet extends org.mitre.dsmiley.httpproxy.URITemp
                             if (securityProviderUtil != null) {
                                 String authenticationHeaderValue = securityProviderUtil.getSSOAuthenticationHeaderValue();
                                 if (!StringUtils.isEmpty(authenticationHeaderValue)) {
-                                    proxyRequest.setHeader("Authorization", authenticationHeaderValue);
+                                    proxyRequest.setHeader(HttpHeaders.AUTHORIZATION, authenticationHeaderValue);
                                 }
                             } else {
                                 throw new IllegalArgumentException("Invalid or Unsupported authentication type " + result.get().getAuthType() + " for current security provider");
@@ -340,6 +342,7 @@ public class URITemplateProxyServlet extends org.mitre.dsmiley.httpproxy.URITemp
         return eProxyRequest;
     }
 
+    @Override
     protected void service(HttpServletRequest servletRequest, HttpServletResponse servletResponse)
         throws ServletException, IOException {
 
@@ -362,8 +365,7 @@ public class URITemplateProxyServlet extends org.mitre.dsmiley.httpproxy.URITemp
                 }
 
                 // Check if the link requested is in database link list
-                if (proxyCallAllowed == false
-                    && securityMode == SECURITY_MODE.DB_LINK_CHECK) {
+                if (!proxyCallAllowed) {
                     try {
                         URI uri = new URI(servletRequest.getParameter("url"));
                         String host = uri.getHost();
