@@ -458,6 +458,29 @@ public class GeonetworkDataDirectory {
             }
         }
 
+        Path resourcesConfigDir = this.resourcesDir.resolve("config");
+        if (!Files.exists(resourcesConfigDir) || IO.isEmptyDir(resourcesConfigDir)) {
+            Log.info(Geonet.DATA_DIRECTORY, "     - Copying config ...");
+            try {
+                Files.createDirectories(resourcesConfigDir);
+                final Path fromDir = getDefaultDataDir(webappDir).resolve("data").resolve("resources").resolve("config");
+
+                if (Files.exists(fromDir)) {
+                    try (DirectoryStream<Path> paths = Files.newDirectoryStream(fromDir)) {
+                        for (Path path : paths) {
+                            final Path relativePath = fromDir.relativize(path);
+                            final Path dest = resourcesConfigDir.resolve(relativePath.toString());
+                            if (!Files.exists(dest)) {
+                                IO.copyDirectoryOrFile(path, dest, false);
+                            }
+                        }
+                    }
+                }
+            } catch (IOException e) {
+                Log.error(Geonet.DATA_DIRECTORY, "     - Config copy failed: " + e.getMessage(), e);
+            }
+        }
+
         logoDir = this.resourcesDir.resolve("images").resolve("harvesting");
         if (!Files.exists(logoDir) || IO.isEmptyDir(logoDir)) {
             Log.info(Geonet.DATA_DIRECTORY, "     - Copying logos ...");
