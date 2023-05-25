@@ -188,7 +188,7 @@
     "sortedBy": "Trier par {{field}}",
     "sortBy-dateStampDesc": "dernières mises à jour",
     "sortBy-createDateDesc": "nouvelles fiches",
-    "sortBy-resourceTitleObject.default.keyword": "titre",
+    "sortBy-resourceTitleObject.default.sort": "titre",
     "sortBy-relevance": "pertinence",
     "sortBy-ratingDesc": "note",
     "rating": "note",

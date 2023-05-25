@@ -188,7 +188,7 @@
     "sortedBy": " {{field}} 정렬",
     "sortBy-dateStampDesc": "last updates",
     "sortBy-createDateDesc": "new records",
-    "sortBy-resourceTitleObject.default.keyword": "title",
+    "sortBy-resourceTitleObject.default.sort": "title",
     "sortBy-relevance": "연관",
     "sortBy-ratingDesc": "평점",
     "rating": "평점",

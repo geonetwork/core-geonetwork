@@ -188,7 +188,7 @@
     "sortedBy": "Sorteret efter {{field}}",
     "sortBy-dateStampDesc": "sidste opdateringer",
     "sortBy-createDateDesc": "Nye poster",
-    "sortBy-resourceTitleObject.default.keyword": "titel",
+    "sortBy-resourceTitleObject.default.sort": "titel",
     "sortBy-relevance": "Relevans",
     "sortBy-ratingDesc": "bedømmelse",
     "rating": "bedømmelse",

@@ -76,7 +76,7 @@
   "ui-sortBy-help": "Defina la opción de clasificación predeterminada. p.ej. 'relevance' para usar la puntuación de búsqueda calculada (ver configuración de puntuación) o 'dateStamp#desc' para devolver primero el último registro actualizado.",
   "sortBy-dateStampDesc": "ultimas actualizaciones",
   "sortBy-createDateDesc": "nuevos registros",
-  "sortBy-resourceTitleObject.default.keyword": "título",
+  "sortBy-resourceTitleObject.default.sort": "título",
   "sortBy-relevance": "relevancia",
   "sortBy-ratingDesc": "puntuación",
   "sortBy-validDesc": "validation status",

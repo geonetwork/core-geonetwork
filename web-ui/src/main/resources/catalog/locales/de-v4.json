@@ -76,7 +76,7 @@
   "ui-sortBy-help": "Definieren Sie die Standard-Sortieroption. z. B. 'Relevanz' für die Sortierung der Sucheinträge (siehe Konfiguration der Bewertung) oder 'dateStamp#desc', um den zuletzt aktualisierten Datensatz als ersten anzuzeigen.",
   "sortBy-dateStampDesc": "letztes Update",
   "sortBy-createDateDesc": "neue Datensätze",
-  "sortBy-resourceTitleObject.default.keyword": "Titel",
+  "sortBy-resourceTitleObject.default.sort": "Titel",
   "sortBy-relevance": "Relevanz",
   "sortBy-ratingDesc": "Wertung",
   "sortBy-validDesc": "validation status",

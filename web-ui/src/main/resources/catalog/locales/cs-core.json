@@ -188,7 +188,7 @@
     "sortedBy": "Tříděno dle {{field}}",
     "sortBy-dateStampDesc": "poslední aktualizace",
     "sortBy-createDateDesc": "nové záznamy",
-    "sortBy-resourceTitleObject.default.keyword": "název",
+    "sortBy-resourceTitleObject.default.sort": "název",
     "sortBy-relevance": "důležitost",
     "sortBy-ratingDesc": "hodnocení",
     "rating": "hodnocení",

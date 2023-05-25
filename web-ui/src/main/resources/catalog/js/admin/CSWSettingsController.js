@@ -62,7 +62,7 @@
           to: 50,
           isTemplate: "n",
           type: "service",
-          sortBy: "resourceTitleObject.default.keyword",
+          sortBy: "resourceTitleObject.default.sort",
           sortOrder: "asc"
         }
       };

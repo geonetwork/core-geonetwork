@@ -188,7 +188,7 @@
     "sortedBy": "Sortering: {{field}}",
     "sortBy-dateStampDesc": "Laatste wijziging",
     "sortBy-createDateDesc": "Aanmaak datum",
-    "sortBy-resourceTitleObject.default.keyword": "Titel",
+    "sortBy-resourceTitleObject.default.sort": "Titel",
     "sortBy-relevance": "relevantie",
     "sortBy-ratingDesc": "beoordeling",
     "rating": "beoordeling",

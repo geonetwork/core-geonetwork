@@ -188,7 +188,7 @@
     "sortedBy": "Lajittelukenttä: {{field}}",
     "sortBy-dateStampDesc": "last updates",
     "sortBy-createDateDesc": "new records",
-    "sortBy-resourceTitleObject.default.keyword": "title",
+    "sortBy-resourceTitleObject.default.sort": "title",
     "sortBy-relevance": "relevanssi",
     "sortBy-ratingDesc": "arvostelu",
     "rating": "arvostelu",

@@ -1124,7 +1124,7 @@
                 {
                   isTemplate: "n",
                   any: "*QUERY*",
-                  sortBy: "resourceTitleObject.default.keyword"
+                  sortBy: "resourceTitleObject.default.sort"
                 },
                 params
               )
@@ -1397,7 +1397,7 @@
                 settings.data = JSON.stringify({
                   from: 0,
                   size: 10,
-                  sort: [{ "resourceTitleObject.default.keyword": "asc" }],
+                  sort: [{ "resourceTitleObject.default.sort": "asc" }],
                   query: {
                     bool: {
                       must: {

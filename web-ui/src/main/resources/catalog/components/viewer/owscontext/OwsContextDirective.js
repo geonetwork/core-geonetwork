@@ -51,7 +51,7 @@
         hitsperpageValues: 2,
         params: {
           isTemplate: "n",
-          sortBy: "resourceTitleObject.default.keyword",
+          sortBy: "resourceTitleObject.default.sort",
           from: 1,
           to: 2
         }

@@ -76,7 +76,7 @@
   "ui-sortBy-help": "Define default sort by option. eg. 'relevance' to use the computed search score (see score configuration) or 'dateStamp#desc' to return last updated record first.",
   "sortBy-dateStampDesc": "ultimas atualizações",
   "sortBy-createDateDesc": "novos registros",
-  "sortBy-resourceTitleObject.default.keyword": "título",
+  "sortBy-resourceTitleObject.default.sort": "título",
   "sortBy-relevance": "relevância",
   "sortBy-ratingDesc": "avaliação",
   "sortBy-validDesc": "validation status",
