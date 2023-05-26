@@ -716,7 +716,7 @@
             if (element.find("[data-gn-pagination]").length > 0) {
               var unregisterFn = scope.$watch("hasPagination", function () {
                 if (scope.hasPagination) {
-                  if (scope.user) {
+                  if (scope.user && gnSearchLocation.isEditorBoard()) {
                     scope.controller.setOnlyMyRecord(
                       gnGlobalSettings.gnCfg.mods.editor.isUserRecordsOnly
                     );
