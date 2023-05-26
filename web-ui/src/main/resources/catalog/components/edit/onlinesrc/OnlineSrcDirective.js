@@ -772,6 +772,9 @@
               };
 
               var DEFAULT_CONFIG = {
+                sources: {
+                  filestore: true
+                },
                 process: "onlinesrc-add",
                 fields: {
                   url: {
