@@ -663,6 +663,7 @@
                  new="th_httpinspireeceuropaeumetadatacodelistPriorityDataset-PriorityDataset"/>
     </xsl:variable>
 
+
     <xsl:variable name="key">
       <xsl:choose>
         <xsl:when test="starts-with($thesaurusId, 'geonetwork.thesaurus')">

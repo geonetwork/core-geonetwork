@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+  <skos:ConceptScheme xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialRepresentationType">
+    <dc:title xmlns:dc="http://purl.org/dc/elements/1.1/" xml:lang="en">Spatial representation type</dc:title>
+    <dc:description xmlns:dc="http://purl.org/dc/elements/1.1/" xml:lang="en">Method used to represent geographic information in the dataset.</dc:description>
+    <dcterms:issued xmlns:dcterms="http://purl.org/dc/terms/">2023-05-29T09:46:41</dcterms:issued>
+    <dcterms:modified xmlns:dcterms="http://purl.org/dc/terms/">2023-05-29T09:46:41</dcterms:modified>
+  </skos:ConceptScheme>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialRepresentationType/vector">
+    <skos:prefLabel xml:lang="en">Vector</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">Vector data is used to represent geographic data.</skos:scopeNote>
+    <skos:inScheme rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialRepresentationType" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialRepresentationType/grid">
+    <skos:prefLabel xml:lang="en">Grid</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">Grid data is used to represent geographic data.</skos:scopeNote>
+    <skos:inScheme rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialRepresentationType" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialRepresentationType/textTable">
+    <skos:prefLabel xml:lang="en">Text table</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">Textual or tabular data is used to represent geographic data.</skos:scopeNote>
+    <skos:inScheme rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialRepresentationType" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialRepresentationType/tin">
+    <skos:prefLabel xml:lang="en">TIN</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">Triangulated irregular network.</skos:scopeNote>
+    <skos:inScheme rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialRepresentationType" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialRepresentationType/stereoModel">
+    <skos:prefLabel xml:lang="en">Stereo model</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">Three-dimensional view formed by the intersecting homologous rays of an overlapping pair of images.</skos:scopeNote>
+    <skos:inScheme rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialRepresentationType" />
+  </skos:Concept>
+  <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialRepresentationType/video">
+    <skos:prefLabel xml:lang="en">Video</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">Scene from a video recording.</skos:scopeNote>
+    <skos:inScheme rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialRepresentationType" />
+  </skos:Concept>
+</rdf:RDF>
+

@@ -220,33 +220,34 @@
               "../api/remoteharvesters/progress?id=" +
                 runningRemoteHarvesters.join("&id=")
             )
-            .then(function (response) {
-              var data = response.data;
+            .then(
+              function (response) {
+                var data = response.data;
 
-              console.log(data);
+                console.log(data);
 
-              isPolling = false;
-              if (data != "null") {
-                if (!angular.isArray(data)) {
-                  data = [data];
-                }
-
-                angular.forEach($scope.harvesters, function (oldH) {
-                  for (var i = 0; i < data.length; i++) {
-                    var h = data[i];
-
-                    if (oldH.info.result && oldH.info.result.processID == h.processID) {
-                      oldH.info.result.running = h.running;
-                      oldH.info.running = h.running;
-                      oldH.info.result.runningHarvest = h.runningHarvest;
-                      oldH.info.result.runningLinkChecker = h.runningLinkChecker;
-                      oldH.info.result.runningIngest = h.runningIngest;
-                      oldH.info.result.harvesterStatus = h.harvesterStatus;
-                    }
+                isPolling = false;
+                if (data != "null") {
+                  if (!angular.isArray(data)) {
+                    data = [data];
                   }
-                });
 
-                /*var harvesterIndex = {};
+                  angular.forEach($scope.harvesters, function (oldH) {
+                    for (var i = 0; i < data.length; i++) {
+                      var h = data[i];
+
+                      if (oldH.info.result && oldH.info.result.processID == h.processID) {
+                        oldH.info.result.running = h.running;
+                        oldH.info.running = h.running;
+                        oldH.info.result.runningHarvest = h.runningHarvest;
+                        oldH.info.result.runningLinkChecker = h.runningLinkChecker;
+                        oldH.info.result.runningIngest = h.runningIngest;
+                        oldH.info.result.harvesterStatus = h.harvesterStatus;
+                      }
+                    }
+                  });
+
+                  /*var harvesterIndex = {};
                 angular.forEach($scope.harvesters, function(oldH) {
                   harvesterIndex[oldH['@id']] = oldH;
                 });
@@ -266,12 +267,13 @@
                   }
                 }*/
 
-                setTimeout(pollHarvesterStatus, 10000);
+                  setTimeout(pollHarvesterStatus, 10000);
+                }
+              },
+              function (response) {
+                isPolling = false;
               }
-            })
-            .error(function (data) {
-              isPolling = false;
-            });
+            );
         }
       };
 
@@ -280,10 +282,12 @@
 
         $http
           .get("../api/remoteharvesters/progress?id=" + harvesterId + "&quick=false")
-          .success(function (data) {
-            harvesterSelected.infoDetailed = data[0];
-          })
-          .error(function (data) {});
+          .then(
+            function (response) {
+              harvesterSelected.infoDetailed = response.data[0];
+            },
+            function (response) {}
+          );
       };
 
       $scope.refreshHarvester = function () {

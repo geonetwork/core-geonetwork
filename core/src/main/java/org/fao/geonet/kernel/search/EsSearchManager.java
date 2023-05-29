@@ -354,7 +354,7 @@ public class EsSearchManager implements ISearchManager {
     }
 
     public BulkResponse updateFields(String id, Map<String, Object> fieldMap, Set<String> fieldsToRemove) throws IOException {
-        fieldMap.put("indexingDate", new Date());
+        fieldMap.put(Geonet.IndexFieldNames.INDEXING_DATE, new Date());
         BulkRequest bulkrequest = new BulkRequest();
         StringBuilder script = new StringBuilder();
         fieldsToRemove.forEach(f ->

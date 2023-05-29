@@ -107,8 +107,7 @@
       return {
         restrict: "A",
         replace: true,
-        templateUrl:
-          "../../catalog/views/default/directives/" + "partials/mdactionmenu.html",
+        templateUrl: "../../catalog/views/default/directives/partials/mdactionmenu.html",
         link: function linkFn(scope, element, attrs) {
           scope.mdService = gnMetadataActions;
           scope.md = scope.$eval(attrs.gnMdActionsMenu);
@@ -127,6 +126,8 @@
             scope.iso2Lang = gnLangs.getIso2Lang(gnLangs.getCurrent());
           });
 
+          scope.status = undefined;
+
           scope.buildFormatter = function (url, uuid, isDraft) {
             if (url.indexOf("${uuid}") !== -1) {
               return url.replace("${lang}", scope.lang).replace("${uuid}", uuid);
@@ -141,6 +142,60 @@
               );
             }
           };
+
+          function loadWorkflowStatus() {
+            return $http
+              .get("../api/status/workflow", { cache: true })
+              .then(function (response) {
+                scope.status = {};
+                response.data.forEach(function (s) {
+                  scope.status[s.name] = s.id;
+                });
+
+                scope.statusEffects = {
+                  editor: [
+                    {
+                      from: "draft",
+                      to: "submitted"
+                    },
+                    {
+                      from: "retired",
+                      to: "draft"
+                    },
+                    {
+                      from: "submitted",
+                      to: "draft"
+                    }
+                  ],
+                  reviewer: [
+                    {
+                      from: "draft",
+                      to: "submitted"
+                    },
+                    {
+                      from: "submitted",
+                      to: "approved"
+                    },
+                    {
+                      from: "submitted",
+                      to: "draft"
+                    },
+                    {
+                      from: "draft",
+                      to: "approved"
+                    },
+                    {
+                      from: "approved",
+                      to: "retired"
+                    },
+                    {
+                      from: "retired",
+                      to: "draft"
+                    }
+                  ]
+                };
+              });
+          }
 
           function loadTasks() {
             return $http
@@ -199,6 +254,7 @@
           };
 
           loadTasks();
+          loadWorkflowStatus();
 
           scope.$watch(attrs.gnMdActionsMenu, function (a) {
             scope.md = a;

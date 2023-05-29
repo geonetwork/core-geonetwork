@@ -449,9 +449,7 @@
         scope: {
           key: "=esFacetCards",
           homeFacet: "=homeFacet",
-          searchInfo: "=searchInfo",
-          aggResponse: "=aggResponse",
-          aggConfig: "=aggConfig"
+          searchInfo: "=searchInfo"
         },
         templateUrl: function (elem, attrs) {
           return (
@@ -468,6 +466,11 @@
               scope.homeFacet.config[scope.key].terms &&
               scope.homeFacet.config[scope.key].terms.missing;
             scope.isInspire = scope.key.indexOf("th_httpinspireeceuropaeutheme") === 0;
+
+            scope.aggregations = {};
+            scope.homeFacet.facets.forEach(function (facet) {
+              scope.aggregations[facet.key] = facet;
+            });
           }
 
           init();

@@ -12,7 +12,7 @@
 
   <fieldset id="gn-harvest-settings-csw-basic-row">
     <legend id="gn-harvest-settings-csw-basic-title">
-      <span data-translate="">harvesterMainConfigurationFor</span> {{('harvester-' +
+      <span data-translate="">harvesterConnectionConfiguration</span> {{('harvester-' +
       harvesterSelected['@type']) | translate}}
     </legend>
     <div
@@ -138,7 +138,7 @@
           type="checkbox"
           data-ng-model="harvesterSelected.options.errorConfigNextRecordsNotZero"
         />
-        <span id="gn-harvest-errorconfig-next-record-label" data-translate=""
+        <span id="gn-harvest-errorconfig-next-record-not-zero-label" data-translate=""
           >csw-errorconfigNextRecord</span
         >
       </label>
@@ -150,7 +150,7 @@
           type="checkbox"
           data-ng-model="harvesterSelected.options.errorConfigNextRecordsBadValue"
         />
-        <span id="gn-harvest-errorconfig-next-record-label" data-translate=""
+        <span id="gn-harvest-errorconfig-next-record-bad-value-label" data-translate=""
           >csw-errorconfigNextRecordsBadValue</span
         >
       </label>
@@ -162,7 +162,9 @@
           type="checkbox"
           data-ng-model="harvesterSelected.options.errorConfigFewerRecordsThanRequested"
         />
-        <span id="gn-harvest-errorconfig-next-record-label" data-translate=""
+        <span
+          id="gn-harvest-errorconfig-next-record-fewer-records-than-requested-label"
+          data-translate=""
           >csw-errorconfigFewerRecordsThanRequested</span
         >
       </label>
@@ -176,7 +178,9 @@
           type="checkbox"
           data-ng-model="harvesterSelected.options.errorConfigTotalRecordsChanged"
         />
-        <span id="gn-harvest-errorconfig-next-record-label" data-translate=""
+        <span
+          id="gn-harvest-errorconfig-config-total-records-changed-label"
+          data-translate=""
           >csw-errorconfigTotalRecordsChanged</span
         >
       </label>

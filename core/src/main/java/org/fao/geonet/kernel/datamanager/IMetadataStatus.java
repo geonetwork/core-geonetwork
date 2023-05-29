@@ -101,6 +101,15 @@ public interface IMetadataStatus {
     MetadataStatus getStatus(int metadataId) throws Exception;
 
     /**
+     * Given a metadata id, return the previous status of the metadata
+     *
+     * @param metadataId
+     * @return
+     * @throws Exception
+     */
+    MetadataStatus getPreviousStatus(int metadataId) throws Exception;
+
+    /**
      * Given a metadata id, return the status of the metadata
      *
      * @param metadataId
