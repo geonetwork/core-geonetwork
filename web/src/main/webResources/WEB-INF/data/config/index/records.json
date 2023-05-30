@@ -1025,6 +1025,14 @@
   "mappings": {
     "dynamic_templates": [
       {
+        "conformTo": {
+          "match": "conformTo_*",
+          "mapping": {
+            "type": "keyword"
+          }
+        }
+      },
+      {
         "numbers": {
           "match": "*Number",
           "mapping": {
