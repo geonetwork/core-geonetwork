@@ -52,6 +52,7 @@
           "status*",
           "rating",
           "geom",
+          "contact*",
           "Org*",
           "isTemplate",
           "valid",
