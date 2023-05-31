@@ -857,7 +857,7 @@
 
           <crsDetails type="object">{
             "code": "<xsl:value-of select="gn-fn-index:json-escape((gmd:code/*/text())[1])"/>",
-            "codeSpace": "<xsl:value-of select="gn-fn-index:json-escape(gmd:codeSpace/*/text())"/>",
+            "codeSpace": "<xsl:value-of select="gn-fn-index:json-escape((gmd:codeSpace/*/text())[1])"/>",
             "name": "<xsl:value-of select="gn-fn-index:json-escape($crsLabel)"/>",
             "url": "<xsl:value-of select="gn-fn-index:json-escape(gmd:code/*/@xlink:href)"/>"
             }</crsDetails>
