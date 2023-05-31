@@ -246,7 +246,7 @@
                   },
                   function (data) {
                     console.warn(data);
-                    defer.reject(response);
+                    defer.reject(data);
                   }
                 );
             });

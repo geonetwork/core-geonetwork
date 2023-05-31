@@ -66,6 +66,7 @@
     "gnOwsCapabilities",
     "$http",
     "gnViewerSettings",
+    "gnViewerService",
     "$translate",
     "$q",
     "$filter",
@@ -78,6 +79,7 @@
       gnOwsCapabilities,
       $http,
       gnViewerSettings,
+      gnViewerService,
       $translate,
       $q,
       $filter,
@@ -117,6 +119,7 @@
         if (mapType && mapConfig) {
           uiConfig = mapConfig["map-" + mapType];
         }
+        var isMainViewer = mapType === "viewer";
         // first remove any existing layer
         var layersToRemove = [];
         map.getLayers().forEach(function (layer) {
@@ -215,10 +218,13 @@
           if (!gnViewerSettings.bgLayers) {
             gnViewerSettings.bgLayers = [];
           }
-          gnViewerSettings.bgLayers.length = 0;
+          if (isMainViewer) {
+            gnViewerSettings.bgLayers.length = 0;
+          }
+
           var bgLayers = gnViewerSettings.bgLayers;
           bgLayers.fromCtx = true;
-          var isFirstBgLayer = false;
+          var isFirstActiveBgLayer = false;
           // -------
 
           for (i = 0; i < layers.length; i++) {
@@ -246,10 +252,12 @@
                   olLayer.background = true;
                   olLayer.set("group", "Background layers");
                   olLayer.setVisible(!layer.hidden);
-                  bgLayers.push(olLayer);
+                  if (isMainViewer) {
+                    bgLayers.push(olLayer);
+                  }
 
-                  if (!layer.hidden && !isFirstBgLayer) {
-                    isFirstBgLayer = true;
+                  if (!layer.hidden && !isFirstActiveBgLayer) {
+                    isFirstActiveBgLayer = true;
                     map.getLayers().setAt(0, olLayer);
                   }
                 }
@@ -265,12 +273,15 @@
                   visible: false
                 });
 
-                if (!layer.hidden && !isFirstBgLayer) {
-                  isFirstBgLayer = true;
+                if (!layer.hidden && !isFirstActiveBgLayer) {
+                  isFirstActiveBgLayer = true;
                   loadingLayer.set("bgLayer", true);
                 }
 
-                var layerIndex = bgLayers.push(loadingLayer) - 1;
+                var layerIndex;
+                if (isMainViewer) {
+                  layerIndex = bgLayers.push(loadingLayer) - 1;
+                }
                 var p = self.createLayer(layer, map, "do not add");
 
                 (function (idx, loadingLayer) {
@@ -278,7 +289,9 @@
                     if (!layer) {
                       return;
                     }
-                    bgLayers[idx] = layer;
+                    if (layerIndex) {
+                      bgLayers[idx] = layer;
+                    }
 
                     layer.displayInLayerManager = false;
                     layer.background = true;
@@ -357,6 +370,16 @@
             }
             firstLoad = false;
           }
+          if (!isFirstActiveBgLayer && bgLayers.length > 0) {
+            console.warn(
+              "Map context does not contain any active background layer. \n" +
+                "Set the hidden parameter to false to at least one layer of the group Background layers. \n" +
+                "Setting the first one in the group as active."
+            );
+            bgLayers[0].set("bgLayer", true);
+            map.getLayers().setAt(0, bgLayers[0]);
+          }
+          gnViewerService.openTool("layers");
         }
       };
 
