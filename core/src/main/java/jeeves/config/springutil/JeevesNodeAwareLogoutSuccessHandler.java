@@ -31,6 +31,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AbstractAuthenticationTargetUrlRequestHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
+import org.apache.commons.lang.StringUtils;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -84,8 +85,12 @@ public class JeevesNodeAwareLogoutSuccessHandler extends AbstractAuthenticationT
 
                     String siteHost = settingManager.getValue(Settings.SYSTEM_SERVER_HOST);
                     String siteProtocol = settingManager.getValue(Settings.SYSTEM_SERVER_PROTOCOL);
-                    int sitePort = settingManager.getValueAsInt(Settings.SYSTEM_SERVER_PORT);
-
+                    
+                    // some conditional logic to handle the case where there's no port in the settings
+                    int sitePort = 80;
+                    if (Settings.SYSTEM_SERVER_PORT != null && StringUtils.isNumeric(Settings.SYSTEM_SERVER_PORT)) {
+                        sitePort = settingManager.getValueAsInt(Settings.SYSTEM_SERVER_PORT);
+                    }
 
                     if (!hostName.equalsIgnoreCase(siteHost) ||
                         !protocol.equalsIgnoreCase(siteProtocol) ||
