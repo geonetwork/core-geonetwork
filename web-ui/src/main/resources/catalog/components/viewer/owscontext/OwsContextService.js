@@ -66,6 +66,7 @@
     "gnOwsCapabilities",
     "$http",
     "gnViewerSettings",
+    "gnViewerService",
     "$translate",
     "$q",
     "$filter",
@@ -78,6 +79,7 @@
       gnOwsCapabilities,
       $http,
       gnViewerSettings,
+      gnViewerService,
       $translate,
       $q,
       $filter,
@@ -357,6 +359,7 @@
             }
             firstLoad = false;
           }
+          gnViewerService.openTool("layers");
         }
       };
 
