@@ -145,6 +145,8 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
 
     protected Logger log = Log.createLogger(Geonet.HARVESTER);
 
+    protected String logFileName = "";
+
     private Element loadedInfo;
     private String id;
     private volatile Status status;
@@ -618,7 +620,7 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
                 running = true;
                 cancelMonitor.set(false);
                 try {
-                    String logfile = LogUtil.initializeHarvesterLog(getType(), this.getParams().getName());
+                    logFileName = LogUtil.initializeHarvesterLog(getType(), this.getParams().getName());
 
                     this.log.info("Starting harvesting of " + this.getParams().getName());
                     error = null;
@@ -692,7 +694,7 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
                     long elapsedTime = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis() - startTime);
 
                     if (!(this instanceof CswHarvester2)) {
-                        logHarvest(logfile, logger, nodeName, lastRun, elapsedTime);
+                        logHarvest(logFileName, logger, nodeName, lastRun, elapsedTime);
                     }
                 } finally {
                     cancelMonitor.set(false);

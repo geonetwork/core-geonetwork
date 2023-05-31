@@ -245,7 +245,7 @@ public class CswHarvester2 extends AbstractHarvester<HarvestResult, CswParams2> 
 
                     logger.info("Ended harvesting from node : " + nodeName);
 
-                    thiz.logHarvest(log.getFileAppender(), logger, nodeName, lastRun, elapsedTime);
+                    thiz.logHarvest(thiz.logFileName, logger, nodeName, lastRun, elapsedTime);
 
                 }
             }.start();
