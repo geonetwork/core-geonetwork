@@ -186,14 +186,14 @@
     "hitsPerPage": "Počet záznamů na stránku",
     "chooseRecordsPerPage": "Kliknutím zvolte počet záznamů na stránku",
     "sortedBy": "Tříděno dle {{field}}",
-    "sortBy-dateStamp": "poslední aktualizace",
-    "sortBy-createDate": "nové záznamy",
+    "sortBy-dateStampDesc": "poslední aktualizace",
+    "sortBy-createDateDesc": "nové záznamy",
     "sortBy-resourceTitleObject.default.keyword": "název",
     "sortBy-relevance": "důležitost",
-    "sortBy-rating": "hodnocení",
+    "sortBy-ratingDesc": "hodnocení",
     "rating": "hodnocení",
     "popularity": "obliba",
-    "sortBy-popularity": "obliba",
+    "sortBy-popularityDesc": "obliba",
     "sortBy-denominatorDesc": "nejprve menší měřítko",
     "sortBy-denominatorAsc": "nejprve větší měřítko",
     "selected": "vybráno",
@@ -582,5 +582,8 @@
     "facet-mdStatus": "Vývoj v postupu prací",
     "skipLink": "Přeskočte a přejděte k obsahu",
     "batchSubmitTitle": "Dávkové odeslání metadat",
-    "batchSubmitInfo": "Tato možnost odešle vybraná metadata vlastněná uživatelem."
+    "batchSubmitInfo": "Tato možnost odešle vybraná metadata vlastněná uživatelem.",
+    "reviewerNotAllowedPublish": "Prohlížející nemá oprávnění publikovat metadata",
+    "reviewerNotAllowedUnpublish": "Prohlížející nemůže zrušit publikování metadat",
+    "reviewerNotAllowedPublishUnpublish": "Prohlížející nemá oprávnění publikovat/zrušit publikování metadat"
 }

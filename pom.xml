@@ -29,7 +29,7 @@
   <groupId>org.geonetwork-opensource</groupId>
   <artifactId>geonetwork</artifactId>
   <packaging>pom</packaging>
-  <version>4.2.4-SNAPSHOT</version>
+  <version>4.2.5-SNAPSHOT</version>
   <name>GeoNetwork opensource</name>
   <description>GeoNetwork opensource is a standards based, Free and
     Open Source catalog application to manage spatially referenced
@@ -532,7 +532,7 @@
         <version>1.10</version>
       </dependency>
       <!-- logging -->
-      <dependency> 
+      <dependency>
         <!-- usedf for camel -->
         <!-- used for LDAP test dependency in core -->
         <groupId>org.apache.logging.log4j</groupId>
@@ -990,6 +990,11 @@
       <dependency>
         <groupId>org.springframework</groupId>
         <artifactId>spring-core</artifactId>
+        <version>${spring.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-expression</artifactId>
         <version>${spring.version}</version>
       </dependency>
       <dependency>
@@ -1554,8 +1559,8 @@
     <jts.version>1.18.2</jts.version>
     <pg.version>42.3.3</pg.version>
 
-    <spring.version>5.2.20.RELEASE</spring.version>
-    <spring.security.version>5.7.3</spring.security.version>
+    <spring.version>5.3.27</spring.version>
+    <spring.security.version>5.7.8</spring.security.version>
     <spring.jpa.version>2.2.13.RELEASE</spring.jpa.version>
     <springboot.version>2.7.0</springboot.version>
     <springdoc.version>1.5.9</springdoc.version>

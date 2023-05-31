@@ -41,23 +41,53 @@
   <xsl:template match="/">
     <html ng-app="{$angularModule}" lang="{$lang2chars}" id="ng-app">
       <head>
-        <title>
-            <xsl:value-of select="util:getNodeName('', $lang, true())"/>
-        </title>
+        <xsl:variable name="discoveryServiceRecordUuid"
+                      select="util:getDiscoveryServiceUuid('')"/>
+        <xsl:variable name="nodeName"
+                      select="util:getNodeName('', $lang, true())"/>
+
+        <xsl:variable name="htmlHeadTitle"
+                      select="if ($discoveryServiceRecordUuid != '')
+                              then util:getIndexField(
+                                        $lang,
+                                        $discoveryServiceRecordUuid,
+                                        'resourceTitleObject',
+                                        $lang)
+                              else if (contains($nodeName, '|'))
+                              then substring-before($nodeName, '|')
+                              else $nodeName"/>
+
+
+        <xsl:variable name="htmlHeadDescription"
+                      select="if ($discoveryServiceRecordUuid != '')
+                              then util:getIndexField(
+                                        $lang,
+                                        $discoveryServiceRecordUuid,
+                                        'resourceAbstractObject',
+                                        $lang)
+                              else if (contains($nodeName, '|'))
+                              then substring-after($nodeName, '|')
+                              else $nodeName"/>
+
+        <title><xsl:value-of select="$htmlHeadTitle"/></title>
         <meta charset="utf-8"/>
         <meta name="viewport" content="initial-scale=1.0"/>
         <meta name="apple-mobile-web-app-capable" content="yes"/>
 
-        <meta name="description" content=""/>
+        <meta name="description" content="{$htmlHeadDescription}"/>
         <meta name="keywords" content=""/>
 
 
         <link rel="icon" sizes="16x16 32x32 48x48" type="image/png"
               href="../../images/logos/favicon.png"/>
-        <link href="rss.search?sortBy=changeDate" rel="alternate" type="application/rss+xml"
-              title="{concat($env/system/site/name, ' - ', $env/system/site/organization)}"/>
-        <link href="portal.opensearch" rel="search" type="application/opensearchdescription+xml"
-              title="{concat($env/system/site/name, ' - ', $env/system/site/organization)}"/>
+        <xsl:if test="$env/system/microservicesEnabled = 'true'">
+          <link href="{/root/gui/url}/api/collections/main/items?f=rss&amp;sortby=-createDate&amp;size=30" rel="alternate" type="application/rss+xml"
+                title="{concat($env/system/site/name, ' - ', $env/system/site/organization)}"/>
+
+          <link href="{/root/gui/url}/api/collections/main?f=opensearch" rel="search" type="application/opensearchdescription+xml"
+                title="{concat($env/system/site/name, ' - ', $env/system/site/organization)}"/>
+        </xsl:if>
+
 
         <xsl:call-template name="css-load"/>
       </head>

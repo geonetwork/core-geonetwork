@@ -55,10 +55,12 @@
           input: "=",
           inputFormat: "@",
           inputCrs: "@",
-          inputErrorHandler: "="
+          inputErrorHandler: "=",
+          nameType: "@",
+          activeGeometryTool: "="
         },
         templateUrl:
-          "../../catalog/components/viewer/geometry/" + "partials/geometrytool.html",
+          "../../catalog/components/viewer/geometry/partials/geometrytool.html",
         controllerAs: "ctrl",
         bindToController: true,
         controller: [
@@ -73,33 +75,120 @@
             gnGeometryService
           ) {
             var ctrl = this;
-            var layer = gnGeometryService.getCommonLayer(ctrl.map);
-            var source = layer.getSource();
-            ctrl.features = new ol.Collection();
 
-            ctrl.drawInteraction = new ol.interaction.Draw({
-              type: ctrl.geometryType,
-              source: source
-            });
-            ctrl.modifyInteraction = new ol.interaction.Modify({
-              features: ctrl.features
-            });
+            this.$onInit = function () {
+              var layer = gnGeometryService.getCommonLayer(ctrl.map, ctrl.nameType);
+              ctrl.source = layer.getSource();
+              ctrl.features = new ol.Collection();
+              ctrl.geomIsMulti = ctrl.geometryType.contains("Multi");
 
-            // this is used to deactivate zoom on draw end
-            ctrl.zoomInteraction = null;
-            ctrl.map.getInteractions().forEach(function (interaction) {
-              if (interaction instanceof ol.interaction.DoubleClickZoom) {
-                ctrl.zoomInteraction = interaction;
-              }
-            });
+              ctrl.drawInteraction = new ol.interaction.Draw({
+                type: ctrl.geometryType,
+                source: ctrl.source
+              });
+              ctrl.modifyInteraction = new ol.interaction.Modify({
+                features: ctrl.features
+              });
 
-            // add our layer&interactions to the map
-            ctrl.map.addInteraction(ctrl.drawInteraction);
-            ctrl.map.addInteraction(ctrl.modifyInteraction);
-            ctrl.drawInteraction.setActive(false);
-            ctrl.modifyInteraction.setActive(false);
-            olDecorateInteraction(ctrl.drawInteraction);
-            olDecorateInteraction(ctrl.modifyInteraction);
+              // this is used to deactivate zoom on draw end
+              ctrl.zoomInteraction = null;
+              ctrl.map.getInteractions().forEach(function (interaction) {
+                if (interaction instanceof ol.interaction.DoubleClickZoom) {
+                  ctrl.zoomInteraction = interaction;
+                }
+              });
+
+              // add our layer&interactions to the map
+              ctrl.map.addInteraction(ctrl.drawInteraction);
+              ctrl.map.addInteraction(ctrl.modifyInteraction);
+              ctrl.drawInteraction.setActive(false);
+              ctrl.modifyInteraction.setActive(false);
+              olDecorateInteraction(ctrl.drawInteraction);
+              olDecorateInteraction(ctrl.modifyInteraction);
+
+              ctrl.drawInteraction.on("drawstart", function () {
+                angular.forEach(ctrl.map.getInteractions(), function (interaction) {
+                  if (
+                    interaction instanceof ol.interaction.Draw &&
+                    ctrl.drawInteraction != interaction
+                  ) {
+                    interaction.setActive(false);
+                  }
+                });
+              });
+
+              ctrl.drawInteraction.on("modifystart", function () {
+                angular.forEach(ctrl.map.getInteractions(), function (interaction) {
+                  if (
+                    interaction instanceof ol.interaction.Modify &&
+                    ctrl.modifyInteraction != interaction
+                  ) {
+                    interaction.setActive(false);
+                  }
+                });
+              });
+
+              // clear existing features on draw end & save feature
+              ctrl.drawInteraction.on("drawend", function (event) {
+                if (!ctrl.geomIsMulti) {
+                  removeMyFeatures();
+                  ctrl.drawInteraction.active = false;
+                }
+                // for multi geom, we append the feature to the existing one.
+                else {
+                  var geom = gnGeometryService.appendToMultiGeometry(
+                    event.feature.getGeometry(),
+                    ctrl.features.getArray()
+                  );
+                  event.feature.setGeometry(geom);
+                }
+                ctrl.features.push(event.feature);
+
+                updateOutput(event.feature);
+
+                // prevent interference by zoom interaction
+                // see https://github.com/openlayers/openlayers/issues/3610
+                if (ctrl.zoomInteraction) {
+                  ctrl.zoomInteraction.setActive(false);
+                  setTimeout(function () {
+                    ctrl.zoomInteraction.setActive(true);
+                  }, 251);
+                }
+
+                // prevent interference from GFI
+                ctrl.map.set("disable-gfi", true);
+                setTimeout(function () {
+                  ctrl.map.set("disable-gfi", false);
+                }, 1000);
+              });
+
+              // update output on modify end
+              ctrl.modifyInteraction.on("modifyend", function (event) {
+                updateOutput(event.features.item(0), true);
+              });
+
+              ctrl.drawInteraction.on("change:active", setActiveGeometryTool);
+              ctrl.modifyInteraction.on("change:active", setActiveGeometryTool);
+
+              $scope.$watchCollection("ctrl.activeGeometryTool", function (n) {
+                if (n && n.current !== $scope.$id) {
+                  ctrl.drawInteraction.setActive(false);
+                  ctrl.modifyInteraction.setActive(false);
+                } else {
+                  ctrl.drawInteraction.setActive(true);
+                }
+              });
+
+              $scope.$watch(function () {
+                return ctrl.input + ctrl.inputCrs + ctrl.inputFormat;
+              }, handleInputUpdate);
+            };
+
+            // remove all my features from the map
+            function removeMyFeatures() {
+              ctrl.source.clear();
+              ctrl.features.clear();
+            }
 
             // cleanup when scope is destroyed
             $scope.$on("$destroy", function () {
@@ -108,19 +197,8 @@
               ctrl.map.removeInteraction(ctrl.modifyInteraction);
             });
 
-            // remove all my features from the map
-            function removeMyFeatures() {
-              var func = function (f) {
-                return f.ol_uid;
-              };
-              ctrl.features.forEach(function (feature) {
-                source.removeFeature(feature);
-              });
-              ctrl.features.clear();
-            }
-
             // modifies the output value
-            function updateOutput(feature) {
+            function updateOutput(feature, isNew) {
               // no feature: clear output
               if (!feature) {
                 ctrl.output = null;
@@ -133,35 +211,12 @@
                 outputAsWFSFeaturesCollection: ctrl.outputAsFeatures
                 // TODO: make sure this works everytime?
               });
-            }
 
-            // clear existing features on draw end & save feature
-            ctrl.drawInteraction.on("drawend", function (event) {
-              removeMyFeatures();
-              updateOutput(event.feature);
-              ctrl.drawInteraction.active = false;
-              ctrl.features.push(event.feature);
-
-              // prevent interference by zoom interaction
-              // see https://github.com/openlayers/openlayers/issues/3610
-              if (ctrl.zoomInteraction) {
-                ctrl.zoomInteraction.setActive(false);
-                setTimeout(function () {
-                  ctrl.zoomInteraction.setActive(true);
-                }, 251);
+              // When adding a geom to an existing feature we must update the layer
+              if (ctrl.geomIsMulti && !isNew) {
+                ctrl.source.refresh();
               }
-
-              // prevent interference from GFI
-              ctrl.map.set("disable-gfi", true);
-              setTimeout(function () {
-                ctrl.map.set("disable-gfi", false);
-              }, 1000);
-            });
-
-            // update output on modify end
-            ctrl.modifyInteraction.on("modifyend", function (event) {
-              updateOutput(event.features.item(0));
-            });
+            }
 
             // reset drawing
             ctrl.reset = function () {
@@ -201,9 +256,17 @@
                 }
               }
             }
-            $scope.$watch(function () {
-              return ctrl.input + ctrl.inputCrs + ctrl.inputFormat;
-            }, handleInputUpdate);
+
+            // Only one draw interaction at a time
+            function setActiveGeometryTool(e) {
+              if (
+                (ctrl.activeGeometryTool.current === undefined ||
+                  ctrl.activeGeometryTool.current !== $scope.$id) &&
+                e.oldValue === false
+              ) {
+                $scope.ctrl.activeGeometryTool.current = $scope.$id;
+              }
+            }
           }
         ]
       };

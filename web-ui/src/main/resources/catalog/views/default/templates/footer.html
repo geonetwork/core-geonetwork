@@ -77,6 +77,18 @@
       <span class="fa fa-fw fa-link"></span
     ></a>
   </li>
+  <li
+    data-ng-if="info['microservices/enabled'] === true"
+    data-ng-repeat="rssFeed in rssFeeds"
+  >
+    <a
+      href="../../api/collections/main/items?{{rssFeed.url}}"
+      title="{{rssFeed.label | translate}}"
+      aria-label="{{rssFeed.label | translate}}"
+    >
+      <span class="fa fa-rss" />
+    </a>
+  </li>
   <!--<li>
     <a href="rss.search?sortBy=changeDate&georss=simplepoint"
        title="{{'rssFeed' | translate}}"

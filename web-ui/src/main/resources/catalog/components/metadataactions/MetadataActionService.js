@@ -199,9 +199,13 @@
       this.validateMdLinks = function (bucket) {
         $rootScope.$broadcast("operationOnSelectionStart");
         return gnHttp
-          .callService("../api/records/links?" + "analyze=true&bucket=" + bucket, null, {
-            method: "POST"
-          })
+          .callService(
+            "../api/records/links/analyze?" + "analyze=true&bucket=" + bucket,
+            null,
+            {
+              method: "POST"
+            }
+          )
           .then(function (data) {
             $rootScope.processReport = data.data;
 

@@ -186,14 +186,14 @@
     "hitsPerPage": "Record per pagina",
     "chooseRecordsPerPage": "Scegli il numero di record per pagina",
     "sortedBy": "Ordina per {{field}}",
-    "sortBy-dateStamp": "last updates",
-    "sortBy-createDate": "new records",
+    "sortBy-dateStampDesc": "last updates",
+    "sortBy-createDateDesc": "new records",
     "sortBy-resourceTitleObject.default.keyword": "title",
     "sortBy-relevance": "rilevanza",
-    "sortBy-rating": "valutazione",
+    "sortBy-ratingDesc": "valutazione",
     "rating": "valutazione",
     "popularity": "popolarità",
-    "sortBy-popularity": "popolarità",
+    "sortBy-popularityDesc": "popolarità",
     "sortBy-denominatorDesc": "piccola scala prima",
     "sortBy-denominatorAsc": "grande scala prima",
     "selected": "selezionato(i)",
@@ -582,5 +582,8 @@
     "facet-mdStatus": "Progresso del flusso di lavoro",
     "skipLink": "Skip and go to the content",
     "batchSubmitTitle": "Batch metadata submission",
-    "batchSubmitInfo": "This option submits the selected metadata owned by the user."
+    "batchSubmitInfo": "This option submits the selected metadata owned by the user.",
+    "reviewerNotAllowedPublish": "Reviewer not allowed to publish the metadata",
+    "reviewerNotAllowedUnpublish": "Reviewer not allowed to un-publish the metadata",
+    "reviewerNotAllowedPublishUnpublish": "Reviewer not allowed to publish / un-publish the metadata"
 }

@@ -186,14 +186,14 @@
     "hitsPerPage": "Fjöldi færsla á blaðsíðu",
     "chooseRecordsPerPage": "Smelltu til að velja fjölda færsla á hverri síðu",
     "sortedBy": "Raðað eftir {{field}}",
-    "sortBy-dateStamp": "last updates",
-    "sortBy-createDate": "new records",
+    "sortBy-dateStampDesc": "last updates",
+    "sortBy-createDateDesc": "new records",
     "sortBy-resourceTitleObject.default.keyword": "titill",
     "sortBy-relevance": "mikilvægi",
-    "sortBy-rating": "stigagjöf",
+    "sortBy-ratingDesc": "stigagjöf",
     "rating": "stigagjöf",
     "popularity": "vinsældir",
-    "sortBy-popularity": "vinsældir",
+    "sortBy-popularityDesc": "vinsældir",
     "sortBy-denominatorDesc": "Lítill mælikvarði fyrst",
     "sortBy-denominatorAsc": "Stór mælikvarði fyrst",
     "selected": "valið",
@@ -582,5 +582,8 @@
     "facet-mdStatus": "Vinnuferli framvinda",
     "skipLink": "Skip and go to the content",
     "batchSubmitTitle": "Batch metadata submission",
-    "batchSubmitInfo": "This option submits the selected metadata owned by the user."
+    "batchSubmitInfo": "This option submits the selected metadata owned by the user.",
+    "reviewerNotAllowedPublish": "Reviewer not allowed to publish the metadata",
+    "reviewerNotAllowedUnpublish": "Reviewer not allowed to un-publish the metadata",
+    "reviewerNotAllowedPublishUnpublish": "Reviewer not allowed to publish / un-publish the metadata"
 }

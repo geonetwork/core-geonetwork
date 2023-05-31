@@ -163,17 +163,12 @@
           <script src="{$uiResourcesPath}lib/nv.d3.js?v={$buildNumber}"></script>
         </xsl:if>
 
-        <xsl:if test="$angularApp = 'gn_search' or
-                      $angularApp = 'gn_editor' or
-                      $angularApp = 'gn_formatter_viewer' or
-                      $angularApp = 'gn_admin'">
-          <script src="{$uiResourcesPath}lib/zip/zip.js?v={$buildNumber}"></script>
-          <!-- Jsonix resources (OWS Context) -->
-          <script src="{$uiResourcesPath}lib/jsonix/jsonix/Jsonix-all.js?v={$buildNumber}"></script>
-          <script type="text/javascript">
-            zip.workerScriptsPath = "../../catalog/lib/zip/";
-          </script>
-        </xsl:if>
+        <script src="{$uiResourcesPath}lib/zip/zip.js?v={$buildNumber}"></script>
+        <!-- Jsonix resources (OWS Context) -->
+        <script src="{$uiResourcesPath}lib/jsonix/jsonix/Jsonix-all.js?v={$buildNumber}"></script>
+        <script type="text/javascript">
+          zip.workerScriptsPath = "../../catalog/lib/zip/";
+        </script>
 
 
         <!--<xsl:if test="$isEditing">-->

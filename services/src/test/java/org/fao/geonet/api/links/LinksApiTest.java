@@ -109,7 +109,7 @@ public class LinksApiTest extends AbstractServiceIntegrationTest {
         final MockHttpSession httpSession = this.loginAsAdmin();
 
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
-        this.mockMvc.perform(post("/srv/api/records/links?uuid=" + this.uuid)
+        this.mockMvc.perform(post("/srv/api/records/links/analyze?uuid=" + this.uuid)
             .session(httpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isCreated());

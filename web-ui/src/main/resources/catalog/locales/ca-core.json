@@ -186,14 +186,14 @@
     "hitsPerPage": "Entrades per pàgina",
     "chooseRecordsPerPage": "Prem per seleccionar el nombre d'entrades per pàgina",
     "sortedBy": "Ordenat per {{field}}",
-    "sortBy-dateStamp": "last updates",
-    "sortBy-createDate": "new records",
+    "sortBy-dateStampDesc": "last updates",
+    "sortBy-createDateDesc": "new records",
     "sortBy-resourceTitleObject.default.keyword": "title",
     "sortBy-relevance": "rellevància",
-    "sortBy-rating": "puntuació",
+    "sortBy-ratingDesc": "puntuació",
     "rating": "puntuació",
     "popularity": "popularitat",
-    "sortBy-popularity": "popularitat",
+    "sortBy-popularityDesc": "popularitat",
     "sortBy-denominatorDesc": "ascendent",
     "sortBy-denominatorAsc": "descendent",
     "selected": "seleccionat",
@@ -582,5 +582,8 @@
     "facet-mdStatus": "Progrés del flux de treball",
     "skipLink": "Skip and go to the content",
     "batchSubmitTitle": "Batch metadata submission",
-    "batchSubmitInfo": "This option submits the selected metadata owned by the user."
+    "batchSubmitInfo": "This option submits the selected metadata owned by the user.",
+    "reviewerNotAllowedPublish": "Reviewer not allowed to publish the metadata",
+    "reviewerNotAllowedUnpublish": "Reviewer not allowed to un-publish the metadata",
+    "reviewerNotAllowedPublishUnpublish": "Reviewer not allowed to publish / un-publish the metadata"
 }

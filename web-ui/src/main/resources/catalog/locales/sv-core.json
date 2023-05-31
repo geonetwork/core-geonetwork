@@ -186,14 +186,14 @@
     "hitsPerPage": "Antal poster per sida",
     "chooseRecordsPerPage": "Klicka för att välja hur många poster som visas per sida",
     "sortedBy": "Sorterat på {{field}}",
-    "sortBy-dateStamp": "senaste uppdateringar",
-    "sortBy-createDate": "nya poster",
+    "sortBy-dateStampDesc": "senaste uppdateringar",
+    "sortBy-createDateDesc": "nya poster",
     "sortBy-resourceTitleObject.default.keyword": "titel",
     "sortBy-relevance": "relevans",
-    "sortBy-rating": "betyg",
+    "sortBy-ratingDesc": "betyg",
     "rating": "betyg",
     "popularity": "popularitet",
-    "sortBy-popularity": "popularitet",
+    "sortBy-popularityDesc": "popularitet",
     "sortBy-denominatorDesc": "stigande",
     "sortBy-denominatorAsc": "fallande",
     "selected": "Valda",
@@ -582,5 +582,8 @@
     "facet-mdStatus": "Status i arbetsflödet",
     "skipLink": "Skip and go to the content",
     "batchSubmitTitle": "Batch metadata submission",
-    "batchSubmitInfo": "This option submits the selected metadata owned by the user."
+    "batchSubmitInfo": "This option submits the selected metadata owned by the user.",
+    "reviewerNotAllowedPublish": "Reviewer not allowed to publish the metadata",
+    "reviewerNotAllowedUnpublish": "Reviewer not allowed to un-publish the metadata",
+    "reviewerNotAllowedPublishUnpublish": "Reviewer not allowed to publish / un-publish the metadata"
 }

@@ -89,15 +89,19 @@
        * If non existent, the layer will be created
        *
        * @param {ol.Map} map open layers map
+       * @param {!string} name suffix (point, polygon, lines) optional
        * @return {ol.layer.Vector} vector layer
        */
-      this.getCommonLayer = function (map) {
+      this.getCommonLayer = function (map, name) {
+        name
+          ? (name = "geometry-tool-layer" + "-" + name)
+          : (name = "geometry-tool-layer");
         var commonLayer = null;
         map
           .getLayers()
           .getArray()
           .forEach(function (layer) {
-            if (layer.get("name") === "geometry-tool-layer") {
+            if (layer.get("name") === name) {
               commonLayer = layer;
             }
           });
@@ -108,12 +112,13 @@
 
         // layer & source
         var source = new ol.source.Vector({
+          wrapX: false,
           useSpatialIndex: true,
           features: new ol.Collection()
         });
         commonLayer = new ol.layer.Vector({
           source: source,
-          name: "geometry-tool-layer",
+          name: name,
           style: [
             new ol.style.Style({
               // this is the default editing style
@@ -162,7 +167,7 @@
        * This prints the output of a geometry tool according to options given
        *
        * @param {ol.Map} map open layers map
-       * @param {ol.Feature} feature feature to output
+       * @param {ol.Feature} feature feature to output (can be multi)
        * @param {object} options options
        * @param {string} options.crs default is EPSG:4326
        * @param {string} options.format default is GML
@@ -269,6 +274,46 @@
         }
 
         return outputValue;
+      };
+
+      /**
+       * @ngdoc method
+       * @methodOf gn_geometry.service:appendToMultiGeometry
+       * @name gnGeometryService#appendToMultiGeometry
+       *
+       * @description
+       * Takes a multi geometry and an array of geometries (of length 1) in order
+       * to merge the first element of the array into the base geometry
+       *
+       * @param {ol.geom} baseGeom # multi
+       * @param {array<ol.geom>} multiGeometries # multi
+       * @return {ol.geom} merged geometries
+       */
+      this.appendToMultiGeometry = function (baseGeom, multiGeometries) {
+        var geomType = baseGeom.getType();
+        switch (geomType) {
+          case "MultiPoint":
+            multiGeometries.forEach(function (f) {
+              baseGeom.appendPoint(f.getGeometry().getPoints()[0]);
+            });
+            break;
+          case "MultiLineString":
+            multiGeometries.forEach(function (f) {
+              baseGeom.appendLineString(f.getGeometry().getLineStrings()[0]);
+            });
+            break;
+          case "MultiPolygon":
+            multiGeometries.forEach(function (f) {
+              baseGeom.appendPolygon(f.getGeometry().getPolygons()[0]);
+            });
+            break;
+          default:
+            console.error(
+              "Error when getting geometry type '{}' is not supported".format(geomType)
+            );
+            break;
+        }
+        return baseGeom;
       };
 
       /**
