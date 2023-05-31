@@ -302,6 +302,9 @@
         facetsParams = gnFacetService.getParamsFromFacets($scope.currentFacets);
         $scope.$broadcast('beforesearch');
         var params = angular.copy($scope.searchObj.params);
+        if ($scope.onlyMyRecord && $scope.onlyMyRecord.is === true) {
+          params['_owner'] = $scope.user.id;
+        }
         cleanSearchParams(params);
         angular.extend(params, facetsParams);
 
@@ -351,6 +354,11 @@
       } else {
         $scope.searchObj.params = {};
       }
+
+      if ($scope.onlyMyRecord && $scope.onlyMyRecord.is === true) {
+        $scope.searchObj.params['_owner'] = $scope.user.id;
+      }
+      
       if ($scope.searchObj.sortbyDefault) {
         angular.extend($scope.searchObj.params, $scope.searchObj.sortbyDefault);
       }
