@@ -64,29 +64,34 @@ public class KeycloakPreAuthActionsLoginFilter extends KeycloakPreAuthActionsFil
     }
 
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+        throws IOException, ServletException {
         HttpServletRequest servletRequest = (HttpServletRequest) request;
         HttpServletResponse servletResponse = (HttpServletResponse) response;
 
-        // Let's redirect the user to the signin page if
+        // Lets redirect the user to the signin page if
         //     - The session is not authenticate
         //     - This is not a request for the signin page (we don't want endless loop to sign in page)
         //     - It does not match the default request matcher (which is mostly used to validate bearer tokens request for api's)
         //       No sign in page required for api calls.
         //     - and it is not an internal k_* request which should be processed by keycloak adapter and also don't required login page.
-        if (servletRequest.getPathInfo() != null
-            && !KeycloakAuthenticationProcessingFilter.DEFAULT_REQUEST_MATCHER.matches(servletRequest)
-            && !isAuthenticated() && !(servletRequest.getContextPath() + KeycloakUtil.getSigninPath()).equals(servletRequest.getRequestURI())
-            && !servletRequest.getRequestURI().endsWith(AdapterConstants.K_LOGOUT)
-            && !servletRequest.getRequestURI().endsWith(AdapterConstants.K_PUSH_NOT_BEFORE)
-            && !servletRequest.getRequestURI().endsWith(AdapterConstants.K_QUERY_BEARER_TOKEN)
-            && !servletRequest.getRequestURI().endsWith(AdapterConstants.K_TEST_AVAILABLE)
-            && !servletRequest.getRequestURI().endsWith(AdapterConstants.K_JWKS)) {
+        if (servletRequest.getPathInfo() != null &&
+            !KeycloakAuthenticationProcessingFilter.DEFAULT_REQUEST_MATCHER.matches(servletRequest) &&
+            !isAuthenticated() &&
+            !(servletRequest.getContextPath() + KeycloakUtil.getSigninPath()).equals(servletRequest.getRequestURI()) &&
+            !servletRequest.getRequestURI().endsWith(AdapterConstants.K_LOGOUT) &&
+            !servletRequest.getRequestURI().endsWith(AdapterConstants.K_PUSH_NOT_BEFORE) &&
+            !servletRequest.getRequestURI().endsWith(AdapterConstants.K_QUERY_BEARER_TOKEN) &&
+            !servletRequest.getRequestURI().endsWith(AdapterConstants.K_TEST_AVAILABLE) &&
+            !servletRequest.getRequestURI().endsWith(AdapterConstants.K_JWKS)) {
 
             // Get request uri which is a relative path. Absolute paths will be ignored if they are received as returning url.
-            String returningUrl = servletRequest.getRequestURI() + (servletRequest.getQueryString() == null ? "" : "?" + servletRequest.getQueryString());
+            String returningUrl = servletRequest.getRequestURI() +
+                (servletRequest.getQueryString() == null ? "" : "?" + servletRequest.getQueryString());
+
             String encodedRedirectURL = ((HttpServletResponse) response).encodeRedirectURL(
                 servletRequest.getContextPath() + KeycloakUtil.getSigninPath() + "?redirectUrl=" + URLEncoder.encode(returningUrl, Constants.ENCODING));
+
             servletResponse.sendRedirect(encodedRedirectURL);
 
             // No further action required as we are redirecting to new page
@@ -98,7 +103,8 @@ public class KeycloakPreAuthActionsLoginFilter extends KeycloakPreAuthActionsFil
 
     private boolean isAuthenticated() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || AnonymousAuthenticationToken.class.isAssignableFrom(authentication.getClass())) {
+        if (authentication == null || AnonymousAuthenticationToken.class.
+            isAssignableFrom(authentication.getClass())) {
             return false;
         }
         return authentication.isAuthenticated();
