@@ -23,6 +23,7 @@
 package org.fao.geonet.kernel.harvest.harvester.csw2;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.logging.log4j.ThreadContext;
 import org.elasticsearch.action.search.SearchResponse;
 import org.fao.geonet.Logger;
 import org.fao.geonet.client.RemoteHarvesterApiClient;
@@ -143,10 +144,20 @@ public class CswHarvester2 extends AbstractHarvester<HarvestResult, CswParams2> 
         if (StringUtils.isNotEmpty(harvesterProcessId)) {
             harvesterSettingsManager.setValue("harvesting/id:" + getID() + "/options/processID", harvesterProcessId);
             final CswHarvester2 thiz = this;
+
+            final String harvesterLogFile = ThreadContext.get("logfile");
+            final String harvesterName = ThreadContext.get("harvest");
+            final String timeZone = ThreadContext.get("timeZone");
+
             new Thread() {
                 @Override
                 public void run() {
                     super.run();
+
+                    ThreadContext.put("harvest", harvesterName);
+                    ThreadContext.putIfNull("logfile", harvesterLogFile);
+                    ThreadContext.put("timeZone", timeZone);
+
                     long startTime = System.currentTimeMillis();
                     String url = thiz.settingManager.getValue(RemoteHarvesterApiClient.SETTING_REMOTE_HARVESTER_API);
 
@@ -184,18 +195,18 @@ public class CswHarvester2 extends AbstractHarvester<HarvestResult, CswParams2> 
                                     !state.equals((OrchestratedHarvestProcessState.ERROR)) &&
                                     !state.equals((OrchestratedHarvestProcessState.USERABORT))) {
                                     try {
-                                        log.info(String.format("Monitor harvester process progress (%s), state (%s):  %s" , harvesterProcessId, state.toString(), harvesterStatus.toString()));
+                                        thiz.log.info(String.format("Monitor harvester process progress (%s), state (%s):  %s" , harvesterProcessId, state.toString(), harvesterStatus.toString()));
                                         Thread.sleep(10 * 1000);
                                     } catch (InterruptedException e) {
-                                        log.error(e);
+                                        thiz.log.error(e);
                                     }
                                 } else {
                                     if (state.equals(OrchestratedHarvestProcessState.ERROR)) {
                                         OrchestratedHarvestProcessStatus harvesterStatusDetailed = remoteHarvesterApiClient.retrieveProgress(harvesterProcessId, log, false);
 
-                                        log.error(String.format("Monitor harvester process progress (%s), error: %s" , harvesterProcessId, harvesterStatusDetailed.toString()));
+                                        thiz.log.error(String.format("Monitor harvester process progress (%s), error: %s" , harvesterProcessId, harvesterStatusDetailed.toString()));
                                     } else {
-                                        log.info(String.format("Monitor harvester process progress (%s), state (%s):  %s" , harvesterProcessId, state.toString(), harvesterStatus.toString()));
+                                        thiz.log.info(String.format("Monitor harvester process progress (%s), state (%s):  %s" , harvesterProcessId, state.toString(), harvesterStatus.toString()));
                                     }
 
 
