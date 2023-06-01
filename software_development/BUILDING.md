@@ -1,6 +1,6 @@
 # Building
 
-See [Installing from source code](https://geonetwork-opensource.org/manuals/trunk/en/maintainer-guide/installing/installing-from-source-code.html) (Maintainer Guide)
+See [Installing from source code](https://geonetwork-opensource.org/manuals/4.0.x/en/install-guide/installing-from-source-code.html) (Installation Guide)
 
 Build GeoNetwork
 ----------------
