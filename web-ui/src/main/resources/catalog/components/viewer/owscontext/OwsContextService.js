@@ -311,7 +311,8 @@
               // load extension content (JSON)
               var extension =
                 layer.extension && layer.extension.any
-                  ? JSON.parse(layer.extension.any)
+                  ? // Formatted XML may contains extra space and line feed
+                    JSON.parse(layer.extension.any.replaceAll(/\n +/g, " "))
                   : {};
 
               var loadingId = extension.label ? extension.label : layer.name;
@@ -710,8 +711,11 @@
        * @param {numeric} index of the layer in the tree
        */
       this.createLayer = function (layer, map, bgIdx, index, style) {
-        var server = layer.server[0];
-        var res = server.onlineResource[0];
+        var res = { href: "" };
+        if (layer.server) {
+          var server = layer.server[0];
+          res = server.onlineResource[0];
+        }
         var createOnly = angular.isDefined(bgIdx) || angular.isDefined(index);
 
         if (layer.name && layer.name.match(reT)) {

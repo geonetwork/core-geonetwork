@@ -45,6 +45,14 @@
       this.queue = queue;
       this.errors = errors;
 
+      var clear = function (map) {
+        var type = (map && map.get && map.get("type")) || "viewer";
+        if (queue[type]) {
+          queue[type].queue.length = 0;
+          queue[type].errors.length = 0;
+        }
+      };
+
       var getMapType = function (map) {
         var type = (map && map.get && map.get("type")) || "viewer";
         if (queue[type] === undefined) {

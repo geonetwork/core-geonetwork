@@ -38,6 +38,7 @@
     "gnViewerSettings",
     "gnSearchSettings",
     "gnOwsContextService",
+    "gnWmsQueue",
     "$rootScope",
     "gnMapsManager",
     "gnMap",
@@ -45,6 +46,7 @@
       gnViewerSettings,
       gnSearchSettings,
       gnOwsContextService,
+      gnWmsQueue,
       $rootScope,
       gnMapsManager,
       gnMap
@@ -91,6 +93,7 @@
 
           scope.reset = function () {
             $rootScope.$broadcast("owsContextReseted");
+            gnWmsQueue.clear(scope.map);
             var mapViewerConfig = gnMap.getMapConfig()["map-" + gnMapsManager.VIEWER_MAP];
             if (gnViewerSettings.defaultContext) {
               loadContext();
