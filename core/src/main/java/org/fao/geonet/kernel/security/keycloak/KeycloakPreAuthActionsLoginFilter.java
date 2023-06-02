@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2017 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2023 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -24,6 +24,7 @@
 package org.fao.geonet.kernel.security.keycloak;
 
 import org.fao.geonet.Constants;
+import org.fao.geonet.security.web.csrf.GeonetworkCsrfSecurityRequestMatcher;
 import org.keycloak.adapters.spi.UserSessionManagement;
 import org.keycloak.adapters.springsecurity.filter.KeycloakCsrfRequestMatcher;
 import org.keycloak.adapters.springsecurity.filter.KeycloakPreAuthActionsFilter;
@@ -41,29 +42,30 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.net.URLEncoder;
 import java.io.IOException;
+import java.net.URLEncoder;
 
-public class keycloakPreAuthActionsLoginFilter extends KeycloakPreAuthActionsFilter {
-    public static String signinPath = null;
+public class KeycloakPreAuthActionsLoginFilter extends KeycloakPreAuthActionsFilter {
 
     @Autowired
     LoginUrlAuthenticationEntryPoint loginUrlAuthenticationEntryPoint;
 
-    public keycloakPreAuthActionsLoginFilter(UserSessionManagement userSessionManagement) {
+    public KeycloakPreAuthActionsLoginFilter(UserSessionManagement userSessionManagement) {
         super(userSessionManagement);
     }
 
-    public keycloakPreAuthActionsLoginFilter(UserSessionManagement userSessionManagement, CsrfFilter csrfFilter) {
+    public KeycloakPreAuthActionsLoginFilter(UserSessionManagement userSessionManagement, CsrfFilter csrfFilter,
+                                             GeonetworkCsrfSecurityRequestMatcher csrfRequestMatcher) {
         super(userSessionManagement);
         // Set the csrf filter request matcher for Keycloak so that it allows k_* endpoints to be reached without CSRF.
-        // Without this fix, the backchannel logout was not working due to CSRF failures.
-        csrfFilter.setRequireCsrfProtectionMatcher(new KeycloakCsrfRequestMatcher());
+        // Without this fix, the back-channel logout was not working due to CSRF failures.
+        csrfRequestMatcher.addRequestMatcher(new KeycloakCsrfRequestMatcher());
+        csrfFilter.setRequireCsrfProtectionMatcher(csrfRequestMatcher);
     }
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
-            throws IOException, ServletException {
+        throws IOException, ServletException {
         HttpServletRequest servletRequest = (HttpServletRequest) request;
         HttpServletResponse servletResponse = (HttpServletResponse) response;
 
@@ -76,7 +78,7 @@ public class keycloakPreAuthActionsLoginFilter extends KeycloakPreAuthActionsFil
         if (servletRequest.getPathInfo() != null &&
             !KeycloakAuthenticationProcessingFilter.DEFAULT_REQUEST_MATCHER.matches(servletRequest) &&
             !isAuthenticated() &&
-            !(servletRequest.getContextPath() + KeycloakUtil.getSigninPath()).equals(servletRequest.getRequestURI())  &&
+            !(servletRequest.getContextPath() + KeycloakUtil.getSigninPath()).equals(servletRequest.getRequestURI()) &&
             !servletRequest.getRequestURI().endsWith(AdapterConstants.K_LOGOUT) &&
             !servletRequest.getRequestURI().endsWith(AdapterConstants.K_PUSH_NOT_BEFORE) &&
             !servletRequest.getRequestURI().endsWith(AdapterConstants.K_QUERY_BEARER_TOKEN) &&
@@ -102,7 +104,7 @@ public class keycloakPreAuthActionsLoginFilter extends KeycloakPreAuthActionsFil
     private boolean isAuthenticated() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || AnonymousAuthenticationToken.class.
-                isAssignableFrom(authentication.getClass())) {
+            isAssignableFrom(authentication.getClass())) {
             return false;
         }
         return authentication.isAuthenticated();
