@@ -119,7 +119,7 @@
             <xsl:variable name="isAuthenticated"
                           select="util:isAuthenticated()"/>
             <xsl:variable name="isSigninEnabled"
-                          select="if (util:getUiConfigurationJsonProperty(/root/request/ui, 'mods.signin.enabled') = 'true')
+                          select="if (util:getUiConfigurationJsonProperty(/root/request/ui, 'mods.authentication.enabled') = 'true')
                                     then true()
                                     else false()"/>
             <xsl:if test="$isSigninEnabled and not($isAuthenticated) and not($isDisableLoginForm)">
