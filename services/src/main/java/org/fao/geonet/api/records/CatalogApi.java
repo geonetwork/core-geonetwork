@@ -35,6 +35,9 @@ import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.sources.http.ServletPathFinder;
 import jeeves.services.ReadWriteController;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVPrinter;
+import org.apache.commons.csv.QuoteMode;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.text.StrSubstitutor;
@@ -49,6 +52,7 @@ import org.fao.geonet.api.records.rdf.RdfOutputManager;
 import org.fao.geonet.api.records.rdf.RdfSearcher;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.guiapi.search.XsltResponseWriter;
 import org.fao.geonet.kernel.*;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
@@ -61,7 +65,9 @@ import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.util.XslUtil;
 import org.fao.geonet.utils.Log;
-import org.jdom.Element;
+import org.fao.geonet.utils.Xml;
+import org.fao.geonet.web.DefaultLanguage;
+import org.jdom.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpHeaders;
@@ -81,6 +87,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 import static org.fao.geonet.api.ApiParams.*;
 import static org.fao.geonet.kernel.mef.MEFLib.Version.Constants.MEF_V1_ACCEPT_TYPE;
@@ -119,11 +126,15 @@ public class CatalogApi {
     }
 
     @Autowired
+    DefaultLanguage defaultLanguage;
+    @Autowired
     ThesaurusManager thesaurusManager;
     @Autowired
     MetadataRepository metadataRepository;
     @Autowired
     IMetadataUtils metadataUtils;
+    @Autowired
+    SchemaManager schemaManager;
     @Autowired
     DataManager dataManager;
     @Autowired
@@ -494,6 +505,28 @@ public class CatalogApi {
             required = false
         )
         String bucket,
+        @Parameter(description = "XPath pointing to the XML element to loop on.",
+            required = false,
+            example = "Use . for the metadata, " +
+                ".//gmd:CI_ResponsibleParty for all contacts in ISO19139, " +
+                ".//gmd:transferOptions/*/gmd:onLine/* for all online resources in ISO19139.")
+        @RequestParam(required = false)
+        String loopElementXpath,
+        @Parameter(description = "Properties to collect",
+            required = false,
+            example = ".//gmd:electronicMailAddress/*/text()")
+        @RequestParam(required = false)
+        List<String> propertiesXpath,
+        @Parameter(description = "Column separator",
+            required = false,
+            example = ",")
+        @RequestParam(required = false, defaultValue = ",")
+        String sep,
+        @Parameter(description = "Multiple values separator",
+            required = false,
+            example = "###")
+        @RequestParam(required = false, defaultValue = "###")
+        String internalSep,
         @Parameter(hidden = true)
         @RequestParam
         Map<String, String> allRequestParams,
@@ -516,31 +549,114 @@ public class CatalogApi {
             EsFilterBuilder.buildPermissionsFilter(ApiUtils.createServiceContext(httpRequest)),
             FIELDLIST_CORE, 0, maxhits);
 
-        Element response = new Element("response");
-        Arrays.asList(searchResponse.getHits().getHits()).forEach(h -> {
-            try {
-                response.addContent(
-                    dataManager.getMetadata(
-                        context,
-                        (String) h.getSourceAsMap().get("id"),
-                        false, false, false));
-            } catch (Exception ignored) {
-            }
-        });
-
-        Element r = new XsltResponseWriter(null, "search")
-            .withXml(response)
-            .withXsl("xslt/services/csv/csv-search.xsl")
-            .asElement();
+        List<String> idsToExport = Arrays.stream(searchResponse.getHits().getHits())
+            .map(h -> {
+                return (String) h.getSourceAsMap().get("id");
+            })
+            .collect(Collectors.toList());
 
         // Determine filename to use
         String fileName = replaceFilenamePlaceholder(settingManager.getValue("metadata/csvReport/csvName"), "csv");
 
         httpResponse.setContentType("text/csv");
         httpResponse.addHeader("Content-Disposition", "attachment; filename=" + fileName);
-        httpResponse.setContentLength(r.getText().length());
-        httpResponse.getWriter().write(r.getText());
+
+        if (StringUtils.isNotEmpty(loopElementXpath)) {
+            buildCsvResponseFromXml(loopElementXpath, propertiesXpath, httpResponse, idsToExport,
+                sep, internalSep);
+        } else {
+            Element response = new Element("response");
+            idsToExport.forEach(uuid -> {
+                try {
+                    response.addContent(
+                        dataManager.getMetadata(
+                            context,
+                            uuid,
+                            false, false, false));
+                } catch (Exception ignored) {
+                }
+            });
+
+            Element r = new XsltResponseWriter(null, "search")
+                .withParams(allRequestParams.entrySet().stream()
+                    .collect(Collectors.toMap(
+                        Entry::getKey,
+                        Entry::getValue)))
+                .withXml(response)
+                .withXsl("xslt/services/csv/csv-search.xsl")
+                .asElement();
+            String text = r.getText();
+            httpResponse.setContentLength(text.length());
+            httpResponse.getWriter().write(text);
+        }
+
     }
+
+    private void buildCsvResponseFromXml(String loopElementXpath, List<String> propertiesXpath, HttpServletResponse httpResponse, List<String> idsToExport, String sep, String internalSep) {
+        try (CSVPrinter csvPrinter = new CSVPrinter(
+            new OutputStreamWriter(httpResponse.getOutputStream()),
+            CSVFormat.DEFAULT
+                .withRecordSeparator("\n")
+                .withDelimiter(sep.charAt(0))
+                .withQuoteMode(QuoteMode.ALL))) {
+            List<String> headers = new ArrayList<>();
+            headers.add("uuid");
+            headers.add("permalink");
+            headers.addAll(propertiesXpath);
+            csvPrinter.printRecord(headers);
+            idsToExport.forEach(id -> {
+                buildCsvRecordFromXml(loopElementXpath, propertiesXpath, csvPrinter, id, internalSep);
+            });
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
+    private void buildCsvRecordFromXml(String loopElementXpath, List<String> propertiesXpath, CSVPrinter csvPrinter, String id, String internalSep) {
+        try {
+            Metadata metadata = metadataRepository.findOneById(Integer.parseInt(id));
+            if (metadata == null) return;
+            Element xml = metadata.getXmlData(false);
+            String schema = metadata.getDataInfo().getSchemaId();
+            List<Namespace> namespaces = schemaManager.getSchema(schema).getNamespaces();
+            List<?> elements = Xml.selectNodes(xml, loopElementXpath, namespaces);
+            for (Object e : elements) {
+                List<String> values = new ArrayList<>();
+                values.add(metadata.getUuid());
+                values.add(metadataUtils.getPermalink(metadata.getUuid(), defaultLanguage.getLanguage()));
+                if (e instanceof Element) {
+                    for (String p : propertiesXpath) {
+                        try {
+                            List<?> textList = Xml.selectNodes((Element) e, p, namespaces);
+                            List<String> allTextValues = new ArrayList<>();
+                            for (Object t : textList) {
+                                if (t instanceof Element) {
+                                    allTextValues.add(((Element) t).getTextNormalize());
+                                } else if (t instanceof Text) {
+                                    allTextValues.add(((Text) t).getTextNormalize());
+                                } else if (t instanceof Attribute) {
+                                    allTextValues.add(((Attribute) t).getValue());
+                                } else {
+                                    allTextValues.add(t.toString());
+                                }
+                            }
+                            values.add(String.join(internalSep, allTextValues));
+                        } catch (JDOMException jdomException) {
+                            values.add("Error: " + jdomException.getMessage());
+                        }
+                    }
+                }
+                csvPrinter.printRecord(values);
+            }
+        } catch (IOException e) {
+            throw new IllegalStateException(String.format(
+                "Error retrieving record %s. %s", id, e.getMessage()));
+        } catch (JDOMException e) {
+            throw new IllegalArgumentException(String.format(
+                "Error retrieving properties in record %s. %s", id, e.getMessage()));
+        }
+    }
+
 
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Get catalog content as RDF. This endpoint supports the same Lucene query parameters as for the GUI search.",
