@@ -406,8 +406,7 @@ public class BaseMetadataManager implements IMetadataManager {
     }
 
     /**
-     * Creates a new metadata duplicating an existing template with an specified
-     * uuid.
+     * Creates a new metadata duplicating an existing template with a specified uuid.
      *
      * @param isTemplate
      * @param fullRightsForGroup

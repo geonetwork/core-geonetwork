@@ -2202,6 +2202,32 @@
     }
   ]);
   /**
+   * Compute a translated status label for a record, based on the index field
+   * 'statusWorkflow'.
+   * The result can be a single status for records that have no draft,
+   * or a combined label for records with draft.
+   */
+  module.filter("getStatusLabel", [
+    "$translate",
+    function ($translate) {
+      return function (workflowStatus) {
+        var split = workflowStatus.split("-");
+        // the status of the record
+        var metadataStatus = $translate.instant("status-" + split[0]);
+        if (split.length === 2) {
+          // if there is a draft status present,
+          // incorporate this into the resulting string
+          var draftStatus = $translate.instant("status-" + split[1]);
+          return $translate.instant("mdStatusWorkflowWithDraft", {
+            metadataStatus: metadataStatus,
+            draftStatus: draftStatus
+          });
+        }
+        return metadataStatus;
+      };
+    }
+  ]);
+  /**
    * Append size parameter to request a smaller thumbnail.
    */
   module.filter("thumbnailUrlSize", function () {

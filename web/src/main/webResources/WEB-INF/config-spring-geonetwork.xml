@@ -229,7 +229,13 @@
 
     <bean class="org.fao.geonet.kernel.datamanager.draft.DraftMetadataIndexer"/>
     <bean class="org.fao.geonet.kernel.datamanager.draft.DraftMetadataManager"/>
-    <bean class="org.fao.geonet.kernel.datamanager.draft.DraftMetadataUtils"/>
+    <bean class="org.fao.geonet.kernel.datamanager.draft.DraftMetadataUtils">
+      <property name="listOfStatusCreatingDraft">
+        <util:set>
+          <util:constant static-field="org.fao.geonet.domain.StatusValue.Status.APPROVED"/>
+        </util:set>
+      </property>
+    </bean>
 
   <!-- In order to get non-draft metadata  uncomment the definitions below,
     or make them available in an external override file -->
