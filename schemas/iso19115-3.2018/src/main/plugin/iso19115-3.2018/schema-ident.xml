@@ -134,7 +134,7 @@ Ce schéma est également composé des normes :
     the information. When filtered the element is
     preserved but with no content in.
     -->
-    <filter xpath=".//*[@gco:nilReason='withheld']"
+    <filter xpath=".//*[@gco:nilReason = 'withheld']"
             jsonpath="$.*[?(@.nilReason == 'withheld')]"
             ifNotOperation="editing">
       <keepMarkedElement gco:nilReason="withheld"/>
@@ -159,8 +159,4 @@ Ce schéma est également composé des normes :
     <filter xpath=".//mrd:onLine[starts-with(*/cit:protocol/gco:CharacterString, 'OGC:WMS')]"
             ifNotOperation="dynamic"/>
   </filters>
-
-  <!--<withheldElements>
-    <withheld esFieldName="contact" xpath="//mdb:contact"/>
-  </withheldElements>-->
 </schema>

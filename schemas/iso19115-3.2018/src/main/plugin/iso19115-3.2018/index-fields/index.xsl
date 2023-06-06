@@ -1067,6 +1067,9 @@
             "descriptionObject": <xsl:value-of select="gn-fn-index:add-multilingual-field(
                                 'description', description/*, $allLanguages)"/>,
           </xsl:if>
+          <xsl:if test="nilReason">
+            "nilReason": "<xsl:value-of select="nilReason"/>",
+          </xsl:if>
           "applicationProfile": "<xsl:value-of select="gn-fn-index:json-escape(
                                         applicationProfile/text())"/>"
           }
@@ -1178,6 +1181,9 @@
             <xsl:if test="normalize-space(cit:description) != ''">
               "descriptionObject": <xsl:value-of select="gn-fn-index:add-multilingual-field(
                                 'description', cit:description, $allLanguages)"/>,
+            </xsl:if>
+            <xsl:if test="../@gco:nilReason">
+              "nilReason": "<xsl:value-of select="../@gco:nilReason"/>",
             </xsl:if>
             "function":"<xsl:value-of select="cit:function/cit:CI_OnLineFunctionCode/@codeListValue"/>",
             "applicationProfile":"<xsl:value-of select="gn-fn-index:json-escape(cit:applicationProfile/gco:CharacterString/text())"/>",
@@ -1331,9 +1337,6 @@
     <xsl:variable name="identifiers"
                   select=".//cit:partyIdentifier/*"/>
 
-
-    <xsl:variable name="hasWithheld" select="@gco:nilReason = 'withheld'" as="xs:boolean" />
-
     <xsl:element name="contact{$fieldSuffix}">
       <!-- TODO: Can be multilingual -->
       <xsl:attribute name="type" select="'object'"/>{
@@ -1349,8 +1352,8 @@
       "position":"<xsl:value-of select="gn-fn-index:json-escape($positionName)"/>",
       "phone":"<xsl:value-of select="gn-fn-index:json-escape($phone)"/>",
       "address":"<xsl:value-of select="gn-fn-index:json-escape($address)"/>"
-      <xsl:if test="$hasWithheld">
-        ,"nilReason": "withheld"
+      <xsl:if test="@gco:nilReason">
+        ,"nilReason": "<xsl:value-of select="@gco:nilReason"/>"
       </xsl:if>
       <xsl:if test="count($identifiers) > 0">
         ,"identifiers":[
