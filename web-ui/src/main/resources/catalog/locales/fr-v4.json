@@ -74,11 +74,6 @@
   "indexingError": "Erreur d'indexation",
   "source": "Catalogue",
   "ui-sortBy-help": "Définir l'option de tri. eg. 'relevance' pour utiliser la configuration du score ci-dessus, ou bien 'dateStamp#desc' pour les dernières fiches mises à jour.",
-  "sortBy-dateStampDesc": "dernières mises à jour",
-  "sortBy-createDateDesc": "nouvelles fiches",
-  "sortBy-resourceTitleObject.default.sort": "titre",
-  "sortBy-relevance": "pertinence",
-  "sortBy-ratingDesc": "note",
   "sortBy-validDesc": "status de validation",
   "sortBy-recordOwner": "propriétaire",
   "csw-sortByHelp": "Définir le tri des opérations GetRecords. Cette option permet de résoudre des problèmes sur des catalogues dont l'ordre des résultats peut varier lors d'un même moissonnage. Des fiches apparaissent dans différentes pages. Trier avec 'identifier:A' permet de trier par UUID. N'importe quel champ de recherche du CSW peut être utilisé avec les lettres A ou D pour définir la direction du tri.",
@@ -93,9 +88,6 @@
   "alternateTitle": "Aussi nommé :",
   "isHarvested-true": "Moissonnée",
   "isHarvested-false": "Local",
-  "sortBy-popularityDesc": "popularité",
-  "sortBy-denominatorDesc": "petites échelles en premier",
-  "sortBy-denominatorAsc": "grandes échelles en premier",
   "deleteRecordConfirm": "Voulez-vous vraiment supprimer la fiche '{{resourceTitle}}' ?",
   "range-relation-intersects": "Intersecte",
   "range-relation-within": "Complètement à l'intérieur",
@@ -397,5 +389,6 @@
   "staticPageStatus-PRIVATE": "Visible par les utilisateurs authentifiés",
   "staticPageStatus-PUBLIC": "Visible par tous",
   "pageLink": "Lien",
-  "pageSection-help": "Actuellement, l'interface par défaut ne prend en charge que les valeurs TOP et FOOTER. "
+  "pageSection-help": "Actuellement, l'interface par défaut ne prend en charge que les valeurs TOP et FOOTER. ",
+  "lastCreatedRecords": "Nouvelles fiches"
 }

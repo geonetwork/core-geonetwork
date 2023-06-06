@@ -74,11 +74,6 @@
   "indexingError": "Error de indexación",
   "source": "Catálogo",
   "ui-sortBy-help": "Defina la opción de clasificación predeterminada. p.ej. 'relevance' para usar la puntuación de búsqueda calculada (ver configuración de puntuación) o 'dateStamp#desc' para devolver primero el último registro actualizado.",
-  "sortBy-dateStampDesc": "ultimas actualizaciones",
-  "sortBy-createDateDesc": "nuevos registros",
-  "sortBy-resourceTitleObject.default.sort": "título",
-  "sortBy-relevance": "relevancia",
-  "sortBy-ratingDesc": "puntuación",
   "sortBy-validDesc": "validation status",
   "sortBy-recordOwner": "owner",
   "csw-sortByHelp": "Define sort option for GetRecords query. This can solve issue for large sets where some records may change on the remote node during harvesting and returned in different pages. Sorting by 'identifier:A' means by UUID with alphabetical order. Any CSW queryables can be used in combination with A or D for setting the ordering.",
@@ -93,9 +88,6 @@
   "alternateTitle": "Also named: ",
   "isHarvested-true": "Importado por harvester",
   "isHarvested-false": "Local",
-  "sortBy-popularityDesc": "popularidad",
-  "sortBy-denominatorDesc": "escala pequeña primero",
-  "sortBy-denominatorAsc": "escala grande primero",
   "deleteRecordConfirm": "¿Realmente desea eliminar '{{resourceTitle}}'?",
   "range-relation-intersects": "Intersecta",
   "range-relation-within": "Dentro de",
@@ -397,5 +389,6 @@
   "staticPageStatus-PRIVATE": "Visible to logged users",
   "staticPageStatus-PUBLIC": "Visible to everyone",
   "pageLink": "Link",
-  "pageSection-help": "Currently, the default UI view only supports TOP and FOOTER values. Custom UI views can make use of additional values."
+  "pageSection-help": "Currently, the default UI view only supports TOP and FOOTER values. Custom UI views can make use of additional values.",
+  "lastCreatedRecords": "Last created records"
 }
