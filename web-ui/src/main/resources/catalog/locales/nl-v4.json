@@ -74,11 +74,6 @@
   "indexingError": "Indexeringsfout",
   "source": "catalogus",
   "ui-sortBy-help": "Definieer standaard sorteren op optie. bijv. &#39;relevantie&#39; om de berekende zoekscore te gebruiken (zie scoreconfiguratie) of &#39;dateStamp # desc&#39; om als eerste het laatst bijgewerkte record te retourneren.",
-  "sortBy-dateStampDesc": "Laatste wijziging",
-  "sortBy-createDateDesc": "Aanmaak datum",
-  "sortBy-resourceTitleObject.default.sort": "Titel",
-  "sortBy-relevance": "relevantie",
-  "sortBy-ratingDesc": "beoordeling",
   "sortBy-validDesc": "validation status",
   "sortBy-recordOwner": "owner",
   "csw-sortByHelp": "Define sort option for GetRecords query. This can solve issue for large sets where some records may change on the remote node during harvesting and returned in different pages. Sorting by 'identifier:A' means by UUID with alphabetical order. Any CSW queryables can be used in combination with A or D for setting the ordering.",
@@ -93,9 +88,6 @@
   "alternateTitle": "Also named: ",
   "isHarvested-true": "Geharvest",
   "isHarvested-false": "Lokaal",
-  "sortBy-popularityDesc": "populariteit",
-  "sortBy-denominatorDesc": "laagste schaal eerst",
-  "sortBy-denominatorAsc": "hoogste schaal eerst",
   "deleteRecordConfirm": "Weet u zeker dat u '{{resourceTitle}}' wilt verwijderen?",
   "range-relation-intersects": "Doorkruist",
   "range-relation-within": "Binnen",
@@ -397,5 +389,6 @@
   "staticPageStatus-PRIVATE": "Visible to logged users",
   "staticPageStatus-PUBLIC": "Visible to everyone",
   "pageLink": "Link",
-  "pageSection-help": "Currently, the default UI view only supports TOP and FOOTER values. Custom UI views can make use of additional values."
+  "pageSection-help": "Currently, the default UI view only supports TOP and FOOTER values. Custom UI views can make use of additional values.",
+  "lastCreatedRecords": "Last created records"
 }
