@@ -86,6 +86,26 @@
           return "../../catalog/components/pages/partials/" + attr.section + ".html";
         },
         link: function ($scope) {
+          $scope.pagesMenu = [];
+          function buildMenu(pagesMenu, pagesConfig) {
+            pagesConfig.forEach(function (menu) {
+              if (typeof menu === "string") {
+                if ($scope.pages[menu]) {
+                  pagesMenu.push($scope.pages[menu]);
+                }
+              } else if (angular.isObject(menu)) {
+                var key = Object.keys(menu)[0],
+                  submenu = {
+                    label: key,
+                    type: "submenu",
+                    pages: []
+                  };
+                buildMenu(submenu.pages, menu[key]);
+                pagesMenu.push(submenu);
+              }
+            });
+          }
+
           $scope.loadPages = function () {
             $http({
               method: "GET",
@@ -97,22 +117,14 @@
             }).then(
               function (response) {
                 var configKey = $scope.section === "footer" ? "footer" : "header";
-                var customMenuOptions =
+                $scope.pagesConfig =
                   gnGlobalSettings.gnCfg.mods[configKey][$scope.section + "CustomMenu"];
-                if (customMenuOptions && customMenuOptions.length > 0) {
-                  $scope.pagesList = [];
-                  for (var i = 0; i < customMenuOptions.length; i++) {
-                    var g = _.find(response.data, function (x) {
-                      return x.pageId == customMenuOptions[i];
-                    });
-
-                    if (g) {
-                      $scope.pagesList.push(g);
-                    }
-                  }
-                } else {
-                  $scope.pagesList = response.data;
-                }
+                $scope.pagesMenu = [];
+                $scope.pages = {};
+                response.data.forEach(function (page) {
+                  $scope.pages[page.pageId] = page;
+                });
+                buildMenu($scope.pagesMenu, $scope.pagesConfig);
               },
               function (response) {
                 $scope.pagesList = null;
