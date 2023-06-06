@@ -425,6 +425,7 @@ public class EsHTTPProxy {
      */
     private void addRequiredField(ArrayNode source) {
         source.add("op*");
+        source.add(Geonet.IndexFieldNames.SCHEMA);
         source.add(Geonet.IndexFieldNames.GROUP_OWNER);
         source.add(Geonet.IndexFieldNames.OWNER);
         source.add(Geonet.IndexFieldNames.ID);
