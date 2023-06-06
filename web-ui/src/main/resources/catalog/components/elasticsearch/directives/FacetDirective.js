@@ -161,8 +161,7 @@
     ["isTemplate", "recordType"],
     ["groupOwner", "group"],
     ["groupPublishedId", "group"],
-    ["sourceCatalogue", "source"],
-    ["statusWorkflow", "mdStatus"]
+    ["sourceCatalogue", "source"]
   ]);
 
   module.service("gnFacetSorter", [
@@ -184,7 +183,8 @@
 
   module.filter("facetTranslator", [
     "$translate",
-    function ($translate) {
+    "$filter",
+    function ($translate, $filter) {
       return function (input, facetKey) {
         if (!input || angular.isObject(input)) {
           return input;
@@ -203,7 +203,12 @@
         // A specific facet key eg. "isHarvested-true"
         var translationId =
             (facetKeyToTranslationGroupMap.get(facetKey) || facetKey) + "-" + input,
+          translation = undefined;
+        if (facetKey === "statusWorkflow") {
+          translation = $filter("getStatusLabel")(input);
+        } else {
           translation = $translate.instant(translationId);
+        }
         if (translation !== translationId) {
           return translation;
         } else {
