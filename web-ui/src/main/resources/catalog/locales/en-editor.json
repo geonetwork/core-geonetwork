@@ -428,5 +428,7 @@
     "confirmCancelEdit": "Do you want to cancel all changes and close the editor?",
     "allowEditGroupMembers": "Allow group editors to edit",
     "wmsSelectedLayers": "Selected layers",
-    "wmsSelectedLayersNone": "No layers selected"
+    "wmsSelectedLayersNone": "No layers selected",
+    "approved-submitted": "Approved (Working copy is Submitted)",
+    "approved-draft": "Approved (Working copy is Draft)"
 }
