@@ -26,6 +26,28 @@
 
   var module = angular.module("gn_toolbar_directive", []);
 
+  module.constant("GN_DEFAULT_MENU", [
+    "gn-site-name-menu",
+    "gn-portal-switcher",
+    "gn-search-menu",
+    "gn-map-menu",
+    "gn-contribute-menu",
+    "gn-admin-menu",
+    "gn-static-pages-list-viewer"
+  ]);
+  module.directive("gnToolbar", [
+    "GN_DEFAULT_MENU",
+    "gnStaticPagesService",
+    function (GN_DEFAULT_MENU, gnStaticPagesService) {
+      return {
+        templateUrl: "../../catalog/components/toolbar/partials/top-toolbar.html",
+        link: function ($scope) {
+          $scope.pagesMenu = [];
+
+        }
+      };
+    }
+  ]);
   module.directive("gnSiteNameMenu", [
     function () {
       return {

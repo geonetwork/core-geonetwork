@@ -1,10 +1,12 @@
 <li
   data-ng-repeat="page in pagesMenu"
-  data-ng-init="isSubmenu = page.type === 'submenu';
+  data-ng-init="isGnMenu = page.pageId.indexOf('gn-') === 0;
+                isSubmenu = page.type === 'submenu';
                 isExternalLink = (page.format == 'LINK' || page.format == 'HTMLPAGE')"
   data-ng-class="{'dropdown': isSubmenu}"
   role="menuitem"
 >
+
   <a
     data-ng-if="isSubmenu"
     class="dropdown-toggle gn-menuheader-xs"

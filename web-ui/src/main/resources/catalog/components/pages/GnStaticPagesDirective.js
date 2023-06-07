@@ -74,7 +74,8 @@
     "$http",
     "$location",
     "gnGlobalSettings",
-    function ($http, $location, gnGlobalSettings) {
+    "gnStaticPagesService",
+    function ($http, $location, gnGlobalSettings, gnStaticPagesService) {
       return {
         restrict: "AEC",
         replace: true,
@@ -87,34 +88,8 @@
         },
         link: function ($scope) {
           $scope.pagesMenu = [];
-          function buildMenu(pagesMenu, pagesConfig) {
-            pagesConfig.forEach(function (menu) {
-              if (typeof menu === "string") {
-                if ($scope.pages[menu]) {
-                  pagesMenu.push($scope.pages[menu]);
-                }
-              } else if (angular.isObject(menu)) {
-                var key = Object.keys(menu)[0],
-                  submenu = {
-                    label: key,
-                    type: "submenu",
-                    pages: []
-                  };
-                buildMenu(submenu.pages, menu[key]);
-                pagesMenu.push(submenu);
-              }
-            });
-          }
 
-          $scope.loadPages = function () {
-            $http({
-              method: "GET",
-              url:
-                "../api/pages?language=" +
-                $scope.language +
-                "&section=" +
-                $scope.section.toUpperCase()
-            }).then(
+          gnStaticPagesService.loadPages($scope.language, $scope.section).then(
               function (response) {
                 var configKey = $scope.section === "footer" ? "footer" : "header";
                 $scope.pagesConfig =
@@ -124,15 +99,12 @@
                 response.data.forEach(function (page) {
                   $scope.pages[page.pageId] = page;
                 });
-                buildMenu($scope.pagesMenu, $scope.pagesConfig);
+                gnStaticPagesService.buildMenu($scope.pagesMenu, $scope.pages, $scope.pagesConfig);
               },
               function (response) {
                 $scope.pagesList = null;
               }
             );
-          };
-
-          $scope.loadPages();
         }
       };
     }
