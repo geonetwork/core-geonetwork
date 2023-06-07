@@ -30,7 +30,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.services.ReadWriteController;
-
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -38,8 +37,6 @@ import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
-import org.fao.geonet.kernel.datamanager.*;
-import org.fao.geonet.util.MetadataPublicationMailNotifier;
 import org.fao.geonet.api.exception.FeatureNotEnabledException;
 import org.fao.geonet.api.exception.NotAllowedException;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
@@ -53,6 +50,7 @@ import org.fao.geonet.domain.utils.ObjectJSONUtils;
 import org.fao.geonet.events.history.RecordRestoredEvent;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.datamanager.*;
 import org.fao.geonet.kernel.metadata.StatusActions;
 import org.fao.geonet.kernel.metadata.StatusActionsFactory;
 import org.fao.geonet.kernel.metadata.StatusChangeType;
@@ -61,6 +59,7 @@ import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.*;
+import org.fao.geonet.util.MetadataPublicationMailNotifier;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
@@ -234,16 +233,16 @@ public class MetadataWorkflowApi {
 
         // --- get the list of content reviewers for this metadata record
         Set<Integer> ids = new HashSet<>();
-        ids.add(Integer.valueOf(metadata.getId()));
+        ids.add(metadata.getId());
         List<Pair<Integer, User>> reviewers = userRepository.findAllByGroupOwnerNameAndProfile(ids, Profile.Reviewer);
-        Collections.sort(reviewers, Comparator.comparing(s -> s.two().getName()));
+        reviewers.sort(Comparator.comparing(s -> s.two().getName()));
 
         List<User> listOfReviewers = new ArrayList<>();
         for (Pair<Integer, User> reviewer : reviewers) {
             listOfReviewers.add(reviewer.two());
         }
         return new MetadataWorkflowStatusResponse(recordStatus, listOfReviewers,
-            accessManager.hasEditPermission(context, metadata.getId() + ""), elStatus);
+            accessManager.hasEditPermission(context, String.valueOf(metadata.getId())), elStatus);
 
     }
 
@@ -520,8 +519,8 @@ public class MetadataWorkflowApi {
             }
         }
 
-        if ((status.getStatus() == Integer.parseInt(StatusValue.Status.APPROVED) && notifyByEmail)) {
-            if (this.metadataUtils.isMetadataPublished(metadataIdApproved)) {
+        if ((status.getStatus() == Integer.parseInt(StatusValue.Status.APPROVED) && notifyByEmail)
+            && (this.metadataUtils.isMetadataPublished(metadataIdApproved))) {
                 MetadataPublicationNotificationInfo metadataNotificationInfo = new MetadataPublicationNotificationInfo();
                 metadataNotificationInfo.setMetadataUuid(metadata.getUuid());
                 metadataNotificationInfo.setMetadataId(metadataIdApproved);
@@ -533,7 +532,6 @@ public class MetadataWorkflowApi {
                 metadataListToNotifyPublication.add(metadataNotificationInfo);
 
                 metadataPublicationMailNotifier.notifyPublication(messages, context.getLanguage(), metadataListToNotifyPublication);
-            }
         }
         return statusUpdate;
     }
@@ -684,7 +682,7 @@ public class MetadataWorkflowApi {
             if (!CollectionUtils.isEmpty(recordIdentifier)) {
                 for (Integer recordId : recordIdentifier) {
                     try {
-                        ApiUtils.canEditRecord(recordId + "", request);
+                        ApiUtils.canEditRecord(String.valueOf(recordId), request);
                     } catch (SecurityException e) {
                         throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT);
                     }
@@ -702,11 +700,13 @@ public class MetadataWorkflowApi {
         }
         PageRequest pageRequest;
         if (sortOrder != null) {
-            Sort sortByStatusChangeDate = SortUtils.createSort(sortOrder, MetadataStatus_.changeDate).and(SortUtils.createSort(sortOrder, MetadataStatus_.id));
+            Sort sortByStatusChangeDate = SortUtils.createSort(sortOrder, MetadataStatus_.changeDate)
+                .and(SortUtils.createSort(sortOrder, MetadataStatus_.id));
             pageRequest = PageRequest.of(from, size, sortByStatusChangeDate);
         } else {
             // Default sort order
-            Sort sortByStatusChangeDate = SortUtils.createSort(Sort.Direction.DESC, MetadataStatus_.changeDate).and(SortUtils.createSort(Sort.Direction.DESC, MetadataStatus_.id));
+            Sort sortByStatusChangeDate = SortUtils.createSort(Sort.Direction.DESC, MetadataStatus_.changeDate)
+                .and(SortUtils.createSort(Sort.Direction.DESC, MetadataStatus_.id));
             pageRequest = PageRequest.of(from, size, sortByStatusChangeDate);
         }
 
@@ -928,9 +928,7 @@ public class MetadataWorkflowApi {
             }
             if (s.getOwner() != null && listOfUsers.get(s.getOwner()) == null) {
                 Optional<User> user = userRepository.findById(s.getOwner());
-                if (user.isPresent()) {
-                    listOfUsers.put(s.getOwner(), user.get());
-                }
+                user.ifPresent(value -> listOfUsers.put(s.getOwner(), value));
             }
         }
 
@@ -1076,7 +1074,7 @@ public class MetadataWorkflowApi {
                 final List<Integer> editingGroupList = AccessManager.getGroups(userSession, Profile.Editor);
                 if (!editingGroupList.contains(Integer.valueOf(groupId))) {
                     throw new SecurityException(
-                            String.format("You can't view history from this group (%s). User MUST be an Editor in that group", groupOwnerName));
+                        String.format("You can't view history from this group (%s). User MUST be an Editor in that group", groupOwnerName));
                 }
             } else {
                 throw new SecurityException(
@@ -1110,7 +1108,7 @@ public class MetadataWorkflowApi {
                 final List<Integer> editingGroupList = AccessManager.getGroups(userSession, Profile.Editor);
                 if (!editingGroupList.contains(Integer.valueOf(groupId))) {
                     throw new SecurityException(
-                            String.format("You can't create a record in this group (%s). User MUST be an Editor in that group", groupOwnerName));
+                        String.format("You can't create a record in this group (%s). User MUST be an Editor in that group", groupOwnerName));
                 }
             }
         }
@@ -1119,9 +1117,12 @@ public class MetadataWorkflowApi {
 
         String schema = info.getChildText(Edit.Info.Elem.SCHEMA);
         if (schema == null) {
-            schema = dataManager.autodetectSchema(md);
-            throw new IllegalArgumentException("Can't detect schema for metadata automatically. "
-                + "You could try to force the schema with the schema parameter.");
+            try {
+                schema = dataManager.autodetectSchema(md);
+            } catch (Exception e) {
+                throw new IllegalArgumentException("Can't detect schema for metadata automatically. "
+                    + "You could try to force the schema with the schema parameter.");
+            }
         }
 
         String uuid = info.getChildText(Edit.Info.Elem.UUID);
@@ -1181,9 +1182,11 @@ public class MetadataWorkflowApi {
 
     private String getValidatedStateText(MetadataStatus metadataStatus, State state, HttpServletRequest request, HttpSession httpSession) throws Exception {
 
-        if (!StatusValueType.event.equals(metadataStatus.getStatusValue().getType()) || !ArrayUtils.contains(supportedRestoreStatuses, metadataStatus.getStatusValue().getId())) {
-            throw new NotAllowedException("Unsupported action on status type '" + metadataStatus.getStatusValue().getType() + "' for metadata '" + metadataStatus.getUuid() + "'. Supports status type '" +
-                StatusValueType.event + "' with the status id '" + Arrays.toString(supportedRestoreStatuses) + "'.");
+        if (!StatusValueType.event.equals(metadataStatus.getStatusValue().getType())
+            || !ArrayUtils.contains(supportedRestoreStatuses, metadataStatus.getStatusValue().getId())) {
+            throw new NotAllowedException("Unsupported action on status type '" + metadataStatus.getStatusValue().getType()
+                + "' for metadata '" + metadataStatus.getUuid() + "'. Supports status type '"
+                + StatusValueType.event + "' with the status id '" + Arrays.toString(supportedRestoreStatuses) + "'.");
         }
 
         String stateText;
@@ -1195,8 +1198,8 @@ public class MetadataWorkflowApi {
 
         if (stateText == null) {
             throw new ResourceNotFoundException(
-                    String.format("No data exists for previous state on metadata record '%s', user '%d' at date '%s'", metadataStatus.getUuid(),
-                            metadataStatus.getUserId(), metadataStatus.getChangeDate()));
+                String.format("No data exists for previous state on metadata record '%s', user '%d' at date '%s'",
+                    metadataStatus.getUuid(), metadataStatus.getUserId(), metadataStatus.getChangeDate()));
         }
 
         // If record exists then check if user has access.
@@ -1232,7 +1235,7 @@ public class MetadataWorkflowApi {
 
     /**
      * Checks if the metadata status can be changed.
-     *
+     * <p>
      * If the setting to allow only to submit / approve valid metadata only is enabled,
      * the metadata should be valid, to allow the status change.
      *

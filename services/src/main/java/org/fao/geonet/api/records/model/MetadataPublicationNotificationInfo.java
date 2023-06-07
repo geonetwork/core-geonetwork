@@ -44,7 +44,6 @@ public class MetadataPublicationNotificationInfo {
      * When the metadata workflow is enabled and the metadata was already
      * published, but has been reapproved a working copy. To use a different
      * message for the mail.
-     *
      */
     private boolean reapproval = false;
 

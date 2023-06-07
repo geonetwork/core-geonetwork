@@ -32,7 +32,6 @@ import org.fao.geonet.domain.User;
 import org.fao.geonet.kernel.metadata.DefaultStatusActions;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.GroupRepository;
-import org.fao.geonet.util.MailUtil;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -46,26 +45,25 @@ import static org.fao.geonet.kernel.setting.Settings.SYSTEM_METADATAPRIVS_PUBLIC
 @Component
 public class MetadataPublicationMailNotifier {
     @Autowired
-    SettingManager sm;
+    SettingManager settingManager;
 
     @Autowired
     GroupRepository groupRepository;
 
     /**
      * Notify a metadata publication by mail.
-     *
+     * <p>
      * Collects the email addresses to be notified based on the metadata publication
      * notification level configured in the settings.
      *
-     * @param messages                          Message bundle with the mail texts.
-     * @param mailLanguage                      Language to use for the mais.
-     * @param metadataListToNotifyPublication   List of notifications to send.
-     *
+     * @param messages                        Message bundle with the mail texts.
+     * @param mailLanguage                    Language to use for the mais.
+     * @param metadataListToNotifyPublication List of notifications to send.
      */
     public void notifyPublication(ResourceBundle messages,
                                   String mailLanguage,
                                   List<MetadataPublicationNotificationInfo> metadataListToNotifyPublication) {
-        String notificationSetting = sm.getValue(SYSTEM_METADATAPRIVS_PUBLICATION_NOTIFICATIONLEVEL);
+        String notificationSetting = settingManager.getValue(SYSTEM_METADATAPRIVS_PUBLICATION_NOTIFICATIONLEVEL);
         if (StringUtils.isNotEmpty(notificationSetting)) {
             StatusValueNotificationLevel notificationLevel =
                 StatusValueNotificationLevel.valueOf(notificationSetting);
@@ -79,15 +77,15 @@ public class MetadataPublicationMailNotifier {
                     // Process the metadata published by group owner
                     metadataListToNotifyPublicationPerGroup.forEach((groupId, metadataNotificationInfoList) -> {
                         Set<Integer> metadataIds = metadataNotificationInfoList
-                            .stream().map(m -> m.getMetadataId()).collect(Collectors.toSet());
+                            .stream().map(MetadataPublicationNotificationInfo::getMetadataId).collect(Collectors.toSet());
 
                         List<User> userToNotify = DefaultStatusActions.getUserToNotify(notificationLevel,
                             metadataIds,
                             null);
 
                         List<String> toAddress1 = userToNotify.stream()
-                            .filter(u -> StringUtils.isNotEmpty(u.getEmail()))
                             .map(User::getEmail)
+                            .filter(StringUtils::isNotEmpty)
                             .collect(Collectors.toList());
 
                         sendMailPublicationNotification(messages, mailLanguage, toAddress1, metadataNotificationInfoList);
@@ -98,23 +96,23 @@ public class MetadataPublicationMailNotifier {
 
                     if (notificationLevel == StatusValueNotificationLevel.recordGroupEmail) {
                         List<Group> groupToNotify = DefaultStatusActions.getGroupToNotify(notificationLevel,
-                            Arrays.asList(sm.getValue(SYSTEM_METADATAPRIVS_PUBLICATION_NOTIFICATIONGROUPS).split("\\|")));
+                            Arrays.asList(settingManager.getValue(SYSTEM_METADATAPRIVS_PUBLICATION_NOTIFICATIONGROUPS).split("\\|")));
 
                         toAddress = groupToNotify.stream()
-                            .filter(g -> StringUtils.isNotEmpty(g.getEmail()))
                             .map(Group::getEmail)
+                            .filter(StringUtils::isNotEmpty)
                             .collect(Collectors.toList());
                     } else {
                         Set<Integer> metadataIds = metadataListToNotifyPublication
-                            .stream().map(m -> m.getMetadataId()).collect(Collectors.toSet());
+                            .stream().map(MetadataPublicationNotificationInfo::getMetadataId).collect(Collectors.toSet());
 
                         List<User> userToNotify = DefaultStatusActions.getUserToNotify(notificationLevel,
                             metadataIds,
                             null);
 
                         toAddress = userToNotify.stream()
-                            .filter(u -> StringUtils.isNotEmpty(u.getEmail()))
                             .map(User::getEmail)
+                            .filter(StringUtils::isNotEmpty)
                             .collect(Collectors.toList());
 
                     }
@@ -135,15 +133,15 @@ public class MetadataPublicationMailNotifier {
 
         String subject = String.format(
             messages.getString("metadata_published_subject"),
-            sm.getSiteName());
+            settingManager.getSiteName());
         String message = messages.getString("metadata_published_text");
 
         String linkRecordTemplate = "{{link}}";
-        String linkRecordUrlTemplate = sm.getNodeURL()+ "api/records/{{index:uuid}}";
+        String linkRecordUrlTemplate = settingManager.getNodeURL() + "api/records/{{index:uuid}}";
 
         String recordPublishedMessage = messages.getString("metadata_published_record_text")
             .replace(linkRecordTemplate, linkRecordUrlTemplate);
-        String recordUnpublishedMessage  = messages.getString("metadata_unpublished_record_text")
+        String recordUnpublishedMessage = messages.getString("metadata_unpublished_record_text")
             .replace(linkRecordTemplate, linkRecordUrlTemplate);
         String recordReapprovedPublishedMessage = messages.getString("metadata_approved_published_record_text")
             .replace(linkRecordTemplate, linkRecordUrlTemplate);
@@ -151,7 +149,7 @@ public class MetadataPublicationMailNotifier {
 
         StringBuilder listOfProcessedMetadataMessage = new StringBuilder();
 
-        metadataListToNotifyPublication.forEach( metadata -> {
+        metadataListToNotifyPublication.forEach(metadata -> {
             java.util.Optional<Group> group = groupRepository.findById(metadata.getGroupId());
 
             if (Boolean.TRUE.equals(metadata.getPublished())) {
@@ -177,7 +175,7 @@ public class MetadataPublicationMailNotifier {
 
         // Send mail to notify about metadata publication / un-publication
         try {
-            MailUtil.sendHtmlMail(toAddress, subject, htmlMessage, sm);
+            MailUtil.sendHtmlMail(toAddress, subject, htmlMessage, settingManager);
         } catch (IllegalArgumentException ex) {
             Log.warning(API.LOG_MODULE_NAME, ex.getMessage(), ex);
         }
