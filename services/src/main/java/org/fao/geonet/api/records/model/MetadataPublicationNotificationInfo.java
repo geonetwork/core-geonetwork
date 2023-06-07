@@ -40,6 +40,13 @@ public class MetadataPublicationNotificationInfo {
     private String reviewerUser = "";
     private String submitterUser = "";
 
+    /**
+     * When the metadata workflow is enabled and the metadata was already
+     * published, but has been reapproved a working copy. To use a different
+     * message for the mail.
+     */
+    private boolean reapproval = false;
+
     public String getMetadataUuid() {
         return metadataUuid;
     }
@@ -102,5 +109,13 @@ public class MetadataPublicationNotificationInfo {
 
     public void setSubmitterUser(String submitterUser) {
         this.submitterUser = submitterUser;
+    }
+
+    public boolean isReapproval() {
+        return reapproval;
+    }
+
+    public void setReapproval(boolean reapproval) {
+        this.reapproval = reapproval;
     }
 }

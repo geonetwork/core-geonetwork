@@ -74,11 +74,6 @@
   "indexingError": "Fejl i indeksering",
   "source": "Katalog",
   "ui-sortBy-help": "Definer standard sortering indenfor optionerne som f. eks. 'relevans' for at benytte den beregnede søgescore (se scorekonfiguration) eller 'dateStamp#desc' for at returnere den sidst opdaterede instans først.",
-  "sortBy-dateStampDesc": "sidste opdateringer",
-  "sortBy-createDateDesc": "nye poster",
-  "sortBy-resourceTitleObject.default.sort": "titel",
-  "sortBy-relevance": "relevans",
-  "sortBy-ratingDesc": "bedømmelse",
   "sortBy-validDesc": "valideringsstatus",
   "sortBy-recordOwner": "ejer",
   "csw-sortByHelp": "Definer sorteringsmulighederne for GetRecords forespørgsler. Dette kan løse problemer for store set, hvor nogle instanser på en ekstern node kan ændre sig under høstningen og returneres på nye sider.  Sortering ved 'identifier:A' betyder, at der sorteres efter UUID i alfabetisk rækkefølge. Enhver CSW-elementer, som kan forespørges, kan benyttes i kombination med A eller D til  at bestemme rækkefølgen af responser.",
@@ -93,9 +88,6 @@
   "alternateTitle": "Også navngivet:",
   "isHarvested-true": "Høstet",
   "isHarvested-false": "Lokal",
-  "sortBy-popularityDesc": "popularitet",
-  "sortBy-denominatorDesc": "lavt målforhold først",
-  "sortBy-denominatorAsc": "højt målforhold først",
   "deleteRecordConfirm": "Vil du virkelig fjerne '{{resourceTitle}}'?",
   "range-relation-intersects": "Skæringspunkter",
   "range-relation-within": "Inden i",
@@ -397,5 +389,6 @@
   "staticPageStatus-PRIVATE": "Visible to logged users",
   "staticPageStatus-PUBLIC": "Visible to everyone",
   "pageLink": "Link",
-  "pageSection-help": "Currently, the default UI view only supports TOP and FOOTER values. Custom UI views can make use of additional values."
+  "pageSection-help": "Currently, the default UI view only supports TOP and FOOTER values. Custom UI views can make use of additional values.",
+  "lastCreatedRecords": "Last created records"
 }
