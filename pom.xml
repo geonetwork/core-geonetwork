@@ -354,11 +354,30 @@
         <artifactId>jdom</artifactId>
         <version>1.1.2</version>
       </dependency>
+
       <dependency>
         <groupId>xalan</groupId>
         <artifactId>xalan</artifactId>
-        <version>2.7.1</version>
+        <version>2.7.3</version>
       </dependency>
+      <!-- because xalan 2.7.3 misses to declare its serializer dependency
+       we do it as an explicit dependency here and where it is declared
+       and needed, which is in:
+          core/pom.xml
+          web/pom.xml
+          common/pom.xml
+
+       This all can be removed once the following issue
+       has been resolved: https://issues.apache.org/jira/browse/XALANJ-2649
+       This is planned for the next xalan release. Note that xml-apis
+       and xercesImpl were already listed explicitly.
+      -->
+      <dependency>
+        <groupId>xalan</groupId>
+        <artifactId>serializer</artifactId>
+        <version>2.7.3</version>
+      </dependency>
+
       <dependency>
         <groupId>net.sf.saxon</groupId>
         <artifactId>saxon</artifactId>
