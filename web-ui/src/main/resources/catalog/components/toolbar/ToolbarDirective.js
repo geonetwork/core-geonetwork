@@ -32,8 +32,7 @@
     "gn-search-menu",
     "gn-map-menu",
     "gn-contribute-menu",
-    "gn-admin-menu",
-    "gn-static-pages-list-viewer"
+    "gn-admin-menu"
   ]);
 
   module.directive("gnToolbar", [
