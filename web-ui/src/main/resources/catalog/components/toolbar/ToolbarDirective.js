@@ -35,15 +35,23 @@
     "gn-admin-menu",
     "gn-static-pages-list-viewer"
   ]);
+
   module.directive("gnToolbar", [
     "GN_DEFAULT_MENU",
-    "gnStaticPagesService",
-    function (GN_DEFAULT_MENU, gnStaticPagesService) {
+    "gnGlobalSettings",
+    function (GN_DEFAULT_MENU, gnGlobalSettings) {
       return {
         templateUrl: "../../catalog/components/toolbar/partials/top-toolbar.html",
         link: function ($scope) {
-          $scope.pagesMenu = [];
+          $scope.toolbarMenu =
+            gnGlobalSettings.gnCfg.mods.header.topCustomMenu &&
+            gnGlobalSettings.gnCfg.mods.header.topCustomMenu.length > 0
+              ? gnGlobalSettings.gnCfg.mods.header.topCustomMenu
+              : GN_DEFAULT_MENU;
 
+          $scope.isPage = function (page) {
+            return angular.isObject(page) || page.indexOf("gn-") === -1;
+          };
         }
       };
     }

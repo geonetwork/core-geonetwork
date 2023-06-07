@@ -118,7 +118,7 @@
               <div class="navbar navbar-default gn-top-bar"
                    role="navigation"
                    data-ng-hide="layout.hideTopToolBar"
-                   data-ng-include="'{$uiResourcesPath}templates/top-toolbar.html'"></div>
+                   data-gn-toolbar=""></div>
             </xsl:if>
 
             <xsl:apply-templates mode="content" select="."/>

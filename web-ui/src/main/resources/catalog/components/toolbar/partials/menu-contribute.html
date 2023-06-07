@@ -1,7 +1,6 @@
 <li
   class="dropdown gn-clear-xs"
-  data-ng-if="gnCfg.mods.editor.enabled"
-  data-ng-show="authenticated && user.isEditorOrMore()"
+  data-ng-show="gnCfg.mods.editor.enabled && authenticated && user.isEditorOrMore()"
   id="gn-login-dropdown"
   role="menuitem"
 >

@@ -1,7 +1,6 @@
 <li
-  data-ng-if="gnCfg.mods.admin.enabled"
   class="dropdown"
-  data-ng-show="user.isUserAdminOrMore()"
+  data-ng-show="gnCfg.mods.admin.enabled && user.isUserAdminOrMore()"
   role="menuitem"
 >
   <a

@@ -53,7 +53,6 @@
               },
               function (response) {
                 $scope.content = "Page not available";
-                console.log(response.statusText);
               }
             );
           };
@@ -71,40 +70,75 @@
   ]);
 
   module.directive("gnStaticPagesListViewer", [
-    "$http",
-    "$location",
     "gnGlobalSettings",
-    "gnStaticPagesService",
-    function ($http, $location, gnGlobalSettings, gnStaticPagesService) {
+    function (gnGlobalSettings) {
       return {
         restrict: "AEC",
-        replace: true,
+        replace: false,
         scope: {
           language: "@language",
           section: "@section"
         },
         templateUrl: function (elem, attr) {
-          return "../../catalog/components/pages/partials/" + attr.section + ".html";
+          return "../../catalog/components/pages/partials/top.html";
         },
         link: function ($scope) {
           $scope.pagesMenu = [];
 
-          gnStaticPagesService.loadPages($scope.language, $scope.section).then(
+          var configKey = $scope.section === "footer" ? "footer" : "header";
+          $scope.pagesConfig =
+            gnGlobalSettings.gnCfg.mods[configKey][$scope.section + "CustomMenu"];
+        }
+      };
+    }
+  ]);
+
+  module.directive("gnStaticPageMenu", [
+    "gnStaticPagesService",
+    "gnGlobalSettings",
+    function (gnStaticPagesService, gnGlobalSettings) {
+      return {
+        restrict: "A",
+        replace: true,
+        scope: {
+          pageId: "=gnStaticPageMenu",
+          language: "@language",
+          section: "@section"
+        },
+        templateUrl: function (elem, attr) {
+          return "../../catalog/components/pages/partials/menu-page.html";
+        },
+        link: function ($scope) {
+          $scope.pagesMenu = [];
+          $scope.gnCfg = gnGlobalSettings.gnCfg;
+          $scope.pagesConfig = angular.isArray($scope.pageId)
+            ? $scope.pageId
+            : [$scope.pageId];
+
+          if ($scope.pagesConfig.length > 0) {
+            gnStaticPagesService.loadPages($scope.language, $scope.section).then(
               function (response) {
-                var configKey = $scope.section === "footer" ? "footer" : "header";
-                $scope.pagesConfig =
-                  gnGlobalSettings.gnCfg.mods[configKey][$scope.section + "CustomMenu"];
                 $scope.pagesMenu = [];
                 $scope.pages = {};
                 response.data.forEach(function (page) {
                   $scope.pages[page.pageId] = page;
                 });
-                gnStaticPagesService.buildMenu($scope.pagesMenu, $scope.pages, $scope.pagesConfig);
+
+                gnStaticPagesService.buildMenu(
+                  $scope.pagesMenu,
+                  $scope.pages,
+                  $scope.pagesConfig
+                );
+                $scope.page = $scope.pagesMenu[0];
+                $scope.isSubmenu = $scope.page.type === "submenu";
+                $scope.isExternalLink =
+                  $scope.page.format == "LINK" || $scope.page.format == "HTMLPAGE";
               },
               function (response) {
                 $scope.pagesList = null;
               }
             );
+          }
         }
       };
     }

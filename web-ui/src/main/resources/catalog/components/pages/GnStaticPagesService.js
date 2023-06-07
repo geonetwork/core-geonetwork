@@ -32,11 +32,10 @@
       var loadPages = function (language, section) {
         return $http({
           method: "GET",
-          url:
-            "../api/pages?language=" +
-            language +
-            "&section=" +
-            section.toUpperCase()
+          url: "../api/pages?language=" + language + "&section=" + section.toUpperCase(),
+          config: {
+            cache: true
+          }
         });
       };
 
@@ -46,8 +45,11 @@
             if (staticPages[menu]) {
               pagesMenu.push(staticPages[menu]);
             } else {
-              console.warn(menu + " not found in pages configuration." +
-                " Check your UI configuration.");
+              console.warn(
+                menu +
+                  " not found in pages configuration." +
+                  " Check your UI configuration."
+              );
             }
           } else if (angular.isObject(menu)) {
             var key = Object.keys(menu)[0],
