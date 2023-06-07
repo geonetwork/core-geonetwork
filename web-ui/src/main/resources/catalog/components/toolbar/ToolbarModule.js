@@ -21,40 +21,8 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-// Define root geonetwork namespace
-var geonetwork = {};
-
 (function () {
-  goog.provide("gn");
-
-  goog.require("gn_locale");
-  goog.require("gn_toolbar");
-  goog.require("gn_count_watchers");
-  goog.require("gn_polyfills");
-
-  /**
-   * Main gn module.
-   *
-   * Must be included by all uis.
-   * Is used in wro4j for $templatecache.
-   * Must contains only what is mendatory in all uis:
-   * - locale management
-   *
-   * @type {module|*}
-   */
-  var module = angular.module("gn", [
-    "gn_toolbar",
-    "gn_locale",
-    "gn_config",
-    "cfp.hotkeys"
-  ]);
-
-  // See https://docs.angularjs.org/guide/migration#commit-aa077e8
-  module.config([
-    "$locationProvider",
-    function ($locationProvider) {
-      // Configure existing providers
-      $locationProvider.hashPrefix("");
-    }
-  ]);
+  goog.provide("gn_toolbar");
+  goog.require("gn_toolbar_directive");
+  angular.module("gn_toolbar", ["gn_toolbar_directive"]);
 })();
