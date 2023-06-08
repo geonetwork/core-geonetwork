@@ -46,6 +46,7 @@ import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
@@ -119,6 +120,7 @@ public class KeycloakUserUtils {
             // Create or update the user
             User user;
             boolean newUserFlag = false;
+            boolean profileChangedFlag = false;
             try {
                 user = (User) geonetworkAuthenticationProvider.loadUserByUsername(baselUser.getUsername());
             } catch (UsernameNotFoundException e) {
@@ -166,7 +168,11 @@ public class KeycloakUserUtils {
             // Assign the highest profile available
             Map<Profile, List<String>> profileGroups = getProfileGroups(accessToken);
             if (newUserFlag || keycloakConfiguration.isUpdateProfile()) {
-                user.setProfile(getMaxProfile(baselUser.getProfile(), profileGroups));
+                Profile maxProfile = getMaxProfile(baselUser.getProfile(), profileGroups);
+                if (maxProfile != user.getProfile()) {
+                    user.setProfile(maxProfile);
+                    profileChangedFlag = true;
+                }
             }
 
             //Apply changes to database is required.
@@ -176,7 +182,7 @@ public class KeycloakUserUtils {
                 }
 
                 if (newUserFlag || keycloakConfiguration.isUpdateGroup()) {
-                    updateGroups(profileGroups, user);
+                    updateGroups(profileGroups, user, profileChangedFlag);
                 }
             }
 
@@ -249,9 +255,24 @@ public class KeycloakUserUtils {
      * Update users group information in the database.
      * @param profileGroups object containing the profile and related groups.
      * @param user to apply the changes to.
-     */
-    private void updateGroups(Map<Profile, List<String>> profileGroups, User user) {
-        // First we remove all previous groups
+     * @param profileChangedFlag true, indicate that user's profile has been changes. false, no change
+    */
+    private void updateGroups(Map<Profile, List<String>> profileGroups, User user, boolean profileChangedFlag) {
+        boolean isUserGroupAssignmentChanged = profileChangedFlag;
+        if (!isUserGroupAssignmentChanged) {
+            Set<String> assignedUserGroups = userGroupRepository.findAll(UserGroupSpecs.hasUserId(user.getId()))
+                .stream().map(ug -> {
+                    return ug.getGroup().getName();
+                }).collect(Collectors.toSet());
+            Set<String> currentUserGroups = new HashSet(profileGroups.values());
+            isUserGroupAssignmentChanged = !assignedUserGroups.equals(currentUserGroups);
+        }
+        if (!isUserGroupAssignmentChanged) {
+            //Do nothing if user group assignment has no change.
+            return;
+        }
+
+        // First we remove all previous groups if user's profile has been changed
         userGroupRepository.deleteAll(UserGroupSpecs.hasUserId(user.getId()));
 
         // Now we add the groups
