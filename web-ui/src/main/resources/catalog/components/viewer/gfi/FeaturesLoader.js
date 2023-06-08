@@ -249,8 +249,10 @@
         });
 
         // Lower case the keys
-        obj = _.mapKeys(obj, function (v, k) { return k.toLowerCase(); });
-        
+        obj = _.mapKeys(obj, function (v, k) {
+          return k.toLowerCase();
+        });
+
         return obj;
       });
 
