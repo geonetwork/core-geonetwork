@@ -71,7 +71,8 @@
 
   module.directive("gnStaticPagesListViewer", [
     "gnGlobalSettings",
-    function (gnGlobalSettings) {
+    "gnStaticPagesService",
+    function (gnGlobalSettings, gnStaticPagesService) {
       return {
         restrict: "AEC",
         replace: false,
@@ -88,6 +89,16 @@
           var configKey = $scope.section === "footer" ? "footer" : "header";
           $scope.pagesConfig =
             gnGlobalSettings.gnCfg.mods[configKey][$scope.section + "CustomMenu"];
+
+          if ($scope.pagesConfig && $scope.pagesConfig.length === 0) {
+            gnStaticPagesService
+              .loadPages($scope.language, $scope.section)
+              .then(function (response) {
+                $scope.pagesConfig = response.data.map(function (p) {
+                  return p.pageId;
+                });
+              });
+          }
         }
       };
     }
@@ -129,10 +140,12 @@
                   $scope.pages,
                   $scope.pagesConfig
                 );
-                $scope.page = $scope.pagesMenu[0];
-                $scope.isSubmenu = $scope.page.type === "submenu";
-                $scope.isExternalLink =
-                  $scope.page.format == "LINK" || $scope.page.format == "HTMLPAGE";
+                if ($scope.pagesMenu.length === 1) {
+                  $scope.page = $scope.pagesMenu[0];
+                  $scope.isSubmenu = $scope.page.type === "submenu";
+                  $scope.isExternalLink =
+                    $scope.page.format == "LINK" || $scope.page.format == "HTMLPAGE";
+                }
               },
               function (response) {
                 $scope.pagesList = null;
