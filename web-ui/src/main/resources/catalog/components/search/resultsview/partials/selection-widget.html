@@ -93,6 +93,7 @@
         </a>
       </li>
       <li
+        data-ng-repeat="pubOption in publicationOptions"
         data-ng-show="!excludePattern.test('publish')"
         data-ng-if="user.isReviewerOrMore()"
       >
