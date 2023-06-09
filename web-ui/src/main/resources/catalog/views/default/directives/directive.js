@@ -124,11 +124,6 @@
             scope.workFlowApps =
               gnGlobalSettings.gnCfg.mods.workflowHelper.workflowAssistApps;
             scope.iso2Lang = gnLangs.getIso2Lang(gnLangs.getCurrent());
-
-            scope.isPublishToIntranetEnabled =
-              gnConfig["metadata.publication.publishToIntranet"];
-            scope.isPublishToGuestEnabled =
-              gnConfig["metadata.publication.publishToGuestUsers"];
           });
 
           scope.status = undefined;

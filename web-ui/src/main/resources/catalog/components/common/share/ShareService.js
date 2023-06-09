@@ -216,61 +216,6 @@
           return defer.promise;
         },
 
-        publishToIntranet: function (metadataId, bucket, publish, user) {
-          var defer = $q.defer();
-          var url =
-            "../api/records" +
-            (angular.isDefined(metadataId) ? "/" + metadataId : "") +
-            "/" +
-            (publish ? "publishToIntranet" : "unpublishToIntranet");
-
-          if (angular.isDefined(bucket)) {
-            url += "?bucket=" + bucket;
-          }
-
-          $http.put(url).then(
-            function (response) {
-              defer.resolve(response);
-            },
-            function (response) {
-              defer.reject(response);
-            }
-          );
-
-          return defer.promise;
-        },
-
-        publishToGuest: function (metadataId, bucket, publish, user) {
-          var defer = $q.defer();
-          var url =
-            "../api/records" +
-            (angular.isDefined(metadataId) ? "/" + metadataId : "") +
-            "/" +
-            (publish ? "publishToGuest" : "unpublishToGuest");
-
-          if (angular.isDefined(bucket)) {
-            url += "?bucket=" + bucket;
-            if (angular.isDefined(publicationType)) {
-              url += "?publicationType=" + publicationType;
-            }
-          } else {
-            if (angular.isDefined(publicationType)) {
-              url += "?publicationType=" + publicationType;
-            }
-          }
-
-          $http.put(url).then(
-            function (response) {
-              defer.resolve(response);
-            },
-            function (response) {
-              defer.reject(response);
-            }
-          );
-
-          return defer.promise;
-        },
-
         /**
          * @ngdoc method
          * @methodOf gn_share.service:gnShareService

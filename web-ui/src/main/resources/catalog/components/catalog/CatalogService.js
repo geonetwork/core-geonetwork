@@ -808,6 +808,36 @@
               this.isPublishedToGuest = this.isPublished(pubOption) ? false : true;
             }
 
+            if (pubOption.additionalPublications) {
+              var additionalPublicationGroups = Object.keys(
+                pubOption.additionalPublications
+              );
+              for (var i = 0; i < additionalPublicationGroups.length; i++) {
+                var additionalPublicationGroup = additionalPublicationGroups[i];
+
+                if (additionalPublicationGroup === pubOption.publicationGroup) {
+                  continue;
+                }
+
+                var additionalPubOption = {
+                  publicationGroup: additionalPublicationGroup
+                };
+                if (additionalPublicationGroup === "all") {
+                  this.isPublishedToAll = this.isPublished(additionalPubOption)
+                    ? false
+                    : true;
+                } else if (additionalPublicationGroup === "intranet") {
+                  this.isPublishedToIntranet = this.isPublished(additionalPubOption)
+                    ? false
+                    : true;
+                } else if (additionalPublicationGroup === "guest") {
+                  this.isPublishedToGuest = this.isPublished(additionalPubOption)
+                    ? false
+                    : true;
+                }
+              }
+            }
+
             return;
           }
 
