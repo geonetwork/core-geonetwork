@@ -458,9 +458,9 @@
        * @param {string} flag
        * @return {*}
        */
-      this.publish = function (md, bucket, flag, scope) {
+      this.publish = function (md, bucket, flag, scope, publicationType) {
         if (md) {
-          flag = md.isPublished() ? "off" : "on";
+          flag = md.isPublished(publicationType) ? "off" : "on";
         }
 
         scope.isMdWorkflowEnable = gnConfig["metadata.workflow.enable"];
@@ -478,6 +478,75 @@
 
         return gnShareService
           .publish(
+            angular.isDefined(md) ? md.id : undefined,
+            angular.isDefined(md) ? undefined : bucket,
+            onOrOff,
+            $rootScope.user,
+            publicationType.name === "default" ? "" : publicationType.name
+          )
+          .then(
+            function (response) {
+              if (response.data !== "") {
+                scope.processReport = response.data;
+
+                // A report is returned
+                gnUtilityService.openModal(
+                  {
+                    title: onOrOff
+                      ? translations.metadataPublished
+                      : translations.metadataUnpublished,
+                    content: '<div gn-batch-report="processReport"></div>',
+                    className: "gn-privileges-popup",
+                    onCloseCallback: function () {
+                      scope.$emit("PrivilegesUpdated", true);
+                      scope.$broadcast("operationOnSelectionStop");
+                      scope.processReport = null;
+                    }
+                  },
+                  scope,
+                  "PrivilegesUpdated"
+                );
+              } else {
+                scope.$emit("PrivilegesUpdated", true);
+                scope.$broadcast("operationOnSelectionStop");
+                scope.$emit("StatusUpdated", {
+                  msg: onOrOff
+                    ? translations.metadataPublished
+                    : translations.metadataUnpublished,
+                  timeout: 0,
+                  type: "success"
+                });
+              }
+
+              if (md) {
+                md.publish(publicationType);
+              }
+            },
+            function (response) {
+              scope.$emit("PrivilegesUpdated", false);
+              scope.$broadcast("operationOnSelectionStop");
+              scope.$emit("StatusUpdated", {
+                title: onOrOff
+                  ? translations.metadataPublishedError
+                  : translations.metadataUnpublishedError,
+                error: response.data,
+                timeout: 0,
+                type: "danger"
+              });
+            }
+          );
+      };
+
+      this.publishToIntranet = function (md, bucket, flag, scope) {
+        if (md) {
+          flag = md.isPublishedInternal() ? "off" : "on";
+        }
+
+        scope.$broadcast("operationOnSelectionStart");
+        var onOrOff = flag === "on";
+
+        return gnShareService
+          .publishToIntranet(
             angular.isDefined(md) ? md.id : undefined,
             angular.isDefined(md) ? undefined : bucket,
             onOrOff,
@@ -518,7 +587,75 @@
               }
 
               if (md) {
-                md.publish();
+                md.publishToIntranet();
+              }
+            },
+            function (response) {
+              scope.$emit("PrivilegesUpdated", false);
+              scope.$broadcast("operationOnSelectionStop");
+              scope.$emit("StatusUpdated", {
+                title: onOrOff
+                  ? translations.metadataPublishedError
+                  : translations.metadataUnpublishedError,
+                error: response.data,
+                timeout: 0,
+                type: "danger"
+              });
+            }
+          );
+      };
+
+      this.publishToGuest = function (md, bucket, flag, scope) {
+        if (md) {
+          flag = md.isPublishedGuest() ? "off" : "on";
+        }
+
+        scope.$broadcast("operationOnSelectionStart");
+        var onOrOff = flag === "on";
+
+        return gnShareService
+          .publishToGuest(
+            angular.isDefined(md) ? md.id : undefined,
+            angular.isDefined(md) ? undefined : bucket,
+            onOrOff,
+            $rootScope.user
+          )
+          .then(
+            function (response) {
+              if (response.data !== "") {
+                scope.processReport = response.data;
+
+                // A report is returned
+                gnUtilityService.openModal(
+                  {
+                    title: onOrOff
+                      ? translations.metadataPublished
+                      : translations.metadataUnpublished,
+                    content: '<div gn-batch-report="processReport"></div>',
+                    className: "gn-privileges-popup",
+                    onCloseCallback: function () {
+                      scope.$emit("PrivilegesUpdated", true);
+                      scope.$broadcast("operationOnSelectionStop");
+                      scope.processReport = null;
+                    }
+                  },
+                  scope,
+                  "PrivilegesUpdated"
+                );
+              } else {
+                scope.$emit("PrivilegesUpdated", true);
+                scope.$broadcast("operationOnSelectionStop");
+                scope.$emit("StatusUpdated", {
+                  msg: onOrOff
+                    ? translations.metadataPublished
+                    : translations.metadataUnpublished,
+                  timeout: 0,
+                  type: "success"
+                });
+              }
+
+              if (md) {
+                md.publishToGuest();
               }
             },
             function (response) {

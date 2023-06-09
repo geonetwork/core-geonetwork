@@ -41,6 +41,8 @@ import org.fao.geonet.api.processing.report.MetadataProcessingReport;
 import org.fao.geonet.api.processing.report.SimpleMetadataProcessingReport;
 import org.fao.geonet.api.records.model.*;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
+import org.fao.geonet.config.IPublicationConfig;
+import org.fao.geonet.config.PublicationOption;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.domain.utils.ObjectJSONUtils;
 import org.fao.geonet.events.history.RecordGroupOwnerChangeEvent;
@@ -60,7 +62,6 @@ import org.fao.geonet.util.MetadataPublicationMailNotifier;
 import org.fao.geonet.util.UserUtil;
 import org.fao.geonet.util.WorkflowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
@@ -91,6 +92,7 @@ import static org.springframework.data.jpa.domain.Specification.where;
 @Controller("recordSharing")
 @ReadWriteController
 public class MetadataSharingApi {
+    private static final String DEFAULT_PUBLICATION_TYPE_NAME = "default";
 
     @Autowired
     LanguageUtils languageUtils;
@@ -153,8 +155,7 @@ public class MetadataSharingApi {
      * What does publish mean?
      */
     @Autowired
-    @Qualifier("publicationConfig")
-    private Map publicationConfig;
+    private IPublicationConfig publicationConfig;
 
     public static Vector<OperationAllowedId> retrievePrivileges(ServiceContext context, String id, Integer userId, Integer groupId) {
 
@@ -177,6 +178,20 @@ public class MetadataSharingApi {
         return result;
     }
 
+
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Get publication options.")
+    @GetMapping(
+        value = "/publicationOptions"
+    )
+    @PreAuthorize("permitAll")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public List<PublicationOption> getPublicationOptions() {
+        return publicationConfig.getPublicationOptions();
+    }
+
+
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Set privileges for ALL group to publish the metadata for all users.")
     @RequestMapping(
@@ -196,6 +211,10 @@ public class MetadataSharingApi {
             required = true)
         @PathVariable
         String metadataUuid,
+        @Parameter(
+            description = "Publication type",
+            required = false)
+        String publicationType,
         @Parameter(hidden = true)
         HttpSession session,
         HttpServletRequest request
@@ -205,7 +224,11 @@ public class MetadataSharingApi {
         UserSession userSession = ApiUtils.getUserSession(request.getSession());
         checkUserProfileToPublishMetadata(userSession);
 
-        shareMetadataWithAllGroup(metadataUuid, true, session, request);
+        if (StringUtils.isEmpty(publicationType)) {
+            publicationType = DEFAULT_PUBLICATION_TYPE_NAME;
+        }
+
+        shareMetadataWithReservedGroup(metadataUuid, true, publicationType, session, request);
     }
 
     @io.swagger.v3.oas.annotations.Operation(
@@ -227,6 +250,10 @@ public class MetadataSharingApi {
             required = true)
         @PathVariable
         String metadataUuid,
+        @Parameter(
+            description = "Publication type",
+            required = false)
+        String publicationType,
         @Parameter(hidden = true)
         HttpSession session,
         HttpServletRequest request
@@ -236,7 +263,11 @@ public class MetadataSharingApi {
         UserSession userSession = ApiUtils.getUserSession(request.getSession());
         checkUserProfileToUnpublishMetadata(userSession);
 
-        shareMetadataWithAllGroup(metadataUuid, false, session, request);
+        if (StringUtils.isEmpty(publicationType)) {
+            publicationType = DEFAULT_PUBLICATION_TYPE_NAME;
+        }
+
+        shareMetadataWithReservedGroup(metadataUuid, false, publicationType, session, request);
     }
 
     @io.swagger.v3.oas.annotations.Operation(
@@ -339,7 +370,7 @@ public class MetadataSharingApi {
     )
         throws Exception {
 
-        SharingParameter sharing = buildSharingForPublicationConfig(true);
+        SharingParameter sharing = buildSharingForPublicationConfig(true, DEFAULT_PUBLICATION_TYPE_NAME);
         return shareSelection(uuids, bucket, sharing, session, request);
     }
 
@@ -370,7 +401,7 @@ public class MetadataSharingApi {
     )
         throws Exception {
 
-        SharingParameter sharing = buildSharingForPublicationConfig(false);
+        SharingParameter sharing = buildSharingForPublicationConfig(false, DEFAULT_PUBLICATION_TYPE_NAME);
         return shareSelection(uuids, bucket, sharing, session, request);
     }
 
@@ -1083,7 +1114,7 @@ public class MetadataSharingApi {
      * @param request
      * @throws Exception
      */
-    private void shareMetadataWithAllGroup(String metadataUuid, boolean publish,
+    private void shareMetadataWithReservedGroup(String metadataUuid, boolean publish, String publicationType,
                                            HttpSession session, HttpServletRequest request) throws Exception {
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
         ApplicationContext appContext = ApplicationContextHolder.get();
@@ -1102,7 +1133,7 @@ public class MetadataSharingApi {
             operationMap.put(o.getName(), o.getId());
         }
 
-        SharingParameter sharing = buildSharingForPublicationConfig(publish);
+        SharingParameter sharing = buildSharingForPublicationConfig(publish, publicationType);
 
         List<GroupOperations> privileges = sharing.getPrivileges();
         List<MetadataPublicationNotificationInfo> metadataListToNotifyPublication = new ArrayList<>();
@@ -1113,7 +1144,11 @@ public class MetadataSharingApi {
             metadataListToNotifyPublication, notifyByEmail);
         metadataIndexer.indexMetadata(String.valueOf(metadata.getId()), true, IndexingMode.full);
 
-        if (notifyByEmail && !metadataListToNotifyPublication.isEmpty()) {
+        java.util.Optional<PublicationOption> publicationOption = publicationConfig.getPublicationOptionConfiguration(publicationType);
+        if (publicationOption.isPresent() &&
+            publicationOption.get().hasPublicationTo(ReservedGroup.all) &&
+            notifyByEmail &&
+            !metadataListToNotifyPublication.isEmpty()) {
             metadataPublicationMailNotifier.notifyPublication(messages, context.getLanguage(),
                 metadataListToNotifyPublication);
         }
@@ -1210,37 +1245,52 @@ public class MetadataSharingApi {
      * @param publish Flag to add/remove sharing privileges.
      * @return
      */
-    private SharingParameter buildSharingForPublicationConfig(boolean publish) {
+    private SharingParameter buildSharingForPublicationConfig(boolean publish, String configName) {
         SharingParameter sharing = new SharingParameter();
         sharing.setClear(false);
 
         List<GroupOperations> privilegesList = new ArrayList<>();
 
-        final Iterator<Map.Entry<String, Object[]>> iterator = publicationConfig.entrySet().iterator();
-        while (iterator.hasNext()) {
-            Map.Entry<String, Object[]> e = iterator.next();
-            GroupOperations privAllGroup = new GroupOperations();
-            privAllGroup.setGroup(Integer.parseInt(e.getKey()));
+        java.util.Optional<PublicationOption> publicationOptionOptional =
+            publicationConfig.getPublicationOptionConfiguration(configName);
 
+        if (publicationOptionOptional.isPresent()) {
+            // Process the publication group and operations
+            PublicationOption publicationOption = publicationOptionOptional.get();
+
+            Iterator<ReservedOperation> it = publicationOption.getPublicationOperations().iterator();
+            GroupOperations privReservedGroup = new GroupOperations();
+            privReservedGroup.setGroup(publicationOption.getPublicationGroup().getId());
             Map<String, Boolean> operations = new HashMap<>();
-            for (Object operation : e.getValue()) {
-                operations.put((String) operation, publish);
-            }
 
-            privAllGroup.setOperations(operations);
-            privilegesList.add(privAllGroup);
+            while (it.hasNext()) {
+                ReservedOperation operation = it.next();
+                operations.put(operation.toString(), publish);
+            }
+            privReservedGroup.setOperations(operations);
+            privilegesList.add(privReservedGroup);
+
+            // Process the additional publication group(s) and operations
+            Iterator<Map.Entry<ReservedGroup, List<ReservedOperation>>> it2 =
+                publicationOption.getAdditionalPublications().entrySet().iterator();
+            while (it2.hasNext()) {
+                Map.Entry<ReservedGroup, List<ReservedOperation>> info = it2.next();
+
+                privReservedGroup = new GroupOperations();
+                privReservedGroup.setGroup(info.getKey().getId());
+
+                operations = new HashMap<>();
+                for (ReservedOperation operation : info.getValue()) {
+                    operations.put(operation.toString(), publish);
+                }
+
+                privReservedGroup.setOperations(operations);
+                privilegesList.add(privReservedGroup);
+            }
         }
 
         sharing.setPrivileges(privilegesList);
         return sharing;
-    }
-
-    public Map getPublicationConfig() {
-        return publicationConfig;
-    }
-
-    public void setPublicationConfig(Map publicationConfig) {
-        this.publicationConfig = publicationConfig;
     }
 
 
