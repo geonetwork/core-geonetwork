@@ -48,7 +48,9 @@ import org.springframework.util.StringUtils;
 import jeeves.component.ProfileManager;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author ETj (etj at geo-solutions.it)
@@ -153,9 +155,6 @@ public class ShibbolethUserUtils {
                 user = (User) authProvider.loadUserByUsername(username);
 
                 if (config.isUpdateGroup()) {
-                    // First we remove all previous groups
-                    userGroupRepository.deleteAll(UserGroupSpecs.hasUserId(user.getId()));
-
                     // Now we add the groups
                     assignGroups(groupRepository, userGroupRepository, roleGroups,
                             roleGroupSeparator, user);
@@ -222,6 +221,9 @@ public class ShibbolethUserUtils {
 
     private void assignGroups(GroupRepository groupRepository, UserGroupRepository userGroupRepository,
                               String[] role_groups, String separator, User user) {
+
+        Set<UserGroup> userGroups =  new HashSet<>();
+
         // Assign groups
         int i = 0;
 
@@ -258,13 +260,24 @@ public class ShibbolethUserUtils {
                     ug.setGroup(g);
                     ug.setUser(user);
                     ug.setProfile(Profile.Editor);
-                    userGroupRepository.save(ug);
+                    userGroups.add(ug);
                 }
             } else {
                 // Failback if no profile
                 usergroup.setProfile(Profile.Guest);
             }
-            userGroupRepository.save(usergroup);
+            userGroups.add(usergroup);
+        }
+
+        List<UserGroup> dbUserGroupLists = userGroupRepository.findAll(UserGroupSpecs.hasUserId(user.getId()));
+        Set<UserGroup> dbUserGroups = new HashSet<>(dbUserGroupLists);
+
+        // If the user groups are not the same then update database so that they are the same.
+        if (! userGroups.equals(dbUserGroups)) {
+            userGroupRepository.deleteAll(UserGroupSpecs.hasUserId(user.getId()));
+            for (UserGroup ug: userGroups) {
+                userGroupRepository.save(ug);
+            }
         }
     }
 
