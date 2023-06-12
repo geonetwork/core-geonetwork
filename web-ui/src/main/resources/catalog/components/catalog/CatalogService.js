@@ -763,22 +763,21 @@
         },
         isPublished: function (pubOption) {
           if (pubOption) {
-            if (pubOption.publicationGroup === "all") {
-              return JSON.parse(this.isPublishedToAll) === true;
-            } else if (pubOption.publicationGroup === "intranet") {
-              return this.isPublishedInternal();
-            } else if (pubOption.publicationGroup === "guest") {
-              return this.isPublishedGuest();
-            }
+            return this.isPublishedToGroup(pubOption.publicationGroup);
+          } else {
+            return JSON.parse(this.isPublishedToAll) === true;
+          }
+        },
+        isPublishedToGroup: function (group) {
+          if (group === "all") {
+            return JSON.parse(this.isPublishedToAll) === true;
+          } else if (group === "intranet") {
+            return JSON.parse(this.isPublishedToIntranet) === true;
+          } else if (group === "guest") {
+            return JSON.parse(this.isPublishedToGuest) === true;
           }
 
-          return JSON.parse(this.isPublishedToAll) === true;
-        },
-        isPublishedInternal: function () {
-          return JSON.parse(this.isPublishedToIntranet) === true;
-        },
-        isPublishedGuest: function () {
-          return JSON.parse(this.isPublishedToGuest) === true;
+          return false;
         },
         isValid: function () {
           return this.valid === "1";
