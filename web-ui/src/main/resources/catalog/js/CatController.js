@@ -1667,7 +1667,7 @@
       $scope.externalViewerUrl = gnExternalViewer.getBaseUrl();
       $scope.publicationOptions = [];
 
-      $http.get("../api/records/publicationOptions").then(function (response) {
+      $http.get("../api/records/sharing/options").then(function (response) {
         $scope.publicationOptions = response.data;
       });
 
@@ -1943,7 +1943,7 @@
         // Retrieve the publication options
         userLogin.then(function (value) {
           if ($scope.user && $scope.user.isReviewerOrMore()) {
-            $http.get("../api/records/publicationOptions").then(function (response) {
+            $http.get("../api/records/sharing/options").then(function (response) {
               $scope.publicationOptions = response.data;
             });
           }

@@ -182,7 +182,7 @@ public class MetadataSharingApi {
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Get publication options.")
     @GetMapping(
-        value = "/publicationOptions"
+        value = "/sharing/options"
     )
     @PreAuthorize("permitAll")
     @ResponseStatus(HttpStatus.OK)
