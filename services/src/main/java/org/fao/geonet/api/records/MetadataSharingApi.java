@@ -364,13 +364,18 @@ public class MetadataSharingApi {
         @Parameter(description = ApiParams.API_PARAM_BUCKET_NAME,
             required = false)
         @RequestParam(required = false) String bucket,
+        @Parameter(
+            description = "Publication type",
+            required = false)
+        String publicationType,
         @Parameter(hidden = true)
         HttpSession session,
         HttpServletRequest request
     )
         throws Exception {
 
-        SharingParameter sharing = buildSharingForPublicationConfig(true, DEFAULT_PUBLICATION_TYPE_NAME);
+        SharingParameter sharing = buildSharingForPublicationConfig(true,
+            StringUtils.isNotEmpty(publicationType) ? publicationType : DEFAULT_PUBLICATION_TYPE_NAME);
         return shareSelection(uuids, bucket, sharing, session, request);
     }
 
@@ -395,13 +400,18 @@ public class MetadataSharingApi {
         @Parameter(description = ApiParams.API_PARAM_BUCKET_NAME,
             required = false)
         @RequestParam(required = false) String bucket,
+        @Parameter(
+            description = "Publication type",
+            required = false)
+        String publicationType,
         @Parameter(hidden = true)
         HttpSession session,
         HttpServletRequest request
     )
         throws Exception {
 
-        SharingParameter sharing = buildSharingForPublicationConfig(false, DEFAULT_PUBLICATION_TYPE_NAME);
+        SharingParameter sharing = buildSharingForPublicationConfig(false,
+            StringUtils.isNotEmpty(publicationType) ? publicationType : DEFAULT_PUBLICATION_TYPE_NAME);
         return shareSelection(uuids, bucket, sharing, session, request);
     }
 
