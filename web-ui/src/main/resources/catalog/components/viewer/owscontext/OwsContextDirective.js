@@ -244,8 +244,8 @@
                     scope.mapProps = angular.extend({}, defaultMapProps);
                     defer.resolve(response);
                   },
-                  function (data) {
-                    console.warn(data);
+                  function (response) {
+                    console.warn(response);
                     defer.reject(response);
                   }
                 );
