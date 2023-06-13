@@ -168,8 +168,9 @@ public class GeonetworkJwtAuthenticationProvider implements AuthenticationProvid
         Instant expireTime = Instant.ofEpochMilli((Long) jwt.get("exp") * 1000);
 
         //if expired, throw
-        if (expireTime.compareTo(Instant.now()) < 0)
+        if (expireTime.compareTo(Instant.now()) < 0) {
             throw new OAuth2AuthenticationException(invalidToken("access token has expired"));
+        }
 
         //execute the userinfo endpoint
         ClientRegistration clientRegistration = clientRegistrationRepository.findByRegistrationId(CLIENTREGISTRATION_NAME);
