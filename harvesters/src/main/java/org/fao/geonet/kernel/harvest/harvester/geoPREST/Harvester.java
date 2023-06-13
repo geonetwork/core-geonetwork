@@ -47,6 +47,9 @@ import java.net.URL;
 import java.net.URLDecoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
@@ -262,6 +265,33 @@ class Harvester implements IHarvester<HarvestResult> {
 
     }
 
+    protected Date parseDateJdk11(String pubDate) throws ParseException {
+        Locale wellKnownLocales[] = {Locale.ENGLISH, Locale.FRENCH, Locale.GERMAN, Locale.ITALIAN};
+
+        for (Locale locale : wellKnownLocales) {
+            DateTimeFormatter formatter = DateTimeFormatter.RFC_1123_DATE_TIME.withLocale(locale);
+
+            try {
+                ZonedDateTime date = ZonedDateTime.parse(pubDate, formatter);
+                return Date.from(date.toInstant());
+            } catch (DateTimeParseException e) {
+                // workaround for https://bugs.openjdk.java.net/browse/JDK-8136539
+                if(locale == Locale.GERMAN && (pubDate.toLowerCase(Locale.GERMAN).contains("mrz")
+                || pubDate.toLowerCase(Locale.GERMAN).contains("mär"))) {
+                    try {
+                        log.info("Applying MRZ workaround to '"+pubDate+"'");
+                        String wad = pubDate.toLowerCase(Locale.GERMAN).replace("mrz", "mar");
+                        wad = wad.replace("mär", "mar");
+                        ZonedDateTime workedAroundDate = ZonedDateTime.parse(wad, formatter);
+                        return Date.from(workedAroundDate.toInstant());
+                    } catch (DateTimeParseException ex) {}
+                }
+                log.debug("Date '"+pubDate+"' is not parsable according to " + locale);
+            }
+        }
+
+        throw new ParseException("Can't parse date '"+pubDate+"'", 0);
+    }
     /**
      * Parse the date provided in the pubDate field.
      *
