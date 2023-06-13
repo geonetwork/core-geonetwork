@@ -382,8 +382,7 @@
           }
 
           if (
-            gnGlobalSettings.gnCfg.mods.map.defaultToolAfterMapLoad &&
-            gnGlobalSettings.gnCfg.mods.map.defaultToolAfterMapLoad != ""
+            gnGlobalSettings.gnCfg.mods.map.defaultToolAfterMapLoad
           ) {
             gnViewerService.openTool(
               gnGlobalSettings.gnCfg.mods.map.defaultToolAfterMapLoad
