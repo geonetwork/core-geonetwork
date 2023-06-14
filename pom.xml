@@ -419,6 +419,13 @@
         <groupId>org.openrdf</groupId>
         <artifactId>sesame</artifactId>
         <version>1.2.7</version>
+        <exclusions>
+          <!-- Remove CVE-2022-45378 and do not break sesame usage. -->
+          <exclusion>
+            <groupId>soap</groupId>
+            <artifactId>soap</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
       <dependency>
         <groupId>org.openrdf</groupId>
@@ -1094,6 +1101,11 @@
         <version>${hibernate.version}</version>
       </dependency>
       <dependency>
+        <groupId>net.sf.ehcache</groupId>
+        <artifactId>ehcache</artifactId>
+        <version>2.10.9.2</version>
+      </dependency>
+      <dependency>
         <groupId>org.hibernate</groupId>
         <artifactId>hibernate-jpamodelgen</artifactId>
         <version>${hibernate.version}</version>
@@ -1571,7 +1583,7 @@
     <kb.url>http://localhost:${kb.port}</kb.url>
 
     <jms.url>tcp://localhost:61616</jms.url>
-    <activemq.version>5.6.0</activemq.version>
+    <activemq.version>5.7.0</activemq.version>
 
     <!-- Avoid to create any sessions for crawlers.
     Define the list of User-Agent to be considered as bot. -->
@@ -1587,7 +1599,7 @@
      request the list of hosts (but JPA cache db queries). -->
     <cors.allowedHosts>*</cors.allowedHosts>
 
-    <jetty.version>9.4.48.v20220622</jetty.version>
+    <jetty.version>9.4.51.v20230217</jetty.version>
     <jetty.file>jetty-distribution-${jetty.version}</jetty.file>
     <jetty.download>https://repo1.maven.org/maven2/org/eclipse/jetty/jetty-distribution/${jetty.version}/${jetty.file}.tar.gz</jetty.download>
 
@@ -1598,10 +1610,11 @@
     <pg.version>42.3.3</pg.version>
 
     <spring.version>5.3.27</spring.version>
-    <spring.security.version>5.7.8</spring.security.version>
-    <spring.jpa.version>2.2.13.RELEASE</spring.jpa.version>
+    <spring.security.version>5.8.3</spring.security.version>
+    <spring.jpa.version>2.7.12</spring.jpa.version>
     <springboot.version>2.7.0</springboot.version>
-    <springdoc.version>1.5.9</springdoc.version>
+    <springdoc.version>1.5.13</springdoc.version>
+    <hibernate.version>5.6.15.Final</hibernate.version>
 
     <metrics.version>2.2.0</metrics.version>
     <maven.build.timestamp.format>yyyy-MM-dd'T'HH'\:'mm'\:'ssZ</maven.build.timestamp.format>
@@ -1610,10 +1623,8 @@
     <wro.version>1.7.9</wro.version>
     <wro.debug>true</wro.debug>
     <fop.version>2.7</fop.version>
-    <node.version>v8.11.1</node.version>
-    <npm.version>5.8.0</npm.version>
     <xmlunit.version>2.1.1</xmlunit.version>
-    <jackson.version>2.10.4</jackson.version>
+    <jackson.version>2.15.2</jackson.version>
     <flying-saucer>9.1.22</flying-saucer>
     <camel.version>2.25.1</camel.version>
     <log4j2.version>2.17.2</log4j2.version>
@@ -1623,7 +1634,6 @@
     <httpcomponents.version>4.5.14</httpcomponents.version>
     <jasypt.version>1.9.3</jasypt.version>
     <jupiter.version>5.9.1</jupiter.version>
-    <hibernate.version>5.6.7.Final</hibernate.version>
 
     <sonar.organization>geonetwork</sonar.organization>
     <sonar.host.url>https://sonarcloud.io</sonar.host.url>

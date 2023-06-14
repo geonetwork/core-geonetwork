@@ -26,54 +26,40 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jeeves.interfaces.Service;
-import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-
-import nonapi.io.github.classgraph.utils.Join;
-import org.apache.commons.lang.NotImplementedException;
-import org.fao.geonet.Util;
+import org.apache.commons.lang.StringUtils;
+import org.fao.geonet.GeonetContext;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.exception.NotAllowedException;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.AbstractMetadata;
-import org.fao.geonet.domain.ReservedOperation;
+import org.fao.geonet.domain.InspireAtomFeed;
+import org.fao.geonet.domain.InspireAtomFeedEntry;
+import org.fao.geonet.exceptions.ResourceNotFoundEx;
 import org.fao.geonet.guiapi.search.XsltResponseWriter;
 import org.fao.geonet.inspireatom.InspireAtomService;
+import org.fao.geonet.inspireatom.harvester.InspireAtomHarvester;
 import org.fao.geonet.inspireatom.model.DatasetFeedInfo;
+import org.fao.geonet.inspireatom.util.InspireAtomUtil;
+import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.InspireAtomFeedRepository;
 import org.fao.geonet.utils.Log;
-import org.apache.commons.lang.StringUtils;
-import org.fao.geonet.GeonetContext;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.exceptions.MetadataNotFoundEx;
-import org.fao.geonet.inspireatom.util.InspireAtomUtil;
-import org.fao.geonet.inspireatom.harvester.InspireAtomHarvester;
-import org.fao.geonet.domain.InspireAtomFeed;
-import org.fao.geonet.domain.InspireAtomFeedEntry;
-import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
-
-import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import org.fao.geonet.exceptions.ResourceNotFoundEx;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUID;
 import static org.fao.geonet.inspireatom.util.InspireAtomUtil.retrieveKeywordsFromFileIdentifier;
-import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
 @RequestMapping(value = {
@@ -203,7 +189,7 @@ public class AtomServiceDescription {
             .addContent(new Element("title").setText(feedTitle))
             .addContent(new Element("subtitle").setText(feedSubtitle))
             .addContent(new Element("lang").setText(feedLang))
-            .addContent(new Element("keywords").setText(Join.join(", ", keywords)))
+            .addContent(new Element("keywords").setText(String.join(", ", keywords)))
             .addContent(new Element("authorName").setText(feedAuthorName))
             .addContent(new Element("url").setText(feedUrl))
             .addContent(datasetsEl);
