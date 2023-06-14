@@ -41,3 +41,5 @@ The following list provides a few tips:
 * **org.fao.geonet.utils.GeonetHttpRequestFactory*: When making Http requests you should use `org.fao.geonet.utils.GeonetHttpRequestFactory` instead
   of directly using `HttpClient`.  This is because there are mock instances of `org.fao.geonet.utils.GeonetHttpRequestFactory` that can
   be used to mock responses when performing tests.
+
+* Integration tests are disabled by default. Use the `it` maven profile to use them.
