@@ -42,6 +42,13 @@
     <constructor-arg name="className" value="org.fao.geonet.kernel.metadata.DefaultStatusActions"/>
   </bean>
 
+
+  <!--
+  Bean with the default publication configuration.
+  The default publication options publishes the metadata to the ALL group and the INTRANET group.
+  -->
+  <bean class="org.fao.geonet.config.DefaultPublicationConfig" name="publicationConfig" />
+
   <mvc:annotation-driven content-negotiation-manager="cnManager">
     <mvc:message-converters>
       <bean class = "org.springframework.http.converter.StringHttpMessageConverter">
