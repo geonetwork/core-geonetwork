@@ -53,33 +53,6 @@
     <constructor-arg index="1" ref="defaultLanguage"/>
   </bean>
 
-  <!--
-   Configure here what the publish/unpublish action does.
-   By default, it set view, download and dynamic operation
-   to Internet and Intranet group.
-   -->
-  <util:map id="publicationConfig"
-            key-type="java.lang.String"
-            value-type="java.lang.String[]">
-    <!-- INTERNET GROUP -->
-    <entry key="1">
-      <array>
-        <!-- View, download, dynamic -->
-        <value>view</value>
-        <value>download</value>
-        <value>dynamic</value>
-      </array>
-    </entry>
-    <!-- INTRANET GROUP -->
-    <entry key="0">
-      <array>
-        <value>view</value>
-        <value>download</value>
-        <value>dynamic</value>
-      </array>
-    </entry>
-  </util:map>
-
   <bean id="RegionsDAO" class="org.fao.geonet.api.regions.ThesaurusBasedRegionsDAO">
     <constructor-arg ref="languages"/>
     <property name="cacheAllRegionsInMemory" value="true"/>

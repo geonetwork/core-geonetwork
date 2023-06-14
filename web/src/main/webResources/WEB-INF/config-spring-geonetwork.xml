@@ -302,4 +302,10 @@
       </util:list>
     </entry>
   </util:map>
+
+  <!--
+  Bean with the default publication configuration.
+  The default publication options publishes the metadata to the ALL group and the INTRANET group.
+  -->
+  <bean class="org.fao.geonet.config.DefaultPublicationConfig" name="publicationConfig" />
 </beans>

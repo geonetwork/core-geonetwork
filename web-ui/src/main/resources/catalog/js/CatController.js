@@ -1667,6 +1667,11 @@
       $scope.isUserGroupUpdateEnabled = gnGlobalSettings.isUserGroupUpdateEnabled;
       $scope.isExternalViewerEnabled = gnExternalViewer.isEnabled();
       $scope.externalViewerUrl = gnExternalViewer.getBaseUrl();
+      $scope.publicationOptions = [];
+
+      $http.get("../api/records/sharing/options").then(function (response) {
+        $scope.publicationOptions = response.data;
+      });
 
       $scope.isSelfRegisterPossible = function () {
         return gnConfig["system.userSelfRegistration.enable"];
@@ -1937,6 +1942,15 @@
             });
         });
 
+        // Retrieve the publication options
+        userLogin.then(function (value) {
+          if ($scope.user && $scope.user.isReviewerOrMore()) {
+            $http.get("../api/records/sharing/options").then(function (response) {
+              $scope.publicationOptions = response.data;
+            });
+          }
+        });
+
         // Retrieve main search information
         var searchInfo = userLogin.then(function (value) {
           // Check index status.
@@ -2012,11 +2026,17 @@
         return gnConfig["metadata.workflow.allowPublishNonApprovedMd"];
       };
 
-      $scope.getPublicationOptionClass = function (md, user, isMdWorkflowEnable) {
+      $scope.getPublicationOptionClass = function (
+        md,
+        user,
+        isMdWorkflowEnable,
+        pubOption
+      ) {
         var publicationOptionTitle = $scope.getPublicationOptionTitle(
           md,
           user,
-          isMdWorkflowEnable
+          isMdWorkflowEnable,
+          pubOption
         );
         switch (publicationOptionTitle) {
           case "mdnonapprovedcantpublish":
@@ -2029,16 +2049,22 @@
       };
 
       // Function to get the title name to be used when displaying the publish item in the menu
-      $scope.getPublicationOptionTitle = function (md, user, isMdWorkflowEnable) {
+      $scope.getPublicationOptionTitle = function (
+        md,
+        user,
+        isMdWorkflowEnable,
+        pubOption
+      ) {
         var publicationOptionTitle = "";
-        if (!md.isPublished()) {
+        if (!md.isPublished(pubOption)) {
           if (md.isValid()) {
             publicationOptionTitle = "mdvalid";
           } else {
             if (
               isMdWorkflowEnable &&
               md.isWorkflowEnabled() &&
-              $scope.allowPublishInvalidMd() === false
+              $scope.allowPublishInvalidMd() === false &&
+              pubOption.name === "default"
             ) {
               publicationOptionTitle = "mdinvalidcantpublish";
             } else {
@@ -2055,7 +2081,8 @@
             isMdWorkflowEnable &&
             md.isWorkflowEnabled() &&
             md.mdStatus != 2 &&
-            $scope.allowPublishNonApprovedMd() === false
+            $scope.allowPublishNonApprovedMd() === false &&
+            pubOption.name === "default"
           ) {
             publicationOptionTitle = "mdnonapprovedcantpublish";
           }

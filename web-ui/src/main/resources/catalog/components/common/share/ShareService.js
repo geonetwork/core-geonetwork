@@ -66,7 +66,8 @@
     "$http",
     "gnShareConstants",
     "gnConfig",
-    function ($q, $http, gnShareConstants, gnConfig) {
+    "gnUrlUtils",
+    function ($q, $http, gnShareConstants, gnConfig, gnUrlUtils) {
       var isAdminOrReviewer = function (userProfile, groupOwner, privileges, batchMode) {
         var publicationbyrevieweringroupowneronly =
           gnConfig["system.metadataprivs.publicationbyrevieweringroupowneronly"] === false
@@ -187,7 +188,7 @@
           return defer.promise;
         },
 
-        publish: function (metadataId, bucket, publish, user) {
+        publish: function (metadataId, bucket, publish, user, publicationType) {
           var defer = $q.defer();
           var url =
             "../api/records" +
@@ -196,7 +197,11 @@
             (publish ? "publish" : "unpublish");
 
           if (angular.isDefined(bucket)) {
-            url += "?bucket=" + bucket;
+            url = gnUrlUtils.append(url, "bucket=" + bucket);
+          }
+
+          if (angular.isDefined(publicationType)) {
+            url = gnUrlUtils.append(url, "publicationType=" + publicationType);
           }
 
           $http.put(url).then(
