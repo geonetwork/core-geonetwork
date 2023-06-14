@@ -276,6 +276,8 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
         }
 
         addElement(infoEl, Edit.Info.Elem.IS_PUBLISHED_TO_ALL, hasOperation(doc, ReservedGroup.all, ReservedOperation.view));
+        addElement(infoEl, Edit.Info.Elem.IS_PUBLISHED_TO_INTRANET, hasOperation(doc, ReservedGroup.intranet, ReservedOperation.view));
+        addElement(infoEl, Edit.Info.Elem.IS_PUBLISHED_TO_GUEST, hasOperation(doc, ReservedGroup.guest, ReservedOperation.view));
         addOperationsElement(infoEl, ReservedOperation.view.name(), operations.contains(ReservedOperation.view));
         addOperationsElement(infoEl, ReservedOperation.notify.name(), operations.contains(ReservedOperation.notify));
         addOperationsElement(infoEl, ReservedOperation.download.name(), operations.contains(ReservedOperation.download));

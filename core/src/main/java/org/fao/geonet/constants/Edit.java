@@ -84,6 +84,8 @@ public final class Edit {
             public static final String BASEURL = "baseUrl";
             public static final String LOCSERV = "locService";
             public static final String IS_PUBLISHED_TO_ALL = "isPublishedToAll";
+            public static final String IS_PUBLISHED_TO_INTRANET = "isPublishedToIntranet";
+            public static final String IS_PUBLISHED_TO_GUEST = "isPublishedToGuest";
 
             //--- privileges
 

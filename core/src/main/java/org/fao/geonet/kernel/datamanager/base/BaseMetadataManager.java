@@ -1169,6 +1169,12 @@ public class BaseMetadataManager implements IMetadataManager {
             where(operationAllowedSpec).and(OperationAllowedSpecs.hasGroupIdIn(allUserGroups)));
         final Set<Integer> visibleToAll = loadOperationsAllowed(context,
             where(operationAllowedSpec).and(OperationAllowedSpecs.isPublic(ReservedOperation.view))).keySet();
+        final Set<Integer> visibleToIntranet = loadOperationsAllowed(context,
+            where(operationAllowedSpec).and(OperationAllowedSpecs.hasGroupId(ReservedGroup.intranet.getId()))
+                .and(OperationAllowedSpecs.hasOperation(ReservedOperation.view))).keySet();
+        final Set<Integer> visibleToGuest = loadOperationsAllowed(context,
+            where(operationAllowedSpec).and(OperationAllowedSpecs.hasGroupId(ReservedGroup.guest.getId()))
+                .and(OperationAllowedSpecs.hasOperation(ReservedOperation.view))).keySet();
         final Set<Integer> downloadableByGuest = loadOperationsAllowed(context,
             where(operationAllowedSpec).and(OperationAllowedSpecs.hasGroupId(ReservedGroup.guest.getId()))
                 .and(OperationAllowedSpecs.hasOperation(ReservedOperation.download))).keySet();
@@ -1199,6 +1205,8 @@ public class BaseMetadataManager implements IMetadataManager {
             }
 
             addElement(infoEl, Edit.Info.Elem.IS_PUBLISHED_TO_ALL, visibleToAll.contains(mdId));
+            addElement(infoEl, Edit.Info.Elem.IS_PUBLISHED_TO_INTRANET, visibleToIntranet.contains(mdId));
+            addElement(infoEl, Edit.Info.Elem.IS_PUBLISHED_TO_GUEST, visibleToGuest.contains(mdId));
             addElement(infoEl, ReservedOperation.view.name(), operations.contains(ReservedOperation.view));
             addElement(infoEl, ReservedOperation.notify.name(), operations.contains(ReservedOperation.notify));
             addElement(infoEl, ReservedOperation.download.name(), operations.contains(ReservedOperation.download));

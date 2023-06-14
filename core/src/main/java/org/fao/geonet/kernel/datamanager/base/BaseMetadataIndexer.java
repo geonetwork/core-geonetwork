@@ -566,6 +566,8 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
             List<OperationAllowed> operationsAllowed = operationAllowedRepository.findAllById_MetadataId(id);
 
             boolean isPublishedToAll = false;
+            boolean isPublishedToIntranet = false;
+            boolean isPublishedToGuest = false;
 
             for (OperationAllowed operationAllowed : operationsAllowed) {
                 OperationAllowedId operationAllowedId = operationAllowed.getId();
@@ -581,6 +583,10 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
                             true, true));
                         if (g.getId() == ReservedGroup.all.getId()) {
                             isPublishedToAll = true;
+                        } else if (g.getId() == ReservedGroup.intranet.getId()) {
+                            isPublishedToIntranet = true;
+                        } else if (g.getId() == ReservedGroup.guest.getId()) {
+                            isPublishedToGuest = true;
                         }
                     }
                 }
@@ -590,6 +596,18 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
                 moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.IS_PUBLISHED_TO_ALL, "y", true, true));
             } else {
                 moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.IS_PUBLISHED_TO_ALL, "n", true, true));
+            }
+
+            if (isPublishedToIntranet) {
+                moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.IS_PUBLISHED_TO_INTRANET, "y", true, true));
+            } else {
+                moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.IS_PUBLISHED_TO_INTRANET, "n", true, true));
+            }
+
+            if (isPublishedToGuest) {
+                moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.IS_PUBLISHED_TO_GUEST, "y", true, true));
+            } else {
+                moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.IS_PUBLISHED_TO_GUEST, "n", true, true));
             }
 
             for (MetadataCategory category : fullMd.getCategories()) {

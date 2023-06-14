@@ -650,8 +650,23 @@
       getTitle: function() {
         return this.title || this.defaultTitle;
       },
-      isPublished: function() {
-        return this['geonet:info'].isPublishedToAll === 'true';
+      isPublished: function(pubOption) {
+        if (pubOption) {
+          return this.isPublishedToGroup(pubOption.publicationGroup);
+        } else {
+          return this['geonet:info'].isPublishedToAll === 'true';
+        }
+      },
+      isPublishedToGroup: function (group) {
+        if (group === "all") {
+          return this['geonet:info'].isPublishedToAll === 'true';
+        } else if (group === "intranet") {
+          return this['geonet:info'].isPublishedToIntranet === 'true';
+        } else if (group === "guest") {
+          return this['geonet:info'].isPublishedToGuest === 'true';
+        }
+
+        return false;
       },
       isValid: function() {
         return this.valid === '1';
@@ -671,11 +686,47 @@
       getSchema: function() {
         return this['geonet:info'].schema;
       },
-      publish: function() {
-        this['geonet:info'].isPublishedToAll = this.isPublished() ?
-            'false' : 'true';
-      },
+      publish: function(pubOption) {
+        if (pubOption) {
+          var isPublishedValue = this.isPublished(pubOption);
+          if (pubOption.publicationGroup === "all") {
+            this['geonet:info'].isPublishedToAll = isPublishedValue ? 'false' : 'true';
+          } else if (pubOption.publicationGroup === "intranet") {
+            this['geonet:info'].isPublishedToIntranet = isPublishedValue ? 'false' : 'true';
+          } else if (pubOption.publicationGroup === "guest") {
+            this['geonet:info'].isPublishedToGuest = isPublishedValue ? 'false' : 'true';
+          }
 
+          if (pubOption.additionalPublications) {
+            var additionalPublicationGroups = Object.keys(
+              pubOption.additionalPublications
+            );
+            for (var i = 0; i < additionalPublicationGroups.length; i++) {
+              var additionalPublicationGroup = additionalPublicationGroups[i];
+
+              if (additionalPublicationGroup === pubOption.publicationGroup) {
+                continue;
+              }
+              // Update the other additional publication groups with
+              // the status of the main publication group.
+              if (additionalPublicationGroup === "all") {
+                this['geonet:info'].isPublishedToAll = isPublishedValue
+                  ? 'false' : 'true';
+              } else if (additionalPublicationGroup === "intranet") {
+                this['geonet:info'].isPublishedToIntranet = isPublishedValue
+                  ? 'false' : 'true';
+              } else if (additionalPublicationGroup === "guest") {
+                this['geonet:info'].isPublishedToGuest = isPublishedValue
+                  ? 'false' : 'true';
+              }
+            }
+          }
+
+          return;
+        }
+
+        this.isPublishedToAll = this.isPublished(pubOption) ? false : true;
+      },
       getLinks: function() {
         return this.link;
       },

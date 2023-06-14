@@ -221,4 +221,10 @@
           p:url="http:\/\/map1[A-Z].com" p:useProxy="true" p:authType="BASIC" p:urlType="REGEXP" p:username="test" p:password="testpass"/-->
   </util:list>
 
+  <!--
+  Bean with the default publication configuration.
+  The default publication options publishes the metadata to the ALL group and the INTRANET group.
+  -->
+  <bean class="org.fao.geonet.config.DefaultPublicationConfig" name="publicationConfig" />
+
 </beans>
