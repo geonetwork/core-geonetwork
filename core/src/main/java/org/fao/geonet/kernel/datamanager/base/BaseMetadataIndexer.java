@@ -29,12 +29,10 @@ import com.yammer.metrics.core.TimerContext;
 import jeeves.monitor.MonitorManager;
 import jeeves.monitor.timer.IndexingRecordMeter;
 import jeeves.monitor.timer.IndexingRecordTimer;
-import jeeves.monitor.timer.ServiceManagerXslOutputTransformTimer;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.xlink.Processor;
 import org.apache.commons.lang.StringUtils;
-import org.eclipse.jetty.util.ConcurrentHashSet;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.records.attachments.Store;
 import org.fao.geonet.constants.Geonet;
@@ -74,6 +72,7 @@ import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -146,7 +145,7 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
 
     Set<String> waitForIndexing = new HashSet<String>();
     Set<String> indexing = new HashSet<String>();
-    Set<IndexMetadataTask> batchIndex = new ConcurrentHashSet<IndexMetadataTask>();
+    Set<IndexMetadataTask> batchIndex = ConcurrentHashMap.newKeySet();
 
     @Override
     public void forceIndexChanges() throws IOException {
