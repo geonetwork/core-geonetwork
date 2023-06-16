@@ -61,7 +61,7 @@
       $scope.searchObj = {
         params: {
           isTemplate: ["y", "n", "s", "t"],
-          sortBy: "resourceTitleObject.default.keyword"
+          sortBy: "resourceTitleObject.default.sort"
         }
       };
 
@@ -318,7 +318,7 @@
         $scope.$broadcast("resetSearch", {
           isTemplate: ["y", "n", "s", "t"],
           owner: u.id,
-          sortBy: "resourceTitleObject.default.keyword"
+          sortBy: "resourceTitleObject.default.sort"
         });
 
         $scope.userUpdated = false;
@@ -798,7 +798,7 @@
         $scope.$broadcast("resetSearch", {
           isTemplate: ["y", "n", "s", "t"],
           group: g.id,
-          sortBy: "resourceTitleObject.default.keyword"
+          sortBy: "resourceTitleObject.default.sort"
         });
 
         loadGroupUsers($scope.groupSelected.id);

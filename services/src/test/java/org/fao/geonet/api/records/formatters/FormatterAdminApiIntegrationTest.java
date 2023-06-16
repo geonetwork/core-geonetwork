@@ -59,8 +59,8 @@ public class FormatterAdminApiIntegrationTest extends AbstractServiceIntegration
         serviceConfig.setValue(FormatterConstants.USER_XSL_DIR, dataDirectory.getWebappDir() + "/formatters");
 
         listService.init(dataDirectory.getWebappDir(), serviceConfig);
-        assertFormattersForSchema(true, "iso19139", listService, "full_view", "datacite", "jsonld", "iso19115-3.2018");
-        assertFormattersForSchema(false, "iso19139", listService, "full_view", "datacite", "jsonld", "xsl-view", "partial_view", "citation", "iso19115-3.2018");
+        assertFormattersForSchema(true, "iso19139", listService, "full_view", "datacite", "eu-po-doi", "jsonld", "iso19115-3.2018");
+        assertFormattersForSchema(false, "iso19139", listService, "full_view", "datacite", "eu-po-doi", "jsonld", "xsl-view", "partial_view", "citation", "iso19115-3.2018");
         assertFormattersForSchema(true, "dublin-core", listService, "full_view");
     }
 

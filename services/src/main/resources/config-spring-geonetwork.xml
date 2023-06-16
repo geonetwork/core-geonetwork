@@ -30,9 +30,10 @@
         http://www.springframework.org/schema/context
         http://www.springframework.org/schema/context/spring-context-3.2.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
 
-  <context:property-placeholder location="${app.properties}"
-                                file-encoding="UTF-8"
-                                ignore-unresolvable="true" />
+  <context:property-placeholder location="${app.properties},file://#{systemEnvironment['geonetwork_dir']}/config/app.properties"
+                                ignore-unresolvable="true"
+                                ignore-resource-not-found="true"
+                                file-encoding="UTF-8"/>
 
   <context:component-scan base-package="org.springdoc.webmvc"/>
   <context:component-scan base-package="org.springdoc.core"/>
@@ -41,6 +42,7 @@
   <context:component-scan base-package="org.fao.geonet.guiapi"/>
   <context:component-scan base-package="org.fao.geonet.guiservices"/>
   <context:component-scan base-package="org.fao.geonet.services"/>
+  <context:component-scan base-package="org.fao.geonet.util"/>
 
   <bean id="defaultLanguage" class="java.lang.String">
     <constructor-arg index="0" value="\${language.default}"/>
@@ -50,33 +52,6 @@
     <constructor-arg index="0" ref="languages"/>
     <constructor-arg index="1" ref="defaultLanguage"/>
   </bean>
-
-  <!--
-   Configure here what the publish/unpublish action does.
-   By default, it set view, download and dynamic operation
-   to Internet and Intranet group.
-   -->
-  <util:map id="publicationConfig"
-            key-type="java.lang.String"
-            value-type="java.lang.String[]">
-    <!-- INTERNET GROUP -->
-    <entry key="1">
-      <array>
-        <!-- View, download, dynamic -->
-        <value>view</value>
-        <value>download</value>
-        <value>dynamic</value>
-      </array>
-    </entry>
-    <!-- INTRANET GROUP -->
-    <entry key="0">
-      <array>
-        <value>view</value>
-        <value>download</value>
-        <value>dynamic</value>
-      </array>
-    </entry>
-  </util:map>
 
   <bean id="RegionsDAO" class="org.fao.geonet.api.regions.ThesaurusBasedRegionsDAO">
     <constructor-arg ref="languages"/>

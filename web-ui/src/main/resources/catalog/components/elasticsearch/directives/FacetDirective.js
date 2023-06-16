@@ -161,8 +161,7 @@
     ["isTemplate", "recordType"],
     ["groupOwner", "group"],
     ["groupPublishedId", "group"],
-    ["sourceCatalogue", "source"],
-    ["statusWorkflow", "mdStatus"]
+    ["sourceCatalogue", "source"]
   ]);
 
   module.service("gnFacetSorter", [
@@ -184,7 +183,8 @@
 
   module.filter("facetTranslator", [
     "$translate",
-    function ($translate) {
+    "$filter",
+    function ($translate, $filter) {
       return function (input, facetKey) {
         if (!input || angular.isObject(input)) {
           return input;
@@ -203,7 +203,12 @@
         // A specific facet key eg. "isHarvested-true"
         var translationId =
             (facetKeyToTranslationGroupMap.get(facetKey) || facetKey) + "-" + input,
+          translation = undefined;
+        if (facetKey === "statusWorkflow") {
+          translation = $filter("getStatusLabel")(input);
+        } else {
           translation = $translate.instant(translationId);
+        }
         if (translation !== translationId) {
           return translation;
         } else {
@@ -449,9 +454,7 @@
         scope: {
           key: "=esFacetCards",
           homeFacet: "=homeFacet",
-          searchInfo: "=searchInfo",
-          aggResponse: "=aggResponse",
-          aggConfig: "=aggConfig"
+          searchInfo: "=searchInfo"
         },
         templateUrl: function (elem, attrs) {
           return (
@@ -468,6 +471,11 @@
               scope.homeFacet.config[scope.key].terms &&
               scope.homeFacet.config[scope.key].terms.missing;
             scope.isInspire = scope.key.indexOf("th_httpinspireeceuropaeutheme") === 0;
+
+            scope.aggregations = {};
+            scope.homeFacet.facets.forEach(function (facet) {
+              scope.aggregations[facet.key] = facet;
+            });
           }
 
           init();

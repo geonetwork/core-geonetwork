@@ -422,6 +422,7 @@
     "mdvalid": "Metadatat är giltigt",
     "mdinvalid": "Metadatat är ogiltigt",
     "mdinvalidcantpublish": "Ogiltigt metadata kan inte publiseras",
+    "mdnonapprovedcantpublish": "Non approved metadata can't be published",
     "mdnovalidation": "Metadatat har ingen valideringsinformation",
     "setall": "Sätt alla rättigheter",
     "print_legend": "Teckenförklaring",

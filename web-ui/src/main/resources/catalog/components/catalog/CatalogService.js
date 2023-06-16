@@ -761,8 +761,23 @@
         getUuid: function () {
           return this.uuid;
         },
-        isPublished: function () {
-          return JSON.parse(this.isPublishedToAll) === true;
+        isPublished: function (pubOption) {
+          if (pubOption) {
+            return this.isPublishedToGroup(pubOption.publicationGroup);
+          } else {
+            return JSON.parse(this.isPublishedToAll) === true;
+          }
+        },
+        isPublishedToGroup: function (group) {
+          if (group === "all") {
+            return JSON.parse(this.isPublishedToAll) === true;
+          } else if (group === "intranet") {
+            return JSON.parse(this.isPublishedToIntranet) === true;
+          } else if (group === "guest") {
+            return JSON.parse(this.isPublishedToGuest) === true;
+          }
+
+          return false;
         },
         isValid: function () {
           return this.valid === "1";
@@ -782,8 +797,50 @@
         getSchema: function () {
           return this.schema;
         },
-        publish: function () {
-          this.isPublishedToAll = this.isPublished() ? false : true;
+        publish: function (pubOption) {
+          if (pubOption) {
+            if (pubOption.publicationGroup === "all") {
+              this.isPublishedToAll = this.isPublished(pubOption) ? false : true;
+            } else if (pubOption.publicationGroup === "intranet") {
+              this.isPublishedToIntranet = this.isPublished(pubOption) ? false : true;
+            } else if (pubOption.publicationGroup === "guest") {
+              this.isPublishedToGuest = this.isPublished(pubOption) ? false : true;
+            }
+
+            if (pubOption.additionalPublications) {
+              var additionalPublicationGroups = Object.keys(
+                pubOption.additionalPublications
+              );
+              for (var i = 0; i < additionalPublicationGroups.length; i++) {
+                var additionalPublicationGroup = additionalPublicationGroups[i];
+
+                if (additionalPublicationGroup === pubOption.publicationGroup) {
+                  continue;
+                }
+
+                var additionalPubOption = {
+                  publicationGroup: additionalPublicationGroup
+                };
+                if (additionalPublicationGroup === "all") {
+                  this.isPublishedToAll = this.isPublished(additionalPubOption)
+                    ? false
+                    : true;
+                } else if (additionalPublicationGroup === "intranet") {
+                  this.isPublishedToIntranet = this.isPublished(additionalPubOption)
+                    ? false
+                    : true;
+                } else if (additionalPublicationGroup === "guest") {
+                  this.isPublishedToGuest = this.isPublished(additionalPubOption)
+                    ? false
+                    : true;
+                }
+              }
+            }
+
+            return;
+          }
+
+          this.isPublishedToAll = this.isPublished(pubOption) ? false : true;
         },
         getFields: function (filter) {
           var values = {},

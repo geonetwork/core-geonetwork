@@ -31,6 +31,7 @@
   goog.require("gn_search_manager");
   goog.require("gn_session_service");
   goog.require("gn_alert");
+  goog.require("gn_es");
 
   var module = angular.module("gn_cat_controller", [
     "gn_search_manager",
@@ -39,7 +40,8 @@
     "gn_saved_selections",
     "gn_external_viewer",
     "gn_history",
-    "gn_alert"
+    "gn_alert",
+    "gn_es"
   ]);
 
   module.constant("gnSearchSettings", {});
@@ -75,7 +77,18 @@
             enabled: true,
             showSocialBarInFooter: true,
             showApplicationInfoAndLinksInFooter: true,
-            footerCustomMenu: [] // List of static pages identifiers to display
+            footerCustomMenu: [], // List of static pages identifiers to display
+            rssFeeds: [
+              {
+                // List of rss feeds links to display when the OGC API Records service is enabled
+                url: "f=rss&sortby=-createDate&size=30",
+                label: "lastCreatedRecords"
+              }
+              // , {
+              //   url: "f=rss&sortby=-publicationDateForResource&size=30",
+              //   label: "lastPublishedRecords"
+              // }
+            ]
           },
           header: {
             enabled: true,
@@ -622,7 +635,7 @@
                 sortOrder: "desc"
               },
               {
-                sortBy: "resourceTitleObject.default.keyword",
+                sortBy: "resourceTitleObject.default.sort",
                 sortOrder: ""
               },
               {
@@ -733,7 +746,7 @@
               maps: ["ows"]
             },
             isFilterTagsDisplayedInSearch: true,
-            showMapInFacet: false,
+            searchMapPlacement: "results", // results, facets or none
             showStatusFooterFor: "historicalArchive,obsolete,superseded",
             showBatchDropdown: true,
             usersearches: {
@@ -802,6 +815,8 @@
               syncAllLayers: false,
               drawVector: false
             },
+            defaultTool: "layers",
+            defaultToolAfterMapLoad: "layers",
             graticuleOgcService: {},
             "map-viewer": {
               context: "../../map/config-viewer.xml",
@@ -1090,7 +1105,7 @@
                 sortOrder: "desc"
               },
               {
-                sortBy: "resourceTitleObject.default.keyword",
+                sortBy: "resourceTitleObject.default.sort",
                 sortOrder: ""
               },
               {
@@ -1517,6 +1532,7 @@
     "$cookies",
     "gnExternalViewer",
     "gnAlertService",
+    "gnESFacet",
     function (
       $scope,
       $http,
@@ -1536,7 +1552,8 @@
       gnSearchSettings,
       $cookies,
       gnExternalViewer,
-      gnAlertService
+      gnAlertService,
+      gnESFacet
     ) {
       $scope.version = "0.0.1";
       var defaultNode = "srv";
@@ -1556,6 +1573,8 @@
       $scope.langs = gnGlobalSettings.gnCfg.mods.header.languages;
       $scope.lang = gnLangs.detectLang(null, gnGlobalSettings);
       $scope.iso2lang = gnLangs.getIso2Lang($scope.lang);
+
+      $scope.rssFeeds = gnGlobalSettings.gnCfg.mods.footer.rssFeeds;
 
       $scope.getSocialLinksVisible = function () {
         var onMdView = $location.absUrl().indexOf("/metadata/") > -1;
@@ -1648,6 +1667,11 @@
       $scope.isUserGroupUpdateEnabled = gnGlobalSettings.isUserGroupUpdateEnabled;
       $scope.isExternalViewerEnabled = gnExternalViewer.isEnabled();
       $scope.externalViewerUrl = gnExternalViewer.getBaseUrl();
+      $scope.publicationOptions = [];
+
+      $http.get("../api/records/sharing/options").then(function (response) {
+        $scope.publicationOptions = response.data;
+      });
 
       $scope.isSelfRegisterPossible = function () {
         return gnConfig["system.userSelfRegistration.enable"];
@@ -1918,6 +1942,15 @@
             });
         });
 
+        // Retrieve the publication options
+        userLogin.then(function (value) {
+          if ($scope.user && $scope.user.isReviewerOrMore()) {
+            $http.get("../api/records/sharing/options").then(function (response) {
+              $scope.publicationOptions = response.data;
+            });
+          }
+        });
+
         // Retrieve main search information
         var searchInfo = userLogin.then(function (value) {
           // Check index status.
@@ -1952,6 +1985,7 @@
                   $scope.searchInfo = r.data;
                   var keys = Object.keys(gnGlobalSettings.gnCfg.mods.home.facetConfig);
                   selectedFacet = keys[0];
+
                   for (var i = 0; i < keys.length; i++) {
                     if (
                       $scope.searchInfo.aggregations[keys[i]].buckets.length > 0 ||
@@ -1965,7 +1999,13 @@
                     list: keys,
                     key: selectedFacet,
                     lastKey: keys.length > 1 ? keys[keys.length - 1] : undefined,
-                    config: gnGlobalSettings.gnCfg.mods.home.facetConfig
+                    config: gnGlobalSettings.gnCfg.mods.home.facetConfig,
+                    facets: gnESFacet.createFacetModel(
+                      gnGlobalSettings.gnCfg.mods.home.facetConfig,
+                      r.data.aggregations,
+                      undefined,
+                      undefined
+                    )
                   };
                 });
             }
@@ -1986,11 +2026,17 @@
         return gnConfig["metadata.workflow.allowPublishNonApprovedMd"];
       };
 
-      $scope.getPublicationOptionClass = function (md, user, isMdWorkflowEnable) {
+      $scope.getPublicationOptionClass = function (
+        md,
+        user,
+        isMdWorkflowEnable,
+        pubOption
+      ) {
         var publicationOptionTitle = $scope.getPublicationOptionTitle(
           md,
           user,
-          isMdWorkflowEnable
+          isMdWorkflowEnable,
+          pubOption
         );
         switch (publicationOptionTitle) {
           case "mdnonapprovedcantpublish":
@@ -2003,16 +2049,22 @@
       };
 
       // Function to get the title name to be used when displaying the publish item in the menu
-      $scope.getPublicationOptionTitle = function (md, user, isMdWorkflowEnable) {
+      $scope.getPublicationOptionTitle = function (
+        md,
+        user,
+        isMdWorkflowEnable,
+        pubOption
+      ) {
         var publicationOptionTitle = "";
-        if (!md.isPublished()) {
+        if (!md.isPublished(pubOption)) {
           if (md.isValid()) {
             publicationOptionTitle = "mdvalid";
           } else {
             if (
               isMdWorkflowEnable &&
               md.isWorkflowEnabled() &&
-              $scope.allowPublishInvalidMd() === false
+              $scope.allowPublishInvalidMd() === false &&
+              pubOption.name === "default"
             ) {
               publicationOptionTitle = "mdinvalidcantpublish";
             } else {
@@ -2029,7 +2081,8 @@
             isMdWorkflowEnable &&
             md.isWorkflowEnabled() &&
             md.mdStatus != 2 &&
-            $scope.allowPublishNonApprovedMd() === false
+            $scope.allowPublishNonApprovedMd() === false &&
+            pubOption.name === "default"
           ) {
             publicationOptionTitle = "mdnonapprovedcantpublish";
           }

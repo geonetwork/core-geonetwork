@@ -422,6 +422,7 @@
     "mdvalid": "Metadata er gyldig",
     "mdinvalid": "Metadata er ugyldig",
     "mdinvalidcantpublish": "Ugyldige metadata kan ikke udgives",
+    "mdnonapprovedcantpublish": "Non approved metadata can't be published",
     "mdnovalidation": "Metadata har ingen valideringsoplysninger",
     "setall": "Indstil alle rettigheder",
     "print_legend": "Signaturforklaring",

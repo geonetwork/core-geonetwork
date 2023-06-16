@@ -422,6 +422,7 @@
     "mdvalid": "Metadata jsou platná",
     "mdinvalid": "Metadata jsou neplatná",
     "mdinvalidcantpublish": "Neplatná metadata nelze publikovat",
+    "mdnonapprovedcantpublish": "Neschválená metadata nelze publikovat",
     "mdnovalidation": "Metadata neobsahují žádné informace o ověření",
     "setall": "Nastavit všechna oprávnění",
     "print_legend": "Legenda",

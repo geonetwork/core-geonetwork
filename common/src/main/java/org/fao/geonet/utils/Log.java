@@ -106,6 +106,16 @@ public final class Log {
         + ".transformerFactory";
 
     /**
+     * This is the name of the RollingFileAppender in your log4j2.xml configuration file.
+     * <p>
+     * LogConfig uses this name to lookup RollingFileAppender to check configuration in
+     * case a custom log file location has been used.
+     */
+    private static final String FILE_APPENDER_NAME = "File";
+
+    public static final String GEONETWORK_MODULE = "geonetwork";
+
+    /**
      * Default constructor. Builds a Log.
      */
     private Log() {
@@ -331,4 +341,62 @@ public final class Log {
         return null;
     }
 
+    public static File getLogfile() {
+        // Appender is supplied by LogUtils based on parsing log4j2.xml file indicated
+        // by database settings
+
+        // First, try the fileappender from the logger named "geonetwork"
+        org.apache.log4j.Appender appender = org.apache.log4j.Logger.getLogger(GEONETWORK_MODULE).getAppender(FILE_APPENDER_NAME);
+        // If still not found, try the one from the logger named "jeeves"
+        if (appender == null) {
+            appender = org.apache.log4j.Logger.getLogger(Log.JEEVES).getAppender(FILE_APPENDER_NAME);
+        }
+        if (appender != null) {
+            if (appender instanceof AppenderWrapper) {
+                AppenderWrapper wrapper = (AppenderWrapper) appender;
+                org.apache.logging.log4j.core.Appender appender2 = wrapper.getAppender();
+
+                if (appender2 instanceof FileAppender) {
+                    FileAppender fileAppender = (FileAppender) appender2;
+                    String logFileName = fileAppender.getFileName();
+                    if (logFileName != null) {
+                        File logFile = new File(logFileName);
+                        if (logFile.exists()) {
+                            return logFile;
+                        }
+                    }
+                }
+                if (appender2 instanceof RollingFileAppender) {
+                    RollingFileAppender fileAppender = (RollingFileAppender) appender2;
+                    String logFileName = fileAppender.getFileName();
+                    if (logFileName != null) {
+                        File logFile = new File(logFileName);
+                        if (logFile.exists()) {
+                            return logFile;
+                        }
+                    }
+                }
+            }
+        }
+        Log.warning(GEONETWORK_MODULE, "Error when getting logger file for the " + "appender named '" + FILE_APPENDER_NAME + "'. "
+            + "Check your log configuration file. "
+            + "A FileAppender or RollingFileAppender is required to return last activity to the user interface."
+            + "Appender file not found.");
+
+        if (System.getProperties().containsKey("log_dir")) {
+            File logDir = new File(System.getProperty("log_dir"));
+            if (logDir.exists() && logDir.isDirectory()) {
+                File logFile = new File(logDir, "logs/geonetwork.log");
+                if (logFile.exists()) {
+                    return logFile;
+                }
+            }
+        } else {
+            File logFile = new File("logs/geonetwork.log");
+            if (logFile.exists()) {
+                return logFile;
+            }
+        }
+        return null; // unavailable
+    }
 }

@@ -623,7 +623,7 @@
                 internal: true,
                 state: { filters: "" },
                 params: {
-                  sortBy: "resourceTitleObject.default.keyword"
+                  sortBy: "resourceTitleObject.default.sort"
                 }
               };
 
@@ -772,6 +772,9 @@
               };
 
               var DEFAULT_CONFIG = {
+                sources: {
+                  filestore: true
+                },
                 process: "onlinesrc-add",
                 fields: {
                   url: {
@@ -1392,7 +1395,8 @@
                     selectedLayersNames = params[scope.addLayersInUrl].split(",");
                   }
 
-                  scope.layers.forEach &&
+                  scope.layers &&
+                    scope.layers.forEach &&
                     scope.layers.forEach(function (l) {
                       if (selectedLayersNames.indexOf(l.Name) != -1) {
                         scope.params.selectedLayers.push(l);
@@ -1409,7 +1413,8 @@
                     ? []
                     : scope.params.name.split(",");
                   scope.params.selectedLayers = [];
-                  scope.layers.forEach &&
+                  scope.layers &&
+                    scope.layers.forEach &&
                     scope.layers.forEach(function (l) {
                       if (selectedLayersNames.indexOf(l.Name) != -1) {
                         scope.params.selectedLayers.push(l);
