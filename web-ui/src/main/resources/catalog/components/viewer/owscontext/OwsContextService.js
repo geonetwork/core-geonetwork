@@ -231,7 +231,7 @@
             var type,
               layer = layers[i];
             if (layer.group == "Background layers") {
-              var layerAttributionArray = undefined;
+              var layerAttributionArray;
               if (layer.extension && layer.extension.attribution) {
                 layerAttributionArray = [];
                 for (var a = 0; a < layer.extension.attribution.length; a++) {
