@@ -226,10 +226,10 @@
               layer = layers[i];
             if (layer.group == "Background layers") {
               var layerAttributionArray = undefined;
-              if (layer.attribution) {
+              if (layer.extension && layer.extension.attribution) {
                 layerAttributionArray = [];
-                for (var a = 0; a < layer.attribution.length; a++) {
-                  var attribution = layer.attribution[a];
+                for (var a = 0; a < layer.extension.attribution.length; a++) {
+                  var attribution = layer.extension.attribution[a];
                   layerAttribution = attribution.title;
                   // If href exist then make the title a link
                   if (attribution.onlineResource && attribution.onlineResource[0].href) {

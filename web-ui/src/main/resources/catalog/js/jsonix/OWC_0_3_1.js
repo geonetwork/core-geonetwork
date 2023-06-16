@@ -369,6 +369,12 @@ var OWC_0_3_1_Module_Factory = function () {
             n: "any",
             mx: true,
             t: "ae"
+          },
+          {
+            n: "attribution",
+            col: true,
+            en: "Attribution",
+            ti: "OWC_0_3_1.Attribution"
           }
         ]
       },
@@ -392,12 +398,6 @@ var OWC_0_3_1_Module_Factory = function () {
             col: true,
             en: "Server",
             ti: "OWC_0_3_1.ServerType"
-          },
-          {
-            n: "attribution",
-            col: true,
-            en: "Attribution",
-            ti: "OWC_0_3_1.Attribution"
           },
           {
             n: "dataURL",
