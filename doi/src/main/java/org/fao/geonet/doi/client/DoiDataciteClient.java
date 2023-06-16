@@ -22,23 +22,16 @@
 //==============================================================================
 package org.fao.geonet.doi.client;
 
-import com.google.common.io.CharStreams;
+import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.methods.HttpDelete;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.message.BasicHeader;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.geonet.utils.Log;
-import org.apache.commons.httpclient.HttpStatus;
 import org.springframework.http.client.ClientHttpResponse;
 
-import java.io.InputStreamReader;
 import java.text.MessageFormat;
 
 import static org.fao.geonet.doi.client.DoiSettings.LOGGER_NAME;
@@ -50,31 +43,13 @@ import static org.fao.geonet.doi.client.DoiSettings.LOGGER_NAME;
  *
  * @author Jose García
  */
-public class DoiClient {
+public class DoiDataciteClient extends BaseDoiClient implements IDoiClient {
 
-    public static final String DOI_ENTITY = "DOI";
-    public static final String ALL_DOI_ENTITY = "All DOI";
-    public static final String DOI_METADATA_ENTITY = "DOI metadata";
-
-    private String apiUrl;
-    private String doiPublicUrl;
-    private String username;
-    private String password;
-
-    private boolean testMode;
-
-    protected GeonetHttpRequestFactory requestFactory;
-
-    public DoiClient(String apiUrl, String username, String password, String doiPublicUrl) {
-        this(apiUrl, username, password, doiPublicUrl, true);
-    }
-
-    public DoiClient(String apiUrl, String username, String password, String doiPublicUrl, boolean testMode) {
+    public DoiDataciteClient(String apiUrl, String username, String password, String doiPublicUrl) {
         this.apiUrl = apiUrl.endsWith("/") ? apiUrl : apiUrl + "/";
         this.doiPublicUrl = doiPublicUrl.endsWith("/") ? doiPublicUrl : doiPublicUrl + "/";
         this.username = username;
         this.password = password;
-        this.testMode = testMode;
 
         requestFactory =
             ApplicationContextHolder.get().getBean(GeonetHttpRequestFactory.class);
@@ -90,6 +65,7 @@ public class DoiClient {
      * @param url   The landing page
      * @throws DoiClientException
      */
+    @Override
     public void createDoi(String doi, String url)
             throws DoiClientException {
 
@@ -97,9 +73,13 @@ public class DoiClient {
                 "doi={0}\nurl={1}",
                 doi, url);
 
-        create(createUrl("doi"), requestBody,
+        String apiurl = createUrl("doi");
+        this.create(apiurl,
+            requestBody,
             "text/plain;charset=UTF-8",
-            DOI_ENTITY);
+            HttpStatus.SC_CREATED,
+            String.format(
+                "DOI metadata created at %s.", apiurl));
     }
 
     /**
@@ -112,10 +92,11 @@ public class DoiClient {
      *          otherwise short explanation for non-200 status.
      * @throws DoiClientException
      */
+    @Override
     public String retrieveDoi(String doi)
             throws DoiClientException {
 
-        return retrieve(createUrl("doi/" + doi), DOI_ENTITY);
+        return retrieve(createUrl("doi/" + doi));
     }
 
     /**
@@ -126,10 +107,11 @@ public class DoiClient {
      * @return If response status is 200: list of DOIs, one DOI per line; empty for 204.
      * @throws DoiClientException
      */
+    @Override
     public String retrieveAllDoi(String doi)
             throws DoiClientException {
 
-        return retrieve(createUrl("doi"), ALL_DOI_ENTITY);
+        return retrieve(createUrl("doi"));
     }
 
     /**
@@ -141,13 +123,17 @@ public class DoiClient {
      * @param doiMetadata XML in DataCite format as String
      * @throws DoiClientException
      */
+    @Override
     public void createDoiMetadata(String doi, String doiMetadata)
             throws DoiClientException {
 
-//        create(createUrl("metadata/" + doi),
-        create(createUrl("metadata"),
+        String apiurl = createUrl("metadata");
+        this.create(apiurl,
             doiMetadata,
-            "application/xml", DOI_METADATA_ENTITY);
+            "application/xml",
+            HttpStatus.SC_CREATED,
+            String.format(
+                "DOI metadata created at %s.", apiurl));
     }
 
     /**
@@ -157,10 +143,10 @@ public class DoiClient {
      * @return
      * @throws DoiClientException
      */
+    @Override
     public String retrieveDoiMetadata(String doi)
             throws DoiClientException {
-        return retrieve(createUrl("metadata/" + doi),
-            "DOI metadata");
+        return retrieve(createUrl("metadata/" + doi));
     }
 
 
@@ -171,6 +157,7 @@ public class DoiClient {
      * @param doi
      * @throws DoiClientException
      */
+    @Override
     public void deleteDoiMetadata(String doi)
             throws DoiClientException {
 
@@ -211,6 +198,7 @@ public class DoiClient {
         }
     }
 
+    @Override
     public void deleteDoi(String doi)
         throws DoiClientException {
 
@@ -252,112 +240,11 @@ public class DoiClient {
     }
 
     /**
-     * See https://support.datacite.org/docs/mds-api-guide#section-register-metadata
-     */
-    private void create(String url, String body, String contentType, String entity)
-            throws DoiClientException {
-
-        ClientHttpResponse httpResponse = null;
-        HttpPost postMethod = null;
-
-        try {
-            Log.debug(LOGGER_NAME, "   -- URL: " + url);
-
-            postMethod = new HttpPost(url);
-
-            ((HttpUriRequest) postMethod).addHeader( new BasicHeader("Content-Type",  contentType + ";charset=UTF-8") );
-            Log.debug(LOGGER_NAME, "   -- Request body: " + body);
-
-            StringEntity requestEntity = new StringEntity(
-                    body,
-                    contentType,
-                    "UTF-8");
-
-            postMethod.setEntity(requestEntity);
-
-            httpResponse = requestFactory.execute(
-                postMethod,
-                new UsernamePasswordCredentials(username, password), AuthScope.ANY);
-            int status = httpResponse.getRawStatusCode();
-
-            Log.debug(LOGGER_NAME, "   -- Request status code: " + status);
-
-            if (status != HttpStatus.SC_CREATED) {
-                String responseBody = httpResponse.getBody() != null
-                    ? CharStreams.toString(new InputStreamReader(httpResponse.getBody()))
-                    :  "";
-                String message = String.format(
-                    "Failed to create '%s' with '%s'. Status is %d. Error is %s. Response body: %s",
-                    url, body, status,
-                    httpResponse.getStatusText(), responseBody);
-                Log.info(LOGGER_NAME, message);
-                throw new DoiClientException(message);
-            } else {
-                Log.info(LOGGER_NAME, String.format(
-                    "DOI metadata created at %s.", url));
-            }
-        } catch (Exception ex) {
-            Log.error(LOGGER_NAME, "   -- Error (exception): " + ex.getMessage());
-            throw new DoiClientException(ex.getMessage());
-
-        } finally {
-            if (postMethod != null) {
-                postMethod.releaseConnection();
-            }
-            // Release the connection.
-            IOUtils.closeQuietly(httpResponse);
-        }
-    }
-
-    private String retrieve(String url, String entity)
-            throws DoiClientException {
-
-        ClientHttpResponse httpResponse = null;
-        HttpGet getMethod = null;
-
-        try {
-            Log.debug(LOGGER_NAME, "   -- URL: " + url);
-
-            getMethod = new HttpGet(url);
-
-
-            httpResponse = requestFactory.execute(getMethod,
-                new UsernamePasswordCredentials(username, password), AuthScope.ANY);
-            int status = httpResponse.getRawStatusCode();
-
-            Log.debug(LOGGER_NAME, "   -- Request status code: " + status);
-
-            if (status == HttpStatus.SC_OK) {
-                return CharStreams.toString(new InputStreamReader(httpResponse.getBody()));
-            } else if (status == HttpStatus.SC_NO_CONTENT) {
-                return null; // Not found
-            } else if (status == HttpStatus.SC_NOT_FOUND) {
-                return null; // Not found
-            } else {
-                Log.info(LOGGER_NAME, "Retrieve DOI metadata end -- Error: " + httpResponse.getStatusText());
-
-                throw new DoiClientException( httpResponse.getStatusText() +
-                    CharStreams.toString(new InputStreamReader(httpResponse.getBody())));
-            }
-
-        } catch (Exception ex) {
-            Log.error(LOGGER_NAME, "   -- Error (exception): " + ex.getMessage());
-            throw new DoiClientException(ex.getMessage());
-
-        } finally {
-            if (getMethod != null) {
-                getMethod.releaseConnection();
-            }
-            // Release the connection.
-            IOUtils.closeQuietly(httpResponse);
-        }
-    }
-
-    /**
      * Builds API endpoint url based on server URL configured in settings.
      *
      * eg. https://mds.datacite.org/doi/10.12770/38e00808-ffca-4266-943f-b691d3ca0bec
      */
+    @Override
     public String createUrl(String service) {
         return this.apiUrl + service;
     }
@@ -368,6 +255,7 @@ public class DoiClient {
      *
      * eg. https://doi.org/10.17882/80771
      */
+    @Override
     public String createPublicUrl(String doi) {
         return this.doiPublicUrl + doi;
     }

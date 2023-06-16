@@ -28,13 +28,9 @@ import static org.fao.geonet.kernel.mef.MEFConstants.DIR_PUBLIC;
 import static org.fao.geonet.kernel.mef.MEFConstants.FS;
 import static org.fao.geonet.kernel.mef.MEFConstants.VERSION;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileFilter;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.URISyntaxException;
+import java.net.URLEncoder;
 import java.nio.file.DirectoryStream;
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
@@ -47,6 +43,7 @@ import java.util.zip.ZipOutputStream;
 import javax.annotation.Nonnull;
 
 import org.apache.commons.io.IOUtils;
+import org.fao.geonet.Constants;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.ZipUtil;
 import org.fao.geonet.constants.Edit;
@@ -68,10 +65,13 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.OperationRepository;
 import org.fao.geonet.utils.BinaryFile;
+import org.fao.geonet.utils.IO;
+import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Attribute;
 import org.jdom.Document;
@@ -527,6 +527,37 @@ public class MEFLib {
         }
 
         throw new Exception("File not found in info.xml : " + fileName);
+    }
+
+    public static void backupRecord(AbstractMetadata metadata, ServiceContext context) {
+        Log.trace(Geonet.DATA_MANAGER, "Backing up record " + metadata.getId());
+        Path outDir = Lib.resource.getRemovedDir(metadata.getId());
+        Path outFile;
+        try {
+            // When metadata records contains character not supported by filesystem
+            // it may be an issue. eg. acri-st.fr/96443
+            outFile = outDir.resolve(URLEncoder.encode(metadata.getUuid(), Constants.ENCODING) + ".zip");
+        } catch (UnsupportedEncodingException e1) {
+            outFile = outDir.resolve(String.format(
+                "backup-%s-%s.mef",
+                new Date(), metadata.getUuid()));
+        }
+
+        Path file = null;
+        try {
+            file = doExport(context, metadata.getUuid(), "full", false, true, false, false, true);
+            Files.createDirectories(outDir);
+            try (InputStream is = IO.newInputStream(file);
+                 OutputStream os = Files.newOutputStream(outFile)) {
+                BinaryFile.copy(is, os);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Error performing backup on record '" + metadata.getUuid() + "'. Contact the system administrator if the problem persists: " + e.getMessage(), e);
+        } finally {
+            if (file != null) {
+                IO.deleteFile(file, false, Geonet.MEF);
+            }
+        }
     }
 
     public enum UuidAction {

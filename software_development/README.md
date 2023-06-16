@@ -13,7 +13,7 @@ This manual is for software developers customizing or developing GeoNetwork:
   * [Eclipse IDE](ECLIPSE.md)
   * [IntelliJ IDE](INTELLIJ.md).
   
-  See [Installing from source code](https://geonetwork-opensource.org/manuals/trunk/en/maintainer-guide/installing/installing-from-source-code.html) (Maintainer Guide)
+  See [Installing from source code](https://geonetwork-opensource.org/manuals/4.0.x/en/install-guide/installing-from-source-code.html) (Installation Guide)
 
 * Writing documentation: see [Writing documentation](https://geonetwork-opensource.org/manuals/trunk/en/contributing/writing-documentation.html) (Contributing Guide).
 * Release process: See [Doing a release](https://geonetwork-opensource.org/manuals/trunk/en/contributing/doing-a-release.html) (Contributing Guide).

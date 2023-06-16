@@ -1541,6 +1541,32 @@
           /**
            * @ngdoc method
            * @methodOf gn_map.service:gnMap
+           * @name gnMap#getLinkDescription
+           *
+           * @description
+           * Retrieve description of the link from the metadata
+           * record using the URL and layer name. The description
+           * may override GetCapabilities layer name and can also
+           * be multilingual.
+           */
+          getLinkDescription: function (md, url, name) {
+            if (md) {
+              var link = md.getLinksByFilter(
+                "protocol:OGC:WMS" +
+                  " AND url:" +
+                  url.replace("?", "\\?") +
+                  " AND name:" +
+                  name
+              );
+              if (link.length === 1) {
+                return link[0].description !== "" ? link[0].description : undefined;
+              }
+            }
+          },
+
+          /**
+           * @ngdoc method
+           * @methodOf gn_map.service:gnMap
            * @name gnMap#addWmsFromScratch
            *
            * @description
@@ -1615,6 +1641,12 @@
                           if (!createOnly) {
                             map.addLayer(olL);
                           }
+
+                          olL.set(
+                            "layerTitleFromMetadata",
+                            $this.getLinkDescription(olL.get("md"), url, name)
+                          );
+
                           gnWmsQueue.removeFromQueue(
                             url,
                             name,
@@ -1910,6 +1942,12 @@
                       if (!createOnly) {
                         map.addLayer(olL);
                       }
+
+                      olL.set(
+                        "layerTitleFromMetadata",
+                        $this.getLinkDescription(olL.get("md"), url, name)
+                      );
+
                       gnWmsQueue.removeFromQueue(url, name, map);
                       defer.resolve(olL);
                     };
@@ -2393,7 +2431,7 @@
           feedLayerWithRelated: function (layer, linkGroup) {
             var md = layer.get("md");
 
-            if (!linkGroup) {
+            if (!Number.isInteger(linkGroup)) {
               console.warn(
                 "The layer has not been found in any group: " +
                   layer.getSource().getParams().LAYERS

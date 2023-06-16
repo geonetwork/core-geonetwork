@@ -512,11 +512,11 @@ INSERT INTO OperationsDes  (iddes, langid, label) VALUES (5,'por','Mapa Interact
 INSERT INTO OperationsDes  (iddes, langid, label) VALUES (6,'por','Featured');
 
 INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (0,'por','Unknown');
-INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (1,'por','Draft');
-INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (2,'por','Approved');
-INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (3,'por','Retired');
-INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (4,'por','Submitted');
-INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (5,'por','Rejected');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (1,'por','Rascunho');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (2,'por','Aprovado');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (3,'por','Retirado');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (4,'por','Enviado');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (5,'por','Rejeitado');
 INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (50,'por','Record created.');
 INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (51,'por','Record updated.');
 INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (52,'por','Attachment {{h.item1}} added.');

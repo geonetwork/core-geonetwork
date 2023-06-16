@@ -5,6 +5,11 @@
       "query.default_field": "any.default",
       "mapping.total_fields.limit": ${es.index.mapping.total_fields.limit},
       "analysis": {
+        "normalizer": {
+          "sorting": {
+            "filter": ["lowercase", "asciifolding"]
+          }
+        },
         "analyzer": {
           "trigram": {
             "type": "custom",
@@ -1025,6 +1030,14 @@
   "mappings": {
     "dynamic_templates": [
       {
+        "conformTo": {
+          "match": "conformTo_*",
+          "mapping": {
+            "type": "keyword"
+          }
+        }
+      },
+      {
         "numbers": {
           "match": "*Number",
           "mapping": {
@@ -1083,6 +1096,11 @@
                   "keyword": {
                     "type": "keyword",
                     "ignore_above": ${es.index.ignore_above}
+                  },
+                  "sort": {
+                    "type": "keyword",
+                    "ignore_above": ${es.index.ignore_above},
+                    "normalizer": "sorting"
                   },
                   "trigram": {
                     "type": "text",

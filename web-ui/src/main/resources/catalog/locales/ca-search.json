@@ -422,6 +422,7 @@
     "mdvalid": "La metadada és vàlida",
     "mdinvalid": "La metadada no és vàlida",
     "mdinvalidcantpublish": "Invalid metadata can't be published",
+    "mdnonapprovedcantpublish": "Non approved metadata can't be published",
     "mdnovalidation": "La metadada no té informació de validació",
     "setall": "Aplicar tots els privilegis",
     "print_legend": "Llegenda",

@@ -79,6 +79,7 @@
                 >
                   <input
                     ng-model="field.value"
+                    data-ng-click="desactivateGeometryTool()"
                     type="text"
                     ng-blur="onBlur($event)"
                     class="input-sm form-control"
@@ -87,8 +88,24 @@
                 </div>
               </div>
 
+              <div ng-if="isBoolean(input)">
+                <div
+                  ng-repeat="field in getInputsByName(input.identifier.value)"
+                  class="input-checkbox checkbox"
+                >
+                  <label>
+                    <input
+                      type="checkbox"
+                      id="field.value"
+                      data-ng-click="desactivateGeometryTool()"
+                      ng-model="field.value"
+                    />
+                  </label>
+                </div>
+              </div>
+
               <!-- Basic form field (combo box or text field) -->
-              <div ng-if="::input.literalData && !isDateTime(input)">
+              <div ng-if="::input.literalData && !isDateTime(input) && !isBoolean(input)">
                 <div
                   class="input-group"
                   ng-repeat="field in getInputsByName(input.identifier.value)"
@@ -97,6 +114,7 @@
                     class="form-control input-sm"
                     ng-if="::input.literalData.allowedValues && !getIsAllowedValuesRange(input.literalData.allowedValues)"
                     ng-model="field.value"
+                    data-ng-click="desactivateGeometryTool()"
                     ng-required="$index < input.minOccurs"
                     ng-disabled="inputWfsOverride[input.identifier.value] || isInputDisabled(input.identifier.value)"
                   >
@@ -114,6 +132,7 @@
                     min="{{::getMinValueFromAllowedValues(input.literalData.allowedValues) || ''}}"
                     max="{{::getMaxValueFromAllowedValues(input.literalData.allowedValues) || ''}}"
                     ng-model="field.value"
+                    data-ng-click="desactivateGeometryTool()"
                     ng-required="$index < input.minOccurs"
                     ng-disabled="inputWfsOverride[input.identifier.value] || isInputDisabled(input.identifier.value)"
                   />
@@ -144,6 +163,7 @@
                   value="field.value"
                   map="::map"
                   read-only="::inputWfsOverride[input.identifier.value] || isInputDisabled(input.identifier.value)"
+                  data-ng-click="desactivateGeometryTool()"
                   ng-required="$index < input.minOccurs"
                   watch-value-change="true"
                 />
@@ -158,10 +178,12 @@
                   output="field.value"
                   output-format="{{ input.outputFormat }}"
                   output-crs="{{ map.getView().getProjection().getCode() }}"
+                  name-type="{{ input.geometryType }}"
                   geometry-type="{{ input.geometryType }}"
                   output-crs="{{ map.getView().getProjection().getCode() }}"
                   output-as-features="true"
                   map="map"
+                  active-geometry-tool="activeGeometryTool"
                 />
               </div>
 

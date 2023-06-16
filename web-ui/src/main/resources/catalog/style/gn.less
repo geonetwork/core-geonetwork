@@ -1,6 +1,8 @@
 // GN Styles
-@import "../lib/style/font-awesome/less/font-awesome.less";
-@import "../lib/style/bootstrap/less/variables.less";
+@import "../catalog/lib/style/font-awesome/css/all.css";
+@import "../catalog/lib/style/font-awesome/css/v4-shims.css";
+@import "../catalog/lib/style/font-awesome/css/v4-font-face.css";
+@import "gn_bootstrap.less";
 @import (less) "../lib/ol.css";
 @import (less) "../lib/angular.ext/hotkeys/hotkeys.min.css";
 @import "gn_doc.less";
@@ -9,7 +11,7 @@
 @import "../views/default/less/gn_variables_default.less"; // must be last
 
 @fa-version: "4.4.0";
-@fa-font-path: "../catalog/lib/style/font-awesome/fonts";
+@fa-font-path: "../catalog/lib/style/font-awesome/webfonts";
 
 div[gn-transfer-ownership] * .list-group {
   max-height: 45em;
@@ -693,18 +695,18 @@ input[type="file"] {
   left: 5px;
 }
 
-.gn-recordtype-n:before {
-  content: @fa-var-file-text;
-}
-.gn-recordtype-s:before {
-  content: @fa-var-bookmark;
-}
-.gn-recordtype-y:before {
-  content: @fa-var-file-o;
-}
-.gn-recordtype-t:before {
-  content: @fa-var-bookmark-o;
-}
+//.gn-recordtype-n:before {
+//  content: @fa-var-file-text;
+//}
+//.gn-recordtype-s:before {
+//  content: @fa-var-bookmark;
+//}
+//.gn-recordtype-y:before {
+//  content: @fa-var-file-o;
+//}
+//.gn-recordtype-t:before {
+//  content: @fa-var-bookmark-o;
+//}
 
 [data-gn-slide-toggle] {
   padding-left: 20px;

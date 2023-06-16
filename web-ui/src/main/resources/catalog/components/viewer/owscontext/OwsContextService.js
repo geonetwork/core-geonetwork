@@ -66,6 +66,7 @@
     "gnOwsCapabilities",
     "$http",
     "gnViewerSettings",
+    "gnViewerService",
     "$translate",
     "$q",
     "$filter",
@@ -78,6 +79,7 @@
       gnOwsCapabilities,
       $http,
       gnViewerSettings,
+      gnViewerService,
       $translate,
       $q,
       $filter,
@@ -117,6 +119,7 @@
         if (mapType && mapConfig) {
           uiConfig = mapConfig["map-" + mapType];
         }
+        var isMainViewer = mapType === "viewer";
         // first remove any existing layer
         var layersToRemove = [];
         map.getLayers().forEach(function (layer) {
@@ -215,10 +218,13 @@
           if (!gnViewerSettings.bgLayers) {
             gnViewerSettings.bgLayers = [];
           }
+          if (isMainViewer) {
           gnViewerSettings.bgLayers.length = 0;
+          }
+
           var bgLayers = gnViewerSettings.bgLayers;
           bgLayers.fromCtx = true;
-          var isFirstBgLayer = false;
+          var isFirstActiveBgLayer = false;
           // -------
 
           for (i = 0; i < layers.length; i++) {
@@ -282,10 +288,12 @@
                     olLayer.getSource().setAttributions(attributionLike);
                   }
 
+                  if (isMainViewer) {
                   bgLayers.push(olLayer);
+                  }
 
-                  if (!layer.hidden && !isFirstBgLayer) {
-                    isFirstBgLayer = true;
+                  if (!layer.hidden && !isFirstActiveBgLayer) {
+                    isFirstActiveBgLayer = true;
                     map.getLayers().setAt(0, olLayer);
                   }
                 }
@@ -301,12 +309,15 @@
                   visible: false
                 });
 
-                if (!layer.hidden && !isFirstBgLayer) {
-                  isFirstBgLayer = true;
+                if (!layer.hidden && !isFirstActiveBgLayer) {
+                  isFirstActiveBgLayer = true;
                   loadingLayer.set("bgLayer", true);
                 }
 
-                var layerIndex = bgLayers.push(loadingLayer) - 1;
+                var layerIndex;
+                if (isMainViewer) {
+                  layerIndex = bgLayers.push(loadingLayer) - 1;
+                }
                 var p = self.createLayer(layer, map, "do not add");
 
                 (function (idx, loadingLayer) {
@@ -314,7 +325,9 @@
                     if (!layer) {
                       return;
                     }
+                    if (layerIndex) {
                     bgLayers[idx] = layer;
+                    }
 
                     layer.displayInLayerManager = false;
                     layer.background = true;
@@ -334,7 +347,8 @@
               // load extension content (JSON)
               var extension =
                 layer.extension && layer.extension.any
-                  ? JSON.parse(layer.extension.any)
+                  ? // Formatted XML may contains extra space and line feed
+                    JSON.parse(layer.extension.any.replaceAll(/\n +/g, " "))
                   : {};
 
               var loadingId = extension.label ? extension.label : layer.name;
@@ -392,6 +406,23 @@
               }
             }
             firstLoad = false;
+          }
+          if (!isFirstActiveBgLayer && bgLayers.length > 0) {
+            console.warn(
+              "Map context does not contain any active background layer. \n" +
+                "Set the hidden parameter to false to at least one layer of the group Background layers. \n" +
+                "Setting the first one in the group as active."
+            );
+            bgLayers[0].set("bgLayer", true);
+            map.getLayers().setAt(0, bgLayers[0]);
+        }
+
+          if (
+            gnGlobalSettings.gnCfg.mods.map.defaultToolAfterMapLoad
+          ) {
+            gnViewerService.openTool(
+              gnGlobalSettings.gnCfg.mods.map.defaultToolAfterMapLoad
+            );
           }
         }
       };
@@ -723,8 +754,11 @@
        * @param {numeric} index of the layer in the tree
        */
       this.createLayer = function (layer, map, bgIdx, index, style) {
+        var res = { href: "" };
+        if (layer.server) {
         var server = layer.server[0];
-        var res = server.onlineResource[0];
+          res = server.onlineResource[0];
+        }
         var createOnly = angular.isDefined(bgIdx) || angular.isDefined(index);
 
         if (layer.name && layer.name.match(reT)) {

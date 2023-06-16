@@ -342,7 +342,7 @@
                       0.95;
 
                     var closeBtn =
-                      '<a class="fa fa-times btn btn-link pull-right close-popover"></a>';
+                      '<a class="btn btn-link pull-right close-popover"><i class="fa fa-times"></i></a>';
 
                     tooltipTarget.popover({
                       title: info.label,
