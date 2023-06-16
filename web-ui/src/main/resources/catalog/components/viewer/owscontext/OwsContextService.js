@@ -219,7 +219,7 @@
             gnViewerSettings.bgLayers = [];
           }
           if (isMainViewer) {
-          gnViewerSettings.bgLayers.length = 0;
+            gnViewerSettings.bgLayers.length = 0;
           }
 
           var bgLayers = gnViewerSettings.bgLayers;
@@ -281,7 +281,7 @@
                       typeof attributionLike === "object" &&
                       Array.isArray(attributionLike)
                     ) {
-                      attributionLike.push(...layerAttributionArray);
+                      attributionLike.push.apply(attributionLike, layerAttributionArray);
                     } else {
                       attributionLike = layerAttributionArray;
                     }
@@ -289,7 +289,7 @@
                   }
 
                   if (isMainViewer) {
-                  bgLayers.push(olLayer);
+                    bgLayers.push(olLayer);
                   }
 
                   if (!layer.hidden && !isFirstActiveBgLayer) {
@@ -326,7 +326,7 @@
                       return;
                     }
                     if (layerIndex) {
-                    bgLayers[idx] = layer;
+                      bgLayers[idx] = layer;
                     }
 
                     layer.displayInLayerManager = false;
@@ -415,7 +415,7 @@
             );
             bgLayers[0].set("bgLayer", true);
             map.getLayers().setAt(0, bgLayers[0]);
-        }
+          }
 
           if (
             gnGlobalSettings.gnCfg.mods.map.defaultToolAfterMapLoad
@@ -756,7 +756,7 @@
       this.createLayer = function (layer, map, bgIdx, index, style) {
         var res = { href: "" };
         if (layer.server) {
-        var server = layer.server[0];
+          var server = layer.server[0];
           res = server.onlineResource[0];
         }
         var createOnly = angular.isDefined(bgIdx) || angular.isDefined(index);
