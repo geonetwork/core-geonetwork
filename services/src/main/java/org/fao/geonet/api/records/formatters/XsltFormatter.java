@@ -24,9 +24,11 @@
 package org.fao.geonet.api.records.formatters;
 
 import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.search.JSONLocCacheLoader;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -121,12 +123,20 @@ public class XsltFormatter implements FormatterImpl {
             Element translations = new Element("translations");
             Map<String, String> translationMap = new JSONLocCacheLoader(configurableApplicationContext, fparams.context.getLanguage()).call();
             for (Map.Entry<String, String> entry : translationMap.entrySet()) {
-                // Skip keys that are not alpha numeric only including "." - otherwhise chars like : ? +... cause problem when creating element.
+                // Attempt to only use name that are valid element names.
+                //   https://www.w3.org/TR/REC-xml/#NT-Name
+                //   https://www.w3.org/TR/REC-xml/#NT-NameStartChar
+                // Skip keys that are not alphanumeric only including "." - otherwise certain chars like ':?+...' can cause problem when creating element as they are invalid element names
+                // i.e. some properties look like the following
+                //      "cron-0 0 12 * * ?": "Fire at 12pm (noon) every day"
+                //      "system/feedback"="Feedback"
+
                 if (entry.getKey().matches("[a-zA-Z0-9\\.]+")) {
                     try {
                         translations.addContent(new Element(entry.getKey()).setText(entry.getValue()));
                     } catch (Exception e) {
-                        System.out.println("Failed to add translation key for \"" + entry.getKey() + "\"=\"" + entry.getValue() + "\". " + e.getMessage());
+                        // If errors are generated here then it may mean that the regular expression needs to be updated.
+                        Log.error(Geonet.GEONETWORK, "Failed to add translation key for \"" + entry.getKey() + "\"=\"" + entry.getValue() + "\". " + e.getMessage());
                     }
                 }
             }
