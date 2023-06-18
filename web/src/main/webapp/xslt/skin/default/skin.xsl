@@ -2,6 +2,10 @@
 <!--
   The main entry point for all user interface generated
   from XSLT.
+
+  Note: When using getUiConfigurationJsonProperty, /root/request/ui may be empty or the parameter may not be defined.
+        If this is the case then use defaults specified from CatController.js - defaultConfig
+
 -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:util="java:org.fao.geonet.util.XslUtil"
@@ -23,9 +27,9 @@
                   select="/root/gui/language"/>
 
     <xsl:variable name="isHeaderEnabled"
-                  select="if (util:getUiConfigurationJsonProperty(/root/request/ui, 'mods.header.enabled') = 'true')
-                        then true()
-                        else false()"/>
+                  select="if (util:getUiConfigurationJsonProperty(/root/request/ui, 'mods.header.enabled') = 'false')
+                        then false()
+                        else true()"/>
 
     <xsl:if test="$isHeaderEnabled">
       <div class="navbar navbar-default gn-top-bar" role="navigation">
@@ -49,18 +53,18 @@
           <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav" id="topbar-left">
               <xsl:variable name="isHomeEnabled"
-                            select="if (util:getUiConfigurationJsonProperty(/root/request/ui, 'mods.home.enabled') = 'true')
-                                    then true()
-                                    else false()"/>
+                            select="if (util:getUiConfigurationJsonProperty(/root/request/ui, 'mods.home.enabled') = 'false')
+                                    then false()
+                                    else true()"/>
               <xsl:if test="$isHomeEnabled">
                 <xsl:variable name="isLogoInHeader"
                               select="if (util:getUiConfigurationJsonProperty(/root/request/ui, 'mods.header.isLogoInHeader') = 'true')
                                     then true()
                                     else false()"/>
                 <xsl:variable name="isShowGNName"
-                              select="if (util:getUiConfigurationJsonProperty(/root/request/ui, 'mods.header.showGNName') = 'true')
-                                    then true()
-                                    else false()"/>
+                              select="if (util:getUiConfigurationJsonProperty(/root/request/ui, 'mods.header.showGNName') = 'false')
+                                    then false()
+                                    else true()"/>
                 <xsl:if test="not($isLogoInHeader) or $isShowGNName">
                   <xsl:variable name="appUrl"
                                 select="if(util:getUiConfigurationJsonProperty(/root/request/ui, 'mods.home.appUrl'))
@@ -82,9 +86,9 @@
               </xsl:if>
 
               <xsl:variable name="isSearchEnabled"
-                            select="if (util:getUiConfigurationJsonProperty(/root/request/ui, 'mods.search.enabled') = 'true')
-                                    then true()
-                                    else false()"/>
+                            select="if (util:getUiConfigurationJsonProperty(/root/request/ui, 'mods.search.enabled') = 'false')
+                                    then false()
+                                    else true()"/>
               <xsl:if test="$isSearchEnabled">
                 <xsl:variable name="searchUrl"
                               select="if(util:getUiConfigurationJsonProperty(/root/request/ui, 'mods.search.appUrl'))
@@ -99,9 +103,9 @@
               </xsl:if>
 
               <xsl:variable name="isMapEnabled"
-                            select="if (util:getUiConfigurationJsonProperty(/root/request/ui, 'mods.map.enabled') = 'true')
-                                    then true()
-                                    else false()"/>
+                            select="if (util:getUiConfigurationJsonProperty(/root/request/ui, 'mods.map.enabled') = 'false')
+                                    then false()
+                                    else true()"/>
               <xsl:if test="$isMapEnabled">
                 <xsl:variable name="mapUrl"
                               select="if(util:getUiConfigurationJsonProperty(/root/request/ui, 'mods.map.appUrl'))
@@ -119,9 +123,9 @@
             <xsl:variable name="isAuthenticated"
                           select="util:isAuthenticated()"/>
             <xsl:variable name="isSigninEnabled"
-                          select="if (util:getUiConfigurationJsonProperty(/root/request/ui, 'mods.authentication.enabled') = 'true')
-                                    then true()
-                                    else false()"/>
+                          select="if (util:getUiConfigurationJsonProperty(/root/request/ui, 'mods.authentication.enabled') = 'false')
+                                    then false()
+                                    else true()"/>
             <xsl:if test="$isSigninEnabled and not($isAuthenticated) and not($isDisableLoginForm)">
               <xsl:variable name="signinUrl"
                             select="if(util:getUiConfigurationJsonProperty(/root/request/ui, 'mods.signin.appUrl'))
@@ -179,9 +183,9 @@
 
   <xsl:template name="footer">
     <xsl:variable name="isFooterEnabled"
-                  select="if (util:getUiConfigurationJsonProperty(/root/request/ui, 'mods.footer.enabled') = 'true')
-                        then true()
-                        else false()"/>
+                  select="if (util:getUiConfigurationJsonProperty(/root/request/ui, 'mods.footer.enabled') = 'false')
+                        then false()
+                        else true()"/>
     <xsl:if test="$isFooterEnabled">
       <div class="navbar navbar-default gn-bottom-bar" role="navigation">
         <ul class="nav navbar-nav">
