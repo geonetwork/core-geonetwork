@@ -467,7 +467,7 @@
     field per language is displayed. -->
     <expanded>
       <name>cit:title</name>
-      <name>cit:abstract</name>
+      <name>mri:abstract</name>
     </expanded>
     <!-- All fields in ISO could be multilingual.
     Define element to exclude.
