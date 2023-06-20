@@ -10,6 +10,28 @@
   exclude-result-prefixes="#all">
 
 
+  <xsl:function name="gn-fn-iso19115-3.2018:write-date-or-dateTime" as="node()">
+    <xsl:param name="date" as="xs:string"/>
+    <xsl:param name="dateType" as="xs:string"/>
+    <cit:CI_Date>
+      <cit:date>
+        <xsl:choose>
+          <xsl:when test="contains($date, 'T')">
+            <gco:DateTime><xsl:value-of select="$date"/></gco:DateTime>
+          </xsl:when>
+          <xsl:otherwise>
+            <gco:Date><xsl:value-of select="$date"/></gco:Date>
+          </xsl:otherwise>
+        </xsl:choose>
+      </cit:date>
+      <cit:dateType>
+        <cit:CI_DateTypeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_DateTypeCode" codeListValue="{$dateType}"/>
+      </cit:dateType>
+    </cit:CI_Date>
+  </xsl:function>
+
+
+
   <!-- Get language id attribute defined in
   the metadata PT_Locale section matching the lang
   parameter. If not found, return the lang parameter
