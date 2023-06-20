@@ -236,10 +236,10 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
                 Log.warning(Geonet.DATA_MANAGER, String.format(
 
                     "Error during removal of metadata %s part of batch delete operation. " +
-                    "This error may create a ghost record (ie. not in the index " +
-                    "but still present in the database). " +
-                    "You can reindex the catalogue to see it again. " +
-                    "Error was: %s.", md.getUuid(), e.getMessage()));
+                        "This error may create a ghost record (ie. not in the index " +
+                        "but still present in the database). " +
+                        "You can reindex the catalogue to see it again. " +
+                        "Error was: %s.", md.getUuid(), e.getMessage()));
                 e.printStackTrace();
             }
         });
@@ -501,11 +501,15 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
             moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.EXTRA, extra, false, true));
 
             // If the metadata has an atom document, index related information
-            InspireAtomFeed feed = inspireAtomFeedRepository.findByMetadataId(id);
+            List<InspireAtomFeed> feedList = inspireAtomFeedRepository.findAllByMetadataId(id);
 
-            if ((feed != null) && StringUtils.isNotEmpty(feed.getAtom())) {
+            if (feedList.stream().anyMatch(f -> StringUtils.isNotEmpty(f.getAtom()))) {
                 moreFields.add(SearchManager.makeField("has_atom", "y", true, true));
-                moreFields.add(SearchManager.makeField("any", feed.getAtom(), false, true));
+                feedList.forEach(f -> {
+                    if (StringUtils.isNotEmpty(f.getAtom())) {
+                        moreFields.add(SearchManager.makeField("any", f.getAtom(), false, true));
+                    }
+                });
             }
 
             if (owner != null) {
@@ -545,8 +549,8 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
                     if (logo != null) {
                         added = true;
                         moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.LOGO,
-                                                               "/images/harvesting/" + logo.getPath().getFileName(),
-                                                               true, false));
+                            "/images/harvesting/" + logo.getPath().getFileName(),
+                            true, false));
                     }
                 }
             }
