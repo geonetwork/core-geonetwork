@@ -528,10 +528,10 @@
   <xsl:template match="mdb:MD_Metadata/*/lan:PT_Locale">
     <xsl:element name="lan:{local-name()}">
       <xsl:variable name="id"
-                    select="upper-case(java:twoCharLangCode(lan:language/lan:LanguageCode/@codeListValue))"/>
+                    select="upper-case(java:twoCharLangCode(lan:language/lan:LanguageCode/@codeListValue, ''))"/>
 
       <xsl:apply-templates select="@*"/>
-      <xsl:if test="normalize-space(@id)='' or normalize-space(@id)!=$id">
+      <xsl:if test="normalize-space(@id) = '' or normalize-space(@id) != $id">
         <xsl:attribute name="id">
           <xsl:value-of select="$id"/>
         </xsl:attribute>
