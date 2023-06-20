@@ -39,21 +39,18 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 
 /**
  * Created by francois on 04/06/16.
  */
 public class SiteInformation {
     final Properties properties = System.getProperties();
-    private Map<String, String> catProperties = new HashMap<>();
-    private Map<String, String> indexProperties = new HashMap<>();
-    private Map<String, String> systemProperties = new HashMap<>();
-    private Map<String, String> databaseProperties = new HashMap<>();
-    private Map<String, String> versionProperties = new HashMap<>();
+    private Map<String, String> catProperties = new LinkedHashMap<>();
+    private Map<String, String> indexProperties = new LinkedHashMap<>();
+    private Map<String, String> systemProperties = new LinkedHashMap<>();
+    private Map<String, String> databaseProperties = new LinkedHashMap<>();
+    private Map<String, String> versionProperties = new LinkedHashMap<>();
 
     public SiteInformation(final ServiceContext context, final GeonetContext gc) {
         if (context.getUserSession().isAuthenticated()) {
@@ -124,9 +121,19 @@ public class SiteInformation {
     private void loadCatalogueInfo(final GeonetContext gc) {
         ServiceConfig sc = gc.getBean(ServiceConfig.class);
 
-        String[] props = {Geonet.Config.DATA_DIR, Geonet.Config.CODELIST_DIR, Geonet.Config.CONFIG_DIR,
-            Geonet.Config.INDEX_CONFIG_DIR, Geonet.Config.SCHEMAPLUGINS_DIR, Geonet.Config.SUBVERSION_PATH,
-            Geonet.Config.RESOURCES_DIR, Geonet.Config.FORMATTER_PATH, Geonet.Config.BACKUP_DIR};
+        String[] props = {
+            Geonet.Config.SYSTEM_DATA_DIR,
+            Geonet.Config.DATA_DIR,
+            Geonet.Config.BACKUP_DIR,
+            Geonet.Config.CODELIST_DIR,
+            Geonet.Config.RESOURCES_DIR,
+            Geonet.Config.SCHEMAPLUGINS_DIR,
+            Geonet.Config.CONFIG_DIR,
+            Geonet.Config.INDEX_CONFIG_DIR,
+            Geonet.Config.FORMATTER_PATH,
+            Geonet.Config.HTMLCACHE_DIR,
+            Geonet.Config.SUBVERSION_PATH
+        };
 
         for (String prop : props) {
             catProperties.put("data." + prop, sc.getValue(prop));
