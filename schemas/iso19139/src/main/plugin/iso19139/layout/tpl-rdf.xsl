@@ -427,25 +427,44 @@
     <!-- xpath: gmd:identificationInfo/*/gmd:language/gmd:LanguageCode/@codeListValue -->
 
 
+    <!-- dct:license content -->
     <!-- "The license under which the dataset is published and can be reused." -->
-    <xsl:for-each select="gmd:resourceConstraints/gmd:MD_LegalConstraints/*/gmd:MD_RestrictionCode[@codeListValue!='otherRestrictions']">
-      <dct:license>
-        <xsl:value-of select="@codeListValue"/>
-      </dct:license>
+    <xsl:for-each select="gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:useConstraints">
+      <xsl:choose>
+        <xsl:when test="gmd:MD_RestrictionCode[@codeListValue!='otherRestrictions']">
+          <dct:license>
+            <xsl:value-of select="@codeListValue"/>
+          </dct:license>
+        </xsl:when>
+        <xsl:otherwise>
+            <xsl:call-template name="legalOtherConstraints">
+              <xsl:with-param name="ocnode"><xsl:copy-of select="./following-sibling::gmd:otherConstraints[1]"/></xsl:with-param>
+              <xsl:with-param name="tagname">license</xsl:with-param>
+            </xsl:call-template>
+        </xsl:otherwise>
+      </xsl:choose>
     </xsl:for-each>
-    <xsl:for-each
-      select="gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:otherConstraints/gco:CharacterString">
-      <dct:license>
-        <xsl:value-of select="."/>
-      </dct:license>
-    </xsl:for-each>
-    <xsl:for-each
-      select="gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:otherConstraints/gmx:Anchor">
-      <dct:license rdf:resource="{@xlink:href}">
-        <xsl:value-of select="."/>
-      </dct:license>
+
+    <!--  Access constraints should not be stored under license, but rather on accessRights category,
+          cf https://semiceu.github.io/GeoDCAT-AP/releases/2.0.0/#conditions-for-access-and-use-and-limitations-on-public-access-use-limitation-and-access-other-constraints 
+    -->
+    <xsl:for-each select="gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:accessConstraints">
+      <xsl:choose>
+        <xsl:when test="gmd:MD_RestrictionCode[@codeListValue!='otherRestrictions']">
+          <dct:license>
+            <xsl:value-of select="@codeListValue"/>
+          </dct:license>
+        </xsl:when>
+        <xsl:otherwise>
+            <xsl:call-template name="legalOtherConstraints">
+              <xsl:with-param name="ocnode"><xsl:copy-of select="./following-sibling::gmd:otherConstraints[1]"/></xsl:with-param>
+              <xsl:with-param name="tagname">accessRights</xsl:with-param>
+            </xsl:call-template>
+        </xsl:otherwise>
+      </xsl:choose>
     </xsl:for-each>
     <!-- xpath: gmd:identificationInfo/*/gmd:resourceConstraints/??? -->
+
 
     <xsl:for-each select="../../gmd:distributionInfo/*/gmd:transferOptions/*/gmd:onLine">
       <dcat:distribution rdf:resource="{iso19139:RecordUri($uuid)}#{encode-for-uri(gmd:CI_OnlineResource/gmd:protocol/*/text())}-{encode-for-uri(gmd:CI_OnlineResource/gmd:name/(gco:CharacterString|gmx:Anchor)/text())}"/>
@@ -519,6 +538,34 @@
 
     <!-- FIXME ?
       <void:dataDump></void:dataDump>-->
+  </xsl:template>
+
+
+  <!--
+    Process the otherContraints in LegalResources differently depending on the previous sibling. If gmd:useConstraints use dct:license, if gmd:accessConstraints use dct:accessRights
+  -->
+  <xsl:template name="legalOtherConstraints">
+    <xsl:param name="ocnode"/>
+    <xsl:param name="tagname"/>
+
+    <xsl:choose>
+      <xsl:when test="$ocnode/gmd:otherConstraints/gmx:Anchor">
+        <xsl:element name="dct:{$tagname}">
+          <xsl:attribute name="rdf:resource">
+              <xsl:value-of select="$ocnode/gmd:otherConstraints/gmx:Anchor/@xlink:href"/>
+          </xsl:attribute>
+          <xsl:value-of select="$ocnode/gmd:otherConstraints/gmx:Anchor"/>
+        </xsl:element>
+      </xsl:when>
+      <xsl:when test="$ocnode/gmd:otherConstraints/gco:CharacterString">
+        <xsl:element name="dct:{$tagname}">
+          <xsl:value-of select="$ocnode/gmd:otherConstraints/gco:CharacterString"/>
+        </xsl:element>
+      </xsl:when>
+      <!--      <xsl:otherwise>-->
+      <!--          <xsl:copy-of select="$ocnode"/>-->
+      <!--      </xsl:otherwise>-->
+    </xsl:choose>
   </xsl:template>
 
 
