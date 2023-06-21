@@ -170,9 +170,9 @@
         </dcat:accessURL>
         <!-- xpath: gmd:linkage/gmd:URL -->
 
-        <xsl:if test="gmd:name/gco:CharacterString!=''">
+        <xsl:if test="gmd:name/(gco:CharacterString|gmx:Anchor) != ''">
           <dct:title>
-            <xsl:value-of select="gmd:name/gco:CharacterString"/>
+            <xsl:value-of select="gmd:name/(gco:CharacterString|gmx:Anchor)"/>
           </dct:title>
         </xsl:if>
         <!-- xpath: gmd:name/gco:CharacterString -->
