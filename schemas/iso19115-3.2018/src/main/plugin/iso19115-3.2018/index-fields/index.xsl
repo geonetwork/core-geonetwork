@@ -1101,8 +1101,34 @@
           <xsl:copy-of select="gn-fn-index:build-record-link(@uuidref, $xlink, @xlink:title, 'sources')"/>
         </xsl:for-each>
 
-        <xsl:for-each select=".//mrl:source/*/mrl:description[gco:CharacterString != '']">
+        <xsl:for-each select="mrl:source/*/mrl:description[gco:CharacterString != '']">
           <xsl:copy-of select="gn-fn-index:add-multilingual-field('sourceDescription', ., $allLanguages)"/>
+        </xsl:for-each>
+
+
+
+        <xsl:variable name="processSteps"
+                      select="mrl:processStep/*[mrl:description/gco:CharacterString != '']"/>
+        <xsl:for-each select="$processSteps">
+          <processSteps type="object">{
+            "descriptionObject": <xsl:value-of select="gn-fn-index:add-multilingual-field(
+                                'description', mrl:description, $allLanguages)"/>
+            <xsl:if test="normalize-space(mrl:stepDateTime) != ''">
+              ,"date": "<xsl:value-of select="mrl:stepDateTime//gml:timePosition/text()"/>"
+            </xsl:if>
+            <xsl:if test="normalize-space(mrl:source) != ''">
+              ,"source": [
+              <xsl:for-each select="mrl:source/*[mrl:description/gco:CharacterString != '']">
+                {
+                "descriptionObject": <xsl:value-of
+                select="gn-fn-index:add-multilingual-field(
+                                            'description', mrl:description, $allLanguages)"/>
+                }
+                <xsl:if test="position() != last()">,</xsl:if>
+              </xsl:for-each>
+              ]
+            </xsl:if>
+            }</processSteps>
         </xsl:for-each>
       </xsl:for-each>
 

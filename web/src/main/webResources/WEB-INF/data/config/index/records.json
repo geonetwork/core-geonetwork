@@ -1593,9 +1593,6 @@
       "isOpenData": {
         "type": "keyword"
       },
-      "lineage": {
-        "type": "text"
-      },
       "resolutionScaleDenominator": {
         "type": "integer"
       },
@@ -1627,6 +1624,20 @@
           },
           "pass": {
             "type": "keyword"
+          }
+        }
+      },
+      "processSteps": {
+        "type": "nested",
+        "properties": {
+          "descriptionObject": {
+            "type": "object"
+          },
+          "date": {
+            "type": "date"
+          },
+          "source": {
+            "type": "object"
           }
         }
       },

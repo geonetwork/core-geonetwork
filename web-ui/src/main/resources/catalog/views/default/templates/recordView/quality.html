@@ -1,29 +1,57 @@
-<h2 data-translate="">specificationConformance</h2>
+<div data-ng-if="mdView.current.record.specificationConformance">
+  <h2 data-translate="">specificationConformance</h2>
 
-<ul class="gn-md-side gn-comma-list">
-  <li
-    class="list-group-ite1m flex-row"
-    data-ng-repeat="c in mdView.current.record.specificationConformance"
-    title="{{c.explanation}}"
-  >
-    <span
-      class="badge badge-rounded"
-      data-ng-class="{
-           'bg-success': c.pass == 'true',
-           '': c.pass == '',
-           'bg-danger': c.pass == 'false'
-           }"
+  <ul class="gn-md-side gn-comma-list">
+    <li
+      class="list-group-ite1m flex-row"
+      data-ng-repeat="c in mdView.current.record.specificationConformance"
+      title="{{c.explanation}}"
     >
-      <i
-        class="fa fa-fw"
+      <span
+        class="badge badge-rounded"
         data-ng-class="{
-           'fa-check': c.pass == 'true',
-           '': c.pass == '',
-           'fa-times': c.pass == 'false'
-           }"
-      ></i>
-    </span>
-    <a data-ng-if="::c.link" data-ng-href="{{c.link}}">{{c.title}}</a>
-    <span data-ng-if="::!c.link">{{c.title}}</span>
-  </li>
-</ul>
+             'bg-success': c.pass == 'true',
+             '': c.pass == '',
+             'bg-danger': c.pass == 'false'
+             }"
+      >
+        <i
+          class="fa fa-fw"
+          data-ng-class="{
+             'fa-check': c.pass == 'true',
+             '': c.pass == '',
+             'fa-times': c.pass == 'false'
+             }"
+        ></i>
+      </span>
+      <a data-ng-if="::c.link" data-ng-href="{{c.link}}">{{c.title}}</a>
+      <span data-ng-if="::!c.link">{{c.title}}</span>
+    </li>
+  </ul>
+</div>
+<div data-ng-if="mdView.current.record.processSteps">
+  <h2 data-translate="">processSteps</h2>
+
+  <ul class="timeline timeline-1-col">
+    <li class="timeline-inverted"
+        data-ng-repeat="p in mdView.current.record.processSteps">
+      <div
+        class="timeline-badge timeline-badge-small">
+        <i class="fa fa-fw fa-cog"></i>
+      </div>
+      <div class="timeline-panel">
+        <div class="timeline-heading">
+          <strong data-gn-humanize-time="{{p.date}}">{{p.date}}</strong>
+          <br data-ng-if="p.date"/>
+          {{p.description}}
+        </div>
+        <div class="timeline-body" data-ng-if="p.source">
+          <span data-translate="">sourceDescription</span>
+          <p data-ng-repeat="s in p.source">
+            {{s.description}}
+          </p>
+        </div>
+      </div>
+    </li>
+  </ul>
+</div>

@@ -995,6 +995,30 @@
             </xsl:element>
           </xsl:for-each>
         </xsl:for-each>
+
+        <xsl:variable name="processSteps"
+                      select="gmd:lineage/*/gmd:processStep/*[gmd:description/gco:CharacterString != '']"/>
+        <xsl:for-each select="$processSteps">
+          <processSteps type="object">{
+            "descriptionObject": <xsl:value-of select="gn-fn-index:add-multilingual-field(
+                                'description', gmd:description, $allLanguages)"/>
+            <xsl:if test="normalize-space(gmd:dateTime) != ''">
+              ,"date": "<xsl:value-of select="gmd:dateTime/gco:*/text()"/>"
+            </xsl:if>
+            <xsl:if test="normalize-space(gmd:source) != ''">
+              ,"source": [
+              <xsl:for-each select="gmd:source/*[gmd:description/gco:CharacterString != '']">
+                {
+                  "descriptionObject": <xsl:value-of
+                                          select="gn-fn-index:add-multilingual-field(
+                                            'description', gmd:description, $allLanguages)"/>
+                }
+                <xsl:if test="position() != last()">,</xsl:if>
+              </xsl:for-each>
+              ]
+            </xsl:if>
+            }</processSteps>
+        </xsl:for-each>
       </xsl:for-each>
 
       <xsl:variable name="atomProtocol" select="util:getSettingValue('system/inspire/atomProtocol')" />
