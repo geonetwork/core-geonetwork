@@ -31,6 +31,7 @@ var geonetwork = {};
   goog.require("gn_toolbar");
   goog.require("gn_count_watchers");
   goog.require("gn_polyfills");
+  goog.require("gn_static_pages");
 
   /**
    * Main gn module.
@@ -46,7 +47,8 @@ var geonetwork = {};
     "gn_toolbar",
     "gn_locale",
     "gn_config",
-    "cfp.hotkeys"
+    "cfp.hotkeys",
+    "gn_static_pages"
   ]);
 
   // See https://docs.angularjs.org/guide/migration#commit-aa077e8
