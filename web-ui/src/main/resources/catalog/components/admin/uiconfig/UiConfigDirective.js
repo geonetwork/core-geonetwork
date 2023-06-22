@@ -340,10 +340,14 @@
           if (JSON.stringify(newObj) === JSON.stringify(scope.value)) {
             return;
           }
-          for (var key in scope.value) {
-            delete scope.value[key];
+          if (angular.isArray(newObj)) {
+            scope.value = newObj;
+          } else {
+            for (var key in scope.value) {
+              delete scope.value[key];
+            }
+            angular.merge(scope.value, newObj);
           }
-          angular.merge(scope.value, newObj);
           internalUpdate = true;
         });
       }
