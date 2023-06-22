@@ -49,6 +49,7 @@ import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.support.WriteRequest;
 import org.elasticsearch.client.*;
+import org.elasticsearch.client.core.MainResponse;
 import org.elasticsearch.client.indices.AnalyzeRequest;
 import org.elasticsearch.client.indices.AnalyzeResponse;
 import org.elasticsearch.common.xcontent.XContentType;
@@ -281,7 +282,7 @@ public class EsRestClient implements InitializingBean {
         final QueryBuilder query = QueryBuilders.wrapperQuery(String.valueOf(jsonQuery));
         return query(index, query, postFilterBuilder, includedFields, scriptedFields, from, size, sort);
     }
-    
+
     public SearchResponse query(String index, QueryBuilder queryBuilder, QueryBuilder postFilterBuilder,
                                 Set<String> includedFields, Map<String, String> scriptedFields,
                                 int from, int size, List<SortBuilder<FieldSortBuilder>> sort) throws Exception {
@@ -501,5 +502,11 @@ public class EsRestClient implements InitializingBean {
 
         return response.getStatus().toString();
 //        return getClient().ping(RequestOptions.DEFAULT);
+    }
+
+    public String getServerVersion() throws IOException {
+        MainResponse.Version version = client.info(RequestOptions.DEFAULT).getVersion();
+
+        return version.getNumber();
     }
 }
