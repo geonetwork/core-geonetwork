@@ -72,6 +72,16 @@
         </a>
       </li>
 
+      <li class="divider"></li>
+
+      <li ng-if="mdService.isFavouritesPanelEnabled">
+        <a href="" data-ng-click="mdService.addToFavouritesList(searchResults)">
+          <i class="fa fa-fw fa-thumb-tack"></i>&nbsp;<span translate
+            >addToFavouritesList</span
+          >
+        </a>
+      </li>
+
       <li class="divider" data-ng-if="user.isConnected()"></li>
       <li
         data-ng-show="!excludePattern.test('updatePrivileges')"

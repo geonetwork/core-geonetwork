@@ -234,6 +234,8 @@
     "resetPasswordError": "Error occurred while resetting password",
     "rus": "Русский",
     "save": "Save",
+    "saveChanges" : "Save Changes",
+    "markDelete": "Mark for Deletion",
     "scrollTop": "Scroll to top",
     "selectAll": "All",
     "selectNone": "None",

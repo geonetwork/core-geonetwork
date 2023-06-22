@@ -45,7 +45,8 @@
 
   module.directive("searchFilterTags", [
     "$location",
-    function ($location) {
+    "gnFavouritesListService",
+    function ($location, gnFavouritesListService) {
       return {
         restrict: "EA",
         require: "^ngSearchForm",
@@ -172,7 +173,7 @@
                 var value = newFilters[filterKey];
 
                 // value is empty/undefined
-                if (!value || typeof value !== "string") {
+                if (!value || (typeof value !== "string" && typeof value !== "number")) {
                   continue;
                 }
 
@@ -180,6 +181,14 @@
                 if (filterKey === "facet.q") {
                   var facetFilters = createNewFiltersFromFacets(value);
                   Array.prototype.push.apply(scope.currentFilters, facetFilters);
+                  continue;
+                }
+
+                if (filterKey === "favouritesList") {
+                  scope.currentFilters.push({
+                    key: filterKey,
+                    value: value
+                  });
                   continue;
                 }
 
@@ -242,10 +251,15 @@
             true
           );
 
+          scope.getFavouritesListName = function (id) {
+            var item = gnFavouritesListService.getFavouriteListById(id);
+            return item.name;
+          };
+
           scope.isSpecificParameter = function (key) {
             // full text search and uuid on selection only
             // are not translated like facet.
-            return key === "any" || key === "uuid";
+            return key === "any" || key === "uuid" || key == "favouritesList";
           };
           scope.getFilterType = function (filter) {
             if (
@@ -256,6 +270,8 @@
               return "RANGE";
             } else if (filter.key === "geometry") {
               return "GEOMETRY";
+            } else if (filter.key === "favouritesList") {
+              return filter.key;
             } else {
               return undefined;
             }

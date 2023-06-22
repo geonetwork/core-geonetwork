@@ -43,11 +43,10 @@ import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.Constants;
 import org.fao.geonet.NodeInfo;
 import org.fao.geonet.api.ApiUtils;
-import org.fao.geonet.api.records.MetadataApi;
+import org.fao.geonet.api.es.queryrewrite.FavouritesListESQueryRewriter;
 import org.fao.geonet.api.records.MetadataUtils;
 import org.fao.geonet.api.records.model.related.AssociatedRecord;
 import org.fao.geonet.api.records.model.related.RelatedItemType;
-import org.fao.geonet.api.records.model.related.RelatedResponse;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.*;
@@ -77,7 +76,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
-import java.util.stream.Collectors;
 import java.util.zip.DeflaterInputStream;
 import java.util.zip.DeflaterOutputStream;
 import java.util.zip.GZIPInputStream;
@@ -291,8 +289,11 @@ public class EsHTTPProxy {
         @Parameter(hidden = true)
         HttpEntity<String> httpEntity) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
-        call(context, httpSession, request, response, SEARCH_ENDPOINT, httpEntity.getBody(), bucket, relatedTypes);
+        call(context, httpSession, request, response, SEARCH_ENDPOINT, esQueryRewriter.rewriteQuery(httpSession, request, httpEntity.getBody()), bucket, relatedTypes);
     }
+
+    @Autowired
+    FavouritesListESQueryRewriter esQueryRewriter;
 
 
     @io.swagger.v3.oas.annotations.Operation(

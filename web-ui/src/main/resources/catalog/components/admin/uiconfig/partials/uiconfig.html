@@ -566,6 +566,25 @@
                   </div>
                 </div>
 
+                <div class="row" data-ng-switch-when="favouriteslists">
+                  <div class="col-lg-5 gn-nopadding-left">
+                    <label class="control-label">{{('ui-' + key) | translate}}</label>
+                    <gn-ui-config-help />
+                  </div>
+                  <div class="col-lg-7 gn-nopadding-right">
+                    <div data-ng-repeat="(type, value) in mCfg[key] track by $index">
+                      <input
+                        type="checkbox"
+                        id="{{key + type}}-checkbox"
+                        data-ng-model="mCfg[key][type]"
+                      />&nbsp;
+                      <label class="control-label" for="{{key + type}}-checkbox"
+                        >{{('ui-' + type) | translate}}</label
+                      >
+                    </div>
+                  </div>
+                </div>
+
                 <div class="row" data-ng-switch-when="savedSelection">
                   <!--<h3>{{('ui-' + key) | translate}}</h3>-->
 

@@ -1,0 +1,31 @@
+<div class="gn-favourite-add">
+  <label class="control-label gn-margin-bottom-sm" data-translate=""
+    >{{'favouriteslist'|translate}}</label
+  >
+  <div class="list-group">
+    <a
+      ng-repeat="list in favouritesLists "
+      href=""
+      class="list-group-item"
+      ng-click="select(list)"
+      ng-style="list.id === selectedListId && {'background-color': '#DDDDDD'}"
+    >
+      <label class="list-group-item-heading">{{list.name}}</label>
+    </a>
+  </div>
+
+  <div class="btn-toolbar">
+    <button
+      type="button"
+      class="btn btn-success pull-right"
+      ng-disabled="selectedListId <0"
+      ng-click="finish()"
+    >
+      <i class="fa fa-fw fa-save"></i>
+      <span data-translate="">Add</span>
+    </button>
+    <button type="button" class="btn btn-default pull-right" data-dismiss="modal">
+      <span data-translate="">cancel</span>
+    </button>
+  </div>
+</div>

@@ -22,10 +22,18 @@
     >
       <strong class="text-no-wrap">
         <span ng-if="::!specific">{{('facet-' + filter.key) | facetKeyTranslator}}</span>
-        <span ng-if="::specific">{{filter.key}}</span>
+        <span ng-if="::specific && type !=='favouritesList'">{{filter.key}}</span>
+        <span ng-if="::specific && type =='favouritesList'"
+          >{{'favouritelist' |translate}}</span
+        >
       </strong>
       <div class="flex-spacer"></div>
-      <span ng-if="::specific"> {{::filter.value | characters:180}} </span>
+      <span ng-if="::specific && type !=='favouritesList'">
+        {{::filter.value | characters:180}}
+      </span>
+      <span ng-if="::specific && type  =='favouritesList'">
+        {{getFavouritesListName(filter.value) | characters:180}}
+      </span>
       <span ng-if="::type === 'RANGE'">
         {{::filter.value | renderRangeExpression:filter.key}}
       </span>

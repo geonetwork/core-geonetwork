@@ -754,6 +754,9 @@
               includePortals: true,
               displayFeaturedSearchesPanel: false
             },
+            favouriteslists: {
+              enabled: true
+            },
             savedSelection: {
               enabled: false
             },
@@ -1249,6 +1252,7 @@
           "related",
           "linkTypes",
           "usersearches",
+          "favouriteslists",
           "savedSelection",
           "listOfServices",
           "showCitation",

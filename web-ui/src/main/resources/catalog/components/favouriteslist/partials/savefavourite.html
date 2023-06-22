@@ -1,0 +1,128 @@
+<div class="gn-favourite-modal">
+  <form class="form-horizontal">
+    <!-- name -->
+    <div class="form-group">
+      <label class="control-label gn-margin-bottom-sm" data-translate=""
+        >userSearchName</label
+      >
+      <div>
+        <input
+          type="text"
+          name="name"
+          class="form-control gn-margin-bottom-sm"
+          maxlength="255"
+          data-ng-model="name"
+        />
+      </div>
+    </div>
+    <!-- contents -->
+    <div class="form-group">
+      <label class="control-label gn-margin-bottom-sm" data-translate=""
+        >Contents (favourite records)</label
+      >
+      <!-- list of metadata for the selected list -->
+      <div class="list-group">
+        <div ng-repeat="hit in hits">
+          <div
+            class="list-group-item"
+            ng-style="{'background-color': isDeleted(hit) ? '#FFF0F0':'white'}"
+          >
+            <div class="btn-group btn-group-sm pull-right" role="group">
+              <button
+                ng-click="delete(hit)"
+                title="{{'markDelete'|translate}}"
+                class="btn btn-default"
+              >
+                <i class="fa fa-times text-danger" ng-if="!isDeleted(hit)"></i>
+                <span class="text-danger" ng-if="isDeleted(hit)">
+                  <i class="fa fa-times text-danger"></i> to be deleted</span
+                >
+              </button>
+            </div>
+
+            <label class="list-group-item-heading"> {{getTitle(hit)}}</label>
+            <p class="list-group-item-text" style="font-size: 10px">
+              <i>{{hit._id}}</i>
+            </p>
+            <p class="list-group-item-text">{{getAbstract(hit)}}</p>
+          </div>
+        </div>
+      </div>
+
+      <!--pagenation -->
+      <div>
+        <div class="gn-pager">
+          <ul class="pagination">
+            <li data-ng-class="page.page == 0 ? 'disabled' : ''">
+              <a href="" data-ng-click="pageFirst()">
+                <i class="fa fa-angle-double-left"></i>
+                <span class="sr-only" data-translate="">first</span>
+              </a>
+            </li>
+            <li data-ng-class="page.page == 0 ? 'disabled' : ''">
+              <a href="" data-ng-click="pagePrevious()">
+                <i class="fa fa-angle-left"></i>
+                <span class="sr-only" data-translate="">previous</span>
+              </a>
+            </li>
+            <li data-ng-if="hits.length === 0">
+              <span ng-show="page.pages > 1">
+                {{page.from}} - {{page.to}}
+                <span translate>resultXonY</span>
+                {{page.count}}
+              </span>
+              <span ng-show="page.pages <= 1">
+                {{page.to}}
+                <span translate>results</span>
+              </span>
+            </li>
+            <li class="btn-group" data-ng-if="hits.length > 0">
+              <!-- A dropdown button to select the number of page
+                   and indicating the current page info -->
+              <div style="padding: 7px">
+                <span ng-show="page.pages > 1">
+                  {{page.from}} - {{page.to}}
+                  <span translate>resultXonY</span>
+                  {{page.count}}
+                </span>
+                <span ng-show="page.pages <= 1">
+                  {{page.to}}
+                  <span translate>results</span>
+                </span>
+              </div>
+            </li>
+
+            <li data-ng-class="page.page == (page.pages-1) ? 'disabled' : ''">
+              <a href="" data-ng-click="pageNext()">
+                <i class="fa fa-angle-right"></i>
+                <span class="sr-only" data-translate="">next</span>
+              </a>
+            </li>
+            <li data-ng-class="page.page == (page.pages-1) ? 'disabled' : ''">
+              <a href="" data-ng-click="pageLast()">
+                <i class="fa fa-angle-double-right"></i>
+                <span class="sr-only" data-translate="">last</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </form>
+
+  <!--save/cancel -->
+
+  <div class="btn-toolbar">
+    <button
+      type="button"
+      class="btn btn-success pull-right"
+      data-gn-click-and-spin="save()"
+    >
+      <i class="fa fa-fw fa-save"></i>
+      <span data-translate="">saveChanges</span>
+    </button>
+    <button data-dismiss="modal" type="button" class="btn btn-default pull-right">
+      <span data-translate="">cancel</span>
+    </button>
+  </div>
+</div>

@@ -1,0 +1,80 @@
+<div class="panel panel-default gn-favourites" data-ng-show="isFavouritesPanelEnabled">
+  <div class="panel-heading" data-gn-slide-toggle="false">
+    <i class="fa fa-fw fa-thumb-tack" />&nbsp;
+    <span data-translate="">{{'favourites' | translate}}</span>
+
+    <div class="pull-right">
+      <div class="btn-group" role="group">
+        <button
+          type="button"
+          class="btn btn-default btn-xs"
+          title="{{'createUserSearch' | translate}}"
+          data-ng-click="createNewList($event)"
+        >
+          <span class="fa fa-fw fa-plus"></span>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="panel-body">
+    <ul class="list-group">
+      <li
+        class="list-group-item flex-row flex-align-center flex-wrap"
+        data-ng-repeat="search in favouriteLists"
+      >
+        <div class="gn-favourite flex-grow-4">
+          <a ng-click="searchUrl(search)" style="cursor: pointer"
+            >{{search.name}}&nbsp;({{search.nItems}})</a
+          >
+        </div>
+
+        <div class="btn-group btn-group-sm" role="group" ng-disabled="!search.editable">
+          <!-- view -->
+          <a
+            ng-click="searchUrl(search)"
+            class="btn btn-default"
+            title="{{'View' | translate}}"
+            aria-label="{{'View' | translate}}"
+          >
+            <span class="fa fa-filter"></span>
+          </a>
+          <!-- private/public status -->
+          <a
+            href=""
+            class="btn btn-default"
+            data-ng-click="(search.editable) && toggleStatus(search)"
+            title="{{'favouriteToggleStatus' | translate}}"
+            aria-label="{{'change status' | translate}}"
+            ng-disabled="!search.editable || search.userName ==null"
+          >
+            <span class="fa fa-unlock" ng-if="search.public"></span>
+            <span class="fa fa-lock" ng-if="!search.public"></span>
+          </a>
+          <!-- edit -->
+          <a
+            href=""
+            class="btn btn-default"
+            data-ng-click="(search.editable) &&  edit(search)"
+            title="{{'edit' | translate}}"
+            aria-label="{{'edit' | translate}}"
+            ng-disabled="!search.editable"
+          >
+            <span class="fa fa-pencil"></span>
+          </a>
+          <!-- delete -->
+          <button
+            href=""
+            class="btn btn-default"
+            data-gn-click-and-spin="(search.editable) && delete(search)"
+            data-gn-confirm-click="{{'deleteFavouritesConfirm' | translate}}"
+            title="{{'delete' | translate}}"
+            aria-label="{{'delete' | translate}}"
+            ng-disabled="!search.editable"
+          >
+            <span class="fa fa-remove text-danger"></span>
+          </button>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>

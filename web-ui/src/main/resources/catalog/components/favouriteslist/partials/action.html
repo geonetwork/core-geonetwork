@@ -1,0 +1,53 @@
+<!-- Single button -->
+<div
+  class=""
+  ng-if="isFavouritesPanelEnabled && record.isTemplate != 'y' &&  areEditableLists()"
+>
+  <button
+    type="button"
+    class="btn btn-default btn-single dropdown-toggle"
+    data-toggle="dropdown"
+    aria-haspopup="true"
+    aria-expanded="false"
+    title="{{'addToFavouritesList' | translate}}"
+  >
+    <i class="fa fa-thumb-tack"></i>&nbsp;
+    <span class="sr-only" data-translate="">addToFavouritesList</span>
+    <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu" role="menu">
+    <li
+      class="dropdown-header"
+      data-ng-show="canBeAdded()"
+      role="menuitem"
+      data-translate=""
+    >
+      addToSelection
+    </li>
+
+    <li
+      data-ng-repeat="s in favouriteLists "
+      ng-if="s.editable"
+      data-ng-show="canBeAdded(s)"
+      role="menuitem"
+    >
+      <a href="" data-ng-click="add(s)"> {{s.name}} </a>
+    </li>
+    <li
+      class="dropdown-header"
+      data-ng-show="canBeRemoved()"
+      role="menuitem"
+      data-translate=""
+    >
+      removeFromSelection
+    </li>
+    <li
+      data-ng-repeat="s in favouriteLists  "
+      ng-if="s.editable"
+      data-ng-show="canBeRemoved(s)"
+      role="menuitem"
+    >
+      <a href="" data-ng-click="remove(s)"> {{s.name}}</a>
+    </li>
+  </ul>
+</div>
