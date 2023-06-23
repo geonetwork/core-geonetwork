@@ -117,6 +117,7 @@ public class SchemaManager {
     private String defaultSchema;
     private Path basePath;
     private Path resourcePath;
+    private Path schemaPublicationDir;
     private int numberOfCoreSchemasAdded = 0;
 
     public static Path registerXmlCatalogFiles(Path webappDir, Path schemapluginUriCatalog) {
@@ -177,6 +178,7 @@ public class SchemaManager {
     public void configureFrom(SchemaManager schemaManager, Path basePath, GeonetworkDataDirectory dataDir) {
         this.basePath = basePath;
         this.resourcePath = dataDir.getResourcesDir();
+        this.schemaPublicationDir = dataDir.getSchemaPublicationDir();
         this.schemaPluginsDir = dataDir.getSchemaPluginsDir();
         this.schemaPluginsCat = schemaPluginsDir.resolve("schemaplugin-uri-catalog.xml");
         this.defaultLang = schemaManager.defaultLang;
@@ -209,13 +211,14 @@ public class SchemaManager {
      * @param defaultLang      the default language (taken from context)
      * @param defaultSchema    the default schema (taken from config.xml)
      */
-    public void configure(ApplicationContext applicationContext, Path basePath, Path resourcePath, Path schemaPluginsCat,
+    public void configure(ApplicationContext applicationContext, Path basePath, Path resourcePath, Path schemaPublicationDir, Path schemaPluginsCat,
                           Path sPDir, String defaultLang, String defaultSchema, boolean createOrUpdateSchemaCatalog) throws Exception {
 
         hmSchemas.clear();
 
         this.basePath = basePath;
         this.resourcePath = resourcePath;
+        this.schemaPublicationDir = schemaPublicationDir;
         this.schemaPluginsDir = sPDir;
         this.schemaPluginsCat = schemaPluginsCat;
         this.defaultLang = defaultLang;
@@ -1260,7 +1263,7 @@ public class SchemaManager {
         }
         deleteDir(schemaDir);
 
-        Path pubSchemaDir = resourcePath.resolve(Geonet.Path.SCHEMAS).resolve(name);
+        Path pubSchemaDir = schemaPublicationDir.resolve(Geonet.Path.SCHEMAS).resolve(name);
         if (Log.isDebugEnabled(Geonet.SCHEMA_MANAGER)) {
             Log.debug(Geonet.SCHEMA_MANAGER, "Removing published schemas directory " + pubSchemaDir);
         }
@@ -1857,7 +1860,7 @@ public class SchemaManager {
      * @param schemaPluginDir the directory containing the schema plugin
      */
     private void copySchemaXSDsToWebApp(String name, Path schemaPluginDir) throws Exception {
-        Path schemasDir = resourcePath.resolve(Geonet.Path.SCHEMAS);
+        Path schemasDir = schemaPublicationDir.resolve(Geonet.Path.SCHEMAS);
         Files.createDirectories(schemasDir);
 
         Path webAppDirSchemaXSD = schemasDir.resolve(name);

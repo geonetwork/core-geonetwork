@@ -74,6 +74,7 @@ public class GeonetworkDataDirectory {
     private Path metadataRevisionDir;
     private Path resourcesDir;
     private Path htmlCacheDir;
+    private Path schemaPublicationDir;
     private Path uploadDir;
     private Path formatterDir;
     private Path nodeLessFiles;
@@ -305,6 +306,9 @@ public class GeonetworkDataDirectory {
 
         htmlCacheDir = setDir(jeevesServlet, webappName, handlerConfig, htmlCacheDir,
             ".htmlcache" + KEY_SUFFIX, Geonet.Config.HTMLCACHE_DIR, handlerConfig.getValue(Geonet.Config.RESOURCES_DIR), "htmlcache"
+        );
+        schemaPublicationDir = setDir(jeevesServlet, webappName, handlerConfig, schemaPublicationDir,
+            ".schemapublication" + KEY_SUFFIX, Geonet.Config.SCHEMAPUBLICATION_DIR, handlerConfig.getValue(Geonet.Config.RESOURCES_DIR), "schemapublication"
         );
         backupDir = setDir(jeevesServlet, webappName, handlerConfig, backupDir,
             ".backup" + KEY_SUFFIX, Geonet.Config.BACKUP_DIR, "data", "backup"
@@ -717,6 +721,23 @@ public class GeonetworkDataDirectory {
      */
     public void setHtmlCacheDir(Path htmlCacheDir) {
         this.htmlCacheDir = htmlCacheDir;
+    }
+
+    /**
+     * Get directory for publishing schemas and making them publicly available.
+     *
+     * @return directory for publishing schemas and making them publicly available.
+     */
+    public Path getSchemaPublicationDir() {
+        return schemaPublicationDir;
+    }
+
+    /**
+     * Set directory for publishing schemas and making them publicly available.
+      * @param schemaPublicationDir
+     */
+    public void setSchemaPublicationDir(Path schemaPublicationDir) {
+        this.schemaPublicationDir = schemaPublicationDir;
     }
 
     /**

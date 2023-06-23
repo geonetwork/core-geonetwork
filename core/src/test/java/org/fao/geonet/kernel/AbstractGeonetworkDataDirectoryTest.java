@@ -83,6 +83,7 @@ public abstract class AbstractGeonetworkDataDirectoryTest extends AbstractCoreIn
         final Path expectedResourcesDir = expectedDataDir.resolve("data").resolve("resources");
         assertEquals(expectedResourcesDir, dataDirectory.getResourcesDir());
         assertEquals(expectedResourcesDir.resolve("htmlcache"), dataDirectory.getHtmlCacheDir());
+        assertEquals(expectedResourcesDir.resolve("schemapublication"), dataDirectory.getSchemaPublicationDir());
         assertEquals(expectedConfigDir.resolve("schema_plugins"), dataDirectory.getSchemaPluginsDir());
         assertEquals(expectedConfigDir.resolve("codelist"), dataDirectory.getThesauriDir());
     }

@@ -304,6 +304,11 @@
 
   <filter-mapping>
     <filter-name>resources</filter-name>
+    <url-pattern>/xml/schemas/*</url-pattern>
+  </filter-mapping>
+
+  <filter-mapping>
+    <filter-name>resources</filter-name>
     <url-pattern>/map/*</url-pattern>
   </filter-mapping>
 

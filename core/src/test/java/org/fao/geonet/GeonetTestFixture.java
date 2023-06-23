@@ -191,12 +191,13 @@ public class GeonetTestFixture {
     protected SchemaManager initSchemaManager(Path webappDir, GeonetworkDataDirectory geonetworkDataDirectory) throws Exception {
         final Path schemaPluginsDir = geonetworkDataDirectory.getSchemaPluginsDir();
         final Path resourcePath = geonetworkDataDirectory.getResourcesDir();
+        final Path schemaPublicationDir = geonetworkDataDirectory.getSchemaPublicationDir();
         Path schemaPluginsCatalogFile = schemaPluginsDir.resolve("schemaplugin-uri-catalog.xml");
 
         final SchemaManager schemaManager = _applicationContext.getBean(SchemaManager.class);
 
         SchemaManager.registerXmlCatalogFiles(webappDir, schemaPluginsCatalogFile);
-        schemaManager.configure(_applicationContext, webappDir, resourcePath,
+        schemaManager.configure(_applicationContext, webappDir, resourcePath, schemaPublicationDir,
             schemaPluginsCatalogFile, schemaPluginsDir, "eng", "iso19139", true);
 
         assertRequiredSchemas(schemaManager);
