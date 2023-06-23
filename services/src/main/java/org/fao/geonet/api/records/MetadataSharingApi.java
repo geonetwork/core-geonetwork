@@ -1223,34 +1223,20 @@ public class MetadataSharingApi {
                             Metadata md = this.metadataRepository.findOneByUuid(metadata.getUuid());
 
                             if (md != null) {
-                                Iterator<GroupOperations> it = privileges.iterator();
+                                setOperations(sharing, dataManager, context, appContext, md, operationMap, allGroupPrivileges,
+                                    ApiUtils.getUserSession(session).getUserIdAsInt(), skipAllReservedGroup, report, request,
+                                    metadataListToNotifyPublication, notifyByEmail);
 
-                                while (it.hasNext()) {
-                                    GroupOperations g = it.next();
-
-                                    if (g.getGroup() == ReservedGroup.all.getId() ||
-                                        g.getGroup() == ReservedGroup.intranet.getId()) {
-                                        allGroupPrivileges.add(g);
-                                        it.remove();
-                                    }
-                                }
-
-                                if (!allGroupPrivileges.isEmpty()) {
-                                    setOperations(sharing, dataManager, context, appContext, md, operationMap, allGroupPrivileges,
-                                        ApiUtils.getUserSession(session).getUserIdAsInt(), skipAllReservedGroup, report, request,
-                                        metadataListToNotifyPublication, notifyByEmail);
-                                }
-                            }
-
-                            if (!privileges.isEmpty()) {
+                                report.incrementProcessedRecords();
+                                listOfUpdatedRecords.add(String.valueOf(md.getId()));
+                            } else {
                                 setOperations(sharing, dataManager, context, appContext, metadata, operationMap, privileges,
                                     ApiUtils.getUserSession(session).getUserIdAsInt(), skipAllReservedGroup, report, request,
                                     metadataListToNotifyPublication, notifyByEmail);
-                            }
 
-                            report.incrementProcessedRecords();
-                            listOfUpdatedRecords.add(String.valueOf(metadata.getId()));
-                            listOfUpdatedRecords.add(String.valueOf(md.getId()));
+                                report.incrementProcessedRecords();
+                                listOfUpdatedRecords.add(String.valueOf(metadata.getId()));
+                            }
 
                         } else {
                             setOperations(sharing, dataManager, context, appContext, metadata, operationMap, privileges,
