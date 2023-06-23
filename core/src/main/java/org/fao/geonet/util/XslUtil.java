@@ -523,7 +523,7 @@ public final class XslUtil {
     }
 
     /**
-     * Check is user is currently authenticated.
+     * Check if user is authenticated.
      */
     public static boolean isAuthenticated() throws Exception {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
