@@ -1,4 +1,4 @@
-INSERT INTO Languages (id, name, isinspire, isdefault) VALUES ('spa','español', 'y', 'n');
+INSERT INTO Languages (id, name, isinspire) VALUES ('spa','español', 'y');
 
 -- Take care to table ID (related to other loc files)
 INSERT INTO CategoriesDes (iddes, langid, label) VALUES (2,'spa','Conjuntos de datos');

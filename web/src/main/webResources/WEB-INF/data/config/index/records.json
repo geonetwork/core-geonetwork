@@ -1316,6 +1316,14 @@
               "organisation": {
                 "type": "keyword"
               },
+              "email": {
+                "type": "keyword",
+                "copy_to": ["any.default"]
+              },
+              "individual": {
+                "type": "keyword",
+                "copy_to": ["any.default"]
+              },
               "role": {
                 "type": "keyword"
               }

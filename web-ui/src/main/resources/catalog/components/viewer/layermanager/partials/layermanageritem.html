@@ -66,9 +66,10 @@
           for="layer-{{$index}}"
           data-ng-class="{'gn-map-layer-selected': layer.showInfo}"
         >
-          <span class="clickable"
-                data-ng-class="layer.get('errors').length > 0 ? 'text-danger' : ''"
-                title="{{layer.get('label')}}"
+          <span
+            class="clickable"
+            data-ng-class="layer.get('errors').length > 0 ? 'text-danger' : ''"
+            title="{{layer.get('label')}}"
           >
             {{layer.get('layerTitleFromMetadata') || layer.get('label')}}
             <span

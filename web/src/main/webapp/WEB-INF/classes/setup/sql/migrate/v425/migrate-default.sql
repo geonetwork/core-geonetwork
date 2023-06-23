@@ -35,6 +35,7 @@ UPDATE StatusValuesDes SET label = 'Retirado' WHERE iddes = 3 AND langid = 'spa'
 UPDATE StatusValuesDes SET label = 'Enviado' WHERE iddes = 4 AND langid = 'spa';
 UPDATE StatusValuesDes SET label = 'Rechazado' WHERE iddes = 5 AND langid = 'spa';
 
+ALTER TABLE Languages DROP COLUMN isdefault;
 
 UPDATE Settings SET value='4.2.5' WHERE name='system/platform/version';
 UPDATE Settings SET value='SNAPSHOT' WHERE name='system/platform/subVersion';

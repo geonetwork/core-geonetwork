@@ -129,6 +129,7 @@
     In that case you may want to use a custom dialect
     <entry key="hibernate.dialect" value="org.fao.geonet.dialect.CustomPostgreSQLDialect" />
     -->
+
   </util:map>
 
   <util:list id="wro4jUrlsToInitialize" value-type="java.lang.String">
@@ -281,7 +282,7 @@
         <value>json/core+search+v4+custom</value>
         <value>json/schemas</value>
         <value>standards/iso19139/codelists/gmd:MD_TopicCategoryCode+gmd:MD_ScopeCode+gmd:MD_MaintenanceFrequencyCode+gmd:MD_ProgressCode+gmd:MD_SpatialRepresentationTypeCode</value>
-        <value>standards/iso19115-3.2018/codelists/cit:CI_DateTypeCode+indeterminatePosition+mri:DS_InitiativeTypeCode+mri:DS_AssociationTypeCode</value>
+        <value>standards/iso19115-3.2018/codelists/cit:CI_DateTypeCode+indeterminatePosition+mri:DS_InitiativeTypeCode+mri:DS_AssociationTypeCode+cit:CI_RoleCode</value>
         <value>db/MetadataCategory+Operation+Group+StatusValue+Source+Translations</value>
       </util:list>
     </entry>
@@ -297,7 +298,7 @@
         <value>json/core+search+editor+v4+custom</value>
         <value>json/schemas</value>
         <value>standards/iso19139/codelists/gmd:MD_TopicCategoryCode+gmd:MD_ScopeCode+gmd:MD_MaintenanceFrequencyCode+gmd:MD_ProgressCode+gmd:MD_SpatialRepresentationTypeCode</value>
-        <value>standards/iso19115-3.2018/codelists/cit:CI_DateTypeCode+indeterminatePosition+mri:DS_InitiativeTypeCode+mri:DS_AssociationTypeCode</value>
+        <value>standards/iso19115-3.2018/codelists/cit:CI_DateTypeCode+indeterminatePosition+mri:DS_InitiativeTypeCode+mri:DS_AssociationTypeCode+cit:CI_RoleCode</value>
         <value>db/MetadataCategory+Operation+Group+StatusValue+Source+Translations</value>
       </util:list>
     </entry>
