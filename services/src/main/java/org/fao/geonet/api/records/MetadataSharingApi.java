@@ -552,12 +552,12 @@ public class MetadataSharingApi {
                 java.util.Optional<GroupPrivilege> allGroupPrivsBefore =
                     sharingBefore.getPrivileges().stream().filter(p -> p.getGroup() == ReservedGroup.all.getId()).findFirst();
 
-                boolean publishedBefore = allGroupPrivsBefore.get().getOperations().get(ReservedOperation.view.name());
+                boolean publishedBefore = allGroupPrivsBefore.isPresent() && allGroupPrivsBefore.get().getOperations().get(ReservedOperation.view.name());
 
                 java.util.Optional<GroupOperations> allGroupOpsAfter =
                     privileges.stream().filter(p -> p.getGroup() == ReservedGroup.all.getId()).findFirst();
 
-                boolean publishedAfter = allGroupOpsAfter.get().getOperations().get(ReservedOperation.view.name());
+                boolean publishedAfter = allGroupOpsAfter.isPresent() && allGroupOpsAfter.get().getOperations().get(ReservedOperation.view.name());
 
                 if (publishedBefore != publishedAfter) {
                     MetadataPublicationNotificationInfo metadataNotificationInfo = new MetadataPublicationNotificationInfo();
@@ -1296,9 +1296,10 @@ public class MetadataSharingApi {
                             }
 
                             if (!allGroupPrivileges.isEmpty()) {
-                                setOperations(sharing, dataMan, context, appContext, metadata, operationMap, privileges,
+                                setOperations(sharing, dataMan, context, appContext, md, operationMap, allGroupPrivileges,
                                     ApiUtils.getUserSession(session).getUserIdAsInt(), skipAllReservedGroup, report, request,
-                                    metadataListToNotifyPublication, notifyByEmail);                            }
+                                    metadataListToNotifyPublication, notifyByEmail);
+                            }
                         }
 
                         if (!privileges.isEmpty()) {
