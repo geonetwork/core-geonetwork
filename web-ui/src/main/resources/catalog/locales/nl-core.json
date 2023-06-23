@@ -408,6 +408,7 @@
     "featureAttributeTable": "Attributen tabel",
     "attributeName": "naam",
     "attributeDefinition": "Definitie",
+    "attributeCardinality": "Cardinaliteit:",
     "attributeValues": "Lijst met waarden",
     "attributeType": "Soort",
     "attributeCode": "Code",

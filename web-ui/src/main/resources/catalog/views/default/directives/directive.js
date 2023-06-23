@@ -66,10 +66,12 @@
           ) {
             scope.attributeTable = [scope.attributeTable];
           }
-          scope.showCodeColumn = false;
+          scope.columnVisibility = {
+            code: false
+          };
           angular.forEach(scope.attributeTable, function (elem) {
             if (elem.code > "") {
-              scope.showCodeColumn = true;
+              scope.columnVisibility.code = true;
             }
           });
         }
