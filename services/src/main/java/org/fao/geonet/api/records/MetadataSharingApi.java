@@ -1275,42 +1275,27 @@ public class MetadataSharingApi {
                     }
 
                     List<GroupOperations> privileges = sharing.getPrivileges();
-                    List<GroupOperations> allGroupPrivileges = new ArrayList<>();
 
                     if (metadata instanceof MetadataDraft) {
-                        // If the metadata is a working copy, publish privileges (ALL and INTRANET groups)
-                        // should be applied to the approved version.
+                        // If the metadata is a working copy, privileges should be applied to the approved version.
                         Metadata md = this.metadataRepository.findOneByUuid(metadata.getUuid());
 
                         if (md != null) {
-                            Iterator<GroupOperations> it = privileges.iterator();
+                            setOperations(sharing, dataMan, context, appContext, md, operationMap, privileges,
+                                ApiUtils.getUserSession(session).getUserIdAsInt(), skipAllReservedGroup, report, request,
+                                metadataListToNotifyPublication, notifyByEmail);
 
-                            while (it.hasNext()) {
-                                GroupOperations g = it.next();
+                            report.incrementProcessedRecords();
+                            listOfUpdatedRecords.add(String.valueOf(md.getId()));
 
-                                if (g.getGroup() == ReservedGroup.all.getId() ||
-                                    g.getGroup() == ReservedGroup.intranet.getId()) {
-                                    allGroupPrivileges.add(g);
-                                    it.remove();
-                                }
-                            }
-
-                            if (!allGroupPrivileges.isEmpty()) {
-                                setOperations(sharing, dataMan, context, appContext, md, operationMap, allGroupPrivileges,
-                                    ApiUtils.getUserSession(session).getUserIdAsInt(), skipAllReservedGroup, report, request,
-                                    metadataListToNotifyPublication, notifyByEmail);
-                            }
-                        }
-
-                        if (!privileges.isEmpty()) {
+                        } else {
                             setOperations(sharing, dataMan, context, appContext, metadata, operationMap, privileges,
                                 ApiUtils.getUserSession(session).getUserIdAsInt(), skipAllReservedGroup, report, request,
                                 metadataListToNotifyPublication, notifyByEmail);
-                        }
 
-                        report.incrementProcessedRecords();
-                        listOfUpdatedRecords.add(String.valueOf(metadata.getId()));
-                        listOfUpdatedRecords.add(String.valueOf(md.getId()));
+                            report.incrementProcessedRecords();
+                            listOfUpdatedRecords.add(String.valueOf(metadata.getId()));
+                        }
 
                     } else {
                         setOperations(sharing, dataMan, context, appContext, metadata, operationMap, privileges,
