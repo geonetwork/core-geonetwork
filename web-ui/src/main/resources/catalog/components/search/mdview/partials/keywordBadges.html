@@ -21,8 +21,9 @@
       </button>
       <div gn-popover-content="">
         <a data-ng-href="{{::k.link}}" data-ng-if="::!!k.link">
-          <i class="fa fa-fw" />
+          <i class="fa fa-fw fa-info" />
           <span data-translate="">keywordAnchorLink</span>
+          <span>{{::k.default}}</span>
         </a>
         <br data-ng-if="::!!k.link" />
 

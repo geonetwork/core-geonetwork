@@ -82,7 +82,7 @@ public class SetSequenceValueToMaxOfMetadataAndStats extends DatabaseMigrationTa
                 Log.debug(Geonet.DB, "  Set sequence to value: " + newSequenceValue);
                 final String updateSequenceSQL = "ALTER SEQUENCE HIBERNATE_SEQUENCE " +
                     "RESTART WITH " + newSequenceValue;
-                statement.execute(updateSequenceSQL);
+                statement.execute(updateSequenceSQL); //NOSONAR
 
                 // TODO: Probably a scenario for Oracle db
                 // ALTER sequence HIBERNATE_SEQUENCE increment by X;

@@ -745,6 +745,25 @@
                   </div>
                 </div>
 
+                <div
+                  class="row"
+                  data-ng-switch-when="defaultToolAfterMapLoad|defaultTool"
+                  data-ng-switch-when-separator="|"
+                >
+                  <div class="col-lg-5 gn-nopadding-left">
+                    <label class="control-label">{{('ui-' + key) | translate}}</label>
+                    <gn-ui-config-help />
+                  </div>
+
+                  <div class="col-lg-7 gn-nopadding-right">
+                    <select
+                      data-ng-model="mCfg[key]"
+                      data-ng-options="('' + tool | translate) for tool in ['', 'addLayers', 'projectionSwitcher', 'contexts', 'filter', 'layers', 'legend', 'print', 'processes']"
+                      class="form-control"
+                    />
+                  </div>
+                </div>
+
                 <!-- numbers -->
                 <div class="row" data-ng-switch-when="paginationInfo">
                   <div class="col-lg-5 gn-nopadding-left">

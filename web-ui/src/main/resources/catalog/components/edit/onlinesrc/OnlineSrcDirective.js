@@ -623,7 +623,7 @@
                 internal: true,
                 state: { filters: "" },
                 params: {
-                  sortBy: "resourceTitleObject.default.keyword"
+                  sortBy: "resourceTitleObject.default.sort"
                 }
               };
 

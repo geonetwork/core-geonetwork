@@ -76,7 +76,7 @@
         configId: "harvester",
         defaultParams: {
           isTemplate: ["y", "n", "s", "t"],
-          sortBy: "resourceTitleObject.default.keyword"
+          sortBy: "resourceTitleObject.default.sort"
         }
       };
       $scope.searchObj.params = angular.extend(

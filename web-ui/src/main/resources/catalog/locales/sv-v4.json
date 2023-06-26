@@ -74,11 +74,6 @@
   "indexingError": "Indexeringsfel",
   "source": "Katalog",
   "ui-sortBy-help": "Definiera standardsortering t.ex. &#39;relevans&#39; för att använda den beräknade sökpoängen (se poängkonfiguration) eller &#39;dateStamp # desc&#39; för att returnera senast uppdaterad post först.",
-  "sortBy-dateStampDesc": "senaste uppdateringar",
-  "sortBy-createDateDesc": "nya poster",
-  "sortBy-resourceTitleObject.default.keyword": "titel",
-  "sortBy-relevance": "relevans",
-  "sortBy-ratingDesc": "betyg",
   "sortBy-validDesc": "valideringsstatus",
   "sortBy-recordOwner": "ägare",
   "csw-sortByHelp": "Definiera sorteringsalternativ för GetRecords-fråga. Detta kan lösa problem för stora datamängder där vissa poster kan ändras på fjärrnoden under skörd och returneras på olika sidor. Sortering efter &#39;identifier:A&#39; betyder efter UUID i alfabetisk ordning. Alla CSW-frågor kan användas i kombination med A eller D för att ställa in beställningen.",
@@ -93,9 +88,6 @@
   "alternateTitle": "Även kallad:",
   "isHarvested-true": "Skördad",
   "isHarvested-false": "Lokal",
-  "sortBy-popularityDesc": "popularitet",
-  "sortBy-denominatorDesc": "stigande",
-  "sortBy-denominatorAsc": "fallande",
   "deleteRecordConfirm": "Vill du verkligen ta bort &#39;{{resourceTitle}}&#39;?",
   "range-relation-intersects": "Skär över",
   "range-relation-within": "Inom",
@@ -418,5 +410,6 @@
   "staticPageStatus-PRIVATE": "Visible to logged users",
   "staticPageStatus-PUBLIC": "Visible to everyone",
   "pageLink": "Link",
-  "pageSection-help": "Currently, the default UI view only supports TOP and FOOTER values. Custom UI views can make use of additional values."
+  "pageSection-help": "Currently, the default UI view only supports TOP and FOOTER values. Custom UI views can make use of additional values.",
+  "lastCreatedRecords": "Last created records"
 }

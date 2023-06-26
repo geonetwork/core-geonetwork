@@ -33,11 +33,11 @@ import org.fao.geonet.domain.HarvesterSetting;
 import org.fao.geonet.domain.Setting;
 import org.fao.geonet.domain.SettingDataType;
 import org.fao.geonet.domain.Setting_;
-import org.fao.geonet.repository.LanguageRepository;
 import org.fao.geonet.repository.SettingRepository;
 import org.fao.geonet.repository.SortUtils;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.utils.Log;
+import org.fao.geonet.web.DefaultLanguage;
 import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,7 +75,7 @@ public class SettingManager {
     public static final ZoneId DEFAULT_SERVER_TIMEZONE = ZoneId.systemDefault();
 
     @PersistenceContext
-    private EntityManager _entityManager;
+    private EntityManager entityManager;
 
     @Autowired
     private ServletContext servletContext;
@@ -90,6 +90,9 @@ public class SettingManager {
 
     @Autowired
     StandardPBEStringEncryptor encryptor;
+
+    @Autowired
+    DefaultLanguage defaultLanguage;
 
     @PostConstruct
     private void init() {
@@ -115,7 +118,7 @@ public class SettingManager {
         Element env = new Element("settings");
         List<Setting> settings = repo.findAll(SortUtils.createSort(Setting_.name));
 
-        Map<String, Element> pathElements = new HashMap<String, Element>();
+        Map<String, Element> pathElements = new HashMap<>();
 
         for (Setting setting : settings) {
             if (asTree) {
@@ -384,7 +387,7 @@ public class SettingManager {
      * without using this class. For example when using an SQL script.
      */
     public final boolean refresh() throws SQLException {
-        _entityManager.getEntityManagerFactory().getCache().evict(HarvesterSetting.class);
+        entityManager.getEntityManagerFactory().getCache().evict(HarvesterSetting.class);
         return true;
     }
 
@@ -415,9 +418,8 @@ public class SettingManager {
     public
     @Nonnull
     String getSiteURL(String language) {
-        LanguageRepository languageRepository = ApplicationContextHolder.get().getBean(LanguageRepository.class);
         if (language == null) {
-            language = languageRepository.findOneByDefaultLanguage().getId();
+            language = defaultLanguage.getLanguage();
         }
 
         return getNodeURL() + language + "/";
@@ -436,8 +438,7 @@ public class SettingManager {
                 nodeId = node.getId();
             }
         } catch (Exception e) {}
-        String locServ = getBaseURL() + nodeId + "/";
-        return locServ;
+        return getBaseURL() + nodeId + "/";
     }
     /**
      * Return complete node URL eg. http://localhost:8080/geonetwork/
@@ -454,7 +455,6 @@ public class SettingManager {
     public
     @Nonnull
     String getServerURL() {
-        String baseURL = pathFinder.getBaseUrl();
         String protocol = getValue(Settings.SYSTEM_SERVER_PROTOCOL);
         String host = getValue(Settings.SYSTEM_SERVER_HOST);
         String port = getValue(Settings.SYSTEM_SERVER_PORT);
@@ -462,10 +462,10 @@ public class SettingManager {
         return protocol + "://" + host + (isPortRequired(protocol, port) ? ":" + port : "");
     }
 
-    static public boolean isPortRequired(String protocol, String port) {
-        if(Geonet.HttpProtocol.HTTP.equals(protocol) && String.valueOf(Geonet.DefaultHttpPort.HTTP).equals(port)) {
+    public static boolean isPortRequired(String protocol, String port) {
+        if (Geonet.HttpProtocol.HTTP.equals(protocol) && String.valueOf(Geonet.DefaultHttpPort.HTTP).equals(port)) {
             return false;
-        } else if(Geonet.HttpProtocol.HTTPS.equals(protocol) && String.valueOf(Geonet.DefaultHttpPort.HTTPS).equals(port)) {
+        } else if (Geonet.HttpProtocol.HTTPS.equals(protocol) && String.valueOf(Geonet.DefaultHttpPort.HTTPS).equals(port)) {
             return false;
         } else {
             return true;
