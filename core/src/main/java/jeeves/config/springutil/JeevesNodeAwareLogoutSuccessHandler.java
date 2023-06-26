@@ -33,6 +33,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AbstractAuthenticationTargetUrlRequestHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.apache.commons.lang3.StringUtils;
+import org.fao.geonet.kernel.setting.SettingInfo;
 
 
 import java.io.IOException;
@@ -89,10 +90,12 @@ public class JeevesNodeAwareLogoutSuccessHandler extends AbstractAuthenticationT
                     String siteProtocol = settingManager.getValue(Settings.SYSTEM_SERVER_PROTOCOL);
                     
                     // some conditional logic to handle the case where there's no port in the settings
-                    int sitePort = Geonet.DefaultHttpPort.HTTP;
-                    if (StringUtils.isNumeric(settingManager.getValue(Settings.SYSTEM_SERVER_PORT))) {
-                        sitePort = settingManager.getValueAsInt(Settings.SYSTEM_SERVER_PORT);
-                    }
+                    //int sitePort = Geonet.DefaultHttpPort.HTTP;
+                    //if (StringUtils.isNumeric(settingManager.getValue(Settings.SYSTEM_SERVER_PORT))) {
+                    //    sitePort = settingManager.getValueAsInt(Settings.SYSTEM_SERVER_PORT);
+                    //}
+                    SettingInfo si = new SettingInfo();
+                    int sitePort = si.getSitePort(); 
 
                     if (!hostName.equalsIgnoreCase(siteHost) ||
                         !protocol.equalsIgnoreCase(siteProtocol) ||
