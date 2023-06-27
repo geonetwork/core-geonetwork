@@ -90,10 +90,6 @@ public class JeevesNodeAwareLogoutSuccessHandler extends AbstractAuthenticationT
                     String siteProtocol = settingManager.getValue(Settings.SYSTEM_SERVER_PROTOCOL);
                     
                     // some conditional logic to handle the case where there's no port in the settings
-                    //int sitePort = Geonet.DefaultHttpPort.HTTP;
-                    //if (StringUtils.isNumeric(settingManager.getValue(Settings.SYSTEM_SERVER_PORT))) {
-                    //    sitePort = settingManager.getValueAsInt(Settings.SYSTEM_SERVER_PORT);
-                    //}
                     SettingInfo si = new SettingInfo();
                     int sitePort = si.getSitePort(); 
 
