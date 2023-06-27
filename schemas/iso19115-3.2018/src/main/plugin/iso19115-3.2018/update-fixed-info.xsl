@@ -177,7 +177,7 @@
 
       <xsl:apply-templates select="mdb:metadataProfile"/>
       <xsl:apply-templates select="mdb:alternativeMetadataReference"/>
-      <xsl:apply-templates select="mdb:otherLocale"/>
+      <xsl:apply-templates select="mdb:otherLocale[*/lan:language/*/@codeListValue != $mainLanguage]"/>
       <xsl:apply-templates select="mdb:metadataLinkage"/>
 
       <xsl:variable name="pointOfTruthUrl" select="concat(/root/env/nodeURL, 'api/records/', $uuid)"/>
