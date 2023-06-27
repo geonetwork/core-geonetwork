@@ -64,6 +64,7 @@ public abstract class AbstractGeonetworkDataDirectoryTest extends AbstractCoreIn
         dataDirectory.setHtmlCacheDir(null);
         dataDirectory.setSchemaPluginsDir(null);
         dataDirectory.setThesauriDir(null);
+        dataDirectory.setSchemaPublicationDir(null);
         final ArrayList<Element> serviceConfigParameterElements = getServiceConfigParameterElements();
         final ServiceConfig handlerConfig = new ServiceConfig(serviceConfigParameterElements);
         final Path webappDir = getWebappDir(getClass());
