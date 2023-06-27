@@ -44,7 +44,8 @@
 
             $http({
               method: "GET",
-              url: "../api/pages/" + $scope.language + "/" + page + "/content"
+              url: "../api/pages/" + $scope.language + "/" + page + "/content",
+              transformResponse: angular.identity
             }).then(
               function (response) {
                 $sce.trustAsJs(response.data);
