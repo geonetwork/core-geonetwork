@@ -74,7 +74,7 @@ public class SettingInfo {
   */
 
     public Integer getSitePort() {
-             SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
+        SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
 
         // some conditional logic to handle the case where there's no port in the settings
         int sitePort = Geonet.DefaultHttpPort.HTTP;
