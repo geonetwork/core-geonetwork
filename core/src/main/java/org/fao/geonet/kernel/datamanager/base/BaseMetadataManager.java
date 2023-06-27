@@ -920,12 +920,6 @@ public class BaseMetadataManager implements IMetadataManager {
         String host = settingManager.getValue(Settings.SYSTEM_SERVER_HOST);
         SettingInfo si = new SettingInfo();
         String port = Integer.toString(si.getSitePort());
-        //String port = settingManager.getValue(Settings.SYSTEM_SERVER_PORT);
-        //if (port.equals("80")) {
-        //    port = "";
-        //} else {
-        //    port = ":" + port;
-        //}
         addElement(info, Edit.Info.Elem.BASEURL, protocol + "://" + host + port + context.getBaseUrl());
         addElement(info, Edit.Info.Elem.LOCSERV, "/srv/en");
         return info;
