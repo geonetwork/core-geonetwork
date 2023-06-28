@@ -438,6 +438,19 @@ public final class XslUtil {
             + (withOrganization ? " - " + settingsMan.getValue(SYSTEM_SITE_ORGANIZATION) : "");
     }
 
+
+    /**
+     * Return the ID of the current node (catalog or subportal).
+     * If the main one, then srv.
+     * If a sub portal, use the sub portal key.
+     *
+     * @return
+     */
+    public static String getNodeId() {
+        return ApplicationContextHolder.get().getBean(org.fao.geonet.NodeInfo.class).getId();
+    }
+
+    
     public static String getNodeLogo(String key) {
         Optional<Source> source = getSource(key);
         return source.isPresent() ? source.get().getLogo() : "";
