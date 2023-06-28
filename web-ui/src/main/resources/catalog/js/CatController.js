@@ -116,7 +116,6 @@
             fluidHeaderLayout: true,
             showGNName: true,
             isHeaderFixed: false,
-            isMenubarAccessible: true,
             showPortalSwitcher: true,
             topCustomMenu: [] // List of static pages identifiers to display
           },

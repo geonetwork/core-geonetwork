@@ -1,18 +1,3 @@
-<li data-ng-repeat="page in pagesList">
-  <a
-    data-ng-show="{{page.format == 'LINK' || page.format == 'HTMLPAGE'}}"
-    title="{{page.label}}"
-    href="{{page.link}}"
-    target="_blank"
-  >
-    <span>{{page.label}}</span>
-  </a>
-  <a
-    data-ng-show="{{page.format != 'LINK' && page.format != 'HTMLPAGE'}}"
-    data-gn-active-tb-item="{{gnCfg.mods.page.appUrl + '/' + page.pageId}}?page={{page.pageId}}"
-    title="{{page.pageId}}"
-    data-ng-click="changePage($event)"
-  >
-    <span>{{page.pageId}}</span>
-  </a>
-</li>
+<li data-ng-repeat-start="menu in pagesConfig"></li>
+<li gn-static-page-menu="menu" language="{{language}}" section="{{section}}"></li>
+<li data-ng-repeat-end=""></li>

@@ -39,18 +39,31 @@
   </div>
   <div id="navbar" class="navbar-accessible navbar-collapse collapse">
     <ul class="nav navbar-nav gn-menu-xs" role="menu">
-      <li gn-site-name-menu="" />
-      <li gn-portal-switcher="" />
-      <li gn-search-menu="" />
-      <li gn-map-menu="" />
-      <li gn-contribute-menu="" />
-      <li gn-admin-menu="" />
-      <li gn-static-pages-list-viewer data-section="top" data-language="{{lang}}" />
+      <li data-ng-repeat-start="menu in toolbarMenu"></li>
+      <li data-ng-if="menu == 'gn-site-name-menu'" gn-site-name-menu=""></li>
+      <li data-ng-if="menu == 'gn-portal-switcher'" gn-portal-switcher=""></li>
+      <li data-ng-if="menu == 'gn-search-menu'" gn-search-menu=""></li>
+      <li data-ng-if="menu == 'gn-map-menu'" gn-map-menu=""></li>
+      <li data-ng-if="menu == 'gn-contribute-menu'" gn-contribute-menu=""></li>
+      <li data-ng-if="menu == 'gn-admin-menu'" gn-admin-menu=""></li>
+      <li
+        data-ng-if="isPage(menu)"
+        gn-static-page-menu="menu"
+        language="{{lang}}"
+        section="top"
+      ></li>
+      <ul
+        data-ng-if="menu == 'gn-static-pages-list-viewer'"
+        gn-static-pages-list-viewer=""
+        language="{{lang}}"
+        section="top"
+        class="nav navbar-nav gn-menu-xs"
+      ></ul>
+      <li data-ng-repeat-end=""></li>
     </ul>
-
     <div class="navbar-right">
-      <ul gn-signin-menu="" />
-      <div gn-languages-menu="" />
+      <ul gn-signin-menu=""></ul>
+      <div gn-languages-menu=""></div>
     </div>
   </div>
 </div>
