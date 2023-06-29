@@ -24,6 +24,7 @@
 package org.fao.geonet.kernel.harvest.harvester;
 
 import com.google.common.collect.Maps;
+import org.fao.geonet.utils.Env;
 import org.locationtech.jts.util.Assert;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
@@ -365,10 +366,19 @@ public abstract class AbstractParams implements Cloneable {
             } catch (DateTimeException e) {
                 log.error(e);
             }
-
         }
 
-        return QuartzSchedulerUtils.getTrigger(getUuid(), AbstractHarvester.HARVESTER_GROUP_NAME, getEvery(), MAX_EVERY, tz);
+        boolean enableScheduledHarvesters = Env.getPropertyFromEnv("harvester.scheduler.enabled", "true").equalsIgnoreCase("true");
+        final String schedule;
+        if (enableScheduledHarvesters) {
+            // the configured value for the harvester
+            schedule = getEvery();
+        } else {
+            // override with 'never'
+            schedule = "0 0 0 * * ? 2099";
+        }
+
+        return QuartzSchedulerUtils.getTrigger(getUuid(), AbstractHarvester.HARVESTER_GROUP_NAME, schedule, MAX_EVERY, tz);
     }
 
     /**
