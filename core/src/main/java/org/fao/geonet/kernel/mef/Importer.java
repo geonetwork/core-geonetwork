@@ -45,6 +45,7 @@ import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.datamanager.IMetadataValidator;
 import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.*;
 import org.fao.geonet.utils.FilePathChecker;
 import org.fao.geonet.utils.Log;
@@ -513,10 +514,18 @@ public class Importer {
         }
 
         boolean metadataExist = dm.existsMetadataUuid(uuid);
+
+        SettingManager settingManager = gc.getBean(SettingManager.class);
+        boolean isMdWorkflowEnable = settingManager.getValueAsBool(Settings.METADATA_WORKFLOW_ENABLE);
+
         String metadataId = "";
         if (metadataExist && uuidAction == MEFLib.UuidAction.NOTHING) {
             throw new UnAuthorizedException("Record already exists. Change the import mode to overwrite or generating a new UUID.", null);
         } else if (metadataExist && uuidAction == MEFLib.UuidAction.OVERWRITE){
+            if (isMdWorkflowEnable) {
+                throw new UnAuthorizedException("Overwrite mode is not allowed when workflow is enabled. Use the metadata editor.", null);
+            }
+
             String recordToUpdateId = dm.getMetadataId(uuid);
             if (dm.getAccessManager().canEdit(context, recordToUpdateId)) {
                 MetadataValidationRepository metadataValidationRepository =
@@ -536,6 +545,10 @@ public class Importer {
                 throw new UnAuthorizedException("User has no privilege to overwrite existing metadata", null);
             }
         } else if (metadataExist && uuidAction == MEFLib.UuidAction.REMOVE_AND_REPLACE){
+            if (isMdWorkflowEnable) {
+                throw new UnAuthorizedException("Overwrite mode is not allowed when workflow is enabled. Use the metadata editor.", null);
+            }
+
             try {
                 if (dm.getAccessManager().canEdit(context, dm.getMetadataId(uuid))) {
                     if (Log.isDebugEnabled(Geonet.MEF)) {
