@@ -116,6 +116,7 @@
         /xml/**,
         /xsl/**,
         /read/**,
+        /opensearch/**,
         /.*.jsp,
         /*.html,
         /*.css
