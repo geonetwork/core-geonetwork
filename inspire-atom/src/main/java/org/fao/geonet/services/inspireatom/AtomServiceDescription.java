@@ -1,25 +1,25 @@
-//=============================================================================
-//===	Copyright (C) 2001-2017 Food and Agriculture Organization of the
-//===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
-//===	and United Nations Environment Programme (UNEP)
-//===
-//===	This program is free software; you can redistribute it and/or modify
-//===	it under the terms of the GNU General Public License as published by
-//===	the Free Software Foundation; either version 2 of the License, or (at
-//===	your option) any later version.
-//===
-//===	This program is distributed in the hope that it will be useful, but
-//===	WITHOUT ANY WARRANTY; without even the implied warranty of
-//===	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-//===	General Public License for more details.
-//===
-//===	You should have received a copy of the GNU General Public License
-//===	along with this program; if not, write to the Free Software
-//===	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
-//===
-//===	Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
-//===	Rome - Italy. email: geonetwork@osgeo.org
-//==============================================================================
+/*
+ * Copyright (C) 2001-2023 Food and Agriculture Organization of the
+ * United Nations (FAO-UN), United Nations World Food Programme (WFP)
+ * and United Nations Environment Programme (UNEP)
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or (at
+ * your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+ *
+ * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+ * Rome - Italy. email: geonetwork@osgeo.org
+ */
 package org.fao.geonet.services.inspireatom;
 
 import jeeves.interfaces.Service;
@@ -150,7 +150,7 @@ public class AtomServiceDescription implements Service {
         // Dataset feeds referenced by service feed.
         List<DatasetFeedInfo> datasetsInformation = InspireAtomUtil.extractRelatedDatasetsInfoFromServiceFeed(inspireAtomFeed.getAtom(), dm);
 
-        // Get information from the the service atom feed.
+        // Get information from the service atom feed.
         String feedAuthorName = inspireAtomFeed.getAuthorName();
         String feedTitle = inspireAtomFeed.getTitle();
         String feedSubtitle = inspireAtomFeed.getSubtitle();
@@ -190,23 +190,25 @@ public class AtomServiceDescription implements Service {
         throws Exception {
         Element datasetsEl = new Element("datasets");
 
-        final InspireAtomFeedRepository repository = context.getBean(InspireAtomFeedRepository.class);
+        final InspireAtomFeedRepository inspireAtomFeedRepository = context.getBean(InspireAtomFeedRepository.class);
 
         DataManager dm = context.getBean(DataManager.class);
 
         for (DatasetFeedInfo datasetFeedInfo : datasetsInformation) {
-            // Get the metadata uuid for the dataset
-            String datasetUuid = repository.retrieveDatasetUuidFromIdentifier(datasetFeedInfo.identifier);
-
-            // If dataset metadata not found, ignore
-            if (StringUtils.isEmpty(datasetUuid)) {
-                Log.warning(Geonet.ATOM, "AtomServiceDescription for service metadata (" + serviceIdentifier +
-                    "): metadata for dataset identifier " + datasetFeedInfo.identifier + " is not found, ignoring it.");
+            // Get the metadata id for the dataset
+            InspireAtomFeed inspireAtomFeed;
+            List<InspireAtomFeed> inspireAtomFeedList = inspireAtomFeedRepository.findAllByAtomDatasetid(datasetFeedInfo.identifier);
+            if (!inspireAtomFeedList.isEmpty()) {
+                inspireAtomFeed = inspireAtomFeedList.get(0);
+            } else {
+                // If dataset metadata not found, ignore
+                Log.warning(Geonet.ATOM, String.format("AtomServiceDescription for service metadata (%s): metadata "
+                    + "for dataset identifier %s was not found, ignoring it.",
+                    serviceIdentifier, datasetFeedInfo.identifier));
                 continue;
             }
 
-            String id = dm.getMetadataId(datasetUuid);
-            InspireAtomFeed inspireAtomFeed = repository.findByMetadataId(Integer.parseInt(id));
+            String datasetUuid = dm.getMetadataUuid(String.valueOf(inspireAtomFeed.getMetadataId()));
 
             String idNs = inspireAtomFeed.getAtomDatasetid();
             String namespace = inspireAtomFeed.getAtomDatasetns();
@@ -231,10 +233,10 @@ public class AtomServiceDescription implements Service {
 
             // Get dataset download info
             // From INSPIRE spec: if a CRS has multiple downloads should be returned a link to feed document with the CRS downloads.
-            Map<String, Integer> downloadsCountByCrs = new HashMap<String, Integer>();
+            Map<String, Integer> downloadsCountByCrs = new HashMap<>();
             for (InspireAtomFeedEntry entry : inspireAtomFeed.getEntryList()) {
                 Integer count = downloadsCountByCrs.get(entry.getCrs());
-                if (count == null) count = Integer.valueOf(0);
+                if (count == null) count = 0;
                 downloadsCountByCrs.put(entry.getCrs(), count + 1);
             }
 
