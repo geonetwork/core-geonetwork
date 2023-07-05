@@ -25,6 +25,7 @@ package org.fao.geonet.kernel.setting;
 
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Geonet;
+import org.apache.commons.lang3.StringUtils;
 
 import static org.fao.geonet.kernel.setting.SettingManager.isPortRequired;
 
@@ -66,6 +67,22 @@ public class SettingInfo {
 		}
 
         return sb.toString();
+    }
+
+    /**
+   * Handle the case where the port in Settings is empty
+  */
+
+    public Integer getSitePort() {
+        SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
+
+        // some conditional logic to handle the case where there's no port in the settings
+        int sitePort = Geonet.DefaultHttpPort.HTTP;
+        if (StringUtils.isNumeric(settingManager.getValue(Settings.SYSTEM_SERVER_PORT))) {
+            sitePort = settingManager.getValueAsInt(Settings.SYSTEM_SERVER_PORT);
+        }
+
+        return sitePort;
     }
 
     //---------------------------------------------------------------------------
