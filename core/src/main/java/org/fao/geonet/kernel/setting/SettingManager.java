@@ -477,10 +477,10 @@ public class SettingManager {
         // some conditional logic to handle the case where there's no port in the settings
         Integer sitePort;
 
-        Integer configuredPort = toIntOrNull(Settings.SYSTEM_SERVER_PORT);
-        if (configuredPort != null) {
+        Integer configuredPort = getValueAsInt(Settings.SYSTEM_SERVER_PORT, -1);
+        if (configuredPort != -1) {
             sitePort = configuredPort;
-        } else if (protocol.equalsIgnoreCase(Geonet.HttpProtocol.HTTPS)) {
+        } else if (protocol != null && protocol.equalsIgnoreCase(Geonet.HttpProtocol.HTTPS)) {
             sitePort = Geonet.DefaultHttpPort.HTTPS;
         } else {
             sitePort = Geonet.DefaultHttpPort.HTTP;
