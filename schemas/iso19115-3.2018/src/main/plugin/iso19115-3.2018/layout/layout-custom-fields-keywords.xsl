@@ -145,6 +145,8 @@
                   as="element()?"
                   select="if ($thesaurusList/thesaurus[@key=substring-after($thesaurusIdentifier, 'geonetwork.thesaurus.')])
                           then $thesaurusList/thesaurus[@key=substring-after($thesaurusIdentifier, 'geonetwork.thesaurus.')]
+                          else if ($listOfThesaurus/thesaurus[multilingualTitles/multilingualTitle/title=$thesaurusTitle])
+                          then $listOfThesaurus/thesaurus[multilingualTitles/multilingualTitle/title=$thesaurusTitle]
                           else $listOfThesaurus/thesaurus[title=$thesaurusTitle]"/>
 
     <xsl:choose>
