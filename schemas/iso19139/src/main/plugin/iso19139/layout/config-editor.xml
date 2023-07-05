@@ -108,6 +108,10 @@
     </for>
     -->
 
+    <!-- Check if metadata title is defined in other metadata record
+    <for name="gmd:title" use="data-gn-duplicated-metadata-title-checker" />
+    -->
+
     <for name="gts:TM_PeriodDuration" use="data-gn-field-duration-div"/>
     <for name="gml:duration" use="data-gn-field-duration-div"/>
 
