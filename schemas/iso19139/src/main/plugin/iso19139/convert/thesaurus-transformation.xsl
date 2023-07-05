@@ -293,12 +293,15 @@
       </xsl:if>
 
       <xsl:copy-of
-        select="geonet:add-thesaurus-info($currentThesaurus, $withAnchor, $withThesaurusAnchor, /root/gui/thesaurus/thesauri, not(/root/request/keywordOnly))"/>
+        select="geonet:add-thesaurus-info($currentThesaurus, $listOfLanguage[1],
+                              $withAnchor, $withThesaurusAnchor,
+                              /root/gui/thesaurus/thesauri, not(/root/request/keywordOnly))"/>
     </gmd:MD_Keywords>
   </xsl:template>
 
   <xsl:function name="geonet:add-thesaurus-info">
     <xsl:param name="currentThesaurus" as="xs:string"/>
+    <xsl:param name="mainLanguage" as="xs:string?"/>
     <xsl:param name="withTitleAnchor" as="xs:boolean"/>
     <xsl:param name="withThesaurusAnchor" as="xs:boolean"/>
     <xsl:param name="thesauri" as="node()"/>
@@ -311,18 +314,28 @@
         codeListValue="{$thesauri/thesaurus[key = $currentThesaurus]/dname}"/>
     </gmd:type>
     <xsl:if test="$thesaurusInfo">
+
+      <xsl:variable name="thesaurusInMainLanguage"
+                    select="$thesauri/thesaurus[key = $currentThesaurus]
+                              /multilingualTitles/multilingualTitle[
+                                lang = util:twoCharLangCode($mainLanguage, '')]/title"/>
+      <xsl:variable name="thesaurusTitle"
+                    select="if ($thesaurusInMainLanguage != '')
+                            then $thesaurusInMainLanguage
+                            else $thesauri/thesaurus[key = $currentThesaurus]/title"/>
+
       <gmd:thesaurusName>
         <gmd:CI_Citation>
           <gmd:title>
             <xsl:choose>
               <xsl:when test="$withTitleAnchor = true()">
                 <gmx:Anchor xlink:href="{$thesauri/thesaurus[key = $currentThesaurus]/defaultNamespace}">
-                  <xsl:value-of select="$thesauri/thesaurus[key = $currentThesaurus]/title"/>
+                  <xsl:value-of select="$thesaurusTitle"/>
                 </gmx:Anchor>
               </xsl:when>
               <xsl:otherwise>
                 <gco:CharacterString>
-                  <xsl:value-of select="$thesauri/thesaurus[key = $currentThesaurus]/title"/>
+                  <xsl:value-of select="$thesaurusTitle"/>
                 </gco:CharacterString>
               </xsl:otherwise>
             </xsl:choose>
