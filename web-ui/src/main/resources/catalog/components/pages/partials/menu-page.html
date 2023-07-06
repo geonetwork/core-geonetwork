@@ -36,7 +36,7 @@
     </li>
   </ul>
   <a
-    data-ng-if="!isSubmenu"
+    data-ng-if="!isSubmenu && page"
     data-ng-show="isExternalLink"
     title="{{page.label}}"
     href="{{page.link}}"
@@ -45,9 +45,9 @@
     <span>{{page.label}}</span>
   </a>
   <a
-    data-ng-if="!isSubmenu"
+    data-ng-if="!isSubmenu && page"
     data-ng-show="!isExternalLink"
-    data-gn-active-tb-item="{{gnCfg.mods.page.appUrl + '/' + pageId}}?page={{pageId}}"
+    data-gn-active-tb-item="{{gnCfg.mods.page.appUrl + '/' + page.pageId}}?page={{page.pageId}}"
     title="{{page.pageId}}"
     data-ng-click="changePage($event)"
   >
