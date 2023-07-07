@@ -195,7 +195,8 @@
         // TODO: do not add duplicates
         gnMdViewObj.previousRecords.push(md);
 
-        if (!gnMdViewObj.usingFormatter) {
+        // Don't increase popularity for working copies
+        if (!gnMdViewObj.usingFormatter && md.draft !== "y") {
           $http.post("../api/records/" + md.uuid + "/popularity");
         }
         this.setLocationUuid(md.uuid, formatter);
