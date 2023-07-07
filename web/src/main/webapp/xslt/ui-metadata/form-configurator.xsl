@@ -324,15 +324,15 @@
                     select="gn-fn-metadata:check-elementandsession-visibility(
                   $schema, $base, $serviceInfo, @if, @displayIfServiceInfo)"/>
 
-      <!--
+      <!-- 
       <xsl:message> Field: <xsl:value-of select="@name"/></xsl:message>
       <xsl:message>Xpath: <xsl:copy-of select="@xpath"/></xsl:message>
       <xsl:message>TemplateModeOnly: <xsl:value-of select="@templateModeOnly"/></xsl:message>
       <xsl:message>Display: <xsl:copy-of select="$isDisplayed"/></xsl:message>
       <xsl:message><xsl:value-of select="count($nodes/*)"/> matching nodes: <xsl:copy-of select="$nodes"/></xsl:message>
       <xsl:message>Non existing child path: <xsl:value-of select="concat(@in, '/gn:child[@name = ''', @or, ''']')"/></xsl:message>
-      <xsl:message>Non existing child: <xsl:copy-of select="$nonExistingChildParent"/></xsl:message>
-      -->
+      <xsl:message>Non existing child: <xsl:copy-of select="$nonExistingChildParent"/></xsl:message> -->
+
 
 
       <xsl:variable name="del" select="@del"/>
@@ -361,7 +361,6 @@
             <xsl:if test="$configName != '' and not($overrideLabel)">
               <xsl:message>Label not defined for field name <xsl:value-of select="$configName"/> in loc/{language}/strings.xml.</xsl:message>
             </xsl:if>
-
 
             <xsl:choose>
               <xsl:when test="count($nodes/*) = 1">
@@ -455,10 +454,14 @@
             metadocument. This mode will probably take precedence over the others
             if defined in a view.
             -->
+          <xsl:variable name="configName" select="@name"/>
+          <xsl:variable name="translation"
+                        select="$strings/*[name() = $configName]"/>
           <xsl:variable name="name"
-                        select="if (@name and $strings/*[name() = @name] != '')
-                                then $strings/*[name() = @name]
-                                else @name"/>
+                        select="if ($translation != '')
+                                then $translation
+                                else $configName"/>
+
           <xsl:variable name="del" select="@del"/>
           <xsl:variable name="template" select="template"/>
           <xsl:variable name="forceLabel" select="@forceLabel"/>
@@ -530,7 +533,6 @@
                 <xsl:with-param name="delXpath" select="$del"/>
               </xsl:call-template>
             </xsl:variable>
-
 
             <!-- If the element exist, use the _X<ref> mode which
                   insert the snippet for the element if not use the

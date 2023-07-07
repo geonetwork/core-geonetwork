@@ -419,7 +419,12 @@
       </legend>
 
       <xsl:if test="count($attributesSnippet/*) > 0 and name($attributesSnippet/*[1]) != 'null'">
-        <div class="well well-sm gn-attr {if ($isDisplayingAttributes = true()) then '' else 'hidden'}">
+
+        <xsl:variable name="hasOnlyAttributes"
+                      select="count(*[namespace-uri() != 'http://www.fao.org/geonetwork']) = 0
+                              and count(@*) > 0"/>
+        <div class="well well-sm gn-attr {if ($isDisplayingAttributes = true() or $hasOnlyAttributes)
+                                          then '' else 'hidden'}">
           <xsl:copy-of select="$attributesSnippet"/>
         </div>
       </xsl:if>
@@ -1236,7 +1241,7 @@
 
               <xsl:attribute name="{$type}">
                 <xsl:value-of
-                  select="."/>
+                  select="normalize-space($valueToEdit)"/>
               </xsl:attribute>
 
               <xsl:if test="$directiveAttributes instance of node()+">

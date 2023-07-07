@@ -581,6 +581,8 @@ public class EsSearchManager implements ISearchManager {
             .add(INDEXING_ERROR_FIELD)
             .add("isHarvested")
             .add("isPublishedToAll")
+            .add("isPublishedToIntranet")
+            .add("isPublishedToGuest")
             .add("isSchemaValid")
             .add("isAboveThreshold")
             .add("isOpenData")

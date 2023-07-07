@@ -35,7 +35,6 @@ import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.common.document.DocumentField;
 import org.elasticsearch.search.SearchHit;
 import org.fao.geonet.ApplicationContextHolder;
-import org.fao.geonet.Constants;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.NodeInfo;
 import org.fao.geonet.api.es.EsHTTPProxy;
@@ -49,7 +48,6 @@ import org.fao.geonet.domain.Source;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.datamanager.IMetadataValidator;
-import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.kernel.schema.AssociatedResource;
 import org.fao.geonet.kernel.schema.AssociatedResourcesSchemaPlugin;
 import org.fao.geonet.kernel.schema.SchemaPlugin;
@@ -61,8 +59,6 @@ import org.fao.geonet.repository.MetadataValidationRepository;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.repository.specification.MetadataValidationSpecs;
 import org.fao.geonet.services.relations.Get;
-import org.fao.geonet.utils.BinaryFile;
-import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
 import org.jdom.Content;
 import org.jdom.Element;
@@ -70,12 +66,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -751,38 +741,6 @@ public class MetadataUtils {
         }
         return content;
     }
-
-    public static void backupRecord(AbstractMetadata metadata, ServiceContext context) {
-        Log.trace(Geonet.DATA_MANAGER, "Backing up record " + metadata.getId());
-        Path outDir = Lib.resource.getRemovedDir(metadata.getId());
-        Path outFile;
-        try {
-            // When metadata records contains character not supported by filesystem
-            // it may be an issue. eg. acri-st.fr/96443
-            outFile = outDir.resolve(URLEncoder.encode(metadata.getUuid(), Constants.ENCODING) + ".zip");
-        } catch (UnsupportedEncodingException e1) {
-            outFile = outDir.resolve(String.format(
-                "backup-%s-%s.mef",
-                new Date(), metadata.getUuid()));
-        }
-
-        Path file = null;
-        try {
-            file = MEFLib.doExport(context, metadata.getUuid(), "full", false, true, false, false, true);
-            Files.createDirectories(outDir);
-            try (InputStream is = IO.newInputStream(file);
-                 OutputStream os = Files.newOutputStream(outFile)) {
-                BinaryFile.copy(is, os);
-            }
-        } catch (Exception e) {
-            throw new RuntimeException("Error performing backup on record '" + metadata.getUuid() + "'. Contact the system administrator if the problem persists: " + e.getMessage(), e);
-        } finally {
-            if (file != null) {
-                IO.deleteFile(file, false, Geonet.MEF);
-            }
-        }
-    }
-
 
     /**
      * Returns the metadata validation status from the database, calculating/storing the validation if not stored.

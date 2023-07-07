@@ -422,6 +422,7 @@
     "mdvalid": "元数据是有效的",
     "mdinvalid": "元数据无效",
     "mdinvalidcantpublish": "Invalid metadata can't be published",
+    "mdnonapprovedcantpublish": "Non approved metadata can't be published",
     "mdnovalidation": "元数据没有验证信息",
     "setall": "设置所有权限",
     "print_legend": "图例",

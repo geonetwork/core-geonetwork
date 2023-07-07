@@ -900,18 +900,31 @@
                 // Compute default name and add a
                 // tokens element which is used for filter
                 angular.forEach(data, function (lang) {
-                  var defaultName = lang.label["eng"];
-                  lang.name = lang.label[scope.lang] || defaultName;
+                  lang.english = lang.label["eng"];
+                  lang.name = lang.label[scope.lang] || lang.english;
                   lang.code = scope.prefix + lang.code;
-                  lang.tokens = [lang.name, lang.code, defaultName];
+                  lang.tokens = [lang.name, lang.code, lang.english];
                 });
                 var source = new Bloodhound({
-                  datumTokenizer: Bloodhound.tokenizers.obj.whitespace("name"),
+                  datumTokenizer: Bloodhound.tokenizers.obj.whitespace(
+                    "name",
+                    "code",
+                    "english"
+                  ),
                   queryTokenizer: Bloodhound.tokenizers.whitespace,
                   local: data,
                   limit: 30
                 });
                 source.initialize();
+
+                function allOrSearchFn(q, sync) {
+                  if (q === "") {
+                    sync(source.all());
+                  } else {
+                    source.search(q, sync);
+                  }
+                }
+
                 $(element).typeahead(
                   {
                     minLength: 0,
@@ -920,7 +933,7 @@
                   {
                     name: "isoLanguages",
                     displayKey: "code",
-                    source: source.ttAdapter(),
+                    source: allOrSearchFn,
                     templates: {
                       suggestion: function (datum) {
                         return "<p>" + datum.name + " (" + datum.code + ")</p>";
@@ -1124,7 +1137,7 @@
                 {
                   isTemplate: "n",
                   any: "*QUERY*",
-                  sortBy: "resourceTitleObject.default.keyword"
+                  sortBy: "resourceTitleObject.default.sort"
                 },
                 params
               )
@@ -1397,7 +1410,7 @@
                 settings.data = JSON.stringify({
                   from: 0,
                   size: 10,
-                  sort: [{ "resourceTitleObject.default.keyword": "asc" }],
+                  sort: [{ "resourceTitleObject.default.sort": "asc" }],
                   query: {
                     bool: {
                       must: {
@@ -2198,6 +2211,32 @@
     function () {
       return function (mail) {
         return mail && mail.indexOf("@") !== -1 ? mail.replace(/.*@(.*)/, "$1") : "";
+      };
+    }
+  ]);
+  /**
+   * Compute a translated status label for a record, based on the index field
+   * 'statusWorkflow'.
+   * The result can be a single status for records that have no draft,
+   * or a combined label for records with draft.
+   */
+  module.filter("getStatusLabel", [
+    "$translate",
+    function ($translate) {
+      return function (workflowStatus) {
+        var split = workflowStatus.split("-");
+        // the status of the record
+        var metadataStatus = $translate.instant("status-" + split[0]);
+        if (split.length === 2) {
+          // if there is a draft status present,
+          // incorporate this into the resulting string
+          var draftStatus = $translate.instant("status-" + split[1]);
+          return $translate.instant("mdStatusWorkflowWithDraft", {
+            metadataStatus: metadataStatus,
+            draftStatus: draftStatus
+          });
+        }
+        return metadataStatus;
       };
     }
   ]);

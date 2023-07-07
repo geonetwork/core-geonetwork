@@ -1,6 +1,6 @@
 # Building
 
-See [Installing from source code](https://geonetwork-opensource.org/manuals/trunk/en/maintainer-guide/installing/installing-from-source-code.html) (Maintainer Guide)
+See [Installing from source code](https://geonetwork-opensource.org/manuals/4.0.x/en/install-guide/installing-from-source-code.html) (Installation Guide)
 
 Build GeoNetwork
 ----------------
@@ -64,7 +64,7 @@ Many Maven build options are available, for instance, you might like to use foll
   mvn install -o -DskipTests -T 2C
   ```
 
-Please refer to the maven documentation for additional options, [Maven: The Complete Reference](http://www.sonatype.com/books/mvnref-book/reference/public-book.html)
+Please refer to the maven documentation for additional options, [Maven: The Complete Reference](https://books.sonatype.com/mvnref-book/pdf/mvnref-pdf.pdf)
 
 Maven Profiles
 --------------

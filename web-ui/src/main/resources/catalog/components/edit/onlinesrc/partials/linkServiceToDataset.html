@@ -60,7 +60,7 @@
         type="button"
         class="btn navbar-btn btn-success"
         data-gn-click-and-spin="linkTo(addOnlineSrcInDataset)"
-        data-ng-class="{'disabled': (stateObj.selectRecords.length < 1)}"
+        ng-disabled="(stateObj.selectRecords.length < 1)"
       >
         <i class="fa gn-icon-service" />&nbsp;
         <span data-translate="" data-ng-show="mode == 'service'">linkToService</span>

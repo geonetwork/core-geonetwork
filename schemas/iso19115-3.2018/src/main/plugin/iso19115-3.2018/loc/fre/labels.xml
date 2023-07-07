@@ -1399,10 +1399,17 @@
     <label>Étendue</label>
     <description iso="true">Étendue spatiale ou temporelle du rôle</description>
   </element>
+  <element name="lan:language" id="448.0" context="/mdb:MD_Metadata/mdb:defaultLocale/lan:PT_Locale/lan:language">
+    <label>Langue de la fiche</label>
+    <description iso="true">Langue principale de la fiche. Code ISO de la langue à 3 caractères.</description>
+  </element>
+  <element name="lan:language" id="448.0" context="/mdb:MD_Metadata/mdb:otherLocale/lan:PT_Locale/lan:language">
+    <label>Autres langues</label>
+    <description iso="true">Langue additionnelle. Code ISO de la langue à 3 caractères.</description>
+  </element>
   <element name="lan:language" id="448.0">
     <label>Langue</label>
-    <description iso="true">Désignation de la langue du paramétrage régional
-    </description>
+    <description iso="true">Code ISO de la langue à 3 caractères.</description>
   </element>
   <element name="cit:MD_ScopeCode">
     <label>Code du sujet</label>

@@ -3,7 +3,7 @@
 ## Manual installation
 
 1. Download Elasticsearch (at least 7.6.2 for Geonetwork 4.0.x) from https://www.elastic.co/downloads/elasticsearch
-and copy to the ES module. eg. es/elasticsearch-7.6.2
+and copy to the ES module, e.g., es/elasticsearch-7.6.2
  
 2. Start ES using:
 
@@ -38,7 +38,7 @@ and copy to the ES module. eg. es/elasticsearch-7.6.2
    docker pull docker.elastic.co/elasticsearch/elasticsearch:7.6.2
    ```
 
-2. Use docker run, leacing 9200 available:
+2. Use docker run, leaving 9200 available:
 
    ```
    docker run -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" docker.elastic.co/elasticsearch/elasticsearch:7.6.2
@@ -48,7 +48,7 @@ and copy to the ES module. eg. es/elasticsearch-7.6.2
 
 ## Docker compose installation
 
-1. Use docer compose with the provided [docker-compose.yml](docker-compose.yml):
+1. Use docker compose with the provided [docker-compose.yml](docker-compose.yml):
 
    ```
    cd es
@@ -58,7 +58,7 @@ and copy to the ES module. eg. es/elasticsearch-7.6.2
 3. Check that it is running using your browser:
    
    * Elasticsearch: http://localhost:9200
-   * Kabana: http://localhost:5601
+   * Kibana: http://localhost:5601
 
 # Configuration
 

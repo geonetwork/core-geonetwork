@@ -23,7 +23,7 @@
   -->
 
 <editor xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:noNamespaceSchemaLocation="../../config-editor.xsd">
+        xsi:noNamespaceSchemaLocation="../../../../../../config-editor.xsd">
 
   <!-- Form field type configuration. Default is text. -->
   <fields>
@@ -65,7 +65,7 @@
 
   <!-- View configuration -->
   <views>
-    <view name="default">
+    <view name="default" default="true">
       <sidePanel>
         <directive data-gn-need-help="creating-metadata"/>
         <directive data-gn-onlinesrc-list=""

@@ -70,17 +70,10 @@ public class UserGroupRepositoryCustomImpl implements UserGroupRepositoryCustom 
     public int deleteAllByIdAttribute(SingularAttribute<UserGroupId, Integer> idAttribute, Collection<Integer> ids) {
         String userIdPath = SortUtils.createPath(UserGroup_.id, idAttribute);
 
-        StringBuilder idString = new StringBuilder();
-
-        for (Integer id : ids) {
-            if (idString.length() > 0) {
-                idString.append(",");
-            }
-            idString.append(id);
-        }
-        final String qlString = "DELETE FROM " + UserGroup.class.getSimpleName() + " WHERE " + userIdPath + " IN (" + idString + ")";
-        final int deleted = _entityManager.createQuery(qlString).executeUpdate();
-
+        final String qlString = String.format("DELETE FROM UserGroup WHERE %s IN :idString", userIdPath);
+        final int deleted = _entityManager.createQuery(qlString)
+            .setParameter("idString", ids)
+            .executeUpdate();
         _entityManager.flush();
         _entityManager.clear();
 

@@ -438,9 +438,33 @@ public final class XslUtil {
             + (withOrganization ? " - " + settingsMan.getValue(SYSTEM_SITE_ORGANIZATION) : "");
     }
 
+
+    /**
+     * Return the ID of the current node (catalog or subportal).
+     * If the main one, then srv.
+     * If a sub portal, use the sub portal key.
+     *
+     * @return
+     */
+    public static String getNodeId() {
+        return ApplicationContextHolder.get().getBean(org.fao.geonet.NodeInfo.class).getId();
+    }
+
+    
     public static String getNodeLogo(String key) {
         Optional<Source> source = getSource(key);
         return source.isPresent() ? source.get().getLogo() : "";
+    }
+
+    public static String getDiscoveryServiceUuid(String key) {
+        Optional<Source> source = getSource(key);
+        if (source.isPresent() && source.get().getType() == SourceType.subportal) {
+            return source.get().getServiceRecord();
+        } else {
+            SettingManager settingsMan = ApplicationContextHolder.get().getBean(SettingManager.class);
+            String uuid = settingsMan.getValue(SYSTEM_CSW_CAPABILITY_RECORD_UUID);
+            return "-1".equals(uuid) ? "" : uuid;
+        }
     }
 
     private static Optional<Source> getSource(String idOrUuid) {
@@ -1189,6 +1213,7 @@ public final class XslUtil {
         String extension = Files.getFileExtension(url).toLowerCase();
         if (extension.matches(supportedExtension)) {
 
+            InputStream in = null;
             try {
                 SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
                 Matcher m = Pattern.compile(settingManager.getNodeURL() + "api/records/(.*)/attachments/(.*)$").matcher(url);
@@ -1202,7 +1227,12 @@ public final class XslUtil {
                         image = ImageIO.read(file.getPath().toFile());
                     }
                 } else {
-                    image = ImageIO.read(new URL(url));
+                    URL imageUrl = new URL(url);
+                    URLConnection con = imageUrl.openConnection();
+                    con.setConnectTimeout(1000);
+                    con.setReadTimeout(10000);
+                    in = con.getInputStream();
+                    image = ImageIO.read(in);
                 }
 
                 if (image != null) {
@@ -1225,6 +1255,8 @@ public final class XslUtil {
                 Log.info(Geonet.GEONETWORK, String.format(
                     "Image '%s' is not accessible or can't be converted to Data URL. Error is: %s",
                     url, e.getMessage()));
+            } finally {
+                IOUtils.closeQuietly(in);
             }
         } else {
             Log.info(Geonet.GEONETWORK, String.format(

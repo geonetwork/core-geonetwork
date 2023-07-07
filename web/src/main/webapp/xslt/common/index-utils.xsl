@@ -388,17 +388,20 @@
 
     <!-- Build index field for type
     keywordType-place: [{default: France}]-->
-    <xsl:for-each-group select="$allKeywords" group-by="thesaurus/info/@type">
-      <xsl:element name="keywordType-{current-grouping-key()}">
-        <xsl:attribute name="type" select="'object'"/>
-        [<xsl:for-each select="$allKeywords/thesaurus[info/@type = current-grouping-key()]/keywords/keyword">
-        {
-        <xsl:value-of select="string-join(values/value, ', ')"/>
-        <xsl:if test="@uri != ''">, "link": "<xsl:value-of select="@uri"/>"</xsl:if>
-        }
-        <xsl:if test="position() != last()">,</xsl:if>
-      </xsl:for-each>]
-      </xsl:element>
+    <xsl:for-each-group select="$allKeywords"
+                        group-by="thesaurus/info/@type">
+      <xsl:if test="matches(current-grouping-key(), '^[A-Za-z\-_]+$')">
+        <xsl:element name="keywordType-{current-grouping-key()}">
+          <xsl:attribute name="type" select="'object'"/>
+          [<xsl:for-each select="$allKeywords/thesaurus[info/@type = current-grouping-key()]/keywords/keyword">
+          {
+          <xsl:value-of select="string-join(values/value, ', ')"/>
+          <xsl:if test="@uri != ''">, "link": "<xsl:value-of select="@uri"/>"</xsl:if>
+          }
+          <xsl:if test="position() != last()">,</xsl:if>
+        </xsl:for-each>]
+        </xsl:element>
+      </xsl:if>
     </xsl:for-each-group>
 
     <!-- Fields with keywords and keyword count of a thesaurus, eg. th_regions, th_regionsNumber -->

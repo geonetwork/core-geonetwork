@@ -620,6 +620,16 @@ The key of the view name stored in ``{schema}/loc/{lang}/strings.xml`` or the el
             ]]></xs:documentation>
         </xs:annotation>
       </xs:attribute>
+      <xs:attribute name="default" type="xs:boolean" fixed="true">
+        <xs:annotation>
+          <xs:documentation><![CDATA[
+One default view per schema can be configured. The default tab of the default
+view will be used if no tab parameter set. To customize the tab to use
+on a per metadata record basis, check the EditorController.js file schemaCustomConfig
+function.
+            ]]></xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
       <xs:attribute name="disabled" type="xs:boolean" fixed="true">
         <xs:annotation>
           <xs:documentation><![CDATA[
@@ -669,15 +679,16 @@ Display help documentation for all elements by default when loading the view.
 ]]></xs:documentation>
         </xs:annotation>
       </xs:attribute>
-      <xs:attribute name="displayTooltipsMode" type="xs:string">
+      <xs:attribute name="displayTooltipsMode">
         <xs:annotation>
           <xs:documentation><![CDATA[
-Display help documentation onhover elements (default) or by clicking on an icon.
+Display help documentation onfocus (default), onhover or by clicking on an icon.
 ]]></xs:documentation>
         </xs:annotation>
         <xs:simpleType>
           <xs:restriction base="xs:string">
             <xs:enumeration value="icon"/>
+            <xs:enumeration value="onfocus"/>
             <xs:enumeration value="onhover"/>
           </xs:restriction>
         </xs:simpleType>
@@ -910,10 +921,12 @@ record, or if the field should be displayed to enable the user to add new occurr
 Customizing thesaurus
 ~~~~~~~~~~~~~~~~~~~~~
 
-To configure the type of transformations,
-or the number of keywords allowed, or if the widget
-has to be displayed in a fieldset, or as simple field for a
-thesaurus define a specific configuration:
+To configure:
+ * the type of transformations (eg. to-iso19139-keyword, to-iso19139-keyword-with-anchor - see convert/thesaurus-transformation.xsl in each plugins),
+ * the number of keywords allowed,
+ * if the widget has to be displayed in a fieldset or as simple field
+ * if the concept relationships are browsable (enable by default)
+
 
 e.g. only 2 INSPIRE themes:
 
@@ -938,6 +951,7 @@ e.g. only 2 INSPIRE themes:
             <xs:attribute name="maxtags" type="xs:integer" use="optional"/>
             <xs:attribute name="orderById" type="xs:boolean" use="optional"/>
             <xs:attribute name="fieldset" type="xs:string" use="optional" fixed="false"/>
+            <xs:attribute name="browsable" type="xs:string" use="optional" fixed="false"/>
             <xs:attribute name="transformations" type="xs:string" use="optional"/>
           </xs:complexType>
         </xs:element>

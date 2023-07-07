@@ -43,6 +43,7 @@
     ) {
       this.SEARCH = "/search";
       this.SEARCHPAGES = /\/search|\/board/;
+      this.EDITORBOARD = /\/board|\/batchedit/;
       this.MAP = "/map";
       this.METADATA = "/metadata/";
       this.DRAFT = "/metadraf/";
@@ -65,6 +66,10 @@
 
       this.isSearch = function (path) {
         return (path || $location.path()).match(this.SEARCHPAGES) !== null;
+      };
+
+      this.isEditorBoard = function (path) {
+        return (path || $location.path()).match(this.EDITORBOARD) !== null;
       };
 
       this.isMdView = function (path) {
