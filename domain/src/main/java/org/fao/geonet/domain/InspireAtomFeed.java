@@ -1,25 +1,25 @@
-//=============================================================================
-//===	Copyright (C) 2001-2010 Food and Agriculture Organization of the
-//===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
-//===	and United Nations Environment Programme (UNEP)
-//===
-//===	This program is free software; you can redistribute it and/or modify
-//===	it under the terms of the GNU General Public License as published by
-//===	the Free Software Foundation; either version 2 of the License, or (at
-//===	your option) any later version.
-//===
-//===	This program is distributed in the hope that it will be useful, but
-//===	WITHOUT ANY WARRANTY; without even the implied warranty of
-//===	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-//===	General Public License for more details.
-//===
-//===	You should have received a copy of the GNU General Public License
-//===	along with this program; if not, write to the Free Software
-//===	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
-//===
-//===	Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
-//===	Rome - Italy. email: geonetwork@osgeo.org
-//==============================================================================
+/*
+ * Copyright (C) 2001-2023 Food and Agriculture Organization of the
+ * United Nations (FAO-UN), United Nations World Food Programme (WFP)
+ * and United Nations Environment Programme (UNEP)
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or (at
+ * your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+ *
+ * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+ * Rome - Italy. email: geonetwork@osgeo.org
+ */
 package org.fao.geonet.domain;
 
 
@@ -29,10 +29,10 @@ import org.jdom.Element;
 import org.jdom.Namespace;
 
 import javax.persistence.*;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * INSPIRE Atom feed model class.
@@ -42,7 +42,9 @@ import java.util.List;
 @Entity
 @Access(AccessType.PROPERTY)
 @Table(name = "InspireAtomFeed",
-    indexes = { @Index(name = "idx_inspireatomfeed_metadataid", columnList = "metadataid") })
+    indexes = { @Index(name = "idx_inspireatomfeed_metadataid", columnList = "metadataid"),
+                @Index(name = "idx_inspireatomfeed_atomDatasetid", columnList = "atomDatasetid"),
+                @Index(name = "idx_inspireatomfeed_atomDatasetns", columnList = "atomDatasetns")})
 @SequenceGenerator(name = InspireAtomFeed.ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
 public class InspireAtomFeed extends GeonetEntity implements Serializable {
     static final String ID_SEQ_NAME = "inspire_atom_feed_id_seq";
@@ -65,7 +67,7 @@ public class InspireAtomFeed extends GeonetEntity implements Serializable {
 
 
     public InspireAtomFeed() {
-        _entryList = new ArrayList<InspireAtomFeedEntry>();
+        _entryList = new ArrayList<>();
     }
 
     public static InspireAtomFeed build(Element atomDoc) {
@@ -263,49 +265,30 @@ public class InspireAtomFeed extends GeonetEntity implements Serializable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof InspireAtomFeed)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
 
         InspireAtomFeed that = (InspireAtomFeed) o;
 
         if (_id != that._id) return false;
         if (_metadataId != that._metadataId) return false;
-        if (_atom != null ? !_atom.equals(that._atom) : that._atom != null) return false;
-        if (_atomDatasetid != null ? !_atomDatasetid.equals(that._atomDatasetid) : that._atomDatasetid != null)
+        if (!Objects.equals(_title, that._title)) return false;
+        if (!Objects.equals(_atom, that._atom)) return false;
+        if (!Objects.equals(_atomUrl, that._atomUrl)) return false;
+        if (!Objects.equals(_atomDatasetid, that._atomDatasetid))
             return false;
-        if (_atomDatasetns != null ? !_atomDatasetns.equals(that._atomDatasetns) : that._atomDatasetns != null)
+        if (!Objects.equals(_atomDatasetns, that._atomDatasetns))
             return false;
-        if (_atomUrl != null ? !_atomUrl.equals(that._atomUrl) : that._atomUrl != null)
-            return false;
-        if (_authorEmail != null ? !_authorEmail.equals(that._authorEmail) : that._authorEmail != null)
-            return false;
-        if (_authorName != null ? !_authorName.equals(that._authorName) : that._authorName != null)
-            return false;
-        if (_lang != null ? !_lang.equals(that._lang) : that._lang != null) return false;
-        if (_rights != null ? !_rights.equals(that._rights) : that._rights != null) return false;
-        if (_subtitle != null ? !_subtitle.equals(that._subtitle) : that._subtitle != null)
-            return false;
-        if (_title != null ? !_title.equals(that._title) : that._title != null) return false;
-        if (_entryList != null ? !_entryList.equals(that._entryList) : that._entryList != null)
-            return false;
-
-        return true;
+        if (!Objects.equals(_subtitle, that._subtitle)) return false;
+        if (!Objects.equals(_rights, that._rights)) return false;
+        if (!Objects.equals(_lang, that._lang)) return false;
+        if (!Objects.equals(_authorName, that._authorName)) return false;
+        if (!Objects.equals(_authorEmail, that._authorEmail)) return false;
+        return Objects.equals(_entryList, that._entryList);
     }
 
     @Override
     public int hashCode() {
-        int result = _id;
-        result = 31 * result + _metadataId;
-        result = 31 * result + (_title != null ? _title.hashCode() : 0);
-        result = 31 * result + (_atom != null ? _atom.hashCode() : 0);
-        result = 31 * result + (_atomUrl != null ? _atomUrl.hashCode() : 0);
-        result = 31 * result + (_atomDatasetid != null ? _atomDatasetid.hashCode() : 0);
-        result = 31 * result + (_atomDatasetns != null ? _atomDatasetns.hashCode() : 0);
-        result = 31 * result + (_subtitle != null ? _subtitle.hashCode() : 0);
-        result = 31 * result + (_rights != null ? _rights.hashCode() : 0);
-        result = 31 * result + (_lang != null ? _lang.hashCode() : 0);
-        result = 31 * result + (_authorName != null ? _authorName.hashCode() : 0);
-        result = 31 * result + (_authorEmail != null ? _authorEmail.hashCode() : 0);
-        result = 31 * result + (_entryList != null ? _entryList.hashCode() : 0);
-        return result;
+        return Objects.hash(_id, _metadataId, _title, _atom, _atomUrl, _atomDatasetid, _atomDatasetns, _subtitle,
+            _rights, _lang, _authorName, _authorEmail, _entryList);
     }
 }

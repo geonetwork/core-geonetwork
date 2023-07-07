@@ -64,7 +64,11 @@
               data-ng-if="key === 'function' &&
                              !params.linkType.fields.function.hidden"
             >
-              <label id="gn-addonlinesrc-function-label" class="col-sm-2 control-label">
+              <label
+                id="gn-addonlinesrc-function-label"
+                class="col-sm-2 control-label"
+                data-gn-field-tooltip="{{schema}}|{{params.linkType.fields.function.tooltip}}"
+              >
                 <span data-translate="">onlineFunction</span>
               </label>
               <div class="col-sm-9">
@@ -75,7 +79,6 @@
                   data-init-on-load="true"
                   data-allow-blank="true"
                   data-selected-info="params.function"
-                  data-gn-field-tooltip="{{schema}}|{{params.linkType.fields.function.tooltip}}"
                   data-gn-schema-info="function"
                   lang="lang"
                 ></div>
@@ -93,7 +96,11 @@
               data-ng-if="key === 'protocol' &&
                              !params.linkType.fields.protocol.hidden"
             >
-              <label id="gn-addonlinesrc-protocol-label" class="col-sm-2 control-label">
+              <label
+                id="gn-addonlinesrc-protocol-label"
+                class="col-sm-2 control-label"
+                data-gn-field-tooltip="{{schema}}|{{params.linkType.fields.protocol.tooltip}}"
+              >
                 <span data-translate="">protocol</span>
               </label>
               <div class="col-sm-9">
@@ -103,7 +110,6 @@
                   data-init-on-load="true"
                   name="protocol"
                   data-selected-info="params.protocol"
-                  data-gn-field-tooltip="{{schema}}|{{params.linkType.fields.protocol.tooltip}}"
                   data-gn-schema-info="protocol"
                   lang="lang"
                   data-extra-options="dataFormats"
@@ -120,7 +126,11 @@
               data-ng-if="key === 'mimeType' &&
                              !params.linkType.fields.mimeType.hidden"
             >
-              <label id="gn-addonlinesrc-mimeType-label" class="col-sm-2 control-label">
+              <label
+                id="gn-addonlinesrc-mimeType-label"
+                class="col-sm-2 control-label"
+                data-gn-field-tooltip="{{schema}}|{{params.linkType.fields.mimeType.tooltip}}"
+              >
                 <span data-translate="">mimeType</span>
               </label>
               <div class="col-sm-9">
@@ -129,7 +139,6 @@
                   type="text"
                   name="format"
                   data-ng-model="params.mimeType"
-                  data-gn-field-tooltip="{{schema}}|{{params.linkType.fields.mimeType.tooltip}}"
                 />
               </div>
               <div class="col-sm-1 gn-control"></div>
@@ -148,6 +157,7 @@
                   for="gn-addonlinesrc-url-list-single-input"
                   class="col-sm-2 control-label"
                   data-translate=""
+                  data-gn-field-tooltip="{{schema}}|{{params.linkType.fields.url.tooltip}}"
                   >url</label
                 >
 
@@ -166,7 +176,6 @@
                     class="form-control input-sm"
                     lang="{{val}}"
                     ng-model-options="{debounce: 500}"
-                    data-gn-field-tooltip="{{schema}}|{{params.linkType.fields.url.tooltip}}"
                     data-ng-model="params.url[val]"
                   />
                 </div>
@@ -188,7 +197,6 @@
                       type="text"
                       data-ng-blur="loadCurrentLink()"
                       id="gn-addonlinesrc-url-list-single-input"
-                      data-gn-field-tooltip="{{schema}}|{{params.linkType.fields.url.tooltip}}"
                       placeholder="{{params.linkType.fields.url.placeholder || 'https://...'}}"
                     />
                     <span class="input-group-btn" data-ng-show="OGCProtocol != null">
@@ -291,6 +299,7 @@
                 for="gn-addonlinesrc-name-single-input"
                 class="col-sm-2 control-label"
                 data-translate=""
+                data-gn-field-tooltip="{{schema}}|{{params.linkType.fields.name.tooltip}}"
                 >onlineResourceName</label
               >
               <div
@@ -305,7 +314,6 @@
                   name="name"
                   class="form-control input-sm"
                   type="text"
-                  data-gn-field-tooltip="{{schema}}|{{params.linkType.fields.name.tooltip}}"
                   placeholder="Name"
                   data-ng-readonly='config.wmsResources.addLayerNamesMode ==
                 "resourcename" && OGCProtocol != null && isWMSProtocol()'
@@ -325,7 +333,6 @@
                   data-ng-required="params.linkType.fields.name.required"
                   class="form-control input-sm"
                   lang="{{val}}"
-                  data-gn-field-tooltip="{{schema}}|{{params.linkType.fields.name.tooltip}}"
                   data-ng-model="params.name[val]"
                   data-ng-readonly='config.wmsResources.addLayerNamesMode ==
                 "resourcename" && OGCProtocol != null && isWMSProtocol()'
@@ -349,6 +356,7 @@
                 for="gn-addonlinesrc-description-single-textarea"
                 class="col-sm-2 control-label"
                 data-translate=""
+                data-gn-field-tooltip="{{schema}}|{{params.linkType.fields.desc.tooltip}}"
                 >description</label
               >
               <div class="col-sm-9" data-ng-if="!params.linkType.fields.desc.directive">
@@ -364,7 +372,6 @@
                     data-ng-model="params.desc"
                     class="form-control input-sm"
                     placeholder="description"
-                    data-gn-field-tooltip="{{schema}}|{{params.linkType.fields.desc.tooltip}}"
                     name="description"
                   />
                 </div>
@@ -384,7 +391,6 @@
                     data-ng-model="params.desc[val]"
                     class="form-control input-sm"
                     placeholder="description"
-                    data-gn-field-tooltip="{{schema}}|{{params.linkType.fields.desc.tooltip}}"
                     name="description"
                   />
                 </div>
@@ -417,6 +423,7 @@
                 for="gn-addonlinesrc-profile-input"
                 class="col-sm-2 control-label"
                 data-translate=""
+                data-gn-field-tooltip="{{schema}}|{{params.linkType.fields.applicationProfile.tooltip}}"
                 >applicationProfile</label
               >
               <div class="col-sm-9">
@@ -426,7 +433,6 @@
                   data-ng-required="params.linkType.fields.applicationProfile.required"
                   name="applicationProfile"
                   class="form-control"
-                  data-gn-field-tooltip="{{schema}}|{{params.linkType.fields.applicationProfile.tooltip}}"
                   type="text"
                 />
               </div>

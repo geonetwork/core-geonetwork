@@ -417,9 +417,7 @@
             map.getLayers().setAt(0, bgLayers[0]);
           }
 
-          if (
-            gnGlobalSettings.gnCfg.mods.map.defaultToolAfterMapLoad
-          ) {
+          if (gnGlobalSettings.gnCfg.mods.map.defaultToolAfterMapLoad) {
             gnViewerService.openTool(
               gnGlobalSettings.gnCfg.mods.map.defaultToolAfterMapLoad
             );

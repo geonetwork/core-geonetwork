@@ -179,10 +179,14 @@
           <xsl:text>gex</xsl:text>
         </xsl:when>
         <xsl:when
-          test="ancestor-or-self::gmd:MD_Georectified or ancestor-or-self::gmi:MI_Georectified
-          or ancestor-or-self::gmd:MD_Georeferenceable or ancestor-or-self::gmi:MI_Georeferenceable
-          or ancestor-or-self::gmd:MD_GridSpatialRepresentation or ancestor-or-self::gmd:MD_ReferenceSystem
-          or name()=gmi:MI_Metadata">
+          test="ancestor-or-self::gmd:MD_Georectified
+                or ancestor-or-self::gmi:MI_Georectified
+                or ancestor-or-self::gmd:MD_Georeferenceable
+                or ancestor-or-self::gmi:MI_Georeferenceable
+                or ancestor-or-self::gmd:MD_GridSpatialRepresentation
+                or ancestor-or-self::gmd:MD_ReferenceSystem
+                or ancestor-or-self::gmd:MD_VectorSpatialRepresentation
+                or name()=gmi:MI_Metadata">
           <xsl:text>msr</xsl:text>
         </xsl:when>
         <xsl:when test="ancestor-or-self::gmd:DQ_Scope">
@@ -191,7 +195,7 @@
         <xsl:when test="ancestor-or-self::gmd:MD_Distribution or ancestor-or-self::gmd:MD_Format">
           <xsl:text>mrd</xsl:text>
         </xsl:when>
-        <xsl:when test="ancestor-or-self::gmd:MD_Resolution or ancestor-or-self::gmd:MD_RepresentativeFraction or ancestor-or-self::gmd:MD_VectorSpatialRepresentation">
+        <xsl:when test="ancestor-or-self::gmd:MD_Resolution or ancestor-or-self::gmd:MD_RepresentativeFraction">
           <xsl:text>mri</xsl:text>
         </xsl:when>
         <xsl:when test="ancestor-or-self::gmd:MD_MaintenanceInformation">

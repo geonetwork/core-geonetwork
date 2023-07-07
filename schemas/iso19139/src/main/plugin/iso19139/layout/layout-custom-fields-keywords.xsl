@@ -118,11 +118,12 @@
     <xsl:variable name="thesaurusIdentifier"
                   select="normalize-space(*/gmd:thesaurusName/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/*/text())"/>
 
+    <!-- Editor configuration can define to display thesaurus with or without fieldset -->
     <xsl:variable name="thesaurusConfig"
                   as="element()?"
-                  select="if ($thesaurusList/thesaurus[@key=substring-after($thesaurusIdentifier, 'geonetwork.thesaurus.')])
-                          then $thesaurusList/thesaurus[@key=substring-after($thesaurusIdentifier, 'geonetwork.thesaurus.')]
-                          else $listOfThesaurus/thesaurus[title=$thesaurusTitle]"/>
+                  select="if ($thesaurusList/thesaurus[@key = substring-after($thesaurusIdentifier, 'geonetwork.thesaurus.')])
+                          then $thesaurusList/thesaurus[@key = substring-after($thesaurusIdentifier, 'geonetwork.thesaurus.')]
+                          else $listOfThesaurus/thesaurus[title = $thesaurusTitle]"/>
 
     <xsl:choose>
       <xsl:when test="($isFlatMode and not($thesaurusConfig/@fieldset)) or $thesaurusConfig/@fieldset = 'false'">
@@ -170,12 +171,18 @@
       </xsl:for-each>
     </xsl:variable>
 
-
+    <!-- Check if thesaurus is defined in editor config or is available in the catalogue -->
+    <xsl:variable name="thesaurusKey"
+                  select="substring-after($thesaurusIdentifier, 'geonetwork.thesaurus.')"/>
     <xsl:variable name="thesaurusConfig"
                   as="element()?"
-                  select="if ($thesaurusList/thesaurus[@key=substring-after($thesaurusIdentifier, 'geonetwork.thesaurus.')])
-                          then $thesaurusList/thesaurus[@key=substring-after($thesaurusIdentifier, 'geonetwork.thesaurus.')]
-                          else $listOfThesaurus/thesaurus[title=$thesaurusTitle]"/>
+                  select="if ($thesaurusList/thesaurus[@key = $thesaurusKey])
+                          then $thesaurusList/thesaurus[@key = $thesaurusKey]
+                          else if ($listOfThesaurus/thesaurus[key = $thesaurusKey])
+                          then $listOfThesaurus/thesaurus[key = $thesaurusKey]
+                          else if ($listOfThesaurus/thesaurus[multilingualTitles/multilingualTitle/title = $thesaurusTitle])
+                          then $listOfThesaurus/thesaurus[multilingualTitles/multilingualTitle/title = $thesaurusTitle]
+                          else $listOfThesaurus/thesaurus[title = $thesaurusTitle]"/>
 
     <xsl:choose>
       <xsl:when test="$thesaurusConfig">

@@ -247,6 +247,7 @@ public class PagesAPI {
             fillContent(null, link, content, pageToUpdate);
             pageToUpdate.setSections(pageProperties.getSections() != null ? pageProperties.getSections() : pageToUpdate.getSections());
             pageToUpdate.setStatus(pageProperties.getStatus() != null ? pageProperties.getStatus() : pageToUpdate.getStatus());
+            pageToUpdate.setLabel(newLabel);
             pageRepository.save(pageToUpdate);
         }
 

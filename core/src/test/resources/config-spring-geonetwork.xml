@@ -34,4 +34,9 @@
 
   <!-- DataManager need ThesaurusManager need SettingManager need a ServletContext-->
   <bean id="servletContext" class="org.fao.geonet.GeonetMockServletContext"/>
+
+  <bean id="language" class="org.fao.geonet.web.DefaultLanguage">
+    <property name="language" value="${language.default}"/>
+    <property name="forceDefault" value="${language.forceDefault}"/>
+  </bean>
 </beans>
