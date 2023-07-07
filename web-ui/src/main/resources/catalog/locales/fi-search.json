@@ -422,6 +422,7 @@
     "mdvalid": "Metadata on oikein",
     "mdinvalid": "Metadata on pätemätöntä",
     "mdinvalidcantpublish": "Invalid metadata can't be published",
+    "mdnonapprovedcantpublish": "Non approved metadata can't be published",
     "mdnovalidation": "Metadatassa ei ole oikeellisuus tietoja",
     "setall": "Aseta kaikki oikeudet",
     "print_legend": "Selite",

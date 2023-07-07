@@ -688,7 +688,8 @@
   module.directive("ngSearchForm", [
     "gnSearchLocation",
     "gnESService",
-    function (gnSearchLocation, gnESService) {
+    "gnGlobalSettings",
+    function (gnSearchLocation, gnESService, gnGlobalSettings) {
       return {
         restrict: "A",
         scope: true,
@@ -715,6 +716,11 @@
             if (element.find("[data-gn-pagination]").length > 0) {
               var unregisterFn = scope.$watch("hasPagination", function () {
                 if (scope.hasPagination) {
+                  if (scope.user && gnSearchLocation.isEditorBoard()) {
+                    scope.controller.setOnlyMyRecord(
+                      gnGlobalSettings.gnCfg.mods.editor.isUserRecordsOnly
+                    );
+                  }
                   scope.triggerSearch(true);
                   unregisterFn();
                 }

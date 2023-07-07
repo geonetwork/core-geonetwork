@@ -123,6 +123,8 @@
 
   <xsl:variable name="metadata"
                 select="//mdb:MD_Metadata"/>
+  <xsl:variable name="metadataUuid"
+                select="$metadata/mdb:metadataIdentifier/*/mcc:code/*/text()"/>
 
   <!-- TODO: Convert language code eng > en_US ? -->
   <xsl:variable name="metadataLanguage"
@@ -460,12 +462,17 @@ eg.
       <datacite:publisher>DataCite</datacite:publisher>
       <datacite:publicationYear>2014</datacite:publicationYear>
 
-      TODO: Define who is the publisher ? Only one allowed.
+  publisher is the first distributor contact
+  or the first point of contact having the role "distributor"
   -->
   <xsl:template mode="toDatacite"
                 match="mdb:distributionInfo[1]">
     <datacite:publisher>
-      <xsl:value-of select="($metadata//mrd:distributorContact)[1]/*/cit:party//cit:CI_Organisation/cit:name/*/text()"/>
+      <xsl:variable name="publisher"
+                    select="if ($metadata//mrd:distributorContact)
+                            then $metadata//mrd:distributorContact
+                            else $metadata/mdb:identificationInfo/*/mri:pointOfContact[*/cit:role/*/@codeListValue = 'distributor']"/>
+      <xsl:value-of select="$publisher[1]/*/cit:party//cit:CI_Organisation/cit:name/*/text()"/>
     </datacite:publisher>
 
     <!--

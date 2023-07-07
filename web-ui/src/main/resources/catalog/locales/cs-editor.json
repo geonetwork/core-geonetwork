@@ -387,7 +387,7 @@
     "directoryEntryAssociatedMetadata": "Přidružená metadata",
     "directoryEntryEditor": "Editor položek",
     "directoryEntryEditing": "Aktuální editace:",
-    "directoryEntry-removeError-referenced": "You can't remove this subtemplate cause it is used in some records.",
+    "directoryEntry-removeError-referenced": "Tuto podšablonu nemůžete odstranit, protože se používá v některých záznamech.",
     "directoryManagerMode-newEntry": "Nový záznam",
     "directoryManagerMode-editEntry": "Upravit položku",
     "directoryManagerMode-newTemplate": "Nová šablona",

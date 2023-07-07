@@ -467,7 +467,7 @@
     field per language is displayed. -->
     <expanded>
       <name>cit:title</name>
-      <name>cit:abstract</name>
+      <name>mri:abstract</name>
     </expanded>
     <!-- All fields in ISO could be multilingual.
     Define element to exclude.
@@ -614,6 +614,7 @@
   <!-- View configuration -->
   <views>
     <view name="default"
+          default="true"
           class="gn-label-above-input gn-indent-bluescale">
       <sidePanel>
         <directive data-gn-need-help="creating-metadata"/>
@@ -624,7 +625,7 @@
                    data-type="onlines"/>
 
         <directive data-gn-onlinesrc-list=""
-                   data-types="onlinesrc|parent|dataset|service|source|sibling|associated|fcats"/>
+                   data-types="onlinesrc|sibling|associated|source|dataset|service|fcats"/>
 
         <directive gn-geo-publisher=""
                    data-ng-if="gnCurrentEdit.geoPublisherConfig"
@@ -699,7 +700,8 @@
       <sidePanel>
         <directive data-gn-need-help="creating-metadata"/>
         <directive data-gn-validation-report=""/>
-        <directive data-gn-onlinesrc-list=""/>
+        <directive data-gn-onlinesrc-list=""
+                   data-types="onlinesrc|sibling|associated|source|dataset|service|fcats"/>
         <directive gn-geo-publisher=""
                    data-ng-if="gnCurrentEdit.geoPublisherConfig"
                    data-config="{{gnCurrentEdit.geoPublisherConfig}}"
@@ -799,7 +801,8 @@
       <sidePanel>
         <directive data-gn-need-help="creating-metadata"/>
         <directive data-gn-validation-report=""/>
-        <directive data-gn-onlinesrc-list=""/>
+        <directive data-gn-onlinesrc-list=""
+                   data-types="onlinesrc|sibling|associated|source|dataset|service|fcats"/>
         <directive gn-geo-publisher=""
                    data-ng-if="gnCurrentEdit.geoPublisherConfig"
                    data-config="{{gnCurrentEdit.geoPublisherConfig}}"

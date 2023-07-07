@@ -2344,8 +2344,7 @@
       steht
     </description>
   </element>
-  <element name="gmd:individualName" context="gmd:CI_ResponsibleParty"
-           id="375">
+  <element name="gmd:individualName" id="375">
     <label>Person</label>
     <help>Als Trennzeichen wird Komma empfohlen</help>
     <condition>Es muss entweder ein Nachname, eine Organisation oder eine

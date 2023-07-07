@@ -170,7 +170,7 @@
             var query = {
               from: 0,
               size: 100,
-              sort: [{ "resourceTitleObject.default.keyword": "asc" }],
+              sort: [{ "resourceTitleObject.default.sort": "asc" }],
               query: {
                 bool: {
                   must: [

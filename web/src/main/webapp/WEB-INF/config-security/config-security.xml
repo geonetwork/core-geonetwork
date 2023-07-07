@@ -30,6 +30,13 @@
           http://www.springframework.org/schema/context/spring-context.xsd"
   xmlns="http://www.springframework.org/schema/beans">
   <!-- <sec:debug/> -->
+
+  <ctx:property-placeholder location="WEB-INF/config-security/config-security.properties,file://#{systemEnvironment['geonetwork_dir']}/config/security.properties"
+                                ignore-unresolvable="true"
+                                ignore-resource-not-found="true"
+                                file-encoding="UTF-8"
+                                order="100"/>
+
   <import resource="config-security-core.xml"/>
   <import resource="config-security-mapping.xml"/>
 
@@ -57,16 +64,4 @@
   -->
 
   <import resource="config-security-${geonetwork.security.type:default}.xml"/>
-  <!--<import resource="config-security-keycloak.xml"/> -->
-  <!--<import resource="config-security-openidconnect.xml"/> -->
-  <!--<import resource="config-security-ldap.xml"/>-->
-  <!--<import resource="config-security-ldap-recursive.xml"/>-->
-  <!-- <import resource="config-security-ecas.xml"/> -->
-  <!--<import resource="config-security-cas.xml"/>-->
-  <!--<import resource="config-security-cas-ldap.xml"/>-->
-  <!-- <import resource="config-security-cas-database.xml"/> -->
-  <!-- <import resource="config-security-shibboleth.xml"/>  -->
-  <ctx:property-placeholder location="WEB-INF/config-security/config-security.properties"
-                            file-encoding="UTF-8" ignore-unresolvable="true" order="100"/>
-
 </beans>

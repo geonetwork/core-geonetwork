@@ -199,9 +199,13 @@
       this.validateMdLinks = function (bucket) {
         $rootScope.$broadcast("operationOnSelectionStart");
         return gnHttp
-          .callService("../api/records/links?" + "analyze=true&bucket=" + bucket, null, {
-            method: "POST"
-          })
+          .callService(
+            "../api/records/links/analyze?" + "analyze=true&bucket=" + bucket,
+            null,
+            {
+              method: "POST"
+            }
+          )
           .then(function (data) {
             $rootScope.processReport = data.data;
 
@@ -454,9 +458,9 @@
        * @param {string} flag
        * @return {*}
        */
-      this.publish = function (md, bucket, flag, scope) {
+      this.publish = function (md, bucket, flag, scope, publicationType) {
         if (md) {
-          flag = md.isPublished() ? "off" : "on";
+          flag = md.isPublished(publicationType) ? "off" : "on";
         }
 
         scope.isMdWorkflowEnable = gnConfig["metadata.workflow.enable"];
@@ -477,7 +481,8 @@
             angular.isDefined(md) ? md.id : undefined,
             angular.isDefined(md) ? undefined : bucket,
             onOrOff,
-            $rootScope.user
+            $rootScope.user,
+            publicationType.name === "default" ? "" : publicationType.name
           )
           .then(
             function (response) {
@@ -514,7 +519,7 @@
               }
 
               if (md) {
-                md.publish();
+                md.publish(publicationType);
               }
             },
             function (response) {

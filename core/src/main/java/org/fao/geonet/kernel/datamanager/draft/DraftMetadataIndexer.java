@@ -86,17 +86,17 @@ public class DraftMetadataIndexer extends BaseMetadataIndexer implements IMetada
                 List<MetadataStatus> statuses = statusRepository.findAllByMetadataIdAndByType(fullMd.getId(), StatusValueType.workflow, statusSort);
                 if (!statuses.isEmpty()) {
                     MetadataStatus stat = statuses.get(0);
-                    status = String.valueOf(stat.getStatusValue().getId());
+                    status = String.valueOf(stat.getStatusValue().getName());
                 }
 
                 // get status of draft
                 statuses = statusRepository.findAllByMetadataIdAndByType(metadataDraft.getId(), StatusValueType.workflow, statusSort);
                 if (!statuses.isEmpty()) {
                     MetadataStatus stat = statuses.get(0);
-                    statusDraft = String.valueOf(stat.getStatusValue().getId());
+                    statusDraft = String.valueOf(stat.getStatusValue().getName());
                 }
 
-                extraFields.put(Geonet.IndexFieldNames.STATUS_WORKFLOW,  status + statusDraft);
+                extraFields.put(Geonet.IndexFieldNames.STATUS_WORKFLOW, status + "-" + statusDraft);
 
             } else {
                 Log.trace(Geonet.DATA_MANAGER,
@@ -109,8 +109,8 @@ public class DraftMetadataIndexer extends BaseMetadataIndexer implements IMetada
                 List<MetadataStatus> statuses = statusRepository.findAllByMetadataIdAndByType(fullMd.getId(), StatusValueType.workflow, statusSort);
                 if (!statuses.isEmpty()) {
                     MetadataStatus stat = statuses.get(0);
-                    String status = String.valueOf(stat.getStatusValue().getId());
-                    extraFields.put(Geonet.IndexFieldNames.STATUS_WORKFLOW,  status);
+                    String status = String.valueOf(stat.getStatusValue().getName());
+                    extraFields.put(Geonet.IndexFieldNames.STATUS_WORKFLOW, status);
                 }
             }
         }

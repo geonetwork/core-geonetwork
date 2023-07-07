@@ -13,23 +13,7 @@ Wro4j is is used to compile and manage JS dependencies.
 
 ## Check & format file
 
-Closure utility could be used to check syntax and fix style
-
-See https://developers.google.com/closure/utilities/docs/linter_howto for installation
-
-```
-sudo easy_install http://closure-linter.googlecode.com/files/closure_linter-latest.tar.gz
-```
-
-Maven build running with profile "jslint" runs:
- * fixjsstyle for fix JS style
- * gjslint for checking JS files
-
-
-```
- mvn clean install -Pjslint
-```
-
+Maven build is using Prettier to format JS and HTML code.
 
 ## Translate client app
 
@@ -38,7 +22,7 @@ Generate a transifex token API from https://www.transifex.com/user/settings/api/
 Install transifex client:
 
 ```shell script
-sudo apt-get install transifex-client
+curl -o- https://raw.githubusercontent.com/transifex/cli/master/install.sh | bash
 ```
 
 Download translations from transifex:

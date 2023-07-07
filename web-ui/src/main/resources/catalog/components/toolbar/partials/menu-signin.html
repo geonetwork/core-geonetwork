@@ -1,0 +1,192 @@
+<ul
+  data-ng-if="gnCfg.mods.authentication.enabled"
+  class="nav navbar-nav username-dropdown accessible-dropdown"
+>
+  <!-- logged in -->
+  <li class="dropdown" data-ng-show="authenticated">
+    <a
+      title="{{'userDetails' | translate}}"
+      href
+      class="dropdown-toggle gn-menuitem-xs"
+      data-toggle="dropdown"
+      aria-haspopup="true"
+      aria-expanded="false"
+    >
+      <img
+        class="img-circle"
+        alt="{{'avatar' | translate}}"
+        data-ng-src="../api/users/{{(user.id)}}.png?size=18"
+      />
+      <div class="gn-user-info hidden-sm hidden-md">
+        <span class="gn-user-name">{{user.name}} {{user.surname}}</span><br />
+        <span class="gn-user-role">{{user.profile | translate}}</span>
+      </div>
+      <span class="caret"></span>
+      <span
+        class="alert alert-danger ng-hide"
+        data-ng-show="session.remainingTime > 0 &&
+                        session.remainingTime < session.alertInTitleWhen"
+        translate
+        data-translate-values="{remainingTime: '{{session.remainingTime}}'}"
+      >
+        sessionWillExpireIn
+      </span>
+    </a>
+    <ul class="dropdown-menu gn-menuitem-xs">
+      <li class="text-center hidden-xs" role="menuitem">
+        <img
+          class="img-circle"
+          alt="{{'avatar' | translate}}"
+          data-ng-src="../api/users/{{(user.id)}}.png?size=56"
+        />
+      </li>
+      <li role="separator" class="divider hidden-xs"></li>
+      <li class="dropdown-header hidden-xs" role="menuitem" translate>username</li>
+      <li class="hidden-xs" role="menuitem">
+        <a
+          data-gn-active-tb-item="{{gnCfg.mods.admin.appUrl}}#/organization/users?userOrGroup={{user.username}}"
+          >{{user.name}} {{user.surname}}</a
+        >
+      </li>
+      <li class="dropdown-header hidden-xs" role="menuitem" translate>profile</li>
+      <li class="hidden-xs" role="menuitem">
+        <a
+          style="text-transform: lowercase"
+          data-gn-active-tb-item="{{gnCfg.mods.admin.appUrl}}#/organization/users?userOrGroup={{user.username}}"
+          >{{user.profile | translate}}</a
+        >
+      </li>
+      <li role="separator" class="divider hidden-xs"></li>
+      <li role="menuitem">
+        <a href="{{signoutUrl}}" title="{{'signout' | translate}}">
+          <span class="fa fa-fw fa-sign-out"></span>
+          {{'signout' | translate}}
+        </a>
+      </li>
+    </ul>
+  </li>
+  <li
+    class="open signin-dropdown"
+    data-ng-if="!authenticated && service !== 'catalog.signin' && service !== 'new.account' && isShowLoginAsLink"
+  >
+    <a
+      href="{{signInFormAction}}?_csrf={{csrf}}&redirectUrl={{redirectUrlAfterSign}}"
+      title="{{'signIn'|translate}}"
+      class="gn-menuheader-xs"
+      data-ng-keypress="$event"
+      id="signinLink"
+    >
+      <span class="fa fa-fw fa-sign-in hidden-sm"></span>
+      {{'signIn' | translate}}
+    </a>
+  </li>
+  <!-- not logged in -->
+  <li
+    class="dropdown signin-dropdown"
+    data-ng-if="!authenticated && service !== 'catalog.signin' && service !== 'new.account' && !isShowLoginAsLink && !isDisableLoginForm"
+  >
+    <a
+      href="{{gnCfg.mods.authentication.signinUrl | signInLink}}"
+      title="{{'signIn'|translate}}"
+      class="dropdown-toggle gn-menuheader-xs"
+      data-ng-keypress="$event"
+      data-toggle="dropdown"
+      aria-haspopup="true"
+      data-ng-mouseover="focusLoginPopup()"
+    >
+      <span class="fa fa-fw fa-sign-in hidden-sm"></span>
+      {{'signIn' | translate}}
+      <span class="caret"></span>
+    </a>
+    <ul class="dropdown-menu">
+      <form
+        name="gnSigninForm"
+        class="navbar-form"
+        action="{{signInFormAction}}"
+        method="post"
+        role="form"
+      >
+        <input type="hidden" name="_csrf" value="{{csrf}}" />
+        <li role="menuitem">
+          <div class="form-group">
+            <div class="input-group">
+              <span class="input-group-addon">
+                <span class="fa fa-fw fa-user"></span>
+              </span>
+              <input
+                type="text"
+                class="form-control"
+                id="inputUsername"
+                name="username"
+                autofocus=""
+                aria-label="{{'username' | translate}}"
+                placeholder="{{'username' | translate}}"
+                data-ng-model="signinUsername"
+                required=""
+              />
+            </div>
+          </div>
+        </li>
+        <li role="menuitem">
+          <div class="form-group">
+            <div class="input-group">
+              <span class="input-group-addon">
+                <span class="fa fa-fw fa-lock"></span>
+              </span>
+              <input
+                type="password"
+                class="form-control"
+                id="inputPassword"
+                name="password"
+                autocomplete="off"
+                data-ng-model="signinPassword"
+                aria-label="{{'password' | translate}}"
+                placeholder="{{'password' | translate}}"
+                required=""
+              />
+            </div>
+          </div>
+        </li>
+        <input type="hidden" name="redirectUrl" value="{{redirectUrlAfterSign}}" />
+        <li role="menuitem">
+          <button
+            type="submit"
+            class="btn btn-primary btn-block"
+            aria-label="{{'signIn' | translate}}"
+            data-ng-disabled="!gnSigninForm.$valid"
+          >
+            <span class="fa fa-sign-in"></span>
+            <span translate="">signIn</span>
+          </button>
+        </li>
+      </form>
+      <!-- register -->
+      <li
+        role="separator"
+        class="divider hidden-xs"
+        data-ng-show="isSelfRegisterPossible()"
+      ></li>
+      <li role="menuitem" data-ng-show="isSelfRegisterPossible()">
+        <b data-translate="">needAnAccount</b>
+        <p data-translate="">needAnAccountInfo</p>
+        <a class="btn btn-default" href="new.account" data-translate=""
+          >createAnAccount</a
+        >
+      </li>
+      <li role="separator" class="divider hidden-xs" data-ng-show="isHostDefined()"></li>
+      <li data-ng-show="isHostDefined()" class="gn-margin-bottom">
+        <!-- forgot password -->
+        <b data-translate="">forgetDetails</b>
+        <span>
+          <p data-translate="">forgetDetailsInfo</p>
+          <a
+            class="btn btn-default btn-block"
+            href="catalog.signin?showforgotpassword=true"
+            data-translate=""
+            >recoverPassword</a
+          >
+        </span>
+      </li>
+    </ul>
+  </li>
+</ul>

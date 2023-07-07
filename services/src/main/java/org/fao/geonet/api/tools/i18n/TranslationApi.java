@@ -39,6 +39,7 @@ import org.fao.geonet.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -107,7 +108,9 @@ public class TranslationApi {
         @RequestParam(required = false) final List<String> type,
         ServletRequest request
     ) throws Exception {
-        return translationsRepository.findAll();
+        final Sort sort = SortUtils.createSort(Translations_.fieldName);
+
+        return translationsRepository.findAll(sort);
     }
 
     @io.swagger.v3.oas.annotations.Operation(
