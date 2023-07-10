@@ -83,6 +83,7 @@ public class ISO19139SchemaPlugin
             .put("csw:Record", Namespace.getNamespace("csw", "http://www.opengis.net/cat/csw/2.0.2"))
             .put("gmd:MD_Metadata", GMD)
             .put("dcat", Namespace.getNamespace("dcat", "http://www.w3.org/ns/dcat#"))
+            .put("dcat-ap", Namespace.getNamespace("dcatap", "http://data.europa.eu/r5r/"))
             .build();
 
         allExportFormats = ImmutableMap.<String, String>builder()
