@@ -75,10 +75,10 @@
         <div data-ng-switch on="mainType">
           <div data-ng-switch-when="WFS">
             <div
-              data-ng-if="isLayerProtocol(r)"
-              data-gn-no-map-wfs-download=""
-              data-typename="{{isLayerProtocol(r) ? r.locTitle : ''}}"
-              data-url="{{r.locUrl}}"
+              data-ng-if="::isLayerProtocol(r)"
+              data-gn-wfs-download=""
+              data-typename="{{::isLayerProtocol(r) ? r.locTitle : ''}}"
+              data-url="{{::r.locUrl}}"
             ></div>
           </div>
 

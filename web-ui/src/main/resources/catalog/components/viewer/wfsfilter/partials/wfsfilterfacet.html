@@ -7,7 +7,9 @@
                       && isWfsAvailable == false"
     class="alert alert-warning"
   >
-    <button type="button" class="close"><i class="fa fa-times" /></button>
+    <button type="button" class="close" data-ng-click="dismiss()">
+      <i class="fa fa-times" />
+    </button>
     <span data-translate="" data-translate-values="{'url': '{{wfsUrl}}'}"
       >wfsNotAvailable</span
     >
