@@ -84,8 +84,8 @@
   xmlns:xlink  = "http://www.w3.org/1999/xlink"
   xmlns:xsi    = "http://www.w3.org/2001/XMLSchema-instance"
   xmlns:xsl    = "http://www.w3.org/1999/XSL/Transform"
-  exclude-result-prefixes="earl gco gmd gml gmx i i-gp srv xlink xsi xsl wdrs"
-  version="1.0">
+  exclude-result-prefixes="#all"
+  version="2.0">
 
   <xsl:output method="xml"
               indent="yes"
@@ -440,20 +440,47 @@
       The default rule implies that HTTP URIs are specified for the metadata file identifier
       (metadata URI) and the resource identifier (resource URI).
 
+      Resource URI can be an http or https URI based on:
+      * codeSpace + code value
+      * code value
+
+      The first URI found is used.
     -->
 
     <xsl:param name="ResourceUri">
-      <xsl:variable name="rURI" select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier/*/gmd:code/gco:CharacterString"/>
-      <xsl:if test="$rURI != '' and ( starts-with($rURI, 'http://') or starts-with($rURI, 'https://') )">
-        <xsl:value-of select="$rURI"/>
+      <xsl:variable name="identifiers"
+                    select="gmd:identificationInfo/*/gmd:citation/*/
+                              gmd:identifier/*"/>
+
+      <xsl:variable name="uriIdentifiers"
+                    as="node()*">
+        <xsl:for-each select="$identifiers">
+          <xsl:variable name="rURI"
+                        select="if (gmd:codeSpace)
+                                then concat(
+                                      gmd:codeSpace/(gco:CharacterString
+                                                     |gmx:Anchor/@xlink:href),
+                                      gmd:code/(gco:CharacterString
+                                                |gmx:Anchor/@xlink:href))
+                                else gmd:code/(gco:CharacterString/text()
+                                               |gmx:Anchor/@xlink:href)"/>
+          <xsl:if test="matches($rURI, '^https?://')">
+            <uri><xsl:value-of select="$rURI"/></uri>
+          </xsl:if>
+        </xsl:for-each>
+      </xsl:variable>
+
+      <xsl:if test="count($uriIdentifiers) > 1">
+        <xsl:value-of select="$uriIdentifiers[1]"/>
+        <xsl:if test="count($uriIdentifiers) > 1">
+          <xsl:message>ResourceUri is <xsl:value-of select="$uriIdentifiers[1]"/>. Ignored: <xsl:value-of select="string-join($uriIdentifiers[position() > 1], ',')"/>. </xsl:message>
+        </xsl:if>
       </xsl:if>
     </xsl:param>
 
     <xsl:param name="MetadataUri">
-      <xsl:variable name="mURI" select="gmd:fileIdentifier/gco:CharacterString"/>
-      <xsl:if test="$mURI != '' and ( starts-with($mURI, 'http://') or starts-with($mURI, 'https://') )">
-        <xsl:value-of select="$mURI"/>
-      </xsl:if>
+      <xsl:value-of select="gmd:fileIdentifier/gco:CharacterString[
+                              matches(., '^https?://')]"/>
     </xsl:param>
 
     <!--
