@@ -40,7 +40,6 @@ import org.fao.geonet.util.ThreadUtils;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.TransformerFactoryFactory;
 import org.fao.geonet.utils.Xml;
-import org.geotools.data.DataStore;
 import org.jdom.Element;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,14 +67,21 @@ public class GeonetTestFixture {
     private volatile static FileSystemPool.CreatedFs templateFs;
     private volatile static SchemaManager templateSchemaManager;
     @Autowired
-    private EsSearchManager templateSearchManager;
-    @Autowired
-    protected DataStore dataStore;
+    private EsSearchManager esSearchManager;
     @Autowired
     private ConfigurableApplicationContext _applicationContext;
     @Autowired
     private IsoLanguagesMapper isoLanguagesMapper;
-
+    @Autowired
+    private GeonetworkDataDirectory geonetworkDataDirectory;
+    @Autowired
+    private ThesaurusManager thesaurusManager;
+    @Autowired
+    private DataManager dataManager;
+    @Autowired
+    private DataSource dataSource;
+    @Autowired
+    private SettingManager settingManager;
     private FileSystemPool.CreatedFs currentFs;
 
 
@@ -111,17 +117,15 @@ public class GeonetTestFixture {
                     }
                 });
 
-
                 Path schemaPluginsDir = templateDataDirectory.resolve("config/schema_plugins");
                 deploySchema(webappDir, schemaPluginsDir);
 
-                final GeonetworkDataDirectory geonetworkDataDirectory = _applicationContext.getBean(GeonetworkDataDirectory.class);
-                final ServiceConfig serviceConfig = new ServiceConfig(Lists.<Element>newArrayList());
+                final ServiceConfig serviceConfig = new ServiceConfig(Lists.newArrayList());
                 geonetworkDataDirectory.init("geonetwork", webappDir, templateDataDirectory, serviceConfig, null);
                 test.addTestSpecificData(geonetworkDataDirectory);
 
                 // Create ES index
-               _applicationContext.getBean(EsSearchManager.class).init(false, Optional.empty());
+                esSearchManager.init(true, Optional.empty());
 
                 templateSchemaManager = initSchemaManager(webappDir, geonetworkDataDirectory);
 
@@ -130,7 +134,7 @@ public class GeonetTestFixture {
             isoLanguagesMapper.reinit();
         }
 
-        final String fsName = test.getClass().getSimpleName().replaceAll("[^a-z0-9A-Z]", "") + UUID.randomUUID().toString();
+        final String fsName = test.getClass().getSimpleName().replaceAll("[^a-z0-9A-Z]", "") + UUID.randomUUID();
         currentFs = FILE_SYSTEM_POOL.get(fsName);
 
         assertTrue(Files.isDirectory(currentFs.dataDir.resolve("config")));
@@ -142,34 +146,20 @@ public class GeonetTestFixture {
         final GeonetworkDataDirectory dataDir = configureDataDir(test, webappDir, currentFs.dataDir);
         configureNewSchemaManager(dataDir, webappDir);
 
-        // TODO: I don't know why but this corrupts other tests that will fail depending on the run order:
-        //  assertCorrectDataDir();
-        // for example, running GeonetworkDataDirectoryMultiNodeServiceConfigOnlySystemDataDirSetTest, then
-        // GeonetworkDataDirectoryMultiNodeSystemPropertyOnlySystemDataDirSetTest with that line enabled, the second fails.
-
-//        if (test.resetLuceneIndex()) {
-//            _directoryFactory.resetIndex();
-//        }
-
         ServiceContext serviceContext = test.createServiceContext();
 
         ApplicationContextHolder.set(_applicationContext);
         serviceContext.setAsThreadLocal();
-//      TODOES
-//        _applicationContext.getBean(EsSearchManager.class).initNonStaticData(100);
-        _applicationContext.getBean(DataManager.class).init(serviceContext, false);
-        _applicationContext.getBean(ThesaurusManager.class).init(true, serviceContext, "WEB-INF/data/config/codelist");
 
+        dataManager.init(serviceContext, false);
+        thesaurusManager.init(true, serviceContext, "WEB-INF/data/config/codelist");
 
         addSourceUUID(dataDir);
 
-        final DataSource dataSource = _applicationContext.getBean(DataSource.class);
         try (Connection conn = dataSource.getConnection()) {
-            ThreadUtils.init(conn.getMetaData().getURL(), _applicationContext.getBean(SettingManager.class));
+            ThreadUtils.init(conn.getMetaData().getURL(), settingManager);
         }
-
     }
-
 
     protected void configureNewSchemaManager(GeonetworkDataDirectory dataDir, Path webappDir) throws Exception {
         final SchemaManager schemaManager = _applicationContext.getBean(SchemaManager.class);
@@ -179,7 +169,7 @@ public class GeonetTestFixture {
 
     protected void addSourceUUID(GeonetworkDataDirectory dataDirectory) {
         String siteUuid = dataDirectory.getSystemDataDir().getFileName().toString();
-        _applicationContext.getBean(SettingManager.class).setSiteUuid(siteUuid);
+        settingManager.setSiteUuid(siteUuid);
         final SourceRepository sourceRepository = _applicationContext.getBean(SourceRepository.class);
         List<Source> sources = sourceRepository.findAll();
         if (sources.isEmpty()) {
