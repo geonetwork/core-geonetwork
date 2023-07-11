@@ -1669,11 +1669,13 @@
     </xsl:param>
 
     <xsl:param name="OrganisationName">
-      <xsl:value-of select="normalize-space(gmd:organisationName/*)"/>
+      <xsl:value-of select="string-join(gmd:organisationName/*, '')"/>
     </xsl:param>
     <xsl:param name="OrganisationName-FOAF">
       <xsl:for-each select="gmd:organisationName">
-        <foaf:name xml:lang="{$MetadataLanguage}"><xsl:value-of select="normalize-space(*[self::gco:CharacterString|gmx:Anchor])"/></foaf:name>
+        <foaf:name xml:lang="{$MetadataLanguage}">
+          <xsl:value-of select="normalize-space(*[self::gco:CharacterString|gmx:Anchor])"/>
+        </foaf:name>
         <xsl:call-template name="LocalisedString">
           <xsl:with-param name="term">foaf:name</xsl:with-param>
         </xsl:call-template>
