@@ -27,9 +27,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.dbcp2.BasicDataSource;
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.EsSearchManager;
+import org.fao.geonet.utils.Env;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.TransformerFactoryFactory;
 
@@ -52,6 +54,8 @@ public class SiteInformation {
     private Map<String, String> catProperties = new HashMap<>();
     private Map<String, String> indexProperties = new HashMap<>();
     private Map<String, String> systemProperties = new HashMap<>();
+
+    private Map<String, String> envProperties = new HashMap<>();
     private Map<String, String> databaseProperties = new HashMap<>();
     private Map<String, String> versionProperties = new HashMap<>();
 
@@ -68,6 +72,7 @@ public class SiteInformation {
             } catch (IOException e) {
                 Log.error(Geonet.GEONETWORK, e.getMessage(), e);
             }
+            loadEnvInfo();
             loadVersionInfo();
             loadSystemInfo();
         }
@@ -98,6 +103,15 @@ public class SiteInformation {
 
     public void setSystemProperties(Map<String, String> systemProperties) {
         this.systemProperties = systemProperties;
+    }
+
+    @JsonProperty(value = "env")
+    public Map<String, String> getEnvProperties() {
+        return envProperties;
+    }
+
+    public void setEnvProperties(Map<String, String> envProperties) {
+        this.envProperties = envProperties;
     }
 
     @JsonProperty(value = "database")
@@ -167,6 +181,19 @@ public class SiteInformation {
         indexProperties.put("es.url", esSearchManager.getClient().getServerUrl());
         indexProperties.put("es.version", esSearchManager.getClient().getServerVersion());
         indexProperties.put("es.index", esSearchManager.getDefaultIndex());
+    }
+
+    private void loadEnvInfo(){
+        String[] variables = {
+            "harvester.scheduler.enabled",
+            "db.migration_onstartup"
+        };
+        for (String variable : variables) {
+            String value = Env.getPropertyFromEnv(variable, "");
+            if (StringUtils.isNotEmpty(value)) {
+                envProperties.put(variable, value);
+            }
+        }
     }
 
     /**
