@@ -368,7 +368,9 @@ public abstract class AbstractParams implements Cloneable {
             }
         }
 
-        boolean enableScheduledHarvesters = Env.getPropertyFromEnv("harvester.scheduler.enabled", "true").equalsIgnoreCase("true");
+        boolean enableScheduledHarvesters = Env
+            .getPropertyFromEnv("harvester.scheduler.enabled", "true")
+            .equalsIgnoreCase("true");
         final String schedule;
         if (enableScheduledHarvesters) {
             // the configured value for the harvester
