@@ -160,8 +160,9 @@
 
             <xsl:for-each select="current-group()">
               <xsl:sort select="."/>
-              <a href='#/search?query_string=%7B"tag.\\*":%7B"{.}":true%7D%7D'>
-                <span class="badge"><xsl:copy-of select="."/></span>
+              <a class="btn btn-default btn-xs"
+                 href='#/search?query_string=%7B"tag.\\*":%7B"{.}":true%7D%7D'>
+                <xsl:copy-of select="."/>
               </a>
             </xsl:for-each>
             <xsl:if test="position() != last()">
@@ -172,8 +173,9 @@
         <xsl:otherwise>
           <xsl:for-each select="$tags/tag">
             <xsl:sort select="."/>
-              <a href='#/search?query_string=%7B"tag.\\*":%7B"{.}":true%7D%7D'>
-              <span class="badge"><xsl:copy-of select="."/></span>
+            <a class="btn btn-default btn-xs"
+               href='#/search?query_string=%7B"tag.\\*":%7B"{.}":true%7D%7D'>
+              <xsl:copy-of select="."/>
             </a>
           </xsl:for-each>
         </xsl:otherwise>
