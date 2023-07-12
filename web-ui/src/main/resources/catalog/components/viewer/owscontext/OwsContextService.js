@@ -248,6 +248,36 @@
                 }
               }
 
+              // Function to set the attribution on the layer
+              // Parameter :
+              //   ol layer to apply the attributions to.
+              //   layerAttributionArray containing attributions to be added.
+              var setLayerAttribution = function (olLayer, layerAttributionArray) {
+                if (layerAttributionArray) {
+                  // Only apply the layer if there is a source.
+                  if (olLayer.getSource()) {
+                    var attributionLike = olLayer.getSource().getAttributions();
+                    if (typeof attributionLike === "function") {
+                      attributionLike = attributionLike();
+                    }
+                    if (typeof attributionLike === "string") {
+                      attributionLike = [attributionLike];
+                    }
+                    if (
+                      typeof attributionLike === "object" &&
+                      Array.isArray(attributionLike)
+                    ) {
+                      attributionLike.push.apply(attributionLike, layerAttributionArray);
+                    } else {
+                      attributionLike = layerAttributionArray;
+                    }
+                    olLayer.getSource().setAttributions(attributionLike);
+                  } else {
+                    console.log("Warning: Cannot add attributions to map as source is not defined");
+                  }
+                }
+              };
+
               // {type=bing_aerial} (mapquest, osm ...)
               // {type=arcgis,name=0,1,2}
               // type=wms,name=lll
@@ -269,24 +299,7 @@
                   olLayer.background = true;
                   olLayer.set("group", "Background layers");
                   olLayer.setVisible(!layer.hidden);
-                  if (layerAttributionArray) {
-                    var attributionLike = olLayer.getSource().getAttributions();
-                    if (typeof attributionLike === "function") {
-                      attributionLike = attributionLike();
-                    }
-                    if (typeof attributionLike === "string") {
-                      attributionLike = [attributionLike];
-                    }
-                    if (
-                      typeof attributionLike === "object" &&
-                      Array.isArray(attributionLike)
-                    ) {
-                      attributionLike.push.apply(attributionLike, layerAttributionArray);
-                    } else {
-                      attributionLike = layerAttributionArray;
-                    }
-                    olLayer.getSource().setAttributions(attributionLike);
-                  }
+                  setLayerAttribution(olLayer, layerAttributionArray);
 
                   if (isMainViewer) {
                     bgLayers.push(olLayer);
@@ -313,6 +326,8 @@
                   isFirstActiveBgLayer = true;
                   loadingLayer.set("bgLayer", true);
                 }
+
+                setLayerAttribution(loadingLayer, layerAttributionArray);
 
                 var layerIndex;
                 if (isMainViewer) {
