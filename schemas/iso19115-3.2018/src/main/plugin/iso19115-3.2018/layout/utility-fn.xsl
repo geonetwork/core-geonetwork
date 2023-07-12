@@ -47,7 +47,7 @@
       <xsl:when
         test="$languageIdentifier">
         <xsl:value-of
-          select="concat('#', $languageIdentifier)"
+          select="concat('#', $languageIdentifier[1])"
         />
       </xsl:when>
       <xsl:otherwise>
