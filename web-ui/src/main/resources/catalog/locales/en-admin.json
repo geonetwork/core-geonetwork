@@ -348,6 +348,7 @@
     "harvesterUnchangedRecords": "Unchanged",
     "harvesterType": "Node type",
     "harvesterUpdated": "Harvester updated",
+    "harvesterUpdateError": "Error on updating harvester",
     "harvesterValidate": "Validate records before import",
     "harvesterValidateHelp": "Invalid records will be rejected. Validation is based on the standard validation (ie. XSD, Schematrons).",
     "index.lucene.config": "Lucene configuration",
