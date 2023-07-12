@@ -29,7 +29,10 @@
         <div data-gn-metadata-individual="c" />
 
         <address data-ng-if="c.address != '' || c.phone != ''">
-          <div data-ng-if="c.address != ''">{{c.address}}</div>
+          <div data-ng-if="c.address != ''">
+            <i class="fa fa-fw fa-map-marker"></i>
+            {{c.address}}
+          </div>
           <a href="tel:{{c.phone}}" data-ng-if="c.phone != ''">
             <span data-translate="">call</span> {{c.phone}}
           </a>
@@ -83,7 +86,10 @@
           <div data-gn-metadata-individual="c" />
 
           <address data-ng-if="c.address != '' || c.phone != ''">
-            <div data-ng-if="c.address != ''">{{c.address}}</div>
+            <div data-ng-if="c.address != ''">
+              <i class="fa fa-fw fa-map-marker"></i>
+              {{c.address}}
+            </div>
             <a href="tel:{{c.phone}}" data-ng-if="c.phone != ''">
               <span data-translate="">call</span> {{c.phone}}
             </a>
@@ -136,7 +142,10 @@
           <div data-gn-metadata-individual="c" />
 
           <address data-ng-if="c.address != '' || c.phone != ''">
-            <div data-ng-if="c.address != ''">{{c.address}}</div>
+            <div data-ng-if="c.address != ''">
+              <i class="fa fa-fw fa-map-marker"></i>
+              {{c.address}}
+            </div>
             <a href="tel:{{c.phone}}" data-ng-if="c.phone != ''">
               <span data-translate="">call</span> {{c.phone}}
             </a>
