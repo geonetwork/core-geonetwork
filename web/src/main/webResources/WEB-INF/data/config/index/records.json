@@ -1638,6 +1638,9 @@
           },
           "source": {
             "type": "object"
+          },
+          "processor": {
+            "type": "object"
           }
         }
       },

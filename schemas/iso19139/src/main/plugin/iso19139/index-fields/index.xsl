@@ -1017,8 +1017,38 @@
               </xsl:for-each>
               ]
             </xsl:if>
+
+            <xsl:variable name="processors"
+                          select="gmd:processor/*[gmd:organisationName/gco:CharacterString != '']"/>
+
+            <xsl:if test="count($processors) > 0">
+              ,"processor": [
+              <xsl:for-each select="$processors">
+                {
+                  "organisationObject": <xsl:value-of
+                                          select="gn-fn-index:add-multilingual-field(
+                                            'description', gmd:organisationName, $allLanguages)"/>
+                  <xsl:if test="gmd:individualName/gco:CharacterString/text()">
+                    ,"individual":"<xsl:value-of select="gn-fn-index:json-escape(gmd:individualName/gco:CharacterString/text())"/>"
+                  </xsl:if>
+                }
+                <xsl:if test="position() != last()">,</xsl:if>
+              </xsl:for-each>
+              ]
+            </xsl:if>
             }</processSteps>
         </xsl:for-each>
+
+        <xsl:for-each-group select="gmd:lineage/*/gmd:processStep/*/gmd:processor[
+                                    */gmd:organisationName/gco:CharacterString != '']"
+                            group-by="*/gmd:organisationName/gco:CharacterString">
+          <xsl:apply-templates mode="index-contact"
+                               select=".">
+            <xsl:with-param name="fieldSuffix" select="'ForProcessing'"/>
+            <xsl:with-param name="languages" select="$allLanguages"/>
+          </xsl:apply-templates>
+        </xsl:for-each-group>
+
       </xsl:for-each>
 
       <xsl:variable name="atomProtocol" select="util:getSettingValue('system/inspire/atomProtocol')" />

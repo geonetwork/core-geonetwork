@@ -1128,8 +1128,38 @@
               </xsl:for-each>
               ]
             </xsl:if>
+
+            <xsl:variable name="processor"
+                          select="mrl:processor/*[.//cit:CI_Organisation/cit:name != '']"/>
+            <xsl:if test="count($processor) > 0">
+              ,"processor": [
+              <xsl:for-each select="$processor">
+                <xsl:variable name="individualName"
+                              select="(.//cit:CI_Individual/cit:name/gco:CharacterString/text())[1]"/>
+                {
+                  "organisationObject": <xsl:value-of
+                select="gn-fn-index:add-multilingual-field(
+                                            'description', .//cit:CI_Organisation/cit:name,
+                                             $allLanguages)"/>
+                <xsl:if test="$individualName != ''">
+                  ,"individual":"<xsl:value-of select="gn-fn-index:json-escape($individualName)"/>"
+                </xsl:if>
+                }
+                <xsl:if test="position() != last()">,</xsl:if>
+              </xsl:for-each>
+              ]
+            </xsl:if>
             }</processSteps>
         </xsl:for-each>
+
+        <xsl:for-each-group select="mrl:processStep//mrl:processor[.//cit:CI_Organisation/cit:name != '']"
+                            group-by=".//cit:CI_Organisation/cit:name/gco:CharacterString">
+          <xsl:apply-templates mode="index-contact"
+                               select=".">
+            <xsl:with-param name="fieldSuffix" select="'ForProcessing'"/>
+            <xsl:with-param name="languages" select="$allLanguages"/>
+          </xsl:apply-templates>
+        </xsl:for-each-group>
       </xsl:for-each>
 
 
