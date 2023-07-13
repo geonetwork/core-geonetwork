@@ -892,7 +892,6 @@
           createOlWMS: function (map, layerParams, layerOptions) {
             var options = layerOptions || {};
 
-
             var convertGetMapRequestToPost = function (url, onLoadCallback) {
               var p = url.split("?");
               var action = p[0];
