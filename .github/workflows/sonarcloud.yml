@@ -2,9 +2,7 @@ name: SonarCloud QA
 on:
   push:
     branches:
-      - main
-      - 4.0.x
-      - 3.12.x
+      - 4.2.x
   pull_request:
     types: [opened, synchronize, reopened]
 jobs:

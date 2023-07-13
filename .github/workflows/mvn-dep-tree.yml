@@ -5,18 +5,18 @@ name: "MavenDepTreeSubmission"
 
 on:
   push:
-    branches: [ main ]
+    branches: [ 4.2.x ]
   schedule:
     - cron: '44 22 * * 5'
 
 jobs:
   update-maven-dep-tree:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-      
+
       - name: Setup Java JDK
         uses: actions/setup-java@v3.10.0
         with:
@@ -26,6 +26,6 @@ jobs:
           # The package type (jdk, jre, jdk+fx, jre+fx)
           java-package: jdk
           cache: maven
-    
+
       - name: Submit Dependency Snapshot
         uses: advanced-security/maven-dependency-submission-action@v3
