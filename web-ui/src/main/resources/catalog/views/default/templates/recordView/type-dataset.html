@@ -32,6 +32,22 @@
       <div data-gn-data-preview="mdView.current.record" />
       <br />
     </div>
+
+    <div
+      data-ng-repeat="t in ['extentDescription', 'extentIdentifier']"
+      data-ng-if="mdView.current.record[t + 'Object']"
+    >
+      <ul
+        class="gn-label-list pull-left"
+        data-ng-repeat="c in mdView.current.record[t + 'Object']"
+      >
+        <li title="{{t | translate}}">
+          <i class="fa fa-fw fa-location-pin"></i>
+          {{c.default}}
+        </li>
+      </ul>
+    </div>
+
     <div
       data-gn-keyword-badges="mdView.current.record"
       data-thesaurus="viewConfig.locationThesaurus"

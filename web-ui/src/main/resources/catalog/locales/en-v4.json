@@ -336,6 +336,8 @@
   "siblingsReverseLinks": "Other resources (other record links)",
   "focusOnFrom": "Focus on resources from ",
   "focusOn": "Focus on ",
+  "extentDescription": "Extent description",
+  "extentIdentifier": "Extent identifier",
   "memberOf": "Member of:",
   "keywordAnchorLink": "More information about ",
   "facet-linkUrl": "Url",
