@@ -137,7 +137,7 @@ public class MetadataPublicationMailNotifier {
         String message = messages.getString("metadata_published_text");
 
         String linkRecordTemplate = "{{link}}";
-        String linkRecordUrlTemplate = settingManager.getNodeURL() + "api/records/{{index:uuid}}";
+        String linkRecordUrlTemplate = settingManager.getNodeURL() + "api/records/{{index:_uuid}}";
 
         String recordPublishedMessage = messages.getString("metadata_published_record_text")
             .replace(linkRecordTemplate, linkRecordUrlTemplate);
