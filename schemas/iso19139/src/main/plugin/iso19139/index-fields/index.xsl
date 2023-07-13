@@ -966,13 +966,14 @@
                                 gmd:statement, $allLanguages)"/>
 
 
-        <xsl:for-each select="gmd:report/*[gmd:nameOfMeasure/gco:CharacterString != '']">
+        <xsl:for-each select="gmd:report/*[gmd:nameOfMeasure/gco:CharacterString != ''
+                                          or gmd:measureDescription/gco:CharacterString != '']">
           <xsl:variable name="name"
                         select="(gmd:nameOfMeasure/gco:CharacterString)[1]"/>
           <xsl:variable name="value"
                         select="(gmd:result/gmd:DQ_QuantitativeResult/gmd:value)[1]"/>
           <xsl:variable name="unit"
-                        select="(gmd:result/gmd:DQ_QuantitativeResult/gmd:valueUnit//gml:identifier)[1]"/>
+                        select="(gmd:result/gmd:DQ_QuantitativeResult/gmd:valueUnit//(gml:identifier|gml320:identifier))[1]"/>
           <xsl:variable name="description"
                         select="(gmd:measureDescription/gco:CharacterString)[1]"/>
           <measure type="object">{

@@ -1165,7 +1165,9 @@
 
       <xsl:for-each select="mdb:dataQualityInfo/*">
         <xsl:for-each select="mdq:report/*[
-                normalize-space(mdq:measure/*/mdq:nameOfMeasure/gco:CharacterString) != '']">
+                normalize-space(mdq:measure/*/mdq:nameOfMeasure/gco:CharacterString) != ''
+                or normalize-space(mdq:measure/*/mdq:measureDescription/gco:CharacterString) != ''
+                ]">
 
           <xsl:variable name="name"
                         select="(mdq:measure/*/mdq:nameOfMeasure/gco:CharacterString)[1]"/>
