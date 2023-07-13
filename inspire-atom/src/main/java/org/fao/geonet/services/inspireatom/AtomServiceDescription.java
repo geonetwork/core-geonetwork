@@ -27,7 +27,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.server.context.ServiceContext;
-import nonapi.io.github.classgraph.utils.Join;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.api.API;
@@ -190,7 +189,7 @@ public class AtomServiceDescription {
             .addContent(new Element("title").setText(feedTitle))
             .addContent(new Element("subtitle").setText(feedSubtitle))
             .addContent(new Element("lang").setText(feedLang))
-            .addContent(new Element("keywords").setText(Join.join(", ", keywords)))
+            .addContent(new Element("keywords").setText(StringUtils.join(keywords, ", ")))
             .addContent(new Element("authorName").setText(feedAuthorName))
             .addContent(new Element("url").setText(feedUrl))
             .addContent(datasetsEl);
