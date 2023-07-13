@@ -1,7 +1,9 @@
 <div class="row gn-env">
-  <div class="col-lg-12"
-       data-ng-repeat="section in infoSection"
-       data-ng-show="(info[section.key] | json) != '{}'">
+  <div
+    class="col-lg-12"
+    data-ng-repeat="section in infoSection"
+    data-ng-show="(info[section.key] | json) != '{}'"
+  >
     <div class="panel panel-default">
       <div class="panel-heading" data-gn-slide-toggle="">
         {{(section.label || (section.key + 'Information')) | translate}}
@@ -18,8 +20,7 @@
           </table>
         </span>
 
-        <div data-ng-if="section.help"
-             data-gn-need-help="{{section.help}}"></div>
+        <div data-ng-if="section.help" data-gn-need-help="{{section.help}}"></div>
       </div>
     </div>
   </div>
