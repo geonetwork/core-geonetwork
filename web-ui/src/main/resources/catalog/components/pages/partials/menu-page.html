@@ -1,0 +1,56 @@
+<li data-ng-class="{'dropdown': isSubmenu}" role="menuitem">
+  <a
+    data-ng-if="isSubmenu"
+    class="dropdown-toggle gn-menuheader-xs"
+    role="button"
+    data-toggle="dropdown"
+    aria-haspopup="true"
+    aria-expanded="true"
+  >
+    <span>{{page.label}}</span>
+    <span class="caret hidden-xs"></span>
+  </a>
+  <ul data-ng-if="isSubmenu" class="dropdown-menu gn-menu-xs clearfix">
+    <li
+      data-ng-repeat="page in page.pages"
+      class="gn-menuitem-xs"
+      role="menuitem"
+      data-ng-init="submenuExternalLink = (page.format == 'LINK' || page.format == 'HTMLPAGE');"
+    >
+      <a
+        data-ng-show="submenuExternalLink"
+        title="{{page.label}}"
+        href="{{page.link}}"
+        target="{{page.link.indexOf('http') === 0 ? '_blank' : '_self'}}"
+      >
+        <span>{{page.label}}</span>
+      </a>
+      <a
+        data-ng-show="!submenuExternalLink"
+        data-gn-active-tb-item="{{gnCfg.mods.page.appUrl + '/' + page.pageId}}?page={{page.pageId}}"
+        title="{{page.pageId}}"
+        data-ng-click="changePage($event)"
+      >
+        <span>{{page.label}}</span>
+      </a>
+    </li>
+  </ul>
+  <a
+    data-ng-if="!isSubmenu && page"
+    data-ng-show="isExternalLink"
+    title="{{page.label}}"
+    href="{{page.link}}"
+    target="_blank"
+  >
+    <span>{{page.label}}</span>
+  </a>
+  <a
+    data-ng-if="!isSubmenu && page"
+    data-ng-show="!isExternalLink"
+    data-gn-active-tb-item="{{gnCfg.mods.page.appUrl + '/' + page.pageId}}?page={{page.pageId}}"
+    title="{{page.pageId}}"
+    data-ng-click="changePage($event)"
+  >
+    <span>{{page.label}}</span>
+  </a>
+</li>

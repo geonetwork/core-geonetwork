@@ -39,6 +39,7 @@ import javax.persistence.Lob;
 import javax.persistence.Table;
 
 import org.fao.geonet.domain.GeonetEntity;
+import org.hibernate.annotations.Type;
 
 /**
  * A page with content and properties
@@ -105,9 +106,10 @@ public class Page extends GeonetEntity implements Serializable {
         return data;
     }
 
-    @Column
-    @Nullable
+    @Lob
     @Basic(fetch = FetchType.LAZY)
+    @Type(type = "org.hibernate.type.TextType")
+    @Column(unique = true)
     public String getLink() {
         return link;
     }

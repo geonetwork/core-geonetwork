@@ -177,7 +177,9 @@
 
         <div
           ng-if="hasDownload"
-          data-gn-wfs-download="layer"
+          data-gn-wfs-download=""
+          data-typename="{{layer.getSource().getParams().LAYERS}}"
+          data-url="{{layer.get('url')}}"
           data-init-on-demand="true"
           data-mode="select"
           has-download="hasDownload"

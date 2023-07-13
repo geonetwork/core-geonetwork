@@ -160,8 +160,9 @@
 
             <xsl:for-each select="current-group()">
               <xsl:sort select="."/>
-              <a href='#/search?query_string=%7B"tag.\\*":%7B"{.}":true%7D%7D'>
-                <span class="badge"><xsl:copy-of select="."/></span>
+              <a class="btn btn-default btn-xs"
+                 href='#/search?query_string=%7B"tag.\\*":%7B"{.}":true%7D%7D'>
+                <xsl:copy-of select="."/>
               </a>
             </xsl:for-each>
             <xsl:if test="position() != last()">
@@ -172,8 +173,9 @@
         <xsl:otherwise>
           <xsl:for-each select="$tags/tag">
             <xsl:sort select="."/>
-              <a href='#/search?query_string=%7B"tag.\\*":%7B"{.}":true%7D%7D'>
-              <span class="badge"><xsl:copy-of select="."/></span>
+            <a class="btn btn-default btn-xs"
+               href='#/search?query_string=%7B"tag.\\*":%7B"{.}":true%7D%7D'>
+              <xsl:copy-of select="."/>
             </a>
           </xsl:for-each>
         </xsl:otherwise>
@@ -622,16 +624,16 @@
     <!-- Display name is <org name> - <individual name> (<position name>) -->
     <!-- with separator/parentheses as required -->
     <xsl:variable name="displayName">
-      <xsl:if test="*/gmd:organisationName">
+      <xsl:if test="*/gmd:organisationName[normalize-space(.) != '']">
         <xsl:apply-templates mode="render-value-no-breaklines" select="*/gmd:organisationName"/>
       </xsl:if>
-      <xsl:if test="*/gmd:organisationName and */gmd:individualName|*/gmd:positionName"> - </xsl:if>
-      <xsl:if test="*/gmd:individualName">
+      <xsl:if test="*/gmd:organisationName[normalize-space(.) != ''] and */gmd:individualName[normalize-space(.) != '']|*/gmd:positionName[normalize-space(.) != '']"> - </xsl:if>
+      <xsl:if test="*/gmd:individualName[normalize-space(.) != '']">
         <xsl:apply-templates mode="render-value-no-breaklines" select="*/gmd:individualName"/>
       </xsl:if>
-      <xsl:if test="*/gmd:positionName">
+      <xsl:if test="*/gmd:positionName[normalize-space(.) != '']">
         <xsl:choose>
-          <xsl:when test="*/gmd:individualName">
+          <xsl:when test="*/gmd:individualName[normalize-space(.) != '']">
             (<xsl:apply-templates mode="render-value-no-breaklines" select="*/gmd:positionName"/>)
           </xsl:when>
           <xsl:otherwise>
@@ -666,7 +668,12 @@
               </xsl:choose>
             <br/>
             <xsl:for-each select="*/gmd:contactInfo/*">
-              <xsl:for-each select="gmd:address/*">
+              <xsl:for-each select="gmd:address/*[
+                  gmd:deliveryPoint[normalize-space(.) != ''] or
+                  gmd:city[normalize-space(.) != ''] or
+                  gmd:administrativeArea[normalize-space(.) != ''] or
+                  gmd:postalCode[normalize-space(.) != ''] or
+                  gmd:country[normalize-space(.) != '']]">
                 <div>
                 <i class="fa fa-fw fa-map-marker"><xsl:comment select="'address'"/></i>
                   <xsl:for-each select="gmd:deliveryPoint[normalize-space(.) != '']">

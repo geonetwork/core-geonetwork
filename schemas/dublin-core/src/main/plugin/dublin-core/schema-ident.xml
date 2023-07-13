@@ -28,7 +28,7 @@
   <gns:name>dublin-core</gns:name>
   <gns:id>3785ae4c-dde3-11df-a813-001c2346de4c</gns:id>
   <gns:version>1.0</gns:version>
-  <gns:appMinorVersionSupported>3.4.0</gns:appMinorVersionSupported>
+  <gns:appMinorVersionSupported>4.4.0</gns:appMinorVersionSupported>
   <gns:title xml:lang="en">Dublin core</gns:title>
   <gns:description>The Dublin Core Metadata Element Set is a vocabulary of fifteen properties for
     use in resource description. The name "Dublin" is due to its origin at a 1995 invitational

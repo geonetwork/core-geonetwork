@@ -215,8 +215,7 @@
         scope: {
           md: "=gnDataPreview"
         },
-        templateUrl:
-          "../../catalog/components/search/mdview/partials/" + "datapreview.html",
+        templateUrl: "../../catalog/components/search/mdview/partials/datapreview.html",
         controller: [
           "$scope",
           "$timeout",

@@ -110,6 +110,9 @@
               "code": "<xsl:value-of select="gn-fn-index:json-escape(*/gfc:code/*/text())"/>",
               "link": "<xsl:value-of select="*/gfc:code/*/@xlink:href"/>",
               "type": "<xsl:value-of select="*/gfc:valueType/gco:TypeName/gco:aName/*/text()"/>"
+              <xsl:if test="*/gfc:cardinality">
+                ,"cardinality": "<xsl:value-of select="concat(*/gfc:cardinality//gco:lower/*/text(), '..', */gfc:cardinality//gco:upper/*/text())"/>"
+              </xsl:if>
               <xsl:if test="*/gfc:listedValue">
                 ,"values": [
                 <xsl:for-each select="*/gfc:listedValue">{

@@ -563,7 +563,17 @@ public class MEFLib {
     public enum UuidAction {
         GENERATEUUID("generateUUID"),
         NOTHING("nothing"),
-        OVERWRITE("overwrite");
+
+        /**
+         * Update the XML of the metadata record.
+         */
+        OVERWRITE("overwrite"),
+
+        /**
+         * Remove the metadata (and privileges, status, ...)
+         * and insert the new one with the same UUID.
+         */
+        REMOVE_AND_REPLACE("removeAndReplace");
         String name;
 
         UuidAction(String name) {
@@ -583,7 +593,7 @@ public class MEFLib {
 
     public enum Format {
         /**
-         * Only metadata record and infomation
+         * Only metadata record and information
          */
         SIMPLE,
         /**

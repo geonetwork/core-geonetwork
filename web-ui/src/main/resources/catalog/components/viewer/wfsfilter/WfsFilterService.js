@@ -34,6 +34,7 @@
     "$http",
     "$q",
     "$translate",
+    "gnWfsFilterConfig",
     function (
       gnIndexRequestManager,
       gnHttp,
@@ -41,7 +42,8 @@
       gnGlobalSettings,
       $http,
       $q,
-      $translate
+      $translate,
+      gnWfsFilterConfig
     ) {
       var indexProxyUrl = gnHttp.getService("featureindexproxy");
 
@@ -421,24 +423,138 @@
       /**
        * Call generateSLD service to create the SLD and get an url to reach it.
        *
-       * @param {Object} rulesObj strcture of the SLD rules to apply
+       * @param {boolean} isSld Request a SLD URL or a OGC FILTER
+       * @param {Object} rulesObj structure of the SLD rules to apply
        * @param {string} wmsUrl url of the WMS service
        * @param {string} featureTypeName of the featuretype
        * @return {HttpPromise} promise
        */
-      this.getSldUrl = function (rulesObj, wmsUrl, featureTypeName) {
-        var params = {
-          filters: JSON.stringify(rulesObj),
-          url: wmsUrl,
-          layers: featureTypeName
-        };
+      this.getFilter = function (rulesObj, wmsUrl, featureTypeName) {
+        var isSld = gnWfsFilterConfig.filterStrategy.indexOf("SLD") === 0,
+          params = {
+            filters: JSON.stringify(rulesObj),
+            url: wmsUrl,
+            layers: featureTypeName
+          };
 
         return $http({
           method: "POST",
-          url: "../api/tools/ogc/sld",
+          url: "../api/tools/ogc/" + (isSld ? "sld" : "filter"),
           data: $.param(params),
           headers: { "Content-Type": "application/x-www-form-urlencoded" }
-        });
+        }).then(
+          function (response) {
+            if (isSld) {
+              var url = response.data;
+              return this.pollSldUrl(url);
+            } else {
+              var defer = $q.defer();
+              defer.resolve(
+                response.data.replace('<?xml version="1.0" encoding="UTF-8"?>', "")
+              );
+              return defer.promise;
+            }
+          }.bind(this)
+        );
+      };
+
+      /**
+       * Apply FILTER or SLD parameter to a layer depending on configuration.
+       *
+       * @param {boolean} layer Map layer
+       * @param {Object} filterOrSldUrl OGC filter or SLD url or SLD body retrieved from getFilter.
+       */
+      this.applyFilter = function (layer, filterOrSldUrl) {
+        var isSld = gnWfsFilterConfig.filterStrategy.indexOf("SLD") === 0;
+        if (isSld) {
+          var useSldBody = gnWfsFilterConfig.filterStrategy === "SLD_BODY";
+          if (useSldBody) {
+            $http.get(filterOrSldUrl).then(function (response) {
+              layer.getSource().updateParams({
+                SLD_BODY: response.data
+              });
+            });
+          } else {
+            layer.getSource().updateParams({
+              SLD: filterOrSldUrl
+            });
+          }
+        } else {
+          var layers = layer.getSource().getParams().LAYERS,
+            isGroupOfNLayers = layers.split(",").length;
+
+          function buildFilterForEachLayers(nbOfLayers, filter) {
+            if (filter == null) {
+              return filter;
+            }
+            var listOfFilters = "";
+            for (var i = 0; i < nbOfLayers; i++) {
+              listOfFilters += "(" + filter + ")";
+            }
+            return listOfFilters;
+          }
+          layer.getSource().updateParams({
+            FILTER: isGroupOfNLayers
+              ? buildFilterForEachLayers(isGroupOfNLayers, filterOrSldUrl)
+              : filterOrSldUrl
+          });
+        }
+      };
+
+      this.pollSldUrl = function (url) {
+        var defer = $q.defer();
+        var pollingTimeout = 100;
+        var pollingAttempts = 0;
+        var pollingMaxAttemps = 25;
+
+        var poller = function () {
+          pollingAttempts++;
+          $http({
+            method: "GET",
+            url: url
+          }).then(
+            function () {
+              defer.resolve(url);
+            },
+            function (error) {
+              if (pollingAttempts < pollingMaxAttemps) {
+                $timeout(poller, pollingTimeout);
+              } else {
+                defer.reject(error);
+              }
+            }
+          );
+        };
+        poller();
+        return defer.promise;
+      };
+
+      this.pollSldUrl = function (url) {
+        var defer = $q.defer();
+        var pollingTimeout = 100;
+        var pollingAttempts = 0;
+        var pollingMaxAttempts = 25;
+
+        var poller = function () {
+          pollingAttempts++;
+          $http({
+            method: "GET",
+            url: url
+          }).then(
+            function () {
+              defer.resolve(url);
+            },
+            function (error) {
+              if (pollingAttempts < pollingMaxAttempts) {
+                $timeout(poller, pollingTimeout);
+              } else {
+                defer.reject(error);
+              }
+            }
+          );
+        };
+        poller();
+        return defer.promise;
       };
 
       /**

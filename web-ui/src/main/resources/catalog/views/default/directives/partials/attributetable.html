@@ -1,15 +1,25 @@
 <table class="table table-bordered">
   <tr>
     <th data-translate="">attributeName</th>
-    <th data-translate="" data-ng-show="showCodeColumn">attributeCode</th>
+    <th data-translate="" data-ng-show="::columnVisibility.code">attributeCode</th>
     <th data-translate="">attributeDefinition</th>
   </tr>
   <tr data-ng-repeat-start="attribute in attributeTable track by $index">
     <td>
       <strong>{{attribute.name}}</strong>
-      <span data-ng-show="attribute.type">&nbsp;({{attribute.type}})</span>
+      <div>
+        <span data-ng-if="attribute.type" title="{{'attributeType' | translate}}">
+          {{attribute.type}}
+        </span>
+        <span data-ng-if="attribute.type && attribute.cardinality"> - </span>
+        <span
+          data-ng-if="attribute.cardinality"
+          title="{{'attributeCardinality' | translate}}"
+          >{{'attributeCardinality' | translate}} {{attribute.cardinality}}
+        </span>
+      </div>
     </td>
-    <td data-ng-show="showCodeColumn">
+    <td data-ng-show="::columnVisibility.code">
       <strong data-ng-show="{{attribute.link == null || attribute.link == ''}}"
         >{{attribute.code}}</strong
       >

@@ -426,7 +426,7 @@
     "link": "Verknüpfung",
     "link-text": "Link-Beschriftung",
     "confirmCancelEdit": "Möchtest du alle Änderungen abbrechen und den Editor schließen?",
-    "allowEditGroupMembers": "Allow group editors to edit",
+    "allowEditGroupMembers": "Bearbeitung für Gruppeneditoren erlauben",
     "wmsSelectedLayers": "Selected layers",
     "wmsSelectedLayersNone": "No layers selected"
 }

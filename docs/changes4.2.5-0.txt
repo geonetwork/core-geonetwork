@@ -1,0 +1,112 @@
+================================================================================
+===
+=== GeoNetwork 4.2.5: List of changes
+===
+================================================================================
+- Thesaurus / Region / Use ISO format for date (#7208)
+- Transifex updates.
+- Static pages / Fix links to load html pages content (#7203)
+- Sort custom translations by translation key to display them in the UI grouped by translation
+- API / Import record / Overwrite mode improvement. (#7178)
+- Additional code refactor related to pull request 7124 to avoid code duplication (#7200)
+- Editor / Thesaurus widget initialization improvement.
+- Thesaurus / Multilingual title / Set title according to record language.
+- Merge pull request #7124 from AstunTechnology/jeevesnodeawarelogout-port-fix
+- Bulk publish / Publish privileges should be assigned to the approved version, not to the working copy version.
+- [FP] Metadata workflow - publish an approved record with a draft copy, publishes the draft copy. Fixes #5556 (#5557)
+- Fix load of static pages html content
+- Remote INSPIRE ATOM Feed / code cleanup and optimisations for ATOM describe service (#7189)
+- Exclude ATOM opensearch URLs from the portal filter checker. Related to #6970 (#7196)
+- Add a Dutch translation for the datepicker (#7193)
+- Merge pull request #7181 from pi-geosolutions/external-viewer-add-wfs-to-map
+- Pages / Top toolbar / Add support for submenu  (#7138)
+- XslUtil / Add a function to get current node id (srv or subportal id)
+- [WFS / external viewer] Remove trailing semi-colon
+- [WFS / External viewer] Support localized title but fallback on link name
+- Change line-height for username so that it is not truncated. (#7185)
+- Update core/src/main/java/jeeves/config/springutil/JeevesNodeAwareLogoutSuccessHandler.java
+- Update core/src/main/java/org/fao/geonet/kernel/datamanager/base/BaseMetadataManager.java
+- Update core/src/main/java/org/fao/geonet/kernel/setting/SettingInfo.java
+- Created new instances of SettingInfo.getSitePort in JeevesNodeAwareLogoutSuccessHandler and BaseMetadataManager to get around compilation error about not referring to a non-static method from a static context
+- External map viewer / Fix add WFS to map empty variable
+- Site information - return ES index information
+- Updated Java 8 download link (#7177)
+- Standard / Translations / Load contact role codelist from the schema (#7153)
+- Configuration / Externalize Kibana configuration (#7098)
+- Test / Fix for default language. (#7175)
+- Record view / Keyword popup / Improve label. (#7152)
+- Fixed broken link for Maven Reference
+- CSW / DCAT output / Fix for multilingual records (#7161)
+- Record view / Citation / Improve layout
+- Remove Language table isdefault column and use DefaultLanguage bean instead
+- Fixing SONAR warnings about SQL Injections. (#7146)
+- Search / Full text / Add individual name and email. (#7167)
+- Standard / ISO19115-3 / Preserve revision date type. (#7168)
+- Standard / ISO19115-3 / Editor / Do not add default lang id (#7174)
+- Standard / ISO19115-3 / Better label for metadata language. (#7173)
+- Standard / ISO19115-3 / From 19139 conversion / Fix MD_VectorSpatialRepresentation namespace (#7172)
+- Editor / Template field label fix (#7171)
+- Standard / ISO19115-3 / Editor / Expand abstract for multilingual records (#7170)
+- Move tooltip from reccusive input field to a single label (#7039)
+- Minor formatting changes. (#7164)
+- Do not make Danish language a default language.
+- Support code elements with anchors in ATOM predefined feeds
+- Support customising the metadata publication options (#7148)
+- Update TESTING.md to include a hint to the it maven profile (#7149)
+- missed file in pull/6494 (#7150)
+- Map / Background layer / Fix active layer on load. (#7126)
+- Map / Layer manager / Add support for multilingual layer title. (#7121)
+- UI / Language picker / Display all entries on focus. Search by code and labels (#7076)
+- Standard / ISO19115-3 / Formatter / JSONLD / Avoid error on multilingual URL
+- Fixed typos in es README (#7151)
+- FeatureInfo - lower case columns names - related to #6801
+- Fixed another broken link for Installing from source code (#7141)
+- Send metadata mail notifications for public metadata when is re-approved (#7074)
+- Update transifex translations
+- Update metadata status values translations
+- Workflow / Facets / Generic translations (#7135)
+- Remove sort by translations, duplicated in en-core.json file
+- Related resources - fix the check to display association information
+- Indexing / Update objects definition to index a sort field that is case insensitive and ignore accents
+- ISO19139 / Metadata editor / Fix display of contact individual name label in German (#7122)
+- Workflow / Remove magic numbers in label and avoid issue when using custom status (#7104)
+- Fixed broken link for Installing from source code
+- Add Spring Security mappings for local INSPIRE ATOM feed services
+- Allow multiple request matchers to decide if require CSRF (#7123)
+- Changed logic to check actual value of port setting
+- Using correct setting for default port, and better handling of null values
+- Include the parent exception in the MetadataProcessingReport error so that we can see the real error in the logs. (#7119)
+- Fix check of harvester log file path
+- ISO19139 / Fix indexing of CRS codespace when contains a multilingual value
+- Added some logic into JeevesNodeAwareLogoutSuccessHandler to deal with the case where no port is set in the settings manager
+- Fix selection / filter Only my records (#7111)
+- Return contact information in the search results, used in the results templates
+- Index configuration / define dynamic template for conformTo_* fields pattern
+- Update sortby-combo directive to use the field name and the sort order information.
+- Metadata editor / include the metadata file store in the default configuration of the online resources. Fixes #7103
+- Copying the resources/config folder to the data dir
+- Workflow / On Cancel / Properly remove draft from index (#7101)
+- Remove code smells
+- Fix javascript error when creating / editing online resources
+- Fix microservices proxy detection
+- Metadata workflow / send mail notifications for metadata status change to DRAFT when doing a rejection, not when creating a working copy
+- Workflow improvements (#7011)
+- DB / Only update schema on startup (#7100)
+- Display footer rss endpoint(s) when OGC API Records service is enabled (#7094)
+- SEO / Set HTML head title and description
+- Build / Fix missing font awesome files in WAR
+- Map / Define location of search map. (#7071)
+- fixed links to debugging tomcat in eclipse and remote debugging (#7075)
+- Add criteria-type.xml for iso19115-3.2018
+- Fix for broken icons in the editor, admin pages, file uploader and multiselect (#7093)
+- Config / Add property file overlay. (#6954)
+- Test / Fixes (#7091)
+- Workflow / Fix typo in setting key. (#7070)
+- UI / Dependency / CatController depends on facets also on signin. (#7084)
+- i18n / NL / INSPIRE Themes / Fix language code
+- Home page / Aggregations / Fix label for facet based on multilingual thesaurus.
+- Standard / ISO19139 / Schematron / NL translation (#7063)
+- DOI / Add European Union Publication Office format for DOI. (#6979)
+- Update to Font Awesome 6.x (6.4) (#7007)
+- Fix multiple default tab in a single view
+- Update version to 4.2.5-SNAPSHOT

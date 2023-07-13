@@ -398,6 +398,7 @@
     "featureAttributeTable": "Attribute table",
     "attributeName": "Name",
     "attributeDefinition": "Definition",
+    "attributeCardinality": "Cardinality:",
     "attributeValues": "List of values",
     "attributeType": "Type",
     "attributeCode": "Code",
