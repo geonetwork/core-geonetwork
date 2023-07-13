@@ -721,6 +721,16 @@
         </xsl:for-each>
 
         <xsl:for-each select="*/gex:EX_Extent">
+
+          <xsl:for-each select="gex:geographicElement/*/gex:geographicIdentifier/
+                                  */mcc:code[*/normalize-space(.) != '']">
+            <xsl:copy-of select="gn-fn-index:add-multilingual-field('extentIdentifier', ., $allLanguages)"/>
+          </xsl:for-each>
+
+          <xsl:for-each select="gex:description[*/normalize-space(.) != '']">
+            <xsl:copy-of select="gn-fn-index:add-multilingual-field('extentDescription', ., $allLanguages)"/>
+          </xsl:for-each>
+
           <!-- TODO: index bounding polygon -->
           <xsl:for-each select=".//gex:EX_GeographicBoundingBox[
                                 ./gex:westBoundLongitude/gco:Decimal castable as xs:decimal and
@@ -1013,6 +1023,9 @@
               "code": "<xsl:value-of select="gn-fn-index:json-escape(*/gfc:code/*/text())"/>",
               "link": "<xsl:value-of select="*/gfc:code/*/@xlink:href"/>",
               "type": "<xsl:value-of select="*/gfc:valueType/gco:TypeName/gco:aName/*/text()"/>"
+              <xsl:if test="*/gfc:cardinality">
+                ,"cardinality": "<xsl:value-of select="gn-fn-index:json-escape(*/gfc:cardinality/*/text())"/>"
+              </xsl:if>
               <xsl:if test="*/gfc:listedValue">
                 ,"values": [
                 <xsl:for-each select="*/gfc:listedValue">{

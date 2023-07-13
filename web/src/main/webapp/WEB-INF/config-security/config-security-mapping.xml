@@ -231,6 +231,12 @@
         <!-- INSPIRE Atom -->
         <sec:intercept-url pattern="/opensearch/.*" access="permitAll"/>
 
+        <!-- Local INSPIRE atom feeds -->
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/opensearch/OpenSearchDescription.xml!?.*" access="permitAll"/>
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/atom/describe/service!?.*" access="permitAll"/>
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/atom/describe/dataset!?.*" access="permitAll"/>
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/atom/download/dataset!?.*" access="permitAll"/>
+        
         <!-- Metadata identifier templates -->
         <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/metadataIdentifierTemplates!?.*"
                            access="hasAuthority('Editor')"/>

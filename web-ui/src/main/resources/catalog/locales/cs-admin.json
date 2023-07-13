@@ -1143,8 +1143,11 @@
     "ui-isFilterTagsDisplayed-help": "Pokud je povoleno, zobrazte seznam filtrů použitých na hlavním panelu a na hlavním panelu editoru dávek",
     "ui-isFilterTagsDisplayedInSearch": "Zobrazit značky filtrů ve výsledcích vyhledávání",
     "ui-isFilterTagsDisplayedInSearch-help": "Pokud je povoleno, zobrazte seznam filtrů použitých na stránce s výsledky vyhledávání",
-    "ui-searchMapPlacement": "Zobrazit mapu v levém sloupci nad vyhledávacím filtrem",
-    "ui-searchMapPlacement-help": "Je-li povoleno, zobrazí mapu v levém sloupci a ne ve výchozí pozici v pravém dolním rohu",
+    "ui-searchMapPlacement": "Umístění mapy výsledků hledání",
+    "searchMapPlacement-facets": "Nad vyhledávacím filtrem",
+    "searchMapPlacement-results": "Vpravo dole na výsledky",
+    "searchMapPlacement-": "Nezobrazovat",
+    "ui-searchMapPlacement-help": "Definujte, kde se má zobrazit mapa výsledků hledání se zvýrazněním rámečku záznamů.",
     "ui-showStatusFooterFor": "Zvýraznit stav v zápatí záznamu",
     "ui-showStatusFooterFor-help": "Seznam hodnot seznamů kódů (např. Vyplněný, historický archiv, zastaralý, nahrazený), pro které má zápatí stavovou barvu pozadí.",
     "ui-showBatchDropdown": "Zobrazit rozbalovací nabídku na stránce vyhledávání",
@@ -1473,7 +1476,10 @@
     "staticPageRemoved": "Statická stránka odstraněna",
     "chooseStaticPageFile": "Zde vyberte nebo přetáhněte soubor statické stránky",
     "ui-topCustomMenu": "Vlastní položky nabídky záhlaví",
-    "ui-topCustomMenu-help": "Seznam ID statických stránek přidružených k části záhlaví, která se má zobrazit:<ul><li> Pokud je uveden seznam, odkazy se zobrazují v uvedeném pořadí a pouze pro uvedené stránky.</li><li> Pokud není uveden seznam, zobrazí se všechny statické stránky nakonfigurované pro sekci záhlaví bez zaručeného pořadí.</li>",
+    "ui-topCustomMenu-help": "List of static page IDs associated with the header section to display: <ul><li>When a list is provided, the links are displayed in the order provided and only for the pages listed.</li><li>When a list is not provided, all static pages configured for the header section are displayed, with no guaranteed order.</li>.\nPages can be inserted in between catalogue default menu which are: <pre>[\"gn-site-name-menu\",\n    \"gn-portal-switcher\",\n    \"gn-search-menu\",\n    \"gn-map-menu\",\n    \"gn-contribute-menu\",\n    \"gn-admin-menu\"]</pre>. Insert a page as a simple menu using its id eg. <pre>\"documentation\"</pre> or as a submenu using an object: <pre>{\"Quick search\": [\n  \"searchForAfrica\", \n  \"forReview\"\n]}</pre>",
     "ui-footerCustomMenu": "Vlastní položky nabídky zápatí",
-    "ui-footerCustomMenu-help": "Seznam ID statických stránek přidružených k části zápatí, která se má zobrazit:<ul><li> Pokud je uveden seznam, odkazy se zobrazují v uvedeném pořadí a pouze pro uvedené stránky.</li><li> Pokud není uveden seznam, zobrazí se všechny statické stránky nakonfigurované pro sekci zápatí bez zaručeného pořadí.</li>"
+    "ui-footerCustomMenu-help": "Seznam ID statických stránek přidružených k části zápatí, která se má zobrazit:<ul><li> Pokud je uveden seznam, odkazy se zobrazují v uvedeném pořadí a pouze pro uvedené stránky.</li><li> Pokud není uveden seznam, zobrazí se všechny statické stránky nakonfigurované pro sekci zápatí bez zaručeného pořadí.</li>",
+    "es.url": "Server ElasticSearch",
+    "es.version": "Verze ElasticSearch",
+    "es.index": "Název indexu"
 }

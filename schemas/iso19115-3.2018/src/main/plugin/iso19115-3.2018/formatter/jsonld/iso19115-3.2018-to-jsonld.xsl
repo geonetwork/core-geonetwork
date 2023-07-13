@@ -305,7 +305,7 @@
         <xsl:variable name="p" select="normalize-space(cit:protocol/*/text())"/>
         {
         "@type":"DataDownload",
-        "contentUrl": "<xsl:value-of select="gn-fn-index:json-escape(cit:linkage/*/text())" />"
+        "contentUrl": "<xsl:value-of select="gn-fn-index:json-escape((cit:linkage/*/text())[1])" />"
         <xsl:if test="cit:protocol">,
           "encodingFormat": "<xsl:value-of select="gn-fn-index:json-escape(if ($p != '') then $p else cit:protocol/*/@xlink:href)"/>"
         </xsl:if>

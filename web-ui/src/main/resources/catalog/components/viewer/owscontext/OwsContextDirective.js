@@ -51,7 +51,7 @@
         hitsperpageValues: 2,
         params: {
           isTemplate: "n",
-          sortBy: "resourceTitleObject.default.keyword",
+          sortBy: "resourceTitleObject.default.sort",
           from: 1,
           to: 2
         }
@@ -244,8 +244,8 @@
                     scope.mapProps = angular.extend({}, defaultMapProps);
                     defer.resolve(response);
                   },
-                  function (data) {
-                    console.warn(data);
+                  function (response) {
+                    console.warn(response);
                     defer.reject(response);
                   }
                 );

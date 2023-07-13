@@ -48,7 +48,7 @@
                     class="text-muted gn-status"
                     data-ng-class="{'text-success': md.mdStatus == 2, 'text-warning': md.mdStatus == 4}"
                     data-ng-if="md.mdStatus < 50 && isMdWorkflowEnable"
-                    >{{('mdStatus-' + md.statusWorkflow) | translate}}</small
+                    >{{::md.statusWorkflow | getStatusLabel}}</small
                   >
 
                   <small

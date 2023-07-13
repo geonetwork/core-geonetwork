@@ -127,7 +127,7 @@
           from: 1,
           to: 50,
           isTemplate: "y",
-          sortBy: "resourceType,resourceTitleObject.default.keyword",
+          sortBy: "resourceType,resourceTitleObject.default.sort",
           sortOrder: "asc,asc"
         }
       };
@@ -614,7 +614,7 @@
           to: 50,
           op1: 1,
           linkProtocol: "OGC:OWS-C",
-          sortBy: "resourceTitleObject.default.keyword",
+          sortBy: "resourceTitleObject.default.sort",
           sortOrder: "asc"
         }
       };

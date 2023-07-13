@@ -117,7 +117,7 @@
 
                 <div
                   class="row"
-                  data-ng-switch-when="languageWhitelist|mainThesaurus|locationThesaurus|internalThesaurus|topCustomMenu|footerCustomMenu"
+                  data-ng-switch-when="languageWhitelist|mainThesaurus|locationThesaurus|internalThesaurus|footerCustomMenu"
                   data-ng-switch-when-separator="|"
                 >
                   <div class="col-lg-5 gn-nopadding-left">
@@ -202,7 +202,7 @@
 
                 <div
                   class="row"
-                  data-ng-switch-when="autocompleteConfig|moreLikeThisConfig|facetConfig|relatedFacetConfig|filters|scoreConfig|queryBaseOptions|collectionTableConfig|distributionConfig"
+                  data-ng-switch-when="autocompleteConfig|moreLikeThisConfig|facetConfig|relatedFacetConfig|filters|scoreConfig|queryBaseOptions|collectionTableConfig|distributionConfig|topCustomMenu"
                   data-ng-switch-when-separator="|"
                 >
                   <div class="col-lg-5 gn-nopadding-left">
@@ -740,6 +740,25 @@
                     <select
                       data-ng-model="mCfg[key]"
                       data-ng-options="('searchMapPlacement-' + placement | translate) for placement in ['results', 'facets', '']"
+                      class="form-control"
+                    />
+                  </div>
+                </div>
+
+                <div
+                  class="row"
+                  data-ng-switch-when="defaultToolAfterMapLoad|defaultTool"
+                  data-ng-switch-when-separator="|"
+                >
+                  <div class="col-lg-5 gn-nopadding-left">
+                    <label class="control-label">{{('ui-' + key) | translate}}</label>
+                    <gn-ui-config-help />
+                  </div>
+
+                  <div class="col-lg-7 gn-nopadding-right">
+                    <select
+                      data-ng-model="mCfg[key]"
+                      data-ng-options="('' + tool | translate) for tool in ['', 'addLayers', 'projectionSwitcher', 'contexts', 'filter', 'layers', 'legend', 'print', 'processes']"
                       class="form-control"
                     />
                   </div>

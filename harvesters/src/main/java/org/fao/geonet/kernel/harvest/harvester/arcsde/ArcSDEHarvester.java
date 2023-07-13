@@ -192,20 +192,23 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult, ArcSDEPara
 
                 // Check if the ESRI metadata has an embedded iso19139 metadata
                 boolean hasIso19139Embedded = false;
-                if (iso19139Element != null) {
-                    try {
-                        schema = dataMan.autodetectSchema(iso19139Element, null);
-                    } catch (NoSchemaMatchesException ex) {
-                        // Ignore
-                    }
+                if (schema == null) {
 
-                    hasIso19139Embedded = (schema != null);
+                    if (iso19139Element != null) {
+                        try {
+                            schema = dataMan.autodetectSchema(iso19139Element, null);
+                        } catch (NoSchemaMatchesException ex) {
+                            // Ignore
+                        }
+
+                        hasIso19139Embedded = (schema != null);
+
+                        log.info("Metadata has ISO13139 embedded - " + hasIso19139Embedded);
+                    }
                 }
 
-                log.info("Metadata has ISO13139 embedded - " + hasIso19139Embedded);
-
-                // No schema detected or not iso19139 embedded, try to convert from default ESRI md to ISO1939
-                if ((schema == null) || !hasIso19139Embedded) {
+                // No schema detected, try to convert from default ESRI md to ISO1939
+                if (schema == null) {
                     log.info("Convert metadata to ISO19139 - start");
 
                     // Extract picture if available

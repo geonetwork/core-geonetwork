@@ -591,6 +591,8 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
         List<OperationAllowed> operationsAllowed = operationAllowedRepository.findAllById_MetadataId(recordId);
         Multimap<String, Object> privilegesFields = ArrayListMultimap.create();
         boolean isPublishedToAll = false;
+        boolean isPublishedToIntranet = false;
+        boolean isPublishedToGuest = false;
 
         for (OperationAllowed operationAllowed : operationsAllowed) {
             OperationAllowedId operationAllowedId = operationAllowed.getId();
@@ -607,6 +609,10 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
 
                     if (g.get().getId() == ReservedGroup.all.getId()) {
                         isPublishedToAll = true;
+                    } else if (g.get().getId() == ReservedGroup.intranet.getId()) {
+                        isPublishedToIntranet = true;
+                    } else if (g.get().getId() == ReservedGroup.guest.getId()) {
+                        isPublishedToGuest = true;
                     }
                 }
             }
@@ -617,6 +623,19 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
         } else {
             privilegesFields.put(Geonet.IndexFieldNames.IS_PUBLISHED_TO_ALL, false);
         }
+
+        if (isPublishedToIntranet) {
+            privilegesFields.put(Geonet.IndexFieldNames.IS_PUBLISHED_TO_INTRANET, true);
+        } else {
+            privilegesFields.put(Geonet.IndexFieldNames.IS_PUBLISHED_TO_INTRANET, false);
+        }
+
+        if (isPublishedToGuest) {
+            privilegesFields.put(Geonet.IndexFieldNames.IS_PUBLISHED_TO_GUEST, true);
+        } else {
+            privilegesFields.put(Geonet.IndexFieldNames.IS_PUBLISHED_TO_GUEST, false);
+        }
+
         return privilegesFields;
     }
 

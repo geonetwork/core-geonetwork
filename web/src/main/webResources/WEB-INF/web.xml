@@ -116,6 +116,7 @@
         /xml/**,
         /xsl/**,
         /read/**,
+        /opensearch/**,
         /.*.jsp,
         /*.html,
         /*.css
@@ -485,7 +486,7 @@
 
   <servlet>
     <servlet-name>HttpDashboardProxy</servlet-name>
-    <servlet-class>org.mitre.dsmiley.httpproxy.ProxyServlet</servlet-class>
+    <servlet-class>org.fao.geonet.proxy.URITemplateProxyServlet</servlet-class>
     <init-param>
       <param-name>targetUri</param-name>
       <param-value>${kb.url}</param-value>

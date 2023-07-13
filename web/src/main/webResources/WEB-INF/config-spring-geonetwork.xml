@@ -129,6 +129,7 @@
     In that case you may want to use a custom dialect
     <entry key="hibernate.dialect" value="org.fao.geonet.dialect.CustomPostgreSQLDialect" />
     -->
+
   </util:map>
 
   <util:list id="wro4jUrlsToInitialize" value-type="java.lang.String">
@@ -229,7 +230,13 @@
 
     <bean class="org.fao.geonet.kernel.datamanager.draft.DraftMetadataIndexer"/>
     <bean class="org.fao.geonet.kernel.datamanager.draft.DraftMetadataManager"/>
-    <bean class="org.fao.geonet.kernel.datamanager.draft.DraftMetadataUtils"/>
+    <bean class="org.fao.geonet.kernel.datamanager.draft.DraftMetadataUtils">
+      <property name="listOfStatusCreatingDraft">
+        <util:set>
+          <util:constant static-field="org.fao.geonet.domain.StatusValue.Status.APPROVED"/>
+        </util:set>
+      </property>
+    </bean>
 
   <!-- In order to get non-draft metadata  uncomment the definitions below,
     or make them available in an external override file -->
@@ -275,7 +282,7 @@
         <value>json/core+search+v4+custom</value>
         <value>json/schemas</value>
         <value>standards/iso19139/codelists/gmd:MD_TopicCategoryCode+gmd:MD_ScopeCode+gmd:MD_MaintenanceFrequencyCode+gmd:MD_ProgressCode+gmd:MD_SpatialRepresentationTypeCode</value>
-        <value>standards/iso19115-3.2018/codelists/cit:CI_DateTypeCode+indeterminatePosition+mri:DS_InitiativeTypeCode+mri:DS_AssociationTypeCode</value>
+        <value>standards/iso19115-3.2018/codelists/cit:CI_DateTypeCode+indeterminatePosition+mri:DS_InitiativeTypeCode+mri:DS_AssociationTypeCode+cit:CI_RoleCode</value>
         <value>db/MetadataCategory+Operation+Group+StatusValue+Source+Translations</value>
       </util:list>
     </entry>
@@ -291,9 +298,15 @@
         <value>json/core+search+editor+v4+custom</value>
         <value>json/schemas</value>
         <value>standards/iso19139/codelists/gmd:MD_TopicCategoryCode+gmd:MD_ScopeCode+gmd:MD_MaintenanceFrequencyCode+gmd:MD_ProgressCode+gmd:MD_SpatialRepresentationTypeCode</value>
-        <value>standards/iso19115-3.2018/codelists/cit:CI_DateTypeCode+indeterminatePosition+mri:DS_InitiativeTypeCode+mri:DS_AssociationTypeCode</value>
+        <value>standards/iso19115-3.2018/codelists/cit:CI_DateTypeCode+indeterminatePosition+mri:DS_InitiativeTypeCode+mri:DS_AssociationTypeCode+cit:CI_RoleCode</value>
         <value>db/MetadataCategory+Operation+Group+StatusValue+Source+Translations</value>
       </util:list>
     </entry>
   </util:map>
+
+  <!--
+  Bean with the default publication configuration.
+  The default publication options publishes the metadata to the ALL group and the INTRANET group.
+  -->
+  <bean class="org.fao.geonet.config.DefaultPublicationConfig" name="publicationConfig" />
 </beans>

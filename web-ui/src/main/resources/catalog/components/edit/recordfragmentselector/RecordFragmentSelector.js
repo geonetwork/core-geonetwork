@@ -61,7 +61,7 @@
                   any: "",
                   from: 1,
                   to: 50,
-                  sortBy: "resourceTitleObject.default.keyword",
+                  sortBy: "resourceTitleObject.default.sort",
                   sortOrder: ""
                 }
               };

@@ -75,10 +75,10 @@
         <div data-ng-switch on="mainType">
           <div data-ng-switch-when="WFS">
             <div
-              data-ng-if="isLayerProtocol(r)"
-              data-gn-no-map-wfs-download=""
-              data-typename="{{isLayerProtocol(r) ? r.locTitle : ''}}"
-              data-url="{{r.locUrl}}"
+              data-ng-if="::isLayerProtocol(r)"
+              data-gn-wfs-download=""
+              data-typename="{{::isLayerProtocol(r) ? r.locTitle : ''}}"
+              data-url="{{::r.locUrl}}"
             ></div>
           </div>
 
@@ -233,15 +233,15 @@
             }"
         >
           <i class="fa {{icon}}" />
-          <span data-ng-hide="md.properties && md.properties.associationType != ''">
+          <span data-ng-hide="md.properties && !md.properties.associationType">
             {{(config.getLabel(mainType, type)) | translate}}</span
           >
           <span
-            data-ng-show="md.properties && md.properties.associationType != ''"
+            data-ng-show="md.properties && md.properties.associationType"
             title="{{(config.getLabel(mainType, type)) | translate}}"
           >
             {{md.properties.associationType | translate}}
-            <span data-ng-if="md.properties && md.properties.initiativeType != ''">
+            <span data-ng-if="md.properties && md.properties.initiativeType">
               ({{md.properties.initiativeType | translate}})
             </span>
           </span>

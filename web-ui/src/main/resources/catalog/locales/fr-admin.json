@@ -1143,8 +1143,11 @@
     "ui-isFilterTagsDisplayed-help": "Si activé, affiche les filtres de recherche au dessus des résultats.",
     "ui-isFilterTagsDisplayedInSearch": "Afficher les filtres de recherche dans la page de recherche",
     "ui-isFilterTagsDisplayedInSearch-help": "Si activé, affiche les filtres de recherche au dessus des résultats.",
-    "ui-searchMapPlacement": "Afficher la carte dans la colonne de gauche sur le filtre de recherche",
-    "ui-searchMapPlacement-help": "Si activé, afficher la carte dans la colonne de gauche et non dans la position par défaut du coin inférieur droit",
+    "ui-searchMapPlacement": "Emplacement de la carte des résultats de recherche",
+    "searchMapPlacement-facets": "Au-dessus des filtres",
+    "searchMapPlacement-results": "En bas à droite des résultats",
+    "searchMapPlacement-": "Ne pas afficher",
+    "ui-searchMapPlacement-help": "Définissez où afficher la carte des résultats de la recherche affichant les emprises des fiches.",
     "ui-showStatusFooterFor": "Mettre en évidence le statut de la donnée dans les résultats de la recherche",
     "ui-showStatusFooterFor-help": "Liste des valeurs à mettre en évidence (eg. completed,historicalArchive,obsolete,superseded) pour lesquelles la couleur de fond est définie.",
     "ui-showBatchDropdown": "Afficher les outils de sélection",
@@ -1473,7 +1476,10 @@
     "staticPageRemoved": "Page supprimée.",
     "chooseStaticPageFile": "Sélectionner ou déposer un fichier ici",
     "ui-topCustomMenu": "Personnalisation des menus de l'en-tête",
-    "ui-topCustomMenu-help": "Liste des identifiants des pages associée avec une section : <ul><li>Quand une liste est fournie, les liens sont affichés dans cet ordre.</li><li>Quand aucune liste n'est fournie, toutes les pages de cette section sont affichées sans ordre spécifique.</li>",
+    "ui-topCustomMenu-help": "List of static page IDs associated with the header section to display: <ul><li>When a list is provided, the links are displayed in the order provided and only for the pages listed.</li><li>When a list is not provided, all static pages configured for the header section are displayed, with no guaranteed order.</li>.\nPages can be inserted in between catalogue default menu which are: <pre>[\"gn-site-name-menu\",\n    \"gn-portal-switcher\",\n    \"gn-search-menu\",\n    \"gn-map-menu\",\n    \"gn-contribute-menu\",\n    \"gn-admin-menu\"]</pre>. Insert a page as a simple menu using its id eg. <pre>\"documentation\"</pre> or as a submenu using an object: <pre>{\"Quick search\": [\n  \"searchForAfrica\", \n  \"forReview\"\n]}</pre>",
     "ui-footerCustomMenu": "Personnalisation des menus du pied de page",
-    "ui-footerCustomMenu-help": "Liste des identifiants des pages associée avec une section : <ul><li>Quand une liste est fournie, les liens sont affichés dans cet ordre.</li><li>Quand aucune liste n'est fournie, toutes les pages de cette section sont affichées sans ordre spécifique.</li>"
+    "ui-footerCustomMenu-help": "Liste des identifiants des pages associée avec une section : <ul><li>Quand une liste est fournie, les liens sont affichés dans cet ordre.</li><li>Quand aucune liste n'est fournie, toutes les pages de cette section sont affichées sans ordre spécifique.</li>",
+    "es.url": "ElasticSearch server",
+    "es.version": "ElasticSearch version",
+    "es.index": "Nom de l'index"
 }

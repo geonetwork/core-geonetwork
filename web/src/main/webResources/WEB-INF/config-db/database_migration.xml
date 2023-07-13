@@ -160,6 +160,11 @@
         <value>WEB-INF/classes/setup/sql/migrate/v424/migrate-db-</value>
       </list>
     </entry>
+    <entry key="4.2.5">
+      <list>
+        <value>WEB-INF/classes/setup/sql/migrate/v425/migrate-db-</value>
+      </list>
+    </entry>
   </util:map>
 
 
@@ -369,6 +374,11 @@
     <entry key="4.2.5">
       <list>
         <value>WEB-INF/classes/setup/sql/migrate/v425/migrate-</value>
+      </list>
+    </entry>
+    <entry key="4.2.6">
+      <list>
+        <value>WEB-INF/classes/setup/sql/migrate/v426/migrate-</value>
       </list>
     </entry>
   </util:map>

@@ -1,22 +1,23 @@
 <div class="gn-margin-bottom" data-ng-show="layers.length > 1">
-  <h4 data-translate="">backgroundMap</h4>
+  <h4>
+    <span data-translate="">backgroundMap</span>
+    <span ng-if="map.getLayers().item(0).get('loading')">
+      <span class="fa fa-spin fa-spinner"></span>
+    </span>
+  </h4>
+
   <ul class="gn-baselayer-switcher-menu list-group width-100">
     <li class="list-group-item" ng-if="::layer" ng-repeat="layer in layers">
       <a
         href=""
         data-ng-class="{'gn-map-layer-selected': layer == map.getLayers().item(0)}"
-        ng-click="changeBackground(layer);popoverCtrl.dismissPopover()"
+        ng-click="setBgLayer(layer);popoverCtrl.dismissPopover()"
       >
-        <span ng-if="::!layer.get('loading')">
-          <span
-            class="fa gn-margin-right"
-            ng-class="layer == map.getLayers().item(0) ? 'fa-dot-circle-o' : 'fa-circle-o'"
-          ></span
-          >{{layer.get('title')}}
-        </span>
-        <span ng-if="::layer.get('loading')">
-          <span class="fa fa-spin fa-spinner"></span>
-        </span>
+        <span
+          class="fa gn-margin-right"
+          ng-class="layer == map.getLayers().item(0) ? 'fa-dot-circle-o' : 'fa-circle-o'"
+        ></span
+        >{{layer.get('title')}}
       </a>
     </li>
 

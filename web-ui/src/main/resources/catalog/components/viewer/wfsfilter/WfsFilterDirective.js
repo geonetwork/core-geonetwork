@@ -97,6 +97,17 @@
 
   var module = angular.module("gn_wfsfilter_directive", []);
 
+  module.constant("gnWfsFilterConfig", {
+    // Define how WMS filter features
+    // * Inject filter in SLD
+    // filterStrategy: "SLD"
+    // * Same but using SLD_BODY parameter (Do not activate it,
+    // Usually return 414 Request-URI Too Large)
+    // filterStrategy: "SLD_BODY"
+    // * Using FILTER parameter (recommended)
+    filterStrategy: "FILTER"
+  });
+
   /**
    * @ngdoc directive
    * @name gn_wfsfilter.directive:gnWfsFilterFacets
@@ -119,6 +130,7 @@
     "gnAlertService",
     "gnWfsService",
     "gnOwsCapabilities",
+    "gnWfsFilterConfig",
     function (
       $http,
       wfsFilterService,
@@ -134,13 +146,14 @@
       gnFeaturesTableService,
       gnAlertService,
       gnWfsService,
-      gnOwsCapabilities
+      gnOwsCapabilities,
+      gnWfsFilterConfig
     ) {
       return {
         restrict: "A",
         replace: false,
         templateUrl:
-          "../../catalog/components/viewer/wfsfilter/" + "partials/wfsfilterfacet.html",
+          "../../catalog/components/viewer/wfsfilter/partials/wfsfilterfacet.html",
         scope: {
           featureTypeName: "@?",
           wfsUrl: "@",
@@ -374,14 +387,27 @@
             );
           };
 
+          scope.dismiss = function () {
+            scope.isWfsAvailable = undefined;
+          };
+
           scope.checkFeatureTypeInWfs = function () {
             gnWfsService.getCapabilities(scope.url).then(function (capObj) {
-              var capL = gnOwsCapabilities.getLayerInfoFromWfsCap(
-                scope.featureTypeName,
-                capObj,
-                scope.uuid
-              );
-              scope.isFeatureTypeAvailable = angular.isDefined(capL);
+              var featureTypes = scope.featureTypeName.split(","),
+                layersInCapabilities = [];
+
+              featureTypes.forEach(function (featureTypeName) {
+                var layer = gnOwsCapabilities.getLayerInfoFromWfsCap(
+                  featureTypeName,
+                  capObj,
+                  scope.uuid
+                );
+
+                if (layer) {
+                  layersInCapabilities.push(layer);
+                }
+              });
+              scope.isFeatureTypeAvailable = layersInCapabilities.length > 0;
             });
           };
 
@@ -972,9 +998,7 @@
 
           scope.resetSLDFilters = function () {
             if (scope.layer) {
-              scope.layer.getSource().updateParams({
-                SLD: null
-              });
+              wfsFilterService.applyFilter(scope.layer, null);
               scope.layer.setExtent();
             }
           };
@@ -1008,34 +1032,26 @@
               );
             }
             if (sldConfig.filters.length > 0) {
+              var isSld = gnWfsFilterConfig.filterStrategy.indexOf("SLD") === 0;
               wfsFilterService
-                .getSldUrl(sldConfig, layer.get("directUrl") || layer.get("url"), ftName)
-                .then(function (response) {
-                  var sldURL = response.data;
-
-                  // Do not activate it
-                  // Usually return 414 Request-URI Too Large
-                  var useSldBody = false;
-                  if (useSldBody) {
-                    $http.get(sldURL).then(function (response) {
-                      layer.getSource().updateParams({
-                        SLD_BODY: response.data
-                      });
-                    });
-                  } else {
-                    layer.getSource().updateParams({
-                      SLD: sldURL
+                .getFilter(sldConfig, layer.get("directUrl") || layer.get("url"), ftName)
+                .then(
+                  function (filterOrSldUrl) {
+                    wfsFilterService.applyFilter(layer, filterOrSldUrl);
+                  },
+                  function () {
+                    gnAlertService.addAlert({
+                      msg: $translate.instant("wfsIssueWhileLoadingSLD"),
+                      type: "danger"
                     });
                   }
-                })
+                )
                 .finally(function () {
                   scope.filtersChanged = false; // reset 'apply filters' button
                   defer.resolve();
                 });
             } else {
-              layer.getSource().updateParams({
-                SLD: null
-              });
+              wfsFilterService.applyFilter(layer, null);
               scope.filtersChanged = false;
               defer.resolve();
             }

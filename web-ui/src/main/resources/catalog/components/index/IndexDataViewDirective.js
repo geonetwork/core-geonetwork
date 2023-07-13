@@ -42,7 +42,7 @@
             scope.currentLayer = l;
           };
           scope.getLabel = function (layer) {
-            return layer.get("label");
+            return layer.get("layerTitleFromMetadata") || layer.get("label");
           };
           scope.set = function () {
             if (scope.layer) {
