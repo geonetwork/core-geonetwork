@@ -721,6 +721,16 @@
         </xsl:for-each>
 
         <xsl:for-each select="*/gex:EX_Extent">
+
+          <xsl:for-each select="gex:geographicElement/*/gex:geographicIdentifier/
+                                  */mcc:code[*/normalize-space(.) != '']">
+            <xsl:copy-of select="gn-fn-index:add-multilingual-field('extentIdentifier', ., $allLanguages)"/>
+          </xsl:for-each>
+
+          <xsl:for-each select="gex:description[*/normalize-space(.) != '']">
+            <xsl:copy-of select="gn-fn-index:add-multilingual-field('extentDescription', ., $allLanguages)"/>
+          </xsl:for-each>
+
           <!-- TODO: index bounding polygon -->
           <xsl:for-each select=".//gex:EX_GeographicBoundingBox[
                                 ./gex:westBoundLongitude/gco:Decimal castable as xs:decimal and
