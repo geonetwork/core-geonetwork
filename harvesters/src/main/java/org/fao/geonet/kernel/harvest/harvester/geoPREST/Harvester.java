@@ -290,7 +290,7 @@ class Harvester implements IHarvester<HarvestResult> {
             }
         }
 
-        throw new ParseException("Can't parse date '"+pubDate+"'", 0);
+        throw new ParseException("Can't parse date '" + pubDate + "'", 0);
     }
     /**
      * Parse the date provided in the pubDate field.
