@@ -266,7 +266,7 @@ class Harvester implements IHarvester<HarvestResult> {
     }
 
     protected Date parseDateJdk11(String pubDate) throws ParseException {
-        Locale wellKnownLocales[] = {Locale.ENGLISH, Locale.FRENCH, Locale.GERMAN, Locale.ITALIAN};
+        Locale[] wellKnownLocales = {Locale.ENGLISH, Locale.FRENCH, Locale.GERMAN, Locale.ITALIAN};
 
         for (Locale locale : wellKnownLocales) {
             DateTimeFormatter formatter = DateTimeFormatter.RFC_1123_DATE_TIME.withLocale(locale);
