@@ -169,7 +169,7 @@ public class OpenApiController extends AbstractOpenApiResource {
         }
     }
 
-
+    @Override
     protected boolean isRestController(Map<String, Object> restControllers,
                                        HandlerMethod handlerMethod,
                                        String operationPath) {
