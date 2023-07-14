@@ -279,7 +279,7 @@ class Harvester implements IHarvester<HarvestResult> {
                 if(locale == Locale.GERMAN && (pubDate.toLowerCase(Locale.GERMAN).contains("mrz")
                 || pubDate.toLowerCase(Locale.GERMAN).contains("mär"))) {
                     try {
-                        log.info("Applying MRZ workaround to '"+pubDate+"'");
+                        log.info("Applying MRZ workaround to '" + pubDate + "'");
                         String wad = pubDate.toLowerCase(Locale.GERMAN).replace("mrz", "mar");
                         wad = wad.replace("mär", "mar");
                         ZonedDateTime workedAroundDate = ZonedDateTime.parse(wad, formatter);
