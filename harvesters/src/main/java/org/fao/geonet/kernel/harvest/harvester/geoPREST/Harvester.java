@@ -286,7 +286,7 @@ class Harvester implements IHarvester<HarvestResult> {
                         return Date.from(workedAroundDate.toInstant());
                     } catch (DateTimeParseException ex) {}
                 }
-                log.debug("Date '"+pubDate+"' is not parsable according to " + locale);
+                log.debug("Date '" + pubDate + "' is not parsable according to " + locale);
             }
         }
 
