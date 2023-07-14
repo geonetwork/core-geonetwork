@@ -1969,6 +1969,7 @@
             www.mixin(this);
             this.eventBus = o.eventBus;
             this.minLength = _.isNumber(o.minLength) ? o.minLength : 1;
+            this.showHintsOnFocus = o.showHintsOnFocus ? true : false;
             this.input = o.input;
             this.menu = o.menu;
             this.enabled = true;
@@ -2032,7 +2033,11 @@
                 this.eventBus.trigger("asyncreceive", query, dataset);
             },
             _onFocused: function onFocused() {
+              if (!this.showHintsOnFocus) {
                 this._minLengthMet() && this.menu.update(this.input.getQuery());
+              } else {
+                this._minLengthMet() && this.menu.update("");
+              }
             },
             _onBlurred: function onBlurred() {
                 if (this.input.hasQueryChangedSinceLastFocus()) {
@@ -2277,7 +2282,8 @@
                         input: input,
                         menu: menu,
                         eventBus: eventBus,
-                        minLength: o.minLength
+                        minLength: o.minLength,
+                      showHintsOnFocus: o.showHintsOnFocus
                     }, www);
                     $input.data(keys.www, www);
                     $input.data(keys.typeahead, typeahead);
