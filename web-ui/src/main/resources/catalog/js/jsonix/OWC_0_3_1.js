@@ -100,7 +100,7 @@ var OWC_0_3_1_Module_Factory = function () {
           {
             n: "vendorExtension",
             en: "VendorExtension",
-            ti: "OWC_0_3_1.ExtensionType"
+            ti: "OWC_0_3_1.VendorExtensionType"
           },
           {
             n: "queryable",
@@ -364,6 +364,16 @@ var OWC_0_3_1_Module_Factory = function () {
       },
       {
         ln: "ExtensionType",
+        ps: [
+          {
+            n: "any",
+            mx: true,
+            t: "ae"
+          }
+        ]
+      },
+      {
+        ln: "VendorExtensionType",
         ps: [
           {
             n: "any",
