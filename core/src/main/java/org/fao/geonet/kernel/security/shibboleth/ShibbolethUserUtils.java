@@ -269,16 +269,7 @@ public class ShibbolethUserUtils {
             userGroups.add(usergroup);
         }
 
-        List<UserGroup> dbUserGroupLists = userGroupRepository.findAll(UserGroupSpecs.hasUserId(user.getId()));
-        Set<UserGroup> dbUserGroups = new HashSet<>(dbUserGroupLists);
-
-        // If the user groups are not the same then update database so that they are the same.
-        if (! userGroups.equals(dbUserGroups)) {
-            userGroupRepository.deleteAll(UserGroupSpecs.hasUserId(user.getId()));
-            for (UserGroup ug: userGroups) {
-                userGroupRepository.save(ug);
-            }
-        }
+        userGroupRepository.updateUserGroups(user.getId(), userGroups);
     }
 
     private void assignProfile(String[] role_groups, String roleGroupSeparator, User user) {

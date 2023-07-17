@@ -299,16 +299,7 @@ public class KeycloakUserUtils {
             }
         }
 
-        List<UserGroup> dbUserGroupLists = userGroupRepository.findAll(UserGroupSpecs.hasUserId(user.getId()));
-        Set<UserGroup> dbUserGroups = new HashSet<>(dbUserGroupLists);
-
-        // If the user groups are not the same as what is in the database then update database so that they are the same.
-        if (! userGroups.equals(dbUserGroups)) {
-            userGroupRepository.deleteAll(UserGroupSpecs.hasUserId(user.getId()));
-            for (UserGroup ug: userGroups) {
-                userGroupRepository.save(ug);
-            }
-        }
+        userGroupRepository.updateUserGroups(user.getId(), userGroups);
     }
 
     /**
