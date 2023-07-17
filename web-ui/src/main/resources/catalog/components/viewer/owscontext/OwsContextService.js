@@ -273,7 +273,9 @@
                     }
                     olLayer.getSource().setAttributions(attributionLike);
                   } else {
-                    console.log("Warning: Cannot add attributions to map as source is not defined");
+                    console.log(
+                      "Warning: Cannot add attributions to map as source is not defined"
+                    );
                   }
                 }
               };
@@ -327,8 +329,6 @@
                   loadingLayer.set("bgLayer", true);
                 }
 
-                setLayerAttribution(loadingLayer, layerAttributionArray);
-
                 var layerIndex;
                 if (isMainViewer) {
                   layerIndex = bgLayers.push(loadingLayer) - 1;
@@ -346,6 +346,8 @@
 
                     layer.displayInLayerManager = false;
                     layer.background = true;
+
+                    setLayerAttribution(layer, layerAttributionArray);
 
                     if (loadingLayer.get("bgLayer")) {
                       map.getLayers().setAt(0, layer);
