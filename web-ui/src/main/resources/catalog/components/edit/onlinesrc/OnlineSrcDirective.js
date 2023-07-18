@@ -1485,13 +1485,6 @@
                */
               scope.$watchCollection("params.selectedLayers", function (n, o) {
                 if (
-                  scope.config &&
-                  scope.config.wmsResources.addLayerNamesMode != "resourcename"
-                ) {
-                  return;
-                }
-
-                if (
                   o !== n &&
                   scope.params.selectedLayers &&
                   scope.params.selectedLayers.length > 0
@@ -1530,10 +1523,6 @@
                       }
                     }
                   });
-                  angular.forEach(scope.params.selectedLayers, function (layer) {
-                    names.push(layer.Name || layer.name);
-                    descs.push(layer.Title || layer.title);
-                  });
 
                   if (scope.config.wmsResources.addLayerNamesMode == "resourcename") {
                     if (scope.isMdMultilingual) {
@@ -1548,8 +1537,6 @@
                     }
                   } else {
                     if (scope.isMdMultilingual) {
-                      var langCode = scope.mdLangs[scope.mdLang];
-
                       if (names.length > 0) {
                         angular.forEach(scope.mdLangs, function (value, key) {
                           scope.params.name[value] = names.join(",");
