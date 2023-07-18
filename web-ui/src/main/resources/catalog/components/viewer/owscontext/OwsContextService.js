@@ -197,6 +197,55 @@
             var type, layer = layers[i];
             if (layer.group == 'Background layers') {
 
+              var layerAttributionArray;
+              if (layer.vendorExtension && layer.vendorExtension.attribution) {
+                layerAttributionArray = [];
+                for (var a = 0; a < layer.vendorExtension.attribution.length; a++) {
+                  var attribution = layer.vendorExtension.attribution[a];
+                  layerAttribution = attribution.title;
+                  // If href exist then make the title a link
+                  if (attribution.onlineResource && attribution.onlineResource[0].href) {
+                    var link = document.createElement("a");
+                    link.href = attribution.onlineResource[0].href;
+                    link.innerHTML = layerAttribution;
+                    layerAttribution = link.outerHTML;
+                  }
+                  layerAttributionArray.push(layerAttribution);
+                }
+              }
+
+              // Function to set the attribution on the layer
+              // Parameter :
+              //   ol layer to apply the attributions to.
+              //   layerAttributionArray containing attributions to be added.
+              var setLayerAttribution = function (olLayer, layerAttributionArray) {
+                if (layerAttributionArray) {
+                  // Only apply the layer if there is a source.
+                  if (olLayer.getSource()) {
+                    var attributionLike = olLayer.getSource().getAttributions();
+                    if (typeof attributionLike === "function") {
+                      attributionLike = attributionLike();
+                    }
+                    if (typeof attributionLike === "string") {
+                      attributionLike = [attributionLike];
+                    }
+                    if (
+                      typeof attributionLike === "object" &&
+                      Array.isArray(attributionLike)
+                    ) {
+                      attributionLike.push.apply(attributionLike, layerAttributionArray);
+                    } else {
+                      attributionLike = layerAttributionArray;
+                    }
+                    olLayer.getSource().setAttributions(attributionLike);
+                  } else {
+                    console.log(
+                      "Warning: Cannot add attributions to map as source is not defined"
+                    );
+                  }
+                }
+              };
+
               // {type=bing_aerial} (mapquest, osm ...)
               var re = this.getREForPar('type');
               type = layer.name.match(re) ? re.exec(layer.name)[1] : null;
@@ -220,6 +269,8 @@
                   olLayer.background = true;
                   olLayer.set('group', 'Background layers');
                   olLayer.setVisible(!layer.hidden);
+                  setLayerAttribution(olLayer, layerAttributionArray);
+
                   bgLayers.push(olLayer);
 
                   if (!layer.hidden && !isFirstBgLayer) {
@@ -258,7 +309,9 @@
                     layer.displayInLayerManager = false;
                     layer.background = true;
 
-                    if (loadingLayer.get('bgLayer')) {
+                    setLayerAttribution(layer, layerAttributionArray);
+
+                    if (loadingLayer.get("bgLayer")) {
                       map.getLayers().setAt(0, layer);
                     }
                   });
