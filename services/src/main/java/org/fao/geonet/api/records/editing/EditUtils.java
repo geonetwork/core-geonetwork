@@ -38,6 +38,7 @@ import org.fao.geonet.kernel.*;
 import org.fao.geonet.kernel.datamanager.IMetadataValidator;
 import org.fao.geonet.kernel.schema.MultilingualSchemaPlugin;
 import org.fao.geonet.kernel.schema.SchemaPlugin;
+import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
@@ -139,13 +140,13 @@ class EditUtils {
      * Updates metadata content.
      */
     public void updateContent(Element params, boolean validate) throws Exception {
-        updateContent(params, validate, false);
+        updateContent(params, validate, false, IndexingMode.full);
     }
 
     /**
      * TODO javadoc.
      */
-    public void updateContent(Element params, boolean validate, boolean embedded) throws Exception {
+    public void updateContent(Element params, boolean validate, boolean embedded, IndexingMode indexingMode) throws Exception {
         String id = Util.getParam(params, Params.ID);
         String version = Util.getParam(params, Params.VERSION);
         String minor = Util.getParam(params, Params.MINOREDIT, "false");
@@ -172,20 +173,18 @@ class EditUtils {
         AbstractMetadata result = null;
         // whether to request automatic changes (update-fixed-info)
         boolean ufo = true;
-        // whether to index on update
-        boolean index = true;
 
         boolean updateDateStamp = !minor.equals("true");
         String changeDate = null;
         if (embedded) {
             Element updatedMetada = new AjaxEditUtils(context).applyChangesEmbedded(id, htChanges, version);
             if (updatedMetada != null) {
-                result = dataManager.updateMetadata(context, id, updatedMetada, false, ufo, index, context.getLanguage(), changeDate, updateDateStamp);
+                result = dataManager.updateMetadata(context, id, updatedMetada, false, ufo, context.getLanguage(), changeDate, updateDateStamp, indexingMode);
             }
         } else {
             Element updatedMetada = applyChanges(id, htChanges, version);
             if (updatedMetada != null) {
-                result = dataManager.updateMetadata(context, id, updatedMetada, validate, ufo, index, context.getLanguage(), changeDate, updateDateStamp);
+                result = dataManager.updateMetadata(context, id, updatedMetada, validate, ufo, context.getLanguage(), changeDate, updateDateStamp, indexingMode);
             }
         }
         if (result == null) {

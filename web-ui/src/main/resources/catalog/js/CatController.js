@@ -31,6 +31,7 @@
   goog.require("gn_search_manager");
   goog.require("gn_session_service");
   goog.require("gn_alert");
+  goog.require("gn_es");
 
   var module = angular.module("gn_cat_controller", [
     "gn_search_manager",
@@ -39,7 +40,8 @@
     "gn_saved_selections",
     "gn_external_viewer",
     "gn_history",
-    "gn_alert"
+    "gn_alert",
+    "gn_es"
   ]);
 
   module.constant("gnSearchSettings", {});
@@ -74,26 +76,39 @@
           footer: {
             enabled: true,
             showSocialBarInFooter: true,
-            showApplicationInfoAndLinksInFooter: true
+            showApplicationInfoAndLinksInFooter: true,
+            footerCustomMenu: [], // List of static pages identifiers to display
+            rssFeeds: [
+              {
+                // List of rss feeds links to display when the OGC API Records service is enabled
+                url: "f=rss&sortby=-createDate&size=30",
+                label: "lastCreatedRecords"
+              }
+              // , {
+              //   url: "f=rss&sortby=-publicationDateForResource&size=30",
+              //   label: "lastPublishedRecords"
+              // }
+            ]
           },
           header: {
             enabled: true,
             languages: {
               eng: "en",
-              dut: "nl",
-              fre: "fr",
-              ger: "de",
-              kor: "ko",
-              spa: "es",
-              cze: "cs",
               cat: "ca",
-              fin: "fi",
+              chi: "zh",
+              cze: "cs",
+              dan: "da",
+              ger: "de",
+              fre: "fr",
+              spa: "es",
               ice: "is",
               ita: "it",
+              dut: "nl",
+              kor: "ko",
               por: "pt",
               rus: "ru",
-              chi: "zh",
               slo: "sk",
+              fin: "fi",
               swe: "sv"
             },
             isLogoInHeader: false,
@@ -101,8 +116,8 @@
             fluidHeaderLayout: true,
             showGNName: true,
             isHeaderFixed: false,
-            isMenubarAccessible: true,
-            showPortalSwitcher: true
+            showPortalSwitcher: true,
+            topCustomMenu: [] // List of static pages identifiers to display
           },
           cookieWarning: {
             enabled: true,
@@ -121,17 +136,30 @@
                   field: "th_httpinspireeceuropaeutheme-theme_tree.key",
                   size: 34
                   // "order" : { "_key" : "asc" }
+                },
+                meta: {
+                  decorator: {
+                    type: "icon",
+                    prefix: "fa fa-2x pull-left gn-icon iti-",
+                    expression: "http://inspire.ec.europa.eu/theme/(.*)"
+                  }
                 }
               },
               "cl_topic.key": {
                 terms: {
                   field: "cl_topic.key",
                   size: 20
+                },
+                meta: {
+                  decorator: {
+                    type: "icon",
+                    prefix: "fa fa-2x pull-left gn-icon-"
+                  }
                 }
               },
               // 'OrgForResource': {
               //   'terms': {
-              //     'field': 'OrgForResource',
+              //     'field': 'OrgForResourceObject',
               //     'include': '.*',
               //     'missing': '- No org -',
               //     'size': 15
@@ -141,6 +169,12 @@
                 terms: {
                   field: "resourceType",
                   size: 10
+                },
+                meta: {
+                  decorator: {
+                    type: "icon",
+                    prefix: "fa fa-2x pull-left gn-icon-"
+                  }
                 }
               }
             },
@@ -174,19 +208,24 @@
             queryTitle: "resourceTitleObject.\\*:(${any})",
             queryTitleExactMatch: 'resourceTitleObject.\\*:"${any}"',
             searchOptions: {
+              fullText: true,
               titleOnly: true,
               exactMatch: true,
               language: true
             },
+            // The language strategy define how to search on multilingual content.
+            // It also applies to aggregation using ${aggLanguage} substitute.
             // Language strategy can be:
             // * searchInUILanguage: search in UI languages
-            // eg. full text field is any.langfre if French
-            // * searchInAllLanguages: search using any.* fields
+            // eg. full text field is any.langfre if French, aggLanguage is uiLanguage.
+            // * searchInAllLanguages: search using any.* fields, aggLanguage is default
             // (no analysis is done, more records are returned)
             // * searchInDetectedLanguage: restrict the search to the language detected
-            // based on user search. If language detection fails, search in all languages.
+            // based on user search. aggLanguage is detectedLanguage.
+            // If language detection fails, search in all languages and aggLanguage is uiLanguage
             // * searchInThatLanguage: Force a language using searchInThatLanguage:fre
             // 'languageStrategy': 'searchInThatLanguage:fre',
+            // aggLanguage is forcedLanguage.
             languageStrategy: "searchInAllLanguages",
             // Limit language detection to some languages only.
             // If empty, the list of languages in catalogue records is used
@@ -228,6 +267,10 @@
               // }
               boost: "5",
               functions: [
+                {
+                  filter: { match: { resourceType: "series" } },
+                  weight: 1.5
+                },
                 // Boost down member of a series
                 {
                   filter: { exists: { field: "parentUuid" } },
@@ -271,6 +314,7 @@
                           "resourceTitleObject.${searchLang}^6",
                           "resourceAbstractObject.${searchLang}^.5",
                           "tag",
+                          "uuid",
                           "resourceIdentifier"
                           // "anytext",
                           // "anytext._2gram",
@@ -281,20 +325,7 @@
                   ]
                 }
               },
-              _source: ["resourceTitleObject"],
-              // Fuzzy autocomplete
-              // {
-              //   query: {
-              //     // match_phrase_prefix: match
-              //     "multi_match" : {
-              //       "query" : query,
-              //         // "type":       "phrase_prefix",
-              //         "fields" : [ field + "^3", "tag" ]
-              //     }
-              //   },
-              //   _source: [field]
-              // }
-              from: 0,
+              _source: ["resourceTitle*", "resourceType"],
               size: 20
             },
             moreLikeThisSameType: true,
@@ -322,11 +353,10 @@
                 terms: {
                   field: "resourceType"
                 },
-                aggs: {
-                  format: {
-                    terms: {
-                      field: "format"
-                    }
+                meta: {
+                  decorator: {
+                    type: "icon",
+                    prefix: "fa fa-fw gn-icon-"
                   }
                 }
               },
@@ -345,6 +375,14 @@
                   size: 10
                 }
               },
+              format: {
+                terms: {
+                  field: "format"
+                },
+                meta: {
+                  collapsed: true
+                }
+              },
               availableInServices: {
                 filters: {
                   //"other_bucket_key": "others",
@@ -359,6 +397,16 @@
                       query_string: {
                         query: "+linkProtocol:/OGC:WFS.*/"
                       }
+                    }
+                  }
+                },
+                meta: {
+                  decorator: {
+                    type: "icon",
+                    prefix: "fa fa-fw ",
+                    map: {
+                      availableInViewService: "fa-globe",
+                      availableInDownloadService: "fa-download"
                     }
                   }
                 }
@@ -415,11 +463,18 @@
                   field: "th_httpinspireeceuropaeutheme-theme_tree.key",
                   size: 34
                   // "order" : { "_key" : "asc" }
+                },
+                meta: {
+                  decorator: {
+                    type: "icon",
+                    prefix: "fa fa-fw gn-icon iti-",
+                    expression: "http://inspire.ec.europa.eu/theme/(.*)"
+                  }
                 }
               },
-              "tag.default": {
+              tag: {
                 terms: {
-                  field: "tag.default",
+                  field: "tag.${aggLang}",
                   include: ".*",
                   size: 10
                 },
@@ -491,9 +546,11 @@
               // },
               OrgForResource: {
                 terms: {
-                  field: "OrgForResource",
+                  field: "OrgForResourceObject.${aggLang}",
+                  // field: "OrgForResourceObject.default",
+                  // field: "OrgForResourceObject.langfre",
                   include: ".*",
-                  size: 15
+                  size: 20
                 },
                 meta: {
                   // Always display filter even no more elements
@@ -501,6 +558,12 @@
                   // with a large size and you want to provide filtering.
                   // 'displayFilter': true,
                   caseInsensitiveInclude: true
+                  // decorator: {
+                  //   type: 'img',
+                  //   map: {
+                  //     'EEA': 'https://upload.wikimedia.org/wikipedia/en/thumb/7/79/EEA_agency_logo.svg/220px-EEA_agency_logo.svg.png'
+                  //   }
+                  // }
                 }
               },
               "cl_maintenanceAndUpdateFrequency.key": {
@@ -571,7 +634,7 @@
                 sortOrder: "desc"
               },
               {
-                sortBy: "resourceTitleObject.default.keyword",
+                sortBy: "resourceTitleObject.default.sort",
                 sortOrder: ""
               },
               {
@@ -655,7 +718,12 @@
                 // 'url' : '/formatters/xml?attachment=false',
                 url: "/formatters/xml",
                 class: "fa-file-code-o"
-              }
+              } /*,
+              {
+                label: "exportDCAT",
+                url: "/geonetwork/api/collections/main/items/${uuid}?f=dcat",
+                class: "fa-file-code-o"
+              }*/
             ],
             grid: {
               related: ["parent", "children", "services", "datasets"]
@@ -677,7 +745,7 @@
               maps: ["ows"]
             },
             isFilterTagsDisplayedInSearch: true,
-            showMapInFacet: false,
+            searchMapPlacement: "results", // results, facets or none
             showStatusFooterFor: "historicalArchive,obsolete,superseded",
             showBatchDropdown: true,
             usersearches: {
@@ -707,6 +775,7 @@
             is3DModeAllowed: false,
             isSaveMapInCatalogAllowed: true,
             isExportMapAsImageEnabled: false,
+            isAccessible: false,
             storage: "sessionStorage",
             bingKey: "",
             listOfServices: {
@@ -745,6 +814,8 @@
               syncAllLayers: false,
               drawVector: false
             },
+            defaultTool: "layers",
+            defaultToolAfterMapLoad: "layers",
             graticuleOgcService: {},
             "map-viewer": {
               context: "../../map/config-viewer.xml",
@@ -754,7 +825,8 @@
             "map-search": {
               context: "../../map/config-viewer.xml",
               extent: [0, 0, 0, 0],
-              layers: []
+              layers: [],
+              geodesicExtents: false
             },
             "map-editor": {
               context: "",
@@ -778,7 +850,8 @@
             showStatusTopBarFor: "",
             showCitation: {
               enabled: false,
-              if: null // {'documentStandard': ['iso19115-3.2018']}
+              // if: {'documentStandard': ['iso19115-3.2018']}
+              if: { resourceType: ["series", "dataset", "nonGeographicDataset"] }
             },
             sortKeywordsAlphabetically: true,
             mainThesaurus: ["th_gemet", "th_gemet-theme"],
@@ -868,6 +941,12 @@
               resourceType: {
                 terms: {
                   field: "resourceType"
+                },
+                meta: {
+                  decorator: {
+                    type: "icon",
+                    prefix: "fa fa-fw gn-icon-"
+                  }
                 }
               },
               mdStatus: {
@@ -911,6 +990,10 @@
                   filterByTranslation: true,
                   displayFilter: true,
                   collapsed: true
+                  // decorator: {
+                  //   type: "img",
+                  //   path: "../../images/logos/{key}.png"
+                  // }
                 }
               },
               groupOwner: {
@@ -940,6 +1023,16 @@
                 terms: {
                   field: "isPublishedToAll",
                   size: 2
+                },
+                meta: {
+                  decorator: {
+                    type: "icon",
+                    prefix: "fa fa-fw ",
+                    map: {
+                      false: "fa-lock",
+                      true: "fa-unlock"
+                    }
+                  }
                 }
               },
               groupPublishedId: {
@@ -970,7 +1063,15 @@
                   size: 2
                 },
                 meta: {
-                  collapsed: true
+                  collapsed: true,
+                  decorator: {
+                    type: "icon",
+                    prefix: "fa fa-fw ",
+                    map: {
+                      false: "fa-folder",
+                      true: "fa-cloud"
+                    }
+                  }
                 }
               },
               isTemplate: {
@@ -979,7 +1080,15 @@
                   size: 5
                 },
                 meta: {
-                  collapsed: true
+                  collapsed: true,
+                  decorator: {
+                    type: "icon",
+                    prefix: "fa fa-fw ",
+                    map: {
+                      n: "fa-file-text",
+                      y: "fa-file"
+                    }
+                  }
                 }
               }
             }
@@ -995,7 +1104,7 @@
                 sortOrder: "desc"
               },
               {
-                sortBy: "resourceTitleObject.default.keyword",
+                sortBy: "resourceTitleObject.default.sort",
                 sortOrder: ""
               },
               {
@@ -1008,10 +1117,42 @@
               }
             ],
             sortBy: "relevance",
+            facetConfig: {
+              valid: {
+                terms: {
+                  field: "valid",
+                  size: 10
+                }
+              },
+              groupOwner: {
+                terms: {
+                  field: "groupOwner",
+                  size: 10
+                }
+              },
+              recordOwner: {
+                terms: {
+                  field: "recordOwner",
+                  size: 10
+                }
+              },
+              groupPublished: {
+                terms: {
+                  field: "groupPublished",
+                  size: 10
+                }
+              },
+              isHarvested: {
+                terms: {
+                  field: "isHarvested",
+                  size: 2
+                }
+              }
+            },
             // Add some fuzziness when search on directory entries
             // but boost exact match.
             queryBase:
-              'any.${searchLang}:(${any}) any.common:(${any}) resourceTitleObject.${searchLang}:"${any}"^10 resourceTitleObject.${searchLang}:(${any})^5 resourceTitleObject.${searchLang}:(${any}~2)'
+              'any.${searchLang}:(${any}) OR any.common:(${any}) OR resourceTitleObject.${searchLang}:"${any}"^10 OR resourceTitleObject.${searchLang}:(${any})^5 OR resourceTitleObject.${searchLang}:(${any}~2)'
           },
           admin: {
             enabled: true,
@@ -1083,7 +1224,7 @@
         requireProxy: [],
         gnCfg: angular.copy(defaultConfig),
         gnUrl: "",
-        docUrl: "https://geonetwork-opensource.org/manuals/4.0.x/",
+        docUrl: "https://geonetwork-opensource.org/manuals/4.0.x/{lang}",
         //docUrl: '../../doc/',
         modelOptions: {
           updateOn: "default blur",
@@ -1141,10 +1282,17 @@
         isShowLoginAsLink: false,
         isUserProfileUpdateEnabled: true,
         isUserGroupUpdateEnabled: true,
-        init: function (configOverlay, gnUrl, gnViewerSettings, gnSearchSettings) {
+        init: function (
+          configOverlay,
+          gnUrl,
+          nodeUrl,
+          gnViewerSettings,
+          gnSearchSettings
+        ) {
           this.applyConfig(configOverlay !== null ? configOverlay : {});
           this.setLegacyOption(gnViewerSettings, gnSearchSettings);
           this.gnUrl = gnUrl || "../";
+          this.nodeUrl = nodeUrl || "../";
           this.proxyUrl = this.gnUrl + "../proxy?url=";
         },
         setLegacyOption: function (gnViewerSettings, gnSearchSettings) {
@@ -1192,7 +1340,7 @@
               result = result.concat(
                 that.getObjectKeysPaths(obj[key], stopKeyList, allLevels, prefix + key)
               );
-            } else {
+            } else if (key !== "mods") {
               result.push(prefix + key);
             }
             return result;
@@ -1383,6 +1531,7 @@
     "$cookies",
     "gnExternalViewer",
     "gnAlertService",
+    "gnESFacet",
     function (
       $scope,
       $http,
@@ -1402,7 +1551,8 @@
       gnSearchSettings,
       $cookies,
       gnExternalViewer,
-      gnAlertService
+      gnAlertService,
+      gnESFacet
     ) {
       $scope.version = "0.0.1";
       var defaultNode = "srv";
@@ -1422,6 +1572,8 @@
       $scope.langs = gnGlobalSettings.gnCfg.mods.header.languages;
       $scope.lang = gnLangs.detectLang(null, gnGlobalSettings);
       $scope.iso2lang = gnLangs.getIso2Lang($scope.lang);
+
+      $scope.rssFeeds = gnGlobalSettings.gnCfg.mods.footer.rssFeeds;
 
       $scope.getSocialLinksVisible = function () {
         var onMdView = $location.absUrl().indexOf("/metadata/") > -1;
@@ -1498,7 +1650,8 @@
         rus: "русский",
         chi: "中文",
         slo: "Slovenčina",
-        swe: "Svenska"
+        swe: "Svenska",
+        dan: "Dansk"
       };
       $scope.url = "";
       $scope.gnUrl = gnGlobalSettings.gnUrl;
@@ -1513,6 +1666,11 @@
       $scope.isUserGroupUpdateEnabled = gnGlobalSettings.isUserGroupUpdateEnabled;
       $scope.isExternalViewerEnabled = gnExternalViewer.isEnabled();
       $scope.externalViewerUrl = gnExternalViewer.getBaseUrl();
+      $scope.publicationOptions = [];
+
+      $http.get("../api/records/sharing/options").then(function (response) {
+        $scope.publicationOptions = response.data;
+      });
 
       $scope.isSelfRegisterPossible = function () {
         return gnConfig["system.userSelfRegistration.enable"];
@@ -1627,25 +1785,25 @@
         // Retrieve site information
         // TODO: Add INSPIRE, harvester, ... information
         var catInfo = promiseStart.then(function (value) {
-          return $http
-            .get("../api/site")
-            .success(function (data, status) {
-              $scope.info = data;
+          return $http.get("../api/site").then(
+            function (response) {
+              $scope.info = response.data;
               // Add the last time catalog info where updated.
               // That could be useful to append to catalog image URL
               // in order to trigger a reload of the logo when info are
               // reloaded.
               $scope.info["system/site/lastUpdate"] = new Date().getTime();
               $scope.initialized = true;
-            })
-            .error(function (data, status, headers, config) {
+            },
+            function (response) {
               $rootScope.$broadcast("StatusUpdated", {
                 id: "catalogueStatus",
                 title: $translate.instant("somethingWrong"),
                 msg: $translate.instant("msgNoCatalogInfo"),
                 type: "danger"
               });
-            });
+            }
+          );
         });
 
         // Utility functions for user
@@ -1682,7 +1840,24 @@
                   : "";
             return angular.isFunction(this[fnName]) ? this[fnName]() : false;
           },
-
+          canPublishMetadata: function () {
+            var profile =
+                gnConfig["metadata.publication.profilePublishMetadata"] || "Reviewer",
+              fnName =
+                profile !== ""
+                  ? "is" + profile[0].toUpperCase() + profile.substring(1) + "OrMore"
+                  : "";
+            return angular.isFunction(this[fnName]) ? this[fnName]() : false;
+          },
+          canUnpublishMetadata: function () {
+            var profile =
+                gnConfig["metadata.publication.profileUnpublishMetadata"] || "Reviewer",
+              fnName =
+                profile !== ""
+                  ? "is" + profile[0].toUpperCase() + profile.substring(1) + "OrMore"
+                  : "";
+            return angular.isFunction(this[fnName]) ? this[fnName]() : false;
+          },
           // The md provide the information about
           // if the current user can edit records or not
           // based on record operation allowed. See edit property.
@@ -1733,7 +1908,8 @@
         var userLogin = catInfo.then(function (value) {
           return $http
             .get("../api/me?_random=" + Math.floor(Math.random() * 10000))
-            .success(function (me, status) {
+            .then(function (response) {
+              var me = response.data;
               if (angular.isObject(me)) {
                 me["isAdmin"] = function (groupId) {
                   return me.admin;
@@ -1763,6 +1939,15 @@
                 $scope.user = undefined;
               }
             });
+        });
+
+        // Retrieve the publication options
+        userLogin.then(function (value) {
+          if ($scope.user && $scope.user.isReviewerOrMore()) {
+            $http.get("../api/records/sharing/options").then(function (response) {
+              $scope.publicationOptions = response.data;
+            });
+          }
         });
 
         // Retrieve main search information
@@ -1799,8 +1984,12 @@
                   $scope.searchInfo = r.data;
                   var keys = Object.keys(gnGlobalSettings.gnCfg.mods.home.facetConfig);
                   selectedFacet = keys[0];
+
                   for (var i = 0; i < keys.length; i++) {
-                    if ($scope.searchInfo.aggregations[keys[i]].buckets.length > 0) {
+                    if (
+                      $scope.searchInfo.aggregations[keys[i]].buckets.length > 0 ||
+                      Object.keys($scope.searchInfo.aggregations[keys[i]]).length > 0
+                    ) {
                       selectedFacet = keys[i];
                       break;
                     }
@@ -1809,7 +1998,13 @@
                     list: keys,
                     key: selectedFacet,
                     lastKey: keys.length > 1 ? keys[keys.length - 1] : undefined,
-                    config: gnGlobalSettings.gnCfg.mods.home.facetConfig
+                    config: gnGlobalSettings.gnCfg.mods.home.facetConfig,
+                    facets: gnESFacet.createFacetModel(
+                      gnGlobalSettings.gnCfg.mods.home.facetConfig,
+                      r.data.aggregations,
+                      undefined,
+                      undefined
+                    )
                   };
                 });
             }
@@ -1824,6 +2019,74 @@
 
       $scope.allowPublishInvalidMd = function () {
         return gnConfig["metadata.workflow.allowPublishInvalidMd"];
+      };
+
+      $scope.allowPublishNonApprovedMd = function () {
+        return gnConfig["metadata.workflow.allowPublishNonApprovedMd"];
+      };
+
+      $scope.getPublicationOptionClass = function (
+        md,
+        user,
+        isMdWorkflowEnable,
+        pubOption
+      ) {
+        var publicationOptionTitle = $scope.getPublicationOptionTitle(
+          md,
+          user,
+          isMdWorkflowEnable,
+          pubOption
+        );
+        switch (publicationOptionTitle) {
+          case "mdnonapprovedcantpublish":
+          case "mdinvalidcantpublish":
+            return "disabled";
+            break;
+          default:
+            return "";
+        }
+      };
+
+      // Function to get the title name to be used when displaying the publish item in the menu
+      $scope.getPublicationOptionTitle = function (
+        md,
+        user,
+        isMdWorkflowEnable,
+        pubOption
+      ) {
+        var publicationOptionTitle = "";
+        if (!md.isPublished(pubOption)) {
+          if (md.isValid()) {
+            publicationOptionTitle = "mdvalid";
+          } else {
+            if (
+              isMdWorkflowEnable &&
+              md.isWorkflowEnabled() &&
+              $scope.allowPublishInvalidMd() === false &&
+              pubOption.name === "default"
+            ) {
+              publicationOptionTitle = "mdinvalidcantpublish";
+            } else {
+              if (!md.hasValidation()) {
+                publicationOptionTitle = "mdnovalidation";
+              } else {
+                publicationOptionTitle = "mdinvalid";
+              }
+            }
+          }
+          // if we are not using a disabled option like mdinvalidcantpublish then check if there is an approval
+          if (
+            publicationOptionTitle != "mdinvalidcantpublish" &&
+            isMdWorkflowEnable &&
+            md.isWorkflowEnabled() &&
+            md.mdStatus != 2 &&
+            $scope.allowPublishNonApprovedMd() === false &&
+            pubOption.name === "default"
+          ) {
+            publicationOptionTitle = "mdnonapprovedcantpublish";
+          }
+        }
+        return publicationOptionTitle;
       };
 
       $scope.$on("StatusUpdated", function (event, status) {

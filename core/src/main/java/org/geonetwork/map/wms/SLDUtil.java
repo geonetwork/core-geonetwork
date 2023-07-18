@@ -46,8 +46,8 @@ public class SLDUtil {
      * @throws ServiceException if the server responds with an error
      * @throws ParseException if unable to parse content type header from server
      */
-    public static HashMap<String, String> parseSLD(URI url, String layers) throws URISyntaxException, IOException, ParseException {
-        HashMap<String, String> hash = new HashMap<String, String>();
+    public static Map<String, String> parseSLD(URI url, String layers) throws URISyntaxException, IOException, ParseException {
+        Map<String, String> hash = new HashMap<String, String>();
 
         String requestUrl = SLDUtil.getGetStyleRequest(url, layers);
 
@@ -240,6 +240,12 @@ public class SLDUtil {
         } else if(filterType.equals("PropertyIsBetween")) {
             if (parameters.size() != 2) throw new JSONException("Invalid parameter count");
             return ff2.between(ff2.property(fieldName), ff2.literal(parameters.get(0)), ff2.literal(parameters.get(1)));
+        } else if(filterType.equals("PropertyIsBetweenExclusive")) {
+            if (parameters.size() != 2) throw new JSONException("Invalid parameter count");
+            return ff2.and(
+                ff2.greater(ff2.property(fieldName), ff2.literal(parameters.get(0))),
+                ff2.less(ff2.property(fieldName), ff2.literal(parameters.get(1)))
+            );
         } else {
             // Currently, no implementation of topological or distance operators
             throw new JSONException("No implementation for filter type : " + filterType);

@@ -422,6 +422,7 @@
     "mdvalid": "元数据是有效的",
     "mdinvalid": "元数据无效",
     "mdinvalidcantpublish": "Invalid metadata can't be published",
+    "mdnonapprovedcantpublish": "Non approved metadata can't be published",
     "mdnovalidation": "元数据没有验证信息",
     "setall": "设置所有权限",
     "print_legend": "图例",
@@ -540,5 +541,13 @@
     "esriCapabilitiesNoValid": "The response is not a valid ESRI Rest capabilities document.",
     "seriesComposedOf": "Composed of",
     "seriesCoveringPeriod": "Covering period",
-    "approve": "Approve"
+    "approve": "Approve",
+    "fieldRequired": "The value is required",
+    "fieldTooLong": "The value is too long",
+    "fieldTooLongMax": "The value is too long (max {{maxChar}} characters)",
+    "fieldTooShort": "The value is too short",
+    "fieldEmailNotValid": "A valid email address is required",
+    "addLayerPrefix": "Add layer",
+    "addLayerPostfix": "to the map",
+    "submit": "Submit"
 }

@@ -54,101 +54,104 @@
         controller: [
           "$scope",
           function ($scope) {
-            var ctrl = this;
+            this.$onInit = function () {
+              var ctrl = this;
 
-            // create a vector layer to hold the features
-            ctrl.source = new ol.source.Vector({
-              features: []
-            });
-            ctrl.layer = new ol.layer.Vector({
-              source: ctrl.source,
-              style: gnHeatmapService.getCellStyle()
-            });
-            ctrl.map.addLayer(ctrl.layer);
+              // create a vector layer to hold the features
+              ctrl.source = new ol.source.Vector({
+                features: []
+              });
+              ctrl.layer = new ol.layer.Vector({
+                source: ctrl.source,
+                style: gnHeatmapService.getCellStyle()
+              });
+              ctrl.map.addLayer(ctrl.layer);
 
-            // add an interaction for cell hovering
-            ctrl.hoverInteration = new ol.interaction.Select({
-              condition: ol.events.condition.pointerMove,
-              style: gnHeatmapService.getCellHoverStyle(),
-              layers: [ctrl.layer]
-            });
-            ctrl.map.addInteraction(ctrl.hoverInteration);
+              // add an interaction for cell hovering
+              ctrl.hoverInteration = new ol.interaction.Select({
+                condition: ol.events.condition.pointerMove,
+                style: gnHeatmapService.getCellHoverStyle(),
+                layers: [ctrl.layer]
+              });
+              ctrl.map.addInteraction(ctrl.hoverInteration);
 
-            // add popover for feature info
-            ctrl.overlay = new ol.Overlay({
-              element: $('<div class="heatmap-overlay"></div>')[0],
-              positioning: "bottom-center",
-              stopEvent: false,
-              offset: [0, -2]
-            });
-            ctrl.map.addOverlay(ctrl.overlay);
-            ctrl.hoverInteration.on("select", function (event) {
-              var selected = event.selected[0];
+              // add popover for feature info
+              ctrl.overlay = new ol.Overlay({
+                element: $('<div class="heatmap-overlay"></div>')[0],
+                positioning: "bottom-center",
+                stopEvent: false,
+                offset: [0, -2]
+              });
+              ctrl.map.addOverlay(ctrl.overlay);
+              ctrl.hoverInteration.on("select", function (event) {
+                var selected = event.selected[0];
 
-              // hide if no feature hovered; else move overlay on hovered feature
-              if (!selected) {
-                ctrl.overlay.setPosition();
-              } else {
-                var center = ol.extent.getCenter(selected.getGeometry().getExtent());
-                var topleft = ol.extent.getTopLeft(selected.getGeometry().getExtent());
-                ctrl.overlay.setPosition([center[0], topleft[1]]);
-                ctrl.overlay.getElement().innerText =
-                  $translate.instant("featureCount") + ": " + selected.get("count");
-              }
-            });
-
-            // this will refresh the heatmap
-            ctrl.refresh = function () {
-              gnHeatmapService
-                .requestHeatmapData(ctrl.featureType, ctrl.map, ctrl.filter)
-                .then(function (cells) {
-                  // add cells as features
-                  ctrl.source.clear();
-                  ctrl.hoverInteration.getFeatures().clear();
+                // hide if no feature hovered; else move overlay on hovered feature
+                if (!selected) {
                   ctrl.overlay.setPosition();
-                  ctrl.source.addFeatures(cells);
-                });
-            };
+                } else {
+                  var center = ol.extent.getCenter(selected.getGeometry().getExtent());
+                  var topleft = ol.extent.getTopLeft(selected.getGeometry().getExtent());
+                  ctrl.overlay.setPosition([center[0], topleft[1]]);
+                  ctrl.overlay.getElement().innerText =
+                    $translate.instant("featureCount") + ": " + selected.get("count");
+                }
+              });
 
-            // watch "enabled" param to show/hide layer
-            $scope.$watch("ctrl.enabled", function (newValue, oldValue) {
-              ctrl.layer.setVisible(!!newValue);
-              ctrl.hoverInteration.setActive(!!newValue);
+              // this will refresh the heatmap
+              ctrl.refresh = function () {
+                gnHeatmapService
+                  .requestHeatmapData(ctrl.featureType, ctrl.map, ctrl.filter)
+                  .then(function (cells) {
+                    // add cells as features
+                    ctrl.source.clear();
+                    ctrl.hoverInteration.getFeatures().clear();
+                    ctrl.overlay.setPosition();
+                    ctrl.source.addFeatures(cells);
+                  });
+              };
 
-              // the heatmap was enabled: refresh data
-              // else: clear select interaction
-              if (newValue) {
+              // watch "enabled" param to show/hide layer
+              $scope.$watch("ctrl.enabled", function (newValue, oldValue) {
+                ctrl.layer.setVisible(!!newValue);
+                ctrl.hoverInteration.setActive(!!newValue);
+
+                // the heatmap was enabled: refresh data
+                // else: clear select interaction
+                if (newValue) {
+                  ctrl.refresh();
+                } else {
+                  ctrl.hoverInteration.getFeatures().clear();
+                }
+              });
+
+              // refresh features on map move
+              var mapEventKey = ctrl.map.on("moveend", function () {
+                if (!ctrl.enabled) {
+                  return;
+                }
                 ctrl.refresh();
-              } else {
-                ctrl.hoverInteration.getFeatures().clear();
-              }
-            });
+              });
 
-            // refresh features on map move
-            var mapEventKey = ctrl.map.on("moveend", function () {
-              if (!ctrl.enabled) {
-                return;
-              }
-              ctrl.refresh();
-            });
+              // unbind event & remove layer on destroy
+              $scope.$on("$destroy", function () {
+                ctrl.map.un(mapEventKey);
+                ctrl.map.removeLayer(ctrl.layer);
+                ctrl.map.removeInteraction(ctrl.hoverInteration);
+                ctrl.map.removeInteraction(ctrl.overlay);
+              });
 
-            // unbind event & remove layer on destroy
-            $scope.$on("$destroy", function () {
-              ctrl.map.un(mapEventKey);
-              ctrl.map.removeLayer(ctrl.layer);
-              ctrl.map.removeInteraction(ctrl.hoverInteration);
-              ctrl.map.removeInteraction(ctrl.overlay);
-            });
-
-            // adjust ES request based on current filters
-            // (skip the initial watch trigger)
-            function reload(newValue, oldValue) {
-              if (!ctrl.enabled || oldValue === undefined) {
-                return;
+              // adjust ES request based on current filters
+              // (skip the initial watch trigger)
+              function reload(newValue, oldValue) {
+                if (!ctrl.enabled || oldValue === undefined) {
+                  return;
+                }
+                ctrl.refresh();
               }
-              ctrl.refresh();
-            }
-            $scope.$watch("ctrl.filter", reload, true);
+
+              $scope.$watch("ctrl.filter", reload, true);
+            };
           }
         ],
         link: function (scope, element, attrs) {

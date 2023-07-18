@@ -68,9 +68,12 @@
     <tag name="gmd:descriptiveKeywords" context="gmd:MD_DataIdentification|srv:SV_ServiceIdentification"
          groupBy="*/gmd:thesaurusName/*/gmd:title/*/text()"
          merge="gmd:keyword"/>
-    <tag name="gmd:extent" context="gmd:MD_DataIdentification|srv:SV_ServiceIdentification"
-         groupBy="*/(gmd:geographicElement|gmd:temporalElement)"
-         merge="gmd:geographicElement|gmd:temporalElement"/>
+    <tag name="gmd:geographicElement" context="gmd:EX_Extent"
+         groupBy="*"
+         merge="."/>
+    <tag name="gmd:temporalElement" context="gmd:EX_Extent"
+         groupBy="*"
+         merge="."/>
     <!-- TODO: gmd:language can be in various places. -->
     <tag name="gmd:language" context="gmd:MD_DataIdentification|srv:SV_ServiceIdentification"
          groupBy="gmd:LanguageCode/@codeListValue"
@@ -191,10 +194,14 @@
         <xsl:with-param name="name" select="'gmd:topicCategory'"/>
       </xsl:call-template>
       <xsl:apply-templates select="gmd:environmentDescription" mode="expand"/>
-      <xsl:call-template name="copyOrAddElement">
-        <xsl:with-param name="elements" select="gmd:extent"/>
-        <xsl:with-param name="name" select="'gmd:extent'"/>
-      </xsl:call-template>
+
+      <gmd:extent>
+        <gmd:EX_Extent>
+          <gmd:geographicElement/>
+          <gmd:temporalElement/>
+        </gmd:EX_Extent>
+      </gmd:extent>
+
       <xsl:apply-templates select="gmd:supplementalInformation" mode="expand"/>
 
       <xsl:apply-templates select="srv:*" mode="expand"/>
@@ -202,6 +209,36 @@
       <xsl:apply-templates select="*[namespace-uri()!='http://www.isotc211.org/2005/gmd' and
                                      namespace-uri()!='http://www.isotc211.org/2005/srv']"
                            mode="expand"/>
+    </xsl:copy>
+  </xsl:template>
+
+  <xsl:template match="gmd:identificationInfo/*/gmd:citation/*" mode="expand">
+    <xsl:copy>
+      <xsl:copy-of select="@*"/>
+      <xsl:apply-templates select="gmd:title
+                                   |gmd:alternateTitle"
+                           mode="expand"/>
+
+      <xsl:for-each-group select="$existingMembers//gmd:MD_Metadata/gmd:identificationInfo
+            /*/gmd:citation/*/gmd:date[*/gmd:dateType/*/@codeListValue = 'publication']"
+                          group-by="*/gmd:date/gco:*">
+        <xsl:sort select="*/gmd:date/gco:*" order="descending"/>
+
+        <xsl:if test="position() = 1">
+          <xsl:copy-of select="."/>
+        </xsl:if>
+      </xsl:for-each-group>
+
+      <xsl:apply-templates select="gmd:edition
+                                   |gmd:editionDate
+                                   |gmd:identifier
+                                   |gmd:citedResponsibleParty
+                                   |gmd:presentationForm
+                                   |gmd:series
+                                   |gmd:otherCitationDetails
+                                   |gmd:collectiveTitle
+                                   |gmd:ISBN
+                                   |gmd:ISSN" mode="expand"/>
     </xsl:copy>
   </xsl:template>
 

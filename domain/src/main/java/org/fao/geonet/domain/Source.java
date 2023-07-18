@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2020 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2022 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -24,17 +24,19 @@
 package org.fao.geonet.domain;
 
 import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.domain.converter.BooleanToYNConverter;
 import org.fao.geonet.entitylistener.SourceEntityListenerManager;
 import org.fao.geonet.repository.LanguageRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.annotation.Nonnull;
 import javax.persistence.*;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
  * Entity representing a source catalogue.
- *
+ * <p>
  * A source is created for the default catalogue,
  * when a harvester is created,
  * when a MEF is imported flagging an external catalogue,
@@ -60,6 +62,7 @@ public class Source extends Localized {
     private String serviceRecord;
     private ISODate creationDate = new ISODate();
     private Integer groupOwner;
+    private Boolean listableInHeaderSelector = true;
 
     /**
      * Default constructor.  Required by framework.
@@ -69,9 +72,10 @@ public class Source extends Localized {
 
     /**
      * Convenience constructor for quickly making a Source object.
-     *  @param uuid  the uuid of the source (also the ID)
-     * @param name  the name
-     * @param type
+     *
+     * @param uuid the uuid of the source (also the ID)
+     * @param name the name.
+     * @param type the type of source (harvester, subportal...).
      */
     public Source(String uuid, String name, Map<String, String> translations, SourceType type) {
         this._uuid = uuid;
@@ -134,11 +138,13 @@ public class Source extends Localized {
         this._name = name;
         return this;
     }
+
     @Override
     @ElementCollection(fetch = FetchType.LAZY, targetClass = String.class)
     @CollectionTable(joinColumns = @JoinColumn(name = "idDes"), name = "SourcesDes")
     @MapKeyColumn(name = "langId", length = 5)
     @Column(name = "label", nullable = false, length = 255)
+    @Nonnull
     public Map<String, String> getLabelTranslations() {
         return super.getLabelTranslations();
     }
@@ -147,13 +153,8 @@ public class Source extends Localized {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         Source source = (Source) o;
-
-        if (_name != null ? !_name.equals(source._name) : source._name != null) return false;
-        if (_uuid != null ? !_uuid.equals(source._uuid) : source._uuid != null) return false;
-
-        return true;
+        return Objects.equals(_uuid, source._uuid) && Objects.equals(_name, source._name);
     }
 
     @Override
@@ -166,6 +167,7 @@ public class Source extends Localized {
     /**
      * Property indicating if the source is the local catalogue,
      * an external one, a harvester source or a sub portal.
+     *
      * @return
      */
     @Column(nullable = true, name = "type")
@@ -181,6 +183,7 @@ public class Source extends Localized {
 
     /**
      * Only applies to subportal.
+     *
      * @return
      */
     public String getLogo() {
@@ -195,6 +198,7 @@ public class Source extends Localized {
 
     /**
      * Only applies to subportal.
+     *
      * @return
      */
     public String getFilter() {
@@ -208,6 +212,7 @@ public class Source extends Localized {
 
     /**
      * Only applies to subportal.
+     *
      * @return
      */
     public String getUiConfig() {
@@ -250,6 +255,7 @@ public class Source extends Localized {
      * Get the group id that this subportal is managed by.
      * When assigning a subportal to a group, user admin of that group
      * can manage it.
+     *
      * @return the group that owns this source.
      */
     @Column(name = "groupOwner")
@@ -262,6 +268,7 @@ public class Source extends Localized {
         return this;
     }
 
+
     @Column(name = "serviceRecord")
     public String getServiceRecord() {
         return serviceRecord;
@@ -269,5 +276,15 @@ public class Source extends Localized {
 
     public void setServiceRecord(String serviceRecord) {
         this.serviceRecord = serviceRecord;
+    }
+
+    @Column(name = "isListableInHeaderSelector", nullable = false, length = 1, columnDefinition="CHAR(1) DEFAULT 'y'")
+    @Convert(converter = BooleanToYNConverter.class)
+    public boolean isListableInHeaderSelector() {
+        return this.listableInHeaderSelector;
+    }
+
+    public void setListableInHeaderSelector(Boolean listableInHeaderSelector) {
+        this.listableInHeaderSelector = listableInHeaderSelector;
     }
 }

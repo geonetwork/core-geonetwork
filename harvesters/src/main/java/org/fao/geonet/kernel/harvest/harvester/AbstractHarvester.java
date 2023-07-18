@@ -26,7 +26,6 @@ package org.fao.geonet.kernel.harvest.harvester;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
-import org.apache.logging.log4j.ThreadContext;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.exceptions.InvalidParameterValueEx;
@@ -62,6 +61,7 @@ import org.fao.geonet.repository.specification.HarvestHistorySpecs;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.resources.Resources;
 import org.fao.geonet.services.harvesting.notifier.SendNotification;
+import org.fao.geonet.util.LogUtil;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.QuartzSchedulerUtils;
 import org.jdom.Element;
@@ -82,13 +82,11 @@ import java.io.File;
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -178,52 +176,6 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
         this.harvesterSettingsManager = context.getBean(HarvesterSettingsManager.class);
         this.settingManager = context.getBean(SettingManager.class);
         this.metadataManager = context.getBean(IMetadataManager.class);
-    }
-
-    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmm");
-
-    /**
-     * Used to configure Log4J to route harvester messages to an individual file.
-     * <p>
-     * This method has the side effect of setting Log4J ThreadContext values:
-     * <ul>
-     *     <li>harvester</li>
-     *     <li>logfile</li>
-     *     <li>timeZone</li>
-     * </ul>
-     * <p>
-     * Log4J checks for {@code ThreadContext.put("logfile", name)} to route messages
-     * the logfile location.
-     *
-     * @return the location of the logfile
-     */
-    private String initializeLog() {
-
-        // configure personalized logger
-        String packagename = getClass().getPackage().getName();
-        String[] packages = packagename.split("\\.");
-        String packageType = packages[packages.length - 1];
-
-
-        // Filename safe representation of harvester name (using '_' as needed).
-        final String harvesterName = this.getParams().getName().replaceAll("\\W+", "_");
-
-        String logfile = "harvester_"
-            + packageType
-            + "_" + harvesterName
-            + "_" + dateFormat.format(new Date(System.currentTimeMillis()))
-            + ".log";
-
-        String timeZoneSetting = settingManager.getValue(Settings.SYSTEM_SERVER_TIMEZONE);
-        if (StringUtils.isBlank(timeZoneSetting)) {
-            timeZoneSetting = TimeZone.getDefault().getID();
-        }
-
-        ThreadContext.put("harvest", harvesterName);
-        ThreadContext.putIfNull("logfile", logfile);
-        ThreadContext.put("timeZone", timeZoneSetting);
-
-        return logfile;
     }
 
     public void add(Element node) throws BadInputEx, SQLException {
@@ -652,7 +604,7 @@ public abstract class AbstractHarvester<T extends HarvestResult, P extends Abstr
                 running = true;
                 cancelMonitor.set(false);
                 try {
-                    String logfile = initializeLog();
+                    String logfile = LogUtil.initializeHarvesterLog(getType(), this.getParams().getName());
 
                     this.log.info("Starting harvesting of " + this.getParams().getName());
                     error = null;

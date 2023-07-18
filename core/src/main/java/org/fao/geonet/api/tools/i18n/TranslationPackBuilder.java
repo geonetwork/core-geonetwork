@@ -118,7 +118,7 @@ public class TranslationPackBuilder {
     public Map<String, String> getPack(
         String language, String key,
         ServiceContext context) {
-        HashMap<String, String> translations = new HashMap<>();
+        Map<String, String> translations = new HashMap<>();
         if (packages.get(key) != null) {
             packages.get(key).forEach(resource -> {
                 String[] config = resource.split(TYPE_SEPARATOR);
@@ -173,7 +173,7 @@ public class TranslationPackBuilder {
     public Map<String, String> getStandardCodelist(
         String language, String schema, List<String> codelist,
         ServiceContext context) {
-        HashMap<String, String> translations = new HashMap<>();
+        Map<String, String> translations = new HashMap<>();
         context.setLanguage(language);
 
         for (String c : codelist) {
@@ -195,78 +195,65 @@ public class TranslationPackBuilder {
 
     @Cacheable(value = "translations", cacheManager = "cacheManager")
     public Map<String, String> getDbTranslation(String language, List<String> type) {
-        HashMap<String, String> translations = new HashMap<>();
+        Map<String, String> translations = new HashMap<>();
 
         validateDbType(type);
 
         if (type == null || type.contains("StatusValue")) {
             List<StatusValue> valueList = statusValueRepository.findAll();
-            Iterator<StatusValue> valueIterator = valueList.iterator();
-            while (valueIterator.hasNext()) {
-                StatusValue entity = valueIterator.next();
-                translations.put("status-" + entity.getId() + "",
-                    getLabelOrKey(entity, language, entity.getId() + ""));
+            for (StatusValue entity : valueList) {
+                String label = getLabelOrKey(entity, language, entity.getId() + "");
+                translations.put("status-" + entity.getId(), label);
+                translations.put("status-" + entity.getName(), label);
             }
         }
 
         if (type == null || type.contains("MetadataCategory")) {
             List<MetadataCategory> metadataCategoryList = categoryRepository.findAll();
-            Iterator<MetadataCategory> metadataCategoryIterator = metadataCategoryList.iterator();
-            while (metadataCategoryIterator.hasNext()) {
-                MetadataCategory entity = metadataCategoryIterator.next();
-                translations.put("cat-" + entity.getName() + "",
+            for (MetadataCategory entity : metadataCategoryList) {
+                translations.put("cat-" + entity.getName(),
                     getLabelOrKey(entity, language, entity.getName()));
             }
         }
 
         if (type == null || type.contains("Group")) {
             List<Group> groupList = groupRepository.findAll();
-            Iterator<Group> groupIterator = groupList.iterator();
-            while (groupIterator.hasNext()) {
-                Group entity = groupIterator.next();
-                translations.put("group-" + entity.getId() + "",
+            for (Group entity : groupList) {
+                translations.put("group-" + entity.getId(),
                     getLabelOrKey(entity, language, entity.getName()));
             }
         }
 
         if (type == null || type.contains("Operation")) {
             List<Operation> operationList = operationRepository.findAll();
-            Iterator<Operation> operationIterator = operationList.iterator();
-            while (operationIterator.hasNext()) {
-                Operation entity = operationIterator.next();
-                translations.put("op-" + entity.getId() + "",
-                    getLabelOrKey(entity, language, entity.getId() + ""));
-                translations.put("op-" + entity.getName() + "",
+            for (Operation entity : operationList) {
+                translations.put("op-" + entity.getId(),
+                    getLabelOrKey(entity, language, String.valueOf(entity.getId())));
+                translations.put("op-" + entity.getName(),
                     getLabelOrKey(entity, language, entity.getName()));
             }
         }
 
         if (type == null || type.contains("Source")) {
             List<Source> sourceList = sourceRepository.findAll();
-            Iterator<Source> sourceIterator = sourceList.iterator();
-            while (sourceIterator.hasNext()) {
-                Source entity = sourceIterator.next();
-                translations.put("source-" + entity.getUuid() + "",
+            for (Source entity : sourceList) {
+                translations.put("source-" + entity.getUuid(),
                     getLabelOrKey(entity, language, entity.getUuid()));
             }
         }
 
         if (type == null || type.contains("Schematron")) {
             List<Schematron> schematronList = schematronRepository.findAll();
-            Iterator<Schematron> schematronIterator = schematronList.iterator();
-            while (schematronIterator.hasNext()) {
-                Schematron entity = schematronIterator.next();
-                translations.put("sch-" + entity.getRuleName() + "",
+            for (Schematron entity : schematronList) {
+                translations.put("sch-" + entity.getRuleName(),
                     getLabelOrKey(entity, language, entity.getRuleName()));
             }
         }
 
         if (type == null || type.contains("IsoLanguage")) {
             List<IsoLanguage> isoLanguageList = isoLanguageRepository.findAll();
-            Iterator<IsoLanguage> isoLanguageIterator = isoLanguageList.iterator();
-            while (isoLanguageIterator.hasNext()) {
-                IsoLanguage entity = isoLanguageIterator.next();
-                translations.put("lang-" + entity.getCode() + "",
+            for (IsoLanguage entity : isoLanguageList) {
+                translations.put("lang-" + entity.getCode(),
                     getLabelOrKey(entity, language, entity.getCode()));
             }
         }
@@ -282,7 +269,7 @@ public class TranslationPackBuilder {
     public Map<String, String> getJsonTranslation(
         String language,
         List<String> fileNameKeys) {
-        HashMap<String, String> translations = new HashMap<>();
+        Map<String, String> translations = new HashMap<>();
         ObjectMapper mapper = new ObjectMapper();
         String iso2letterLangCode = XslUtil.twoCharLangCode(language, "eng");
 

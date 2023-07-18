@@ -35,7 +35,10 @@ import org.fao.geonet.kernel.ApplicableSchematron;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchematronValidator;
 import org.fao.geonet.kernel.datamanager.base.BaseMetadataSchemaUtils;
+import org.fao.geonet.kernel.datamanager.base.BaseMetadataUtils;
 import org.fao.geonet.kernel.schema.MetadataSchema;
+import org.fao.geonet.kernel.schema.SavedQuery;
+import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.SchematronRepository;
 import org.fao.geonet.utils.Log;
@@ -53,6 +56,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.fao.geonet.doi.client.DoiMedraClient.MEDRA_SEARCH_KEY;
+
 /**
  * Class to register/unregister DOIs using the Datacite Metadata Store (MDS) API.
  *
@@ -65,19 +70,24 @@ public class DoiManager {
     private static final String DOI_ADD_XSL_PROCESS = "process/doi-add.xsl";
     private static final String DOI_REMOVE_XSL_PROCESS = "process/doi-remove.xsl";
     public static final String DATACITE_XSL_CONVERSION_FILE = "formatter/datacite/view.xsl";
+    public static final String DATACITE_MEDRA_XSL_CONVERSION_FILE = "formatter/eu-po-doi/view.xsl";
     public static final String DOI_ID_PARAMETER = "doiId";
     public static final String DOI_DEFAULT_URL = "https://doi.org/";
     public static final String DOI_DEFAULT_PATTERN = "{{uuid}}";
 
-    private DoiClient client;
+    private IDoiClient client;
     private String doiPrefix;
     private String doiPattern;
     private String landingPageTemplate;
     private boolean initialised = false;
+    private boolean isMedra = false;
 
     DataManager dm;
     SettingManager sm;
     BaseMetadataSchemaUtils schemaUtils;
+
+    @Autowired
+    BaseMetadataUtils metadataUtils;
 
     @Autowired
     SchematronValidator validator;
@@ -88,7 +98,6 @@ public class DoiManager {
     @Autowired
     SchematronRepository schematronRepository;
 
-    public static final String DOI_GET_SAVED_QUERY = "doi-get";
 
     public DoiManager() {
         sm = ApplicationContextHolder.get().getBean(SettingManager.class);
@@ -148,12 +157,14 @@ public class DoiManager {
                 }
                 Log.warning(DoiSettings.LOGGER_NAME,
                     report.toString());
-                this.initialised = false;
             } else {
                 Log.debug(DoiSettings.LOGGER_NAME,
                     "DOI configuration looks perfect.");
-                // TODO: Check connection ?
-                this.client = new DoiClient(serverUrl, username, password, doiPublicUrl);
+                isMedra = serverUrl.contains(MEDRA_SEARCH_KEY);
+                this.client =
+                    isMedra ?
+                    new DoiMedraClient(serverUrl, username, password, doiPublicUrl) :
+                    new DoiDataciteClient(serverUrl, username, password, doiPublicUrl);
                 initialised = true;
             }
         }
@@ -244,10 +255,8 @@ public class DoiManager {
         }
 
         // Record MUST not contains a DOI
-        final MetadataSchema schema = schemaUtils.getSchema(metadata.getDataInfo().getSchemaId());
-        Element xml = metadata.getXmlData(false);
         try {
-            String currentDoi = schema.queryString(DOI_GET_SAVED_QUERY, xml);
+            String currentDoi = metadataUtils.getDoi(metadata.getUuid());
             if (StringUtils.isNotEmpty(currentDoi)) {
                 // Current doi does not match the one going to be inserted. This is odd
                 String newDoi = client.createPublicUrl(doi);
@@ -273,6 +282,7 @@ public class DoiManager {
                         new String[]{ metadata.getUuid(), currentDoi, currentDoi });
             }
         } catch (ResourceNotFoundException e) {
+            final MetadataSchema schema = schemaUtils.getSchema(metadata.getDataInfo().getSchemaId());
             // Schema not supporting DOI extraction and needs to be configured
             // Check bean configuration which should contains something like
             //            <bean class="org.fao.geonet.kernel.schema.SavedQuery">
@@ -285,12 +295,12 @@ public class DoiManager {
                     "with id '%s' to retrieve the DOI. Error is %s. " +
                     "Check the schema %sSchemaPlugin and add the DOI get query.",
                 metadata.getUuid(), schema.getName(),
-                DOI_GET_SAVED_QUERY, e.getMessage(),
+                SavedQuery.DOI_GET, e.getMessage(),
                 schema.getName()))
                 .withMessageKey("exception.doi.missingSavedquery")
                 .withDescriptionKey("exception.doi.missingSavedquery.description",
                     new String[]{ metadata.getUuid(), schema.getName(),
-                    DOI_GET_SAVED_QUERY, e.getMessage(),
+                    SavedQuery.DOI_GET, e.getMessage(),
                     schema.getName() });
         }
     }
@@ -329,11 +339,9 @@ public class DoiManager {
             namespaces.add(Geonet.Namespaces.SVRL);
             List<?> failures = Xml.selectNodes(rules, ".//svrl:failed-assert/svrl:text/*", namespaces);
             StringBuilder message = new StringBuilder();
-            if (failures.size() > 0) {
+            if (!failures.isEmpty()) {
                 message.append("<ul>");
-                failures.forEach(f -> {
-                    message.append("<li>").append(((Element)f).getTextNormalize()).append("</li>");
-                });
+                failures.forEach(f -> message.append("<li>").append(((Element)f).getTextNormalize()).append("</li>"));
                 message.append("</ul>");
 
                 throw new DoiClientException(String.format(
@@ -408,12 +416,11 @@ public class DoiManager {
 
         // ** Validate output ? XSD
         // ** POST metadata
-        // 201 Created: operation successful,
+        // 201 Created: operation successful for Datacite,
+        // 200 Ok: operation successful for Medra,
         client.createDoiMetadata(doiInfo.get("doi"), Xml.getString(dataciteMetadata));
 
-
-        // Register the URL
-        // 201 Created: operation successful;
+        // Register the URL for Datacite
         String landingPage = landingPageTemplate.replace(
                         "{{uuid}}", metadata.getUuid());
         doiInfo.put("doiLandingPage", landingPage);
@@ -426,10 +433,9 @@ public class DoiManager {
         Element recordWithDoi = setDOIValue(doiInfo.get("doi"), metadata.getDataInfo().getSchemaId(), metadata.getXmlData(false));
         // Update the published copy
         //--- needed to detach md from the document
-//        md.detach();
 
-        dm.updateMetadata(context, metadata.getId() + "", recordWithDoi, false, true, true,
-            context.getLanguage(), new ISODate().toString(), true);
+        dm.updateMetadata(context, metadata.getId() + "", recordWithDoi, false, true,
+            context.getLanguage(), new ISODate().toString(), true, IndexingMode.full);
     }
 
 
@@ -440,7 +446,7 @@ public class DoiManager {
      */
     private void checkDoiCreation(AbstractMetadata metadata, Map<String, String> doi) {
         // Check it is available on DataCite Metadata Store
-        // curl -X GET --user INIST.IFREMER https://mds.test.datacite.org/metadata/10.5072/GN2
+        // curl -X GET --user USER https://mds.test.datacite.org/metadata/10.5072/GN2
         // Check it is in the record
     }
 
@@ -459,17 +465,15 @@ public class DoiManager {
 
         try {
             Element md = metadata.getXmlData(false);
-
-            String doiUrl = schemaUtils.getSchema(metadata.getDataInfo().getSchemaId())
-                .queryString(DOI_GET_SAVED_QUERY, md);
+            String doiUrl = metadataUtils.getDoi(metadata.getUuid());
 
             client.deleteDoiMetadata(doi);
             client.deleteDoi(doi);
 
             Element recordWithoutDoi = removeDOIValue(doiUrl, metadata.getDataInfo().getSchemaId(), md);
 
-            dm.updateMetadata(context, metadata.getId() + "", recordWithoutDoi, false, true, true,
-                context.getLanguage(), new ISODate().toString(), true);
+            dm.updateMetadata(context, metadata.getId() + "", recordWithoutDoi, false, true,
+                context.getLanguage(), new ISODate().toString(), true, IndexingMode.full);
         } catch (Exception ex) {
             throw new DoiClientException(ex.getMessage());
         }
@@ -520,17 +524,17 @@ public class DoiManager {
      * @throws Exception if there is no conversion available.
      */
     private Element convertXmlToDataCiteFormat(String schema, Element md, String doi) throws Exception {
-        final Path styleSheet = dm.getSchemaDir(schema).resolve(DATACITE_XSL_CONVERSION_FILE);
+        final Path styleSheet = dm.getSchemaDir(schema).resolve(
+            isMedra ? DATACITE_MEDRA_XSL_CONVERSION_FILE : DATACITE_XSL_CONVERSION_FILE);
         final boolean exists = Files.exists(styleSheet);
         if (!exists) {
             throw new DoiClientException(String.format("To create a DOI, the record needs to be converted to the DataCite format (https://schema.datacite.org/). You need to create a formatter for this in schema_plugins/%s/%s. If the standard is a profile of ISO19139, you can simply point to the ISO19139 formatter.",
                 schema, DATACITE_XSL_CONVERSION_FILE));
-        };
+        }
 
-        Map<String,Object> params = new HashMap<String,Object>();
+        Map<String,Object> params = new HashMap<>();
         params.put(DOI_ID_PARAMETER, doi);
-        Element dataciteMetadata = Xml.transform(md, styleSheet, params);
-        return dataciteMetadata;
+        return Xml.transform(md, styleSheet, params);
     }
 
     private void checkInitialised() throws DoiClientException {

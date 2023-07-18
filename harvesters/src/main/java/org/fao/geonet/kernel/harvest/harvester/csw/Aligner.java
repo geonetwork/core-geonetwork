@@ -23,9 +23,12 @@
 
 package org.fao.geonet.kernel.harvest.harvester.csw;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
+import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.search.SearchHit;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
@@ -39,12 +42,7 @@ import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.exceptions.OperationAbortedEx;
-import org.fao.geonet.kernel.AddElemValue;
-import org.fao.geonet.kernel.BatchEditParameter;
-import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.EditLib;
-import org.fao.geonet.kernel.SchemaManager;
-import org.fao.geonet.kernel.UpdateDatestamp;
+import org.fao.geonet.kernel.*;
 import org.fao.geonet.kernel.datamanager.IMetadataIndexer;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
@@ -57,11 +55,12 @@ import org.fao.geonet.kernel.harvest.harvester.HarvesterUtil;
 import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
 import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
 import org.fao.geonet.kernel.schema.MetadataSchema;
+import org.fao.geonet.kernel.search.EsSearchManager;
+import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
-import org.jdom.Namespace;
 import org.jdom.xpath.XPath;
 
 import javax.transaction.Transactional;
@@ -69,17 +68,10 @@ import javax.transaction.Transactional.TxType;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import static org.fao.geonet.kernel.search.EsSearchManager.FIELDLIST_UUID;
 import static org.fao.geonet.kernel.setting.Settings.SYSTEM_CSW_TRANSACTION_XPATH_UPDATE_CREATE_NEW_ELEMENTS;
 import static org.fao.geonet.utils.AbstractHttpRequest.Method.GET;
 import static org.fao.geonet.utils.AbstractHttpRequest.Method.POST;
@@ -102,8 +94,9 @@ public class Aligner extends BaseAligner<CswParams> {
     private HarvestResult result;
     private GetRecordByIdRequest request;
     private String processName;
-    private Map<String, Object> processParams = new HashMap<String, Object>();
+    private Map<String, Object> processParams = new HashMap<>();
     private Logger log;
+    private EsSearchManager searchManager;
 
     public Aligner(AtomicBoolean cancelMonitor, ServiceContext sc, CswServer server, CswParams params, Logger log) throws OperationAbortedEx {
         super(cancelMonitor);
@@ -116,6 +109,7 @@ public class Aligner extends BaseAligner<CswParams> {
         metadataUtils = gc.getBean(IMetadataUtils.class);
         metadataManager = gc.getBean(IMetadataManager.class);
         metadataIndexer = gc.getBean(IMetadataIndexer.class);
+        searchManager = gc.getBean(EsSearchManager.class);
         result = new HarvestResult();
         result.unretrievable = 0;
         result.uuidSkipped = 0;
@@ -223,6 +217,7 @@ public class Aligner extends BaseAligner<CswParams> {
                         case SKIP:
                             log.debug("Skipping record with uuid " + ri.uuid);
                             result.uuidSkipped++;
+                            break;
                         default:
                             break;
                     }
@@ -275,7 +270,14 @@ public class Aligner extends BaseAligner<CswParams> {
     }
 
 
-    private void addMetadata(RecordInfo ri, String uuid) throws Exception {
+    /**
+     * Adds a new metadata.
+     *
+     * @param ri                Metadata information.
+     * @param uuidToAssign      UUID to assign. It can be different from ri.uuid, depending on the override uuid policy.
+     * @throws Exception
+     */
+    private void addMetadata(RecordInfo ri, String uuidToAssign) throws Exception {
         if (cancelMonitor.get()) {
             return;
         }
@@ -295,7 +297,7 @@ public class Aligner extends BaseAligner<CswParams> {
         }
 
         if (StringUtils.isNotEmpty(params.xpathFilter)) {
-            Object xpathResult = Xml.selectSingle(md, params.xpathFilter, new ArrayList<Namespace>(dataMan.getSchema(schema).getNamespaces()));
+            Object xpathResult = Xml.selectSingle(md, params.xpathFilter, new ArrayList<>(dataMan.getSchema(schema).getNamespaces()));
             boolean match = xpathResult instanceof Boolean && ((Boolean) xpathResult).booleanValue();
             if(!match) {
                 result.xpathFilterExcluded ++;
@@ -305,27 +307,41 @@ public class Aligner extends BaseAligner<CswParams> {
 
         log.debug("  - Adding metadata with remote uuid:" + ri.uuid + " schema:" + schema);
 
-        String mdUuid = ri.uuid;
+        // If the xslfilter process changes the metadata uuid,
+        // use that uuid (newMdUuid) for the new metadata to add to the catalogue.
+        String newMdUuid = null;
         if (!params.xslfilter.equals("")) {
             md = processMetadata(context, md, processName, processParams);
             schema = dataMan.autodetectSchema(md);
             // Get new uuid if modified by XSLT process
-            mdUuid = metadataUtils.extractUUID(schema, md);
-            if (mdUuid == null) {
-                mdUuid = ri.uuid;
-            }
+            newMdUuid = metadataUtils.extractUUID(schema, md);
         }
 
-        applyBatchEdits(ri.uuid, md, schema, params.getBatchEdits(), context, log);
+        boolean newMdUuidFromXslt = !StringUtils.isBlank(newMdUuid);
+
+        if (!newMdUuidFromXslt) {
+            applyBatchEdits(ri.uuid, md, schema, params.getBatchEdits(), context, log);
+        } else {
+            applyBatchEdits(newMdUuid, md, schema, params.getBatchEdits(), context, log);
+
+        }
 
         //
         // insert metadata
         //
         AbstractMetadata metadata = new Metadata();
-        metadata.setUuid(uuid);
-        if (!uuid.equals(ri.uuid)) {
-            md = metadataUtils.setUUID(schema, uuid, md);
+
+        if (newMdUuidFromXslt) {
+            // Use the UUID from the xslt
+            metadata.setUuid(newMdUuid);
+        } else {
+            // Use the uuid provided in the uuidToAssign parameter
+            metadata.setUuid(uuidToAssign);
+            if (!uuidToAssign.equals(ri.uuid)) {
+                md = metadataUtils.setUUID(schema, uuidToAssign, md);
+            }
         }
+
         Integer ownerId = getOwner();
         metadata.getDataInfo().
             setSchemaId(schema).
@@ -345,13 +361,13 @@ public class Aligner extends BaseAligner<CswParams> {
 
         addCategories(metadata, params.getCategories(), localCateg, context, null, false);
 
-        metadata = metadataManager.insertMetadata(context, metadata, md, false, false, UpdateDatestamp.NO, false, false);
+        metadata = metadataManager.insertMetadata(context, metadata, md, IndexingMode.none, false, UpdateDatestamp.NO, false, false);
 
         String id = String.valueOf(metadata.getId());
 
         addPrivileges(id, params.getPrivileges(), localGroups, context);
 
-        metadataIndexer.indexMetadata(id, true);
+        metadataIndexer.indexMetadata(id, true, IndexingMode.full);
         result.addedMetadata++;
     }
 
@@ -363,12 +379,12 @@ public class Aligner extends BaseAligner<CswParams> {
 
             BatchEditParameter[] listOfUpdates = mapper.readValue(batchEdits, BatchEditParameter[].class);
             if (listOfUpdates.length > 0) {
-                SchemaManager _schemaManager = context.getBean(SchemaManager.class);
-                EditLib editLib = new EditLib(_schemaManager);
+                SchemaManager schemaManager = context.getBean(SchemaManager.class);
+                EditLib editLib = new EditLib(schemaManager);
                 boolean metadataChanged = false;
                 boolean createXpathNodeIfNotExists =
                     context.getBean(SettingManager.class).getValueAsBool(SYSTEM_CSW_TRANSACTION_XPATH_UPDATE_CREATE_NEW_ELEMENTS);
-                MetadataSchema metadataSchema = _schemaManager.getSchema(schema);
+                MetadataSchema metadataSchema = schemaManager.getSchema(schema);
 
                 Iterator<BatchEditParameter> listOfUpdatesIterator =
                     Arrays.asList(listOfUpdates).iterator();
@@ -415,7 +431,7 @@ public class Aligner extends BaseAligner<CswParams> {
             } else {
                 log.debug("  - Updating local metadata for uuid:" + ri.uuid);
                 if (updatingLocalMetadata(ri, id, force)) {
-                    metadataIndexer.indexMetadata(id, true);
+                    metadataIndexer.indexMetadata(id, true, IndexingMode.full);
                     result.updatedMetadata++;
                 }
             }
@@ -434,7 +450,7 @@ public class Aligner extends BaseAligner<CswParams> {
         String schema = dataMan.autodetectSchema(md, null);
 
         if (StringUtils.isNotEmpty(params.xpathFilter)) {
-            Object xpathResult = Xml.selectSingle(md, params.xpathFilter, new ArrayList<Namespace>(dataMan.getSchema(schema).getNamespaces()));
+            Object xpathResult = Xml.selectSingle(md, params.xpathFilter, new ArrayList<>(dataMan.getSchema(schema).getNamespaces()));
             boolean match = xpathResult instanceof Boolean && ((Boolean) xpathResult).booleanValue();
             if(!match) {
                 result.xpathFilterExcluded ++;
@@ -452,15 +468,11 @@ public class Aligner extends BaseAligner<CswParams> {
 
         applyBatchEdits(ri.uuid, md, schema, params.getBatchEdits(), context, log);
 
-        //
-        // update metadata
-        //
+
         boolean validate = false;
         boolean ufo = false;
-        boolean index = false;
         String language = context.getLanguage();
-
-        final AbstractMetadata metadata = metadataManager.updateMetadata(context, id, md, validate, ufo, index, language, ri.changeDate, true);
+        final AbstractMetadata metadata = metadataManager.updateMetadata(context, id, md, validate, ufo, language, ri.changeDate, true, IndexingMode.none);
 
         if (force || updateSchema) {
             if (force) {
@@ -506,7 +518,7 @@ public class Aligner extends BaseAligner<CswParams> {
 
             //--- maybe the metadata has been removed
 
-            if (list.size() == 0) {
+            if (list.isEmpty()) {
                 return null;
             }
 
@@ -566,8 +578,6 @@ public class Aligner extends BaseAligner<CswParams> {
 
         if (schema != null && schema.startsWith("iso19139")) {
             String resourceIdentifierXPath = "gmd:identificationInfo/*/gmd:citation/gmd:CI_Citation/gmd:identifier/*/gmd:code/gco:CharacterString";
-            String resourceIdentifierLuceneIndexField = "identifier";
-            String defaultLanguage = "eng";
 
             try {
                 // Extract resource identifier
@@ -576,7 +586,7 @@ public class Aligner extends BaseAligner<CswParams> {
                 xp.addNamespace("gco", "http://www.isotc211.org/2005/gco");
                 @SuppressWarnings("unchecked")
                 List<Element> resourceIdentifiers = xp.selectNodes(response);
-                if (resourceIdentifiers.size() > 0) {
+                if (!resourceIdentifiers.isEmpty()) {
                     // Check if the metadata to import has a resource identifier
                     // existing in current catalog for a record with a different UUID
 
@@ -586,20 +596,14 @@ public class Aligner extends BaseAligner<CswParams> {
                         String identifier = identifierNode.getTextTrim();
                         log.debug("    - Searching for duplicates for resource identifier: " + identifier);
 
-                        // TODOES
-                        Map<String, Map<String, String>> values = new HashMap<>();
-//                        Map<String, Map<String, String>> values = LuceneSearcher.getAllMetadataFromIndexFor(defaultLanguage, resourceIdentifierLuceneIndexField,
-//                            identifier, Collections.singleton("_uuid"), true);
+                        Set<String> values = retrieveMetadataUuidsFromIdentifier(searchManager, identifier, uuid);
                         log.debug("    - Number of resources with same identifier: " + values.size());
-                        for (Map<String, String> recordFieldValues : values.values()) {
-                            String indexRecordUuid = recordFieldValues.get("_uuid");
-                            if (!indexRecordUuid.equals(uuid)) {
-                                log.debug("      - UUID " + indexRecordUuid + " in index does not match harvested record UUID " + uuid);
-                                log.warning("      - Duplicates found. Skipping record with UUID " + uuid + " and resource identifier " + identifier);
 
-                                result.duplicatedResource++;
-                                return true;
-                            }
+                        if (!values.isEmpty()) {
+                            log.warning("      - Duplicates found. Skipping record with UUID " + uuid + " and resource identifier " + identifier);
+                            log.warning("      - Duplicates found. Metadata uuid resources with same resource identifier: " + String.join(",", values));
+                            result.duplicatedResource++;
+                            return true;
                         }
                     }
                 }
@@ -624,7 +628,7 @@ public class Aligner extends BaseAligner<CswParams> {
                                     Element md,
                                     String processName,
                                     Map<String, Object> processParams) {
-        Path filePath = context.getAppPath().resolve(Geonet.Path.STYLESHEETS).resolve("conversion/import").resolve(processName + ".xsl");
+        Path filePath = context.getBean(GeonetworkDataDirectory.class).getXsltConversion(processName);
         if (!Files.exists(filePath)) {
             log.debug("     processing instruction  " + processName + ". Metadata not filtered.");
         } else {
@@ -638,5 +642,44 @@ public class Aligner extends BaseAligner<CswParams> {
             }
         }
         return md;
+    }
+
+    /**
+     * Retrieves the list of metadata uuids that have the same dataset identifier.
+     *
+     * @param searchMan         ES search manager.
+     * @param datasetIdCode     Dataset identifier.
+     * @param metadataUuid      Metadata identifier to exclude from the search.
+     * @return  A list of metadata uuids that have the same dataset identifier.
+     */
+    private Set<String> retrieveMetadataUuidsFromIdentifier(EsSearchManager searchMan,
+                                                            String datasetIdCode,
+                                                            String metadataUuid) {
+
+         Set<String> metadataUuids = new HashSet<>();
+
+        String jsonQuery = " {" +
+            "       \"query_string\": {" +
+            "       \"query\": \"+resourceIdentifier.code:\\\"%s\\\" -uuid:\\\"%s\\\"\"" +
+            "       }" +
+            "}";
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            JsonNode esJsonQuery = objectMapper.readTree(String.format(jsonQuery, datasetIdCode, metadataUuid));
+
+            final SearchResponse queryResult = searchMan.query(
+                esJsonQuery,
+                FIELDLIST_UUID,
+                0, 1000);
+
+            for (SearchHit hit : queryResult.getHits()) {
+                String uuid = hit.getSourceAsMap().get(Geonet.IndexFieldNames.UUID).toString();
+                metadataUuids.add(uuid);
+            }
+
+        } catch (Exception ex) {
+            log.error("     retrieve metadata uuids from identifier  " + datasetIdCode + ".");
+        }
+        return metadataUuids;
     }
 }

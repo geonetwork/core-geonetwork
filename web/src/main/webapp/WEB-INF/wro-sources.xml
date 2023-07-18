@@ -25,6 +25,8 @@
          xsi:noNamespaceSchemaLocation="wro-sources.xsd">
   <include file="classpath:web-ui-wro-sources.xml"/>
   <require>
+    <!--pathOnDisk="web/target/geonetwork"-->
+
     <jsSource webappPath="{{schemaPluginsDir}}"/>
     <jsSource webappPath="{{formatterDir}}"/>
     <cssSource webappPath="{{schemaPluginsDir}}"/>

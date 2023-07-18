@@ -97,7 +97,8 @@
     "$http",
     "gnGlobalSettings",
     "Metadata",
-    function ($http, gnGlobalSettings, Metadata) {
+    "gnESFacet",
+    function ($http, gnGlobalSettings, Metadata, gnESFacet) {
       return {
         scope: {
           md: "=gnMoreLikeThis"
@@ -134,20 +135,8 @@
             };
 
           function buildQuery() {
-            var query = {
-              _source: {
-                include: [
-                  "id",
-                  "uuid",
-                  "overview.*",
-                  "resourceTitle*",
-                  "resourceAbstract*",
-                  "resourceType",
-                  "cl_status*"
-                ]
-              },
-              size: scope.size,
-              query: {
+            var query = gnESFacet.buildDefaultQuery(
+              {
                 bool: {
                   must: [
                     moreLikeThisQuery,
@@ -168,8 +157,10 @@
                     }
                   ]
                 }
-              }
-            };
+              },
+              scope.size
+            );
+
             query.query.bool.must[0].more_like_this.like = scope.md.resourceTitle;
 
             var resourceType = scope.md.resourceType
@@ -224,8 +215,7 @@
         scope: {
           md: "=gnDataPreview"
         },
-        templateUrl:
-          "../../catalog/components/search/mdview/partials/" + "datapreview.html",
+        templateUrl: "../../catalog/components/search/mdview/partials/datapreview.html",
         controller: [
           "$scope",
           "$timeout",
@@ -365,8 +355,8 @@
           scope.rateForRecord = function () {
             return $http
               .put("../api/records/" + scope.md.uuid + "/rate", scope.rate)
-              .success(function (data) {
-                scope.rate = data;
+              .then(function (response) {
+                scope.rate = response.data;
               });
           };
         }

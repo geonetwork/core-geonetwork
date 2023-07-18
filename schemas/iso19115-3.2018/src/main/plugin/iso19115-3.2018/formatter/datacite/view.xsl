@@ -123,6 +123,8 @@
 
   <xsl:variable name="metadata"
                 select="//mdb:MD_Metadata"/>
+  <xsl:variable name="metadataUuid"
+                select="$metadata/mdb:metadataIdentifier/*/mcc:code/*/text()"/>
 
   <!-- TODO: Convert language code eng > en_US ? -->
   <xsl:variable name="metadataLanguage"
@@ -162,7 +164,7 @@
         </xsl:when>
         <xsl:otherwise>
           <!-- Build a new one -->
-          <xsl:value-of select="$$doiId"/>
+          <xsl:value-of select="$doiId"/>
         </xsl:otherwise>
       </xsl:choose>
     </datacite:identifier>
@@ -353,9 +355,18 @@
           <!--
           Expect the entry point to be CI_Organisation
           The full name of the creator. -->
-          <datacite:creatorName nameType="Personal">
-            <xsl:value-of select="cit:party/*/cit:individual/*/cit:name/*/text()"/>
-          </datacite:creatorName>
+          <xsl:choose>
+            <xsl:when test="cit:party/*/cit:individual/*/cit:name/*/text() != ''">
+              <datacite:creatorName nameType="Personal">
+                <xsl:value-of select="cit:party/*/cit:individual/*/cit:name/*/text()"/>
+              </datacite:creatorName>
+            </xsl:when>
+            <xsl:otherwise>
+              <datacite:creatorName nameType="Organizational">
+              <xsl:value-of select="cit:party/*/cit:name/*/text()"/>
+              </datacite:creatorName>
+            </xsl:otherwise>
+          </xsl:choose>
 
           <!--
           <datacite:givenName>Elizabeth</datacite:givenName>
@@ -451,12 +462,17 @@ eg.
       <datacite:publisher>DataCite</datacite:publisher>
       <datacite:publicationYear>2014</datacite:publicationYear>
 
-      TODO: Define who is the publisher ? Only one allowed.
+  publisher is the first distributor contact
+  or the first point of contact having the role "distributor"
   -->
   <xsl:template mode="toDatacite"
                 match="mdb:distributionInfo[1]">
     <datacite:publisher>
-      <xsl:value-of select="($metadata//mrd:distributorContact)[1]/*/cit:party//cit:CI_Organisation/cit:name/gco:CharacterString"/>
+      <xsl:variable name="publisher"
+                    select="if ($metadata//mrd:distributorContact)
+                            then $metadata//mrd:distributorContact
+                            else $metadata/mdb:identificationInfo/*/mri:pointOfContact[*/cit:role/*/@codeListValue = 'distributor']"/>
+      <xsl:value-of select="$publisher[1]/*/cit:party//cit:CI_Organisation/cit:name/*/text()"/>
     </datacite:publisher>
 
     <!--

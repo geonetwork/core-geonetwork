@@ -81,7 +81,9 @@
     "$rootScope",
     "$timeout",
     "$window",
-    function (gnPopup, $translate, $location, $rootScope, $timeout, $window) {
+    "$q",
+    "$http",
+    function (gnPopup, $translate, $location, $rootScope, $timeout, $window, $q, $http) {
       /**
        * Scroll page to element.
        */
@@ -330,7 +332,7 @@
        * @param {String} title
        * @param {String} url
        */
-      function getPermalink(title, url) {
+      function displayPermalink(title, url) {
         gnPopup.createModal({
           title: $translate.instant("permalinkTo", { title: title }),
           content:
@@ -380,8 +382,18 @@
               var values = angular.isArray(prop.if[key]) ? prop.if[key] : [prop.if[key]];
 
               var recordValue = this.getObjectValueByPath(record, key);
-              if (values.includes(recordValue)) {
-                cb();
+              if (angular.isArray(recordValue)) {
+                if (
+                  values.filter(function (value) {
+                    return recordValue.includes(value);
+                  }).length > 0
+                ) {
+                  cb();
+                }
+              } else {
+                if (values.includes(recordValue)) {
+                  cb();
+                }
               }
             }
           }
@@ -411,6 +423,19 @@
         }
       };
 
+      var getSelectionListOfUuids = function (bucket, separator) {
+        var url = "../api/selections/" + bucket,
+          defer = $q.defer();
+        $http.delete(url).then(function () {
+          $http.put(url).then(function () {
+            $http.get(url).then(function (response) {
+              defer.resolve(response.data.join(separator || "\n"));
+            });
+          });
+        });
+        return defer.promise;
+      };
+
       return {
         scrollTo: scrollTo,
         isInView: isInView,
@@ -423,8 +448,9 @@
         toCsv: toCsv,
         CSVToArray: CSVToArray,
         getUrlParameter: getUrlParameter,
+        getSelectionListOfUuids: getSelectionListOfUuids,
         randomUuid: randomUuid,
-        getPermalink: getPermalink,
+        displayPermalink: displayPermalink,
         openModal: openModal,
         goBack: goBack
       };
@@ -495,8 +521,8 @@
               },
               cache: true
             })
-            .success(function (response) {
-              var data = response.region;
+            .then(function (response) {
+              var data = response.data.region;
 
               var defaultLang = gnGlobalSettings.gnCfg.langDetector.default;
 
@@ -523,7 +549,9 @@
         loadList: function () {
           if (!listDefer) {
             listDefer = $q.defer();
-            $http.get("../api/regions/types").success(function (data) {
+            $http.get("../api/regions/types").then(function (response) {
+              var data = response.data;
+
               angular.forEach(data, function (value, key) {
                 if (value.id) {
                   var tokens = value.id.split("#"),
@@ -567,6 +595,10 @@
             );
           }
           var fromNow = parsedDate.fromNow();
+
+          if (date.length === 4) {
+            format = "YYYY";
+          }
           if (settingAllowToUseFromNow && contextAllowToUseFromNow) {
             return {
               value: fromNow,

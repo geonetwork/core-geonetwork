@@ -117,7 +117,7 @@
               terms: {
                 field: "resourceType",
                 exclude: ["map/static", "theme", "place"],
-                missing: "N/A"
+                missing: "other"
               }
             }
           };
@@ -314,7 +314,9 @@
             metadataUuid,
             true
           )
-          .error(function (data) {
+          .catch(function (response) {
+            var data = response.data;
+
             $rootScope.$broadcast("StatusUpdated", {
               title: $translate.instant("createMetadataError"),
               error: data.description ? data.description : data.error,
@@ -435,8 +437,8 @@
       function loadMetadataIdentifierTemplates() {
         $scope.mdIdentifierTemplateSelected = {};
 
-        $http.get("../api/identifiers").success(function (data) {
-          $scope.mdIdentifierTemplates = data;
+        $http.get("../api/identifiers").then(function (response) {
+          $scope.mdIdentifierTemplates = response.data;
         });
       }
 

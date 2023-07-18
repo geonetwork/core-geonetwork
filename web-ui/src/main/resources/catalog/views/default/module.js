@@ -74,6 +74,7 @@
         permalink: false,
         internal: true,
         filters: gnSearchSettings.filters,
+        configId: "home",
         params: {
           isTemplate: "n",
           sortBy: "popularity",
@@ -92,6 +93,7 @@
         permalink: false,
         internal: true,
         filters: gnSearchSettings.filters,
+        configId: "home",
         params: {
           isTemplate: "n",
           sortBy: "createDate",
@@ -120,6 +122,7 @@
             }
           }
         ],
+        configId: "recordWithLink",
         params: {
           isTemplate: "n",
           sortBy: "changeDate",
@@ -197,7 +200,7 @@
       $scope.showMosaic = gnGlobalSettings.gnCfg.mods.home.showMosaic;
       $scope.isFilterTagsDisplayedInSearch =
         gnGlobalSettings.gnCfg.mods.search.isFilterTagsDisplayedInSearch;
-      $scope.showMapInFacet = gnGlobalSettings.gnCfg.mods.search.showMapInFacet;
+      $scope.searchMapPlacement = gnGlobalSettings.gnCfg.mods.search.searchMapPlacement;
       $scope.showStatusFooterFor = gnGlobalSettings.gnCfg.mods.search.showStatusFooterFor;
       $scope.showBatchDropdown = gnGlobalSettings.gnCfg.mods.search.showBatchDropdown;
       $scope.exactMatchToggle = gnGlobalSettings.gnCfg.mods.search.exactMatchToggle;

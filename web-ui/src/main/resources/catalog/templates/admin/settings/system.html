@@ -68,10 +68,7 @@
       <div class="panel-heading">
         <h1 data-translate="">settings</h1>
 
-        <div
-          data-gn-need-help="administrator-guide/configuring-the-catalog/system-configuration.html"
-          class="pull-right"
-        ></div>
+        <div data-gn-need-help="system-configuration" class="pull-right"></div>
       </div>
       <div class="panel-body">
         <form id="gn-settings" name="gnSettings" class="form-horizontal">
@@ -91,27 +88,27 @@
 
                   <div
                     data-ng-if="::section2.name === 'system/inspire'"
-                    data-gn-need-help="administrator-guide/configuring-the-catalog/inspire-configuration.html"
+                    data-gn-need-help="inspire-configuration"
                     class="pull-right"
                   ></div>
                   <div
                     data-ng-if="::section2.name === 'system/publication'"
-                    data-gn-need-help="user-guide/associating-resources/doi.html"
+                    data-gn-need-help="doi"
                     class="pull-right"
                   ></div>
                   <div
                     data-ng-if="::section2.name === 'metadata/workflow'"
-                    data-gn-need-help="user-guide/workflow/life-cycle.html"
+                    data-gn-need-help="life-cycle"
                     class="pull-right"
                   ></div>
                   <div
                     data-ng-if="::section2.name === 'system/userSelfRegistration'"
-                    data-gn-need-help="administrator-guide/managing-users-and-groups/user-self-registration.html"
+                    data-gn-need-help="user-self-registration"
                     class="pull-right"
                   ></div>
                   <div
                     data-ng-if="::section2.name === 'system/csw'"
-                    data-gn-need-help="administrator-guide/configuring-the-catalog/csw-configuration.html"
+                    data-gn-need-help="csw-configuration"
                     class="pull-right"
                   ></div>
                 </legend>
@@ -122,16 +119,10 @@
                   data-ng-if="s.name != ''"
                 >
                   <div data-ng-switch-when="BOOLEAN" class="form-group">
-                    <label class="col-sm-4 control-label" for="{{s['name']}}">
-                      {{s['name'] | translate}}
-                    </label>
-                    <div class="col-sm-8">
-                      <input
-                        type="checkbox"
-                        id="{{s['name']}}"
-                        name="{{s.name}}"
-                        data-ng-model="s.value"
-                      />
+                    <div class="col-sm-5 gn-nopadding-left">
+                      <label class="control-label" for="{{s['name']}}">
+                        {{s['name'] | translate}}
+                      </label>
 
                       <p class="help-block">
                         <span
@@ -142,6 +133,15 @@
                         </span>
                       </p>
                     </div>
+
+                    <div class="col-sm-7">
+                      <input
+                        type="checkbox"
+                        id="{{s['name']}}"
+                        name="{{s.name}}"
+                        data-ng-model="s.value"
+                      />
+                    </div>
                   </div>
                   <div
                     data-ng-switch-default=""
@@ -149,11 +149,22 @@
                                     gnSettings[s.name].$error.json ? 'has-error' : ''"
                     class="form-group"
                   >
-                    <label class="col-sm-4 control-label" for="{{s['name']}}"
-                      >{{s['name'] | translate}}</label
-                    >
+                    <div class="col-sm-5 gn-nopadding-left">
+                      <label class="control-label" for="{{s['name']}}"
+                        >{{s['name'] | translate}}</label
+                      >
+
+                      <p class="help-block">
+                        <span
+                          data-ng-show="(s['name'] + '-help' | translate) !== (s['name'] + '-help')"
+                          data-translate=""
+                        >
+                          {{(s['name'] + '-help')}}
+                        </span>
+                      </p>
+                    </div>
                     <!-- According to entry -->
-                    <div class="col-sm-8" data-ng-switch="s['name']">
+                    <div class="col-sm-7" data-ng-switch="s['name']">
                       <select
                         data-ng-switch-when="metadata/import/userprofile"
                         class="form-control"
@@ -192,6 +203,37 @@
                         </option>
                       </select>
 
+                      <select
+                        data-ng-switch-when="metadata/publication/profilePublishMetadata"
+                        class="form-control"
+                        name="{{s.name}}"
+                      >
+                        <option value="Reviewer" ng-selected="'Reviewer' == s.value">
+                          {{'Reviewer' | translate}}
+                        </option>
+                        <option
+                          value="Administrator"
+                          ng-selected="'Administrator' == s.value"
+                        >
+                          {{'Administrator' | translate}}
+                        </option>
+                      </select>
+
+                      <select
+                        data-ng-switch-when="metadata/publication/profileUnpublishMetadata"
+                        class="form-control"
+                        name="{{s.name}}"
+                      >
+                        <option value="Reviewer" ng-selected="'Reviewer' == s.value">
+                          {{'Reviewer' | translate}}
+                        </option>
+                        <option
+                          value="Administrator"
+                          ng-selected="'Administrator' == s.value"
+                        >
+                          {{'Administrator' | translate}}
+                        </option>
+                      </select>
                       <div data-ng-switch-when="system/metadatacreate/preferredGroup">
                         <input
                           type="hidden"
@@ -211,11 +253,17 @@
                       </div>
 
                       <div data-ng-switch-when="system/metadatacreate/preferredTemplate">
+                        <input
+                          type="hidden"
+                          id="{{s.name}}"
+                          name="{{s.name}}"
+                          value="{{s.value}}"
+                        />
                         <div
-                          data-gn-metadata-selector="s.value"
-                          data-search-obj="metadataTemplateSearchObj"
-                          data-md="defaultMetadataTemplate"
-                          data-element-name="{{s.name}}"
+                          data-gn-suggest="metadataTemplateSearchObj"
+                          data-gn-suggest-model="s.value"
+                          data-gn-suggest-property="_id"
+                          data-gn-suggest-display-title="span"
                         />
                       </div>
 
@@ -236,21 +284,15 @@
                         {{'draftWhenInGroup-selection' | translate}}<br />
 
                         <input
-                          type="hidden"
-                          class="form-control"
-                          id="{{s['name']}}"
-                          name="{{s.name}}"
-                          value=".*"
-                          data-ng-disabled="draftInAllGroups != true"
-                        />
-
-                        <input
                           type="text"
                           class="form-control"
                           id="{{s['name']}}"
                           name="{{s.name}}"
-                          value="{{s.value}}"
-                          data-ng-disabled="draftInAllGroups == true"
+                          data-ng-model="draftInAllGroupsUserValue"
+                          data-ng-init="draftInAllGroupsInputValue=s.value || '.*'"
+                          data-ng-change="draftInAllGroups == true?null:draftInAllGroupsInputValue=draftInAllGroupsUserValue"
+                          data-ng-readonly="draftInAllGroups == true"
+                          data-ng-value="draftInAllGroups == true ? '.*' : draftInAllGroupsInputValue"
                         />
                       </div>
 
@@ -322,13 +364,32 @@
                         data-ng-switch-when="system/localrating/notificationLevel"
                         class="form-control"
                         name="{{s.name}}"
+                        data-ng-model="s.value"
+                        data-ng-change="changeLocalRatingNotificationLevel(s.value)"
                       >
                         <option
                           data-ng-repeat="l in notificationLevels"
                           value="{{l}}"
                           ng-selected="l === s.value"
+                          data-translate=""
                         >
-                          {{l}}
+                          {{l !== ''?'notificationLevel-' + l: ''}}
+                        </option>
+                      </select>
+                      <select
+                        data-ng-switch-when="system/metadataprivs/publication/notificationLevel"
+                        class="form-control"
+                        name="{{s.name}}"
+                        data-ng-model="s.value"
+                        data-ng-change="changePublicationNotificationLevel(s.value)"
+                      >
+                        <option
+                          data-ng-repeat="l in notificationLevels"
+                          value="{{l}}"
+                          ng-selected="l === s.value"
+                          data-translate=""
+                        >
+                          {{l !== ''?'notificationLevel-' + l: ''}}
                         </option>
                       </select>
                       <select
@@ -482,6 +543,7 @@
                       <input
                         data-ng-switch-when="system/proxy/password"
                         type="password"
+                        autocomplete="new-password"
                         class="form-control"
                         id="{{s['name']}}"
                         name="{{s.name}}"
@@ -610,6 +672,26 @@
                         </span>
                       </div>
 
+                      <input
+                        data-ng-switch-when="system/metadataprivs/publication/notificationGroups"
+                        type="text"
+                        class="form-control"
+                        id="{{s['name']}}"
+                        name="{{s.name}}"
+                        value="{{s.value}}"
+                        data-ng-disabled="!isGroupPublicationNotificationLevel"
+                      />
+
+                      <input
+                        data-ng-switch-when="system/localrating/notificationGroups"
+                        type="text"
+                        class="form-control"
+                        id="{{s['name']}}"
+                        name="{{s.name}}"
+                        value="{{s.value}}"
+                        data-ng-disabled="!isGroupLocalRatingNotificationLevel"
+                      />
+
                       <!-- Default -->
                       <input
                         data-ng-switch-default=""
@@ -619,15 +701,6 @@
                         name="{{s.name}}"
                         value="{{s.value}}"
                       />
-
-                      <p class="help-block">
-                        <span
-                          data-ng-show="(s['name'] + '-help' | translate) !== (s['name'] + '-help')"
-                          data-translate=""
-                        >
-                          {{(s['name'] + '-help')}}
-                        </span>
-                      </p>
                     </div>
                   </div>
                 </div>

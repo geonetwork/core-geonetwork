@@ -27,8 +27,10 @@ import com.google.common.base.Optional;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.NotImplementedException;
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.NodeInfo;
+import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.*;
@@ -36,7 +38,10 @@ import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.XmlSerializer;
 import org.fao.geonet.kernel.datamanager.*;
+import org.fao.geonet.kernel.schema.MetadataSchema;
+import org.fao.geonet.kernel.schema.SavedQuery;
 import org.fao.geonet.kernel.search.EsSearchManager;
+import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.kernel.search.index.IndexingList;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
@@ -46,7 +51,9 @@ import org.fao.geonet.repository.reports.MetadataReportsQueries;
 import org.fao.geonet.repository.specification.OperationAllowedSpecs;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
+import org.fao.geonet.web.DefaultLanguage;
 import org.jdom.Element;
+import org.jdom.JDOMException;
 import org.jdom.Namespace;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -59,9 +66,12 @@ import org.springframework.data.jpa.domain.Specification;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.PostConstruct;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.*;
+import java.util.regex.Pattern;
 
+import static org.fao.geonet.kernel.setting.Settings.*;
 import static org.fao.geonet.repository.specification.MetadataSpecs.hasMetadataUuid;
 
 public class BaseMetadataUtils implements IMetadataUtils {
@@ -78,6 +88,10 @@ public class BaseMetadataUtils implements IMetadataUtils {
     protected SchemaManager schemaManager;
     @Autowired
     protected MetadataRatingByIpRepository ratingByIpRepository;
+
+    @Autowired
+    protected LanguageRepository languageRepository;
+
     @Autowired
     @Lazy
     protected SettingManager settingManager;
@@ -93,6 +107,9 @@ public class BaseMetadataUtils implements IMetadataUtils {
 
     @Autowired(required = false)
     protected XmlSerializer xmlSerializer;
+
+    @Autowired
+    private DefaultLanguage defaultLanguage;
 
     private Path stylePath;
 
@@ -187,10 +204,10 @@ public class BaseMetadataUtils implements IMetadataUtils {
             Element info = metadataBeforeAnyChanges.getChild(Edit.RootChild.INFO, Edit.NAMESPACE);
             boolean validate = false;
             boolean ufo = false;
-            boolean index = true;
             metadataBeforeAnyChanges.removeChild(Edit.RootChild.INFO, Edit.NAMESPACE);
             metadataManager.updateMetadata(context, id, metadataBeforeAnyChanges, validate, ufo,
-                index, context.getLanguage(), info.getChildText(Edit.Info.Elem.CHANGE_DATE), true);
+                context.getLanguage(), info.getChildText(Edit.Info.Elem.CHANGE_DATE),
+                true, IndexingMode.full);
             endEditingSession(id, session);
         } else {
             if (Log.isDebugEnabled(Geonet.EDITOR_SESSION)) {
@@ -248,15 +265,15 @@ public class BaseMetadataUtils implements IMetadataUtils {
     @Override
     public String extractDefaultLanguage(String schema, Element md) throws Exception {
         Path styleSheet = metadataSchemaUtils.getSchemaDir(schema).resolve(Geonet.File.EXTRACT_DEFAULT_LANGUAGE);
-        String defaultLanguage = Xml.transform(md, styleSheet).getText().trim();
+        String defaultLanguageValue = Xml.transform(md, styleSheet).getText().trim();
 
         if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
-            Log.debug(Geonet.DATA_MANAGER, "Extracted default language '" + defaultLanguage + "' for schema '" + schema + "'");
+            Log.debug(Geonet.DATA_MANAGER, "Extracted default language '" + defaultLanguageValue + "' for schema '" + schema + "'");
 
         // --- needed to detach md from the document
         md.detach();
 
-        return defaultLanguage;
+        return defaultLanguageValue;
     }
 
     /**
@@ -305,6 +322,79 @@ public class BaseMetadataUtils implements IMetadataUtils {
             return extractTitles(metadata.getDataInfo().getSchemaId(), md);
         }
         return null;
+    }
+
+    @Override
+    public String getPermalink(String uuid, String language) {
+        Boolean doiIsFirst = settingManager.getValueAsBool(METADATA_URL_SITEMAPDOIFIRST, false);
+
+        if (Boolean.TRUE.equals(doiIsFirst)) {
+            String doi = null;
+            try {
+                doi = getDoi(uuid);
+            } catch (Exception e) {
+                // DOI not supported for schema
+            }
+            if (StringUtils.isNotEmpty(doi)) {
+                return doi;
+            }
+        }
+
+
+        String sitemapLinkUrl = settingManager.getValue(METADATA_URL_SITEMAPLINKURL);
+        String defaultLink = settingManager.getNodeURL() + "api/records/" + uuid + "?language=all";
+        String permalink = buildUrl(uuid, language, sitemapLinkUrl);
+        return StringUtils.isNotEmpty(permalink) ? permalink : defaultLink;
+    }
+
+    @Override
+    public String getDefaultUrl(String uuid, String language) {
+        String dynamicAppLinkUrl = settingManager.getValue(METADATA_URL_DYNAMICAPPLINKURL);
+        if ("all".equals(language)) {
+            language = defaultLanguage.getLanguage();
+        }
+        String defaultLink = settingManager.getNodeURL() + language + "/catalog.search#/metadata/" + uuid;
+        String url = buildUrl(uuid, language, dynamicAppLinkUrl);
+        return StringUtils.isNotEmpty(url) ? url : defaultLink;
+    }
+
+    private String buildUrl(String uuid, String language, String url) {
+        if (StringUtils.isNotEmpty(url)) {
+            Map<String, String> substitutions = new HashMap<>();
+            substitutions.put("{{UUID}}", uuid);
+            substitutions.put("{{LANG}}", StringUtils.isEmpty(language) ? "" : language);
+            try {
+                String resourceId = getResourceIdentifier(uuid);
+                substitutions.put("{{RESOURCEID}}", StringUtils.isEmpty(resourceId) ? "" : resourceId);
+            } catch (Exception e) {
+                // No resource identifier xpath defined in schema
+            }
+            for (Map.Entry<String, String> s : substitutions.entrySet()) {
+                if (url.toUpperCase().contains(s.getKey())) {
+                    url = url.replaceAll("(?i)" + Pattern.quote(s.getKey()), s.getValue());
+                }
+            }
+        }
+        return url;
+    }
+
+
+    @Override
+    public String getDoi(String uuid) throws ResourceNotFoundException, IOException, JDOMException {
+        AbstractMetadata metadata = findOneByUuid(uuid);
+        final MetadataSchema schema = metadataSchemaUtils
+            .getSchema(metadata.getDataInfo().getSchemaId());
+        Element xml = metadata.getXmlData(false);
+        return schema.queryString(SavedQuery.DOI_GET, xml);
+    }
+
+    @Override
+    public String getResourceIdentifier(String uuid) throws ResourceNotFoundException, JDOMException, IOException {
+        AbstractMetadata metadata = findOneByUuid(uuid);
+        final MetadataSchema schema = metadataSchemaUtils
+            .getSchema(metadata.getDataInfo().getSchemaId());
+        Element xml = metadata.getXmlData(false);
+        return schema.queryString(SavedQuery.RESOURCEID_GET, xml);
     }
 
     /**
@@ -419,24 +509,21 @@ public class BaseMetadataUtils implements IMetadataUtils {
     @Override
     public void setTemplate(final int id, final MetadataType type, final String title) throws Exception {
         setTemplateExt(id, type);
-        metadataIndexer.indexMetadata(Integer.toString(id), true);
+        metadataIndexer.indexMetadata(Integer.toString(id), true, IndexingMode.full);
     }
 
     @Override
     public void setTemplateExt(final int id, final MetadataType metadataType) throws Exception {
-        metadataRepository.update(id, new Updater<Metadata>() {
-            @Override
-            public void apply(@Nonnull Metadata metadata) {
-                final MetadataDataInfo dataInfo = metadata.getDataInfo();
-                dataInfo.setType(metadataType);
-            }
+        metadataRepository.update(id, metadata -> {
+            final MetadataDataInfo dataInfo = metadata.getDataInfo();
+            dataInfo.setType(metadataType);
         });
     }
 
     @Override
     public void setHarvested(int id, String harvestUuid) throws Exception {
         setHarvestedExt(id, harvestUuid);
-        metadataIndexer.indexMetadata(Integer.toString(id), true);
+        metadataIndexer.indexMetadata(Integer.toString(id), true, IndexingMode.full);
     }
 
     /**
@@ -449,14 +536,11 @@ public class BaseMetadataUtils implements IMetadataUtils {
      */
     @Override
     public void setSubtemplateTypeAndTitleExt(final int id, String title) throws Exception {
-        metadataRepository.update(id, new Updater<Metadata>() {
-            @Override
-            public void apply(@Nonnull Metadata metadata) {
-                final MetadataDataInfo dataInfo = metadata.getDataInfo();
-                dataInfo.setType(MetadataType.SUB_TEMPLATE);
-                if (title != null) {
-                    dataInfo.setTitle(title);
-                }
+        metadataRepository.update(id, metadata -> {
+            final MetadataDataInfo dataInfo = metadata.getDataInfo();
+            dataInfo.setType(MetadataType.SUB_TEMPLATE);
+            if (title != null) {
+                dataInfo.setTitle(title);
             }
         });
     }
@@ -469,14 +553,11 @@ public class BaseMetadataUtils implements IMetadataUtils {
     @Override
     public void setHarvestedExt(final int id, final String harvestUuid, final Optional<String> harvestUri)
         throws Exception {
-        metadataRepository.update(id, new Updater<Metadata>() {
-            @Override
-            public void apply(Metadata metadata) {
-                MetadataHarvestInfo harvestInfo = metadata.getHarvestInfo();
-                harvestInfo.setUuid(harvestUuid);
-                harvestInfo.setHarvested(harvestUuid != null);
-                harvestInfo.setUri(harvestUri.orNull());
-            }
+        metadataRepository.update(id, metadata -> {
+            MetadataHarvestInfo harvestInfo = metadata.getHarvestInfo();
+            harvestInfo.setUuid(harvestUuid);
+            harvestInfo.setHarvested(harvestUuid != null);
+            harvestInfo.setUri(harvestUri.orNull());
         });
     }
 
@@ -487,12 +568,7 @@ public class BaseMetadataUtils implements IMetadataUtils {
      */
     @Override
     public void updateDisplayOrder(final String id, final String displayOrder) throws Exception {
-        metadataRepository.update(Integer.valueOf(id), new Updater<Metadata>() {
-            @Override
-            public void apply(Metadata entity) {
-                entity.getDataInfo().setDisplayOrder(Integer.parseInt(displayOrder));
-            }
-        });
+        metadataRepository.update(Integer.valueOf(id), entity -> entity.getDataInfo().setDisplayOrder(Integer.parseInt(displayOrder)));
     }
 
     /**
@@ -503,14 +579,9 @@ public class BaseMetadataUtils implements IMetadataUtils {
         // READONLYMODE
         if (!srvContext.getBean(NodeInfo.class).isReadOnly()) {
             int iId = Integer.parseInt(id);
-            metadataRepository.update(iId, new Updater<Metadata>() {
-                @Override
-                public void apply(Metadata entity) {
-                    entity.getDataInfo().setPopularity(
-                        entity.getDataInfo().getPopularity() + 1
-                    );
-                }
-            });
+            metadataRepository.update(iId, entity -> entity.getDataInfo().setPopularity(
+                entity.getDataInfo().getPopularity() + 1
+            ));
             final java.util.Optional<Metadata> metadata = metadataRepository.findById(iId);
 
             if (metadata.isPresent()) {
@@ -550,12 +621,7 @@ public class BaseMetadataUtils implements IMetadataUtils {
         if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
             Log.debug(Geonet.DATA_MANAGER, "Setting rating for id:" + metadataId + " --> rating is:" + newRating);
 
-        metadataRepository.update(metadataId, new Updater<Metadata>() {
-            @Override
-            public void apply(Metadata entity) {
-                entity.getDataInfo().setRating(newRating);
-            }
-        });
+        metadataRepository.update(metadataId, entity -> entity.getDataInfo().setRating(newRating));
         // And register the metadata to be indexed in the near future
         indexingList.add(metadataId);
 
@@ -582,7 +648,7 @@ public class BaseMetadataUtils implements IMetadataUtils {
 
         // Drop Geonet namespace declaration. It may be contained
         // multiple times, so loop on all.
-        final List<Namespace> additionalNamespaces = new ArrayList<Namespace>(md.getAdditionalNamespaces());
+        final List<Namespace> additionalNamespaces = new ArrayList<>(md.getAdditionalNamespaces());
         for (Namespace n : additionalNamespaces) {
             if (Edit.NAMESPACE.getURI().equals(n.getURI())) {
                 md.removeNamespaceDeclaration(Edit.NAMESPACE);
@@ -698,7 +764,7 @@ public class BaseMetadataUtils implements IMetadataUtils {
         getXmlSerializer().update(metadataId, md, changeDate, true, uuid, context);
 
         if (indexAfterChange) {
-            metadataIndexer.indexMetadata(metadataId, true);
+            metadataIndexer.indexMetadata(metadataId, true, IndexingMode.full);
         }
     }
 

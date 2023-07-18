@@ -6,6 +6,7 @@
                 xmlns:mdb="http://standards.iso.org/iso/19115/-3/mdb/2.0"
                 xmlns:lan="http://standards.iso.org/iso/19115/-3/lan/1.0"
                 xmlns:gcx="http://standards.iso.org/iso/19115/-3/gcx/1.0"
+                xmlns:mdq="http://standards.iso.org/iso/19157/-2/mdq/1.0"
                 exclude-result-prefixes="#all">
 
 
@@ -75,47 +76,81 @@
 
 
   <xsl:variable name="documentsConfig" as="node()*">
-    <doc protocol="WWW:LINK" function="legend">
+    <doc protocol="WWW:LINK" function="legend" type="legend">
       <element>portrayalCatalogueCitation</element>
     </doc>
-    <doc protocol="WWW:LINK" function="featureCatalogue">
+    <doc protocol="WWW:LINK" function="featureCatalogue" type="fcats">
       <element>featureCatalogueCitation</element>
     </doc>
-    <doc protocol="WWW:LINK" function="dataQualityReport">
+    <doc protocol="WWW:LINK" function="dataQualityReport" type="dq-report">
       <element>additionalDocumentation</element>
       <element>specification</element>
       <element>reportReference</element>
     </doc>
   </xsl:variable>
 
+  <!--
+  Collecting links in the metadata records. This is used during
+  indexing (using forIndexing=true to return the complete element
+  (which could be multilingual and will be indexed with translations)
+  and in extract-relations.xsl which return only the current API call language.
+  -->
   <xsl:template name="collect-documents">
-    <xsl:variable name="root" select="."/>
+    <xsl:param name="forIndexing" select="false()" as="xs:boolean"/>
 
+    <xsl:variable name="root" select="."/>
     <xsl:for-each select="$documentsConfig">
       <xsl:variable name="docType"
                     select="current()"/>
       <xsl:for-each select="$root/descendant::*[
                               local-name() = $docType/element/text()
-                              ]/*[cit:onlineResource/*/cit:linkage/gco:CharacterString != '']">
+                              ]/*/cit:onlineResource/*[cit:linkage/gco:CharacterString != '']">
         <item>
           <id>
-            <xsl:value-of select="cit:onlineResource/cit:CI_OnlineResource/cit:linkage/gco:CharacterString"/>
+            <xsl:value-of select="cit:linkage/gco:CharacterString"/>
           </id>
           <url>
-            <xsl:apply-templates mode="get-iso19115-3.2018-localized-string"
-                                 select="cit:onlineResource/*/cit:linkage"/>
+            <xsl:choose>
+              <xsl:when test="$forIndexing">
+                <xsl:copy-of select="cit:linkage"/>
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:apply-templates mode="get-iso19115-3.2018-localized-string"
+                                     select="cit:linkage"/>
+              </xsl:otherwise>
+            </xsl:choose>
           </url>
           <title>
-            <xsl:apply-templates mode="get-iso19115-3.2018-localized-string"
-                                 select="cit:title"/>
+            <xsl:variable name="name"
+                          select="if (cit:name) then cit:name else ../../cit:title"/>
+            <xsl:choose>
+              <xsl:when test="$forIndexing">
+                <xsl:copy-of select="$name"/>
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:apply-templates mode="get-iso19115-3.2018-localized-string"
+                                     select="$name"/>
+              </xsl:otherwise>
+            </xsl:choose>
           </title>
           <description>
-            <xsl:apply-templates mode="get-iso19115-3.2018-localized-string"
-                                 select="cit:onlineResource/*/cit:description"/>
+            <xsl:variable name="desc"
+                          select="if (cit:description)
+                                        then cit:description
+                                        else ../../../../mdq:abstract"/>
+            <xsl:choose>
+              <xsl:when test="$forIndexing">
+                <xsl:copy-of select="$desc"/>
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:apply-templates mode="get-iso19115-3.2018-localized-string"
+                                     select="$desc"/>
+              </xsl:otherwise>
+            </xsl:choose>
           </description>
           <protocol><xsl:value-of select="$docType/@protocol"/></protocol>
           <function><xsl:value-of select="$docType/@function"/></function>
-          <type>onlinesrc</type>
+          <type><xsl:value-of select="$docType/@type"/></type>
         </item>
       </xsl:for-each>
     </xsl:for-each>

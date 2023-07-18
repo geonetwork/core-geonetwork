@@ -33,9 +33,10 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
     ">
 
-  <context:property-placeholder location="${app.properties}"
-                                file-encoding="UTF-8"
-                                ignore-unresolvable="true" />
+  <context:property-placeholder location="${app.properties},file://#{systemEnvironment['geonetwork_dir']}/config/app.properties"
+                                ignore-unresolvable="true"
+                                ignore-resource-not-found="true"
+                                file-encoding="UTF-8"/>
 
   <context:annotation-config/>
   <bean id="ProfileManager" class="jeeves.component.ProfileManager" lazy-init="true"/>
@@ -53,7 +54,9 @@
   <bean id="GeonetworkDataDirectory" class="org.fao.geonet.kernel.GeonetworkDataDirectory"
         lazy-init="true"/>
 
-  <bean id="ThesaurusManager" class="org.fao.geonet.kernel.ThesaurusManager" lazy-init="true"/>
+  <bean id="ThesaurusManager" class="org.fao.geonet.kernel.ThesaurusManager" lazy-init="true">
+    <property name="thesaurusCacheMaxSize" value="\${thesaurus.cache.maxsize}"/>
+  </bean>
 
   <util:list id="allThesaurusExclude">
     <value>external.theme.access_use_conditions</value>
@@ -80,6 +83,8 @@
     <entry key="searchlogs" value="\${es.index.searchlogs}"/>
   </util:map>
 
+  <bean id="OverviewIndexFieldUpdater"
+        class="org.fao.geonet.kernel.search.index.OverviewIndexFieldUpdater"/>
   <bean id="EsSearchManager"
         class="org.fao.geonet.kernel.search.EsSearchManager"
         lazy-init="false">

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2023 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -77,11 +77,15 @@
                 scope.lang,
                 gnCurrentEdit.mdLanguage
               );
-              scope.relations = scope.isOverview
-                ? res.relations[scope.type]
-                : res.relations[scope.type].filter(function (l) {
-                    return l.protocol === scope.protocol;
-                  });
+              if (angular.isArray(res.relations[scope.type])) {
+                scope.relations = scope.isOverview
+                  ? res.relations[scope.type]
+                  : res.relations[scope.type].filter(function (l) {
+                      return l.protocol === scope.protocol;
+                    });
+              } else {
+                scope.relations = {};
+              }
             });
           };
 
@@ -601,6 +605,9 @@
                 attrs.clearFormOnProtocolChange == "false"
               ); //default to true (old behavior)
               scope.popupid = attrs["gnPopupid"];
+              $(scope.popupid).on("hidden.bs.modal", function () {
+                scope.$broadcast("onlineSrcDialogHidden", { popupid: scope.popupid });
+              });
 
               scope.config = null;
               scope.linkType = null;
@@ -616,7 +623,7 @@
                 internal: true,
                 state: { filters: "" },
                 params: {
-                  sortBy: "resourceTitleObject.default.keyword"
+                  sortBy: "resourceTitleObject.default.sort"
                 }
               };
 
@@ -765,6 +772,9 @@
               };
 
               var DEFAULT_CONFIG = {
+                sources: {
+                  filestore: true
+                },
                 process: "onlinesrc-add",
                 fields: {
                   url: {
@@ -826,6 +836,38 @@
                     return c;
                   }
                 }
+
+                /* If the schema configuration file for the online
+                   resources panel defines a default type, return it
+                   instead of DEFAULT_CONFIG
+
+                   schema/config/associated-panel/default.json
+
+                   {"config": {"types": [
+                      {
+                          "default": true,
+                          "label": "addOnlinesrc"
+                          ...
+                      },
+                      {
+                          "label": "addThumbnail",
+                          ...
+                      }]
+                  }}
+                */
+                var defaultSchemaConfigIndex = _.findIndex(
+                  scope.config.types,
+                  function (t) {
+                    return t.default === true;
+                  }
+                );
+
+                if (defaultSchemaConfigIndex > -1) {
+                  return scope.config.types[defaultSchemaConfigIndex];
+                } else {
+                  return DEFAULT_CONFIG;
+                }
+
                 return DEFAULT_CONFIG;
               }
 
@@ -841,6 +883,10 @@
                 }
 
                 scope.isEditing = angular.isDefined(linkToEdit);
+                // Flag used when editing an online resource to prevent the watcher to update the online
+                // resource description when loading the dialog.
+                scope.processSelectedWMSLayer = false;
+
                 scope.codelistFilter =
                   scope.gnCurrentEdit && scope.gnCurrentEdit.codelistFilter;
 
@@ -978,6 +1024,7 @@
                     scope.params.desc = "";
                     initMultilingualFields();
                   }
+                  scope.$broadcast("onlineSrcDialogInited", { popupid: scope.popupid });
                 };
                 function loadConfigAndInit(withInit) {
                   gnSchemaManagerService
@@ -1103,7 +1150,7 @@
               };
 
               /**
-               * Build the multingual structure if need for the onlinesrc
+               * Build the multilingual structure if needed for the onlinesrc
                * param (name, desc, url).
                * Struct like {'ger':'', 'eng': ''}
                *
@@ -1348,7 +1395,8 @@
                     selectedLayersNames = params[scope.addLayersInUrl].split(",");
                   }
 
-                  scope.layers.forEach &&
+                  scope.layers &&
+                    scope.layers.forEach &&
                     scope.layers.forEach(function (l) {
                       if (selectedLayersNames.indexOf(l.Name) != -1) {
                         scope.params.selectedLayers.push(l);
@@ -1365,7 +1413,8 @@
                     ? []
                     : scope.params.name.split(",");
                   scope.params.selectedLayers = [];
-                  scope.layers.forEach &&
+                  scope.layers &&
+                    scope.layers.forEach &&
                     scope.layers.forEach(function (l) {
                       if (selectedLayersNames.indexOf(l.Name) != -1) {
                         scope.params.selectedLayers.push(l);
@@ -1436,10 +1485,24 @@
                */
               scope.$watchCollection("params.selectedLayers", function (n, o) {
                 if (
+                  scope.config &&
+                  scope.config.wmsResources.addLayerNamesMode != "resourcename"
+                ) {
+                  return;
+                }
+
+                if (
                   o !== n &&
                   scope.params.selectedLayers &&
                   scope.params.selectedLayers.length > 0
                 ) {
+                  // To avoid setting the online resource description to the WMS layer description, when loading
+                  // the dialog to edit it, so it is preserved the value from the online resource description.
+                  if (scope.isEditing && !scope.processSelectedWMSLayer) {
+                    scope.processSelectedWMSLayer = true;
+                    return;
+                  }
+
                   var names = [],
                     descs = [];
 
@@ -1568,7 +1631,7 @@
               scope.selectUploadedResource = function (res) {
                 if (res && res.url) {
                   var o = {
-                    name: res.id.split("/").splice(2).join("/"),
+                    name: decodeURI(res.id.split("/").splice(2).join("/")),
                     url: res.url
                   };
                   ["url", "name"].forEach(function (pName) {
@@ -1926,15 +1989,8 @@
                 scope.popupid = "#linkto" + scope.mode + "-popup";
                 scope.btn = {};
 
-                // Append * for like search
                 scope.updateParams = function () {
-                  var addWildcard =
-                    scope.searchObj.any.indexOf('"') === -1 &&
-                    scope.searchObj.any.indexOf("*") === -1 &&
-                    scope.searchObj.any.indexOf("q(") !== 0;
-                  scope.searchObj.params.any = addWildcard
-                    ? "*" + scope.searchObj.any + "*"
-                    : scope.searchObj.any;
+                  scope.searchObj.params.any = scope.searchObj.any;
                 };
 
                 /**
@@ -1946,7 +2002,7 @@
                   var searchParams = {};
                   if (scope.mode === "fcats") {
                     searchParams = {
-                      documentStandard: "iso19110",
+                      resourceType: "featureCatalog",
                       isTemplate: "n"
                     };
                     scope.btn = {

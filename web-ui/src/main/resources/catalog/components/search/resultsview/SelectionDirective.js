@@ -130,9 +130,9 @@
           // initial state
           gnSearchManagerService
             .selected(scope.searchResults.selectionBucket)
-            .success(function (res) {
-              if (angular.isArray(res)) {
-                scope.searchResults.selectedCount = res.length;
+            .then(function (response) {
+              if (angular.isArray(response.data)) {
+                scope.searchResults.selectedCount = response.data.length;
               }
             });
 
@@ -152,12 +152,9 @@
             updateCkb(records);
             records.forEach(function (record, i) {
               watchers.push(
-                scope.$watch(
-                  "searchResults.records[" + i + ']["geonet:info"].selected',
-                  function () {
-                    updateCkb(scope.searchResults.records);
-                  }
-                )
+                scope.$watch("searchResults.records[" + i + "].selected", function () {
+                  updateCkb(scope.searchResults.records);
+                })
               );
             });
           });
@@ -202,16 +199,16 @@
 
             gnSearchManagerService
               .select(uuids, scope.searchResults.selectionBucket)
-              .success(function (res) {
-                scope.searchResults.selectedCount = parseInt(res, 10);
+              .then(function (response) {
+                scope.searchResults.selectedCount = parseInt(response.data, 10);
               });
           };
 
           scope.selectAll = function () {
             gnSearchManagerService
               .selectAll(scope.searchResults.selectionBucket)
-              .success(function (res) {
-                scope.searchResults.selectedCount = parseInt(res, 10);
+              .then(function (response) {
+                scope.searchResults.selectedCount = parseInt(response.data, 10);
                 scope.searchResults.records.forEach(function (record) {
                   record.selected = true;
                 });
@@ -221,8 +218,8 @@
           scope.unSelectAll = function () {
             gnSearchManagerService
               .selectNone(scope.searchResults.selectionBucket)
-              .success(function (res) {
-                scope.searchResults.selectedCount = parseInt(res, 10);
+              .then(function (response) {
+                scope.searchResults.selectedCount = parseInt(response.data, 10);
                 scope.searchResults.records.forEach(function (record) {
                   record.selected = false;
                 });
@@ -269,12 +266,12 @@
           element[0] &&
             element[0].addEventListener("click", function (e) {
               var method = element[0].checked ? "select" : "unselect";
-              gnSearchManagerService[method](scope.md.uuid, scope.bucket).success(
-                function (res) {
-                  scope.md.selected = element[0].checked;
-                  scope.results.selectedCount = parseInt(res, 10);
-                }
-              );
+              gnSearchManagerService[method](scope.md.uuid, scope.bucket).then(function (
+                response
+              ) {
+                scope.md.selected = element[0].checked;
+                scope.results.selectedCount = parseInt(response.data, 10);
+              });
               e.stopPropagation();
             });
         }

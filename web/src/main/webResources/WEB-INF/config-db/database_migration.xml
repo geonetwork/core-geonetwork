@@ -33,10 +33,12 @@
   <bean id="database-migration-bean" class="org.fao.geonet.DatabaseMigration">
     <property name="migration" ref="migrationMap"/>
     <property name="initAfter" value="javax.sql.DataSource"/>
+    <property name="dbMigrationOnStartup" value="\${db.migration_onstartup}"/>
   </bean>
   <bean id="database-data-migration-bean" class="org.fao.geonet.DatabaseMigration">
     <property name="migration" ref="dataMigrationMap"/>
     <property name="initAfter" value="org.springframework.orm.jpa.JpaTransactionManager"/>
+    <property name="dbMigrationOnStartup" value="\${db.migration_onstartup}"/>
   </bean>
 
   <util:map id="migrationMap"
@@ -146,6 +148,21 @@
     <entry key="3.0.6">
       <list>
         <value>WEB-INF/classes/setup/sql/migrate/v306/migrate-</value>
+      </list>
+    </entry>
+    <entry key="4.0.0">
+      <list>
+        <value>WEB-INF/classes/setup/sql/migrate/v400/migrate-db-</value>
+      </list>
+    </entry>
+    <entry key="4.2.4">
+      <list>
+        <value>WEB-INF/classes/setup/sql/migrate/v424/migrate-db-</value>
+      </list>
+    </entry>
+    <entry key="4.2.5">
+      <list>
+        <value>WEB-INF/classes/setup/sql/migrate/v425/migrate-db-</value>
       </list>
     </entry>
   </util:map>
@@ -342,6 +359,31 @@
     <entry key="4.2.2">
       <list>
         <value>WEB-INF/classes/setup/sql/migrate/v422/migrate-</value>
+      </list>
+    </entry>
+    <entry key="4.2.3">
+      <list>
+        <value>WEB-INF/classes/setup/sql/migrate/v423/migrate-</value>
+      </list>
+    </entry>
+    <entry key="4.2.4">
+      <list>
+        <value>WEB-INF/classes/setup/sql/migrate/v424/migrate-</value>
+      </list>
+    </entry>
+    <entry key="4.2.5">
+      <list>
+        <value>WEB-INF/classes/setup/sql/migrate/v425/migrate-</value>
+      </list>
+    </entry>
+    <entry key="4.2.6">
+      <list>
+        <value>WEB-INF/classes/setup/sql/migrate/v426/migrate-</value>
+      </list>
+    </entry>
+    <entry key="4.4.0">
+      <list>
+        <value>WEB-INF/classes/setup/sql/migrate/v440/migrate-</value>
       </list>
     </entry>
   </util:map>

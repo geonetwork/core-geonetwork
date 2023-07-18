@@ -118,6 +118,12 @@
             }
             preferredOptions.push({
               path: ".",
+              label: $translate.instant("ui-full-current-configuration"),
+              group: $translate.instant("preferredOptions"),
+              defaultValue: gnGlobalSettings.gnCfg
+            });
+            preferredOptions.push({
+              path: ".",
               label: $translate.instant("ui-full-configuration"),
               group: $translate.instant("preferredOptions"),
               defaultValue: jsonConfig
@@ -155,8 +161,9 @@
           }
 
           scope.$watch("optionsToAdd", function (n, o) {
-            if (n && n.path != (o && o.path)) {
+            if (n && (n.path != (o && o.path) || n.path === ".")) {
               scope.jsonConfig = addOptionToConfig(n, scope.jsonConfig);
+              scope.optionsToAdd = undefined;
             }
           });
 
@@ -261,6 +268,9 @@
           scope.reset = function () {
             angular.extend(scope.jsonConfig, gnGlobalSettings.getDefaultConfig());
           };
+          scope.currentConfig = function () {
+            scope.jsonConfig = gnGlobalSettings.gnCfg;
+          };
           scope.empty = function () {
             scope.jsonConfig = {};
           };
@@ -330,10 +340,14 @@
           if (JSON.stringify(newObj) === JSON.stringify(scope.value)) {
             return;
           }
-          for (var key in scope.value) {
-            delete scope.value[key];
+          if (angular.isArray(newObj)) {
+            scope.value = newObj;
+          } else {
+            for (var key in scope.value) {
+              delete scope.value[key];
+            }
+            angular.merge(scope.value, newObj);
           }
-          angular.merge(scope.value, newObj);
           internalUpdate = true;
         });
       }

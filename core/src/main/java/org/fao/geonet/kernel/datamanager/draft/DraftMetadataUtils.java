@@ -24,6 +24,7 @@
 package org.fao.geonet.kernel.datamanager.draft;
 
 import com.google.common.base.Optional;
+import com.google.common.collect.Sets;
 import jeeves.server.context.ServiceContext;
 import org.eclipse.jetty.io.RuntimeIOException;
 import org.fao.geonet.api.records.attachments.StoreUtils;
@@ -39,6 +40,7 @@ import org.fao.geonet.kernel.datamanager.base.BaseMetadataUtils;
 import org.fao.geonet.kernel.metadata.StatusActions;
 import org.fao.geonet.kernel.metadata.StatusActionsFactory;
 import org.fao.geonet.kernel.search.EsSearchManager;
+import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.*;
 import org.fao.geonet.repository.specification.MetadataFileUploadSpecs;
@@ -87,6 +89,7 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
     IMetadataUtils metadataUtils;
 
     private ServiceContext context;
+    private Set<String> listOfStatusToTriggerDraftCreation = Sets.newHashSet(StatusValue.Status.APPROVED);
 
     public void init(ServiceContext context, Boolean force) throws Exception {
         this.context = context;
@@ -234,7 +237,7 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
 
         java.util.Optional<MetadataDraft> md = metadataDraftRepository.findById(id);
 
-        return md.isPresent()?md.get():null;
+        return md.isPresent() ? md.get() : null;
     }
 
     @Override
@@ -406,7 +409,7 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
     /**
      * Start an editing session. This will record the original metadata record in
      * the session under the
-     * {@link org.fao.geonet.constants.Geonet.Session#METADATA_BEFORE_ANY_CHANGES} +
+     * {@link Geonet.Session#METADATA_BEFORE_ANY_CHANGES} +
      * id session property.
      * <p>
      * The record contains geonet:info element.
@@ -432,7 +435,9 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
             Log.trace(Geonet.DATA_MANAGER, "Editing draft with id " + id);
         } else if (isMdWorkflowEnable
             && (context.getBean(IMetadataManager.class) instanceof DraftMetadataManager)
-            && metadataStatus.getCurrentStatus(Integer.valueOf(id)).equals(StatusValue.Status.APPROVED)) {
+            && listOfStatusToTriggerDraftCreation.contains(
+                metadataStatus.getCurrentStatus(Integer.parseInt(id)))
+        ) {
             id = createDraft(context, id, md);
 
             Log.trace(Geonet.DATA_MANAGER, "Creating draft with id " + id + " to edit.");
@@ -515,7 +520,7 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
         }
 
         try {
-            newMetadata = (MetadataDraft) metadataManager.insertMetadata(context, newMetadata, xml, true, true,
+            newMetadata = (MetadataDraft) metadataManager.insertMetadata(context, newMetadata, xml, IndexingMode.full, true,
                 UpdateDatestamp.YES, false, true);
 
             Integer finalId = newMetadata.getId();
@@ -606,13 +611,13 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
     @Override
     public void replaceFiles(AbstractMetadata original, AbstractMetadata dest) {
         try {
-            boolean oldApproved=true;
-            boolean newApproved=false;
+            boolean oldApproved = true;
+            boolean newApproved = false;
 
             // If destination is approved then this is a working copy so the original will not be approved.
             if (metadataUtils.isMetadataApproved(dest.getId())) {
-                oldApproved=false;
-                newApproved=true;
+                oldApproved = false;
+                newApproved = true;
             }
             StoreUtils.replaceDataDir(context, original.getUuid(), dest.getUuid(), oldApproved, newApproved);
             cloneStoreFileUploadRequests(original, dest);
@@ -642,7 +647,7 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
 
                 // --- remove metadata
                 xmlSerializer.delete(id, ServiceContext.get());
-                searchManager.delete(id);
+                searchManager.delete(String.format("+id:%s", id));
 
                 // Unset METADATA_EDITING_CREATED_DRAFT flag
                 context.getUserSession().removeProperty(Geonet.Session.METADATA_EDITING_CREATED_DRAFT);
@@ -673,4 +678,11 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
         }
     }
 
+    public void setListOfStatusCreatingDraft(Set<String> listOfStatusCreatingDraft) {
+        this.listOfStatusToTriggerDraftCreation = listOfStatusCreatingDraft;
+    }
+
+    public Set<String> getListOfStatusCreatingDraft() {
+        return listOfStatusToTriggerDraftCreation;
+    }
 }

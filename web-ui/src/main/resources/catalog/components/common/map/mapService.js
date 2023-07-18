@@ -91,14 +91,14 @@
           }
         },
 
-        // As this is a authorized mapservice lets use the authization load function for loading the images/tiles
+        // As this is a authorized mapservice lets use the authorization load function for loading the images/tiles
         authorizationLoadFunction: function (tile, src) {
           var srcUrl = src;
           var mapservice = this.getMapservice(srcUrl);
           if (mapservice !== null) {
             // If we are using a proxy then adjust the url.
             if (mapservice.useProxy) {
-              // Proxy calls should have been handled withtout load function . So it this occures just log a warning and set the proxy url
+              // Proxy calls should have been handled without load function . So it this occurs just log a warning and set the proxy url
               console.log(
                 "Warning: attempting to get Using authorized Map service to get tile/image via proxy - this should have already been handled."
               );
@@ -570,10 +570,12 @@
            */
           getBboxFeatureFromMd: function (md, proj) {
             var feat = new ol.Feature();
-            var wkts = md.geom;
+            var wkts = md.shape || md.geom;
+            if (!angular.isArray(wkts)) {
+              wkts = [wkts];
+            }
             var projExtent = proj.getExtent();
             if (wkts && wkts.length) {
-              var geometry;
               var geoms = [];
               var format = new ol.format.GeoJSON();
               wkts.forEach(function (wkt) {
@@ -581,35 +583,32 @@
                   featureProjection: proj,
                   dataProjection: "EPSG:4326"
                 });
-                geoms.push(geom);
+                if (geom) {
+                  geoms.push(geom);
+                }
               });
               var geometryCollection = new ol.geom.GeometryCollection(geoms);
               feat.setGeometry(geometryCollection);
-              // // If is composed of one geometry of type point
-              // if (extent.length === 1 &&
-              //     extent[0][0] === extent[0][2] &&
-              //     extent[0][1] === extent[0][3]) {
-              //   geometry = new ol.geom.Point([extent[0][0], extent[0][1]]);
-              // } else {
-              //   // Build multipolygon from the set of bboxes
-              //   geometry = new ol.geom.MultiPolygon([]);
-              //   for (var j = 0; j < extent.length; j++) {
-              //     // TODO: Point will not be supported in multi geometry
-              //     var projectedExtent = ol.proj.transformExtent(extent[j], 'EPSG:4326', proj);
-              //     if (!ol.extent.intersects(projectedExtent, projExtent)) {
-              //       continue;
-              //     }
-              //     var coords = this.getPolygonFromExtent(
-              //       ol.extent.getIntersection(projectedExtent, projExtent)
-              //     );
-              //     geometry.appendPolygon(new ol.geom.Polygon(coords));
-              //   }
-              // }
-              // // no valid bbox was found: clear geometry
-              // if (!geometry.getPolygons().length) {
-              //   geometry = null;
-              // }
-              // feat.setGeometry(geometry);
+
+              if (
+                !gnGlobalSettings.gnCfg.mods.map["map-search"].geodesicExtents &&
+                !proj.isGlobal() &&
+                !feat.getGeometry().isEmpty()
+              ) {
+                var geometry = new ol.geom.MultiPolygon([]);
+
+                var coords = this.getPolygonFromExtent(
+                  ol.extent.getIntersection(feat.getGeometry().getExtent(), projExtent)
+                );
+
+                geometry.appendPolygon(new ol.geom.Polygon(coords));
+                // no valid bbox was found: clear geometry
+                if (!geometry.getPolygons().length) {
+                  geometry = null;
+                }
+                feat = new ol.Feature();
+                feat.setGeometry(geometry);
+              }
             }
             return feat;
           },
@@ -893,7 +892,45 @@
           createOlWMS: function (map, layerParams, layerOptions) {
             var options = layerOptions || {};
 
-            var loadFunction;
+            var convertGetMapRequestToPost = function (url, onLoadCallback) {
+              var p = url.split("?");
+              var action = p[0];
+              var params = p[1].split("&");
+              var data = new FormData();
+              params.map(function (p) {
+                var token = p.split("=");
+                data.append(token[0], decodeURIComponent(token[1]));
+              });
+              $http
+                .post(action, data, {
+                  responseType: "arraybuffer",
+                  transformRequest: angular.identity,
+                  headers: { "Content-Type": undefined }
+                })
+                .then(onLoadCallback);
+            };
+
+            var loadFunction = function (imageTile, src) {
+              $http.head(src).then(
+                function (r) {
+                  imageTile.getImage().src = src;
+                },
+                function (r) {
+                  if (r.status === 414) {
+                    // Request URI too large, try POST
+                    convertGetMapRequestToPost(src, function (response) {
+                      var arrayBufferView = new Uint8Array(response.data);
+                      var blob = new Blob([arrayBufferView], { type: "image/png" });
+                      var urlCreator = window.URL || window.webkitURL;
+                      var imageUrl = urlCreator.createObjectURL(blob);
+                      imageTile.getImage().src = imageUrl;
+                    });
+                  } else {
+                    console.warn("Error loading image for: " + src, r);
+                  }
+                }
+              );
+            };
 
             // If this is an authorized mapservice then we need to adjust the url or add auth headers
             // Only check http url and exclude any urls like data: which should not be changed. Also, there is not need to check prox urls.
@@ -1093,7 +1130,16 @@
               if (style && this.containsStyles(getCapLayer)) {
                 for (var i = 0; i < getCapLayer.Style.length; i++) {
                   var s = getCapLayer.Style[i];
-                  if (s.Name === style.Name) {
+                  var withEqualCompare =
+                    (s.Name.indexOf(":") !== -1 && style.Name.indexOf(":") !== -1) ||
+                    (s.Name.indexOf(":") === -1 && style.Name.indexOf(":") === -1);
+
+                  if (
+                    (withEqualCompare && s.Name === style.Name) ||
+                    (!withEqualCompare &&
+                      s.Name.replace(/.*:(.*)/, "$1") ===
+                        style.Name.replace(/.*:(.*)/, "$1"))
+                  ) {
                     requestedStyle = s;
                     legendUrl = s.LegendURL[0];
                     break;
@@ -1533,6 +1579,32 @@
           /**
            * @ngdoc method
            * @methodOf gn_map.service:gnMap
+           * @name gnMap#getLinkDescription
+           *
+           * @description
+           * Retrieve description of the link from the metadata
+           * record using the URL and layer name. The description
+           * may override GetCapabilities layer name and can also
+           * be multilingual.
+           */
+          getLinkDescription: function (md, url, name) {
+            if (md) {
+              var link = md.getLinksByFilter(
+                "protocol:OGC:WMS" +
+                  " AND url:" +
+                  url.replace("?", "\\?") +
+                  " AND name:" +
+                  name
+              );
+              if (link.length === 1) {
+                return link[0].description !== "" ? link[0].description : undefined;
+              }
+            }
+          },
+
+          /**
+           * @ngdoc method
+           * @methodOf gn_map.service:gnMap
            * @name gnMap#addWmsFromScratch
            *
            * @description
@@ -1607,6 +1679,12 @@
                           if (!createOnly) {
                             map.addLayer(olL);
                           }
+
+                          olL.set(
+                            "layerTitleFromMetadata",
+                            $this.getLinkDescription(olL.get("md"), url, name)
+                          );
+
                           gnWmsQueue.removeFromQueue(
                             url,
                             name,
@@ -1902,6 +1980,12 @@
                       if (!createOnly) {
                         map.addLayer(olL);
                       }
+
+                      olL.set(
+                        "layerTitleFromMetadata",
+                        $this.getLinkDescription(olL.get("md"), url, name)
+                      );
+
                       gnWmsQueue.removeFromQueue(url, name, map);
                       defer.resolve(olL);
                     };
@@ -2385,7 +2469,7 @@
           feedLayerWithRelated: function (layer, linkGroup) {
             var md = layer.get("md");
 
-            if (!linkGroup) {
+            if (!Number.isInteger(linkGroup)) {
               console.warn(
                 "The layer has not been found in any group: " +
                   layer.getSource().getParams().LAYERS

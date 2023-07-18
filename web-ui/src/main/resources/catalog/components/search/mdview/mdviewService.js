@@ -119,7 +119,10 @@
                 docs: {
                   top_hits: {
                     // associated stats with UUIDs
-                    size: 100
+                    size: 100,
+                    _source: {
+                      includes: ["uuid"]
+                    }
                   }
                 }
               };
@@ -131,7 +134,7 @@
             var relatedRecordKeysWithValues = []; // keep track of the relations with values
 
             Object.keys(relatedRecords).forEach(function (k) {
-              if (relatedRecords[k] && relatedRecords[k].map) {
+              if (relatedRecords[k] && relatedRecords[k].length > 0) {
                 relatedRecordKeysWithValues.push(k);
 
                 body += '{"index": "records"}\n';
@@ -162,35 +165,38 @@
             });
 
             // Collect stats in main portal as some records may not be visible in subportal
-            $http
-              .post("../../srv/api/search/records/_msearch", body)
-              .then(function (data) {
-                gnMdViewObj.current.record.related = [];
+            if (Object.entries(recordsMap).length !== 0) {
+              $http
+                .post("../../srv/api/search/records/_msearch", body)
+                .then(function (data) {
+                  gnMdViewObj.current.record.related = [];
 
-                Object.keys(relatedRecords).map(function (k) {
-                  relatedRecords[k] &&
-                    relatedRecords[k].map(function (l, i) {
-                      var md = recordsMap[l._id];
-                      relatedRecords[k][i] = md;
-                    });
+                  Object.keys(relatedRecords).map(function (k) {
+                    relatedRecords[k] &&
+                      relatedRecords[k].map(function (l, i) {
+                        var md = recordsMap[l._id];
+                        relatedRecords[k][i] = md;
+                      });
+                  });
+
+                  gnMdViewObj.current.record.related = relatedRecords;
+                  gnMdViewObj.current.record.related.all = Object.values(recordsMap);
+                  gnMdViewObj.current.record.related.uuids = Object.keys(recordsMap);
+
+                  relatedRecordKeysWithValues.forEach(function (key, index) {
+                    gnMdViewObj.current.record.related["aggregations_" + key] =
+                      data.data.responses[index].aggregations;
+                  });
                 });
-
-                gnMdViewObj.current.record.related = relatedRecords;
-                gnMdViewObj.current.record.related.all = Object.values(recordsMap);
-                gnMdViewObj.current.record.related.uuids = Object.keys(recordsMap);
-
-                relatedRecordKeysWithValues.forEach(function (key, index) {
-                  gnMdViewObj.current.record.related["aggregations_" + key] =
-                    data.data.responses[index].aggregations;
-                });
-              });
+            }
           }
         }
 
         // TODO: do not add duplicates
         gnMdViewObj.previousRecords.push(md);
 
-        if (!gnMdViewObj.usingFormatter) {
+        // Don't increase popularity for working copies
+        if (!gnMdViewObj.usingFormatter && md.draft !== "y") {
           $http.post("../api/records/" + md.uuid + "/popularity");
         }
         this.setLocationUuid(md.uuid, formatter);
@@ -235,7 +241,7 @@
           types ||
           "parent|children|sources|hassources|" +
             "brothersAndSisters|services|datasets|" +
-            "siblings|associated|fcats|related";
+            "siblings|associated|fcats|hasfeaturecats|related";
         return "relatedType=" + types.split("|").join("&relatedType=");
       };
 

@@ -7,7 +7,9 @@
                       && isWfsAvailable == false"
     class="alert alert-warning"
   >
-    <button type="button" class="close"><i class="fa fa-times" /></button>
+    <button type="button" class="close" data-ng-click="dismiss()">
+      <i class="fa fa-times" />
+    </button>
     <span data-translate="" data-translate-values="{'url': '{{wfsUrl}}'}"
       >wfsNotAvailable</span
     >
@@ -177,10 +179,17 @@
         class="gn-facet"
         data-ng-repeat="field in fields track by field.name"
       >
-        <h5 gn-collapsible="field.expanded" title="{{field.definition}}">
+        <h5
+          gn-collapsible="field.expanded"
+          title="{{field.definition}}"
+          data-ng-class="{'text-primary': isFilterActive(field.name, field)}"
+        >
           <span
             class="fa fa-arrow-circle-right"
-            data-ng-class="{'fa-rotate-90': field.expanded, 'gn-field-empty': !isFilterActive(field.name, field)}"
+            data-ng-class="{
+              'fa-rotate-90': field.expanded,
+              'gn-field-empty': !isFilterActive(field.name, field)
+            }"
           ></span>
           {{field.label}}
         </h5>
@@ -252,10 +261,16 @@
         class="gn-facet"
         ng-if="!managerOnly && isFeaturesIndexed && indexObject.geomField"
       >
-        <h5 gn-collapsible="indexObject.geomField.expanded">
+        <h5
+          gn-collapsible="indexObject.geomField.expanded"
+          data-ng-class="{'text-primary': isFilterActive('geometry')}"
+        >
           <span
             class="fa fa-arrow-circle-right"
-            data-ng-class="{'fa-rotate-90': indexObject.geomField.expanded, 'gn-field-empty': !isFilterActive('geometry')}"
+            data-ng-class="{
+              'fa-rotate-90': indexObject.geomField.expanded,
+              'gn-field-empty': !isFilterActive('geometry')
+            }"
           ></span>
           {{'gnbbox' | translate}}
         </h5>

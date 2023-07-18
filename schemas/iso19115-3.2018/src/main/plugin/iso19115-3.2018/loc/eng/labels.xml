@@ -737,6 +737,31 @@
     </description>
     <condition>optional</condition>
   </element>
+  <element name="xsi:nil">
+    <label>Nil</label>
+    <description>Indicates that a certain element does not have a value or that the value is unknown.</description>
+  </element>
+  <element name="isInfinite">
+    <label>Is infinite</label>
+  </element>
+  <element name="gco:Multiplicity">
+    <label>Multiplicity</label>
+  </element>
+  <element name="gco:range">
+    <label>Range</label>
+  </element>
+  <element name="gco:MultiplicityRange">
+    <label>Multiplicity range</label>
+  </element>
+  <element name="gfc:FC_Binding">
+    <label>Binding</label>
+  </element>
+  <element name="gfc:FC_BoundAssociationRole">
+    <label>Bound association role</label>
+  </element>
+  <element name="gfc:FC_BoundFeatureAttribute">
+    <label>Bound feature attribute</label>
+  </element>
   <element name="gfc:identifier">
     <label>Identifier</label>
   </element>
@@ -1299,6 +1324,14 @@
   <element name="cit:extent" id="378.0" context="cit:CI_Responsibility">
     <label>Extent</label>
     <description iso="true">Spatial or temporal extent of the role</description>
+  </element>
+  <element name="lan:language" id="448.0" context="/mdb:MD_Metadata/mdb:defaultLocale/lan:PT_Locale/lan:language">
+    <label>Metadata language</label>
+    <description iso="true">Designation of the locale language</description>
+  </element>
+  <element name="lan:language" id="448.0" context="/mdb:MD_Metadata/mdb:otherLocale/lan:PT_Locale/lan:language">
+    <label>Other language</label>
+    <description iso="true">Additional metadata language</description>
   </element>
   <element name="lan:language" id="448.0">
     <label>Language</label>

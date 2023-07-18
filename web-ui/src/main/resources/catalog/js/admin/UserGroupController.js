@@ -61,7 +61,7 @@
       $scope.searchObj = {
         params: {
           isTemplate: ["y", "n", "s", "t"],
-          sortBy: "resourceTitleObject.default.keyword"
+          sortBy: "resourceTitleObject.default.sort"
         }
       };
 
@@ -118,7 +118,8 @@
       $scope.isLoadingGroups = false;
 
       gnConfigService.load().then(function (c) {
-        $scope.passwordMinLength = Math.min(
+        // take the bigger of the two values
+        $scope.passwordMinLength = Math.max(
           gnConfig["system.security.passwordEnforcement.minLength"],
           6
         );
@@ -142,10 +143,10 @@
       $http.defaults.headers.get["Cache-Control"] = "no-cache";
       $http.defaults.headers.get["Pragma"] = "no-cache";
 
-      $http.get("../api/tags").success(function (data) {
+      $http.get("../api/tags").then(function (response) {
         var nullTag = { id: null, name: "", label: {} };
         nullTag.label[$scope.lang] = "";
-        $scope.categories = [nullTag].concat(data);
+        $scope.categories = [nullTag].concat(response.data);
       });
 
       function loadGroups() {
@@ -153,20 +154,14 @@
         // If not send profile, all groups are returned
         var profile = $scope.user.profile ? "?profile=" + $scope.user.profile : "";
 
-        $http
-          .get("../api/groups" + profile)
-          .success(function (data) {
-            $scope.groups = data;
+        $http.get("../api/groups" + profile).then(
+          function (response) {
+            $scope.groups = response.data;
             angular.forEach($scope.groups, function (u) {
               u.langlabel = getLabel(u);
             });
             $scope.isLoadingGroups = false;
-          })
-          .error(function (data) {
-            // TODO
-            $scope.isLoadingGroups = false;
-          })
-          .then(function () {
+
             // Search if requested group in location is
             // in the list and trigger selection.
             // TODO: change route path when selected (issue - controller is
@@ -181,22 +176,21 @@
                 }
               });
             }
-          });
+          },
+          function (response) {
+            // TODO
+            $scope.isLoadingGroups = false;
+          }
+        );
       }
 
       function loadUsers() {
         $scope.isLoadingUsers = true;
-        $http
-          .get("../api/users")
-          .success(function (data) {
-            $scope.users = data;
+        $http.get("../api/users").then(
+          function (response) {
+            $scope.users = response.data;
             $scope.isLoadingUsers = false;
-          })
-          .error(function (data) {
-            // TODO
-            $scope.isLoadingUsers = false;
-          })
-          .then(function () {
+
             // Search if requested user in location is
             // in the list and trigger user selection.
             if ($routeParams.userOrGroup) {
@@ -209,7 +203,12 @@
                 }
               });
             }
-          });
+          },
+          function (response) {
+            // TODO
+            $scope.isLoadingUsers = false;
+          }
+        );
       }
 
       /**
@@ -218,14 +217,14 @@
        * @param groupId
        */
       function loadGroupUsers(groupId) {
-        $http
-          .get("../api/groups/" + groupId + "/users")
-          .success(function (data) {
-            $scope.groupusers = data;
-          })
-          .error(function (data) {
+        $http.get("../api/groups/" + groupId + "/users").then(
+          function (response) {
+            $scope.groupusers = response.data;
+          },
+          function (response) {
             $scope.groupusers = [];
-          });
+          }
+        );
       }
 
       /**
@@ -291,33 +290,35 @@
         $scope.userSelected = null;
         $scope.userGroups = null;
 
-        $http
-          .get("../api/users/" + u.id)
-          .success(function (data) {
+        $http.get("../api/users/" + u.id).then(
+          function (response) {
+            var data = response.data;
+
             $scope.userSelected = data;
             $scope.userIsAdmin = data.profile === "Administrator";
 
             $scope.userIsEnabled = data.enabled;
 
             // Load user group and then select user
-            $http
-              .get("../api/users/" + u.id + "/groups")
-              .success(function (groups) {
-                $scope.userGroups = groups;
-              })
-              .error(function (data) {
+            $http.get("../api/users/" + u.id + "/groups").then(
+              function (response) {
+                $scope.userGroups = response.data;
+              },
+              function (response) {
                 // TODO
-              });
-          })
-          .error(function (data) {
+              }
+            );
+          },
+          function (response) {
             // TODO
-          });
+          }
+        );
 
         // Retrieve records in that group
         $scope.$broadcast("resetSearch", {
           isTemplate: ["y", "n", "s", "t"],
           owner: u.id,
-          sortBy: "resourceTitleObject.default.keyword"
+          sortBy: "resourceTitleObject.default.sort"
         });
 
         $scope.userUpdated = false;
@@ -349,19 +350,21 @@
             "../api/users/" + $scope.userSelected.id + "/actions/forget-password",
             params
           )
-          .success(function (data) {
-            $scope.resetPassword1 = null;
-            $scope.resetPassword2 = null;
-            $("#passwordResetModal").modal("hide");
-          })
-          .error(function (data) {
-            $rootScope.$broadcast("StatusUpdated", {
-              title: $translate.instant("resetPasswordError"),
-              error: data,
-              timeout: 0,
-              type: "danger"
-            });
-          });
+          .then(
+            function (response) {
+              $scope.resetPassword1 = null;
+              $scope.resetPassword2 = null;
+              $("#passwordResetModal").modal("hide");
+            },
+            function (response) {
+              $rootScope.$broadcast("StatusUpdated", {
+                title: $translate.instant("resetPasswordError"),
+                error: response.data,
+                timeout: 0,
+                type: "danger"
+              });
+            }
+          );
       };
 
       /**
@@ -613,9 +616,8 @@
        * Remove the user and refresh the list when done.
        */
       $scope.confirmRemoveUser = function () {
-        $http
-          .delete("../api/users/" + $scope.userSelected.id)
-          .success(function (data) {
+        $http.delete("../api/users/" + $scope.userSelected.id).then(
+          function (response) {
             $rootScope.$broadcast("StatusUpdated", {
               msg: $translate.instant("userRemoved"),
               timeout: 2,
@@ -624,15 +626,16 @@
 
             $scope.unselectUser();
             loadUsers();
-          })
-          .error(function (data) {
+          },
+          function (response) {
             $rootScope.$broadcast("StatusUpdated", {
               title: $translate.instant("userDeleteError"),
-              error: data,
+              error: response.data,
               timeout: 0,
               type: "danger"
             });
-          });
+          }
+        );
       };
 
       $scope.addGroup = function () {
@@ -710,8 +713,7 @@
               ($scope.groupSelected.id != -99 ? "/" + $scope.groupSelected.id : ""),
             $scope.groupSelected
           )
-          .success(createOrModifyGroupSuccess)
-          .error(createOrModifyGroupError);
+          .then(createOrModifyGroupSuccess, createOrModifyGroupError);
       };
 
       $scope.deleteGroupLogo = function () {
@@ -755,9 +757,8 @@
        * Remove the group and refresh the list when done.
        */
       $scope.confirmRemoveGroup = function () {
-        $http
-          .delete("../api/groups/" + $scope.groupSelected.id + "?force=true")
-          .success(function (data) {
+        $http.delete("../api/groups/" + $scope.groupSelected.id + "?force=true").then(
+          function (response) {
             $rootScope.$broadcast("StatusUpdated", {
               msg: $translate.instant("groupRemoved"),
               timeout: 2,
@@ -766,15 +767,16 @@
 
             $scope.unselectGroup();
             loadGroups();
-          })
-          .error(function (data) {
+          },
+          function (response) {
             $rootScope.$broadcast("StatusUpdated", {
               title: $translate.instant("groupDeleteError"),
-              error: data,
+              error: response.data,
               timeout: 0,
               type: "danger"
             });
-          });
+          }
+        );
       };
 
       $scope.unselectGroup = function () {
@@ -796,7 +798,7 @@
         $scope.$broadcast("resetSearch", {
           isTemplate: ["y", "n", "s", "t"],
           group: g.id,
-          sortBy: "resourceTitleObject.default.keyword"
+          sortBy: "resourceTitleObject.default.sort"
         });
 
         loadGroupUsers($scope.groupSelected.id);
@@ -846,6 +848,27 @@
       });
 
       return filtered;
+    };
+  });
+
+  /**
+   * Directive to check the password confirmation field
+   * and set the form validation status.
+   */
+  module.directive("gnValidPasswordConfirmation", function () {
+    return {
+      require: "ngModel",
+      link: function (scope, elm, attrs, ctrl) {
+        ctrl.$setValidity("noMatch", true);
+
+        attrs.$observe("gnValidPasswordConfirmation", function (newVal) {
+          if (newVal === "true") {
+            ctrl.$setValidity("noMatch", true);
+          } else {
+            ctrl.$setValidity("noMatch", false);
+          }
+        });
+      }
     };
   });
 })();

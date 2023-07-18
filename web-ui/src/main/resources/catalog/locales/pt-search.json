@@ -422,6 +422,7 @@
     "mdvalid": "Metadados é válido",
     "mdinvalid": "Metadados é inválido",
     "mdinvalidcantpublish": "Invalid metadata can't be published",
+    "mdnonapprovedcantpublish": "Non approved metadata can't be published",
     "mdnovalidation": "Metadados não tem nenhuma informação de validação",
     "setall": "Defina todos os privilégios",
     "print_legend": "Legenda",
@@ -540,5 +541,13 @@
     "esriCapabilitiesNoValid": "The response is not a valid ESRI Rest capabilities document.",
     "seriesComposedOf": "Composed of",
     "seriesCoveringPeriod": "Covering period",
-    "approve": "Aprovar"
+    "approve": "Aprovar",
+    "fieldRequired": "The value is required",
+    "fieldTooLong": "The value is too long",
+    "fieldTooLongMax": "The value is too long (max {{maxChar}} characters)",
+    "fieldTooShort": "The value is too short",
+    "fieldEmailNotValid": "A valid email address is required",
+    "addLayerPrefix": "Add layer",
+    "addLayerPostfix": "to the map",
+    "submit": "Enviar"
 }

@@ -422,6 +422,7 @@
   "mdvalid": "Metadata is valid",
   "mdinvalid": "Metadata is invalid",
   "mdinvalidcantpublish": "Invalid metadata can't be published",
+  "mdnonapprovedcantpublish": "Non approved metadata can't be published",
   "mdnovalidation": "Metadata has no validation information",
   "setall": "Set all privileges",
   "print_legend": "Legend",
@@ -547,5 +548,6 @@
   "fieldTooShort": "The value is too short",
   "fieldEmailNotValid": "A valid email address is required",
   "addLayerPrefix": "Add layer",
-  "addLayerPostfix": "to the map"
+  "addLayerPostfix": "to the map",
+  "submit": "Submit"
 }

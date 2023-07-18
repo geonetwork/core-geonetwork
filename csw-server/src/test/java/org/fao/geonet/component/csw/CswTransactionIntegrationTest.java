@@ -35,6 +35,7 @@ import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.search.EsSearchManager;
+import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.repository.MetadataRepositoryTest;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Content;
@@ -389,7 +390,7 @@ public class CswTransactionIntegrationTest extends AbstractCoreIntegrationTest {
         extras.put("_isTemplate", "n");
         extras.put("_owner", "" + ownerId);
         _searchManager.index(schemaDir, metadata.getXmlData(false), "" + metadata.getId(), extras,
-            MetadataType.METADATA,false);
+            MetadataType.METADATA,false, IndexingMode.full);
     }
 
     private Element createUpdateTransaction(String property, Object newValue) {

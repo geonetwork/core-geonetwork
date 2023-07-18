@@ -35,6 +35,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
 
 import org.apache.chemistry.opencmis.client.api.CmisObject;
 import org.apache.chemistry.opencmis.client.api.Document;
@@ -58,6 +59,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import com.google.common.util.concurrent.UncheckedExecutionException;
 
 public class CMISUtils {
     @Autowired
@@ -82,10 +84,15 @@ public class CMISUtils {
     }
 
     public Folder getFolderCache(String folderKey) throws ResourceNotFoundException, CmisPermissionDeniedException {
-        return getFolderCache(folderKey, false);
+        return getFolderCache(folderKey, false, false);
     }
 
     public Folder getFolderCache(String folderKey, boolean refresh) throws ResourceNotFoundException, CmisPermissionDeniedException {
+        return getFolderCache(folderKey, refresh, false);
+    }
+
+
+    public Folder getFolderCache(String folderKey, boolean refresh, boolean createMissing) throws ResourceNotFoundException, CmisPermissionDeniedException {
         Folder folder = null;
         // Primitive object declared as an object array so that it can be marked as final so it can be used in calling class.
         // If it is set to true then it was already fetched without using cache so there is no need to refresh()
@@ -107,27 +114,43 @@ public class CMISUtils {
                         }
                         return folder;
                     } catch (CmisObjectNotFoundException e) {
-                        String parentFolderKey = folderKey.substring(0, folderKey.lastIndexOf(cmisConfiguration.getFolderDelimiter()));
-                        Folder subFolder = getFolderCache(parentFolderKey, refresh);
+                        if (createMissing) {
+                            String parentFolderKey = folderKey.substring(0, folderKey.lastIndexOf(cmisConfiguration.getFolderDelimiter()));
+                            Folder subFolder = getFolderCache(parentFolderKey, refresh, createMissing);
 
-                        // synchronize folder creation.
-                        // This will prevent cases where multiple files are uploaded on the interface
-                        // In this case there will be a race condition to create the same folder.
-                        // And if this is not synchronized then there will be a lot or CmisContentAlreadyExistsException errors.
-                        Folder folder;
-                        synchronized (this) {
-                            ObjectId objectId = cmisConfiguration.getClient().createPath(subFolder, folderKey, BaseTypeId.CMIS_FOLDER.value());
-                            folder = (Folder) cmisConfiguration.getClient().getObject(objectId);
+                            // synchronize folder creation.
+                            // This will prevent cases where multiple files are uploaded on the interface
+                            // In this case there will be a race condition to create the same folder.
+                            // And if this is not synchronized then there will be a lot or CmisContentAlreadyExistsException errors.
+                            Folder folder;
+                            synchronized (this) {
+                                Map<String, Object> properties = new HashMap();
+                                properties.put(PropertyIds.OBJECT_TYPE_ID, "cmis:folder");
+                                properties.put(PropertyIds.NAME, folderKey.substring(folderKey.lastIndexOf(cmisConfiguration.getFolderDelimiter())+1));
+                                folder = subFolder.createFolder(properties);
+                            }
+                            if (refresh) {
+                                foundWithoutCache[0] = true;
+                            }
+                            return folder;
+                        } else {
+                            throw e;
                         }
-                        if (refresh) {
-                            foundWithoutCache[0] = true;
-                        }
-                        return folder;
                     }
                 }
             });
-        } catch (ExecutionException e) {
-            throw new ResourceNotFoundException("Error getting folder resource from cache: " + folderKey, e);
+        } catch (ExecutionException | UncheckedExecutionException e) {
+            if (e.getCause() instanceof CmisObjectNotFoundException) {
+                throw new ResourceNotFoundException("Error getting folder resource from cache: " + folderKey, e);
+            } else if (e.getCause() instanceof CmisPermissionDeniedException) {
+                throw new CmisPermissionDeniedException("Error getting folder resource from cache: " + folderKey, e);
+            } else if (e.getCause() instanceof CmisConstraintException) {
+                throw new CmisConstraintException("Error getting folder resource from cache: " + folderKey, e);
+            } else {
+                Log.error(Geonet.RESOURCES, String.format(
+                    "\"Error getting resource from cache: '%s'.", folderKey), e);
+                throw new RuntimeException(e.getCause());
+            }
         }
         if (refresh && !foundWithoutCache[0]) {
             try {
@@ -209,14 +232,6 @@ public class CMISUtils {
         int isLength = is.available();
         ContentStream contentStream = cmisConfiguration.getClient().getObjectFactory().createContentStream(key, isLength, Files.probeContentType(new File(key).toPath()), is);
 
-        // If we have a cmisObject then lets refresh it to make sure it still exists.
-        if (cmisObject != null) {
-            try {
-                cmisObject.refresh();
-            } catch (CmisObjectNotFoundException e) {
-                cmisObject = null;
-            }
-        }
         Document doc;
         if (cmisObject != null) {
             try {
@@ -234,15 +249,38 @@ public class CMISUtils {
                     ObjectId objectID = doc.checkOut();
                     CmisObject o = cmisConfiguration.getClient().getObject(objectID, oc);
                     ((Document) o).checkIn(true, properties, contentStream, null);
+                    if (cmisConfiguration.existSecondaryProperty()) {
+                       //need to reload document to avoid  "Document is not the latest version" when updating secondary types.
+                       doc.refresh();
+                    }
                 } else {
-                    doc.updateProperties(properties, true);
-                    doc.setContentStream(contentStream, true, true);
+                    doc = doc.setContentStream(contentStream, true);
+                    // Split properties because it fails to set primary properties and secondary properties at the same time.
+                    //      {"exception":"invalidArgument","message":"Category attributes and name\/description can't be changed at once [986930338]"}
+                    if (properties.containsKey(PropertyIds.SECONDARY_OBJECT_TYPE_IDS)) {
+                        Map<String, Object> secondaryProperties = new HashMap<>();
+                        Map<String, Object> primaryProperties = properties.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+
+                        for (Object objectPropertyName : ((ArrayList) properties.get(PropertyIds.SECONDARY_OBJECT_TYPE_IDS))) {
+                            String aspectPropertyName = (String)objectPropertyName;
+                            secondaryProperties.putAll(properties.entrySet().stream()
+                                .filter(c -> c.getKey().startsWith(aspectPropertyName))
+                                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))
+                              );
+                            primaryProperties.keySet().removeAll(properties.keySet().stream()
+                                .filter(c -> c.startsWith(aspectPropertyName))
+                                .collect(Collectors.toSet())
+                            );
+                        }
+                        secondaryProperties.put(PropertyIds.SECONDARY_OBJECT_TYPE_IDS, properties.get(PropertyIds.SECONDARY_OBJECT_TYPE_IDS));
+                        primaryProperties.remove(PropertyIds.SECONDARY_OBJECT_TYPE_IDS);
+                        doc = (Document) doc.updateProperties(primaryProperties);
+                        doc = (Document) doc.updateProperties(secondaryProperties);
+                    } else {
+                        doc = (Document) doc.updateProperties(properties);
+                    }
                 }
 
-                if (cmisConfiguration.existSecondaryProperty()) {
-                    //need to reload document to avoid  "Document is not the latest version" when updating secondary types.
-                    doc = (Document) cmisConfiguration.getClient().getObjectByPath(key, oc);
-                }
                 // Avoid CMIS API call is info is not enabled.
                 if (LogManager.getLogger(Geonet.RESOURCES).isInfoEnabled()) {
                     Log.info(Geonet.RESOURCES,
@@ -265,7 +303,7 @@ public class CMISUtils {
             // Get parent folder.
             String parentKey = key.substring(0, lastFolderDelimiterKeyIndex);
             try {
-                Folder parentFolder = getFolderCache(parentKey, true);
+                Folder parentFolder = getFolderCache(parentKey, true, true);
 
                 doc = parentFolder.createDocument(properties, contentStream, cmisConfiguration.getVersioningState(), (List)null, (List)null, (List)null, oc);
                 // Avoid CMIS API call is info is not enabled.

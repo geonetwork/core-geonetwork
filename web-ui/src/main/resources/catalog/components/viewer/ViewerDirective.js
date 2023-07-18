@@ -107,6 +107,10 @@
                 processes: false
               };
 
+              Object.keys(scope.activeTools).forEach(function (key) {
+                scope.activeTools[key] = gnViewerSettings.mapConfig.defaultTool === key;
+              });
+
               /** optional tabs **/
               scope.disabledTools = gnViewerSettings.mapConfig.disabledTools;
 
@@ -140,19 +144,27 @@
               scope.is3DModeAllowed = gnViewerSettings.mapConfig.is3DModeAllowed || false;
               scope.is3dEnabled = gnConfig["is3dEnabled"] || false;
 
+              // map accessibility is disabled by default
+              scope.isAccessible = gnViewerSettings.mapConfig.isAccessible || false;
+              // add `tabindex="0"` so the map can get keyboard focus
+              //
+              // more info: https://openlayers.org/en/latest/examples/accessible.html
+              if (scope.isAccessible) {
+                iElement.find("#map").attr("tabindex", 0);
+              }
+
               // By default, sync only background layer
               // between main map and search map
               scope.syncAllLayers = false;
 
-              scope.map.getLayers().on("add", function () {
-                if (angular.isDefined(gnSearchSettings.searchMap)) scope.doSync(map);
-              });
-
-              scope.map.getLayers().on("change:length", function () {
+              function syncEvent() {
                 if (angular.isDefined(gnSearchSettings.searchMap)) {
-                  scope.doSync(map);
+                  scope.doSync();
                 }
-              });
+              }
+
+              scope.map.getLayers().on("add", syncEvent);
+              scope.map.getLayers().on("change:length", syncEvent);
 
               scope.syncMod = function () {
                 scope.syncAllLayers = !scope.syncAllLayers;

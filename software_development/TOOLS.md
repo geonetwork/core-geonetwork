@@ -24,7 +24,7 @@ Our source code is maintained on GitHub:
 GeoNetwork requires a Java 8 development environment:
 
 * Recommend using the Java 8 distribution available from your operating system
-* [Adopt OpenJDK8 (LTS)](https://adoptopenjdk.net/?variant=openjdk8) for windows or macOS installers
+* [Adoptium OpenJDK8 (LTS)](https://adoptium.net/temurin/archive/?version=8) for windows or macOS installers
 
 We do not support development on Java 11 at this time.
 

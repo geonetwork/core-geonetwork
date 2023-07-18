@@ -36,7 +36,7 @@
   h3 {
     font-size: 18px;
   }
-  [data-gn-keyword-badges] {
+  [data-gn-keyword-badges], .gn-md-side-social {
     .col-md-12 {
       padding-left: 0px;
       padding-right: 0px;
@@ -68,6 +68,7 @@
     gap: 10px;
     li {
       flex-grow: 2;
+      text-align: center;
       img {
         object-fit: cover;
         vertical-align: bottom;
@@ -239,12 +240,12 @@
       line-height: 1.7em;
       display: inline;
       line-break: auto;
+      word-break: break-word;
       a {
         line-break: normal;
       }
       &:after {
         content: ",";
-        margin-left: -0.3ch;
       }
       &:last-child:after {
         content: "";
@@ -309,6 +310,7 @@
     // keywords
     [data-gn-keyword-badges] {
       .btn {
+        word-break: break-word;
         white-space: normal;
         text-align: left;
       }

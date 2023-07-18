@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2023 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -29,7 +29,7 @@ import jeeves.server.context.ServiceContext;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.GeonetworkDataDirectory;
+import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.TransformerFactoryFactory;
 
@@ -49,11 +49,11 @@ import java.util.Properties;
  */
 public class SiteInformation {
     final Properties properties = System.getProperties();
-    private HashMap<String, String> catProperties = new HashMap<String, String>();
-    private HashMap<String, String> indexProperties = new HashMap<String, String>();
-    private HashMap<String, String> systemProperties = new HashMap<String, String>();
-    private HashMap<String, String> databaseProperties = new HashMap<String, String>();
-    private HashMap<String, String> versionProperties = new HashMap<String, String>();
+    private Map<String, String> catProperties = new HashMap<>();
+    private Map<String, String> indexProperties = new HashMap<>();
+    private Map<String, String> systemProperties = new HashMap<>();
+    private Map<String, String> databaseProperties = new HashMap<>();
+    private Map<String, String> versionProperties = new HashMap<>();
 
     public SiteInformation(final ServiceContext context, final GeonetContext gc) {
         if (context.getUserSession().isAuthenticated()) {
@@ -68,44 +68,44 @@ public class SiteInformation {
             } catch (IOException e) {
                 Log.error(Geonet.GEONETWORK, e.getMessage(), e);
             }
-            loadVersionInfo(context);
+            loadVersionInfo();
             loadSystemInfo();
         }
     }
 
     @JsonProperty(value = "catalogue")
-    public HashMap<String, String> getCatProperties() {
+    public Map<String, String> getCatProperties() {
         return catProperties;
     }
 
-    public void setCatProperties(HashMap<String, String> catProperties) {
+    public void setCatProperties(Map<String, String> catProperties) {
         this.catProperties = catProperties;
     }
 
     @JsonProperty(value = "index")
-    public HashMap<String, String> getIndexProperties() {
+    public Map<String, String> getIndexProperties() {
         return indexProperties;
     }
 
-    public void setIndexProperties(HashMap<String, String> indexProperties) {
+    public void setIndexProperties(Map<String, String> indexProperties) {
         this.indexProperties = indexProperties;
     }
 
     @JsonProperty(value = "main")
-    public HashMap<String, String> getSystemProperties() {
+    public Map<String, String> getSystemProperties() {
         return systemProperties;
     }
 
-    public void setSystemProperties(HashMap<String, String> systemProperties) {
+    public void setSystemProperties(Map<String, String> systemProperties) {
         this.systemProperties = systemProperties;
     }
 
     @JsonProperty(value = "database")
-    public HashMap<String, String> getDatabaseProperties() {
+    public Map<String, String> getDatabaseProperties() {
         return databaseProperties;
     }
 
-    public void setDatabaseProperties(HashMap<String, String> databaseProperties) {
+    public void setDatabaseProperties(Map<String, String> databaseProperties) {
         this.databaseProperties = databaseProperties;
     }
 
@@ -114,7 +114,7 @@ public class SiteInformation {
         return versionProperties;
     }
 
-    public void setVersionProperties(HashMap<String, String> versionProperties) {
+    public void setVersionProperties(Map<String, String> versionProperties) {
         this.versionProperties = versionProperties;
     }
 
@@ -162,8 +162,11 @@ public class SiteInformation {
      * Compute information about index.
      */
     private void loadIndexInfo(ServiceContext context) throws IOException {
-        final GeonetworkDataDirectory dataDirectory = context.getBean(GeonetworkDataDirectory.class);
-        // TODOES - give information about the index status ?
+        EsSearchManager esSearchManager = context.getBean(EsSearchManager.class);
+
+        indexProperties.put("es.url", esSearchManager.getClient().getServerUrl());
+        indexProperties.put("es.version", esSearchManager.getClient().getServerVersion());
+        indexProperties.put("es.index", esSearchManager.getDefaultIndex());
     }
 
     /**
@@ -203,7 +206,7 @@ public class SiteInformation {
     /**
      * Compute information about git commit.
      */
-    private void loadVersionInfo(ServiceContext context) {
+    private void loadVersionInfo() {
         Properties prop = new Properties();
 
         try (InputStream input = getClass().getResourceAsStream("/git.properties")) {

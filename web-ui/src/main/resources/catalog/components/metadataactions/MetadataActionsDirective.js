@@ -79,6 +79,84 @@
                         '"></div>',
                       className: "gn-status-popup",
                       onCloseCallback: function () {
+                        scope.$emit("metadataStatusUpdated", true);
+                        scope.$emit("StatusUpdated", true);
+                        scope.$broadcast("operationOnSelectionStop");
+                        scope.processReport = null;
+                      }
+                    },
+                    scope,
+                    "StatusUpdated"
+                  );
+                },
+                function (response) {
+                  scope.$broadcast("operationOnSelectionStop");
+                  scope.$emit("metadataStatusUpdated", false);
+
+                  scope.$emit("StatusUpdated", {
+                    title: $translate.instant("metadataStatusUpdatedErrors"),
+                    error: response.data,
+                    timeout: 0,
+                    type: "danger"
+                  });
+                }
+              );
+          };
+        }
+      };
+    }
+  ]);
+
+  module.directive("gnMetadataBatchSubmit", [
+    "$translate",
+    "$http",
+    "gnMetadataManager",
+    "gnUtilityService",
+    function ($translate, $http, gnMetadataManager, gnUtilityService) {
+      return {
+        restrict: "A",
+        replace: true,
+        templateUrl:
+          "../../catalog/components/metadataactions/partials/" + "batchsubmit.html",
+        scope: {
+          selectionBucket: "@"
+        },
+        link: function (scope) {
+          var translations = null;
+          $translate(["metadataSubmitted"]).then(function (t) {
+            translations = t;
+          });
+
+          scope.changeMessage = "";
+
+          scope.submit = function () {
+            scope.$broadcast("operationOnSelectionStart");
+
+            return $http
+              .put("../api/records/submit", {
+                bucket: scope.selectionBucket,
+                message: scope.changeMessage
+              })
+              .then(
+                function (response) {
+                  scope.processReport = response.data;
+                  var reportTemplate =
+                    "../../catalog/components/utility/" +
+                    "partials/batchreport-workflow.html";
+
+                  scope.$broadcast("operationOnSelectionStop");
+
+                  // A report is returned
+                  gnUtilityService.openModal(
+                    {
+                      title: translations.metadataSubmitted,
+                      content:
+                        '<div gn-batch-report="processReport" template-url="' +
+                        reportTemplate +
+                        '"></div>',
+                      className: "gn-status-popup",
+                      onCloseCallback: function () {
+                        scope.$emit("metadataStatusUpdated", true);
                         scope.$emit("StatusUpdated", true);
                         scope.$broadcast("operationOnSelectionStop");
                         scope.processReport = null;
@@ -156,7 +234,9 @@
                 .get(
                   "../api/records/" + metadataId + "/status/" + scope.statusType + "/last"
                 )
-                .success(function (data) {
+                .then(function (response) {
+                  var data = response.data;
+
                   scope.status = data !== "null" ? data.status : null;
                   scope.newStatus.status = scope.statusToSelect;
                   scope.lastStatus = data.currentStatus.id.statusId;
@@ -164,7 +244,9 @@
             } else {
               return $http
                 .get("../api/status/" + scope.statusType)
-                .success(function (data) {
+                .then(function (response) {
+                  var data = response.data;
+
                   scope.status = data;
                   scope.newStatus = {
                     status: scope.task ? scope.task.id : 0,
@@ -278,7 +360,9 @@
             if (angular.isDefined(scope.groupOwner)) {
               $http
                 .get("../api/groups/" + scope.groupOwner, { cache: true })
-                .success(function (data) {
+                .then(function (response) {
+                  var data = response.data;
+
                   scope.enableallowedcategories = data.enableAllowedCategories;
                   scope.allowedcategories = [];
                   angular.forEach(data.allowedCategories, function (c) {
@@ -298,9 +382,9 @@
           });
 
           var init = function () {
-            return $http.get("../api/tags", { cache: true }).success(function (data) {
+            return $http.get("../api/tags", { cache: true }).then(function (response) {
               var lang = scope.lang;
-              scope.categories = data;
+              scope.categories = response.data;
               angular.forEach(scope.categories, function (c) {
                 if (
                   angular.isDefined(scope.currentCategories) &&
@@ -473,8 +557,8 @@
           scope.init = function (event) {
             return $http
               .get("../api/groups?profile=Editor", { cache: true })
-              .success(function (groups) {
-                scope.groups = groups;
+              .then(function (response) {
+                scope.groups = response.data;
               });
           };
 
@@ -510,7 +594,7 @@
         restrict: "A",
         replace: false,
         templateUrl:
-          "../../catalog/components/metadataactions/partials/" + "permalinkinput.html",
+          "../../catalog/components/metadataactions/partials/permalinkinput.html",
         link: function (scope, element, attrs) {
           scope.url = attrs["gnPermalinkInput"];
           scope.copied = false;
@@ -649,9 +733,9 @@
           };
           $http
             .get("../api/users/groups")
-            .success(function (data) {
+            .then(function (response) {
               var uniqueUserGroups = {};
-              angular.forEach(data, function (g) {
+              angular.forEach(response.data, function (g) {
                 var key = g.groupId + "-" + g.userId;
                 if (!uniqueUserGroups[key]) {
                   uniqueUserGroups[key] = g;

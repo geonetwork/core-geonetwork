@@ -5,6 +5,9 @@
   data-ng-init="mainType = config.getType(md, type);
                   icon = config.getClassIcon(mainType);"
 >
+  <li data-ng-if="items.length > 0" class="gn-related-title">
+    <i class="fa fa-fw {{icon}}" /> {{('link-' + type) | translate}}
+  </li>
   <li data-ng-repeat="md in items | orderBy:getOrderBy">
     <a
       data-ng-hide="md.remoteUrl"
@@ -13,7 +16,6 @@
       gn-metadata-open="md"
       gn-formatter="formatter.defaultUrl"
     >
-      <i class="fa {{icon}}" />
       {{md.resourceTitle}}
     </a>
     <a
@@ -23,7 +25,6 @@
       target="_blank"
       title="{{md.resourceTitle}}"
     >
-      <i class="fa {{icon}}" />
       {{md.resourceTitle}}
       <i
         data-ng-if="md.origin === 'remote'"

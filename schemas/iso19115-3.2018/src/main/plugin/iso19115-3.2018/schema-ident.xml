@@ -5,7 +5,7 @@
   <name>iso19115-3.2018</name>
   <id>93f66207-621a-4610-813f-38494a51d121</id>
   <version>1.0</version>
-  <appMinorVersionSupported>3.5.0</appMinorVersionSupported>
+  <appMinorVersionSupported>4.4.0</appMinorVersionSupported>
   <title xml:lang="en">Geographic information &#45;&#45; Metadata</title>
   <title xml:lang="fr">Information géographique &#45;&#45; Métadonnées</title>
   <description xml:lang="en"><![CDATA[
@@ -81,6 +81,7 @@ Ce schéma est également composé des normes :
               xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0"
               xmlns:mco="http://standards.iso.org/iso/19115/-3/mco/1.0"
               xmlns:mdb="http://standards.iso.org/iso/19115/-3/mdb/2.0"
+              xmlns:mrs="http://standards.iso.org/iso/19115/-3/mrs/1.0"
               xmlns:mrd="http://standards.iso.org/iso/19115/-3/mrd/1.0"
               xmlns:mdq="http://standards.iso.org/iso/19157/-2/mdq/1.0"
               xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0">
@@ -94,6 +95,7 @@ Ce schéma est également composé des normes :
       <cit:CI_Responsibility/>
       <cit:CI_Organisation/>
       <mcc:MD_BrowseGraphic/>
+      <mrs:MD_ReferenceSystem/>
       <mrd:MD_Format/>
       <mdq:DQ_DomainConsistency/>
       <mdq:DQ_CompletenessCommission/>
@@ -132,7 +134,7 @@ Ce schéma est également composé des normes :
     the information. When filtered the element is
     preserved but with no content in.
     -->
-    <filter xpath="*//*[@gco:nilReason='withheld']"
+    <filter xpath=".//*[@gco:nilReason='withheld']"
             ifNotOperation="editing">
       <keepMarkedElement gco:nilReason="withheld"/>
     </filter>
@@ -142,7 +144,7 @@ Ce schéma est également composé des normes :
     are filtered when user does not have download
     privilege.
     -->
-    <filter xpath="*//mrd:onLine[contains(*/cit:protocol/gco:CharacterString, 'DOWNLOAD') or
+    <filter xpath=".//mrd:onLine[contains(*/cit:protocol/gco:CharacterString, 'DOWNLOAD') or
                                   */cit:protocol/gco:CharacterString = 'FILE' or
                                   */cit:protocol/gco:CharacterString = 'DB' or
                                   */cit:protocol/gco:CharacterString = 'COPYFILE']"
@@ -153,7 +155,7 @@ Ce schéma est également composé des normes :
     to user not having dynamic privilege.
     TODO: other type of services ?
     -->
-    <filter xpath="*//mrd:onLine[starts-with(*/cit:protocol/gco:CharacterString, 'OGC:WMS')]"
+    <filter xpath=".//mrd:onLine[starts-with(*/cit:protocol/gco:CharacterString, 'OGC:WMS')]"
             ifNotOperation="dynamic"/>
   </filters>
 </schema>

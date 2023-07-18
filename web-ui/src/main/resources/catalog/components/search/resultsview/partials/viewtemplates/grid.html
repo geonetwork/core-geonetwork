@@ -31,6 +31,7 @@
             gn-records="searchResults.records"
             gn-formatter="formatter.defaultUrl"
             title="{{md.resourceTitle}}"
+            class="gn-break"
           >
             {{(md.resourceTitle) | characters:80}}
           </a>
@@ -85,10 +86,7 @@
       <div data-gn-status-badge="md" />
       <div class="gn-toolbar">
         <gn-links-btn class="pull-right"></gn-links-btn>
-
-        <!--<div data-gn-related-dropdown="md"
-             class="pull-right"></div>
-        </div>-->
+        <!-- <div data-gn-related-dropdown="md" data-user="user"></div>-->
       </div>
     </div>
     <!-- /.gn-card-footer -->

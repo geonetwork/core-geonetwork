@@ -37,6 +37,7 @@ import org.fao.geonet.domain.StatusValueType;
 import org.fao.geonet.kernel.datamanager.IMetadataIndexer;
 import org.fao.geonet.kernel.datamanager.IMetadataStatus;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.MetadataStatusRepository;
@@ -96,6 +97,21 @@ public class BaseMetadataStatus implements IMetadataStatus {
     }
 
     /**
+     * Return previous workflow status for the metadata id
+     */
+    @Override
+    public MetadataStatus getPreviousStatus(int metadataId) throws Exception {
+        String sortField = SortUtils.createPath(MetadataStatus_.id, MetadataStatus_.changeDate);
+        List<MetadataStatus> metadataStatusList = metadataStatusRepository.findAllByMetadataIdAndByType(
+            metadataId, StatusValueType.workflow, Sort.by(Sort.Direction.DESC, sortField));
+        if (metadataStatusList.isEmpty() || metadataStatusList.size() == 1) {
+            return null;
+        } else {
+            return metadataStatusList.get(1);
+        }
+    }
+
+    /**
      * Return all status for the metadata id
      */
     @Override
@@ -139,14 +155,14 @@ public class BaseMetadataStatus implements IMetadataStatus {
     public MetadataStatus setStatus(ServiceContext context, int id, int status, ISODate changeDate,
             String changeMessage) throws Exception {
         MetadataStatus statusObject = setStatusExt(context, id, status, changeDate, changeMessage);
-        metadataIndexer.indexMetadata(Integer.toString(id), true);
+        metadataIndexer.indexMetadata(Integer.toString(id), true, IndexingMode.full);
         return statusObject;
     }
 
     @Override
     public MetadataStatus setStatusExt(MetadataStatus metatatStatus) throws Exception {
         metadataStatusRepository.save(metatatStatus);
-        metadataIndexer.indexMetadata(metatatStatus.getMetadataId() + "", true);
+        metadataIndexer.indexMetadata(metatatStatus.getMetadataId() + "", true, IndexingMode.full);
         return metatatStatus;
     }
 
@@ -232,7 +248,7 @@ public class BaseMetadataStatus implements IMetadataStatus {
         metatatStatus.setTitles(metadataUtils.extractTitles(Integer.toString(metadataId)));
 
         metadataStatusRepository.save(metatatStatus);
-        metadataIndexer.indexMetadata(metadataId + "", true);
+        metadataIndexer.indexMetadata(metadataId + "", true, IndexingMode.full);
     }
 
     // Utility to verify workflow status transitions

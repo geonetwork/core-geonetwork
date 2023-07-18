@@ -99,6 +99,8 @@
 
   <xsl:variable name="metadata"
                 select="//gmd:MD_Metadata"/>
+  <xsl:variable name="metadataUuid"
+                select="$metadata/gmd:fileIdentifier/*/text()"/>
 
   <!-- TODO: Convert language code eng > en_US ? -->
   <xsl:variable name="metadataLanguage"
@@ -339,15 +341,18 @@
       <xsl:for-each select="../gmd:pointOfContact/*[gmd:role/gmd:CI_RoleCode/@codeListValue = ('pointOfContact', 'custodian')]">
         <datacite:creator>
           <!-- The full name of the creator. -->
-          <datacite:creatorName nameType="Personal">
-            <xsl:value-of select="gmd:individualName/*/text()"/>
-          </datacite:creatorName>
-          <!--<xsl:apply-templates mode="toDataciteLocalized" select="gmd:individualName">
-            <xsl:with-param name="template">
-              <datacite:creatorName nameType="Personal"/>
-            </xsl:with-param>
-          </xsl:apply-templates>-->
-
+          <xsl:choose>
+            <xsl:when test="gmd:individualName/*/text() != ''">
+              <datacite:creatorName nameType="Personal">
+                <xsl:value-of select="gmd:individualName/*/text()"/>
+              </datacite:creatorName>
+            </xsl:when>
+            <xsl:otherwise>
+              <datacite:creatorName nameType="Organizational">
+                <xsl:value-of select="gmd:organisationName/*/text()"/>
+              </datacite:creatorName>
+            </xsl:otherwise>
+          </xsl:choose>
           <!--
           <datacite:givenName>Elizabeth</datacite:givenName>
           <datacite:familyName>Miller</datacite:familyName>
@@ -442,12 +447,17 @@ eg.
       <datacite:publisher>DataCite</datacite:publisher>
       <datacite:publicationYear>2014</datacite:publicationYear>
 
-      TODO: Define who is the publisher ? Only one allowed.
+  publisher is the first distributor contact
+  or the first point of contact having the role "distributor"
   -->
   <xsl:template mode="toDatacite"
                 match="gmd:distributionInfo[1]">
     <datacite:publisher>
-      <xsl:value-of select="($metadata//gmd:distributorContact)[1]/*/gmd:organisationName/gco:CharacterString"/>
+      <xsl:variable name="publisher"
+                    select="if ($metadata//gmd:distributorContact)
+                            then $metadata//gmd:distributorContact
+                            else $metadata/gmd:identificationInfo/*/gmd:pointOfContact[*/gmd:role/*/@codeListValue = 'distributor']"/>
+      <xsl:value-of select="$publisher[1]/*/gmd:organisationName/*/text()"/>
     </datacite:publisher>
 
     <!--

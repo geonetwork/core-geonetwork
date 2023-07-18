@@ -40,6 +40,7 @@ import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.exceptions.BadServerCertificateEx;
 import org.fao.geonet.exceptions.BadXmlResponseEx;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.kernel.datamanager.IMetadataIndexer;
@@ -54,6 +55,7 @@ import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.harvest.harvester.IHarvester;
 import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
 import org.fao.geonet.kernel.harvest.harvester.UriMapper;
+import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataCategoryRepository;
 import org.fao.geonet.util.Sha1Encoder;
@@ -208,6 +210,8 @@ class Harvester extends BaseAligner<ThreddsParams> implements IHarvester<Harvest
     private IMetadataIndexer mdIndexer;
     private DataManager dataMan;
 
+    private GeonetworkDataDirectory dataDirectory;
+
     //---------------------------------------------------------------------------
     //---
     //--- API methods
@@ -242,6 +246,7 @@ class Harvester extends BaseAligner<ThreddsParams> implements IHarvester<Harvest
         mdOperations = gc.getBean(IMetadataOperations.class);
         mdIndexer = gc.getBean(IMetadataIndexer.class);
         dataMan = gc.getBean(DataManager.class);
+        dataDirectory = gc.getBean(GeonetworkDataDirectory.class);
 
     }
 
@@ -366,24 +371,12 @@ class Harvester extends BaseAligner<ThreddsParams> implements IHarvester<Harvest
         Path schemaDir = schemaMan.getSchemaDir(params.outputSchema);
 
         //--- get service and dataset style sheets, try schema first
-       	Path serviceStyleSheet = schemaDir.
-            resolve(Geonet.Path.TDS_19119_19139_STYLESHEETS).
-            resolve("ThreddsCatalog-to-19119.xsl");
-       	Path datasetStyleSheet = schemaDir.
-            resolve(Geonet.Path.TDS_19119_19139_STYLESHEETS).
-            resolve("ThreddsCatalog-to-19139.xsl");
-        if (!Files.exists(serviceStyleSheet)) {
-        	serviceStyleSheet = context.getAppPath().
-            resolve(Geonet.Path.IMPORT_STYLESHEETS).
-            resolve("ThreddsCatalog-to-ISO19119.xsl");
-        }
-        if (!Files.exists(datasetStyleSheet)) {
-        	datasetStyleSheet = context.getAppPath().
-            resolve(Geonet.Path.IMPORT_STYLESHEETS).
-            resolve("ThreddsCatalog-to-ISO19139.xsl");
-				}
+       	Path serviceStyleSheet = dataDirectory.getXsltConversion("schema:" + params.outputSchema + ":"
+            + Geonet.Path.TDS_19119_19139_STYLESHEETS + "ThreddsCatalog-to-19119");
+       	Path datasetStyleSheet = dataDirectory.getXsltConversion("schema:" + params.outputSchema + ":"
+            + Geonet.Path.TDS_19119_19139_STYLESHEETS +"ThreddsCatalog-to-19139");
 
-				Path dataParamsNCSSStylesheet = null;
+        Path dataParamsNCSSStylesheet = null;
         // -- This is schema dependent
         if (schemaDir.toString().contains("iso19139.mcp")) {
             dataParamsNCSSStylesheet = schemaDir.
@@ -393,7 +386,7 @@ class Harvester extends BaseAligner<ThreddsParams> implements IHarvester<Harvest
             dataParamsNCSSStylesheet = schemaDir.
 							resolve(Geonet.Path.TDS_19119_19139_STYLESHEETS).
               resolve("NetcdfSubsetDataset-to-ISO191152contentInfo.xsl");
-				}
+        }
 
         //--- Get base host url
         URL url = new URL(params.url);
@@ -579,13 +572,13 @@ class Harvester extends BaseAligner<ThreddsParams> implements IHarvester<Harvest
         	addCategories(metadata, params.getCategories(), localCateg, context, null, false);
 				}
 
-        metadata = (Metadata) mdManager.insertMetadata(context, metadata, md, false, false, UpdateDatestamp.NO, false, false);
+        metadata = (Metadata) mdManager.insertMetadata(context, metadata, md, IndexingMode.none, false, UpdateDatestamp.NO, false, false);
 
         String id = String.valueOf(metadata.getId());
 
         addPrivileges(id, params.getPrivileges(), localGroups, context);
 
-        mdIndexer.indexMetadata(id, true);
+        mdIndexer.indexMetadata(id, true, IndexingMode.full);
 
         mdManager.flush();
     }

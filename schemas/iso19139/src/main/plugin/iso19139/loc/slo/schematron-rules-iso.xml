@@ -136,12 +136,13 @@
   <alert.m23>
     <div>Musí sa zdokumentovať buď 'aggregateDataSetName' alebo 'aggregateDataSetIdentifier' </div>
   </alert.m23>
-  <report.m23>aggregateDataSetName alebo aggregateDataSetIdentifier je zdokumentované. </report.m23>
+  <report.m23>aggregateDataSetName alebo aggregateDataSetIdentifier je zdokumentované. </report.M23>
+<report.M23-dup>An associated resource is declared multiple time with same association and initiative type.</report.M23-dup>
   <alert.m24>
     <div>Chýbajúci jazyk. </div>
   </alert.m24>
   <alert.m26.obligation>
-    <div>Ak 'dataType' nie je 'zoznam', 'výpočet' alebo 'codelistElement' potom ''povinnosť' je povinné. 
+    <div>Ak 'dataType' nie je 'zoznam', 'výpočet' alebo 'codelistElement' potom ''povinnosť' je povinné.
 </div>
   </alert.m26.obligation>
   <alert.m26.maximumoccurence>

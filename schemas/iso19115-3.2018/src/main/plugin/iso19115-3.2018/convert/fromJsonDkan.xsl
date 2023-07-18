@@ -70,14 +70,14 @@
           </lan:language>
           <lan:characterEncoding>
             <lan:MD_CharacterSetCode codeList="codeListLocation#MD_CharacterSetCode"
-                                     codeListValue=""/>
+                                     codeListValue="utf8"/>
           </lan:characterEncoding>
         </lan:PT_Locale>
       </mdb:defaultLocale>
       <mdb:metadataScope>
         <mdb:MD_MetadataScope>
           <mdb:resourceScope>
-            <mcc:MD_ScopeCode codeList="" codeListValue="{type}"/>
+            <mcc:MD_ScopeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_ScopeCode" codeListValue="dataset"/>
           </mdb:resourceScope>
         </mdb:MD_MetadataScope>
       </mdb:metadataScope>
@@ -366,9 +366,9 @@
     <xsl:param name="value"></xsl:param>
 
     <!-- Regexps for parsing expected date formats -->
-    <!-- example of localized date: "jeu, 03/06/2021 - 03:00" -->
-    <xsl:variable name="regExLoc">^.*([0-9]{2})/([0-9]{2})/([0-9]{4}) - ([0-9]{2}:[0-9]{2})$</xsl:variable>
-    <!-- example of internationalized date: "2020-12-09 00:00:00" -->
+    <!-- examples of localized date: "jeu, 24/12/2020 - 03:00", "24-12-2020 03:00" -->
+    <xsl:variable name="regExLoc">^.*([0-9]{2})[-/]([0-9]{2})[-/]([0-9]{4})[-\s]+([0-9]{2}:[0-9]{2}).*$</xsl:variable>
+    <!-- example of internationalized date: "2020-12-24 03:00:00" -->
     <xsl:variable name="regExInt">^([0-9]{4})-([0-9]{2})-([0-9]{2}) ([0-9]{2}:[0-9]{2}:[0-9]{2})$</xsl:variable>
 
     <xsl:variable name="dateFormatted">

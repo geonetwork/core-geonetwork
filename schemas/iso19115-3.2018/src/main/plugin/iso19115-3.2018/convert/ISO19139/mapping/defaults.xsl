@@ -4,6 +4,8 @@
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 xmlns:gmd="http://www.isotc211.org/2005/gmd"
                 xmlns:gcoold="http://www.isotc211.org/2005/gco"
+                xmlns:gfcold="http://www.isotc211.org/2005/gfc"
+                xmlns:gfc="http://standards.iso.org/iso/19110/gfc/1.1"
                 xmlns:gmi="http://www.isotc211.org/2005/gmi"
                 xmlns:gmx="http://www.isotc211.org/2005/gmx"
                 xmlns:gsr="http://www.isotc211.org/2005/gsr"
@@ -86,6 +88,17 @@
         <xsl:when test="name()='gmi:MI_Metadata'">
           <xsl:text>mdb</xsl:text>
         </xsl:when>
+        <xsl:when test="name() = 'gfc:name' or name() = 'gmx:name'
+                     or name() = 'gfc:scope' or name() = 'gmx:scope'
+                     or name() = 'gfc:fieldOfApplication' or name() = 'gmx:fieldOfApplication'
+                     or name() = 'gfc:versionNumber' or name() = 'gmx:versionNumber'
+                     or name() = 'gfc:versionDate' or name() = 'gmx:versionDate'
+                     or name() = 'gfc:language' or name() = 'gmx:language'
+                     or name() = 'gfc:characterSet' or name() = 'gmx:characterSet'
+                     or name() = 'gfc:locale' or name() = 'gmx:locale'
+        ">
+          <xsl:text>cat</xsl:text>
+        </xsl:when>
         <xsl:when test="starts-with(name(),'gmx:')">
           <xsl:text>gcx</xsl:text>
         </xsl:when>
@@ -97,6 +110,9 @@
         </xsl:when>
         <xsl:when test="starts-with(name(),'gts:')">
           <xsl:text>gco</xsl:text>
+        </xsl:when>
+        <xsl:when test="starts-with(name(),'gfc:')">
+          <xsl:text>gfc</xsl:text>
         </xsl:when>
         <xsl:when test="starts-with(name(),'srv:') and not(name()='srv:extent')">
           <xsl:text>srv</xsl:text>
@@ -163,10 +179,14 @@
           <xsl:text>gex</xsl:text>
         </xsl:when>
         <xsl:when
-          test="ancestor-or-self::gmd:MD_Georectified or ancestor-or-self::gmi:MI_Georectified
-          or ancestor-or-self::gmd:MD_Georeferenceable or ancestor-or-self::gmi:MI_Georeferenceable
-          or ancestor-or-self::gmd:MD_GridSpatialRepresentation or ancestor-or-self::gmd:MD_ReferenceSystem
-          or name()=gmi:MI_Metadata">
+          test="ancestor-or-self::gmd:MD_Georectified
+                or ancestor-or-self::gmi:MI_Georectified
+                or ancestor-or-self::gmd:MD_Georeferenceable
+                or ancestor-or-self::gmi:MI_Georeferenceable
+                or ancestor-or-self::gmd:MD_GridSpatialRepresentation
+                or ancestor-or-self::gmd:MD_ReferenceSystem
+                or ancestor-or-self::gmd:MD_VectorSpatialRepresentation
+                or name()=gmi:MI_Metadata">
           <xsl:text>msr</xsl:text>
         </xsl:when>
         <xsl:when test="ancestor-or-self::gmd:DQ_Scope">
@@ -175,7 +195,7 @@
         <xsl:when test="ancestor-or-self::gmd:MD_Distribution or ancestor-or-self::gmd:MD_Format">
           <xsl:text>mrd</xsl:text>
         </xsl:when>
-        <xsl:when test="ancestor-or-self::gmd:MD_Resolution or ancestor-or-self::gmd:MD_RepresentativeFraction or ancestor-or-self::gmd:MD_VectorSpatialRepresentation">
+        <xsl:when test="ancestor-or-self::gmd:MD_Resolution or ancestor-or-self::gmd:MD_RepresentativeFraction">
           <xsl:text>mri</xsl:text>
         </xsl:when>
         <xsl:when test="ancestor-or-self::gmd:MD_MaintenanceInformation">

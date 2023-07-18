@@ -1,6 +1,8 @@
 // GN Styles
-@import "../lib/style/font-awesome/less/font-awesome.less";
-@import "../lib/style/bootstrap/less/variables.less";
+@import "../catalog/lib/style/font-awesome/css/all.css";
+@import "../catalog/lib/style/font-awesome/css/v4-shims.css";
+@import "../catalog/lib/style/font-awesome/css/v4-font-face.css";
+@import "gn_bootstrap.less";
 @import (less) "../lib/ol.css";
 @import (less) "../lib/angular.ext/hotkeys/hotkeys.min.css";
 @import "gn_doc.less";
@@ -9,7 +11,7 @@
 @import "../views/default/less/gn_variables_default.less"; // must be last
 
 @fa-version: "4.4.0";
-@fa-font-path: "../catalog/lib/style/font-awesome/fonts";
+@fa-font-path: "../catalog/lib/style/font-awesome/webfonts";
 
 div[gn-transfer-ownership] * .list-group {
   max-height: 45em;
@@ -19,6 +21,11 @@ div[gn-transfer-ownership] * .list-group {
 .gn-pager {
   .pagination {
     margin: 0;
+    li > span,
+    li > span:hover {
+      border: none;
+      background: none;
+    }
   }
 }
 
@@ -70,6 +77,9 @@ div[gn-transfer-ownership] * .list-group {
   }
 }
 
+.btn-help {
+  background-color: #e2edf7 !important;
+}
 .btn-circle {
   width: 30px;
   height: 30px;
@@ -97,11 +107,14 @@ div[gn-transfer-ownership] * .list-group {
 }
 // help button
 [data-gn-need-help] {
-  margin-top: 10px;
+  margin-bottom: 10px !important;
 }
 .panel-heading {
   [data-gn-need-help] {
-    margin-top: 0;
+    margin-bottom: 0 !important;
+    padding: 1px 5px;
+    font-size: 12px;
+    line-height: 1.5;
   }
 }
 
@@ -203,6 +216,7 @@ div[gn-transfer-ownership] * .list-group {
 
 a {
   word-wrap: break-word;
+  word-break: break-all;
 }
 .gn-break {
   word-wrap: break-word;
@@ -451,7 +465,7 @@ div.gn-scroll-spy {
     border-top: 1px solid @modal-footer-border-color;
     padding: 15px;
     [data-gn-need-help] {
-      margin-top: 0;
+      margin-bottom: 0 !important;
       border: 0;
       font-size: 18px;
     }
@@ -476,9 +490,6 @@ div.thumb-small {
 }
 .gn-list-file {
   position: relative;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
   width: 100%;
   text-align: left;
   margin-bottom: 5px !important;
@@ -684,18 +695,18 @@ input[type="file"] {
   left: 5px;
 }
 
-.gn-recordtype-n:before {
-  content: @fa-var-file-text;
-}
-.gn-recordtype-s:before {
-  content: @fa-var-bookmark;
-}
-.gn-recordtype-y:before {
-  content: @fa-var-file-o;
-}
-.gn-recordtype-t:before {
-  content: @fa-var-bookmark-o;
-}
+//.gn-recordtype-n:before {
+//  content: @fa-var-file-text;
+//}
+//.gn-recordtype-s:before {
+//  content: @fa-var-bookmark;
+//}
+//.gn-recordtype-y:before {
+//  content: @fa-var-file-o;
+//}
+//.gn-recordtype-t:before {
+//  content: @fa-var-bookmark-o;
+//}
 
 [data-gn-slide-toggle] {
   padding-left: 20px;
@@ -853,6 +864,7 @@ i.fa-times.delete:hover {
   .gn-status-stamp {
     position: absolute;
     margin: 100px;
+    right: 0;
     overflow: hidden;
     transform: rotate(-15deg);
     font-size: 4rem;
@@ -899,6 +911,15 @@ i.fa-times.delete:hover {
     margin-right: -8px;
     bottom: auto;
   }
+  .gn-status-bottomright {
+    position: absolute;
+    left: auto;
+    right: 0;
+    float: right;
+    margin-right: -8px;
+    bottom: 10px;
+    line-height: 1.6em;
+  }
   .gn-status-table {
     position: relative;
     bottom: unset;
@@ -916,6 +937,16 @@ i.fa-times.delete:hover {
   }
   .gn-status-lg {
     font-size: 1.6em;
+  }
+
+  // ----- Keep the text size inside card panels for related metadata
+  .gn-card-heading {
+    .gn-status-md {
+      font-size: inherit !important;
+    }
+    .gn-status-lg {
+      font-size: inherit !important;
+    }
   }
 }
 
@@ -1043,7 +1074,8 @@ fieldset[disabled] .radio label {
   }
 }
 
-input.ng-invalid {
+input.ng-invalid,
+select.ng-invalid {
   border-color: #a94442;
 }
 
@@ -1075,29 +1107,6 @@ input.ng-invalid {
   }
 }
 
-/* Highlight updated checkboxes in sharing form */
-.gn-sharing-batch {
-  // remove
-  input.ng-dirty.ng-empty:after {
-    content: "-";
-    padding-left: 20px;
-    margin-top: -20px;
-    color: @brand-danger;
-    font-size: 24px;
-    display: inline-block;
-    font-weight: bold;
-  }
-  // add
-  input.ng-dirty.ng-not-empty:after {
-    content: "+";
-    padding-left: 20px;
-    margin-top: -20px;
-    color: @brand-success;
-    font-size: 24px;
-    display: inline-block;
-    font-weight: bold;
-  }
-}
 [gn-batch-categories] {
   // remove
   input.ng-dirty.ng-empty ~ span {
@@ -1251,7 +1260,7 @@ gn-md-type-inspire-validation-widget {
     vertical-align: middle;
     padding-left: 3px;
     margin: -6px 0px;
-    line-height: 1em;
+    line-height: normal;
     .gn-user-name {
       max-width: 200px;
       display: inline-block;
@@ -1594,12 +1603,18 @@ gn-indexing-task-status {
 .width-66 {
   width: 66%;
 }
+.w-30-px {
+  width: 30px;
+}
 .max-width-none {
   max-width: none;
 }
 .height-auto {
   height: auto !important;
   max-height: none !important;
+}
+.height-70-px {
+  height: 70px;
 }
 .col-2 {
   column-count: 2;
@@ -1612,6 +1627,9 @@ gn-indexing-task-status {
   & > div {
     break-inside: avoid;
   }
+}
+.d-block {
+  display: block;
 }
 .d-inline {
   display: inline;

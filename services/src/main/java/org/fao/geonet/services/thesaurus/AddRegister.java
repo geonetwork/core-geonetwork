@@ -30,11 +30,8 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.domain.Constants;
-import org.fao.geonet.domain.ThesaurusActivation;
 import org.fao.geonet.kernel.Thesaurus;
 import org.fao.geonet.kernel.ThesaurusManager;
-import org.fao.geonet.repository.ThesaurusActivationRepository;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
 
@@ -69,14 +66,6 @@ public class AddRegister extends NotInReadOnlyModeService {
 
         Thesaurus gst = tm.getThesaurusByName(theKey);
         String fname = gst.getFname();
-
-        final ThesaurusActivationRepository activationRepository = context.getBean(ThesaurusActivationRepository.class);
-
-        final ThesaurusActivation activation = new ThesaurusActivation();
-        activation.setId(fname);
-        activation.setActivated(Constants.toBoolean_fromYNChar(activated.charAt(0)));
-
-        activationRepository.save(activation);
 
         Element elResp = new Element(Jeeves.Elem.RESPONSE);
         Element elRef = new Element("ref");

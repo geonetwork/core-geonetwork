@@ -39,15 +39,11 @@
     <div class="col-xs-12 col-md-4">
       <div class="form-group">
         <label data-translate="">filterStatusByRecordId</label>
-        <input
-          type="text"
-          class="form-control"
-          data-ng-model="filter.recordFilter"
-          data-typeahead="t.id as t.title for t in getSuggestions($viewValue)"
-          data-typeahead-loading="anyLoading"
-          data-typeahead-min-length="1"
-          data-typeahead-focus-first="false"
-          data-typeahead-wait-ms="300"
+        <div
+          data-gn-suggest="searchObj"
+          data-gn-suggest-model="filter.uuid"
+          data-gn-suggest-property="_id"
+          data-gn-suggest-display-title="span"
         />
       </div>
 

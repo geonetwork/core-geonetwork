@@ -126,12 +126,12 @@
           getTopicCategories: function (schema) {
             var defer = $q.defer();
             var url = getTopicCategoriesSearchUrl(schema);
-            $http
-              .get(url, { cache: true })
-              .success(function (data) {
-                defer.resolve(parseTopicCategoriesResponse(data));
-              })
-              .error(function (data, status) {});
+            $http.get(url, { cache: true }).then(
+              function (response) {
+                defer.resolve(parseTopicCategoriesResponse(response.data));
+              },
+              function (response) {}
+            );
             return defer.promise;
           },
 

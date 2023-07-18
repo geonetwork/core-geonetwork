@@ -46,10 +46,13 @@
           event.preventDefault();
       });
 
+      $scope.isNew = false;
       $scope.mdIdentifierTemplates = [];
       $scope.mdIdentifierTemplateSelected = {};
 
       $scope.selectTemplate = function (template) {
+        $scope.isNew = false;
+
         if ($(".ng-dirty").length > 0 && confirm($translate.instant("doSaveConfirm"))) {
           $scope.saveMetadataIdentifierTemplate(false);
         }
@@ -64,12 +67,13 @@
       function loadMetadataUrnTemplates() {
         $scope.mdIdentifierTemplateSelected = {};
 
-        $http.get("../api/identifiers?userDefinedOnly=true").success(function (data) {
-          $scope.mdIdentifierTemplates = data;
+        $http.get("../api/identifiers?userDefinedOnly=true").then(function (response) {
+          $scope.mdIdentifierTemplates = response.data;
         });
       }
 
       $scope.addMetadataIdentifierTemplate = function () {
+        $scope.isNew = true;
         $scope.mdIdentifierTemplateSelected = {
           id: "-99",
           name: "",
@@ -77,27 +81,31 @@
         };
       };
 
-      $scope.deleteMetadataIdentifierTemplate = function (id) {
-        $http
-          .delete("../api/identifiers/" + id)
-          .success(function (data) {
+      $scope.deleteTemplateConfig = function () {
+        $("#gn-confirm-remove-metadataidentifiertpl").modal("show");
+      };
+
+      $scope.confirmDeleteTemplateConfig = function () {
+        $http.delete("../api/identifiers/" + $scope.mdIdentifierTemplateSelected.id).then(
+          function (response) {
             $(".ng-dirty").removeClass("ng-dirty");
             loadMetadataUrnTemplates();
             $rootScope.$broadcast("StatusUpdated", {
-              msg: $translate.instant("metadataUrnTemplateDeleted"),
+              msg: $translate.instant("metadataIdentifierTemplateDeleted"),
               timeout: 2,
               type: "success"
             });
-          })
-          .error(function (data) {
+          },
+          function (response) {
             $(".ng-dirty").removeClass("ng-dirty");
             $rootScope.$broadcast("StatusUpdated", {
-              title: $translate.instant("metadataUrnTemplateDeletedError"),
-              error: data,
+              title: $translate.instant("metadataIdentifierTemplateDeletedError"),
+              error: response.data,
               timeout: 0,
               type: "danger"
             });
-          });
+          }
+        );
       };
 
       $scope.saveMetadataIdentifierTemplate = function () {
@@ -109,24 +117,26 @@
                 : ""),
             $scope.mdIdentifierTemplateSelected
           )
-          .success(function (data) {
-            $(".ng-dirty").removeClass("ng-dirty");
-            loadMetadataUrnTemplates();
-            $rootScope.$broadcast("StatusUpdated", {
-              msg: $translate.instant("metadataIdentifierTemplateUpdated"),
-              timeout: 2,
-              type: "success"
-            });
-          })
-          .error(function (data) {
-            $(".ng-dirty").removeClass("ng-dirty");
-            $rootScope.$broadcast("StatusUpdated", {
-              title: $translate.instant("metadataIdentifier TemplateUpdateError"),
-              error: data,
-              timeout: 0,
-              type: "danger"
-            });
-          });
+          .then(
+            function (response) {
+              $(".ng-dirty").removeClass("ng-dirty");
+              loadMetadataUrnTemplates();
+              $rootScope.$broadcast("StatusUpdated", {
+                msg: $translate.instant("metadataIdentifierTemplateUpdated"),
+                timeout: 2,
+                type: "success"
+              });
+            },
+            function (response) {
+              $(".ng-dirty").removeClass("ng-dirty");
+              $rootScope.$broadcast("StatusUpdated", {
+                title: $translate.instant("metadataIdentifier TemplateUpdateError"),
+                error: response.data,
+                timeout: 0,
+                type: "danger"
+              });
+            }
+          );
       };
 
       loadMetadataUrnTemplates();

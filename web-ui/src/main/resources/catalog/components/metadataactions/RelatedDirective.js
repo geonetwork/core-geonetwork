@@ -279,7 +279,8 @@
   module.directive("gnRecordIsReplacedBy", [
     "$http",
     "Metadata",
-    function ($http, Metadata) {
+    "gnESFacet",
+    function ($http, Metadata, gnESFacet) {
       return {
         restrict: "A",
         templateUrl:
@@ -289,13 +290,14 @@
         },
         link: function (scope) {
           $http
-            .post("../api/search/records/_search", {
-              query: {
+            .post(
+              "../api/search/records/_search",
+              gnESFacet.buildDefaultQuery({
                 query_string: {
                   query: '+agg_associated_revisionOf:"' + scope.uuid + '"'
                 }
-              }
-            })
+              })
+            )
             .then(function (r) {
               scope.items = r.data.hits.hits.map(function (r) {
                 return new Metadata(r);
@@ -438,7 +440,9 @@
                   scope.relations.siblings.map &&
                   scope.groupSiblingsByType
                 ) {
-                  scope.relations.siblings
+                  var siblings = angular.copy(scope.relations.siblings);
+                  scope.relations.siblings = [];
+                  siblings
                     .map(function (r) {
                       return (r.properties && r.properties.initiativeType) || "";
                     })
@@ -446,13 +450,11 @@
                       return self.indexOf(value) === index;
                     })
                     .forEach(function (type) {
-                      scope.relations["siblings" + type] =
-                        scope.relations.siblings.filter(function (r) {
-                          return r.properties && r.properties.initiativeType === type;
-                        });
+                      scope.relations["siblings" + type] = siblings.filter(function (r) {
+                        return r.properties && r.properties.initiativeType === type;
+                      });
                       siblingsCount += scope.relations["siblings" + type].length;
                     });
-                  scope.relations.siblings = [];
                 } else {
                   siblingsCount = scope.relations[idx].length;
                 }
@@ -692,7 +694,8 @@
   ]);
 
   module.directive("gnMetadataCard", [
-    function () {
+    "gnGlobalSettings",
+    function (gnGlobalSettings) {
       return {
         restrict: "E",
         transclude: true,
@@ -708,6 +711,19 @@
         },
         link: function (scope, element, attrs, controller) {
           scope.lang = scope.lang || scope.$parent.lang;
+          scope.showStatusFooterFor =
+            gnGlobalSettings.gnCfg.mods.search.showStatusFooterFor;
+
+          scope.getOverviewUrl = function (md) {
+            if (md.overview && md.overview.length > 0) {
+              return md.overview[0].url;
+              // Related records contain the first overview in the properties.overview property
+            } else if (md.properties && md.properties.overview) {
+              return md.properties.overview;
+            }
+
+            return "";
+          };
         }
       };
     }

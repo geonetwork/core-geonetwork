@@ -50,15 +50,21 @@
           from: 1,
           to: 50,
           type: "service",
-          sortBy: "resourceTitleObject.default.keyword",
+          isTemplate: "n",
+          sortBy: "resourceTitleObject.default.sort",
           sortOrder: "asc"
         }
       };
+      $scope.serviceRecordSearchObj.params = angular.extend(
+        {},
+        $scope.serviceRecordSearchObj.defaultParams
+      );
 
       $scope.selectSource = function (source) {
         source.uiConfig = source.uiConfig && source.uiConfig.toString();
         source.groupOwner = source.groupOwner || null;
         $scope.source = source;
+        $scope.isNew = false;
       };
 
       function filterSources() {
@@ -85,8 +91,14 @@
         if ($scope.user.profile === "UserAdmin") {
           url += "?group=" + $scope.user.groupsWithUserAdmin.join("&group=");
         }
-        $http.get(url).success(function (data) {
-          $scope.sources = data;
+        $http.get(url).then(function (response) {
+          $scope.sources = response.data;
+          if ($scope.source && $scope.source.uuid !== null) {
+            var selectedSource = _.find($scope.sources, { uuid: $scope.source.uuid });
+            if (selectedSource) {
+              $scope.source = selectedSource;
+            }
+          }
           filterSources();
           $scope.isNew = false;
         });
@@ -95,7 +107,9 @@
       function loadUiConfigurations() {
         $scope.uiConfiguration = undefined;
         $scope.uiConfigurationId = "";
-        $http.get("../api/ui").success(function (data) {
+        $http.get("../api/ui").then(function (response) {
+          var data = response.data;
+
           $scope.uiConfigurations = [{ id: "" }];
           for (var i = 0; i < data.length; i++) {
             $scope.uiConfigurations.push({
@@ -116,45 +130,16 @@
           uiConfig: "",
           filter: "",
           serviceRecord: null,
-          groupOwner: null
+          groupOwner: null,
+          listableInHeaderSelector: true
         };
         // TODO: init labels
       };
-      function loadServiceRecords() {
-        var id = $scope.source.serviceRecord;
-
-        if (angular.isDefined(id) && id != -1) {
-          var query = {
-            query: {
-              term: {
-                uuid: {
-                  value: id
-                }
-              }
-            },
-            from: 0,
-            size: 1
-          };
-
-          gnESClient.search(query).then(function (data) {
-            angular.forEach(data.hits.hits, function (record) {
-              var md = new Metadata(record);
-              $scope.cswServiceRecord = md;
-            });
-          });
-        }
-      }
-      $scope.$watchCollection("source.serviceRecord", function (n, o) {
-        if (n != o) {
-          loadServiceRecords();
-        }
-      });
 
       $scope.updateSource = function () {
         var url = "../api/sources" + ($scope.isNew ? "" : "/" + $scope.source.uuid);
-        $http
-          .put(url, $scope.source)
-          .success(function (data) {
+        $http.put(url, $scope.source).then(
+          function (response) {
             $rootScope.$broadcast("StatusUpdated", {
               msg: $translate.instant("sourceUpdated"),
               timeout: 2,
@@ -162,21 +147,25 @@
             });
 
             loadSources();
-          })
-          .error(function (data) {
+          },
+          function (response) {
             $rootScope.$broadcast("StatusUpdated", {
               title: $translate.instant("sourceUpdateError"),
-              error: data,
+              error: response.data,
               timeout: 0,
               type: "danger"
             });
-          });
+          }
+        );
       };
 
-      $scope.removeSource = function () {
-        $http
-          .delete("../api/sources/" + $scope.source.uuid)
-          .success(function (data) {
+      $scope.deleteSourceConfig = function () {
+        $("#gn-confirm-remove-source").modal("show");
+      };
+
+      $scope.confirmDeleteSourceConfig = function () {
+        $http.delete("../api/sources/" + $scope.source.uuid).then(
+          function (response) {
             $rootScope.$broadcast("StatusUpdated", {
               msg: $translate.instant("sourceRemoved"),
               timeout: 2,
@@ -184,15 +173,17 @@
             });
 
             loadSources();
-          })
-          .error(function (data) {
+            $scope.source = null;
+          },
+          function (response) {
             $rootScope.$broadcast("StatusUpdated", {
               title: $translate.instant("sourceRemovedError"),
-              error: data,
+              error: response.data,
               timeout: 0,
               type: "danger"
             });
-          });
+          }
+        );
       };
 
       var uploadLogoDone = function (e, data) {

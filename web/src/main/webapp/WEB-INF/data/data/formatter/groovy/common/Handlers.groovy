@@ -217,7 +217,7 @@ public class Handlers {
     private Element getRelatedReport(int id, String uuid) {
         def relatedXsl = this.env.getBean(GeonetworkDataDirectory).getWebappDir().resolve("xslt/services/metadata/relation.xsl");
         def RelatedItemType[] types = [];
-        def raw = MetadataUtils.getRelated(ServiceContext.get(), id, uuid, types, 1, 1000, true)
+        def raw = MetadataUtils.getRelated(ServiceContext.get(), id, uuid, types, 1, 1000)
         def withGui = new Element("root").addContent(Arrays.asList(
                 new Element("gui").addContent(Arrays.asList(
                         new Element("language").setText(env.lang3),

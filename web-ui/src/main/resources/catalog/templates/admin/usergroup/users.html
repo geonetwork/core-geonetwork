@@ -55,9 +55,7 @@
         </button>
       </div>
     </div>
-    <div
-      data-gn-need-help="administrator-guide/managing-users-and-groups/creating-user.html"
-    ></div>
+    <div data-gn-need-help="creating-user"></div>
   </div>
 
   <div class="col-lg-8" data-ng-hide="userSelected.id == null">
@@ -108,7 +106,7 @@
             data-ng-click="removeUser()"
             id="gn-btn-user-delete"
           >
-            <i class="fa fa-times"></i> <span data-translate="">deleteUser</span>
+            <i class="fa fa-fw fa-times"></i> <span data-translate="">deleteUser</span>
           </button>
         </div>
       </div>
@@ -243,6 +241,7 @@
                       name="password2"
                       class="form-control"
                       autocomplete="off"
+                      gn-valid-password-confirmation="{{userSelected.password===passwordCheck}}"
                       data-ng-model="passwordCheck"
                     />
 

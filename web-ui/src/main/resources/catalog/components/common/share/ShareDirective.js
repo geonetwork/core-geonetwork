@@ -78,6 +78,10 @@
           });
 
           scope.onlyUserGroup = gnConfig["system.metadataprivs.usergrouponly"];
+          scope.profilePublishMetadata =
+            gnConfig["metadata.publication.profilePublishMetadata"];
+          scope.profileUnpublishMetadata =
+            gnConfig["metadata.publication.profileUnpublishMetadata"];
           scope.publicationbyrevieweringroupowneronly =
             gnConfig["system.metadataprivs.publicationbyrevieweringroupowneronly"] ===
             false
@@ -101,6 +105,109 @@
             scope.alertMsg = true;
           }
 
+          /**
+           * Enable a privilege for reserved groups:
+           *   - Batch mode.
+           *   - Admin user.
+           *   - Reviewers if allowed to publish / unpublish metadata.
+           *
+           * @param value
+           * @returns {boolean|*}
+           */
+          scope.enabledReservedGroups = function (value) {
+            if (scope.batch) {
+              return true;
+            } else if (scope.user.isAdmin()) {
+              return true;
+            } else if (!scope.isAdminOrReviewer) {
+              return false;
+            } else {
+              if (
+                scope.profilePublishMetadata === "Reviewer" &&
+                scope.profileUnpublishMetadata === "Reviewer"
+              ) {
+                return true;
+              } else if (
+                scope.profilePublishMetadata === "Reviewer" &&
+                scope.profileUnpublishMetadata === "Administrator"
+              ) {
+                return !value;
+              } else if (
+                scope.profilePublishMetadata === "Administrator" &&
+                scope.profileUnpublishMetadata === "Reviewer"
+              ) {
+                return value;
+              }
+            }
+          };
+
+          /**
+           * Enable select all checkbox:
+           *   - Batch mode.
+           *   - Admin user.
+           *   - Reviewers if allowed to publish / unpublish metadata.
+           *
+           * @returns {boolean}
+           */
+          scope.enabledReservedGroupsSelectAll = function () {
+            if (scope.batch) {
+              return true;
+            } else if (scope.user.isAdmin()) {
+              return true;
+            } else if (!scope.isAdminOrReviewer) {
+              return false;
+            } else {
+              if (
+                scope.profilePublishMetadata === "Reviewer" &&
+                scope.profileUnpublishMetadata === "Reviewer"
+              ) {
+                return true;
+              } else {
+                return false;
+              }
+            }
+          };
+
+          /**
+           * Display a tooltip for a group privilege when is disabled for reviewers:
+           *
+           *   - If the privilege is checked (published) and reviewers not allowed to unpublish.
+           *   - If the privilege is not checked (not published) and reviewers not allowed to publish.
+           *
+           * @returns {boolean}
+           */
+          scope.tooltipReservedGroups = function (value) {
+            var tooltip = "";
+
+            if (!scope.batch && scope.isAdminOrReviewer && !scope.user.isAdmin()) {
+              if (
+                scope.profilePublishMetadata === "Reviewer" &&
+                scope.profileUnpublishMetadata === "Administrator"
+              ) {
+                if (value) {
+                  // If the privilege is checked show tooltip to inform that reviewer can't unpublish.
+                  tooltip = $translate.instant("reviewerNotAllowedUnpublish");
+                }
+              } else if (
+                scope.profilePublishMetadata === "Administrator" &&
+                scope.profileUnpublishMetadata === "Reviewer"
+              ) {
+                if (!value) {
+                  // If the privilege is un-checked show tooltip to inform that reviewer can't publish.
+                  tooltip = $translate.instant("reviewerNotAllowedPublish");
+                }
+              } else if (
+                scope.profilePublishMetadata === "Administrator" &&
+                scope.profileUnpublishMetadata === "Administrator"
+              ) {
+                // Show tooltip to inform that reviewer can't publish / un-publish.
+                tooltip = $translate.instant("reviewerNotAllowedPublishUnpublish");
+              }
+            }
+
+            return tooltip;
+          };
+
           scope.selectPrivilege = function () {
             scope.privilegeIsSelected = true;
           };
@@ -108,6 +215,14 @@
           var loadPrivileges;
           var fillGrid = function (data) {
             scope.privileges = data.privileges;
+            angular.forEach(scope.privileges, function (p) {
+              var checkedCounter = 0,
+                uncheckedCounter = 0;
+              angular.forEach(p.operations, function (v, k) {
+                v === false ? ++uncheckedCounter : ++checkedCounter;
+              });
+              p.isCheckedAll = checkedCounter > uncheckedCounter;
+            });
             scope.operations = data.operations;
             scope.isAdminOrReviewer = data.isAdminOrReviewer;
           };
@@ -133,6 +248,9 @@
                 group.operations[key] = group.isCheckedAll === true;
               }
               $("[name=" + group.group + "-" + key + "]").addClass("ng-dirty");
+              if (scope.opsForm[group.group + "-" + key]) {
+                scope.opsForm[group.group + "-" + key].$dirty = true;
+              }
             });
             scope.privilegeIsSelected = true;
           };

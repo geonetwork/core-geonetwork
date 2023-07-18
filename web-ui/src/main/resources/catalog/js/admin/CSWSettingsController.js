@@ -52,7 +52,6 @@
        * CSW properties
        */
       $scope.cswSettings = {};
-      $scope.cswServiceRecord = null;
 
       $scope.serviceRecordSearchObj = {
         internal: true,
@@ -61,11 +60,16 @@
           any: "",
           from: 1,
           to: 50,
+          isTemplate: "n",
           type: "service",
-          sortBy: "resourceTitleObject.default.keyword",
+          sortBy: "resourceTitleObject.default.sort",
           sortOrder: "asc"
         }
       };
+      $scope.serviceRecordSearchObj.params = angular.extend(
+        {},
+        $scope.serviceRecordSearchObj.defaultParams
+      );
 
       /**
        * CSW element set name (an array of xpath).
@@ -96,50 +100,22 @@
        * Load catalog settings and extract CSW settings
        */
       function loadSettings() {
-        $http
-          .get("../api/site/settings?set=CSW")
-          .success(function (data) {
-            $scope.cswSettings = data;
-            loadServiceRecords();
-          })
-          .error(function (data) {
+        $http.get("../api/site/settings?set=CSW").then(
+          function (response) {
+            $scope.cswSettings = response.data;
+          },
+          function (response) {
             // TODO
-          });
+          }
+        );
       }
-
-      function loadServiceRecords() {
-        var id = $scope.cswSettings["system/csw/capabilityRecordUuid"];
-        if (angular.isDefined(id) && id != -1) {
-          var query = {
-            query: {
-              term: {
-                uuid: {
-                  value: id
-                }
-              }
-            },
-            from: 0,
-            size: 1
-          };
-
-          gnESClient.search(query).then(function (data) {
-            angular.forEach(data.hits.hits, function (record) {
-              var md = new Metadata(record);
-              $scope.cswServiceRecord = md;
-            });
-          });
-        }
-      }
-      $scope.$watchCollection("cswSettings", function (n, o) {
-        if (n != o) {
-          loadServiceRecords();
-        }
-      });
 
       function loadCSWElementSetName() {
         $http
           .get("admin.config.csw.customelementset?_content_type=json&")
-          .success(function (data) {
+          .then(function (response) {
+            var data = response.data;
+
             if (data) {
               $scope.cswElementSetName = $.isArray(data.xpaths)
                 ? data.xpaths
@@ -162,7 +138,7 @@
           url: "admin.config.csw.customelementset.save",
           data: "_content_type=json&" + $(formId).serialize(),
           headers: { "Content-Type": "application/x-www-form-urlencoded" }
-        }).success(function (data) {
+        }).then(function (response) {
           loadCSWElementSetName();
         });
       };
@@ -176,21 +152,23 @@
           .post("../api/site/settings", gnUtilityService.serialize(formId), {
             headers: { "Content-Type": "application/x-www-form-urlencoded" }
           })
-          .success(function (data) {
-            $rootScope.$broadcast("StatusUpdated", {
-              msg: $translate.instant("settingsUpdated"),
-              timeout: 2,
-              type: "success"
-            });
-          })
-          .error(function (data) {
-            $rootScope.$broadcast("StatusUpdated", {
-              title: $translate.instant("settingsUpdateError"),
-              error: data,
-              timeout: 0,
-              type: "danger"
-            });
-          });
+          .then(
+            function (response) {
+              $rootScope.$broadcast("StatusUpdated", {
+                msg: $translate.instant("settingsUpdated"),
+                timeout: 2,
+                type: "success"
+              });
+            },
+            function (response) {
+              $rootScope.$broadcast("StatusUpdated", {
+                title: $translate.instant("settingsUpdateError"),
+                error: response.data,
+                timeout: 0,
+                type: "danger"
+              });
+            }
+          );
       };
 
       /**

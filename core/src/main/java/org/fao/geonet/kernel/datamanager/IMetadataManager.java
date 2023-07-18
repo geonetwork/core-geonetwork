@@ -32,6 +32,7 @@ import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.MetadataSourceInfo;
 import org.fao.geonet.kernel.EditLib;
 import org.fao.geonet.kernel.UpdateDatestamp;
+import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.repository.BatchUpdateQuery;
 import org.fao.geonet.repository.PathSpec;
 import org.fao.geonet.repository.Updater;
@@ -61,12 +62,26 @@ public interface IMetadataManager {
 
     /**
      * Removes the record with the id metadataId
+     * from the database and index without sending events.
+     *
+     * This is useful for harvesting tasks.
      *
      * @param context
      * @param metadataId
      * @throws Exception
      */
     void deleteMetadata(ServiceContext context, String metadataId) throws Exception;
+
+    /**
+     * Delete the record with the id metadataId
+     * from the database and index
+     * and additionally take care of cleaning up resources, send events, ...
+     *
+     * @param context
+     * @param metadataId
+     * @throws Exception
+     */
+    void purgeMetadata(ServiceContext context, String metadataId, boolean withBackup) throws Exception;
 
     /**
      * Removes a record without notifying.
@@ -113,13 +128,13 @@ public interface IMetadataManager {
      * @param createDate date of creation
      * @param changeDate date of modification
      * @param ufo whether to apply automatic changes
-     * @param index whether to index this metadata
+     * @param indexingMode whether to index this metadata
      * @return id, as a string
      * @throws Exception hmm
      */
     String insertMetadata(ServiceContext context, String schema, Element metadataXml, String uuid, int owner, String groupOwner,
-            String source, String metadataType, String docType, String category, String createDate, String changeDate, boolean ufo,
-            boolean index) throws Exception;
+                          String source, String metadataType, String docType, String category, String createDate, String changeDate, boolean ufo,
+                          IndexingMode indexingMode) throws Exception;
 
     /**
      * /** Inserts a metadata into the database, optionally indexing it, and optionally applying automatic changes to it
@@ -128,7 +143,7 @@ public interface IMetadataManager {
      * @param context
      * @param newMetadata
      * @param metadataXml
-     * @param index
+     * @param indexingMode
      * @param updateFixedInfo
      * @param updateDatestamp
      * @param fullRightsForGroup
@@ -136,7 +151,7 @@ public interface IMetadataManager {
      * @return
      * @throws Exception
      */
-    AbstractMetadata insertMetadata(ServiceContext context, AbstractMetadata newMetadata, Element metadataXml, boolean index,
+    AbstractMetadata insertMetadata(ServiceContext context, AbstractMetadata newMetadata, Element metadataXml, IndexingMode indexingMode,
                                     boolean updateFixedInfo, UpdateDatestamp updateDatestamp, boolean fullRightsForGroup, boolean forceRefreshReaders)
             throws Exception;
 
@@ -170,8 +185,8 @@ public interface IMetadataManager {
      *
      * @return metadata if the that was updated
      */
-    AbstractMetadata updateMetadata(ServiceContext context, String metadataId, Element md, boolean validate, boolean ufo, boolean index,
-            String lang, String changeDate, boolean updateDateStamp) throws Exception;
+    AbstractMetadata updateMetadata(ServiceContext context, String metadataId, Element md, boolean validate, boolean ufo,
+                                    String lang, String changeDate, boolean updateDateStamp, IndexingMode indexingMode) throws Exception;
 
     /**
      * Add privileges information about metadata record which depends on context and usually could not be stored in db or Lucene index

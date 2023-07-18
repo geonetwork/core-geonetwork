@@ -1,6 +1,6 @@
 <div data-ng-search-form="" data-runSearch="true">
   <div
-    data-ng-if="!showHealthIndexError"
+    data-ng-if="!showHealthIndexError && searchOptions.fullText !== false"
     class="hidden-print"
     data-ng-include="'../../catalog/views/default/templates/searchForm.html'"
   ></div>
@@ -9,8 +9,12 @@
     <div class="col-sm-offset-6" data-gn-index-error-panel=""></div>
 
     <div data-ng-class="fluidLayout ? 'container-fluid' : 'container'">
-      <div class="col-md-3 gn-search-facet">
-        <div ng-if="showMapInFacet">
+      <div
+        class="gn-search-facet"
+        data-ng-class="(isFilterTagsDisplayedInSearch === true
+            || searchResults.facets.length > 0) ? 'col-md-3': 'hidden'"
+      >
+        <div ng-if="searchMapPlacement === 'facets'">
           <div class="panel panel-default">
             <div class="panel-heading" data-gn-slide-toggle="">
               <span translate="" class="ng-scope">map</span>
@@ -34,9 +38,9 @@
           data-gn-user-searches-panel="user"
           data-ng-if="isUserSearchesEnabled && user.isConnected()"
         ></div>
-
         <div
-          data-ng-show="searchResults.records.length > 0"
+          data-ng-show="searchResults.records.length > 0
+            && searchResults.facets.length > 0"
           data-es-facets="searchResults.facets"
         ></div>
 
@@ -47,7 +51,11 @@
       </div>
       <!-- /.gn-search-facet -->
 
-      <div class="col-md-9 container-fluid">
+      <div
+        class="container-fluid"
+        data-ng-class="(isFilterTagsDisplayedInSearch === true
+            || searchResults.facets.length > 0) ? 'col-md-9': 'col-md-12'"
+      >
         <div
           class="row gn-row-tools hidden-print"
           data-ng-show="searchResults.records.length > 0"
@@ -110,7 +118,10 @@
               data-template-url="resultTemplate"
               data-map="searchObj.searchMap"
             ></div>
-
+          </div>
+        </div>
+        <div class="row gn-row-tools gn-noborder-bottom hidden-print">
+          <div class="col-sm-3">
             <button
               data-ng-show="searchResults.records.length > 9"
               class="btn btn-link hidden-print"
@@ -120,11 +131,20 @@
               <i class="fa fa-fw fa-chevron-up" />
             </button>
           </div>
+          <div class="col-xs-12 col-sm-6 text-center">
+            <div
+              class=""
+              data-gn-pagination="paginationInfo"
+              data-hits-values="searchObj.hitsperpageValues"
+              data-enable-hot-keys=""
+              data-enable-events=""
+            ></div>
+          </div>
         </div>
       </div>
     </div>
 
-    <div ng-if="!showMapInFacet" class="hidden-print">
+    <div ng-if="searchMapPlacement === 'results'" class="hidden-print">
       <div
         data-gn-map-field="searchObj.searchMap"
         data-gn-map-field-geom="searchObj.params.geometry"

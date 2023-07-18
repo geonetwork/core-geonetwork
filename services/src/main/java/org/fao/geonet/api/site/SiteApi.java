@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2021 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2023 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -32,7 +32,7 @@ import jeeves.config.springutil.ServerBeanPropertyUpdater;
 import jeeves.server.JeevesProxyInfo;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.core.CountRequest;
 import org.elasticsearch.client.core.CountResponse;
@@ -55,6 +55,7 @@ import org.fao.geonet.index.es.EsRestClient;
 import org.fao.geonet.index.es.EsServerStatusChecker;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
+import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.base.BaseMetadataManager;
 import org.fao.geonet.kernel.harvest.HarvestManager;
@@ -67,6 +68,7 @@ import org.fao.geonet.repository.*;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.resources.Resources;
 import org.fao.geonet.utils.FilePathChecker;
+import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.ProxyInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -85,10 +87,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.imageio.ImageIO;
-import javax.persistence.criteria.Root;
+import javax.servlet.ServletRegistration;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.DirectoryStream;
@@ -107,6 +110,7 @@ import java.util.TimeZone;
 
 import static org.apache.commons.fileupload.util.Streams.checkFileName;
 import static org.fao.geonet.api.ApiParams.API_CLASS_CATALOG_TAG;
+import static org.fao.geonet.constants.Geonet.Path.IMPORT_STYLESHEETS_SCHEMA_PREFIX;
 
 /**
  *
@@ -119,9 +123,13 @@ import static org.fao.geonet.api.ApiParams.API_CLASS_CATALOG_TAG;
     description = ApiParams.API_CLASS_CATALOG_OPS)
 @Controller("site")
 public class SiteApi {
-
+    @Autowired
+    GeonetworkDataDirectory dataDirectory;
     @Autowired
     SettingManager settingManager;
+
+    @Autowired
+    SchemaManager schemaManager;
 
     @Autowired
     NodeInfo node;
@@ -225,6 +233,15 @@ public class SiteApi {
                     .setValue(StringUtils.isEmpty(source.get().getLabel(iso3langCode))
                         ? source.get().getName() : source.get().getLabel(iso3langCode)));
         }
+
+        // Setting for OGC API Records service enabled
+        String microservicesTargetUri = (String) request.getServletContext().getAttribute("MicroServicesProxy.targetUri");
+
+        response.getSettings().add(
+            new Setting().setName(Settings.MICROSERVICES_ENABLED)
+                .setValue(Boolean.toString(StringUtils.isNotBlank(microservicesTargetUri)))
+                .setDataType(SettingDataType.BOOLEAN));
+
         return response;
     }
 
@@ -346,7 +363,6 @@ public class SiteApi {
         @Parameter(hidden = true)
             HttpSession httpSession
     ) throws Exception {
-        ConfigurableApplicationContext appContext = ApplicationContextHolder.get();
         UserSession session = ApiUtils.getUserSession(httpSession);
         Profile profile = session == null ? null : session.getProfile();
 
@@ -411,10 +427,10 @@ public class SiteApi {
         String newSiteName = settingManager.getSiteName();
         // Update site source name/translations if the site name is updated
         if (!oldSiteName.equals(newSiteName)) {
-            SourceRepository sourceRepository = applicationContext.getBean(SourceRepository.class);
-            Source siteSource = sourceRepository.findById(currentUuid).get();
+            Optional<Source> siteSourceOpt = sourceRepository.findById(currentUuid);
 
-            if (siteSource != null) {
+            if (siteSourceOpt.isPresent()) {
+                Source siteSource = siteSourceOpt.get();
                 siteSource.setName(newSiteName);
                 siteSource.getLabelTranslations().forEach(
                     (l, t) -> siteSource.getLabelTranslations().put(l, newSiteName)
@@ -434,25 +450,23 @@ public class SiteApi {
         String newUuid = allRequestParams.get(Settings.SYSTEM_SITE_SITE_ID_PATH);
 
         if (newUuid != null && !currentUuid.equals(newUuid)) {
-            final IMetadataManager metadataRepository = applicationContext.getBean(IMetadataManager.class);
-            final SourceRepository sourceRepository = applicationContext.getBean(SourceRepository.class);
-            final Source source = sourceRepository.findById(currentUuid).get();
-            Source newSource = new Source(newUuid, source.getName(), source.getLabelTranslations(), source.getType());
-            sourceRepository.save(newSource);
+            final IMetadataManager metadataManager = applicationContext.getBean(IMetadataManager.class);
+            final Optional<Source> sourceOpt = sourceRepository.findById(currentUuid);
 
-            PathSpec<Metadata, String> servicesPath = new PathSpec<Metadata, String>() {
-                @Override
-                public javax.persistence.criteria.Path<String> getPath(Root<Metadata> root) {
-                    return root.get(Metadata_.sourceInfo).get(MetadataSourceInfo_.sourceId);
-                }
-            };
-            metadataRepository.createBatchUpdateQuery(servicesPath, newUuid, MetadataSpecs.isHarvested(false));
-            sourceRepository.delete(source);
+            if (sourceOpt.isPresent()) {
+                Source source = sourceOpt.get();
+                Source newSource = new Source(newUuid, source.getName(), source.getLabelTranslations(), source.getType());
+                sourceRepository.save(newSource);
+
+                PathSpec<Metadata, String> servicesPath = root -> root.get(Metadata_.sourceInfo).get(MetadataSourceInfo_.sourceId);
+                metadataManager.createBatchUpdateQuery(servicesPath, newUuid, MetadataSpecs.isHarvested(false));
+                sourceRepository.delete(source);
+            }
         }
 
-        SettingInfo info = applicationContext.getBean(SettingInfo.class);
+        SettingInfo settingInfo = applicationContext.getBean(SettingInfo.class);
         ServiceContext context = ApiUtils.createServiceContext(request);
-        ServerBeanPropertyUpdater.updateURL(info.getSiteUrl() +
+        ServerBeanPropertyUpdater.updateURL(settingInfo.getSiteUrl() +
                 context.getBaseUrl(),
             applicationContext);
 
@@ -649,7 +663,7 @@ public class SiteApi {
     public Map<String, Object> indexAndDbSynchronizationStatus(
         HttpServletRequest request
     ) throws Exception {
-        Map<String, Object> info = new HashMap<>();
+        Map<String, Object> infoIndexDbSynch = new HashMap<>();
         long dbCount = metadataRepository.count();
 
         boolean isMdWorkflowEnable = settingManager.getValueAsBool(Settings.METADATA_WORKFLOW_ENABLE);
@@ -657,14 +671,14 @@ public class SiteApi {
             dbCount += metadataDraftRepository.count();
         }
 
-        info.put("db.count", dbCount);
+        infoIndexDbSynch.put("db.count", dbCount);
 
         EsSearchManager searchMan = ApplicationContextHolder.get().getBean(EsSearchManager.class);
         CountResponse countResponse = esRestClient.getClient().count(
             new CountRequest(searchMan.getDefaultIndex()),
             RequestOptions.DEFAULT);
-        info.put("index.count", countResponse.getCount());
-        return info;
+        infoIndexDbSynch.put("index.count", countResponse.getCount());
+        return infoIndexDbSynch;
     }
 
 
@@ -677,6 +691,7 @@ public class SiteApi {
         @ApiResponse(responseCode = "201", description = "Changes committed.")
     })
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasAuthority('Administrator')")
     public void commitIndexChanges(
     ) throws Exception {
         ApplicationContextHolder.get()
@@ -696,6 +711,7 @@ public class SiteApi {
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Build info.")
     })
+    @PreAuthorize("hasAuthority('Administrator')")
     @ResponseBody
     public SystemInfo getSystemInfo(
     ) throws Exception {
@@ -729,7 +745,7 @@ public class SiteApi {
         path = "/logo",
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.PUT)
-    @PreAuthorize("hasAuthority('UserAdmin')")
+    @PreAuthorize("hasAuthority('Administrator')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiResponses(value = {
         @ApiResponse(responseCode = "204", description = "Logo set."),
@@ -824,13 +840,31 @@ public class SiteApi {
     @ResponseBody
     public List<String> getXslTransformations(
     ) throws Exception {
-        ApplicationContext applicationContext = ApplicationContextHolder.get();
-        GeonetworkDataDirectory dataDirectory = applicationContext.getBean(GeonetworkDataDirectory.class);
+        List<String> list = new ArrayList<>();
+
+        schemaManager.getSchemas().forEach(schema -> {
+            try (DirectoryStream<Path> sheets = Files.newDirectoryStream(
+                dataDirectory.getSchemaPluginsDir()
+                    .resolve(schema)
+                    .resolve("convert")
+            )) {
+                for (Path sheet : sheets) {
+                    String id = sheet.toString();
+                    if (id != null && id.contains("convert/from") && id.endsWith(".xsl")) {
+                        String name = com.google.common.io.Files.getNameWithoutExtension(
+                            sheet.getFileName().toString());
+                        list.add(IMPORT_STYLESHEETS_SCHEMA_PREFIX + schema + ":convert/" + name);
+                    }
+                }
+            } catch (IOException e) {
+                Log.warning(Geonet.GEONETWORK,
+                    "Error getting conversion xslt transformations for schemas: " + e.getMessage());
+            }
+        });
 
         try (DirectoryStream<Path> sheets = Files.newDirectoryStream(
             dataDirectory.getWebappDir().resolve(Geonet.Path.IMPORT_STYLESHEETS)
         )) {
-            List<String> list = new ArrayList<>();
             for (Path sheet : sheets) {
                 String id = sheet.toString();
                 if (id != null && id.endsWith(".xsl")) {

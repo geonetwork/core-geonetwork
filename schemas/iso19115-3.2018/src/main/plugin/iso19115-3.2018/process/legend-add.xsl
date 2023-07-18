@@ -31,6 +31,7 @@
   xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/2.0"
   xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0"
   xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
+  xmlns:gcx="http://standards.iso.org/iso/19115/-3/gcx/1.0"
   xmlns:gn="http://www.fao.org/geonetwork"
   xmlns:xs="http://www.w3.org/2001/XMLSchema"
   xmlns:gn-fn-iso19115-3.2018="http://geonetwork-opensource.org/xsl/functions/profiles/iso19115-3.2018"
@@ -51,8 +52,12 @@
                 select="/mdb:MD_Metadata/mdb:defaultLocale/*/lan:language/*/@codeListValue"
                 as="xs:string"/>
 
+  <xsl:variable name="mainLangId"
+                select="/mdb:MD_Metadata/mdb:defaultLocale/*/@id"
+                as="xs:string"/>
+
   <xsl:variable name="useOnlyPTFreeText"
-                select="count(//*[lan:PT_FreeText and not(gco:CharacterString)]) > 0"
+                select="count(//*[lan:PT_FreeText and not(gco:CharacterString|gcx:Anchor)]) > 0"
                 as="xs:boolean"/>
 
   <xsl:variable name="metadataIdentifier"
@@ -95,7 +100,7 @@
 
   <xsl:template match="mdb:portrayalCatalogueInfo[concat(
                           */mpc:portrayalCatalogueCitation/
-                          cit:CI_Citation/cit:onlineResource/cit:CI_OnlineResource/cit:linkage/gco:CharacterString,
+                          cit:CI_Citation/cit:onlineResource/cit:CI_OnlineResource/cit:linkage/gco:CharacterString, 'WWW:LINK',
                           */mpc:portrayalCatalogueCitation/
                           cit:CI_Citation/cit:title/gco:CharacterString) =
                           normalize-space($updateKey)]">
@@ -110,17 +115,17 @@
                   <cit:CI_Citation>
                       <xsl:if test="$name != ''">
                           <cit:title>
-                              <xsl:copy-of select="gn-fn-iso19115-3.2018:fillTextElement($name, $mainLang, $useOnlyPTFreeText)"/>
+                              <xsl:copy-of select="gn-fn-iso19115-3.2018:fillTextElement($name, $mainLangId, $useOnlyPTFreeText)"/>
                           </cit:title>
                       </xsl:if>
                       <cit:onlineResource>
                           <cit:CI_OnlineResource>
                               <cit:linkage>
-                                  <xsl:copy-of select="gn-fn-iso19115-3.2018:fillTextElement($url, $mainLang, $useOnlyPTFreeText)"/>
+                                  <xsl:copy-of select="gn-fn-iso19115-3.2018:fillTextElement($url, $mainLangId, $useOnlyPTFreeText)"/>
                               </cit:linkage>
                               <xsl:if test="$desc != ''">
                                   <cit:description>
-                                      <xsl:copy-of select="gn-fn-iso19115-3.2018:fillTextElement($desc, $mainLang, $useOnlyPTFreeText)"/>
+                                      <xsl:copy-of select="gn-fn-iso19115-3.2018:fillTextElement($desc, $mainLangId, $useOnlyPTFreeText)"/>
                                   </cit:description>
                               </xsl:if>
                           </cit:CI_OnlineResource>

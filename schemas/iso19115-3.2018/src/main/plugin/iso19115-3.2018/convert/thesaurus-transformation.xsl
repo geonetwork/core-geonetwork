@@ -234,7 +234,10 @@
         </mri:keyword>
       </xsl:if>
 
-      <xsl:copy-of select="geonet:add-iso19115-3.2018-thesaurus-info($currentThesaurus, $withThesaurusAnchor, /root/gui/thesaurus/thesauri, not(/root/request/keywordOnly))" />
+      <xsl:copy-of select="geonet:add-iso19115-3.2018-thesaurus-info(
+                                    $currentThesaurus, $listOfLanguage[1],
+                                    $withThesaurusAnchor,
+                                    /root/gui/thesaurus/thesauri, not(/root/request/keywordOnly))" />
 
     </mri:MD_Keywords>
   </xsl:template>
@@ -243,6 +246,7 @@
 
   <xsl:function name="geonet:add-iso19115-3.2018-thesaurus-info">
     <xsl:param name="currentThesaurus" as="xs:string"/>
+    <xsl:param name="mainLanguage" as="xs:string?"/>
     <xsl:param name="withThesaurusAnchor" as="xs:boolean"/>
     <xsl:param name="thesauri" as="node()"/>
     <xsl:param name="thesaurusInfo" as="xs:boolean"/>
@@ -253,18 +257,26 @@
                               codeListValue="{$thesauri/thesaurus[key = $currentThesaurus]/dname}" />
     </mri:type>
     <xsl:if test="$thesaurusInfo">
+      <xsl:variable name="thesaurusInMainLanguage"
+                    select="$thesauri/thesaurus[key = $currentThesaurus]
+                              /multilingualTitles/multilingualTitle[
+                                lang = util:twoCharLangCode($mainLanguage, '')]/title"/>
+      <xsl:variable name="thesaurusTitle"
+                    select="if ($thesaurusInMainLanguage != '')
+                            then $thesaurusInMainLanguage
+                            else $thesauri/thesaurus[key = $currentThesaurus]/title"/>
       <mri:thesaurusName>
         <cit:CI_Citation>
           <cit:title>
             <xsl:choose>
               <xsl:when test="$withThesaurusAnchor = true()">
                 <gcx:Anchor xlink:href="{$thesauri/thesaurus[key = $currentThesaurus]/defaultNamespace}">
-                  <xsl:value-of select="$thesauri/thesaurus[key = $currentThesaurus]/title"/>
+                  <xsl:value-of select="$thesaurusTitle"/>
                 </gcx:Anchor>
               </xsl:when>
               <xsl:otherwise>
                 <gco:CharacterString>
-                  <xsl:value-of select="$thesauri/thesaurus[key = $currentThesaurus]/title"/>
+                  <xsl:value-of select="$thesaurusTitle"/>
                 </gco:CharacterString>
               </xsl:otherwise>
             </xsl:choose>
@@ -272,6 +284,12 @@
 
           <xsl:variable name="thesaurusDate"
                         select="normalize-space($thesauri/thesaurus[key = $currentThesaurus]/date)" />
+          <xsl:variable name="thesaurusCreatedDate"
+                        select="normalize-space($thesauri/thesaurus[key = $currentThesaurus]/createdDate)"/>
+          <xsl:variable name="thesaurusIssuedDate"
+                        select="normalize-space($thesauri/thesaurus[key = $currentThesaurus]/issuedDate)"/>
+          <xsl:variable name="thesaurusModifiedDate"
+                        select="normalize-space($thesauri/thesaurus[key = $currentThesaurus]/modifiedDate)"/>
 
           <xsl:if test="$thesaurusDate != ''">
             <cit:date>
@@ -294,6 +312,87 @@
                   <cit:CI_DateTypeCode
                           codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode"
                           codeListValue="publication" />
+                </cit:dateType>
+              </cit:CI_Date>
+            </cit:date>
+          </xsl:if>
+
+          <!-- Publication Date-->
+          <xsl:choose>
+            <xsl:when test="$thesaurusIssuedDate != ''">
+              <cit:date>
+                <cit:CI_Date>
+                  <cit:date>
+                    <xsl:choose>
+                      <xsl:when test="contains($thesaurusIssuedDate, 'T')">
+                        <gco:DateTime>
+                          <xsl:value-of select="$thesaurusIssuedDate" />
+                        </gco:DateTime>
+                      </xsl:when>
+                      <xsl:otherwise>
+                        <gco:Date>
+                          <xsl:value-of select="$thesaurusIssuedDate" />
+                        </gco:Date>
+                      </xsl:otherwise>
+                    </xsl:choose>
+                  </cit:date>
+                  <cit:dateType>
+                    <cit:CI_DateTypeCode
+                      codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode"
+                      codeListValue="publication" />
+                  </cit:dateType>
+                </cit:CI_Date>
+              </cit:date>
+            </xsl:when>
+            <xsl:otherwise>
+              <cit:date>
+                <cit:CI_Date>
+                  <cit:date>
+                    <xsl:choose>
+                      <xsl:when test="contains($thesaurusDate, 'T')">
+                        <gco:DateTime>
+                          <xsl:value-of select="$thesaurusDate" />
+                        </gco:DateTime>
+                      </xsl:when>
+                      <xsl:otherwise>
+                        <gco:Date>
+                          <xsl:value-of select="$thesaurusDate" />
+                        </gco:Date>
+                      </xsl:otherwise>
+                    </xsl:choose>
+                  </cit:date>
+                  <cit:dateType>
+                    <cit:CI_DateTypeCode
+                      codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode"
+                      codeListValue="publication" />
+                  </cit:dateType>
+                </cit:CI_Date>
+              </cit:date>
+            </xsl:otherwise>
+          </xsl:choose>
+
+          <!--Creation Date-->
+          <xsl:if test="$thesaurusCreatedDate != ''">
+            <cit:date>
+              <cit:CI_Date>
+                <cit:date>
+                  <xsl:choose>
+                    <xsl:when test="contains($thesaurusCreatedDate, 'T')">
+                      <gco:DateTime>
+                        <xsl:value-of select="$thesaurusCreatedDate" />
+                      </gco:DateTime>
+                    </xsl:when>
+                    <xsl:otherwise>
+                      <gco:Date>
+                        <xsl:value-of select="$thesaurusCreatedDate" />
+                      </gco:Date>
+                    </xsl:otherwise>
+                  </xsl:choose>
+                </cit:date>
+                <cit:dateType>
+                  <cit:CI_DateTypeCode
+                    codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode"
+                    codeListValue="creation" />
                 </cit:dateType>
               </cit:CI_Date>
             </cit:date>

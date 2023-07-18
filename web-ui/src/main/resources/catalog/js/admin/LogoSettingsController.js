@@ -47,8 +47,8 @@
        */
       loadLogo = function () {
         $scope.logos = [];
-        $http.get("../api/logos").success(function (data) {
-          $scope.logos = data;
+        $http.get("../api/logos").then(function (response) {
+          $scope.logos = response.data;
         });
       };
 
@@ -82,25 +82,25 @@
        * if favicon parameter is set to true.
        */
       $scope.setCatalogLogo = function (logoName, asFavicon) {
-        $http
-          .put("../api/site/logo?file=" + logoName + "&asFavicon=" + asFavicon)
-          .success(function (data) {
+        $http.put("../api/site/logo?file=" + logoName + "&asFavicon=" + asFavicon).then(
+          function (response) {
             $rootScope.$broadcast("StatusUpdated", {
               msg: $translate.instant("logoUpdated"),
               timeout: 2,
               type: "success"
             });
             $rootScope.$broadcast("loadCatalogInfo");
-          })
-          .error(function (data) {
+          },
+          function (response) {
             $rootScope.$broadcast("StatusUpdated", {
               title: $translate.instant("logoUpdateError"),
-              error: data,
+              error: response.data,
               timeout: 0,
               type: "danger"
             });
             loadLogo();
-          });
+          }
+        );
       };
 
       /**
@@ -115,25 +115,25 @@
        * Remove the logo and refresh the list when done.
        */
       $scope.confirmRemoveLogo = function (logoName) {
-        $http
-          .delete("../api/logos/" + $scope.remLogoName)
-          .success(function (data) {
+        $http.delete("../api/logos/" + $scope.remLogoName).then(
+          function (response) {
             $rootScope.$broadcast("StatusUpdated", {
               msg: $translate.instant("logoRemoved"),
               timeout: 2,
               type: "success"
             });
             loadLogo();
-          })
-          .error(function (data) {
+          },
+          function (response) {
             $rootScope.$broadcast("StatusUpdated", {
               title: $translate.instant("logoRemoveError"),
-              error: data,
+              error: response.data,
               timeout: 0,
               type: "danger"
             });
             loadLogo();
-          });
+          }
+        );
       };
 
       $scope.filterLogoList = function (e, formId) {

@@ -27,6 +27,7 @@
                 data-ng-show="md.isTemplate != 's'"
                 data-ng-href="catalog.search#/{{(md.draft == 'y')?'metadraf':'metadata'}}/{{md.uuid}}"
                 title="{{md.resourceAbstract}}"
+                class="gn-break"
                 >{{md.resourceTitle}}</a
               >
               <span data-ng-show="md.isTemplate == 's'">{{md.resourceTitle}}</span>
@@ -47,7 +48,7 @@
                     class="text-muted gn-status"
                     data-ng-class="{'text-success': md.mdStatus == 2, 'text-warning': md.mdStatus == 4}"
                     data-ng-if="md.mdStatus < 50 && isMdWorkflowEnable"
-                    >{{('mdStatus-' + md.statusWorkflow) | translate}}</small
+                    >{{::md.statusWorkflow | getStatusLabel}}</small
                   >
 
                   <small
@@ -70,7 +71,7 @@
           <div class="btn-group">
             <a
               class="btn btn-default"
-              data-ng-href=""
+              href=""
               data-ng-if="user.canManagePrivileges(md) && user.isEditorOrMore() && md.draft != 'y'"
               data-ng-click="mdService.openPrivilegesPanel(md, getCatScope())"
               title="{{'privileges' | translate}}"
@@ -92,6 +93,7 @@
             </a>
             <a
               class="btn btn-default"
+              href=""
               data-ng-show="(!md.isPublished() || (md.isPublished() && user.canDeletePublishedMetadata())) && user.canEditRecord(md) && md.isTemplate != 's'
                              && (user.isReviewerOrMore() || md.mdStatus != 4 || !isMdWorkflowEnable)
                              && md.draft != 'e'"
@@ -101,14 +103,6 @@
               title="{{'delete' | translate}}"
             >
               <i class="fa fa-times text-danger"></i>
-            </a>
-            <a
-              class="btn btn-default"
-              data-ng-show="user.canEditRecord(md) && md.isTemplate != 's'"
-              data-ng-href="#/create?childOf={{md.id}}"
-              title="{{'createChild' | translate}}"
-            >
-              <i class="fa fa-sitemap text-muted"></i>
             </a>
             <a
               class="btn btn-default"

@@ -58,7 +58,15 @@
           var prop = attrs[attr];
 
           var map = scope.$eval(prop);
-          map.setTarget(element[0]);
+          var target = element[0];
+
+          var resizeObserver = new ResizeObserver(function () {
+            map.updateSize();
+            resizeObserver.unobserve(target);
+          });
+
+          map.setTarget(target);
+          resizeObserver.observe(target);
         }
     };
   };

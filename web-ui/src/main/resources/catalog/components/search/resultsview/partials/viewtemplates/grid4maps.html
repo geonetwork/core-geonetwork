@@ -2,13 +2,14 @@
   <li
     class="list-group-item panel panel-default gn-card"
     data-ng-repeat="md in searchResults.records"
-    title="{{(md.resourceAbstract) | striptags}}"
+    title="{{'addToMap' | translate}}&#013;&#013;{{::md.resourceAbstract | striptags}}"
+    ng-show="md.linksByType.maps[0]"
     ng-click="loadMap(md.linksByType.maps[0], md)"
   >
     <div class="panel-heading gn-card-heading">
       <div class="gn-md-title">
         <a>
-          <h1>{{md.resourceTitle}}</h1>
+          <h1 class="gn-break">{{md.resourceTitle}}</h1>
         </a>
       </div>
     </div>

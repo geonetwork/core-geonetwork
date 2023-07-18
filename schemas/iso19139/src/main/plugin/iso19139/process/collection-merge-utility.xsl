@@ -69,6 +69,7 @@
               </xsl:message>-->
 
               <xsl:for-each select="distinct-values($groupKey)">
+                <xsl:sort select="." order="ascending"/>
                 <xsl:variable name="groupKey"
                               select="current()"/>
                 <xsl:variable name="emptyKey"
@@ -126,7 +127,7 @@
                                     </xsl:when>
                                     <xsl:otherwise>
                                       <xsl:for-each-group select="$elementsToMerge"
-                                                          group-by="normalize-space(*)">
+                                                          group-by="string-join(.//(text()|@*), '')">
                                         <xsl:copy-of select="."/>
                                       </xsl:for-each-group>
                                     </xsl:otherwise>

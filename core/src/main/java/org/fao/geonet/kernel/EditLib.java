@@ -289,7 +289,7 @@ public class EditLib {
 
     public void addXMLFragments(String schema, Element md, Map<String, String> xmlInputs) throws Exception {
         // Loop over each XML fragments to insert or replace
-        HashMap<String, Element> nodeRefToElem = new HashMap<>();
+        Map<String, Element> nodeRefToElem = new HashMap<>();
         for (Map.Entry<String, String> entry : xmlInputs.entrySet()) {
             String[] nodeConfig = entry.getKey().split("_");
             String nodeRef = nodeConfig[0];
@@ -808,6 +808,12 @@ public class EditLib {
             currentToken = xpathParser.getNextToken();
         }
 
+        if (value.isXml() && isAttribute) {
+            throw new AssertionError(String.format(
+                "Cannot set Xml on an attribute. Xpath:'%s' value: '%s'.",
+                xpathProperty, Xml.getString(value.getNodeValue())
+            ));
+        }
         // The current node is an existing node or newly created one
         // Insert the XML value
         if (value.isXml()) {

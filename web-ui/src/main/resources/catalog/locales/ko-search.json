@@ -422,6 +422,7 @@
     "mdvalid": "메타데이터가 유효합니다",
     "mdinvalid": "메타데이터가 유효하지 않습니다",
     "mdinvalidcantpublish": "Invalid metadata can't be published",
+    "mdnonapprovedcantpublish": "Non approved metadata can't be published",
     "mdnovalidation": "메타데이터의 유효성검사 정보가 없습니다",
     "setall": "모든 권한 설정",
     "print_legend": "범례",
@@ -540,5 +541,13 @@
     "esriCapabilitiesNoValid": "The response is not a valid ESRI Rest capabilities document.",
     "seriesComposedOf": "Composed of",
     "seriesCoveringPeriod": "Covering period",
-    "approve": "Approve"
+    "approve": "Approve",
+    "fieldRequired": "The value is required",
+    "fieldTooLong": "The value is too long",
+    "fieldTooLongMax": "The value is too long (max {{maxChar}} characters)",
+    "fieldTooShort": "The value is too short",
+    "fieldEmailNotValid": "A valid email address is required",
+    "addLayerPrefix": "Add layer",
+    "addLayerPostfix": "to the map",
+    "submit": "Submit"
 }

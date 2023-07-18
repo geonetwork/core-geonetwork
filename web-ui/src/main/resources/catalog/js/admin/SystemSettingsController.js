@@ -127,41 +127,14 @@
           from: 1,
           to: 50,
           isTemplate: "y",
-          sortBy: "resourceTitleObject.default.keyword",
-          sortOrder: "asc"
+          sortBy: "resourceType,resourceTitleObject.default.sort",
+          sortOrder: "asc,asc"
         }
       };
-
-      function loadDefaultMetadataTemplate() {
-        var preferredTemplate = gnConfig["system.metadatacreate.preferredTemplate"];
-
-        if (preferredTemplate) {
-          var query = {
-            query: {
-              term: {
-                uuid: {
-                  value: preferredTemplate
-                }
-              }
-            },
-            from: 0,
-            size: 1
-          };
-
-          gnESClient.search(query).then(function (data) {
-            angular.forEach(data.hits.hits, function (record) {
-              var md = new Metadata(record);
-              $scope.defaultMetadataTemplate = md;
-            });
-          });
-        }
-      }
-
-      $scope.$watchCollection("settings", function (n, o) {
-        if (n != o) {
-          loadDefaultMetadataTemplate();
-        }
-      });
+      $scope.metadataTemplateSearchObj.params = angular.extend(
+        {},
+        $scope.metadataTemplateSearchObj.defaultParams
+      );
 
       $scope.settings = [];
       $scope.initalSettings = [];
@@ -176,26 +149,39 @@
       };
       $scope.stagingProfiles = ["production", "development", "testing"];
       $scope.updateProfile = function () {
-        $http
-          .put("../api/site/info/staging/" + $scope.systemInfo.stagingProfile)
-          .success(function (data) {
+        $http.put("../api/site/info/staging/" + $scope.systemInfo.stagingProfile).then(
+          function (response) {
             $rootScope.$broadcast("StatusUpdated", {
               msg: $translate.instant("profileUpdated"),
               timeout: 2,
               type: "success"
             });
-          })
-          .error(function (data) {
+          },
+          function (response) {
             $rootScope.$broadcast("StatusUpdated", {
               msg: $translate.instant("profileUpdatedFailed"),
               timeout: 2,
               type: "danger"
             });
-          });
+          }
+        );
       };
+
+      $scope.defaultConfigId = "srv";
 
       $scope.loadTplReport = null;
       $scope.atomFeedType = "";
+
+      $scope.isGroupPublicationNotificationLevel = false;
+      $scope.isGroupLocalRatingNotificationLevel = false;
+
+      $scope.changeLocalRatingNotificationLevel = function (value) {
+        $scope.isGroupLocalRatingNotificationLevel = value === "recordGroupEmail";
+      };
+
+      $scope.changePublicationNotificationLevel = function (value) {
+        $scope.isGroupPublicationNotificationLevel = value === "recordGroupEmail";
+      };
 
       /**
        * Load catalog settings as a flat list and
@@ -206,22 +192,24 @@
        * element name in XML Jeeves request element).
        */
       function loadSettings() {
-        $http.get("../api/site/info/build").success(function (data) {
-          $scope.systemInfo = data;
+        $http.get("../api/site/info/build").then(function (response) {
+          $scope.systemInfo = response.data;
         });
 
-        $http.get("../api/site/info/notificationLevels").success(function (data) {
-          $scope.notificationLevels = data;
+        $http.get("../api/site/info/notificationLevels").then(function (response) {
+          $scope.notificationLevels = response.data;
+          $scope.notificationLevels.unshift("");
         });
 
         // load log files
-        $http.get("../api/site/logging").success(function (data) {
-          $scope.logfiles = data;
+        $http.get("../api/site/logging").then(function (response) {
+          $scope.logfiles = response.data;
         });
 
-        $http
-          .get("../api/site/settings/details")
-          .success(function (data) {
+        $http.get("../api/site/settings/details").then(
+          function (response) {
+            var data = response.data;
+
             var sectionsLevel1 = [];
             var sectionsLevel2 = [];
 
@@ -242,6 +230,15 @@
                 $scope.settings[i].name == "metadata/workflow/draftWhenInGroup"
               ) {
                 $scope.draftInAllGroups = $scope.settings[i].value == ".*";
+              } else if (
+                $scope.settings[i].name ==
+                "system/metadataprivs/publication/notificationLevel"
+              ) {
+                $scope.isGroupPublicationNotificationLevel =
+                  $scope.settings[i].value === "recordGroupEmail";
+              } else if ("system/localrating/notificationLevel") {
+                $scope.isGroupLocalRatingNotificationLevel =
+                  $scope.settings[i].value === "recordGroupEmail";
               }
 
               var tokens = $scope.settings[i].name.split("/");
@@ -274,10 +271,11 @@
                 }, 900);
               }
             }
-          })
-          .error(function (data) {
+          },
+          function (response) {
             // TODO
-          });
+          }
+        );
         loadUiConfigurations();
       }
 
@@ -287,7 +285,9 @@
         $scope.uiConfiguration = undefined;
         $scope.uiConfigurationId = "";
         $scope.uiConfigurationIdIsValid = false;
-        return $http.get("../api/ui").success(function (data) {
+        return $http.get("../api/ui").then(function (response) {
+          var data = response.data;
+
           for (var i = 0; i < data.length; i++) {
             data[i].configuration == angular.toJson(data[i].configuration);
 
@@ -337,10 +337,23 @@
        * one defined in CatController.
        */
       $scope.createDefaultUiConfig = function () {
-        var defaultConfigId = "srv";
-        $scope.lastUiConfiguration = defaultConfigId;
-        $scope.createOrUpdateUiConfiguration(false, defaultConfigId);
+        $scope.lastUiConfiguration = $scope.defaultConfigId;
+        $scope.createOrUpdateUiConfiguration(false, $scope.defaultConfigId);
       };
+
+      $scope.canDeleteUiConfig = function () {
+        if ($scope.uiConfiguration) {
+          // UI configuration for 'srv' can be deleted only by Administrator users
+          return (
+            $scope.uiConfiguration.id !== $scope.defaultConfigId ||
+            ($scope.uiConfiguration.id === $scope.defaultConfigId &&
+              $scope.user.isAdministratorOrMore())
+          );
+        } else {
+          return false;
+        }
+      };
+
       $scope.updateUiConfig = function () {
         return $scope.createOrUpdateUiConfiguration(true);
       };
@@ -364,7 +377,7 @@
               function (r) {
                 $rootScope.$broadcast("StatusUpdated", {
                   title: $translate.instant("uiConfigUpdateError"),
-                  error: r.data,
+                  error: r.data.message || r.data.description,
                   timeout: 0,
                   type: "danger"
                 });
@@ -379,14 +392,24 @@
 
       $scope.confirmDeleteUiConfig = function () {
         $scope.lastUiConfiguration = undefined;
-        return $http.delete("../api/ui/" + $scope.uiConfiguration.id).then(function (r) {
-          loadUiConfigurations();
-        });
+        return $http.delete("../api/ui/" + $scope.uiConfiguration.id).then(
+          function (r) {
+            loadUiConfigurations();
+          },
+          function (r) {
+            $rootScope.$broadcast("StatusUpdated", {
+              title: $translate.instant("uiConfigDeleteError"),
+              error: r.data.message || r.data.description,
+              timeout: 0,
+              type: "danger"
+            });
+          }
+        );
       };
 
       function loadUsers() {
-        $http.get("../api/users").success(function (data) {
-          $scope.systemUsers = data;
+        $http.get("../api/users").then(function (response) {
+          $scope.systemUsers = response.data;
         });
       }
 
@@ -417,27 +440,29 @@
           .post("../api/site/settings", gnUtilityService.serialize(formId), {
             headers: { "Content-Type": "application/x-www-form-urlencoded" }
           })
-          .success(function (data) {
-            $(".gn-no-setting").attr("disabled", false);
+          .then(
+            function (response) {
+              $(".gn-no-setting").attr("disabled", false);
 
-            $rootScope.$broadcast("StatusUpdated", {
-              msg: $translate.instant("settingsUpdated"),
-              timeout: 2,
-              type: "success"
-            });
+              $rootScope.$broadcast("StatusUpdated", {
+                msg: $translate.instant("settingsUpdated"),
+                timeout: 2,
+                type: "success"
+              });
 
-            $scope.loadCatalogInfo();
-          })
-          .error(function (data) {
-            $(".gn-no-setting").attr("disabled", false);
+              $scope.loadCatalogInfo();
+            },
+            function (response) {
+              $(".gn-no-setting").attr("disabled", false);
 
-            $rootScope.$broadcast("StatusUpdated", {
-              title: $translate.instant("settingsUpdateError"),
-              error: data,
-              timeout: 0,
-              type: "danger"
-            });
-          });
+              $rootScope.$broadcast("StatusUpdated", {
+                title: $translate.instant("settingsUpdateError"),
+                error: response.data,
+                timeout: 0,
+                type: "danger"
+              });
+            }
+          );
       };
 
       $scope.filterForm = function (e, formId) {
@@ -547,18 +572,18 @@
        * Execute Atom feed harvester
        */
       $scope.executeAtomHarvester = function () {
-        return $http
-          .get("../api/atom/scan")
-          .success(function (data) {
-            $scope.loadTplReport = data;
+        return $http.get("../api/atom/scan").then(
+          function (response) {
+            $scope.loadTplReport = response.data;
 
             $("#atomHarvesterModal").modal();
-          })
-          .error(function (data) {
-            $scope.loadTplReport = data;
+          },
+          function (response) {
+            $scope.loadTplReport = response.data;
 
             $("#atomHarvesterModal").modal();
-          });
+          }
+        );
       };
 
       /**
@@ -589,7 +614,7 @@
           to: 50,
           op1: 1,
           linkProtocol: "OGC:OWS-C",
-          sortBy: "resourceTitleObject.default.keyword",
+          sortBy: "resourceTitleObject.default.sort",
           sortOrder: "asc"
         }
       };

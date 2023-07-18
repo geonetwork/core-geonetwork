@@ -169,15 +169,11 @@
       </div>
     </div>
 
-    <div
-      id="gn-harvest-select-help-button"
-      data-gn-need-help="user-guide/harvesting/index.html"
-    ></div>
+    <div id="gn-harvest-select-help-button" data-gn-need-help="harvesting-home"></div>
   </div>
-
   <div class="col-lg-7" data-ng-hide="harvesterSelected['@id'] == null">
     <tabset id="harvester-tabset" type="pills" justified="false" role="tablist">
-      <tab heading="{{'settings' | translate}}" role="tab" active="true">
+      <tab heading="{{'settings' | translate}}" role="tab" active="activeTab.settings">
         <div id="gn-harvest-settings-panel" class="panel panel-default gn-margin-top">
           <div class="panel-heading clearfix">
             <span id="gn-harvest-settings-title">
@@ -291,7 +287,11 @@
           </div>
         </div>
       </tab>
-      <tab heading="{{'harvesterHistory'|translate}}" role="tab">
+      <tab
+        heading="{{'harvesterHistory'|translate}}"
+        role="tab"
+        active="activeTab.history"
+      >
         <div
           id="gn-harvest-history-panel"
           class="panel panel-default gn-margin-top"
@@ -457,13 +457,13 @@
         </div>
       </tab>
       <tab
-        heading="{{ searchResults.count }} {{'metadataRecords' | translate}}"
+        heading="{{ searchResultsTotal }} {{'metadataRecords' | translate}}"
         data-ng-hide="harvesterSelected['@id'] == ''
-                          || searchResults.count == '-1'
+                          || searchResultsTotal == 0
                           || isLoadingOneHarvester
                           || deleting.indexOf(harvesterSelected['@id']) > -1"
-        data-ng-show="searchResults.count > 0"
         role="tab"
+        active="activeTab.results"
       >
         <div id="gn-harvest-records-panel" data-ng-search-form="" class="gn-margin-top">
           <div class="panel panel-default">
@@ -484,7 +484,7 @@
               </div>
             </div>
           </div>
-          <div class="panel panel-default" data-ng-if="searchResults.count > 0">
+          <div class="panel panel-default" data-ng-show="searchResults.count > 0">
             <div class="panel-heading">
               <span id="gn-harvest-records-title" data-translate=""
                 >harvesterRecords</span
@@ -499,6 +499,7 @@
                   class="btn btn-primary btn-warning"
                   data-ng-disabled="harvesterSelected.info.running === true || deleting.indexOf(harvesterSelected['@id']) > -1"
                   data-gn-click-and-spin="assignHarvestedRecordToLocalNode()"
+                  data-ng-show="user.isAdministratorOrMore()"
                 >
                   <span class="fa fa-database"></span>
                   <span

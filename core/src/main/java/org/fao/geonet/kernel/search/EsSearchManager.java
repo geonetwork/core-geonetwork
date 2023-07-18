@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2023 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -62,12 +62,12 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.kernel.search.index.OverviewIndexFieldUpdater;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
-import org.jdom.JDOMException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -100,16 +100,17 @@ public class EsSearchManager implements ISearchManager {
     public static final String FIELDNAME = "name";
     public static final String FIELDSTRING = "string";
 
-    public static Map<String, String> relatedIndexFields;
-    public static Set<String> FIELDLIST_CORE;
-    public static Set<String> FIELDLIST_RELATED;
-    public static Set<String> FIELDLIST_UUID;
+    public static final Map<String, String> RELATED_INDEX_FIELDS;
+    public static final Set<String> FIELDLIST_CORE;
+    public static final Set<String> FIELDLIST_RELATED;
+    public static final Map<String, String> FIELDLIST_RELATED_SCRIPTED;
+    public static final Set<String> FIELDLIST_UUID;
 
     static {
         FIELDLIST_UUID = ImmutableSet.<String>builder()
             .add(Geonet.IndexFieldNames.UUID).build();
 
-        relatedIndexFields = ImmutableMap.<String, String>builder()
+        RELATED_INDEX_FIELDS = ImmutableMap.<String, String>builder()
             .put("children", "parentUuid")
             .put("brothersAndSisters", "parentUuid")
             .put("services", "recordOperateOn")
@@ -139,7 +140,7 @@ public class EsSearchManager implements ISearchManager {
             .add(Geonet.IndexFieldNames.UUID)
             .add(Geonet.IndexFieldNames.RESOURCETITLE)
             .add(Geonet.IndexFieldNames.RESOURCETITLE + "Object")
-            .add("overview.*")
+            //.add("overview.*")
             .add("link")
             .add("format")
             .add("resourceType")
@@ -149,6 +150,11 @@ public class EsSearchManager implements ISearchManager {
             .add(Geonet.IndexFieldNames.RESOURCEABSTRACT)
             .add(Geonet.IndexFieldNames.RESOURCEABSTRACT + "Object")
             .add("operatesOn")
+            .build();
+
+        FIELDLIST_RELATED_SCRIPTED = ImmutableMap.<String, String>builder()
+            // ElasticSearch scripted field to get the first overview url. Scripted fields must return single values.
+            .put("overview", "return params['_source'].overview == null ? [] : params['_source'].overview.stream().map(f -> f.url).findFirst().orElse('');")
             .build();
     }
 
@@ -177,6 +183,9 @@ public class EsSearchManager implements ISearchManager {
     @Autowired
     public EsRestClient client;
 
+    @Autowired
+    OverviewIndexFieldUpdater overviewFieldUpdater;
+
     private int commitInterval = 200;
 
     // public for test, to be private or protected
@@ -198,10 +207,15 @@ public class EsSearchManager implements ISearchManager {
         return xsltForIndexing;
     }
 
-    private void addMDFields(Element doc, Path schemaDir, Element metadata, MetadataType metadataType) {
+    private void addMDFields(Element doc, Path schemaDir,
+                             Element metadata, MetadataType metadataType,
+                             IndexingMode indexingMode) {
         final Path styleSheet = getXSLTForIndexing(schemaDir, metadataType);
         try {
-            Element fields = Xml.transform(metadata, styleSheet);
+            Map<String, Object> indexParams = new HashMap<>();
+            indexParams.put("fastIndexMode", indexingMode.equals(IndexingMode.core));
+
+            Element fields = Xml.transform(metadata, styleSheet, indexParams);
             /* Generates something like that:
             <doc>
               <field name="toto">Contenu</field>
@@ -218,10 +232,8 @@ public class EsSearchManager implements ISearchManager {
     }
 
     private void addMoreFields(Element doc, Multimap<String, Object> fields) {
-        fields.entries().forEach(e -> {
-            doc.addContent(new Element(e.getKey())
-                .setText(String.valueOf(e.getValue())));
-        });
+        fields.entries().forEach(e -> doc.addContent(new Element(e.getKey())
+            .setText(String.valueOf(e.getValue()))));
     }
 
     public Element makeField(String name, String value) {
@@ -317,16 +329,21 @@ public class EsSearchManager implements ISearchManager {
     public void end() {
     }
 
-    public UpdateResponse updateFields(String id, Map<String, Object> fields) throws Exception {
-        fields.put("indexingDate", new Date());
+    public UpdateResponse updateFields(String id, Map<String, Object> fields) throws IOException {
+        fields.put(Geonet.IndexFieldNames.INDEXING_DATE, new Date());
         UpdateRequest updateRequest = new UpdateRequest(defaultIndex, id).doc(fields);
         return client.getClient().update(updateRequest, RequestOptions.DEFAULT);
     }
 
-    public BulkResponse updateFields(String id, Multimap<String, Object> fields, Set<String> fieldsToRemove) throws Exception {
-        fields.put("indexingDate", new Date());
+    public BulkResponse updateFields(String id, Multimap<String, Object> fields, Set<String> fieldsToRemove) throws IOException {
+        Map<String, Object> fieldMap = new HashMap<>();
+        fields.asMap().forEach((e, v) -> fieldMap.put(e, v.toArray()));
+        return updateFields(id, fieldMap, fieldsToRemove);
+    }
+    public BulkResponse updateFields(String id, Map<String, Object> fieldMap, Set<String> fieldsToRemove) throws IOException {
+        fieldMap.put(Geonet.IndexFieldNames.INDEXING_DATE, new Date());
         BulkRequest bulkrequest = new BulkRequest();
-        StringBuffer script = new StringBuffer();
+        StringBuilder script = new StringBuilder();
         fieldsToRemove.forEach(f ->
             script.append(String.format("ctx._source.remove('%s');", f)));
 
@@ -336,18 +353,16 @@ public class EsSearchManager implements ISearchManager {
                 script.toString(),
                 Collections.emptyMap()));
         bulkrequest.add(deleteFieldRequest);
-        Map<String, Object> fieldMap = new HashMap<>();
-        fields.asMap().forEach((e, v) -> fieldMap.put(e, v.toArray()));
         UpdateRequest addFieldRequest = new UpdateRequest(defaultIndex, id)
             .doc(fieldMap);
         bulkrequest.add(addFieldRequest);
         return client.getClient().bulk(bulkrequest, RequestOptions.DEFAULT);
     }
 
-    public void updateFieldsAsynch(String id, Map<String, Object> fields) throws Exception {
-        fields.put("indexingDate", new Date());
+    public void updateFieldsAsynch(String id, Map<String, Object> fields) {
+        fields.put(Geonet.IndexFieldNames.INDEXING_DATE, new Date());
         UpdateRequest request = new UpdateRequest(defaultIndex, id).doc(fields);
-        ActionListener listener = new ActionListener<UpdateResponse>() {
+        ActionListener<UpdateResponse> listener = new ActionListener<UpdateResponse>() {
             @Override
             public void onResponse(UpdateResponse updateResponse) {
             }
@@ -365,7 +380,7 @@ public class EsSearchManager implements ISearchManager {
         return updateFields(id, updates);
     }
 
-    public void updateFieldAsynch(String id, String field, Object value) throws Exception {
+    public void updateFieldAsynch(String id, String field, Object value) {
         Map<String, Object> updates = new HashMap<>(2);
         updates.put(getPropertyName(field), value);
         updateFieldsAsynch(id, updates);
@@ -378,11 +393,12 @@ public class EsSearchManager implements ISearchManager {
     public void index(Path schemaDir, Element metadata, String id,
                       Multimap<String, Object> dbFields,
                       MetadataType metadataType,
-                      boolean forceRefreshReaders) throws Exception {
+                      boolean forceRefreshReaders,
+                      IndexingMode indexingMode) throws Exception {
 
         Element docs = new Element("doc");
         if (schemaDir != null) {
-            addMDFields(docs, schemaDir, metadata, metadataType);
+            addMDFields(docs, schemaDir, metadata, metadataType, indexingMode);
         }
         addMoreFields(docs, dbFields);
 
@@ -404,10 +420,11 @@ public class EsSearchManager implements ISearchManager {
         String jsonDocument = mapper.writeValueAsString(doc);
 
         if (forceRefreshReaders) {
-            HashMap<String, String> document = new HashMap<>();
+            Map<String, String> document = new HashMap<>();
             document.put(id, jsonDocument);
             final BulkResponse bulkItemResponses = client.bulkRequest(defaultIndex, document);
             checkIndexResponse(bulkItemResponses, document);
+            overviewFieldUpdater.process(id);
         } else {
             listOfDocumentsToIndex.put(id, jsonDocument);
             if (listOfDocumentsToIndex.size() == commitInterval) {
@@ -429,7 +446,8 @@ public class EsSearchManager implements ISearchManager {
                     "An error occurred while indexing {} documents in current indexing list. Error is {}.",
                     new Object[]{listOfDocumentsToIndex.size(), e.getMessage()});
             } finally {
-                //                listOfDocumentsToIndex.clear();
+                // TODO: Trigger this async ?
+                documents.keySet().forEach(uuid -> overviewFieldUpdater.process(uuid));
             }
         }
     }
@@ -485,9 +503,9 @@ public class EsSearchManager implements ISearchManager {
 
             if (listErrorOfDocumentsToIndex.size() > 0) {
                 BulkResponse response = client.bulkRequest(defaultIndex, listErrorOfDocumentsToIndex);
-                if (!(response.status().getStatus() != 201)) {
+                if (response.status().getStatus() != 201) {
                     LOGGER.error("Failed to save error documents {}.",
-                        new Object[]{errorDocumentIds.toArray().toString()});
+                        new Object[]{Arrays.toString(errorDocumentIds.toArray())});
                 }
             }
         }
@@ -504,6 +522,8 @@ public class EsSearchManager implements ISearchManager {
             .add("cat")
             .add("keyword")
             .add("extentDescriptionObject")
+            .add("extentIdentifierObject")
+            .add("resourceAltTitleObject")
             .add("resourceCredit")
             .add("resourceCreditObject")
             .add("resolutionScaleDenominator")
@@ -537,6 +557,7 @@ public class EsSearchManager implements ISearchManager {
             .add("type")
             .add("resourceDate")
             .add("link")
+            .add("linkProtocol")
             .add("crsDetails")
             .add("format")
             .add("orderingInstructionsObject")
@@ -551,6 +572,7 @@ public class EsSearchManager implements ISearchManager {
             .add("resourceTemporalDateRange")
             .add("resourceTemporalExtentDateRange")
             .add("resourceTemporalExtentDetails")
+            .add("licenseObject")
             .build();
         booleanFields = ImmutableSet.<String>builder()
             .add("hasxlinks")
@@ -560,6 +582,8 @@ public class EsSearchManager implements ISearchManager {
             .add(INDEXING_ERROR_FIELD)
             .add("isHarvested")
             .add("isPublishedToAll")
+            .add("isPublishedToIntranet")
+            .add("isPublishedToGuest")
             .add("isSchemaValid")
             .add("isAboveThreshold")
             .add("isOpenData")
@@ -578,7 +602,7 @@ public class EsSearchManager implements ISearchManager {
         ObjectNode doc = new ObjectMapper().createObjectNode();
         ObjectMapper mapper = new ObjectMapper();
 
-        List<String> elementNames = new ArrayList();
+        List<String> elementNames = new ArrayList<>();
         List<Element> fields = xml.getChildren();
 
         // Loop on doc fields
@@ -628,7 +652,7 @@ public class EsSearchManager implements ISearchManager {
 
             if (name.equals("geom")) {
                 try {
-                    doc.put("geom", mapper.readTree(nodeElements.get(0).getTextNormalize()));
+                    doc.set("geom", mapper.readTree(nodeElements.get(0).getTextNormalize()));
                 } catch (IOException e) {
                     LOGGER.error("Parsing invalid geometry for JSON node {}. Error is: {}",
                         new Object[]{nodeElements.get(0).getTextNormalize(), e.getMessage()});
@@ -687,14 +711,14 @@ public class EsSearchManager implements ISearchManager {
         }
 
         if (StringUtils.isNotBlank(bucket)) {
-            ArrayList<String> listOfIdsToIndex = new ArrayList<String>();
+            ArrayList<String> listOfIdsToIndex = new ArrayList<>();
             UserSession session = context.getUserSession();
             SelectionManager sm = SelectionManager.getManager(session);
 
             synchronized (sm.getSelection(bucket)) {
                 for (Iterator<String> iter = sm.getSelection(bucket).iterator();
                      iter.hasNext(); ) {
-                    String uuid = (String) iter.next();
+                    String uuid = iter.next();
                     for (AbstractMetadata metadata : metadataRepository.findAllByUuid(uuid)) {
                         String indexKey = uuid;
                         if (metadata instanceof MetadataDraft) {
@@ -732,11 +756,11 @@ public class EsSearchManager implements ISearchManager {
     }
 
     public SearchResponse query(String luceneQuery, String filterQuery, int startPosition, int maxRecords) throws Exception {
-        return client.query(defaultIndex, luceneQuery, filterQuery, new HashSet<String>(), startPosition, maxRecords);
+        return client.query(defaultIndex, luceneQuery, filterQuery, new HashSet<>(), new HashMap<>(), startPosition, maxRecords);
     }
 
     public SearchResponse query(String luceneQuery, String filterQuery, int startPosition, int maxRecords, List<SortBuilder<FieldSortBuilder>> sort) throws Exception {
-        return client.query(defaultIndex, luceneQuery, filterQuery, new HashSet<String>(), startPosition, maxRecords, sort);
+        return client.query(defaultIndex, luceneQuery, filterQuery, new HashSet<>(), new HashMap<>(), startPosition, maxRecords, sort);
     }
 
     public SearchResponse query(String luceneQuery, String filterQuery, Set<String> includedFields,
@@ -744,10 +768,16 @@ public class EsSearchManager implements ISearchManager {
         return client.query(defaultIndex, luceneQuery, filterQuery, includedFields, from, size);
     }
 
+    public SearchResponse query(String luceneQuery, String filterQuery, Set<String> includedFields,
+                                Map<String, String> scriptedFields,
+                                int from, int size) throws Exception {
+        return client.query(defaultIndex, luceneQuery, filterQuery, includedFields, scriptedFields, from, size);
+    }
+
     public SearchResponse query(JsonNode jsonRequest, Set<String> includedFields,
                                 int from, int size, List<SortBuilder<FieldSortBuilder>> sort) throws Exception {
         // TODO: Review postFilterBuilder
-        return client.query(defaultIndex, jsonRequest, null, includedFields, from, size, sort);
+        return client.query(defaultIndex, jsonRequest, null, includedFields, new HashMap<>(), from, size, sort);
     }
 
     public SearchResponse query(JsonNode jsonRequest, Set<String> includedFields,
@@ -756,7 +786,7 @@ public class EsSearchManager implements ISearchManager {
         return client.query(defaultIndex, jsonRequest, null, includedFields, from, size);
     }
 
-    public Map<String, String> getFieldsValues(String id, Set<String> fields) throws Exception {
+    public Map<String, String> getFieldsValues(String id, Set<String> fields) throws IOException {
         return client.getFieldsValues(defaultIndex, id, fields);
     }
 
@@ -805,9 +835,7 @@ public class EsSearchManager implements ISearchManager {
 
             final SearchResponse response = client.query(defaultIndex, "*", null, docsChangeIncludedFields, from, size);
 
-            response.getHits().forEach(r -> {
-                docs.put(r.getId(), (String) r.getSourceAsMap().get(Geonet.IndexFieldNames.DATABASE_CHANGE_DATE));
-            });
+            response.getHits().forEach(r -> docs.put(r.getId(), (String) r.getSourceAsMap().get(Geonet.IndexFieldNames.DATABASE_CHANGE_DATE)));
         } catch (Exception e) {
             LOGGER.error("Error while collecting all documents: {}", e.getMessage());
             e.printStackTrace();
@@ -876,7 +904,7 @@ public class EsSearchManager implements ISearchManager {
 //        Set<Integer> result = new HashSet<>();
 //        iterateQuery(params,
 //            doc -> result.add(convertInteger(doc.getFieldValue(ID))));
-        return null;
+        return Collections.emptySet();
     }
 
     @Override

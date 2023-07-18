@@ -28,8 +28,10 @@ var geonetwork = {};
   goog.provide("gn");
 
   goog.require("gn_locale");
+  goog.require("gn_toolbar");
   goog.require("gn_count_watchers");
   goog.require("gn_polyfills");
+  goog.require("gn_static_pages");
 
   /**
    * Main gn module.
@@ -41,5 +43,20 @@ var geonetwork = {};
    *
    * @type {module|*}
    */
-  var module = angular.module("gn", ["gn_locale", "gn_config", "cfp.hotkeys"]);
+  var module = angular.module("gn", [
+    "gn_toolbar",
+    "gn_locale",
+    "gn_config",
+    "cfp.hotkeys",
+    "gn_static_pages"
+  ]);
+
+  // See https://docs.angularjs.org/guide/migration#commit-aa077e8
+  module.config([
+    "$locationProvider",
+    function ($locationProvider) {
+      // Configure existing providers
+      $locationProvider.hashPrefix("");
+    }
+  ]);
 })();
