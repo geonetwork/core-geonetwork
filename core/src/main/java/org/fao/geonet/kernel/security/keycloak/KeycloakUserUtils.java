@@ -251,8 +251,7 @@ public class KeycloakUserUtils {
      * @param user to apply the changes to.
      */
     private void updateGroups(Map<Profile, List<String>> profileGroups, User user) {
-        // First we remove all previous groups
-        userGroupRepository.deleteAll(UserGroupSpecs.hasUserId(user.getId()));
+        Set<UserGroup> userGroups =  new HashSet<>();
 
         // Now we add the groups
         for (Profile p : profileGroups.keySet()) {
@@ -293,12 +292,14 @@ public class KeycloakUserUtils {
                     ug.setGroup(group);
                     ug.setUser(user);
                     ug.setProfile(Profile.Editor);
-                    userGroupRepository.save(ug);
+                    userGroups.add(ug);
                 }
 
-                userGroupRepository.save(usergroup);
+                userGroups.add(usergroup);
             }
         }
+
+        userGroupRepository.updateUserGroups(user.getId(), userGroups);
     }
 
     /**
