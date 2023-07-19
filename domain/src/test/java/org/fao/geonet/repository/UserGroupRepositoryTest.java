@@ -33,16 +33,16 @@ import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.jpa.domain.Specification;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.data.jpa.domain.Specification.where;
 
@@ -199,6 +199,28 @@ public class UserGroupRepositoryTest extends AbstractSpringDataTest {
         assertTrue(_repo.existsById(ug4.getId()));
 
         assertFalse(_repo.findById(ug1.getId()).isPresent());
+    }
+
+    @Test
+    public void testUpdateUserGroups() {
+        UserGroup ug1 = _repo.save(newUserGroup());
+        User user = ug1.getUser();
+
+        UserGroup ug2 = newUserGroup();
+        ug2.setUser(user);
+
+        UserGroup ug3 = newUserGroup();
+        ug3.setUser(user);
+
+        Set<UserGroup> userGroups = new HashSet<>();
+        userGroups.add(ug2);
+        userGroups.add(ug3);
+
+        _repo.updateUserGroups(ug1.getUser().getId(), userGroups);
+
+        List<UserGroup> userGroups1 = _repo.findAll(UserGroupSpecs.hasUserId(user.getId()));
+
+        assertEquals(new HashSet<>(userGroups1), userGroups);
     }
 
     private UserGroup newUserGroup() {
