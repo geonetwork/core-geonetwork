@@ -518,8 +518,7 @@
             $scope.harvesterUpdated = false;
             $scope.harvesterNew = false;
             $scope.$parent.loadHarvesters();
-          })
-          .error(function (response) {
+          }, function (response) {
             console.log(response.data);
           });
       };
