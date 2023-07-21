@@ -1368,6 +1368,39 @@
                   </div>
                 </div>
 
+                <div data-ng-switch-when="batchEditingAccessLevel">
+                  <label class="control-label">{{('ui-' + key) | translate}}</label>
+
+                  <div class="checkbox">
+                    <label>
+                      <input type="radio" data-ng-model="mCfg[key]"
+                             value="editor"/>
+                      <i class="fa fa-fw fa-align-left"></i>&nbsp;
+                      <span data-translate="">Editor</span>
+                    </label>
+                  </div>
+                  <div class="checkbox">
+                    <label>
+                      <input type="radio" data-ng-model="mCfg[key]"
+                             value="reviewer"/>
+                      <i class="fa fa-fw fa-align-center"></i>&nbsp;
+                      <span data-translate="">Reviewer</span>
+                    </label>
+                  </div>
+                  <div class="checkbox">
+                    <label>
+                      <input type="radio" data-ng-model="mCfg[key]"
+                             value="administrator"/>
+                      <i class="fa fa-fw fa-align-right"></i>&nbsp;
+                      <span data-translate="">Administrator</span>
+                    </label>
+                  </div>
+
+                  <p class="help-block"
+                     data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
+                    {{('ui-' + key + '-help') | translate}} </p>
+                </div>
+
                 <div class="row" data-ng-switch-default>
                   <div class="col-lg-5 gn-nopadding-left">
                     <label class="control-label">{{('ui-' + key) | translate}}</label>

@@ -1135,6 +1135,8 @@
     "ui-mod-editor": "Éditeur",
     "ui-mod-authentication": "Authentification",
     "ui-mod-workflowHelper": "Assistance au cycle de vie",
+    "ui-mod-limitedBatchEditing": "Edition par lots limitée",
+    "ui-batchEditingAccessLevel": "Niveau d'accès à l'édition par lots :",
     "ui-signinUrl": "URL pour la connexion",
     "ui-signoutUrl": "URL pour la déconnexion",
     "ui-signinUrl-help": "URL de la page d'accueil. L'URL peut contenir les variables suivantes entre 2 2 '{' ouvrantes et fermantes: <ul><li><strong>node</strong> pour le portail</li><li><strong>lang</strong> pour le code de la langue à 3 caractères</li><li> <strong>isoLang</strong> pour celui à 2 caractères.</li></ul>",

@@ -127,7 +127,7 @@
               ><span translate>directoryManager</span>
             </a>
           </li>
-          <li class="gn-menuitem-xs" role="menuitem">
+          <li class="gn-menuitem-xs" role="menuitem" data-ng-if="!gnCfg.mods.limitedBatchEditing.enabled || (gnCfg.mods.limitedBatchEditing.batchEditingAccessLevel=='editor' && user.isEditorOrMore()) || (gnCfg.mods.limitedBatchEditing.batchEditingAccessLevel=='reviewer' && user.isReviewerOrMore()) || (gnCfg.mods.limitedBatchEditing.batchEditingAccessLevel=='administrator' && user.isAdministrator())">
             <a data-gn-active-tb-item="{{gnCfg.mods.editor.appUrl}}#/batchedit">
               <span class="fa fa-fw fa-pencil"></span><span translate>batchEditing</span>
             </a>
