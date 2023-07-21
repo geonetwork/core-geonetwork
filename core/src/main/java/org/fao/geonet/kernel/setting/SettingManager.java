@@ -431,6 +431,15 @@ public class SettingManager {
     public
     @Nonnull
     String getNodeURL() {
+        return getBaseURL() + getNodeId() + "/";
+    }
+
+    /**
+     * Return node id - i.e. srv
+     */
+    public
+    @Nonnull
+    String getNodeId() {
         String nodeId = NodeInfo.DEFAULT_NODE;
         try {
             NodeInfo node = ApplicationContextHolder.get().getBean(NodeInfo.class);
@@ -438,7 +447,7 @@ public class SettingManager {
                 nodeId = node.getId();
             }
         } catch (Exception e) {}
-        return getBaseURL() + nodeId + "/";
+        return  nodeId;
     }
     /**
      * Return complete node URL eg. http://localhost:8080/geonetwork/
