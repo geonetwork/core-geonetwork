@@ -42,6 +42,7 @@ import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.SortUtils;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.specification.UserSpecs;
+import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -107,11 +108,13 @@ public class HarvesterDataPushApi {
         String synchToolsPath = settingManager.getValue(HarvesterDataTask.SYSTEM_HARVESTER_SYNCH_TOOLS_PATH);
 
         if (StringUtils.isEmpty(synchToolsPath)) {
+            Log.info("org.fao.geonet.api.HarvesterDataPushApi", "Harvester synchronize metadata tools path is not configured. Configure it in the Settings page.");
             throw new Exception("Harvester synchronize metadata tools path is not configured. Configure it in the Settings page.");
         }
 
         AbstractHarvester harvester = harvestManager.getHarvester(harvesterUuid);
         if (harvester == null) {
+            Log.info("org.fao.geonet.api.HarvesterDataPushApi", String.format("Harvester with uuid '%s' not found.", harvesterUuid));
             throw new ResourceNotFoundException(String.format("Harvester with uuid '%s' not found.", harvesterUuid));
         }
 
@@ -121,6 +124,7 @@ public class HarvesterDataPushApi {
             List<Integer> userAdminGroups = AccessManager.getGroups(session, Profile.UserAdmin);
 
             if (!userAdminGroups.contains(Integer.parseInt(harvesterOwnerGroup))) {
+                Log.info("org.fao.geonet.api.HarvesterDataPushApi", "User can't publish the data of this harvester.");
                 throw new NotAllowedException("User can't publish the data of this harvester.");
             }
         }

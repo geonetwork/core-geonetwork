@@ -513,14 +513,17 @@
       $scope.pushHarvesterData = function () {
         return $http
           .put("../api/harvesters/" + $scope.harvesterSelected.site.uuid + "/push")
-          .then(function (response) {
-            $scope.harvesterSelected = {};
-            $scope.harvesterUpdated = false;
-            $scope.harvesterNew = false;
-            $scope.$parent.loadHarvesters();
-          }, function (response) {
-            console.log(response.data);
-          });
+          .then(
+            function (response) {
+              $scope.harvesterSelected = {};
+              $scope.harvesterUpdated = false;
+              $scope.harvesterNew = false;
+              $scope.$parent.loadHarvesters();
+            },
+            function (response) {
+              console.log(response.data);
+            }
+          );
       };
 
       $scope.deleteHarvesterRecord = function () {

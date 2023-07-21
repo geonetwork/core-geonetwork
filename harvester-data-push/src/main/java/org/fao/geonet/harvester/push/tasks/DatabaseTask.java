@@ -23,6 +23,7 @@
 package org.fao.geonet.harvester.push.tasks;
 
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -38,6 +39,14 @@ public class DatabaseTask extends HarvesterDataTask {
     public int synch(String harvesterUuid) throws IOException, InterruptedException {
         ProcessBuilder processBuilder = setupProcess("./pgsync.sh", harvesterUuid);
 
-        return runTask(processBuilder);
+        Log.info("org.fao.geonet.api.HarvesterDataPushApi",
+            String.format("Start database synch for harvester with uuid '%s'.", harvesterUuid));
+
+        int exitCode = runTask(processBuilder);
+
+        Log.info("org.fao.geonet.api.HarvesterDataPushApi",
+            String.format("Database synch for harvester with uuid '%s' status code: %d", harvesterUuid, exitCode));
+
+        return exitCode;
     }
 }

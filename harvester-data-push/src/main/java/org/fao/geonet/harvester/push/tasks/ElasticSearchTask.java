@@ -23,6 +23,7 @@
 package org.fao.geonet.harvester.push.tasks;
 
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -40,7 +41,15 @@ public class ElasticSearchTask extends HarvesterDataTask {
         // set up the command and parameter
         ProcessBuilder processBuilder = setupProcess("./elasticdump.sh", harvesterUuid);
 
-        return runTask(processBuilder);
+        Log.info("org.fao.geonet.api.HarvesterDataPushApi",
+            String.format("Start elasticsearch synch for harvester with uuid '%s'.", harvesterUuid));
+
+        int exitCode =  runTask(processBuilder);
+
+        Log.info("org.fao.geonet.api.HarvesterDataPushApi",
+            String.format("ElasticSearch synch for harvester with uuid '%s' status code: %d", harvesterUuid, exitCode));
+
+        return exitCode;
     }
 }
 
