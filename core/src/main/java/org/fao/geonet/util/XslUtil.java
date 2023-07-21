@@ -92,6 +92,9 @@ import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.annotation.BeanFactoryAnnotationUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.w3c.dom.Node;
 
 import javax.annotation.Nonnull;
@@ -359,7 +362,19 @@ public final class XslUtil {
         return null;
     }
 
-	/**
+    /**
+     * Check if user is authenticated.
+     */
+    public static boolean isAuthenticated() throws Exception {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || AnonymousAuthenticationToken.class.isAssignableFrom(authentication.getClass())) {
+            return false;
+        }
+        return authentication.isAuthenticated();
+    }
+
+
+    /**
 	 * Check if security provider require login form
 	 */
 	public static boolean isDisableLoginForm() {

@@ -52,6 +52,7 @@
     <html ng-app="{$angularModule}" lang="{$lang2chars}" id="ng-app">
       <head>
         <title><xsl:value-of select="$title"/></title>
+        <base href="{$nodeUrl}eng/catalog.search"/>
         <meta charset="utf-8"/>
 
         <xsl:copy-of select="$meta"/>
