@@ -1213,6 +1213,10 @@
           workflowHelper: {
             enabled: false,
             workflowAssistApps: [{ appUrl: "", appLabelKey: "" }]
+          },
+          limitedBatchEditing: {
+            enabled: true,
+            batchEditingAccessLevel: "administrator"
           }
         }
       };

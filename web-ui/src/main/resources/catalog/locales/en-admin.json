@@ -1138,6 +1138,8 @@
     "ui-mod-editor": "Editor application",
     "ui-mod-authentication": "Authentication",
     "ui-mod-workflowHelper": "Workflow assist",
+    "ui-mod-limitedBatchEditing": "Limited Batch Editing",
+    "ui-batchEditingAccessLevel": "Batch Editing Access Level:",
     "ui-signinUrl": "Sign in application URL",
     "ui-signoutUrl": "Sign out application URL",
     "ui-signinUrl-help": "URL of the home page. Can contain the following variables between 2 opening and closing '{': <ul><li><strong>node</strong> for the current portal</li><li><strong>lang</strong> for 3 letters language code</li><li> <strong>isoLang</strong> for 2 letters language code.</li></ul>",
