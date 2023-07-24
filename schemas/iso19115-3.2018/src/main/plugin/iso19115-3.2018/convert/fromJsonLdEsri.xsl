@@ -44,8 +44,6 @@
                 xmlns:xd="http://www.oxygenxml.com/ns/doc/xsl"
                 exclude-result-prefixes="#all">
 
-    <xsl:import href="protocol-mapping.xsl"></xsl:import>
-
     <xsl:output method="xml" indent="yes"/>
     <xsl:strip-space elements="*"/>
 
@@ -84,14 +82,14 @@
             </lan:language>
             <lan:characterEncoding>
               <lan:MD_CharacterSetCode codeList="codeListLocation#MD_CharacterSetCode"
-                                       codeListValue=""/>
+                                       codeListValue="utf8"/>
             </lan:characterEncoding>
           </lan:PT_Locale>
         </mdb:defaultLocale>
         <mdb:metadataScope>
           <mdb:MD_MetadataScope>
             <mdb:resourceScope>
-              <mcc:MD_ScopeCode codeList="" codeListValue="{@type}"/>
+              <mcc:MD_ScopeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_ScopeCode" codeListValue="dataset"/>
             </mdb:resourceScope>
           </mdb:MD_MetadataScope>
         </mdb:metadataScope>
