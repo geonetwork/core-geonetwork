@@ -267,7 +267,7 @@ public class DefaultStatusActions implements StatusActions {
         // Replace link in message
         ApplicationContext applicationContext = ApplicationContextHolder.get();
         SettingManager sm = applicationContext.getBean(SettingManager.class);
-        textTemplate = textTemplate.replace("{{link}}", sm.getNodeURL()+ "api/records/{{index:uuid}}");
+        textTemplate = textTemplate.replace("{{link}}", sm.getNodeURL()+ "api/records/'{{'index:uuid'}}'");
 
         UserRepository userRepository = context.getBean(UserRepository.class);
         User owner = userRepository.findById(status.getOwner()).orElse(null);
