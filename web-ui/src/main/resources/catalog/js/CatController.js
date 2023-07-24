@@ -1680,6 +1680,10 @@
         return gnConfig["system.feedback.mailServer.hostIsDefined"];
       };
 
+      $scope.getBatchEditingAccessLevel = function() {
+        return gnConfig['metadata.batchediting.accesslevel'];
+      };
+
       $scope.layout = {
         hideTopToolBar: false
       };
