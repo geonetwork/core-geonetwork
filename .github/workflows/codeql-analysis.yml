@@ -13,10 +13,10 @@ name: "CodeQL"
 
 on:
   push:
-    branches: [ main ]
+    branches: [ 4.2.x ]
   pull_request:
     # The branches below must be a subset of the branches above
-    branches: [ main ]
+    branches: [ 4.2.x ]
   schedule:
     - cron: '44 20 * * 5'
 
@@ -39,7 +39,7 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
-      
+
     - name: Setup Java JDK
       uses: actions/setup-java@v3.10.0
       with:
