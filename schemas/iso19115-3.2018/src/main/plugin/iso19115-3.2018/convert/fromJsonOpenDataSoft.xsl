@@ -482,7 +482,7 @@
 
                 <!-- Data download links are inferred from the record metadata -->
                 <xsl:variable name="count"
-                              select="dataset/metas/default/records_count"/>
+                              select="metas/records_count|dataset/metas/default/records_count"/>
                 <xsl:if test="$count > 0">
                   <xsl:call-template name="dataLink">
                     <xsl:with-param name="format">csv</xsl:with-param>
