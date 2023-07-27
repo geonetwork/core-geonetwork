@@ -489,10 +489,7 @@
             gnCurrentEdit.metadata.draft &&
             url.match(".*/api/records/(.*)/attachments/.*") != null
           ) {
-            url +=
-              url.indexOf("?") > 0
-                ? "&"
-                : "?" + "approved=" + (gnCurrentEdit.metadata.draft != "y");
+            url += url.indexOf("?") > 0 ? "&" : "?" + "approved=false";
           }
           return url;
         },
