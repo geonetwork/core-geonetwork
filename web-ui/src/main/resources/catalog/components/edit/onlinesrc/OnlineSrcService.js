@@ -246,7 +246,8 @@
             isArray = angular.isArray(types),
             defaultRelatedTypes = ["thumbnails", "onlines"],
             relatedTypes = [],
-            associatedTypes = [];
+            associatedTypes = [],
+            isApproved = gnCurrentEdit.metadata.draft !== "y";
 
           if (isArray) {
             var relatedTypeFilterFn = function (t) {
@@ -261,18 +262,31 @@
           }
 
           linksAndRelatedPromises.push(
-            $http.get(apiPrefix + "/related?type=" + relatedTypes.join("&type="), {
-              headers: {
-                Accept: "application/json"
+            $http.get(
+              apiPrefix + "/related?type=" + relatedTypes.join("&type=") + !isApproved
+                ? "&approved=false"
+                : "",
+              {
+                headers: {
+                  Accept: "application/json"
+                }
               }
-            })
+            )
           );
           linksAndRelatedPromises.push(
-            $http.get(apiPrefix + "/associated?type=" + associatedTypes.join("&type="), {
-              headers: {
-                Accept: "application/json"
+            $http.get(
+              apiPrefix +
+                "/associated?type=" +
+                associatedTypes.join("&type=") +
+                !isApproved
+                ? "&approved=false"
+                : "",
+              {
+                headers: {
+                  Accept: "application/json"
+                }
               }
-            })
+            )
           );
 
           var all = $q.all(linksAndRelatedPromises).then(function (result) {

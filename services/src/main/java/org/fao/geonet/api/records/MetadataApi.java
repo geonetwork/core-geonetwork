@@ -49,6 +49,7 @@ import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.mef.MEFLib;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.utils.Log;
@@ -69,10 +70,13 @@ import javax.servlet.http.HttpServletResponse;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.fao.geonet.api.ApiParams.*;
+import static org.fao.geonet.api.records.attachments.AbstractStore.getAndCheckMetadataId;
 import static org.fao.geonet.kernel.mef.MEFLib.Version.Constants.MEF_V1_ACCEPT_TYPE;
 import static org.fao.geonet.kernel.mef.MEFLib.Version.Constants.MEF_V2_ACCEPT_TYPE;
 
@@ -107,7 +111,7 @@ public class MetadataApi {
 
     public static RelatedResponse getAssociatedResources(
         String language, ServiceContext context,
-        AbstractMetadata md, RelatedItemType[] type, int start, int rows) throws Exception {
+        AbstractMetadata md, RelatedItemType[] type, boolean approved, int start, int rows) throws Exception {
         // TODO PERF: ByPass XSL processing and create response directly
         // At least for related metadata and keep XSL only for links
         Element raw = new Element("root").addContent(Arrays.asList(
@@ -123,6 +127,47 @@ public class MetadataApi {
 
         final Element transform = Xml.transform(raw, relatedXsl);
         RelatedResponse response = (RelatedResponse) Xml.unmarshall(transform, RelatedResponse.class);
+        if (!approved) {
+            // For non-approved working copy, we need to update all urls to user approved=false if they are internal links
+            SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
+            Pattern pattern = Pattern.compile(settingManager.getNodeURL() + "api/records/" + md.getUuid() + "/attachments/(.*)$");
+            if (response.getOnlines() != null && response.getOnlines().getItem() != null) {
+                for (RelatedLinkItem relatedLinkItem : response.getOnlines().getItem()) {
+                    for (LocalizedString localizedString : relatedLinkItem.getUrl().getValue()) {
+                        if (localizedString.getValue() != null) {
+                            Matcher matcher = pattern.matcher(localizedString.getValue());
+                            if (matcher.matches()) {
+                                localizedString.setValue(localizedString.getValue() + "?approved=false");
+                            }
+                        }
+                        if (localizedString.getHref() != null) {
+                            Matcher matcher = pattern.matcher(localizedString.getHref());
+                            if (matcher.matches()) {
+                                localizedString.setHref(localizedString.getHref() + "?approved=false");
+                            }
+                        }
+                    }
+                }
+            }
+            if (response.getThumbnails() != null && response.getThumbnails().getItem() != null) {
+                for (RelatedThumbnailItem relatedThumbnailItem : response.getThumbnails().getItem()) {
+                    for (LocalizedString localizedString : relatedThumbnailItem.getUrl().getValue()) {
+                        if (localizedString.getValue() != null) {
+                            Matcher matcher = pattern.matcher(localizedString.getValue());
+                            if (matcher.matches()) {
+                                localizedString.setValue(localizedString.getValue() + "?approved=false");
+                            }
+                        }
+                        if (localizedString.getHref() != null) {
+                            Matcher matcher = pattern.matcher(localizedString.getHref());
+                            if (matcher.matches()) {
+                                localizedString.setHref(localizedString.getHref() + "?approved=false");
+                            }
+                        }
+                    }
+                }
+            }
+        }
         return response;
     }
 
@@ -471,7 +516,7 @@ public class MetadataApi {
                     // Adding children in MEF file
 
                     RelatedResponse related = getAssociatedResources(
-                        metadataUuid, null, 0, 100, request);
+                        metadataUuid, null, approved,0, 100, request);
                     uuidsToExport.addAll(getUuidsOfAssociatedRecords(related.getParent()));
                     uuidsToExport.addAll(getUuidsOfAssociatedRecords(related.getChildren()));
                     uuidsToExport.addAll(getUuidsOfAssociatedRecords(related.getDatasets()));
@@ -619,6 +664,9 @@ public class MetadataApi {
         )
         @RequestParam(defaultValue = "")
         RelatedItemType[] type,
+        @Parameter(description = "Use approved version or not", example = "true")
+        @RequestParam(required = false, defaultValue = "true")
+        Boolean approved,
         @Parameter(description = "Start offset for paging. Default 1. Only applies to related metadata records (ie. not for thumbnails).",
             required = false
         )
@@ -631,7 +679,8 @@ public class MetadataApi {
 
         AbstractMetadata md;
         try {
-            md = ApiUtils.canViewRecord(metadataUuid, request);
+            int metadataId = getAndCheckMetadataId(metadataUuid, approved);
+            md = ApiUtils.canViewRecord(metadataId, request);
         } catch (SecurityException e) {
             Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
             throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
@@ -640,7 +689,7 @@ public class MetadataApi {
         String language = languageUtils.getIso3langCode(request.getLocales());
         final ServiceContext serviceContext = ApiUtils.createServiceContext(request);
 
-        return getAssociatedResources(language, serviceContext, md, type, start, rows);
+        return getAssociatedResources(language, serviceContext, md, type, approved, start, rows);
     }
 
     @io.swagger.v3.oas.annotations.Operation(
@@ -664,6 +713,9 @@ public class MetadataApi {
             required = true)
         @PathVariable
         String metadataUuid,
+        @Parameter(description = "Use approved version or not", example = "true")
+        @RequestParam(required = false, defaultValue = "true")
+        Boolean approved,
         HttpServletRequest request) throws ResourceNotFoundException {
 
         RelatedItemType[] type = {RelatedItemType.fcats};
@@ -674,7 +726,7 @@ public class MetadataApi {
 
         try {
             RelatedResponse related = getAssociatedResources(
-                metadataUuid, type, 0, 100, request);
+                metadataUuid, type, approved, 0, 100, request);
 
             if (isIncludedAttributeTable(related.getFcats())) {
                 // TODO: Make consistent with document in index? and add codelists
