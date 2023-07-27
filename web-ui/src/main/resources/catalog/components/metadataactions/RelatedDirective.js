@@ -48,7 +48,7 @@
     "$http",
     "$q",
     function ($http, $q) {
-      this.get = function (uuidOrId, types) {
+      this.get = function (uuidOrId, types, approved) {
         var canceller = $q.defer();
         var request = $http({
           method: "get",
@@ -56,7 +56,8 @@
             "../api/records/" +
             uuidOrId +
             "/related?" +
-            (types ? "type=" + types.split("|").join("&type=") : ""),
+            (types ? "type=" + types.split("|").join("&type=") : "") +
+            (approved === false ? "approved=false" : ""),
           timeout: canceller.promise,
           cache: true
         });
@@ -87,11 +88,15 @@
         var uuids = mds.map(function (md) {
           return md.uuid;
         });
+        var approved = mds.map(function (md) {
+          return md.draft !== "y";
+        });
         var url = "../api/related";
         return $http.get(url, {
           params: {
             type: types,
-            uuid: uuids
+            uuid: uuids,
+            approved: approved
           }
         });
       };
@@ -384,6 +389,9 @@
                 return;
               }
 
+              // Todo 
+              // Add add check for gnCurrentEdit.metadata.draft === "y" and append "approved=false" to url
+              
               // init object if required
               scope.relations = scope.relations || {};
               scope.hasResults = true;
