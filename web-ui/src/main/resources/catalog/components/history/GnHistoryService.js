@@ -89,7 +89,7 @@
           filters.push("owner=" + filter.ownerFilter.id);
         }
         if (filter.recordFilter) {
-          filters.push("record=" + filter.recordFilter);
+          filters.push("recordIdentifier=" + filter.recordFilter);
         }
         if (filter.uuid) {
           filters.push("uuid=" + filter.uuid);
