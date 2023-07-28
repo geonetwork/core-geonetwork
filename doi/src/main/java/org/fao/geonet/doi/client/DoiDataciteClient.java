@@ -169,9 +169,8 @@ public class DoiDataciteClient extends BaseDoiClient implements IDoiClient {
 
             deleteMethod = new HttpDelete(createUrl("metadata/" + doi));
 
-            httpResponse = requestFactory.execute(
-                deleteMethod,
-                new UsernamePasswordCredentials(username, password), AuthScope.ANY);
+            httpResponse = executeRequest(deleteMethod);
+
             int status = httpResponse.getRawStatusCode();
 
             Log.debug(LOGGER_NAME, "   -- Request status code: " + status);
@@ -210,9 +209,8 @@ public class DoiDataciteClient extends BaseDoiClient implements IDoiClient {
 
             deleteMethod = new HttpDelete(createUrl("doi/" + doi));
 
-            httpResponse = requestFactory.execute(
-                deleteMethod,
-                new UsernamePasswordCredentials(username, password), AuthScope.ANY);
+            httpResponse = executeRequest(deleteMethod);
+
             int status = httpResponse.getRawStatusCode();
 
             Log.debug(LOGGER_NAME, "   -- Request status code: " + status);
