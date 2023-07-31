@@ -126,7 +126,8 @@
           },
           function (reason) {
             $rootScope.$broadcast("StatusUpdated", {
-              title: reason.data.description, //returned error JSON obj
+              title: $translate.instant("metadataStatusUpdatedErrors"),
+              error: reason.data,
               timeout: 0,
               type: "danger"
             });

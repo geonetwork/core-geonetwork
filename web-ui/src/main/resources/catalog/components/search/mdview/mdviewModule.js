@@ -196,7 +196,8 @@
             // Data needs improvements
             // See https://github.com/geonetwork/core-geonetwork/issues/723
             gnAlertService.addAlert({
-              msg: reason.data.description,
+              title: $translate.instant("metadataStatusUpdatedErrors"),
+              error: reason.data,
               type: "danger"
             });
           }
