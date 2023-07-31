@@ -100,7 +100,7 @@ public class BaseDoiClient {
                     successMessage, url));
             }
         } catch (Exception ex) {
-            Log.error(LOGGER_NAME, "   -- Error (exception): " + ex.getMessage());
+            Log.error(LOGGER_NAME, "   -- Error (exception): " + ex.getMessage(), ex);
             throw new DoiClientException(ex.getMessage());
 
         } finally {
@@ -144,7 +144,7 @@ public class BaseDoiClient {
             }
 
         } catch (Exception ex) {
-            Log.error(LOGGER_NAME, "   -- Error (exception): " + ex.getMessage());
+            Log.error(LOGGER_NAME, "   -- Error (exception): " + ex.getMessage(), ex);
             throw new DoiClientException(ex.getMessage());
 
         } finally {
