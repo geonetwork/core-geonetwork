@@ -375,7 +375,7 @@
             </xsl:for-each-group>
           </xsl:if>
 
-          <xsl:for-each select="cit:identifier/*">
+          <xsl:for-each select="cit:identifier/*[string(mcc:code/*)]">
             <resourceIdentifier type="object">{
               "code": "<xsl:value-of select="mcc:code/(gco:CharacterString|gcx:Anchor)"/>",
               "codeSpace": "<xsl:value-of select="mcc:codeSpace/(gco:CharacterString|gcx:Anchor)"/>",
