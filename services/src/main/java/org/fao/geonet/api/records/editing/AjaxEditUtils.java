@@ -355,7 +355,6 @@ public class AjaxEditUtils extends EditUtils {
 
         //--- locate the geonet:element and geonet:info elements and clone for
         //--- later re-use
-        Element refEl = (Element) (el.getChild(Edit.RootChild.ELEMENT, Edit.NAMESPACE)).clone();
         Element info = null;
 
         if (md.getChild(Edit.RootChild.INFO, Edit.NAMESPACE) != null) {
@@ -376,6 +375,8 @@ public class AjaxEditUtils extends EditUtils {
                         if (defaultChild != null) {
                             defaultValue = defaultChild.getAttributeValue(Edit.Attribute.Attr.VALUE);
                         }
+                        attributeDef.removeAttribute(Edit.Attribute.Attr.ADD);
+                        attributeDef.setAttribute(new Attribute(Edit.Attribute.Attr.DEL, "true"));
                     }
                 }
 
@@ -383,7 +384,6 @@ public class AjaxEditUtils extends EditUtils {
                 //--- Add new attribute with default value
                 el.setAttribute(new Attribute(attInfo.two(), defaultValue, attInfo.one()));
 
-                // TODO : add attribute should be false and del true after adding an attribute
                 child = el;
             } else {
                 //--- normal element
@@ -409,19 +409,13 @@ public class AjaxEditUtils extends EditUtils {
         }
         //--- now enumerate the new child (if not a simple attribute)
         if (childName == null || !childName.equals("geonet:attribute")) {
-            //--- now add the geonet:element back again to keep ref number
-            el.addContent(refEl);
-
             int iRef = editLib.findMaximumRef(md);
-            editLib.expandElements(schema, child);
             editLib.enumerateTreeStartingAt(child, iRef + 1, Integer.parseInt(ref));
-
-            //--- add editing info to everything from the parent down
-            editLib.expandTree(mds, el);
-
+            editLib.expandTree(mds, child);
         }
         if (info != null) {
-            //--- attach the info element to the child
+            //--- remove and re-attach the info element to the child
+            child.removeChild(Edit.RootChild.INFO, Edit.NAMESPACE);
             child.addContent(info);
         }
 
