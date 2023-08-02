@@ -224,7 +224,7 @@
         formatter-url="formatter.defaultUrl"
       >
         <span
-          class="label label-default gn-card-badge"
+          class="gn-card-badge"
           data-ng-class="{
             'gn-card-series': type === 'parent',
             'gn-card-nonGeographicDataset': type === 'nonGeographicDataset',
@@ -232,22 +232,29 @@
             'gn-card-dataset': type !== 'parent' && type !== 'services' && type !== 'application' && type !== 'nonGeographicDataset'
             }"
         >
-          <i class="fa {{icon}}" />
-          <span data-ng-hide="md.properties && !md.properties.associationType">
-            {{(config.getLabel(mainType, type)) | translate}}</span
-          >
-          <span
-            data-ng-show="md.properties && md.properties.associationType"
-            title="{{(config.getLabel(mainType, type)) | translate}}"
-          >
-            {{md.properties.associationType | translate}}
-            <span data-ng-if="md.properties && md.properties.initiativeType">
-              ({{md.properties.initiativeType | translate}})
+          <i
+            class="fa fa-fw {{icon}} gn-icon-association-{{md.properties.associationType}} gn-icon-initiative-{{md.properties.initiativeType}}"
+          />
+          <span class="gn-truncate">
+            <span data-ng-hide="md.properties && !md.properties.associationType">
+              {{(config.getLabel(mainType, type)) | translate}}</span
+            >
+            <span
+              class="gn-card-badge-sublabel"
+              data-ng-show="md.properties && md.properties.associationType"
+              title="{{(config.getLabel(mainType, type)) | translate}}"
+            >
+              <b translate>associationType</b><br />
+              {{md.properties.associationType | translate}}
+              <span data-ng-if="md.properties && md.properties.initiativeType">
+                <br /><b translate>initiativeType</b><br />
+                {{md.properties.initiativeType | translate}}
+              </span>
             </span>
           </span>
           <i
             data-ng-if="md.origin === 'remote'"
-            class="fa fa-external-link"
+            class="fa fa-fw fa-external-link"
             title="{{'remoteRecord' | translate}}"
           ></i>
         </span>

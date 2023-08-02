@@ -106,11 +106,60 @@
   }
   .gn-card-badge {
     padding: 15px;
+    font-size: 100%;
     margin-top: 30px !important;
     color: #0e0e0e;
     position: absolute;
-    left: -5px;
-    bottom: 10px;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    text-align: left;
+    border-radius: 0;
+    &:before {
+      content: "\f077";
+      font-family: FontAwesome;
+      font-style: normal;
+      font-weight: normal;
+      text-decoration: inherit;
+      color: @gray-light;
+      font-size: 14px;
+      padding-top: 4px;
+      text-align: center;
+      background-color: @gray-lighter;
+      width: 30px;
+      height: 30px;
+      border-radius: 15px;
+      position: absolute;
+      display: block;
+      top: -15px;
+      left: calc(~"50% - 15px");
+    }
+    &:hover::before {
+      rotate: 180deg;
+      transition: rotate 0.35s;
+    }
+    .gn-truncate {
+      cursor: pointer;
+      width: calc(~"100% - 10px - 1.25em - 1.25em");
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+      display: inline-block;
+      vertical-align: middle;
+      .gn-card-badge-sublabel {
+        display: none;
+      }
+    }
+    &:hover {
+      .gn-truncate {
+        white-space: normal;
+        line-height: 1.4em;
+        text-overflow: unset;
+        .gn-card-badge-sublabel {
+          display: inline-block;
+        }
+      }
+    }
   }
   .btn-block + .btn-block {
     margin-top: 0;
