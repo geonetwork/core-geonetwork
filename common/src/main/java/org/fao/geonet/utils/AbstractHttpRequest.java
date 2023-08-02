@@ -272,8 +272,6 @@ public class AbstractHttpRequest {
                     input.setDefaultCredentialsProvider(credentialsProvider);
                 }
 
-                input.useSystemProperties();
-
                 if (useProxy) {
                     final HttpHost proxy = new HttpHost(proxyHost, proxyPort);
                     input.setProxy(proxy);
