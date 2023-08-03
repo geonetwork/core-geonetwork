@@ -516,7 +516,7 @@ public class MetadataApi {
                     // Adding children in MEF file
 
                     RelatedResponse related = getAssociatedResources(
-                        metadataUuid, null, approved,0, 100, request);
+                        metadataUuid, null, approved, 0, 100, request);
                     uuidsToExport.addAll(getUuidsOfAssociatedRecords(related.getParent()));
                     uuidsToExport.addAll(getUuidsOfAssociatedRecords(related.getChildren()));
                     uuidsToExport.addAll(getUuidsOfAssociatedRecords(related.getDatasets()));
