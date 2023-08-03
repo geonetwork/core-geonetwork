@@ -486,11 +486,12 @@
         getApprovedUrl: function (url) {
           if (
             gnCurrentEdit.metadata.draft &&
-            url.match(".*/api/records/(.*)/attachments/.*") != null
+            url.match(".*/api/records/" + gnCurrentEdit.uuid + "/attachments/.*") != null
           ) {
-            // Remove approved parameter if already exists.
-            url = gnUrlUtils.remove(url, ["approved"], true);
-            // Apply correct approved parameter.
+            if (url.match(".*(&?)((approved=.*)(&?))+")) {
+              // Remove approved parameter if already exists.
+              url = gnUrlUtils.remove(url, ["approved"], true);
+            }
             url += (url.indexOf("?") > 0 ? "&" : "?") + "approved=false";
           }
           return url;

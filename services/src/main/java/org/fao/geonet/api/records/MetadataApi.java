@@ -49,7 +49,6 @@ import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.mef.MEFLib;
-import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.utils.Log;
@@ -70,8 +69,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -127,41 +124,7 @@ public class MetadataApi {
 
         final Element transform = Xml.transform(raw, relatedXsl);
         RelatedResponse response = (RelatedResponse) Xml.unmarshall(transform, RelatedResponse.class);
-        if (!approved) {
-            // For non-approved working copy, we need to update all urls to user approved=false if they are internal links
-            if (response.getOnlines() != null && response.getOnlines().getItem() != null) {
-                for (RelatedLinkItem relatedLinkItem : response.getOnlines().getItem()) {
-                    updateNonApprovedUrl(relatedLinkItem.getUrl().getValue(), md.getUuid());
-                }
-            }
-            if (response.getThumbnails() != null && response.getThumbnails().getItem() != null) {
-                for (RelatedThumbnailItem relatedThumbnailItem : response.getThumbnails().getItem()) {
-                    updateNonApprovedUrl(relatedThumbnailItem.getUrl().getValue(), md.getUuid());
-                }
-            }
-        }
         return response;
-    }
-
-    private static void updateNonApprovedUrl(List<LocalizedString> localizedStrings, String currentUuid) {
-        // For non-approved working copy, we need to update all urls to user approved=false if they are internal links
-        SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
-        Pattern pattern = Pattern.compile(settingManager.getNodeURL() + "api/records/" + currentUuid + "/attachments/(.*)$");
-
-        for (LocalizedString localizedString : localizedStrings) {
-            if (localizedString.getValue() != null) {
-                Matcher matcher = pattern.matcher(localizedString.getValue());
-                if (matcher.matches()) {
-                    localizedString.setValue(localizedString.getValue() + "?approved=false");
-                }
-            }
-            if (localizedString.getHref() != null) {
-                Matcher matcher = pattern.matcher(localizedString.getHref());
-                if (matcher.matches()) {
-                    localizedString.setHref(localizedString.getHref() + "?approved=false");
-                }
-            }
-        }
     }
 
     public synchronized void setApplicationContext(ApplicationContext context) {
