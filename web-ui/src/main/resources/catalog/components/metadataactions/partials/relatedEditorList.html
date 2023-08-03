@@ -22,10 +22,10 @@
           data-ng-href="{{record.remoteUrl}}"
           rel="noopener noreferrer"
           target="_blank"
-          title="{{record.resourceTitle}}"
+          title="{{record.resourceTitle || record.uuid}}"
         >
           <i class="fa {{icon}}" />
-          {{record.resourceTitle}}
+          {{record.resourceTitle || record.uuid}}
           <i
             data-ng-if="record.origin === 'remote'"
             class="fa fa-external-link"
