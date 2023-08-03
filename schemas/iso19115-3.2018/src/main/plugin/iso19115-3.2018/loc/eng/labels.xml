@@ -294,7 +294,7 @@
     <condition></condition>
   </element>
   <element name="dqc:dateTime">
-    <label>Date et heure</label>
+    <label>Date and Time</label>
     <description></description>
   </element>
   <element name="dqc:relatedElement">
@@ -357,7 +357,7 @@
     <condition></condition>
   </element>
   <element name="mrl:processingInformation">
-    <label>Information sur le processus</label>
+    <label>Processing Information</label>
     <description></description>
     <condition></condition>
   </element>
@@ -398,21 +398,30 @@
     </description>
     <condition></condition>
   </element>
-  <element name="mdb:MD_MetadataScoperd" id="39.0">
+  <element name="mdb:metadataProfile" id="21.5">
+    <label>Metadata profile</label>
+    <description iso="true">Citation for the profile(s) of the metadata
+      standard to which the metadata
+      conforms. NOTE Metadata profile citations
+      should include an identifier.
+    </description>
+    <condition></condition>
+  </element>
+  <!--<element name="mdb:MD_MetadataScope" id="39.0">
     <label>Resource scope</label>
     <description iso="true">Information about the scope of the resource.
     </description>
     <condition></condition>
-  </element>
+  </element>-->
   <element name="mdb:resourceScope" id="40.0">
     <label>Resource scope</label>
     <description iso="true">Code for the scope.</description>
     <condition>mandatory</condition>
   </element>
   <element name="mdb:name" id="41.0">
-    <label>Name</label>
-    <description iso="true">Description of the scope.</description>
-    <condition>optional</condition>
+    <label>Descriptor</label>
+    <description iso="true">Name or description of the scope. (Mandatory for scope other than dataset)</description>
+    <condition>conditional</condition>
   </element>
   <element name="msr:MD_GridSpatialRepresentation" id="148.0">
     <label>Grid spatial representation</label>
@@ -605,7 +614,7 @@
   </element>
   <element name="msr:dimensionTitle" id="174.0">
     <label>Dimension title</label>
-    <description iso="true">enhancement/modifier of the dimension name. EXAMPLE
+    <description iso="true">Enhancement/modifier of the dimension name. EXAMPLE
       dimensionName = “column” dimensionTitle = “Longitude”
     </description>
     <condition>optional</condition>
@@ -808,6 +817,7 @@
   </element>
   <element name="mdq:abstract">
     <label>Abstract</label>
+    <help>https://icsm-au.github.io/metadata-working-group/defs/Abstract.html</help>
     <description></description>
   </element>
   <element name="mdq:elementReport">
@@ -1032,7 +1042,7 @@
     <_condition>optional</_condition>
   </element>
   <element name="mrl:additionalDocumentation">
-    <label>Additional doc.</label>
+    <label>Additional documentation</label>
     <description/>
   </element>
   <element name="mrl:LI_Source">
@@ -1143,6 +1153,7 @@
       compoundGeographic2DParametric
     </description>
     <_condition>optional</_condition>
+    <help><![CDATA[<a target="docs" href="https://openwork-nz.github.io/ANZLIC-Metadata-Tool-help/Spatial-Metadata#reference-system-information">Help</a>]]></help>
   </element>
   <element name="mrc:includedWithDataset" id="186.0">
     <label>Included with dataset</label>
@@ -1311,11 +1322,13 @@
   </element>
   <element name="cit:role" id="377.0">
     <label>Role</label>
+    <help><![CDATA[<a target="docs" href="https://openwork-nz.github.io/ANZLIC-Metadata-Tool-help/Contacts-Metadata">Help</a>]]></help>
   </element>
   <element name="cit:role" id="377.0" context="cit:CI_Responsibility">
     <label>Role</label>
     <description>Function performed by the responsible party</description>
     <condition>mandatory</condition>
+    <help><![CDATA[<a target="docs" href="https://openwork-nz.github.io/ANZLIC-Metadata-Tool-help/Contacts-Metadata">Help</a>]]></help>
   </element>
   <element name="cit:party" id="379.0" context="cit:CI_Responsibility">
     <label>Party</label>
@@ -1353,7 +1366,7 @@
     <condition/>
   </element>
   <element name="cit:CI_Series" id="413.0">
-    <label>Séries</label>
+    <label>Series</label>
     <description iso="true">Class of information about the series, or aggregate
       resource, to which a resource belongs
     </description>
@@ -1505,7 +1518,7 @@
     <_condition>Use obligation/condition from referencing object</_condition>
   </element>
   <element name="cit:CI_OnlineResource" id="405.0">
-    <label>OnLine resource</label>
+    <label>Online resource</label>
     <description>Information about on-line sources from which the dataset,
       specification, or
       community profile name and extended metadata elements can be obtained
@@ -1583,15 +1596,13 @@
   <element name="mdq:DQ_FormatConsistency" id="114.0">
     <label>Format consistency</label>
     <description>Degree to which data is stored in accordance with the physical
-      structure of the
-      dataset, as described by the scope
+      structure of the dataset, as described by the scope
     </description>
   </element>
   <element name="mdq:DQ_GriddedDataPositionalAccuracy" id="118.0">
     <label>Gridded data positional accuracy</label>
     <description>Closeness of gridded data position values to values accepted as
-      or being
-      true
+      or being true
     </description>
   </element>
   <element name="mdq:DQ_NonQuantitativeAttributeAccuracy" id="126.0">
@@ -1605,16 +1616,14 @@
   <element name="mdq:DQ_RelativeInternalPositionalAccuracy" id="119.0">
     <label>Relative internal positional accuracy</label>
     <description>Closeness of the relative positions of features in the scope to
-      their
-      respective relative positions accepted as or being true
+      their respective relative positions accepted as or being true
     </description>
   </element>
   <element name="mri:DQ_Scope" id="138.0">
     <label>Scope</label>
     <description>Description of the data specified by the scope</description>
     <help>extent of characteristic(s) of the data for which quality information
-      is
-      reported
+      is reported
     </help>
   </element>
   <element name="mdq:DQ_TemporalConsistency" id="122.0">
@@ -1644,8 +1653,7 @@
   <element name="gex:EX_BoundingPolygon" id="341.0">
     <label>Bounding Polygon</label>
     <description>Boundary enclosing the dataset, expressed as the closed set of
-      (x,y)
-      coordinates of the polygon (last point replicates first point)
+      (x,y) coordinates of the polygon (last point replicates first point)
     </description>
   </element>
   <element name="gex:EX_Extent" id="334.0">
@@ -1656,6 +1664,7 @@
   <element name="gex:EX_GeographicBoundingBox" id="343.0">
     <label>Geographic bounding box</label>
     <description>Geographic position of the dataset</description>
+    <help><![CDATA[<a target="docs" href="https://openwork-nz.github.io/ANZLIC-Metadata-Tool-help/Spatial-Metadata#geographic-bounding-box">Help</a>]]></help>
   </element>
   <element name="gex:EX_GeographicDescription" id="348.0">
     <label>Geographic description</label>
@@ -1686,26 +1695,22 @@
   <element name="mrl:LI_Lineage" id="82.0">
     <label>Lineage</label>
     <description>Information about the events or source data used in
-      constructing the data
-      specified by the scope or lack of knowledge about lineage
+      constructing the data specified by the scope or lack of knowledge about lineage
     </description>
   </element>
   <element name="mri:LI_ProcessStep" id="86.0">
     <label>Process step</label>
     <description>Information about an event in the creation process for the data
-      specified by
-      the scope
+      specified by the scope
     </description>
     <help>information about an event or transformation in the life of a dataset
-      including the
-      process used to maintain the dataset
+      including the process used to maintain the dataset
     </help>
   </element>
   <element name="mri:LI_Source" id="92.0">
     <label>Source</label>
     <description>Information about the source data used in creating the data
-      specified by the
-      scope
+      specified by the scope
     </description>
   </element>
   <element name="mri:MD_AggregateInformation" id="66.1">
@@ -1750,8 +1755,7 @@
   <element name="mrd:MD_DigitalTransferOptions" id="274.0">
     <label>Digital transfer options</label>
     <description>Technical means and media by which a resource is obtained from
-      the
-      distributor
+      the distributor
     </description>
   </element>
   <element name="mri:MD_Dimension" id="179.0">
@@ -1761,8 +1765,7 @@
   <element name="mrd:MD_Distribution" id="270.0">
     <label>Distribution</label>
     <description>Information about the distributor of and options for obtaining
-      the
-      resource
+      the resource
     </description>
   </element>
   <element name="mrd:MD_Distributor" id="279.0">
@@ -1771,8 +1774,7 @@
   </element>
   <element name="mri:MD_ExtendedElementInformation" id="306.0">
     <description>New metadata element, not found in ISO 19115, which is required
-      to describe
-      geographic data
+      to describe geographic data
     </description>
     <label>Extended Element Information</label>
   </element>
@@ -1785,10 +1787,8 @@
   <element name="mrd:MD_Format" id="284.0">
     <label>Format</label>
     <description>Description of the computer language construct that specifies
-      the
-      representation of data objects in a record, file, message, storage device
-      or
-      transmission channel
+      the representation of data objects in a record, file, message, storage device
+      or transmission channel
     </description>
   </element>
   <element name="mri:MD_GeometricObjects" id="183.0">
@@ -1800,23 +1800,17 @@
   <element name="mri:MD_Georectified" id="162.0">
     <label>Georectified</label>
     <description>Grid whose cells are regularly spaced in a geographic (i.e.,
-      lat / long) or map
-      coordinate system defined in the Spatial Referencing System (SRS) so that
-      any cell in
-      the grid can be geolocated given its grid coordinate and the grid origin,
-      cell spacing,
-      and orientation
+      lat / long) or map coordinate system defined in the Spatial Referencing System (SRS) so that
+      any cell in the grid can be geolocated given its grid coordinate and the grid origin,
+      cell spacing, and orientation
     </description>
   </element>
   <element name="mri:MD_Georeferenceable" id="170.0">
     <label>Georeferenceable</label>
     <description>Grid with cells irregularly spaced in any given geographic/map
-      projection
-      coordinate system, whose individual cells can be geolocated using
-      geolocation
-      information supplied with the data but cannot be geolocated from the grid
-      properties
-      alone
+      projection coordinate system, whose individual cells can be geolocated using
+      geolocation information supplied with the data but cannot be geolocated from the grid
+      properties alone
     </description>
   </element>
   <element name="mri:MD_GridSpatialRepresentation" id="157.0">
@@ -1848,6 +1842,7 @@
     <label>Maintenance information</label>
     <description>Information about the scope and frequency of updating
     </description>
+    <help><![CDATA[<a target="docs" href="https://openwork-nz.github.io/ANZLIC-Metadata-Tool-help/General-Metadata#maintenance-information">Help</a>]]></help>
   </element>
   <element name="mrd:MD_Medium" id="291.0">
     <label>Medium</label>
@@ -1873,8 +1868,7 @@
   <element name="mrc:MD_RangeDimension" id="256.0">
     <label>Range dimension</label>
     <description>Information on the range of each dimension of a cell
-      measurement
-      value
+      measurement value
     </description>
   </element>
   <element name="mrs:MD_ReferenceSystem" id="186.0">
@@ -1885,8 +1879,7 @@
   <element name="mri:MD_RepresentativeFraction" id="56.0">
     <label>Representative fraction</label>
     <description>Derived from Scale where MD_RepresentativeFraction.denominator
-      = 1 /
-      Scale.measure And Scale.targetUnits = Scale.sourceUnits
+      = 1 / Scale.measure And Scale.targetUnits = Scale.sourceUnits
     </description>
   </element>
   <element name="mri:MD_Resolution" id="59.0">
@@ -1923,17 +1916,14 @@
   <element name="mri:MD_ServiceIdentification" id="47.0">
     <label>Service Identification</label>
     <description>Identification of capabilities which a service provider makes
-      available to a
-      service user through a set of interfaces that define a behaviour - See ISO
-      19119 -
-      Services for further information
+      available to a service user through a set of interfaces that define a behaviour - See ISO
+      19119 - Services for further information
     </description>
   </element>
   <element name="mrd:MD_StandardOrderProcess" id="298.0">
     <label>Standard order process</label>
     <description>Common ways in which the resource may be obtained or received,
-      and related
-      instructions and fee information
+      and related instructions and fee information
     </description>
   </element>
   <element name="mri:MD_Usage" id="62.0">
@@ -1965,13 +1955,18 @@
     <label>Abstract</label>
     <description>Brief narrative summary of the content of the resource(s)
     </description>
+    <help><![CDATA[<a target="docs" href="https://openwork-nz.github.io/ANZLIC-Metadata-Tool-help/General-Metadata#abstract">Help</a>]]></help>
     <condition>mandatory</condition>
+  </element>
+  <element name="cit:identifier" id="25.5">
+    <label>Data identifier</label>
+    <description>A uri identifing the resource
+    </description>
   </element>
   <element name="mco:accessConstraints" id="70.0">
     <label>Access constraints</label>
     <description>Access constraints applied to assure the protection of privacy
-      or intellectual
-      property, and any special restrictions or limitations on obtaining the
+      or intellectual property, and any special restrictions or limitations on obtaining the
       resource
     </description>
   </element>
@@ -1982,18 +1977,16 @@
   <element name="cit:address" id="389.0" context="CI_Contact">
     <label>Address</label>
     <description>Physical and email address at which the organization or
-      individual may be
-      contacted
+      individual may be contacted
     </description>
   </element>
   <element name="cit:address" id="397.0">
     <label>Adresse</label>
-    <description>Adresse physique et électronique à laquelle la personne ou
-      l'organisation responsable peut être contactée
+    <description>Physical and email address at which the organization or
+      individual may be contacted
     </description>
-    <help>Adresse postale ou électronique d'un premier niveau de contact (par
-      exemple un secrétariat). Ces informations sont du type CI_Address et sont
-      gérées dans la classe du même nom.
+    <help>APhysical and email address at which the organization or
+      individual may be contacted
     </help>
     <condition/>
 
@@ -2083,8 +2076,7 @@
            id="253.0">
     <label>Camera calibration information availability</label>
     <description>Indication of whether or not constants are available which
-      allow for camera
-      calibration corrections
+      allow for camera calibration corrections
     </description>
   </element>
   <element name="mri:cellGeometry" id="160.0">
@@ -2095,17 +2087,14 @@
   <element name="mri:centerPoint" id="166.0">
     <label>Center point</label>
     <description>Earth location in the coordinate system defined by the Spatial
-      Reference System
-      and the grid coordinate of the cell halfway between opposite ends of the
-      grid in the
-      spatial dimensions
+      Reference System and the grid coordinate of the cell halfway between opposite ends of the
+      grid in the spatial dimensions
     </description>
   </element>
   <element name="mri:characterSet" id="4.0" context="mri:MD_Metadata">
     <label>Character set</label>
     <description>Full name of the character coding standard used for the
-      metadata
-      set
+      metadata set
     </description>
     <condition>conditional</condition>
     <_condition>conditional / ISO/IEC 10646-1 not used and not defined by
@@ -2123,23 +2112,20 @@
   <element name="mri:characterSet" id="4.0">
     <label>Character set</label>
     <description>Full name of the character coding standard used for the
-      metadata
-      set
+      metadata set
     </description>
     <condition>conditional</condition>
   </element>
   <element name="mri:checkPointAvailability" id="163.0">
     <description>Indication of whether or not geographic position points are
-      available to test
-      the accuracy of the georeferenced grid data
+      available to test the accuracy of the georeferenced grid data
     </description>
     <condition>mandatory</condition>
     <label>Checkpoint Availability</label>
   </element>
   <element name="mri:checkPointDescription" id="164.0">
     <description>Description of geographic position points used to test the
-      accuracy of the
-      georeferenced grid data
+      accuracy of the georeferenced grid data
     </description>
     <condition>conditional</condition>
     <label>Checkpoint Description</label>
@@ -2163,9 +2149,9 @@
   <element name="cit:citedResponsibleParty" id="367.0">
     <label>Cited responsible party</label>
     <description>Name and position information for an individual or organization
-      that is
-      responsible for the resource
+      that is responsible for the resource
     </description>
+    <help><![CDATA[<a target="docs" href="https://openwork-nz.github.io/ANZLIC-Metadata-Tool-help/Contacts-Metadata">Help</a>]]></help>
   </element>
   <element name="cit:city" id="390.0">
     <label>City</label>
@@ -2199,10 +2185,10 @@
     <description>Alphanumeric value identifying an instance in the namespace
     </description>
     <description iso="true">Alphanumeric value identifying an instance in the
-      namespace. NOTE Avoid characters that are not legal in URLs. EXAMPLE
-      EPSG::4326
+      namespace. NOTE Avoid characters that are not legal in URLs.
     </description>
     <condition>mandatory</condition>
+    <help><![CDATA[<a target="docs" href="https://openwork-nz.github.io/ANZLIC-Metadata-Tool-help/Spatial-Metadata.html#reference-system">Help</a>]]></help>
   </element>
   <element name="mri:code" id="547.0" context="mri:MD_CodeValue">
     <label>Code</label>
@@ -2212,22 +2198,20 @@
   <element name="mcc:codeSpace" id="434.0">
     <label>Codespace</label>
     <description>Name or identifier of the person or organization responsible
-      for
-      namespace
+      for namespace
     </description>
     <description iso="true">Identifier or namespace in which the code is valid
     </description>
     <helper>
       <option value="EPSG">EPSG</option>
     </helper>
+    <help><![CDATA[<a target="docs" href="https://openwork-nz.github.io/ANZLIC-Metadata-Tool-help/Spatial-Metadata.html#reference-system">Help</a>]]></help>
   </element>
   <element name="mri:collectiveTitle" id="371.0">
     <label>Collective title</label>
     <description>Common title with holdings note. NOTE title identifies elements
-      of a series
-      collectively, combined with information about what volumes are available
-      at the source
-      cited
+      of a series collectively, combined with information about what volumes are available
+      at the source cited
     </description>
     <help>This field is used to name the Basic Geodata as defined in the GeoIV
       Annex I, as it is possible that there are more than 1 "physical" datasets
@@ -2239,15 +2223,13 @@
   <element name="mrc:complianceCode" id="234.0">
     <label>Compliance code</label>
     <description>Indication of whether or not the cited feature catalogue
-      complies with ISO
-      19110
+      complies with ISO 19110
     </description>
   </element>
   <element name="mri:compressionGenerationQuantity" id="250.0">
     <label>Compression generation quantity</label>
     <description>Count of the number of lossy compression cycles
-      performed on the
-      image
+      performed on the image
     </description>
   </element>
   <element name="mri:condition" id="312.0">
@@ -2262,15 +2244,15 @@
   </element>
   <element name="mdb:contact" id="19.0">
     <condition>mandatory</condition>
-    <label>Contact</label>
+    <label>Metadata Contact</label>
     <description>Party responsible for the metadata information</description>
+    <help><![CDATA[<a target="docs" href="https://openwork-nz.github.io/ANZLIC-Metadata-Tool-help/Contacts-Metadata">Help</a>]]></help>
   </element>
   <element name="mmi:contact" id="148.1"
            context="mmi:MD_MaintenanceInformation">
-    <label>Contact</label>
+    <label>Maintenance Contact</label>
     <description>Identification of, and means of communication with, person(s)
-      and
-      organization(s) with responsibility for maintaining the metadata
+      and organization(s) with responsibility for maintaining the metadata
     </description>
   </element>
   <element name="mri:contact" id="8.0">
@@ -2285,14 +2267,12 @@
   <element name="cit:contactInstructions" id="392.0">
     <label>Contact instructions</label>
     <description>Supplemental instructions on how or when to contact the
-      individual or
-      organization
+      individual or organization
     </description>
   </element>
   <element name="mdb:contentInfo" id="16.0">
     <description>Provides information about the feature catalogue and describes
-      the coverage and
-      image data characteristics
+      the coverage and image data characteristics
     </description>
     <label>Content Information</label>
   </element>
@@ -2310,12 +2290,9 @@
   <element name="mri:cornerPoints" id="165.0">
     <label>Corner points</label>
     <description>Earth location in the coordinate system defined by the Spatial
-      Reference System
-      and the grid coordinate of the cells at opposite ends of grid coverage
-      along two
-      diagonals in the grid spatial dimensions. There are four corner points in
-      a georectified
-      grid; at least two corner points along one diagonal are required
+      Reference System and the grid coordinate of the cells at opposite ends of grid coverage
+      along two diagonals in the grid spatial dimensions. There are four corner points in
+      a georectified grid; at least two corner points along one diagonal are required
     </description>
     <condition>mandatory</condition>
   </element>
@@ -2366,12 +2343,10 @@
   <element name="mri:dataSetURI" id="11.1">
     <label>Dataset URI</label>
     <description>Uniformed Resource Identifier (URI) of the dataset to which the
-      metadata
-      applies
+      metadata applies
     </description>
     <help>Uniformed Resource Identifier (URI) of the dataset to which the
-      metadata applies. This
-      link refers direct to the machine-readable dataset.
+      metadata applies. This link refers direct to the machine-readable dataset.
     </help>
   </element>
   <element name="mri:dataType" id="313.0">
@@ -2406,6 +2381,7 @@
     <label>Date</label>
     <description>Reference date for the cited resource</description>
     <_condition>M</_condition>
+    <help><![CDATA[<a target="docs" href="https://openwork-nz.github.io/ANZLIC-Metadata-Tool-help/General-Metadata#key-dates">Help</a>]]></help>
   </element>
   <element name="cit:date" id="403.0" context="cit:CI_Date">
     <condition>mandatory</condition>
@@ -2426,8 +2402,7 @@
   <element name="mri:dateTime" id="89.0">
     <label>Date / Time</label>
     <description>Date and time or range of date and time on or over which the
-      process step
-      occurred (YYYY-MM-DDThh:mm:ss)
+      process step occurred (YYYY-MM-DDThh:mm:ss)
     </description>
   </element>
   <element name="mri:dateTime" id="89.0" context="LI_ProcessStep">
@@ -2467,16 +2442,17 @@
     <description>The number below the line in a vulgar fraction</description>
     <condition>add either a denominator or a distance</condition>
     <helper>
-      <option value="5000">1:5´000</option>
-      <option value="10000">1:10´000</option>
-      <option value="25000">1:25´000</option>
-      <option value="50000">1:50´000</option>
-      <option value="100000">1:100´000</option>
-      <option value="200000">1:200´000</option>
-      <option value="300000">1:300´000</option>
-      <option value="500000">1:500´000</option>
-      <option value="1000000">1:1´000´000</option>
+      <option value="5000">1:5,000</option>
+      <option value="10000">1:10,000</option>
+      <option value="25000">1:25,000</option>
+      <option value="50000">1:50,000</option>
+      <option value="100000">1:100,000</option>
+      <option value="200000">1:200,000</option>
+      <option value="300000">1:300,000</option>
+      <option value="500000">1:500,000</option>
+      <option value="1000000">1:1,000,000</option>
     </helper>
+    <help><![CDATA[<a target="docs" href="https://openwork-nz.github.io/ANZLIC-Metadata-Tool-help/Spatial-Metadata#resolution">Help</a>]]></help>
 
   </element>
   <element name="mrd:density" id="293.0">
@@ -2513,6 +2489,7 @@
       code value. EXAMPLE For codeSpace = EPSG, code= 4326, description =
       WGS-84.
     </description>
+    <help><![CDATA[<a target="docs" href="https://openwork-nz.github.io/ANZLIC-Metadata-Tool-help/General-Metadata#description">Help</a>]]></help>
   </element>
   <element name="mri:description" id="561.0" context="mri:MD_AbstractClass">
     <label>Description</label>
@@ -2526,7 +2503,7 @@
     </description>
   </element>
   <element name="mrl:description" id="93.0" context="mrl:LI_Source">
-    <label>Description</label>
+    <label>Source Description</label>
     <description>Detailed description of the level of the source data
     </description>
     <_condition>Conditional / sourceExtent not provided?</_condition>
@@ -2561,6 +2538,7 @@
       verticalElement not
       documented?
     </_condition>
+    <help><![CDATA[<a target="docs" href="https://openwork-nz.github.io/ANZLIC-Metadata-Tool-help/Spatial-Metadata#description">Help</a>]]></help>
   </element>
   <element name="cit:description" id="410.0" context="cit:CI_OnlineResource">
     <label>Description</label>
@@ -2621,9 +2599,10 @@
     <condition>mandatory</condition>
   </element>
   <element name="mri:descriptiveKeywords" id="33.0">
-    <label>Descriptive keywords</label>
-    <description>Provides category keywords, their type, and reference source
+    <label>Descriptive keywords (click for help)</label>
+    <description>Provides textual description of category keywords, their type, and reference source
     </description>
+    <help><![CDATA[<a target="docs" href="https://openwork-nz.github.io/ANZLIC-Metadata-Tool-help/Keyword-Metadata">Help</a>]]></help>
   </element>
   <element name="mri:descriptor" id="258.0">
     <label>Descriptor</label>
@@ -2657,6 +2636,7 @@
       <option value="30" title="m">30 m</option>
       <option value="100" title="m">100 m</option>
     </helper>
+    <help><![CDATA[<a target="docs" href="https://openwork-nz.github.io/ANZLIC-Metadata-Tool-help/Spatial-Metadata#resolution">Help</a>]]></help>
   </element>
   <element name="mrd:distributionFormat" id="271.0">
     <label>Distribution format</label>
@@ -2675,8 +2655,7 @@
   <element name="mrd:distributionOrderProcess" id="281.0">
     <label>Distribution / Order Process</label>
     <description>Provides information about how the resource may be obtained,
-      and related
-      instructions and fee information
+      and related instructions and fee information
     </description>
   </element>
   <element name="mrd:distributor" id="272.0">
@@ -2686,8 +2665,7 @@
   <element name="mrd:distributorContact" id="280.0">
     <label>Distributor contact</label>
     <description>Party from whom the resource may be obtained. This list need
-      not be
-      exhaustive
+      not be exhaustive
     </description>
     <condition>mandatory</condition>
   </element>
@@ -2700,8 +2678,7 @@
   <element name="mrd:distributorTransferOptions" id="283.0">
     <label>Distributor transfer options</label>
     <description>Provides information about the technical means and media used
-      by the
-      distributor
+      by the distributor
     </description>
   </element>
   <element name="mri:domainCode" id="309.0">
@@ -2724,8 +2701,7 @@
   <element name="mri:eastBoundLongitude" id="345.0">
     <label>East bound</label>
     <description>Eastern-most coordinate of the limit of the dataset extent,
-      expressed in
-      longitude in decimal degrees (positive east)
+      expressed in longitude in decimal degrees (positive east)
     </description>
     <condition>mandatory</condition>
   </element>
@@ -2740,26 +2716,24 @@
   <element name="cit:electronicMailAddress" id="394.0">
     <label>Electronic mail address</label>
     <description>Address of the electronic mailbox of the responsible
-      organization or
-      individual
+      organization or individual
     </description>
+    <help><![CDATA[<a target="docs" href="https://openwork-nz.github.io/ANZLIC-Metadata-Tool-help/Contacts-Metadata">Help</a>]]></help>
   </element>
   <element name="mri:environmentDescription" id="44.0">
     <label>Environment description</label>
-    <description>Description of the dataset in the producer_s processing
-      environment, including
-      items such as the software, the computer operating system, file name, and
-      the dataset
-      size
+    <description>Description of the dataset in the producer's processing
+      environment, including items such as the software, the computer operating system, file name, and
+      the dataset size
     </description>
   </element>
   <element name="mri:equivalentScale" id="60.0">
     <label>Equivalent scale</label>
     <description>Level of detail expressed as the scale of a comparable hardcopy
-      map or
-      chart
+      map or chart
     </description>
     <_condition>Conditional / distance not documented?</_condition>
+    <help><![CDATA[<a target="docs" href="https://openwork-nz.github.io/ANZLIC-Metadata-Tool-help/Spatial-Metadata#equivalent-scale">Help</a>]]></help>
   </element>
   <element name="mri:errorStatistic" id="136.0">
     <label>Error statistic</label>
@@ -2844,8 +2818,7 @@
   <element name="mrc:featureTypes" id="237.0">
     <label>Feature types</label>
     <description>Subset of feature types from cited feature catalogue occurring
-      in
-      data
+      in data
     </description>
   </element>
   <element name="mcc:features" id="151.0">
@@ -2856,15 +2829,13 @@
   <element name="mrd:fees" id="299.0">
     <label>Fees</label>
     <description>Fees and terms for retrieving the resource. Include monetary
-      units (as
-      specified in ISO 4217)
+      units (as specified in ISO 4217)
     </description>
   </element>
   <element name="mrd:fileDecompressionTechnique" id="289.0">
     <label>File decompression technique</label>
     <description>Recommendations of algorithms or processes that can be applied
-      to read or
-      expand resources to which compression techniques have been applied
+      to read or expand resources to which compression techniques have been applied
     </description>
   </element>
   <element name="mcc:fileDescription" id="439.0">
@@ -2878,17 +2849,15 @@
   <element name="mcc:fileName" id="438.0">
     <label>File name</label>
     <description>Name of the file that contains a graphic that provides an
-      illustration of the
-      dataset. It could be a public image document URL.
+      illustration of the dataset. It could be a public image document URL.
     </description>
     <condition>mandatory</condition>
   </element>
   <element name="mcc:fileType" id="440.0">
     <label>File type</label>
     <description>Format in which the illustration is encoded</description>
-    <help>Format in which the illustration is encoded Examples: EPS, GIF, JPEG,
-      PBM, PS,
-      TIFF, PDF
+    <help>Format in which the illustration is encoded Examples: EPS, GIF, JPEG, PNG,
+      PBM, PS, TIFF, PDF
     </help>
     <helper>
       <option value="EPS">EPS</option>
@@ -2933,15 +2902,15 @@
     <label>Function</label>
     <description>Code for function performed by the online resource
     </description>
+    <help><![CDATA[<a target="docs" href="https://openwork-nz.github.io/ANZLIC-Metadata-Tool-help/Service-Metadata#connect-point">Help</a>]]></help>
   </element>
-  <element name="gex:geographicElement" id="336.0">
-    <label>Geographic element</label>
+  <element name="gex:geographicElement" id="336.0" context="gex:EX_Extent">
+    <label>Geographic extent</label>
     <description>Provides geographic component of the extent of the referring
       object
     </description>
     <_condition>Conditional / description and temporalElement and
-      verticalElement not
-      documented?
+      verticalElement not documented?
     </_condition>
   </element>
   <element name="gex:geographicIdentifier" id="349.0">
@@ -2952,15 +2921,13 @@
   <element name="mri:geometricObjectCount" id="185.0">
     <label>Geometric object count</label>
     <description>Total number of the point or vector object type occurring in
-      the
-      dataset
+      the dataset
     </description>
   </element>
   <element name="mri:geometricObjectType" id="184.0">
     <label>Geometric object type</label>
     <description>Name of point and vector spatial objects used to locate zero-,
-      one-, and
-      two-dimensional spatial locations in the dataset
+      one-, and two-dimensional spatial locations in the dataset
     </description>
     <condition>mandatory</condition>
   </element>
@@ -3002,8 +2969,7 @@
   <element name="mri:hierarchyLevel" id="6.0">
     <label>Hierarchy level</label>
     <description>Scope to which the metadata applies (see annex H for more
-      information about
-      metadata hierarchy levels)
+      information about metadata hierarchy levels)
     </description>
   </element>
   <element name="mri:hierarchyLevelName" id="7.0">
@@ -3017,8 +2983,7 @@
   <element name="cit:hoursOfService" id="391.0">
     <label>Hours of service</label>
     <description>Time period (including time zone) when individuals can contact
-      the organization
-      or individual
+      the organization or individual
     </description>
   </element>
   <element name="mdb:identificationInfo" id="29.0">
@@ -3031,13 +2996,14 @@
   <element name="mri:identifier" id="573.0">
     <label>Identifier</label>
     <description>Unique identifier for the resource. EXAMPLE: Universal Product
-      Code (UPC),
-      National Stock Number (NSN)
+      Code (UPC), National Stock Number (NSN)
     </description>
+    <help><![CDATA[<a target="docs" href="https://openwork-nz.github.io/ANZLIC-Metadata-Tool-help/General-Metadata.html#identifier">Help</a>]]></help>
   </element>
   <element name="cit:identifier" id="573.0" context="cit:CI_Citation">
     <label>Citation identifier</label>
     <description>Identifier of the citation</description>
+    <help><![CDATA[<a target="docs" href="https://openwork-nz.github.io/ANZLIC-Metadata-Tool-help/General-Metadata.html#resource-identification">Help</a>]]></help>
   </element>
   <element name="mri:identifier" id="575.0" context="mri:MD_Authority">
     <label>Identifier</label>
@@ -3046,19 +3012,15 @@
   <element name="mrc:illuminationAzimuthAngle" id="245.0">
     <label>Illumination azimuth angle</label>
     <description>Illumination azimuth measured in degrees clockwise from true
-      north at the time
-      the image is taken. For images from a scanning device, refer to the centre
-      pixel of the
-      image
+      north at the time the image is taken. For images from a scanning device, refer to the centre
+      pixel of the image
     </description>
   </element>
   <element name="mrc:illuminationElevationAngle" id="244.0">
     <label>Illumination elevation angle</label>
     <description>Illumination elevation measured in degrees clockwise from the
-      target plane at
-      intersection of the optical line of sight with the Earth_s surface. For
-      images from a
-      scanning device, refer to the centre pixel of the image
+      target plane at intersection of the optical line of sight with the Earth's surface. For
+      images from a scanning device, refer to the centre pixel of the image
     </description>
   </element>
   <element name="mrc:imageQualityCode" id="247.0">
@@ -3073,8 +3035,7 @@
   <element name="mri:includedWithDataset" id="236.0">
     <label>Included with dataset</label>
     <description>Indication of whether or not the feature catalogue is included
-      with the
-      dataset
+      with the dataset
     </description>
     <condition>mandatory</condition>
   </element>
@@ -3091,8 +3052,7 @@
   <element name="mri:keyword" id="53.0">
     <label>Keyword</label>
     <description>Commonly used word(s) or formalised word(s) or phrase(s) used
-      to describe the
-      subject
+      to describe the subject
     </description>
   </element>
   <element name="mri:language" context="mri:MD_Metadata" id="3.0">
@@ -3115,8 +3075,7 @@
   <element name="mrc:lensDistortionInformationAvailability" id="255.0">
     <label>Lens distortion information availability</label>
     <description>Indication of whether or not lens aberration correction
-      information is
-      available
+      information is available
     </description>
   </element>
   <element name="mcc:level" id="139.0">
@@ -3124,12 +3083,12 @@
     <description>Hierarchical level of the data specified by the scope
     </description>
     <condition>mandatory</condition>
+    <help><![CDATA[<a target="docs" href="https://openwork-nz.github.io/ANZLIC-Metadata-Tool-help/Constraints-Metadata#legal-constraints">Help</a>]]></help>
   </element>
   <element name="mcc:levelDescription" id="141.0">
     <label>Level description</label>
     <description>Detailed description about the level of the data specified by
-      the
-      scope
+      the scope
     </description>
     <_condition>Conditional / level not equal 'dataset' or 'series'?
     </_condition>
@@ -3137,16 +3096,14 @@
   <element name="mri:lineage" id="81.0">
     <label>Lineage</label>
     <description>Non-quantitative quality information about the lineage of the
-      data specified by
-      the scope
+      data specified by the scope
     </description>
     <_condition>Conditional / report not provided?</_condition>
   </element>
   <element name="cit:linkage" id="406.0">
-    <label>Linkage</label>
+    <label>Linkage (URL)</label>
     <description>Location (address) for on-line access using a Uniform Resource
-      Locator address
-      or similar addressing scheme such as http://www.statkart.no/isotc211
+      Locator address or similar addressing scheme such as http://www.statkart.no/isotc211
     </description>
     <condition>mandatory</condition>
   </element>
@@ -3158,8 +3115,7 @@
   <element name="mmi:maintenanceAndUpdateFrequency" id="143.0">
     <label>Maintenance and update frequency</label>
     <description>Frequency with which changes and additions are made to the
-      resource after the
-      initial resource is completed
+      resource after the initial resource is completed
     </description>
     <condition>mandatory</condition>
   </element>
@@ -3172,8 +3128,7 @@
   <element name="mrc:maxValue" id="260.0">
     <label>Maximum value</label>
     <description>Longest wavelength that the sensor is capable of collecting
-      within a designated
-      band
+      within a designated band
     </description>
   </element>
   <element name="gex:maximumValue" id="356.0">
@@ -3203,6 +3158,7 @@
     <label>Metadata constraints</label>
     <description>Provides restrictions on the access and use of metadata
     </description>
+    <help><![CDATA[<a target="docs" href="https://openwork-nz.github.io/ANZLIC-Metadata-Tool-help/Constraints-Metadata">Help</a>]]></help>
   </element>
   <element name="mdb:metadataExtensionInfo" id="14.0">
     <description>Information describing metadata extensions</description>
@@ -3211,8 +3167,7 @@
   <element name="mdb:metadataMaintenance" id="22.0">
     <label>Metadata maintenance</label>
     <description>Provides information about the frequency of metadata updates,
-      and the scope of
-      those updates
+      and the scope of those updates
     </description>
   </element>
   <element name="mri:metadataStandardName" id="10.0">
@@ -3227,8 +3182,7 @@
   <element name="mrc:minValue" id="261.0">
     <label>Minimum value</label>
     <description>Shortest wavelength that the sensor is capable of collecting
-      within a
-      designated band
+      within a designated band
     </description>
   </element>
   <element name="gex:minimumValue" id="355.0">
@@ -3292,13 +3246,12 @@
   </element>
   <element name="cit:name" context="cit:CI_OnlineResource" id="409.0">
     <label>Name of the resource</label>
-    <description>Name of the online resource</description>
+    <description>Name or title of the online resource</description>
   </element>
   <element name="cit:name" context="cit:CI_Series" id="414.0">
     <label>Name</label>
     <description>Name of the series, or aggregate dataset, of which the dataset
-      is a
-      part
+      is a part
     </description>
   </element>
   <element name="mri:name" context="mri:MD_CodeDomain" id="537.0">
@@ -3328,7 +3281,7 @@
   </element>
   <element name="cit:name">
     <label>Name</label>
-    <description/>
+    <description>Name of the responsible person, organisation, etc.</description>
   </element>
   <element name="mri:nameOfMeasure" id="100.0">
     <label>Name of measure</label>
@@ -3379,26 +3332,20 @@
       <option
               value="Number of items noncompliant to the rules of the conceptual schema"
               title="Count of all items in the dataset that are noncompliant to the rules of the conceptual schema. If the conceptual schema explicitly or implicitly describes rules, these rules have to be followed. Violations against such rules can e.g. be invalid placement of features within a defined tolerance, duplication of features and invalid overlap of features."
-              id="ISO19138:2006:measure:10">Number of items noncompliant to the
-        rules of the conceptual
-        schema
+              id="ISO19138:2006:measure:10">Number of items noncompliant to the rules of the conceptual schema
       </option>
       <option value="Number of invalid overlaps of surfaces"
               title="Total number of erroneous overlaps within the data Which surfaces may overlap and which must not is application dependent. Not all overlapping surfaces are necessarily erroneous. When reporting this data quality measure the types of feature classes corresponding to the illegal overlapping surfaces have to be reported as well."
-              id="ISO19138:2006:measure:11">Number of invalid overlaps of
-        surfaces
+              id="ISO19138:2006:measure:11">Number of invalid overlaps of surfaces
       </option>
       <option
               value="Non-compliance rate with respect to the rules of the conceptual schema"
               title="Number of items in the dataset that are noncompliant to the rules of the conceptual schema in relation to the total number of these items supposed to be in the dataset"
-              id="ISO19138:2006:measure:12">Non-compliance rate with respect to
-        the rules of the conceptual
-        schema
+              id="ISO19138:2006:measure:12">Non-compliance rate with respect to the rules of the conceptual schema
       </option>
       <option value=" Compliance rate with the rules of the conceptual schema"
               title="number of items in the dataset in compliance with the rules of the conceptual schema in relation to the total number of items"
-              id="ISO19138:2006:measure:13">Compliance rate with the rules of
-        the conceptual schema
+              id="ISO19138:2006:measure:13">Compliance rate with the rules of the conceptual schema
       </option>
       <option value="">-- Logical consistency / Domain consistency --
       </option>
@@ -3451,8 +3398,7 @@
       </option>
       <option value="Number of missing connections due to overshoots"
               title="Count of items in the dataset, within the parameter tolerance, that are mismatched due to overshoots"
-              id="ISO19138:2006:measure:24">Number of missing connections due to
-        overshoots
+              id="ISO19138:2006:measure:24">Number of missing connections due to overshoots
       </option>
       <option value="Number of invalid slivers"
               title="Count of all items in the dataset that are invalid sliver surfaces. A sliver is an unintended area that occurs when adjacent surfaces are not digitized properly. The borders of the adjacent surfaces may unintentionally gap or overlap by small amounts to cause a topological error."
@@ -3460,36 +3406,29 @@
       </option>
       <option value="Number of invalid self intersect errors"
               title="Count of all items in the data that illegally intersect with themselves"
-              id="ISO19138:2006:measure:26">Number of invalid self intersect
-        errors
+              id="ISO19138:2006:measure:26">Number of invalid self intersect errors
       </option>
       <option value="Number of invalid self overlap errors"
               title="Count of all items in the data that illegally self overlap"
-              id="ISO19138:2006:measure:27">Number of invalid self overlap
-        errors
+              id="ISO19138:2006:measure:27">Number of invalid self overlap errors
       </option>
-      <option value="">-- Positional accuracy / Absolute or external
-        accuracy / General measures --
+      <option value="">-- Positional accuracy / Absolute or external accuracy / General measures --
       </option>
       <option value="Mean value of positional uncertainties"
               title="Mean value of the positional uncertainties for a set of positions where the positional uncertainties are defined as the distance between a measured position and what is considered as the corresponding true position"
-              id="ISO19138:2006:measure:28">Mean value of positional
-        uncertainties
+              id="ISO19138:2006:measure:28">Mean value of positional uncertainties
       </option>
       <option value="Mean value of positional uncertainties excluding outliers"
               title="For a set of points where the distance does not exceed a defined threshold the arithmetical average of distances between their measured positions and what is considered as the corresponding true positions"
-              id="ISO19138:2006:measure:29">Mean value of positional
-        uncertainties excluding outliers
+              id="ISO19138:2006:measure:29">Mean value of positional uncertainties excluding outliers
       </option>
       <option value="Number of positional uncertainties above a given threshold"
               title="Number of positional uncertainties above a given threshold for a set of positions. The errors are defined as the distance between a measured position and what is considered as the corresponding true position"
-              id="ISO19138:2006:measure:30">Number of positional uncertainties
-        above a given threshold
+              id="ISO19138:2006:measure:30">Number of positional uncertainties above a given threshold
       </option>
       <option value="Rate of positional errors above a given threshold"
               title="Number of positional uncertainties above a given threshold for a set of positions in relation to the total number of measured positions. The errors are defined as the distance between a measured position and what is considered as the corresponding true position."
-              id="ISO19138:2006:measure:31">Rate of positional errors above a
-        given threshold
+              id="ISO19138:2006:measure:31">Rate of positional errors above a given threshold
       </option>
       <option value="Covariance matrix"
               title="A symmetrical square matrix with variances of point coordinates on the main diagonal and covariances between these coordinates as off-diagonal elements."
@@ -3508,18 +3447,15 @@
       </option>
       <option value="Linear map accuracy at 90% significance level"
               title="Half length of the interval defined by an upper and a lower limit, in which the true value lies with probability 90%."
-              id="ISO19138:2006:measure:35">Linear map accuracy at 90%
-        significance level
+              id="ISO19138:2006:measure:35">Linear map accuracy at 90% significance level
       </option>
       <option value="Linear map accuracy at 95% significance level"
               title="Half length of the interval defined by an upper and a lower limit, in which the true value lies with probability 95%."
-              id="ISO19138:2006:measure:36">Linear map accuracy at 95%
-        significance level
+              id="ISO19138:2006:measure:36">Linear map accuracy at 95% significance level
       </option>
       <option value="Linear map accuracy at 99% significance level"
               title="Half length of the interval defined by an upper and a lower limit, in which the true value lies with probability 99%."
-              id="ISO19138:2006:measure:37">Linear map accuracy at 99%
-        significance level
+              id="ISO19138:2006:measure:37">Linear map accuracy at 99% significance level
       </option>
       <option value="Near certainty linear error"
               title="Half length of the interval defined by an upper and a lower limit, in which the true value lies with probability 99.8%."
@@ -3532,16 +3468,12 @@
       <option
               value="Absolute linear error at 90% significance level of biased vertical data (Alternative 1)"
               title="The absolute vertical accuracy of the data’s coordinates, expressed in terms of linear error at 90% probability given that a bias is present."
-              id="ISO19138:2006:measure:40">Absolute linear error at 90%
-        significance level of biased
-        vertical data (Alternative 1)
+              id="ISO19138:2006:measure:40">Absolute linear error at 90% significance level of biased vertical data (Alternative 1)
       </option>
       <option
               value="Absolute linear error at 90% significance level of biased vertical data"
               title="The absolute vertical accuracy of the data’s coordinates, expressed in terms of linear error at 90% probability given that a bias is present."
-              id="ISO19138:2006:measure:41">Absolute linear error at 90%
-        significance level of biased
-        vertical data
+              id="ISO19138:2006:measure:41">Absolute linear error at 90% significance level of biased vertical data
       </option>
       <option value="">-- Positional accuracy / Absolute or external
         accuracy / Horizontal --
@@ -3574,15 +3506,12 @@
       <option
               value="Absolute circular error at 90% significance level of biased data (Alternative 2)"
               title="The absolute horizontal accuracy of the data’s coordinates, expressed in terms of circular error at 90% probability given that a bias is present."
-              id="ISO19138:2006:measure:48">Absolute circular error at 90%
-        significance level of biased data
-        (Alternative 2)
+              id="ISO19138:2006:measure:48">Absolute circular error at 90% significance level of biased data (Alternative 2)
       </option>
       <option
               value="Absolute circular error at 90% significance level of biased data"
               title="The absolute horizontal accuracy of the data’s coordinates, expressed in terms of circular error at 90% probability given that a bias is present."
-              id="ISO19138:2006:measure:49">Absolute circular error at 90%
-        significance level of biased data
+              id="ISO19138:2006:measure:49">Absolute circular error at 90% significance level of biased data
       </option>
       <option value="Uncertainty ellipse"
               title="2D ellipse with the two main axes indicating the direction and magnitude of the highest and the lowest uncertainty of a 2D point"
@@ -3613,36 +3542,30 @@
       </option>
       <option value="Time accuracy at 50% significance level"
               title="Half length of the interval defined by an upper and a lower limit, in which the true value for the time instance lies with probability 50%."
-              id="ISO19138:2006:measure:55">Time accuracy at 50% significance
-        level
+              id="ISO19138:2006:measure:55">Time accuracy at 50% significance level
       </option>
       <option value="Time accuracy at 90% significance level"
               title="Half length of the interval defined by an upper and a lower limit, in which the true value for the time instance lies with probability 90%."
-              id="ISO19138:2006:measure:56">Time accuracy at 90% significance
-        level
+              id="ISO19138:2006:measure:56">Time accuracy at 90% significance level
       </option>
       <option value="Time accuracy at 95% significance level"
               title="Half length of the interval defined by an upper and a lower limit, in which the true value for the time instance lies with probability 95%."
-              id="ISO19138:2006:measure:57">Time accuracy at 95% significance
-        level
+              id="ISO19138:2006:measure:57">Time accuracy at 95% significance level
       </option>
       <option value="Time accuracy at 99% significance level"
               title="Half length of the interval defined by an upper and a lower limit, in which the true value for the time instance lies with probability 99%."
-              id="ISO19138:2006:measure:58">Time accuracy at 99% significance
-        level
+              id="ISO19138:2006:measure:58">Time accuracy at 99% significance level
       </option>
       <option value="Time accuracy at 99.8% significance level"
               title="Half length of the interval defined by an upper and a lower limit, in which the true value for the time instance lies with probability 99.8%."
-              id="ISO19138:2006:measure:59">Time accuracy at 99.8% significance
-        level
+              id="ISO19138:2006:measure:59">Time accuracy at 99.8% significance level
       </option>
       <option value="">-- Thematic accuracy / Classification
         correctness --
       </option>
       <option value="Number of incorrectly classified features"
               title="Number of incorrectly classified features"
-              id="ISO19138:2006:measure:60">Number of
-        incorrectly classified features
+              id="ISO19138:2006:measure:60">Number of incorrectly classified features
       </option>
       <option value="Misclassification rate"
               title="number of incorrectly classified features in relation to the number of features that are supposed to be there"
@@ -3680,40 +3603,33 @@
       </option>
       <option value="Attribute value uncertainty at 68.3% significance level"
               title="Half length of the interval defined by an upper and a lower limit, in which the true value for the quantitative attribute lies with probability 68.3%."
-              id="ISO19138:2006:measure:68">Attribute value uncertainty at 68.3%
-        significance level
+              id="ISO19138:2006:measure:68">Attribute value uncertainty at 68.3% significance level
       </option>
       <option value="Attribute value uncertainty at 50% significance level"
               title="Half length of the interval defined by an upper and a lower limit, in which the true value for the quantitative attribute lies with probability 50%."
-              id="ISO19138:2006:measure:69">Attribute value uncertainty at 50%
-        significance level
+              id="ISO19138:2006:measure:69">Attribute value uncertainty at 50% significance level
       </option>
       <option value="Attribute value uncertainty at 90% significance level"
               title="Half length of the interval defined by an upper and a lower limit, in which the true value for the quantitative attribute lies with probability 90%."
-              id="ISO19138:2006:measure:70">Attribute value uncertainty at 90%
-        significance level
+              id="ISO19138:2006:measure:70">Attribute value uncertainty at 90% significance level
       </option>
       <option value="Attribute value uncertainty at 95% significance level"
               title="Half length of the interval defined by an upper and a lower limit, in which the true value for the quantitative attribute lies with probability 95%."
-              id="ISO19138:2006:measure:71">Attribute value uncertainty at 95%
-        significance level
+              id="ISO19138:2006:measure:71">Attribute value uncertainty at 95% significance level
       </option>
       <option value="Attribute value uncertainty at 99% significance level"
               title="Half length of the interval defined by an upper and a lower limit, in which the true value for the quantitative attribute lies with probability 99%."
-              id="ISO19138:2006:measure:72">Attribute value uncertainty at 99%
-        significance level
+              id="ISO19138:2006:measure:72">Attribute value uncertainty at 99% significance level
       </option>
       <option value="Attribute value uncertainty at 99.8% significance level"
               title="Half length of the interval defined by an upper and a lower limit, in which the true value for the quantitative attribute lies with probability 99.8%."
-              id="ISO19138:2006:measure:73">Attribute value uncertainty at 99.8%
-        significance level
+              id="ISO19138:2006:measure:73">Attribute value uncertainty at 99.8% significance level
       </option>
     </helper>
   </element>
   <element name="mri:northBoundLatitude" id="347.0">
     <label>North bound</label>
-    <description>Northern-most, coordinate of the limit of the dataset extent
-      expressed in
+    <description>Northern-most, coordinate of the limit of the dataset extent expressed in
       latitude in decimal degrees (positive north)
     </description>
     <condition>mandatory</condition>
@@ -3739,17 +3655,16 @@
     </description>
   </element>
   <element name="mrd:onLine" id="277.0">
-    <label>OnLine resource</label>
+    <label>Online resource</label>
     <description>Information about online sources from which the resource can be
       obtained
     </description>
   </element>
   <element name="cit:onlineResource" id="390.0">
     <help>Define URL to access the website</help>
-    <label>Website</label>
+    <label>Web Address</label>
     <description>On-line information that can be used to contact the individual
-      or
-      organisation
+      or organisation
     </description>
   </element>
   <element name="mrd:orderingInstructions" id="301.0">
@@ -3773,16 +3688,14 @@
   <element name="mcc:other" id="155.0">
     <label>Other</label>
     <description>Class of information that does not fall into the other
-      categories to which the
-      information applies
+      categories to which the information applies
     </description>
     <condition/>
   </element>
   <element name="cit:otherCitationDetails" id="371.0">
     <label>Other citation details</label>
     <description>Other information required to complete the citation that is not
-      recorded
-      elsewhere
+      recorded elsewhere
     </description>
   </element>
   <element name="mco:otherConstraints" id="72.0">
@@ -3793,8 +3706,7 @@
   </element>
   <element name="cit:page" id="416.0">
     <label>Page</label>
-    <description>Details on which pages of the publication the article was
-      published
+    <description>Details on which pages of the publication the article was published
     </description>
   </element>
   <element name="mri:parameterCitation" id="175.0">
@@ -3804,18 +3716,15 @@
   <element name="mri:parentEntity" id="316.0">
     <label>Parent entity</label>
     <description>Name of the metadata entity(s) under which this extended
-      metadata element may
-      appear. The name(s) may be standard metadata element(s) or other extended
-      metadata
-      element(s).
+      metadata element may appear. The name(s) may be standard metadata element(s) or other extended
+      metadata element(s).
     </description>
     <condition>mandatory</condition>
   </element>
   <element name="mri:parentIdentifier" id="5.0">
     <label>Parent identifier</label>
     <description>File identifier of the metadata to which this metadata is a
-      subset
-      (child)
+      subset (child)
     </description>
   </element>
   <element name="mri:pass" id="132.0">
@@ -3832,8 +3741,7 @@
   <element name="mri:phone" id="526.0">
     <label>Phone</label>
     <description>Telephone numbers at which the organization or individual may
-      be
-      contacted
+      be contacted
     </description>
   </element>
   <element name="mrd:plannedAvailableDateTime" id="300.0">
@@ -3850,11 +3758,11 @@
     <condition>mandatory</condition>
   </element>
   <element name="mri:pointOfContact" id="29.0">
-    <label>Point of contact</label>
+    <label>Point of contact - Custodian, Owner, etc</label>
     <description>Identification of, and means of communication with, person(s)
-      and
-      organizations(s) associated with the resource(s)
+      and organizations(s) associated with the resource(s)
     </description>
+    <help><![CDATA[<a target="docs" href="https://openwork-nz.github.io/ANZLIC-Metadata-Tool-help/Contacts-Metadata#point-of-contact">Help</a>]]></help>
   </element>
   <element name="gex:polygon" id="342.0">
     <label>Polygon</label>
@@ -3870,8 +3778,7 @@
   <element name="mdb:portrayalCatalogueInfo" id="19.0">
     <label>Portrayal catalogue info</label>
     <description>Provides information about the catalogue of rules defined for
-      the portrayal of
-      a resource(s)
+      the portrayal of a resource(s)
     </description>
   </element>
   <element name="cit:positionName" id="377.0">
@@ -3890,23 +3797,20 @@
   <element name="mrl:processStep" id="84.0">
     <label>Process step</label>
     <description>Information about an event in the creation process for the data
-      specified by
-      the scope
+      specified by the scope
     </description>
     <condition>conditional</condition>
   </element>
   <element name="mrc:processingLevelCode" id="249.0">
     <label>Processing level code</label>
-    <description>Image distributor_s code that identifies the level of
-      radiometric and geometric
-      processing that has been applied
+    <description>Image distributor's code that identifies the level of
+      radiometric and geometric processing that has been applied
     </description>
   </element>
   <element name="mrl:processor" id="90.0">
     <label>Processor</label>
     <description>Identification of, and means of communication with, person(s)
-      and
-      organization(s) associated with the process step
+      and organization(s) associated with the process step
     </description>
   </element>
   <element name="cit:protocol" id="398.0" alias="protocol">
@@ -3969,9 +3873,11 @@
       <option value="RBNB:DATATURBINE">Data Turbine</option>
       <option value="UKST">Unknown Service Type</option>
     </helper>
+    <help><![CDATA[<a target="docs" href="https://openwork-nz.github.io/ANZLIC-Metadata-Tool-help/Service-Metadata#contains-operation">Help</a>]]></help>
   </element>
   <element name="mri:purpose" id="26.0">
     <label>Purpose</label>
+    <help><![CDATA[<a target="docs" href="https://openwork-nz.github.io/ANZLIC-Metadata-Tool-help/General-Metadata#purpose">Help</a>]]></help>
     <description>Summary of the intentions with which the resource(s) was
       developed
     </description>
@@ -3979,8 +3885,7 @@
   <element name="mrc:radiometricCalibrationDataAvailability" id="252.0">
     <label>Radiometric calibration data availability</label>
     <description>Indication of whether or not the radiometric calibration
-      information for
-      generating the radiometrically calibrated standard data product is
+      information for generating the radiometrically calibrated standard data product is
       available
     </description>
   </element>
@@ -4001,12 +3906,12 @@
   <element name="mdb:referenceSystemInfo" id="13.0">
     <label>Reference System Information</label>
     <description>Description of the spatial and temporal reference systems used
-      in the
-      dataset
+      in the dataset
     </description>
+    <help><![CDATA[<a target="docs" href="https://openwork-nz.github.io/ANZLIC-Metadata-Tool-help/Spatial-Metadata#reference-system">Help</a>]]></help>
   </element>
   <element name="mco:reference" id="102.0">
-    <label>Référence</label>
+    <label>Reference</label>
     <description iso="true">citation for the limitation or constraint EXAMPLE
       Copyright statement,licence agreement, etc.
     </description>
@@ -4099,6 +4004,7 @@
     <description>Provides information about constraints which apply to the
       resource(s)
     </description>
+    <help><![CDATA[<a target="docs" href="https://openwork-nz.github.io/ANZLIC-Metadata-Tool-help/Constraints-Metadata">Help</a>]]></help>
   </element>
   <element name="mri:resourceFormat" id="32.0">
     <label>Resource format</label>
@@ -4108,24 +4014,20 @@
   <element name="mri:resourceMaintenance" id="30.0">
     <label>Resource maintenance</label>
     <description>Provides information about the frequency of resource updates,
-      and the scope of
-      those updates
+      and the scope of those updates
     </description>
   </element>
   <element name="mri:resourceSpecificUsage" id="34.0">
     <label>Resource specific usage</label>
     <description>Provides basic information about specific application(s) for
-      which the
-      resource(s) has/have been or is being used by different users
+      which the resource(s) has/have been or is being used by different users
     </description>
   </element>
   <element name="mri:result" id="107.0">
     <label>Result</label>
     <description>Value (or set of values) obtained from applying a data quality
-      measure or the
-      out come of evaluating the obtained value (or set of values) against a
-      specified
-      acceptable conformance quality level
+      measure or the out come of evaluating the obtained value (or set of values) against a
+      specified acceptable conformance quality level
     </description>
     <condition>mandatory</condition>
   </element>
@@ -4137,13 +4039,12 @@
   <element name="mri:rule" id="317.0">
     <label>Rule</label>
     <description>Specifies how the extended element relates to other existing
-      elements and
-      entities
+      elements and entities
     </description>
     <condition>mandatory</condition>
   </element>
   <element name="mri:scaleDenominator" id="94.0">
-    <label>Scale Denominator</label>
+    <label>Scale denominator</label>
     <description>Denominator of the representative fraction on a source map
     </description>
   </element>
@@ -4170,22 +4071,19 @@
   <element name="mrc:sequenceIdentifier" id="257.0">
     <label>Sequence identifier</label>
     <description>Number that uniquely identifies instances of bands of
-      wavelengths on which a
-      sensor operates
+      wavelengths on which a sensor operates
     </description>
   </element>
   <element name="mri:series" id="369.0">
     <label>Series</label>
     <description>Information about the series, or aggregate dataset, of which
-      the dataset is a
-      part
+      the dataset is a part
     </description>
   </element>
   <element name="mri:shortName" id="308.0">
     <label>Short name</label>
     <description>Short form suitable for use in an implementation method such as
-      XML or SGML.
-      NOTE other methods may be used
+      XML or SGML. NOTE other methods may be used
     </description>
   </element>
   <element name="mas:softwareDevelopmentFile" id="326.0">
@@ -4196,15 +4094,13 @@
   <element name="mas:softwareDevelopmentFileFormat" id="327.0">
     <label>Software development file format</label>
     <description>Software dependent format used for the application schema
-      software dependent
-      file
+      software dependent file
     </description>
   </element>
   <element name="mrl:source" id="85.0">
     <label>Source</label>
     <description>Information about the source data used in creating the data
-      specified by the
-      scope
+      specified by the scope
     </description>
     <condition>mandatory</condition>
   </element>
@@ -4224,8 +4120,7 @@
   <element name="mri:sourceExtent" id="97.0">
     <label>Source extent</label>
     <description>Information about the spatial, vertical and temporal extent of
-      the source
-      data
+      the source data
     </description>
     <condition>conditional</condition>
   </element>
@@ -4236,15 +4131,13 @@
   <element name="mrl:sourceStep" id="98.0">
     <label>Source step</label>
     <description>Information about an event in the creation process for the
-      source
-      data
+      source data
     </description>
   </element>
   <element name="mri:southBoundLatitude" id="346.0">
     <label>South bound</label>
     <description>Southern-most coordinate of the limit of the dataset extent,
-      expressed in
-      latitude in decimal degrees (positive north)
+      expressed in latitude in decimal degrees (positive north)
     </description>
     <condition>mandatory</condition>
   </element>
@@ -4268,8 +4161,7 @@
   <element name="mri:spatialResolution" id="38.0">
     <label>Spatial resolution</label>
     <description>Factor which provides a general understanding of the density of
-      spatial data in
-      the dataset
+      spatial data in the dataset
     </description>
   </element>
   <element name="mri:specificUsage" id="63.0">
@@ -4284,8 +4176,7 @@
     <condition>mandatory</condition>
     <label>Specification</label>
     <description>Citation of product specification or user requirement against
-      which data is
-      being evaluated
+      which data is being evaluated
     </description>
   </element>
   <element name="mri:specification" id="288.0" context="mri:MD_Format">
@@ -4299,23 +4190,25 @@
   </element>
   <element name="mrl:statement" id="83.0">
     <label>Statement</label>
-    <description>General explanation of the data producer_s knowledge about the
-      lineage of a
-      dataset
+    <description>General explanation of the data producer's knowledge about the
+      lineage of a dataset
     </description>
     <condition>conditional</condition>
+    <help><![CDATA[<a target="docs" href="https://openwork-nz.github.io/ANZLIC-Metadata-Tool-help/Linage-Metadata#statement">Help</a>]]></help>
   </element>
   <element name="mri:status" id="28.0">
     <label>Status</label>
     <description>Status of the resource(s)</description>
+    <help><![CDATA[<a target="docs" href="https://openwork-nz.github.io/ANZLICcit-Metadata-Tool-help/General-Metadata#status">Help</a>]]></help>
   </element>
   <element name="mri:supplementalInformation" id="46.0">
     <label>Supplemental Information</label>
     <description>Any other descriptive information about the dataset
     </description>
+    <help><![CDATA[<a target="docs" href="https://openwork-nz.github.io/ANZLIC-Metadata-Tool-help/General-Metadata#status">Help</a>]]></help>
   </element>
   <element name="gex:temporalElement" id="337.0">
-    <label>Temporal element</label>
+    <label>Temporal extent</label>
     <description>Provides temporal component of the extent of the referring
       object
     </description>
@@ -4328,8 +4221,7 @@
   <element name="mri:thesaurusName" id="55.0">
     <label>Thesaurus name</label>
     <description>Name of the formally registered thesaurus or a similar
-      authoritative source of
-      keywords
+      authoritative source of keywords
     </description>
   </element>
   <element name="cit:title" id="285.0"
@@ -4338,6 +4230,23 @@
     <description>Name of the data transfer format(s)</description>
     <help>File or link format name</help>
     <helper>
+      <option value="ArcGIS GP Server">ArcGIS GP Server</option>
+      <option value="ArcGIS Image Server">ArcGIS Image Server</option>
+      <option value="ArcGIS Map Server">ArcGIS Map Server</option>
+      <option value="ArcIMS Service">ArcIMS Service</option>
+      <option value="Catalogue Service for the Web">CSW</option>
+      <option value="OGC Web Map Service">WMS</option>
+      <option value="Sensor Observation Service">Sensor Observation Service</option>
+      <option value="Web Coverage Service">WCS</option>
+      <option value="Web Feature Service">WFS</option>
+      <option value="Web Map Tile Service">WMTS</option>
+      <option value="Web Processing Service">WPS</option>
+      <option value="OPeNDAP root URL">OPeNDAP root URL</option>
+      <option value="REST service">REST service</option>
+      <option value="SPARQL service">SPARQL service</option>
+      <option value="Download">Download</option>
+      <option value="HTML information">HTML information</option>
+
       <option value="Text">Text</option>
       <option value="XLS">XLS</option>
       <option value="ESRI Shapefile">ESRI Shapefile</option>
@@ -4441,11 +4350,33 @@
            context="/mdb:MD_Metadata/mdb:identificationInfo/mri:MD_DataIdentification/mri:citation/cit:CI_Citation/cit:title">
     <label>Title</label>
     <description>Name by which the cited resource is known</description>
+    <help><![CDATA[<a target="docs" href="https://openwork-nz.github.io/ANZLIC-Metadata-Tool-help/General-Metadata#title">Help</a>]]></help>
+    <condition>mandatory</condition>
+
   </element>
 
-  <element name="cit:title" id="360.0">
+  <element name="cit:title" id="360.0" context="/mdb:MD_Metadata/mdb:identificationInfo/srv:SV_ServiceIdentification/mri:citation/cit:CI_Citation/cit:title">
     <label>Title</label>
     <description>Name by which the cited resource is known</description>
+    <help><![CDATA[<a target="docs" href="https://openwork-nz.github.io/ANZLIC-Metadata-Tool-help/General-Metadata#title">Help</a>]]></help>
+    <condition>mandatory</condition>
+  </element>
+  <element name="cit:title" id="1361.0" context="/mdb:MD_Metadata/mdb:identificationInfo/*/mri:descriptiveKeywords/mri:thesaurusName/mri:citation/cit:CI_Citation/cit:title">
+    <label>Title</label>
+    <description>Name by which the cited resource is known</description>
+    <help><![CDATA[<a target="docs" href="https://openwork-nz.github.io/ANZLIC-Metadata-Tool-help/General-Metadata#title">Help</a>]]></help>
+    <condition>mandatory</condition>
+  </element>
+  <element name="cit:title" id="1362.0" context="/mdb:MD_Metadata/mdb:identificationInfo/*/mri:descriptiveKeywords/mri:MD_KeywordClass/mri:ontology/mri:citation/cit:CI_Citation/cit:title">
+    <label>Title</label>
+    <description>Name by which the cited resource is known</description>
+    <help><![CDATA[<a target="docs" href="https://openwork-nz.github.io/ANZLIC-Metadata-Tool-help/General-Metadata#title">Help</a>]]></help>
+    <condition>mandatory</condition>
+  </element>
+  <element name="cit:title" id="1362.0" context="/mdb:MD_Metadata/mdb:identificationInfo/*/mri:resourceConstraints/mco:MD_Constraints/mco:reference/cit:CI_Citation/cit:title">
+    <label>Title</label>
+    <description>Name by which the cited resource is known</description>
+    <help><![CDATA[<a target="docs" href="https://openwork-nz.github.io/ANZLIC-Metadata-Tool-help/General-Metadata#title">Help</a>]]></help>
     <condition>mandatory</condition>
   </element>
   <element name="mri:title" id="507.0" context="mri:MD_Legislation">
@@ -4461,16 +4392,14 @@
     <label>Topic category</label>
     <description>Main theme(s) of the dataset</description>
     <condition>mandatory</condition>
+    <help><![CDATA[<a target="docs" href="https://openwork-nz.github.io/ANZLIC-Metadata-Tool-help/General-Metadata#topic-category">Help</a>]]></help>
   </element>
   <element name="mri:MD_TopicCategoryCode">
     <label>Topic category code</label>
     <description>High-level geographic data thematic classification to assist in
-      the grouping
-      and search of available geographic data sets. Can be used to group
-      keywords as well.
-      Listed examples are not exhaustive. NOTE It is understood there are
-      overlaps between
-      general categories and the user is encouraged to select the one most
+      the grouping and search of available geographic data sets. Can be used to group
+      keywords as well. Listed examples are not exhaustive. NOTE It is understood there are
+      overlaps between general categories and the user is encouraged to select the one most
       appropriate.
     </description>
   </element>
@@ -4483,22 +4412,19 @@
   <element name="mrd:transferOptions" id="273.0">
     <label>Transfer options</label>
     <description>Provides information about technical means and media by which a
-      resource is
-      obtained from the distributor
+      resource is obtained from the distributor
     </description>
   </element>
   <element name="mrd:transferSize" id="276.0">
     <label>Transfer size</label>
     <description>Estimated size of a unit in the specified transfer format,
-      expressed in
-      megabytes. The transfer size is &gt; 0.0
+      expressed in megabytes. The transfer size is &gt; 0.0
     </description>
   </element>
   <element name="mri:transformationDimensionDescription" id="168.0">
     <label>Transformation dimension description</label>
     <description>Description of the information about which grid dimensions are
-      the spatial
-      dimensions
+      the spatial dimensions
     </description>
   </element>
   <element name="mri:transformationDimensionMapping" id="169.0">
@@ -4511,15 +4437,13 @@
     <label>Transformation parameter availability</label>
     <condition>mandatory</condition>
     <description>Indication of whether or not parameters for transformation
-      between image
-      coordinates and geographic or map coordinates exist (are available)
+      between image coordinates and geographic or map coordinates exist (are available)
     </description>
   </element>
   <element name="mrc:triangulationIndicator" id="251.0">
     <label>Triangulation indicator</label>
     <description>Indication of whether or not triangulation has been performed
-      upon the
-      image
+      upon the image
     </description>
   </element>
   <element name="mrd:turnaround" id="302.0">
@@ -4571,18 +4495,21 @@
   <element name="mri:usageDateTime" id="64.0">
     <label>Usage datetime</label>
     <description>Date and time of the first use or range of uses of the resource
-      and/or resource
-      series (YYYY-MM-DDThh:mm:ss)
+      and/or resource series (YYYY-MM-DDThh:mm:ss)
     </description>
   </element>
   <element name="mco:useConstraints" id="71.0">
     <label>Use constraints</label>
     <description>Constraints applied to assure the protection of privacy or
-      intellectual
-      property, and any special restrictions or limitations or warnings on using
-      the
-      resource
+      intellectual property, and any special restrictions or limitations or warnings on using
+      the resource
     </description>
+  </element>
+  <element name="mco:useLimitation" id="99.0"
+           context="/mdb:MD_Metadata/mdb:identificationInfo/mri:MD_DataIdentification/mri:resourceConstraints/mco:MD_Constraints/mco:useLimitation">
+    <label>Resource use limitation</label>
+    <description>Assign an overall product quality score with respect to the objectives and explain why.</description>
+    <help><![CDATA[<a target="docs" href="https://openwork-nz.github.io/ANZLIC-Metadata-Tool-help/Constraints-Metadata#use-limitation">Help</a>]]></help>
   </element>
   <element name="mco:useLimitation" id="99.0">
     <label>Use limitation</label>
@@ -4600,8 +4527,7 @@
   <element name="mri:userContactInfo" id="66.0">
     <label>User contact info</label>
     <description>Identification of and means of communicating with person(s) and
-      organization(s)
-      using the resource(s)
+      organization(s) using the resource(s)
     </description>
     <condition>mandatory</condition>
   </element>
@@ -4612,15 +4538,13 @@
   <element name="mri:userDeterminedLimitations" id="65.0">
     <label>User determined limitations</label>
     <description>Applications, determined by the user for which the resource
-      and/or resource
-      series is not suitable
+      and/or resource series is not suitable
     </description>
   </element>
   <element name="mco:userNote" id="75.0">
     <label>User note</label>
     <description>Explanation of the application of the legal constraints or
-      other restrictions
-      and legal prerequisites for obtaining and using the resource or metadata
+      other restrictions and legal prerequisites for obtaining and using the resource or metadata
     </description>
   </element>
   <element name="mdq:value" id="137.0" context="/mdb:MD_Metadata/mdb:dataQualityInfo/mdq:DQ_DataQuality/mdq:report/mdq:DQ_DomainConsistency/mdq:result/mdq:DQ_QuantitativeResult/mdq:value">
@@ -4644,8 +4568,7 @@
       <option value="Integer">Integer</option>
       <option value="Ratio">Ratio</option>
       <option value="Percentage">Percentage</option>
-      <option value="Measure(s) (value(s) + unit(s))">Measure(s) (value(s) +
-        unit(s))
+      <option value="Measure(s) (value(s) + unit(s))">Measure(s) (value(s) + unit(s))
       </option>
     </helper>
   </element>
@@ -4668,7 +4591,7 @@
     <condition>mandatory</condition>
   </element>
   <element name="gex:verticalElement" id="338.0">
-    <label>Vertical element</label>
+    <label>Vertical extent</label>
     <description>Provides vertical component of the extent of the referring
       object
     </description>
@@ -4677,8 +4600,7 @@
   <element name="mri:voice" id="408.0">
     <label>Voice</label>
     <description>Telephone number by which individuals can speak to the
-      responsible organization
-      or individual
+      responsible organization or individual
     </description>
   </element>
   <element name="mrd:volumes" id="295.0">
@@ -4688,8 +4610,7 @@
   <element name="mri:westBoundLongitude" id="344.0">
     <label>West bound</label>
     <description>Western-most coordinate of the limit of the dataset extent,
-      expressed in
-      longitude in decimal degrees (positive east)
+      expressed in longitude in decimal degrees (positive east)
     </description>
     <condition>mandatory</condition>
   </element>
@@ -4736,18 +4657,15 @@
   <element name="gml:LineString">
     <label>Line</label>
     <description>A gml:LineString is a special curve that consists of a single
-      segment with
-      linear interpolation. It is defined by two or more coordinate tuples, with
-      linear
-      interpolation between them.
+      segment with linear interpolation. It is defined by two or more coordinate tuples, with
+      linear interpolation between them.
     </description>
   </element>
 
   <element name="gml:LinearRing">
     <label>Linear ring</label>
     <description>A gml:LinearRing is defined by four or more coordinate tuples,
-      with linear
-      interpolation between them; the first and last coordinates shall be
+      with linear interpolation between them; the first and last coordinates shall be
       coincident.
     </description>
   </element>
@@ -4909,8 +4827,7 @@
   <element name="srv:serviceType">
     <label>Service Type</label>
     <description>Service type name from a registry of services. For example, the
-      values of the
-      nameSpace and name attributes of GeneralName may be 'OGC' and 'catalogue'
+      values of the nameSpace and name attributes of GeneralName may be 'OGC' and 'catalogue'
     </description>
     <helper>
       <option value="OGC:WMS">OGC Web Map Service</option>
@@ -4930,37 +4847,35 @@
       <option value="W3C:HTML:DOWNLOAD">Download (W3C:HTML:DOWNLOAD)</option>
       <option value="W3C:HTML:LINK">Information (W3C:HTML:LINK)</option>-->
     </helper>
+    <help><![CDATA[<a target="docs" href="https://openwork-nz.github.io/ANZLIC-Metadata-Tool-help/Service-Metadata#service-type">Help</a>]]></help>
   </element>
   <element name="srv:serviceTypeVersion">
-    <label>Service Version</label>
+    <label>Service Type Version</label>
     <description>Provides for searching based on the version of serviceType. For
-      example, we may
-      only be interested in OGC Catalogue V1.1 services. If version is
-      maintained as a
-      separate attribute, users can easily search for all services of a type
-      regardless of the
-      version
+      example, we may only be interested in OGC Catalogue V1.1 services. If version is
+      maintained as a separate attribute, users can easily search for all services of a type
+      regardless of the version
     </description>
+    <help><![CDATA[<a target="docs" href="https://openwork-nz.github.io/ANZLIC-Metadata-Tool-help/Service-Metadata#service-type-version">Help</a>]]></help>
   </element>
   <element name="srv:accessProperties">
     <label>Access Properties</label>
     <description>Information about the availability of the service eg. fees,
-      availability,
-      oredering instructions
+      availability, oredering instructions
     </description>
   </element>
   <element name="srv:restrictions">
     <label>Restrictions</label>
     <description>Legal and security constraints on accessing the service and
-      distributing data
-      generated by the service
+      distributing data generated by the service
     </description>
   </element>
   <element name="srv:containsOperations">
-    <label>Contains Operations</label>
-    <description>Provides information about the operations that comprise the
-      service
+    <label>Contains Operation</label>
+    <description>Each Contains Operation instance describes one and only one
+      method provided by the service
     </description>
+    <help><![CDATA[<a target="docs" href="https://openwork-nz.github.io/ANZLIC-Metadata-Tool-help/Service-Metadata#contains-operation">Help</a>]]></help>
   </element>
   <element name="srv:operatesOn">
     <label>Operates On</label>
@@ -4971,9 +4886,14 @@
   <element name="srv:operationName">
     <label>Operation Name</label>
     <description>A unique identifier for this interface</description>
+    <help><![CDATA[<a target="docs" href="https://openwork-nz.github.io/ANZLIC-Metadata-Tool-help/Service-Metadata#operation-name">Help</a>]]></help>
   </element>
   <element name="srv:SV_OperationMetadata">
     <label>Operation</label>
+    <description>Operation Metadata</description>
+  </element>
+  <element name="srv:SV_OperationMetadata">
+    <label>Operation Details</label>
     <description>Operation Metadata</description>
   </element>
   <element name="srv:DCP">
@@ -4981,19 +4901,19 @@
     <description>Distributed computing platforms on which the operation has been
       implemented
     </description>
+    <help><![CDATA[<a target="docs" href="https://openwork-nz.github.io/ANZLIC-Metadata-Tool-help/Service-Metadata#distributed-computing-platform-dcp">Help</a>]]></help>
   </element>
   <element name="srv:operationDescription">
     <label>Operation Description</label>
     <description>Free text description of the intent of the operation and the
-      results of the
-      operation
+      results of the operation
     </description>
+    <help><![CDATA[<a target="docs" href="https://openwork-nz.github.io/ANZLIC-Metadata-Tool-help/Service-Metadata#operation-description">Help</a>]]></help>
   </element>
   <element name="srv:invocationName">
     <label>Invocation Name</label>
     <description>The name used to invoke this interface within the context of
-      the DCP. The name
-      is identical for all DCPs
+      the DCP. The name is identical for all DCPs
     </description>
   </element>
   <element name="srv:parameters">
@@ -5015,14 +4935,13 @@
   <element name="srv:connectPoint">
     <label>Connect Point</label>
     <description>Handle for accessing the service interface</description>
+    <help><![CDATA[<a target="docs" href="https://openwork-nz.github.io/ANZLIC-Metadata-Tool-help/Service-Metadata#connect-point">Help</a>]]></help>
   </element>
   <element name="srv:dependsOn">
     <label>Depends On</label>
     <description>List of operations that must be completed immediately before
-      current operation
-      is invoked, structured as a list for capturing alternate predecessor paths
-      and sets for
-      capturing parallel predecessor paths
+      current operation is invoked, structured as a list for capturing alternate predecessor paths
+      and sets for capturing parallel predecessor paths
     </description>
   </element>
   <element name="srv:providerName">
@@ -5064,6 +4983,10 @@
     <label>Coupled Resource</label>
     <description>Details of services coupled with this one</description>
   </element>
+  <element name="srv:resourceReference">
+    <label>Resource Reference</label>
+    <description>Details of resource coupled with this one</description>
+  </element>
   <element name="srv:identifier">
     <label>Identifier</label>
     <description>Identifier of resource to which the operation applies
@@ -5072,6 +4995,16 @@
   <element name="srv:couplingType">
     <label>Coupling Type</label>
     <description>Type of Coupling</description>
+    <help><![CDATA[<a target="docs" href="https://openwork-nz.github.io/ANZLIC-Metadata-Tool-help/Service-Metadata#coupling-type">Help</a>]]></help>
+  </element>
+  <element name="srv:SV_CouplingType">
+    <label>Coupling Type</label>
+    <description>Type of Coupling</description>
+    <help><![CDATA[<a target="docs" href="https://openwork-nz.github.io/ANZLIC-Metadata-Tool-help/Service-Metadata#coupling-type">Help</a>]]></help>
+  </element>
+  <element name="srv:scopedName">
+    <label>Scoped Name</label>
+    <description>Name used by the service to describe the resource</description>
   </element>
   <element name="gex:extent">
     <label>Extent</label>
@@ -5085,6 +5018,10 @@
     <label>Operated dataset</label>
     <description>Provides a reference to the resource on which the service operates. Note: For one resource either operated dataset or operates on may be used (not both).</description>
   </element>
+  <element name="srv:resource">
+    <label>Resource metadata</label>
+    <description>Full identifaction metadata for coupled resource</description>
+  </element>
   <element name="srv:profile">
     <label>Profile</label>
     <description>Profile to which the service adheres</description>
@@ -5096,6 +5033,7 @@
   <element name="srv:distributedComputingPlatform">
     <label>Distributed computing platform (DCP)</label>
     <description>DCP on which the operation has been implemented</description>
+    <help><![CDATA[<a target="docs" href="https://openwork-nz.github.io/ANZLIC-Metadata-Tool-help/Service-Metadata#distributed-computing-platform-dcp---dcp-on-which-the-operation-has-been-implemented">Help</a>]]></help>
   </element>
   <element name="srv:parameter">
     <label>Parameter</label>
@@ -5116,7 +5054,7 @@
     <description>Describes</description>
   </element>
   <element name="mri:propertyType">
-    <label>PropertyType</label>
+    <label>Property Type</label>
     <description>PropertyType</description>
   </element>
   <element name="lan:PT_Locale">
@@ -5132,8 +5070,7 @@
   <element name="mri:featureType">
     <label>Feature type</label>
     <description>Subset of feature types from cited feature catalogue occurring
-      in
-      data
+      in data
     </description>
   </element>
   <element name="mri:featureAttribute">
@@ -5271,16 +5208,16 @@
     <description/>
   </element>
   <element name="mri:composedOf">
-    <label>ComposedOf</label>
+    <label>Composed Of</label>
     <description>ComposedOf</description>
   </element>
   <element name="mri:partOf">
-    <label>PartOf</label>
+    <label>Part Of</label>
     <description>PartOf</description>
   </element>
   <element name="mri:seriesMetadata">
-    <label>SeriesMetadata</label>
-    <description>SeriesMetadata</description>
+    <label>Series Metadata</label>
+    <description>Series Metadata</description>
   </element>
   <element name="mri:subset">
     <label>Subset</label>
@@ -5583,7 +5520,7 @@
     <description></description>
   </element>
   <element name="gfc:FC_InheritanceRelation">
-    <label>Heritance relation</label>
+    <label>Inheritance relation</label>
     <description></description>
   </element>
   <element name="gfc:functionalLanguage">

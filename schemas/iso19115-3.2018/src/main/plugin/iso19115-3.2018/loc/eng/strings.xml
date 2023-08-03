@@ -30,7 +30,7 @@
   </xml_iso19139Tooai_dc>
   <resourceLineageTab>Lineage</resourceLineageTab>
 
-  <advanced>Full</advanced>
+  <advanced>Advanced</advanced>
   <default>Simple</default>
   <simple>Simple</simple>
   <inspire>INSPIRE</inspire>
@@ -39,6 +39,51 @@
   <resource>Resource</resource>
   <xml>XML</xml>
   <metadata>Metadata</metadata>
+
+!-- Added ICMS element names BC 20-07-23 -->
+  <icsm>ICSM</icsm>  <!-- New tab -->
+  <general>General Info</general>
+  <dateTabICSM>Dates</dateTabICSM>
+  <metadataIcsm>Metadata</metadataIcsm>
+  <contentInfoIcsm>Content</contentInfoIcsm>
+  <acquisitionInformationIcsm>Acquisition Info</acquisitionInformationIcsm>
+  <distributionInfoIcsm>Distribution</distributionInfoIcsm>
+  <distributionICSM>Distribution</distributionICSM>
+  <qualityLineageIcsm>Lineage</qualityLineageIcsm>
+  <qualityIcsm>Quality</qualityIcsm>
+  <descriptiveKeywordsIcsm>Keywords</descriptiveKeywordsIcsm>
+  <extentIcsm>Extents</extentIcsm>
+  <temporalExtent>Temporal Extent</temporalExtent>
+  <spatialInfoIcsm>Spatial</spatialInfoIcsm>
+  <portrayalCatalogueInfoIcsm>Portrayal</portrayalCatalogueInfoIcsm>
+  <metadataConstraintsIcsm>Md. Constraints</metadataConstraintsIcsm>
+  <metadataMaintenanceIcsm>Md. Maintenance</metadataMaintenanceIcsm>
+  <applicationSchemaInfoIcsm>Schema Info</applicationSchemaInfoIcsm>
+  <generalIcsm>General Information</generalIcsm>
+  <datesIcsm>Key Dates</datesIcsm>
+  <abstractPurposeIcsm>Abstract &amp; Purpose</abstractPurposeIcsm>
+  <contactsIcsm>Contacts</contactsIcsm>
+  <identificationIcsm>Other</identificationIcsm>
+  <constraintsIcsm>Constraints</constraintsIcsm>
+  <serviceIcsm>Service</serviceIcsm>
+  <couplingIcsm>Coupling</couplingIcsm>
+  <serviceStandardIcsm>Standard</serviceStandardIcsm>
+  <serviceOperationsIcsm>Operations</serviceOperationsIcsm>
+  <dataIdentifierIcsm>Resource Identification</dataIdentifierIcsm>
+  <resolutionIcsm>Resolution</resolutionIcsm>
+  <referenceSystemInfoIcsm>Reference System</referenceSystemInfoIcsm>
+  <dateInfoIcsm>Dates</dateInfoIcsm>
+  <metadataContactsIcsm>Metadata Contacts</metadataContactsIcsm>
+  <resourceContactsIcsm>Resource Contacts</resourceContactsIcsm>
+  <resourceLineageIcsm>Resource Lineage</resourceLineageIcsm>
+  <pointOfTruthMD>Metadata Source</pointOfTruthMD>
+  <contentInfoICSM>Content</contentInfoICSM>
+
+
+<!-- Added missing element names BC 20-07-23 -->
+  <beginPosition>Begin date</beginPosition>
+  <endPosition>End date</endPosition>
+
   <identificationInfo>Identification</identificationInfo>
   <distributionInfo>Distribution</distributionInfo>
   <dataQualityInfo>Quality</dataQualityInfo>
