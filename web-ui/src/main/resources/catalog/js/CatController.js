@@ -718,8 +718,13 @@
                 // 'url' : '/formatters/xml?attachment=false',
                 url: "/formatters/xml",
                 class: "fa-file-code-o"
-              } /*,
+              },
               {
+                label: "exportJSON",
+                url: "/formatters/jsonld",
+                class: "fa-file-o"
+              }
+              /*{
                 label: "exportDCAT",
                 url: "/geonetwork/api/collections/main/items/${uuid}?f=dcat",
                 class: "fa-file-code-o"
