@@ -129,46 +129,39 @@ public class MetadataApi {
         RelatedResponse response = (RelatedResponse) Xml.unmarshall(transform, RelatedResponse.class);
         if (!approved) {
             // For non-approved working copy, we need to update all urls to user approved=false if they are internal links
-            SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
-            Pattern pattern = Pattern.compile(settingManager.getNodeURL() + "api/records/" + md.getUuid() + "/attachments/(.*)$");
             if (response.getOnlines() != null && response.getOnlines().getItem() != null) {
                 for (RelatedLinkItem relatedLinkItem : response.getOnlines().getItem()) {
-                    for (LocalizedString localizedString : relatedLinkItem.getUrl().getValue()) {
-                        if (localizedString.getValue() != null) {
-                            Matcher matcher = pattern.matcher(localizedString.getValue());
-                            if (matcher.matches()) {
-                                localizedString.setValue(localizedString.getValue() + "?approved=false");
-                            }
-                        }
-                        if (localizedString.getHref() != null) {
-                            Matcher matcher = pattern.matcher(localizedString.getHref());
-                            if (matcher.matches()) {
-                                localizedString.setHref(localizedString.getHref() + "?approved=false");
-                            }
-                        }
-                    }
+                    updateNonApprovedUrl(relatedLinkItem.getUrl().getValue(), md.getUuid());
                 }
             }
             if (response.getThumbnails() != null && response.getThumbnails().getItem() != null) {
                 for (RelatedThumbnailItem relatedThumbnailItem : response.getThumbnails().getItem()) {
-                    for (LocalizedString localizedString : relatedThumbnailItem.getUrl().getValue()) {
-                        if (localizedString.getValue() != null) {
-                            Matcher matcher = pattern.matcher(localizedString.getValue());
-                            if (matcher.matches()) {
-                                localizedString.setValue(localizedString.getValue() + "?approved=false");
-                            }
-                        }
-                        if (localizedString.getHref() != null) {
-                            Matcher matcher = pattern.matcher(localizedString.getHref());
-                            if (matcher.matches()) {
-                                localizedString.setHref(localizedString.getHref() + "?approved=false");
-                            }
-                        }
-                    }
+                    updateNonApprovedUrl(relatedThumbnailItem.getUrl().getValue(), md.getUuid());
                 }
             }
         }
         return response;
+    }
+
+    private static void updateNonApprovedUrl(List<LocalizedString> localizedStrings, String currentUuid) {
+        // For non-approved working copy, we need to update all urls to user approved=false if they are internal links
+        SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
+        Pattern pattern = Pattern.compile(settingManager.getNodeURL() + "api/records/" + currentUuid + "/attachments/(.*)$");
+
+        for (LocalizedString localizedString : localizedStrings) {
+            if (localizedString.getValue() != null) {
+                Matcher matcher = pattern.matcher(localizedString.getValue());
+                if (matcher.matches()) {
+                    localizedString.setValue(localizedString.getValue() + "?approved=false");
+                }
+            }
+            if (localizedString.getHref() != null) {
+                Matcher matcher = pattern.matcher(localizedString.getHref());
+                if (matcher.matches()) {
+                    localizedString.setHref(localizedString.getHref() + "?approved=false");
+                }
+            }
+        }
     }
 
     public synchronized void setApplicationContext(ApplicationContext context) {
