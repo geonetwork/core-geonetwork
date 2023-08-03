@@ -263,9 +263,9 @@
 
           linksAndRelatedPromises.push(
             $http.get(
-              apiPrefix + "/related?type=" + relatedTypes.join("&type=") + !isApproved
+              apiPrefix + "/related?type=" + relatedTypes.join("&type=") + (!isApproved
                 ? "&approved=false"
-                : "",
+                : ""),
               {
                 headers: {
                   Accept: "application/json"
