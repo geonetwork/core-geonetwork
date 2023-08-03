@@ -278,9 +278,9 @@
               apiPrefix +
                 "/associated?type=" +
                 associatedTypes.join("&type=") +
-                !isApproved
+                (!isApproved
                 ? "&approved=false"
-                : "",
+                : ""),
               {
                 headers: {
                   Accept: "application/json"
