@@ -83,10 +83,13 @@
   .gn-editor-board {
     padding-top: @gn-header-height;
     .gn-top-search {
+      padding-top: 0;
+      padding-bottom: 0;
       background-color: #fff;
     }
   }
   .gn-search-facet {
+    padding-top: 55px;
     padding-bottom: 15px;
   }
   .modal-dialog {
@@ -343,7 +346,7 @@
     .gn-field {
       float: none;
       label {
-        font-size: 12px;
+        font-size: 15px;
         &:after {
           font-size: 24px;
         }
@@ -414,6 +417,7 @@
     padding: 0 15px 15px 15px;
     position: relative;
     margin-top: 0;
+    border-radius: 0;
     [ol-map] {
       border-radius: 0;
       .ol-attribution {
