@@ -263,7 +263,7 @@
 
     <!-- For some fields, always display attributes.
     TODO: move to editor config ? -->
-    <xsl:variable name="forceDisplayAttributes" select="count(gcx:Anchor) > 0"/>
+    <!--<xsl:variable name="forceDisplayAttributes" select="count(gcx:Anchor) > 0"/>-->
 
     <xsl:variable name="monoLingualValue"
                   select="gco:CharacterString|gcx:Anchor|gco:Integer|gco:UnlimitedInteger|gco:Decimal|
@@ -410,7 +410,7 @@
       <xsl:with-param name="parentEditInfo" select="if ($refToDelete) then $refToDelete else gn:element"/>
       <xsl:with-param name="listOfValues" select="$helper"/>
       <xsl:with-param name="toggleLang" select="$isMultilingualElementExpanded"/>
-      <xsl:with-param name="forceDisplayAttributes" select="$forceDisplayAttributes"/>
+      <!--<xsl:with-param name="forceDisplayAttributes" select="$forceDisplayAttributes"/>-->
       <xsl:with-param name="isFirst" select="count(preceding-sibling::*[name() = $elementName]) = 0"/>
       <xsl:with-param name="isDisabled" select="$isDisabled"/>
     </xsl:call-template>
