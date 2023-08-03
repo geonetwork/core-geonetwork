@@ -263,9 +263,10 @@
 
           linksAndRelatedPromises.push(
             $http.get(
-              apiPrefix + "/related?type=" + relatedTypes.join("&type=") + (!isApproved
-                ? "&approved=false"
-                : ""),
+              apiPrefix +
+                "/related?type=" +
+                relatedTypes.join("&type=") +
+                (!isApproved ? "&approved=false" : ""),
               {
                 headers: {
                   Accept: "application/json"
@@ -278,9 +279,7 @@
               apiPrefix +
                 "/associated?type=" +
                 associatedTypes.join("&type=") +
-                (!isApproved
-                ? "&approved=false"
-                : ""),
+                (!isApproved ? "&approved=false" : ""),
               {
                 headers: {
                   Accept: "application/json"
@@ -489,7 +488,10 @@
             gnCurrentEdit.metadata.draft &&
             url.match(".*/api/records/(.*)/attachments/.*") != null
           ) {
-            url += url.indexOf("?") > 0 ? "&" : "?" + "approved=false";
+            // Remove approved parameter if already exists.
+            url = gnUrlUtils.remove(url, ["approved"], true);
+            // Apply correct approved parameter.
+            url += (url.indexOf("?") > 0 ? "&" : "?") + "approved=false";
           }
           return url;
         },
@@ -710,11 +712,16 @@
          * @param {Object} onlinesrc the online resource to remove
          */
         removeOnlinesrc: function (onlinesrc) {
+          var url = onlinesrc.lUrl || onlinesrc.url;
+          if (url.match(".*/api/records/(.*)/attachments/.*") != null) {
+            url = gnUrlUtils.remove(url, ["approved"], true);
+          }
+
           return runProcess(
             this,
             setParams("onlinesrc-remove", {
               id: gnCurrentEdit.id,
-              url: onlinesrc.lUrl || onlinesrc.url,
+              url: url,
               name: $filter("gnLocalized")(onlinesrc.title)
             })
           );

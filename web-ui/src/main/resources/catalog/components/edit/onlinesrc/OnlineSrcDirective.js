@@ -967,6 +967,11 @@
                         $log.warn("Failed to compute key for updating the resource.");
                       }
                     }
+
+                    if (keyUrl.match(".*/api/records/(.*)/attachments/.*") != null) {
+                      keyUrl = gnUrlUtils.remove(keyUrl, ["approved"], true);
+                    }
+
                     scope.editingKey = [keyUrl, linkToEdit.protocol, keyName].join("");
 
                     scope.OGCProtocol = checkIsOgc(linkToEdit.protocol);
@@ -1207,6 +1212,16 @@
 
                 if (scope.isEditing) {
                   processParams.updateKey = scope.editingKey;
+                }
+
+                if (
+                  processParams.url.match(".*/api/records/(.*)/attachments/.*") != null
+                ) {
+                  processParams.url = gnUrlUtils.remove(
+                    processParams.url,
+                    ["approved"],
+                    true
+                  );
                 }
 
                 // Add list of layers for WMS
