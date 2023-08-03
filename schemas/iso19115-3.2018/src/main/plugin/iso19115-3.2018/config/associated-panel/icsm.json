@@ -1,0 +1,115 @@
+{
+  "config": {
+    "display": "radio",
+    "types": [
+      {
+        "group": "onlineDiscover",
+        "label": "onlineDiscoverThumbnail",
+        "sources": {
+          "filestore": true,
+          "thumbnailMaker": true
+        },
+        "icon": "fa gn-icon-thumbnail",
+        "fileStoreFilter": "*.{jpg,JPG,jpeg,JPEG,png,PNG,gif,GIF}",
+        "process": "thumbnail-add",
+        "fields": {
+          "url": {
+            "isMultilingual": false,
+            "param": "thumbnail_url"
+          },
+          "name": {
+            "param": "thumbnail_desc"
+          }
+        }
+      },
+      {
+        "group": "onlineDownload",
+        "label": "onlineWWWLink",
+        "copyLabel": "name",
+        "sources": {
+          "filestore": true
+        },
+        "icon": "fa gn-icon-onlinesrc",
+        "process": "onlinesrc-add",
+        "fields": {
+          "url": {
+            "isMultilingual": false
+          },
+          "protocol": {
+            "value": "WWW:LINK",
+            "hidden": true,
+            "isMultilingual": false
+          },
+          "name": {},
+          "desc": {},
+          "function": {
+            "value": "download",
+            "hidden": true,
+            "isMultilingual": false
+          }
+        }
+      },
+
+      {
+        "group": "onlineDiscover",
+        "label": "onlineDiscoverWMS",
+        "copyLabel": "desc",
+        "icon": "fa gn-icon-onlinesrc",
+        "sources": {
+          "metadataStore": {
+            "label": "searchAservice",
+            "params": {
+              "serviceType": "OGC:WMS or WMS or view"
+            }
+          }
+        },
+        "process": "onlinesrc-add",
+        "fields": {
+          "url": {
+            "isMultilingual": false,
+            "value": "https://ant-nz.geodata.nz/geoserver/wms"
+          },
+          "protocol": {
+            "value": "OGC:WMS",
+            "hidden": true,
+            "isMultilingual": false
+          },
+          "name": {},
+          "desc": {},
+          "function": {
+            "value": "browsing",
+            "hidden": true,
+            "isMultilingual": false
+          }
+        }
+      },
+      {
+        "group": "onlineMore",
+        "label": "onlineMoreFile",
+        "copyLabel": "name",
+        "sources": {
+          "filestore": true
+        },
+        "icon": "fa gn-icon-onlinesrc",
+        "process": "onlinesrc-add",
+        "fields": {
+          "url": {
+            "isMultilingual": false
+          },
+          "protocol": {
+            "value": "WWW:LINK",
+            "hidden": true,
+            "isMultilingual": false
+          },
+          "name": {},
+          "desc": {},
+          "function": {
+            "value": "information",
+            "hidden": true,
+            "isMultilingual": false
+          }
+        }
+      }
+    ]
+  }
+}
