@@ -1471,7 +1471,16 @@
                     // Editing an online resource after saving the metadata doesn't trigger the params.protocol watcher
                     processSelectedWMSLayers();
                   });
-                  scope.isImage = curUrl.match(/.*.(png|jpg|jpeg|gif)$/i);
+                  if (
+                    curUrl.match(
+                      ".*/api/records/" + scope.gnCurrentEdit.uuid + "/attachments/.*"
+                    ) != null
+                  ) {
+                    // working copy or other resources from the system may have ?approved=... appended to the url.
+                    scope.isImage = curUrl.match(/.*.(png|jpg|jpeg|gif)(\?.*)?$/i);
+                  } else {
+                    scope.isImage = curUrl.match(/.*.(png|jpg|jpeg|gif)$/i);
+                  }
                 }
               };
               scope.$watch("params.url", updateImageTag, true);

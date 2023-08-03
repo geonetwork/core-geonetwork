@@ -389,9 +389,6 @@
                 return;
               }
 
-              // Todo 
-              // Add add check for gnCurrentEdit.metadata.draft === "y" and append "approved=false" to url
-              
               // init object if required
               scope.relations = scope.relations || {};
               scope.hasResults = true;
@@ -410,6 +407,19 @@
                 }
               } else {
                 scope.relations[idx] = value;
+              }
+
+              // For draft version append "approved=false" to url
+              if (scope.md.draft === "y" && idx === "onlines") {
+                for (var i = 0; i < scope.relations[idx].length; i++) {
+                  if (
+                    scope.relations[idx][i].url.match(
+                      ".*/api/records/" + scope.md.uuid + "/attachments/.*"
+                    ) != null
+                  ) {
+                    scope.relations[idx][i].url += "?approved=false";
+                  }
+                }
               }
 
               // siblings, children, parent can contain elements from
