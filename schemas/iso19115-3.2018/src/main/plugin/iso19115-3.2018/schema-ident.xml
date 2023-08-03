@@ -84,7 +84,8 @@ Ce schéma est également composé des normes :
               xmlns:mrs="http://standards.iso.org/iso/19115/-3/mrs/1.0"
               xmlns:mrd="http://standards.iso.org/iso/19115/-3/mrd/1.0"
               xmlns:mdq="http://standards.iso.org/iso/19157/-2/mdq/1.0"
-              xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0">
+              xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
+              xmlns:srv="http://standards.iso.org/iso/19115/-3/srv/2.1">
     <!-- ISO19115-3 identification is based on the
     root element of the record. It could be a MD_Metadata
     element (for a metadata recocrd) or some other eleement
@@ -119,6 +120,8 @@ Ce schéma est également composé des normes :
       <mco:MD_Constraints/>
       <mco:MD_LegalConstraints/>
       <mco:MD_SecurityConstraints/>
+      <mdb:referenceSystemInfo/>
+      <srv:serviceStandard/>
       <!-- TODO: Add subtemplate roots -->
     </elements>
   </autodetect>
