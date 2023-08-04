@@ -491,7 +491,11 @@
               if (controller) {
                 controller.startGnRelatedRequest(elem);
               }
-              (promise = gnRelatedService.get(scope.id, scope.types)).then(
+              (promise = gnRelatedService.get(
+                scope.id,
+                scope.types,
+                scope.gnCurrentEdit.metadata.draft !== "y"
+              )).then(
                 function (data) {
                   scope.loadRelations(data);
                   if (angular.isDefined(scope.container) && scope.relations == null) {

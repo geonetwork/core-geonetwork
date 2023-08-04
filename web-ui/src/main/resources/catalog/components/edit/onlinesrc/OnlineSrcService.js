@@ -714,7 +714,9 @@
          */
         removeOnlinesrc: function (onlinesrc) {
           var url = onlinesrc.lUrl || onlinesrc.url;
-          if (url.match(".*/api/records/(.*)/attachments/.*") != null) {
+          if (
+            url.match(".*/api/records/' + gnCurrentEdit.uuid + '/attachments/.*") != null
+          ) {
             url = gnUrlUtils.remove(url, ["approved"], true);
           }
 
