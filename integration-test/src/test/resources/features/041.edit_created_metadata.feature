@@ -2,7 +2,7 @@ Feature: Create Draft
 When trying to edit the published record, a draft is created
 
   Scenario: Edit published record
-    Given I login as editortest/editorpass and navigate to catalog.edit#/board
+    Given I login as editortest/editorpasS1@- and navigate to catalog.edit#/board
     Then I wait 10 seconds for element having css "table.gn-results-editor tr td" to display
     Then I click on link having text "itest-metadata"
     Then I click on element having css ".gn-md-edit-btn"

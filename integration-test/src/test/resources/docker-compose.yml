@@ -1,0 +1,55 @@
+version: '3.1'
+
+volumes:
+  geonetwork:
+  esdata:
+
+networks:
+  gn-network:
+    driver: bridge
+
+services:
+  geonetwork:
+    image: geonetwork:4.2.3
+    restart: always
+    ports:
+      - 8080:8080
+    environment:
+      DATA_DIR: /catalogue-data
+
+      JAVA_OPTS: >
+        -Dorg.eclipse.jetty.annotations.AnnotationParser.LEVEL=OFF
+        -Djava.security.egd=file:/dev/./urandom -Djava.awt.headless=true
+        -Xms2G -Xmx2G -XX:+UseConcMarkSweepGC
+        -Dgeonetwork.dir=/catalogue-data
+        -Dgeonetwork.codeList.dir=/var/lib/jetty/webapps/geonetwork/WEB-INF/data/config/codelist
+        -Dgeonetwork.schema.dir=/var/lib/jetty/webapps/geonetwork/WEB-INF/data/config/schema_plugins
+
+      ES_HOST: elasticsearch
+      ES_PROTOCOL: http
+      ES_PORT: 9200
+    volumes:
+      - geonetwork:/catalogue-data
+    depends_on:
+      - elasticsearch
+    networks:
+      - gn-network
+
+  elasticsearch:
+    image: elasticsearch:7.11.1
+    ports:
+      - 9200:9200
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    environment:
+      ES_JAVA_OPTS: "-Xms1G -Xmx1G"
+      discovery.type: single-node
+    volumes:
+      - esdata:/usr/share/elasticsearch/data
+    networks:
+      - gn-network

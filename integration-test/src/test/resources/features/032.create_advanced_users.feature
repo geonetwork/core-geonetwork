@@ -8,8 +8,8 @@ Feature: Create (draft) editor
     # Add editor
     And I click on element having id "gn-btn-user-add"
     And I enter "editortest" into input field having id "username"
-    And I enter "editorpass" into input field having id "gn-user-password"
-    And I enter "editorpass" into input field having id "gn-user-password2"
+    And I enter "editorpasS1@-" into input field having id "gn-user-password"
+    And I enter "editorpasS1@-" into input field having id "gn-user-password2"
     And I enter "Edi" into input field having name "name"
     And I enter "Thor" into input field having name "surname"
     And I enter "editortest@email.com" into input field having name "email"
@@ -19,14 +19,14 @@ Feature: Create (draft) editor
     Then I scroll to top of page
     And I click on element having id "gn-btn-user-save"
     And I wait 5 seconds for element having css "div.alert.gn-info" to display
-        
+
     # Add editor 2
   Scenario: Add editortest2
     Then I navigate to "{endPointToTest}/srv/eng/admin.console#/organization"
     And I click on element having id "gn-btn-user-add"
     And I enter "editortest2" into input field having id "username"
-    And I enter "editorpass" into input field having id "gn-user-password"
-    And I enter "editorpass" into input field having id "gn-user-password2"
+    And I enter "editorpasS1@-" into input field having id "gn-user-password"
+    And I enter "editorpasS1@-" into input field having id "gn-user-password2"
     And I enter "Edi" into input field having name "name"
     And I enter "Thor 2" into input field having name "surname"
     And I enter "editortest@email.com" into input field having name "email"
@@ -41,8 +41,8 @@ Feature: Create (draft) editor
   Scenario: Add reviewertest
     And I click on element having id "gn-btn-user-add"
     And I enter "reviewertest" into input field having id "username"
-    And I enter "editorpass" into input field having id "gn-user-password"
-    And I enter "editorpass" into input field having id "gn-user-password2"
+    And I enter "editorpasS1@-" into input field having id "gn-user-password"
+    And I enter "editorpasS1@-" into input field having id "gn-user-password2"
     And I enter "Revi" into input field having name "name"
     And I enter "Ewer" into input field having name "surname"
     And I enter "reviewer@email.com" into input field having name "email"
@@ -52,6 +52,6 @@ Feature: Create (draft) editor
     Then I scroll to top of page
     When I click on element having id "gn-btn-user-save"
     And I wait 5 seconds for element having css "div.alert.gn-info" to display
-        
+
     # Logout admin
     And I sign out

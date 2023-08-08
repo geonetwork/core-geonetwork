@@ -1202,6 +1202,14 @@
           <artifactId>diff-match-patch</artifactId>
           <version>1.2</version>
       </dependency>
+
+      <dependency>
+        <groupId>org.testcontainers</groupId>
+        <artifactId>testcontainers-bom</artifactId>
+        <version>1.17.6</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
@@ -1287,9 +1295,6 @@
     </pluginRepository>
   </pluginRepositories>
 
-  <!-- =========================================================== -->
-  <!--     Modules for the build in approximate dependency order   -->
-  <!-- =========================================================== -->
   <modules>
     <module>common</module>
     <module>cachingxslt</module>
@@ -1365,6 +1370,7 @@
         <module>schemas-test</module>
         <module>web-ui</module>
         <module>web</module>
+        <module>integration-test</module>
       </modules>
     </profile>
     <profile>
