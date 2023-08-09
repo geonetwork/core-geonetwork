@@ -494,7 +494,7 @@
               (promise = gnRelatedService.get(
                 scope.id,
                 scope.types,
-                scope.gnCurrentEdit.metadata.draft !== "y"
+                scope.md.draft !== "y"
               )).then(
                 function (data) {
                   scope.loadRelations(data);
