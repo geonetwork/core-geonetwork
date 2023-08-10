@@ -108,7 +108,7 @@ public class MetadataApi {
 
     public static RelatedResponse getAssociatedResources(
         String language, ServiceContext context,
-        AbstractMetadata md, RelatedItemType[] type, boolean approved, int start, int rows) throws Exception {
+        AbstractMetadata md, RelatedItemType[] type, int start, int rows) throws Exception {
         // TODO PERF: ByPass XSL processing and create response directly
         // At least for related metadata and keep XSL only for links
         Element raw = new Element("root").addContent(Arrays.asList(
@@ -645,7 +645,7 @@ public class MetadataApi {
         String language = languageUtils.getIso3langCode(request.getLocales());
         final ServiceContext serviceContext = ApiUtils.createServiceContext(request);
 
-        return getAssociatedResources(language, serviceContext, md, type, approved, start, rows);
+        return getAssociatedResources(language, serviceContext, md, type, start, rows);
     }
 
     @io.swagger.v3.oas.annotations.Operation(

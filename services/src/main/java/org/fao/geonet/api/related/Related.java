@@ -57,6 +57,8 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import static org.fao.geonet.api.records.attachments.AbstractStore.getAndCheckMetadataId;
+
 @RequestMapping(value = {
     "/{portal}/api/related"
 })
@@ -104,6 +106,9 @@ public class Related implements ApplicationContextAware {
         )
         @RequestParam(defaultValue = "", name = "uuid")
             String[] uuids,
+        @Parameter(description = "Use approved version or not", example = "true")
+        @RequestParam(required = false, defaultValue = "true")
+        Boolean approved,
         HttpServletRequest request) throws Exception {
 
         Locale language = languageUtils.parseAcceptLanguage(request.getLocales());
@@ -115,7 +120,8 @@ public class Related implements ApplicationContextAware {
 
         for (String uuid : uuids) {
             try {
-                md = ApiUtils.canViewRecord(uuid, request);
+                int metadataId = getAndCheckMetadataId(uuid, approved);
+                md = ApiUtils.canViewRecord(metadataId, request);
                 Element raw = new Element("root").addContent(Arrays.asList(
                     new Element("gui").addContent(Arrays.asList(
                         new Element("language").setText(language.getISO3Language()),
