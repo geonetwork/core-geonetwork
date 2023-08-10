@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?><schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:cat="http://standards.iso.org/iso/19115/-3/cat/1.0" xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0" elementFormDefault="qualified" targetNamespace="http://standards.iso.org/iso/19115/-3/cat/1.0" version="1.0">
+  <include schemaLocation="cat.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/gco/1.0" schemaLocation="../../../../19115/-3/gco/1.0/gco.xsd"/>
+  <!--XML Schema document created by ShapeChange - http://shapechange.net/-->
+  <element name="CT_CRS" substitutionGroup="gco:AbstractObject" type="cat:CT_CRS_Type"/>
+  <complexType name="CT_CRS_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <element name="definition" type="gco:CharacterString_PropertyType"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="CT_CRS_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="cat:CT_CRS"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="CT_CoordinateSystem" substitutionGroup="gco:AbstractObject" type="cat:CT_CoordinateSystem_Type"/>
+  <complexType name="CT_CoordinateSystem_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <element name="definition" type="gco:CharacterString_PropertyType"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="CT_CoordinateSystem_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="cat:CT_CoordinateSystem"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="CT_CoordinateSystemAxis" substitutionGroup="gco:AbstractObject" type="cat:CT_CoordinateSystemAxis_Type"/>
+  <complexType name="CT_CoordinateSystemAxis_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <element name="definition" type="gco:CharacterString_PropertyType"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="CT_CoordinateSystemAxis_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="cat:CT_CoordinateSystemAxis"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="CT_CrsCatalogue" substitutionGroup="cat:AbstractCT_Catalogue" type="cat:CT_CrsCatalogue_Type"/>
+  <complexType name="CT_CrsCatalogue_Type">
+    <complexContent>
+      <extension base="cat:AbstractCT_Catalogue_Type">
+        <sequence>
+          <element maxOccurs="unbounded" minOccurs="0" name="parameters" type="cat:CT_OperationParameters_PropertyType"/>
+          <element maxOccurs="unbounded" minOccurs="0" name="operation" type="cat:CT_Operation_PropertyType"/>
+          <element maxOccurs="unbounded" minOccurs="0" name="coordinateSystem" type="cat:CT_CoordinateSystem_PropertyType"/>
+          <element maxOccurs="unbounded" minOccurs="0" name="ellipsoid" type="cat:CT_Ellipsoid_PropertyType"/>
+          <element maxOccurs="unbounded" minOccurs="0" name="datum" type="cat:CT_Datum_PropertyType"/>
+          <element maxOccurs="unbounded" minOccurs="0" name="operationMethod" type="cat:CT_OperationMethod_PropertyType"/>
+          <element maxOccurs="unbounded" name="crs" type="cat:CT_CRS_PropertyType"/>
+          <element maxOccurs="unbounded" minOccurs="0" name="primeMeridian" type="cat:CT_PrimeMeridian_PropertyType"/>
+          <element maxOccurs="unbounded" minOccurs="0" name="axis" type="cat:CT_CoordinateSystemAxis_PropertyType"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="CT_CrsCatalogue_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="cat:CT_CrsCatalogue"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="CT_Datum" substitutionGroup="gco:AbstractObject" type="cat:CT_Datum_Type"/>
+  <complexType name="CT_Datum_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <element name="definition" type="gco:CharacterString_PropertyType"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="CT_Datum_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="cat:CT_Datum"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="CT_Ellipsoid" substitutionGroup="gco:AbstractObject" type="cat:CT_Ellipsoid_Type"/>
+  <complexType name="CT_Ellipsoid_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <element name="definition" type="gco:CharacterString_PropertyType"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="CT_Ellipsoid_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="cat:CT_Ellipsoid"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="CT_Operation" substitutionGroup="gco:AbstractObject" type="cat:CT_Operation_Type"/>
+  <complexType name="CT_Operation_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence/>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="CT_Operation_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="cat:CT_Operation"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="CT_OperationMethod" substitutionGroup="gco:AbstractObject" type="cat:CT_OperationMethod_Type"/>
+  <complexType name="CT_OperationMethod_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <element name="definition" type="gco:CharacterString_PropertyType"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="CT_OperationMethod_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="cat:CT_OperationMethod"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="CT_OperationParameters" substitutionGroup="gco:AbstractObject" type="cat:CT_OperationParameters_Type"/>
+  <complexType name="CT_OperationParameters_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <element name="definition" type="gco:CharacterString_PropertyType"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="CT_OperationParameters_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="cat:CT_OperationParameters"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="CT_PrimeMeridian" substitutionGroup="gco:AbstractObject" type="cat:CT_PrimeMeridian_Type"/>
+  <complexType name="CT_PrimeMeridian_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <element name="definition" type="gco:CharacterString_PropertyType"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="CT_PrimeMeridian_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="cat:CT_PrimeMeridian"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+</schema>

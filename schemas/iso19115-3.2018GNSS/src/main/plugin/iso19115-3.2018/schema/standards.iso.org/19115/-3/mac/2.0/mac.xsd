@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" 
+  xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
+  xmlns:gmw="http://standards.iso.org/iso/19115/-3/gmw/1.0"
+  xmlns:mac="http://standards.iso.org/iso/19115/-3/mac/2.0"
+  xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0" elementFormDefault="qualified"
+  targetNamespace="http://standards.iso.org/iso/19115/-3/mac/2.0" version=""> 
+  <include schemaLocation="acquisitionInformationImagery.xsd"/>
+  <include schemaLocation="event.xsd"/>  
+</schema>

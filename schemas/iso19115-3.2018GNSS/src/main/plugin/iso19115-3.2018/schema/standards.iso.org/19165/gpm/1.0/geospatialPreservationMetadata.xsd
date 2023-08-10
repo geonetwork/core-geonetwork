@@ -1,0 +1,376 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2008 sp1 (http://www.altova.com) by Joan Maso (CREAF) -->
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gpm="http://standards.iso.org/iso/19165/gpm/1.0" xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/1.0" xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0" xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0" xmlns:mco="http://standards.iso.org/iso/19115/-3/mco/1.0" xmlns:mdb="http://standards.iso.org/iso/19115/-3/mdb/1.0" xmlns:mdq="http://standards.iso.org/iso/19157/-2/mdq/1.0"
+	xmlns:mrd="http://standards.iso.org/iso/19115/-3/mrd/1.0" xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0" xmlns:mrl="http://standards.iso.org/iso/19115/-3/mrl/1.0" xmlns:srv="http://standards.iso.org/iso/19115/-3/srv/2.0" xmlns:gml="http://www.opengis.net/gml/3.2" targetNamespace="http://standards.iso.org/iso/19165/gpm/1.0" elementFormDefault="qualified" version="1.1">
+	<import namespace="http://standards.iso.org/iso/19115/-3/cit/1.0" schemaLocation="http://standards.iso.org/iso/19115/-3/cit/1.0/cit.xsd"/>
+	<import namespace="http://standards.iso.org/iso/19115/-3/gco/1.0" schemaLocation="http://standards.iso.org/iso/19115/-3/gco/1.0/gco.xsd"/>
+	<import namespace="http://standards.iso.org/iso/19115/-3/mas/1.0" schemaLocation="http://standards.iso.org/iso/19115/-3/mas/1.0/mas.xsd"/>
+	<import namespace="http://standards.iso.org/iso/19115/-3/mcc/1.0" schemaLocation="http://standards.iso.org/iso/19115/-3/mcc/1.0/mcc.xsd"/>
+	<import namespace="http://standards.iso.org/iso/19115/-3/mco/1.0" schemaLocation="http://standards.iso.org/iso/19115/-3/mco/1.0/mco.xsd"/>
+	<import namespace="http://standards.iso.org/iso/19115/-3/mdb/1.0" schemaLocation="http://standards.iso.org/iso/19115/-3/mdb/1.0/mdb.xsd"/>
+	<import namespace="http://standards.iso.org/iso/19157/-2/mdq/1.0" schemaLocation="http://standards.iso.org/iso/19157/-2/mdq/1.0/mdq.xsd"/>
+	<import namespace="http://standards.iso.org/iso/19115/-3/mpc/1.0" schemaLocation="http://standards.iso.org/iso/19115/-3/mpc/1.0/mpc.xsd"/>
+	<import namespace="http://standards.iso.org/iso/19115/-3/mrc/1.0" schemaLocation="http://standards.iso.org/iso/19115/-3/mrc/1.0/mrc.xsd"/>
+	<import namespace="http://standards.iso.org/iso/19115/-3/mrd/1.0" schemaLocation="http://standards.iso.org/iso/19115/-3/mrd/1.0/mrd.xsd"/>
+	<import namespace="http://standards.iso.org/iso/19115/-3/mri/1.0" schemaLocation="http://standards.iso.org/iso/19115/-3/mri/1.0/mri.xsd"/>
+	<import namespace="http://standards.iso.org/iso/19115/-3/mrl/1.0" schemaLocation="http://standards.iso.org/iso/19115/-3/mrl/1.0/mrl.xsd"/>
+	<import namespace="http://standards.iso.org/iso/19115/-3/mrs/1.0" schemaLocation="http://standards.iso.org/iso/19115/-3/mrs/1.0/mrs.xsd"/>
+	<import namespace="http://standards.iso.org/iso/19115/-3/msr/1.0" schemaLocation="http://standards.iso.org/iso/19115/-3/msr/1.0/msr.xsd"/>
+	<import namespace="http://standards.iso.org/iso/19115/-3/srv/2.0" schemaLocation="http://standards.iso.org/iso/19115/-3/srv/2.0/srv.xsd"/>
+	<import namespace="http://www.opengis.net/gml/3.2" schemaLocation="../../ISO_19136_Schemas/gml.xsd"/>
+	<!--XML Schema document created by ShapeChange - http://shapechange.net/-->
+	<element name="GP_Archive" type="gpm:GP_Archive_Type" substitutionGroup="mrd:MD_Distributor">
+		<annotation>
+			<documentation>Who is storing the package</documentation>
+		</annotation>
+	</element>
+	<complexType name="GP_Archive_Type">
+		<complexContent>
+			<extension base="mrd:MD_Distributor_Type">
+				<sequence/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="GP_Archive_PropertyType">
+		<sequence minOccurs="0">
+			<element ref="gpm:GP_Archive"/>
+		</sequence>
+		<attributeGroup ref="gco:ObjectReference"/>
+		<attribute ref="gco:nilReason"/>
+	</complexType>
+	<element name="GP_AssociatedResource" type="gpm:GP_AssociatedResource_Type" substitutionGroup="mri:MD_AssociatedResource"/>
+	<complexType name="GP_AssociatedResource_Type">
+		<complexContent>
+			<extension base="mri:MD_AssociatedResource_Type">
+				<sequence>
+					<element name="relationType" type="gpm:GP_RelationTypeCode_PropertyType" minOccurs="0"/>
+					<element name="associationProcess" minOccurs="0" maxOccurs="unbounded">
+						<complexType>
+							<sequence minOccurs="0">
+								<element ref="mrl:LI_ProcessStep"/>
+							</sequence>
+							<attributeGroup ref="gml:AssociationAttributeGroup"/>
+						</complexType>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="GP_AssociatedResource_PropertyType">
+		<sequence minOccurs="0">
+			<element ref="gpm:GP_AssociatedResource"/>
+		</sequence>
+		<attributeGroup ref="gco:ObjectReference"/>
+		<attribute ref="gco:nilReason"/>
+	</complexType>
+	<element name="GP_BornDigital" type="gpm:GP_BornDigital_Type" substitutionGroup="gpm:AbstractGP_Digital"/>
+	<complexType name="GP_BornDigital_Type">
+		<complexContent>
+			<extension base="gpm:AbstractGP_Digital_Type">
+				<sequence/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="GP_BornDigital_PropertyType">
+		<sequence minOccurs="0">
+			<element ref="gpm:GP_BornDigital"/>
+		</sequence>
+		<attributeGroup ref="gco:ObjectReference"/>
+		<attribute ref="gco:nilReason"/>
+	</complexType>
+	<element name="AbstractGP_Digital" type="gpm:AbstractGP_Digital_Type" abstract="true" substitutionGroup="gco:AbstractObject"/>
+	<complexType name="AbstractGP_Digital_Type" abstract="true">
+		<complexContent>
+			<extension base="gco:AbstractObject_Type">
+				<sequence/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="AbstractGP_Digital_PropertyType">
+		<sequence minOccurs="0">
+			<element ref="gpm:AbstractGP_Digital"/>
+		</sequence>
+		<attributeGroup ref="gco:ObjectReference"/>
+		<attribute ref="gco:nilReason"/>
+	</complexType>
+	<element name="GP_DistributionFile" type="gpm:GP_DistributionFile_Type" substitutionGroup="gco:AbstractObject"/>
+	<complexType name="GP_DistributionFile_Type">
+		<complexContent>
+			<extension base="gco:AbstractObject_Type">
+				<sequence/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="GP_DistributionFile_PropertyType">
+		<sequence minOccurs="0">
+			<element ref="gpm:GP_DistributionFile"/>
+		</sequence>
+		<attributeGroup ref="gco:ObjectReference"/>
+		<attribute ref="gco:nilReason"/>
+	</complexType>
+	<!--	<element name="GP_Format" type="gpm:GP_Format_Type" substitutionGroup="mrd:MD_Format"/>
+	<complexType name="GP_Format_Type">
+		<complexContent>
+			<extension base="mrd:MD_Format_Type">-->
+	<element name="GP_Format" type="gpm:GP_Format_Type" substitutionGroup="mcc:Abstract_Format"/>
+	<complexType name="GP_Format_Type">
+		<complexContent>
+			<extension base="mcc:Abstract_Format_Type">
+				<sequence>
+					<element name="formatSpecificationParticularities" minOccurs="0" maxOccurs="unbounded">
+						<complexType>
+							<sequence minOccurs="0">
+								<element ref="cit:CI_Citation"/>
+							</sequence>
+							<attributeGroup ref="gml:AssociationAttributeGroup"/>
+						</complexType>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="GP_Format_PropertyType">
+		<sequence minOccurs="0">
+			<element ref="gpm:GP_Format"/>
+		</sequence>
+		<attributeGroup ref="gco:ObjectReference"/>
+		<attribute ref="gco:nilReason"/>
+	</complexType>
+	<element name="GP_InformationValue" type="gpm:GP_InformationValue_Type" substitutionGroup="gco:AbstractObject"/>
+	<complexType name="GP_InformationValue_Type">
+		<complexContent>
+			<extension base="gco:AbstractObject_Type">
+				<sequence>
+					<element name="type" type="gpm:GP_InformationValueTypeCode_PropertyType" minOccurs="0"/>
+					<element name="dueDate">
+						<complexType>
+							<sequence>
+								<element ref="cit:CI_Date"/>
+							</sequence>
+						</complexType>
+					</element>
+					<element name="comments" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+					<element name="justification" type="gpm:GP_JustificationValue_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="GP_InformationValue_PropertyType">
+		<sequence minOccurs="0">
+			<element ref="gpm:GP_InformationValue"/>
+		</sequence>
+		<attributeGroup ref="gco:ObjectReference"/>
+		<attribute ref="gco:nilReason"/>
+	</complexType>
+	<element name="GP_InformationValueTypeCode" type="gco:CodeListValue_Type" substitutionGroup="gco:CharacterString"/>
+	<complexType name="GP_InformationValueTypeCode_PropertyType">
+		<sequence minOccurs="0">
+			<element ref="gpm:GP_InformationValueTypeCode"/>
+		</sequence>
+		<attribute ref="gco:nilReason"/>
+	</complexType>
+	<element name="GP_JustificationValue" type="gpm:GP_JustificationValue_Type" substitutionGroup="gco:AbstractObject"/>
+	<complexType name="GP_JustificationValue_Type">
+		<complexContent>
+			<extension base="gco:AbstractObject_Type">
+				<sequence>
+					<element name="justification" type="gco:CharacterString_PropertyType"/>
+					<element name="justificationType" type="gpm:GP_JustificationValueTypeCode_PropertyType" minOccurs="0"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="GP_JustificationValue_PropertyType">
+		<sequence minOccurs="0">
+			<element ref="gpm:GP_JustificationValue"/>
+		</sequence>
+		<attributeGroup ref="gco:ObjectReference"/>
+		<attribute ref="gco:nilReason"/>
+	</complexType>
+	<element name="GP_JustificationValueTypeCode" type="gco:CodeListValue_Type" substitutionGroup="gco:CharacterString"/>
+	<complexType name="GP_JustificationValueTypeCode_PropertyType">
+		<sequence minOccurs="0">
+			<element ref="gpm:GP_JustificationValueTypeCode"/>
+		</sequence>
+		<attribute ref="gco:nilReason"/>
+	</complexType>
+	<element name="GP_MasterFile" type="gpm:GP_MasterFile_Type" substitutionGroup="gco:AbstractObject"/>
+	<complexType name="GP_MasterFile_Type">
+		<complexContent>
+			<extension base="gco:AbstractObject_Type">
+				<sequence/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="GP_MasterFile_PropertyType">
+		<sequence minOccurs="0">
+			<element ref="gpm:GP_MasterFile"/>
+		</sequence>
+		<attributeGroup ref="gco:ObjectReference"/>
+		<attribute ref="gco:nilReason"/>
+	</complexType>
+	<element name="GP_PackageElementTypeCode" type="gco:CodeListValue_Type" substitutionGroup="gco:CharacterString"/>
+	<complexType name="GP_PackageElementTypeCode_PropertyType">
+		<sequence minOccurs="0">
+			<element ref="gpm:GP_PackageElementTypeCode"/>
+		</sequence>
+		<attribute ref="gco:nilReason"/>
+	</complexType>
+	<element name="GP_PackagingInformation" type="gpm:GP_PackagingInformation_Type"/>
+	<complexType name="GP_PackagingInformation_Type">
+		<complexContent>
+			<extension base="mrd:MD_Distribution_Type">
+				<sequence>
+					<element name="packageIdentifier">
+						<complexType>
+							<sequence>
+								<element ref="mcc:MD_Identifier"/>
+							</sequence>
+						</complexType>
+					</element>
+					<element name="dueDate">
+						<complexType>
+							<sequence>
+								<element ref="cit:CI_Date"/>
+							</sequence>
+						</complexType>
+					</element>
+					<element name="packageElement" type="gpm:GP_PackageElement_PropertyType" maxOccurs="unbounded"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="GP_PackagingInformation_PropertyType">
+		<sequence minOccurs="0">
+			<element ref="gpm:GP_PackagingInformation"/>
+		</sequence>
+		<attributeGroup ref="gco:ObjectReference"/>
+		<attribute ref="gco:nilReason"/>
+	</complexType>
+	<element name="GP_PreservationMetadata" type="gpm:GP_PreservationMetadata_Type" substitutionGroup="mdb:MD_Metadata"/>
+	<complexType name="GP_PreservationMetadata_Type">
+		<complexContent>
+			<extension base="mdb:MD_Metadata_Type">
+				<sequence>
+					<element name="associatedResource" type="gpm:GP_AssociatedResource_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+					<element name="informationValue" type="gpm:GP_InformationValue_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+					<element name="packagingInformation" type="gpm:GP_PackagingInformation_PropertyType" maxOccurs="unbounded"/>
+					<element name="resourceUsage" type="gpm:GP_Usage_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+					<element name="preservationActions" type="mrl:LI_Lineage_PropertyType" minOccurs="0"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="GP_PreservationMetadata_PropertyType">
+		<sequence minOccurs="0">
+			<element ref="gpm:GP_PreservationMetadata"/>
+		</sequence>
+		<attributeGroup ref="gco:ObjectReference"/>
+		<attribute ref="gco:nilReason"/>
+	</complexType>
+	<element name="GP_RelationTypeCode" type="gco:CodeListValue_Type" substitutionGroup="gco:CharacterString"/>
+	<complexType name="GP_RelationTypeCode_PropertyType">
+		<sequence minOccurs="0">
+			<element ref="gpm:GP_RelationTypeCode"/>
+		</sequence>
+		<attribute ref="gco:nilReason"/>
+	</complexType>
+	<element name="GP_ScannedDigitalCopy" type="gpm:GP_ScannedDigitalCopy_Type" substitutionGroup="gpm:AbstractGP_Digital"/>
+	<complexType name="GP_ScannedDigitalCopy_Type">
+		<complexContent>
+			<extension base="gpm:AbstractGP_Digital_Type">
+				<sequence/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="GP_ScannedDigitalCopy_PropertyType">
+		<sequence minOccurs="0">
+			<element ref="gpm:GP_ScannedDigitalCopy"/>
+		</sequence>
+		<attributeGroup ref="gco:ObjectReference"/>
+		<attribute ref="gco:nilReason"/>
+	</complexType>
+	<element name="GP_ServiceIdentification" type="gpm:GP_ServiceIdentification_Type" substitutionGroup="srv:SV_ServiceIdentification"/>
+	<complexType name="GP_ServiceIdentification_Type">
+		<complexContent>
+			<extension base="srv:SV_ServiceIdentification_Type">
+				<sequence>
+					<element name="usageMetrics" type="gpm:GP_ServiceUsageMetrics_PropertyType" maxOccurs="unbounded"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="GP_ServiceIdentification_PropertyType">
+		<sequence minOccurs="0">
+			<element ref="gpm:GP_ServiceIdentification"/>
+		</sequence>
+		<attributeGroup ref="gco:ObjectReference"/>
+		<attribute ref="gco:nilReason"/>
+	</complexType>
+	<element name="GP_ServiceUsageMetrics" type="gpm:GP_ServiceUsageMetrics_Type" substitutionGroup="mdq:AbstractDQ_Element"/>
+	<complexType name="GP_ServiceUsageMetrics_Type">
+		<complexContent>
+			<extension base="mdq:AbstractDQ_Element_Type">
+				<sequence/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="GP_ServiceUsageMetrics_PropertyType">
+		<sequence minOccurs="0">
+			<element ref="gpm:GP_ServiceUsageMetrics"/>
+		</sequence>
+		<attributeGroup ref="gco:ObjectReference"/>
+		<attribute ref="gco:nilReason"/>
+	</complexType>
+	<element name="GP_Usage" type="gpm:GP_Usage_Type" substitutionGroup="mri:MD_Usage"/>
+	<complexType name="GP_Usage_Type">
+		<complexContent>
+			<extension base="mri:MD_Usage_Type">
+				<sequence>
+					<element name="service" type="gpm:GP_ServiceIdentification_PropertyType"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="GP_Usage_PropertyType">
+		<sequence minOccurs="0">
+			<element ref="gpm:GP_Usage"/>
+		</sequence>
+		<attributeGroup ref="gco:ObjectReference"/>
+		<attribute ref="gco:nilReason"/>
+	</complexType>
+	<element name="GP_PackageElement" type="gpm:GP_PackageElement_Type" substitutionGroup="gco:AbstractObject">
+		<annotation>
+			<documentation>Use onLine and offLine when this packageElement is stored in another package of a collection.</documentation>
+		</annotation>
+	</element>
+	<complexType name="GP_PackageElement_Type">
+		<complexContent>
+			<extension base="gco:AbstractObject_Type">
+				<sequence>
+					<element name="name" type="gco:CharacterString_PropertyType"/>
+					<element name="format" minOccurs="0">
+						<complexType>
+							<sequence minOccurs="0">
+								<element ref="mrd:MD_Format"/>
+							</sequence>
+							<attributeGroup ref="gml:AssociationAttributeGroup"/>
+						</complexType>
+					</element>
+					<element name="size" type="gco:Real_PropertyType" minOccurs="0"/>
+					<element name="type" type="gpm:GP_PackageElementTypeCode_PropertyType" minOccurs="0"/>
+					<element name="disseminationConstraints" type="mco:MD_RestrictionCode_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+					<element name="onLine" type="cit:CI_OnlineResource_PropertyType" minOccurs="0"/>
+					<element name="offLine" type="mrd:MD_Medium_PropertyType" minOccurs="0"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="GP_PackageElement_PropertyType">
+		<sequence minOccurs="0">
+			<element ref="gpm:GP_PackageElement"/>
+		</sequence>
+		<attributeGroup ref="gco:ObjectReference"/>
+		<attribute ref="gco:nilReason"/>
+	</complexType>
+</schema>

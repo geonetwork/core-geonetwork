@@ -1,0 +1,562 @@
+<?xml version="1.0" encoding="UTF-8"?><schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0" xmlns:lan="http://standards.iso.org/iso/19115/-3/lan/1.0" xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0" xmlns:pre="http://standards.iso.org/iso/19135/-2/pre/1.0" xmlns:reg="http://standards.iso.org/iso/19135/-2/reg/1.0" elementFormDefault="qualified" targetNamespace="http://standards.iso.org/iso/19135/-2/reg/1.0" version="1.0">
+  <include schemaLocation="reg.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/gco/1.0"    schemaLocation="../../../../19115/-3/gco/1.0/gco.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/lan/1.0" schemaLocation="../../../../19115/-3/lan/1.0/lan.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/mcc/1.0" schemaLocation="../../../../19115/-3/mcc/1.0/mcc.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19135/-2/pre/1.0" schemaLocation="../../../../19135/-2/pre/1.0/pre.xsd"/>
+  <!--XML Schema document created by ShapeChange - http://shapechange.net/-->
+  <element name="RE_AdditionInformation" substitutionGroup="reg:AbstractRE_ProposalManagementInformation" type="reg:RE_AdditionInformation_Type"/>
+  <complexType name="RE_AdditionInformation_Type">
+    <complexContent>
+      <extension base="reg:AbstractRE_ProposalManagementInformation_Type">
+        <sequence/>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="RE_AdditionInformation_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="reg:RE_AdditionInformation"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="RE_AlternativeExpression" substitutionGroup="gco:AbstractObject" type="reg:RE_AlternativeExpression_Type"/>
+  <complexType name="RE_AlternativeExpression_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <element name="name" type="gco:CharacterString_PropertyType"/>
+          <element minOccurs="0" name="definition" type="gco:CharacterString_PropertyType"/>
+          <element minOccurs="0" name="description" type="gco:CharacterString_PropertyType"/>
+          <element maxOccurs="unbounded" minOccurs="0" name="fieldOfApplication" type="reg:RE_FieldOfApplication_PropertyType">
+            <annotation>
+              <documentation>change cardinality from 0..1 to 0..* to implement the Set&lt;RE_FieldOfApplication&gt; type</documentation>
+            </annotation>
+          </element>
+          <element name="locale" type="reg:RE_Locale_PropertyType"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="RE_AlternativeExpression_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="reg:RE_AlternativeExpression"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="RE_AlternativeName" substitutionGroup="gco:AbstractObject" type="reg:RE_AlternativeName_Type"/>
+  <complexType name="RE_AlternativeName_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <element name="name" type="gco:CharacterString_PropertyType"/>
+          <element name="locale" type="reg:RE_Locale_PropertyType"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="RE_AlternativeName_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="reg:RE_AlternativeName"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="RE_AmendmentInformation" substitutionGroup="reg:AbstractRE_ProposalManagementInformation" type="reg:RE_AmendmentInformation_Type"/>
+  <complexType name="RE_AmendmentInformation_Type">
+    <complexContent>
+      <extension base="reg:AbstractRE_ProposalManagementInformation_Type">
+        <sequence>
+          <element name="amendmentType" type="reg:RE_AmendmentType_PropertyType"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="RE_AmendmentInformation_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="reg:RE_AmendmentInformation"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="RE_AmendmentType" substitutionGroup="gco:CharacterString" type="reg:RE_AmendmentType_Type">
+    <annotation>
+      <documentation>&lt;UsedBy&gt;
+&lt;NameSpace&gt;ISO 19135 Procedures for registration&lt;/NameSpace&gt;
+&lt;Class&gt;RE_AmendmentInformation&lt;/Class&gt;
+&lt;Attribute&gt;amendmentType&lt;/Attribute&gt;
+&lt;Type&gt;RE_AmendmentType&lt;/Type&gt;
+&lt;UsedBy&gt;</documentation>
+    </annotation>
+  </element>
+  <simpleType name="RE_AmendmentType_Type">
+    <annotation>
+      <documentation>&lt;UsedBy&gt;
+&lt;NameSpace&gt;ISO 19135 Procedures for registration&lt;/NameSpace&gt;
+&lt;Class&gt;RE_AmendmentInformation&lt;/Class&gt;
+&lt;Attribute&gt;amendmentType&lt;/Attribute&gt;
+&lt;Type&gt;RE_AmendmentType&lt;/Type&gt;
+&lt;UsedBy&gt;</documentation>
+    </annotation>
+    <restriction base="string">
+      <enumeration value="supersession"/>
+      <enumeration value="retirement"/>
+    </restriction>
+  </simpleType>
+  <complexType name="RE_AmendmentType_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="reg:RE_AmendmentType"/>
+    </sequence>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="RE_ClarificationInformation" substitutionGroup="reg:AbstractRE_ProposalManagementInformation" type="reg:RE_ClarificationInformation_Type"/>
+  <complexType name="RE_ClarificationInformation_Type">
+    <complexContent>
+      <extension base="reg:AbstractRE_ProposalManagementInformation_Type">
+        <sequence>
+          <element name="proposedChange" type="gco:CharacterString_PropertyType"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="RE_ClarificationInformation_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="reg:RE_ClarificationInformation"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="RE_DecisionStatus" substitutionGroup="gco:CharacterString" type="reg:RE_DecisionStatus_Type">
+    <annotation>
+      <documentation>&lt;UsedBy&gt;
+&lt;NameSpace&gt;ISO 19135 Procedures for registration&lt;/NameSpace&gt;
+&lt;Class&gt;RE_ProposalManagementInformation&lt;/Class&gt;
+&lt;Attribute&gt;status&lt;/Attribute&gt;
+&lt;Type&gt;RE_DecisionStatus&lt;/Type&gt;
+&lt;UsedBy&gt;</documentation>
+    </annotation>
+  </element>
+  <simpleType name="RE_DecisionStatus_Type">
+    <annotation>
+      <documentation>&lt;UsedBy&gt;
+&lt;NameSpace&gt;ISO 19135 Procedures for registration&lt;/NameSpace&gt;
+&lt;Class&gt;RE_ProposalManagementInformation&lt;/Class&gt;
+&lt;Attribute&gt;status&lt;/Attribute&gt;
+&lt;Type&gt;RE_DecisionStatus&lt;/Type&gt;
+&lt;UsedBy&gt;</documentation>
+    </annotation>
+    <restriction base="string">
+      <enumeration value="pending"/>
+      <enumeration value="tentative"/>
+      <enumeration value="final"/>
+    </restriction>
+  </simpleType>
+  <complexType name="RE_DecisionStatus_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="reg:RE_DecisionStatus"/>
+    </sequence>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="RE_Disposition" substitutionGroup="gco:CharacterString" type="reg:RE_Disposition_Type">
+    <annotation>
+      <documentation>&lt;UsedBy&gt;
+&lt;NameSpace&gt;ISO 19135 Procedures for registration&lt;/NameSpace&gt;
+&lt;Class&gt;RE_ProposalManagementInformation&lt;/Class&gt;
+&lt;Attribute&gt;disposition[0..1]&lt;/Attribute&gt;
+&lt;Type&gt;RE_Disposition&lt;/Type&gt;
+&lt;UsedBy&gt;</documentation>
+    </annotation>
+  </element>
+  <simpleType name="RE_Disposition_Type">
+    <annotation>
+      <documentation>&lt;UsedBy&gt;
+&lt;NameSpace&gt;ISO 19135 Procedures for registration&lt;/NameSpace&gt;
+&lt;Class&gt;RE_ProposalManagementInformation&lt;/Class&gt;
+&lt;Attribute&gt;disposition[0..1]&lt;/Attribute&gt;
+&lt;Type&gt;RE_Disposition&lt;/Type&gt;
+&lt;UsedBy&gt;</documentation>
+    </annotation>
+    <restriction base="string">
+      <enumeration value="withdrawn"/>
+      <enumeration value="accepted"/>
+      <enumeration value="notAccepted"/>
+    </restriction>
+  </simpleType>
+  <complexType name="RE_Disposition_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="reg:RE_Disposition"/>
+    </sequence>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="RE_FieldOfApplication" substitutionGroup="gco:AbstractObject" type="reg:RE_FieldOfApplication_Type"/>
+  <complexType name="RE_FieldOfApplication_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <element name="name" type="gco:CharacterString_PropertyType"/>
+          <element minOccurs="0" name="description" type="gco:CharacterString_PropertyType"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="RE_FieldOfApplication_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="reg:RE_FieldOfApplication"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="RE_ItemClass" substitutionGroup="gco:AbstractObject" type="reg:RE_ItemClass_Type"/>
+  <complexType name="RE_ItemClass_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <element name="name" type="gco:CharacterString_PropertyType"/>
+          <element maxOccurs="unbounded" name="technicalStandard" type="mcc:Abstract_Citation_PropertyType"/>
+          <element name="alternativeName" type="reg:RE_AlternativeName_PropertyType">
+            <annotation>
+              <documentation>change cardinality from 1..1 to 1..* to implement the Set&lt;RE_AlternativeName&gt;</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="RE_ItemClass_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="reg:RE_ItemClass"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="RE_ItemStatus" substitutionGroup="gco:CharacterString" type="reg:RE_ItemStatus_Type">
+    <annotation>
+      <documentation>&lt;UsedBy&gt;
+&lt;NameSpace&gt;ISO 19135 Procedures for registration&lt;/NameSpace&gt;
+&lt;Class&gt;RE_RegisterItem&lt;/Class&gt;
+&lt;Attribute&gt;status&lt;/Attribute&gt;
+&lt;Type&gt;RE_ItemStatus&lt;/Type&gt;
+&lt;UsedBy&gt;</documentation>
+    </annotation>
+  </element>
+  <simpleType name="RE_ItemStatus_Type">
+    <annotation>
+      <documentation>&lt;UsedBy&gt;
+&lt;NameSpace&gt;ISO 19135 Procedures for registration&lt;/NameSpace&gt;
+&lt;Class&gt;RE_RegisterItem&lt;/Class&gt;
+&lt;Attribute&gt;status&lt;/Attribute&gt;
+&lt;Type&gt;RE_ItemStatus&lt;/Type&gt;
+&lt;UsedBy&gt;</documentation>
+    </annotation>
+    <restriction base="string">
+      <enumeration value="notValid"/>
+      <enumeration value="valid"/>
+      <enumeration value="superseded"/>
+      <enumeration value="retired"/>
+    </restriction>
+  </simpleType>
+  <complexType name="RE_ItemStatus_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="reg:RE_ItemStatus"/>
+    </sequence>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="RE_Locale" substitutionGroup="gco:AbstractObject" type="reg:RE_Locale_Type">
+    <annotation>
+      <documentation>remove datatype stereotype SMR 2014-07-16 for XML build with Shapechange
+
+&lt;UsedBy&gt;
+&lt;NameSpace&gt;ISO 19135 Procedures for registration&lt;/NameSpace&gt;
+&lt;Class&gt;RE_Register&lt;/Class&gt;
+&lt;Attribute&gt;operatingLanguage&lt;/Attribute&gt;
+&lt;Type&gt;RE_Locale&lt;/Type&gt;
+&lt;UsedBy&gt;
+
+&lt;UsedBy&gt;
+&lt;NameSpace&gt;ISO 19135 Procedures for registration&lt;/NameSpace&gt;
+&lt;Class&gt;RE_SubregisterDescription&lt;/Class&gt;
+&lt;Attribute&gt;operatingLanguage&lt;/Attribute&gt;
+&lt;Type&gt;RE_Locale&lt;/Type&gt;
+&lt;UsedBy&gt;</documentation>
+    </annotation>
+  </element>
+  <complexType name="RE_Locale_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <element name="name" type="gco:CharacterString_PropertyType"/>
+          <element name="language" type="lan:LanguageCode_PropertyType"/>
+          <element name="country" type="gco:CharacterString_PropertyType"/>
+          <element name="characterEncoding" type="lan:MD_CharacterSetCode_PropertyType"/>
+          <element name="citation" type="mcc:Abstract_Citation_PropertyType"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="RE_Locale_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="reg:RE_Locale"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element abstract="true" name="AbstractRE_ProposalManagementInformation" substitutionGroup="gco:AbstractObject" type="reg:AbstractRE_ProposalManagementInformation_Type"/>
+  <complexType abstract="true" name="AbstractRE_ProposalManagementInformation_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <element name="sponsor" type="reg:RE_SubmittingOrganization_PropertyType"/>
+          <element name="dateProposed" type="gco:Date_PropertyType"/>
+          <element name="justification" type="gco:CharacterString_PropertyType"/>
+          <element name="status" type="reg:RE_DecisionStatus_PropertyType"/>
+          <element minOccurs="0" name="disposition" type="reg:RE_Disposition_PropertyType"/>
+          <element minOccurs="0" name="dateDisposed" type="gco:Date_PropertyType"/>
+          <element minOccurs="0" name="controlBodyDecisionEvent" type="gco:CharacterString_PropertyType"/>
+          <element minOccurs="0" name="controlBodyNotes" type="gco:CharacterString_PropertyType"/>
+          <element minOccurs="0" name="registerManagerNotes" type="gco:CharacterString_PropertyType"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="AbstractRE_ProposalManagementInformation_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="reg:AbstractRE_ProposalManagementInformation"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="RE_Reference" substitutionGroup="gco:AbstractObject" type="reg:RE_Reference_Type"/>
+  <complexType name="RE_Reference_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <element name="itemIdentifierAtSource" type="gco:CharacterString_PropertyType"/>
+          <element name="similarity" type="reg:RE_SimilarityToSource_PropertyType"/>
+          <element minOccurs="0" name="referenceText" type="gco:CharacterString_PropertyType"/>
+          <element minOccurs="0" name="notes" type="gco:CharacterString_PropertyType"/>
+          <element name="sourceCitation" type="reg:RE_ReferenceSource_PropertyType"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="RE_Reference_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="reg:RE_Reference"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="RE_ReferenceSource" substitutionGroup="gco:AbstractObject" type="reg:RE_ReferenceSource_Type">
+    <annotation>
+      <documentation>Why does this class exist? it is simply a wrapper with no specific properties for a CI_Citation.</documentation>
+    </annotation>
+  </element>
+  <complexType name="RE_ReferenceSource_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <element name="citation" type="mcc:Abstract_Citation_PropertyType"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="RE_ReferenceSource_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="reg:RE_ReferenceSource"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="RE_Register" substitutionGroup="pre:Abstract_Register" type="reg:RE_Register_Type"/>
+  <complexType name="RE_Register_Type">
+    <complexContent>
+      <extension base="pre:Abstract_Register_Type">
+        <sequence>
+          <element name="name" type="gco:CharacterString_PropertyType"/>
+          <element name="contentSummary" type="gco:CharacterString_PropertyType"/>
+          <element maxOccurs="unbounded" name="uniformResourceIdentifier" type="mcc:Abstract_OnlineResource_PropertyType"/>
+          <element name="operatingLanguage" type="reg:RE_Locale_PropertyType"/>
+          <element maxOccurs="unbounded" name="alternativeLanguages" type="reg:RE_Locale_PropertyType">
+            <annotation>
+              <documentation>change cardinality from 1..1 to 1..* to implement Set&lt;RE_Locale&gt;</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="version" type="reg:RE_Version_PropertyType"/>
+          <element minOccurs="0" name="dateOfLastChange" type="gco:Date_PropertyType"/>
+          <element maxOccurs="unbounded" name="submitter" type="reg:RE_SubmittingOrganization_PropertyType"/>
+          <element maxOccurs="unbounded" name="containedItem" type="reg:RE_RegisterItem_PropertyType"/>
+          <element name="manager" type="reg:RE_RegisterManager_PropertyType"/>
+          <element name="owner" type="reg:RE_RegisterOwner_PropertyType"/>
+          <element maxOccurs="unbounded" name="containedItemClass" type="reg:RE_ItemClass_PropertyType"/>
+          <element maxOccurs="unbounded" minOccurs="0" name="citation" type="reg:RE_ReferenceSource_PropertyType"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="RE_Register_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="reg:RE_Register"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="RE_RegisterItem" substitutionGroup="pre:Abstract_RegisterItem" type="reg:RE_RegisterItem_Type"/>
+  <complexType name="RE_RegisterItem_Type">
+    <complexContent>
+      <extension base="pre:Abstract_RegisterItem_Type">
+        <sequence>
+          <element maxOccurs="unbounded" minOccurs="0" name="predecessor" type="reg:RE_RegisterItem_PropertyType"/>
+          <element name="itemIdentifier" type="gco:Integer_PropertyType"/>
+          <element name="name" type="gco:CharacterString_PropertyType"/>
+          <element name="status" type="reg:RE_ItemStatus_PropertyType"/>
+          <element minOccurs="0" name="dateAccepted" type="gco:Date_PropertyType"/>
+          <element minOccurs="0" name="dateAmended" type="gco:Date_PropertyType"/>
+          <element name="definition" type="gco:CharacterString_PropertyType"/>
+          <element minOccurs="0" name="description" type="gco:CharacterString_PropertyType"/>
+          <element maxOccurs="unbounded" minOccurs="0" name="fieldOfApplication" type="reg:RE_FieldOfApplication_PropertyType">
+            <annotation>
+              <documentation>change cardinality from 0..1 to 0..* to implement Set</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="alternativeExpressions" type="reg:RE_AlternativeExpression_PropertyType">
+            <annotation>
+              <documentation>Change cardinality from 0..1 to 0..* to implement Set</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="specificationSource" type="reg:RE_Reference_PropertyType"/>
+          <element maxOccurs="unbounded" minOccurs="0" name="specificationLineage" type="reg:RE_Reference_PropertyType"/>
+          <element maxOccurs="unbounded" minOccurs="0" name="successor" type="reg:RE_RegisterItem_PropertyType"/>
+          <element name="itemClass" type="reg:RE_ItemClass_PropertyType"/>
+          <element maxOccurs="unbounded" minOccurs="0" name="clarificationInformation" type="reg:RE_ClarificationInformation_PropertyType"/>
+          <element maxOccurs="unbounded" minOccurs="0" name="amendmentInformation" type="reg:RE_AmendmentInformation_PropertyType"/>
+          <element maxOccurs="unbounded" name="additionInformation" type="reg:RE_AdditionInformation_PropertyType"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="RE_RegisterItem_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="reg:RE_RegisterItem"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="RE_RegisterManager" substitutionGroup="gco:AbstractObject" type="reg:RE_RegisterManager_Type"/>
+  <complexType name="RE_RegisterManager_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <element name="name" type="gco:CharacterString_PropertyType"/>
+          <element name="contact" type="mcc:Abstract_Responsibility_PropertyType"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="RE_RegisterManager_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="reg:RE_RegisterManager"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="RE_RegisterOwner" substitutionGroup="gco:AbstractObject" type="reg:RE_RegisterOwner_Type"/>
+  <complexType name="RE_RegisterOwner_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <element name="name" type="gco:CharacterString_PropertyType"/>
+          <element name="contact" type="mcc:Abstract_Responsibility_PropertyType"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="RE_RegisterOwner_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="reg:RE_RegisterOwner"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="RE_SimilarityToSource" substitutionGroup="gco:CharacterString" type="gco:CodeListValue_Type">
+    <annotation>
+      <documentation>&lt;UsedBy&gt;
+&lt;NameSpace&gt;ISO 19135 Procedures for registration&lt;/NameSpace&gt;
+&lt;Class&gt;RE_Reference&lt;/Class&gt;
+&lt;Attribute&gt;similarity&lt;/Attribute&gt;
+&lt;Type&gt;RE_SimilarityToSource&lt;/Type&gt;
+&lt;UsedBy&gt;</documentation>
+    </annotation>
+  </element>
+  <complexType name="RE_SimilarityToSource_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="reg:RE_SimilarityToSource"/>
+    </sequence>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="RE_SubmittingOrganization" substitutionGroup="gco:AbstractObject" type="reg:RE_SubmittingOrganization_Type"/>
+  <complexType name="RE_SubmittingOrganization_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <element name="name" type="gco:CharacterString_PropertyType"/>
+          <element name="contact" type="mcc:Abstract_Responsibility_PropertyType"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="RE_SubmittingOrganization_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="reg:RE_SubmittingOrganization"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="RE_SubregisterDescription" substitutionGroup="reg:RE_RegisterItem" type="reg:RE_SubregisterDescription_Type"/>
+  <complexType name="RE_SubregisterDescription_Type">
+    <complexContent>
+      <extension base="reg:RE_RegisterItem_Type">
+        <sequence>
+          <element name="uniformResourceIdentifier" type="mcc:Abstract_OnlineResource_PropertyType"/>
+          <element name="operatingLanguage" type="reg:RE_Locale_PropertyType"/>
+          <element maxOccurs="unbounded" name="containedItemClass" type="reg:RE_ItemClass_PropertyType"/>
+          <element name="subregisterManager" type="reg:RE_RegisterManager_PropertyType"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="RE_SubregisterDescription_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="reg:RE_SubregisterDescription"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="RE_Version" substitutionGroup="gco:AbstractObject" type="reg:RE_Version_Type">
+    <annotation>
+      <documentation>&lt;UsedBy&gt;
+&lt;NameSpace&gt;ISO 19135 Procedures for registration&lt;/NameSpace&gt;
+&lt;Class&gt;RE_Register&lt;/Class&gt;
+&lt;Attribute&gt;version[0..1]&lt;/Attribute&gt;
+&lt;Type&gt;RE_Version&lt;/Type&gt;
+&lt;UsedBy&gt;</documentation>
+    </annotation>
+  </element>
+  <complexType name="RE_Version_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <element name="versionNumber" type="gco:CharacterString_PropertyType"/>
+          <element name="versionDate" type="gco:Date_PropertyType"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="RE_Version_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="reg:RE_Version"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+</schema>

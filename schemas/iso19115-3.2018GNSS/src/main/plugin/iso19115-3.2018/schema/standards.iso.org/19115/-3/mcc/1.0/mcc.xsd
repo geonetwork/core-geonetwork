@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?><schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0" elementFormDefault="qualified" targetNamespace="http://standards.iso.org/iso/19115/-3/mcc/1.0" version="1.0">
+  <annotation>
+    <documentation>Abstract classes for linking to elements in the metadata implementation from external schema to loosely couple the external schema for smoother handling of version changes in components. Classes used by all components in ISO19115 metadata application.</documentation>
+  </annotation>
+  <include schemaLocation="AbstractCommonClasses.xsd"/>
+  <include schemaLocation="commonClasses.xsd"/>
+  <!--XML Schema document created by ShapeChange - http://shapechange.net/-->
+</schema>

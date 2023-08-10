@@ -1,0 +1,530 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xlink="http://www.w3.org/1999/xlink"
+	targetNamespace="http://standards.iso.org/iso/19115/-3/gco/1.0"
+	elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<!-- ================================= Annotation ================================ -->
+	<xs:annotation>
+		<xs:documentation>Geographic COmmon (GCO) extensible markup language is a component of the XML Schema Implementation of Geographic
+Information Metadata documented in ISO/TS 19115-3, based on the implementation patterns defined and utilized in ISO19139.
+This gcoBase.xsd schema provides:
+		1. tools to handle specific objects like "code lists" and "record";
+		2. Some XML types that do not follow the general encoding rules specified in ISO19139.
+		*** SMR 2014-12-22.  Refactor gco, gts, gsr, gss to separate gml dependencies.  
+		All element or attribute types in this schema are either types defined by this schema, or are datatypes defined by 
+		the XML schema namespace (http://www.w3.org/2001/XMLSchema)
+		To remove the dependency between gml and the base datatypes in ISO19115-3:
+			1. The nilReason attribute is defined here instead of extending the gml type. 
+			2. The definition of MeasureType is copied here from gml 3.2 basic Types. The only
+			difference this will introduce in instance documents is that the uom attribute on a measure value
+			(or one of its substitutions) will be gco:uom, not gml:uom.
+		</xs:documentation>
+	</xs:annotation>
+	<!-- ================================== Imports ================================== -->
+	<xs:import namespace="http://www.w3.org/1999/xlink"
+		schemaLocation="../../../../../others/xlink/xlink.xsd"/>
+
+	<!-- ########################################################################### -->
+	<!-- =========================================================================== -->
+	<!-- ========================= IM_Object: abstract Root ============================= -->
+	<!--================= Type ===================-->
+	<xs:complexType name="AbstractObject_Type" abstract="true">
+		<xs:sequence/>
+		<xs:attributeGroup ref="gco:ObjectIdentification"/>
+	</xs:complexType>
+	<!--================= Element =================-->
+	<xs:element name="AbstractObject" type="gco:AbstractObject_Type" abstract="true"/>
+	<!-- ========================================================================== -->
+	<!-- ====================== Reference of a resource =============================== -->
+	<!--The following attributeGroup 'extends' the GML  gml:AssociationAttributeGroup-->
+	<xs:attributeGroup name="ObjectReference">
+		<xs:attributeGroup ref="xlink:simpleAttrs"/>
+		<xs:attribute name="uuidref" type="xs:string"/>
+	</xs:attributeGroup>
+	<!--================== NULL ====================-->
+	<xs:attribute name="nilReason" type="gco:NilReasonType"/>
+
+	<xs:simpleType name="NilReasonType">
+		<xs:annotation>
+			<xs:documentation>copied from gml32:NilReasonType. This Type defines a content model that allows recording of an 
+				explanation for a void value or other exception.
+				gml:NilReasonType is a union of the following enumerated values:
+				-	inapplicable- there is no value
+				-	missing- the correct value is not readily available to the sender of this data. Furthermore, a correct value may not exist
+				-	template- the value will be available later
+				-	unknown- the correct value is not known to, and not computable by, the sender of this data. However, a correct value probably exists
+				-	withheld- the value is not divulged
+				-	other:text - other brief explanation, where text is a string of two or more characters with no included spaces
+				and
+				-	xs:anyURI which should refer to a resource which describes the reason for the exception
+				A particular community may choose to assign more detailed semantics to the standard values provided. Alternatively, the URI method enables a specific or more complete explanation for the absence of a value to be provided elsewhere and indicated by-reference in an instance document.
+				gml:NilReasonType is used as a member of a union in a number of simple content types where it is necessary to permit a value from the NilReasonType union as an alternative to the primary type.</xs:documentation>
+		</xs:annotation>
+		<xs:union memberTypes="gco:NilReasonEnumeration xs:anyURI"/>
+	</xs:simpleType>
+	<xs:simpleType name="NilReasonEnumeration">
+		<xs:union>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="inapplicable"/>
+					<xs:enumeration value="missing"/>
+					<xs:enumeration value="template"/>
+					<xs:enumeration value="unknown"/>
+					<xs:enumeration value="withheld"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:pattern value="other:\w{2,}"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<!--=============== PropertyType =================-->
+	<xs:complexType name="ObjectReference_PropertyType">
+		<xs:sequence/>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- ========================================================================== -->
+	<!-- ====================== Identification of a resource ============================== -->
+	<xs:attributeGroup name="ObjectIdentification">
+		<xs:attribute name="id" type="xs:ID"/>
+		<xs:attribute name="uuid" type="xs:string"/>
+	</xs:attributeGroup>
+	<!-- ========================================================================== -->
+
+	<!-- ====================== The CodeList prototype ================================= -->
+	<!--It is used to refer to a specific codeListValue in a register-->
+	<!--================= Type ==================-->
+	<xs:complexType name="CodeListValue_Type">
+		<xs:simpleContent>
+			<xs:extension base="xs:string">
+				<xs:attribute name="codeList" type="xs:anyURI" use="required"/>
+				<xs:attribute name="codeListValue" type="xs:anyURI" use="required"/>
+				<xs:attribute name="codeSpace" type="xs:anyURI"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	<!-- ========================================================================== -->
+	<!-- ========================== The isoType attribute ============================== -->
+	<xs:attribute name="isoType" type="xs:string"/>
+
+	<!-- moved from 19139 basicTypes.xsd -->
+	<!-- ########################################################################### -->
+	<!-- ########################################################################### -->
+	<!-- ================================== Classes ================================= -->
+	<!-- =========================================================================== -->
+	<xs:complexType name="TypeName_Type">
+		<xs:annotation>
+			<xs:documentation>A TypeName is a LocalName that references either a recordType or object type in some form of schema. The stored value "aName" is the returned value for the "aName()" operation. This is the types name.  - For parsing from types (or objects) the parsible name normally uses a "." navigation separator, so that it is of the form  [class].[member].[memberOfMember]. ...)</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="gco:AbstractObject_Type">
+				<xs:sequence>
+					<xs:element name="aName" type="gco:CharacterString_PropertyType"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="TypeName" type="gco:TypeName_Type"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="TypeName_PropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="gco:TypeName"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================================== -->
+	<xs:complexType name="MemberName_Type">
+		<xs:annotation>
+			<xs:documentation>A MemberName is a LocalName that references either an attribute slot in a record or  recordType or an attribute, operation, or association role in an object instance or  type description in some form of schema. The stored value "aName" is the returned value for the "aName()" operation.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="gco:AbstractObject_Type">
+				<xs:sequence>
+					<xs:element name="aName" type="gco:CharacterString_PropertyType"/>
+					<xs:element name="attributeType" type="gco:TypeName_PropertyType"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="MemberName" type="gco:MemberName_Type"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="MemberName_PropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="gco:MemberName"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================================== -->
+	<xs:complexType name="Multiplicity_Type">
+		<xs:annotation>
+			<xs:documentation>Use to represent the possible cardinality of a relation. Represented by a set of simple multiplicity ranges.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="gco:AbstractObject_Type">
+				<xs:sequence>
+					<xs:element name="range" type="gco:MultiplicityRange_PropertyType"
+						maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="Multiplicity" type="gco:Multiplicity_Type"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="Multiplicity_PropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="gco:Multiplicity"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================================== -->
+	<xs:complexType name="MultiplicityRange_Type">
+		<xs:annotation>
+			<xs:documentation>A component of a multiplicity, consisting of an non-negative lower bound, and a potentially infinite upper bound.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="gco:AbstractObject_Type">
+				<xs:sequence>
+					<xs:element name="lower" type="gco:Integer_PropertyType"/>
+					<xs:element name="upper" type="gco:UnlimitedInteger_PropertyType"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="MultiplicityRange" type="gco:MultiplicityRange_Type"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="MultiplicityRange_PropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="gco:MultiplicityRange"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+
+	<!-- ........................................................................ -->
+	<xs:element name="CharacterString" type="xs:string"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="CharacterString_PropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="gco:CharacterString"/>
+		</xs:sequence>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================================== -->
+	<!-- ........................................................................ -->
+	<xs:element name="Boolean" type="xs:boolean"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="Boolean_PropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="gco:Boolean"/>
+		</xs:sequence>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================================== -->
+
+	<!-- =========================== Date & DateTime ================================= -->
+	<!--=============================================-->
+	<xs:element name="DateTime" type="xs:dateTime"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="DateTime_PropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="gco:DateTime"/>
+		</xs:sequence>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================================== -->
+	<xs:simpleType name="Date_Type">
+		<xs:union memberTypes="xs:date xs:gYearMonth xs:gYear"/>
+	</xs:simpleType>
+	<!-- ........................................................................ -->
+	<xs:element name="Date" type="gco:Date_Type" nillable="true"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="Date_PropertyType">
+		<xs:choice minOccurs="0">
+			<xs:element ref="gco:Date"/>
+			<xs:element ref="gco:DateTime"/>
+		</xs:choice>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- ========================================================================== -->
+	<!-- =========================== Number basic type =============================== -->
+	<!--=======================================================-->
+	<xs:complexType name="Number_PropertyType">
+		<xs:choice minOccurs="0">
+			<xs:element ref="gco:Real"/>
+			<xs:element ref="gco:Decimal"/>
+			<xs:element ref="gco:Integer"/>
+		</xs:choice>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================================== -->
+	<!-- ........................................................................ -->
+	<xs:element name="Decimal" type="xs:decimal"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="Decimal_PropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="gco:Decimal"/>
+		</xs:sequence>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================================== -->
+	<!-- ........................................................................ -->
+	<xs:element name="Real" type="xs:double"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="Real_PropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="gco:Real"/>
+		</xs:sequence>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================================== -->
+	<!-- ........................................................................ -->
+	<xs:element name="Integer" type="xs:integer"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="Integer_PropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="gco:Integer"/>
+		</xs:sequence>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- ========================================================================== -->
+	<!-- ============================= UnlimitedInteger ================================ -->
+	<!--NB: The encoding mechanism below is based on the use of XCPT (see the usage of xsi:nil in XML instance).-->
+	<!--================= Type ==================-->
+	<xs:complexType name="UnlimitedInteger_Type">
+		<xs:simpleContent>
+			<xs:extension base="xs:nonNegativeInteger">
+				<xs:attribute name="isInfinite" type="xs:boolean"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="UnlimitedInteger" type="gco:UnlimitedInteger_Type" nillable="true"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="UnlimitedInteger_PropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="gco:UnlimitedInteger"/>
+		</xs:sequence>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- ========================================================================== -->
+	<!-- ========================= Record & RecordType ============================== -->
+	<!--================= Record ==================-->
+	<xs:element name="Record"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="Record_PropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="gco:Record"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================================== -->
+	<!--================= RecordType ==================-->
+	<xs:complexType name="RecordType_Type">
+		<xs:simpleContent>
+			<xs:extension base="xs:string">
+				<xs:attributeGroup ref="xlink:simpleAttrs"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="RecordType" type="gco:RecordType_Type"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="RecordType_PropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="gco:RecordType"/>
+		</xs:sequence>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- ========================================================================== -->
+	<!-- =========================== Binary basic type ================================ -->
+	<!--NB: this type is not declared in 19103 but used in 19115. -->
+	<!--================= Type ==================-->
+	<xs:complexType name="Binary_Type">
+		<xs:simpleContent>
+			<xs:extension base="xs:string">
+				<xs:attribute name="src" type="xs:anyURI"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="Binary" type="gco:Binary_Type"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="Binary_PropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="gco:Binary"/>
+		</xs:sequence>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!--================================================-->
+	<!--================================================-->
+	<!-- ================== Measure and the Measure substitution group===================== -->
+	<!-- ........................................................................ -->
+	<!--================= Type ===================-->
+	<xs:complexType name="MeasureType">
+		<xs:annotation>
+			<xs:documentation>Copied from gml32:MeasureType, which supports recording an amount encoded as a value of XML Schema double, together with a units of measure indicated by an attribute uom, short for "units Of measure". The value of the uom attribute identifies a reference system for the amount, usually a ratio or interval scale. Namespace changed to gco</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="xs:double">
+				<xs:attribute name="uom" type="gco:UomIdentifierType" use="required"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	<!-- SMR handcraft UomIdentifier to implement 19103:2015 interface; this will allow
+	reducing dependencies on GML for elements using measures with a separate unit of measurement element-->
+	<!--================= Element =================-->
+	<xs:element name="UomIdentifier" type="gco:UomIdentifierType"/>
+	<!--================= Type ===================-->
+	<xs:simpleType name="UomIdentifierType">
+		<xs:annotation>
+			<xs:documentation>The simple type gml:UomIdentifer defines the syntax and value space of the unit of measure identifier.</xs:documentation>
+		</xs:annotation>
+		<xs:union memberTypes="gco:UomSymbol gco:UomURI"/>
+	</xs:simpleType>
+	<xs:simpleType name="UomSymbol">
+		<xs:annotation>
+			<xs:documentation>This type specifies a character string of length at least one, and restricted such that it must not contain any of the following characters: ":" (colon), " " (space), (newline), (carriage return), (tab). This allows values corresponding to familiar abbreviations, such as "kg", "m/s", etc. 
+				It is recommended that the symbol be an identifier for a unit of measure as specified in the "Unified Code of Units of Measure" (UCUM) (http://aurora.regenstrief.org/UCUM). This provides a set of symbols and a grammar for constructing identifiers for units of measure that are unique, and may be easily entered with a keyboard supporting the limited character set known as 7-bit ASCII. ISO 2955 formerly provided a specification with this scope, but was withdrawn in 2001. UCUM largely follows ISO 2955 with modifications to remove ambiguities and other problems.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[^: \n\r\t]+"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="UomURI">
+		<xs:annotation>
+			<xs:documentation>This type specifies a URI, restricted such that it must start with one of the following sequences: "#", "./", "../", or a string of characters followed by a ":". These patterns ensure that the most common URI forms are supported, including absolute and relative URIs and URIs that are simple fragment identifiers, but prohibits certain forms of relative URI that could be mistaken for unit of measure symbol . 
+				NOTE	It is possible to re-write such a relative URI to conform to the restriction (e.g. "./m/s").
+				In an instance document, on elements of type gml:MeasureType the mandatory uom attribute shall carry a value corresponding to either 
+				-	a conventional unit of measure symbol,
+				-	a link to a definition of a unit of measure that does not have a conventional symbol, or when it is desired to indicate a precise or variant definition.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:anyURI">
+			<xs:pattern value="([a-zA-Z][a-zA-Z0-9\-\+\.]*:|\.\./|\./|#).*"/>
+		</xs:restriction>
+	</xs:simpleType>
+	
+	
+	<!-- ============ UomIdentifier Property =================== -->
+	<!-- implementing interface defined in ISO19103:2015 -->
+	<xs:complexType name="UomIdentifier_PropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="gco:UomIdentifier"/>
+		</xs:sequence>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+
+
+	<!--================= Element =================-->
+	<xs:element name="Measure" type="gco:MeasureType"/>
+	<!-- ============ Property =================== -->
+	<!-- ........................................................................ -->
+	<xs:complexType name="Measure_PropertyType">
+		<!-- used in spatialRepresentation.xsd, msr:resolution -->
+		<xs:sequence minOccurs="0">
+			<xs:element ref="gco:Measure"/>
+		</xs:sequence>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- ============Substitutions for measure ==================== -->
+	<!-- ........................................................................ -->
+	<xs:element name="Length" type="gco:MeasureType" substitutionGroup="gco:Measure"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="Length_PropertyType">
+		<!-- not used in schema 19115-3; 
+			Distance, in substitution group for length, is used (see below) -->
+		<xs:sequence minOccurs="0">
+			<xs:element ref="gco:Length"/>
+		</xs:sequence>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- Substitution for Measure.Length ================== -->
+	<!-- ........................................................................ -->
+	<xs:element name="Distance" type="gco:MeasureType" substitutionGroup="gco:Length"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="Distance_PropertyType">
+		<!-- used in identification.xsd mri:distance and mri:vertical properties
+			used in lineageImagery.xsd mrl:scanningResolution and mrl:groundResolution -->
+		<xs:sequence minOccurs="0">
+			<xs:element ref="gco:Distance"/>
+		</xs:sequence>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="Angle" type="gco:MeasureType" substitutionGroup="gco:Measure"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="Angle_PropertyType">
+		<!-- used in identification.xsd mri:angularDistance-->
+		<xs:sequence minOccurs="0">
+			<xs:element ref="gco:Angle"/>
+		</xs:sequence>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+
+	<!-- =========================================================================== -->
+	<!-- ........................................................................ -->
+	<xs:element name="AbstractGenericName" type="gco:CodeType" abstract="true"/>
+	<!-- defines substitution group for elements that have a gco:codeSpace attribute -->
+	<!-- ........................................................................ -->
+	<xs:complexType name="CodeType">
+		<xs:annotation>
+			<xs:documentation>gml:CodeType is a generalized type to be used for a term, keyword or name. It adds a XML attribute codeSpace to a term, where the value of the codeSpace attribute (if present) shall indicate a dictionary, thesaurus, classification scheme, authority, or pattern for the term.</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="xs:string">
+				<xs:attribute name="codeSpace" type="xs:anyURI"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+
+	<xs:complexType name="GenericName_PropertyType">
+		<!-- used in catalogues.xsd cat:identifier
+			used in metadataTransfer.xsd mdt:featureTypes
+			used in content.xsd mrc:featureTypeName
+			used in serviceInformation.xsd srv:serviceType -->
+		<xs:sequence minOccurs="0">
+			<xs:element ref="gco:AbstractGenericName"/>
+		</xs:sequence>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="ScopedName" type="gco:CodeType" substitutionGroup="gco:AbstractGenericName"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="ScopedName_PropertyType">
+		<!-- used in serviceInformation.xsd srv:scopedName property -->
+		<xs:sequence minOccurs="0">
+			<xs:element ref="gco:ScopedName"/>
+		</xs:sequence>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================================== -->
+
+	<!-- =========================================================================== -->
+	<!-- ......move from gmw because it has no dependency on gml ................... -->
+	<xs:element name="TM_PeriodDuration" type="xs:duration"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="TM_PeriodDuration_PropertyType">
+		<!-- used in maintenance.xsd mmi:userDefinedMaintenanceFrequency
+			used in distribution.xsd mrd:transferFrequency
+			used in identification.xsd mri:temporalResolution.  all of these properties
+			are optional. -->
+		<xs:sequence minOccurs="0">
+			<xs:element ref="gco:TM_PeriodDuration"/>
+		</xs:sequence>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- =========================================================================== -->
+
+	<!--==============End================-->
+</xs:schema>

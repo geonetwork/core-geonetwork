@@ -152,6 +152,15 @@
             });
           });
 
+          scope.setNowForDatePicker = function () {
+            var format = "YYYY-MM-DDTHH:mm:ss";
+            var dateTime = moment(new Date());
+            scope.dateInput = dateTime.format(format);
+          };
+          scope.setNow = function () {
+            scope.year = scope.month = scope.date = scope.time = new Date();
+          };
+
           scope.mode =
             scope.year =
             scope.month =

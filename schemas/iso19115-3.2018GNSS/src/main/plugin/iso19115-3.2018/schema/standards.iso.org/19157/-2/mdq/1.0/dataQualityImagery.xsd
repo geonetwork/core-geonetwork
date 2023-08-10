@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?><schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0" xmlns:gcx="http://standards.iso.org/iso/19115/-3/gcx/1.0" xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0" xmlns:mdq="http://standards.iso.org/iso/19157/-2/mdq/1.0" xmlns:mrd="http://standards.iso.org/iso/19115/-3/mrd/1.0" elementFormDefault="qualified" targetNamespace="http://standards.iso.org/iso/19157/-2/mdq/1.0" version="1.0">
+  <include schemaLocation="mdq.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/gco/1.0" schemaLocation="../../../../19115/-3/gco/1.0/gco.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/gcx/1.0" schemaLocation="../../../../19115/-3/gcx/1.0/gcx.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/mcc/1.0" schemaLocation="../../../../19115/-3/mcc/1.0/mcc.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/mrd/1.0" schemaLocation="../../../../19115/-3/mrd/1.0/mrd.xsd"/>
+  <!--XML Schema document created by ShapeChange - http://shapechange.net/-->
+  <element name="QE_CoverageResult" substitutionGroup="mdq:AbstractDQ_Result" type="mdq:QE_CoverageResult_Type">
+    <annotation>
+      <documentation>Description: Result of a data quality measure organising the measured values as a coverage
+shortName: CoverageResult</documentation>
+    </annotation>
+  </element>
+  <complexType name="QE_CoverageResult_Type">
+    <complexContent>
+      <extension base="mdq:AbstractDQ_Result_Type">
+        <sequence>
+          <element name="spatialRepresentationType" type="mcc:MD_SpatialRepresentationTypeCode_PropertyType">
+            <annotation>
+              <documentation>Description: method used to spatially represent the coverage result
+shortName: spaRepType</documentation>
+            </annotation>
+          </element>
+          <element name="resultFile" type="mdq:QualityResultFile_PropertyType"/>
+          <element name="resultSpatialRepresentation" type="mcc:Abstract_SpatialRepresentation_PropertyType"/>
+          <element name="resultContentDescription" type="mcc:Abstract_ContentInformation_PropertyType"/>
+          <element name="resultFormat" type="mrd:MD_Format_PropertyType"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="QE_CoverageResult_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mdq:QE_CoverageResult"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="QualityResultFile" substitutionGroup="gco:AbstractObject" type="mdq:QualityResultFile_Type">
+    <annotation>
+      <documentation>Implement MX_File in this package to avoid circular dependencies required by import of 'Metadata for file transfer' package</documentation>
+    </annotation>
+  </element>
+  <complexType name="QualityResultFile_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <element name="fileName" type="gcx:FileName_PropertyType"/>
+          <element name="fileType" type="gcx:MimeFileType_PropertyType"/>
+          <element name="fileDescription" type="gco:CharacterString_PropertyType"/>
+          <element name="fileFormat" type="mcc:Abstract_Format_PropertyType"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="QualityResultFile_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mdq:QualityResultFile"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+</schema>

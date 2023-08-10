@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?><schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0" xmlns:mrc="http://standards.iso.org/iso/19115/-3/mrc/1.0" elementFormDefault="qualified" targetNamespace="http://standards.iso.org/iso/19115/-3/mrc/1.0" version="1.0">
+  <annotation>
+    <documentation>Name: Content
+Position: 5</documentation>
+  </annotation>
+  <include schemaLocation="content.xsd"/>
+  <include schemaLocation="mrc.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/gco/1.0" schemaLocation="../../../../19115/-3/gco/1.0/gco.xsd"/>
+  <!--XML Schema document created by ShapeChange - http://shapechange.net/-->
+  <element name="MI_Band" substitutionGroup="mrc:MD_Band" type="mrc:MI_Band_Type">
+    <annotation>
+      <documentation>Description: extensions to electromagnetic spectrum wavelength description
+shortName: BandExt</documentation>
+    </annotation>
+  </element>
+  <complexType name="MI_Band_Type">
+    <complexContent>
+      <extension base="mrc:MD_Band_Type">
+        <sequence>
+          <element minOccurs="0" name="bandBoundaryDefinition" type="mrc:MI_BandDefinition_PropertyType">
+            <annotation>
+              <documentation>Description: Designation of criterion for defining maximum and minimum wavelengths for a spectral band
+FGDC: Band_Boundry_Definition
+Position: 1
+shortName: bBndDef</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="nominalSpatialResolution" type="gco:Real_PropertyType">
+            <annotation>
+              <documentation>Description: Smallest distance between which separate points can be distinguished, as specified in instrument design
+FGDC: Nominal_Spatial_Resolution
+Position: 4
+shortName: bndRes</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="transferFunctionType" type="mrc:MI_TransferFunctionTypeCode_PropertyType">
+            <annotation>
+              <documentation>Description: transform function to be used when scaling a physical value for a given element
+shortName: scalXfrFunc</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="transmittedPolarisation" type="mrc:MI_PolarisationOrientationCode_PropertyType">
+            <annotation>
+              <documentation>Description: polarisation of the transmitter or detector
+shortName: polarisation</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="detectedPolarisation" type="mrc:MI_PolarisationOrientationCode_PropertyType">
+            <annotation>
+              <documentation>Description: polarisation of the transmitter or detector
+shortName: polarisation</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="MI_Band_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mrc:MI_Band"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="MI_BandDefinition" substitutionGroup="gco:CharacterString" type="gco:CodeListValue_Type">
+    <annotation>
+      <documentation>Description: Designation of criterion for defining maximum and minimum wavelengths for a spectral band
+FGDC: Band_Boundry_Definition
+shortName: BndDef</documentation>
+    </annotation>
+  </element>
+  <complexType name="MI_BandDefinition_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mrc:MI_BandDefinition"/>
+    </sequence>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="MI_CoverageDescription" substitutionGroup="mrc:MD_CoverageDescription" type="mrc:MI_CoverageDescription_Type">
+    <annotation>
+      <documentation>Description: information about the content of a coverage, including the description of specific range elements
+shortName: CCovDesc</documentation>
+    </annotation>
+  </element>
+  <complexType name="MI_CoverageDescription_Type">
+    <complexContent>
+      <extension base="mrc:MD_CoverageDescription_Type">
+        <sequence>
+          <element maxOccurs="unbounded" minOccurs="0" name="rangeElementDescription" type="mrc:MI_RangeElementDescription_PropertyType"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="MI_CoverageDescription_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mrc:MI_CoverageDescription"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="MI_ImageDescription" substitutionGroup="mrc:MD_ImageDescription" type="mrc:MI_ImageDescription_Type">
+    <annotation>
+      <documentation>Description: information about the content of an image, including the description of specific range elements
+shortName: ICovDesc</documentation>
+    </annotation>
+  </element>
+  <complexType name="MI_ImageDescription_Type">
+    <complexContent>
+      <extension base="mrc:MD_ImageDescription_Type">
+        <sequence>
+          <element maxOccurs="unbounded" minOccurs="0" name="rangeElementDescription" type="mrc:MI_RangeElementDescription_PropertyType"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="MI_ImageDescription_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mrc:MI_ImageDescription"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="MI_PolarisationOrientationCode" substitutionGroup="gco:CharacterString" type="gco:CodeListValue_Type">
+    <annotation>
+      <documentation>Description: polarisation of the antenna relative to the waveform
+shortName: PolarOrienCode</documentation>
+    </annotation>
+  </element>
+  <complexType name="MI_PolarisationOrientationCode_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mrc:MI_PolarisationOrientationCode"/>
+    </sequence>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="MI_RangeElementDescription" substitutionGroup="gco:AbstractObject" type="mrc:MI_RangeElementDescription_Type">
+    <annotation>
+      <documentation>Description: description of specific range elements
+shortName: RgEltDesc</documentation>
+    </annotation>
+  </element>
+  <complexType name="MI_RangeElementDescription_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <element name="name" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>Description: designation associated with a set of range elements
+shortName: rgEltName</documentation>
+            </annotation>
+          </element>
+          <element name="definition" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>Description: description of a set of specific range elements
+shortName: rgEltDef</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" name="rangeElement" type="gco:Record_PropertyType">
+            <annotation>
+              <documentation>Description: specific range elements, i.e. range elements associated with a name and definition defining their meaning
+shortName: rgElt</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="MI_RangeElementDescription_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mrc:MI_RangeElementDescription"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="MI_TransferFunctionTypeCode" substitutionGroup="gco:CharacterString" type="gco:CodeListValue_Type">
+    <annotation>
+      <documentation>Description: transform function to be used when scaling a physical value for a given element
+shortName: XfrFuncTypeCode</documentation>
+    </annotation>
+  </element>
+  <complexType name="MI_TransferFunctionTypeCode_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mrc:MI_TransferFunctionTypeCode"/>
+    </sequence>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+</schema>

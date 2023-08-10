@@ -418,6 +418,7 @@
             scope.allowEdits = true;
             scope.lang = scope.$parent.lang;
             scope.readonly = attrs["readonly"] || false;
+            scope.hasMenu = attrs["menu"] || true;
             scope.gnCurrentEdit.associatedPanelConfigId = attrs["configId"] || "default";
             scope.relations = [];
             scope.gnCurrentEdit.codelistFilter = attrs["codelistFilter"];
@@ -1804,7 +1805,8 @@
                     scope.stateObj.selectRecords.length > 0
                   ) {
                     var md = new Metadata(scope.stateObj.selectRecords[0]);
-                    scope.currentMdTitle = md.resourceTitle;
+                    scope.currentMdTitle =
+                      gnCurrentEdit.mdTitle || gnCurrentEdit.mdDefaultTitle;
                     if (scope.mode === "service") {
                       var links = [];
                       scope.layers = [];

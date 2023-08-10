@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+  xmlns="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+  <bean id="iso19115-3.2018SchemaPlugin"
+        class="org.fao.geonet.schema.iso19115_3_2018.ISO19115_3_2018SchemaPlugin">
+    <property name="xpathTitle">
+      <util:list value-type="java.lang.String">
+        <value>mdb:identificationInfo/*/mri:citation/*/cit:title/gco:CharacterString</value>
+        <value>mdb:identificationInfo/*/mri:citation/*/cit:title/*/lan:textGroup/lan:LocalisedCharacterString</value>
+      </util:list>
+    </property>
+    <!--
+    When using a custom parent relation mechanism, the editor needs to be
+    updated in order to create the proper link (instead of the default parentMetadata mode).
+    See web-ui/src/main/resources/catalog/components/edit/onlinesrc/partials/onlinesrcList.html
+      <li data-ng-show="gnCurrentEdit.metadata['geonet:info'].schema == 'iso19115-3.2018'
+          && !gnCurrentEdit.isService
+          && gnCurrentEdit.metadata.type.indexOf('series') === -1">
+            <a href=""
+               data-ng-click="onlinesrcService.onOpenPopup('sibling', {associationType: 'partOfSeamlessDatabase', initiativeType: 'collection'})">
+              <i class="fa gn-icon-sibling"></i>
+              <i class="icon-external-link"></i>&nbsp;
+              <span data-translate="">linkToParent</span>
+            </a>
+          </li>
+    -->
+    <property name="parentAssociatedResourceType" value="partOfSeamlessDatabase"/>
+    <property name="elementsToProcess">
+      <util:list value-type="java.lang.String">
+        <value>gco:CharacterString</value>
+        <value>gcx:Anchor</value>
+      </util:list>
+    </property>
+    <property name="savedQueries">
+      <list>
+        <bean class="org.fao.geonet.kernel.schema.SavedQuery">
+          <property name="id"
+                    value="wfs-indexing-config"/>
+          <property name="xpath"
+                    value="normalize-space(*//cit:CI_OnlineResource[
+                      contains(cit:protocol/gco:CharacterString, '{{protocol}}') and
+                      cit:name/gco:CharacterString = '{{name}}']
+                    /cit:applicationProfile/gco:CharacterString/text())"/>
+        </bean>
+        <bean class="org.fao.geonet.kernel.schema.SavedQuery">
+          <property name="id" value="doi-get"/>
+          <property name="xpath"
+                    value="*//cit:CI_OnlineResource[cit:protocol/gco:CharacterString = 'DOI' or cit:protocol/gco:CharacterString = 'WWW:LINK-1.0-http--metadata-URL']/cit:linkage/gco:CharacterString/text()"/>
+        </bean>
+        <bean class="org.fao.geonet.kernel.schema.SavedQuery">
+          <property name="id" value="resourceid-get"/>
+          <property name="xpath"
+                    value="mdb:identificationInfo/*/mri:citation/*/cit:identifier[1]/*/mcc:code/*/text()"/>
+        </bean>
+      </list>
+    </property>
+  </bean>
+</beans>

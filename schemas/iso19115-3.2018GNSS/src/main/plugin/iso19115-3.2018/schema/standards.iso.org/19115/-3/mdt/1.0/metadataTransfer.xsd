@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?><schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:cat="http://standards.iso.org/iso/19115/-3/cat/1.0" xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0" xmlns:gcx="http://standards.iso.org/iso/19115/-3/gcx/1.0" xmlns:mda="http://standards.iso.org/iso/19115/-3/mda/1.0" xmlns:mdt="http://standards.iso.org/iso/19115/-3/mdt/1.0" elementFormDefault="qualified" targetNamespace="http://standards.iso.org/iso/19115/-3/mdt/1.0" version="1.0">
+  <include schemaLocation="mdt.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/gco/1.0" schemaLocation="../../../../19115/-3/gco/1.0/gco.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/cat/1.0" schemaLocation="../../../../19115/-3/cat/1.0/cat.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/gcx/1.0" schemaLocation="../../../../19115/-3/gcx/1.0/gcx.xsd"/>
+  <import namespace="http://standards.iso.org/iso/19115/-3/mda/1.0" schemaLocation="../../../../19115/-3/mda/1.0/mda.xsd"/>
+  <!--XML Schema document created by ShapeChange - http://shapechange.net/-->
+  <element name="MX_Aggregate" substitutionGroup="mda:AbstractDS_Aggregate" type="mdt:MX_Aggregate_Type"/>
+  <complexType name="MX_Aggregate_Type">
+    <complexContent>
+      <extension base="mda:AbstractDS_Aggregate_Type">
+        <sequence>
+          <element maxOccurs="unbounded" minOccurs="0" name="aggregateCatalogue" type="cat:AbstractCT_Catalogue_PropertyType"/>
+          <element maxOccurs="unbounded" minOccurs="0" name="aggregateFile" type="mdt:MX_SupportFile_PropertyType"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="MX_Aggregate_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mdt:MX_Aggregate"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="MX_DataFile" substitutionGroup="mdt:AbstractMX_File" type="mdt:MX_DataFile_Type"/>
+  <complexType name="MX_DataFile_Type">
+    <complexContent>
+      <extension base="mdt:AbstractMX_File_Type">
+        <sequence>
+          <element maxOccurs="unbounded" minOccurs="0" name="featureTypes" type="gco:GenericName_PropertyType"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="MX_DataFile_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mdt:MX_DataFile"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <!--
+    Fix made by Ted Habermann - 20151123
+    <element name="MX_DataSet" substitutionGroup="gco:AbstractObject" type="mdt:MX_DataSet_Type"/>
+  -->  
+  <element name="MX_DataSet" substitutionGroup="mda:AbstractDS_Resource" type="mdt:MX_DataSet_Type"/>
+  <complexType name="MX_DataSet_Type">
+    <complexContent>
+      <!--
+        Fix made by Ted Habermann - 20151123
+        <extension base="gco:AbstractObject_Type">
+      -->
+      <extension base="mda:AbstractDS_Resource_Type">
+          <sequence>
+          <element maxOccurs="unbounded" minOccurs="0" name="datasetCatalogue" type="cat:AbstractCT_Catalogue_PropertyType"/>
+          <element maxOccurs="unbounded" minOccurs="0" name="supportFile" type="mdt:MX_SupportFile_PropertyType"/>
+          <element maxOccurs="unbounded" name="dataFile" type="mdt:MX_DataFile_PropertyType"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="MX_DataSet_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mdt:MX_DataSet"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element abstract="true" name="AbstractMX_File" substitutionGroup="gco:AbstractObject" type="mdt:AbstractMX_File_Type"/>
+  <complexType abstract="true" name="AbstractMX_File_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <element name="fileName" type="gcx:FileName_PropertyType"/>
+          <element name="fileDescription" type="gco:CharacterString_PropertyType"/>
+          <element name="fileType" type="gcx:MimeFileType_PropertyType"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="AbstractMX_File_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mdt:AbstractMX_File"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="MX_ScopeCode" substitutionGroup="gco:CharacterString" type="gco:CodeListValue_Type"/>
+  <complexType name="MX_ScopeCode_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mdt:MX_ScopeCode"/>
+    </sequence>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="MX_SupportFile" substitutionGroup="mdt:AbstractMX_File" type="mdt:MX_SupportFile_Type"/>
+  <complexType name="MX_SupportFile_Type">
+    <complexContent>
+      <extension base="mdt:AbstractMX_File_Type">
+        <sequence/>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="MX_SupportFile_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mdt:MX_SupportFile"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+</schema>

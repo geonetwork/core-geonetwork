@@ -625,6 +625,8 @@ public final class Geonet {
         public static final Namespace SE = Namespace.getNamespace("se", "http://www.opengis.net/se");
         public static final Namespace XML = Namespace.getNamespace("xml", "http://www.w3.org/XML/1998/namespace");
         public static final Namespace ATOM = Namespace.getNamespace("atom", "http://www.w3.org/2005/Atom");
+        public static final Namespace MRI = Namespace.getNamespace("atom", "http://standards.iso.org/iso/19115/-3/mrl/2.0");
+        public static final Namespace MCC = Namespace.getNamespace("atom", "http://standards.iso.org/iso/19115/-3/mcc/1.0");
     }
 
     public static class IndexFieldNames {
