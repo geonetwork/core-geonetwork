@@ -635,7 +635,12 @@ public class MetadataApi {
 
         AbstractMetadata md;
         try {
-            int metadataId = getAndCheckMetadataId(metadataUuid, approved);
+            int metadataId;
+            if (Lib.type.isInteger(metadataUuid)) {
+                metadataId = Integer.parseInt(metadataUuid);
+            } else {
+                metadataId = getAndCheckMetadataId(metadataUuid, approved);
+            }
             md = ApiUtils.canViewRecord(metadataId, request);
         } catch (SecurityException e) {
             Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);

@@ -39,6 +39,7 @@ import org.fao.geonet.api.records.model.related.RelatedResponse;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
+import org.fao.geonet.lib.Lib;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
@@ -120,7 +121,12 @@ public class Related implements ApplicationContextAware {
 
         for (String uuid : uuids) {
             try {
-                int metadataId = getAndCheckMetadataId(uuid, approved);
+                int metadataId;
+                if (Lib.type.isInteger(uuid)) {
+                    metadataId = Integer.parseInt(uuid);
+                } else {
+                    metadataId = getAndCheckMetadataId(uuid, approved);
+                }
                 md = ApiUtils.canViewRecord(metadataId, request);
                 Element raw = new Element("root").addContent(Arrays.asList(
                     new Element("gui").addContent(Arrays.asList(

@@ -40,6 +40,7 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -133,7 +134,12 @@ public class MetadataAssociatedApi {
 
         AbstractMetadata md;
         try {
-            int metadataId = getAndCheckMetadataId(metadataUuid, approved);
+            int metadataId;
+            if (Lib.type.isInteger(metadataUuid)) {
+                metadataId = Integer.parseInt(metadataUuid);
+            } else {
+                metadataId = getAndCheckMetadataId(metadataUuid, approved);
+            }
             md = ApiUtils.canViewRecord(metadataId, request);
         } catch (SecurityException e) {
             Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
