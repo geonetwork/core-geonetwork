@@ -55,9 +55,9 @@
           url:
             "../api/records/" +
             uuidOrId +
-            "/related?" +
-            (types ? "type=" + types.split("|").join("&type=") : "") +
-            (approved === false ? "approved=false" : ""),
+            "/related?type=" +
+            (types ? types.split("|").join("&type=") : "") +
+            (approved === false ? "&approved=false" : ""),
           timeout: canceller.promise,
           cache: true
         });
