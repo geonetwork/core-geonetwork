@@ -33,7 +33,7 @@
   <div>
     <h3 data-translate="">metadataLanguage</h3>
     <ul class="gn-comma-list">
-      <li data-ng-repeat="l in mdLanguages">{{l | translate}}</li>
+      <li data-ng-repeat="l in mdLanguages | unique">{{l | translate}}</li>
     </ul>
   </div>
 </div>
