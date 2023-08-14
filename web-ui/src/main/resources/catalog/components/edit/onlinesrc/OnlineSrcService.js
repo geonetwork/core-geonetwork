@@ -485,7 +485,7 @@
 
         getApprovedUrl: function (url) {
           if (
-            gnCurrentEdit.metadata.draft &&
+            gnCurrentEdit.metadata.draft === "y" &&
             url.match(".*/api/records/" + gnCurrentEdit.uuid + "/attachments/.*") != null
           ) {
             if (url.match(".*(&?)((approved=.*)(&?))+")) {
