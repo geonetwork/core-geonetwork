@@ -2,9 +2,9 @@
 <schema xmlns="http://geonetwork-opensource.org/schemas/schema-ident"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://geonetwork-opensource.org/schemas/schema-ident http://geonetwork-opensource.org/schemas/schema-ident/schema-ident.xsd">
-  <name>iso19115-3.2018</name>
-  <id>93f66207-621a-4610-813f-38494a51d121</id>
-  <version>1.0</version>
+  <name>iso19115-3.2018GNSS</name>
+  <id>93f66207-621a-4610-813f-38494a51d122</id>
+  <version>3.0</version>
   <appMinorVersionSupported>3.5.0</appMinorVersionSupported>
   <title xml:lang="en">Geographic information &#45;&#45; Metadata</title>
   <title xml:lang="fr">Information géographique &#45;&#45; Métadonnées</title>
@@ -91,37 +91,26 @@ Ce schéma est également composé des normes :
     element (for a metadata recocrd) or some other eleement
     when used as a subtemplate (cf. directory support).
     -->
-    <elements type="root">
-      <mdb:MD_Metadata/>
-      <cit:CI_Responsibility/>
-      <cit:CI_Organisation/>
-      <mcc:MD_BrowseGraphic/>
-      <mrs:MD_ReferenceSystem/>
-      <mrd:MD_Format/>
-      <mdq:DQ_DomainConsistency/>
-      <mdq:DQ_CompletenessCommission/>
-      <mdq:DQ_CompletenessOmission/>
-      <mdq:DQ_ConceptualConsistency/>
-      <mdq:DQ_FormatConsistency/>
-      <mdq:DQ_AbsoluteExternalPositionalAccuracy/>
-      <mdq:DQ_AccuracyOfATimeMeasurement/>
-      <mdq:DQ_Confidence/>
-      <mdq:DQ_GriddedDataPositionalAccuracy/>
-      <mdq:DQ_Homogeneity/>
-      <mdq:DQ_NonQuantitativeAttributeCorrectness/>
-      <mdq:DQ_QuantitativeAttributeAccuracy/>
-      <mdq:DQ_RelativeInternalPositionalAccuracy/>
-      <mdq:DQ_Representativity/>
-      <mdq:DQ_TemporalConsistency/>
-      <mdq:DQ_TemporalValidity/>
-      <mdq:DQ_ThematicClassificationCorrectness/>
-      <mdq:DQ_TopologicalConsistency/>
-      <mdq:DQ_UsabilityElement/>
-      <mco:MD_Constraints/>
-      <mco:MD_LegalConstraints/>
-      <mco:MD_SecurityConstraints/>
-      <mdb:referenceSystemInfo/>
-      <srv:serviceStandard/>
+    <elements>
+      <mdb:metadataProfile xmlns:gn="http://www.fao.org/geonetwork"
+                           xmlns:gmd="http://standards.iso.org/iso/19115/-3/mdb/1.0"
+                           xmlns:geonet="http://www.fao.org/geonetwork">
+        <cit:CI_Citation>
+          <cit:title>
+            <gco:CharacterString>GNSSMetadataProfile_v3</gco:CharacterString>
+          </cit:title>
+          <cit:edition>
+            <gco:CharacterString>Version 3.0, July 2023</gco:CharacterString>
+          </cit:edition>
+          <cit:identifier>
+            <mcc:MD_Identifier>
+              <mcc:code>
+                <gco:CharacterString>https://pid.geoscience.gov.au/dataset/ga/122551</gco:CharacterString>
+              </mcc:code>
+            </mcc:MD_Identifier>
+          </cit:identifier>
+        </cit:CI_Citation>
+      </mdb:metadataProfile>
       <!-- TODO: Add subtemplate roots -->
     </elements>
   </autodetect>

@@ -808,7 +808,7 @@
       </thesaurusList>
     </view>
 
-    <view name="icsm" class="gn-label-above-input" displayTooltips="true" hideTimeInCalendar="true" >
+    <view name="icsm" class="gn-label-above-input" displayTooltips="true" hideTimeInCalendar="true" default="true">
       <sidePanel>
         <directive data-gn-onlinesrc-list="" data-config-id="icsm" data-menu="false" />
         <directive gn-geo-publisher=""

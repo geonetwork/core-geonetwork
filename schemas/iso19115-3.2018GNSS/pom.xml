@@ -10,8 +10,8 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>gn-schema-iso19115-3.2018</artifactId>
-  <name>GeoNetwork schema plugin for ISO19115-3:2018 standard</name>
+  <artifactId>gn-schema-iso19115-3.2018GNSS</artifactId>
+  <name>GeoNetwork schema plugin for ISO19115-3:2018-GNSS-profile standard</name>
 
   <dependencies>
     <dependency>
