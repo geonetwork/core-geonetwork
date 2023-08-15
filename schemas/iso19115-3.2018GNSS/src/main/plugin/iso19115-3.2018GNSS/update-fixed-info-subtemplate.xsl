@@ -39,7 +39,7 @@
                 xmlns:mdq="http://standards.iso.org/iso/19157/-2/mdq/1.0"
                 xmlns:gfc="http://standards.iso.org/iso/19110/gfc/1.1"
                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                xmlns:gn-fn-iso19115-3.2018="http://geonetwork-opensource.org/xsl/functions/profiles/iso19115-3.2018"
+                xmlns:gn-fn-iso19115-3.2018GNSS="http://geonetwork-opensource.org/xsl/functions/profiles/iso19115-3.2018GNSS"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 xmlns:saxon="http://saxon.sf.net/"

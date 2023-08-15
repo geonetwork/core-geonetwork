@@ -39,7 +39,7 @@
   <!-- Catalog URL from protocol to lang -->
   <xsl:param name="catalogUrl" select="''"/>
   <xsl:param name="nodeId" select="''"/>
-  <xsl:variable name="schema" select="'iso19115-3.2018'"/>
+  <xsl:variable name="schema" select="'iso19115-3.2018GNSS'"/>
 
   <!-- Search for any of the searchStrings provided -->
   <xsl:function name="gn:parseBoolean" as="xs:boolean">

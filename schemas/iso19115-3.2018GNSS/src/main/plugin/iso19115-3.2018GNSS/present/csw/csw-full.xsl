@@ -30,7 +30,7 @@
 
     <xsl:variable name="info" select="geonet:info"/>
     <xsl:variable name="langId">
-      <xsl:call-template name="getLangId19115-3.2018">
+      <xsl:call-template name="getLangId19115-3.2018GNSS">
         <xsl:with-param name="langGui" select="$lang"/>
         <xsl:with-param name="md" select="."/>
       </xsl:call-template>
@@ -56,7 +56,7 @@
       <xsl:for-each select="$identification">
         <xsl:for-each select="mri:citation/cit:CI_Citation/cit:title">
           <dc:title>
-            <xsl:apply-templates mode="localised19115-3.2018" select=".">
+            <xsl:apply-templates mode="localised19115-3.2018GNSS" select=".">
               <xsl:with-param name="langId" select="$langId"/>
             </xsl:apply-templates>
           </dc:title>
@@ -65,7 +65,7 @@
         <!-- Type - - - - - - - - - -->
         <xsl:for-each select="../../mdb:metadataScope/mdb:MD_MetadataScope/mdb:resourceScope/mcc:MD_ScopeCode/@codeListValue">
           <dc:type>
-            <xsl:apply-templates mode="localised19115-3.2018" select=".">
+            <xsl:apply-templates mode="localised19115-3.2018GNSS" select=".">
               <xsl:with-param name="langId" select="$langId"/>
             </xsl:apply-templates>
           </dc:type>
@@ -74,7 +74,7 @@
         <!-- subject -->
         <xsl:for-each select="mri:descriptiveKeywords/mri:MD_Keywords/mri:keyword[not(@gco:nilReason)]">
           <dc:subject>
-            <xsl:apply-templates mode="localised19115-3.2018" select=".">
+            <xsl:apply-templates mode="localised19115-3.2018GNSS" select=".">
               <xsl:with-param name="langId" select="$langId"/>
             </xsl:apply-templates>
           </dc:subject>
@@ -106,7 +106,7 @@
 
         <xsl:for-each select="mri:citation/cit:CI_Citation/cit:citedResponsibleParty/cit:CI_Responsibility[cit:role/cit:CI_RoleCode/@codeListValue='originator']/cit:party/cit:CI_Organisation/cit:name">
           <dc:creator>
-            <xsl:apply-templates mode="localised19115-3.2018" select=".">
+            <xsl:apply-templates mode="localised19115-3.2018GNSS" select=".">
               <xsl:with-param name="langId" select="$langId"/>
             </xsl:apply-templates>
           </dc:creator>
@@ -114,7 +114,7 @@
 
         <xsl:for-each select="mri:citation/cit:CI_Citation/cit:citedResponsibleParty/cit:CI_Responsibility[cit:role/cit:CI_RoleCode/@codeListValue='publisher']/cit:party/cit:CI_Organisation/cit:name">
           <dc:publisher>
-            <xsl:apply-templates mode="localised19115-3.2018" select=".">
+            <xsl:apply-templates mode="localised19115-3.2018GNSS" select=".">
               <xsl:with-param name="langId" select="$langId"/>
             </xsl:apply-templates>
           </dc:publisher>
@@ -122,7 +122,7 @@
 
         <xsl:for-each select="mri:citation/cit:CI_Citation/cit:citedResponsibleParty/cit:CI_Responsibility[cit:role/cit:CI_RoleCode/@codeListValue='author']/cit:party/cit:CI_Organisation/cit:name">
           <dc:contributor>
-            <xsl:apply-templates mode="localised19115-3.2018" select=".">
+            <xsl:apply-templates mode="localised19115-3.2018GNSS" select=".">
               <xsl:with-param name="langId" select="$langId"/>
             </xsl:apply-templates>
           </dc:contributor>
@@ -133,12 +133,12 @@
       <!-- abstract -->
       <xsl:for-each select="$identification/mri:abstract">
         <dct:abstract>
-          <xsl:apply-templates mode="localised19115-3.2018" select=".">
+          <xsl:apply-templates mode="localised19115-3.2018GNSS" select=".">
             <xsl:with-param name="langId" select="$langId"/>
           </xsl:apply-templates>
         </dct:abstract>
         <dc:description>
-          <xsl:apply-templates mode="localised19115-3.2018" select=".">
+          <xsl:apply-templates mode="localised19115-3.2018GNSS" select=".">
             <xsl:with-param name="langId" select="$langId"/>
           </xsl:apply-templates>
         </dc:description>
@@ -154,7 +154,7 @@
 
         <xsl:for-each select="$identification/mri:otherConstraints">
           <dc:rights>
-            <xsl:apply-templates mode="localised19115-3.2018" select=".">
+            <xsl:apply-templates mode="localised19115-3.2018GNSS" select=".">
               <xsl:with-param name="langId" select="$langId"/>
             </xsl:apply-templates>
           </dc:rights>
@@ -171,7 +171,7 @@
       <!-- Lineage -->
       <xsl:for-each select="../../mdb:resourceLineage/mrl:LI_Lineage/mrl:statement">
         <dc:source>
-          <xsl:apply-templates mode="localised19115-3.2018" select=".">
+          <xsl:apply-templates mode="localised19115-3.2018GNSS" select=".">
             <xsl:with-param name="langId" select="$langId"/>
           </xsl:apply-templates>
         </dc:source>
@@ -246,7 +246,7 @@
               <xsl:if test="cit:name/gco:CharacterString != ''">
                 <xsl:attribute name="name">
                   <xsl:for-each select="cit:name">
-                    <xsl:apply-templates mode="localised19115-3.2018" select=".">
+                    <xsl:apply-templates mode="localised19115-3.2018GNSS" select=".">
                       <xsl:with-param name="langId" select="$langId"/>
                     </xsl:apply-templates>
                   </xsl:for-each>
@@ -256,7 +256,7 @@
               <xsl:if test="cit:description/gco:CharacterString != ''">
                 <xsl:attribute name="description">
                   <xsl:for-each select="cit:description">
-                    <xsl:apply-templates mode="localised19115-3.2018" select=".">
+                    <xsl:apply-templates mode="localised19115-3.2018GNSS" select=".">
                       <xsl:with-param name="langId" select="$langId"/>
                     </xsl:apply-templates>
                   </xsl:for-each>

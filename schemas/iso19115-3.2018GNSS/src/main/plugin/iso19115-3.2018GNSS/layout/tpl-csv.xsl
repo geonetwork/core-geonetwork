@@ -18,7 +18,7 @@
                 xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
                 xmlns:gn="http://www.fao.org/geonetwork"
                 xmlns:gn-fn-core="http://geonetwork-opensource.org/xsl/functions/core"
-                xmlns:gn-fn-iso19115-3.2018="http://geonetwork-opensource.org/xsl/functions/profiles/iso19115-3.2018"
+                xmlns:gn-fn-iso19115-3.2018GNSS="http://geonetwork-opensource.org/xsl/functions/profiles/iso19115-3.2018GNSS"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 exclude-result-prefixes="#all" version="2.0">
 
@@ -28,7 +28,7 @@
   <xsl:template mode="csv" match="mdb:MD_Metadata|*[@gco:isoType='mdb:MD_Metadata']"
                 priority="2">
     <metadata>
-      <xsl:variable name="langId" select="gn-fn-iso19115-3.2018:getLangId(., $lang)"/>
+      <xsl:variable name="langId" select="gn-fn-iso19115-3.2018GNSS:getLangId(., $lang)"/>
       <id>
         <xsl:value-of select="gn:info/id"/>
       </id>

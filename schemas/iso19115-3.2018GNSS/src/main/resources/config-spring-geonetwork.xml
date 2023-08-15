@@ -4,7 +4,7 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
 
-  <bean id="iso19115-3.2018SchemaPlugin"
+  <bean id="iso19115-3.2018GNSSSchemaPlugin"
         class="org.fao.geonet.schema.iso19115_3_2018.ISO19115_3_2018SchemaPlugin">
     <property name="xpathTitle">
       <util:list value-type="java.lang.String">
@@ -16,7 +16,7 @@
     When using a custom parent relation mechanism, the editor needs to be
     updated in order to create the proper link (instead of the default parentMetadata mode).
     See web-ui/src/main/resources/catalog/components/edit/onlinesrc/partials/onlinesrcList.html
-      <li data-ng-show="gnCurrentEdit.metadata['geonet:info'].schema == 'iso19115-3.2018'
+      <li data-ng-show="gnCurrentEdit.metadata['geonet:info'].schema == 'iso19115-3.2018GNSS'
           && !gnCurrentEdit.isService
           && gnCurrentEdit.metadata.type.indexOf('series') === -1">
             <a href=""

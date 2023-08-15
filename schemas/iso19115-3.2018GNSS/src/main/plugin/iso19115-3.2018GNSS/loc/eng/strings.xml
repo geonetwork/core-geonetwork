@@ -41,8 +41,8 @@
   <metadata>Metadata</metadata>
 
 !-- Added ICMS element names BC 20-07-23 -->
-  <icsm>ICSM</icsm>  <!-- New tab -->
-  <general>General Info</general>
+  <icsm>GNSS</icsm>  <!-- New tab -->
+  <general>Basic Info</general>
   <dateTabICSM>Dates</dateTabICSM>
   <metadataIcsm>Metadata</metadataIcsm>
   <contentInfoIcsm>Content</contentInfoIcsm>

@@ -28,7 +28,7 @@
                 xmlns:util="java:org.fao.geonet.util.XslUtil"
                 xmlns:tr="java:org.fao.geonet.api.records.formatters.SchemaLocalizations"
                 xmlns:gn-fn-render="http://geonetwork-opensource.org/xsl/functions/render"
-                xmlns:gn-fn-iso19115-3.2018="http://geonetwork-opensource.org/xsl/functions/profiles/iso19115-3.2018"
+                xmlns:gn-fn-iso19115-3.2018GNSS="http://geonetwork-opensource.org/xsl/functions/profiles/iso19115-3.2018GNSS"
                 xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
                 xmlns:saxon="http://saxon.sf.net/"
                 extension-element-prefixes="saxon"
@@ -58,7 +58,7 @@
   <xsl:include href="../../layout/evaluate.xsl"/>
   <xsl:include href="../../layout/utility-tpl-multilingual.xsl"/>
   <xsl:include href="../../layout/utility-fn.xsl"/>
-  <xsl:include href="../jsonld/iso19115-3.2018-to-jsonld.xsl"/>
+  <xsl:include href="../jsonld/iso19115-3.2018GNSS-to-jsonld.xsl"/>
   <xsl:include href="../citation/base.xsl"/>
   <xsl:include href="../citation/common.xsl"/>
 
@@ -70,10 +70,10 @@
   <xsl:variable name="metadata"
                 select="/root/mdb:MD_Metadata"/>
 
-  <xsl:variable name="langId" select="gn-fn-iso19115-3.2018:getLangId($metadata, $language)"/>
+  <xsl:variable name="langId" select="gn-fn-iso19115-3.2018GNSS:getLangId($metadata, $language)"/>
 
   <xsl:variable name="allLanguages">
-    <xsl:call-template name="get-iso19115-3.2018-other-languages"/>
+    <xsl:call-template name="get-iso19115-3.2018GNSS-other-languages"/>
   </xsl:variable>
 
   <xsl:variable name="isOnlyFeatureCatalog"
@@ -92,7 +92,7 @@
     <xsl:for-each select="if ($isOnlyFeatureCatalog)
                           then mdb:contentInfo/*/mrc:featureCatalogue/*/cat:name
                           else mdb:identificationInfo/*/mri:citation/*/cit:title">
-      <xsl:call-template name="get-iso19115-3.2018-localised">
+      <xsl:call-template name="get-iso19115-3.2018GNSS-localised">
         <xsl:with-param name="langId" select="$langId"/>
       </xsl:call-template>
     </xsl:for-each>
@@ -103,7 +103,7 @@
                           then mdb:contentInfo/*/mrc:featureCatalogue/*/cat:scope
                           else mdb:identificationInfo/*/mri:abstract">
       <xsl:variable name="txt">
-        <xsl:call-template name="get-iso19115-3.2018-localised">
+        <xsl:call-template name="get-iso19115-3.2018GNSS-localised">
           <xsl:with-param name="langId" select="$langId"/>
         </xsl:call-template>
       </xsl:variable>
@@ -127,14 +127,14 @@
                                                 text() != '')]">
         <xsl:variable name="thesaurusTitle">
           <xsl:for-each select="mri:thesaurusName/*/cit:title">
-            <xsl:call-template name="get-iso19115-3.2018-localised">
+            <xsl:call-template name="get-iso19115-3.2018GNSS-localised">
               <xsl:with-param name="langId" select="$langId"/>
             </xsl:call-template>
           </xsl:for-each>
         </xsl:variable>
         <xsl:for-each select="mri:keyword">
           <xsl:variable name="keyword">
-            <xsl:call-template name="get-iso19115-3.2018-localised">
+            <xsl:call-template name="get-iso19115-3.2018GNSS-localised">
               <xsl:with-param name="langId" select="$langId"/>
             </xsl:call-template>
           </xsl:variable>
@@ -255,7 +255,7 @@
 
           <xsl:for-each select="mcc:fileDescription">
             <div class="gn-img-thumbnail-caption">
-              <xsl:call-template name="get-iso19115-3.2018-localised">
+              <xsl:call-template name="get-iso19115-3.2018GNSS-localised">
                 <xsl:with-param name="langId" select="$langId"/>
               </xsl:call-template>
             </div>
@@ -272,7 +272,7 @@
                             then mdb:contentInfo/*/mrc:featureCatalogue/*/cat:scope
                             else mdb:identificationInfo/*/mri:abstract">
         <xsl:variable name="txt">
-          <xsl:call-template name="get-iso19115-3.2018-localised">
+          <xsl:call-template name="get-iso19115-3.2018GNSS-localised">
             <xsl:with-param name="langId" select="$langId"/>
           </xsl:call-template>
         </xsl:variable>
@@ -313,7 +313,7 @@
         <xsl:when test="$language = 'all'">
 
           <xsl:variable name="citationInfo">
-            <xsl:call-template name="get-iso19115-3.2018-citation">
+            <xsl:call-template name="get-iso19115-3.2018GNSS-citation">
               <xsl:with-param name="metadata" select="$metadata"/>
               <xsl:with-param name="language" select="$language"/>
             </xsl:call-template>
@@ -348,7 +348,7 @@
         <xsl:when test="count($forcedCitation) > 0">
           <xsl:variable name="txt">
             <xsl:for-each select="$forcedCitation">
-              <xsl:call-template name="get-iso19115-3.2018-localised">
+              <xsl:call-template name="get-iso19115-3.2018GNSS-localised">
                 <xsl:with-param name="langId" select="$langId"/>
               </xsl:call-template>
             </xsl:for-each>
@@ -649,7 +649,7 @@
 
         <div class="row">
           <div class="col-md-6">
-            <!-- Needs improvements as contact/org are more flexible in iso19115-3.2018 -->
+            <!-- Needs improvements as contact/org are more flexible in iso19115-3.2018GNSS -->
             <address>
               <strong>
                 <xsl:choose>

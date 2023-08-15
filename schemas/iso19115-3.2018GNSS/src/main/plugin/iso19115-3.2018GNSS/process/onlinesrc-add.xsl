@@ -10,7 +10,7 @@
   xmlns:gcx="http://standards.iso.org/iso/19115/-3/gcx/1.0"
   xmlns:gn="http://www.fao.org/geonetwork"
   xmlns:xs="http://www.w3.org/2001/XMLSchema"
-  xmlns:gn-fn-iso19115-3.2018="http://geonetwork-opensource.org/xsl/functions/profiles/iso19115-3.2018"
+  xmlns:gn-fn-iso19115-3.2018GNSS="http://geonetwork-opensource.org/xsl/functions/profiles/iso19115-3.2018GNSS"
   exclude-result-prefixes="#all">
 
   <xsl:import href="../layout/utility-fn.xsl"/>
@@ -177,7 +177,7 @@
             <mrd:onLine>
               <cit:CI_OnlineResource>
                 <cit:linkage>
-                  <xsl:copy-of select="gn-fn-iso19115-3.2018:fillTextElement($url, '\|', '', $mainLangId, $useOnlyPTFreeText)"/>
+                  <xsl:copy-of select="gn-fn-iso19115-3.2018GNSS:fillTextElement($url, '\|', '', $mainLangId, $useOnlyPTFreeText)"/>
                 </cit:linkage>
 
                 <xsl:if test="$protocol != ''">
@@ -198,14 +198,14 @@
 
                 <xsl:if test="normalize-space(.) != ''">
                   <cit:name>
-                    <xsl:copy-of select="gn-fn-iso19115-3.2018:fillTextElement(., $mainLangId, $useOnlyPTFreeText)"/>
+                    <xsl:copy-of select="gn-fn-iso19115-3.2018GNSS:fillTextElement(., $mainLangId, $useOnlyPTFreeText)"/>
                   </cit:name>
                 </xsl:if>
                 <xsl:variable name="pos" select="position()"/>
                 <xsl:variable name="description" select="tokenize($desc, ',')[position() = $pos]"/>
                 <xsl:if test="$description != ''">
                   <cit:description>
-                    <xsl:copy-of select="gn-fn-iso19115-3.2018:fillTextElement($description, $mainLangId, $useOnlyPTFreeText)"/>
+                    <xsl:copy-of select="gn-fn-iso19115-3.2018GNSS:fillTextElement($description, $mainLangId, $useOnlyPTFreeText)"/>
                   </cit:description>
                 </xsl:if>
 
@@ -223,7 +223,7 @@
           <mrd:onLine>
             <cit:CI_OnlineResource>
               <cit:linkage>
-                <xsl:copy-of select="gn-fn-iso19115-3.2018:fillTextElement($url, '\|', '', $mainLangId, $useOnlyPTFreeText)"/>
+                <xsl:copy-of select="gn-fn-iso19115-3.2018GNSS:fillTextElement($url, '\|', '', $mainLangId, $useOnlyPTFreeText)"/>
               </cit:linkage>
 
               <xsl:if test="$protocol != ''">
@@ -242,13 +242,13 @@
 
               <xsl:if test="normalize-space($name) != ''">
                 <cit:name>
-                  <xsl:copy-of select="gn-fn-iso19115-3.2018:fillTextElement($name, $mainLangId, $useOnlyPTFreeText)"/>
+                  <xsl:copy-of select="gn-fn-iso19115-3.2018GNSS:fillTextElement($name, $mainLangId, $useOnlyPTFreeText)"/>
                 </cit:name>
               </xsl:if>
 
               <xsl:if test="$desc != ''">
                 <cit:description>
-                  <xsl:copy-of select="gn-fn-iso19115-3.2018:fillTextElement($desc, $mainLangId, $useOnlyPTFreeText)"/>
+                  <xsl:copy-of select="gn-fn-iso19115-3.2018GNSS:fillTextElement($desc, $mainLangId, $useOnlyPTFreeText)"/>
                 </cit:description>
               </xsl:if>
 

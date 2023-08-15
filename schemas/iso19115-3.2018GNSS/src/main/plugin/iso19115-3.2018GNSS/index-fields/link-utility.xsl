@@ -12,7 +12,7 @@
 
   <!-- Convert an element gco:CharacterString
   to the GN localized string structure -->
-  <xsl:template mode="get-iso19115-3.2018-localized-string" match="*">
+  <xsl:template mode="get-iso19115-3.2018GNSS-localized-string" match="*">
     <xsl:param name="defaultLanguage" select="'eng'" as="xs:string?"/>
 
     <xsl:variable name="mainLanguage"
@@ -42,11 +42,11 @@
           <xsl:value-of select="cit:linkage/gco:CharacterString"/>
         </id>
         <title>
-          <xsl:apply-templates mode="get-iso19115-3.2018-localized-string"
+          <xsl:apply-templates mode="get-iso19115-3.2018GNSS-localized-string"
                                select="cit:name"/>
         </title>
         <url>
-          <xsl:apply-templates mode="get-iso19115-3.2018-localized-string"
+          <xsl:apply-templates mode="get-iso19115-3.2018GNSS-localized-string"
                                select="cit:linkage"/>
         </url>
         <function>
@@ -56,7 +56,7 @@
           <xsl:value-of select="cit:applicationProfile/gco:CharacterString"/>
         </applicationProfile>
         <description>
-          <xsl:apply-templates mode="get-iso19115-3.2018-localized-string"
+          <xsl:apply-templates mode="get-iso19115-3.2018GNSS-localized-string"
                                select="cit:description"/>
         </description>
         <protocol>

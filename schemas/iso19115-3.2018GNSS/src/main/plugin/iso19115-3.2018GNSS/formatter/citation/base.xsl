@@ -9,7 +9,7 @@
                 xmlns:mrd="http://standards.iso.org/iso/19115/-3/mrd/1.0"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
-                xmlns:gn-fn-iso19115-3.2018="http://geonetwork-opensource.org/xsl/functions/profiles/iso19115-3.2018"
+                xmlns:gn-fn-iso19115-3.2018GNSS="http://geonetwork-opensource.org/xsl/functions/profiles/iso19115-3.2018GNSS"
                 xmlns:saxon="http://saxon.sf.net/"
                 extension-element-prefixes="saxon"
                 exclude-result-prefixes="#all">
@@ -18,12 +18,12 @@
   <xsl:import href="../../layout/utility-tpl-multilingual.xsl"/>
   <xsl:import href="../../layout/utility-fn.xsl"/>
 
-  <xsl:template name="get-iso19115-3.2018-citation">
+  <xsl:template name="get-iso19115-3.2018GNSS-citation">
     <xsl:param name="metadata" as="node()"/>
     <xsl:param name="language" as="xs:string"/>
 
     <xsl:variable name="langId"
-                  select="gn-fn-iso19115-3.2018:getLangId($metadata, $language)"/>
+                  select="gn-fn-iso19115-3.2018GNSS:getLangId($metadata, $language)"/>
 
     <!-- Who is the creator of the data set?  This can be an individual, a group of individuals, or an organization. -->
     <xsl:variable name="authorRoles"
@@ -38,13 +38,13 @@
                         select=".//cit:individual/*/cit:name[1]"/>
 
           <xsl:for-each select="$name">
-            <xsl:call-template name="get-iso19115-3.2018-localised">
+            <xsl:call-template name="get-iso19115-3.2018GNSS-localised">
               <xsl:with-param name="langId" select="$langId"/>
             </xsl:call-template>
           </xsl:for-each>
           <xsl:if test="normalize-space($name) != ''">(</xsl:if>
           <xsl:for-each select="cit:party/*/cit:name">
-            <xsl:call-template name="get-iso19115-3.2018-localised">
+            <xsl:call-template name="get-iso19115-3.2018GNSS-localised">
               <xsl:with-param name="langId" select="$langId"/>
             </xsl:call-template>
           </xsl:for-each>
@@ -59,7 +59,7 @@
 
     <xsl:variable name="translatedTitle">
       <xsl:for-each select="$title">
-        <xsl:call-template name="get-iso19115-3.2018-localised">
+        <xsl:call-template name="get-iso19115-3.2018GNSS-localised">
           <xsl:with-param name="langId" select="$langId"/>
         </xsl:call-template>
       </xsl:for-each>
@@ -99,13 +99,13 @@
                         select=".//cit:individual/*/cit:name[1]"/>
 
           <xsl:for-each select="$name">
-            <xsl:call-template name="get-iso19115-3.2018-localised">
+            <xsl:call-template name="get-iso19115-3.2018GNSS-localised">
               <xsl:with-param name="langId" select="$langId"/>
             </xsl:call-template>
           </xsl:for-each>
           <xsl:if test="normalize-space($name) != ''">(</xsl:if>
           <xsl:for-each select="cit:party/*/cit:name">
-            <xsl:call-template name="get-iso19115-3.2018-localised">
+            <xsl:call-template name="get-iso19115-3.2018GNSS-localised">
               <xsl:with-param name="langId" select="$langId"/>
             </xsl:call-template>
           </xsl:for-each>
@@ -144,7 +144,7 @@
     <xsl:variable name="translatedKeywords">
       <xsl:for-each select="$keywords">
         <keyword>
-          <xsl:call-template name="get-iso19115-3.2018-localised">
+          <xsl:call-template name="get-iso19115-3.2018GNSS-localised">
             <xsl:with-param name="langId" select="$langId"/>
           </xsl:call-template>
         </keyword>
@@ -153,7 +153,7 @@
 
     <xsl:variable name="additionalCitation">
       <xsl:for-each select=".//mrd:onLine/*[cit:protocol/* = 'WWW:LINK-1.0-http--publication-URL']/cit:description">
-        <xsl:call-template name="get-iso19115-3.2018-localised">
+        <xsl:call-template name="get-iso19115-3.2018GNSS-localised">
           <xsl:with-param name="langId" select="$langId"/>
         </xsl:call-template>
       </xsl:for-each>

@@ -9,7 +9,7 @@
   xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
   xmlns:gmx="http://standards.iso.org/iso/19115/-3/gmx"
   xmlns:gn="http://www.fao.org/geonetwork"
-  xmlns:gn-fn-iso19115-3.2018="http://geonetwork-opensource.org/xsl/functions/profiles/iso19115-3.2018"
+  xmlns:gn-fn-iso19115-3.2018GNSS="http://geonetwork-opensource.org/xsl/functions/profiles/iso19115-3.2018GNSS"
   xmlns:mdb="http://standards.iso.org/iso/19115/-3/mdb/2.0"
   xmlns:lan="http://standards.iso.org/iso/19115/-3/lan/1.0"
   xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0"
@@ -30,11 +30,11 @@
         <item>
           <id><xsl:value-of select="mcc:fileName/gco:CharacterString"/></id>
           <url>
-              <xsl:apply-templates mode="get-iso19115-3.2018-localized-string"
+              <xsl:apply-templates mode="get-iso19115-3.2018GNSS-localized-string"
                                     select="mcc:fileName"/>
           </url>
           <title>
-              <xsl:apply-templates mode="get-iso19115-3.2018-localized-string"
+              <xsl:apply-templates mode="get-iso19115-3.2018GNSS-localized-string"
                                    select="mcc:fileDescription"/>
           </title>
           <type>thumbnail</type>

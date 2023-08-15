@@ -32,21 +32,21 @@
   ```
 
   -->
-  <xsl:template mode="mode-iso19115-3.2018" match="*[cit:CI_Telephone]" priority="2000">
+  <xsl:template mode="mode-iso19115-3.2018GNSS" match="*[cit:CI_Telephone]" priority="2000">
     <xsl:param name="schema" select="$schema" required="no"/>
     <xsl:param name="labels" select="$labels" required="no"/>
 
-    <xsl:apply-templates mode="mode-iso19115-3.2018" select="*/cit:*">
+    <xsl:apply-templates mode="mode-iso19115-3.2018GNSS" select="*/cit:*">
       <xsl:with-param name="schema" select="$schema"/>
       <xsl:with-param name="labels" select="$labels"/>
     </xsl:apply-templates>
   </xsl:template>
 
   <!-- Number type is handled in next template -->
-  <xsl:template mode="mode-iso19115-3.2018" match="cit:numberType" priority="2000"/>
+  <xsl:template mode="mode-iso19115-3.2018GNSS" match="cit:numberType" priority="2000"/>
 
   <!-- Rendering number type as a dropdown -->
-  <xsl:template mode="mode-iso19115-3.2018"
+  <xsl:template mode="mode-iso19115-3.2018GNSS"
                 priority="2000"
                 match="cit:number[parent::node()/name() = 'cit:CI_Telephone']">
     <xsl:param name="schema" select="$schema" required="no"/>

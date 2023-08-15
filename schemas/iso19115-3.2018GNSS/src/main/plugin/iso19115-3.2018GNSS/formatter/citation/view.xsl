@@ -8,7 +8,7 @@
                 xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0"
                 xmlns:mrd="http://standards.iso.org/iso/19115/-3/mrd/1.0"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
-                xmlns:gn-fn-iso19115-3.2018="http://geonetwork-opensource.org/xsl/functions/profiles/iso19115-3.2018"
+                xmlns:gn-fn-iso19115-3.2018GNSS="http://geonetwork-opensource.org/xsl/functions/profiles/iso19115-3.2018GNSS"
                 xmlns:saxon="http://saxon.sf.net/"
                 extension-element-prefixes="saxon"
                 exclude-result-prefixes="#all">
@@ -25,7 +25,7 @@
 
   <xsl:template match="/">
     <xsl:variable name="citationInfo">
-      <xsl:call-template name="get-iso19115-3.2018-citation">
+      <xsl:call-template name="get-iso19115-3.2018GNSS-citation">
         <xsl:with-param name="metadata" select="$metadata"/>
         <xsl:with-param name="language" select="$language"/>
       </xsl:call-template>

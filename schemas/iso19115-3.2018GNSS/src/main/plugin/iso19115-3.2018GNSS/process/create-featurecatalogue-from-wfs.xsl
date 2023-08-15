@@ -120,7 +120,7 @@
                 mdb:metadataExtensionInfo|
                 mdb:identificationInfo"/>
 
-      <xsl:copy-of select="geonet:make-iso19115-3.2018-featurecatalogue-from-wfs($featureCatWfsUrl)"/>
+      <xsl:copy-of select="geonet:make-iso19115-3.2018GNSS-featurecatalogue-from-wfs($featureCatWfsUrl)"/>
 
       <xsl:if test="not($featureCatIsReplacedBy)">
         <xsl:apply-templates

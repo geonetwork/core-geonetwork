@@ -51,7 +51,7 @@
         <directory>src/test/resources</directory>
       </testResource>
       <testResource>
-        <directory>src/main/plugin/iso19115-3.2018</directory>
+        <directory>src/main/plugin/iso19115-3.2018GNSS</directory>
       </testResource>
     </testResources>
 

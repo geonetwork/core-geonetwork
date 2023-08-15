@@ -7,7 +7,7 @@
 
   <xsl:output method="text"/>
 
-  <xsl:include href="iso19115-3.2018-to-jsonld.xsl"/>
+  <xsl:include href="iso19115-3.2018GNSS-to-jsonld.xsl"/>
 
   <xsl:template match="/">
     <textResponse>

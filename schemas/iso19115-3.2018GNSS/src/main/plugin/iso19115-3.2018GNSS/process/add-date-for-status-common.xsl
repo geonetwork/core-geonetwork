@@ -10,11 +10,11 @@
 
   <xsl:variable name="dateTypes" as="node()+">
    <status is="completed" dateType="publication" schema="iso19139"/>
-    <status is="completed" dateType="publication" schema="iso19115-3.2018"/>
-    <status is="superseded" dateType="superseded" schema="iso19115-3.2018"/>
-    <status is="deprecated" dateType="deprecated" schema="iso19115-3.2018"/>
-    <status is="obsolete" dateType="deprecated" schema="iso19115-3.2018"/>
-    <status is="retired" dateType="deprecated" schema="iso19115-3.2018"/>
+    <status is="completed" dateType="publication" schema="iso19115-3.2018GNSS"/>
+    <status is="superseded" dateType="superseded" schema="iso19115-3.2018GNSS"/>
+    <status is="deprecated" dateType="deprecated" schema="iso19115-3.2018GNSS"/>
+    <status is="obsolete" dateType="deprecated" schema="iso19115-3.2018GNSS"/>
+    <status is="retired" dateType="deprecated" schema="iso19115-3.2018GNSS"/>
   </xsl:variable>
 
 
@@ -84,7 +84,7 @@
           </name>
           <operational>true</operational>
           <params>{
-            "dateTypeForStatus":{"type":"codelist", "codelist": "<xsl:value-of select="if ($schema = 'iso19115-3.2018') then 'cit:CI_DateTypeCode' else 'gmd:CI_DateTypeCode'"/>", "defaultValue":"<xsl:value-of select="$dateTypeForStatus"/>"},
+            "dateTypeForStatus":{"type":"codelist", "codelist": "<xsl:value-of select="if ($schema = 'iso19115-3.2018GNSS') then 'cit:CI_DateTypeCode' else 'gmd:CI_DateTypeCode'"/>", "defaultValue":"<xsl:value-of select="$dateTypeForStatus"/>"},
             "dateValueForStatus":{"type":"string", "defaultValue":"<xsl:value-of select="$dateValueForStatus"/>"}
           }</params>
         </suggestion>

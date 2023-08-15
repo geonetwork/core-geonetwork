@@ -26,7 +26,7 @@
   xmlns:gn="http://www.fao.org/geonetwork"
   xmlns:gn-fn-core="http://geonetwork-opensource.org/xsl/functions/core"
   xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
-  xmlns:gn-fn-iso19115-3.2018="http://geonetwork-opensource.org/xsl/functions/profiles/iso19115-3.2018"
+  xmlns:gn-fn-iso19115-3.2018GNSS="http://geonetwork-opensource.org/xsl/functions/profiles/iso19115-3.2018GNSS"
   exclude-result-prefixes="#all">
 
   <xsl:include href="utility-fn.xsl"/>
@@ -37,7 +37,7 @@
   <xsl:include href="layout-custom-fields-keywords.xsl"/>
 
   <!-- Visit all XML tree recursively -->
-  <xsl:template mode="mode-iso19115-3.2018"
+  <xsl:template mode="mode-iso19115-3.2018GNSS"
                 match="mds:*|mcc:*|mri:*|mrs:*|mrc:*|mrd:*|mco:*|msr:*|lan:*|
                        gcx:*|gex:*|dqm:*|mdq:*|cit:*|srv:*|gml:*|gts:*|gfc:*"
                 priority="2">
@@ -45,7 +45,7 @@
     <xsl:param name="labels" select="$labels" required="no"/>
     <xsl:param name="refToDelete" required="no"/>
 
-    <xsl:apply-templates mode="mode-iso19115-3.2018" select="*|@*">
+    <xsl:apply-templates mode="mode-iso19115-3.2018GNSS" select="*|@*">
       <xsl:with-param name="schema" select="$schema"/>
       <xsl:with-param name="labels" select="$labels"/>
       <xsl:with-param name="refToDelete" select="$refToDelete"/>
@@ -53,13 +53,13 @@
   </xsl:template>
 
   <!-- Ignore all gn element -->
-  <xsl:template mode="mode-iso19115-3.2018" match="gn:*|@gn:*|@*" priority="1000"/>
+  <xsl:template mode="mode-iso19115-3.2018GNSS" match="gn:*|@gn:*|@*" priority="1000"/>
 
 
   <!-- Template to display non existing element ie. geonet:child element
 	of the metadocument. Display in editing mode only and if
   the editor mode is not flat mode. -->
-  <xsl:template mode="mode-iso19115-3.2018" match="gn:child" priority="2000">
+  <xsl:template mode="mode-iso19115-3.2018GNSS" match="gn:child" priority="2000">
     <xsl:param name="schema" select="$schema" required="no"/>
     <xsl:param name="labels" select="$labels" required="no"/>
 
@@ -139,7 +139,7 @@
       * and gmd:*: Match all elements having gmd child elements
       * and not(gco:CharacterString): Don't take into account those having gco:CharacterString (eg. multilingual elements)
   -->
-  <xsl:template mode="mode-iso19115-3.2018" priority="200"
+  <xsl:template mode="mode-iso19115-3.2018GNSS" priority="200"
                 match="*[name() = $editorConfig/editor/fieldsWithFieldset/name
                           or @gco:isoType = $editorConfig/editor/fieldsWithFieldset/name]|
                         *[namespace-uri(.) != $gnUri and $isFlatMode = false() and
@@ -184,7 +184,7 @@
         <!-- Process child of those element. Propagate schema
         and labels to all subchilds (eg. needed like iso19110 elements
         contains gmd:* child. -->
-        <xsl:apply-templates mode="mode-iso19115-3.2018" select="*">
+        <xsl:apply-templates mode="mode-iso19115-3.2018GNSS" select="*">
           <xsl:with-param name="schema" select="$schema"/>
           <xsl:with-param name="labels" select="$labels"/>
         </xsl:apply-templates>
@@ -199,7 +199,7 @@
   </xsl:template>
 
   <!-- Render simple element which usually match a form field -->
-  <xsl:template mode="mode-iso19115-3.2018" priority="200"
+  <xsl:template mode="mode-iso19115-3.2018GNSS" priority="200"
                 match="*[gco:CharacterString|gcx:Anchor|gco:Integer|gco:UnlimitedInteger|gco:Decimal|
        gco:Boolean|gco:Real|gco:Measure|gco:Length|gco:Distance|gco:Angle|gmx:FileName|
        gco:Scale|gco:RecordType|gcx:MimeFileType|gco:LocalName|gco:ScopedName|gco:RecordType|
@@ -248,7 +248,7 @@
       </xsl:choose>
     </xsl:variable>
     <xsl:variable name="excluded"
-                  select="gn-fn-iso19115-3.2018:isNotMultilingualField(., $editorConfig)"/>
+                  select="gn-fn-iso19115-3.2018GNSS:isNotMultilingualField(., $editorConfig)"/>
 
 
     <xsl:variable name="hasPTFreeText" select="count(lan:PT_FreeText) > 0"/>
@@ -418,7 +418,7 @@
 
 
 
-  <xsl:template mode="mode-iso19115-3.2018"
+  <xsl:template mode="mode-iso19115-3.2018GNSS"
                 match="gml:beginPosition|gml:endPosition|gml:timePosition"
                 priority="400">
     <xsl:variable name="xpath" select="gn-fn-metadata:getXPath(.)"/>
@@ -450,7 +450,7 @@
   </xsl:template>
 
 
-  <xsl:template mode="mode-iso19115-3.2018" priority="200"
+  <xsl:template mode="mode-iso19115-3.2018GNSS" priority="200"
                 match="gfc:memberName|gfc:typeName|gfc:aliases">
     <xsl:param name="schema" select="$schema" required="no"/>
     <xsl:param name="labels" select="$labels" required="no"/>
@@ -486,10 +486,10 @@
   </xsl:template>
 
   <!--
-  <xsl:template mode="mode-iso19115-3.2018" match="*|@*" priority="0"/>
+  <xsl:template mode="mode-iso19115-3.2018GNSS" match="*|@*" priority="0"/>
 -->
   <!-- Codelists -->
-  <xsl:template mode="mode-iso19115-3.2018" priority="200"
+  <xsl:template mode="mode-iso19115-3.2018GNSS" priority="200"
                 match="*[*/@codeList]">
     <xsl:param name="schema" select="$schema" required="no"/>
     <xsl:param name="labels" select="$labels" required="no"/>
@@ -519,7 +519,7 @@
       <xsl:with-param name="value" select="*/@codeListValue"/>
       <xsl:with-param name="cls" select="local-name()"/>
       <xsl:with-param name="xpath" select="$xpath"/>
-      <xsl:with-param name="type" select="gn-fn-iso19115-3.2018:getCodeListType(name(), $editorConfig)"/>
+      <xsl:with-param name="type" select="gn-fn-iso19115-3.2018GNSS:getCodeListType(name(), $editorConfig)"/>
       <xsl:with-param name="name"
                       select="concat(*/gn:element/@ref, '_codeListValue')"/>
       <xsl:with-param name="editInfo" select="*/gn:element"/>
@@ -543,7 +543,7 @@
       <geonet:text value="boundaries"/
   -->
 
-  <xsl:template mode="mode-iso19115-3.2018"
+  <xsl:template mode="mode-iso19115-3.2018GNSS"
                 match="mri:topicCategory[1]"
                 priority="2100">
 
@@ -574,15 +574,15 @@
   </xsl:template>
 
   <!-- Ignore the following topic categories and the gn:child to add new ones -->
-  <xsl:template mode="mode-iso19115-3.2018"
+  <xsl:template mode="mode-iso19115-3.2018GNSS"
                 match="mri:topicCategory[preceding-sibling::*[1]/name() = name()]"
                 priority="2100"/>
-  <xsl:template mode="mode-iso19115-3.2018"
+  <xsl:template mode="mode-iso19115-3.2018GNSS"
                 match="gn:child[@name = 'topicCategory' and count(../mri:topicCategory) > 0]"
                 priority="21000"/>
 
 
-  <xsl:template mode="mode-iso19115-3.2018"
+  <xsl:template mode="mode-iso19115-3.2018GNSS"
                 match="*[gn:element/gn:text]"
                 priority="2000">
     <xsl:param name="schema" select="$schema" required="no"/>
@@ -595,7 +595,7 @@
                       select="gn-fn-metadata:getLabel($schema, name(), $labels, name(..), '', '')"/>
       <xsl:with-param name="value" select="text()"/>
       <xsl:with-param name="cls" select="local-name()"/>
-      <xsl:with-param name="type" select="gn-fn-iso19115-3.2018:getCodeListType(name(), $editorConfig)"/>
+      <xsl:with-param name="type" select="gn-fn-iso19115-3.2018GNSS:getCodeListType(name(), $editorConfig)"/>
       <xsl:with-param name="name" select="gn:element/@ref"/>
       <xsl:with-param name="editInfo" select="if ($refToDelete) then $refToDelete else */gn:element"/>
       <xsl:with-param name="listOfValues"
@@ -606,10 +606,10 @@
 
   <!-- Some element to ignore which are matched by the
   next template -->
-  <xsl:template mode="mode-iso19115-3.2018" priority="400" match="gml:TimeInstantType"/>
+  <xsl:template mode="mode-iso19115-3.2018GNSS" priority="400" match="gml:TimeInstantType"/>
 
   <!-- the gml element having no child eg. gml:name. -->
-  <xsl:template mode="mode-iso19115-3.2018" priority="300" match="gml:*[count(.//gn:element) = 1]">
+  <xsl:template mode="mode-iso19115-3.2018GNSS" priority="300" match="gml:*[count(.//gn:element) = 1]">
     <xsl:variable name="name" select="name(.)"/>
 
     <xsl:variable name="labelConfig" select="gn-fn-metadata:getLabel($schema, $name, $labels)"/>

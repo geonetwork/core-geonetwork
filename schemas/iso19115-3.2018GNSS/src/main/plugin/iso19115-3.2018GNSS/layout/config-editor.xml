@@ -150,7 +150,7 @@
       use the following configuration:
               data-filter='{"root": "gmd:CI_ResponsibleParty"}'
               data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"
-              data-transformation="contact-from-iso19139-to-iso19115-3.2018"/>
+              data-transformation="contact-from-iso19139-to-iso19115-3.2018GNSS"/>
        -->
       <directiveAttributes
         data-template-add-snippet="&lt;cit:CI_Responsibility
@@ -403,7 +403,7 @@
 
     <for name="mri:descriptiveKeywords" addDirective="data-gn-thesaurus-selector">
       <directiveAttributes
-              data-transformation="to-iso19115-3.2018-keyword-with-anchor"
+              data-transformation="to-iso19115-3.2018GNSS-keyword-with-anchor"
               data-include="xpath::string-join(*
                                           //mri:thesaurusName//cit:identifier/*/
                                             mcc:code/gcx:Anchor/
@@ -801,10 +801,10 @@
         <for name="gfc:listedValue"/>
       </flatModeExceptions>
       <thesaurusList>
-        <thesaurus key="external.theme.httpinspireeceuropaeutheme-theme" transformations="to-iso19115-3.2018-keyword-with-anchor"/>
-        <thesaurus key="external.theme.httpinspireeceuropaeumetadatacodelistSpatialScope-SpatialScope" transformations="to-iso19115-3.2018-keyword-with-anchor"/>
-        <thesaurus key="external.theme.httpinspireeceuropaeumetadatacodelistPriorityDataset-PriorityDataset" transformations="to-iso19115-3.2018-keyword-with-anchor"/>
-        <thesaurus key="external.theme.httpinspireeceuropaeufeatureconcept-featureconcept" transformations="to-iso19115-3.2018-keyword-with-anchor"/>
+        <thesaurus key="external.theme.httpinspireeceuropaeutheme-theme" transformations="to-iso19115-3.2018GNSS-keyword-with-anchor"/>
+        <thesaurus key="external.theme.httpinspireeceuropaeumetadatacodelistSpatialScope-SpatialScope" transformations="to-iso19115-3.2018GNSS-keyword-with-anchor"/>
+        <thesaurus key="external.theme.httpinspireeceuropaeumetadatacodelistPriorityDataset-PriorityDataset" transformations="to-iso19115-3.2018GNSS-keyword-with-anchor"/>
+        <thesaurus key="external.theme.httpinspireeceuropaeufeatureconcept-featureconcept" transformations="to-iso19115-3.2018GNSS-keyword-with-anchor"/>
       </thesaurusList>
     </view>
 
@@ -1055,10 +1055,10 @@
         <for name="srv:operationDescription" />
       </flatModeExceptions>
       <thesaurusList>
-        <thesaurus key="external.theme.httpinspireeceuropaeutheme-theme" transformations="to-iso19115-3.2018-keyword-with-anchor"/>
-        <thesaurus key="external.theme.httpinspireeceuropaeumetadatacodelistSpatialScope-SpatialScope" transformations="to-iso19115-3.2018-keyword-with-anchor"/>
-        <thesaurus key="external.theme.httpinspireeceuropaeumetadatacodelistPriorityDataset-PriorityDataset" transformations="to-iso19115-3.2018-keyword-with-anchor"/>
-        <thesaurus key="external.theme.httpinspireeceuropaeufeatureconcept-featureconcept" transformations="to-iso19115-3.2018-keyword-with-anchor"/>
+        <thesaurus key="external.theme.httpinspireeceuropaeutheme-theme" transformations="to-iso19115-3.2018GNSS-keyword-with-anchor"/>
+        <thesaurus key="external.theme.httpinspireeceuropaeumetadatacodelistSpatialScope-SpatialScope" transformations="to-iso19115-3.2018GNSS-keyword-with-anchor"/>
+        <thesaurus key="external.theme.httpinspireeceuropaeumetadatacodelistPriorityDataset-PriorityDataset" transformations="to-iso19115-3.2018GNSS-keyword-with-anchor"/>
+        <thesaurus key="external.theme.httpinspireeceuropaeufeatureconcept-featureconcept" transformations="to-iso19115-3.2018GNSS-keyword-with-anchor"/>
       </thesaurusList>
 
     </view>
@@ -1101,7 +1101,7 @@
         <section>
           <xsl xpath="/mdb:MD_Metadata/mdb:dataQualityInfo"
                or="report"
-               mode="iso19115-3.2018-qm"/>
+               mode="iso19115-3.2018GNSS-qm"/>
         </section>
       </tab>-->
       <tab id="resourceLineage">
@@ -1160,9 +1160,9 @@
                  in="/mdb:MD_Metadata"/>
       </tab>
       <thesaurusList>
-        <thesaurus key="external.theme.httpinspireeceuropaeutheme-theme" transformations="to-iso19115-3.2018-keyword-with-anchor"/>
-        <thesaurus key="external.theme.httpinspireeceuropaeumetadatacodelistSpatialScope-SpatialScope" transformations="to-iso19115-3.2018-keyword-with-anchor"/>
-        <thesaurus key="external.theme.httpinspireeceuropaeumetadatacodelistPriorityDataset-PriorityDataset" transformations="to-iso19115-3.2018-keyword-with-anchor"/>
+        <thesaurus key="external.theme.httpinspireeceuropaeutheme-theme" transformations="to-iso19115-3.2018GNSS-keyword-with-anchor"/>
+        <thesaurus key="external.theme.httpinspireeceuropaeumetadatacodelistSpatialScope-SpatialScope" transformations="to-iso19115-3.2018GNSS-keyword-with-anchor"/>
+        <thesaurus key="external.theme.httpinspireeceuropaeumetadatacodelistPriorityDataset-PriorityDataset" transformations="to-iso19115-3.2018GNSS-keyword-with-anchor"/>
       </thesaurusList>
     </view>
     <view name="xml">

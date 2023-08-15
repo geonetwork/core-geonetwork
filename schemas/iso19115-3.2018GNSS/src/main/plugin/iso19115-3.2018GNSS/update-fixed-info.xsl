@@ -17,7 +17,7 @@
   xmlns:mdq="http://standards.iso.org/iso/19157/-2/mdq/1.0"
   xmlns:gfc="http://standards.iso.org/iso/19110/gfc/1.1"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xmlns:gn-fn-iso19115-3.2018="http://geonetwork-opensource.org/xsl/functions/profiles/iso19115-3.2018"
+  xmlns:gn-fn-iso19115-3.2018GNSS="http://geonetwork-opensource.org/xsl/functions/profiles/iso19115-3.2018GNSS"
   xmlns:xlink="http://www.w3.org/1999/xlink"
   xmlns:xs="http://www.w3.org/2001/XMLSchema"
   xmlns:java="java:org.fao.geonet.util.XslUtil"
@@ -74,7 +74,7 @@
     <xsl:copy copy-namespaces="no">
       <xsl:apply-templates select="@*"/>
 
-      <xsl:call-template name="add-iso19115-3.2018-namespaces"/>
+      <xsl:call-template name="add-iso19115-3.2018GNSSGNSS-namespaces"/>
 
       <xsl:for-each select="mdb:metadataIdentifier">
         <xsl:copy>
@@ -128,12 +128,12 @@
                     or (/root/env/createDate != ''
                         and /root/env/newRecord = 'true')">
         <mdb:dateInfo>
-          <xsl:copy-of select="gn-fn-iso19115-3.2018:write-date-or-dateTime(/root/env/createDate, 'creation')"/>
+          <xsl:copy-of select="gn-fn-iso19115-3.2018GNSS:write-date-or-dateTime(/root/env/createDate, 'creation')"/>
         </mdb:dateInfo>
       </xsl:if>
       <xsl:if test="not($isRevisionDateAvailable)">
         <mdb:dateInfo>
-          <xsl:copy-of select="gn-fn-iso19115-3.2018:write-date-or-dateTime(/root/env/changeDate, 'revision')"/>
+          <xsl:copy-of select="gn-fn-iso19115-3.2018GNSS:write-date-or-dateTime(/root/env/changeDate, 'revision')"/>
         </mdb:dateInfo>
       </xsl:if>
 
@@ -144,7 +144,7 @@
         <xsl:choose>
           <xsl:when test="$currentDateType = 'revision' and /root/env/changeDate">
             <mdb:dateInfo>
-              <xsl:copy-of select="gn-fn-iso19115-3.2018:write-date-or-dateTime(/root/env/changeDate, 'revision')"/>
+              <xsl:copy-of select="gn-fn-iso19115-3.2018GNSS:write-date-or-dateTime(/root/env/changeDate, 'revision')"/>
             </mdb:dateInfo>
           </xsl:when>
           <xsl:when test="$currentDateType = 'creation'
@@ -306,7 +306,7 @@
       <xsl:apply-templates select="@*[not(name() = 'gco:nilReason') and not(name() = 'xsi:type')]"/>
 
       <xsl:variable name="excluded"
-                    select="gn-fn-iso19115-3.2018:isNotMultilingualField(., $editorConfig)"/>
+                    select="gn-fn-iso19115-3.2018GNSS:isNotMultilingualField(., $editorConfig)"/>
 
       <xsl:variable name="valueInPtFreeTextForMainLanguage"
                     select="normalize-space(lan:PT_FreeText/*/lan:LocalisedCharacterString[

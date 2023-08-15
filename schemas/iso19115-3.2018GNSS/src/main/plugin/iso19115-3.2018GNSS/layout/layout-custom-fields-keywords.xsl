@@ -24,7 +24,7 @@
     the advanced editor which provides easy selection of
     keywords.
   -->
-  <xsl:template mode="mode-iso19115-3.2018" priority="2000" match="
+  <xsl:template mode="mode-iso19115-3.2018GNSS" priority="2000" match="
     mri:descriptiveKeywords">
     <xsl:param name="schema" select="$schema" required="no"/>
     <xsl:param name="labels" select="$labels" required="no"/>
@@ -100,7 +100,7 @@
 
     <xsl:choose>
       <xsl:when test="($isFlatMode and not($thesaurusConfig/@fieldset)) or $thesaurusConfig/@fieldset = 'false'">
-        <xsl:apply-templates mode="mode-iso19115-3.2018" select="*">
+        <xsl:apply-templates mode="mode-iso19115-3.2018GNSS" select="*">
           <xsl:with-param name="schema" select="$schema"/>
           <xsl:with-param name="labels" select="$labels"/>
           <xsl:with-param name="overrideLabel" select="$overrideLabel"/>
@@ -117,7 +117,7 @@
           <xsl:with-param name="xpath" select="$xpath"/>
           <xsl:with-param name="attributesSnippet" select="$attributes"/>
           <xsl:with-param name="subTreeSnippet">
-            <xsl:apply-templates mode="mode-iso19115-3.2018" select="*">
+            <xsl:apply-templates mode="mode-iso19115-3.2018GNSS" select="*">
               <xsl:with-param name="schema" select="$schema"/>
               <xsl:with-param name="labels" select="$labels"/>
               <xsl:with-param name="overrideLabel" select="$overrideLabel"/>
@@ -130,7 +130,7 @@
   </xsl:template>
 
 
-  <xsl:template mode="mode-iso19115-3.2018" match="mri:MD_Keywords" priority="2000">
+  <xsl:template mode="mode-iso19115-3.2018GNSS" match="mri:MD_Keywords" priority="2000">
     <xsl:param name="overrideLabel" select="''" required="no"/>
 
     <xsl:variable name="thesaurusIdentifier"
@@ -188,15 +188,15 @@
                       as="xs:string"
                       select="if ($thesaurusConfig/@transformations != '')
                               then $thesaurusConfig/@transformations
-                              else 'to-iso19115-3.2018-keyword,to-iso19115-3.2018-keyword-with-anchor,to-iso19115-3.2018-keyword-as-xlink'"/>
+                              else 'to-iso19115-3.2018GNSS-keyword,to-iso19115-3.2018-keyword-with-anchor,to-iso19115-3.2018-keyword-as-xlink'"/>
 
         <!-- Get current transformation mode based on XML fragement analysis -->
         <xsl:variable name="transformation"
           select="if (parent::node()/@xlink:href)
-                  then 'to-iso19115-3.2018-keyword-as-xlink'
+                  then 'to-iso19115-3.2018GNSS-keyword-as-xlink'
                   else if (count(mri:keyword/gcx:Anchor) > 0)
-                  then 'to-iso19115-3.2018-keyword-with-anchor'
-                  else 'to-iso19115-3.2018-keyword'"/>
+                  then 'to-iso19115-3.2018GNSS-keyword-with-anchor'
+                  else 'to-iso19115-3.2018GNSS-keyword'"/>
 
         <xsl:variable name="parentName" select="name(..)"/>
 
@@ -265,7 +265,7 @@
         </xsl:if>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:apply-templates mode="mode-iso19115-3.2018" select="*"/>
+        <xsl:apply-templates mode="mode-iso19115-3.2018GNSS" select="*"/>
       </xsl:otherwise>
     </xsl:choose>
 

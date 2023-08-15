@@ -15,7 +15,7 @@ a coupledResource reference.
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
-                xmlns:gn-fn-iso19115-3.2018="http://geonetwork-opensource.org/xsl/functions/profiles/iso19115-3.2018"
+                xmlns:gn-fn-iso19115-3.2018GNSS="http://geonetwork-opensource.org/xsl/functions/profiles/iso19115-3.2018GNSS"
                 xmlns:gn="http://www.fao.org/geonetwork"
                 exclude-result-prefixes="#all">
 
@@ -214,7 +214,7 @@ a coupledResource reference.
           <cit:CI_OnlineResource>
             <cit:linkage>
               <xsl:copy-of
-                select="gn-fn-iso19115-3.2018:fillTextElement($url, $mainLang, $useOnlyPTFreeText)"/>
+                select="gn-fn-iso19115-3.2018GNSS:fillTextElement($url, $mainLang, $useOnlyPTFreeText)"/>
             </cit:linkage>
             <cit:protocol>
               <gco:CharacterString>
@@ -235,7 +235,7 @@ a coupledResource reference.
             <cit:CI_OnlineResource>
               <cit:linkage>
                 <xsl:copy-of
-                  select="gn-fn-iso19115-3.2018:fillTextElement($url, $mainLang, $useOnlyPTFreeText)"/>
+                  select="gn-fn-iso19115-3.2018GNSS:fillTextElement($url, $mainLang, $useOnlyPTFreeText)"/>
               </cit:linkage>
               <cit:protocol>
                 <gco:CharacterString>

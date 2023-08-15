@@ -29,19 +29,19 @@
     Load the schema configuration for the editor.
     Same configuration as ISO19139 here.
       -->
-  <xsl:template name="get-iso19115-3.2018-configuration">
+  <xsl:template name="get-iso19115-3.2018GNSS-configuration">
     <xsl:copy-of select="document('config-editor.xml')"/>
   </xsl:template>
 
 
   <!-- Dispatch to the current profile mode -->
-  <xsl:template name="dispatch-iso19115-3.2018">
+  <xsl:template name="dispatch-iso19115-3.2018GNSS">
     <xsl:param name="base" as="node()"/>
     <xsl:param name="overrideLabel" as="xs:string?" required="no" select="''"/>
     <xsl:param name="refToDelete" as="node()?" required="no"/>
     <xsl:param name="config" as="node()?" required="no"/>
 
-    <xsl:apply-templates mode="mode-iso19115-3.2018" select="$base">
+    <xsl:apply-templates mode="mode-iso19115-3.2018GNSS" select="$base">
       <xsl:with-param name="overrideLabel" select="$overrideLabel"/>
       <xsl:with-param name="refToDelete" select="$refToDelete"/>
       <xsl:with-param name="config" select="$config"/>

@@ -43,23 +43,23 @@
   Swallow the complex element having CI_Date
   to simplify the editor for dates
   -->
-  <xsl:template mode="mode-iso19115-3.2018" match="*[cit:CI_Date]" priority="2000">
+  <xsl:template mode="mode-iso19115-3.2018GNSS" match="*[cit:CI_Date]" priority="2000">
     <xsl:param name="schema" select="$schema" required="no"/>
     <xsl:param name="labels" select="$labels" required="no"/>
 
-    <xsl:apply-templates mode="mode-iso19115-3.2018" select="*/cit:*">
+    <xsl:apply-templates mode="mode-iso19115-3.2018GNSS" select="*/cit:*">
       <xsl:with-param name="schema" select="$schema"/>
       <xsl:with-param name="labels" select="$labels"/>
     </xsl:apply-templates>
   </xsl:template>
 
   <!-- Date type is handled in next template -->
-  <xsl:template mode="mode-iso19115-3.2018" match="cit:dateType" priority="2000"/>
+  <xsl:template mode="mode-iso19115-3.2018GNSS" match="cit:dateType" priority="2000"/>
 
   <!-- Rendering date type as a dropdown to select type
   and the calendar next to it.
   -->
-  <xsl:template mode="mode-iso19115-3.2018"
+  <xsl:template mode="mode-iso19115-3.2018GNSS"
                 priority="2000"
                 match="cit:CI_Date/cit:date[../cit:dateType]">
     <xsl:param name="schema" select="$schema" required="no"/>
@@ -134,7 +134,7 @@
   Date with not date type.
    eg. cit:editionDate
   -->
-  <xsl:template mode="mode-iso19115-3.2018"
+  <xsl:template mode="mode-iso19115-3.2018GNSS"
                 priority="2000"
                 match="*[(gco:Date|gco:DateTime) and not(../cit:dateType)]">
     <xsl:param name="schema" select="$schema" required="no"/>

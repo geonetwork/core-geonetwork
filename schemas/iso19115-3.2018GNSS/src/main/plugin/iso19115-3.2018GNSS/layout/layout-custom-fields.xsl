@@ -19,7 +19,7 @@
 
 
   <!-- Readonly elements -->
-  <xsl:template mode="mode-iso19115-3.2018"
+  <xsl:template mode="modeso19115-i-3.2018GNSS"
                 match="mdb:metadataIdentifier/mcc:MD_Identifier/mcc:code|
                        mdb:dateInfo/cit:CI_Date[cit:dateType/cit:CI_DateTypeCode = 'revision']/cit:date|
                        mdb:dateInfo/cit:CI_Date[cit:dateType/cit:CI_DateTypeCode = 'revision']/cit:dateType"
@@ -68,7 +68,7 @@
 
 
   <!-- Set CRS system type before the CRS -->
-  <xsl:template mode="mode-iso19115-3.2018"
+  <xsl:template mode="mode-iso19115-3.2018GNSS"
                 priority="2000"
                 match="mrs:MD_ReferenceSystem">
     <xsl:param name="schema" select="$schema" required="no"/>
@@ -105,23 +105,23 @@
       <xsl:with-param name="attributesSnippet" select="$attributes"/>
       <xsl:with-param name="subTreeSnippet">
 
-        <xsl:apply-templates mode="mode-iso19115-3.2018"
+        <xsl:apply-templates mode="mode-iso19115-3.2018GNSS"
                              select="mrs:referenceSystemType"/>
 
-        <xsl:apply-templates mode="mode-iso19115-3.2018"
+        <xsl:apply-templates mode="mode-iso19115-3.2018GNSS"
                              select="gn:*[@name = 'referenceSystemType']"/>
 
-        <xsl:apply-templates mode="mode-iso19115-3.2018"
+        <xsl:apply-templates mode="mode-iso19115-3.2018GNSS"
                              select="mrs:referenceSystemIdentifier"/>
 
-        <xsl:apply-templates mode="mode-iso19115-3.2018"
+        <xsl:apply-templates mode="mode-iso19115-3.2018GNSS"
                              select="gn:*[@name = 'referenceSystemIdentifier']"/>
       </xsl:with-param>
     </xsl:call-template>
   </xsl:template>
 
 
-  <xsl:template mode="mode-iso19115-3.2018"
+  <xsl:template mode="mode-iso19115-3.2018GNSS"
                 match="@uuidref" priority="2000">
     <xsl:variable name="xpath" select="gn-fn-metadata:getXPath(.)"/>
 
@@ -141,7 +141,7 @@
 
 
   <!-- Measure elements, gco:Distance, gco:Angle, gco:Scale, gco:Length, ... -->
-  <xsl:template mode="mode-iso19115-3.2018" priority="2000" match="mri:*[gco:*/@uom]">
+  <xsl:template mode="mode-iso19115-3.2018GNSS" priority="2000" match="mri:*[gco:*/@uom]">
     <xsl:param name="schema" select="$schema" required="no"/>
     <xsl:param name="labels" select="$labels" required="no"/>
     <xsl:param name="refToDelete" select="''" required="no"/>
@@ -192,7 +192,7 @@
     </div>
   </xsl:template>
 
- <!-- <xsl:template mode="mode-iso19115-3.2018"
+ <!-- <xsl:template mode="mode-iso19115-3.2018GNSS"
                 match="cit:CI_Date"
                 priority="2000">
     <xsl:param name="schema" select="$schema" required="no"/>
@@ -200,13 +200,13 @@
 
     <div class="row">
       <div class="col-md-8">
-        <xsl:apply-templates mode="mode-iso19115-3.2018" select="cit:date">
+        <xsl:apply-templates mode="mode-iso19115-3.2018GNSS" select="cit:date">
           <xsl:with-param name="schema" select="$schema"/>
           <xsl:with-param name="labels" select="$labels"/>
         </xsl:apply-templates>
       </div>
       <div class="col-md-4">
-        <xsl:apply-templates mode="mode-iso19115-3.2018" select="cit:dateType">
+        <xsl:apply-templates mode="mode-iso19115-3.2018GNSS" select="cit:dateType">
           <xsl:with-param name="schema" select="$schema"/>
           <xsl:with-param name="labels" select="$labels"/>
         </xsl:apply-templates>
@@ -220,7 +220,7 @@
   <!-- gml:TimePeriod (format = %Y-%m-%dThh:mm:ss) -->
   <!-- ===================================================================== -->
 
-  <xsl:template mode="mode-iso19115-3.2018" match="gml:beginPosition|gml:endPosition|gml:timePosition"
+  <xsl:template mode="mode-iso19115-3.2018GNSS" match="gml:beginPosition|gml:endPosition|gml:timePosition"
                 priority="200">
 
 
@@ -266,7 +266,7 @@
     </xsl:call-template>
   </xsl:template>
 
-  <xsl:template mode="mode-iso19115-3.2018"
+  <xsl:template mode="mode-iso19115-3.2018GNSS"
                 match="gex:EX_GeographicBoundingBox"
                 priority="2000">
     <xsl:param name="schema" select="$schema" required="no"/>
@@ -292,7 +292,7 @@
     </xsl:call-template>
   </xsl:template>
 
-  <xsl:template mode="mode-iso19115-3.2018"
+  <xsl:template mode="mode-iso19115-3.2018GNSS"
                 match="gex:EX_BoundingPolygon" priority="2000">
     <xsl:param name="schema" select="$schema" required="no"/>
     <xsl:param name="labels" select="$labels" required="no"/>
@@ -330,10 +330,10 @@
   </xsl:template>
 
   <!-- Those elements MUST be ignored in the editor layout -->
-  <xsl:template mode="mode-iso19115-3.2018"
+  <xsl:template mode="mode-iso19115-3.2018GNSS"
                 match="*[contains(name(), 'GROUP_ELEMENT')]"
                 priority="2000">
-    <xsl:apply-templates mode="mode-iso19115-3.2018" select="*"/>
+    <xsl:apply-templates mode="mode-iso19115-3.2018GNSS" select="*"/>
   </xsl:template>
 
 
@@ -341,17 +341,17 @@
     Display contact as table when mode is flat (eg. simple view) or if using xsl mode
     Match first node (or added one)
   -->
-  <xsl:template mode="mode-iso19115-3.2018"
+  <xsl:template mode="mode-iso19115-3.2018GNSS"
                 match="*[
                         *[1]/name() = $editorConfig/editor/tableFields/table/@for and
                         (1 or @gn:addedObj = 'true') and
                         $isFlatMode]"
                 priority="2000">
-    <xsl:call-template name="iso19115-3.2018-table"/>
+    <xsl:call-template name="iso19115-3.2018GNSS-table"/>
   </xsl:template>
 
   <!-- Ignore the following -->
-  <xsl:template mode="mode-iso19115-3.2018"
+  <xsl:template mode="mode-iso19115-3.2018GNSS"
                 match="*[
                         *[1]/name() = $editorConfig/editor/tableFields/table/@for and
                         preceding-sibling::*[1]/name() = name() and
@@ -360,7 +360,7 @@
                 priority="2000"/>
 
   <!-- Define table layout -->
-  <xsl:template name="iso19115-3.2018-table">
+  <xsl:template name="iso19115-3.2018GNSS-table">
     <xsl:variable name="name" select="name()"/>
     <xsl:variable name="xpath" select="gn-fn-metadata:getXPath(.)"/>
     <xsl:variable name="isoType" select="if (../@gco:isoType) then ../@gco:isoType else ''"/>

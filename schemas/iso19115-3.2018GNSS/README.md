@@ -95,7 +95,7 @@ Nevertheless, the citation code is also indexed.
 
 ### Validation
 
-Validation steps are first XSD validation made on the schema, then the schematron validation defined in folder  [iso19115-3.2018/schematron](https://github.com/geonetwork/core-geonetwork/tree/master/schemas/iso19115-3.2018/src/main/plugin/iso19115-3.2018/schematron). 2 famillies of rules are available:
+Validation steps are first XSD validation made on the schema, then the schematron validation defined in folder  [iso19115-3.2018GNSS/schematron](https://github.com/geonetwork/core-geonetwork/tree/master/schemas/iso19115-3.2018GNSS/src/main/plugin/iso19115-3.2018GNSS/schematron). 2 famillies of rules are available:
 * ISO rules (defined by TC211)
 * INSPIRE rules
 
@@ -103,7 +103,7 @@ Validation steps are first XSD validation made on the schema, then the schematro
 ## CSW requests:
 
 If requesting using output schema http://www.isotc211.org/2005/gmd an ISO19139 record is returned. 
-To retrieve the record in ISO19115-3.2018, use http://standards.iso.org/iso/19115/-3/mdb/2.0 output schema.
+To retrieve the record in ISO19115-3.2018GNSS, use http://standards.iso.org/iso/19115/-3/mdb/2.0 output schema.
 ```xml
 <?xml version="1.0"?>
 <csw:GetRecordById xmlns:csw="http://www.opengis.net/cat/csw/2.0.2"

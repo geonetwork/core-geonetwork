@@ -2,7 +2,7 @@
 <xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 xmlns:gn="http://www.fao.org/geonetwork"
-                xmlns:gn-fn-iso19115-3.2018="http://geonetwork-opensource.org/xsl/functions/profiles/iso19115-3.2018"
+                xmlns:gn-fn-iso19115-3.2018GNSS="http://geonetwork-opensource.org/xsl/functions/profiles/iso19115-3.2018GNSS"
                 exclude-result-prefixes="#all">
 
   <!-- Vacuum utility. Remove empty elements from a metadata record:
@@ -10,18 +10,18 @@
   * All elements having no child text (ie. normalize-space return '') and
   have only empty attribute (or gco:nilReason=missing).
 
-  The main function call the vacuum-iso19115-3.2018 mode.
+  The main function call the vacuum-iso19115-3.2018GNSS mode.
   -->
-  <xsl:function name="gn-fn-iso19115-3.2018:vacuum" as="node()">
+  <xsl:function name="gn-fn-iso19115-3.2018GNSS:vacuum" as="node()">
     <xsl:param name="metadata" as="node()"/>
     <xsl:for-each select="$metadata/*">
-      <xsl:apply-templates mode="vacuum-iso19115-3.2018"
+      <xsl:apply-templates mode="vacuum-iso19115-3.2018GNSS"
                            select="."/>
     </xsl:for-each>
   </xsl:function>
 
 
-  <xsl:function name="gn-fn-iso19115-3.2018:isElementOrChildEmpty"
+  <xsl:function name="gn-fn-iso19115-3.2018GNSS:isElementOrChildEmpty"
                 as="xs:boolean">
     <xsl:param name="element"/>
 
@@ -42,10 +42,10 @@
   </xsl:function>
 
   <!-- Do a copy of every nodes and attributes -->
-  <xsl:template mode="vacuum-iso19115-3.2018"
+  <xsl:template mode="vacuum-iso19115-3.2018GNSS"
                 match="@*|node()">
     <xsl:variable name="isElementEmpty"
-                  select="gn-fn-iso19115-3.2018:isElementOrChildEmpty(.)"/>
+                  select="gn-fn-iso19115-3.2018GNSS:isElementOrChildEmpty(.)"/>
 
     <xsl:choose>
       <xsl:when test="$isElementEmpty = true()">
@@ -55,7 +55,7 @@
       </xsl:when>
       <xsl:otherwise>
         <xsl:copy>
-          <xsl:apply-templates mode="vacuum-iso19115-3.2018"
+          <xsl:apply-templates mode="vacuum-iso19115-3.2018GNSS"
                                select="@*|node()"/>
         </xsl:copy>
       </xsl:otherwise>
@@ -65,14 +65,14 @@
   <!--
   This will not work as it will only remove elements and its parent.
   It will not handle complex empty element.
-  <xsl:template mode="vacuum-iso19115-3.2018"
+  <xsl:template mode="vacuum-iso19115-3.2018GNSS"
                 match="@*[. = '']|
                        *[gco:CharacterString/normalize-space(text()) = '']|
                        *[text() = '' and count(@*) = 0 and count(*) = 0]"
                 priority="2"><empty/></xsl:template>-->
 
   <!-- Always remove gn:* elements. -->
-  <xsl:template mode="vacuum-iso19115-3.2018"
+  <xsl:template mode="vacuum-iso19115-3.2018GNSS"
                 match="gn:*" priority="2"/>
 
 </xsl:stylesheet>

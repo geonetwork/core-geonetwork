@@ -35,7 +35,7 @@
   xmlns:gcx="http://standards.iso.org/iso/19115/-3/gcx/1.0"
   xmlns:gn="http://www.fao.org/geonetwork"
   xmlns:xs="http://www.w3.org/2001/XMLSchema"
-  xmlns:gn-fn-iso19115-3.2018="http://geonetwork-opensource.org/xsl/functions/profiles/iso19115-3.2018"
+  xmlns:gn-fn-iso19115-3.2018GNSS="http://geonetwork-opensource.org/xsl/functions/profiles/iso19115-3.2018GNSS"
   exclude-result-prefixes="#all">
 
   <xsl:import href="../layout/utility-fn.xsl"/>
@@ -220,12 +220,12 @@
             <mdq:specification>
               <cit:CI_Citation>
                 <cit:title>
-                  <xsl:copy-of select="gn-fn-iso19115-3.2018:fillTextElement($name, $mainLangId, $useOnlyPTFreeText)"/>
+                  <xsl:copy-of select="gn-fn-iso19115-3.2018GNSS:fillTextElement($name, $mainLangId, $useOnlyPTFreeText)"/>
                 </cit:title>
                 <cit:onlineResource>
                   <cit:CI_OnlineResource>
                     <cit:linkage>
-                      <xsl:copy-of select="gn-fn-iso19115-3.2018:fillTextElement($url, $mainLangId, $useOnlyPTFreeText)"/>
+                      <xsl:copy-of select="gn-fn-iso19115-3.2018GNSS:fillTextElement($url, $mainLangId, $useOnlyPTFreeText)"/>
                     </cit:linkage>
                   </cit:CI_OnlineResource>
                 </cit:onlineResource>
@@ -233,7 +233,7 @@
             </mdq:specification>
             <xsl:if test="$desc">
               <mdq:explanation>
-                <xsl:copy-of select="gn-fn-iso19115-3.2018:fillTextElement($desc, $mainLangId, $useOnlyPTFreeText)"/>
+                <xsl:copy-of select="gn-fn-iso19115-3.2018GNSS:fillTextElement($desc, $mainLangId, $useOnlyPTFreeText)"/>
               </mdq:explanation>
             </xsl:if>
             <mdq:pass>
@@ -261,12 +261,12 @@
         <mdq:reportReference>
           <cit:CI_Citation>
             <cit:title>
-              <xsl:copy-of select="gn-fn-iso19115-3.2018:fillTextElement($name, $mainLangId, $useOnlyPTFreeText)"/>
+              <xsl:copy-of select="gn-fn-iso19115-3.2018GNSS:fillTextElement($name, $mainLangId, $useOnlyPTFreeText)"/>
             </cit:title>
             <cit:onlineResource>
               <cit:CI_OnlineResource>
                 <cit:linkage>
-                  <xsl:copy-of select="gn-fn-iso19115-3.2018:fillTextElement($url, $mainLangId, $useOnlyPTFreeText)"/>
+                  <xsl:copy-of select="gn-fn-iso19115-3.2018GNSS:fillTextElement($url, $mainLangId, $useOnlyPTFreeText)"/>
                 </cit:linkage>
               </cit:CI_OnlineResource>
             </cit:onlineResource>
@@ -274,7 +274,7 @@
         </mdq:reportReference>
         <xsl:if test="$desc">
           <mdq:abstract>
-            <xsl:copy-of select="gn-fn-iso19115-3.2018:fillTextElement($desc, $mainLangId, $useOnlyPTFreeText)"/>
+            <xsl:copy-of select="gn-fn-iso19115-3.2018GNSS:fillTextElement($desc, $mainLangId, $useOnlyPTFreeText)"/>
           </mdq:abstract>
         </xsl:if>
       </mdq:DQ_StandaloneQualityReportInformation>
@@ -292,19 +292,19 @@
     <mrl:additionalDocumentation>
       <cit:CI_Citation>
         <cit:title>
-          <xsl:copy-of select="gn-fn-iso19115-3.2018:fillTextElement($name, $mainLangId, $useOnlyPTFreeText)"/>
+          <xsl:copy-of select="gn-fn-iso19115-3.2018GNSS:fillTextElement($name, $mainLangId, $useOnlyPTFreeText)"/>
         </cit:title>
         <cit:onlineResource>
           <cit:CI_OnlineResource>
             <cit:linkage>
-              <xsl:copy-of select="gn-fn-iso19115-3.2018:fillTextElement($url, $mainLangId, $useOnlyPTFreeText)"/>
+              <xsl:copy-of select="gn-fn-iso19115-3.2018GNSS:fillTextElement($url, $mainLangId, $useOnlyPTFreeText)"/>
             </cit:linkage>
             <cit:protocol>
               <gco:CharacterString>WWW:LINK</gco:CharacterString>
             </cit:protocol>
             <xsl:if test="$desc">
               <cit:description>
-                <xsl:copy-of select="gn-fn-iso19115-3.2018:fillTextElement($desc, $mainLangId, $useOnlyPTFreeText)"/>
+                <xsl:copy-of select="gn-fn-iso19115-3.2018GNSS:fillTextElement($desc, $mainLangId, $useOnlyPTFreeText)"/>
               </cit:description>
             </xsl:if>
           </cit:CI_OnlineResource>

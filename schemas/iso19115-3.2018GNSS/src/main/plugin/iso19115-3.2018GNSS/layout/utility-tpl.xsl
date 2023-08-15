@@ -25,12 +25,12 @@
   <xsl:import href="common/index-utils.xsl"/>
   <xsl:include href="utility-tpl-multilingual.xsl"/>
 
-  <xsl:template name="get-iso19115-3.2018-is-service">
+  <xsl:template name="get-iso19115-3.2018GNSS-is-service">
     <xsl:value-of
             select="count($metadata/mdb:identificationInfo/srv:SV_ServiceIdentification) > 0"/>
   </xsl:template>
 
-  <xsl:template name="get-iso19115-3.2018-title">
+  <xsl:template name="get-iso19115-3.2018GNSS-title">
     <xsl:value-of select="($metadata/mdb:identificationInfo/*/mri:citation/*/cit:title/gco:CharacterString
                           |$metadata/mdb:contentInfo/*/mrc:featureCatalogue/*/cat:name[*/text() != '']
                           |$metadata/mdb:contentInfo/*/mrc:featureCatalogue/*/gfc:featureType/*/gfc:typeName[text() != ''])[1]
@@ -48,7 +48,7 @@
   </xsl:template>
 
 
-  <xsl:template name="get-iso19115-3.2018-extents-as-json">[
+  <xsl:template name="get-iso19115-3.2018GNSS-extents-as-json">[
    <xsl:for-each select="//mdb:identificationInfo/*/mri:extent
                           //gex:geographicElement/gex:EX_GeographicBoundingBox[
             number(gex:westBoundLongitude/gco:Decimal)
@@ -73,7 +73,7 @@
     ]
   </xsl:template>
 
-  <xsl:template name="get-iso19115-3.2018-online-source-config">
+  <xsl:template name="get-iso19115-3.2018GNSS-online-source-config">
     <xsl:param name="pattern"/>
     <config>
       <xsl:for-each select="$metadata/descendant::mrd:onLine[

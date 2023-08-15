@@ -5,12 +5,12 @@
   xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
   xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/2.0"
   xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0"
-  xmlns:gn-fn-iso19115-3.2018="http://geonetwork-opensource.org/xsl/functions/profiles/iso19115-3.2018"
+  xmlns:gn-fn-iso19115-3.2018GNSS="http://geonetwork-opensource.org/xsl/functions/profiles/iso19115-3.2018GNSS"
   xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
   exclude-result-prefixes="#all">
 
 
-  <xsl:function name="gn-fn-iso19115-3.2018:write-date-or-dateTime" as="node()">
+  <xsl:function name="gn-fn-iso19115-3.2018GNSS:write-date-or-dateTime" as="node()">
     <xsl:param name="date" as="xs:string"/>
     <xsl:param name="dateType" as="xs:string"/>
     <cit:CI_Date>
@@ -37,7 +37,7 @@
   parameter. If not found, return the lang parameter
   prefixed by #.
         -->
-  <xsl:function name="gn-fn-iso19115-3.2018:getLangId" as="xs:string">
+  <xsl:function name="gn-fn-iso19115-3.2018GNSS:getLangId" as="xs:string">
     <xsl:param name="md"/>
     <xsl:param name="lang"/>
 
@@ -57,7 +57,7 @@
   </xsl:function>
 
 
-  <xsl:function name="gn-fn-iso19115-3.2018:getCodeListType" as="xs:string">
+  <xsl:function name="gn-fn-iso19115-3.2018GNSS:getCodeListType" as="xs:string">
     <xsl:param name="name" as="xs:string"/>
     <xsl:param name="editorConfig" as="node()"/>
 
@@ -68,7 +68,7 @@
   </xsl:function>
 
 
-  <xsl:function name="gn-fn-iso19115-3.2018:isNotMultilingualField" as="xs:boolean">
+  <xsl:function name="gn-fn-iso19115-3.2018GNSS:isNotMultilingualField" as="xs:boolean">
     <xsl:param name="element" as="node()"/>
     <xsl:param name="editorConfig" as="node()"/>
 
@@ -136,15 +136,15 @@
     split on 2 chars to get language code and get string from the 4 position
     to get the value.
    -->
-  <xsl:function name="gn-fn-iso19115-3.2018:fillTextElement" as="node()*">
+  <xsl:function name="gn-fn-iso19115-3.2018GNSS:fillTextElement" as="node()*">
     <xsl:param name="string" as="xs:string"/>
     <xsl:param name="mainLanguage" as="xs:string?"/>
     <xsl:param name="useOnlyPTFreeText" as="xs:boolean"/>
 
-    <xsl:copy-of select="gn-fn-iso19115-3.2018:fillTextElement($string, '\|', '#', $mainLanguage, $useOnlyPTFreeText)"/>
+    <xsl:copy-of select="gn-fn-iso19115-3.2018GNSS:fillTextElement($string, '\|', '#', $mainLanguage, $useOnlyPTFreeText)"/>
   </xsl:function>
 
-  <xsl:function name="gn-fn-iso19115-3.2018:fillTextElement" as="node()*">
+  <xsl:function name="gn-fn-iso19115-3.2018GNSS:fillTextElement" as="node()*">
     <xsl:param name="string" as="xs:string"/>
     <xsl:param name="translationSeparator" as="xs:string"/>
     <xsl:param name="valueSeparator" as="xs:string"/>
