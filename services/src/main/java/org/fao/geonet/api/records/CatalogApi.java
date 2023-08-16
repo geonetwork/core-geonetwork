@@ -35,6 +35,7 @@ import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.sources.http.ServletPathFinder;
 import jeeves.services.ReadWriteController;
+import jeeves.xlink.Processor;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.csv.QuoteMode;
@@ -154,6 +155,8 @@ public class CatalogApi {
     IsoLanguagesMapper isoLanguagesMapper;
     @Autowired
     private ServletContext servletContext;
+    @Autowired
+    private XmlSerializer xmlSerializer;
 
     /*
      * <p>Retrieve all parameters (except paging parameters) as a string.</p>
@@ -557,7 +560,7 @@ public class CatalogApi {
 
         if (StringUtils.isNotEmpty(loopElementXpath)) {
             buildCsvResponseFromXml(loopElementXpath, propertiesXpath, httpResponse, idsToExport,
-                sep, internalSep);
+                sep, internalSep, context);
         } else {
             Element response = new Element("response");
             idsToExport.forEach(uuid -> {
@@ -586,7 +589,7 @@ public class CatalogApi {
 
     }
 
-    private void buildCsvResponseFromXml(String loopElementXpath, List<String> propertiesXpath, HttpServletResponse httpResponse, List<String> idsToExport, String sep, String internalSep) {
+    private void buildCsvResponseFromXml(String loopElementXpath, List<String> propertiesXpath, HttpServletResponse httpResponse, List<String> idsToExport, String sep, String internalSep, ServiceContext context) {
         try (CSVPrinter csvPrinter = new CSVPrinter(
             new OutputStreamWriter(httpResponse.getOutputStream()),
             CSVFormat.DEFAULT
@@ -598,17 +601,21 @@ public class CatalogApi {
             headers.add("permalink");
             headers.addAll(propertiesXpath);
             csvPrinter.printRecord(headers);
-            idsToExport.forEach(id -> buildCsvRecordFromXml(loopElementXpath, propertiesXpath, csvPrinter, id, internalSep));
+            idsToExport.forEach(id -> buildCsvRecordFromXml(
+                loopElementXpath, propertiesXpath, csvPrinter, id, internalSep, context));
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }
     }
 
-    private void buildCsvRecordFromXml(String loopElementXpath, List<String> propertiesXpath, CSVPrinter csvPrinter, String id, String internalSep) {
+    private void buildCsvRecordFromXml(String loopElementXpath, List<String> propertiesXpath, CSVPrinter csvPrinter, String id, String internalSep, ServiceContext context) {
         try {
             Metadata metadata = metadataRepository.findOneById(Integer.parseInt(id));
             if (metadata == null) return;
             Element xml = metadata.getXmlData(false);
+            if (xmlSerializer.resolveXLinks()) {
+                Processor.detachXLink(xml, context);
+            }
             String schema = metadata.getDataInfo().getSchemaId();
             List<Namespace> namespaces = schemaManager.getSchema(schema).getNamespaces();
             List<?> elements = Xml.selectNodes(xml, loopElementXpath, namespaces);
