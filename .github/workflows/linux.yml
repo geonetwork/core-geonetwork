@@ -13,7 +13,7 @@ jobs:
       matrix:
         include:
           - os: ubuntu-22.04
-            jdk: 8
+            jdk: 11
     steps:
     - uses: actions/checkout@v3
       with:
@@ -51,7 +51,7 @@ jobs:
       uses: actions/setup-java@v3.10.0
       with:
         distribution: 'temurin'
-        java-version: 8
+        java-version: 11
         cache: 'maven'
     - name: Set up Maven
       uses: stCarolas/setup-maven@v4
