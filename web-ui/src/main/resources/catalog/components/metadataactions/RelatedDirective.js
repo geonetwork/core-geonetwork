@@ -50,14 +50,15 @@
    */
   module.service('gnRelatedService', ['$http', '$q',
     function($http, $q) {
-    this.get = function(uuidOrId, types) {
+    this.get = function(uuidOrId, types, approved) {
       var canceller = $q.defer();
       var request = $http({
         method: 'get',
-        url: '../api/records/' + uuidOrId + '/related?' +
+        url: '../api/records/' + uuidOrId + '/related?type=' +
             (types ?
-            'type=' + types.split('|').join('&type=') :
-            ''),
+             types.split('|').join('&type=') :
+            '') +
+          (approved === false ? "&approved=false" : ""),
         timeout: canceller.promise,
         cache: true
       });
@@ -85,12 +86,13 @@
       return (promise);
     };
 
-    this.getMdsRelated = function(uuids, types) {
+    this.getMdsRelated = function(uuids, types, approved) {
       var url = '../api/related';
       return $http.get(url, {
         params: {
           type: types,
-          uuid: uuids
+          uuid: uuids,
+          approved: approved
         }
       });
     };
@@ -149,7 +151,7 @@
                     controller.startGnRelatedRequest(elem);
                   }
                   (promise = gnRelatedService.get(
-                     scope.id, scope.types)
+                     scope.id, scope.types, scope.md.draft !== 'y')
                   ).then(function(data) {
                        angular.forEach(data, function(value, idx) {
                          if (!value) { return; }

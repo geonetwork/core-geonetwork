@@ -230,8 +230,9 @@
         getAllResources: function(types) {
 
           var defer = $q.defer();
-          var url = '../api/records/' + gnCurrentEdit.uuid + '/related' +
-                      (angular.isArray(types) ? '?' + types.join('&type=') : '');
+          var url = '../api/records/' + gnCurrentEdit.uuid + '/related?type=' +
+                      (angular.isArray(types) ? types.join('&type=') : '') + 
+                      (gnCurrentEdit.metadata.draft === 'y' ? '&approved=false' : '');
           $http.get(url, {
             headers: {
               'Accept': 'application/json'
@@ -463,9 +464,15 @@
          * @return {string} icon class
          */
         getApprovedUrl: function(url) {
-          if(gnCurrentEdit.metadata.draft
-             && url.match(".*/api/records/(.*)/attachments/.*") != null) {
-             url += (url.indexOf("?") > 0)?"&":"?" + "approved=" + (gnCurrentEdit.metadata.draft != 'y');
+          if (
+            gnCurrentEdit.metadata.draft === 'y' &&
+            url.match(".*/api/records/" + gnCurrentEdit.uuid + "/attachments/.*") != null
+          ) {
+            if (url.match(".*(&?)((approved=.*)(&?))+")) {
+              // Remove approved parameter if already exists.
+              url = gnUrlUtils.remove(url, ["approved"], true);
+            }
+            url += (url.indexOf("?") > 0 ? "&" : "?") + "approved=false";
           }
           return url
         },
@@ -654,11 +661,17 @@
          * @param {Object} onlinesrc the online resource to remove
          */
         removeOnlinesrc: function(onlinesrc) {
+          var url = onlinesrc.lUrl || onlinesrc.url;
+          if (
+            url.match(".*/api/records/' + gnCurrentEdit.uuid + '/attachments/.*") != null
+          ) {
+            url = gnUrlUtils.remove(url, ["approved"], true);
+          }
 
           return runProcess(this,
               setParams('onlinesrc-remove', {
                 id: gnCurrentEdit.id,
-                url: onlinesrc.lUrl || onlinesrc.url,
+                url: url,
                 name: $filter('gnLocalized')(onlinesrc.title)
               }));
         },
