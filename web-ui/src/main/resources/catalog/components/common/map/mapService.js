@@ -1222,6 +1222,83 @@
               if (url.slice(-1) === "?") {
                 url = url.substring(0, url.length - 1);
               }
+
+              /**
+               * Parses a time value with the following formats:
+               *
+               *   DATE
+               *   DATE/DATE
+               *   DATE/PERIOD
+               *   DATE/DATE/PERIOD
+               *
+               * @param value time value
+               * @returns {*[]|*}
+               */
+              var createTimeInterval = function (interval) {
+                var timeIntervalValues = [];
+                var intervalTokens = interval.split("/");
+
+                if (intervalTokens.length == 1 && moment(interval).isValid()) {
+                  timeIntervalValues.push(interval);
+                } else if (intervalTokens.length == 2) {
+                  if (
+                    moment(intervalTokens[0]).isValid() &&
+                    moment(intervalTokens[1]).isValid()
+                  ) {
+                    // DATE/DATE
+                    timeIntervalValues = intervalTokens;
+                  } else if (
+                    moment(intervalTokens[0]).isValid() &&
+                    moment.isDuration(moment.duration(intervalTokens[1]))
+                  ) {
+                    //   DATE/PERIOD
+                    var durationValue = moment.duration(intervalTokens[1]);
+
+                    timeIntervalValues.push(intervalTokens[0]);
+                    var nextValue = moment(intervalTokens[0])
+                      .add(durationValue)
+                      .utc()
+                      .format();
+                    timeIntervalValues.push(nextValue);
+                  } else if (
+                    moment(intervalTokens[0]).isValid() &&
+                    moment.isDuration(moment.duration(intervalTokens[1]))
+                  ) {
+                    //   DATE/PERIOD
+                    var durationValue = moment.duration(intervalTokens[1]);
+
+                    timeIntervalValues.push(intervalTokens[0]);
+                    var nextValue = moment(intervalTokens[0])
+                      .add(durationValue)
+                      .utc()
+                      .format();
+                    timeIntervalValues.push(nextValue);
+                  }
+                } else if (intervalTokens.length == 3) {
+                  if (
+                    moment(intervalTokens[0]).isValid() &&
+                    moment(intervalTokens[1]).isValid() &&
+                    moment.isDuration(moment.duration(intervalTokens[2]))
+                  ) {
+                    // DATE/DATE/PERIOD
+                    var durationValue = moment.duration(intervalTokens[2]);
+
+                    timeIntervalValues.push(intervalTokens[0]);
+                    var nextValue = moment(intervalTokens[0])
+                      .add(durationValue)
+                      .utc()
+                      .format();
+
+                    while (moment(nextValue).isBefore(moment(intervalTokens[1]))) {
+                      timeIntervalValues.push(nextValue);
+                      nextValue = moment(nextValue).add(durationValue).utc().format();
+                    }
+                  }
+                }
+
+                return timeIntervalValues;
+              };
+
               var layer = this.createOlWMS(map, layerParam, {
                 url: url,
                 label: getCapLayer.Title || getCapLayer.Name,
@@ -1257,11 +1334,19 @@
                     }
                   }
                   if (dimension.name == "time") {
+                    var dimensionValues = [];
+
+                    var dimensionList = dimension.values.split(",");
+
+                    for (var i = 0; i < dimensionList.length; i++) {
+                      dimensionValues = dimensionValues.concat(
+                        createTimeInterval(dimensionList[i].trim())
+                      );
+                    }
+
                     layer.set("time", {
                       units: dimension.units,
-                      values: dimension.values.split(",").map(function (e) {
-                        return e.trim();
-                      })
+                      values: dimensionValues
                     });
 
                     if (dimension.default) {
