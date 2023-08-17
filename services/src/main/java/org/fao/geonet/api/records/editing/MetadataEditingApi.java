@@ -373,9 +373,9 @@ public class MetadataEditingApi {
 
             boolean reindex = false;
 
-            String iso3langCode = languageUtils.iso3code(request.getLocales());
+            String lang = String.valueOf(languageUtils.parseAcceptLanguage(request.getLocales()));
             ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages",
-                new Locale(iso3langCode));
+                new Locale(lang));
 
             // Save validation if the forceValidationOnMdSave is enabled
             if (forceValidationOnMdSave) {
