@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2010 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2023 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -41,5 +41,5 @@ public class DoiSettings {
     public static final String SETTING_PUBLICATION_DOI_LANDING_PAGE_TEMPLATE =
         "system/publication/doi/doilandingpagetemplate";
 
-    protected static final String LOGGER_NAME = "DOI";
+    protected static final String LOGGER_NAME = "geonetwork.doi";
 }

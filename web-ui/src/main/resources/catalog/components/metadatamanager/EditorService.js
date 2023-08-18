@@ -614,12 +614,12 @@
                 checkAddControls(target.get(0), true);
                 checkMoveControls(target.get(0));
 
-                target.slideUp(duration, function () {
+                target.slideUp(duration);
+                target.promise().done(function () {
                   $(this).remove();
+                  // TODO: Take care of moving the + sign
+                  defer.resolve(response.data);
                 });
-
-                // TODO: Take care of moving the + sign
-                defer.resolve(response.data);
               },
               function (response) {
                 defer.reject(response.data);

@@ -229,10 +229,6 @@
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
           <version>3.8.1</version>
-          <configuration>
-            <source>1.8</source>
-            <target>1.8</target>
-          </configuration>
         </plugin>
         <plugin>
           <artifactId>maven-assembly-plugin</artifactId>
@@ -260,13 +256,17 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
-          <source>1.8</source>
-          <target>1.8</target>
-          <compilerVersion>1.8</compilerVersion>
+          <source>11</source>
+          <target>11</target>
+          <compilerVersion>11</compilerVersion>
           <debug>true</debug>   <!-- Whether to include debugging information.   -->
           <encoding>UTF-8</encoding> <!-- The -encoding argument for the Java compiler. -->
-          <compilerArgument>-proc:none
-          </compilerArgument> <!-- disable automatic annotation processing accoring to: http://docs.jboss.org/hibernate/jpamodelgen/1.0/reference/en-US/html_single/#d0e261 -->
+          <compilerArgs>
+            <!-- disable automatic annotation processing according to: http://docs.jboss.org/hibernate/jpamodelgen/1.0/reference/en-US/html_single/#d0e261 -->
+            <arg>-proc:none</arg>
+            <arg>--add-exports</arg>
+            <arg>java.base/sun.net.ftp=ALL-UNNAMED</arg>
+          </compilerArgs>
         </configuration>
       </plugin>
 
@@ -421,6 +421,13 @@
         <groupId>org.openrdf</groupId>
         <artifactId>sesame</artifactId>
         <version>1.2.7</version>
+        <exclusions>
+          <!-- Remove CVE-2022-45378 and do not break sesame usage. -->
+          <exclusion>
+            <groupId>soap</groupId>
+            <artifactId>soap</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
       <dependency>
         <groupId>org.openrdf</groupId>
@@ -584,6 +591,13 @@
         <artifactId>xml-apis</artifactId>
         <version>1.4.01</version>
       </dependency>
+
+      <dependency>
+        <groupId>org.yaml</groupId>
+        <artifactId>snakeyaml</artifactId>
+        <version>2.0</version>
+      </dependency>
+
 
       <!-- Patched XML Resolver 1.2 from apache xml-commons - fixes problems
                  with windows URLs -->
@@ -1096,6 +1110,11 @@
         <version>${hibernate.version}</version>
       </dependency>
       <dependency>
+        <groupId>net.sf.ehcache</groupId>
+        <artifactId>ehcache</artifactId>
+        <version>2.10.9.2</version>
+      </dependency>
+      <dependency>
         <groupId>org.hibernate</groupId>
         <artifactId>hibernate-jpamodelgen</artifactId>
         <version>${hibernate.version}</version>
@@ -1160,12 +1179,12 @@
       <dependency>
         <groupId>javax.xml.bind</groupId>
         <artifactId>jaxb-api</artifactId>
-        <version>2.2.11</version>
+        <version>2.3.1</version>
       </dependency>
       <dependency>
         <groupId>com.sun.xml.bind</groupId>
         <artifactId>jaxb-impl</artifactId>
-        <version>2.2.11</version>
+        <version>2.3.1</version>
       </dependency>
       <dependency>
         <groupId>org.elasticsearch.client</groupId>
@@ -1202,6 +1221,12 @@
           <artifactId>diff-match-patch</artifactId>
           <version>1.2</version>
       </dependency>
+      <dependency>
+        <groupId>javax.annotation</groupId>
+        <artifactId>javax.annotation-api</artifactId>
+        <version>1.3.2</version>
+      </dependency>
+
     </dependencies>
   </dependencyManagement>
 
@@ -1317,37 +1342,6 @@
 
   <profiles>
     <profile>
-      <!-- force use of java 8 if available in toolchains.xml -->
-      <id>toolchain</id>
-      <activation>
-        <file>
-          <exists>${user.home}/.m2/toolchains.xml</exists>
-        </file>
-      </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-toolchains-plugin</artifactId>
-            <executions>
-              <execution>
-                <goals>
-                  <goal>toolchain</goal>
-                </goals>
-              </execution>
-            </executions>
-            <configuration>
-              <toolchains>
-                <jdk>
-                  <version>8</version>
-                </jdk>
-              </toolchains>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-    <profile>
       <id>with-doc</id>
       <modules>
         <module>docs</module>
@@ -1435,8 +1429,6 @@
     <application.name>geonetwork</application.name>
     <app.properties>WEB-INF/config.properties</app.properties>
     <!--<app.properties>file:/${geonetwork.dir}/config.properties</app.properties>-->
-    <maven.compiler.source>1.8</maven.compiler.source>
-    <maven.compiler.target>1.8</maven.compiler.target>
     <!-- Configure database config file to use. Could be
      h2, postgres, sqlserver, mysql, oracle, db2, postgres-postgis, jndi
      -->
@@ -1533,7 +1525,7 @@
     <kb.url>http://localhost:${kb.port}</kb.url>
 
     <jms.url>tcp://localhost:61616</jms.url>
-    <activemq.version>5.6.0</activemq.version>
+    <activemq.version>5.7.0</activemq.version>
 
     <!-- Avoid to create any sessions for crawlers.
     Define the list of User-Agent to be considered as bot. -->
@@ -1549,7 +1541,7 @@
      request the list of hosts (but JPA cache db queries). -->
     <cors.allowedHosts>*</cors.allowedHosts>
 
-    <jetty.version>9.4.48.v20220622</jetty.version>
+    <jetty.version>9.4.51.v20230217</jetty.version>
     <jetty.file>jetty-distribution-${jetty.version}</jetty.file>
     <jetty.download>https://repo1.maven.org/maven2/org/eclipse/jetty/jetty-distribution/${jetty.version}/${jetty.file}.tar.gz</jetty.download>
 
@@ -1560,10 +1552,11 @@
     <pg.version>42.3.3</pg.version>
 
     <spring.version>5.3.27</spring.version>
-    <spring.security.version>5.7.8</spring.security.version>
-    <spring.jpa.version>2.2.13.RELEASE</spring.jpa.version>
+    <spring.security.version>5.8.3</spring.security.version>
+    <spring.jpa.version>2.7.12</spring.jpa.version>
     <springboot.version>2.7.0</springboot.version>
-    <springdoc.version>1.5.9</springdoc.version>
+    <springdoc.version>1.5.13</springdoc.version>
+    <hibernate.version>5.6.15.Final</hibernate.version>
 
     <metrics.version>2.2.0</metrics.version>
     <maven.build.timestamp.format>yyyy-MM-dd'T'HH'\:'mm'\:'ssZ</maven.build.timestamp.format>
@@ -1572,10 +1565,8 @@
     <wro.version>1.7.9</wro.version>
     <wro.debug>true</wro.debug>
     <fop.version>2.7</fop.version>
-    <node.version>v8.11.1</node.version>
-    <npm.version>5.8.0</npm.version>
     <xmlunit.version>2.1.1</xmlunit.version>
-    <jackson.version>2.10.4</jackson.version>
+    <jackson.version>2.15.2</jackson.version>
     <flying-saucer>9.1.22</flying-saucer>
     <camel.version>2.25.1</camel.version>
     <log4j2.version>2.17.2</log4j2.version>
@@ -1585,7 +1576,6 @@
     <httpcomponents.version>4.5.14</httpcomponents.version>
     <jasypt.version>1.9.3</jasypt.version>
     <jupiter.version>5.9.1</jupiter.version>
-    <hibernate.version>5.6.7.Final</hibernate.version>
 
     <sonar.organization>geonetwork</sonar.organization>
     <sonar.host.url>https://sonarcloud.io</sonar.host.url>

@@ -127,10 +127,10 @@ public class ZipUtilTest {
 
         assertEquals(7, allFiles.size());
         assertTrue(allFiles.toString(), allFiles.contains("/"));
-        assertTrue(allFiles.toString(), allFiles.contains("/zipfile/"));
+        assertTrue(allFiles.toString(), allFiles.contains("/zipfile") || allFiles.contains("/zipfile/"));
         assertTrue(allFiles.toString(), allFiles.contains("/zipfile/file1.txt"));
         assertTrue(allFiles.toString(), allFiles.contains("/zipfile/file2.txt"));
-        assertTrue(allFiles.toString(), allFiles.contains("/zipfile/dir/"));
+        assertTrue(allFiles.toString(), allFiles.contains("/zipfile/dir") || allFiles.contains("/zipfile/dir/"));
         assertTrue(allFiles.toString(), allFiles.contains("/zipfile/dir/file4.txt"));
         assertTrue(allFiles.toString(), allFiles.contains("/file3.txt"));
     }

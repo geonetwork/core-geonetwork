@@ -1222,6 +1222,7 @@
               if (url.slice(-1) === "?") {
                 url = url.substring(0, url.length - 1);
               }
+
               var layer = this.createOlWMS(map, layerParam, {
                 url: url,
                 label: getCapLayer.Title || getCapLayer.Name,
@@ -1257,11 +1258,21 @@
                     }
                   }
                   if (dimension.name == "time") {
+                    var dimensionValues = [];
+
+                    var dimensionList = dimension.values.split(",");
+
+                    for (var i = 0; i < dimensionList.length; i++) {
+                      var wmsTimeInterval = new WMSTimeInterval(dimensionList[i].trim());
+
+                      dimensionValues = dimensionValues.concat(
+                        wmsTimeInterval.getValues()
+                      );
+                    }
+
                     layer.set("time", {
                       units: dimension.units,
-                      values: dimension.values.split(",").map(function (e) {
-                        return e.trim();
-                      })
+                      values: dimensionValues
                     });
 
                     if (dimension.default) {
@@ -2535,4 +2546,81 @@
     function (value) {
       return typeof value === "number" && isFinite(value) && Math.floor(value) === value;
     };
+
+  /**
+   * Parses a time interval with the following formats and creates a list of dates for the time interval.
+   *
+   *   DATE
+   *   DATE/DATE
+   *   DATE/PERIOD
+   *   DATE/DATE/PERIOD
+   *
+   * @param value time interval value
+   */
+  function WMSTimeInterval(interval) {
+    this.interval = interval;
+  }
+
+  WMSTimeInterval.prototype._isValidDate = function (value) {
+    return moment(value).isValid();
+  };
+
+  WMSTimeInterval.prototype._isValidDuration = function (value) {
+    return moment.isDuration(moment.duration(value));
+  };
+
+  WMSTimeInterval.prototype._processInterval = function (startDate, endDate, duration) {
+    var timeIntervalValues = [];
+
+    var durationValue = moment.duration(duration);
+    timeIntervalValues.push(startDate);
+
+    var nextValue = moment(startDate).add(durationValue).utc().format();
+
+    if (!endDate) {
+      timeIntervalValues.push(nextValue);
+    } else {
+      while (moment(nextValue).isBefore(moment(endDate))) {
+        timeIntervalValues.push(nextValue);
+        nextValue = moment(nextValue).add(durationValue).utc().format();
+      }
+    }
+
+    return timeIntervalValues;
+  };
+
+  WMSTimeInterval.prototype.getValues = function () {
+    var timeIntervalValues = [];
+    var intervalTokens = this.interval.split("/");
+
+    if (intervalTokens.length == 1 && this._isValidDate(this.interval)) {
+      timeIntervalValues.push(this.interval);
+    } else if (intervalTokens.length == 2) {
+      var isValidStartDate = this._isValidDate(intervalTokens[0]);
+      var isValidEndDate = this._isValidDate(intervalTokens[1]);
+      var isValidDuration = this._isValidDuration(intervalTokens[1]);
+
+      if (isValidStartDate && isValidEndDate) {
+        // DATE/DATE
+        timeIntervalValues = intervalTokens;
+      } else if (isValidStartDate && isValidDuration) {
+        // DATE/PERIOD
+        timeIntervalValues = timeIntervalValues.concat(
+          this._processInterval(intervalTokens[0], undefined, intervalTokens[1])
+        );
+      }
+    } else if (
+      intervalTokens.length == 3 &&
+      this._isValidDate(intervalTokens[0]) &&
+      this._isValidDate(intervalTokens[1]) &&
+      this._isValidDuration(intervalTokens[2])
+    ) {
+      // DATE/DATE/PERIOD
+      timeIntervalValues = timeIntervalValues.concat(
+        this._processInterval(intervalTokens[0], intervalTokens[1], intervalTokens[2])
+      );
+    }
+
+    return timeIntervalValues;
+  };
 })();
