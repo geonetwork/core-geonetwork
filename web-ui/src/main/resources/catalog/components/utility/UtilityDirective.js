@@ -2596,6 +2596,41 @@
     }
   ]);
 
+  module.directive("gnInspireUsageDetails", [
+    "$http",
+    function ($http) {
+      return {
+        restrict: "A",
+        replace: true,
+        scope: {
+          inspireApiUrl: "=gnInspireUsageDetails",
+          inspireApiKey: "=apiKey"
+        },
+        templateUrl: "../../catalog/components/utility/partials/inspireapiusage.html",
+        link: function (scope, element, attrs) {
+          scope.inspireApiUsage = undefined;
+          if (
+            scope.inspireApiUrl &&
+            scope.inspireApiUrl.length > 0 &&
+            scope.inspireApiKey &&
+            scope.inspireApiKey.length > 0
+          ) {
+            $http
+              .get(scope.inspireApiUrl + "/v2/Usages/" + scope.inspireApiKey + "/")
+              .then(
+                function (response) {
+                  scope.inspireApiUsage = response.data;
+                },
+                function (error) {
+                  console.warn("Error while retrieving INSPIRE API quotas: ", error);
+                }
+              );
+          }
+        }
+      };
+    }
+  ]);
+
   module.directive("gnSuggest", [
     "gnMetadataManager",
     function (gnMetadataManager) {
