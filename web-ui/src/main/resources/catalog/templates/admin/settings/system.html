@@ -626,27 +626,32 @@
                         />
                       </div>
 
-                      <div
-                        class="input-group"
-                        data-ng-switch-when="system/inspire/remotevalidation/url"
-                      >
-                        <input
-                          type="text"
-                          class="form-control"
-                          id="{{s['name']}}"
-                          name="{{s.name}}"
-                          value="{{s.value}}"
-                          placeholder="{{'system/inspire/remotevalidation/url-placeholder' | translate}}"
-                        />
-                        <span class="input-group-btn">
-                          <div
-                            class="btn btn-default"
-                            onClick="document.getElementById('system/inspire/remotevalidation/url').value = 'https://inspire.ec.europa.eu/validator/';"
-                            data-translate=""
-                          >
-                            validatorUseInspireOne
-                          </div>
-                        </span>
+                      <div data-ng-switch-when="system/inspire/remotevalidation/url">
+                        <div class="input-group">
+                          <input
+                            type="text"
+                            class="form-control"
+                            id="{{s['name']}}"
+                            name="{{s.name}}"
+                            value="{{s.value}}"
+                            placeholder="{{'system/inspire/remotevalidation/url-placeholder' | translate}}"
+                          />
+                          <span class="input-group-btn">
+                            <div
+                              class="btn btn-default"
+                              onClick="document.getElementById('system/inspire/remotevalidation/url').value = 'https://inspire.ec.europa.eu/validator/';"
+                              data-translate=""
+                            >
+                              validatorUseInspireOne
+                            </div>
+                          </span>
+                        </div>
+                        <br />
+                        <div
+                          class="alert alert-info"
+                          data-gn-inspire-usage-details="inspireApiUrl"
+                          data-api-key="inspireApiKey"
+                        ></div>
                       </div>
 
                       <div

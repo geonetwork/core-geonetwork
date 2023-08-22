@@ -223,6 +223,9 @@
             $scope.settings = data;
             angular.copy(data, $scope.initalSettings);
 
+            $scope.inspireApiUrl = undefined;
+            $scope.inspireApiKey = undefined;
+
             for (var i = 0; i < $scope.settings.length; i++) {
               if ($scope.settings[i].name == "metadata/workflow/enable") {
                 $scope.workflowEnable = $scope.settings[i].value == "true";
@@ -236,9 +239,19 @@
               ) {
                 $scope.isGroupPublicationNotificationLevel =
                   $scope.settings[i].value === "recordGroupEmail";
-              } else if ("system/localrating/notificationLevel") {
+              } else if (
+                $scope.settings[i].name == "system/localrating/notificationLevel"
+              ) {
                 $scope.isGroupLocalRatingNotificationLevel =
                   $scope.settings[i].value === "recordGroupEmail";
+              } else if (
+                $scope.settings[i].name == "system/inspire/remotevalidation/url"
+              ) {
+                $scope.inspireApiUrl = $scope.settings[i].value;
+              } else if (
+                $scope.settings[i].name == "system/inspire/remotevalidation/apikey"
+              ) {
+                $scope.inspireApiKey = $scope.settings[i].value;
               }
 
               var tokens = $scope.settings[i].name.split("/");
