@@ -33,11 +33,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.Closeable;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URL;
 import java.nio.file.Path;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.Nullable;
+import javax.servlet.ServletOutputStream;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -139,6 +141,9 @@ public interface Store {
      * @return The resource
      */
     ResourceHolder getResource(ServiceContext context, String metadataUuid, String resourceId, Boolean approved) throws Exception;
+
+    void streamResource(ServiceContext context, String metadataUuid,
+                        String resourceId, Boolean approved, OutputStream out) throws Exception;
 
     /**
      * Retrieve a metadata resource path (for internal use eg. indexing)
@@ -347,6 +352,7 @@ public interface Store {
      *
      */
     void copyResources(ServiceContext context, String sourceUuid, String targetUuid, MetadataResourceVisibility metadataResourceVisibility, boolean sourceApproved, boolean targetApproved) throws Exception;
+
 
     interface ResourceHolder extends Closeable {
         Path getPath();

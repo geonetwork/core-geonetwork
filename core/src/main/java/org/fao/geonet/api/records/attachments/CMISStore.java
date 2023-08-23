@@ -189,6 +189,11 @@ public class CMISStore extends AbstractStore {
     }
 
     @Override
+    public void streamResource(ServiceContext context, String metadataUuid, String resourceId, Boolean approved, OutputStream out) throws Exception {
+        throw new UnsupportedOperationException(String.format("%s does not support streamResource.", this.getClass().getSimpleName()));
+    }
+
+    @Override
     public ResourceHolder getResourceInternal(String metadataUuid, MetadataResourceVisibility visibility, String resourceId, Boolean approved) throws Exception {
         throw new UnsupportedOperationException("CMISStore does not support getResourceInternal.");
     }
