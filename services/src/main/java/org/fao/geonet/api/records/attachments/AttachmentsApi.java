@@ -48,6 +48,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
+import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -62,6 +63,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import javax.annotation.PostConstruct;
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -247,41 +249,36 @@ public class AttachmentsApi {
     @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "Record attachment."),
         @ApiResponse(responseCode = "403", description = "Operation not allowed. "
             + "User needs to be able to download the resource.")})
-    @ResponseBody
-    public HttpEntity<byte[]> getResource(
+    public void getResource(
         @Parameter(description = "The metadata UUID", required = true, example = "43d7c186-2187-4bcd-8843-41e575a5ef56") @PathVariable String metadataUuid,
         @Parameter(description = "The resource identifier (ie. filename)", required = true) @PathVariable String resourceId,
         @Parameter(description = "Use approved version or not", example = "true") @RequestParam(required = false, defaultValue = "true") Boolean approved,
         @Parameter(description = "Size (only applies to images). From 1px to 2048px.", example = "200") @RequestParam(required = false) Integer size,
-        @Parameter(hidden = true) HttpServletRequest request) throws Exception {
+        @Parameter(hidden = true) HttpServletRequest request,
+        @Parameter(hidden = true) HttpServletResponse response
+    ) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
         try (Store.ResourceHolder file = store.getResource(context, metadataUuid, resourceId, approved)) {
 
             ApiUtils.canViewRecord(metadataUuid, request);
 
-            MultiValueMap<String, String> headers = new HttpHeaders();
-            headers.add("Content-Disposition", "inline; filename=\"" + file.getMetadata().getFilename() + "\"");
-            headers.add("Cache-Control", "no-cache");
+            response.setHeader("Content-Disposition", "inline; filename=\"" + file.getMetadata().getFilename() + "\"");
+            response.setHeader("Cache-Control", "no-cache");
             String contentType = getFileContentType(file.getPath());
-            headers.add("Content-Type", contentType);
+            response.setHeader("Content-Type", contentType);
 
             if (contentType.startsWith("image/") && size != null) {
                 if (size >= MIN_IMAGE_SIZE && size <= MAX_IMAGE_SIZE) {
                     BufferedImage image = ImageIO.read(file.getPath().toFile());
                     BufferedImage resized = ImageUtil.resize(image, size);
-                    ByteArrayOutputStream output = new ByteArrayOutputStream();
-                    ImageIO.write(resized, "png", output);
-                    output.flush();
-                    byte[] imagesB = output.toByteArray();
-                    output.close();
-                    return new HttpEntity<>(imagesB, headers);
+                    ImageIO.write(resized, "png", response.getOutputStream());
                 } else {
                     throw new IllegalArgumentException(String.format(
                         "Image can only be resized from %d to %d. You requested %d.",
                         MIN_IMAGE_SIZE, MAX_IMAGE_SIZE, size));
                 }
             } else {
-                return new HttpEntity<>(Files.readAllBytes(file.getPath()), headers);
+                StreamUtils.copy(Files.newInputStream(file.getPath()), response.getOutputStream());
             }
         }
     }
