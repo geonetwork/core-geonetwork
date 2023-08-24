@@ -35,6 +35,10 @@ import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.sources.http.ServletPathFinder;
 import jeeves.services.ReadWriteController;
+import jeeves.xlink.Processor;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVPrinter;
+import org.apache.commons.csv.QuoteMode;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.text.StrSubstitutor;
@@ -49,6 +53,7 @@ import org.fao.geonet.api.records.rdf.RdfOutputManager;
 import org.fao.geonet.api.records.rdf.RdfSearcher;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.guiapi.search.XsltResponseWriter;
 import org.fao.geonet.kernel.*;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
@@ -61,7 +66,9 @@ import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.util.XslUtil;
 import org.fao.geonet.utils.Log;
-import org.jdom.Element;
+import org.fao.geonet.utils.Xml;
+import org.fao.geonet.web.DefaultLanguage;
+import org.jdom.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpHeaders;
@@ -81,6 +88,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 import static org.fao.geonet.api.ApiParams.*;
 import static org.fao.geonet.kernel.mef.MEFLib.Version.Constants.MEF_V1_ACCEPT_TYPE;
@@ -97,10 +105,11 @@ import static org.fao.geonet.kernel.search.IndexFields.SOURCE_CATALOGUE;
 @ReadWriteController
 public class CatalogApi {
 
-    public static Set<String> FIELDLIST_PDF;
+    public static final String HITS_PER_PAGE_PARAM = "hitsPerPage";
+    private static final Set<String> searchFieldsForPdf;
 
     static {
-        FIELDLIST_PDF = ImmutableSet.<String>builder()
+        searchFieldsForPdf = ImmutableSet.<String>builder()
             .add(Geonet.IndexFieldNames.ID)
             .add(Geonet.IndexFieldNames.UUID)
             .add("tag")
@@ -119,11 +128,15 @@ public class CatalogApi {
     }
 
     @Autowired
+    DefaultLanguage defaultLanguage;
+    @Autowired
     ThesaurusManager thesaurusManager;
     @Autowired
     MetadataRepository metadataRepository;
     @Autowired
     IMetadataUtils metadataUtils;
+    @Autowired
+    SchemaManager schemaManager;
     @Autowired
     DataManager dataManager;
     @Autowired
@@ -142,6 +155,8 @@ public class CatalogApi {
     IsoLanguagesMapper isoLanguagesMapper;
     @Autowired
     private ServletContext servletContext;
+    @Autowired
+    private XmlSerializer xmlSerializer;
 
     /*
      * <p>Retrieve all parameters (except paging parameters) as a string.</p>
@@ -161,8 +176,7 @@ public class CatalogApi {
         description = "Metadata Exchange Format (MEF) is returned. MEF is a ZIP file containing " +
             "the metadata as XML and some others files depending on the version requested. " +
             "See http://geonetwork-opensource.org/manuals/trunk/eng/users/annexes/mef-format.html.")
-    @RequestMapping(value = "/zip",
-        method = RequestMethod.GET,
+    @GetMapping(value = "/zip",
         consumes = {
             MediaType.ALL_VALUE
         },
@@ -255,7 +269,7 @@ public class CatalogApi {
         if (version == MEFLib.Version.V1) {
             throw new IllegalArgumentException("MEF version 1 only support one record. Use the /records/{uuid}/formatters/zip to retrieve that format");
         } else {
-            Set<String> allowedUuid = new HashSet<String>();
+            Set<String> allowedUuid = new HashSet<>();
             for (String uuid : uuidList) {
                 try {
                     ApiUtils.canViewRecord(uuid, request);
@@ -275,18 +289,16 @@ public class CatalogApi {
             if (withRelated) {
                 int maxhits = Integer.parseInt(settingInfo.getSelectionMaxRecords());
 
-                Set<String> tmpUuid = new HashSet<String>();
+                Set<String> tmpUuid = new HashSet<>();
                 for (String uuid : allowedUuid) {
                     Map<RelatedItemType, List<AssociatedRecord>> associated =
                         MetadataUtils.getAssociated(context,
                             metadataRepository.findOneByUuid(uuid),
                             RelatedItemType.values(), 0, maxhits);
 
-                    associated.forEach((type, list) -> {
-                        list.forEach(r -> {
-                            tmpUuid.add(r.getUuid());
-                        });
-                    });
+                    associated.forEach(
+                        (type, list) -> list.forEach(
+                            r -> tmpUuid.add(r.getUuid())));
                 }
 
                 if (selectionManger.addAllSelection(SelectionManager.SELECTION_METADATA, tmpUuid)) {
@@ -329,8 +341,7 @@ public class CatalogApi {
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Get a set of metadata records as PDF",
         description = "The PDF is a short summary of each records with links to the complete metadata record in different format (ie. landing page on the portal, XML)")
-    @RequestMapping(value = "/pdf",
-        method = RequestMethod.GET,
+    @GetMapping(value = "/pdf",
         consumes = {
             MediaType.ALL_VALUE
         },
@@ -378,7 +389,7 @@ public class CatalogApi {
                 "uuid:(\"%s\")",
                 String.join("\" or \"", uuidList)),
             EsFilterBuilder.buildPermissionsFilter(ApiUtils.createServiceContext(httpRequest)),
-            FIELDLIST_PDF, 0, maxhits);
+            searchFieldsForPdf, 0, maxhits);
 
 
         Map<String, Object> params = new HashMap<>();
@@ -468,8 +479,7 @@ public class CatalogApi {
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Get a set of metadata records as CSV",
         description = "The CSV is a short summary of each records.")
-    @RequestMapping(value = "/csv",
-        method = RequestMethod.GET,
+    @GetMapping(value = "/csv",
         consumes = {
             MediaType.ALL_VALUE
         },
@@ -494,6 +504,28 @@ public class CatalogApi {
             required = false
         )
         String bucket,
+        @Parameter(description = "XPath pointing to the XML element to loop on.",
+            required = false,
+            example = "Use . for the metadata, " +
+                ".//gmd:CI_ResponsibleParty for all contacts in ISO19139, " +
+                ".//gmd:transferOptions/*/gmd:onLine/* for all online resources in ISO19139.")
+        @RequestParam(required = false)
+        String loopElementXpath,
+        @Parameter(description = "Properties to collect",
+            required = false,
+            example = ".//gmd:electronicMailAddress/*/text()")
+        @RequestParam(required = false)
+        List<String> propertiesXpath,
+        @Parameter(description = "Column separator",
+            required = false,
+            example = ",")
+        @RequestParam(required = false, defaultValue = ",")
+        String sep,
+        @Parameter(description = "Multiple values separator",
+            required = false,
+            example = "###")
+        @RequestParam(required = false, defaultValue = "###")
+        String internalSep,
         @Parameter(hidden = true)
         @RequestParam
         Map<String, String> allRequestParams,
@@ -516,37 +548,123 @@ public class CatalogApi {
             EsFilterBuilder.buildPermissionsFilter(ApiUtils.createServiceContext(httpRequest)),
             FIELDLIST_CORE, 0, maxhits);
 
-        Element response = new Element("response");
-        Arrays.asList(searchResponse.getHits().getHits()).forEach(h -> {
-            try {
-                response.addContent(
-                    dataManager.getMetadata(
-                        context,
-                        (String) h.getSourceAsMap().get("id"),
-                        false, false, false));
-            } catch (Exception ignored) {
-            }
-        });
-
-        Element r = new XsltResponseWriter(null, "search")
-            .withXml(response)
-            .withXsl("xslt/services/csv/csv-search.xsl")
-            .asElement();
+        List<String> idsToExport = Arrays.stream(searchResponse.getHits().getHits())
+            .map(h -> (String) h.getSourceAsMap().get("id"))
+            .collect(Collectors.toList());
 
         // Determine filename to use
         String fileName = replaceFilenamePlaceholder(settingManager.getValue("metadata/csvReport/csvName"), "csv");
 
         httpResponse.setContentType("text/csv");
         httpResponse.addHeader("Content-Disposition", "attachment; filename=" + fileName);
-        httpResponse.setContentLength(r.getText().length());
-        httpResponse.getWriter().write(r.getText());
+
+        if (StringUtils.isNotEmpty(loopElementXpath)) {
+            buildCsvResponseFromXml(loopElementXpath, propertiesXpath, httpResponse, idsToExport,
+                sep, internalSep, context);
+        } else {
+            Element response = new Element("response");
+            idsToExport.forEach(uuid -> {
+                try {
+                    response.addContent(
+                        dataManager.getMetadata(
+                            context,
+                            uuid,
+                            false, false, false));
+                } catch (Exception ignored) {
+                }
+            });
+
+            Element r = new XsltResponseWriter(null, "search")
+                .withParams(allRequestParams.entrySet().stream()
+                    .collect(Collectors.toMap(
+                        Entry::getKey,
+                        Entry::getValue)))
+                .withXml(response)
+                .withXsl("xslt/services/csv/csv-search.xsl")
+                .asElement();
+            String text = r.getText();
+            httpResponse.setContentLength(text.length());
+            httpResponse.getWriter().write(text);
+        }
+
     }
+
+    private void buildCsvResponseFromXml(String loopElementXpath, List<String> propertiesXpath, HttpServletResponse httpResponse, List<String> idsToExport, String sep, String internalSep, ServiceContext context) {
+        try (CSVPrinter csvPrinter = new CSVPrinter(
+            new OutputStreamWriter(httpResponse.getOutputStream()),
+            CSVFormat.DEFAULT
+                .withRecordSeparator("\n")
+                .withDelimiter(sep.charAt(0))
+                .withQuoteMode(QuoteMode.ALL))) {
+            List<String> headers = new ArrayList<>();
+            headers.add("uuid");
+            headers.add("permalink");
+            headers.addAll(propertiesXpath);
+            csvPrinter.printRecord(headers);
+            idsToExport.forEach(id -> buildCsvRecordFromXml(
+                loopElementXpath, propertiesXpath, csvPrinter, id, internalSep, context));
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
+    private void buildCsvRecordFromXml(String loopElementXpath, List<String> propertiesXpath, CSVPrinter csvPrinter, String id, String internalSep, ServiceContext context) {
+        try {
+            Metadata metadata = metadataRepository.findOneById(Integer.parseInt(id));
+            if (metadata == null) return;
+            Element xml = metadata.getXmlData(false);
+            if (xmlSerializer.resolveXLinks()) {
+                Processor.detachXLink(xml, context);
+            }
+            String schema = metadata.getDataInfo().getSchemaId();
+            List<Namespace> namespaces = schemaManager.getSchema(schema).getNamespaces();
+            List<?> elements = Xml.selectNodes(xml, loopElementXpath, namespaces);
+            for (Object e : elements) {
+                List<String> values = new ArrayList<>();
+                values.add(metadata.getUuid());
+                values.add(metadataUtils.getPermalink(metadata.getUuid(), defaultLanguage.getLanguage()));
+                if (e instanceof Element) {
+                    for (String p : propertiesXpath) {
+                        buildRecordProperties(internalSep, namespaces, (Element) e, values, p);
+                    }
+                }
+                csvPrinter.printRecord(values);
+            }
+        } catch (IOException e) {
+            throw new IllegalStateException(String.format(
+                "Error retrieving record %s. %s", id, e.getMessage()));
+        } catch (JDOMException e) {
+            throw new IllegalArgumentException(String.format(
+                "Error retrieving properties in record %s. %s", id, e.getMessage()));
+        }
+    }
+
+    private static void buildRecordProperties(String internalSep, List<Namespace> namespaces, Element e, List<String> values, String p) {
+        try {
+            List<?> textList = Xml.selectNodes(e, p, namespaces);
+            List<String> allTextValues = new ArrayList<>();
+            for (Object t : textList) {
+                if (t instanceof Element) {
+                    allTextValues.add(((Element) t).getTextNormalize());
+                } else if (t instanceof Text) {
+                    allTextValues.add(((Text) t).getTextNormalize());
+                } else if (t instanceof Attribute) {
+                    allTextValues.add(((Attribute) t).getValue());
+                } else {
+                    allTextValues.add(t.toString());
+                }
+            }
+            values.add(String.join(internalSep, allTextValues));
+        } catch (JDOMException jdomException) {
+            values.add("Error: " + jdomException.getMessage());
+        }
+    }
+
 
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Get catalog content as RDF. This endpoint supports the same Lucene query parameters as for the GUI search.",
         description = ".")
-    @RequestMapping(
-        method = RequestMethod.GET,
+    @GetMapping(
         consumes = {
             MediaType.ALL_VALUE
         },
@@ -556,7 +674,7 @@ public class CatalogApi {
     @Parameters({
         @Parameter(name = "from", description = "Indicates the start position in a sorted list of matches that the client wants to use as the beginning of a page result.", required = false,
             in = ParameterIn.QUERY, schema = @Schema(type = "integer", format = "int32", defaultValue = "1")),
-        @Parameter(name = "hitsPerPage", description = "Indicates the number of hits per page.", required = false,
+        @Parameter(name = HITS_PER_PAGE_PARAM, description = "Indicates the number of hits per page.", required = false,
             in = ParameterIn.QUERY, schema = @Schema(type = "integer", format = "int32")),
         //@Parameter(name="to", value = "Indicates the end position in a sorted list of matches that the client wants to use as the ending of a page result", required = false, defaultValue ="10", dataType = "int", paramType = "query"),
         @Parameter(name = "any", description = "Search key", required = false,
@@ -603,7 +721,7 @@ public class CatalogApi {
         String hostURL = getHostURL();
 
         //Retrieve the paging parameter values (if present)
-        int hitsPerPage = (allRequestParams.get("hitsPerPage") != null ? Integer.parseInt(allRequestParams.get("hitsPerPage")) : 0);
+        int hitsPerPage = (allRequestParams.get(CatalogApi.HITS_PER_PAGE_PARAM) != null ? Integer.parseInt(allRequestParams.get(CatalogApi.HITS_PER_PAGE_PARAM)) : 0);
         int from = (allRequestParams.get("from") != null ? Integer.parseInt(allRequestParams.get("from")) : 0);
         int to = (allRequestParams.get("to") != null ? Integer.parseInt(allRequestParams.get("to")) : 0);
 
@@ -611,7 +729,7 @@ public class CatalogApi {
         if (hitsPerPage <= 0 || from <= 0) {
             if (hitsPerPage <= 0) {
                 hitsPerPage = 10;
-                allRequestParams.put("hitsPerPage", Integer.toString(hitsPerPage));
+                allRequestParams.put(CatalogApi.HITS_PER_PAGE_PARAM, Integer.toString(hitsPerPage));
             }
             if (from <= 0) {
                 from = 1;
@@ -635,7 +753,7 @@ public class CatalogApi {
             }
         }
         allRequestParams.put("to", Integer.toString(to));
-        allRequestParams.put("hitsPerPage", Integer.toString(hitsPerPage));
+        allRequestParams.put(CatalogApi.HITS_PER_PAGE_PARAM, Integer.toString(hitsPerPage));
         allRequestParams.put("from", Integer.toString(from));
 
         ServiceContext context = ApiUtils.createServiceContext(request);
@@ -645,9 +763,7 @@ public class CatalogApi {
         // Copy all request parameters
         /// Mimic old Jeeves param style
         Element params = new Element("params");
-        allRequestParams.forEach((k, v) -> {
-            params.addContent(new Element(k).setText(v));
-        });
+        allRequestParams.forEach((k, v) -> params.addContent(new Element(k).setText(v)));
 
         // Perform the search on the Lucene Index
         RdfSearcher rdfSearcher = new RdfSearcher(params, context);
@@ -672,13 +788,13 @@ public class CatalogApi {
         String nextPage = canonicalURL + "?" + paramsAsString(allRequestParams) + "&from=" + nextFrom + "&to=" + nextTo;
 
         // Hydra Paging information (see also: http://www.hydra-cg.com/spec/latest/core/)
-        String hydraPagedCollection = "<hydra:PagedCollection xmlns:hydra=\"http://www.w3.org/ns/hydra/core#\" rdf:about=\"" + currentPage.replaceAll("&", "&amp;") + "\">\n" +
+        String hydraPagedCollection = "<hydra:PagedCollection xmlns:hydra=\"http://www.w3.org/ns/hydra/core#\" rdf:about=\"" + currentPage.replace("&", "&amp;") + "\">\n" +
             "<rdf:type rdf:resource=\"hydra:PartialCollectionView\"/>" +
-            "<hydra:lastPage>" + lastPage.replaceAll("&", "&amp;") + "</hydra:lastPage>\n" +
+            "<hydra:lastPage>" + lastPage.replace("&", "&amp;") + "</hydra:lastPage>\n" +
             "<hydra:totalItems rdf:datatype=\"http://www.w3.org/2001/XMLSchema#integer\">" + numberMatched + "</hydra:totalItems>\n" +
-            ((prevFrom <= prevTo && prevFrom < from && prevTo < to) ? "<hydra:previousPage>" + previousPage.replaceAll("&", "&amp;") + "</hydra:previousPage>\n" : "") +
-            ((nextFrom <= nextTo && from < nextFrom && to < nextTo) ? "<hydra:nextPage>" + nextPage.replaceAll("&", "&amp;") + "</hydra:nextPage>\n" : "") +
-            "<hydra:firstPage>" + firstPage.replaceAll("&", "&amp;") + "</hydra:firstPage>\n" +
+            ((prevFrom <= prevTo && prevFrom < from && prevTo < to) ? "<hydra:previousPage>" + previousPage.replace("&", "&amp;") + "</hydra:previousPage>\n" : "") +
+            ((nextFrom <= nextTo && from < nextFrom && to < nextTo) ? "<hydra:nextPage>" + nextPage.replace("&", "&amp;") + "</hydra:nextPage>\n" : "") +
+            "<hydra:firstPage>" + firstPage.replace("&", "&amp;") + "</hydra:firstPage>\n" +
             "<hydra:itemsPerPage rdf:datatype=\"http://www.w3.org/2001/XMLSchema#integer\">" + hitsPerPage + "</hydra:itemsPerPage>\n" +
             "</hydra:PagedCollection>";
         // Construct the RDF output
@@ -745,13 +861,13 @@ public class CatalogApi {
                 fileName = fileName + "." + extension;
             }
 
-            Map<String, String> values = new HashMap<String, String>();
+            Map<String, String> values = new HashMap<>();
             values.put("siteName", settingManager.getSiteName());
 
             Calendar c = Calendar.getInstance();
-            values.put("year", c.get(Calendar.YEAR) + "");
-            values.put("month", c.get(Calendar.MONTH) + "");
-            values.put("day", c.get(Calendar.DAY_OF_MONTH) + "");
+            values.put("year", String.valueOf(c.get(Calendar.YEAR)));
+            values.put("month", String.valueOf(c.get(Calendar.MONTH)));
+            values.put("day", String.valueOf(c.get(Calendar.DAY_OF_MONTH)));
 
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
             SimpleDateFormat datetimeFormat = new SimpleDateFormat("yyyyMMddHHmmss");
