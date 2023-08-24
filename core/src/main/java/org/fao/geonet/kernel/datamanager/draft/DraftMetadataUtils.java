@@ -572,6 +572,10 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
             Integer status = Integer.valueOf(StatusValue.Status.DRAFT);
             java.util.Optional<StatusValue> statusValue = statusValueRepository.findById(status);
 
+            String lang = context.getLanguage();
+            ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages",
+                new Locale(lang));
+
             if (statusValue.isPresent()) {
                 for (Integer mdId : metadataIds) {
                     MetadataStatus metadataStatus = new MetadataStatus();
@@ -580,7 +584,7 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
                     metadataStatus.setChangeDate(new ISODate());
                     metadataStatus.setUserId(author);
                     metadataStatus.setStatusValue(statusValue.get());
-                    metadataStatus.setChangeMessage("Editing instance created");
+                    metadataStatus.setChangeMessage(messages.getString("metadata_status_editing_instance_created_text"));
                     metadataStatus.setTitles(metadataUtils.extractTitles(newMetadata.getDataInfo().getSchemaId(), xml));
 
                     List<MetadataStatus> listOfStatusChange = new ArrayList<>(1);
