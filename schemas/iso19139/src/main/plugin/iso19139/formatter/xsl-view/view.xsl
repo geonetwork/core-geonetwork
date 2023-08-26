@@ -38,9 +38,7 @@
                 xmlns:gn-fn-iso19139="http://geonetwork-opensource.org/xsl/functions/profiles/iso19139"
                 xmlns:fn="http://www.w3.org/2005/xpath-functions"
                 xmlns:xslUtils="https://geonetwork-opensource.org/xsl-extension"
-                xmlns:saxon="http://saxon.sf.net/"
                 version="2.0"
-                extension-element-prefixes="saxon"
                 exclude-result-prefixes="#all">
 
   <!-- This formatter render an ISO19139 record based on the

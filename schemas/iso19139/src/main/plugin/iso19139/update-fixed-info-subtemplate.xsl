@@ -30,11 +30,9 @@
                 xmlns:gmd="http://www.isotc211.org/2005/gmd"
                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
-                xmlns:saxon="http://saxon.sf.net/"
                 xmlns:gn-fn-iso19139="http://geonetwork-opensource.org/xsl/functions/profiles/iso19139"
                 xmlns:geonet="http://www.fao.org/geonetwork"
                 xmlns:java="https://geonetwork-opensource.org/xsl-extension"
-                extension-element-prefixes="saxon"
                 version="2.0" exclude-result-prefixes="#all">
 
   <xsl:output name="default-serialize-mode" indent="no"
@@ -107,8 +105,9 @@
     </xsl:variable>
     <xsl:variable name="bbox"
                   select="java:geomToBbox(
-                                    saxon:serialize($polygonWithNs,
-                                    'default-serialize-mode'))"/>
+                                    fn:serialize($polygonWithNs,
+                                    map{'method':'xml', 'indent': true()})
+                                    )"/>
     <xsl:if test="$bbox != ''">
       <xsl:variable name="bboxCoordinates"
                     select="tokenize($bbox, '\|')"/>

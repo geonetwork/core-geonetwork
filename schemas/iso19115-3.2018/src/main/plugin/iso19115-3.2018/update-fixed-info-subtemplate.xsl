@@ -110,7 +110,7 @@
   <xsl:template mode="compute-bbox-for-polygon"
                 match="gex:polygon">
     <xsl:variable name="bbox"
-                  select="java:geomToBbox(saxon:serialize(./gml:*, 'default-serialize-mode'))"/>
+                  select="java:geomToBbox(fn:serialize(./gml:*, map{'method':'xml', 'indent': true()}))"/>
     <xsl:if test="$bbox != ''">
       <xsl:variable name="bboxCoordinates"
                     select="tokenize($bbox, '\|')"/>

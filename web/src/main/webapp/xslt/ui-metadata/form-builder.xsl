@@ -22,7 +22,9 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<xsl:stylesheet xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xlink="http://www.w3.org/1999/xlink"
+<xsl:stylesheet xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                xmlns:fn="http://www.w3.org/2005/xpath-functions"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
                 xmlns:gn="http://www.fao.org/geonetwork" xmlns:gco="http://www.isotc211.org/2005/gco"
                 xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -168,10 +170,10 @@
                 <xsl:choose>
                   <xsl:when test="starts-with(., 'eval#')">
                     <xsl:attribute name="{name()}">
-                      <xsl:call-template name="{concat('evaluate-', $schema)}">
-                        <xsl:with-param name="base" select="$node"/>
-                        <xsl:with-param name="in" select="concat('/', substring-after(., 'eval#'))"/>
-                      </xsl:call-template>
+                      <xsl:copy-of select="fn:function-lookup(
+                                  xs:QName('gn-fn-metadata:evaluate-' || $schema), 2)
+                                  ($node,
+                                  concat('/', substring-after(., 'eval#')))"/>
                     </xsl:attribute>
                   </xsl:when>
                   <xsl:otherwise>
@@ -800,7 +802,7 @@
               <xsl:if test="$hasMultipleChoice">
                 <xsl:for-each select="$snippets">
                   <textarea id="{concat($id, @label, '-value')}">
-                    <xsl:value-of select="saxon:serialize(*, 'default-serialize-mode')"/>
+                    <xsl:value-of select="fn:serialize(*, 'default-serialize-mode')"/>
                   </textarea>
                 </xsl:for-each>
               </xsl:if>
@@ -814,7 +816,7 @@
                 <xsl:if test="$isMissingLabel != ''">
                   <xsl:attribute name="data-not-set-check" select="$tagId"/>
                 </xsl:if>
-                <xsl:value-of select="saxon:serialize($snippets[1]/*, 'default-serialize-mode')"/>
+                <xsl:value-of select="fn:serialize($snippets[1]/*, 'default-serialize-mode')"/>
               </textarea>
             </div>
           </xsl:if>
@@ -1026,13 +1028,11 @@
                         <xsl:when test="starts-with(., 'xpath::')">
                           <xsl:variable name="xpath" select="substring-after(., 'xpath::')"/>
 
-
                           <xsl:attribute name="{name(.)}">
-                            <xsl:call-template name="{concat('evaluate-', $schema)}">
-                              <xsl:with-param name="base" select="$metadata//*[gn:element/@ref = $parentEditInfo/@ref]"/>
-                              <xsl:with-param name="in"
-                                              select="concat('/../', $xpath)"/>
-                            </xsl:call-template>
+                            <xsl:copy-of select="fn:function-lookup(
+                                  xs:QName('gn-fn-metadata:evaluate-' || $schema), 2)
+                                  ($metadata//*[gn:element/@ref = $parentEditInfo/@ref],
+                                  concat('/../', $xpath))"/>
                           </xsl:attribute>
                         </xsl:when>
                         <xsl:otherwise>
@@ -1252,10 +1252,10 @@
                   <xsl:choose>
                     <xsl:when test="starts-with(., 'eval#')">
                       <xsl:attribute name="{name()}">
-                        <xsl:call-template name="{concat('evaluate-', $schema)}">
-                          <xsl:with-param name="base" select="$node"/>
-                          <xsl:with-param name="in" select="concat('/', substring-after(., 'eval#'))"/>
-                        </xsl:call-template>
+                        <xsl:copy-of select="fn:function-lookup(
+                                  xs:QName('gn-fn-metadata:evaluate-' || $schema), 2)
+                                  ($node,
+                                  concat('/', substring-after(., 'eval#')))"/>
                       </xsl:attribute>
                     </xsl:when>
                     <xsl:otherwise>
@@ -1398,8 +1398,8 @@
     The helper config to pass to the directive in JSON format
     -->
     <textarea id="{$elementRef}_config" class="hidden">
-      <xsl:copy-of select="java-xsl-util:xmlToJson(
-        saxon:serialize($listOfValues, 'default-serialize-mode'))"/>
+<!--      <xsl:copy-of select="java-xsl-util:xmlToJson(-->
+<!--        fn:serialize($listOfValues, map{'method':'xml', 'indent': true()})"/> TODO-SAXON -->
     </textarea>
     <div
       data-gn-editor-helper="{$listOfValues/@editorMode}"
@@ -1848,16 +1848,20 @@
                       </xsl:when>
                       <xsl:otherwise>
                         <!-- Call schema render mode of the field without label and controls.-->
-                        <xsl:call-template name="{concat('dispatch-', $schema)}">
-                          <xsl:with-param name="base" select=".[name() != 'directiveAttributes']"/>
-                          <xsl:with-param name="config" as="node()?">
-                            <xsl:if test="@use">
-                              <field>
-                                <xsl:copy-of select="@use|directiveAttributes"/>
-                              </field>
-                            </xsl:if>
-                          </xsl:with-param>
-                        </xsl:call-template>
+                        <xsl:variable name="config" as="node()?">
+                          <xsl:if test="@use">
+                            <field>
+                              <xsl:copy-of select="@use|directiveAttributes"/>
+                            </field>
+                          </xsl:if>
+                        </xsl:variable>
+
+                        <xsl:copy-of select="fn:function-lookup(
+                                  xs:QName('gn-fn-metadata:dispatch-' || $schema), 4)(
+                                    .[name() != 'directiveAttributes'],
+                                    '',
+                                    null,
+                                    $config)"/>
                       </xsl:otherwise>
                     </xsl:choose>
 

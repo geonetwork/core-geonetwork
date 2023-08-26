@@ -43,7 +43,8 @@
     <html ng-app="{$angularModule}" lang="{$lang2chars}" id="ng-app">
       <head>
         <xsl:variable name="discoveryServiceRecordUuid"
-                      select="util:getDiscoveryServiceUuid('')"/>
+                      select="''"/>
+<!--                      TODO-SAXON select="util:getDiscoveryServiceUuid('')"/>-->
         <xsl:variable name="nodeName"
                       select="util:getNodeName('', xs:string($lang), true())"/>
 

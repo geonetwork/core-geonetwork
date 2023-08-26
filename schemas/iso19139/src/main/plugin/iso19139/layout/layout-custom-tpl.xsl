@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:fn="http://www.w3.org/2005/xpath-functions"
+                xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 xmlns:gmd="http://www.isotc211.org/2005/gmd"
                 xmlns:gco="http://www.isotc211.org/2005/gco"
                 xmlns:gmx="http://www.isotc211.org/2005/gmx"
@@ -78,19 +80,15 @@
                 <xsl:if test="@del != ''">
                   <xsl:attribute name="remove" select="'true'"/>
 
-                  <xsl:call-template name="{concat('evaluate-', $schema)}">
-                    <xsl:with-param name="base" select="$base"/>
-                    <xsl:with-param name="in"
-                                    select="concat('/', @del, '/gn:element')"/>
-                  </xsl:call-template>
+                  <xsl:copy-of select="fn:function-lookup(
+                                  xs:QName('gn-fn-metadata:evaluate-' || $schema), 2)
+                                  ($base, concat('/', @del, '/gn:element'))"/>
                 </xsl:if>
 
                 <xsl:if test="@xpath != ''">
-                  <xsl:call-template name="{concat('evaluate-', $schema)}">
-                    <xsl:with-param name="base" select="$base"/>
-                    <xsl:with-param name="in"
-                                    select="concat('/', @xpath)"/>
-                  </xsl:call-template>
+                  <xsl:copy-of select="fn:function-lookup(
+                                  xs:QName('gn-fn-metadata:evaluate-' || $schema), 2)
+                                  ($base, concat('/', @xpath))"/>
                 </xsl:if>
               </col>
             </xsl:for-each>

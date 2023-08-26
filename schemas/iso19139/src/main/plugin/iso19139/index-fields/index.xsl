@@ -650,7 +650,7 @@
         <xsl:for-each select="*/gmd:EX_Extent/*/gmd:EX_BoundingPolygon/gmd:polygon">
           <xsl:variable name="geojson"
                         select="util:gmlToGeoJson(
-                                  saxon:serialize((gml:*|gml320:*), 'default-serialize-mode'),
+                                  fn:serialize((gml:*|gml320:*), 'default-serialize-mode'),
                                   true(), 5)"/>
           <xsl:choose>
             <xsl:when test="$geojson = ''"></xsl:when>

@@ -28,6 +28,7 @@
                 xmlns:srv="http://www.isotc211.org/2005/srv"
                 xmlns:gmx="http://www.isotc211.org/2005/gmx"
                 xmlns:gn-fn-index="http://geonetwork-opensource.org/xsl/functions/index"
+                xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
                 xmlns:gn="http://www.fao.org/geonetwork"
                 version="2.0"
                 exclude-result-prefixes="#all">
@@ -35,14 +36,16 @@
   <xsl:import href="common/index-utils.xsl"/>
   <xsl:include href="utility-tpl-multilingual.xsl"/>
 
-  <xsl:template name="get-iso19139-is-service">
+  <xsl:function name="gn-fn-metadata:get-iso19139-is-service">
+    <xsl:param name="metadata" as="node()"/>
     <xsl:value-of
       select="count($metadata/gmd:identificationInfo/srv:SV_ServiceIdentification) > 0"/>
-  </xsl:template>
+  </xsl:function>
 
-  <xsl:template name="get-iso19139-title">
+  <xsl:function name="gn-fn-metadata:get-iso19139-title">
+    <xsl:param name="metadata" as="node()"/>
     <xsl:value-of select="$metadata/gmd:identificationInfo/*/gmd:citation/*/gmd:title/gco:CharacterString"/>
-  </xsl:template>
+  </xsl:function>
 
   <xsl:template mode="get-formats-as-json" match="gmd:MD_Metadata">
     [
@@ -54,8 +57,10 @@
     ]
   </xsl:template>
 
-  <xsl:template name="get-iso19139-extents-as-json">[
-    <xsl:for-each select="//gmd:geographicElement/gmd:EX_GeographicBoundingBox[
+  <xsl:function name="gn-fn-metadata:get-iso19139-extents-as-json">
+    <xsl:param name="metadata" as="node()"/>
+    [
+    <xsl:for-each select="$metadata//gmd:geographicElement/gmd:EX_GeographicBoundingBox[
             number(gmd:westBoundLongitude/gco:Decimal)
             and number(gmd:southBoundLatitude/gco:Decimal)
             and number(gmd:eastBoundLongitude/gco:Decimal)
@@ -75,9 +80,10 @@
       <xsl:if test="position() != last()">,</xsl:if>
     </xsl:for-each>
     ]
-  </xsl:template>
+  </xsl:function>
 
-  <xsl:template name="get-iso19139-online-source-config">
+  <xsl:function name="gn-fn-metadata:get-iso19139-online-source-config">
+    <xsl:param name="metadata" as="node()"/>
     <xsl:param name="pattern"/>
     <config>
       <xsl:for-each select="$metadata/descendant::gmd:onLine[
@@ -136,5 +142,5 @@
         </xsl:if>
       </xsl:for-each>
     </config>
-  </xsl:template>
+  </xsl:function>
 </xsl:stylesheet>

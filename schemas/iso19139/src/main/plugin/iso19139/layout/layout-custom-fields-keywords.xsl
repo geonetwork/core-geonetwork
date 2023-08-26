@@ -187,7 +187,7 @@
     <xsl:choose>
       <xsl:when test="$thesaurusConfig">
         <!-- If defined dc:title with xml:lang use it for thesaurus label in the editor -->
-        <xsl:variable name="uiLang2code" select="xslutil:twoCharLangCode($lang, 'en')" />
+        <xsl:variable name="uiLang2code" select="xslutil:twoCharLangCode($lang)" />
 
         <xsl:variable name="thesaurusTitleTranslated" select="$listOfThesaurus/thesaurus[title=$thesaurusTitle]/multilingualTitles/multilingualTitle[lang=$uiLang2code]/title" />
         <xsl:variable name="thesaurusTitleForEditor" select="if (string($thesaurusTitleTranslated)) then $thesaurusTitleTranslated else $thesaurusTitle" />

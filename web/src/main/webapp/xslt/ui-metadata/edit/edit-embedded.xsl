@@ -26,10 +26,12 @@
   Edit metadata embedded processing to add
   a piece of metadata to the editor form
   -->
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:saxon="http://saxon.sf.net/"
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:fn="http://www.w3.org/2005/xpath-functions"
+                xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
                 xmlns:gn="http://www.fao.org/geonetwork"
                 version="2.0"
-                extension-element-prefixes="saxon"
                 exclude-result-prefixes="#all">
 
   <xsl:output method="html" encoding="UTF-8" indent="yes"/>
@@ -49,11 +51,13 @@
       <!-- Process the added object using schema layout ... -->
       <xsl:for-each
         select="/root/*[name(.)!='gui' and name(.)!='request']//*[@gn:addedObj = 'true']">
-        <!-- Dispatch to profile mode -->
-        <xsl:variable name="profileTemplate" select="concat('dispatch-', $schema)"/>
-        <xsl:call-template name="{$profileTemplate}">
-          <xsl:with-param name="base" select="."/>
-        </xsl:call-template>
+
+        <xsl:copy-of select="fn:function-lookup(
+                                  xs:QName('gn-fn-metadata:dispatch-' || $schema), 4)(
+                                    .,
+                                    '',
+                                    null,
+                                    null)"/>
       </xsl:for-each>
     </xsl:variable>
 

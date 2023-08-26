@@ -33,7 +33,9 @@
 
 
   <!-- Get the main metadata languages -->
-   <xsl:template name="get-iso19139-language">
+   <xsl:function name="gn-fn-metadata:get-iso19139-language">
+     <xsl:param name="metadata" as="node()"/>
+
     <xsl:variable name="isTemplate" select="$metadata/gn:info[position() = last()]/isTemplate"/>
     <xsl:choose>
       <xsl:when test="$isTemplate = 's' or $isTemplate = 't'">
@@ -53,10 +55,11 @@
           </xsl:choose>
       </xsl:otherwise>
     </xsl:choose>
-   </xsl:template>
+   </xsl:function>
 
   <!-- Get the list of other languages in JSON -->
-  <xsl:template name="get-iso19139-other-languages-as-json">
+  <xsl:function name="gn-fn-metadata:get-iso19139-other-languages-as-json">
+    <xsl:param name="metadata" as="node()"/>
 
     <xsl:variable name="isTemplate" select="$metadata/gn:info[position() = last()]/isTemplate"/>
     <xsl:variable name="langs">
@@ -73,7 +76,7 @@
         </xsl:when>
         <xsl:otherwise>
           <xsl:variable name="mainLanguage">
-            <xsl:call-template name="get-iso19139-language"/>
+            <xsl:value-of select="gn-fn-metadata:get-iso19139-language($metadata)"/>
           </xsl:variable>
           <xsl:if test="$mainLanguage">
             <xsl:variable name="mainLanguageId"
@@ -97,7 +100,7 @@
       </xsl:choose>
     </xsl:variable>
     <xsl:text>{</xsl:text><xsl:value-of select="string-join($langs/lang, ',')"/><xsl:text>}</xsl:text>
-  </xsl:template>
+  </xsl:function>
 
   <xsl:function name="gn-fn-metadata:get-iso19139-other-languages">
     <xsl:param name="metadata" as="node()"/>
@@ -114,7 +117,7 @@
       </xsl:when>
       <xsl:otherwise>
         <xsl:variable name="mainLanguage">
-          <xsl:call-template name="get-iso19139-language"/>
+          <xsl:value-of select="gn-fn-metadata:get-iso19139-language($metadata)"/>
         </xsl:variable>
         <xsl:for-each select="$metadata/gmd:locale/gmd:PT_Locale">
           <xsl:variable name="langCode"

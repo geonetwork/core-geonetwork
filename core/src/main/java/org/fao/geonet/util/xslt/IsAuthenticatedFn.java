@@ -6,39 +6,27 @@ import net.sf.saxon.lib.ExtensionFunctionDefinition;
 import net.sf.saxon.om.Sequence;
 import net.sf.saxon.om.StructuredQName;
 import net.sf.saxon.trans.XPathException;
+import net.sf.saxon.value.BooleanValue;
 import net.sf.saxon.value.SequenceType;
-import net.sf.saxon.value.StringValue;
 import org.fao.geonet.util.XslUtil;
 
-public class GetTwoCharLangCodeFn extends ExtensionFunctionDefinition {
+public class IsAuthenticatedFn extends ExtensionFunctionDefinition {
     @Override
     public StructuredQName getFunctionQName() {
         return new StructuredQName(
             XslFn.PREFIX,
             XslFn.URI,
-            "twoCharLangCode");
-    }
-
-    @Override
-    public int getMinimumNumberOfArguments() {
-        return 1;
-    }
-
-    @Override
-    public int getMaximumNumberOfArguments() {
-        return 2;
+            "isAuthenticated");
     }
 
     @Override
     public SequenceType[] getArgumentTypes() {
-        return new SequenceType[]{
-            SequenceType.SINGLE_STRING,
-            SequenceType.OPTIONAL_STRING};
+        return new SequenceType[]{};
     }
 
     @Override
     public SequenceType getResultType(SequenceType[] suppliedArgumentTypes) {
-        return SequenceType.SINGLE_STRING;
+        return SequenceType.SINGLE_BOOLEAN;
     }
 
     @Override
@@ -46,8 +34,7 @@ public class GetTwoCharLangCodeFn extends ExtensionFunctionDefinition {
         return new ExtensionFunctionCall() {
             @Override
             public Sequence call(XPathContext context, Sequence[] arguments) throws XPathException {
-                String lang = ((StringValue) arguments[0]).getStringValue();
-                return StringValue.makeStringValue(XslUtil.twoCharLangCode(lang));
+                return BooleanValue.get(XslUtil.isAuthenticated());
             }
         };
     }

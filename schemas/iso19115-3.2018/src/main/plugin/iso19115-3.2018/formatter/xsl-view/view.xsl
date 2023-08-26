@@ -25,13 +25,12 @@
                 xmlns:gex="http://standards.iso.org/iso/19115/-3/gex/1.0"
                 xmlns:gfc="http://standards.iso.org/iso/19110/gfc/1.1"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
+                xmlns:fn="http://www.w3.org/2005/xpath-functions"
                 xmlns:util="https://geonetwork-opensource.org/xsl-extension"
                 xmlns:tr="https://geonetwork-opensource.org/xsl-extension/schema"
                 xmlns:gn-fn-render="http://geonetwork-opensource.org/xsl/functions/render"
                 xmlns:gn-fn-iso19115-3.2018="http://geonetwork-opensource.org/xsl/functions/profiles/iso19115-3.2018"
                 xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
-                xmlns:saxon="http://saxon.sf.net/"
-                extension-element-prefixes="saxon"
                 exclude-result-prefixes="#all">
   <!-- This formatter render an ISO19115-3 record based on the
   editor configuration file.
@@ -1159,7 +1158,7 @@
                                     '&lt;a target=''_blank'' href=''$1''&gt;$1&lt;/a&gt;')"/>
 
         <xsl:if test="$textWithLinks != ''">
-          <xsl:copy-of select="saxon:parse(
+          <xsl:copy-of select="fn:parse-xml(
                           concat('&lt;p&gt;',
                           replace($textWithLinks, '&amp;', '&amp;amp;'),
                           '&lt;/p&gt;'))"/>

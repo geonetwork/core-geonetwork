@@ -19,10 +19,13 @@
     <extensionFunction>org.fao.geonet.util.xslt.GetSecurityProviderFn</extensionFunction>
     <extensionFunction>org.fao.geonet.util.xslt.GetSettingValueFn</extensionFunction>
     <extensionFunction>org.fao.geonet.util.xslt.GetSiteUrlFn</extensionFunction>
+    <extensionFunction>org.fao.geonet.util.xslt.GetDefaultUrlFn</extensionFunction>
+    <extensionFunction>org.fao.geonet.util.xslt.GetISO639_2T_2BFn</extensionFunction>
     <extensionFunction>org.fao.geonet.util.xslt.GetThreeCharLangCodeFn</extensionFunction>
     <extensionFunction>org.fao.geonet.util.xslt.GetTwoCharLangCodeFn</extensionFunction>
     <extensionFunction>org.fao.geonet.util.xslt.GetUiConfigurationFn</extensionFunction>
     <extensionFunction>org.fao.geonet.util.xslt.GetUiConfigurationJsonPropertyFn</extensionFunction>
+    <extensionFunction>org.fao.geonet.util.xslt.IsAuthenticatedFn</extensionFunction>
     <extensionFunction>org.fao.geonet.util.xslt.IsDisabledLoginFormFn</extensionFunction>
     <extensionFunction>org.fao.geonet.util.xslt.IsShowLoginAsLinkFn</extensionFunction>
     <extensionFunction>org.fao.geonet.util.xslt.IsUserGroupUpdateEnabledFn</extensionFunction>
