@@ -1,31 +1,34 @@
-package org.fao.geonet.api.records.formatters.xslt;
+package org.fao.geonet.util.xslt;
 
 import net.sf.saxon.expr.XPathContext;
 import net.sf.saxon.lib.ExtensionFunctionCall;
 import net.sf.saxon.lib.ExtensionFunctionDefinition;
+import net.sf.saxon.om.Item;
 import net.sf.saxon.om.Sequence;
 import net.sf.saxon.om.StructuredQName;
 import net.sf.saxon.trans.XPathException;
-import net.sf.saxon.value.EmptySequence;
 import net.sf.saxon.value.SequenceType;
+import net.sf.saxon.value.StringValue;
+import org.fao.geonet.util.XslUtil;
+import org.fao.geonet.utils.DateUtil;
 
-public class CreateForLangFn extends ExtensionFunctionDefinition {
+public class GetThesaurusIdByTitleFn extends ExtensionFunctionDefinition {
     @Override
     public StructuredQName getFunctionQName() {
         return new StructuredQName(
             XslFn.PREFIX,
             XslFn.URI,
-            "createForLang");
+            "getThesaurusIdByTitle");
     }
 
     @Override
     public SequenceType[] getArgumentTypes() {
-        return new SequenceType[]{SequenceType.SINGLE_STRING, SequenceType.SINGLE_STRING};
+        return new SequenceType[]{SequenceType.SINGLE_STRING};
     }
 
     @Override
     public SequenceType getResultType(SequenceType[] suppliedArgumentTypes) {
-        return SequenceType.ANY_SEQUENCE;
+        return SequenceType.SINGLE_STRING;
     }
 
     @Override
@@ -33,11 +36,12 @@ public class CreateForLangFn extends ExtensionFunctionDefinition {
         return new ExtensionFunctionCall() {
             @Override
             public Sequence call(XPathContext context, Sequence[] arguments) throws XPathException {
-                String schema = arguments[0].head().getStringValue();
-                String lang = arguments[1].head().getStringValue();
-                return EmptySequence.getInstance();
-                // TODO-SAXON: How to return the object ?
-//                    return SchemaLocalizations.create(schema);
+                Item head = arguments[0].head();
+                String title = "";
+                if (head != null) {
+                    title = head.getStringValue();
+                }
+                return StringValue.makeStringValue(XslUtil.getThesaurusIdByTitle(title));
             }
         };
     }

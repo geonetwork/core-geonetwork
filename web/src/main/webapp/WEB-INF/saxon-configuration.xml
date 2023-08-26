@@ -3,6 +3,8 @@
   <global lineNumbering="true"
           preEvaluateDoc="false"/>
   <resources>
+    <extensionFunction>org.fao.geonet.util.xslt.AnalyzeFieldFn</extensionFunction>
+    <extensionFunction>org.fao.geonet.util.xslt.ConvertToISOZuluDateTimeFn</extensionFunction>
     <extensionFunction>org.fao.geonet.util.xslt.EncodeForHTMLFn</extensionFunction>
     <extensionFunction>org.fao.geonet.util.xslt.EncodeForJavascriptFn</extensionFunction>
     <extensionFunction>org.fao.geonet.util.xslt.GetAuthServerBaseUrlFn</extensionFunction>
@@ -22,6 +24,11 @@
     <extensionFunction>org.fao.geonet.util.xslt.GetDefaultUrlFn</extensionFunction>
     <extensionFunction>org.fao.geonet.util.xslt.GetISO639_2T_2BFn</extensionFunction>
     <extensionFunction>org.fao.geonet.util.xslt.GetThreeCharLangCodeFn</extensionFunction>
+    <extensionFunction>org.fao.geonet.util.xslt.GetThesaurusIdByTitleFn</extensionFunction>
+    <extensionFunction>org.fao.geonet.util.xslt.GetKeywordUriFn</extensionFunction>
+    <extensionFunction>org.fao.geonet.util.xslt.GetRecordFn</extensionFunction>
+    <extensionFunction>org.fao.geonet.util.xslt.GetTargetAssociatedResourcesAsNodeFn</extensionFunction>
+    <extensionFunction>org.fao.geonet.util.xslt.GetUrlContentFn</extensionFunction>
     <extensionFunction>org.fao.geonet.util.xslt.GetTwoCharLangCodeFn</extensionFunction>
     <extensionFunction>org.fao.geonet.util.xslt.GetUiConfigurationFn</extensionFunction>
     <extensionFunction>org.fao.geonet.util.xslt.GetUiConfigurationJsonPropertyFn</extensionFunction>

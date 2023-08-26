@@ -1571,7 +1571,6 @@
     <httpcomponents.version>4.5.14</httpcomponents.version>
     <jasypt.version>1.9.3</jasypt.version>
     <jupiter.version>5.9.1</jupiter.version>
-    <hibernate.version>5.6.7.Final</hibernate.version>
     <saxon.version>12.3</saxon.version>
 
     <sonar.organization>geonetwork</sonar.organization>

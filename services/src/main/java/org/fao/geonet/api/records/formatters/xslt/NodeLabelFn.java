@@ -34,7 +34,7 @@ public class NodeLabelFn extends ExtensionFunctionDefinition {
             @Override
             public Sequence call(XPathContext context, Sequence[] arguments) throws XPathException {
                 String schema = "";//arguments[0].head().getStringValue();
-                return StringValue.makeStringValue("todo");
+                return StringValue.makeStringValue("TODO-SAXON");
             }
         };
     }
