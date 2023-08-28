@@ -524,6 +524,10 @@ public class GeonetworkDataDirectory {
      */
     private Path setDir(JeevesServlet jeevesServlet, String webappName,
                         ServiceConfig handlerConfig, Path dir, String key, String handlerKey, String firstPathSeg, String... otherSegments) {
+        // when context is root, webappname is empty, use the default
+        if(webappName.equals("")) {
+            webappName = "geonetwork";
+        }
         String envKey = webappName + key;
         if (dir != null) {
             if (Log.isDebugEnabled(Geonet.DATA_DIRECTORY)) {
