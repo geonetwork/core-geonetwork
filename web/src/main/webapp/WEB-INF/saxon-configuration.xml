@@ -5,6 +5,9 @@
   <resources>
     <extensionFunction>org.fao.geonet.util.xslt.AnalyzeFieldFn</extensionFunction>
     <extensionFunction>org.fao.geonet.util.xslt.ConvertToISOZuluDateTimeFn</extensionFunction>
+    <extensionFunction>org.fao.geonet.util.xslt.DecodeUrlParameterFn</extensionFunction>
+    <extensionFunction>org.fao.geonet.util.xslt.DetectMimeTypeFileFn</extensionFunction>
+    <extensionFunction>org.fao.geonet.util.xslt.DetectMimeTypeUrlFn</extensionFunction>
     <extensionFunction>org.fao.geonet.util.xslt.EncodeForHTMLFn</extensionFunction>
     <extensionFunction>org.fao.geonet.util.xslt.EncodeForJavascriptFn</extensionFunction>
     <extensionFunction>org.fao.geonet.util.xslt.GetAuthServerBaseUrlFn</extensionFunction>
@@ -21,6 +24,7 @@
     <extensionFunction>org.fao.geonet.util.xslt.GetSecurityProviderFn</extensionFunction>
     <extensionFunction>org.fao.geonet.util.xslt.GetSettingValueFn</extensionFunction>
     <extensionFunction>org.fao.geonet.util.xslt.GetSiteUrlFn</extensionFunction>
+    <extensionFunction>org.fao.geonet.util.xslt.GetDefaultLangCodeFn</extensionFunction>
     <extensionFunction>org.fao.geonet.util.xslt.GetDefaultUrlFn</extensionFunction>
     <extensionFunction>org.fao.geonet.util.xslt.GetISO639_2T_2BFn</extensionFunction>
     <extensionFunction>org.fao.geonet.util.xslt.GetThreeCharLangCodeFn</extensionFunction>

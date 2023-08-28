@@ -23,6 +23,8 @@
   -->
 
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                xmlns:fn="http://www.w3.org/2005/xpath-functions"
                 xmlns:gn="http://www.fao.org/geonetwork"
                 version="3.0">
   <!--
@@ -75,6 +77,7 @@
     <xsl:variable name="schema" select="gn:info/schema"/>
     <xsl:variable name="briefSchemaCallBack" select="concat($schema,'Brief')"/>
     <xsl:call-template name="{$briefSchemaCallBack}"/>
+    <xsl:copy-of select="fn:function-lookup(xs:QName($briefSchemaCallBack))()"/>
   </xsl:template>
 
 </xsl:stylesheet>

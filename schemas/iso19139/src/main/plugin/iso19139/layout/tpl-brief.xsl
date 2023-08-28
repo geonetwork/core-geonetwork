@@ -64,6 +64,7 @@
     </abstract>
   </xsl:template>
 
+  <!-- TODO-SAXON: convert to a function -->
   <xsl:template name="iso19139Brief">
     <metadata>
       <xsl:call-template name="iso19139-brief"/>
