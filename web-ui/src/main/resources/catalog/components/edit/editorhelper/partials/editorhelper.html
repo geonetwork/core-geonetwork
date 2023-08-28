@@ -17,7 +17,7 @@
             type="radio"
             data-ng-click="select(o)"
             name="ignore_{{ref}}"
-            data-ng-checked="o['@value'] === config.value"
+            data-ng-checked="o['@value'] == config.value"
           />
           {{o['#text']}}
         </label>
