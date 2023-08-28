@@ -1,32 +1,63 @@
-## Pandoc Document Conversion
+# Geonetwork-opensource Manual
 
-The [translation](../translate) module makes use of document conversion between markdown and html.
-As a result some markdown extensions cannot be used:
+Documentation for GeoNetwork opensource is available via https://geonetwork-opensource.org.
 
-* ``simple_tables`` cannot be used by github-flavored-markdown, use ``pipe_tables`` instead
+This documentation is written under the creative commons license [Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0)](LICENSE.md).
 
-Pandoc used for initial conversion from rich-structured-text to markdown:
-```
-cp -r src/sphinx docs
-cd docs
-find . -name \*.rst -type f -exec pandoc -o {}.md {} \;
-```
+Reference:
 
-Not all sphinx-build directives are supported, you may see junk like:
+* [Documentation Writing Guide](docs/devel/docs/docs.md)
 
-```
-``{.interpreted-text role="guilabel"} **Cancel**
-`waterways`{.interpreted-text role="kbd"} `waterways`
-```
+## Communication
 
-To prevent this use search/replace to pre-process:
+The [project issue tracker](https://github.com/geonetwork/core-geonetwork/issues) is used for communication, with ongoing topics tagged [documentation](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+label%3Adocumenation).
 
-* ``:gui-label:`text` `` changes to `**text**`
-* ``:menuselection:`text` `` changes to `**text**`
-* ``:kbd:`text` `` changes to ` ``text`` `
+## Material for MkDocs
 
+Documentation is [mkdocs-material](https://squidfunk.github.io/mkdocs-material/) which is a Markdown documentation framework written on top of [MkDocs](https://www.mkdocs.org/).
 
-The ``translate`` python module can do this for individual files:
-```
-python3 translate sphinx docs/example.rst
-```
+If you are familiar with python:
+
+1. Install using ``pip3`` and build:
+
+   ```bash
+   pip3 install -r requirements.txt
+   ```
+
+2. Use ***mkdocs** to preview locally:
+
+   ```bash
+   mkdocs serve
+   ```
+
+3. Preview: http://localhost:8000
+
+If you use a python virtual environment:
+
+1. Activate virtual environment:
+
+   ```bash
+   virtualenv venv
+   source venv/bin/activate
+   pip install -r requirements.txt
+   ```
+   
+2. Use ***mkdocs*** to preview from virtual environment:
+
+   ```bash
+   mkdocs serve
+   ```
+
+3. Preview: http://localhost:8000
+
+If you are not familiar with python the mkdocs-material website has instructions for docker:
+
+1. Run mkdocs in Docker environment:
+
+   ```
+   docker pull squidfunk/mkdocs-material
+   docker run --rm -it -p 8000:8000 -v ${PWD}:/docs squidfunk/mkdocs-material
+   ```
+   
+2. Preview: http://localhost:8000
+

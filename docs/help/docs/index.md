@@ -1,14 +1,13 @@
-# Catalogue
+# About
 
-This catalogue has lists records of available datasets. The catalogue uses ***GeoNetwok-opensource*** technology
-for listing, searching and reviewing records. 
+This catalogue lists records of available datasets.
 
 
-* [Search](search/index.md)
-* [Visualizing Data](map/index.md)
+## GeoNetwork-opensource
 
-This online help has been prepared with ISO19139/119 content.
+The catalogue uses :geonetwork-logo: ***GeoNetwok*** technology for listing, searching and reviewing records. 
 
 !!! info "Reference"
 
-    [GeoNetwork Manual](https://geonetwork-opensource.org/manuals/4.0.x/en/#)
+    [GeoNetwork Manual](https://geonetwork-opensource.org/manuals/4.0.x/en/#) <br/> 
+    [GeoNetwork-opensource](http://geonetwork-opensource.org)

@@ -24,7 +24,7 @@ Catalogue homepage and select a search type.
 ## Discover
 
 1.  To begin visualizing geospatial data, simply locate the data using
-    the data catalogue\'s search functionality (for more information,
+    the data catalogue's search functionality (for more information,
     see Discovering Data).
 
 2.  If a dataset can be visualized using the map viewer you will see two
@@ -84,20 +84,3 @@ Catalogue homepage and select a search type.
 
     \[screenshots of map viewer with expanded panel -- ie) add layers,
     manage layers, etc\]
-
-    Navigation Controls: located on the right hand side, change the
-    viewing extent of the map;
-
-    -   add layers
-    -   manage layers
-    -   legend
-    -   filter data
-    -   use a WPS process
-    -   maps
-    -   print
-    -   measure
-    -   annotation
-    -   synchronize all layers
-    -   zoom in/out, zoom to extent
-    -   switch 2D to 3D
-    -   graticule

@@ -1,4 +1,4 @@
-site_name: Catalogue Help
+site_name: GeoNetwork-opensource
 site_dir: target/html
 extra_css:
   - stylesheets/extra.css
@@ -28,10 +28,7 @@ plugins:
           build: true
       nav_translations:
         fr:
-          Home: Home
-          Search: Search
-          Record: Record
-          Map: Map
+          Development : Development
 markdown_extensions:
   - admonition
   - attr_list
@@ -56,12 +53,8 @@ markdown_extensions:
   - tables
 nav:
   - 'index.md'
-  - 'Home':
-    - 'home/index.md'
-  - 'Search':
-    - 'search/index.md'
-  - 'Record':
-    - 'record/index.md'
-  - 'Map':
-    - 'map/index.md'
-    - 'map/visualize/index.md'
+nav:
+  - 'index.md'
+  - 'Development':
+    - 'devel/index.md'
+    - 'devel/docs/docs.md'

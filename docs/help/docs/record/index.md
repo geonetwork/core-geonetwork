@@ -1,7 +1,6 @@
 # View Record
 
-View record contents to discovering more in depth details about record
-and the dataset described.
+View record contents to discovering more in depth details about record and the dataset described.
 
 Locate record to view:
 
@@ -14,7 +13,7 @@ Locate record to view:
     
     Click on the record to view.
 
-    ![](img/search_ocean.png)
+    ![](../search/img/search_ocean.png)
     *Search Ocean*
 
 3.  The record contents are displayed, using the initial
@@ -26,7 +25,7 @@ Locate record to view:
 4.  Record actions for viewing and download:
 
     -   **Next** and **Previous** buttons used to review search results.
-    -   **Download** used to [export record](download.md#download-from-record-view)
+    -   **Download** used to [export record](#download-from-record-view)
         as `ZIP`, `XML` or `PDF`.
     -   The **Display mode** drop-down to change between **Default View**
         and **Full View** covered in the next section.
@@ -154,4 +153,55 @@ The **Full view** is used to show complete record contents.
 
 3.  Keep in mind XML record does not include any attached documents or thumbnails.
 
-    To download complete record information see the [download](download.md) section.
+    To download complete record information see the download section.
+    
+## Download from record view
+
+Download the contents of a single record.
+
+1.  View the `Harbour Porpoise Presence, Maritimes Region` record, showing a number of **:fontawesome-solid-download: Download** options:
+
+    ![](img/record_download.png)
+    *Record download options*
+
+2.  **Permalink** provides a URL that
+    can be shared via email or message.
+
+    ![](img/permalink.png)
+    *Permalink to GEODBA.ACCOMMODATIONS record*
+
+    Use ++control+c++ (or ++command+c++ on macOS) to copy text to clipboard:
+
+    ![](img/permalink_copied.png)
+    *Permalink copied*
+
+3.  **Export (ZIP)** archive including:
+
+    -   A folder containing complete **`metadata.xml`** record, and simplified
+        ***`metadata-iso19139.xml`*** record.
+    -   ***`index.html`** and **`index.csv`** summary described in
+        the [previous section](#download-from-search-results).
+
+    ![](img/export_record_zip.png)
+    *Export (ZIP) index.html summary*
+
+    This file is useful for exchanging information between systems. The
+    archive contents follows the "Metadata Exchange Format" convention
+    used to share records between catalogs.
+
+4.  **Export (PDF)** document.
+
+    ![](img/export_record_pdf.png)
+    *Export (PDF) document*
+
+5.  **Export (XML)** machine readable
+    document.
+
+    ![](img/record-xml.png)
+    *XML download shown in FireFox*
+
+6.  **Export (RDF)** machine readable
+    definition of vocabulary used.
+
+    This file is useful for exchanging information between systems.
+
