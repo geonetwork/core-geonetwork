@@ -529,9 +529,31 @@ public class MetadataWorkflowApi {
                 metadataNotificationInfo.setPublicationDateStamp(new ISODate());
                 metadataNotificationInfo.setReapproval(metadataIdApproved != metadata.getId());
 
-                metadataListToNotifyPublication.add(metadataNotificationInfo);
 
-                metadataPublicationMailNotifier.notifyPublication(messages, context.getLanguage(), metadataListToNotifyPublication);
+            // If the metadata workflow is enabled retrieve the submitter and reviewer users information
+            if (isMdWorkflowEnable) {
+                String sortField = SortUtils.createPath(MetadataStatus_.changeDate);
+                List<MetadataStatus> statusList = metadataStatusRepository.findAllByMetadataIdAndByType(metadata.getId(),
+                    StatusValueType.workflow, Sort.by(Sort.Direction.DESC, sortField));
+
+                java.util.Optional<User> reviewerUser = userRepository.findById(metadataStatusValue.getUserId());
+                reviewerUser.ifPresent(user -> {
+                    metadataNotificationInfo.setReviewerUser(user.getUsername());
+                    // Set publisher to the reviewer user that approved the metadata
+                    metadataNotificationInfo.setPublisherUser(user.getUsername());
+                });
+
+                java.util.Optional<MetadataStatus> submittedStatus = statusList.stream().filter(status1 ->
+                    status1.getStatusValue().getId() == Integer.parseInt(StatusValue.Status.SUBMITTED)).findFirst();
+                if (submittedStatus.isPresent()) {
+                    java.util.Optional<User> submitterUser = userRepository.findById(submittedStatus.get().getUserId());
+                    submitterUser.ifPresent(user -> metadataNotificationInfo.setSubmitterUser(user.getUsername()));
+                }
+            }
+
+            metadataListToNotifyPublication.add(metadataNotificationInfo);
+
+            metadataPublicationMailNotifier.notifyPublication(messages, context.getLanguage(), metadataListToNotifyPublication);
         }
         return statusUpdate;
     }
