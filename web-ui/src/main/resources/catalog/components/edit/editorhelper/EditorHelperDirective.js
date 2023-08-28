@@ -137,7 +137,7 @@
 
           // Load the config from the textarea containing the helpers
           scope.config = angular.fromJson($("#" + scope.ref + "_config")[0].value);
-          if (scope.mode !== "suggestion") {
+          if (scope.mode == "") {
             scope.config.defaultSelected = {
               "@value": "",
               "#text": $translate.instant("recommendedValues"),
@@ -155,7 +155,7 @@
             scope.config.option = scope.config;
           }
 
-          if (scope.mode !== "suggestion") {
+          if (scope.mode == "") {
             // Add on top the recommended values option
             scope.config.option.unshift(scope.config.defaultSelected);
           }
