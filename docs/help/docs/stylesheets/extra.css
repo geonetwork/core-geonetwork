@@ -1,0 +1,6 @@
+img + em {
+ display: block;
+ text-align: left;
+ font-size: 0.7rem;
+ color: grey;
+}

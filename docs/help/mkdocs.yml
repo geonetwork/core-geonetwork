@@ -1,0 +1,65 @@
+site_name: Catalogue Help
+site_dir: target/html
+extra_css:
+  - stylesheets/extra.css
+theme:
+  name: material
+  language: en
+  custom_dir: overrides
+  features:
+    - navigation.tracking
+    - navigation.prune
+    - navigation.indexes
+    - toc.follow
+    - navigation.top
+plugins:
+  - search
+  - i18n:
+      default_language: en
+      docs_structure: suffix
+      search_reconfigure: true
+      material_alternate: true
+      languages:
+        en:
+          name: English
+          build: true
+        fr:
+          name: Français
+          build: true
+      nav_translations:
+        fr:
+          Search: Search
+          Map: Map
+markdown_extensions:
+  - admonition
+  - attr_list
+  - def_list
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
+      options:
+        custom_icons:
+          - overrides/.icons
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - tables
+nav:
+  - 'index.md'
+  - 'Search':
+    - 'search/index.md'
+    - 'search/records.md'
+    - 'search/details.md'
+    - 'search/download.md'
+  - 'Map':
+    - 'map/index.md'
+    - 'map/mapping/mapping.md'
+    - 'map/visualize/visualize.md'
