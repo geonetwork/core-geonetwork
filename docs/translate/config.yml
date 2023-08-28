@@ -1,0 +1,4 @@
+deepl_base_url: "https://api-free.deepl.com"
+upload_folder: "target/translate"
+convert_folder: "target/convert"
+download_folder: "target/translate"
