@@ -53,8 +53,9 @@ markdown_extensions:
   - tables
 nav:
   - 'index.md'
-nav:
-  - 'index.md'
+  - 'User-guide':
+    - 'user-guide/index.md'
+    - 'user-guide/quick-start/index.md'
   - 'Development':
     - 'devel/index.md'
     - 'devel/docs/docs.md'

@@ -1,15 +1,12 @@
-# GeoNetwork Manual
+# Contents
 
 * Overview
 * Installation
+* [User-guide](user-guide/index.md)
 * Administration
 * Maintainer
 * API
-* [Development](devel/index)
+* Contributing
 * Customization
 * Tutorials
 * Annexes
-
-!!! info "Reference"
-
-    Catalogue Help
