@@ -8,7 +8,9 @@ The Catalogue page is used to browse records, and has provides a quick search fi
     at the top of the page and press the **:fontawesome-solid-magnifying-glass: Search** button
     (or use the ++enter++ key), to list search results.
 
+    <div class="browser-border">
     ![Search field](img/search.png)
+    </div>
     *Search field*
 
 2.  Search for complete words.
@@ -17,7 +19,9 @@ The Catalogue page is used to browse records, and has provides a quick search fi
     
     Results are shown on the **Search** tab.
 
+    <div class="browser-mockup">
     ![](img/search_results.png)
+    </div>
     *Search results for Ocean*
 
 3.  Search using the wildcard `*` to match the start or end of word. 
@@ -26,14 +30,18 @@ The Catalogue page is used to browse records, and has provides a quick search fi
     
     Use **Search** field to enter: `Area*`
 
+    <div class="browser-mockup">
     ![](img/search_wildcard.png)
+    </div>
     *Search for start of a word*
 
 4.  The wildcard `*` can also be used multiple times to match part of a word.
 
     Use **Search** field to enter: `*brass*`
 
+    <div class="browser-mockup">
     ![](img/search_partial.png)
+    </div>
     *Search for part of a word*
 
 5. Search results are shown on the **Seach** tab, which allows filtering and exploring of records.
@@ -50,7 +58,9 @@ The Catalogue page is used to browse records, and has provides a quick search fi
     -   **Most popular**: frequently used records
     -   **Comments**: records with new comments and discussion
 
+    <div class="browser-border">
     ![](img/browse_latest.png)
+    </div>
     *Latest news*
 
 3.  Records are displayed as a :fontawesome-solid-table-cells-large: block list, :fontawesome-solid-bars: large list, or :fontawesome-solid-align-justify: small list
@@ -58,7 +68,9 @@ The Catalogue page is used to browse records, and has provides a quick search fi
 
     Click on any of the listed records to view.
 
+    <div class="browser-border">
     ![](img/browse_large_list.png)
+    </div>
     *Large list display of records*
 
 4.  The catalog page provides a number of quick searches to browse

@@ -8,14 +8,19 @@ The **Search** tab lists search results for filtering and sorting.
     at the top of the page and press the **:fontawesome-solid-magnifying-glass: Search** button
     (or use the ++enter++ key), to list search results.
 
+    <div class="browser-border">
     ![Search field](../home/img/search.png)
+    </div>
     *Search field*
+    
 
 2.  Search for complete words.
 
     Use **Search** field to enter: `Ocean`
 
+    <div class="browser-mockup">
     ![](../home/img/search_results.png)
+    </div>
     *Search results for Ocean*
 
 3.  Search using the wildcard `*` to match the start or end of word. 
@@ -24,14 +29,18 @@ The **Search** tab lists search results for filtering and sorting.
     
     Use **Search** field to enter: `Area*`
 
+    <div class="browser-mockup">
     ![](../home/img/search_wildcard.png)
+    </div>
     *Search for start of a word*
 
 4.  The wildcard `*` can also be used multiple times to match part of a word.
 
     Use **Search** field to enter: `*brass*`
 
+    <div class="browser-mockup">
     ![](../home/img/search_partial.png)
+    </div>
     *Search for part of a word*
 
 5. Filtering and exploring [search results](#search-results) is described below.
@@ -43,8 +52,10 @@ To further explore listed records:
 
 1.  Navigate to the **:fontawesome-solid-magnifying-glass: Search** page (or browse or search the catalogue to
     list search results).
-    
+
+    <div class="browser-mockup">
     ![](img/search_page.png)
+    </div>
     *Search page*
     
 2.  Use the **:fontawesome-solid-magnifying-glass: Filter** section on the right hand side to refine search results
@@ -53,7 +64,9 @@ To further explore listed records:
     Click on the "search facet" `Oceans` to filter the search results to
     matching records.
 
+    <div class="browser-border">
     ![](img/results_filter.png)
+    </div>
     *Filter results*
 
 3.  Options are provided at the top of the search results to:
@@ -65,7 +78,9 @@ To further explore listed records:
     * Advance to additional pages of results
     * Quickly select records
 
+    <div class="browser-border">
     ![](img/browse_results.png)
+    </div>
     *Browse results*
 
 4.  To clear the search results use **:fontawesome-solid-xmark: Clear current search query, filters, and sorts** 
@@ -77,20 +92,24 @@ To further explore listed records:
     These options can be used to further refine search results by category, keywords, contact
     or date range.
 
+    <div class="browser-mockup">
     ![](img/search_advanced.png)
+    </div>
     *Advanced search options*
 
-4.  Open the **:fontawesome-solid-ellipsis-vertical: Advanced** search options panel.
+6.  Open the **:fontawesome-solid-ellipsis-vertical: Advanced** search options panel.
     
     Use the drop down menu for **Records created in the last** to select `this week`.
     This acts as a short cut to fill in the **From** and **To** calendar fields.
     
     Press the **:fontawesome-solid-magnifying-glass:  Search** button to filter using this date range.
 
+    <div class="browser-border">
     ![](img/search_record_creation.png)
+    </div>
     *Record updated in the last week*
 
-5.  To search for data in the year `2016` use the advanced search
+7.  To search for data in the year `2016` use the advanced search
     options to fill **Resources created in the last** in:
     
     **From**
@@ -110,10 +129,12 @@ To further explore listed records:
         (creation, publication, revision) dates included within the
         calendar date range.
 
-6.  A slide out map is provided at the bottom of the page, providing
+8.  A slide out map is provided at the bottom of the page, providing
     visual feedback on the extent of each record.
 
+    <div class="browser-mockup">
     ![](img/search_map.png)
+    </div>
     *Search map*
 
     The map can be controlled by by toggling beween two modes:
@@ -130,13 +151,15 @@ To further explore listed records:
         ![](img/search_map_bbox.png)
         *Search bounding box intersects*
 
-7.  Records are selected (using the checkbox located next to each one)
+9.  Records are selected (using the checkbox located next to each one)
     to quickly download or generate a PDF of one or more records.
 
+    <div class="browser-mockup">
     ![](img/browse_selection.png)
+    </div>
     *Selected Records*
 
-9.  Additional tips and tricks with search results:
+10.  Additional tips and tricks with search results:
 
     -   Details on
         [selecting multiple records and exporting](#download-from-search-results)

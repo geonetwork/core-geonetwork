@@ -13,13 +13,17 @@ Locate record to view:
     
     Click on the record to view.
 
+    <div class="browser-mockup">
     ![](../search/img/search_ocean.png)
+    </div>
     *Search Ocean*
 
 3.  The record contents are displayed, using the initial
     **Default View** display mode.
 
+    <div class="browser-mockup">
     ![](img/record_default_view.png)
+    </div>
     *Default view*
 
 4.  Record actions for viewing and download:
@@ -30,7 +34,9 @@ Locate record to view:
     -   The **Display mode** drop-down to change between **Default View**
         and **Full View** covered in the next section.
 
+    <div class="browser-border">
     ![](img/record_navigation.png)
+    </div>
     *Record actions*
 
 ## Default View
@@ -39,7 +45,9 @@ The **Default view**, provides a quick summary of record contents:
 
 1.  Use **Display mode** drop-down menu to select **Default view**.
 
+    <div class="browser-border">
     ![](img/default_view.png)
+    </div>
     *Change display mode to default view*
 
 2.  Record title and description are shown at the top of the page.
@@ -68,7 +76,9 @@ The **Default view**, provides a quick summary of record contents:
     -   **Spatial extent** is shown visually on a map
     -   Information on updates and feedback.
 
+    <div class="browser-mockup">
     ![](img/record_default_view.png)
+    </div>
     *Default view*
 
 ## Full View
@@ -148,7 +158,9 @@ The **Full view** is used to show complete record contents.
     
 2.  The XML file is downloaded, or shown directly in your browser.
 
+    <div class="browser-mockup">
     ![](img/record-xml.png)
+    </div>
     *XML download shown in FireFox*
 
 3.  Keep in mind XML record does not include any attached documents or thumbnails.
@@ -161,7 +173,9 @@ Download the contents of a single record.
 
 1.  View the `Harbour Porpoise Presence, Maritimes Region` record, showing a number of **:fontawesome-solid-download: Download** options:
 
+    <div class="browser-border">
     ![](img/record_download.png)
+    </div>
     *Record download options*
 
 2.  **Permalink** provides a URL that
@@ -191,13 +205,17 @@ Download the contents of a single record.
 
 4.  **Export (PDF)** document.
 
+    <div class="browser-border">
     ![](img/export_record_pdf.png)
+    </div>
     *Export (PDF) document*
 
 5.  **Export (XML)** machine readable
     document.
 
+    <div class="browser-mockup">
     ![](img/record-xml.png)
+    </div>
     *XML download shown in FireFox*
 
 6.  **Export (RDF)** machine readable
