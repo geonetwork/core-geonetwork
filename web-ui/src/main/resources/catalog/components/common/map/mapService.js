@@ -926,7 +926,8 @@
                       imageTile.getImage().src = imageUrl;
                     });
                   } else {
-                    console.warn("Error loading image for: " + src, r);
+                    // Other HEAD errors, default to OL image src set
+                    imageTile.getImage().src = src;
                   }
                 }
               );
