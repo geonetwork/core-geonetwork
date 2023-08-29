@@ -105,4 +105,4 @@ From the results or the record view, you can add WMS layers referenced in a meta
 
 ![](img/map-africa-basin.png)
 
-Read more about use of the `map-viewer-as-user`{.interpreted-text role="ref"}
+Read more about use of the [map viewer](map-viewer-as-user.md).

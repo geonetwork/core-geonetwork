@@ -44,8 +44,8 @@ def convert_rst(rst_file: str) -> str:
        raise FileNotFoundError(errno.ENOENT, f"RST file does not exist at location:", rst_file)
 
     config = load_config()
-    if not (rst_file[-3:] == '.rst' or rst_file[-3:] == '.txt'):
-       raise FileNotFoundError(errno.ENOENT, f"RST 'rst' or `txt` extension required:", rst_file)
+    if rst_file[-4:] != '.rst':
+       raise FileNotFoundError(errno.ENOENT, f"Rich-structued-text 'rst' extension required:", rst_file)
 
     convert_folder = config['convert_folder']
 
@@ -53,6 +53,7 @@ def convert_rst(rst_file: str) -> str:
     path = path.replace(".txt",".md")
     path = path.replace(".rst",".md")
     md_file = path
+    md_tmp_file = path.replace(".md",".tmp.md")
 
     convert_directory = os.path.dirname(path)
     if not os.path.exists(convert_directory):
@@ -67,20 +68,98 @@ def convert_rst(rst_file: str) -> str:
     print("Converting ",rst_prep," to ",md_file)
 
     completed = subprocess.run(["pandoc",
-       "--from", "rst"
+       "--from", "rst",
        "--to",md_extensions_to,
        "--wrap=none",
        "--eol=lf",
-       "-o", md_file,
+       "-o", md_tmp_file,
        rst_prep
     ])
     if completed.returncode != 0:
         print(completed)
 
-    if not os.path.exists(html_file):
-       raise FileNotFoundError(errno.ENOENT, f"Pandoc did not create html file:", md_file)
+    if not os.path.exists(md_tmp_file):
+       raise FileNotFoundError(errno.ENOENT, f"Pandoc did not create md file:", md_tmp_file)
+
+    postprocess_rst_markdown(md_tmp_file, md_file)
+    if not os.path.exists(md_file):
+      raise FileNotFoundError(errno.ENOENT, f"Did not create postprocessed md file:", md_file)
 
     return md_file
+
+def preprocess_rst(rst_file:str, rst_prep: str) -> str:
+
+    with open(rst_file, 'r') as file:
+        text = file.read()
+
+    # gui-label and menuselection represented: **Cancel**
+    clean = re.sub(
+        r":guilabel:`(.*)`",
+        r":**\1**",
+        text,
+        flags=re.MULTILINE
+    )
+    clean = re.sub(
+        r":menuselection:`(.*)`",
+        r":**\1**",
+        text,
+        flags=re.MULTILINE
+    )
+
+    # command represented: ***mkdir***
+    clean = re.sub(
+        r":command:`(.*)`",
+        r":***\1***",
+        text,
+        flags=re.MULTILINE
+    )
+
+    # file path represented: **`file`**
+    clean = re.sub(
+        r":command:`(.*)`",
+        r":***\1***",
+        text,
+        flags=re.MULTILINE
+    )
+
+    # kbd represented with +++ by mkdocs
+    clean = re.sub(
+        r":kbd:`(.*)`",
+        r":+++\1+++",
+        text,
+        flags=re.MULTILINE
+    )
+
+    # DO THIS LAST: `some text` should use ``some text``
+    clean = re.sub(
+        r"(\s)`(.*)([^`])`([^`])",
+        r"\1``\2\3``\4",
+        text,
+        flags=re.MULTILINE
+    )
+
+    with open(rst_prep,'w') as rst:
+        rst.write(clean)
+
+def postprocess_rst_markdown(md_file: str, md_clean: str):
+    with open(md_file, 'r') as markdown:
+        data = markdown.read()
+
+    # fix references into broken links
+    data = re.sub(
+        r'`(.*) <(.*)>`{\.interpreted-text role="ref"}',
+        r'[\1](\2.md)',
+        data,
+        flags=re.MULTILINE
+    )
+    data = re.sub(
+        r'`(.*)`{\.interpreted-text role="ref"}',
+        r'[\1](\1.md)',
+        data,
+        flags=re.MULTILINE
+    )
+    with open(md_clean,'w') as markdown:
+        markdown.write(data)
 
 def convert_markdown(md_file: str) -> str:
     """
@@ -129,52 +208,6 @@ def convert_markdown(md_file: str) -> str:
        raise FileNotFoundError(errno.ENOENT, f"Pandoc did not create html file:", html_file)
 
     return html_file
-
-def preprocess_rst(rst_file:str, rst_prep: str) -> str:
-
-    with open(rst_file, 'r') as file:
-        text = file.read()
-
-    # gui-label and menuselection represented: **Cancel**
-    clean = re.sub(
-        r":guilabel:`(.*)`",
-        r":**\1**",
-        text,
-        flags=re.MULTILINE
-    )
-    clean = re.sub(
-        r":menuselection:`(.*)`",
-        r":**\1**",
-        text,
-        flags=re.MULTILINE
-    )
-
-    # command represented: ***mkdir***
-    clean = re.sub(
-        r":command:`(.*)`",
-        r":***\1***",
-        text,
-        flags=re.MULTILINE
-    )
-
-    # file path represented: **`file`**
-    clean = re.sub(
-        r":command:`(.*)`",
-        r":***\1***",
-        text,
-        flags=re.MULTILINE
-    )
-
-    # kbd represented with +++ by mkdocs
-    clean = re.sub(
-        r":kbd:`(.*)`",
-        r":+++\1+++",
-        text,
-        flags=re.MULTILINE
-    )
-
-    with open(rst_prep,'w') as rst:
-        rst.write(clean)
 
 
 def preprocess_markdown(md_file:str, md_prep: str) -> str:

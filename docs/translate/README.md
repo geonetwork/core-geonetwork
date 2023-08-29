@@ -26,3 +26,10 @@ See ``python3 -m translate --help`` for more options.
 
 You are welcome to use  google translate, ChatGPT, or Deepl directly - keeping in mind markdown formatting may be lost.
 
+## sphinx-build notes
+
+Pandoc conversion from rst to md:
+
+* ``toc:`` not supported, requires manual editing (if that is even appropriate)
+* `` \` `` in the middle of a word like can't 
+* `` `http:localhost:8080/geonetwork` `` require double ` `` ` rather than `` ` ``.

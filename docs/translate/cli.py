@@ -46,7 +46,7 @@ def french(
     print(md_fr,"\n")
 
 @app.command()
-def convert_rst(
+def rst(
         rst_file: Annotated[str, typer.Argument(help="RST file path")]
     ):
     """
