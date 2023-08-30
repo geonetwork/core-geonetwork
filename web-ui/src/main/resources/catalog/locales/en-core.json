@@ -507,7 +507,7 @@
     "indexingTaskFinished": "Indexing finished, {{total}} records processed",
     "indexingTaskFinishedWithErrors": "Indexing finished, {{total}} records processed with {{errors}} errors",
     "indexingTaskCanceled": "Indexing canceled",
-    "inspireValidationTaskUndefined": "Unknow INSPIRE validation task (abnormal state)",
+    "inspireValidationTaskUndefined": "Unknown INSPIRE validation task (abnormal state)",
     "inspireValidationTaskRunning": "INSPIRE validation {{total}} records...",
     "inspireValidationTaskFinished": "INSPIRE validation finished, {{total}} records processed",
     "inspireValidationTaskFinishedWithErrors": "INSPIRE validation finished, {{total}} records processed with {{errors}} errors",
