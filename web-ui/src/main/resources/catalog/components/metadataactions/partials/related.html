@@ -232,23 +232,29 @@
             'gn-card-dataset': type !== 'parent' && type !== 'services' && type !== 'application' && type !== 'nonGeographicDataset'
             }"
         >
-          <i
-            class="fa fa-fw {{icon}} gn-icon-association-{{md.properties.associationType}} gn-icon-initiative-{{md.properties.initiativeType}}"
-          />
-          <span class="gn-truncate">
-            <span data-ng-hide="md.properties && !md.properties.associationType">
+          <span>
+            <span data-ng-if="!md.properties || (md.properties && md.properties.associationType == '')">
               {{(config.getLabel(mainType, type)) | translate}}</span
             >
             <span
-              class="gn-card-badge-sublabel"
+              data-ng-if="md.properties && md.properties.associationType"
               data-ng-show="md.properties && md.properties.associationType"
               title="{{(config.getLabel(mainType, type)) | translate}}"
-            >
-              <b translate>associationType</b><br />
-              {{md.properties.associationType | translate}}
+            > {{'associatedTo' | translate}}
+              <b title="{{'associationType' | translate}}">
+                <i
+                  class="fa fa-fw {{icon}} gn-icon-association-{{md.properties.associationType}}"
+                />
+                {{md.properties.associationType | translate}}
+              </b>
               <span data-ng-if="md.properties && md.properties.initiativeType">
-                <br /><b translate>initiativeType</b><br />
-                {{md.properties.initiativeType | translate}}
+                >
+                <b title="{{'initiativeType' | translate}}">
+                  <i
+                    class="fa fa-fw {{icon}} gn-icon-initiative-{{md.properties.initiativeType}}"
+                  />
+                  {{md.properties.initiativeType | translate}}
+                </b>
               </span>
             </span>
           </span>
