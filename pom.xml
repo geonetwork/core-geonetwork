@@ -1341,6 +1341,27 @@
   </modules>
 
   <profiles>
+    <!-- Profile to include CMIS datastorage -->
+    <profile>
+      <id>datastorage-cmis</id>
+      <modules>
+        <module>datastorage-cmis</module>
+      </modules>
+    </profile>
+    <!-- Profile to include S3 datastorage -->
+    <profile>
+      <id>datastorage-s3</id>
+      <modules>
+        <module>datastorage-s3</module>
+      </modules>
+    </profile>
+    <!-- Profile to include JCloud datastorage -->
+    <profile>
+      <id>datastorage-jcloud</id>
+      <modules>
+        <module>datastorage-jcloud</module>
+      </modules>
+    </profile>
     <profile>
       <id>with-doc</id>
       <modules>
