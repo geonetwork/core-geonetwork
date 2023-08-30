@@ -26,12 +26,15 @@ package org.fao.geonet.api.es;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.Sets;
+import com.jayway.jsonpath.DocumentContext;
+import com.jayway.jsonpath.JsonPath;
 import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -55,14 +58,18 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.index.es.EsRestClient;
 import org.fao.geonet.kernel.AccessManager;
+import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.kernel.schema.MetadataSchema;
+import org.fao.geonet.kernel.schema.MetadataSchemaOperationFilter;
 import org.fao.geonet.kernel.search.EsFilterBuilder;
 import org.fao.geonet.repository.SourceRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -142,6 +149,9 @@ public class EsHTTPProxy {
 
     @Autowired
     private EsRestClient client;
+
+    @Autowired
+    private SchemaManager schemaManager;
 
     public EsHTTPProxy() {
     }
@@ -309,7 +319,9 @@ public class EsHTTPProxy {
             content = @Content(examples = {
                 @ExampleObject(value = "{\"query\":{\"match\":{\"_id\":\"catalogue_uuid\"}}}")
             }))
-        String body) throws Exception {
+        String body,
+        @Parameter(hidden = true)
+        HttpEntity<String> httpEntity) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
         call(context, httpSession, request, response, SEARCH_ENDPOINT, body, bucket, relatedTypes);
     }
@@ -351,7 +363,9 @@ public class EsHTTPProxy {
             content = @Content(examples = {
             @ExampleObject(value = "{\"query\":{\"match\":{\"_id\":\"catalogue_uuid\"}}}")
         }))
-        String body) throws Exception {
+        String body,
+        @Parameter(hidden = true)
+        HttpEntity<String> httpEntity) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
         call(context, httpSession, request, response, MULTISEARCH_ENDPOINT, body, bucket, relatedTypes);
     }
@@ -392,7 +406,9 @@ public class EsHTTPProxy {
             content = @Content(examples = {
                 @ExampleObject(value = "{\"query\":{\"match\":{\"_id\":\"catalogue_uuid\"}}}")
             }))
-        String body) throws Exception {
+        String body,
+        @Parameter(hidden = true)
+        HttpEntity<String> httpEntity) throws Exception {
 
         ServiceContext context = ApiUtils.createServiceContext(request);
         call(context, httpSession, request, response, endPoint, body, bucket, null);
@@ -457,6 +473,7 @@ public class EsHTTPProxy {
      */
     private void addRequiredField(ArrayNode source) {
         source.add("op*");
+        source.add(Geonet.IndexFieldNames.SCHEMA);
         source.add(Geonet.IndexFieldNames.GROUP_OWNER);
         source.add(Geonet.IndexFieldNames.OWNER);
         source.add(Geonet.IndexFieldNames.ID);
@@ -468,8 +485,8 @@ public class EsHTTPProxy {
 
         // Build filter node
         String esFilter = buildQueryFilter(context,
-                                            "",
-                                            esQuery.toString().contains("\"draft\":"));
+            "",
+            esQuery.toString().contains("\"draft\":"));
         JsonNode nodeFilter = objectMapper.readTree(esFilter);
 
         JsonNode queryNode = esQuery.get("query");
@@ -677,13 +694,20 @@ public class EsHTTPProxy {
                     addRelatedTypes(doc, relatedTypes, context);
                 }
 
-                // Remove fields with privileges info
                 if (doc.has("_source")) {
                     ObjectNode sourceNode = (ObjectNode) doc.get("_source");
 
+                    String metadataSchema = doc.get("_source").get("documentStandard").asText();
+                    MetadataSchema mds = schemaManager.getSchema(metadataSchema);
+
+                    // Apply metadata schema filters to remove non-allowed fields
+                    processMetadataSchemaFilters(context, mds, doc);
+
+                    // Remove fields with privileges info
                     for (ReservedOperation o : ReservedOperation.values()) {
                         sourceNode.remove("op" + o.getId());
                     }
+
                 }
             });
         } else {
@@ -807,4 +831,96 @@ public class EsHTTPProxy {
         return false;
     }
 
+
+    /**
+     * Process the metadata schema filters to filter out from the ElasticSearch response
+     * the elements defined in the metadata schema filters.
+     *
+     * It uses a jsonpath to filter the elements, typically is configured with the following jsonpath, to
+     * filter the ES object elements with an attribute nilReason = 'withheld'.
+     *
+     *  $.*[?(@.nilReason == 'withheld')]
+     *
+     * The metadata index process, has to define this attribute. Any element that requires to be filtered, should be
+     * defined as an object in ElasticSearch.
+     *
+     * Example for contacts:
+     *
+     *  <xsl:template mode="index-contact" match="*[cit:CI_Responsibility]">
+     *      ...
+     *      <!-- Check if the contact has an attribute @gco:nilReason = 'withheld', added by update-fixed-info.xsl process -->
+     *      <xsl:variable name="hasWithheld" select="@gco:nilReason = 'withheld'" as="xs:boolean" />
+     *
+     *      <xsl:element name="contact{$fieldSuffix}">
+     *        <xsl:attribute name="type" select="'object'"/>{
+     *        ...
+     *        "address":"<xsl:value-of select="gn-fn-index:json-escape($address)"/>"
+     *        <xsl:if test="$hasWithheld">
+     *         ,"nilReason": "withheld"
+     *        </xsl:if>
+     *
+     * @param mds
+     * @param doc
+     * @throws JsonProcessingException
+     */
+    private void processMetadataSchemaFilters(ServiceContext context, MetadataSchema mds, ObjectNode doc) throws JsonProcessingException {
+        if (!doc.has("_source")) {
+            return;
+        }
+
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode sourceNode = (ObjectNode) doc.get("_source");
+
+        MetadataSchemaOperationFilter authenticatedFilter = mds.getOperationFilter("authenticated");
+
+        List<String> jsonpathFilters = new ArrayList<>();
+
+        if (authenticatedFilter != null && !context.getUserSession().isAuthenticated()) {
+            jsonpathFilters.add(authenticatedFilter.getJsonpath());
+        }
+
+        MetadataSchemaOperationFilter editFilter = mds.getOperationFilter(ReservedOperation.editing);
+
+        if (editFilter != null) {
+            boolean canEdit = doc.get("edit").asBoolean();
+
+            if (!canEdit) {
+                jsonpathFilters.add(editFilter.getJsonpath());
+            }
+        }
+
+        MetadataSchemaOperationFilter downloadFilter = mds.getOperationFilter(ReservedOperation.download);
+        if (downloadFilter != null) {
+            boolean canDownload = doc.get("download").asBoolean();
+
+            if (!canDownload) {
+                jsonpathFilters.add(downloadFilter.getJsonpath());
+            }
+        }
+
+        MetadataSchemaOperationFilter dynamicFilter = mds.getOperationFilter(ReservedOperation.dynamic);
+        if (dynamicFilter != null) {
+            boolean canDynamic = doc.get("dynamic").asBoolean();
+
+            if (!canDynamic) {
+                jsonpathFilters.add(dynamicFilter.getJsonpath());
+            }
+        }
+
+        JsonNode actualObj = filterResponseElements(mapper, sourceNode, jsonpathFilters);
+        if (actualObj != null) {
+            doc.set("_source", actualObj);
+        }
+    }
+    private JsonNode filterResponseElements(ObjectMapper mapper, ObjectNode sourceNode, List<String> jsonPathFilters) throws JsonProcessingException {
+        DocumentContext jsonContext = JsonPath.parse(sourceNode.toPrettyString());
+
+        for(String jsonPath : jsonPathFilters) {
+            if (StringUtils.isNotBlank(jsonPath)) {
+                jsonContext = jsonContext.delete(jsonPath);
+            }
+        }
+
+        return mapper.readTree(jsonContext.jsonString());
+    }
 }
