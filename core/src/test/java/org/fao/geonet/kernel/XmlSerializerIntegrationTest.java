@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2023 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -45,6 +45,7 @@ import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.schema.MetadataSchema;
+import org.fao.geonet.kernel.schema.MetadataSchemaOperationFilter;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.Namespace;
@@ -101,23 +102,31 @@ public class XmlSerializerIntegrationTest extends AbstractCoreIntegrationTest {
 
     public void setSchemaFilters(boolean withHeld, boolean keepMarkedElement) {
         MetadataSchema mds = _dataManager.getSchema(metadata.getDataInfo().getSchemaId());
-        Map<String, Pair<String, Element>> filters = new HashMap<String, Pair<String, Element>>();
+        Map<String, MetadataSchemaOperationFilter> filters = new HashMap<>();
         if (withHeld) {
             if (keepMarkedElement) {
                 Element mark = new Element("keepMarkedElement");
                 mark.setAttribute("nilReason", "withheld", Geonet.Namespaces.GCO);
-                filters.put("editing",
-                    Pair.read(XPATH_WITHHELD, mark));
+
+                MetadataSchemaOperationFilter editFilter = new MetadataSchemaOperationFilter(XPATH_WITHHELD, "", "editing", mark);
+
+                filters.put(editFilter.getIfNotOperation(),
+                    editFilter);
             } else {
-                filters.put("editing",
-                    Pair.<String, Element>read(XPATH_WITHHELD, null));
+                MetadataSchemaOperationFilter editFilter = new MetadataSchemaOperationFilter(XPATH_WITHHELD, "", "editing", null);
+
+                filters.put(editFilter.getIfNotOperation(),
+                    editFilter);
             }
         }
 
-        filters.put("download",
-            Pair.<String, Element>read(XPATH_DOWNLOAD, null));
-        filters.put("dynamic",
-            Pair.<String, Element>read(XPATH_DYNAMIC, null));
+        MetadataSchemaOperationFilter downloadFilter = new MetadataSchemaOperationFilter(XPATH_DOWNLOAD, "", "download", null);
+        filters.put(downloadFilter.getIfNotOperation(),
+            downloadFilter);
+
+        MetadataSchemaOperationFilter dynamicFilter = new MetadataSchemaOperationFilter(XPATH_DYNAMIC, "", "dynamic", null);
+        filters.put(dynamicFilter.getIfNotOperation(),
+            dynamicFilter);
 
         mds.setOperationFilters(filters);
     }
