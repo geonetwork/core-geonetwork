@@ -1345,21 +1345,21 @@
     <profile>
       <id>datastorage-cmis</id>
       <modules>
-        <module>datastorage-cmis</module>
+        <module>datastorages/cmis</module>
       </modules>
     </profile>
     <!-- Profile to include S3 datastorage -->
     <profile>
       <id>datastorage-s3</id>
       <modules>
-        <module>datastorage-s3</module>
+        <module>datastorages/s3</module>
       </modules>
     </profile>
     <!-- Profile to include JCloud datastorage -->
     <profile>
       <id>datastorage-jcloud</id>
       <modules>
-        <module>datastorage-jcloud</module>
+        <module>datastorages/jcloud</module>
       </modules>
     </profile>
     <profile>
