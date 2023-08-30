@@ -81,11 +81,11 @@
             rssFeeds: [
               {
                 // List of rss feeds links to display when the OGC API Records service is enabled
-                url: "f=rss&sortby=-createDate&size=30",
+                url: "f=rss&sortby=-createDate&limit=30",
                 label: "lastCreatedRecords"
               }
               // , {
-              //   url: "f=rss&sortby=-publicationDateForResource&size=30",
+              //   url: "f=rss&sortby=-publicationDateForResource&limit=30",
               //   label: "lastPublishedRecords"
               // }
             ]
