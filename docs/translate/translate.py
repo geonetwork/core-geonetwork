@@ -102,7 +102,7 @@ def preprocess_rst(rst_file:str, rst_prep: str) -> str:
     clean = re.sub(
         r":menuselection:`(.*)`",
         r":**\1**",
-        text,
+        clean,
         flags=re.MULTILINE
     )
 
@@ -110,7 +110,7 @@ def preprocess_rst(rst_file:str, rst_prep: str) -> str:
     clean = re.sub(
         r":command:`(.*)`",
         r":***\1***",
-        text,
+        clean,
         flags=re.MULTILINE
     )
 
@@ -118,7 +118,7 @@ def preprocess_rst(rst_file:str, rst_prep: str) -> str:
     clean = re.sub(
         r":command:`(.*)`",
         r":***\1***",
-        text,
+        clean,
         flags=re.MULTILINE
     )
 
@@ -126,7 +126,7 @@ def preprocess_rst(rst_file:str, rst_prep: str) -> str:
     clean = re.sub(
         r":kbd:`(.*)`",
         r":+++\1+++",
-        text,
+        clean,
         flags=re.MULTILINE
     )
 
@@ -134,7 +134,13 @@ def preprocess_rst(rst_file:str, rst_prep: str) -> str:
     clean = re.sub(
         r"(\s)`(.*)([^`])`([^`])",
         r"\1``\2\3``\4",
-        text,
+        clean,
+        flags=re.MULTILINE
+    )
+    clean = re.sub(
+        r"``(.*)``_",
+        r"`\1`_",
+        clean,
         flags=re.MULTILINE
     )
 

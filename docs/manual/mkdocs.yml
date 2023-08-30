@@ -53,6 +53,13 @@ markdown_extensions:
   - tables
 nav:
   - 'index.md'
+  - 'Overview':
+    - 'overview/index.md'
+    - 'overview/about.md'
+    - 'License':
+      - 'overview/license/index.md'
+      - 'overview/license/GPL.md'
+    - 'overview/authors.md'
   - 'User-guide':
     - 'user-guide/index.md'
     - 'user-guide/quick-start/index.md'
