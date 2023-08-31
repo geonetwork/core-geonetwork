@@ -792,7 +792,7 @@
           return this.ownerId;
         },
         getGroupOwner: function () {
-          return this.owner;
+          return this.groupOwner;
         },
         getSchema: function () {
           return this.schema;

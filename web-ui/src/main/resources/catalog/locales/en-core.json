@@ -157,6 +157,7 @@
     "keywordFilter": "Filter keyword",
     "keywords": "Keywords",
     "recordOwner": "Record owner",
+    "groupRecordOwner": "Group record owner",
     "map": "Map",
     "makeYourMap": "Map",
     "metadataPOCs": "Contact for the metadata",
