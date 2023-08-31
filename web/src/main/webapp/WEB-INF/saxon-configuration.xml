@@ -43,8 +43,6 @@
     <extensionFunction>org.fao.geonet.util.xslt.IsUserProfileUpdateEnabledFn</extensionFunction>
     <extensionFunction>org.fao.geonet.api.records.formatters.xslt.CodeListValueDescFn</extensionFunction>
     <extensionFunction>org.fao.geonet.api.records.formatters.xslt.CodeListValueLabelFn</extensionFunction>
-    <extensionFunction>org.fao.geonet.api.records.formatters.xslt.CreateFn</extensionFunction>
-    <extensionFunction>org.fao.geonet.api.records.formatters.xslt.CreateForLangFn</extensionFunction>
     <extensionFunction>org.fao.geonet.api.records.formatters.xslt.NodeLabelFn</extensionFunction>
   </resources>
 </configuration>

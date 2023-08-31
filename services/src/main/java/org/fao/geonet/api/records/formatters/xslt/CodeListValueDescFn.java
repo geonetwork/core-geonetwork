@@ -3,13 +3,15 @@ package org.fao.geonet.api.records.formatters.xslt;
 import net.sf.saxon.expr.XPathContext;
 import net.sf.saxon.lib.ExtensionFunctionCall;
 import net.sf.saxon.lib.ExtensionFunctionDefinition;
+import net.sf.saxon.om.Item;
 import net.sf.saxon.om.Sequence;
 import net.sf.saxon.om.StructuredQName;
 import net.sf.saxon.trans.XPathException;
 import net.sf.saxon.value.SequenceType;
 import net.sf.saxon.value.StringValue;
+import org.fao.geonet.api.records.formatters.SchemaLocalizations;
 
-public class CodeListValueDescFn extends ExtensionFunctionDefinition {
+public class CodeListValueDescFn extends GnExtensionFunctionDefinition {
     @Override
     public StructuredQName getFunctionQName() {
         return new StructuredQName(
@@ -20,7 +22,7 @@ public class CodeListValueDescFn extends ExtensionFunctionDefinition {
 
     @Override
     public SequenceType[] getArgumentTypes() {
-        return new SequenceType[]{SequenceType.ANY_SEQUENCE, SequenceType.SINGLE_STRING, SequenceType.SINGLE_STRING};
+        return new SequenceType[]{SequenceType.SINGLE_STRING, SequenceType.SINGLE_STRING, SequenceType.SINGLE_STRING, SequenceType.SINGLE_STRING};
     }
 
     @Override
@@ -33,8 +35,17 @@ public class CodeListValueDescFn extends ExtensionFunctionDefinition {
         return new ExtensionFunctionCall() {
             @Override
             public Sequence call(XPathContext context, Sequence[] arguments) throws XPathException {
-                //String schema = arguments[0].head().getStringValue();
-                return StringValue.makeStringValue("todo ???");
+                Item nodeName = arguments[2].head();
+                String nodeNameVal = (nodeName != null) ? nodeName.getStringValue() : null;
+                Item parentNodeName = arguments[3].head();
+                String parentNodeNameVal = (parentNodeName != null) ? parentNodeName.getStringValue() : null;
+                try {
+                    SchemaLocalizations schemaLocalizations = getSchemaLocalizations(arguments);
+                    String response = schemaLocalizations.codelistValueDesc(nodeNameVal, parentNodeNameVal);
+                    return StringValue.makeStringValue(response);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
         };
     }

@@ -1320,7 +1320,7 @@
       <xsl:when test="$codelistTranslation != ''">
         <xsl:variable name="codelistDesc"
                       select="tr:codelist-value-desc(
-                            if ($forcedLanguage = '') then tr:create($schema) else tr:createForLang($schema, $forcedLanguage),
+                            $schema, $forcedLanguage,
                             $parentName, $id)"/>
         <span title="{$codelistDesc}">
           <xsl:value-of select="$codelistTranslation"/>
