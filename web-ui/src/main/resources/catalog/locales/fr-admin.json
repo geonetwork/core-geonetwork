@@ -180,6 +180,7 @@
     "data.configDir": "Répertoire pour la configuration :",
     "data.dataDir": "Répertoire des données :",
     "data.formatterPath": "Répertoire des mises en page",
+    "data.htmlCacheDir": "Répertoire de HTML cache:",
     "data.indexConfigDir": "Dossier de configuration de l'index :",
     "data.resources": "Répertoire pour les ressources (eg. images, logos) :",
     "data.backupDir": "Répertoire de sauvgarde",

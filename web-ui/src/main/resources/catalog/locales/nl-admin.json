@@ -180,6 +180,7 @@
     "data.configDir": "Configuratie folder:",
     "data.dataDir": "Data map:",
     "data.formatterPath": "Formatter folder:",
+    "data.htmlCacheDir": "HTML cache folder:",
     "data.indexConfigDir": "Index configuratiemap:",
     "data.resources": "Bronnen map:",
     "data.backupDir": "Backup folder:",
