@@ -554,18 +554,14 @@
                         ($base, concat('../', .))"/>
     </xsl:variable>
 
-    <xsl:message>xpath: <xsl:value-of select="."/></xsl:message>
-    <xsl:message>nodes: <xsl:copy-of select="$nodes"/></xsl:message>
+
     <xsl:variable name="fieldName">
       <xsl:if test="../@name">
         <xsl:value-of select="gn-fn-render:get-schema-strings($schemaStrings, ../@name)"/>
       </xsl:if>
     </xsl:variable>
-    <xsl:message>c: <xsl:value-of select="count($nodes)"/></xsl:message>
-    <xsl:message>fieldName: <xsl:value-of select="$fieldName"/></xsl:message>
 
     <xsl:for-each select="$nodes">
-      <xsl:message>render <xsl:value-of select="name(.)"/></xsl:message>
       <xsl:apply-templates mode="render-field">
         <xsl:with-param name="fieldName" select="$fieldName"/>
         <xsl:with-param name="collapsible" select="$collapsible"/>

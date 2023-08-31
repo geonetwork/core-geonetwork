@@ -29,7 +29,7 @@ Stylesheet used to update metadata adding a reference to a parent record.
                 xmlns:dct="http://purl.org/dc/terms/"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:geonet="http://www.fao.org/geonetwork"
-                version="2.0">
+                version="3.0">
 
   <!-- Parent metadata record UUID -->
   <xsl:param name="parentUuid"/>

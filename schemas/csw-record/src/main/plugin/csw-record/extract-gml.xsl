@@ -25,7 +25,7 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ows="http://www.opengis.net/ows"
                 xmlns:csw="http://www.opengis.net/cat/csw/2.0.2"
                 xmlns:gml="http://www.opengis.net/gml"
-                version="1.0">
+                version="3.0">
   <xsl:output method="xml" indent="yes"/>
   <xsl:template match="/" priority="2">
     <gml:GeometryCollection>

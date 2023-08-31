@@ -30,7 +30,7 @@ Insert is made in first transferOptions found.
                 xmlns:gco="http://www.isotc211.org/2005/gco"
                 xmlns:gmx="http://www.isotc211.org/2005/gmx"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                version="2.0">
+                version="3.0">
 
   <!-- Main properties for the link.
   Name and description may be multilingual eg. ENG#English name|FRE#Le français

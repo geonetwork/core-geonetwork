@@ -33,7 +33,7 @@
                 xmlns:foaf="http://xmlns.com/foaf/0.1/"
                 xmlns:void="http://www.w3.org/TR/void/"
                 xmlns:xslUtils="https://geonetwork-opensource.org/xsl-extension"
-                version="1.0">
+                version="3.0">
 
   <xsl:import href="../../layout/tpl-rdf.xsl"/>
 

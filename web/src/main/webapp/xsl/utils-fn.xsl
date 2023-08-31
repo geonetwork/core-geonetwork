@@ -2,7 +2,7 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:geonet="http://www.fao.org/geonetwork"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
-                version="2.0">
+                version="3.0">
 
   <!-- Search for any of the searchStrings provided -->
   <xsl:function name="geonet:contains-any-of" as="xs:boolean">

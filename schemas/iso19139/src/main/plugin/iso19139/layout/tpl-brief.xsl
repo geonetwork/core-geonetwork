@@ -33,7 +33,7 @@
                 xmlns:gn-fn-core="http://geonetwork-opensource.org/xsl/functions/core"
                 xmlns:gn-fn-iso19139="http://geonetwork-opensource.org/xsl/functions/profiles/iso19139"
                 exclude-result-prefixes="#all"
-                version="2.0">
+                version="3.0">
 
   <xsl:include href="utility-fn.xsl"/>
   <xsl:include href="utility-tpl.xsl"/>

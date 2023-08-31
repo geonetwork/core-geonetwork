@@ -24,7 +24,7 @@
 
 <xsl:stylesheet xmlns:util="https://geonetwork-opensource.org/xsl-extension"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                version="2.0">
+                version="3.0">
   <!-- Global XSL variables about the catalog and user session -->
 
 

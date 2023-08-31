@@ -7,7 +7,7 @@
                 xmlns:util="https://geonetwork-opensource.org/xsl-extension"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
                 xmlns:gn="http://www.fao.org/geonetwork"
-                exclude-result-prefixes="#all" version="2.0">
+                exclude-result-prefixes="#all" version="3.0">
 
   <xsl:template name="make-aggregate">
     <xsl:param name="uuid"/>

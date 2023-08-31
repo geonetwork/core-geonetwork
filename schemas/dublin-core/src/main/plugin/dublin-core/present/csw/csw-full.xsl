@@ -27,7 +27,7 @@
                 xmlns:dc="http://purl.org/dc/elements/1.1/"
                 xmlns:ows="http://www.opengis.net/ows"
                 xmlns:geonet="http://www.fao.org/geonetwork"
-                version="1.0">
+                version="3.0">
   <xsl:template match="simpledc">
     <xsl:variable name="info" select="geonet:info"/>
     <csw:Record>

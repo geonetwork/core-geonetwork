@@ -24,7 +24,7 @@
                 xmlns:util="https://geonetwork-opensource.org/xsl-extension"
                 xmlns:daobs="http://daobs.org"
                 exclude-result-prefixes="#all"
-                version="2.0">
+                version="3.0">
 
   <xsl:function name="daobs:search-in" as="node()*">
     <xsl:param name="list" as="node()*"/>

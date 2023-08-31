@@ -26,7 +26,7 @@
                 xmlns:geonet="http://www.fao.org/geonetwork"
                 xmlns:gn-fn-iso19139="http://geonetwork-opensource.org/xsl/functions/profiles/iso19139"
                 exclude-result-prefixes="#all"
-                version="2.0">
+                version="3.0">
   <xsl:import href="../../iso19139/process/process-utility.xsl"/>
   <xsl:import href="../layout/utility-vacuum.xsl"/>
 

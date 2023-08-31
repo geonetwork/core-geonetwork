@@ -27,7 +27,7 @@
                 xmlns:georss="http://www.georss.org/georss"
                 xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"
                 xmlns:inspire_dls="http://inspire.ec.europa.eu/schemas/inspire_dls/1.0"
-                exclude-result-prefixes="#all" version="1.0">
+                exclude-result-prefixes="#all" version="3.0">
 
   <xsl:output omit-xml-declaration="yes" method="html" doctype-system="html" indent="yes"
               encoding="UTF-8"/>

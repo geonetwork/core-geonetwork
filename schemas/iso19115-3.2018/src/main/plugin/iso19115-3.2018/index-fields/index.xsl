@@ -51,7 +51,7 @@
                 xmlns:saxon="http://saxon.sf.net/"
                 extension-element-prefixes="saxon"
                 exclude-result-prefixes="#all"
-                version="2.0">
+                version="3.0">
 
   <!-- TODO remove dependency on 19139-->
   <xsl:import href="../../iso19139/index-fields/fn.xsl"/>

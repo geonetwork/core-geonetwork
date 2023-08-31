@@ -25,7 +25,7 @@
 
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:csw="http://www.opengis.net/cat/csw/2.0.2"
                 xmlns:geonet="http://www.fao.org/geonetwork"
-                version="1.0">
+                version="3.0">
   <xsl:template match="csw:Record">
     <csw:Record>
       <xsl:apply-templates select="*[name(.)!='geonet:info']"/>

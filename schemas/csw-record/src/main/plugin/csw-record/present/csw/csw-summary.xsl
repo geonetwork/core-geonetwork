@@ -26,7 +26,7 @@
                 xmlns:dc="http://purl.org/dc/elements/1.1/"
                 xmlns:dct="http://purl.org/dc/terms/"
                 xmlns:geonet="http://www.fao.org/geonetwork"
-                version="1.0">
+                version="3.0">
   <xsl:template match="csw:Record">
     <xsl:variable name="info" select="geonet:info"/>
     <csw:SummaryRecord>

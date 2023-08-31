@@ -2,7 +2,7 @@
 
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:geonet="http://www.fao.org/geonetwork"
                 xmlns:exslt="http://exslt.org/common"
-                version="1.0">
+                version="3.0">
   <xsl:output method="xml"/>
 
   <xsl:include href="../../xsl/utils.xsl"/>

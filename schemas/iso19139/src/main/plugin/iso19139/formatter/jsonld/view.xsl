@@ -4,7 +4,7 @@
 	xmlns:gmd="http://www.isotc211.org/2005/gmd"
 	xmlns:gco="http://www.isotc211.org/2005/gco"
 	exclude-result-prefixes="#all"
-	version="2.0">
+	version="3.0">
 
 	<xsl:output method="text"/>
 

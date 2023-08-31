@@ -29,7 +29,7 @@
                 xmlns:digest="org.apache.commons.codec.digest.DigestUtils"
                 extension-element-prefixes="saxon"
                 exclude-result-prefixes="#all"
-                version="2.0">
+                version="3.0">
 
   <xsl:output method="text" encoding="UTF-8"/>
   <xsl:strip-space elements="*"/>

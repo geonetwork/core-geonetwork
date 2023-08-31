@@ -108,7 +108,7 @@
                  xmlns:dsdl="http://www.schematron.com/namespace/dsdl"
                  xmlns:relax="http://relaxng.org/ns/structure/1.0"
                  xmlns:xlink="http://www.w3.org/1999/xlink"
-                 version="1.0">
+                 version="3.0">
   <!-- Note: The URL for the dsdl namespace is not official -->
 
 

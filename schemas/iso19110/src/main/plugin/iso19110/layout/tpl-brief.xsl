@@ -28,7 +28,7 @@
                 xmlns:gmx="http://www.isotc211.org/2005/gmx"
                 xmlns:gco="http://www.isotc211.org/2005/gco"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
-                exclude-result-prefixes="xs" version="2.0">
+                exclude-result-prefixes="xs" version="3.0">
 
   <!-- ===================================================================== -->
   <!-- === iso19110 brief formatting === -->

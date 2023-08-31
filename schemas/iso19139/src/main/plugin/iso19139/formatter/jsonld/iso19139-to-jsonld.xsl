@@ -14,7 +14,7 @@
   xmlns:gn-fn-index="http://geonetwork-opensource.org/xsl/functions/index"
   xmlns:schema-org-fn="http://geonetwork-opensource.org/xsl/functions/schema-org"
 	exclude-result-prefixes="#all"
-	version="2.0">
+	version="3.0">
 
   <!--
   Convert an ISO19139 records in JSON-LD format

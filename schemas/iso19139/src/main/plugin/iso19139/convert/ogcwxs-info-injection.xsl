@@ -50,7 +50,7 @@
                 xmlns:math="http://exslt.org/math"
                 extension-element-prefixes="saxon math"
                 exclude-result-prefixes="#all"
-                version="2.0">
+                version="3.0">
 
   <xsl:import href="OGCWxSGetCapabilitiesto19119/resp-party.xsl"/>
 

@@ -61,7 +61,7 @@
                 xmlns:math="http://exslt.org/math"
                 extension-element-prefixes="saxon math"
                 exclude-result-prefixes="#all"
-                version="2.0">
+                version="3.0">
 
   <xsl:import href="ogcwxs-resp-party.xsl"/>
 
@@ -554,7 +554,7 @@
                              select="."/>
       </xsl:for-each>
 
-      <!-- If no '<AccessConstraints>' in "getCapabilities" response then 
+      <!-- If no '<AccessConstraints>' in "getCapabilities" response then
            copy constraints from template record -->
       <xsl:if test="not($constraints)">
         <xsl:apply-templates mode="copy" select="mri:resourceConstraints"/>
