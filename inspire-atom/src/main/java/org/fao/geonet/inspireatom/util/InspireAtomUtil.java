@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2017 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2023 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -67,17 +67,12 @@ import java.util.Map;
  * @author Jose García
  */
 public class InspireAtomUtil {
-    private final static String EXTRACT_DATASETS_FROM_SERVICE_XSLT = "extract-datasetinfo-from-service-feed.xsl";
+    private static final String EXTRACT_DATASETS_FROM_SERVICE_XSLT = "extract-datasetinfo-from-service-feed.xsl";
 
     /**
      * Xslt process to get the related datasets in service metadata.
      **/
     private static final String EXTRACT_DATASETS = "extract-datasets.xsl";
-
-    /**
-     * Xslt process to get if a metadata is a service or a dataset.
-     **/
-    private static final String EXTRACT_MD_TYPE = "extract-type.xsl";
 
     /**
      * Xslt process to get the atom feed link from the metadata.
@@ -118,6 +113,10 @@ public class InspireAtomUtil {
      * The download url suffix for download of dataset atom feeds.
      **/
     public static final String LOCAL_DOWNLOAD_DATASET_URL_SUFFIX = "atom/download/dataset";
+
+    private InspireAtomUtil() {
+
+    }
 
     /**
      * Issue an http request to retrieve the remote Atom feed document.
@@ -165,7 +164,7 @@ public class InspireAtomUtil {
                                               final String crs)
         throws Exception {
 
-        List<Element> elementsToRemove = new ArrayList<Element>();
+        List<Element> elementsToRemove = new ArrayList<>();
 
         Iterator it = feed.getChildren().iterator();
 
@@ -193,7 +192,7 @@ public class InspireAtomUtil {
     public static boolean isServiceMetadata(DataManager dm, String schema, Element md) throws Exception {
         java.nio.file.Path styleSheet = dm.getSchemaDir(schema).resolve("extract-type.xsl");
 
-        Map<String, Object> paramsM = new HashMap<String, Object>();
+        Map<String, Object> paramsM = new HashMap<>();
         String mdType = Xml.transform(md, styleSheet, paramsM).getText().trim();
 
         return "service".equalsIgnoreCase(mdType);
@@ -238,7 +237,7 @@ public class InspireAtomUtil {
 
         java.nio.file.Path defaultStyleSheet = dataManager.getSchemaDir("iso19139").resolve(EXTRACT_DATASETS_FROM_SERVICE_XSLT);
 
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
         Element atomIndexFields = Xml.transform(serviceFeed, defaultStyleSheet, params);
 
         List<DatasetFeedInfo> datasetsInformation = new ArrayList<>();
@@ -290,7 +289,7 @@ public class InspireAtomUtil {
                                                                 List<AbstractMetadata> iso19139Metadata, String type,
                                                                 String atomProtocol) throws Exception {
 
-        Map<String, String> metadataAtomFeeds = new HashMap<String, String>();
+        Map<String, String> metadataAtomFeeds = new HashMap<>();
 
         for (AbstractMetadata md : iso19139Metadata) {
             int id = md.getId();
@@ -378,7 +377,7 @@ public class InspireAtomUtil {
             searcher.search(context, request, serviceConfig);
 
             List<String> uuids = ((LuceneSearcher) searcher).getAllUuids(1, context);
-            if (uuids.size() > 0) {
+            if (!uuids.isEmpty()) {
                 uuid = uuids.get(0);
             }
         } catch (Exception ex) {
@@ -479,7 +478,10 @@ public class InspireAtomUtil {
             .resolve(TRANSFORM_MD_TO_ATOM_FEED);
     }
 
-    public static Element getDatasetFeed(final ServiceContext context, final String spIdentifier, final String spNamespace, final Map<String, Object> params, String requestedLanguage) throws Exception {
+    public static Element getMetadataFeedByResourceIdentifier(final ServiceContext context, final String spIdentifier,
+                                                              final String spNamespace,
+                                                              final Map<String, Object> params,
+                                                              String requestedLanguage) throws Exception {
 
         ServiceConfig config = new ServiceConfig();
         config.setValue(Geonet.SearchConfig.SEARCH_IGNORE_PORTAL_FILTER_OPTION, "true");
@@ -493,7 +495,6 @@ public class InspireAtomUtil {
         if (StringUtils.isNotBlank(spNamespace)) {
             dsLuceneSearchParams.getRootElement().addContent(new Element("identifierNamespace").setText(spNamespace));
         }
-        dsLuceneSearchParams.getRootElement().addContent(new Element("type").setText("dataset"));
 
         try (MetaSearcher searcher = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE)) {
             searcher.search(context, dsLuceneSearchParams.getRootElement(), config);
@@ -565,12 +566,10 @@ public class InspireAtomUtil {
     }
 
     private static Document createDefaultLuceneSearcherParams() {
-        Document luceneParamSearch = new Document(new Element("request").
+        return new Document(new Element("request").
             addContent(new Element("from").setText("1")).
             addContent(new Element("to").setText("1000")).
             addContent(new Element("fast").setText("index")));
-
-        return luceneParamSearch;
     }
 
     public static Element prepareOpenSearchDescriptionEltBeforeTransform(final ServiceContext context, final Map<String, Object> params, final String fileIdentifier, final String schema, final Element serviceAtomFeed, final String defaultLanguage,
@@ -584,7 +583,7 @@ public class InspireAtomUtil {
         response.addContent(new Element("fileId").setText(fileIdentifier));
         response.addContent(new Element("title").setText(serviceAtomFeed.getChildText("title", ns)));
         response.addContent(new Element("subtitle").setText(serviceAtomFeed.getChildText("subtitle", ns)));
-        List<String> languages = new ArrayList<String>();
+        List<String> languages = new ArrayList<>();
         languages.add(XslUtil.twoCharLangCode(defaultLanguage));
         Iterator<Element> linksChildren = (serviceAtomFeed.getChildren("link", ns)).iterator();
         while (linksChildren.hasNext()) {
@@ -611,7 +610,7 @@ public class InspireAtomUtil {
         response.addContent(datasetsEl);
         Namespace inspiredlsns = serviceAtomFeed.getNamespace("inspire_dls");
         Iterator<Element> datasets = (serviceAtomFeed.getChildren("entry", ns)).iterator();
-        List<String> fileTypes = new ArrayList<String>();
+        List<String> fileTypes = new ArrayList<>();
         while (datasets.hasNext()) {
             Element dataset = datasets.next();
             String datasetIdCode = dataset.getChildText("spatial_dataset_identifier_code", inspiredlsns);
@@ -619,7 +618,7 @@ public class InspireAtomUtil {
 
             Element datasetAtomFeed = null;
             try {
-                datasetAtomFeed = InspireAtomUtil.getDatasetFeed(context, datasetIdCode, datasetIdNs, params, XslUtil.twoCharLangCode(defaultLanguage));
+                datasetAtomFeed = InspireAtomUtil.getMetadataFeedByResourceIdentifier(context, datasetIdCode, datasetIdNs, params, XslUtil.twoCharLangCode(defaultLanguage));
             } catch (Exception e) {
                 Log.error(Geonet.ATOM, "No dataset metadata found with uuid:"
                     + fileIdentifier);
@@ -634,7 +633,7 @@ public class InspireAtomUtil {
                     datasetEl.addContent(new Element("authorName").setText(authorName));
                 }
             }
-            Map<String, Integer> downloadsCountByCrs = new HashMap<String, Integer>();
+            Map<String, Integer> downloadsCountByCrs = new HashMap<>();
             Iterator<Element> entries = (datasetAtomFeed.getChildren("entry", ns)).iterator();
             while (entries.hasNext()) {
                 Element entry = entries.next();
@@ -643,7 +642,7 @@ public class InspireAtomUtil {
                     String term = category.getAttributeValue("term");
                     Integer count = downloadsCountByCrs.get(term);
                     if (count == null) {
-                        count = new Integer(0);
+                        count = 0;
                     }
                     downloadsCountByCrs.put(term, count + 1);
                 }
@@ -744,7 +743,7 @@ public class InspireAtomUtil {
     }
 
     public static List<String> retrieveKeywordsFromFileIdentifier(ServiceContext context, String fileIdentifier) {
-        List<String> keywordsList = new ArrayList<String>();
+        List<String> keywordsList = new ArrayList<>();
         Element request = new Element(Jeeves.Elem.REQUEST);
         request.addContent(new Element("fileId").setText(fileIdentifier));
         //request.addContent(new Element("has_atom").setText("y"));
