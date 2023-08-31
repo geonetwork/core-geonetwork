@@ -100,7 +100,7 @@ public abstract class XslProcessTest {
 
     @Before
     public void setup() throws URISyntaxException {
-        File saxonConfiguration = new File(this.getClass().getResource("saxon-configuration.xml").getFile());
+        File saxonConfiguration = new File(this.getClass().getClassLoader().getResource("saxon-configuration.xml").getFile());
         TransformerFactoryFactory.init("net.sf.saxon.TransformerFactoryImpl", saxonConfiguration);
 
         if (xslFilename != null) {

@@ -63,7 +63,7 @@ public class ISO19139SchemaPluginTest {
 
     @Before
     public void setup() throws TransformerConfigurationException, URISyntaxException {
-        File saxonConfiguration = new File(this.getClass().getResource("saxon-configuration.xml").getFile());
+        File saxonConfiguration = new File(this.getClass().getClassLoader().getResource("saxon-configuration.xml").getFile());
         TransformerFactoryFactory.init("net.sf.saxon.TransformerFactoryImpl", saxonConfiguration);
 
         ns.put(
