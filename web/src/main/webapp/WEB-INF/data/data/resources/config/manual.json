@@ -31,5 +31,8 @@
   "managing-directories": "administrator-guide/managing-classification-systems/managing-directories.html",
   "installing-index": "install-guide/installing-index.html",
   "maintainer-guide-home": "maintainer-guide/index.html",
+  "installing-datadirectory": "install-guide/customizing-data-directory.html",
+  "installing-db": "install-guide/configuring-database.html",
+  "installing-index": "install-guide/installing-index.html",
   "standards-home": "annexes/standards/index.html"
 }

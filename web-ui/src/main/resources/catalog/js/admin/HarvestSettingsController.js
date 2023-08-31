@@ -409,7 +409,7 @@
             function (response) {
               deferred.reject(response.data);
               $rootScope.$broadcast("StatusUpdated", {
-                msg: $translate.instant("harvesterUpdated"),
+                msg: $translate.instant("harvesterUpdateError"),
                 error: response.data,
                 timeout: 2,
                 type: "danger"

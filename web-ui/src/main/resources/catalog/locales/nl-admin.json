@@ -217,6 +217,7 @@
     "emptyPortal": "Portaal <strong>{{portal}}</strong> is leeg. U kunt de <a href='#/settings/sources'>configuration</a> controleren of <a href='catalog.edit'>records importeren of aanmaken</a>.",
     "emptyCatalogShouldBeFilled": "De catalogus is leeg, u wilt waarschijnlijk nieuwe metadata bestanden importeren of een harvester configureren. U kunt ook <a href='#/metadata/metadata-and-template/load-templates/all'>alle templates</a> laden, <a href = '#/metadata/metadata-and-template/load-samples/all'> alle voorbeeld-data </a> of <a href='#/metadata/metadata-and-template/load-samples-and-templates/all'> beide </a> .",
     "enable": "Aanzetten",
+    "disable": "Uitzetten",
     "enableAllowedCategories": "Activeer toegestane categorien",
     "exportLogAsZIP": "Exporteer (ZIP)",
     "facetIndicatorHelp": "Statistieken van metadata bestanden worden gedefinieerd op basis van de facetten configuratie en kunnen daardoor alleen de meest voorkomende waarden vertegenwoordigen.",

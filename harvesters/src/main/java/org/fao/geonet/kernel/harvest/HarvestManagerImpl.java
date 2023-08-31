@@ -156,6 +156,10 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
                     } catch (OperationAbortedEx oae) {
                         Log.error(Geonet.HARVEST_MAN, "Cannot create harvester " + id + " of type \""
                             + type + "\"", oae);
+                    } catch (SchedulerException e) {
+                        // Badly configured schedules prevent Geonetwork from starting successfully, this prevents that.
+                        Log.error(Geonet.HARVEST_MAN, "Could not schedule harvester " + id + " of type "
+                            + type, e);
                     }
                 }
             }
