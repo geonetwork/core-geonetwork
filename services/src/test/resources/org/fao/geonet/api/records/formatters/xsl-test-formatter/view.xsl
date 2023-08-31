@@ -33,7 +33,7 @@
     <html>
       <body>
         <div class="tr">
-          <xsl:value-of select="tr:nodeLabel(tr:create('iso19139'), 'gmd:title', 'gmd:parent')"/>
+          <xsl:value-of select="tr:nodeLabel('iso19139', '', 'gmd:title', 'gmd:parent')"/>
         </div>
         <xsl:copy-of select="gnf:p()"/>
       </body>

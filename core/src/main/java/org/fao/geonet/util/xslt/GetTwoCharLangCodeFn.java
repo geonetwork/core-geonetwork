@@ -46,8 +46,11 @@ public class GetTwoCharLangCodeFn extends ExtensionFunctionDefinition {
         return new ExtensionFunctionCall() {
             @Override
             public Sequence call(XPathContext context, Sequence[] arguments) throws XPathException {
-                String lang = ((StringValue) arguments[0]).getStringValue();
-                return StringValue.makeStringValue(XslUtil.twoCharLangCode(lang));
+                final String lang = arguments[0].head().getStringValue();
+                String param2 = null;
+                if (arguments.length > 1)
+                    param2 = arguments[1].head().getStringValue();
+                return StringValue.makeStringValue(XslUtil.twoCharLangCode(lang, param2));
             }
         };
     }

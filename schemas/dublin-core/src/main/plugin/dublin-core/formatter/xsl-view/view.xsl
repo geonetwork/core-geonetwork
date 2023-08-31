@@ -142,7 +142,7 @@
       <dt>
         <xsl:value-of select="if ($fieldName)
                                 then $fieldName
-                                else tr:nodeLabel(tr:create($schema), name(), null)"/>
+                                else tr:nodeLabel($schema, '', name(), null)"/>
       </dt>
       <dd>
         <xsl:apply-templates mode="render-value" select="."/>

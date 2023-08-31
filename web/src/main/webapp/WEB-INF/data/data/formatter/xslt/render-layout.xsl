@@ -587,7 +587,7 @@
                     select="$configuration/editor/tableFields/table[@for = current()/*/name()]"/>
       <dl class="gn-table">
         <dt>
-          <xsl:value-of select="tr:nodeLabel(tr:create($schema), name(), null)"/>
+          <xsl:value-of select="tr:nodeLabel($schema, '', name(), null)"/>
         </dt>
         <dd>
           <table class="table">
@@ -595,7 +595,7 @@
               <tr>
                 <xsl:for-each select="$tableConfig/header/col[@label]">
                   <th>
-                    <xsl:value-of select="tr:nodeLabel(tr:create($schema), @label, null)"/>
+                    <xsl:value-of select="tr:nodeLabel($schema, '', @label, null)"/>
                   </th>
                 </xsl:for-each>
               </tr>

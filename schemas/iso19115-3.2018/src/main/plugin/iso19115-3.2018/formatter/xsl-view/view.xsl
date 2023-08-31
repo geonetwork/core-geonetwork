@@ -459,7 +459,7 @@
       <xsl:when test="$fieldName = '' and $language = 'all' and count($languages/lang) > 0">
         <xsl:for-each select="$languages/lang">
           <div xml:lang="{@code}">
-            <xsl:value-of select="tr:nodeLabel(tr:createForLang($schema, @code), $name, $context)"/>
+            <xsl:value-of select="tr:nodeLabel($schema, @code, $name, $context)"/>
             <xsl:if test="$contextLabel">
               <xsl:variable name="extraLabel">
                 <xsl:apply-templates mode="render-value"
@@ -480,7 +480,7 @@
           <xsl:variable name="lang3"
                         select="$metadata//mdb:otherLocale/*[@id = $id]/lan:languageCode/*/@codeListValue"/>
           <div xml:lang="{$lang3}">
-            <xsl:value-of select="tr:nodeLabel(tr:createForLang($schema, $lang3), $name, $context)"/>
+            <xsl:value-of select="tr:nodeLabel($schema, $lang3, $name, $context)"/>
           </div>
         </xsl:for-each>
       </xsl:when>
@@ -488,7 +488,7 @@
         <!-- Overriden label or element name in current UI language. -->
         <xsl:value-of select="if ($fieldName)
                                 then $fieldName
-                                else tr:nodeLabel(tr:create($schema), $name, $context)"/>
+                                else tr:nodeLabel($schema, '', $name, $context)"/>
         <xsl:if test="$contextLabel">
           <xsl:variable name="extraLabel">
             <xsl:apply-templates mode="render-value"
@@ -1311,7 +1311,7 @@
 
           <div xml:lang="{@code}"
                title="{if ($codelistTranslation != '') then tr:codelist-value-desc(
-                            tr:create($schema),
+                            $schema, '',
                             $parentName, $id) else ''}">
             <xsl:value-of select="if ($codelistTranslation != '') then $codelistTranslation else $id"/>
           </div>

@@ -89,7 +89,7 @@
       <dt>
         <xsl:value-of select="if ($fieldName)
                                 then $fieldName
-                                else tr:nodeLabel(tr:create($schema), name(), null)"/>
+                                else tr:nodeLabel($schema, '', name(), null)"/>
       </dt>
       <dd>
         <xsl:apply-templates mode="render-value" select="*|*/@codeListValue"/>
@@ -107,19 +107,19 @@
       <strong>
         <xsl:value-of select="if ($fieldName)
                                 then $fieldName
-                                else tr:nodeLabel(tr:create($schema), name(), null)"/>
+                                else tr:nodeLabel($schema, '', name(), null)"/>
       </strong>
       <table class="table table-bordered">
         <tbody>
           <tr>
             <th>
-              <xsl:value-of select="tr:nodeLabel(tr:create($schema), 'gfc:code', null)"/>
+              <xsl:value-of select="tr:nodeLabel($schema, '', 'gfc:code', null)"/>
             </th>
             <th>
-              <xsl:value-of select="tr:nodeLabel(tr:create($schema), 'gfc:label', null)"/>
+              <xsl:value-of select="tr:nodeLabel($schema, '', 'gfc:label', null)"/>
             </th>
             <th>
-              <xsl:value-of select="tr:nodeLabel(tr:create($schema), 'gfc:definition', null)"/>
+              <xsl:value-of select="tr:nodeLabel($schema, '', 'gfc:definition', null)"/>
             </th>
           </tr>
           <xsl:for-each select="../gfc:listedValue/*">
@@ -150,7 +150,7 @@
                          and not(gmd:URL)]">
     <div class="entry name">
       <h3>
-        <xsl:value-of select="tr:nodeLabel(tr:create($schema), name(), null)"/>
+        <xsl:value-of select="tr:nodeLabel($schema, '', name(), null)"/>
       </h3>
       <div class="target">
         <xsl:choose>
@@ -343,7 +343,7 @@
     <xsl:variable name="id" select="."/>
     <xsl:variable name="codelistTranslation"
                   select="tr:codelist-value-label(
-                            tr:create($schema),
+                            $schema, '',
                             parent::node()/local-name(),
                             $id)"/>
     <xsl:choose>
@@ -351,7 +351,7 @@
 
         <xsl:variable name="codelistDesc"
                       select="tr:codelist-value-desc(
-                            tr:create($schema),
+                            $schema, '',
                             parent::node()/local-name(), $id)"/>
         <span title="{$codelistDesc}">
           <xsl:value-of select="$codelistTranslation"/>

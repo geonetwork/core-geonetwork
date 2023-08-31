@@ -409,7 +409,7 @@
       <dt>
         <xsl:value-of select="if ($fieldName)
                                   then $fieldName
-                                  else tr:node-label(tr:create($schema), name(), null)"/>
+                                  else tr:node-label($schema, '', name(), null)"/>
       </dt>
       <dd>
         <xsl:value-of select="$schemaStrings/nilValue"/>
@@ -457,7 +457,8 @@
       <xsl:when test="$fieldName = '' and $language = 'all' and count($languages/lang) > 0">
         <xsl:for-each select="$languages/lang">
           <div xml:lang="{@code}">
-            <xsl:value-of select="tr:nodeLabel(tr:createForLang($schema, @code), $name, $context)"/>
+            <xsl:value-of select="tr:nodeLabel($schema, @code, $name, $context)"/>
+            <xsl:value-of select="tr:nodeLabel($schema, @code, $name)"/>---
             <xsl:if test="$contextLabel">
               <xsl:variable name="extraLabel">
                 <xsl:apply-templates mode="render-value"
@@ -478,7 +479,7 @@
           <xsl:variable name="lang3"
                         select="$metadata//gmd:locale/*[@id = $id]/gmd:languageCode/*/@codeListValue"/>
           <div xml:lang="{$lang3}">
-            <xsl:value-of select="tr:nodeLabel(tr:createForLang($schema, $lang3), $name, $context)"/>
+            <xsl:value-of select="tr:nodeLabel($schema, $lang3, $name, $context)"/>
           </div>
         </xsl:for-each>
       </xsl:when>
@@ -486,7 +487,7 @@
         <!-- Overriden label or element name in current UI language. -->
         <xsl:value-of select="if ($fieldName)
                                 then $fieldName
-                                else tr:nodeLabel(tr:create($schema), $name, $context)"/>
+                                else tr:nodeLabel($schema, '', $name, $context)"/>
         <xsl:if test="$contextLabel">
           <xsl:variable name="extraLabel">
             <xsl:apply-templates mode="render-value"
@@ -1261,7 +1262,7 @@
 
     <xsl:variable name="codelistTranslation"
                   select="tr:codelist-value-label(
-                            if ($forcedLanguage = '') then tr:create($schema) else tr:createForLang($schema, $forcedLanguage),
+                            $schema, $forcedLanguage,
                             if ($name = 'indeterminatePosition') then 'indeterminatePosition' else $parentName,
                             $id)"/>
     <xsl:choose>
@@ -1270,7 +1271,7 @@
         <xsl:for-each select="$allLanguages/lang">
           <xsl:variable name="codelistTranslation"
                         select="tr:codelist-value-label(
-                            tr:createForLang($schema, @code),
+                            $schema, @code,
                             if ($name = 'indeterminatePosition') then 'indeterminatePosition' else $parentName,
                             $id)"/>
 
