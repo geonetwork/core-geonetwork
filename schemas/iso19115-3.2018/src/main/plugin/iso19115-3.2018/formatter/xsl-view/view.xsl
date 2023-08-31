@@ -1296,7 +1296,7 @@
 
     <xsl:variable name="codelistTranslation"
                   select="tr:codelist-value-label(
-                            if ($forcedLanguage = '') then tr:create($schema) else tr:createForLang($schema, $forcedLanguage),
+                            $schema, $forcedLanguage,
                             if ($name = 'indeterminatePosition') then 'indeterminatePosition' else $parentName,
                             $id)"/>
     <xsl:choose>
@@ -1305,7 +1305,7 @@
         <xsl:for-each select="$allLanguages/lang">
           <xsl:variable name="codelistTranslation"
                         select="tr:codelist-value-label(
-                            tr:createForLang($schema, @code),
+                            $schema, @code,
                             if ($name = 'indeterminatePosition') then 'indeterminatePosition' else $parentName,
                             $id)"/>
 
