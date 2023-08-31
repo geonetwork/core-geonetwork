@@ -279,7 +279,7 @@
       then we prepend /.. if a child node, we use current. -->
       <xsl:variable name="xpathPrefix"
                     select="if (starts-with(@xpath, '/'))
-                                    then '/..'
+                                    then ''
                                     else '/'"/>
 
       <!-- Search any nodes in the metadata matching the XPath.
@@ -296,7 +296,7 @@
       <xsl:variable name="nodes">
         <xsl:copy-of select="fn:function-lookup(
                                   xs:QName('gn-fn-metadata:evaluate-' || $schema), 2)
-                                  ($base, concat($xpathPrefix, @xpath))"/>
+                                  ($base, concat($xpathPrefix, substring(@xpath, 2)))"/>
       </xsl:variable>
 
       <!-- Match any gn:child nodes from the metadocument which
@@ -305,7 +305,7 @@
         <xsl:if test="@or and @in">
           <xsl:copy-of select="fn:function-lookup(
                                   xs:QName('gn-fn-metadata:evaluate-' || $schema), 2)
-                                  ($base, concat($xpathPrefix, @in, '[gn:child/@name=''', @or, ''']'))"/>
+                                  ($base, concat($xpathPrefix, substring(@in, 2), '[gn:child/@name=''', @or, ''']'))"/>
         </xsl:if>
       </xsl:variable>
 
@@ -320,13 +320,13 @@
 
       <!--
       <xsl:message> Field: <xsl:value-of select="@name"/></xsl:message>
-      <xsl:message>Xpath: <xsl:copy-of select="@xpath"/></xsl:message>
+      <xsl:message>Xpath: <xsl:value-of select="@xpath"/></xsl:message>
       <xsl:message>TemplateModeOnly: <xsl:value-of select="@templateModeOnly"/></xsl:message>
       <xsl:message>Display: <xsl:copy-of select="$isDisplayed"/></xsl:message>
       <xsl:message><xsl:value-of select="count($nodes/*)"/> matching nodes: <xsl:copy-of select="$nodes"/></xsl:message>
       <xsl:message>Non existing child path: <xsl:value-of select="concat(@in, '/gn:child[@name = ''', @or, ''']')"/></xsl:message>
-      <xsl:message>Non existing child: <xsl:copy-of select="$nonExistingChildParent"/></xsl:message> -->
-
+      <xsl:message>Non existing child: <xsl:copy-of select="$nonExistingChildParent"/></xsl:message>
+      -->
 
 
       <xsl:variable name="del" select="@del"/>

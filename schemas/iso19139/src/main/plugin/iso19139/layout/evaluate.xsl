@@ -35,6 +35,7 @@
                 xmlns:gml="http://www.opengis.net/gml/3.2"
                 xmlns:gml320="http://www.opengis.net/gml"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
+                xmlns:err="http://www.w3.org/2005/xqt-errors"
                 xmlns:gn="http://www.fao.org/geonetwork"
                 xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
                 xmlns:gn-fn-iso19139="http://geonetwork-opensource.org/xsl/functions/profiles/iso19139"
@@ -55,10 +56,22 @@
     <xsl:param name="base" as="node()"/>
     <xsl:param name="in"/>
     <!--
-     <xsl:message>in xml <xsl:copy-of select="$base"></xsl:copy-of></xsl:message>
-     <xsl:message>search for <xsl:copy-of select="$in"></xsl:copy-of></xsl:message>
-    -->
-      <xsl:evaluate xpath="$in" context-item="$base"/>
+     <xsl:message>in xml <xsl:copy-of select="$base"/></xsl:message>
+     <xsl:message>search for <xsl:copy-of select="$in"/></xsl:message>
+-->
+    <xsl:variable name="context" as="node()">
+      <root>
+        <xsl:copy-of select="$base"/>
+      </root>
+    </xsl:variable>
+
+    <xsl:try>
+    <xsl:evaluate xpath="$in" context-item="$context"/>
+      <xsl:catch>
+        <xsl:message>Error evaluating <xsl:value-of select="$in"/>. <xsl:value-of select="$err:description"/></xsl:message>
+      </xsl:catch>
+    </xsl:try>
+
     <!--<xsl:variable name="nodeOrAttribute">
     </xsl:variable>
 
