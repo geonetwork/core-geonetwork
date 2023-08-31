@@ -27,7 +27,7 @@
                 xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
                 xmlns:gmd="http://www.isotc211.org/2005/gmd"
                 version="2.0">
-  <xsl:import href="../../../iso19139/present/csw/dcatap-full.xsl"/>
+  <xsl:import href="../../../iso19139/present/csw/geodcatap-full.xsl"/>
   <xsl:import href="../../convert/ISO19139/toISO19139.xsl"/>
 
   <xsl:output method="xml"
