@@ -31,9 +31,9 @@ public class GetCodeListTranslationFn extends ExtensionFunctionDefinition {
         return new ExtensionFunctionCall() {
             @Override
             public Sequence call(XPathContext context, Sequence[] arguments) throws XPathException {
-                String codelist = ((StringValue) arguments[0]).getStringValue();
-                String value = ((StringValue) arguments[1]).getStringValue();
-                String lang = ((StringValue) arguments[2]).getStringValue();
+                String codelist = arguments[0].head().getStringValue();
+                String value = arguments[1].head().getStringValue();
+                String lang = arguments[2].head().getStringValue();
                 return StringValue.makeStringValue(
                     XslUtil.getCodelistTranslation(codelist, value, lang));
             }

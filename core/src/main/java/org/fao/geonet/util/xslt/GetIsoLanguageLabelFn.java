@@ -34,8 +34,8 @@ public class GetIsoLanguageLabelFn extends ExtensionFunctionDefinition {
         return new ExtensionFunctionCall() {
             @Override
             public Sequence call(XPathContext context, Sequence[] arguments) throws XPathException {
-                String code = ((StringValue) arguments[0]).getStringValue();
-                String lang = ((StringValue) arguments[1]).getStringValue();
+                String code = arguments[0].head().getStringValue();
+                String lang = arguments[1].head().getStringValue();
                 return StringValue.makeStringValue(XslUtil.getIsoLanguageLabel(code, lang));
             }
         };

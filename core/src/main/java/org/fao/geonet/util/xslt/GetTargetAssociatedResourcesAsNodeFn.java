@@ -34,8 +34,8 @@ public class GetTargetAssociatedResourcesAsNodeFn extends ExtensionFunctionDefin
         return new ExtensionFunctionCall() {
             @Override
             public Sequence call(XPathContext context, Sequence[] arguments) throws XPathException {
-                String uuid = ((StringValue) arguments[0]).getStringValue();
-                String parentUuid = ((StringValue) arguments[1]).getStringValue();
+                String uuid = arguments[0].head().getStringValue();
+                String parentUuid = arguments[1].head().getStringValue();
                 return StringValue.makeStringValue("");
 // TODO-SAXON               return XslUtil.getTargetAssociatedResourcesAsNode(uuid);
             }

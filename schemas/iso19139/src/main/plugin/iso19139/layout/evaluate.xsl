@@ -51,7 +51,7 @@
 
        A node returned by evaluate will lost its context (ancestors).
     -->
-  <xsl:function name="gn-fn-metadata:evaluate-iso19139" as="node()?">
+  <xsl:function name="gn-fn-metadata:evaluate-iso19139" as="node()*">
     <xsl:param name="base" as="node()"/>
     <xsl:param name="in"/>
     <!--

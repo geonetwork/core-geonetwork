@@ -36,7 +36,7 @@ public class EncodeForJavascriptFn extends ExtensionFunctionDefinition {
             public Sequence call(XPathContext context, Sequence[] arguments) throws XPathException {
                 return StringValue.makeStringValue(
                     XslUtil.encodeForJavaScript(
-                        ((StringValue) arguments[0]).getStringValue()));
+                        arguments[0].head().getStringValue()));
             }
         };
     }

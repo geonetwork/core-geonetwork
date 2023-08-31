@@ -33,7 +33,7 @@ public class GetSettingValueFn extends ExtensionFunctionDefinition {
         return new ExtensionFunctionCall() {
             @Override
             public Sequence call(XPathContext context, Sequence[] arguments) throws XPathException {
-                String key = ((StringValue) arguments[0]).getStringValue();
+                String key = arguments[0].head().getStringValue();
                 return StringValue.makeStringValue(XslUtil.getSettingValue(key));
             }
         };

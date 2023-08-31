@@ -35,9 +35,9 @@ public class GetKeywordHierarchyFn extends ExtensionFunctionDefinition {
         return new ExtensionFunctionCall() {
             @Override
             public Sequence call(XPathContext context, Sequence[] arguments) throws XPathException {
-                String keyword = ((StringValue) arguments[0]).getStringValue();
-                String thesaurus = ((StringValue) arguments[1]).getStringValue();
-                String lang = ((StringValue) arguments[2]).getStringValue();
+                String keyword = arguments[0].head().getStringValue();
+                String thesaurus = arguments[1].head().getStringValue();
+                String lang = arguments[2].head().getStringValue();
 
                 List<StringValue> stringValues =
                     XslUtil.getKeywordHierarchy(keyword, thesaurus, lang)

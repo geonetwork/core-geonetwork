@@ -34,7 +34,7 @@ public class GetThreeCharLangCodeFn extends ExtensionFunctionDefinition {
         return new ExtensionFunctionCall() {
             @Override
             public Sequence call(XPathContext context, Sequence[] arguments) throws XPathException {
-                String lang = ((StringValue) arguments[0]).getStringValue();
+                String lang = arguments[0].head().getStringValue();
                 return StringValue.makeStringValue(XslUtil.threeCharLangCode(lang));
             }
         };

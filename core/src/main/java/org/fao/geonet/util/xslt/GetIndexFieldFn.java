@@ -32,10 +32,10 @@ public class GetIndexFieldFn extends ExtensionFunctionDefinition {
         return new ExtensionFunctionCall() {
             @Override
             public Sequence call(XPathContext context, Sequence[] arguments) throws XPathException {
-                String appName = ((StringValue) arguments[0]).getStringValue();
-                String uuid = ((StringValue) arguments[1]).getStringValue();
-                String field = ((StringValue) arguments[2]).getStringValue();
-                String lang = ((StringValue) arguments[3]).getStringValue();
+                String appName = arguments[0].head().getStringValue();
+                String uuid = arguments[1].head().getStringValue();
+                String field = arguments[2].head().getStringValue();
+                String lang = arguments[3].head().getStringValue();
                 return StringValue.makeStringValue(
                     XslUtil.getIndexField(appName, uuid, field, lang));
             }

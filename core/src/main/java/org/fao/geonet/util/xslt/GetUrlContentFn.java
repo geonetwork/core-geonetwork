@@ -44,7 +44,7 @@ public class GetUrlContentFn extends ExtensionFunctionDefinition {
         return new ExtensionFunctionCall() {
             @Override
             public Sequence call(XPathContext context, Sequence[] arguments) throws XPathException {
-                String url = ((StringValue) arguments[0]).getStringValue();
+                String url = arguments[0].head().getStringValue();
                 Node urlContent = XslUtil.getUrlContent(url);
 
                 Processor processor = (Processor)context.getConfiguration().getProcessor();

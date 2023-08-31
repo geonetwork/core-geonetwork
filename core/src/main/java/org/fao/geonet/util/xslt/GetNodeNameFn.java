@@ -32,9 +32,9 @@ public class GetNodeNameFn extends ExtensionFunctionDefinition {
         return new ExtensionFunctionCall() {
             @Override
             public Sequence call(XPathContext context, Sequence[] arguments) throws XPathException {
-                String key = ((StringValue) arguments[0]).getStringValue();
-                String lang = ((StringValue) arguments[1]).getStringValue();
-                boolean withOrganization = ((BooleanValue) arguments[2]).getBooleanValue();
+                String key = arguments[0].head().getStringValue();
+                String lang = arguments[1].head().getStringValue();
+                boolean withOrganization = Boolean.parseBoolean(arguments[2].head().getStringValue());
                 return StringValue.makeStringValue(
                     XslUtil.getNodeName(key, lang, withOrganization));
             }

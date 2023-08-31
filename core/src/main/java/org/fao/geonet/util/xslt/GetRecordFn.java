@@ -34,9 +34,9 @@ public class GetRecordFn extends ExtensionFunctionDefinition {
         return new ExtensionFunctionCall() {
             @Override
             public Sequence call(XPathContext context, Sequence[] arguments) throws XPathException {
-                String uuid = ((StringValue) arguments[0]).getStringValue();
+                String uuid = arguments[0].head().getStringValue();
                 return StringValue.makeStringValue("");
-// TODO-SAXON               return XslUtil.getRecord(uuid);
+                // TODO-SAXON               return XslUtil.getRecord(uuid);
             }
         };
     }

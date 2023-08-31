@@ -35,8 +35,8 @@ public class AnalyzeFieldFn extends ExtensionFunctionDefinition {
         return new ExtensionFunctionCall() {
             @Override
             public Sequence call(XPathContext context, Sequence[] arguments) throws XPathException {
-                String analyzer = ((StringValue) arguments[0]).getStringValue();
-                String fieldValue = ((StringValue) arguments[1]).getStringValue();
+                String analyzer = arguments[0].head().getStringValue();
+                String fieldValue = arguments[1].head().getStringValue();
                 return StringValue.makeStringValue(EsSearchManager.analyzeField(analyzer, fieldValue));
             }
         };
