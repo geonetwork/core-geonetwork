@@ -649,10 +649,10 @@
         </xsl:if>
 
         <xsl:for-each select="*/gmd:EX_Extent/*/gmd:EX_BoundingPolygon/gmd:polygon">
-          <xsl:variable name="geojson" select="''"/>
-<!--                        select="util:gmlToGeoJson(-->
-<!--                                  fn:serialize((gml:*|gml320:*), map{'method':'xml', 'indent': true()}),-->
-<!--                                  true(), 5)"/> TODO-SAXON -->
+          <xsl:variable name="geojson"
+                        select="util:gmlToGeoJson(
+                                  fn:serialize((gml:*|gml320:*), map{'method':'xml', 'indent': true()}),
+                                  true(), 5)"/>
           <xsl:choose>
             <xsl:when test="$geojson = ''"></xsl:when>
             <xsl:when test="matches($geojson, '(Error|Warning):.*')">
