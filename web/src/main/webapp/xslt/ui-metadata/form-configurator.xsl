@@ -29,7 +29,7 @@
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 xmlns:saxon="http://saxon.sf.net/"
                 extension-element-prefixes="saxon"
-                exclude-result-prefixes="#all" version="2.0">
+                exclude-result-prefixes="#all" version="3.0">
   <!--
     Build the form from the schema plugin form configuration.
     -->
@@ -279,7 +279,7 @@
       then we prepend /.. if a child node, we use current. -->
       <xsl:variable name="xpathPrefix"
                     select="if (starts-with(@xpath, '/'))
-                                    then ''
+                                    then '/..'
                                     else '/'"/>
 
       <!-- Search any nodes in the metadata matching the XPath.
@@ -296,7 +296,7 @@
       <xsl:variable name="nodes">
         <xsl:copy-of select="fn:function-lookup(
                                   xs:QName('gn-fn-metadata:evaluate-' || $schema), 2)
-                                  ($base, concat($xpathPrefix, substring(@xpath, 2)))"/>
+                                  ($base, concat($xpathPrefix, @xpath))"/>
       </xsl:variable>
 
       <!-- Match any gn:child nodes from the metadocument which
@@ -305,7 +305,7 @@
         <xsl:if test="@or and @in">
           <xsl:copy-of select="fn:function-lookup(
                                   xs:QName('gn-fn-metadata:evaluate-' || $schema), 2)
-                                  ($base, concat($xpathPrefix, substring(@in, 2), '[gn:child/@name=''', @or, ''']'))"/>
+                                  ($base, concat($xpathPrefix, @in, '[gn:child/@name=''', @or, ''']'))"/>
         </xsl:if>
       </xsl:variable>
 

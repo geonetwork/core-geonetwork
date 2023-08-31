@@ -23,7 +23,7 @@
   -->
 
 <!-- WARNING Do not remove those namespaces as
-     saxon:evaluate needs them for matching -->
+     xsl:evaluate needs them for matching -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 xmlns:gmd="http://www.isotc211.org/2005/gmd"
@@ -46,19 +46,18 @@
   <!-- Evaluate an expression. This is schema dependant in order to properly
         set namespaces required for evaluate.
 
-    "The static context for the expression includes all the in-scope namespaces,
-    types, and functions from the calling stylesheet or query"
-    http://saxonica.com/documentation9.4-demo/html/extensions/functions/evaluate.html
-
        A node returned by evaluate will lost its context (ancestors).
     -->
-  <xsl:function name="gn-fn-metadata:evaluate-iso19139" as="node()*">
+  <xsl:function name="gn-fn-metadata:evaluate-iso19139">
     <xsl:param name="base" as="node()"/>
     <xsl:param name="in"/>
     <!--
      <xsl:message>in xml <xsl:copy-of select="$base"/></xsl:message>
-     <xsl:message>search for <xsl:copy-of select="$in"/></xsl:message>
--->
+     <xsl:message>search for <xsl:copy-of select="$in"/></xsl:message>-->
+
+    <!-- saxon:evaluate and xsl:evaluate does not have the same context mechanism.
+    TODO-SAXON: Check how to better handle XPath expression
+    in edit and view mode. -->
     <xsl:variable name="context" as="node()">
       <root>
         <xsl:copy-of select="$base"/>
@@ -66,33 +65,14 @@
     </xsl:variable>
 
     <xsl:try>
-    <xsl:evaluate xpath="$in" context-item="$context"/>
+      <xsl:evaluate xpath="if (starts-with($in, '/../')) then substring($in, 5)
+                           else if (starts-with($in, '..//')) then substring($in, 5)
+                           else $in" context-item="$context"/>
       <xsl:catch>
-        <xsl:message>Error evaluating <xsl:value-of select="$in"/>. <xsl:value-of select="$err:description"/></xsl:message>
+        <xsl:message>Error evaluating <xsl:value-of select="$in"/> in context item <xsl:value-of select="name($base)"/>.
+          <xsl:value-of select="$err:description"/></xsl:message>
       </xsl:catch>
     </xsl:try>
-
-    <!--<xsl:variable name="nodeOrAttribute">
-    </xsl:variable>
-
-    <xsl:choose>
-      <xsl:when test="$nodeOrAttribute instance of text()+">
-        <xsl:message>text</xsl:message>
-        <xsl:value-of select="$nodeOrAttribute"/>
-      </xsl:when>
-      <xsl:when test="$nodeOrAttribute instance of element()+">
-        <xsl:message>el</xsl:message>
-        <xsl:copy-of select="$nodeOrAttribute"/>
-      </xsl:when>
-      <xsl:when test="$nodeOrAttribute instance of attribute()+">
-        <xsl:message>att</xsl:message>
-        <xsl:value-of select="$nodeOrAttribute"/>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:message>?</xsl:message>
-        <xsl:value-of select="$nodeOrAttribute"/>
-      </xsl:otherwise>
-    </xsl:choose>-->
   </xsl:function>
 
   <!-- Evaluate XPath returning a boolean value. -->
@@ -103,6 +83,4 @@
 
     <xsl:evaluate xpath="$in" context-item="$base"/>
   </xsl:function>
-
-
 </xsl:stylesheet>
