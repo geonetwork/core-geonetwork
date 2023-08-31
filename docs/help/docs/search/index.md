@@ -1,3 +1,14 @@
+---
+tags:
+- Search
+- Catalog
+- Filter
+- Grid
+- List
+hide:
+  - tags
+---
+
 # Search
 
 The **Search** tab lists search results for filtering and sorting.

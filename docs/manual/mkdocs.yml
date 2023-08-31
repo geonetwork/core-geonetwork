@@ -1,4 +1,4 @@
-site_name: GeoNetwork-opensource
+site_name: GeoNetwork opensource
 site_dir: target/html
 extra_css:
   - stylesheets/extra.css
@@ -6,12 +6,38 @@ theme:
   name: material
   language: en
   custom_dir: overrides
+  logo: assets/geonetwork-logo.svg
+  favicon: assets/geonetwork-logo.png
+  palette:
+
+    # Palette toggle for light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: blue
+
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+
+    # Palette toggle for dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+
   features:
+    - content.code.annotate
+    - content.tabs.link
+    - navigation.tabs
     - navigation.tracking
     - navigation.prune
     - navigation.indexes
     - toc.follow
     - navigation.top
+    - navigation.footer
+    - announce.dismiss
+
 plugins:
   - search
   - i18n:
@@ -20,15 +46,20 @@ plugins:
       search_reconfigure: true
       material_alternate: true
       languages:
-        en:
+        - locale: en
+          default: true
           name: English
           build: true
-        fr:
+        - locale: fr
           name: Français
           build: true
       nav_translations:
         fr:
-          Development : Development
+          Home: Home
+          Search: Search
+          Record: Record
+          Map: Map
+
 markdown_extensions:
   - admonition
   - attr_list
@@ -47,14 +78,25 @@ markdown_extensions:
   - pymdownx.inlinehilite
   - pymdownx.keys
   - pymdownx.snippets
-  - pymdownx.superfences
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
   - pymdownx.tabbed:
       alternate_style: true
   - tables
   - markdown_include.include:
       base_path: docs
+
+extra:
+  social:
+    - icon: fontawesome/solid/arrow-up-right-from-square
+      link: https://geonetwork-opensource.org/
+      name: GeoNetwork Website
+
 nav:
-  - 'index.md'
+  - 'Home': 'index.md'
   - 'Overview':
     - 'overview/index.md'
     - 'overview/about.md'
@@ -66,7 +108,7 @@ nav:
       - 'overview/change-log/index.md'
       - 'overview/change-log/version-4.2.5.md'
       - 'overview/change-log/version-3.12.9.md'
-  - 'User-guide':
+  - 'User Guide':
     - 'user-guide/index.md'
     - 'user-guide/quick-start/index.md'
   - 'Development':

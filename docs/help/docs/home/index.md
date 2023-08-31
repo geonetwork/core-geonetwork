@@ -1,3 +1,15 @@
+---
+tags:
+- Search
+- Catalog
+- Topics
+- Grid
+- List
+- Home
+hide:
+  - tags
+---
+
 # Home
 
 The Catalogue page is used to browse records, and has provides a quick search field.

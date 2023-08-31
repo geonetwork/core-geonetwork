@@ -1,3 +1,13 @@
+---
+tags:
+- Map
+- Layers
+- Background Layers
+- Measure
+hide:
+  - tags
+---
+
 # Map
 
 The Catalogue includes an interactive map that is used to preview datasets.

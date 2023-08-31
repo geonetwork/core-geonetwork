@@ -6,24 +6,52 @@ theme:
   name: material
   language: en
   custom_dir: overrides
+  logo: assets/geonetwork-logo.svg
+  favicon: assets/geonetwork-logo.png
+  palette:
+
+    # Palette toggle for light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: blue grey
+
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+
+    # Palette toggle for dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+
   features:
+    - content.code.annotate
+    - content.tabs.link
     - navigation.tracking
     - navigation.prune
     - navigation.indexes
     - toc.follow
     - navigation.top
+    - navigation.footer
+    - announce.dismiss
+
 plugins:
   - search
+  - tags:
+      tags_file: tags.md
   - i18n:
       default_language: en
       docs_structure: suffix
       search_reconfigure: true
       material_alternate: true
       languages:
-        en:
+        - locale: en
+          default: true
           name: English
           build: true
-        fr:
+        - locale: fr
           name: Français
           build: true
       nav_translations:
@@ -32,6 +60,7 @@ plugins:
           Search: Search
           Record: Record
           Map: Map
+
 markdown_extensions:
   - admonition
   - attr_list
@@ -50,18 +79,31 @@ markdown_extensions:
   - pymdownx.inlinehilite
   - pymdownx.keys
   - pymdownx.snippets
-  - pymdownx.superfences
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
   - pymdownx.tabbed:
       alternate_style: true
   - tables
+
+extra:
+  social:
+    - icon: fontawesome/solid/arrow-up-right-from-square
+      link: https://geonetwork-opensource.org/
+      name: GeoNetwork Website
+
 nav:
   - 'index.md'
-  - 'Home':
+  - 'Home page':
     - 'home/index.md'
-  - 'Search':
+  - 'Search page':
     - 'search/index.md'
-  - 'Record':
+  - 'Detail page':
     - 'record/index.md'
   - 'Map':
     - 'map/index.md'
     - 'map/visualize/index.md'
+  - 'Tags':
+      - tags.md
