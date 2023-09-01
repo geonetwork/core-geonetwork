@@ -24,6 +24,7 @@
 
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                xmlns:fn="http://www.w3.org/2005/xpath-functions"
                 xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/2.0"
                 xmlns:cat="http://standards.iso.org/iso/19115/-3/cat/1.0"
                 xmlns:gex="http://standards.iso.org/iso/19115/-3/gex/1.0"
@@ -43,13 +44,9 @@
                 xmlns:gfc="http://standards.iso.org/iso/19110/gfc/1.1"
                 xmlns:gml="http://www.opengis.net/gml/3.2"
                 xmlns:util="https://geonetwork-opensource.org/xsl-extension"
-                xmlns:date-util="java:org.fao.geonet.utils.DateUtil"
-                xmlns:index="java:org.fao.geonet.kernel.search.EsSearchManager"
                 xmlns:gn-fn-index="http://geonetwork-opensource.org/xsl/functions/index"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
                 xmlns:daobs="http://daobs.org"
-                xmlns:saxon="http://saxon.sf.net/"
-                extension-element-prefixes="saxon"
                 exclude-result-prefixes="#all"
                 version="3.0">
 
@@ -210,7 +207,7 @@
       <xsl:for-each select="(mdb:dateInfo/
                               cit:CI_Date[cit:dateType/cit:CI_DateTypeCode/@codeListValue = 'revision']/
                                 cit:date/*[gn-fn-index:is-isoDate(.)])[1]">
-        <dateStamp><xsl:value-of select="date-util:convertToISOZuluDateTime(normalize-space(.))"/></dateStamp>
+        <dateStamp><xsl:value-of select="util:convertToISOZuluDateTime(normalize-space(.))"/></dateStamp>
       </xsl:for-each>
 
 
@@ -323,7 +320,7 @@
                           select="string(cit:date/gco:Date|cit:date/gco:DateTime)"/>
 
             <xsl:variable name="zuluDateTime" as="xs:string?">
-              <xsl:value-of select="date-util:convertToISOZuluDateTime(normalize-space($date))"/>
+              <xsl:value-of select="util:convertToISOZuluDateTime(normalize-space($date))"/>
             </xsl:variable>
             <xsl:choose>
               <xsl:when test="$zuluDateTime != ''">
@@ -351,7 +348,7 @@
                             select="string(cit:date/gco:Date|cit:date/gco:DateTime)"/>
 
             <xsl:variable name="zuluDate"
-                          select="date-util:convertToISOZuluDateTime($date)"/>
+                          select="util:convertToISOZuluDateTime($date)"/>
             <xsl:if test="$zuluDate != ''">
               <resourceDate type="object">
                 {"type": "<xsl:value-of select="$dateType"/>", "date": "<xsl:value-of select="$zuluDate"/>"}
@@ -365,7 +362,7 @@
                                 group-by=".">
 
               <xsl:variable name="zuluDate"
-                            select="date-util:convertToISOZuluDateTime(.)"/>
+                            select="util:convertToISOZuluDateTime(.)"/>
               <xsl:if test="$zuluDate != ''">
                 <resourceTemporalDateRange type="object">{
                   "gte": "<xsl:value-of select="$zuluDate"/>",
@@ -475,7 +472,7 @@
                                   gcx:Anchor[. != '']">
 
               <xsl:variable name="inspireTheme" as="xs:string"
-                            select="index:analyzeField('synInspireThemes', text())"/>
+                            select="util:analyzeField('synInspireThemes', text())"/>
 
               <inspireTheme_syn>
                 <xsl:value-of select="text()"/>
@@ -498,10 +495,10 @@
                 <xsl:if test="$inspireTheme != ''">
                   <inspireAnnexForFirstTheme>
                     <xsl:value-of
-                      select="index:analyzeField('synInspireAnnexes', $inspireTheme)"/>
+                      select="util:analyzeField('synInspireAnnexes', $inspireTheme)"/>
                   </inspireAnnexForFirstTheme>
                   <xsl:variable name="inspireThemeUri" as="xs:string"
-                                select="index:analyzeField('synInspireThemeUris', $inspireTheme)"/>
+                                select="util:analyzeField('synInspireThemeUris', $inspireTheme)"/>
                   <inspireThemeUri>
                     <xsl:value-of select="$inspireThemeUri"/>
                   </inspireThemeUri>
@@ -509,7 +506,7 @@
               </xsl:if>
               <inspireAnnex>
                 <xsl:value-of
-                  select="index:analyzeField('synInspireAnnexes', $inspireTheme)"/>
+                  select="util:analyzeField('synInspireAnnexes', $inspireTheme)"/>
               </inspireAnnex>
             </xsl:for-each>
           </xsl:for-each>
@@ -705,7 +702,7 @@
         <xsl:for-each select="*/gex:EX_Extent/*/gex:EX_BoundingPolygon/gex:polygon">
           <xsl:variable name="geojson"
                         select="util:gmlToGeoJson(
-                                  fn:serialize(gml:*, 'default-serialize-mode'),
+                                  fn:serialize((gml:*), map{'method':'xml', 'indent': true()}),
                                   true(), 5)"/>
           <xsl:choose>
             <xsl:when test="$geojson = ''"></xsl:when>
@@ -819,9 +816,9 @@
 
 
             <xsl:variable name="zuluStartDate"
-                          select="date-util:convertToISOZuluDateTime($start)"/>
+                          select="util:convertToISOZuluDateTime($start)"/>
             <xsl:variable name="zuluEndDate"
-                          select="date-util:convertToISOZuluDateTime($end)"/>
+                          select="util:convertToISOZuluDateTime($end)"/>
 
             <xsl:choose>
               <xsl:when test="$zuluStartDate != ''
@@ -884,7 +881,7 @@
           </serviceType>
           <xsl:if test="$inspireEnable = 'true'">
             <xsl:variable name="inspireServiceType" as="xs:string"
-                          select="index:analyzeField(
+                          select="util:analyzeField(
                                     'keepInspireServiceTypes', text())"/>
             <xsl:if test="$inspireServiceType != ''">
               <inspireServiceType>
@@ -1288,7 +1285,7 @@
                       select="util:getTargetAssociatedResourcesAsNode(
                                         $identifier,
                                         if ($parentUuid) then $parentUuid else mdb:parentMetadata[@uuidref != '']/@uuidref)"/>
-        <xsl:copy-of select="$recordsLinks//recordLink"/>
+        <!-- TODO-SAXON       <xsl:copy-of select="$recordsLinks//recordLink"/>-->
       </xsl:if>
     </doc>
 
