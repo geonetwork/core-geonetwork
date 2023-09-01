@@ -64,12 +64,12 @@
     </abstract>
   </xsl:template>
 
-  <!-- TODO-SAXON: convert to a function -->
-  <xsl:template name="iso19139Brief">
+  <xsl:function name="iso19139Brief">
+    <xsl:param name="metadata" as="node()"/>
     <metadata>
-      <xsl:call-template name="iso19139-brief"/>
+      <xsl:call-template name="iso19139-brief" select="$metadata"/>
     </metadata>
-  </xsl:template>
+  </xsl:function>
 
   <xsl:template name="iso19139-brief">
     <xsl:variable name="download_check">

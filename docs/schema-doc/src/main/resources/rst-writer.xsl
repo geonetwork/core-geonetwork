@@ -22,12 +22,11 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:fn="http://www.w3.org/2005/xpath-functions"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 xmlns:gndoc="http://geonetwork-opensource.org/doc"
-                xmlns:saxon="http://saxon.sf.net/"
                 xmlns:java="http://www.java.com/"
                 xmlns:digest="org.apache.commons.codec.digest.DigestUtils"
-                extension-element-prefixes="saxon"
                 exclude-result-prefixes="#all"
                 version="3.0">
 
@@ -297,7 +296,7 @@
     <xsl:value-of select="gndoc:nl(2)"/>
     <xsl:for-each select="$code">
       <xsl:variable name="text"
-                    select="saxon:serialize(., 'default-serialize-mode')"/>
+                    select="fn:serialize(., map{'method':'xml', 'indent': true()})"/>
       <xsl:for-each select="tokenize($text, '\n')">
         <xsl:choose>
           <!-- Strip namespaces -->

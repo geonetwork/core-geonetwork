@@ -30,8 +30,6 @@
                 xmlns:skos="http://www.w3.org/2004/02/skos/core#"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
                 xmlns:gn="http://www.fao.org/geonetwork"
-                xmlns:saxon="http://saxon.sf.net/"
-                extension-element-prefixes="saxon"
                 exclude-result-prefixes="#all">
   <xsl:output indent="yes" method="xml"/>
 

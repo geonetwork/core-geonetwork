@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-  xmlns:saxon="http://saxon.sf.net/"
-  extension-element-prefixes="saxon"
-  version="3.0">
+                version="3.0">
 
 
   <!-- Register here the list of process for the schema-->

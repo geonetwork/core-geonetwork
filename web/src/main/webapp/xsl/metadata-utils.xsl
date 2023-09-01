@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:geonet="http://www.fao.org/geonetwork"
-                xmlns:saxon="http://saxon.sf.net/"
-                xmlns:exslt="http://exslt.org/common"
-                xmlns:java="https://geonetwork-opensource.org/xsl-extension"
-                version="1.0"
-                extension-element-prefixes="saxon"
-                exclude-result-prefixes="exslt saxon geonet java">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                xmlns:fn="http://www.w3.org/2005/xpath-functions"
+                xmlns:geonet="http://www.fao.org/geonetwork"
+                version="3.0"
+                exclude-result-prefixes="#all">
 
   <xsl:include href="blanks/metadata-schema01/present/metadata.xsl"/>
   <xsl:include href="blanks/metadata-schema02/present/metadata.xsl"/>
@@ -48,8 +47,13 @@
       <xsl:apply-templates mode="schema" select="."/>
     </xsl:param>
 
-    <xsl:variable name="briefSchemaCallBack" select="concat($schema,'Brief')"/>
-    <xsl:call-template name="{$briefSchemaCallBack}"/>
+    <xsl:variable name="fn"
+                  as="function(*)?"
+                  select="fn:function-lookup(xs:QName('gn-fn-metadata:' || $schema || 'Brief'), 1)"/>
+
+    <xsl:if test="exists($fn)">
+      <xsl:copy-of select="$fn($metadata)"/>
+    </xsl:if>
   </xsl:template>
 
 </xsl:stylesheet>

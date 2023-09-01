@@ -26,8 +26,6 @@
                 xmlns:gco2="http://standards.iso.org/iso/19115/-3/gco/1.0"
                 xmlns:mac="http://standards.iso.org/iso/19115/-3/mac/2.0"
                 xmlns:gfc="http://standards.iso.org/iso/19110/gfc/1.1"
-                xmlns:saxon="http://saxon.sf.net/"
-                extension-element-prefixes="saxon"
                 exclude-result-prefixes="#all">
 
 

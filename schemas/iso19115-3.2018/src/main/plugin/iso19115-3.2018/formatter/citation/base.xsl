@@ -10,8 +10,6 @@
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
                 xmlns:gn-fn-iso19115-3.2018="http://geonetwork-opensource.org/xsl/functions/profiles/iso19115-3.2018"
-                xmlns:saxon="http://saxon.sf.net/"
-                extension-element-prefixes="saxon"
                 exclude-result-prefixes="#all">
 
   <xsl:import href="sharedFormatterDir/xslt/render-variables.xsl"/>

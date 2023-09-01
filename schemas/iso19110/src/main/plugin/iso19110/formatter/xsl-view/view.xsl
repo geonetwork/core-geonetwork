@@ -30,9 +30,7 @@
                 xmlns:gml="http://www.opengis.net/gml"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 xmlns:tr="https://geonetwork-opensource.org/xsl-extension/schema"
-                xmlns:saxon="http://saxon.sf.net/"
-                version="2.0"
-                extension-element-prefixes="saxon"
+                version="3.0"
                 exclude-result-prefixes="#all">
  <!-- tr is defined at  core-geonetwork/services/src/main/java/org/fao/geonet/api/records/formatters/SchemaLocalizations.java -->
   <!-- Load the editor configuration to be able

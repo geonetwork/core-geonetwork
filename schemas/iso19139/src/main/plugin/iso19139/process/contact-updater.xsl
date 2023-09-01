@@ -22,11 +22,12 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:saxon="http://saxon.sf.net/"
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:geonet="http://www.fao.org/geonetwork"
                 xmlns:gco="http://www.isotc211.org/2005/gco"
-                xmlns:gmd="http://www.isotc211.org/2005/gmd" version="2.0"
-                extension-element-prefixes="saxon"
+                xmlns:gmd="http://www.isotc211.org/2005/gmd"
+                xmlns:fn="http://www.w3.org/2005/xpath-functions"
+                version="3.0"
                 exclude-result-prefixes="#all">
 
 
@@ -56,7 +57,7 @@
                             gmd:CI_Address/gmd:electronicMailAddress/
                               gco:CharacterString = $emailToSearch and $emailToSearch != '']"
     priority="2">
-    <xsl:copy-of select="saxon:parse($contactAsXML)"/>
+    <xsl:copy-of select="fn:parse-xml($contactAsXML)"/>
   </xsl:template>
 
 </xsl:stylesheet>

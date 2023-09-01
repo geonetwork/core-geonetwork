@@ -3,8 +3,7 @@
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 xmlns:sr="http://www.w3.org/2005/sparql-results#"
                 xmlns:gn-fn-sparql="http://geonetwork-opensource.org/xsl/functions/sparql"
-                xmlns:saxon="http://saxon.sf.net/"
-                version="2.0" extension-element-prefixes="saxon"
+                version="3.0"
                 exclude-result-prefixes="#all">
 
 

@@ -7,9 +7,7 @@
                 xmlns:gn-fn-render="http://geonetwork-opensource.org/xsl/functions/render"
                 xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
                 xmlns:xslUtils="https://geonetwork-opensource.org/xsl-extension"
-                xmlns:saxon="http://saxon.sf.net/"
-                version="2.0"
-                extension-element-prefixes="saxon"
+                version="3.0"
                 exclude-result-prefixes="#all">
 
   <xsl:import href="base.xsl"/>

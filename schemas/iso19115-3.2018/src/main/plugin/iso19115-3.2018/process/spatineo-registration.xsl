@@ -32,8 +32,8 @@
                 xmlns:gml="http://www.opengis.net/gml/3.2"
                 xmlns:util="https://geonetwork-opensource.org/xsl-extension"
                 xmlns:spatineo="java:org.fao.geonet.util.SpatineoUtil"
-                xmlns:saxon="http://saxon.sf.net/"
-                version="2.0" exclude-result-prefixes="#all">
+                version="3.0"
+                exclude-result-prefixes="#all">
 
   <xsl:import href="process-utility.xsl"/>
 

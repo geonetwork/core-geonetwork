@@ -23,9 +23,7 @@
   -->
 
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                xmlns:saxon="http://saxon.sf.net/"
-                version="2.0" extension-element-prefixes="saxon"
->
+                version="3.0">
   <!--
     Global XSL variables for metadata editing.
   -->

@@ -27,9 +27,7 @@
                 xmlns:dct="http://purl.org/dc/terms/"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
                 xmlns:daobs="http://daobs.org"
-                xmlns:saxon="http://saxon.sf.net/"
                 xmlns:date-util="java:org.fao.geonet.utils.DateUtil"
-                extension-element-prefixes="saxon"
                 exclude-result-prefixes="#all"
                 version="3.0">
 
@@ -74,9 +72,6 @@
       <docType>metadata</docType>
 
       <!-- Index the metadata document as XML -->
-      <document>
-        <!--<xsl:value-of select="saxon:serialize(., 'default-serialize-mode')"/>-->
-      </document>
       <uuid>
         <xsl:value-of select="$identifier"/>
       </uuid>

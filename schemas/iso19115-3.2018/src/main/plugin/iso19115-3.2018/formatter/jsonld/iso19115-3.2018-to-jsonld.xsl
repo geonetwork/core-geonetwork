@@ -32,14 +32,12 @@
                 xmlns:xlink="http://www.w3.org/1999/xlink"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 xmlns:tr="https://geonetwork-opensource.org/xsl-extension/schema"
-                xmlns:saxon="http://saxon.sf.net/"
                 xmlns:util="https://geonetwork-opensource.org/xsl-extension"
                 xpath-default-namespace="http://www.isotc211.org/2005/gmd"
                 xmlns:gn-fn-index="http://geonetwork-opensource.org/xsl/functions/index"
                 xmlns:schema-org-fn="http://geonetwork-opensource.org/xsl/functions/schema-org"
                 xmlns:gn="http://www.fao.org/geonetwork"
-                version="2.0"
-                extension-element-prefixes="saxon"
+                version="3.0"
                 exclude-result-prefixes="#all">
 <!--
   Convert an ISO19139 records in JSON-LD format

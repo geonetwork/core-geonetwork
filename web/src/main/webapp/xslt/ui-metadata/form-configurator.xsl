@@ -27,8 +27,6 @@
                 xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
                 xmlns:gn="http://www.fao.org/geonetwork"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
-                xmlns:saxon="http://saxon.sf.net/"
-                extension-element-prefixes="saxon"
                 exclude-result-prefixes="#all" version="3.0">
   <!--
     Build the form from the schema plugin form configuration.
@@ -284,9 +282,9 @@
 
       <!-- Search any nodes in the metadata matching the XPath.
 
-      We could have called saxon-evaluate from here like:
+      We could have called xsl:evaluate from here like:
       <xsl:variable name="nodes"
-        select="saxon:evaluate(concat('$p1/..', @xpath), $base)"/>
+        select="xsl:evaluate(concat('$p1/..', @xpath), $base)"/>
       but this does not work here because namespace of the context
       (ie. this XSLT) are used to resolve the xpath.
       It needs to be in a profile specific XSL which declare all

@@ -24,7 +24,6 @@
 
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:geonet="http://www.fao.org/geonetwork"
-                xmlns:saxon="http://saxon.sf.net/"
                 xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
                 xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
                 xmlns:foaf="http://xmlns.com/foaf/0.1/"
@@ -43,8 +42,8 @@
                 xmlns:geo="http://www.opengis.net/ont/geosparql#"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 xmlns:iso19139="http://geonetwork-opensource.org/schemas/iso19139"
-                version="2.0"
-                extension-element-prefixes="saxon" exclude-result-prefixes="#all">
+                version="3.0"
+                exclude-result-prefixes="#all">
 
 
   <!-- TODO : add Multilingual metadata support

@@ -46,9 +46,8 @@
                 xmlns:wps2="http://www.opengis.net/wps/2.0"
                 xmlns:inspire_vs="http://inspire.ec.europa.eu/schemas/inspire_vs/1.0"
                 xmlns:inspire_common="http://inspire.ec.europa.eu/schemas/common/1.0"
-                xmlns:saxon="http://saxon.sf.net/"
                 xmlns:math="http://exslt.org/math"
-                extension-element-prefixes="saxon math"
+                extension-element-prefixes="math"
                 exclude-result-prefixes="#all"
                 version="3.0">
 
