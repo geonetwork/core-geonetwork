@@ -22,13 +22,14 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                version="2.0"
+                xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
+                version="3.0"
                 exclude-result-prefixes="#all">
   <!-- Get the main metadata languages - none for ISO19110 -->
-  <xsl:template name="get-iso19110-language"/>
+  <xsl:function name="gn-fn-metadata:get-iso19110-language"/>
   <!-- Get the list of other languages -->
-  <xsl:template name="get-iso19110-other-languages"/>
-  <xsl:template name="get-iso19110-other-languages-as-json"/>
-  <xsl:template name="get-iso19110-online-source-config"/>
-  <xsl:template name="get-iso19110-extents-as-json">[]</xsl:template>
+  <xsl:function name="gn-fn-metadata:get-iso19110-other-languages"/>
+  <xsl:function name="gn-fn-metadata:get-iso19110-other-languages-as-json"/>
+  <xsl:function name="gn-fn-metadata:get-iso19110-online-source-config"/>
+  <xsl:function name="gn-fn-metadata:get-iso19110-extents-as-json">[]</xsl:function>
 </xsl:stylesheet>

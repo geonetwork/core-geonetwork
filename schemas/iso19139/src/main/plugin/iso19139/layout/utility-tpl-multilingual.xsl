@@ -28,7 +28,7 @@
                 xmlns:gn="http://www.fao.org/geonetwork"
                 xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
                 xmlns:xslutil="https://geonetwork-opensource.org/xsl-extension"
-                version="2.0"
+                version="3.0"
                 exclude-result-prefixes="#all">
 
 

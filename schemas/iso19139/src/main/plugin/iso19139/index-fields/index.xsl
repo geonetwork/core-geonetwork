@@ -37,8 +37,6 @@
                 xmlns:index="java:org.fao.geonet.kernel.search.EsSearchManager"
                 xmlns:util="https://geonetwork-opensource.org/xsl-extension"
                 xmlns:daobs="http://daobs.org"
-                xmlns:saxon="http://saxon.sf.net/"
-                extension-element-prefixes="saxon"
                 exclude-result-prefixes="#all"
                 version="3.0">
 
