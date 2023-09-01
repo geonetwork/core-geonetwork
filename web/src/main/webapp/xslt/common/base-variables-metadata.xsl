@@ -94,13 +94,18 @@
   <xsl:variable name="withXPath" select="false()"/>
 
   <xsl:variable name="editorConfig">
-    <xsl:copy-of select="gn-fn-metadata:get-iso19139-configuration()"/>
-<!--  TODO-SAXON  <xsl:copy-of select="fn:function-lookup(xs:QName('gn-fn-metadata:get-' || $schema || '-configuration'), 0)()"/>-->
+    <xsl:variable name="fn"
+                  select="fn:function-lookup(xs:QName('gn-fn-metadata:get-' || $schema || '-configuration'), 0)"
+                  as="function(*)?"/>
+    <xsl:if test="fn:exists($fn)">
+      <xsl:copy-of select="$fn()"/>
+    </xsl:if>
+<!--    <xsl:copy-of select="fn:function-lookup(xs:QName('gn-fn-metadata:get-iso19115-3.2018-configuration'), 0)()"/>-->
   </xsl:variable>
 
   <xsl:variable name="iso19139EditorConfig">
     <!-- TODO only load for ISO profiles -->
-    <xsl:copy-of select="fn:function-lookup(xs:QName('gn-fn-metadata:get-iso19139-configuration'), 0)()"/>
+    <xsl:copy-of select="gn-fn-metadata:get-iso19139-configuration()"/>
   </xsl:variable>
 
 

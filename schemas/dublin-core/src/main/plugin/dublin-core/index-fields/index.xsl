@@ -28,10 +28,7 @@
                 xmlns:xlink="http://www.w3.org/1999/xlink"
                 xmlns:gn-fn-index="http://geonetwork-opensource.org/xsl/functions/index"
                 xmlns:daobs="http://daobs.org"
-                xmlns:saxon="http://saxon.sf.net/"
                 xmlns:util="https://geonetwork-opensource.org/xsl-extension"
-                xmlns:date-util="java:org.fao.geonet.utils.DateUtil"
-                extension-element-prefixes="saxon"
                 exclude-result-prefixes="#all"
                 version="3.0">
 
@@ -119,7 +116,7 @@
       <xsl:for-each select="dct:created[. != '']">
 
         <xsl:variable name="creationDate"
-                      select="date-util:convertToISOZuluDateTime(string(current()))"/>
+                      select="util:convertToISOZuluDateTime(string(current()))"/>
         <xsl:element name="{$creationDateType}DateForResource">
           <xsl:value-of select="$creationDate"/>
         </xsl:element>
@@ -129,14 +126,14 @@
         <xsl:element name="{$creationDateType}MonthForResource">
           <xsl:value-of select="substring($creationDate, 0, 8)"/>
         </xsl:element>
-        <!--creationDateForResource><xsl:value-of select="date-util:convertToISOZuluDateTime(string(.))"/></creationDateForResource-->
+        <!--creationDateForResource><xsl:value-of select="util:convertToISOZuluDateTime(string(.))"/></creationDateForResource-->
       </xsl:for-each>
 
       <xsl:for-each select="dct:modified[. != '']">
-        <dateStamp><xsl:value-of select="date-util:convertToISOZuluDateTime(normalize-space(.))"/></dateStamp>
+        <dateStamp><xsl:value-of select="util:convertToISOZuluDateTime(normalize-space(.))"/></dateStamp>
 
         <xsl:variable name="revisionDate"
-                      select="date-util:convertToISOZuluDateTime(string(current()))"/>
+                      select="util:convertToISOZuluDateTime(string(current()))"/>
         <xsl:element name="{$revisionDateType}DateForResource">
           <xsl:value-of select="$revisionDate"/>
         </xsl:element>
@@ -146,7 +143,7 @@
         <xsl:element name="{$revisionDateType}MonthForResource">
           <xsl:value-of select="substring($revisionDate, 0, 8)"/>
         </xsl:element>
-        <!--revisionDateForResource><xsl:value-of select="date-util:convertToISOZuluDateTime(string(.))"/></revisionDateForResource-->
+        <!--revisionDateForResource><xsl:value-of select="util:convertToISOZuluDateTime(string(.))"/></revisionDateForResource-->
       </xsl:for-each>
 
       <xsl:for-each select="dc:format">
@@ -244,13 +241,6 @@
       <xsl:for-each select="$overviews">
         <overview type="object">{
           "url":"<xsl:value-of select="current()"/>"
-          <xsl:if test="$isStoringOverviewInIndex">
-            <xsl:variable name="data"
-                          select="util:buildDataUrl(., 140)"/>
-            <xsl:if test="$data != ''">,
-              "data": "<xsl:value-of select="$data"/>"
-            </xsl:if>
-          </xsl:if>
           }</overview>
       </xsl:for-each>
 

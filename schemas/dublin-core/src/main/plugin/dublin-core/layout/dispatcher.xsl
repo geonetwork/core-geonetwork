@@ -23,7 +23,9 @@
   -->
 
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                version="2.0"
+                xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                version="3.0"
+                xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
                 exclude-result-prefixes="#all">
 
   <xsl:include href="layout.xsl"/>
@@ -36,16 +38,21 @@
   <!--
     Load the schema configuration for the editor.
       -->
-  <xsl:template name="get-dublin-core-configuration">
+  <xsl:function name="gn-fn-metadata:get-dublin-core-configuration">
     <xsl:copy-of select="document('config-editor.xml')"/>
-  </xsl:template>
+  </xsl:function>
 
 
   <!-- Dispatching to the profile mode  -->
-  <xsl:template name="dispatch-dublin-core">
+  <xsl:function name="gn-fn-metadata:dispatch-dublin-core">
     <xsl:param name="base" as="node()"/>
-
-    <xsl:apply-templates mode="mode-dublin-core" select="$base"/>
-  </xsl:template>
-
+    <xsl:param name="overrideLabel" as="xs:string?"/>
+    <xsl:param name="refToDelete" as="node()?"/>
+    <xsl:param name="config" as="node()?"/>
+    <xsl:apply-templates mode="mode-dublin-core" select="$base">
+      <xsl:with-param name="overrideLabel" select="$overrideLabel"/>
+      <xsl:with-param name="refToDelete" select="$refToDelete"/>
+      <xsl:with-param name="config" select="$config"/>
+    </xsl:apply-templates>
+  </xsl:function>
 </xsl:stylesheet>

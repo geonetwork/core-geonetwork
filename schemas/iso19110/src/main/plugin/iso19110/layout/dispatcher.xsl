@@ -22,8 +22,9 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:saxon="http://saxon.sf.net/"
-                version="2.0" extension-element-prefixes="saxon"
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                version="2.0"
+                xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
                 exclude-result-prefixes="#all">
 
 
@@ -39,9 +40,9 @@
   <!--
     Load the schema configuration for the editor.
       -->
-  <xsl:template name="get-iso19110-configuration">
+  <xsl:function name="gn-fn-metadata:get-iso19110-configuration">
     <xsl:copy-of select="document('config-editor.xml')"/>
-  </xsl:template>
+  </xsl:function>
 
 
   <!-- Dispatching to the profile mode -->

@@ -371,14 +371,18 @@
                 </xsl:variable>
 
 
-                <xsl:copy-of select="fn:function-lookup(
-                                  xs:QName('gn-fn-metadata:dispatch-' || $schema), 4)(
-                                    $originalNode,
-                                    if ($configName != '' and $overrideLabel != '')
-                                        then $overrideLabel
-                                        else '',
-                                    $refToDelete/gn:element,
-                                    $config)"/>
+                <xsl:variable name="fn"
+                              select="fn:function-lookup(
+                                  xs:QName('gn-fn-metadata:dispatch-' || $schema), 4)"/>
+                <xsl:if test="fn:exists($fn)">
+                  <xsl:copy-of select="$fn(
+                                          $originalNode,
+                                          if ($configName != '' and $overrideLabel != '')
+                                              then $overrideLabel
+                                              else '',
+                                          $refToDelete/gn:element,
+                                          $config)"/>
+                </xsl:if>
               </xsl:when>
               <xsl:otherwise>
                 <xsl:for-each select="$nodes/*">
@@ -394,14 +398,18 @@
                     </xsl:call-template>
                   </xsl:variable>
 
-                  <xsl:copy-of select="fn:function-lookup(
-                                  xs:QName('gn-fn-metadata:dispatch-' || $schema), 4)(
-                                    $originalNode,
-                                    if ($configName != '' and $overrideLabel != '')
-                                        then $overrideLabel
-                                        else '',
-                                    $refToDelete/gn:element,
-                                    $config)"/>
+                  <xsl:variable name="fn"
+                                select="fn:function-lookup(
+                                  xs:QName('gn-fn-metadata:dispatch-' || $schema), 4)"/>
+                  <xsl:if test="fn:exists($fn)">
+                    <xsl:copy-of select="$fn(
+                                            $originalNode,
+                                            if ($configName != '' and $overrideLabel != '')
+                                                then $overrideLabel
+                                                else '',
+                                            $refToDelete/gn:element,
+                                            $config)"/>
+                  </xsl:if>
                 </xsl:for-each>
               </xsl:otherwise>
             </xsl:choose>

@@ -57,7 +57,8 @@
     <xsl:try>
       <xsl:evaluate xpath="if (starts-with($in, '/../')) then substring($in, 5)
                            else if (starts-with($in, '..//')) then substring($in, 5)
-                           else $in" context-item="$context"/>
+                           else $in"
+                    context-item="$context"/>
       <xsl:catch>
         <xsl:message>Error evaluating <xsl:value-of select="$in"/> in context item <xsl:value-of select="name($base)"/>.
           <xsl:value-of select="$err:description"/></xsl:message>

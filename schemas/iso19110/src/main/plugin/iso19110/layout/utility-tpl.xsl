@@ -25,9 +25,8 @@
                 xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
                 version="3.0"
                 exclude-result-prefixes="#all">
-  <!-- Get the main metadata languages - none for ISO19110 -->
+  <xsl:function name="gn-fn-metadata:get-iso19110-is-service"/>
   <xsl:function name="gn-fn-metadata:get-iso19110-language"/>
-  <!-- Get the list of other languages -->
   <xsl:function name="gn-fn-metadata:get-iso19110-other-languages"/>
   <xsl:function name="gn-fn-metadata:get-iso19110-other-languages-as-json"/>
   <xsl:function name="gn-fn-metadata:get-iso19110-online-source-config"/>
