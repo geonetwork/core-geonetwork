@@ -73,7 +73,6 @@ public class Get implements Service {
         @SuppressWarnings("unchecked")
         List<Element> idEls = params.getChildren("id");
         boolean onlyInfo = org.fao.geonet.Util.getParam(params, "onlyInfo", false);
-        String sortField = org.fao.geonet.Util.getParam(params, "sortField", "site[1]/name[1]");
 
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         final SettingManager settingManager = gc.getApplicationContext().getBean(SettingManager.class);
@@ -92,7 +91,7 @@ public class Get implements Service {
         final HarvestManager harvestManager = gc.getBean(HarvestManager.class);
         Element result = new Element("nodes");
         for (String id : ids) {
-            Element node = harvestManager.get(id, context, sortField);
+            Element node = harvestManager.get(id, context, "site[1]/name[1]");
 
             if (node != null) {
                 if (idEls.isEmpty() || id.equals("-1")) {
