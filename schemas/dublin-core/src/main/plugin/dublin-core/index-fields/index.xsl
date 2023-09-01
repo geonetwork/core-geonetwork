@@ -36,12 +36,6 @@
 
   <xsl:output method="xml" indent="yes"/>
 
-  <xsl:output name="default-serialize-mode"
-              indent="no"
-              omit-xml-declaration="yes"
-              encoding="utf-8"
-              escape-uri-attributes="yes"/>
-
   <xsl:variable name="dateFormat" as="xs:string"
                 select="'[Y0001]-[M01]-[D01]T[H01]:[m01]:[s01][ZN]'"/>
 
@@ -84,12 +78,7 @@
     <doc>
       <xsl:copy-of select="gn-fn-index:add-field('docType', 'metadata')"/>
 
-      <!-- Index the metadata document as XML -->
-      <document>
-        <!--<xsl:value-of select="saxon:serialize(., 'default-serialize-mode')"/>-->
-      </document>
       <xsl:copy-of select="gn-fn-index:add-field('metadataIdentifier', $identifier)"/>
-
 
       <!-- Since GN sets the timezone in system/server/timeZone setting as Java system default
         timezone we can rely on XSLT functions to get current date in the right timezone -->

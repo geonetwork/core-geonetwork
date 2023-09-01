@@ -33,12 +33,6 @@
   <xsl:output method="text" encoding="UTF-8"/>
   <xsl:strip-space elements="*"/>
 
-  <xsl:output name="default-serialize-mode"
-              indent="yes"
-              omit-xml-declaration="yes"
-              encoding="utf-8"
-              escape-uri-attributes="yes"/>
-
   <xsl:function xmlns:file="java.io.File"
                 name="java:file-exists"
                 as="xs:boolean">

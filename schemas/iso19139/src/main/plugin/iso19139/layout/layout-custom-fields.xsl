@@ -295,7 +295,7 @@
         <xsl:variable name="readonly" select="ancestor-or-self::node()[@xlink:href] != ''"/>
 
         <br />
-        <gn-bounding-polygon polygon-xml="{fn:serialize($geometry, 'default-serialize-mode')}"
+        <gn-bounding-polygon polygon-xml="{fn:serialize($geometry, map{'method':'xml', 'indent': true()})}"
                              identifier="{$identifier}"
                              read-only="{$readonly}">
         </gn-bounding-polygon>

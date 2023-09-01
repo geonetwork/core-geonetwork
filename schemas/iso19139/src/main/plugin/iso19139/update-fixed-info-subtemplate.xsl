@@ -35,9 +35,6 @@
                 xmlns:java="https://geonetwork-opensource.org/xsl-extension"
                 version="2.0" exclude-result-prefixes="#all">
 
-  <xsl:output name="default-serialize-mode" indent="no"
-              omit-xml-declaration="yes"/>
-
   <xsl:variable name="isExtentSubtemplate"
                 select="count(/root/gmd:EX_Extent) = 1"/>
 

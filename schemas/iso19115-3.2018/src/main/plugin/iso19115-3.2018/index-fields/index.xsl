@@ -56,12 +56,6 @@
   <xsl:import href="common/index-utils.xsl"/>
   <xsl:import href="link-utility.xsl"/>
 
-  <xsl:output name="default-serialize-mode"
-              indent="no"
-              omit-xml-declaration="yes"
-              encoding="utf-8"
-              escape-uri-attributes="yes"/>
-
   <xsl:param name="fastIndexMode" select="false()"/>
 
 
@@ -167,10 +161,6 @@
     <!-- Create a first document representing the main record. -->
     <doc>
       <xsl:copy-of select="gn-fn-index:add-field('docType', 'metadata')"/>
-      <!-- Index the metadata document as XML -->
-      <document>
-        <!--<xsl:value-of select="saxon:serialize(., 'default-serialize-mode')"/>-->
-      </document>
 
       <xsl:copy-of select="gn-fn-index:add-field('metadataIdentifier', $identifier)"/>
 

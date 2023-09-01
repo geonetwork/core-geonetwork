@@ -802,7 +802,7 @@
               <xsl:if test="$hasMultipleChoice">
                 <xsl:for-each select="$snippets">
                   <textarea id="{concat($id, @label, '-value')}">
-                    <xsl:value-of select="fn:serialize(*, 'default-serialize-mode')"/>
+                    <xsl:value-of select="fn:serialize(*, map{'method':'xml', 'indent': true()})"/>
                   </textarea>
                 </xsl:for-each>
               </xsl:if>
@@ -816,7 +816,7 @@
                 <xsl:if test="$isMissingLabel != ''">
                   <xsl:attribute name="data-not-set-check" select="$tagId"/>
                 </xsl:if>
-                <xsl:value-of select="fn:serialize($snippets[1]/*, 'default-serialize-mode')"/>
+                <xsl:value-of select="fn:serialize($snippets[1]/*, map{'method':'xml', 'indent': true()})"/>
               </textarea>
             </div>
           </xsl:if>

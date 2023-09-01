@@ -4,12 +4,6 @@
 
   <xsl:output method="xml" indent="yes"/>
 
-  <xsl:output name="default-serialize-mode"
-              indent="no"
-              omit-xml-declaration="yes"
-              encoding="utf-8"
-              escape-uri-attributes="yes"/>
-
   <xsl:template match="/">
     <doc>
       <source>source-from-index-xsl</source>

@@ -48,9 +48,6 @@
                 xmlns:gn="http://www.fao.org/geonetwork"
                 exclude-result-prefixes="#all">
 
-  <xsl:output name="default-serialize-mode" indent="no"
-              omit-xml-declaration="yes"/>
-
   <xsl:variable name="isExtentSubtemplate"
                 select="count(/root/gex:EX_Extent) = 1"/>
 

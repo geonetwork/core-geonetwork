@@ -30,6 +30,7 @@
                 xmlns:gml="http://www.opengis.net/gml/3.2"
                 xmlns:gml320="http://www.opengis.net/gml"
                 xmlns:gn="http://www.fao.org/geonetwork"
+                xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
                 xmlns:gn-fn-core="http://geonetwork-opensource.org/xsl/functions/core"
                 xmlns:gn-fn-iso19139="http://geonetwork-opensource.org/xsl/functions/profiles/iso19139"
                 exclude-result-prefixes="#all"
@@ -64,11 +65,14 @@
     </abstract>
   </xsl:template>
 
-  <xsl:function name="iso19139Brief">
+  <xsl:function name="gn-fn-metadata:iso19139Brief">
     <xsl:param name="metadata" as="node()"/>
-    <metadata>
-      <xsl:call-template name="iso19139-brief" select="$metadata"/>
-    </metadata>
+    <!--    TODO-SAXON-->
+    <xsl:for-each select="$metadata">
+      <metadata>
+        <xsl:call-template name="iso19139-brief"/>
+      </metadata>
+    </xsl:for-each>
   </xsl:function>
 
   <xsl:template name="iso19139-brief">
