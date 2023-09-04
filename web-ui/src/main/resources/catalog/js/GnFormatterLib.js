@@ -24,7 +24,7 @@
 (function () {
   goog.provide("gn_formatter_lib");
 
-  gnFormatter = {};
+  var gnFormatter = {};
   gnFormatter.formatterSectionTogglersEventHandler = function (e) {
     var thisEl = $(e.currentTarget);
     thisEl.toggleClass("closed");

@@ -1043,6 +1043,13 @@
             <groupId>ro.isdc.wro4j</groupId>
             <artifactId>wro4j-maven-plugin</artifactId>
             <version>${wro.version}</version>
+            <dependencies>
+              <dependency>
+                <groupId>org.webjars.npm</groupId>
+                <artifactId>glob</artifactId>
+                <version>7.1.1</version>
+              </dependency>
+            </dependencies>
             <executions>
               <execution>
                 <id>wro4j-prebuild-cache</id>

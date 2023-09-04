@@ -1983,7 +1983,7 @@
                 .then(function (r) {
                   $scope.searchInfo = r.data;
                   var keys = Object.keys(gnGlobalSettings.gnCfg.mods.home.facetConfig);
-                  selectedFacet = keys[0];
+                  var selectedFacet = keys[0];
 
                   for (var i = 0; i < keys.length; i++) {
                     if (

@@ -484,7 +484,7 @@
 
           function setDefault() {
             var defaultThesaurus = attrs["default"];
-            for (t in scope.regionTypes) {
+            for (var t in scope.regionTypes) {
               if (scope.regionTypes[t].name === defaultThesaurus) {
                 scope.regionType = scope.regionTypes[t];
                 return;
