@@ -413,7 +413,9 @@
   "lastCreatedRecords": "Last created records",
   "system/analytics": "Analytics",
   "system/analytics/type": "Type",
+  "system/analytics/type-help": "Select the analytics service",
   "system/analytics/jscode": "Javascript analytics snippet",
+  "system/analytics/jscode-help": "Configure the Javascript snippet provided by the analytics service to start using the analytics with the application",
   "matomoAnalytics": "Matomo",
   "googleAnalytics": "Google Analytics"
 }
