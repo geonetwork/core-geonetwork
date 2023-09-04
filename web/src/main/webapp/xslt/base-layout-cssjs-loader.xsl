@@ -308,4 +308,13 @@
       }]);
     </script>
   </xsl:template>
+
+
+  <xsl:template name="analytics">
+    <xsl:if test="string($env/system/analytics/type) and string($env/system/analytics/jscode)">
+      <script type="text/javascript">
+        <xsl:value-of select="$env/system/analytics/jscode" />
+      </script>
+    </xsl:if>
+  </xsl:template>
 </xsl:stylesheet>

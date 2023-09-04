@@ -128,6 +128,8 @@
             </xsl:if>
           </xsl:otherwise>
         </xsl:choose>
+
+        <xsl:call-template name="analytics"/>
       </body>
     </html>
   </xsl:template>

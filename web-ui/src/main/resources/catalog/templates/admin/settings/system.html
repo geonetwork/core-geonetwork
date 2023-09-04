@@ -166,6 +166,24 @@
                     <!-- According to entry -->
                     <div class="col-sm-7" data-ng-switch="s['name']">
                       <select
+                        data-ng-switch-when="system/analytics/type"
+                        class="form-control"
+                        name="{{s.name}}"
+                        data-ng-model="s.value"
+                        data-ng-change="changeAnalytics(s.value)"
+                      >
+                        <option value="" ng-selected="'' == s.value">
+                          {{'None' | translate}}
+                        </option>
+                        <option value="matomo" ng-selected="'matomo' == s.value">
+                          {{'matomoAnalytics' | translate}}
+                        </option>
+                        <option value="google" ng-selected="'google' == s.value">
+                          {{'googleAnalytics' | translate}}
+                        </option>
+                      </select>
+
+                      <select
                         data-ng-switch-when="metadata/import/userprofile"
                         class="form-control"
                         name="{{s.name}}"
@@ -333,6 +351,18 @@
                         class="form-control"
                         id="{{s['name']}}"
                         name="{{s.name}}"
+                      >
+{{s.value}}</textarea
+                      >
+
+                      <textarea
+                        data-gn-autogrow=""
+                        data-ng-switch-when="system/analytics/jscode"
+                        type="text"
+                        class="form-control"
+                        id="{{s['name']}}"
+                        name="{{s.name}}"
+                        data-ng-disabled="!isAnalyticsEnabled"
                       >
 {{s.value}}</textarea
                       >
@@ -697,6 +727,15 @@
                         data-ng-disabled="!isGroupLocalRatingNotificationLevel"
                       />
 
+                      <input
+                        data-ng-switch-when="system/localrating/notificationGroups"
+                        type="text"
+                        class="form-control"
+                        id="{{s['name']}}"
+                        name="{{s.name}}"
+                        value="{{s.value}}"
+                        data-ng-disabled="!isGroupLocalRatingNotificationLevel"
+                      />
                       <!-- Default -->
                       <input
                         data-ng-switch-default=""
