@@ -867,8 +867,6 @@
                 } else {
                   return DEFAULT_CONFIG;
                 }
-
-                return DEFAULT_CONFIG;
               }
 
               gnOnlinesrc.register("onlinesrc", function (linkToEditOrType) {
