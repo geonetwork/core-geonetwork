@@ -396,7 +396,7 @@
           getWCSCapabilities: function (url, version) {
             var defer = $q.defer();
             if (url) {
-              defaultVersion = "1.1.0";
+              var defaultVersion = "1.1.0";
               version = version || defaultVersion;
               url = mergeDefaultParams(url, {
                 REQUEST: "GetCapabilities",

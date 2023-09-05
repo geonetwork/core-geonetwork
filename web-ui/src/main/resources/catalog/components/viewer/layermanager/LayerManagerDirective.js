@@ -208,12 +208,12 @@
                       headers: new Headers(headerDict),
                       responseType: "blob"
                     };
-                    legendPromise = $http.get(urlGetLegend, requestOptions).then(
+                    var legendPromise = $http.get(urlGetLegend, requestOptions).then(
                       function (response) {
                         var contentType = headers("content-type");
                         if (contentType.indexOf("image") === 0) {
                           // encode data to base 64 url
-                          fileReader = new FileReader();
+                          var fileReader = new FileReader();
                           fileReader.onload = function () {
                             style.LegendURL[0].OnlineResource = fileReader.result;
                             layer.set("legend", fileReader.result);
@@ -296,7 +296,7 @@
             var dimensionConfig = scope.layer.get(dimension);
             if (dimensionConfig) {
               var idx = dimensionConfig.values.length - 1;
-              for (i = 0; i < dimensionConfig.values.length; i++) {
+              for (var i = 0; i < dimensionConfig.values.length; i++) {
                 if (dimensionConfig.values[i] === dimensionConfig.default) {
                   idx = i;
                   break;

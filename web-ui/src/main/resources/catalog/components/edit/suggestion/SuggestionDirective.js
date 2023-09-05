@@ -158,7 +158,7 @@
               scope.params = {};
               scope.currentSuggestion = gnSuggestion.getCurrent();
               scope.processParams = angular.fromJson(scope.currentSuggestion.params);
-              for (key in scope.processParams) {
+              for (var key in scope.processParams) {
                 if (scope.processParams[key].type == "expression") {
                   scope.params[key] = $interpolate(scope.processParams[key].defaultValue)(
                     scope
