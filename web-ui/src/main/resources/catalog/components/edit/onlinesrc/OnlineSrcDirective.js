@@ -1309,9 +1309,7 @@
                           function (l) {
                             if (angular.isDefined(l.name)) {
                               scope.layers.push({
-                                Name:
-                                  (l.name.prefix ? l.name.prefix + ":" : "") +
-                                  l.name.localPart,
+                                Name: l.name.prefix + ":" + l.name.localPart,
                                 abstract: angular.isArray(l._abstract)
                                   ? l._abstract[0].value
                                   : l._abstract,
