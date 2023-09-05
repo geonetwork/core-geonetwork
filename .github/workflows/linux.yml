@@ -20,6 +20,7 @@ jobs:
         # 500 commits, set to 0 to get all
         fetch-depth: 500
         submodules: 'recursive'
+        show-progress: 'false'
     - name: Set up JDK
       uses: actions/setup-java@v3.12.0
       with:
@@ -47,6 +48,7 @@ jobs:
         # 500 commits, set to 0 to get all
         fetch-depth: 500
         submodules: 'recursive'
+        show-progress: 'false'
     - name: Set up JDK
       uses: actions/setup-java@v3.12.0
       with:
