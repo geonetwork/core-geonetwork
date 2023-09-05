@@ -15,7 +15,7 @@ jobs:
           - os: ubuntu-22.04
             jdk: 11
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         # 500 commits, set to 0 to get all
         fetch-depth: 500
@@ -42,7 +42,7 @@ jobs:
   QA:
     runs-on: ubuntu-22.04
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         # 500 commits, set to 0 to get all
         fetch-depth: 500
