@@ -253,7 +253,8 @@
           <img data-gn-img-modal="md"
                class="gn-img-thumbnail center-block"
                alt="{$schemaStrings/overview}"
-               src="{mcc:fileName/*}"/>
+               src="{mcc:fileName/*}"
+               onerror="this.onerror=null; $('.gn-md-side-overview').hide()"/>
 
           <xsl:for-each select="mcc:fileDescription">
             <div class="gn-img-thumbnail-caption">

@@ -227,7 +227,8 @@
         <img data-gn-img-modal="md"
              class="gn-img-thumbnail"
              alt="{$schemaStrings/overview}"
-             src="{gmd:fileName/*}"/>
+             src="{gmd:fileName/*}"
+             onerror="this.onerror=null; $('.gn-md-side-overview').hide()"/>
 
         <xsl:for-each select="gmd:fileDescription">
           <div class="gn-img-thumbnail-caption">

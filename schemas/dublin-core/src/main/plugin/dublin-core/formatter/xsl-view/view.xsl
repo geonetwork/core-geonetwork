@@ -92,7 +92,8 @@
         <img data-gn-img-modal="md"
              class="gn-img-thumbnail"
              alt="{$schemaStrings/overview}"
-             src="{.}"/>
+             src="{.}"
+             onerror="this.onerror=null; $('.gn-md-side-overview').hide()"/>
       </xsl:for-each>
     </section>
   </xsl:template>
