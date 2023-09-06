@@ -257,7 +257,12 @@
               tag = scope.tagName !== undefined ? scope.tagName : "gco:DateTime";
               var time = $filter("date")(scope.time, "HH:mm:ss");
               // TODO: Set seconds, Timezone ?
-              scope.dateTime = $filter("date")(scope.date, "yyyy-MM-dd");
+              if (scope.date =='Invalid Date') {
+                scope.dateTime = '';
+              } else {
+                scope.dateTime = $filter("date")(scope.date, "yyyy-MM-dd");
+              }
+
               scope.dateTime += "T" + time + scope.timezone;
             } else {
               scope.dateTime = $filter("date")(scope.date, "yyyy-MM-dd");
