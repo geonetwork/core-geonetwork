@@ -399,6 +399,9 @@ public final class Xml {
     public static Element transform(Element xml, Path styleSheetPath, Map<String, Object> params) throws Exception {
         JDOMResult resXml = new JDOMResult();
         transform(xml, styleSheetPath, resXml, params);
+        if (resXml.getDocument() == null) {
+            throw new NullPointerException("Failed to create a Document for " + resXml.getResult());
+        }
         return (Element) resXml.getDocument().getRootElement().detach();
     }
     //--------------------------------------------------------------------------
