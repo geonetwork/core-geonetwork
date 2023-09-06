@@ -360,17 +360,20 @@ public class BaseMetadataUtils implements IMetadataUtils {
 
     private String buildUrl(String uuid, String language, String url) {
         if (StringUtils.isNotEmpty(url)) {
+            String upperCaseUrl = url.toUpperCase();
             Map<String, String> substitutions = new HashMap<>();
             substitutions.put("{{UUID}}", uuid);
             substitutions.put("{{LANG}}", StringUtils.isEmpty(language) ? "" : language);
-            try {
-                String resourceId = getResourceIdentifier(uuid);
-                substitutions.put("{{RESOURCEID}}", StringUtils.isEmpty(resourceId) ? "" : resourceId);
-            } catch (Exception e) {
-                // No resource identifier xpath defined in schema
+            if (upperCaseUrl.contains("{{RESOURCEID}}")) {
+                try {
+                    String resourceId = getResourceIdentifier(uuid);
+                    substitutions.put("{{RESOURCEID}}", StringUtils.isEmpty(resourceId) ? "" : resourceId);
+                } catch (Exception e) {
+                    // No resource identifier xpath defined in schema
+                }
             }
             for (Map.Entry<String, String> s : substitutions.entrySet()) {
-                if (url.toUpperCase().contains(s.getKey())) {
+                if (upperCaseUrl.contains(s.getKey())) {
                     url = url.replaceAll("(?i)" + Pattern.quote(s.getKey()), s.getValue());
                 }
             }
