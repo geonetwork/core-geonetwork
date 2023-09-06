@@ -54,7 +54,7 @@
     "$filter",
     "gnExternalViewer",
     "gnGlobalSettings",
-    "gnAnalyticsService",
+    "gnWebAnalyticsService",
     function (
       gnMap,
       gnOwsCapabilities,
@@ -70,7 +70,7 @@
       $filter,
       gnExternalViewer,
       gnGlobalSettings,
-      gnAnalyticsService
+      gnWebAnalyticsService
     ) {
       this.configure = function (options) {
         angular.extend(this.map, options);
@@ -248,11 +248,11 @@
       var openLink = function (record, link) {
         var url = $filter("gnLocalized")(record.url) || record.url;
         if (url && angular.isString(url) && url.match("^(http|ftp|sftp|\\\\|//)")) {
-          gnAnalyticsService.trackLink(url, "link");
+          gnWebAnalyticsService.trackLink(url, "link");
 
           return window.open(url, "_blank");
         } else if (url && url.indexOf("www.") == 0) {
-          gnAnalyticsService.trackLink("http://" + url, "link");
+          gnWebAnalyticsService.trackLink("http://" + url, "link");
 
           return window.open("http://" + url, "_blank");
         } else if (

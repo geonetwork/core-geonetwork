@@ -915,16 +915,16 @@
   ]);
 
   /**
-   * Service to track links in the analytics service configured in GeoNetwork.
+   * Service to track links in the web analytics service configured in GeoNetwork.
    */
-  module.service("gnAnalyticsService", [
+  module.service("gnWebAnalyticsService", [
     "gnGlobalSettings",
     function (gnGlobalSettings) {
-      var analyticsType = gnGlobalSettings.webAnalyticsService;
+      var analyticsService = gnGlobalSettings.webAnalyticsService;
 
       this.trackLink = function (url, linkType) {
         // Implement track link for the analytics
-        if (analyticsType === "matomo") {
+        if (analyticsService === "matomo") {
           _paq.push(["trackLink", url, linkType]);
         }
       };
