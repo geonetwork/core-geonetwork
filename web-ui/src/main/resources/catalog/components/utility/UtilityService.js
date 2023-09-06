@@ -926,6 +926,7 @@
         // Implement track link for the analytics
         if (analyticsService === "matomo") {
           _paq.push(["trackLink", url, linkType]);
+          _paq.push(["trackEvent", "catalogue-actions", linkType, url]);
         }
       };
     }

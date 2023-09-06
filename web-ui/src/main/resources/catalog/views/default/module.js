@@ -419,7 +419,7 @@
         addMdLayerToMap: function (link, md) {
           var config = buildAddToMapConfig(link, md);
 
-          gnWebAnalyticsService.trackLink(config.url, config.type);
+          gnWebAnalyticsService.trackLink(config.url, link.protocol);
 
           // This is probably only a service
           // Open the add service layer tab
