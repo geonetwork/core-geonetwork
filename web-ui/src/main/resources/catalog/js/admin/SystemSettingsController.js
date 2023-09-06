@@ -175,18 +175,12 @@
       $scope.isGroupPublicationNotificationLevel = false;
       $scope.isGroupLocalRatingNotificationLevel = false;
 
-      $scope.isAnalyticsEnabled = false;
-
       $scope.changeLocalRatingNotificationLevel = function (value) {
         $scope.isGroupLocalRatingNotificationLevel = value === "recordGroupEmail";
       };
 
       $scope.changePublicationNotificationLevel = function (value) {
         $scope.isGroupPublicationNotificationLevel = value === "recordGroupEmail";
-      };
-
-      $scope.changeAnalytics = function (value) {
-        $scope.isAnalyticsEnabled = value !== "" && value !== null;
       };
 
       /**
@@ -258,8 +252,6 @@
                 $scope.settings[i].name == "system/inspire/remotevalidation/apikey"
               ) {
                 $scope.inspireApiKey = $scope.settings[i].value;
-              } else if ($scope.settings[i].name == "system/analytics/type") {
-                $scope.changeAnalytics($scope.settings[i].value);
               }
 
               var tokens = $scope.settings[i].name.split("/");

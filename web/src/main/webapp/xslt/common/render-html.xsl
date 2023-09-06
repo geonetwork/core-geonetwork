@@ -103,7 +103,7 @@
           <xsl:call-template name="footer"/>
         </div>
 
-        <xsl:call-template name="analytics"/>
+        <xsl:call-template name="webAnalytics"/>
       </body>
     </html>
   </xsl:template>

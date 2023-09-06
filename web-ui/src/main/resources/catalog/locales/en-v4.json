@@ -410,12 +410,5 @@
   "text/xml; subtype=gml/2.1.2": "GML 2.1.2",
   "text/xml; subtype=gml/3.1.1": "GML 3.1.1",
   "text/xml; subtype=gml/3.2": "GML 3.2",
-  "lastCreatedRecords": "Last created records",
-  "system/analytics": "Analytics",
-  "system/analytics/type": "Type",
-  "system/analytics/type-help": "Select the analytics service",
-  "system/analytics/jscode": "Javascript analytics snippet",
-  "system/analytics/jscode-help": "Configure the Javascript snippet provided by the analytics service to start using the analytics with the application",
-  "matomoAnalytics": "Matomo",
-  "googleAnalytics": "Google Analytics"
+  "lastCreatedRecords": "Last created records"
 }

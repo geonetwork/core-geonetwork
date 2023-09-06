@@ -918,14 +918,9 @@
    * Service to track links in the analytics service configured in GeoNetwork.
    */
   module.service("gnAnalyticsService", [
-    "gnConfigService",
-    "gnConfig",
-    function (gnConfigService, gnConfig) {
-      var analyticsType = "";
-
-      gnConfigService.load().then(function (c) {
-        analyticsType = gnConfig["system.analytics.type"];
-      });
+    "gnGlobalSettings",
+    function (gnGlobalSettings) {
+      var analyticsType = gnGlobalSettings.webAnalyticsService;
 
       this.trackLink = function (url, linkType) {
         // Implement track link for the analytics
