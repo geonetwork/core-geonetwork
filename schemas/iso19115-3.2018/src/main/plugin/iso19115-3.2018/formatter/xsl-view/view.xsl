@@ -249,19 +249,27 @@
           </span>
         </h2>
 
-        <xsl:for-each select="mdb:identificationInfo/*/mri:graphicOverview/*">
-          <img data-gn-img-modal="md"
-               class="gn-img-thumbnail center-block"
-               alt="{$schemaStrings/overview}"
-               src="{mcc:fileName/*}"/>
+        <xsl:variable name="imgOnError" as="xs:string?"
+                      select="if (count(mdb:identificationInfo/*/mri:graphicOverview/*) > 1)
+                            then 'this.onerror=null; this.parentElement.style.display=''none'';'
+                            else 'this.onerror=null; $(''.gn-md-side-overview'').hide();'"/>
 
-          <xsl:for-each select="mcc:fileDescription">
-            <div class="gn-img-thumbnail-caption">
-              <xsl:call-template name="get-iso19115-3.2018-localised">
-                <xsl:with-param name="langId" select="$langId"/>
-              </xsl:call-template>
-            </div>
-          </xsl:for-each>
+        <xsl:for-each select="mdb:identificationInfo/*/mri:graphicOverview/*">
+          <div>
+            <img data-gn-img-modal="md"
+                 class="gn-img-thumbnail center-block"
+                 alt="{$schemaStrings/overview}"
+                 src="{mcc:fileName/*}"
+                 onerror="{$imgOnError}"/>
+
+            <xsl:for-each select="mcc:fileDescription">
+              <div class="gn-img-thumbnail-caption">
+                <xsl:call-template name="get-iso19115-3.2018-localised">
+                  <xsl:with-param name="langId" select="$langId"/>
+                </xsl:call-template>
+              </div>
+            </xsl:for-each>
+          </div>
         </xsl:for-each>
       </section>
     </xsl:if>

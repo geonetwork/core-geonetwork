@@ -6,6 +6,7 @@
       alt="{{'overview' | translate}}"
       title="{{img.name}}"
       data-ng-src="{{img.url}}"
+      onerror="this.onerror=null; this.parentElement.style.display='none';"
     />
     <p class="text-center" data-ng-if="img.name != ''">{{img.name}}</p>
   </li>
