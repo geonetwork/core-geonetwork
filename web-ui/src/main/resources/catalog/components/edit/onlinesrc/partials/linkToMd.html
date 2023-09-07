@@ -35,7 +35,7 @@
         type="button"
         class="btn navbar-btn btn-success"
         data-gn-click-and-spin="gnOnlinesrc.linkToMd(mode, selectRecords[0], popupid)"
-        ng-disabled="(selectRecords.length < 1)"
+        ng-disabled="!canEnableLinkButton(selectRecords)"
       >
         <i class="fa gn-icon-{{mode}}" />
         <i class="icon-external-link"></i>&nbsp; {{btn.label}}

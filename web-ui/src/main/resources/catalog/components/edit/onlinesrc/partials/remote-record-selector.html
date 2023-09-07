@@ -1,4 +1,4 @@
-<div data-ng-if="allowRemoteRecordLink">
+<div data-ng-if="allowRemoteRecordLink" xmlns="http://www.w3.org/1999/html">
   <form class="form-horizontal">
     <div class="form-group">
       <label for="gnRemoteRecordUrl" class="control-label col-sm-2" data-translate=""
@@ -28,13 +28,18 @@
     </div>
   </form>
 
-  <div class="list-group" data-ng-if="remoteRecord.title">
+  <div class="list-group" data-ng-if="remoteRecord.uuid">
     <li
       class="list-group-item"
       data-ng-click="updateSelection();triggerSearch();"
       data-ng-class="{'active' : selectionList[0].uuid === remoteRecord.uuid}"
     >
-      {{remoteRecord.title}} ({{remoteRecord.uuid}})
+      <input
+        type="text"
+        class="form-control"
+        data-ng-model="remoteRecord.title"
+        placeholder="{{'remoteAssociatedMetadataTitlePlaceholder' | translate}}"
+      />
     </li>
   </div>
 

@@ -270,14 +270,12 @@
                 // No UUID can be easily extracted.
                 try {
                   scope.remoteRecord.title = doc.replace(
-                    /(.|[\r\n])*<title>(.*)<\/title>(.|[\r\n])*/,
-                    "$2"
+                    /(.|[\r\n])*<title(.*)>(.*)<\/title>(.|[\r\n])*/,
+                    "$3"
                   );
+
                   scope.remoteRecord.uuid = scope.remoteRecord.remoteUrl;
 
-                  if (scope.remoteRecord.title === "") {
-                    return false;
-                  }
                   // Looking for schema.org tags or json+ld format could also be an option.
                 } catch (e) {
                   console.warn(e);
@@ -1937,6 +1935,24 @@
 
                 scope.updateParams = function () {
                   scope.searchObj.params.any = scope.searchObj.any;
+                };
+
+                /**
+                 * Checks if there are selected records and the selected records have a title.
+                 *
+                 * @param selectRecords
+                 * @returns {boolean}
+                 */
+                scope.canEnableLinkButton = function (selectRecords) {
+                  if (selectRecords.length < 1) return false;
+
+                  // Check if the metadata titles are defined
+                  for (var i = 0; i < selectRecords.length; i++) {
+                    if (!selectRecords[i].title && !selectRecords[i].resourceTitle)
+                      return false;
+                  }
+
+                  return true;
                 };
 
                 /**
