@@ -786,7 +786,7 @@
           return this.valid > -1;
         },
         isOwned: function () {
-          return this.owner === "true";
+          return this.owner === true;
         },
         getOwnerId: function () {
           return this.ownerId;

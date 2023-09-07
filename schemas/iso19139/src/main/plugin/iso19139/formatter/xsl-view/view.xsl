@@ -223,20 +223,27 @@
         </span>
       </h2>
 
+      <xsl:variable name="imgOnError" as="xs:string?"
+                    select="if (count(gmd:identificationInfo/*/gmd:graphicOverview/*) > 1)
+                            then 'this.onerror=null; this.parentElement.style.display=''none'';'
+                            else 'this.onerror=null; $(''.gn-md-side-overview'').hide();'"/>
+
       <xsl:for-each select="gmd:identificationInfo/*/gmd:graphicOverview/*">
-        <img data-gn-img-modal="md"
-             class="gn-img-thumbnail"
-             alt="{$schemaStrings/overview}"
-             src="{gmd:fileName/*}"/>
+        <div>
+          <img data-gn-img-modal="md"
+               class="gn-img-thumbnail"
+               alt="{$schemaStrings/overview}"
+               src="{gmd:fileName/*}"
+               onerror="{$imgOnError}" />
 
-        <xsl:for-each select="gmd:fileDescription">
-          <div class="gn-img-thumbnail-caption">
-            <xsl:call-template name="localised">
-              <xsl:with-param name="langId" select="$langId"/>
-            </xsl:call-template>
-          </div>
-        </xsl:for-each>
-
+          <xsl:for-each select="gmd:fileDescription">
+            <div class="gn-img-thumbnail-caption">
+              <xsl:call-template name="localised">
+                <xsl:with-param name="langId" select="$langId"/>
+              </xsl:call-template>
+            </div>
+          </xsl:for-each>
+        </div>
       </xsl:for-each>
     </section>
   </xsl:template>

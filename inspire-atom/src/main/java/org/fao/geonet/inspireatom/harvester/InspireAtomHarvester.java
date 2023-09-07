@@ -298,7 +298,7 @@ public class InspireAtomHarvester {
 
             try {
                 // Find the metadata UUID using the resource identifier gmd:MD_Identifier/gmd:code
-                metadataUuid = InspireAtomUtil.retrieveDatasetUuidFromIdentifier(ServiceContext.get(),
+                metadataUuid = InspireAtomUtil.retrieveDatasetUuidFromIdentifier(
                     gc.getBean(EsSearchManager.class), datasetFeedInfo.identifier);
 
                 String atomUrl = datasetFeedInfo.feedUrl;
@@ -376,7 +376,7 @@ public class InspireAtomHarvester {
             String metadataUuid = "";
 
             try {
-                metadataUuid = InspireAtomUtil.retrieveDatasetUuidFromIdentifier(context,
+                metadataUuid = InspireAtomUtil.retrieveDatasetUuidFromIdentifier(
                     gc.getBean(EsSearchManager.class), atomDatasetId);
 
                 String atomDatasetNs = datasetFeedInfo.namespace;
