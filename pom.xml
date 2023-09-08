@@ -1368,30 +1368,10 @@
     <module>messaging</module>
     <module>estest</module>
     <module>index</module>
+    <module>datastorages</module>
   </modules>
 
   <profiles>
-    <!-- Profile to include CMIS datastorage -->
-    <profile>
-      <id>datastorage-cmis</id>
-      <modules>
-        <module>datastorages/cmis</module>
-      </modules>
-    </profile>
-    <!-- Profile to include S3 datastorage -->
-    <profile>
-      <id>datastorage-s3</id>
-      <modules>
-        <module>datastorages/s3</module>
-      </modules>
-    </profile>
-    <!-- Profile to include JCloud datastorage -->
-    <profile>
-      <id>datastorage-jcloud</id>
-      <modules>
-        <module>datastorages/jcloud</module>
-      </modules>
-    </profile>
     <profile>
       <id>with-doc</id>
       <modules>

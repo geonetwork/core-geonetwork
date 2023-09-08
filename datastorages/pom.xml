@@ -38,11 +38,29 @@
   <name>GeoNetwork datastorage providers</name>
   <packaging>pom</packaging>
 
-  <modules>
-    <module>cmis</module>
-    <module>jcloud</module>
-    <module>s3</module>
-  </modules>
+  <profiles>
+    <!-- Profile to include CMIS datastorage -->
+    <profile>
+      <id>datastorage-cmis</id>
+      <modules>
+        <module>cmis</module>
+      </modules>
+    </profile>
+    <!-- Profile to include S3 datastorage -->
+    <profile>
+      <id>datastorage-s3</id>
+      <modules>
+        <module>s3</module>
+      </modules>
+    </profile>
+    <!-- Profile to include JCloud datastorage -->
+    <profile>
+      <id>datastorage-jcloud</id>
+      <modules>
+        <module>jcloud</module>
+      </modules>
+    </profile>
+  </profiles>
 
   <properties>
     <rootProjectDir>../..</rootProjectDir>
