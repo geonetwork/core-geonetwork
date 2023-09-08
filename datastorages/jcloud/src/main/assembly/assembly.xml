@@ -19,7 +19,7 @@
     </file>
 
     <file>
-      <source>src/main/assembly/README.txt</source>
+      <source>src/main/assembly/README.md</source>
       <outputDirectory>/</outputDirectory>
       <filtered>true</filtered>
     </file>
