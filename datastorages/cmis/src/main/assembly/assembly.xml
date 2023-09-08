@@ -21,7 +21,11 @@
     <file>
       <source>src/main/assembly/README.md</source>
       <outputDirectory>/</outputDirectory>
-      <filtered>true</filtered>
+    </file>
+
+    <file>
+      <source>${project.basedir}/../../LICENSE.md</source>
+      <outputDirectory>/</outputDirectory>
     </file>
   </files>
 </assembly>
