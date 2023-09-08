@@ -184,6 +184,11 @@
                 .format()
             );
 
+            // Prevent Invalid Date string to xmlSnippet
+            if (scope.date =='Invalid Date') {
+              scope.date = '';
+            }
+
             var time = tokens[1];
 
             if (time != undefined) {
@@ -257,12 +262,7 @@
               tag = scope.tagName !== undefined ? scope.tagName : "gco:DateTime";
               var time = $filter("date")(scope.time, "HH:mm:ss");
               // TODO: Set seconds, Timezone ?
-              if (scope.date =='Invalid Date') {
-                scope.dateTime = '';
-              } else {
-                scope.dateTime = $filter("date")(scope.date, "yyyy-MM-dd");
-              }
-
+              scope.dateTime = $filter("date")(scope.date, "yyyy-MM-dd");
               scope.dateTime += "T" + time + scope.timezone;
             } else {
               scope.dateTime = $filter("date")(scope.date, "yyyy-MM-dd");
