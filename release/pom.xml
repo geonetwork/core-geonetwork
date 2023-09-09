@@ -11,7 +11,7 @@
   </parent>
 
   <artifactId>gn-release</artifactId>
-  <packaging>jar</packaging>
+  <packaging>pom</packaging>
   <name>Release module</name>
   <description>Use to create distribution packages.</description>
 
@@ -24,11 +24,13 @@
   </licenses>
 
   <profiles>
+    <!-- jetty-download is an optional build step for generating release -->
+    <!-- hack: using the integration phase steps to build before install -->
     <profile>
       <id>jetty-download</id>
       <activation>
         <property>
-          <name>jetty-download</name>
+          <name>release</name>
         </property>
       </activation>
       <build>
@@ -52,7 +54,6 @@
             </executions>
           </plugin>
           <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-antrun-plugin</artifactId>
             <executions>
               <execution>
@@ -76,5 +77,34 @@
         </plugins>
       </build>
     </profile>
+    <profile>
+      <id>bundle</id>
+      <activation>
+        <property>
+          <name>release</name>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-antrun-plugin</artifactId>
+            <executions>
+              <execution>
+                <phase>post-integration-test</phase>
+                <goals>
+                  <goal>run</goal>
+                </goals>
+                <configuration>
+                  <target>
+                    <ant antfile="build.xml"/>
+                  </target>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
   </profiles>
 </project>

@@ -106,53 +106,7 @@
           </execution>
         </executions>
       </plugin>
-
-<!--      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-dependency-plugin</artifactId>
-        <version>3.6.0</version>
-        <executions>
-          <execution>
-            <id>copy-dependencies</id>
-            <phase>package</phase>
-            <goals>
-              <goal>copy-dependencies</goal>
-            </goals>
-            <configuration>
-              <includeScope>runtime</includeScope>
-              <excludeScope>provided</excludeScope>
-              <excludeGroupIds>com.google.code.findbugs</excludeGroupIds>
-              <excludeTransitive>false</excludeTransitive>
-              <outputDirectory>${project.build.directory}/lib</outputDirectory>
-              <overWriteReleases>false</overWriteReleases>
-              <overWriteSnapshots>true</overWriteSnapshots>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-assembly-plugin</artifactId>
-        <version>3.3.0</version>
-        <executions>
-          <execution>
-            <phase>package</phase>
-            <goals>
-              <goal>single</goal>
-            </goals>
-            <configuration>
-              <finalName>${project.artifactId}-${project.version}</finalName>
-              <appendAssemblyId>false</appendAssemblyId>
-              <descriptors>
-                <descriptor>src/main/assembly/assembly.xml</descriptor>
-              </descriptors>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>-->
     </plugins>
-
     <resources>
       <resource>
         <directory>src/main/resources</directory>
@@ -174,6 +128,101 @@
           <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>findbugs-maven-plugin</artifactId>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <!-- Profile to release datastorage bundle -->
+    <profile>
+      <id>release</id>
+      <activation>
+        <property>
+          <!-- include when making a release -->
+          <name>release</name>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <!-- stage jars for assembly -->
+          <plugin>
+            <artifactId>maven-dependency-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>stage-libs</id>
+                <phase>prepare-package</phase>
+                <goals>
+                  <goal>copy-dependencies</goal>
+                </goals>
+                <!-- libs to include are managed here rather than in assembly -->
+                <configuration>
+                  <silent>true</silent>
+                  <includeScope>runtime</includeScope>
+                  <excludeScope>provided</excludeScope>
+                  <excludeGroupIds>com.google.code.findbugs</excludeGroupIds>
+                  <excludeTransitive>false</excludeTransitive>
+                  <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                  <overWriteReleases>false</overWriteReleases>
+                  <overWriteSnapshots>true</overWriteSnapshots>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+          <!-- generate html conrtents-->
+          <plugin>
+            <groupId>com.ruleoftech</groupId>
+            <artifactId>markdown-page-generator-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>readme</id>
+                <phase>process-resources</phase>
+                <goals>
+                  <goal>generate</goal>
+                </goals>
+                <configuration>
+                  <inputDirectory>${project.basedir}/src/main/assembly</inputDirectory>
+                  <outputDirectory>${project.build.directory}/html</outputDirectory>
+                </configuration>
+              </execution>
+              <execution>
+                <id>licenses</id>
+                <phase>process-resources</phase>
+                <goals>
+                  <goal>generate</goal>
+                </goals>
+                <configuration>
+                  <inputDirectory>${project.basedir}/../../</inputDirectory>
+                  <outputDirectory>${project.build.directory}/html/license</outputDirectory>
+                </configuration>
+              </execution>
+            </executions>
+            <configuration>
+              <recursiveInput>false</recursiveInput>
+              <transformRelativeMarkdownLinks>true</transformRelativeMarkdownLinks>
+              <headerHtmlFile>${project.basedir}/../../release/src/markdown/html/header.html</headerHtmlFile>
+              <footerHtmlFile>${project.basedir}/../../release/src/markdown/html/footer.html</footerHtmlFile>
+              <pegdownExtensions>TABLES,FENCED_CODE_BLOCKS</pegdownExtensions>
+              <defaultTitle>true</defaultTitle>
+            </configuration>
+          </plugin>
+          <!-- assemble into zip for release -->
+          <plugin>
+            <artifactId>maven-assembly-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>release-zip</id>
+                <phase>package</phase>
+                <goals>
+                  <goal>single</goal>
+                </goals>
+                <configuration>
+                  <finalName>${project.artifactId}-${project.version}</finalName>
+                  <appendAssemblyId>false</appendAssemblyId>
+                  <descriptors>
+                    <descriptor>src/main/assembly/assembly.xml</descriptor>
+                  </descriptors>
+                </configuration>
+              </execution>
+            </executions>
           </plugin>
         </plugins>
       </build>

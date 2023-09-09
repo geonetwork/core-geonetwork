@@ -8,24 +8,24 @@
   <fileSets>
     <fileSet>
       <directory>${project.build.directory}/lib</directory>
-      <outputDirectory>/</outputDirectory>
+      <outputDirectory>/lib</outputDirectory>
     </fileSet>
   </fileSets>
 
   <files>
     <file>
       <source>${project.build.directory}/${project.artifactId}-${project.version}.jar</source>
+      <outputDirectory>/lib</outputDirectory>
+    </file>
+
+    <file>
+      <source>${project.build.directory}/html/README.html</source>
       <outputDirectory>/</outputDirectory>
     </file>
 
     <file>
-      <source>src/main/assembly/README.md</source>
-      <outputDirectory>/</outputDirectory>
-    </file>
-
-    <file>
-      <source>${project.basedir}/../../LICENSE.md</source>
-      <outputDirectory>/</outputDirectory>
+      <source>${project.build.directory}/html/license/LICENSE.html</source>
+      <outputDirectory>/license</outputDirectory>
     </file>
   </files>
 </assembly>

@@ -2,7 +2,7 @@
 
 To install the Amazon S3 data storage provider in GeoNetwork:
 
-1. Copy the provided jar files to `{GEONETWORK_DIR}/WEB-INF/lib` folder.
+1. Copy the `lib` folder jar files into to `{GEONETWORK_DIR}/WEB-INF/lib` folder.
 
 2. Define the following environmental variables:
 

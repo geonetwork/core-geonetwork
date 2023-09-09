@@ -42,6 +42,12 @@
     <!-- Profile to include CMIS datastorage -->
     <profile>
       <id>datastorage-cmis</id>
+      <activation>
+        <property>
+          <!-- include when making a release -->
+          <name>release</name>
+        </property>
+      </activation>
       <modules>
         <module>cmis</module>
       </modules>
@@ -49,6 +55,12 @@
     <!-- Profile to include S3 datastorage -->
     <profile>
       <id>datastorage-s3</id>
+      <activation>
+        <property>
+          <!-- include when making a release -->
+          <name>release</name>
+        </property>
+      </activation>
       <modules>
         <module>s3</module>
       </modules>
@@ -56,6 +68,12 @@
     <!-- Profile to include JCloud datastorage -->
     <profile>
       <id>datastorage-jcloud</id>
+      <activation>
+        <property>
+          <!-- include when making a release -->
+          <name>release</name>
+        </property>
+      </activation>
       <modules>
         <module>jcloud</module>
       </modules>
