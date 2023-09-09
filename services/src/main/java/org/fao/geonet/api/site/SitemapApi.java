@@ -52,6 +52,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -98,10 +99,14 @@ public class SitemapApi {
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "robots.txt file for SEO.")
     })
-    public void getRobotsText(HttpServletResponse response) throws IOException {
+    public void getRobotsText(HttpServletRequest request, HttpServletResponse response) throws IOException {
         StringBuilder content = new StringBuilder(256);
-        content.append("sitemap: ").append(settingManager.getNodeURL()).append("api/sitemap").append("\n");
-        content.append("sitemap: ").append(settingManager.getNodeURL()).append("api/sitemap?format=rdf");
+        String contextPath = request.getContextPath();
+        content.append("User-agent: *\n");
+        content.append("Disallow: ").append(contextPath).append("/catalog/\n");
+        content.append("Disallow: ").append(contextPath).append("/static/\n");
+        content.append("Sitemap: ").append(settingManager.getNodeURL()).append("api/sitemap\n");
+        content.append("Sitemap: ").append(settingManager.getNodeURL()).append("api/sitemap?format=rdf");
         response.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_PLAIN_VALUE);
         response.getWriter().append(content);
     }
