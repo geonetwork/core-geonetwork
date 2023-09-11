@@ -177,11 +177,11 @@
           }
 
           if (gnLangs.langs[currentUILang_3char]) {
-            v = gnLangs.langs[currentUILang_3char];
+            var v = gnLangs.langs[currentUILang_3char];
             if (!_.includes(result, v)) result.push(v);
           }
           if (currentUILang2_3char && gnLangs.langs[currentUILang2_3char]) {
-            v = gnLangs.langs[currentUILang2_3char];
+            var v = gnLangs.langs[currentUILang2_3char];
             if (!_.includes(result, v)) result.push(v);
           }
           return result;

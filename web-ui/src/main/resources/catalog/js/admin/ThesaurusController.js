@@ -179,7 +179,7 @@
       /**
        * Search thesaurus keyword based on filter and max number
        */
-      searchThesaurusKeyword = function () {
+      var searchThesaurusKeyword = function () {
         $scope.searching = true;
         if ($scope.thesaurusSelected) {
           // list of ui languages; we want the keyword info in all these
@@ -445,7 +445,7 @@
        * Thesaurus uploaded with success, close the modal,
        * refresh the list.
        */
-      uploadThesaurusDone = function (data) {
+      var uploadThesaurusDone = function (data) {
         $scope.clear($scope.queue);
         $scope.thesaurusUrl = "";
 
@@ -463,7 +463,7 @@
       /**
        * Thesaurus uploaded with error, broadcast it.
        */
-      uploadThesaurusError = function (e, data) {
+      var uploadThesaurusError = function (e, data) {
         var r = data.jqXHR || data;
         if (r.status === 201) {
           uploadThesaurusDone(data);
@@ -575,7 +575,7 @@
       /**
        * Search relation for each types for the current keyword
        */
-      searchRelation = function (k) {
+      var searchRelation = function (k) {
         $scope.keywordSelectedRelation = {};
         $.each(relationTypes, function (index, value) {
           $http
@@ -656,7 +656,7 @@
       /**
        * Build keyword POST body message
        */
-      buildKeywordXML = function (keywordObject) {
+      var buildKeywordXML = function (keywordObject) {
         var geoxml = $scope.isPlaceType()
           ? "<west>" +
             keywordObject.geo.west +
