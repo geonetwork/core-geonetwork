@@ -108,7 +108,7 @@ public class ProxyConfiguration {
 
         if (this.enabled) {
             if (this.isProxyConfiguredInSystemProperties) {
-                if (StringUtils.isNotBlank(ProxyConfiguration.HTTPS_PROXY_HOST)) {
+                if (StringUtils.isNotBlank(System.getProperty(ProxyConfiguration.HTTPS_PROXY_HOST))) {
                     this.host = System.getProperty(ProxyConfiguration.HTTPS_PROXY_HOST);
                     this.port = System.getProperty(ProxyConfiguration.HTTPS_PROXY_PORT);
                     this.username = System.getProperty(ProxyConfiguration.HTTPS_PROXY_USERNAME, "");
