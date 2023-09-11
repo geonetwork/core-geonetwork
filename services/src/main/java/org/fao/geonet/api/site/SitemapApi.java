@@ -209,8 +209,7 @@ public class SitemapApi {
         root.addContent(requestElt);
         root.addContent(result);
 
-        Element sitemap = Xml.transform(root, xslt);
         response.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_XML_VALUE);
-        response.getWriter().append(Xml.getString(sitemap));
+        Xml.transform(root, xslt, response.getOutputStream());
     }
 }
