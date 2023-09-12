@@ -28,7 +28,7 @@
                  xmlns:gml="http://www.opengis.net/gml/3.2"
                  xmlns:xlink="http://www.w3.org/1999/xlink"
                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                 xsi:schemaLocation="http://standards.iso.org/iso/19115/-3/mds/2.0 http://standards.iso.org/iso/19115/-3/mds/2.0/mds.xsd">
+                 xsi:schemaLocation="http://standards.iso.org/iso/19115/-3/mdb/2.0 http://standards.iso.org/iso/19115/-3/mdb/2.0/mds.xsd">
   <mdb:metadataIdentifier>
       <mcc:MD_Identifier>
          <mcc:code>
@@ -67,24 +67,31 @@
             <cit:CI_RoleCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_RoleCode"
                              codeListValue="pointOfContact"/>
          </cit:role>
-         <cit:party>
-            <cit:CI_Individual>
-               <cit:name gco:nilReason="missing">
-                  <gco:CharacterString/>
-               </cit:name>
-               <cit:contactInfo>
-                  <cit:CI_Contact>
-                     <cit:address>
-                        <cit:CI_Address>
-                           <cit:electronicMailAddress gco:nilReason="missing">
-                              <gco:CharacterString/>
-                           </cit:electronicMailAddress>
-                        </cit:CI_Address>
-                     </cit:address>
-                  </cit:CI_Contact>
-               </cit:contactInfo>
-            </cit:CI_Individual>
-         </cit:party>
+        <cit:party>
+          <cit:CI_Organisation>
+            <cit:name>
+              <gco:CharacterString>...blank organisation contact entry</gco:CharacterString>
+            </cit:name>
+            <cit:contactInfo>
+              <cit:CI_Contact>
+                <cit:address>
+                  <cit:CI_Address>
+                    <cit:electronicMailAddress>
+                      <gco:CharacterString>!Manual entry</gco:CharacterString>
+                    </cit:electronicMailAddress>
+                  </cit:CI_Address>
+                </cit:address>
+              </cit:CI_Contact>
+            </cit:contactInfo>
+            <cit:individual>
+              <cit:CI_Individual>
+                <cit:name>
+                  <gco:CharacterString>!Manual entry</gco:CharacterString>
+                </cit:name>
+              </cit:CI_Individual>
+            </cit:individual>
+          </cit:CI_Organisation>
+        </cit:party>
       </cit:CI_Responsibility>
   </mdb:contact>
   <mdb:dateInfo>
@@ -294,7 +301,7 @@
          <mri:descriptiveKeywords>
             <mri:MD_Keywords>
                <mri:keyword gco:nilReason="missing">
-                  <gco:CharacterString/>
+                  <gcx:Anchor/>
                </mri:keyword>
                <mri:type>
                   <mri:MD_KeywordTypeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_KeywordTypeCode"
@@ -325,32 +332,13 @@
                      </cit:identifier>
                   </cit:CI_Citation>
                </mri:thesaurusName>
-               <mri:MD_KeywordClass>
-                  <mri:className>
-                     <gco:CharacterString>Hazard Type</gco:CharacterString>
-                  </mri:className>
-                  <mri:conceptIdentifier>
-                     <mcc:URI>http://custom.shared.obj.ch/concept#</mcc:URI>
-                  </mri:conceptIdentifier>
-                  <mri:ontology>
-                     <cit:CI_Citation>
-                        <cit:title>
-                           <gco:CharacterString>concept#</gco:CharacterString>
-                        </cit:title>
-                        <cit:onlineResource>
-                           <cit:linkage>
-                              <gco:CharacterString>http://custom.shared.obj.ch/concept#</gco:CharacterString>
-                           </cit:linkage>
-                        </cit:onlineResource>
-                     </cit:CI_Citation>
-                  </mri:ontology>
-               </mri:MD_KeywordClass>
+
             </mri:MD_Keywords>
          </mri:descriptiveKeywords>
          <mri:descriptiveKeywords>
             <mri:MD_Keywords>
                <mri:keyword gco:nilReason="missing">
-                  <gco:CharacterString/>
+                  <gcx:Anchor/>
                </mri:keyword>
                <mri:type>
                   <mri:MD_KeywordTypeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_KeywordTypeCode"
@@ -381,32 +369,12 @@
                      </cit:identifier>
                   </cit:CI_Citation>
                </mri:thesaurusName>
-               <mri:MD_KeywordClass>
-                  <mri:className>
-                     <gco:CharacterString>Continents, countries, sea regions of the world.</gco:CharacterString>
-                  </mri:className>
-                  <mri:conceptIdentifier>
-                     <mcc:URI>http://geonetwork-opensource.org/thesaurus/naturalearth-and-seavox</mcc:URI>
-                  </mri:conceptIdentifier>
-                  <mri:ontology>
-                     <cit:CI_Citation>
-                        <cit:title>
-                           <gco:CharacterString>naturalearth-and-seavox</gco:CharacterString>
-                        </cit:title>
-                        <cit:onlineResource>
-                           <cit:linkage>
-                              <gco:CharacterString>http://geonetwork-opensource.org/thesaurus/naturalearth-and-seavox</gco:CharacterString>
-                           </cit:linkage>
-                        </cit:onlineResource>
-                     </cit:CI_Citation>
-                  </mri:ontology>
-               </mri:MD_KeywordClass>
             </mri:MD_Keywords>
          </mri:descriptiveKeywords>
          <mri:descriptiveKeywords>
             <mri:MD_Keywords>
                <mri:keyword gco:nilReason="missing">
-                  <gco:CharacterString/>
+                  <gcx:Anchor/>
                </mri:keyword>
                <mri:type>
                   <mri:MD_KeywordTypeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_KeywordTypeCode"
@@ -437,32 +405,12 @@
                      </cit:identifier>
                   </cit:CI_Citation>
                </mri:thesaurusName>
-               <mri:MD_KeywordClass>
-                  <mri:className>
-                     <gco:CharacterString>Dataset Type</gco:CharacterString>
-                  </mri:className>
-                  <mri:conceptIdentifier>
-                     <mcc:URI>http://custom.shared.obj.ch/concept#</mcc:URI>
-                  </mri:conceptIdentifier>
-                  <mri:ontology>
-                     <cit:CI_Citation>
-                        <cit:title>
-                           <gco:CharacterString>concept#</gco:CharacterString>
-                        </cit:title>
-                        <cit:onlineResource>
-                           <cit:linkage>
-                              <gco:CharacterString>http://custom.shared.obj.ch/concept#</gco:CharacterString>
-                           </cit:linkage>
-                        </cit:onlineResource>
-                     </cit:CI_Citation>
-                  </mri:ontology>
-               </mri:MD_KeywordClass>
             </mri:MD_Keywords>
          </mri:descriptiveKeywords>
          <mri:descriptiveKeywords>
             <mri:MD_Keywords>
                <mri:keyword gco:nilReason="missing">
-                  <gco:CharacterString/>
+                  <gcx:Anchor/>
                </mri:keyword>
                <mri:type>
                   <mri:MD_KeywordTypeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_KeywordTypeCode"
@@ -493,26 +441,6 @@
                      </cit:identifier>
                   </cit:CI_Citation>
                </mri:thesaurusName>
-               <mri:MD_KeywordClass>
-                  <mri:className>
-                     <gco:CharacterString>CAP-AU Compliance</gco:CharacterString>
-                  </mri:className>
-                  <mri:conceptIdentifier>
-                     <mcc:URI>http://custom.shared.obj.ch/concept#</mcc:URI>
-                  </mri:conceptIdentifier>
-                  <mri:ontology>
-                     <cit:CI_Citation>
-                        <cit:title>
-                           <gco:CharacterString>concept#</gco:CharacterString>
-                        </cit:title>
-                        <cit:onlineResource>
-                           <cit:linkage>
-                              <gco:CharacterString>http://custom.shared.obj.ch/concept#</gco:CharacterString>
-                           </cit:linkage>
-                        </cit:onlineResource>
-                     </cit:CI_Citation>
-                  </mri:ontology>
-               </mri:MD_KeywordClass>
             </mri:MD_Keywords>
          </mri:descriptiveKeywords>
          <mri:resourceConstraints>
@@ -543,11 +471,29 @@
   </mdb:identificationInfo>
   <mdb:distributionInfo>
       <mrd:MD_Distribution>
-         <mrd:distributionFormat>
-            <mrd:MD_Format>
-               <mrd:formatSpecificationCitation/>
-            </mrd:MD_Format>
-         </mrd:distributionFormat>
+        <mrd:transferOptions>
+          <mrd:MD_DigitalTransferOptions>
+            <mrd:onLine>
+              <cit:CI_OnlineResource>
+                <cit:linkage>
+                  <gco:CharacterString>Distro URL</gco:CharacterString>
+                </cit:linkage>
+                <cit:protocol gco:nilReason="missing">
+                  <gco:CharacterString />
+                </cit:protocol>
+                <cit:name>
+                  <gco:CharacterString>Name of resource</gco:CharacterString>
+                </cit:name>
+                <cit:description gco:nilReason="missing">
+                  <gco:CharacterString />
+                </cit:description>
+                <cit:function>
+                  <cit:CI_OnLineFunctionCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_OnLineFunctionCode" codeListValue="download" />
+                </cit:function>
+              </cit:CI_OnlineResource>
+            </mrd:onLine>
+          </mrd:MD_DigitalTransferOptions>
+        </mrd:transferOptions>
       </mrd:MD_Distribution>
   </mdb:distributionInfo>
   <mdb:dataQualityInfo>

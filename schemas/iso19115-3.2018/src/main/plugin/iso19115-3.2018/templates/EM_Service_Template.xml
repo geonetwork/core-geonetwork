@@ -28,7 +28,7 @@
                  xmlns:gml="http://www.opengis.net/gml/3.2"
                  xmlns:xlink="http://www.w3.org/1999/xlink"
                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                 xsi:schemaLocation="http://standards.iso.org/iso/19115/-3/mds/2.0 http://standards.iso.org/iso/19115/-3/mds/2.0/mds.xsd">
+                 xsi:schemaLocation="http://standards.iso.org/iso/19115/-3/mdb/2.0 http://standards.iso.org/iso/19115/-3/mdb/2.0/mds.xsd">
   <mdb:metadataIdentifier>
       <mcc:MD_Identifier>
          <mcc:code>
@@ -129,17 +129,7 @@
          </cit:edition>
       </cit:CI_Citation>
   </mdb:metadataStandard>
-  <mdb:metadataLinkage xmlns:geonet="http://www.fao.org/geonetwork">
-      <cit:CI_OnlineResource>
-         <cit:linkage>
-            <gco:CharacterString>http://localhost:8080/geonetwork/srv/api/records/e4a23540-e93b-4f5c-bec5-bfcf6297f20f</gco:CharacterString>
-         </cit:linkage>
-         <cit:function>
-            <cit:CI_OnLineFunctionCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_OnLineFunctionCode"
-                                       codeListValue="completeMetadata"/>
-         </cit:function>
-      </cit:CI_OnlineResource>
-  </mdb:metadataLinkage>
+
   <mdb:metadataLinkage xmlns:geonet="http://www.fao.org/geonetwork">
       <cit:CI_OnlineResource>
          <cit:linkage>
@@ -272,20 +262,16 @@
                      </gex:northBoundLatitude>
                   </gex:EX_GeographicBoundingBox>
                </gex:geographicElement>
-               <gex:temporalElement>
-                  <gex:EX_SpatialTemporalExtent>
-                     <gex:extent>
-                        <gml:TimeEdge gml:id="d789e345a1052958">
-                           <gml:start>
-                              <gml:TimeNode gml:id="d789e347a1052958"/>
-                           </gml:start>
-                           <gml:end>
-                              <gml:TimeNode gml:id="d789e349a1052958"/>
-                           </gml:end>
-                        </gml:TimeEdge>
-                     </gex:extent>
-                  </gex:EX_SpatialTemporalExtent>
-               </gex:temporalElement>
+              <gex:temporalElement>
+                <gex:EX_TemporalExtent>
+                  <gex:extent>
+                    <gml:TimePeriod gml:id="d7013e216a1053982">
+                      <gml:beginPosition />
+                      <gml:endPosition />
+                    </gml:TimePeriod>
+                  </gex:extent>
+                </gex:EX_TemporalExtent>
+              </gex:temporalElement>
             </gex:EX_Extent>
          </mri:extent>
          <mri:resourceMaintenance>
@@ -396,7 +382,7 @@
          <mri:descriptiveKeywords>
             <mri:MD_Keywords>
                <mri:keyword gco:nilReason="missing">
-                  <gco:CharacterString/>
+                  <gcx:Anchor/>
                </mri:keyword>
                <mri:type>
                   <mri:MD_KeywordTypeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_KeywordTypeCode"
@@ -427,32 +413,12 @@
                      </cit:identifier>
                   </cit:CI_Citation>
                </mri:thesaurusName>
-               <mri:MD_KeywordClass>
-                  <mri:className>
-                     <gco:CharacterString>Service Keywords</gco:CharacterString>
-                  </mri:className>
-                  <mri:conceptIdentifier>
-                     <mcc:URI>http://pid.geoscience.gov.au/def/voc/ga/servicetype</mcc:URI>
-                  </mri:conceptIdentifier>
-                  <mri:ontology>
-                     <cit:CI_Citation>
-                        <cit:title>
-                           <gco:CharacterString>servicetype</gco:CharacterString>
-                        </cit:title>
-                        <cit:onlineResource>
-                           <cit:linkage>
-                              <gco:CharacterString>http://pid.geoscience.gov.au/def/voc/ga/servicetype</gco:CharacterString>
-                           </cit:linkage>
-                        </cit:onlineResource>
-                     </cit:CI_Citation>
-                  </mri:ontology>
-               </mri:MD_KeywordClass>
             </mri:MD_Keywords>
          </mri:descriptiveKeywords>
          <mri:descriptiveKeywords>
             <mri:MD_Keywords>
                <mri:keyword gco:nilReason="missing">
-                  <gco:CharacterString/>
+                  <gcx:Anchor/>
                </mri:keyword>
                <mri:type>
                   <mri:MD_KeywordTypeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_KeywordTypeCode"
@@ -483,32 +449,12 @@
                      </cit:identifier>
                   </cit:CI_Citation>
                </mri:thesaurusName>
-               <mri:MD_KeywordClass>
-                  <mri:className>
-                     <gco:CharacterString>Hazard Type</gco:CharacterString>
-                  </mri:className>
-                  <mri:conceptIdentifier>
-                     <mcc:URI>http://custom.shared.obj.ch/concept#</mcc:URI>
-                  </mri:conceptIdentifier>
-                  <mri:ontology>
-                     <cit:CI_Citation>
-                        <cit:title>
-                           <gco:CharacterString>concept#</gco:CharacterString>
-                        </cit:title>
-                        <cit:onlineResource>
-                           <cit:linkage>
-                              <gco:CharacterString>http://custom.shared.obj.ch/concept#</gco:CharacterString>
-                           </cit:linkage>
-                        </cit:onlineResource>
-                     </cit:CI_Citation>
-                  </mri:ontology>
-               </mri:MD_KeywordClass>
             </mri:MD_Keywords>
          </mri:descriptiveKeywords>
          <mri:descriptiveKeywords>
             <mri:MD_Keywords>
                <mri:keyword gco:nilReason="missing">
-                  <gco:CharacterString/>
+                  <gcx:Anchor/>
                </mri:keyword>
                <mri:type>
                   <mri:MD_KeywordTypeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_KeywordTypeCode"
@@ -539,32 +485,12 @@
                      </cit:identifier>
                   </cit:CI_Citation>
                </mri:thesaurusName>
-               <mri:MD_KeywordClass>
-                  <mri:className>
-                     <gco:CharacterString>Continents, countries, sea regions of the world.</gco:CharacterString>
-                  </mri:className>
-                  <mri:conceptIdentifier>
-                     <mcc:URI>http://geonetwork-opensource.org/thesaurus/naturalearth-and-seavox</mcc:URI>
-                  </mri:conceptIdentifier>
-                  <mri:ontology>
-                     <cit:CI_Citation>
-                        <cit:title>
-                           <gco:CharacterString>naturalearth-and-seavox</gco:CharacterString>
-                        </cit:title>
-                        <cit:onlineResource>
-                           <cit:linkage>
-                              <gco:CharacterString>http://geonetwork-opensource.org/thesaurus/naturalearth-and-seavox</gco:CharacterString>
-                           </cit:linkage>
-                        </cit:onlineResource>
-                     </cit:CI_Citation>
-                  </mri:ontology>
-               </mri:MD_KeywordClass>
             </mri:MD_Keywords>
          </mri:descriptiveKeywords>
          <mri:descriptiveKeywords>
             <mri:MD_Keywords>
                <mri:keyword gco:nilReason="missing">
-                  <gco:CharacterString/>
+                  <gcx:Anchor/>
                </mri:keyword>
                <mri:type>
                   <mri:MD_KeywordTypeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_KeywordTypeCode"
@@ -595,26 +521,6 @@
                      </cit:identifier>
                   </cit:CI_Citation>
                </mri:thesaurusName>
-               <mri:MD_KeywordClass>
-                  <mri:className>
-                     <gco:CharacterString>CAP-AU Compliance</gco:CharacterString>
-                  </mri:className>
-                  <mri:conceptIdentifier>
-                     <mcc:URI>http://custom.shared.obj.ch/concept#</mcc:URI>
-                  </mri:conceptIdentifier>
-                  <mri:ontology>
-                     <cit:CI_Citation>
-                        <cit:title>
-                           <gco:CharacterString>concept#</gco:CharacterString>
-                        </cit:title>
-                        <cit:onlineResource>
-                           <cit:linkage>
-                              <gco:CharacterString>http://custom.shared.obj.ch/concept#</gco:CharacterString>
-                           </cit:linkage>
-                        </cit:onlineResource>
-                     </cit:CI_Citation>
-                  </mri:ontology>
-               </mri:MD_KeywordClass>
             </mri:MD_Keywords>
          </mri:descriptiveKeywords>
          <mri:resourceConstraints>
