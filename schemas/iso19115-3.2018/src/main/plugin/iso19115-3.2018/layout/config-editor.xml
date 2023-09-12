@@ -475,6 +475,7 @@
     <name>msr:projection</name>
     <name>srv:containsOperations</name>
     <name>srv:SV_CoupledResource</name>
+    <name>mrd:transferOptions</name>
   </fieldsWithFieldset>
 
   <multilingualFields>
@@ -695,16 +696,20 @@
 
     <table for="cit:CI_OnlineResource">
       <header>
-        <col label="cit:linkage" />
-        <col label="cit:protocol" />
-        <col label="cit:function" />
-        <col />
+        <col label="cit:name"/>
+        <col label="cit:linkage"/>
+        <col label="cit:protocol"/>
+        <col label="cit:function"/>
+        <col label="cit:description"/>
+        <col/>
       </header>
       <row>
-        <col xpath="cit:linkage" />
-        <col xpath="cit:protocol" />
-        <col xpath="cit:function" />
-        <col del=".." />
+        <col xpath="cit:name"/>
+        <col xpath="cit:linkage"/>
+        <col xpath="cit:protocol"/>
+        <col xpath="cit:function"/>
+        <col xpath="cit:description"/>
+        <col del=".."/>
       </row>
     </table>
     <table for="gml:TimePeriod">
@@ -977,8 +982,47 @@
       </tab>
 
       <tab id="distributionICSM" mode="flat">
-        <section xpath="/mdb:MD_Metadata/mdb:distributionInfo" or="distributionInfo"
-                 in="/mdb:MD_Metadata" />
+        <section name="Distributions">
+          <field xpath="/mdb:MD_Metadata/mdb:distributionInfo"
+                 del=".."/>
+          <action type="add"
+                  btnLabel="Add Distribution"
+                  or="distributionInfo"
+                  in="/mdb:MD_Metadata">
+            <template>
+              <snippet>
+                <mdb:distributionInfo>
+                <mrd:MD_Distribution>
+                <mrd:transferOptions>
+                <mrd:MD_DigitalTransferOptions>
+                <mrd:onLine>
+                  <cit:CI_OnlineResource>
+                    <cit:linkage>
+                      <gco:CharacterString>Distro URL</gco:CharacterString>
+                    </cit:linkage>
+                    <cit:protocol>
+                      <gco:CharacterString/>
+                    </cit:protocol>
+                    <cit:name>
+                      <gco:CharacterString>Name of resource</gco:CharacterString>
+                    </cit:name>
+                    <cit:description>
+                      <gco:CharacterString/>
+                    </cit:description>
+                    <cit:function>
+                      <cit:CI_OnLineFunctionCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_OnLineFunctionCode"
+                                                 codeListValue="download"/>
+                    </cit:function>
+                  </cit:CI_OnlineResource>
+                </mrd:onLine>
+                </mrd:MD_DigitalTransferOptions>
+                </mrd:transferOptions>
+                </mrd:MD_Distribution>
+                </mdb:distributionInfo>
+              </snippet>
+            </template>
+          </action>
+        </section>
       </tab>
 
       <!--<tab id="metadataIcsm" mode="flat">
