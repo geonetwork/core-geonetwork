@@ -82,6 +82,8 @@
 
     <for name="gco:Date" use="data-gn-date-picker"/>
     <for name="gco:DateTime" use="data-gn-date-picker"/>
+    <for name="gml:beginDate" use="data-gn-date-picker"/>
+    <for name="gml:endDate" use="data-gn-date-picker"/>
 
     <for name="gml:duration" use="data-gn-field-duration-div"/>
     <for name="gco:TM_PeriodDuration" use="data-gn-field-duration-div"/>
@@ -712,7 +714,7 @@
         <col del=".."/>
       </row>
     </table>
-    <table for="gml:TimePeriod">
+    <!--<table for="gml:TimePeriod">
       <header>
         <col label="cit:linkage" />
         <col label="cit:protocol" />
@@ -725,7 +727,7 @@
         <col xpath="cit:function" />
         <col del=".." />
       </row>
-    </table>
+    </table>-->
   </tableFields>
 
 
@@ -919,41 +921,21 @@
           <field xpath="/mdb:MD_Metadata/mdb:identificationInfo/*/mri:extent/gex:EX_Extent/gex:verticalElement" or="verticalElement"
                  in="/mdb:MD_Metadata/mdb:identificationInfo/*/mri:extent/gex:EX_Extent"/>
           <section name="gex:EX_TemporalExtent" >
-            <field name="Temporal extents" templateModeOnly="true"
+            <field name="Temporal extents"
                    xpath="/mdb:MD_Metadata/mdb:identificationInfo/*/mri:extent/gex:EX_Extent/gex:temporalElement"
-                   or="temporalElement"
-                   in="/mdb:MD_Metadata/mdb:identificationInfo/*/mri:extent/gex:EX_Extent">
+                   del=".."/>
+              <action type="add"
+                      btnLabel="Add Temporal Extent"
+                      or="temporalElement"
+                      in="/mdb:MD_Metadata/mdb:identificationInfo/*/mri:extent/gex:EX_Extent">
               <template>
-                <values>
-                  <!-- -Need a * for gml:TimePeriodTypeCHOICE_ELEMENT2 added by editor enumerated tree
-                        but this will make the XSLT formatter fails. Using // to access the element in both case. -->
-                  <key label="beginPosition"
-                       xpath="gex:temporalElement/gex:EX_TemporalExtent/gex:extent/gml:TimePeriod//gml:beginPosition"
-                       use="gn-date-picker"
-                       tooltip="gex:temporalElement/gex:EX_TemporalExtent">
-                    <directiveAttributes
-                      data-tag-name="gml:beginPosition"/>
-                    <!--data-indeterminate-position="eval#gex:EX_TemporalExtent/gex:extent/gml:TimePeriod/*/gml:beginPosition/@indeterminatePosition"/-->
-
-                  </key>
-                  <key label="endPosition"
-                       xpath="gex:temporalElement/gex:EX_TemporalExtent/gex:extent/gml:TimePeriod//gml:endPosition"
-                       use="gn-date-picker"
-                       tooltip="gex:extent|gex:EX_TemporalExtent">
-                    <directiveAttributes
-                      data-tag-name="gml:endPosition"/>
-                    <!--data-indeterminate-position="eval#gex:EX_TemporalExtent/gex:extent/gml:TimePeriod/*/gml:endPosition/@indeterminatePosition"/-->
-
-
-                  </key>
-                </values>
                 <snippet>
                   <gex:temporalElement>
                     <gex:EX_TemporalExtent>
                       <gex:extent>
-                        <gml:TimePeriod>
-                          {{beginPosition}}
-                          {{endPosition}}
+                        <gml:TimePeriod gml:id="d33429e406a1051934">
+                          <gml:beginPosition/>
+                          <gml:endPosition/>
                         </gml:TimePeriod>
                       </gex:extent>
                     </gex:EX_TemporalExtent>
@@ -961,7 +943,7 @@
                 </snippet>
               </template>
 
-            </field>
+              </action>>
           </section>
         </section>
         <section name="resolutionIcsm">

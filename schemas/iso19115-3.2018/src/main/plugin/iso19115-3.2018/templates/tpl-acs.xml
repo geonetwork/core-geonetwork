@@ -1,15 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <mdb:MD_Metadata xmlns:mdb="http://standards.iso.org/iso/19115/-3/mdb/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cat="http://standards.iso.org/iso/19115/-3/cat/1.0" xmlns:gfc="http://standards.iso.org/iso/19110/gfc/1.1" xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/2.0" xmlns:gcx="http://standards.iso.org/iso/19115/-3/gcx/1.0" xmlns:gex="http://standards.iso.org/iso/19115/-3/gex/1.0" xmlns:lan="http://standards.iso.org/iso/19115/-3/lan/1.0" xmlns:srv="http://standards.iso.org/iso/19115/-3/srv/2.1" xmlns:mas="http://standards.iso.org/iso/19115/-3/mas/1.0" xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0" xmlns:mco="http://standards.iso.org/iso/19115/-3/mco/1.0" xmlns:mda="http://standards.iso.org/iso/19115/-3/mda/1.0" xmlns:mds="http://standards.iso.org/iso/19115/-3/mds/2.0" xmlns:mdt="http://standards.iso.org/iso/19115/-3/mdt/2.0" xmlns:mex="http://standards.iso.org/iso/19115/-3/mex/1.0" xmlns:mmi="http://standards.iso.org/iso/19115/-3/mmi/1.0" xmlns:mpc="http://standards.iso.org/iso/19115/-3/mpc/1.0" xmlns:mrc="http://standards.iso.org/iso/19115/-3/mrc/2.0" xmlns:mrd="http://standards.iso.org/iso/19115/-3/mrd/1.0" xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0" xmlns:mrl="http://standards.iso.org/iso/19115/-3/mrl/2.0" xmlns:mrs="http://standards.iso.org/iso/19115/-3/mrs/1.0" xmlns:msr="http://standards.iso.org/iso/19115/-3/msr/2.0" xmlns:mdq="http://standards.iso.org/iso/19157/-2/mdq/1.0" xmlns:mac="http://standards.iso.org/iso/19115/-3/mac/2.0" xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:xlink="http://www.w3.org/1999/xlink" xsi:schemaLocation="http://standards.iso.org/iso/19115/-3/mds/2.0 http://standards.iso.org/iso/19115/-3/mds/2.0/mds.xsd">
   <mdb:metadataIdentifier>
     <mcc:MD_Identifier>
       <mcc:code>
-        <gco:CharacterString>58572906-01f8-4b5a-9c3a-e42e3caadd03</gco:CharacterString>
+        <gco:CharacterString>514c36ce-7902-4c71-bff9-8c0424736bbe</gco:CharacterString>
       </mcc:code>
       <mcc:codeSpace>
         <gco:CharacterString>urn:uuid</gco:CharacterString>
       </mcc:codeSpace>
     </mcc:MD_Identifier>
   </mdb:metadataIdentifier>
-  <mdb:defaultLocale xmlns:geonet="http://www.fao.org/geonetwork">
+  <mdb:defaultLocale>
     <lan:PT_Locale id="EN">
       <lan:language>
         <lan:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="eng" />
@@ -19,7 +20,7 @@
       </lan:characterEncoding>
     </lan:PT_Locale>
   </mdb:defaultLocale>
-  <mdb:metadataScope xmlns:geonet="http://www.fao.org/geonetwork">
+  <mdb:metadataScope>
     <mdb:MD_MetadataScope>
       <mdb:resourceScope>
         <mcc:MD_ScopeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_ScopeCode" codeListValue="dataset" />
@@ -29,42 +30,49 @@
       </mdb:name>
     </mdb:MD_MetadataScope>
   </mdb:metadataScope>
-  <mdb:contact xmlns:geonet="http://www.fao.org/geonetwork">
+  <mdb:contact>
     <cit:CI_Responsibility>
       <cit:role>
         <cit:CI_RoleCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_RoleCode" codeListValue="pointOfContact" />
       </cit:role>
       <cit:party>
-        <cit:CI_Individual>
-          <cit:name gco:nilReason="missing">
-            <gco:CharacterString />
+        <cit:CI_Organisation>
+          <cit:name>
+            <gco:CharacterString>...blank organisation contact entry</gco:CharacterString>
           </cit:name>
           <cit:contactInfo>
             <cit:CI_Contact>
               <cit:address>
                 <cit:CI_Address>
-                  <cit:electronicMailAddress gco:nilReason="missing">
-                    <gco:CharacterString />
+                  <cit:electronicMailAddress>
+                    <gco:CharacterString>!Manual entry</gco:CharacterString>
                   </cit:electronicMailAddress>
                 </cit:CI_Address>
               </cit:address>
             </cit:CI_Contact>
           </cit:contactInfo>
-        </cit:CI_Individual>
+          <cit:individual>
+            <cit:CI_Individual>
+              <cit:name>
+                <gco:CharacterString>!Manual entry</gco:CharacterString>
+              </cit:name>
+            </cit:CI_Individual>
+          </cit:individual>
+        </cit:CI_Organisation>
       </cit:party>
     </cit:CI_Responsibility>
   </mdb:contact>
   <mdb:dateInfo>
     <cit:CI_Date>
       <cit:date>
-        <gco:DateTime>2022-07-26T15:54:08</gco:DateTime>
+        <gco:DateTime>2023-09-12T00:59:52.014Z</gco:DateTime>
       </cit:date>
       <cit:dateType>
         <cit:CI_DateTypeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_DateTypeCode" codeListValue="revision" />
       </cit:dateType>
     </cit:CI_Date>
   </mdb:dateInfo>
-  <mdb:dateInfo xmlns:geonet="http://www.fao.org/geonetwork">
+  <mdb:dateInfo>
     <cit:CI_Date>
       <cit:date>
         <gco:DateTime>2022-05-26T11:59:51</gco:DateTime>
@@ -74,7 +82,7 @@
       </cit:dateType>
     </cit:CI_Date>
   </mdb:dateInfo>
-  <mdb:metadataStandard xmlns:geonet="http://www.fao.org/geonetwork">
+  <mdb:metadataStandard>
     <cit:CI_Citation>
       <cit:title>
         <gco:CharacterString>ISO 19115-1</gco:CharacterString>
@@ -84,7 +92,7 @@
       </cit:edition>
     </cit:CI_Citation>
   </mdb:metadataStandard>
-  <mdb:metadataLinkage xmlns:geonet="http://www.fao.org/geonetwork">
+  <mdb:metadataLinkage>
     <cit:CI_OnlineResource>
       <cit:linkage>
         <gco:CharacterString>http://localhost:8080/geonetwork/srv/api/records/a29e3b02-a0c1-44b4-8a14-5f27f0502212</gco:CharacterString>
@@ -94,7 +102,7 @@
       </cit:function>
     </cit:CI_OnlineResource>
   </mdb:metadataLinkage>
-  <mdb:identificationInfo xmlns:geonet="http://www.fao.org/geonetwork">
+  <mdb:identificationInfo>
     <mri:MD_DataIdentification>
       <mri:citation>
         <cit:CI_Citation>
@@ -355,6 +363,16 @@
               </gex:extent>
             </gex:EX_TemporalExtent>
           </gex:temporalElement>
+          <gex:temporalElement>
+            <gex:EX_TemporalExtent>
+              <gex:extent>
+                <gml:TimePeriod gml:id="d7013e216a1053982">
+                  <gml:beginPosition>2023-09-01</gml:beginPosition>
+                  <gml:endPosition>2023-09-12</gml:endPosition>
+                </gml:TimePeriod>
+              </gex:extent>
+            </gex:EX_TemporalExtent>
+          </gex:temporalElement>
         </gex:EX_Extent>
       </mri:extent>
       <mri:resourceMaintenance>
@@ -416,6 +434,16 @@
               <cit:date>
                 <cit:CI_Date>
                   <cit:date>
+                    <gco:Date>2015-01-01</gco:Date>
+                  </cit:date>
+                  <cit:dateType>
+                    <cit:CI_DateTypeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_DateTypeCode" codeListValue="publication" />
+                  </cit:dateType>
+                </cit:CI_Date>
+              </cit:date>
+              <cit:date>
+                <cit:CI_Date>
+                  <cit:date>
                     <gco:Date>2015-07-17</gco:Date>
                   </cit:date>
                   <cit:dateType>
@@ -426,32 +454,12 @@
               <cit:identifier>
                 <mcc:MD_Identifier>
                   <mcc:code>
-                    <gcx:Anchor xlink:href="http://localhost:8080/geonetwork/srv/eng/thesaurus.download?ref=external.place.regions">geonetwork.thesaurus.external.place.regions</gcx:Anchor>
+                    <gcx:Anchor xlink:href="http://localhost:8080/geonetwork/srv/api/registries/vocabularies/external.place.regions">geonetwork.thesaurus.external.place.regions</gcx:Anchor>
                   </mcc:code>
                 </mcc:MD_Identifier>
               </cit:identifier>
             </cit:CI_Citation>
           </mri:thesaurusName>
-          <mri:MD_KeywordClass>
-            <mri:className>
-              <gco:CharacterString>Continents, countries, sea regions of the world.</gco:CharacterString>
-            </mri:className>
-            <mri:conceptIdentifier>
-              <mcc:URI>http://geonetwork-opensource.org/thesaurus/naturalearth-and-seavox</mcc:URI>
-            </mri:conceptIdentifier>
-            <mri:ontology>
-              <cit:CI_Citation>
-                <cit:title>
-                  <gco:CharacterString>naturalearth-and-seavox</gco:CharacterString>
-                </cit:title>
-                <cit:onlineResource>
-                  <cit:linkage>
-                    <gco:CharacterString>http://geonetwork-opensource.org/thesaurus/naturalearth-and-seavox</gco:CharacterString>
-                  </cit:linkage>
-                </cit:onlineResource>
-              </cit:CI_Citation>
-            </mri:ontology>
-          </mri:MD_KeywordClass>
         </mri:MD_Keywords>
       </mri:descriptiveKeywords>
       <mri:resourceConstraints>
@@ -680,48 +688,34 @@
       </mri:environmentDescription>
     </mri:MD_DataIdentification>
   </mdb:identificationInfo>
-  <mdb:distributionInfo xmlns:geonet="http://www.fao.org/geonetwork">
+  <mdb:distributionInfo>
     <mrd:MD_Distribution>
-      <mrd:distributionFormat>
-        <mrd:MD_Format>
-          <mrd:formatSpecificationCitation>
-            <cit:CI_Citation>
-              <cit:title>
-                <gco:CharacterString>ESRI Shapefile</gco:CharacterString>
-              </cit:title>
-              <cit:onlineResource>
-                <cit:CI_OnlineResource>
-                  <cit:linkage>
-                    <gco:CharacterString>http://Link.to.resource/distribution</gco:CharacterString>
-                  </cit:linkage>
-                  <cit:protocol>
-                    <gco:CharacterString>WWW:LINK-1.0-http--link</gco:CharacterString>
-                  </cit:protocol>
-                  <cit:name gco:nilReason="missing">
-                    <gco:CharacterString />
-                  </cit:name>
-                  <cit:description gco:nilReason="missing">
-                    <gco:CharacterString />
-                  </cit:description>
-                  <cit:function>
-                    <cit:CI_OnLineFunctionCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_OnLineFunctionCode" codeListValue="fileAccess" />
-                  </cit:function>
-                </cit:CI_OnlineResource>
-              </cit:onlineResource>
-            </cit:CI_Citation>
-          </mrd:formatSpecificationCitation>
-        </mrd:MD_Format>
-      </mrd:distributionFormat>
       <mrd:transferOptions>
         <mrd:MD_DigitalTransferOptions>
-          <mrd:transferSize>
-            <gco:Real>1</gco:Real>
-          </mrd:transferSize>
+          <mrd:onLine>
+            <cit:CI_OnlineResource>
+              <cit:linkage>
+                <gco:CharacterString>Distro URL</gco:CharacterString>
+              </cit:linkage>
+              <cit:protocol gco:nilReason="missing">
+                <gco:CharacterString />
+              </cit:protocol>
+              <cit:name>
+                <gco:CharacterString>Name of resource</gco:CharacterString>
+              </cit:name>
+              <cit:description gco:nilReason="missing">
+                <gco:CharacterString />
+              </cit:description>
+              <cit:function>
+                <cit:CI_OnLineFunctionCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_OnLineFunctionCode" codeListValue="download" />
+              </cit:function>
+            </cit:CI_OnlineResource>
+          </mrd:onLine>
         </mrd:MD_DigitalTransferOptions>
       </mrd:transferOptions>
     </mrd:MD_Distribution>
   </mdb:distributionInfo>
-  <mdb:dataQualityInfo xmlns:geonet="http://www.fao.org/geonetwork">
+  <mdb:dataQualityInfo>
     <mdq:DQ_DataQuality>
       <mdq:scope>
         <mcc:MD_Scope>
@@ -750,7 +744,7 @@
       </mdq:report>
     </mdq:DQ_DataQuality>
   </mdb:dataQualityInfo>
-  <mdb:resourceLineage xmlns:geonet="http://www.fao.org/geonetwork">
+  <mdb:resourceLineage>
     <mrl:LI_Lineage>
       <mrl:statement>
         <gco:CharacterString>Information that lets the user understand how the dataset was created over time.</gco:CharacterString>
@@ -783,7 +777,7 @@
       </mrl:source>
     </mrl:LI_Lineage>
   </mdb:resourceLineage>
-  <mdb:metadataConstraints xmlns:geonet="http://www.fao.org/geonetwork">
+  <mdb:metadataConstraints>
     <mco:MD_LegalConstraints>
       <mco:useLimitation>
         <gco:CharacterString>CC BY-SA</gco:CharacterString>
@@ -840,7 +834,7 @@
       </mco:useConstraints>
     </mco:MD_LegalConstraints>
   </mdb:metadataConstraints>
-  <mdb:metadataConstraints xmlns:geonet="http://www.fao.org/geonetwork">
+  <mdb:metadataConstraints>
     <mco:MD_SecurityConstraints>
       <mco:useLimitation>
         <gco:CharacterString>UNOFFICIAL</gco:CharacterString>
@@ -883,3 +877,4 @@
     </mco:MD_SecurityConstraints>
   </mdb:metadataConstraints>
 </mdb:MD_Metadata>
+
