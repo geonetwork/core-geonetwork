@@ -913,46 +913,51 @@
                    in="/mdb:MD_Metadata/mdb:identificationInfo/*/mri:extent/gex:EX_Extent" />
           <field xpath="/mdb:MD_Metadata/mdb:identificationInfo/*/mri:extent/gex:EX_Extent/gex:verticalElement" or="verticalElement"
                  in="/mdb:MD_Metadata/mdb:identificationInfo/*/mri:extent/gex:EX_Extent"/>
-          <field name="temporalElement" templateModeOnly="true"
-                 xpath="/mdb:MD_Metadata/mdb:identificationInfo/*/mri:extent/gex:EX_Extent/gex:temporalElement">
-            <template>
-              <values>
-                <!-- -Need a * for gml:TimePeriodTypeCHOICE_ELEMENT2 added by editor enumerated tree
-                      but this will make the XSLT formatter fails. Using // to access the element in both case. -->
-                <key label="beginPosition"
-                     xpath="gex:EX_TemporalExtent/gex:extent/gml:TimePeriod//gml:beginPosition"
-                     use="gn-date-picker"
-                     tooltip="gex:temporalElement/gex:EX_TemporalExtent">
-                  <directiveAttributes
-                    data-tag-name="gml:beginPosition"/>
-                  <!--data-indeterminate-position="eval#gex:EX_TemporalExtent/gex:extent/gml:TimePeriod/*/gml:beginPosition/@indeterminatePosition"/-->
+          <section name="gex:EX_TemporalExtent" >
+            <field name="Temporal extents" templateModeOnly="true"
+                   xpath="/mdb:MD_Metadata/mdb:identificationInfo/*/mri:extent/gex:EX_Extent/gex:temporalElement"
+                   or="temporalElement"
+                   in="/mdb:MD_Metadata/mdb:identificationInfo/*/mri:extent/gex:EX_Extent">
+              <template>
+                <values>
+                  <!-- -Need a * for gml:TimePeriodTypeCHOICE_ELEMENT2 added by editor enumerated tree
+                        but this will make the XSLT formatter fails. Using // to access the element in both case. -->
+                  <key label="beginPosition"
+                       xpath="gex:temporalElement/gex:EX_TemporalExtent/gex:extent/gml:TimePeriod//gml:beginPosition"
+                       use="gn-date-picker"
+                       tooltip="gex:temporalElement/gex:EX_TemporalExtent">
+                    <directiveAttributes
+                      data-tag-name="gml:beginPosition"/>
+                    <!--data-indeterminate-position="eval#gex:EX_TemporalExtent/gex:extent/gml:TimePeriod/*/gml:beginPosition/@indeterminatePosition"/-->
 
-                </key>
-                <key label="endPosition"
-                     xpath="gex:EX_TemporalExtent/gex:extent/gml:TimePeriod//gml:endPosition"
-                     use="gn-date-picker"
-                     tooltip="gex:extent|gex:EX_TemporalExtent">
-                  <directiveAttributes
-                    data-tag-name="gml:endPosition"/>
-                  <!--data-indeterminate-position="eval#gex:EX_TemporalExtent/gex:extent/gml:TimePeriod/*/gml:endPosition/@indeterminatePosition"/-->
+                  </key>
+                  <key label="endPosition"
+                       xpath="gex:temporalElement/gex:EX_TemporalExtent/gex:extent/gml:TimePeriod//gml:endPosition"
+                       use="gn-date-picker"
+                       tooltip="gex:extent|gex:EX_TemporalExtent">
+                    <directiveAttributes
+                      data-tag-name="gml:endPosition"/>
+                    <!--data-indeterminate-position="eval#gex:EX_TemporalExtent/gex:extent/gml:TimePeriod/*/gml:endPosition/@indeterminatePosition"/-->
 
 
-                </key>
-              </values>
-              <snippet>
-                <gex:temporalElement>
-                  <gex:EX_TemporalExtent>
-                    <gex:extent>
-                      <gml:TimePeriod>
-                        {{beginPosition}}
-                        {{endPosition}}
-                      </gml:TimePeriod>
-                    </gex:extent>
-                  </gex:EX_TemporalExtent>
-                </gex:temporalElement>
-              </snippet>
-            </template>
-          </field>
+                  </key>
+                </values>
+                <snippet>
+                  <gex:temporalElement>
+                    <gex:EX_TemporalExtent>
+                      <gex:extent>
+                        <gml:TimePeriod>
+                          {{beginPosition}}
+                          {{endPosition}}
+                        </gml:TimePeriod>
+                      </gex:extent>
+                    </gex:EX_TemporalExtent>
+                  </gex:temporalElement>
+                </snippet>
+              </template>
+
+            </field>
+          </section>
         </section>
         <section name="resolutionIcsm">
           <field xpath="/mdb:MD_Metadata/mdb:identificationInfo/*/mri:spatialResolution/mri:MD_Resolution" />
