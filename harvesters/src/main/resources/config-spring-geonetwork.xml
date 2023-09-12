@@ -30,7 +30,9 @@
 	">
 
   <bean id="Harvest" class="org.fao.geonet.component.harvester.csw.Harvest"/>
-  <bean id="HarvestManager" class="org.fao.geonet.kernel.harvest.HarvestManagerImpl"/>
+  <bean id="HarvestManager" class="org.fao.geonet.kernel.harvest.HarvestManagerImpl">
+    <property name="harvesterRefreshIntervalMinutes" value="2" />
+  </bean>
 
   <!-- The id of the beans is the same as the type in the harvester settings table and thus should not be changed -->
   <bean id="geonetwork" class="org.fao.geonet.kernel.harvest.harvester.geonet.GeonetHarvester"
