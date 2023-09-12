@@ -894,10 +894,8 @@
       </tab>
 
       <tab id="qualityLineageIcsm" mode="flat">
-        <section xpath="/mdb:MD_Metadata/mdb:resourceLineage" or="resourceLineage"
-                 in="/mdb:MD_Metadata">
-          <field xpath="/mdb:MD_Metadata/mdb:resourceLineage/mrl:LI_Lineage/mrl:statement" or="statement"
-            in="/mdb:MD_Metadata/mdb:resourceLineage/mrl:LI_Lineage"/>
+        <section xpath="/mdb:MD_Metadata/mdb:resourceLineage" >
+          <field xpath="/mdb:MD_Metadata/mdb:resourceLineage/mrl:LI_Lineage/mrl:statement"/>
           <field xpath="/mdb:MD_Metadata/mdb:resourceLineage/mrl:LI_Lineage/mrl:source/mrl:LI_Source/mrl:description"
                  or="description" in="/mdb:MD_Metadata/mdb:resourceLineage/mrl:LI_Lineage/mrl:source/mrl:LI_Source"/>
         </section>
@@ -963,7 +961,7 @@
                  in="/mdb:MD_Metadata" />
       </tab>
 
-      <tab id="distributionICSM" mode="flat">
+      <tab id="distributionICSM" mode="flat" displayIfRecord="count(mdb:MD_Metadata/mdb:identificationInfo/srv:SV_ServiceIdentification) = 0">
         <section name="Distributions">
           <field xpath="/mdb:MD_Metadata/mdb:distributionInfo"
                  del=".."/>

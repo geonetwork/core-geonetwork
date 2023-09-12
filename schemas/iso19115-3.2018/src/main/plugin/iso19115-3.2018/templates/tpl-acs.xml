@@ -749,30 +749,11 @@
       <mrl:statement>
         <gco:CharacterString>Information that lets the user understand how the dataset was created over time.</gco:CharacterString>
       </mrl:statement>
-      <mrl:scope>
-        <mcc:MD_Scope>
-          <mcc:level>
-            <mcc:MD_ScopeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_ScopeCode" codeListValue="dataset" />
-          </mcc:level>
-        </mcc:MD_Scope>
-      </mrl:scope>
       <mrl:source>
         <mrl:LI_Source>
           <mrl:description>
             <gco:CharacterString>Describe the Information Sources that went into building this dataset</gco:CharacterString>
           </mrl:description>
-          <mrl:sourceStep>
-            <mrl:LE_ProcessStep>
-              <mrl:description>
-                <gco:CharacterString>Data Collection</gco:CharacterString>
-              </mrl:description>
-              <mrl:stepDateTime>
-                <gml:TimeInstant gml:id="d62473e535a1053982">
-                  <gml:timePosition />
-                </gml:TimeInstant>
-              </mrl:stepDateTime>
-            </mrl:LE_ProcessStep>
-          </mrl:sourceStep>
         </mrl:LI_Source>
       </mrl:source>
     </mrl:LI_Lineage>

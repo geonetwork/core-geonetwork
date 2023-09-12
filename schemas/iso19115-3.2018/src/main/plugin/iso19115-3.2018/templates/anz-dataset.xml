@@ -394,13 +394,6 @@
       <mrl:statement>
         <gco:CharacterString>Information that lets the user understand how the dataset was created over time.</gco:CharacterString>
       </mrl:statement>
-      <mrl:scope>
-        <mcc:MD_Scope>
-          <mcc:level>
-            <mcc:MD_ScopeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_ScopeCode" codeListValue="dataset" />
-          </mcc:level>
-        </mcc:MD_Scope>
-      </mrl:scope>
       <mrl:source>
         <mrl:LI_Source>
           <mrl:description>
