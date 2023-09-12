@@ -97,7 +97,7 @@
   <mdb:metadataLinkage>
     <cit:CI_OnlineResource>
       <cit:linkage>
-        <gco:CharacterString>http://localhost:8080/geonetwork/srv/api/records/e4a23540-e93b-4f5c-bec5-bfcf6297f20f</gco:CharacterString>
+        <gco:CharacterString></gco:CharacterString>
       </cit:linkage>
       <cit:function>
         <cit:CI_OnLineFunctionCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_OnLineFunctionCode" codeListValue="completeMetadata" />
@@ -231,18 +231,14 @@
             </gex:EX_GeographicBoundingBox>
           </gex:geographicElement>
           <gex:temporalElement>
-            <gex:EX_SpatialTemporalExtent>
+            <gex:EX_TemporalExtent>
               <gex:extent>
-                <gml:TimeEdge gml:id="d789e345a1052958">
-                  <gml:start>
-                    <gml:TimeNode gml:id="d789e347a1052958" />
-                  </gml:start>
-                  <gml:end>
-                    <gml:TimeNode gml:id="d789e349a1052958" />
-                  </gml:end>
-                </gml:TimeEdge>
+                <gml:TimePeriod gml:id="d7013e216a1053982">
+                  <gml:beginPosition />
+                  <gml:endPosition />
+                </gml:TimePeriod>
               </gex:extent>
-            </gex:EX_SpatialTemporalExtent>
+            </gex:EX_TemporalExtent>
           </gex:temporalElement>
         </gex:EX_Extent>
       </mri:extent>
@@ -295,7 +291,7 @@
       <mri:descriptiveKeywords>
         <mri:MD_Keywords>
           <mri:keyword gco:nilReason="missing">
-            <gco:CharacterString />
+            <gcx:Anchor />
           </mri:keyword>
           <mri:type>
             <mri:MD_KeywordTypeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_KeywordTypeCode" codeListValue="theme" />
@@ -324,32 +320,12 @@
               </cit:identifier>
             </cit:CI_Citation>
           </mri:thesaurusName>
-          <mri:MD_KeywordClass>
-            <mri:className>
-              <gco:CharacterString>ISO19119 Service Type</gco:CharacterString>
-            </mri:className>
-            <mri:conceptIdentifier>
-              <mcc:URI>http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/humanInteractionService</mcc:URI>
-            </mri:conceptIdentifier>
-            <mri:ontology>
-              <cit:CI_Citation>
-                <cit:title>
-                  <gco:CharacterString>humanInteractionService</gco:CharacterString>
-                </cit:title>
-                <cit:onlineResource>
-                  <cit:linkage>
-                    <gco:CharacterString>http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/humanInteractionService</gco:CharacterString>
-                  </cit:linkage>
-                </cit:onlineResource>
-              </cit:CI_Citation>
-            </mri:ontology>
-          </mri:MD_KeywordClass>
         </mri:MD_Keywords>
       </mri:descriptiveKeywords>
       <mri:descriptiveKeywords>
         <mri:MD_Keywords>
           <mri:keyword gco:nilReason="missing">
-            <gco:CharacterString />
+            <gcx:Anchor/>
           </mri:keyword>
           <mri:type>
             <mri:MD_KeywordTypeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_KeywordTypeCode" codeListValue="service" />
@@ -378,32 +354,12 @@
               </cit:identifier>
             </cit:CI_Citation>
           </mri:thesaurusName>
-          <mri:MD_KeywordClass>
-            <mri:className>
-              <gco:CharacterString>Protocol Type</gco:CharacterString>
-            </mri:className>
-            <mri:conceptIdentifier>
-              <mcc:URI>http://pid.geoscience.gov.au/def/voc/ga/protocoltype</mcc:URI>
-            </mri:conceptIdentifier>
-            <mri:ontology>
-              <cit:CI_Citation>
-                <cit:title>
-                  <gco:CharacterString>protocoltype</gco:CharacterString>
-                </cit:title>
-                <cit:onlineResource>
-                  <cit:linkage>
-                    <gco:CharacterString>http://pid.geoscience.gov.au/def/voc/ga/protocoltype</gco:CharacterString>
-                  </cit:linkage>
-                </cit:onlineResource>
-              </cit:CI_Citation>
-            </mri:ontology>
-          </mri:MD_KeywordClass>
         </mri:MD_Keywords>
       </mri:descriptiveKeywords>
       <mri:descriptiveKeywords>
         <mri:MD_Keywords>
           <mri:keyword gco:nilReason="missing">
-            <gco:CharacterString />
+            <gcx:Anchor />
           </mri:keyword>
           <mri:type>
             <mri:MD_KeywordTypeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_KeywordTypeCode" codeListValue="place" />
@@ -432,26 +388,6 @@
               </cit:identifier>
             </cit:CI_Citation>
           </mri:thesaurusName>
-          <mri:MD_KeywordClass>
-            <mri:className>
-              <gco:CharacterString>Continents, countries, sea regions of the world.</gco:CharacterString>
-            </mri:className>
-            <mri:conceptIdentifier>
-              <mcc:URI>http://geonetwork-opensource.org/thesaurus/naturalearth-and-seavox</mcc:URI>
-            </mri:conceptIdentifier>
-            <mri:ontology>
-              <cit:CI_Citation>
-                <cit:title>
-                  <gco:CharacterString>naturalearth-and-seavox</gco:CharacterString>
-                </cit:title>
-                <cit:onlineResource>
-                  <cit:linkage>
-                    <gco:CharacterString>http://geonetwork-opensource.org/thesaurus/naturalearth-and-seavox</gco:CharacterString>
-                  </cit:linkage>
-                </cit:onlineResource>
-              </cit:CI_Citation>
-            </mri:ontology>
-          </mri:MD_KeywordClass>
         </mri:MD_Keywords>
       </mri:descriptiveKeywords>
       <mri:resourceConstraints>

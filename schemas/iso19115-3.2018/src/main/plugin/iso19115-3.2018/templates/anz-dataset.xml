@@ -286,26 +286,6 @@
               </cit:identifier>
             </cit:CI_Citation>
           </mri:thesaurusName>
-          <mri:MD_KeywordClass>
-            <mri:className>
-              <gco:CharacterString>Continents, countries, sea regions of the world.</gco:CharacterString>
-            </mri:className>
-            <mri:conceptIdentifier>
-              <mcc:URI>http://geonetwork-opensource.org/thesaurus/naturalearth-and-seavox</mcc:URI>
-            </mri:conceptIdentifier>
-            <mri:ontology>
-              <cit:CI_Citation>
-                <cit:title>
-                  <gco:CharacterString>naturalearth-and-seavox</gco:CharacterString>
-                </cit:title>
-                <cit:onlineResource>
-                  <cit:linkage>
-                    <gco:CharacterString>http://geonetwork-opensource.org/thesaurus/naturalearth-and-seavox</gco:CharacterString>
-                  </cit:linkage>
-                </cit:onlineResource>
-              </cit:CI_Citation>
-            </mri:ontology>
-          </mri:MD_KeywordClass>
         </mri:MD_Keywords>
       </mri:descriptiveKeywords>
       <mri:resourceConstraints>
