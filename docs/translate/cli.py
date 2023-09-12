@@ -7,10 +7,15 @@ import json
 import os
 import shutil
 import typer
+
+from pathlib import Path
+from typing import List
 from typing_extensions import Annotated
+
 
 import translate.translate
 from translate import __app_name__, __version__
+from .translate import collect_paths
 from .translate import convert_rst
 from .translate import convert_markdown
 from .translate import convert_html
@@ -46,8 +51,21 @@ def french(
     print(md_fr,"\n")
 
 @app.command()
+def collect(
+        rst_path: Annotated[List[str], typer.Argument(help="path to rst file(s)")]
+    ):
+    """
+    List all rst files for conversion.
+    """
+    collected = collect_paths(rst_path,'rst')
+
+    for file in collected:
+       print(file)
+    print()
+
+@app.command()
 def rst(
-        rst_file: Annotated[str, typer.Argument(help="RST file path")]
+        rst_path: Annotated[List[str], typer.Argument(help="path to rst file(s)")]
     ):
     """
     Convert rst file to markdown using pandoc.
@@ -58,8 +76,9 @@ def rst(
     Manual cleanup required for:
     figure
     """
-    file = convert_rst(rst_file)
-    print(file,"\n")
+    for rst_file in collect_paths(rst_path,'rst'):
+      md_file = convert_rst(rst_file)
+      print(md_file,"\n")
 
 @app.command()
 def internal_html(

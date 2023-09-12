@@ -1,5 +1,6 @@
 import deepl
 import errno
+import glob
 import os
 import pkgutil
 import re
@@ -14,6 +15,35 @@ md_extensions_to = 'markdown+definition_lists+fenced_divs+backtick_code_blocks+f
 
 # "gfm+definition_lists+fenced_divs+pipe_tables",
 md_extensions_from = 'markdown+definition_lists+fenced_divs+backtick_code_blocks+fenced_code_attributes+pipe_tables'
+
+def collect_path(path: str, extension: str) -> list[str]:
+    """
+    Collect all the files with an extension from a path.
+    If the path is a single file the extension should match.
+    """
+    files = []
+
+    if '*' in path:
+      for file in glob.glob(path):
+         if file.endswith('.'+extension):
+           files.append(file)
+    else:
+      if path.endswith('.'+extension):
+        files.append(path)
+
+    return files
+
+def collect_paths(paths: list[str], extension: str) -> list[str]:
+    """
+    Collect all the files with an extension from a list of paths.
+    If the path is a single file the extension should match.
+    """
+    files = []
+
+    for path in paths:
+       files.extend( collect_path(path,extension) )
+
+    return files
 
 def load_auth() -> str:
     """
@@ -47,20 +77,23 @@ def convert_rst(rst_file: str) -> str:
     if rst_file[-4:] != '.rst':
        raise FileNotFoundError(errno.ENOENT, f"Rich-structued-text 'rst' extension required:", rst_file)
 
+    # file we are generating
+    md_file = rst_file.replace(".txt",".md")
+    md_file = md_file.replace(".rst",".md")
+
+    # temp file for processing
     convert_folder = config['convert_folder']
+    md_tmp_file = re.sub("^(help|manual)/docs/",convert_folder+'/', rst_file)
+    md_tmp_file = md_tmp_file.replace(".txt",".md")
+    md_tmp_file = md_tmp_file.replace(".rst",".md")
+    md_tmp_file = md_tmp_file.replace(".md",".tmp.md")
 
-    path = re.sub("^docs/",convert_folder+'/', rst_file)
-    path = path.replace(".txt",".md")
-    path = path.replace(".rst",".md")
-    md_file = path
-    md_tmp_file = path.replace(".md",".tmp.md")
-
-    convert_directory = os.path.dirname(path)
+    convert_directory = os.path.dirname(md_tmp_file)
     if not os.path.exists(convert_directory):
        print("Conversion directory:",convert_directory)
        os.makedirs(convert_directory)
 
-    rst_prep = re.sub(r"\.md",r".prep.rst", path)
+    rst_prep = re.sub(r"\.md",r".prep.rst", md_tmp_file)
 
     print("Preprocessing ",rst_file," to ",rst_prep)
     preprocess_rst(rst_file,rst_prep)
@@ -130,16 +163,10 @@ def preprocess_rst(rst_file:str, rst_prep: str) -> str:
         flags=re.MULTILINE
     )
 
-    # DO THIS LAST: `some text` should use ``some text``
+    # very simple literals: `some text` should use ``some text``
     clean = re.sub(
-        r"(\s)`(.*)([^`])`([^`])",
+        r"(\s)`(\w|\s)*([^`])`([^`])",
         r"\1``\2\3``\4",
-        clean,
-        flags=re.MULTILINE
-    )
-    clean = re.sub(
-        r"``(.*)``_",
-        r"`\1`_",
         clean,
         flags=re.MULTILINE
     )
@@ -161,6 +188,30 @@ def postprocess_rst_markdown(md_file: str, md_clean: str):
     data = re.sub(
         r'`(.*)`{\.interpreted-text role="ref"}',
         r'[\1](\1.md)',
+        data,
+        flags=re.MULTILINE
+    )
+    data = re.sub(
+        r"\\'",
+        r"'",
+        data,
+        flags=re.MULTILINE
+    )
+    data = re.sub(
+        r'\\"',
+        r'"',
+        data,
+        flags=re.MULTILINE
+    )
+    data = re.sub(
+        r'\\\[',
+        r'[',
+        data,
+        flags=re.MULTILINE
+    )
+    data = re.sub(
+        r'\\\]',
+        r']',
         data,
         flags=re.MULTILINE
     )
