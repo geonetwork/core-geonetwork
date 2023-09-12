@@ -54,7 +54,7 @@ This topic describes how to sign in using your admin login details and load temp
 
 5.  From the top menu, click Search to view the examples:
 
-> ![](../../install-guide/img/once-samples-are-loaded.png)
+    ![](../../install-guide/img/once-samples-are-loaded.png)
 
 ## Searching information
 
