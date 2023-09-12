@@ -5,7 +5,7 @@
 * [User-guide](user-guide/index.md)
 * Administration
 * Maintainer
-* API
+* [API](api/index.md)
 * Contributing
 * Customization
 * Tutorials

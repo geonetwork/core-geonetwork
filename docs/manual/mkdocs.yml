@@ -166,6 +166,15 @@ nav:
   - 'User Guide':
     - 'user-guide/index.md'
     - 'user-guide/quick-start/index.md'
+  - 'API':
+    - 'api/index.md'
+    - 'api/the-geonetwork-api.md'
+    - 'api/search.md'
+    - 'api/csw.md'
+    - 'api/opensearch.md'
+    - 'api/rdf-dcat.md'
+    - 'api/oai-pmh.md'
+    - 'api/z39-50.md'
   - 'Development':
     - 'devel/index.md'
     - 'devel/docs/docs.md'
