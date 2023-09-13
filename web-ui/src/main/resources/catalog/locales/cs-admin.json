@@ -1303,8 +1303,6 @@
     "ui-logoInHeaderPosition-help": "Umístění loga v záhlaví",
     "ui-isHeaderFixed": "Opravit záhlaví",
     "ui-isHeaderFixed-help": "Záhlaví je pevné a zůstává v horní části stránky. Upozornění: Pokud je také vybrána možnost [Zobrazit logo v záhlaví], záhlaví potřebuje nastavenou výšku. To lze provést v části  [CSS & Style] > [Header] > [Height]",
-    "ui-isMenubarAccessible": "Zpřístupnit nabídkovou lištu",
-    "ui-isMenubarAccessible-help": "Položku nabídky otevřete tak, aby byla otevřená kliknutím, nikoli kurzorem. To znamená, že položky nabídky budou přístupné pomocí klávesnice.",
     "ui-sortKeywordsAlphabetically": "Seřaďte klíčová slova / kategorie / kategorie témat podle abecedy",
     "ui-sortKeywordsAlphabetically-help": "Zobrazte klíčová slova / kategorie / kategorie témat seřazené abecedně. Pokud není povoleno, zobrazí se v pořadí, které je přiřazeno k metadatům.",
     "left": "Vlevo",
