@@ -39,21 +39,21 @@ import javax.sql.DataSource;
 import javax.xml.transform.TransformerFactory;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.stream.Collectors;
 
-/**
- * Created by francois on 04/06/16.
- */
 public class SiteInformation {
     final Properties properties = System.getProperties();
-    private Map<String, String> catProperties = new HashMap<>();
-    private Map<String, String> indexProperties = new HashMap<>();
-    private Map<String, String> systemProperties = new HashMap<>();
-    private Map<String, String> envProperties = new HashMap<>();
-    private Map<String, String> databaseProperties = new HashMap<>();
-    private Map<String, String> versionProperties = new HashMap<>();
+    private Map<String, String> catProperties = new LinkedHashMap<>();
+    private Map<String, String> indexProperties = new LinkedHashMap<>();
+    private Map<String, String> systemProperties = new LinkedHashMap<>();
+    private Map<String, String> envProperties = new LinkedHashMap<>();
+    private Map<String, String> databaseProperties = new LinkedHashMap<>();
+    private Map<String, String> versionProperties = new LinkedHashMap<>();
 
     public SiteInformation(final ServiceContext context, final GeonetContext gc) {
         if (context.getUserSession().isAuthenticated()) {
@@ -175,6 +175,18 @@ public class SiteInformation {
         long totMem = Runtime.getRuntime().totalMemory() / 1024;
         systemProperties.put("mem.free", "" + freeMem);
         systemProperties.put("mem.total", "" + totMem);
+
+
+        // hostname could be present in various places, not guaranteed to be there
+        Set<String> hostNames = new HashSet<>();
+        try {
+            hostNames.add(InetAddress.getLocalHost().getHostName());
+        } catch (UnknownHostException ignored) {
+        }
+        hostNames.add(System.getenv("HOSTNAME"));
+        hostNames.add(System.getenv("COMPUTERNAME"));
+        systemProperties.put("host.name",
+            hostNames.stream().filter(s -> s != null && !s.isBlank()).collect(Collectors.joining(", ")));
 
     }
 
