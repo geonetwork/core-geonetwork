@@ -323,206 +323,241 @@
                </mcc:linkage>
             </mcc:MD_BrowseGraphic>
          </mri:graphicOverview>
-         <mri:descriptiveKeywords>
-            <mri:MD_Keywords>
-               <mri:keyword gco:nilReason="missing">
-                  <gco:CharacterString/>
-               </mri:keyword>
-               <mri:type>
-                  <mri:MD_KeywordTypeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_KeywordTypeCode"
-                                          codeListValue="theme"/>
-               </mri:type>
-               <mri:thesaurusName>
-                  <cit:CI_Citation>
-                     <cit:title>
-                        <gcx:Anchor xlink:href="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/humanInteractionService">ISO19119 Service Type</gcx:Anchor>
-                     </cit:title>
-                     <cit:date>
-                        <cit:CI_Date>
-                           <cit:date>
-                              <gco:Date>2021-04-26</gco:Date>
-                           </cit:date>
-                           <cit:dateType>
-                              <cit:CI_DateTypeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_DateTypeCode"
-                                                   codeListValue="publication"/>
-                           </cit:dateType>
-                        </cit:CI_Date>
-                     </cit:date>
-                     <cit:identifier>
-                        <mcc:MD_Identifier>
-                           <mcc:code>
-                              <gcx:Anchor xlink:href="http://localhost:8080/geonetwork/srv/eng/thesaurus.download?ref=external.theme.SpatialDataServiceCategory-2021-03-11-3-2">geonetwork.thesaurus.external.theme.SpatialDataServiceCategory-2021-03-11-3-2</gcx:Anchor>
-                           </mcc:code>
-                        </mcc:MD_Identifier>
-                     </cit:identifier>
-                  </cit:CI_Citation>
-               </mri:thesaurusName>
-               <mri:MD_KeywordClass>
-                  <mri:className>
-                     <gco:CharacterString>ISO19119 Service Type</gco:CharacterString>
-                  </mri:className>
-                  <mri:conceptIdentifier>
-                     <mcc:URI>http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/humanInteractionService</mcc:URI>
-                  </mri:conceptIdentifier>
-                  <mri:ontology>
-                     <cit:CI_Citation>
-                        <cit:title>
-                           <gco:CharacterString>humanInteractionService</gco:CharacterString>
-                        </cit:title>
-                        <cit:onlineResource>
-                           <cit:linkage>
-                              <gco:CharacterString>http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/humanInteractionService</gco:CharacterString>
-                           </cit:linkage>
-                        </cit:onlineResource>
-                     </cit:CI_Citation>
-                  </mri:ontology>
-               </mri:MD_KeywordClass>
-            </mri:MD_Keywords>
-         </mri:descriptiveKeywords>
-         <mri:descriptiveKeywords>
-            <mri:MD_Keywords>
-               <mri:keyword gco:nilReason="missing">
-                  <gcx:Anchor/>
-               </mri:keyword>
-               <mri:type>
-                  <mri:MD_KeywordTypeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_KeywordTypeCode"
-                                          codeListValue="service"/>
-               </mri:type>
-               <mri:thesaurusName>
-                  <cit:CI_Citation>
-                     <cit:title>
-                        <gcx:Anchor xlink:href="http://pid.geoscience.gov.au/def/voc/ga/servicetype">Service Keywords</gcx:Anchor>
-                     </cit:title>
-                     <cit:date>
-                        <cit:CI_Date>
-                           <cit:date>
-                              <gco:Date>2021-06-14</gco:Date>
-                           </cit:date>
-                           <cit:dateType>
-                              <cit:CI_DateTypeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_DateTypeCode"
-                                                   codeListValue="publication"/>
-                           </cit:dateType>
-                        </cit:CI_Date>
-                     </cit:date>
-                     <cit:identifier>
-                        <mcc:MD_Identifier>
-                           <mcc:code>
-                              <gcx:Anchor xlink:href="http://localhost:8080/geonetwork/srv/eng/thesaurus.download?ref=external.service.service keywords">geonetwork.thesaurus.external.service.service keywords</gcx:Anchor>
-                           </mcc:code>
-                        </mcc:MD_Identifier>
-                     </cit:identifier>
-                  </cit:CI_Citation>
-               </mri:thesaurusName>
-            </mri:MD_Keywords>
-         </mri:descriptiveKeywords>
-         <mri:descriptiveKeywords>
-            <mri:MD_Keywords>
-               <mri:keyword gco:nilReason="missing">
-                  <gcx:Anchor/>
-               </mri:keyword>
-               <mri:type>
-                  <mri:MD_KeywordTypeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_KeywordTypeCode"
-                                          codeListValue="subTopicCategory"/>
-               </mri:type>
-               <mri:thesaurusName>
-                  <cit:CI_Citation>
-                     <cit:title>
-                        <gcx:Anchor xlink:href="http://custom.shared.obj.ch/concept#">Hazard Type</gcx:Anchor>
-                     </cit:title>
-                     <cit:date>
-                        <cit:CI_Date>
-                           <cit:date>
-                              <gco:Date>2021-04-13</gco:Date>
-                           </cit:date>
-                           <cit:dateType>
-                              <cit:CI_DateTypeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_DateTypeCode"
-                                                   codeListValue="publication"/>
-                           </cit:dateType>
-                        </cit:CI_Date>
-                     </cit:date>
-                     <cit:identifier>
-                        <mcc:MD_Identifier>
-                           <mcc:code>
-                              <gcx:Anchor xlink:href="http://localhost:8080/geonetwork/srv/eng/thesaurus.download?ref=local.subTopicCategory.hazards">geonetwork.thesaurus.local.subTopicCategory.hazards</gcx:Anchor>
-                           </mcc:code>
-                        </mcc:MD_Identifier>
-                     </cit:identifier>
-                  </cit:CI_Citation>
-               </mri:thesaurusName>
-            </mri:MD_Keywords>
-         </mri:descriptiveKeywords>
-         <mri:descriptiveKeywords>
-            <mri:MD_Keywords>
-               <mri:keyword gco:nilReason="missing">
-                  <gcx:Anchor/>
-               </mri:keyword>
-               <mri:type>
-                  <mri:MD_KeywordTypeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_KeywordTypeCode"
-                                          codeListValue="place"/>
-               </mri:type>
-               <mri:thesaurusName>
-                  <cit:CI_Citation>
-                     <cit:title>
-                        <gcx:Anchor xlink:href="http://geonetwork-opensource.org/thesaurus/naturalearth-and-seavox">Continents, countries, sea regions of the world.</gcx:Anchor>
-                     </cit:title>
-                     <cit:date>
-                        <cit:CI_Date>
-                           <cit:date>
-                              <gco:Date>2015-07-17</gco:Date>
-                           </cit:date>
-                           <cit:dateType>
-                              <cit:CI_DateTypeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_DateTypeCode"
-                                                   codeListValue="publication"/>
-                           </cit:dateType>
-                        </cit:CI_Date>
-                     </cit:date>
-                     <cit:identifier>
-                        <mcc:MD_Identifier>
-                           <mcc:code>
-                              <gcx:Anchor xlink:href="http://localhost:8080/geonetwork/srv/eng/thesaurus.download?ref=external.place.regions">geonetwork.thesaurus.external.place.regions</gcx:Anchor>
-                           </mcc:code>
-                        </mcc:MD_Identifier>
-                     </cit:identifier>
-                  </cit:CI_Citation>
-               </mri:thesaurusName>
-            </mri:MD_Keywords>
-         </mri:descriptiveKeywords>
-         <mri:descriptiveKeywords>
-            <mri:MD_Keywords>
-               <mri:keyword gco:nilReason="missing">
-                  <gcx:Anchor/>
-               </mri:keyword>
-               <mri:type>
-                  <mri:MD_KeywordTypeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_KeywordTypeCode"
-                                          codeListValue="process"/>
-               </mri:type>
-               <mri:thesaurusName>
-                  <cit:CI_Citation>
-                     <cit:title>
-                        <gcx:Anchor xlink:href="http://custom.shared.obj.ch/concept#">CAP-AU Compliance</gcx:Anchor>
-                     </cit:title>
-                     <cit:date>
-                        <cit:CI_Date>
-                           <cit:date>
-                              <gco:Date>2021-05-20</gco:Date>
-                           </cit:date>
-                           <cit:dateType>
-                              <cit:CI_DateTypeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_DateTypeCode"
-                                                   codeListValue="publication"/>
-                           </cit:dateType>
-                        </cit:CI_Date>
-                     </cit:date>
-                     <cit:identifier>
-                        <mcc:MD_Identifier>
-                           <mcc:code>
-                              <gcx:Anchor xlink:href="http://localhost:8080/geonetwork/srv/eng/thesaurus.download?ref=external.process.capau">geonetwork.thesaurus.external.process.capau</gcx:Anchor>
-                           </mcc:code>
-                        </mcc:MD_Identifier>
-                     </cit:identifier>
-                  </cit:CI_Citation>
-               </mri:thesaurusName>
-            </mri:MD_Keywords>
-         </mri:descriptiveKeywords>
+        <mri:descriptiveKeywords>
+          <mri:MD_Keywords>
+            <mri:keyword gco:nilReason="missing">
+              <gcx:Anchor/>
+            </mri:keyword>
+            <mri:type>
+              <mri:MD_KeywordTypeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_KeywordTypeCode"
+                                      codeListValue="place"/>
+            </mri:type>
+            <mri:thesaurusName>
+              <cit:CI_Citation>
+                <cit:title>
+                  <gcx:Anchor xlink:href="http://geonetwork-opensource.org/thesaurus/naturalearth-and-seavox">Continents, countries, sea regions of the world.</gcx:Anchor>
+                </cit:title>
+                <cit:date>
+                  <cit:CI_Date>
+                    <cit:date>
+                      <gco:Date>2015-01-01</gco:Date>
+                    </cit:date>
+                    <cit:dateType>
+                      <cit:CI_DateTypeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_DateTypeCode"
+                                           codeListValue="publication"/>
+                    </cit:dateType>
+                  </cit:CI_Date>
+                </cit:date>
+                <cit:date>
+                  <cit:CI_Date>
+                    <cit:date>
+                      <gco:Date>2015-07-17</gco:Date>
+                    </cit:date>
+                    <cit:dateType>
+                      <cit:CI_DateTypeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_DateTypeCode"
+                                           codeListValue="publication"/>
+                    </cit:dateType>
+                  </cit:CI_Date>
+                </cit:date>
+                <cit:identifier>
+                  <mcc:MD_Identifier>
+                    <mcc:code>
+                      <gcx:Anchor xlink:href="http://localhost:8080/geonetwork/srv/api/registries/vocabularies/external.place.regions">geonetwork.thesaurus.external.place.regions</gcx:Anchor>
+                    </mcc:code>
+                  </mcc:MD_Identifier>
+                </cit:identifier>
+              </cit:CI_Citation>
+            </mri:thesaurusName>
+          </mri:MD_Keywords>
+        </mri:descriptiveKeywords>
+        <mri:descriptiveKeywords>
+          <mri:MD_Keywords>
+            <mri:keyword gco:nilReason="missing">
+              <gcx:Anchor/>
+            </mri:keyword>
+            <mri:type>
+              <mri:MD_KeywordTypeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_KeywordTypeCode"
+                                      codeListValue="process"/>
+            </mri:type>
+            <mri:thesaurusName>
+              <cit:CI_Citation>
+                <cit:title>
+                  <gcx:Anchor xlink:href="http://custom.shared.obj.ch/concept#">CAP-AU Compliance</gcx:Anchor>
+                </cit:title>
+                <cit:date>
+                  <cit:CI_Date>
+                    <cit:date>
+                      <gco:Date>2023-09-13</gco:Date>
+                    </cit:date>
+                    <cit:dateType>
+                      <cit:CI_DateTypeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_DateTypeCode"
+                                           codeListValue="publication"/>
+                    </cit:dateType>
+                  </cit:CI_Date>
+                </cit:date>
+                <cit:date>
+                  <cit:CI_Date>
+                    <cit:date>
+                      <gco:Date>2023-09-13</gco:Date>
+                    </cit:date>
+                    <cit:dateType>
+                      <cit:CI_DateTypeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_DateTypeCode"
+                                           codeListValue="publication"/>
+                    </cit:dateType>
+                  </cit:CI_Date>
+                </cit:date>
+                <cit:identifier>
+                  <mcc:MD_Identifier>
+                    <mcc:code>
+                      <gcx:Anchor xlink:href="http://localhost:8080/geonetwork/srv/api/registries/vocabularies/external.process.capau">geonetwork.thesaurus.external.process.capau</gcx:Anchor>
+                    </mcc:code>
+                  </mcc:MD_Identifier>
+                </cit:identifier>
+              </cit:CI_Citation>
+            </mri:thesaurusName>
+          </mri:MD_Keywords>
+        </mri:descriptiveKeywords>
+        <mri:descriptiveKeywords>
+          <mri:MD_Keywords>
+            <mri:keyword gco:nilReason="missing">
+              <gcx:Anchor/>
+            </mri:keyword>
+            <mri:type>
+              <mri:MD_KeywordTypeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_KeywordTypeCode"
+                                      codeListValue="service"/>
+            </mri:type>
+            <mri:thesaurusName>
+              <cit:CI_Citation>
+                <cit:title>
+                  <gcx:Anchor xlink:href="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/humanInteractionService">ISO19119 Service Type</gcx:Anchor>
+                </cit:title>
+                <cit:date>
+                  <cit:CI_Date>
+                    <cit:date>
+                      <gco:Date>2023-09-13</gco:Date>
+                    </cit:date>
+                    <cit:dateType>
+                      <cit:CI_DateTypeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_DateTypeCode"
+                                           codeListValue="publication"/>
+                    </cit:dateType>
+                  </cit:CI_Date>
+                </cit:date>
+                <cit:date>
+                  <cit:CI_Date>
+                    <cit:date>
+                      <gco:Date>2023-09-13</gco:Date>
+                    </cit:date>
+                    <cit:dateType>
+                      <cit:CI_DateTypeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_DateTypeCode"
+                                           codeListValue="publication"/>
+                    </cit:dateType>
+                  </cit:CI_Date>
+                </cit:date>
+                <cit:identifier>
+                  <mcc:MD_Identifier>
+                    <mcc:code>
+                      <gcx:Anchor xlink:href="http://localhost:8080/geonetwork/srv/api/registries/vocabularies/external.service.ISO19119ServiceType">geonetwork.thesaurus.external.service.ISO19119ServiceType</gcx:Anchor>
+                    </mcc:code>
+                  </mcc:MD_Identifier>
+                </cit:identifier>
+              </cit:CI_Citation>
+            </mri:thesaurusName>
+          </mri:MD_Keywords>
+        </mri:descriptiveKeywords>
+        <mri:descriptiveKeywords>
+          <mri:MD_Keywords>
+            <mri:keyword gco:nilReason="missing">
+              <gcx:Anchor/>
+            </mri:keyword>
+            <mri:type>
+              <mri:MD_KeywordTypeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_KeywordTypeCode"
+                                      codeListValue="theme"/>
+            </mri:type>
+            <mri:thesaurusName>
+              <cit:CI_Citation>
+                <cit:title>
+                  <gcx:Anchor xlink:href="http://custom.shared.obj.ch/concept#">Hazard Type</gcx:Anchor>
+                </cit:title>
+                <cit:date>
+                  <cit:CI_Date>
+                    <cit:date>
+                      <gco:Date>2023-09-13</gco:Date>
+                    </cit:date>
+                    <cit:dateType>
+                      <cit:CI_DateTypeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_DateTypeCode"
+                                           codeListValue="publication"/>
+                    </cit:dateType>
+                  </cit:CI_Date>
+                </cit:date>
+                <cit:date>
+                  <cit:CI_Date>
+                    <cit:date>
+                      <gco:Date>2023-09-13</gco:Date>
+                    </cit:date>
+                    <cit:dateType>
+                      <cit:CI_DateTypeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_DateTypeCode"
+                                           codeListValue="publication"/>
+                    </cit:dateType>
+                  </cit:CI_Date>
+                </cit:date>
+                <cit:identifier>
+                  <mcc:MD_Identifier>
+                    <mcc:code>
+                      <gcx:Anchor xlink:href="http://localhost:8080/geonetwork/srv/api/registries/vocabularies/external.theme.hazardtype">geonetwork.thesaurus.external.theme.hazardtype</gcx:Anchor>
+                    </mcc:code>
+                  </mcc:MD_Identifier>
+                </cit:identifier>
+              </cit:CI_Citation>
+            </mri:thesaurusName>
+          </mri:MD_Keywords>
+        </mri:descriptiveKeywords>
+        <mri:descriptiveKeywords>
+          <mri:MD_Keywords>
+            <mri:keyword gco:nilReason="missing">
+              <gcx:Anchor/>
+            </mri:keyword>
+            <mri:type>
+              <mri:MD_KeywordTypeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_KeywordTypeCode"
+                                      codeListValue="service"/>
+            </mri:type>
+            <mri:thesaurusName>
+              <cit:CI_Citation>
+                <cit:title>
+                  <gcx:Anchor xlink:href="http://pid.geoscience.gov.au/def/voc/ga/servicetype">Service Keywords</gcx:Anchor>
+                </cit:title>
+                <cit:date>
+                  <cit:CI_Date>
+                    <cit:date>
+                      <gco:Date>2023-09-13</gco:Date>
+                    </cit:date>
+                    <cit:dateType>
+                      <cit:CI_DateTypeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_DateTypeCode"
+                                           codeListValue="publication"/>
+                    </cit:dateType>
+                  </cit:CI_Date>
+                </cit:date>
+                <cit:date>
+                  <cit:CI_Date>
+                    <cit:date>
+                      <gco:Date>2023-09-13</gco:Date>
+                    </cit:date>
+                    <cit:dateType>
+                      <cit:CI_DateTypeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_DateTypeCode"
+                                           codeListValue="publication"/>
+                    </cit:dateType>
+                  </cit:CI_Date>
+                </cit:date>
+                <cit:identifier>
+                  <mcc:MD_Identifier>
+                    <mcc:code>
+                      <gcx:Anchor xlink:href="http://localhost:8080/geonetwork/srv/api/registries/vocabularies/external.service.service keywords">geonetwork.thesaurus.external.service.service keywords</gcx:Anchor>
+                    </mcc:code>
+                  </mcc:MD_Identifier>
+                </cit:identifier>
+              </cit:CI_Citation>
+            </mri:thesaurusName>
+          </mri:MD_Keywords>
+        </mri:descriptiveKeywords>
          <mri:resourceConstraints>
             <mco:MD_Constraints>
                <mco:useLimitation gco:nilReason="missing">

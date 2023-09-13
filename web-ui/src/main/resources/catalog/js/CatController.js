@@ -705,7 +705,7 @@
             downloadFormatter: [
               {
                 label: "exportMEF",
-                url: "/formatters/zip?withRelated=false",
+                url: "/formatters/zip?withRelated=true",
                 class: "fa-file-zip-o"
               },
               {

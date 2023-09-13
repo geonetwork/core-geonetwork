@@ -257,7 +257,7 @@
       <mri:descriptiveKeywords>
         <mri:MD_Keywords>
           <mri:keyword gco:nilReason="missing">
-            <gco:CharacterString />
+            <gcx:Anchor />
           </mri:keyword>
           <mri:type>
             <mri:MD_KeywordTypeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_KeywordTypeCode" codeListValue="place" />
