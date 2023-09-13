@@ -41,26 +41,30 @@ theme:
 plugins:
   - search
   - i18n:
-      default_language: en
       docs_structure: suffix
-      search_reconfigure: true
-      material_alternate: true
       languages:
-        en:
-          default: true
+        - locale: en
           name: English
           build: true
+          default: true
           site_name: 'GeoNetwork (en)'
-        fr:
+        - locale: fr
           name: Français
           build: true
           site_name: 'GeoNetwork (fr)'
-      nav_translations:
-        fr:
-          Home: Home
-          Search: Search
-          Record: Record
-          Map: Map
+          nav_translations:
+            Home: Home
+            Search: Search
+            Record: Record
+            Map: Map
+  - exclude:
+      glob:
+        - 'overview/change-log/version*'
+        - 'annexes/gallery/README.md'
+        # in progress
+        - 'administrator-guide/managing-metadata-standards/configure-validation.md'
+  - include-markdown:
+      base_path: 'docs'
 
 markdown_extensions:
   - admonition
@@ -88,8 +92,6 @@ markdown_extensions:
   - pymdownx.tabbed:
       alternate_style: true
   - tables
-  - markdown_include.include:
-      base_path: docs
 
 extra:
   social:
@@ -109,60 +111,9 @@ nav:
     - 'overview/authors.md'
     - 'Changelog':
       - 'overview/change-log/index.md'
-      - 'overview/change-log/version-4.2.5.md'
-      - 'overview/change-log/version-4.2.4.md'
-      - 'overview/change-log/version-4.2.3.md'
-      - 'overview/change-log/version-4.2.2.md'
-      - 'overview/change-log/version-4.2.1.md'
-      - 'overview/change-log/version-4.2.0.md'
-      - 'overview/change-log/version-4.0.6.md'
-      - 'overview/change-log/version-4.0.5.md'
-      - 'overview/change-log/version-4.0.4.md'
-      - 'overview/change-log/version-4.0.3.md'
-      - 'overview/change-log/version-4.0.2.md'
-      - 'overview/change-log/version-4.0.1.md'
-      - 'overview/change-log/version-4.0.0.md'
-      - 'overview/change-log/version-4.0.0-alpha.2.md'
-      - 'overview/change-log/version-4.0.0-alpha.1.md'
-      - 'overview/change-log/version-3.12.9.md'
-      - 'overview/change-log/version-3.12.8.md'
-      - 'overview/change-log/version-3.12.7.md'
-      - 'overview/change-log/version-3.12.6.md'
-      - 'overview/change-log/version-3.12.5.md'
-      - 'overview/change-log/version-3.12.4.md'
-      - 'overview/change-log/version-3.12.3.md'
-      - 'overview/change-log/version-3.12.2.md'
-      - 'overview/change-log/version-3.12.1.md'
-      - 'overview/change-log/version-3.12.0.md'
-      - 'overview/change-log/version-3.10.10.md'
-      - 'overview/change-log/version-3.10.9.md'
-      - 'overview/change-log/version-3.10.8.md'
-      - 'overview/change-log/version-3.10.7.md'
-      - 'overview/change-log/version-3.10.6.md'
-      - 'overview/change-log/version-3.10.5.md'
-      - 'overview/change-log/version-3.10.4.md'
-      - 'overview/change-log/version-3.10.3.md'
-      - 'overview/change-log/version-3.10.2.md'
-      - 'overview/change-log/version-3.10.1.md'
-      - 'overview/change-log/version-3.10.0.md'
-      - 'overview/change-log/version-3.8.3.md'
-      - 'overview/change-log/version-3.8.2.md'
-      - 'overview/change-log/version-3.8.1.md'
-      - 'overview/change-log/version-3.8.0.md'
-      - 'overview/change-log/version-3.6.0.md'
-      - 'overview/change-log/version-3.4.4.md'
-      - 'overview/change-log/version-3.4.3.md'
-      - 'overview/change-log/version-3.4.2.md'
-      - 'overview/change-log/version-3.4.1.md'
-      - 'overview/change-log/version-3.4.0.md'
-      - 'overview/change-log/version-3.2.2.md'
-      - 'overview/change-log/version-3.2.1.md'
-      - 'overview/change-log/version-3.2.0.md'
-      - 'overview/change-log/version-3.0.4.md'
-      - 'overview/change-log/version-3.0.3.md'
-      - 'overview/change-log/version-3.0.2.md'
-      - 'overview/change-log/version-3.0.1.md'
-      - 'overview/change-log/version-3.0.0.md'
+      - 'overview/change-log/stable.md'
+      - 'overview/change-log/maintenance.md'
+      - 'overview/change-log/archive.md'
   - 'User Guide':
     - 'user-guide/index.md'
     - 'user-guide/quick-start/index.md'
@@ -178,3 +129,4 @@ nav:
   - 'Development':
     - 'devel/index.md'
     - 'devel/docs/docs.md'
+
