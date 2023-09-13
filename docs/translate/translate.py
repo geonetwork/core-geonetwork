@@ -16,6 +16,41 @@ md_extensions_to = 'markdown+definition_lists+fenced_divs+backtick_code_blocks+f
 # "gfm+definition_lists+fenced_divs+pipe_tables",
 md_extensions_from = 'markdown+definition_lists+fenced_divs+backtick_code_blocks+fenced_code_attributes+pipe_tables'
 
+def load_auth() -> str:
+    """
+    Look up DEEPL_AUTH environmental variable for authentication.
+    """
+    AUTH = os.getenv('DEEPL_AUTH')
+    if not AUTH:
+       raise ValueError('Environmental variable DEEPL_AUTH required for translate with Deepl REST API')
+
+    return AUTH
+
+def load_config() -> dict:
+    """
+    Load config.yml application configuration.
+    """
+    raw = pkgutil.get_data('translate', "config.yml")
+    config = yaml.safe_load(raw.decode('utf-8'))
+
+    return config
+
+def load_anchors(anchor_txt:str) -> dict[str,str]:
+    """
+    load anchors reference of the form:
+       reference=/absolut/path/to/file.md#anchor
+    """
+    if not os.path.exists(anchor_txt):
+       raise FileNotFoundError(errno.ENOENT, f"anchors definition file does not exist at location:", anchor_txt)
+    anchors = {}
+    with open(anchor_txt,'r') as file:
+       for line in file:
+         if '=' in line:
+            (anchor,path) = line.split('=')
+            anchors[anchor] = path
+
+    return anchors
+
 def collect_path(path: str, extension: str) -> list[str]:
     """
     Collect all the files with an extension from a path.
@@ -45,24 +80,42 @@ def collect_paths(paths: list[str], extension: str) -> list[str]:
 
     return files
 
-def load_auth() -> str:
+# administrator-guide/managing-metadata-standards/configure-validation.md
+def fix_anchors(anchors: dict[str,str], md_file: str) -> int:
     """
-    Look up DEEPL_AUTH environmental variable for authentication.
+    Use search/replace to identify [reference](reference) links and
+    fill in appropriate path to anchor.
     """
-    AUTH = os.getenv('DEEPL_AUTH')
-    if not AUTH:
-       raise ValueError('Environmental variable DEEPL_AUTH required for translate with Deepl REST API')
+    if not os.path.exists(md_file):
+       raise FileNotFoundError(errno.ENOENT, f"Markdown file does not exist at location:", md_file)
 
-    return AUTH
+    with open(md_file, 'r') as file:
+        text = file.read()
 
-def load_config() -> dict:
-    """
-    Load config.yml application configuration.
-    """
-    raw = pkgutil.get_data('translate', "config.yml")
-    config = yaml.safe_load(raw.decode('utf-8'))
+    count = 0;
+    fixed = ''
+    for line in text.splitlines():
+       match = re.search(r"\[(.+)\]\((.+)\.md\)", line)
+       if match:
+          text = match.group(1)
+          link = match.group(2)
+          if text == link:
+             path = anchors.get(text)
+             print("anchor:",link,"->",path)
+             if path:
+                line = re.sub(
+                   r"\[(.+)\]\((.+)\.md\)",
+                   r"[\1]("+path+")",
+                   line
+                )
+                count += 1
+                print(line)
+       fixed += line
 
-    return config
+#     with open(md_file,'w') as rst:
+#         rst.write(fixed)
+
+    return count
 
 def convert_rst(rst_file: str) -> str:
     """

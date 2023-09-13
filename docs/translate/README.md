@@ -81,8 +81,30 @@ Please see the writing guide for what mkdocs functionality is supported.
    find . -type f -regex ".*\.rst" -delete 
    ```
 
+5. Optional: to assist with anchors:
+
+   ```
+   cd docs
+   grep --include=\*.rst -rnw . -e "^.. _.*:$" > anchors.txt
+   ```
+
+   Grep search and replace (I used an editor):
+
+   * ``^\./`` -->  `` ``
+   * ``^([\w\-/\.\d_]+)\.rst:\d*\:\.\.\s+_([\w\-\d_\s\./]+):$`` --> ``\2=/\1.md#\2```
+   ```
+   
+   sed?
+   ```
+   sed -i '' -e 's;^\./;;' anchors.txt
+   sed -i '' -e 's;^([\w\-/\.\d_]+)\.rst:\d*\:\.\.\s+_([\w\-\d_\s\./]+):$;\2=/\1.md#\2;' anchors.txt
+   ```
+
+### manual review required
+
 Pandoc conversion from rst to md:
 
 * ``toc:`` not supported, requires manual editing (if that is even appropriate)
-* `` \` `` in the middle of a word like can't 
-* `` `http:localhost:8080/geonetwork` `` require double ` `` ` rather than `` ` ``.
+* notes, warnings, info
+* anchors
+

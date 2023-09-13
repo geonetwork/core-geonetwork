@@ -16,6 +16,8 @@ from typing_extensions import Annotated
 import translate.translate
 from translate import __app_name__, __version__
 from .translate import collect_paths
+from .translate import load_anchors
+from .translate import fix_anchors
 from .translate import convert_rst
 from .translate import convert_markdown
 from .translate import convert_html
@@ -49,6 +51,21 @@ def french(
     shutil.copy2(translated, md_fr)
 
     print(md_fr,"\n")
+
+@app.command()
+def anchor(
+        anchor_txt: str, md_path: Annotated[List[str], typer.Argument(help="path to md file(s)")]
+    ):
+    """
+    Using an anchor.txt file of reference=path#anchor to translate [reference](reference) links
+    left over from conversion from rst.
+    """
+    anchors = load_anchors(anchor_txt)
+
+    for md_file in collect_paths(md_path,'md'):
+      count = fix_anchors(anchors,md_file)
+      print(md_file,"fixed",count)
+    print()
 
 @app.command()
 def collect(
