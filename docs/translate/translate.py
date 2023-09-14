@@ -174,62 +174,114 @@ def convert_rst(rst_file: str) -> str:
     return md_file
 
 def preprocess_rst(rst_file:str, rst_prep: str) -> str:
-
+    """
+    Pre-process rst files to simplify sphinx-build directives for pandoc conversion
+    """
     with open(rst_file, 'r') as file:
         text = file.read()
 
+    # process toc_tree directive into a list of links
+    if '.. toctree::' in text:
+        text = _preprocess_rst_toctree(text)
+
     # gui-label and menuselection represented: **Cancel**
-    clean = re.sub(
+    text = re.sub(
         r":guilabel:`(.*)`",
         r":**\1**",
         text,
         flags=re.MULTILINE
     )
-    clean = re.sub(
+    text = re.sub(
         r":menuselection:`(.*)`",
         r":**\1**",
-        clean,
+        text,
         flags=re.MULTILINE
     )
 
     # command represented: ***mkdir***
-    clean = re.sub(
+    text = re.sub(
         r":command:`(.*)`",
         r":***\1***",
-        clean,
+        text,
         flags=re.MULTILINE
     )
 
     # file path represented: **`file`**
-    clean = re.sub(
+    text = re.sub(
         r":command:`(.*)`",
         r":***\1***",
-        clean,
+        text,
         flags=re.MULTILINE
     )
 
     # kbd represented with +++ by mkdocs
-    clean = re.sub(
+    text = re.sub(
         r":kbd:`(.*)`",
         r":+++\1+++",
-        clean,
+        text,
         flags=re.MULTILINE
     )
 
     # very simple literals: `some text` should use ``some text``
-    clean = re.sub(
+    text = re.sub(
         r"(\s)`(\w|\s)*([^`])`([^`])",
         r"\1``\2\3``\4",
-        clean,
+        text,
         flags=re.MULTILINE
     )
 
     with open(rst_prep,'w') as rst:
-        rst.write(clean)
+        rst.write(text)
+
+def _preprocess_rst_toctree(text: str):
+   # scan document for toctree directives to process
+   toctree = None
+   process = ''
+   for line in text.splitlines():
+       if '.. toctree::' == line:
+          # directive started
+          toctree = ''
+          continue
+
+       if toctree != None:
+          if len(line) == 0:
+             continue
+          if line[0:4] == '   :':
+             continue
+          if line[0:3] == '   ':
+             # processing directive
+             link = line[3:-4]
+             if link.endswith("/index"):
+                label = link[0:-6]
+             else:
+                label = link
+
+             toctree += f"* `{label} <{link}.md>`__\n"
+          else:
+             # end directive
+             process += toctree
+             toctree = None
+       else:
+          process += line + '\n'
+
+   if toctree != None:
+      # end directive at end of file
+      process += toctree
+
+   return process
 
 def postprocess_rst_markdown(md_file: str, md_clean: str):
+    """
+    Postprocess pandoc generated markdown for mkdocs use.
+    """
+
     with open(md_file, 'r') as markdown:
         data = markdown.read()
+
+    # process pandoc ::: adominitions to mkdocs representation
+    if ':::' in data:
+        data = _postprocess_pandoc_fenced_divs(data)
+
 
     # fix references into broken links
     data = re.sub(
@@ -241,6 +293,27 @@ def postprocess_rst_markdown(md_file: str, md_clean: str):
     data = re.sub(
         r'`(.*)`{\.interpreted-text role="ref"}',
         r'[\1](\1.md)',
+        data,
+        flags=re.MULTILINE
+    )
+    # Pandoc escapes characters over-aggressively when writing markdown
+    # https://github.com/jgm/pandoc/issues/6259
+    # <, >, \, `, *, _, [, ], #
+    data = re.sub(
+        r"\\<",
+        r"<",
+        data,
+        flags=re.MULTILINE
+    )
+    data = re.sub(
+        r"\\>",
+        r">",
+        data,
+        flags=re.MULTILINE
+    )
+    data = re.sub(
+        r"\\_",
+        r"_",
         data,
         flags=re.MULTILINE
     )
@@ -270,6 +343,143 @@ def postprocess_rst_markdown(md_file: str, md_clean: str):
     )
     with open(md_clean,'w') as markdown:
         markdown.write(data)
+
+def _postprocess_pandoc_fenced_divs(text: str) -> str:
+   # scan document for pandoc fenced div info, warnings, ...
+   admonition = False
+   type = None
+   title = None
+   note = None
+   process = ''
+   for line in text.splitlines():
+       if line.startswith(':::') and admonition == False:
+          # admonition started
+          # https://squidfunk.github.io/mkdocs-material/reference/admonitions/
+
+          admonition = True
+          type = line[4:]
+
+          # sphinx-build admonition mappings
+          # https://www.sphinx-doc.org/en/master/usage/restructuredtext/basics.html#rst-directives
+          if type == 'attention':
+             type = 'info'
+          if type == 'caution':
+             type = 'warning'
+          if type == 'danger':
+             type = 'danger'
+          if type == 'error':
+             type = 'failure'
+          if type == 'hint':
+             type = 'tip'
+          if type == 'important':
+             type = 'info'
+          if type == 'note':
+             type = 'note'
+          if type == 'tip':
+             type = 'tip'
+          if type == 'warning':
+             type = 'warning'
+          if type == 'admonition':
+             type = 'abstract'
+
+          # sphinx-build directives mapping to fenced blogs
+          # https://www.sphinx-doc.org/en/master/usage/restructuredtext/directives.html
+          if type == 'deprecated':
+             type = 'warning'
+             title = 'Deprecated'
+             note = ''
+          if type == 'seealso':
+             type = 'info'
+             title = 'See Also'
+             note = ''
+          if type == 'versionadded':
+             type = 'info'
+             title = 'Version Added'
+             note = ''
+          if type == 'versionchanged':
+             type = 'info'
+             title = 'Version Changed'
+             note = ''
+          if type == 'versionchanged':
+             type = 'info'
+             title = 'Version Changed'
+             note = ''
+
+          log('start:',type,' ',title)
+          continue
+
+       if admonition:
+          # processing fenced div
+          if len(line) == 0:
+             continue
+
+          if line.startswith('::: title'):
+             # start title processing, next line title
+             title = ''
+             log("start title")
+             continue
+
+          if title == '':
+             title = line # title obtained
+             log("title",title)
+             continue
+
+          if line.startswith(':::') and note == None:
+             # start note processing, next content is note
+             note = ''
+             log("start note")
+             continue
+
+          if line.startswith(':::'):
+             # processing fenced div
+             log("fenced div")
+             log("type:",type)
+             log("title:",title)
+             log("note:",note)
+
+             process += '!!! '+type
+
+             if title != None and title.lower() != type.lower():
+               process += ' "' + title + '"'
+
+             process += "\n\n"
+             for content in note.splitlines():
+                 process += '    '+content+'\n'
+
+             process += "\n"
+
+             admonition = False
+             type = None
+             title = None
+             note = None
+             continue
+
+          if note != None:
+             note += line + '\n'
+             continue
+
+          # unexpected
+          log("admonition",admonition)
+          log("type",type)
+          log("title",title)
+          log("note",note)
+          log("line",line)
+          raise ValueError('unclear what to process')
+
+       else:
+          process += line + '\n'
+
+   if admonition:
+      # fenced div was at end of file
+      raise ValueError('Expected ::: to end fence dive '+type+' '+title+' '+note)
+
+   return process
+
+def log(*args):
+   message = ''
+#    for value in args:
+#       message += str(value) + ' '
+#    print(message)
 
 def convert_markdown(md_file: str) -> str:
     """
