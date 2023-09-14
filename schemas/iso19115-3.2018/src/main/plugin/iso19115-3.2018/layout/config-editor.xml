@@ -80,7 +80,7 @@
     <for name="gco:Angle" use="number"/>
     <for name="gco:Boolean" use="checkbox"/>
 
-    <for name="gco:Date" use="data-gn-date-picker"/>
+    <for name="gco:Date" use="data-gn-date-picker" />
     <for name="gco:DateTime" use="data-gn-date-picker"/>
     <for name="gml:beginDate" use="data-gn-date-picker"/>
     <for name="gml:endDate" use="data-gn-date-picker"/>

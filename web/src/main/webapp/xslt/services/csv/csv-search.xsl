@@ -68,7 +68,7 @@
   <xsl:variable name="sep" select="','"/>
 
   <!-- Intra field separator -->
-  <xsl:variable name="internalSep" select="'###'"/>
+  <xsl:variable name="internalSep" select="', '"/>
 
   <xsl:include href="../../common/profiles-loader-tpl-brief.xsl"/>
   <xsl:include href="../../common/profiles-loader-tpl-csv.xsl"/>
