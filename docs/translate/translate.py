@@ -16,6 +16,8 @@ md_extensions_to = 'markdown+definition_lists+fenced_divs+backtick_code_blocks+f
 # "gfm+definition_lists+fenced_divs+pipe_tables",
 md_extensions_from = 'markdown+definition_lists+fenced_divs+backtick_code_blocks+fenced_code_attributes+pipe_tables'
 
+anchors = {}
+
 def load_auth() -> str:
     """
     Look up DEEPL_AUTH environmental variable for authentication.
@@ -101,7 +103,7 @@ def fix_anchors(anchors: dict[str,str], md_file: str) -> int:
           link = match.group(2)
           if text == link:
              path = anchors.get(text)
-             print("anchor:",link,"->",path)
+             log("anchor:",link,"->",path)
              if path:
                 line = re.sub(
                    r"\[(.+)\]\((.+)\.md\)",
@@ -109,11 +111,11 @@ def fix_anchors(anchors: dict[str,str], md_file: str) -> int:
                    line
                 )
                 count += 1
-                print(line)
-       fixed += line
+                log("fixed:",line)
+       fixed += line + "\n"
 
-#     with open(md_file,'w') as rst:
-#         rst.write(fixed)
+    with open(md_file,'w') as rst:
+        rst.write(fixed)
 
     return count
 
@@ -200,24 +202,24 @@ def preprocess_rst(rst_file:str, rst_prep: str) -> str:
 
     # command represented: ***mkdir***
     text = re.sub(
-        r":command:`(.*)`",
-        r":***\1***",
+        r":command:`(.*?)`",
+        r"***\1***",
         text,
         flags=re.MULTILINE
     )
 
     # file path represented: **`file`**
     text = re.sub(
-        r":command:`(.*)`",
-        r":***\1***",
+        r":file:`(.*?)`",
+        r"**`\1`**",
         text,
         flags=re.MULTILINE
     )
 
     # kbd represented with +++ by mkdocs
     text = re.sub(
-        r":kbd:`(.*)`",
-        r":+++\1+++",
+        r":kbd:`(.*?)`",
+        r"+++\1+++",
         text,
         flags=re.MULTILINE
     )
@@ -229,6 +231,7 @@ def preprocess_rst(rst_file:str, rst_prep: str) -> str:
         text,
         flags=re.MULTILINE
     )
+    text = text.replace("|project_name|","GeoNetwork")
 
     with open(rst_prep,'w') as rst:
         rst.write(text)
@@ -279,81 +282,74 @@ def postprocess_rst_markdown(md_file: str, md_clean: str):
     """
 
     with open(md_file, 'r') as markdown:
-        data = markdown.read()
+        text = markdown.read()
 
     # process pandoc ::: adominitions to mkdocs representation
-    if ':::' in data:
-        data = _postprocess_pandoc_fenced_divs(data)
+    if ':::' in text:
+        text = _postprocess_pandoc_fenced_divs(text)
 
-    if "{.title-ref}" in data:
+
+    if "{.title-ref}" in text:
         # some strange thing where `TEXT` is taken to be a wiki link
-        data = re.sub(
-            r"\[(\w*)\]{\.title-ref}",
+        text = re.sub(
+            r"\[(.*?)\]{\.title-ref}",
             r"``\1``",
-            data,
+            text,
             flags=re.MULTILINE
         )
 
-    # fix references into broken links
-    data = re.sub(
-        r'`(.*) <(.*)>`{\.interpreted-text role="ref"}',
-        r'[\1](\2.md)',
-        data,
-        flags=re.MULTILINE
-    )
-    data = re.sub(
-        r'`(.*)`{\.interpreted-text role="ref"}',
-        r'[\1](\1.md)',
-        data,
-        flags=re.MULTILINE
-    )
-    # Pandoc escapes characters over-aggressively when writing markdown
-    # https://github.com/jgm/pandoc/issues/6259
-    # <, >, \, `, *, _, [, ], #
-    data = re.sub(
-        r"\\<",
-        r"<",
-        data,
-        flags=re.MULTILINE
-    )
-    data = re.sub(
-        r"\\>",
-        r">",
-        data,
-        flags=re.MULTILINE
-    )
-    data = re.sub(
-        r"\\_",
-        r"_",
-        data,
-        flags=re.MULTILINE
-    )
-    data = re.sub(
-        r"\\'",
-        r"'",
-        data,
-        flags=re.MULTILINE
-    )
-    data = re.sub(
-        r'\\"',
-        r'"',
-        data,
-        flags=re.MULTILINE
-    )
-    data = re.sub(
-        r'\\\[',
-        r'[',
-        data,
-        flags=re.MULTILINE
-    )
-    data = re.sub(
-        r'\\\]',
-        r']',
-        data,
-        flags=re.MULTILINE
-    )
+    # review line by line (skipping fenced code blocks)
+    clean = ''
+    code = None
+    for line in text.splitlines():
+       if re.match("^(.*)```", line):
+          if code == None:
+            code = line + '\n'
+          else:
+            code += line
+            clean += code + '\n'
+            code = None
+          continue
+
+       # accept code blocks as is
+       if code:
+          code += line + '\n'
+          continue;
+
+       # non-code clean content
+       # fix references into broken links
+       line = re.sub(
+           r'`((\w|-)*)`{\.interpreted-text role="ref"}',
+           r'[\1](\1.md)',
+           line,
+           flags=re.MULTILINE
+       )
+       line = re.sub(
+           r'`((\w|\s)*) <(.*?)>`{\.interpreted-text role="ref"}',
+           r'[\1](\3.md)',
+           line,
+           flags=re.MULTILINE
+       )
+
+       # Pandoc escapes characters over-aggressively when writing markdown
+       # https://github.com/jgm/pandoc/issues/6259
+       # <, >, \, `, *, _, [, ], #
+       line = line.replace(r'**\`', '**`')
+       line = line.replace(r'\`**', '`**')
+       line = line.replace(r'\<', '<')
+       line = line.replace(r'\>', '>')
+       line = line.replace(r'\_', '_')
+       line = line.replace(r"\`", "`")
+       line = line.replace(r"\'", "'")
+       line = line.replace(r'\"', '"')
+       line = line.replace(r'\[', '[')
+       line = line.replace(r'\]', ']')
+       line = line.replace(r'\*', '*')
+
+       clean += line + '\n'
+
     with open(md_clean,'w') as markdown:
-        markdown.write(data)
+        markdown.write(clean)
 
 def _postprocess_pandoc_fenced_divs(text: str) -> str:
    # scan document for pandoc fenced div info, warnings, ...

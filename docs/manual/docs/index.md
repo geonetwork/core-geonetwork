@@ -1,7 +1,7 @@
 # Contents
 
 * [Overview](overview/index.md)
-* Installation
+* [Installation](install-guide/index.md)
 * [User-guide](user-guide/index.md)
 * [Administration](administor-guide/index.md)
 * Maintainer

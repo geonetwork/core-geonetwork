@@ -99,6 +99,12 @@ Please see the writing guide for what mkdocs functionality is supported.
    sed -i '' -e 's;^\./;;' anchors.txt
    sed -i '' -e 's;^([\w\-/\.\d_]+)\.rst:\d*\:\.\.\s+_([\w\-\d_\s\./]+):$;\2=/\1.md#\2;' anchors.txt
    ```
+   
+   This can be used as during conversion, or to fix existing file:
+   ```
+   python3 -m translate rst docs/contributing/*.rst --anchor anchors.txt
+   python3 -m translate anchor --anchor anchors.txt docs/contributing/*.rst
+   ```
 
 ### Manual review required
 

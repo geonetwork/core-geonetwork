@@ -82,7 +82,12 @@ def collect(
 
 @app.command()
 def rst(
-        rst_path: Annotated[List[str], typer.Argument(help="path to rst file(s)")]
+        rst_path: Annotated[List[str], typer.Argument(help="path to rst file(s)")],
+        anchor_txt: Optional[str] = typer.Option(
+           None,
+           "--anchor",
+           help="anchors.txt file providing reference locations",
+        ),
     ):
     """
     Convert rst file to markdown using pandoc.
@@ -93,8 +98,15 @@ def rst(
     Manual cleanup required for:
     figure
     """
+    if anchor_txt:
+       anchors = load_anchors(anchor_txt)
+
     for rst_file in collect_paths(rst_path,'rst'):
       md_file = convert_rst(rst_file)
+      if anchor_txt:
+         count = fix_anchors(anchors,md_file)
+         if count > 0:
+            print("Fixed",count,"anchor references")
       print(md_file,"\n")
 
 @app.command()

@@ -113,6 +113,18 @@ nav:
       - 'overview/change-log/stable.md'
       - 'overview/change-log/maintenance.md'
       - 'overview/change-log/archive.md'
+  - 'Install Guide':
+      - install-guide/index.md
+      - install-guide/installing-from-zip.md
+      - install-guide/installing-from-war-file.md
+      - install-guide/installing-with-docker.md
+      - install-guide/installing-from-source-code.md
+      - install-guide/installing-index.md
+      - install-guide/configuring-database.md
+      - install-guide/customizing-data-directory.md
+      - install-guide/logging.md
+      - install-guide/map-print-setup.md
+      - install-guide/loading-samples.md
   - 'User Guide':
     - 'user-guide/index.md'
     - 'user-guide/quick-start/index.md'
