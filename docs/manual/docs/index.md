@@ -6,7 +6,7 @@
 * [Administration](administor-guide/index.md)
 * Maintainer
 * [API](api/index.md)
-* Contributing
+* [Contributing](contributing/index.md)
 * Customization
 * Tutorials
 * Annexes

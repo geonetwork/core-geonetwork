@@ -164,6 +164,13 @@ nav:
     - 'api/rdf-dcat.md'
     - 'api/oai-pmh.md'
     - 'api/z39-50.md'
+  - 'Contributing':
+    - contributing/index.md
+    - contributing/writing-documentation.md
+    - contributing/style-guide.md
+    - contributing/translating.md
+    - contributing/making-a-pull-request.md
+    - contributing/doing-a-release.md
   - 'Development':
     - 'devel/index.md'
     - 'devel/docs/docs.md'
