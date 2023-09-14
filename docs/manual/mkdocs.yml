@@ -62,7 +62,7 @@ plugins:
         - 'overview/change-log/version*'
         - 'annexes/gallery/README.md'
         # in progress
-        - 'administrator-guide/managing-metadata-standards/configure-validation.md'
+
   - include-markdown
 
 markdown_extensions:
@@ -116,6 +116,18 @@ nav:
   - 'User Guide':
     - 'user-guide/index.md'
     - 'user-guide/quick-start/index.md'
+  - 'Administrator Guide':
+    - administrator-guide/index.md
+    - 'Configuring the catalog':
+      - administrator-guide/configuring-the-catalog/index.md
+      - administrator-guide/configuring-the-catalog/system-configuration.md
+      - administrator-guide/configuring-the-catalog/user-interface-configuration.md
+      - administrator-guide/configuring-the-catalog/css-configuration.md
+      - administrator-guide/configuring-the-catalog/csw-configuration.md
+      - administrator-guide/configuring-the-catalog/portal-configuration.md
+      - administrator-guide/configuring-the-catalog/inspire-configuration.md
+      - administrator-guide/configuring-the-catalog/map-server-configuration.md
+    - administrator-guide/managing-metadata-standards/configure-validation.md
   - 'API':
     - 'api/index.md'
     - 'api/the-geonetwork-api.md'
