@@ -295,13 +295,30 @@
           function initDimension(dimension) {
             var dimensionConfig = scope.layer.get(dimension);
             if (dimensionConfig) {
-              var idx = dimensionConfig.values.length - 1;
+              var currentLayerValue = scope.layer.getSource().getParams()[
+                dimension.toUpperCase()
+              ];
+              var idx = undefined;
+              var defaultValueIdx = dimensionConfig.values.length - 1;
               for (var i = 0; i < dimensionConfig.values.length; i++) {
-                if (dimensionConfig.values[i] === dimensionConfig.default) {
+                if (dimensionConfig.values[i] === currentLayerValue) {
                   idx = i;
                   break;
                 }
+                if (dimensionConfig.values[i] === dimensionConfig.default) {
+                  defaultValueIdx = i;
+                }
               }
+              if (currentLayerValue && !idx) {
+                console.warn(
+                  "Dimension value " +
+                    currentLayerValue +
+                    " not found in dimension list of values. Using default or latest value: " +
+                    dimensionConfig.values[defaultValueIdx]
+                );
+              }
+              idx = idx || defaultValueIdx;
+
               scope.dimensions[dimension] = {
                 current: dimensionConfig.values[idx],
                 idx: idx,
