@@ -256,6 +256,9 @@ def _preprocess_rst_toctree(text: str):
              else:
                 label = link
 
+             label = label.replace("-", " ")
+             label = label.title()
+
              toctree += f"* `{label} <{link}.md>`__\n"
           else:
              # end directive
@@ -282,6 +285,14 @@ def postprocess_rst_markdown(md_file: str, md_clean: str):
     if ':::' in data:
         data = _postprocess_pandoc_fenced_divs(data)
 
+    if "{.title-ref}" in data:
+        # some strange thing where `TEXT` is taken to be a wiki link
+        data = re.sub(
+            r"\[(\w*)\]{\.title-ref}",
+            r"``\1``",
+            data,
+            flags=re.MULTILINE
+        )
 
     # fix references into broken links
     data = re.sub(
@@ -348,16 +359,18 @@ def _postprocess_pandoc_fenced_divs(text: str) -> str:
    # scan document for pandoc fenced div info, warnings, ...
    admonition = False
    type = None
+   ident = ''
    title = None
    note = None
    process = ''
    for line in text.splitlines():
-       if line.startswith(':::') and admonition == False:
+       match = re.search(r"^(\s*):::\s*(\w*)$", line)
+       if match and admonition == False:
           # admonition started
           # https://squidfunk.github.io/mkdocs-material/reference/admonitions/
-
           admonition = True
-          type = line[4:]
+          indent = match.group(1)
+          type = match.group(2)
 
           # sphinx-build admonition mappings
           # https://www.sphinx-doc.org/en/master/usage/restructuredtext/basics.html#rst-directives
@@ -405,39 +418,40 @@ def _postprocess_pandoc_fenced_divs(text: str) -> str:
              title = 'Version Changed'
              note = ''
 
-          log('start:',type,' ',title)
+          log('start:',type," title:", title)
           continue
 
        if admonition:
           # processing fenced div
-          if len(line) == 0:
+          log("process:'"+line+"'")
+          if line.strip() == '':
              continue
 
-          if line.startswith('::: title'):
+          if match and match.group(2) == 'title':
              # start title processing, next line title
              title = ''
              log("start title")
              continue
 
           if title == '':
-             title = line # title obtained
+             title = line.strip() # title obtained
              log("title",title)
              continue
 
-          if line.startswith(':::') and note == None:
+          if match and note == None:
              # start note processing, next content is note
              note = ''
              log("start note")
              continue
 
-          if line.startswith(':::'):
+          if match:
              # processing fenced div
              log("fenced div")
-             log("type:",type)
-             log("title:",title)
-             log("note:",note)
+             log("  type:",type)
+             log("  title:",title)
+             log("  note:",note)
 
-             process += '!!! '+type
+             process += indent+'!!! '+type
 
              if title != None and title.lower() != type.lower():
                process += ' "' + title + '"'
@@ -459,11 +473,11 @@ def _postprocess_pandoc_fenced_divs(text: str) -> str:
              continue
 
           # unexpected
-          log("admonition",admonition)
-          log("type",type)
-          log("title",title)
-          log("note",note)
-          log("line",line)
+          log("unexpected:")
+          log("  admonition",admonition)
+          log("  type",type)
+          log("  title",title)
+          log("  note",note)
           raise ValueError('unclear what to process')
 
        else:
@@ -471,7 +485,7 @@ def _postprocess_pandoc_fenced_divs(text: str) -> str:
 
    if admonition:
       # fenced div was at end of file
-      raise ValueError('Expected ::: to end fence dive '+type+' '+title+' '+note)
+      raise ValueError('Expected ::: to end fence dive '+str(type)+' '+str(title)+' '+str(note))
 
    return process
 

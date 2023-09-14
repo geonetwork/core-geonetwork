@@ -27,30 +27,30 @@ The LDAP configuration is defined in `WEB-INF/config-security/config-security.pr
 
 1.  Define the LDAP connection:
 
-    > -   `ldap.base.provider.url`: This tells the portal where the LDAP server is located. Make sure that the computer with the catalog can hit the computer with the LDAP server. Check to make sure that the appropriate ports are opened, etc.
-    > -   `ldap.base.dn`: this will usually look something like: "dc=[organizationnamehere],dc=org"
-    > -   `ldap.security.principal` / `ldap.security.credentials`: Define LDAP administrator user to use to bind to LDAP. If not define, an anonymous bind is made. Principal is the username and credentials property the password.
-    >
-    > ``` text
-    > # LDAP security properties
-    > ldap.base.provider.url=ldap://localhost:389
-    > ldap.base.dn=dc=fao,dc=org
-    > ldap.security.principal=cn=admin,dc=fao,dc=org
-    > ldap.security.credentials=ldap
-    > ```
-    >
-    > To verify that you have the correct settings, try to connect to the LDAP server using an LDAP browser application.
+    -   `ldap.base.provider.url`: This tells the portal where the LDAP server is located. Make sure that the computer with the catalog can hit the computer with the LDAP server. Check to make sure that the appropriate ports are opened, etc.
+    -   `ldap.base.dn`: this will usually look something like: "dc=[organizationnamehere],dc=org"
+    -   `ldap.security.principal` / `ldap.security.credentials`: Define LDAP administrator user to use to bind to LDAP. If not define, an anonymous bind is made. Principal is the username and credentials property the password.
+
+    ``` text
+    # LDAP security properties
+    ldap.base.provider.url=ldap://localhost:389
+    ldap.base.dn=dc=fao,dc=org
+    ldap.security.principal=cn=admin,dc=fao,dc=org
+    ldap.security.credentials=ldap
+    ```
+
+    To verify that you have the correct settings, try to connect to the LDAP server using an LDAP browser application.
 
 2.  Define where to find users in LDAP structure for authentication:
 
-    > -   `ldap.base.search.base`: this is where the catalog will look for users for authentication.
-    > -   `ldap.base.dn.pattern`: this is the distinguished name for the user to bind with. {0} is replaced by the user name typed in the sign in screen.
-    >
-    > ``` text
-    > ldap.base.search.base=ou=people
-    > ldap.base.dn.pattern=uid={0},${ldap.base.search.base}
-    > #ldap.base.dn.pattern=mail={0},${ldap.base.search.base}
-    > ```
+    -   `ldap.base.search.base`: this is where the catalog will look for users for authentication.
+    -   `ldap.base.dn.pattern`: this is the distinguished name for the user to bind with. `{0}` is replaced by the user name typed in the sign in screen.
+
+    ``` text
+    ldap.base.search.base=ou=people
+    ldap.base.dn.pattern=uid={0},${ldap.base.search.base}
+    #ldap.base.dn.pattern=mail={0},${ldap.base.search.base}
+    ```
 
 ### Authorization Settings
 
@@ -102,17 +102,17 @@ ldapUserContextMapper.mapping[profile]=privileges,RegisteredUser
 
 Attributes configuration:
 
-> -   privilege attribute contains the group this user is member of. More than one group is allowed.
-> -   profile attribute contains the profile of the user.
+-   privilege attribute contains the group this user is member of. More than one group is allowed.
+-   profile attribute contains the profile of the user.
 
 User valid profiles are:
 
-> -   Administrator
-> -   UserAdmin
-> -   Reviewer
-> -   Editor
-> -   RegisteredUser
-> -   Guest
+-   Administrator
+-   UserAdmin
+-   Reviewer
+-   Editor
+-   RegisteredUser
+-   Guest
 
 If LDAP attribute containing profiles does not match the catalog profile list, a mapping could be defined:
 
@@ -129,110 +129,107 @@ An attribute could define both the profile and the group for a user. To extract 
 
 1.  Define one attribute for the profile and one for groups in `WEB-INF/config-security/config-security-overrides.properties`
 
-``` text
-# In config-security-overrides.properties
-ldapUserContextMapper.mapping[privilege]=cat_privileges,sample
-```
+    ``` text
+    # In config-security-overrides.properties
+    ldapUserContextMapper.mapping[privilege]=cat_privileges,sample
+    ```
 
 2.  Define one attribute for the privilege and define a custom pattern:
 
-``` text
-# In config-security.properties
-ldap.privilege.pattern=CAT_(.*)_(.*)
-ldap.privilege.pattern.idx.group=1
-ldap.privilege.pattern.idx.profil=2
-```
+    ``` text
+    # In config-security.properties
+    ldap.privilege.pattern=CAT_(.*)_(.*)
+    ldap.privilege.pattern.idx.group=1
+    ldap.privilege.pattern.idx.profil=2
+    ```
 
-Enable the bean `er` for [LDAPUserDetailsContextMapperWithPattern]{.title-ref}[ in ]{.title-ref}[WEB-INF/config-security/config-security-ldap.xml]{.title-ref}\`).
+    Enable the bean `er` for `LDAPUserDetailsContextMapperWithPattern` ( in `WEB-INF/config-security/config-security-ldap.xml`).
 
-``` xml
-<!--<bean id="ldapUserContextMapper"
-    class="org.fao.geonet.kernel.security.ldap.LDAPUserDetailsContextMapper">
-    <property name="mapping">
-      <map/>
-    </property>
-    <property name="profileMapping">
-      <map/>
-    </property>
-    <property name="ldapBaseDn" value="${ldap.base.dn}"/>
-    <property name="importPrivilegesFromLdap" value="${ldap.privilege.import}"/>
-    <property name="createNonExistingLdapGroup"
-              value="${ldap.privilege.create.nonexisting.groups}"/>
-    <property name="createNonExistingLdapUser" value="${ldap.privilege.create.nonexisting.users}"/>
-    <property name="ldapManager" ref="ldapUserDetailsService"/>
-    <property name="contextSource" ref="contextSource"/>
-    <property name="ldapUsernameCaseInsensitive" value="${ldap.usernameCaseInsensitive:#{true}}"/>
-</bean>-->
+    ``` xml
+    <!--<bean id="ldapUserContextMapper"
+        class="org.fao.geonet.kernel.security.ldap.LDAPUserDetailsContextMapper">
+        <property name="mapping">
+          <map/>
+        </property>
+        <property name="profileMapping">
+          <map/>
+        </property>
+        <property name="ldapBaseDn" value="${ldap.base.dn}"/>
+        <property name="importPrivilegesFromLdap" value="${ldap.privilege.import}"/>
+        <property name="createNonExistingLdapGroup"
+                  value="${ldap.privilege.create.nonexisting.groups}"/>
+        <property name="createNonExistingLdapUser" value="${ldap.privilege.create.nonexisting.users}"/>
+        <property name="ldapManager" ref="ldapUserDetailsService"/>
+        <property name="contextSource" ref="contextSource"/>
+        <property name="ldapUsernameCaseInsensitive" value="${ldap.usernameCaseInsensitive:#{true}}"/>
+    </bean>-->
 
-<bean id="ldapUserContextMapper" class="org.fao.geonet.kernel.security.ldap.LDAPUserDetailsContextMapperWithPattern">
-  <property name="mapping">
-      <map/>
-  </property>
-  <property name="profileMapping">
-      <map/>
-  </property>
-  <property name="importPrivilegesFromLdap" value="${ldap.privilege.import}"/>
-  <property name="createNonExistingLdapGroup" value="${ldap.privilege.create.nonexisting.groups}" />
-  <property name="createNonExistingLdapUser" value="${ldap.privilege.create.nonexisting.users}" />
+    <bean id="ldapUserContextMapper" class="org.fao.geonet.kernel.security.ldap.LDAPUserDetailsContextMapperWithPattern">
+      <property name="mapping">
+          <map/>
+      </property>
+      <property name="profileMapping">
+          <map/>
+      </property>
+      <property name="importPrivilegesFromLdap" value="${ldap.privilege.import}"/>
+      <property name="createNonExistingLdapGroup" value="${ldap.privilege.create.nonexisting.groups}" />
+      <property name="createNonExistingLdapUser" value="${ldap.privilege.create.nonexisting.users}" />
 
-  <property name="ldapManager" ref="ldapUserDetailsService" />
+      <property name="ldapManager" ref="ldapUserDetailsService" />
 
-  <property name="privilegePattern" value="${ldap.privilege.pattern}" />
-  <property name="groupIndexInPattern" value="${ldap.privilege.pattern.idx.group}"/>
-  <property name="profilIndexInPattern" value="${ldap.privilege.pattern.idx.profil}"/>
+      <property name="privilegePattern" value="${ldap.privilege.pattern}" />
+      <property name="groupIndexInPattern" value="${ldap.privilege.pattern.idx.group}"/>
+      <property name="profilIndexInPattern" value="${ldap.privilege.pattern.idx.profil}"/>
 
-  <property name="contextSource" ref="contextSource" />
-</bean>
-```
+      <property name="contextSource" ref="contextSource" />
+    </bean>
+    ```
 
-3.  Define custom location for extracting group and role (no support for group/role combination) (use LDAPUserDetailsContextMapperWithProfileSearch in config-security.xml).
+3.  Define custom location for extracting group and role (no support for group/role combination) (use LDAPUserDetailsContextMapperWithProfileSearch in `config-security.xml`{.interpreted-text role="file"}).
 
-``` text
-ldap.privilege.search.group.attribute=cn
-ldap.privilege.search.group.object=ou=groups
-#ldap.privilege.search.group.query=(&(objectClass=*)(memberUid=uid={0},${ldap.base.search.base},${ldap.base.dn})(cn=EL_*))
-ldap.privilege.search.group.queryprop=memberuid
-ldap.privilege.search.group.query=(&(objectClass=*)(memberUid=uid={0},${ldap.base.search.base},${ldap.base.dn})(|(cn=SP_*)(cn=EL_*)))
-ldap.privilege.search.group.pattern=EL_(.*)
-ldap.privilege.search.privilege.attribute=cn
-ldap.privilege.search.privilege.object=ou=groups
-ldap.privilege.search.privilege.query=(&(objectClass=*)(memberUid=uid={0},${ldap.base.search.base},${ldap.base.dn})(cn=SV_*))
-ldap.privilege.search.privilege.pattern=SV_(.*)
-```
+    ``` text
+    ldap.privilege.search.group.attribute=cn
+    ldap.privilege.search.group.object=ou=groups
+    #ldap.privilege.search.group.query=(&(objectClass=*)(memberUid=uid={0},${ldap.base.search.base},${ldap.base.dn})(cn=EL_*))
+    ldap.privilege.search.group.queryprop=memberuid
+    ldap.privilege.search.group.query=(&(objectClass=*)(memberUid=uid={0},${ldap.base.search.base},${ldap.base.dn})(|(cn=SP_*)(cn=EL_*)))
+    ldap.privilege.search.group.pattern=EL_(.*)
+    ldap.privilege.search.privilege.attribute=cn
+    ldap.privilege.search.privilege.object=ou=groups
+    ldap.privilege.search.privilege.query=(&(objectClass=*)(memberUid=uid={0},${ldap.base.search.base},${ldap.base.dn})(cn=SV_*))
+    ldap.privilege.search.privilege.pattern=SV_(.*)
+    ```
 
-The LDAP attribute can contains the following configuration to define the different type of users, for example:
+    The LDAP attribute can contains the following configuration to define the different type of users, for example:
 
-``` text
-cat_privileges=CAT_ALL_Administrator
+    ``` text
+    cat_privileges=CAT_ALL_Administrator
 
--- Define a reviewer for the group GRANULAT
-cat_privileges=CAT_GRANULAT_Reviewer
+    -- Define a reviewer for the group GRANULAT
+    cat_privileges=CAT_GRANULAT_Reviewer
 
--- Define a reviewer for the group GRANULAT and editor for MIMEL
-cat_privileges=CAT_GRANULAT_Reviewer
-cat_privileges=CAT_MIMEL_Editor
+    -- Define a reviewer for the group GRANULAT and editor for MIMEL
+    cat_privileges=CAT_GRANULAT_Reviewer
+    cat_privileges=CAT_MIMEL_Editor
 
--- Define a reviewer for the group GRANULAT and editor for MIMEL and RegisteredUser for NATURA2000
-cat_privileges=CAT_GRANULAT_Reviewer
-cat_privileges=CAT_MIMEL_Reviewer
-cat_privileges=CAT_NATURA2000_RegisteredUser
+    -- Define a reviewer for the group GRANULAT and editor for MIMEL and RegisteredUser for NATURA2000
+    cat_privileges=CAT_GRANULAT_Reviewer
+    cat_privileges=CAT_MIMEL_Reviewer
+    cat_privileges=CAT_NATURA2000_RegisteredUser
 
--- Only a registered user for GRANULAT
-cat_privileges=CAT_GRANULAT_RegisteredUser
-```
+    -- Only a registered user for GRANULAT
+    cat_privileges=CAT_GRANULAT_RegisteredUser
+    ```
 
 #### Synchronization
 
 A synchronization task is taking care of removing LDAP users that may be deleted. For example:
 
 -   T0: User A signs in to the catalog. A local user A is created in the user database.
-
 -   T1: User A is deleted from the LDAP (User A cannot sign in to the catalog anymore).
-
 -   T2: The synchronization task will check that all local LDAP users exist in LDAP:
-
-    > -   If the user does not own any records, it will be deleted.
-    > -   If the user owns metadata records, a warning message will be written to the catalog logging system. The owner of the record should be changed to another user before the task can remove the current owner.
+    -   If the user does not own any records, it will be deleted.
+    -   If the user owns metadata records, a warning message will be written to the catalog logging system. The owner of the record should be changed to another user before the task can remove the current owner.
 
 By default the task runs once every day. This can be changed in the following property:
 
@@ -483,20 +480,17 @@ cas.logout.url=${cas.baseURL}/logout?url=${geonetwork.https.url}/
 Basic Setup Steps:
 
 1.  Configure your IDP Server (i.e. Keycloak or Azure AD)
-
-    > 1.  Ensure that the ID Token provides role/group information
-    > 2.  Authorize your Geonetwork URLs for redirects (i.e. [http://localhost:8080/geonetwork/login/oauth2/code/geonetwork-oicd]{.title-ref})
-    > 3.  Record the Client ID
-    > 4.  Record the Client Secret
-    > 5.  Get the Server's JSON metadata document
-
+    1.  Ensure that the ID Token provides role/group information
+    2.  Authorize your Geonetwork URLs for redirects (i.e. `http://localhost:8080/geonetwork/login/oauth2/code/geonetwork-oicd`)
+    3.  Record the Client ID
+    4.  Record the Client Secret
+    5.  Get the Server's JSON metadata document
 2.  Configure Geonetwork via environment variables
-
-    > 1.  [GEONETWORK_SECURITY_TYPE=openidconnect]{.title-ref}
-    > 2.  [OPENIDCONNECT_CLIENTSECRET=\...]{.title-ref} (from your IDP server)
-    > 3.  [OPENIDCONNECT_CLIENTID=\...]{.title-ref} (from your IDP server)
-    > 4.  [OPENIDCONNECT_SERVERMETADATA_JSON_TEXT='\...']{.title-ref} (the text of your Server's JSON metadata document)
-    > 5.  [OPENIDCONNECT_IDTOKENROLELOCATION=\...]{.title-ref} (location of the user's roles in the ID Token)
+    1.  [GEONETWORK_SECURITY_TYPE=openidconnect]{.title-ref}
+    2.  [OPENIDCONNECT_CLIENTSECRET=\...]{.title-ref} (from your IDP server)
+    3.  [OPENIDCONNECT_CLIENTID=\...]{.title-ref} (from your IDP server)
+    4.  [OPENIDCONNECT_SERVERMETADATA_JSON_TEXT='\...']{.title-ref} (the text of your Server's JSON metadata document)
+    5.  [OPENIDCONNECT_IDTOKENROLELOCATION=\...]{.title-ref} (location of the user's roles in the ID Token)
 
 Geonetwork's Open ID Connect plugin has a lot of configuration options - please see the `WEB-INF/config-security/config-security-openidconnect.xml` and `WEB-INF/config-security/config-security-openidconnect-overrides.properties` files.
 
@@ -504,99 +498,93 @@ Geonetwork's Open ID Connect plugin has a lot of configuration options - please 
 
 **GEONETWORK_SECURITY_TYPE**
 
-> Should be `ct`.
+Should be `ct`.
 
 **OPENIDCONNECT_CLIENTID**
 
-> The name of the client/application you configured on your OpenID server.
+The name of the client/application you configured on your OpenID server.
 
 **OPENIDCONNECT_CLIENTSECRET**
 
-> The `et` you configured on your OpenID server.
+The `et` you configured on your OpenID server.
 
 **OPENIDCONNECT_SERVERMETADATA_CONFIG_URL**
 
-> URL to the external OIDC server's JSON metadata document. This is typically at [/.well-known/openid-configuration]{.title-ref} on the IDP server.
->
-> > ::: note
-> > ::: title
-> > Note
-> > :::
-> >
-> > This will download the server's configuration everytime GeoNetwork starts up, which could be a security concern. For security, use a `ps` URL.
-> > :::
+URL to the external OIDC server's JSON metadata document. This is typically at [/.well-known/openid-configuration]{.title-ref} on the IDP server.
+
+!!! note
+
+    This will download the server's configuration everytime GeoNetwork starts up, which could be a security concern. For security, use a `ps` URL.
+
 
 **OPENIDCONNECT_SERVERMETADATA_JSON_TEXT**
 
-> Should be the text of your OpenID server's metadata configuration (JSON).
+Should be the text of your OpenID server's metadata configuration (JSON).
 
 **OPENIDCONNECT_SERVERMETADATA_FNAME**
 
-> Instead of putting the OpenID server's metadata configuration as text in a variable ([OPENIDCONNECT_SERVERMETADATA_JSON_TEXT]{.title-ref}), you can put the JSON contents in a file and reference it with this variable (ie. `/WEB-INF/config-security/openid-configuration.json`)
+Instead of putting the OpenID server's metadata configuration as text in a variable (``OPENIDCONNECT_SERVERMETADATA_JSON_TEXT``), you can put the JSON contents in a file and reference it with this variable (ie. `/WEB-INF/config-security/openid-configuration.json`)
 
 **OPENIDCONNECT_IDTOKENROLELOCATION**
 
-> Where, in the ID Token, are the users roles/groups stored (i.e. "groups", "roles", or "resource_access.gn-key.roles")
+Where, in the ID Token, are the users roles/groups stored (i.e. "groups", "roles", or "resource_access.gn-key.roles")
 
 **OPENIDCONNECT_ROLECONVERTER**
 
-> This provides simple role conversion from the OpenID server to Geonetwork roles.
->
-> ie. ["GeonetworkAdmin=Administrator,GeonetworkEditor=Editor"]{.title-ref}
->
-> This will convert "GeonetworkAdmin" (from the OpenID Server) to the Geonetwork "Administrator" role.
->
-> ::: note
-> ::: title
-> Note
-> :::
->
-> Like the keycloak plugin, you can use role/group names of the form "group:role" to assign a user to Geonetwork group and permission level.
-> :::
+This provides simple role conversion from the OpenID server to Geonetwork roles.
+
+ie. ["GeonetworkAdmin=Administrator,GeonetworkEditor=Editor"]{.title-ref}
+
+This will convert "GeonetworkAdmin" (from the OpenID Server) to the Geonetwork "Administrator" role.
+
+!!! note
+
+    Like the keycloak plugin, you can use role/group names of the form "group:role" to assign a user to Geonetwork group and permission level.
+
 
 **OPENIDCONNECT_MINIMUMPROFILE**
 
-> Every user who authenticates against the OpenID server will be given this role.
->
-> Default is ["RegisteredUser"]{.title-ref}.
+Every user who authenticates against the OpenID server will be given this role.
+
+Default is ["RegisteredUser"]{.title-ref}.
 
 **OPENIDCONNECT_USERPROFILEUPDATEENABLED**
 
-> When a user logs on, update their Geotwork profile from the OpenID server's ID Token.
->
-> Default is ["true"]{.title-ref}.
+When a user logs on, update their Geotwork profile from the OpenID server's ID Token.
+
+Default is ["true"]{.title-ref}.
 
 **OPENIDCONNECT_USERGROUPUPDATEENABLED**
 
-> When a user logs on, update their Geotwork group/role permissions.
->
-> Default is ["true"]{.title-ref}.
+When a user logs on, update their Geotwork group/role permissions.
+
+Default is ["true"]{.title-ref}.
 
 **OPENIDCONNECT_SCOPES**
 
-> Limit the requested scope access to the OpenID server.
->
-> Default "openid email profile", and "openid email profile offline_access" (for bearer tokens).
+Limit the requested scope access to the OpenID server.
+
+Default "openid email profile", and "openid email profile offline_access" (for bearer tokens).
 
 **OPENIDCONNECT_LOGINTYPE**
 
-> How Geonetwork deals with users who are not logged on.
->
-> Default is "LINK" - users can click on the "login" link on the main page.
->
-> "AUTOLOGIN" - No login form provided which will automatically login the user when possible.
+How Geonetwork deals with users who are not logged on.
+
+Default is "LINK" - users can click on the "login" link on the main page.
+
+"AUTOLOGIN" - No login form provided which will automatically login the user when possible.
 
 **OPENIDCONNECT_LOGSENSITIVE_INFO**
 
-> "true" or "false" (default)
->
-> Logs: CODE, ACCESS TOKEN, ID TOKEN, userinfo endpoint result, and calculated GeoNetwork authorities.
->
-> LOGGING THIS INFORMATION IS PROBABLY A SECURITY AND PERSONAL INFORMATION RISK. DO NOT TURN THIS ON IN A SYSTEM THAT IS ACTUALLY BEING USED.
->
-> We try not to log very sensitive information - we don't log the full access or id token (just the claims part). We log the single-use CODE, but it should have already been deactivated by the server before we log it.
->
-> The access token, userinfo, and id token contain sensitive information (i.e. real names, email address, etc\...)
+"true" or "false" (default)
+
+Logs: CODE, ACCESS TOKEN, ID TOKEN, userinfo endpoint result, and calculated GeoNetwork authorities.
+
+LOGGING THIS INFORMATION IS PROBABLY A SECURITY AND PERSONAL INFORMATION RISK. DO NOT TURN THIS ON IN A SYSTEM THAT IS ACTUALLY BEING USED.
+
+We try not to log very sensitive information - we don't log the full access or id token (just the claims part). We log the single-use CODE, but it should have already been deactivated by the server before we log it.
+
+The access token, userinfo, and id token contain sensitive information (i.e. real names, email address, etc\...)
 
 ### Configuration for a Keycloak Server
 
@@ -605,44 +593,52 @@ It's outside the scope of this document to fully describe the steps to configure
 This will configure keycloak backed by **another OpenID IDP** (for example, by an Azure AD). In keycloak:
 
 1.  Create a realm (i.e. `lm`)
-
 2.  Create an openid client (i.e. `nt`). This is your ClientID.
-
-    > 1.  Root URL: [http://localhost:7777/geonetwork]{.title-ref} (this is the GN root URL)
-    > 2.  Valid Redirect URIs: [http://localhost:7777/geonetwork/\*]{.title-ref}
-    > 3.  Access Type: Confidential
-    > 4.  On the `ls` tab, get the secret (this is your Client Secret)
-    > 5.  On the `es` tab, create some roles: Administrator, Editor, Reviewer, RegisteredGuest
-
+    1.  Root URL: [http://localhost:7777/geonetwork]{.title-ref} (this is the GN root URL)
+    2.  Valid Redirect URIs: [http://localhost:7777/geonetwork/\*]{.title-ref}
+    3.  Access Type: Confidential
+    4.  On the `ls` tab, get the secret (this is your Client Secret)
+    5.  On the `es` tab, create some roles: Administrator, Editor, Reviewer, RegisteredGuest
 3.  Create your backing Identity Provider (i.e. to another OpenID server). Or you can configure users directly in keycloak.
-
-    > 1.  At the bottom of the page, choose "import from URL" and import the backing server's configuration location.
-    > 2.  Add the Client Secret (from the backing service)
-    > 3.  Add the Client ID (from the backing service)
-    > 4.  set "Client Authentication" to "Client secret sent as post"
-
+    1.  At the bottom of the page, choose "import from URL" and import the backing server's configuration location.
+    2.  Add the Client Secret (from the backing service)
+    3.  Add the Client ID (from the backing service)
+    4.  set "Client Authentication" to "Client secret sent as post"
 4.  Configure role translation
-
-    > 1.  Edit the "Identity Provider" you just created, and go to the "Mappers" tab.
-    > 2.  Press "Create" and and add a "Claim to Role".
-    > 3.  Set Sync Mode Override to "Force"
-    > 4.  Claim: `es`
-    > 5.  Claim Value: `DP`
-    > 6.  Role: choose the "Administrator" role from the `nt` client.
-    > 7.  Repeat the above for Administrator, Editor, Reviewer, and RegisteredGuest
-
+    1.  Edit the "Identity Provider" you just created, and go to the "Mappers" tab.
+    2.  Press "Create" and and add a "Claim to Role".
+    3.  Set Sync Mode Override to "Force"
+    4.  Claim: `es`
+    5.  Claim Value: `DP`
+    6.  Role: choose the "Administrator" role from the `nt` client.
+    7.  Repeat the above for Administrator, Editor, Reviewer, and RegisteredGuest
 5.  Configure details for your backing IDP
+    1.  Edit the "Identity Provider" you just configured
+    2.  On the Mappers tab, "Add Builtin" and tick "client roles (User Client Role)" then "Add selected"
+    3.  Edit the "client roles" mapper and make sure "Add to ID token" and "Add to userinfo" are on
 
-    > 1.  Edit the "Identity Provider" you just configured
-    > 2.  On the Mappers tab, "Add Builtin" and tick "client roles (User Client Role)" then "Add selected"
-    > 3.  Edit the "client roles" mapper and make sure "Add to ID token" and "Add to userinfo" are on
+You should have Keycloak's Client id ("myclient") and the client secret. The configuration JSON is available at `https://YOUR_KEYCLOAK_HOST/realms/{YOUR REALM NAME}/.well-known/openid-configuration`
 
-You should have Keycloak's Client id ("myclient") and the client secret. The configuration JSON is available at [https://YOUR_KEYCLOAK_HOST/realms/{YOUR REALM NAME}/.well-known/openid-configuration]{.title-ref}`Your environment variables will looks like this:  .. code-block:: properties      GEONETWORK_SECURITY_TYPE=openidconnect     OPENIDCONNECT_CLIENTSECRET='...'     OPENIDCONNECT_CLIENTID='...'        OPENIDCONNECT_SERVERMETADATA_JSON_TEXT='...big json text...'      OPENIDCONNECT_IDTOKENROLELOCATION='resource_access.{your client id}.roles'   Azure AD Configuration ======================  There are two ways to setup Azure AD.  The first is with user and groups (a more traditional LDAP method) or with Application Roles.  With Users and Groups```````````
+Your environment variables will looks like this:
+
+``` properties
+GEONETWORK_SECURITY_TYPE=openidconnect
+OPENIDCONNECT_CLIENTSECRET='...'
+OPENIDCONNECT_CLIENTID='...'
+OPENIDCONNECT_SERVERMETADATA_JSON_TEXT='...big json text...'
+OPENIDCONNECT_IDTOKENROLELOCATION='resource_access.{your client id}.roles'
+```
+
+### Azure AD Configuration
+
+There are two ways to setup Azure AD. The first is with user and groups (a more traditional LDAP method) or with Application Roles.
+
+#### With Users and Groups
 
 Setup the Azure Application:
 
 1.  Create a new `on`
-2.  use "<http://localhost:8080/geonetwork/login/oauth2/code/geonetwork-oicd>" as a redirect URIs
+2.  use `http://localhost:8080/geonetwork/login/oauth2/code/geonetwork-oicd` as a redirect URIs
 3.  On the "Certificates & Secrets" add a new secret and record it (make sure you get the secret value and NOT the object id)
 4.  Make sure the groups are in the ID token - on the "Manifest" tab, edit the JSON so that "groupMembershipClaims": "SecurityGroup" is set
 5.  On the summary page, get the Application (client) ID
@@ -659,8 +655,8 @@ Your environment variables will looks like this:
 ``` properties
 GEONETWORK_SECURITY_TYPE=openidconnect
 OPENIDCONNECT_CLIENTSECRET='...'
-OPENIDCONNECT_CLIENTID='...'   
-OPENIDCONNECT_SERVERMETADATA_JSON_TEXT='...big json text...' 
+OPENIDCONNECT_CLIENTID='...'
+OPENIDCONNECT_SERVERMETADATA_JSON_TEXT='...big json text...'
 OPENIDCONNECT_IDTOKENROLELOCATION='groups'
 OPENIDCONNECT_ROLECONVERTER='3a94275f-7d53-4205-8d78-11f39e9ffa5a=Administrator,d93c6444-feee-4b67-8c0f-15d6796370cb=Reviewer'
 ```
@@ -680,7 +676,7 @@ OPENIDCONNECT_ROLECONVERTER='3a94275f-7d53-4205-8d78-11f39e9ffa5a=Administrator,
 Setup the Azure Application:
 
 1.  Create a new Enterprise application
-2.  use "<http://localhost:8080/geonetwork/login/oauth2/code/geonetwork-oicd>" as a redirect URIs
+2.  use `http://localhost:8080/geonetwork/login/oauth2/code/geonetwork-oicd` as a redirect URIs
 3.  On the "Certificates & Secrets" add a new secret and record it (make sure you get the secret value and NOT the object id)
 4.  Make sure the groups are in the ID token - on the "Manifest" tab, edit the JSON so that "groupMembershipClaims": "ApplicationGroup" is set
 5.  On the summary page, get the Application (client) ID
@@ -705,8 +701,8 @@ Your environment variables will looks like this:
 ``` properties
 GEONETWORK_SECURITY_TYPE=openidconnect
 OPENIDCONNECT_CLIENTSECRET='...'
-OPENIDCONNECT_CLIENTID='...'   
-OPENIDCONNECT_SERVERMETADATA_JSON_TEXT='...big json text...' 
+OPENIDCONNECT_CLIENTID='...'
+OPENIDCONNECT_SERVERMETADATA_JSON_TEXT='...big json text...'
 OPENIDCONNECT_IDTOKENROLELOCATION='roles'
 ```
 
@@ -796,15 +792,15 @@ Ensure that when you configure your client that you setup the valid redirect uri
 
 In your client role settings (clients -> myclient -> roles). Add the following roles
 
-> ``` text
-> Administrator
-> RegisteredUser
-> Guest
-> sample:UserAdmin
-> sample:Reviewer
-> sample:Editor
-> sample:RegisteredUser
-> ```
+``` text
+Administrator
+RegisteredUser
+Guest
+sample:UserAdmin
+sample:Reviewer
+sample:Editor
+sample:RegisteredUser
+```
 
 #### Sample Group configuration
 

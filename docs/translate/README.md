@@ -100,11 +100,14 @@ Please see the writing guide for what mkdocs functionality is supported.
    sed -i '' -e 's;^([\w\-/\.\d_]+)\.rst:\d*\:\.\.\s+_([\w\-\d_\s\./]+):$;\2=/\1.md#\2;' anchors.txt
    ```
 
-### manual review required
+### Manual review required
 
-Pandoc conversion from rst to md:
+The process is not 100%, here are common problems to find during review:
 
-* ``toc:`` not supported, requires manual editing (if that is even appropriate)
-* notes, warnings, info
-* anchors
+* Broken reference or anchor links
 
+* Indention of nested lists in ``rst`` is often incorrect, resulting in restarted number or block quotes.
+  
+  Correct the RST and re-covert
+  
+* Random ``{.title-ref}`` snippets is a general indication to simplify the rst and recovert

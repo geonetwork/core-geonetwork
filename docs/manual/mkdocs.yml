@@ -118,7 +118,7 @@ nav:
     - 'user-guide/quick-start/index.md'
   - 'Administrator Guide':
     - administrator-guide/index.md
-    - 'Configuring the catalog':
+    - 'Catalog':
       - administrator-guide/configuring-the-catalog/index.md
       - administrator-guide/configuring-the-catalog/system-configuration.md
       - administrator-guide/configuring-the-catalog/user-interface-configuration.md
@@ -127,7 +127,22 @@ nav:
       - administrator-guide/configuring-the-catalog/portal-configuration.md
       - administrator-guide/configuring-the-catalog/inspire-configuration.md
       - administrator-guide/configuring-the-catalog/map-server-configuration.md
-    - administrator-guide/managing-metadata-standards/configure-validation.md
+    - 'Users and Groups':
+      - administrator-guide/managing-users-and-groups/index.md
+      - administrator-guide/managing-users-and-groups/authentication-mode.md
+      - administrator-guide/managing-users-and-groups/creating-group.md
+      - administrator-guide/managing-users-and-groups/creating-user.md
+      - administrator-guide/managing-users-and-groups/user-self-registration.md
+    - 'Classification Systems':
+      - administrator-guide/managing-classification-systems/index.md
+      - administrator-guide/managing-classification-systems/managing-categories.md
+      - administrator-guide/managing-classification-systems/managing-directories.md
+      - administrator-guide/managing-classification-systems/managing-thesaurus.md
+    - 'Metadata Standards':
+      - administrator-guide/managing-metadata-standards/index.md
+      - administrator-guide/managing-metadata-standards/configure-validation.md
+      - administrator-guide/managing-metadata-standards/metadata-identifier.md
+      - administrator-guide/managing-metadata-standards/standards.md
   - 'API':
     - 'api/index.md'
     - 'api/the-geonetwork-api.md'

@@ -10,13 +10,10 @@ To create new groups you should be logged on with an account that has administra
 
 3.  Fill out the details. The email address will be used to send feedback on data downloads when they occur for resources that are part of the Group.
 
-    > ::: warning
-    > ::: title
-    > Warning
-    > :::
-    >
-    > The Name should *NOT* contain spaces! You can use the Localization panel to provide localized names for groups.
-    > :::
+    !!! warning
+
+        The Name should *NOT* contain spaces! You can use the Localization panel to provide localized names for groups.
+
 
 4.  Click *Save*
 
