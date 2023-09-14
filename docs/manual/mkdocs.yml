@@ -63,8 +63,7 @@ plugins:
         - 'annexes/gallery/README.md'
         # in progress
         - 'administrator-guide/managing-metadata-standards/configure-validation.md'
-  - include-markdown:
-      base_path: 'docs'
+  - include-markdown
 
 markdown_extensions:
   - admonition

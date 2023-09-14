@@ -266,7 +266,70 @@ Column alignment using `:`
 | Left         |    Center     |        Right |
 | Left         |    Center     |        Right |
 
-## Translation
+### Inline
+
+Here is a snippet to include markdown files inline, requires opening tag ``{%`` and closing tag ``%}``:
+
+``` markdown
+{ %
+   include-markdown './version-4.2.4.md'
+   heading-offset=3
+% }
+```
+
+Use a glob pattern to inline many files, shown with option to adjusting header level:
+
+``` markdown
+{ %
+   include-markdown './version-4.0.*.md'
+   exclude = './version-4.2.4.md'
+   heading-offset = 3
+% }
+```
+
+For including markdown files inline, we have to exclude them from ``mkdocs.yml`` warnings:
+
+``` yaml
+plugins:
+  - exclude:
+      glob:
+        - 'overview/change-log/version*'
+```
+
+Use ``include`` to include normal files, shown with start and end to capture a snippet, and dedent for appearance:
+
+``` markdown
+{ %
+      include 'record.xml'
+      dedent="true"
+      start="<!--start-->"
+      end="<!--end-->"
+% }
+```
+
+Reference:
+
+* [mkdocs-include-markdown-plugin](https://pypi.org/project/mkdocs-include-markdown-plugin/)
+* [mkdocs-exclude](https://pypi.org/project/mkdocs-exclude/)
+
+### Internationalization
+
+The ``mkdocs-static-i18n`` is setup based on suffix, **`index.md`** is the default English, and **``index.fr.md``** is French:
+
+``` text
+img/figure.png
+img/figure.fr.png
+index.md
+index.fr.md
+```
+
+The mkdocs-material-theme language chooser is configured by this plugin allowing the selection of language at runtime.
+
+Reference:
+
+* [mkdocs-static-i18n](https://ultrabug.github.io/mkdocs-static-i18n/)
+
+#### Deepl Translation
 
 Translation uses ***pandoc*** to convert to `html` for conversion by ***Deepl***.
 
@@ -281,24 +344,31 @@ Other differences in markdown requires pre/post processing of markdown and html 
 To translate provide environmental variable with Deepl authentication key:
 
 ```
+cd core-geonetwork/docs
+mkdir target
 export DEEPL_AUTH="xxxxxxxx-xxx-...-xxxxx:fx"
+```
+
+And translate a file:
+``` bash
+python3 -m translate fr manual/docs/contributing/style-guide.md
 ```
 
 To test each stage individually:
 
 ```
-python3 -m translate html docs/devel/docs/docs.md
-python3 -m translate document target/translate/devel/docs/docs.html target/translate/devel/docs/docs.fr.html
-python3 -m translate markdown target/translate/devel/docs/docs.fr.html
+python3 -m translate html manual/docs/contributing/style-guide.md
+python3 -m translate document target/contributing/style-guide.html target/contributing/style-guide.fr.html
+python3 -m translate markdown target/contributing/style-guide.fr.html
 
-cp target/translate/devel/docs/docs.fr.md docs/devel/docs/docs.fr.md
+cp target/contributing/style-guide.fr.md manual/docs/contributing/style-guide.fr.md
 ```
 
 To test markdown / html only:
 
 ```
-python3 -m translate convert docs/devel/docs/docs.md
-python3 -m translate markdown target/translate/devel/docs/docs.html
+python3 -m translate convert manual/docs/contributing/style-guide.md
+python3 -m translate markdown target/contributing/style-guide.html
 
-diff  docs/devel/docs/docs.md target/translate/devel/docs/docs.md 
+diff manual/docs/contributing/style-guide.md target/contributing/style-guide.md
 ```
