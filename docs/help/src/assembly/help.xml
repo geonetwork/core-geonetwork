@@ -1,0 +1,11 @@
+<assembly>
+  <id>help</id>
+  <formats>
+    <format>zip</format>
+  </formats>
+  <fileSets>
+    <fileSet>
+      <directory>target/html</directory>
+    </fileSet>
+  </fileSets>
+</assembly>

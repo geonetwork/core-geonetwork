@@ -39,8 +39,7 @@ theme:
 
 plugins:
   - search
-  - tags:
-      tags_file: tags.md
+  - offline
   - i18n:
       default_language: en
       docs_structure: suffix
