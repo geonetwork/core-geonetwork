@@ -66,13 +66,24 @@
       <Point_of_Contact>
         <xsl:value-of select="mdb:contact/cit:CI_Responsibility/cit:party/*/cit:contactInfo/*/cit:address/*/cit:electronicMailAddress"/>
       </Point_of_Contact>
+
+      <xsl:variable name="classification" select="mdb:identificationInfo/*/mri:resourceConstraints/mco:MD_SecurityConstraints/mco:useLimitation/*"/>
+      <Access_Rights>
+        <xsl:choose>
+          <xsl:when test="$classification=('PROTECTED', 'SECRET', 'TOP SECRET')">Restricted</xsl:when>
+          <xsl:when test="$classification=('OFFICIAL', 'OFFICIAL: Sensitive')">Conditional</xsl:when>
+          <xsl:otherwise>Open</xsl:otherwise>
+        </xsl:choose>
+      </Access_Rights>
       <Security_Constraints>
-        <xsl:value-of select="mdb:identificationInfo/*/*/mco:MD_SecurityConstraints/*"/>
+        <xsl:value-of select="$classification"/>
       </Security_Constraints>
 
-      <Data_Custodian>
-        <xsl:value-of select="mdb:identificationInfo/*/mri:pointOfContact/*/cit:party/*/cit:name"/>
-      </Data_Custodian>
+      <xsl:for-each select="mdb:identificationInfo/*/mri:pointOfContact/*[cit:role/cit:CI_RoleCode/codeListValue='pointOfContact']">
+        <Data_Custodian>
+          <xsl:value-of select="mdb:identificationInfo/*/mri:pointOfContact/*/cit:party/*/cit:name"/>
+        </Data_Custodian>
+      </xsl:for-each>
 
       <xsl:for-each select="mdb:identificationInfo/*/mri:descriptiveKeywords/*/mri:keyword[not(@gco:nilReason)]">
         <Keyword>
@@ -154,28 +165,30 @@
 
       <xsl:for-each select="mdb:identificationInfo/*//gex:EX_GeographicBoundingBox">
         <GeoBox>
+          <SouthBL>
+            <xsl:value-of select="concat(gex:southBoundLatitude, ', ')"/>
+          </SouthBL>
           <WestBL>
-            <xsl:value-of select="gex:westBoundLongitude"/>
+            <xsl:value-of select="concat(gex:westBoundLongitude, ', ')"/>
           </WestBL>
+          <NorthBL>
+            <xsl:value-of select="concat(gex:northBoundLatitude, ', ')"/>
+          </NorthBL>
           <EastBL>
             <xsl:value-of select="gex:eastBoundLongitude"/>
           </EastBL>
-          <SouthBL>
-            <xsl:value-of select="gex:southBoundLatitude"/>
-          </SouthBL>
-          <NorthBL>
-            <xsl:value-of select="gex:northBoundLatitude"/>
-          </NorthBL>
         </GeoBox>
       </xsl:for-each>
 
+      <xsl:for-each select="mdb:identificationInfo/*//gex:EX_TemporalExtent/gex:extent">
       <Temporal_coverage_from>
-        <xsl:value-of select="mdb:identificationInfo/*/mri:extent/*/gex:temporalElement/*/gex:extent/gml:TimePeriod/gml:beginPosition"/>
+        <xsl:value-of select="*/*[1]"/>
       </Temporal_coverage_from>
 
       <Temporal_coverage_to>
-        <xsl:value-of select="mdb:identificationInfo/*/mri:extent/gex:EX_Extent/gex:temporalElement/gex:EX_TemporalExtent/gex:extent/gml:TimePeriod/gml:endPosition"/>
+        <xsl:value-of select="*/*[2]"/>
       </Temporal_coverage_to>
+      </xsl:for-each>
 
       <Update_Frequency>
         <xsl:value-of select="mdb:identificationInfo/*/mri:resourceMaintenance/mmi:MD_MaintenanceInformation/mmi:maintenanceAndUpdateFrequency/mmi:MD_MaintenanceFrequencyCode/@codeListValue"/>
@@ -191,9 +204,30 @@
         </Location>
       </xsl:for-each>
 
+      <Access_URL>
+        <xsl:value-of select="mdb:metadataLinkage/cit:CI_OnlineResource/cit:linkage/*"/>
+      </Access_URL>
+
       <License>
-        <xsl:value-of select="mdb:identificationInfo/*/*/mco:MD_LegalConstraints/*/mco:reference/*/cit:onlineResource/cit:linkage"/>
+        <xsl:value-of select="mdb:identificationInfo/*/mri:resourceConstraints/mco:MD_LegalConstraints/mco:reference/*/cit:onlineResource/*/cit:linkage/*"/>
       </License>
+
+      <Sensitive_Data>
+
+      </Sensitive_Data>
+
+      <Legal_Authority>
+
+      </Legal_Authority>
+
+      <Disposal>
+        <xsl:for-each select="mdb:identificationInfo/*/mri:resourceConstraints/mco:MD_Constraints/mco:useLimitation/*">
+          <xsl:if test="starts-with(., 'Disposal')">
+            <xsl:value-of select="."/>
+          </xsl:if>
+        </xsl:for-each>
+
+      </Disposal>
 
       <!--<xsl:for-each select="mdb:identificationInfo/*/*/mco:MD_Constraints/*">
         <Constraints>

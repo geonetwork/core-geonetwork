@@ -1,0 +1,1141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:cycAnnot="http://sw.cyc.com/CycAnnotations_v1#" xmlns:skosxl="http://www.w3.org/2008/05/skos-xl#" xmlns:owl="http://www.w3.org/2002/07/owl#" xmlns:csw="http://semantic-web.at/ontologies/csw.owl#" xmlns:xsd="http://www.w3.org/2001/XMLSchema#" xmlns:freebase="http://rdf.freebase.com/ns/" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:dbpedia="http://dbpedia.org/resource/" xmlns:cyc="http://sw.cyc.com/concept/" xmlns:tags="http://www.holygoat.co.uk/owl/redwood/0.1/tags/" xmlns:opencyc="http://sw.opencyc.org/concept/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:ctag="http://commontag.org/ns#" xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:fn="http://www.w3.org/2005/xpath-functions#" xmlns:sesame="http://www.openrdf.org/schema/sesame#">
+  <rdf:Description rdf:about="http://www.w3.org/1999/02/22-rdf-syntax-ns#type">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:domain rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class" />
+    <rdfs:subPropertyOf rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#type" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class" />
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property" />
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/1999/02/22-rdf-syntax-ns#subject">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:domain rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Statement" />
+    <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:subPropertyOf rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#subject" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/1999/02/22-rdf-syntax-ns#predicate">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:domain rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Statement" />
+    <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:subPropertyOf rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#predicate" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/1999/02/22-rdf-syntax-ns#object">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:domain rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Statement" />
+    <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:subPropertyOf rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#object" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/1999/02/22-rdf-syntax-ns#first">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:domain rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#List" />
+    <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:subPropertyOf rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#first" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/1999/02/22-rdf-syntax-ns#rest">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:domain rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#List" />
+    <rdfs:range rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#List" />
+    <rdfs:subPropertyOf rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#rest" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/1999/02/22-rdf-syntax-ns#value">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:domain rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:subPropertyOf rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#value" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#List" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/1999/02/22-rdf-syntax-ns#List">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class" />
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#List" />
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/2000/01/rdf-schema#domain">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:domain rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property" />
+    <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class" />
+    <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#domain" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/2000/01/rdf-schema#Resource">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class" />
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/2000/01/rdf-schema#range">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:domain rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property" />
+    <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class" />
+    <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#range" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/2000/01/rdf-schema#subPropertyOf">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:domain rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property" />
+    <rdfs:range rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property" />
+    <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#subPropertyOf" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/2000/01/rdf-schema#subClassOf">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:domain rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class" />
+    <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class" />
+    <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#subClassOf" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/2000/01/rdf-schema#Class">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class" />
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/1999/02/22-rdf-syntax-ns#Statement">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class" />
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Statement" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/2000/01/rdf-schema#member">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:domain rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#member" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/2000/01/rdf-schema#seeAlso">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:domain rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#seeAlso" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/2000/01/rdf-schema#isDefinedBy">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:domain rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#seeAlso" />
+    <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#isDefinedBy" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/2000/01/rdf-schema#comment">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:domain rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal" />
+    <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#comment" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/2000/01/rdf-schema#label">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:domain rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal" />
+    <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#label" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/2000/01/rdf-schema#Literal">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class" />
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/1999/02/22-rdf-syntax-ns#Alt">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class" />
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Alt" />
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#Container" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/2000/01/rdf-schema#Container">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class" />
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#Container" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/1999/02/22-rdf-syntax-ns#Bag">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class" />
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#Container" />
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Bag" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/1999/02/22-rdf-syntax-ns#Seq">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class" />
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#Container" />
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Seq" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/2000/01/rdf-schema#ContainerMembershipProperty">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class" />
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property" />
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#ContainerMembershipProperty" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Datatype" />
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal" />
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/2000/01/rdf-schema#Datatype">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class" />
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class" />
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#Datatype" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/WPS">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Web Processing Service</skos:prefLabel>
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2017-10-05T03:23:56Z</dcterms:created>
+    <dcterms:creator rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <dcterms:source xml:lang="en">GeoNetwork</dcterms:source>
+    <skos:broader rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/OGC" />
+    <skos:altLabel xml:lang="en">OGC:WPS</skos:altLabel>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2018-03-07T02:03:22Z</dcterms:modified>
+    <dcterms:contributor rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <skos:definition xml:lang="en">Open Geospatial Consortium's Web Processing Service (WPS)</skos:definition>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/2004/02/skos/core#prefLabel">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2004/02/skos/core#prefLabel" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://pid.geoscience.gov.au/def/voc/ga/protocoltype">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#ConceptScheme" />
+    <rdfs:label xml:lang="en">Protocol Type</rdfs:label>
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2017-10-05T03:23:56Z</dcterms:created>
+    <dcterms:creator rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <dcterms:title xml:lang="en">Protocol Type</dcterms:title>
+    <skos:hasTopConcept rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/DataTurbine" />
+    <skos:hasTopConcept rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/Database" />
+    <skos:hasTopConcept rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/ESRI" />
+    <skos:hasTopConcept rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/File" />
+    <skos:hasTopConcept rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/GoogleEarth" />
+    <skos:hasTopConcept rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/JetStream" />
+    <skos:hasTopConcept rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/OGC" />
+    <skos:hasTopConcept rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/UKST" />
+    <skos:hasTopConcept rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/W3C" />
+    <dcterms:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#string">2019-01-25</dcterms:issued>
+    <owl:versionInfo rdf:datatype="http://www.w3.org/2001/XMLSchema#string">V1.2</owl:versionInfo>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://purl.org/dc/terms/created">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:subPropertyOf rdf:resource="http://purl.org/dc/terms/created" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://purl.org/dc/terms/creator">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:subPropertyOf rdf:resource="http://purl.org/dc/terms/creator" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://purl.org/dc/terms/Agent" />
+    <foaf:name rdf:datatype="http://www.w3.org/2001/XMLSchema#string">GA_Sedgmen.Lara_Admin</foaf:name>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://purl.org/dc/terms/title">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:subPropertyOf rdf:resource="http://purl.org/dc/terms/title" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/2004/02/skos/core#ConceptScheme">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class" />
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/2004/02/skos/core#ConceptScheme" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/2004/02/skos/core#hasTopConcept">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2004/02/skos/core#hasTopConcept" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/DataTurbine">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">DataTurbine</skos:prefLabel>
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2017-10-05T03:23:56Z</dcterms:created>
+    <dcterms:creator rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <dcterms:source xml:lang="en">GeoNetwork</dcterms:source>
+    <skos:altLabel xml:lang="en">RBNB:DATATURBINE</skos:altLabel>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2018-03-07T01:37:22Z</dcterms:modified>
+    <dcterms:contributor rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <skos:topConceptOf rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype" />
+    <skos:definition xml:lang="en">Ring Buffer Network Bus (RBNB) DataTurbine streaming</skos:definition>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/Database">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Database</skos:prefLabel>
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2017-10-05T03:23:56Z</dcterms:created>
+    <dcterms:creator rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <dcterms:source xml:lang="en">Geoscience Australia</dcterms:source>
+    <skos:topConceptOf rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype" />
+    <skos:definition xml:lang="en">Un-typed database protocol</skos:definition>
+    <skos:narrower rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/DB-ORACLE" />
+    <skos:narrower rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/DB-POSTGIS" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/ESRI">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">ESRI</skos:prefLabel>
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2017-10-05T03:23:56Z</dcterms:created>
+    <dcterms:creator rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <dcterms:source xml:lang="en">Geoscience Australia</dcterms:source>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2018-03-07T01:36:04Z</dcterms:modified>
+    <dcterms:contributor rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <skos:topConceptOf rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype" />
+    <skos:definition xml:lang="en">Un-typed ESRI protocol</skos:definition>
+    <skos:narrower rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/AIMS-HTTP-configuration" />
+    <skos:narrower rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/AIMS-HTTP-get-feature" />
+    <skos:narrower rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/AIMS-HTTP-get-image" />
+    <skos:narrower rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/Geoprocessing-Service" />
+    <skos:narrower rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/Image-Service" />
+    <skos:narrower rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/Map-Service" />
+    <skos:narrower rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/Services-Directory-Page" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/File">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">File</skos:prefLabel>
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2017-10-05T03:23:56Z</dcterms:created>
+    <dcterms:creator rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <dcterms:source xml:lang="en">GeoNetwork</dcterms:source>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2019-01-24T23:29:32Z</dcterms:modified>
+    <dcterms:contributor rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <skos:topConceptOf rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype" />
+    <skos:narrower rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/FILE-GEO" />
+    <skos:narrower rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/FILE-RASTER" />
+    <skos:narrower rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/FILE-DATA-DIRECTORY" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/GoogleEarth">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Google Earth KML Service 2.0</skos:prefLabel>
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2017-10-05T03:23:56Z</dcterms:created>
+    <dcterms:creator rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <dcterms:source xml:lang="en">GeoNetwork</dcterms:source>
+    <skos:altLabel xml:lang="en">GLG:KML-2.0-http-get-map</skos:altLabel>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2018-03-07T01:39:11Z</dcterms:modified>
+    <dcterms:contributor rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <skos:topConceptOf rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype" />
+    <skos:definition xml:lang="en">Google Earth Keyhole Markup Language (KML) Service version 2.0</skos:definition>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/JetStream">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">File for download through Jetstream Proxy</skos:prefLabel>
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2017-10-05T03:23:56Z</dcterms:created>
+    <dcterms:creator rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <dcterms:source xml:lang="en">Geoscience Australia</dcterms:source>
+    <skos:altLabel xml:lang="en">URN:JETSTREAM-PROXY</skos:altLabel>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2018-03-07T01:45:30Z</dcterms:modified>
+    <dcterms:contributor rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <skos:topConceptOf rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype" />
+    <skos:definition xml:lang="en">File for download through a Jetstream streaming proxy</skos:definition>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/OGC">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Open Geospatial Consortium</skos:prefLabel>
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2017-10-05T03:23:56Z</dcterms:created>
+    <dcterms:creator rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <dcterms:source xml:lang="en">Geoscience Australia</dcterms:source>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2018-03-08T03:49:16Z</dcterms:modified>
+    <dcterms:contributor rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <skos:topConceptOf rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype" />
+    <skos:definition xml:lang="en">Un-typed Open Geospatial Consortium protocol</skos:definition>
+    <skos:narrower rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/WPS" />
+    <skos:narrower rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/CSW" />
+    <skos:narrower rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/GML" />
+    <skos:narrower rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/KML" />
+    <skos:narrower rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/ODS" />
+    <skos:narrower rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/OGS" />
+    <skos:narrower rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/OPS" />
+    <skos:narrower rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/ORS" />
+    <skos:narrower rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/OUS" />
+    <skos:narrower rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/SAS" />
+    <skos:narrower rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/SOS" />
+    <skos:narrower rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/SOS-1.0.0-HTTP-get-observation" />
+    <skos:narrower rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/SOS-1.0.0-HTTP-post-observation" />
+    <skos:narrower rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/SPS" />
+    <skos:narrower rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/WCS" />
+    <skos:narrower rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/WCS-1.0.0-HTTP-get-capabilities" />
+    <skos:narrower rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/WCS-1.1.0-HTTP-get-capabilities" />
+    <skos:narrower rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/WCTS" />
+    <skos:narrower rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/WFS" />
+    <skos:narrower rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/WFS-1.0.0-HTTP-get-capabilities" />
+    <skos:narrower rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/WFS-1.1.0-HTTP-get-capabilities" />
+    <skos:narrower rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/WFS-G" />
+    <skos:narrower rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/WMC-1.1.0-HTTP-get-capabilities" />
+    <skos:narrower rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/WMS" />
+    <skos:narrower rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/WMS-1.1.1-HTTP-get-capabilities" />
+    <skos:narrower rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/WMS-1.1.1-HTTP-get-map" />
+    <skos:narrower rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/WMS-1.3.0-HTTP-get-capabilities" />
+    <skos:narrower rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/WMS-1.3.0-HTTP-get-map" />
+    <skos:narrower rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/WNS" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/UKST">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Unknown Service Type</skos:prefLabel>
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2017-10-05T03:23:56Z</dcterms:created>
+    <dcterms:creator rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <dcterms:source xml:lang="en">GeoNetwork</dcterms:source>
+    <skos:altLabel xml:lang="en">UKST</skos:altLabel>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2018-03-07T01:54:50Z</dcterms:modified>
+    <dcterms:contributor rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <skos:topConceptOf rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype" />
+    <skos:definition xml:lang="en">Unknown Service Type</skos:definition>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/W3C">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">W3C</skos:prefLabel>
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2017-10-05T03:23:56Z</dcterms:created>
+    <dcterms:creator rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <dcterms:source xml:lang="en">Geoscience Australia</dcterms:source>
+    <skos:topConceptOf rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype" />
+    <skos:definition xml:lang="en">Un-typed World Wide Web Consortium protocol</skos:definition>
+    <skos:narrower rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/HTTP-RSS" />
+    <skos:narrower rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/HTTP-ical" />
+    <skos:narrower rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/HTTP-link" />
+    <skos:narrower rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/HTTP-opendap" />
+    <skos:narrower rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/HTTP-partners" />
+    <skos:narrower rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/HTTP-related" />
+    <skos:narrower rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/HTTP-samples" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/AIMS-HTTP-configuration">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">ArcIMS Map Service Configuration File AXL</skos:prefLabel>
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2017-10-05T03:23:56Z</dcterms:created>
+    <dcterms:creator rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <dcterms:source xml:lang="en">GeoNetwork</dcterms:source>
+    <skos:broader rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/ESRI" />
+    <skos:altLabel xml:lang="en">ESRI:AIMS--http--configuration</skos:altLabel>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2018-03-19T05:33:55Z</dcterms:modified>
+    <dcterms:contributor rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <skos:definition xml:lang="en">ESRI's ArcIMS Map Service Configuration File written in ArcXML</skos:definition>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://purl.org/dc/terms/source">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:subPropertyOf rdf:resource="http://purl.org/dc/terms/source" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/2004/02/skos/core#Concept">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class" />
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/2004/02/skos/core#broader">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2004/02/skos/core#broader" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/AIMS-HTTP-get-feature">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">ArcIMS Internet Feature Map Service</skos:prefLabel>
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2017-10-05T03:23:56Z</dcterms:created>
+    <dcterms:creator rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <dcterms:source xml:lang="en">GeoNetwork</dcterms:source>
+    <skos:broader rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/ESRI" />
+    <skos:altLabel xml:lang="en">ESRI:AIMS--http-get-feature</skos:altLabel>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2018-03-19T05:34:18Z</dcterms:modified>
+    <dcterms:contributor rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <skos:definition xml:lang="en">ESRI's ArcIMS Internet Feature Map Service</skos:definition>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/2004/02/skos/core#altLabel">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2004/02/skos/core#altLabel" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/AIMS-HTTP-get-image">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">ArcIMS Internet Image Map Service</skos:prefLabel>
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2017-10-05T03:23:56Z</dcterms:created>
+    <dcterms:creator rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <dcterms:source xml:lang="en">GeoNetwork</dcterms:source>
+    <skos:broader rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/ESRI" />
+    <skos:altLabel xml:lang="en">ESRI:AIMS--http-get-image</skos:altLabel>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2018-03-19T05:34:29Z</dcterms:modified>
+    <dcterms:contributor rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <skos:definition xml:lang="en">ESRI's ArcIMS Internet Image Map Service</skos:definition>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://purl.org/dc/terms/modified">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:subPropertyOf rdf:resource="http://purl.org/dc/terms/modified" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://purl.org/dc/terms/contributor">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:subPropertyOf rdf:resource="http://purl.org/dc/terms/contributor" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/CSW">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Catalogue Service for the Web</skos:prefLabel>
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2017-10-05T03:23:56Z</dcterms:created>
+    <dcterms:creator rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <dcterms:source xml:lang="en">GeoNetwork</dcterms:source>
+    <skos:broader rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/OGC" />
+    <skos:altLabel xml:lang="en">OGC:CSW</skos:altLabel>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2018-03-07T01:36:31Z</dcterms:modified>
+    <dcterms:contributor rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <skos:definition xml:lang="en">Open Geospatial Consortium's Catalogue Service for the Web</skos:definition>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/DB-ORACLE">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">ORACLE database table</skos:prefLabel>
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2017-10-05T03:23:56Z</dcterms:created>
+    <dcterms:creator rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <dcterms:source xml:lang="en">GeoNetwork</dcterms:source>
+    <skos:broader rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/Database" />
+    <skos:altLabel xml:lang="en">DB:ORACLE</skos:altLabel>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2018-03-07T01:37:00Z</dcterms:modified>
+    <dcterms:contributor rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <skos:definition xml:lang="en">ORACLE database table</skos:definition>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/DB-POSTGIS">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">PostGIS database table</skos:prefLabel>
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2017-10-05T03:23:56Z</dcterms:created>
+    <dcterms:creator rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <dcterms:source xml:lang="en">GeoNetwork</dcterms:source>
+    <skos:broader rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/Database" />
+    <skos:altLabel xml:lang="en">DB:POSTGIS</skos:altLabel>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2018-03-07T01:37:10Z</dcterms:modified>
+    <dcterms:contributor rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <skos:definition xml:lang="en">PostGIS database table</skos:definition>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/2004/02/skos/core#topConceptOf">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2004/02/skos/core#topConceptOf" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/2004/02/skos/core#definition">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2004/02/skos/core#definition" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/2004/02/skos/core#narrower">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2004/02/skos/core#narrower" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/Geoprocessing-Service">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">ArcGIS Geoprocessing Service</skos:prefLabel>
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2017-10-05T03:23:56Z</dcterms:created>
+    <dcterms:creator rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <dcterms:source xml:lang="en">Geoscience Australia</dcterms:source>
+    <skos:broader rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/ESRI" />
+    <skos:altLabel xml:lang="en">ESRI:Geoprocessing-Service</skos:altLabel>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2018-03-07T01:38:46Z</dcterms:modified>
+    <dcterms:contributor rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <skos:definition xml:lang="en">ESRI's ArcGIS Geoprocessing Server</skos:definition>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/Image-Service">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">ArcGIS Image Service</skos:prefLabel>
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2017-10-05T03:23:56Z</dcterms:created>
+    <dcterms:creator rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <dcterms:source xml:lang="en">Geoscience Australia</dcterms:source>
+    <skos:broader rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/ESRI" />
+    <skos:altLabel xml:lang="en">ESRI:Image-Service</skos:altLabel>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2018-03-07T01:45:05Z</dcterms:modified>
+    <dcterms:contributor rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <skos:definition xml:lang="en">ESRI's ArcGIS Image Server</skos:definition>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/Map-Service">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">ArcGIS Map Service</skos:prefLabel>
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2017-10-05T03:23:56Z</dcterms:created>
+    <dcterms:creator rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <dcterms:source xml:lang="en">Geoscience Australia</dcterms:source>
+    <skos:broader rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/ESRI" />
+    <skos:altLabel xml:lang="en">ESRI:Map-Service</skos:altLabel>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2018-03-07T01:47:26Z</dcterms:modified>
+    <dcterms:contributor rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <skos:definition xml:lang="en">ESRI's ArcGIS Map Server</skos:definition>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/Services-Directory-Page">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">ArcGIS Services Directory Page</skos:prefLabel>
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2017-10-05T03:23:56Z</dcterms:created>
+    <dcterms:creator rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <dcterms:source xml:lang="en">Geoscience Australia</dcterms:source>
+    <skos:broader rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/ESRI" />
+    <skos:altLabel xml:lang="en">ESRI:Services-Directory-Page</skos:altLabel>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2018-03-19T05:34:43Z</dcterms:modified>
+    <dcterms:contributor rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <skos:definition xml:lang="en">ESRI's ArcGIS Services Directory Page</skos:definition>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/FILE-GEO">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">GIS file</skos:prefLabel>
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2017-10-05T03:23:56Z</dcterms:created>
+    <dcterms:creator rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <dcterms:source xml:lang="en">GeoNetwork</dcterms:source>
+    <skos:broader rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/File" />
+    <skos:altLabel xml:lang="en">FILE:GEO</skos:altLabel>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2018-03-07T01:37:38Z</dcterms:modified>
+    <dcterms:contributor rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <skos:definition xml:lang="en">File containing Geographic Information System (GIS) data</skos:definition>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/FILE-RASTER">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">GIS Raster file</skos:prefLabel>
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2017-10-05T03:23:56Z</dcterms:created>
+    <dcterms:creator rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <dcterms:source xml:lang="en">GeoNetwork</dcterms:source>
+    <skos:broader rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/File" />
+    <skos:altLabel xml:lang="en">FILE:RASTER</skos:altLabel>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2018-03-07T01:37:52Z</dcterms:modified>
+    <dcterms:contributor rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <skos:definition xml:lang="en">File containing raster data</skos:definition>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/GML">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Geography Markup Language</skos:prefLabel>
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2017-10-05T03:23:56Z</dcterms:created>
+    <dcterms:creator rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <dcterms:source xml:lang="en">GeoNetwork</dcterms:source>
+    <skos:broader rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/OGC" />
+    <skos:altLabel xml:lang="en">OGC:GML</skos:altLabel>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2018-03-07T01:38:17Z</dcterms:modified>
+    <dcterms:contributor rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <skos:definition xml:lang="en">Open Geospatial Consortium's Geography Markup Language (GML)</skos:definition>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/HTTP-RSS">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">RSS News feed URL</skos:prefLabel>
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2017-10-05T03:23:56Z</dcterms:created>
+    <dcterms:creator rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <dcterms:source xml:lang="en">GeoNetwork</dcterms:source>
+    <skos:broader rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/W3C" />
+    <skos:altLabel xml:lang="en">WWW:LINK-1.0-http--rss</skos:altLabel>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2018-03-07T01:39:47Z</dcterms:modified>
+    <dcterms:contributor rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <skos:definition xml:lang="en">Rich Site Summary (RSS) News feed URL</skos:definition>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/HTTP-ical">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">iCalendar URL</skos:prefLabel>
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2017-10-05T03:23:56Z</dcterms:created>
+    <dcterms:creator rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <dcterms:source xml:lang="en">GeoNetwork</dcterms:source>
+    <skos:broader rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/W3C" />
+    <skos:altLabel xml:lang="en">WWW:LINK-1.0-http--ical</skos:altLabel>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2018-03-07T01:40:03Z</dcterms:modified>
+    <dcterms:contributor rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <skos:definition xml:lang="en">iCalendar URL</skos:definition>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/HTTP-link">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Web address URL</skos:prefLabel>
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2017-10-05T03:23:56Z</dcterms:created>
+    <dcterms:creator rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <dcterms:source xml:lang="en">GeoNetwork</dcterms:source>
+    <skos:broader rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/W3C" />
+    <skos:altLabel xml:lang="en">WWW:LINK-1.0-http--link</skos:altLabel>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2018-03-07T01:40:20Z</dcterms:modified>
+    <dcterms:contributor rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <skos:definition xml:lang="en">Web address URL</skos:definition>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/HTTP-opendap">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">OPeNDAP URL</skos:prefLabel>
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2017-10-05T03:23:56Z</dcterms:created>
+    <dcterms:creator rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <dcterms:source xml:lang="en">GeoNetwork</dcterms:source>
+    <skos:broader rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/W3C" />
+    <skos:altLabel xml:lang="en">WWW:LINK-1.0-http--opendap</skos:altLabel>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2018-03-07T01:40:36Z</dcterms:modified>
+    <dcterms:contributor rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <skos:definition xml:lang="en">Open-source Project for a Network Data Access Protocol (OPeNDAP) URL</skos:definition>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/HTTP-partners">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Partner web address URL</skos:prefLabel>
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2017-10-05T03:23:56Z</dcterms:created>
+    <dcterms:creator rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <dcterms:source xml:lang="en">GeoNetwork</dcterms:source>
+    <skos:broader rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/W3C" />
+    <skos:altLabel xml:lang="en">WWW:LINK-1.0-http--partners</skos:altLabel>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2018-03-07T01:40:52Z</dcterms:modified>
+    <dcterms:contributor rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <skos:definition xml:lang="en">Partner web address URL</skos:definition>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/HTTP-related">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Related link URL</skos:prefLabel>
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2017-10-05T03:23:56Z</dcterms:created>
+    <dcterms:creator rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <dcterms:source xml:lang="en">GeoNetwork</dcterms:source>
+    <skos:broader rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/W3C" />
+    <skos:altLabel xml:lang="en">WWW:LINK-1.0-http--related</skos:altLabel>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2018-03-07T01:41:13Z</dcterms:modified>
+    <dcterms:contributor rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <skos:definition xml:lang="en">Related link URL</skos:definition>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/HTTP-samples">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Showcase product URL</skos:prefLabel>
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2017-10-05T03:23:56Z</dcterms:created>
+    <dcterms:creator rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <dcterms:source xml:lang="en">GeoNetwork</dcterms:source>
+    <skos:broader rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/W3C" />
+    <skos:altLabel xml:lang="en">WWW:LINK-1.0-http--samples</skos:altLabel>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2018-03-07T01:41:31Z</dcterms:modified>
+    <dcterms:contributor rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <skos:definition xml:lang="en">Showcase product URL</skos:definition>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/KML">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">KML Keyhole Markup Language</skos:prefLabel>
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2017-10-05T03:23:56Z</dcterms:created>
+    <dcterms:creator rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <dcterms:source xml:lang="en">GeoNetwork</dcterms:source>
+    <skos:broader rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/OGC" />
+    <skos:altLabel xml:lang="en">OGC:KML</skos:altLabel>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2018-03-07T01:46:12Z</dcterms:modified>
+    <dcterms:contributor rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <skos:definition xml:lang="en">Open Geospatial Consortium's Keyhole Markup Language (KML)</skos:definition>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/ODS">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">OpenLS Directory Service</skos:prefLabel>
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2017-10-05T03:23:56Z</dcterms:created>
+    <dcterms:creator rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <dcterms:source xml:lang="en">GeoNetwork</dcterms:source>
+    <skos:broader rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/OGC" />
+    <skos:altLabel xml:lang="en">OGC:ODS</skos:altLabel>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2018-03-07T01:50:21Z</dcterms:modified>
+    <dcterms:contributor rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <skos:definition xml:lang="en">Open Geospatial Consortium's Location Service (OpenLS) Directory Service (ODS)</skos:definition>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/OGS">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">OpenLS Gateway Service</skos:prefLabel>
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2017-10-05T03:23:56Z</dcterms:created>
+    <dcterms:creator rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <dcterms:source xml:lang="en">GeoNetwork</dcterms:source>
+    <skos:broader rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/OGC" />
+    <skos:altLabel xml:lang="en">OGC:OGS</skos:altLabel>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2018-03-07T01:50:55Z</dcterms:modified>
+    <dcterms:contributor rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <skos:definition xml:lang="en">Open Geospatial Consortium's Location Service (OpenLS) Gateway Service (ODS)</skos:definition>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/OPS">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">OpenLS Presentation Service</skos:prefLabel>
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2017-10-05T03:23:56Z</dcterms:created>
+    <dcterms:creator rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <dcterms:source xml:lang="en">GeoNetwork</dcterms:source>
+    <skos:broader rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/OGC" />
+    <skos:altLabel xml:lang="en">OGC:OPS</skos:altLabel>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2018-03-07T01:51:16Z</dcterms:modified>
+    <dcterms:contributor rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <skos:definition xml:lang="en">Open Geospatial Consortium's Location Service (OpenLS) Presentation Service (ODS)</skos:definition>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/ORS">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">OpenLS Route Service</skos:prefLabel>
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2017-10-05T03:23:56Z</dcterms:created>
+    <dcterms:creator rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <dcterms:source xml:lang="en">GeoNetwork</dcterms:source>
+    <skos:broader rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/OGC" />
+    <skos:altLabel xml:lang="en">OGC:ORS</skos:altLabel>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2018-03-07T01:51:33Z</dcterms:modified>
+    <dcterms:contributor rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <skos:definition xml:lang="en">Open Geospatial Consortium's Location Service (OpenLS) Route Service (ODS)</skos:definition>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/OUS">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">OpenLS Utility Service</skos:prefLabel>
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2017-10-05T03:23:56Z</dcterms:created>
+    <dcterms:creator rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <dcterms:source xml:lang="en">GeoNetwork</dcterms:source>
+    <skos:broader rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/OGC" />
+    <skos:altLabel xml:lang="en">OGC:OUS</skos:altLabel>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2018-03-07T01:52:01Z</dcterms:modified>
+    <dcterms:contributor rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <skos:definition xml:lang="en">Open Geospatial Consortium's Location Service (OpenLS) Utility Service (ODS)</skos:definition>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/SAS">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Sensor Alert Service</skos:prefLabel>
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2017-10-05T03:23:56Z</dcterms:created>
+    <dcterms:creator rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <dcterms:source xml:lang="en">GeoNetwork</dcterms:source>
+    <skos:broader rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/OGC" />
+    <skos:altLabel xml:lang="en">OGC:SAS</skos:altLabel>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2018-03-07T01:52:15Z</dcterms:modified>
+    <dcterms:contributor rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <skos:definition xml:lang="en">Open Geospatial Consortium's Sensor Alert Service (SAS)</skos:definition>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/SOS">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Sensor Observation Service</skos:prefLabel>
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2017-10-05T03:23:56Z</dcterms:created>
+    <dcterms:creator rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <dcterms:source xml:lang="en">GeoNetwork</dcterms:source>
+    <skos:broader rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/OGC" />
+    <skos:altLabel xml:lang="en">OGC:SOS</skos:altLabel>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2018-03-07T01:52:24Z</dcterms:modified>
+    <dcterms:contributor rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <skos:definition xml:lang="en">Open Geospatial Consortium's Sensor Observation Service (SOS)</skos:definition>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/SOS-1.0.0-HTTP-get-observation">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Sensor Observation Service GetObservation 1.0.0</skos:prefLabel>
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2017-10-05T03:23:56Z</dcterms:created>
+    <dcterms:creator rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <dcterms:source xml:lang="en">GeoNetwork</dcterms:source>
+    <skos:broader rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/OGC" />
+    <skos:altLabel xml:lang="en">OGC:SOS-1.0.0-http-get-observation</skos:altLabel>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2018-03-07T01:53:17Z</dcterms:modified>
+    <dcterms:contributor rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <skos:definition xml:lang="en">Open Geospatial Consortium's Sensor Observation Service (SOS) version 1.0.0 GetObservation operation</skos:definition>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/SOS-1.0.0-HTTP-post-observation">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Sensor Observation Service GetObservation POST 1.0.0</skos:prefLabel>
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2017-10-05T03:23:56Z</dcterms:created>
+    <dcterms:creator rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <dcterms:source xml:lang="en">GeoNetwork</dcterms:source>
+    <skos:broader rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/OGC" />
+    <skos:altLabel xml:lang="en">OGC:SOS-1.0.0-http-post-observation</skos:altLabel>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2018-03-07T01:53:51Z</dcterms:modified>
+    <dcterms:contributor rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <skos:definition xml:lang="en">Open Geospatial Consortium's Sensor Observation Service (SOS) version 1.0.0 GetObservation operation using POST</skos:definition>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/SPS">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Sensor Planning Service</skos:prefLabel>
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2017-10-05T03:23:56Z</dcterms:created>
+    <dcterms:creator rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <dcterms:source xml:lang="en">GeoNetwork</dcterms:source>
+    <skos:broader rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/OGC" />
+    <skos:altLabel xml:lang="en">OGC:SPS</skos:altLabel>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2018-03-07T01:54:03Z</dcterms:modified>
+    <dcterms:contributor rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <skos:definition xml:lang="en">Open Geospatial Consortium's Sensor Planning Service (SPS)</skos:definition>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/WCS">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Web Coverage Service</skos:prefLabel>
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2017-10-05T03:23:56Z</dcterms:created>
+    <dcterms:creator rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <dcterms:source xml:lang="en">GeoNetwork</dcterms:source>
+    <skos:broader rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/OGC" />
+    <skos:altLabel xml:lang="en">OGC:WCS</skos:altLabel>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2018-03-07T01:55:04Z</dcterms:modified>
+    <dcterms:contributor rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <skos:definition xml:lang="en">Open Geospatial Consortium's Web Coverage Service (WCS)</skos:definition>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/WCS-1.0.0-HTTP-get-capabilities">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Web Coverage Service 1.0.0 GetCapabilities</skos:prefLabel>
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2017-10-05T03:23:56Z</dcterms:created>
+    <dcterms:creator rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <dcterms:source xml:lang="en">Geoscience Australia</dcterms:source>
+    <skos:broader rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/OGC" />
+    <skos:altLabel xml:lang="en">OGC:WCS-1.0.0-http-get-capabilities</skos:altLabel>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2018-03-07T01:55:47Z</dcterms:modified>
+    <dcterms:contributor rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <skos:definition xml:lang="en">Open Geospatial Consortium's Web Coverage Service (WCS) version 1.0.0 GetCapabilities operation</skos:definition>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/WCS-1.1.0-HTTP-get-capabilities">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Web Coverage Service 1.1.0 GetCapabilities</skos:prefLabel>
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2017-10-05T03:23:56Z</dcterms:created>
+    <dcterms:creator rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <dcterms:source xml:lang="en">GeoNetwork</dcterms:source>
+    <skos:broader rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/OGC" />
+    <skos:altLabel xml:lang="en">OGC:WCS-1.1.0-http-get-capabilities</skos:altLabel>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2018-03-07T05:18:43Z</dcterms:modified>
+    <dcterms:contributor rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <skos:definition xml:lang="en">Open Geospatial Consortium's Web Coverage Service (WCS) version 1.1.0 GetCapabilities operation</skos:definition>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/WCTS">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Web Coordinate Transformation Service</skos:prefLabel>
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2017-10-05T03:23:56Z</dcterms:created>
+    <dcterms:creator rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <dcterms:source xml:lang="en">GeoNetwork</dcterms:source>
+    <skos:broader rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/OGC" />
+    <skos:altLabel xml:lang="en">OGC:WCTS</skos:altLabel>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2018-03-07T01:56:56Z</dcterms:modified>
+    <dcterms:contributor rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <skos:definition xml:lang="en">Open Geospatial Consortium's Web Coordinate Transformation Service (WCTS)</skos:definition>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/WFS">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Web Feature Service</skos:prefLabel>
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2017-10-05T03:23:56Z</dcterms:created>
+    <dcterms:creator rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <dcterms:source xml:lang="en">GeoNetwork</dcterms:source>
+    <skos:broader rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/OGC" />
+    <skos:altLabel xml:lang="en">OGC:WFS</skos:altLabel>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2018-03-07T01:57:10Z</dcterms:modified>
+    <dcterms:contributor rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <skos:definition xml:lang="en">Open Geospatial Consortium's Web Feature Service (WFS)</skos:definition>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/WFS-1.0.0-HTTP-get-capabilities">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Web Feature Service 1.0.0 GetCapabilities</skos:prefLabel>
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2017-10-05T03:23:56Z</dcterms:created>
+    <dcterms:creator rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <dcterms:source xml:lang="en">GeoNetwork</dcterms:source>
+    <skos:broader rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/OGC" />
+    <skos:altLabel xml:lang="en">OGC:WFS-1.0.0-http-get-capabilities</skos:altLabel>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2018-03-07T01:57:34Z</dcterms:modified>
+    <dcterms:contributor rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <skos:definition xml:lang="en">Open Geospatial Consortium's Web Feature Service (WFS) version 1.0.0 GetCapabilities operation</skos:definition>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/WFS-1.1.0-HTTP-get-capabilities">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Web Feature Service 1.1.0 GetCapabilities</skos:prefLabel>
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2017-10-05T03:23:56Z</dcterms:created>
+    <dcterms:creator rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <dcterms:source xml:lang="en">Geoscience Australia</dcterms:source>
+    <skos:broader rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/OGC" />
+    <skos:altLabel xml:lang="en">OGC:WFS-1.1.0-http-get-capabilities</skos:altLabel>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2018-03-07T05:19:51Z</dcterms:modified>
+    <dcterms:contributor rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <skos:definition xml:lang="en">Open Geospatial Consortium's Web Feature Service (WFS) version 1.1.0 GetCapabilities operation</skos:definition>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/WFS-G">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Gazetteer Service</skos:prefLabel>
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2017-10-05T03:23:56Z</dcterms:created>
+    <dcterms:creator rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <dcterms:source xml:lang="en">GeoNetwork</dcterms:source>
+    <skos:broader rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/OGC" />
+    <skos:altLabel xml:lang="en">OGC:WFS-G</skos:altLabel>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2018-03-07T01:58:17Z</dcterms:modified>
+    <dcterms:contributor rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <skos:definition xml:lang="en">Open Geospatial Consortium's Web Feature Service Gazetteer Profile (WFS-G)</skos:definition>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/WMC-1.1.0-HTTP-get-capabilities">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Web Map Context 1.1 GetCapabilities</skos:prefLabel>
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2017-10-05T03:23:56Z</dcterms:created>
+    <dcterms:creator rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <dcterms:source xml:lang="en">GeoNetwork</dcterms:source>
+    <skos:broader rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/OGC" />
+    <skos:altLabel xml:lang="en">OGC:WMC-1.1.0-http-get-capabilities</skos:altLabel>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2018-03-07T01:58:44Z</dcterms:modified>
+    <dcterms:contributor rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <skos:definition xml:lang="en">Open Geospatial Consortium's Web Map Context (WMC) version 1.1 GetCapabilities operation</skos:definition>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/WMS">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Web Map Service</skos:prefLabel>
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2017-10-05T03:23:56Z</dcterms:created>
+    <dcterms:creator rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <dcterms:source xml:lang="en">GeoNetwork</dcterms:source>
+    <skos:broader rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/OGC" />
+    <skos:altLabel xml:lang="en">OGC:WMS</skos:altLabel>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2018-03-07T01:58:56Z</dcterms:modified>
+    <dcterms:contributor rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <skos:definition xml:lang="en">Open Geospatial Consortium's Web Map Service (WMS)</skos:definition>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/WMS-1.1.1-HTTP-get-capabilities">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Web Map Service 1.1.1 GetCapabilities</skos:prefLabel>
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2017-10-05T03:23:56Z</dcterms:created>
+    <dcterms:creator rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <dcterms:source xml:lang="en">GeoNetwork</dcterms:source>
+    <skos:broader rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/OGC" />
+    <skos:altLabel xml:lang="en">OGC:WMS-1.1.1-http-get-capabilities</skos:altLabel>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2018-03-08T03:48:05Z</dcterms:modified>
+    <dcterms:contributor rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <skos:definition xml:lang="en">Open Geospatial Consortium's Web Map Service (WMS) version 1.1.1 GetCapabilities operation</skos:definition>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/WMS-1.1.1-HTTP-get-map">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Web Map Service 1.1.1 GetMap</skos:prefLabel>
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2017-10-05T03:23:56Z</dcterms:created>
+    <dcterms:creator rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <dcterms:source xml:lang="en">GeoNetwork</dcterms:source>
+    <skos:broader rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/OGC" />
+    <skos:altLabel xml:lang="en">OGC:WMS-1.1.1-http-get-map</skos:altLabel>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2018-03-07T02:02:08Z</dcterms:modified>
+    <dcterms:contributor rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <skos:definition xml:lang="en">Open Geospatial Consortium's Web Map Service (WMS) version 1.1.1 GetMap operation</skos:definition>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/WMS-1.3.0-HTTP-get-capabilities">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Web Map Service 1.3.0 GetCapabilities</skos:prefLabel>
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2017-10-05T03:23:56Z</dcterms:created>
+    <dcterms:creator rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <dcterms:source xml:lang="en">GeoNetwork</dcterms:source>
+    <skos:broader rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/OGC" />
+    <skos:altLabel xml:lang="en">OGC:WMS-1.3.0-http-get-capabilities</skos:altLabel>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2018-03-08T03:48:34Z</dcterms:modified>
+    <dcterms:contributor rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <skos:definition xml:lang="en">Open Geospatial Consortium's Web Map Service (WMS) version 1.3.0 GetCapabilities operation</skos:definition>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/WMS-1.3.0-HTTP-get-map">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Web Map Service 1.3.0 GetMap</skos:prefLabel>
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2017-10-05T03:23:56Z</dcterms:created>
+    <dcterms:creator rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <dcterms:source xml:lang="en">GeoNetwork</dcterms:source>
+    <skos:broader rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/OGC" />
+    <skos:altLabel xml:lang="en">OGC:WMS-1.3.0-http-get-map</skos:altLabel>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2018-03-07T02:02:56Z</dcterms:modified>
+    <dcterms:contributor rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <skos:definition xml:lang="en">Open Geospatial Consortium's Web Map Service (WMS) version 1.3.0 GetMap operation</skos:definition>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/WNS">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Web Notification Service</skos:prefLabel>
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2017-10-05T03:23:56Z</dcterms:created>
+    <dcterms:creator rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <dcterms:source xml:lang="en">GeoNetwork</dcterms:source>
+    <skos:broader rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/OGC" />
+    <skos:altLabel xml:lang="en">OGC:WNS</skos:altLabel>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2018-03-07T02:03:08Z</dcterms:modified>
+    <dcterms:contributor rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <skos:definition xml:lang="en">Open Geospatial Consortium's Web Notification Service (WNS)</skos:definition>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/FILE-DATA-DIRECTORY">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Data Directory</skos:prefLabel>
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2019-01-24T23:30:23Z</dcterms:created>
+    <dcterms:creator rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <dcterms:source xml:lang="en">Geoscience Australia</dcterms:source>
+    <skos:broader rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/File" />
+    <skos:altLabel xml:lang="en">FILE:DATA-DIRECTORY</skos:altLabel>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2019-01-24T23:31:54Z</dcterms:modified>
+    <dcterms:contributor rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <skos:definition xml:lang="en">Directory on a file system holding a collection of data files</skos:definition>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/ArcIMS">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:label xml:lang="en">ArcIMS HTTP configuration</rdfs:label>
+    <owl:deprecated rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</owl:deprecated>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/2002/07/owl#deprecated">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2002/07/owl#deprecated" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/OGCWMS-1.1.1-http-get-capabilities">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:label xml:lang="en">Web Map Service 1.1.1 GetCapabilities</rdfs:label>
+    <owl:deprecated rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</owl:deprecated>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/OGCWMS-1.3.0-http-get-capabilities">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:label xml:lang="en">Web Map Service 1.3.0 GetCapabilities</rdfs:label>
+    <owl:deprecated rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</owl:deprecated>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://pid.geoscience.gov.au/def/voc/ga/protocoltype/FILEDATA-DIRECTORY">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:label xml:lang="en">Data Directory</rdfs:label>
+    <owl:deprecated rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</owl:deprecated>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://purl.org/dc/terms/Agent">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class" />
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:subClassOf rdf:resource="http://purl.org/dc/terms/Agent" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://xmlns.com/foaf/0.1/name">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:subPropertyOf rdf:resource="http://xmlns.com/foaf/0.1/name" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://editor.vocabs.ands.org.au/user/Aaron-Sedgmen">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://purl.org/dc/terms/Agent" />
+    <foaf:name rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Aaron Sedgmen</foaf:name>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://editor.vocabs.ands.org.au/user/Geoscience-Australia">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://purl.org/dc/terms/Agent" />
+    <foaf:name rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Geoscience Australia</foaf:name>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://purl.org/dc/terms/issued">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:subPropertyOf rdf:resource="http://purl.org/dc/terms/issued" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/2002/07/owl#versionInfo">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2002/07/owl#versionInfo" />
+  </rdf:Description>
+</rdf:RDF>
+

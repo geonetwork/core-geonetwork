@@ -159,7 +159,7 @@
   "exportcheXML": "Export (XML)",
   "exportGM03": "Export (GM03)",
   "exportRDF": "Export (RDF)",
-  "exportCSV": "Export (CSV)",
+  "exportCSV": "Export (ONDC)",
   "exportPDF": "Export (PDF)",
   "exportMEF": "Export (ZIP)",
   "exportJSON": "Export (JSON)",

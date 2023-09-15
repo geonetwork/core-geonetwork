@@ -1,0 +1,771 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:schema="http://schema.org/" xmlns:owl="http://www.w3.org/2002/07/owl#" xmlns:org="http://www.w3.org/ns/org#" xmlns:xsd="http://www.w3.org/2001/XMLSchema#" xmlns:skosthes="http://purl.org/iso25964/skos-thes#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:qb="http://purl.org/linked-data/cube#" xmlns:dct="http://purl.org/dc/terms/" xmlns:sh="http://www.w3.org/ns/shacl#" xmlns:dcat="http://www.w3.org/ns/dcat#" xmlns:prov="http://www.w3.org/ns/prov#" xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:skosxl="http://www.w3.org/2008/05/skos-xl#" xmlns:euvoc="http://publications.europa.eu/ontology/euvoc#">
+  <rdf:Description rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/humanInteractionService">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">ISO19119 Service Type</skos:prefLabel>
+    <dct:title xml:lang="en">ISO19119 Service Type</dct:title>
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/humanCatalogueViewer" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/humanGeographicViewer" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/humanGeographicSpreadsheetViewer" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/humanServiceEditor" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/humanChainDefinitionEditor" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/humanWorkflowEnactmentManager" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/humanGeographicFeatureEditor" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/humanGeographicSymbolEditor" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/humanFeatureGeneralizationEditor" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/humanGeographicDataStructureViewer" />
+    <skos:inScheme rdf:resource="https://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:topConceptOf rdf:resource="https://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/humanCatalogueViewer">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Catalogue viewer</skos:prefLabel>
+    <dct:title xml:lang="en">Catalogue viewer</dct:title>
+    <skos:definition xml:lang="en">Client service that allows a user to interact with a catalogue to locate, browse, and manage metadata about geographic data or geographic services.</skos:definition>
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/humanInteractionService" />
+    <skos:inScheme rdf:resource="https://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broaderTransitive rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/humanInteractionService" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/humanGeographicViewer">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Geographic viewer</skos:prefLabel>
+    <dct:title xml:lang="en">Geographic viewer</dct:title>
+    <skos:definition xml:lang="en">Client service that allows a user to view one or more feature collections or coverages.</skos:definition>
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/humanInteractionService" />
+    <skos:inScheme rdf:resource="https://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broaderTransitive rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/humanInteractionService" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/humanGeographicSpreadsheetViewer">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Geographic spreadsheet viewer</skos:prefLabel>
+    <dct:title xml:lang="en">Geographic spreadsheet viewer</dct:title>
+    <skos:definition xml:lang="en">Client service that allows a user to interact with multiple data objects and to request calculations similar to an arithmetic spreadsheet but extended to geographic data.</skos:definition>
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/humanInteractionService" />
+    <skos:inScheme rdf:resource="https://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broaderTransitive rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/humanInteractionService" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/humanServiceEditor">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Service editor</skos:prefLabel>
+    <dct:title xml:lang="en">Service editor</dct:title>
+    <skos:definition xml:lang="en">Client service that allows a user to control geographic processing services.</skos:definition>
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/humanInteractionService" />
+    <skos:inScheme rdf:resource="https://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broaderTransitive rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/humanInteractionService" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/humanChainDefinitionEditor">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Chain definition editor</skos:prefLabel>
+    <dct:title xml:lang="en">Chain definition editor</dct:title>
+    <skos:definition xml:lang="en">Provides user interaction with a chain definition service.</skos:definition>
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/humanInteractionService" />
+    <skos:inScheme rdf:resource="https://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broaderTransitive rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/humanInteractionService" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/humanWorkflowEnactmentManager">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Workflow enactment manager</skos:prefLabel>
+    <dct:title xml:lang="en">Workflow enactment manager</dct:title>
+    <skos:definition xml:lang="en">Provides user interaction with a workflow enactment service.</skos:definition>
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/humanInteractionService" />
+    <skos:inScheme rdf:resource="https://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broaderTransitive rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/humanInteractionService" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/humanGeographicFeatureEditor">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Geographic feature editor</skos:prefLabel>
+    <dct:title xml:lang="en">Geographic feature editor</dct:title>
+    <skos:definition xml:lang="en">Geographic viewer that allows a user to interact with feature data.</skos:definition>
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/humanInteractionService" />
+    <skos:inScheme rdf:resource="https://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broaderTransitive rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/humanInteractionService" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/humanGeographicSymbolEditor">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Geographic symbol editor</skos:prefLabel>
+    <dct:title xml:lang="en">Geographic symbol editor</dct:title>
+    <skos:definition xml:lang="en">Client service that allows a human to select and manage symbol libraries.</skos:definition>
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/humanInteractionService" />
+    <skos:inScheme rdf:resource="https://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broaderTransitive rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/humanInteractionService" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/humanFeatureGeneralizationEditor">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Feature generalisation editor</skos:prefLabel>
+    <dct:title xml:lang="en">Feature generalisation editor</dct:title>
+    <skos:definition xml:lang="en">Client service that allows a user to modify the cartographic characteristics of a feature or feature collection by simplifying its visualisation, while maintaining its salient elements – the spatial equivalent of simplification.</skos:definition>
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/humanInteractionService" />
+    <skos:inScheme rdf:resource="https://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broaderTransitive rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/humanInteractionService" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/humanGeographicDataStructureViewer">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Geographic data-structure viewer</skos:prefLabel>
+    <dct:title xml:lang="en">Geographic data-structure viewer</dct:title>
+    <skos:definition xml:lang="en">Client service that allows a user to access part of data set to see its internal structure.</skos:definition>
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/humanInteractionService" />
+    <skos:inScheme rdf:resource="https://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broaderTransitive rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/humanInteractionService" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/infoManagementService">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Geographic model/information management service</skos:prefLabel>
+    <dct:title xml:lang="en">Geographic model/information management service</dct:title>
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/infoFeatureAccessService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/infoMapAccessService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/infoCoverageAccessService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/infoSensorDescriptionService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/infoProductAccessService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/infoFeatureTypeService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/infoCatalogueService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/infoRegistryService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/infoGazetteerService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/infoOrderHandlingService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/infoStandingOrderService" />
+    <skos:inScheme rdf:resource="https://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:topConceptOf rdf:resource="https://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/infoFeatureAccessService">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Feature access service</skos:prefLabel>
+    <dct:title xml:lang="en">Feature access service</dct:title>
+    <skos:definition xml:lang="en">Service that provides a client access to and management of a feature store.</skos:definition>
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/infoManagementService" />
+    <skos:inScheme rdf:resource="https://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broaderTransitive rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/infoManagementService" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/infoMapAccessService">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Map access service</skos:prefLabel>
+    <dct:title xml:lang="en">Map access service</dct:title>
+    <skos:definition xml:lang="en">Service that provides a client access to a geographic graphics, i.e. pictures of geographic data.</skos:definition>
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/infoManagementService" />
+    <skos:inScheme rdf:resource="https://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broaderTransitive rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/infoManagementService" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/infoCoverageAccessService">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Coverage access service</skos:prefLabel>
+    <dct:title xml:lang="en">Coverage access service</dct:title>
+    <skos:definition xml:lang="en">Service that provides a client access to and management of a coverage store.</skos:definition>
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/infoManagementService" />
+    <skos:inScheme rdf:resource="https://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broaderTransitive rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/infoManagementService" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/infoSensorDescriptionService">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Sensor description service</skos:prefLabel>
+    <dct:title xml:lang="en">Sensor description service</dct:title>
+    <skos:definition xml:lang="en">Service that provides the description of a coverage sensor, including sensor location and orientation, as well as the sensor’s geometric, dynamic, and radiometric characteristics for geo-processing purposes.</skos:definition>
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/infoManagementService" />
+    <skos:inScheme rdf:resource="https://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broaderTransitive rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/infoManagementService" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/infoProductAccessService">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Product access service</skos:prefLabel>
+    <dct:title xml:lang="en">Product access service</dct:title>
+    <skos:definition xml:lang="en">Service that provides access to and management of a geographic product store.</skos:definition>
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/infoManagementService" />
+    <skos:inScheme rdf:resource="https://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broaderTransitive rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/infoManagementService" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/infoFeatureTypeService">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Feature type service</skos:prefLabel>
+    <dct:title xml:lang="en">Feature type service</dct:title>
+    <skos:definition xml:lang="en">Service that provides a client to access to and management of a store of feature type definitions.</skos:definition>
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/infoManagementService" />
+    <skos:inScheme rdf:resource="https://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broaderTransitive rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/infoManagementService" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/infoCatalogueService">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Catalogue service</skos:prefLabel>
+    <dct:title xml:lang="en">Catalogue service</dct:title>
+    <skos:definition xml:lang="en">Service that provides discovery and management services on a store of metadata about instances.</skos:definition>
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/infoManagementService" />
+    <skos:inScheme rdf:resource="https://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broaderTransitive rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/infoManagementService" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/infoRegistryService">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Registry Service</skos:prefLabel>
+    <dct:title xml:lang="en">Registry Service</dct:title>
+    <skos:definition xml:lang="en">Service that provides access to store of metadata about types.</skos:definition>
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/infoManagementService" />
+    <skos:inScheme rdf:resource="https://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broaderTransitive rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/infoManagementService" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/infoGazetteerService">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Gazetteer service</skos:prefLabel>
+    <dct:title xml:lang="en">Gazetteer service</dct:title>
+    <skos:definition xml:lang="en">Service that provides access to a directory of instances of a class or classes of real-world phenomena containing some information regarding position.</skos:definition>
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/infoManagementService" />
+    <skos:inScheme rdf:resource="https://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broaderTransitive rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/infoManagementService" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/infoOrderHandlingService">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Order handling service</skos:prefLabel>
+    <dct:title xml:lang="en">Order handling service</dct:title>
+    <skos:definition xml:lang="en">Service that provides a client with the ability to order products from a provider.</skos:definition>
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/infoManagementService" />
+    <skos:inScheme rdf:resource="https://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broaderTransitive rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/infoManagementService" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/infoStandingOrderService">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Standing order service</skos:prefLabel>
+    <dct:title xml:lang="en">Standing order service</dct:title>
+    <skos:definition xml:lang="en">Order handling service that allows a user to request that a product over a geographic area be disseminated when it becomes available.</skos:definition>
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/infoManagementService" />
+    <skos:inScheme rdf:resource="https://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broaderTransitive rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/infoManagementService" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/taskManagementService">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Geographic workflow/task management services</skos:prefLabel>
+    <dct:title xml:lang="en">Geographic workflow/task management services</dct:title>
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/chainDefinitionService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/workflowEnactmentService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/subscriptionService" />
+    <skos:inScheme rdf:resource="https://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:topConceptOf rdf:resource="https://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/chainDefinitionService">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Chain definition service</skos:prefLabel>
+    <dct:title xml:lang="en">Chain definition service</dct:title>
+    <skos:definition xml:lang="en">Service to define a chain and to enable it to be executed by the workflow enactment service.</skos:definition>
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/taskManagementService" />
+    <skos:inScheme rdf:resource="https://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broaderTransitive rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/taskManagementService" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/workflowEnactmentService">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Workflow enactment service</skos:prefLabel>
+    <dct:title xml:lang="en">Workflow enactment service</dct:title>
+    <skos:definition xml:lang="en">The workflow enactment service interprets a chain and controls the instantiation of services and sequencing of activities.</skos:definition>
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/taskManagementService" />
+    <skos:inScheme rdf:resource="https://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broaderTransitive rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/taskManagementService" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/subscriptionService">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Subscription service</skos:prefLabel>
+    <dct:title xml:lang="en">Subscription service</dct:title>
+    <skos:definition xml:lang="en">Service to allow clients to register for notification about events.</skos:definition>
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/taskManagementService" />
+    <skos:inScheme rdf:resource="https://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broaderTransitive rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/taskManagementService" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialProcessingService">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Geographic processing services – spatial</skos:prefLabel>
+    <dct:title xml:lang="en">Geographic processing services – spatial</dct:title>
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialCoordinateConversionService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialCoordinateTransformationService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialCoverageVectorConversionService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialImageCoordinateConversionService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialRectificationService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialOrthorectificationService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialSensorGeometryModelAdjustmentService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialImageGeometryModelConversionService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialSubsettingService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialSamplingService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialTilingChangeService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialDimensionMeasurementService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialFeatureManipulationService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialFeatureMatchingService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialFeatureGeneralizationService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialRouteDeterminationService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialPositioningService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialProximityAnalysisService" />
+    <skos:inScheme rdf:resource="https://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:topConceptOf rdf:resource="https://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialCoordinateConversionService">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Coordinate conversion service</skos:prefLabel>
+    <dct:title xml:lang="en">Coordinate conversion service</dct:title>
+    <skos:definition xml:lang="en">Service to change coordinates from one coordinate system to another coordinate system that is related to the same datum.</skos:definition>
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialProcessingService" />
+    <skos:inScheme rdf:resource="https://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broaderTransitive rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialProcessingService" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialCoordinateTransformationService">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Coordinate transformation service</skos:prefLabel>
+    <dct:title xml:lang="en">Coordinate transformation service</dct:title>
+    <skos:definition xml:lang="en">Service to change coordinates from a coordinate reference system based on one datum to a coordinate reference system based on a second datum.</skos:definition>
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialProcessingService" />
+    <skos:inScheme rdf:resource="https://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broaderTransitive rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialProcessingService" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialCoverageVectorConversionService">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Coverage/vector conversion service</skos:prefLabel>
+    <dct:title xml:lang="en">Coverage/vector conversion service</dct:title>
+    <skos:definition xml:lang="en">Service to change the spatial representation from a coverage schema to a vector schema, or vice versa.</skos:definition>
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialProcessingService" />
+    <skos:inScheme rdf:resource="https://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broaderTransitive rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialProcessingService" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialImageCoordinateConversionService">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Image coordinate conversion service</skos:prefLabel>
+    <dct:title xml:lang="en">Image coordinate conversion service</dct:title>
+    <skos:definition xml:lang="en">A coordinate transformation or coordinate conversion service to change the coordinate reference system for an image.</skos:definition>
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialProcessingService" />
+    <skos:inScheme rdf:resource="https://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broaderTransitive rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialProcessingService" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialRectificationService">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Rectification service</skos:prefLabel>
+    <dct:title xml:lang="en">Rectification service</dct:title>
+    <skos:definition xml:lang="en">Service for transforming an image into a perpendicular parallel projection and therefore a constant scale.</skos:definition>
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialProcessingService" />
+    <skos:inScheme rdf:resource="https://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broaderTransitive rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialProcessingService" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialOrthorectificationService">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Orthorectification service</skos:prefLabel>
+    <dct:title xml:lang="en">Orthorectification service</dct:title>
+    <skos:definition xml:lang="en">A rectification service that removes image tilt and displacement due to terrain elevation.</skos:definition>
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialProcessingService" />
+    <skos:inScheme rdf:resource="https://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broaderTransitive rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialProcessingService" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialSensorGeometryModelAdjustmentService">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Sensor geometry model adjustment service</skos:prefLabel>
+    <dct:title xml:lang="en">Sensor geometry model adjustment service</dct:title>
+    <skos:definition xml:lang="en">Service that adjusts sensor geometry models to improve the match of the image with other images and/or known ground positions.</skos:definition>
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialProcessingService" />
+    <skos:inScheme rdf:resource="https://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broaderTransitive rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialProcessingService" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialImageGeometryModelConversionService">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Image geometry model conversion service</skos:prefLabel>
+    <dct:title xml:lang="en">Image geometry model conversion service</dct:title>
+    <skos:definition xml:lang="en">Service that converts sensor geometry models into a different but equivalent sensor geometry model.</skos:definition>
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialProcessingService" />
+    <skos:inScheme rdf:resource="https://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broaderTransitive rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialProcessingService" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialSubsettingService">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Subsetting service</skos:prefLabel>
+    <dct:title xml:lang="en">Subsetting service</dct:title>
+    <skos:definition xml:lang="en">Service that extracts data from an input in a continuous spatial region either by geographic location or by grid coordinates.</skos:definition>
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialProcessingService" />
+    <skos:inScheme rdf:resource="https://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broaderTransitive rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialProcessingService" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialSamplingService">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Sampling service</skos:prefLabel>
+    <dct:title xml:lang="en">Sampling service</dct:title>
+    <skos:definition xml:lang="en">Service that extracts data from an input using a consistent sampling scheme either by geographic location or by grid coordinates.</skos:definition>
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialProcessingService" />
+    <skos:inScheme rdf:resource="https://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broaderTransitive rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialProcessingService" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialTilingChangeService">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Tiling change service</skos:prefLabel>
+    <dct:title xml:lang="en">Tiling change service</dct:title>
+    <skos:definition xml:lang="en">Service that changes the tiling of geographic data.</skos:definition>
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialProcessingService" />
+    <skos:inScheme rdf:resource="https://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broaderTransitive rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialProcessingService" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialDimensionMeasurementService">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Dimension measurement service</skos:prefLabel>
+    <dct:title xml:lang="en">Dimension measurement service</dct:title>
+    <skos:definition xml:lang="en">Service to compute dimensions of objects visible in an image or other geodata.</skos:definition>
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialProcessingService" />
+    <skos:inScheme rdf:resource="https://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broaderTransitive rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialProcessingService" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialFeatureManipulationService">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Feature manipulation services</skos:prefLabel>
+    <dct:title xml:lang="en">Feature manipulation services</dct:title>
+    <skos:definition xml:lang="en">Register one feature to another, an image, or another data set or coordinate set; correcting for relative translation shifts, rotational differences, scale differences, and perspective differences. Verify that all features in the Feature Collection are topologically consistent according to the topology rules of the Feature Collection, and identifies and/or corrects any inconsistencies that are discovered.</skos:definition>
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialProcessingService" />
+    <skos:inScheme rdf:resource="https://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broaderTransitive rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialProcessingService" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialFeatureMatchingService">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Feature matching service</skos:prefLabel>
+    <dct:title xml:lang="en">Feature matching service</dct:title>
+    <skos:definition xml:lang="en">Service that determines which features and portions of features represent the same real world entity from multiple data sources, e.g., edge matching and limited conflation.</skos:definition>
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialProcessingService" />
+    <skos:inScheme rdf:resource="https://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broaderTransitive rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialProcessingService" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialFeatureGeneralizationService">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Feature generalisation service</skos:prefLabel>
+    <dct:title xml:lang="en">Feature generalisation service</dct:title>
+    <skos:definition xml:lang="en">Service that reduces spatial variation in a feature collection to increase the effectiveness of communication by counteracting the undesirable effects of data reduction.</skos:definition>
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialProcessingService" />
+    <skos:inScheme rdf:resource="https://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broaderTransitive rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialProcessingService" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialRouteDeterminationService">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Route determination service</skos:prefLabel>
+    <dct:title xml:lang="en">Route determination service</dct:title>
+    <skos:definition xml:lang="en">Service to determine the optimal path between two specified points based on the input parameters and properties contained in the Feature Collection.</skos:definition>
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialProcessingService" />
+    <skos:inScheme rdf:resource="https://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broaderTransitive rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialProcessingService" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialPositioningService">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Positioning service</skos:prefLabel>
+    <dct:title xml:lang="en">Positioning service</dct:title>
+    <skos:definition xml:lang="en">Service provided by a position-providing device to use, obtain and unambiguously interpret position information, and determines whether the results meet the requirements of the use.</skos:definition>
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialProcessingService" />
+    <skos:inScheme rdf:resource="https://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broaderTransitive rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialProcessingService" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialProximityAnalysisService">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Proximity analysis service</skos:prefLabel>
+    <dct:title xml:lang="en">Proximity analysis service</dct:title>
+    <skos:definition xml:lang="en">Given a position or geographic feature, finds all objects with a given set of attributes that are located within a user-specified distance of the position or feature.</skos:definition>
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialProcessingService" />
+    <skos:inScheme rdf:resource="https://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broaderTransitive rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialProcessingService" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicProcessingService">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Geographic processing services – thematic</skos:prefLabel>
+    <dct:title xml:lang="en">Geographic processing services – thematic</dct:title>
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicGoparameterCalculationService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicClassificationService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicFeatureGeneralizationService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicSubsettingService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicSpatialCountingService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicChangeDetectionService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicGeographicInformationExtractionService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicImageProcessingService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicReducedResolutionGenerationService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicImageManipulationService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicImageUnderstandingService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicImageSynthesisService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicMultibandImageManipulationService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicObjectDetectionService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicGeoparsingService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicGeocodingService" />
+    <skos:inScheme rdf:resource="https://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:topConceptOf rdf:resource="https://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicGoparameterCalculationService">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Geoparameter calculation service</skos:prefLabel>
+    <dct:title xml:lang="en">Geoparameter calculation service</dct:title>
+    <skos:definition xml:lang="en">Service to derive application-oriented quantitative results that are not available from the raw data itself.</skos:definition>
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicProcessingService" />
+    <skos:inScheme rdf:resource="https://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broaderTransitive rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicProcessingService" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicClassificationService">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Thematic classification service</skos:prefLabel>
+    <dct:title xml:lang="en">Thematic classification service</dct:title>
+    <skos:definition xml:lang="en">Service to classify regions of geographic data based on thematic attributes.</skos:definition>
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicProcessingService" />
+    <skos:inScheme rdf:resource="https://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broaderTransitive rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicProcessingService" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicFeatureGeneralizationService">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Feature generalisation service</skos:prefLabel>
+    <dct:title xml:lang="en">Feature generalisation service</dct:title>
+    <skos:definition xml:lang="en">Service that generalises feature types in a feature collection to increase the effectiveness of communication by counteracting the undesirable effects of data reduction.</skos:definition>
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicProcessingService" />
+    <skos:inScheme rdf:resource="https://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broaderTransitive rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicProcessingService" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicSubsettingService">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Subsetting service</skos:prefLabel>
+    <dct:title xml:lang="en">Subsetting service</dct:title>
+    <skos:definition xml:lang="en">Service that extracts data from an input based on parameter values.</skos:definition>
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicProcessingService" />
+    <skos:inScheme rdf:resource="https://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broaderTransitive rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicProcessingService" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicSpatialCountingService">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Spatial counting service</skos:prefLabel>
+    <dct:title xml:lang="en">Spatial counting service</dct:title>
+    <skos:definition xml:lang="en">Service that counts geographic features.</skos:definition>
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicProcessingService" />
+    <skos:inScheme rdf:resource="https://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broaderTransitive rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicProcessingService" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicChangeDetectionService">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Change detection service</skos:prefLabel>
+    <dct:title xml:lang="en">Change detection service</dct:title>
+    <skos:definition xml:lang="en">Service to find differences between two data sets that represent the same geographical area at different times.</skos:definition>
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicProcessingService" />
+    <skos:inScheme rdf:resource="https://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broaderTransitive rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicProcessingService" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicGeographicInformationExtractionService">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Geographic information extraction services</skos:prefLabel>
+    <dct:title xml:lang="en">Geographic information extraction services</dct:title>
+    <skos:definition xml:lang="en">Services supporting the extraction of feature and terrain information from remotely sensed and scanned images.</skos:definition>
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicProcessingService" />
+    <skos:inScheme rdf:resource="https://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broaderTransitive rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicProcessingService" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicImageProcessingService">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Image processing service</skos:prefLabel>
+    <dct:title xml:lang="en">Image processing service</dct:title>
+    <skos:definition xml:lang="en">Service to change the values of thematic attributes of an image using a mathematical function.</skos:definition>
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicProcessingService" />
+    <skos:inScheme rdf:resource="https://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broaderTransitive rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicProcessingService" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicReducedResolutionGenerationService">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Reduced resolution generation service</skos:prefLabel>
+    <dct:title xml:lang="en">Reduced resolution generation service</dct:title>
+    <skos:definition xml:lang="en">Service that reduces the resolution of an image.</skos:definition>
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicProcessingService" />
+    <skos:inScheme rdf:resource="https://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broaderTransitive rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicProcessingService" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicImageManipulationService">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Image Manipulation Services</skos:prefLabel>
+    <dct:title xml:lang="en">Image Manipulation Services</dct:title>
+    <skos:definition xml:lang="en">Services for manipulating data values in images: changing colour and contrast values, applying various filters, manipulating image resolution, noise removal, "striping", systematic-radiometric corrections, atmospheric attenuation, changes in scene illumination, etc.</skos:definition>
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicProcessingService" />
+    <skos:inScheme rdf:resource="https://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broaderTransitive rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicProcessingService" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicImageUnderstandingService">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Image understanding services</skos:prefLabel>
+    <dct:title xml:lang="en">Image understanding services</dct:title>
+    <skos:definition xml:lang="en">Services that provide automated image change detection, registered image differencing, significance-of-difference analysis and display, and area-based and model-based differencing.</skos:definition>
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicProcessingService" />
+    <skos:inScheme rdf:resource="https://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broaderTransitive rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicProcessingService" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicImageSynthesisService">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Image synthesis services</skos:prefLabel>
+    <dct:title xml:lang="en">Image synthesis services</dct:title>
+    <skos:definition xml:lang="en">Services for creating or transforming images using computer-based spatial models, perspective transformations, and manipulations of image characteristics to improve visibility, sharpen resolution, and/or reduce the effects of cloud cover or haze.</skos:definition>
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicProcessingService" />
+    <skos:inScheme rdf:resource="https://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broaderTransitive rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicProcessingService" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicMultibandImageManipulationService">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Multiband image manipulation</skos:prefLabel>
+    <dct:title xml:lang="en">Multiband image manipulation</dct:title>
+    <skos:definition xml:lang="en">Services that modify an image using the multiple bands of the image.</skos:definition>
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicProcessingService" />
+    <skos:inScheme rdf:resource="https://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broaderTransitive rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicProcessingService" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicObjectDetectionService">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Object detection service</skos:prefLabel>
+    <dct:title xml:lang="en">Object detection service</dct:title>
+    <skos:definition xml:lang="en">Service to detect real-world objects in an image.</skos:definition>
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicProcessingService" />
+    <skos:inScheme rdf:resource="https://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broaderTransitive rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicProcessingService" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicGeoparsingService">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Geoparsing service</skos:prefLabel>
+    <dct:title xml:lang="en">Geoparsing service</dct:title>
+    <skos:definition xml:lang="en">Service to scan text documents for location-based references, such as a place names, addresses, postal codes, etc., in preparation for passage to a geocoding service.</skos:definition>
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicProcessingService" />
+    <skos:inScheme rdf:resource="https://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broaderTransitive rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicProcessingService" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicGeocodingService">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Geocoding service</skos:prefLabel>
+    <dct:title xml:lang="en">Geocoding service</dct:title>
+    <skos:definition xml:lang="en">Service to augment location-based text references with geographic coordinates (or some other spatial reference).</skos:definition>
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicProcessingService" />
+    <skos:inScheme rdf:resource="https://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broaderTransitive rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicProcessingService" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/temporalProcessingService">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Geographic processing services – temporal</skos:prefLabel>
+    <dct:title xml:lang="en">Geographic processing services – temporal</dct:title>
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/temporalReferenceSystemTransformationService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/temporalSubsettingService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/temporalSamplingService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/temporalProximityAnalysisService" />
+    <skos:inScheme rdf:resource="https://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:topConceptOf rdf:resource="https://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/temporalReferenceSystemTransformationService">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Temporal reference system transformation service</skos:prefLabel>
+    <dct:title xml:lang="en">Temporal reference system transformation service</dct:title>
+    <skos:definition xml:lang="en">Service to change the values of temporal instances from one temporal reference system to another temporal reference system.</skos:definition>
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/temporalProcessingService" />
+    <skos:inScheme rdf:resource="https://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broaderTransitive rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/temporalProcessingService" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/temporalSubsettingService">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Subsetting service</skos:prefLabel>
+    <dct:title xml:lang="en">Subsetting service</dct:title>
+    <skos:definition xml:lang="en">Service that extracts data from an input in a continuous interval based on temporal position values.</skos:definition>
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/temporalProcessingService" />
+    <skos:inScheme rdf:resource="https://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broaderTransitive rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/temporalProcessingService" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/temporalSamplingService">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Sampling service</skos:prefLabel>
+    <dct:title xml:lang="en">Sampling service</dct:title>
+    <skos:definition xml:lang="en">Service that extracts data from an input using a consistent sampling scheme based on temporal position values.</skos:definition>
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/temporalProcessingService" />
+    <skos:inScheme rdf:resource="https://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broaderTransitive rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/temporalProcessingService" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/temporalProximityAnalysisService">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Temporal proximity analysis service</skos:prefLabel>
+    <dct:title xml:lang="en">Temporal proximity analysis service</dct:title>
+    <skos:definition xml:lang="en">Given a temporal interval or event, find all objects with a given set of attributes that are located within a user-specified interval from the interval or event.</skos:definition>
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/temporalProcessingService" />
+    <skos:inScheme rdf:resource="https://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broaderTransitive rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/temporalProcessingService" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/metadataProcessingService">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Geographic processing services – metadata</skos:prefLabel>
+    <dct:title xml:lang="en">Geographic processing services – metadata</dct:title>
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/metadataStatisticalCalculationService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/metadataGeographicAnnotationService" />
+    <skos:inScheme rdf:resource="https://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:topConceptOf rdf:resource="https://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/metadataStatisticalCalculationService">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Statistical calculation service</skos:prefLabel>
+    <dct:title xml:lang="en">Statistical calculation service</dct:title>
+    <skos:definition xml:lang="en">Service to calculate the statistics of a data set.</skos:definition>
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/metadataProcessingService" />
+    <skos:inScheme rdf:resource="https://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broaderTransitive rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/metadataProcessingService" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/metadataGeographicAnnotationService">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Geographic annotation services</skos:prefLabel>
+    <dct:title xml:lang="en">Geographic annotation services</dct:title>
+    <skos:definition xml:lang="en">Services to add ancillary information to an image or a feature in a feature collection.</skos:definition>
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/metadataProcessingService" />
+    <skos:inScheme rdf:resource="https://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broaderTransitive rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/metadataProcessingService" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/comService">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Geographic communication services</skos:prefLabel>
+    <dct:title xml:lang="en">Geographic communication services</dct:title>
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/comEncodingService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/comTransferService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/comGeographicCompressionService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/comGeographicFormatConversionService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/comMessagingService" />
+    <skos:narrower rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/comRemoteFileAndExecutableManagement" />
+    <skos:inScheme rdf:resource="https://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:topConceptOf rdf:resource="https://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/comEncodingService">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Encoding service</skos:prefLabel>
+    <dct:title xml:lang="en">Encoding service</dct:title>
+    <skos:definition xml:lang="en">Service that provides implementation of an encoding rule and provides an interface to encoding and decoding functionality.</skos:definition>
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/comService" />
+    <skos:inScheme rdf:resource="https://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broaderTransitive rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/comService" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/comTransferService">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Transfer service</skos:prefLabel>
+    <dct:title xml:lang="en">Transfer service</dct:title>
+    <skos:definition xml:lang="en">Service that provides implementation of one or more transfer protocols, which allows data transfer between distributed information systems over offline or online communication media.</skos:definition>
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/comService" />
+    <skos:inScheme rdf:resource="https://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broaderTransitive rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/comService" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/comGeographicCompressionService">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Geographic compression service</skos:prefLabel>
+    <dct:title xml:lang="en">Geographic compression service</dct:title>
+    <skos:definition xml:lang="en">Service that converts spatial portions of a feature collection to and from compressed form.</skos:definition>
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/comService" />
+    <skos:inScheme rdf:resource="https://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broaderTransitive rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/comService" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/comGeographicFormatConversionService">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Geographic format conversion service</skos:prefLabel>
+    <dct:title xml:lang="en">Geographic format conversion service</dct:title>
+    <skos:definition xml:lang="en">Service that converts from one geographic data format to another.</skos:definition>
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/comService" />
+    <skos:inScheme rdf:resource="https://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broaderTransitive rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/comService" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/comMessagingService">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Messaging service</skos:prefLabel>
+    <dct:title xml:lang="en">Messaging service</dct:title>
+    <skos:definition xml:lang="en">Service that allows multiple users to simultaneously view, comment about, and request edits of feature collections.</skos:definition>
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/comService" />
+    <skos:inScheme rdf:resource="https://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broaderTransitive rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/comService" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/comRemoteFileAndExecutableManagement">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">Remote file and executable management</skos:prefLabel>
+    <dct:title xml:lang="en">Remote file and executable management</dct:title>
+    <skos:definition xml:lang="en">Service that provides access to secondary storage of geographic features as if it were local to the client.</skos:definition>
+    <skos:broader rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/comService" />
+    <skos:inScheme rdf:resource="https://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory" />
+    <skos:broaderTransitive rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/comService" />
+  </rdf:Description>
+  <rdf:Description rdf:about="https://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#ConceptScheme" />
+    <skos:hasTopConcept rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/humanInteractionService" />
+    <skos:hasTopConcept rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/infoManagementService" />
+    <skos:hasTopConcept rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/taskManagementService" />
+    <skos:hasTopConcept rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/spatialProcessingService" />
+    <skos:hasTopConcept rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/thematicProcessingService" />
+    <skos:hasTopConcept rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/temporalProcessingService" />
+    <skos:hasTopConcept rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/metadataProcessingService" />
+    <skos:hasTopConcept rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/comService" />
+  </rdf:Description>
+</rdf:RDF>
+

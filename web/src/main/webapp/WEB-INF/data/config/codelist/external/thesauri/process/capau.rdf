@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:ns3="http://purl.org/dc/elements/1.1/" xmlns:ns5="http://www.opengis.net/gml#" xmlns:ns2="http://www.w3.org/2004/02/skos/core#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+  <rdf:Description rdf:about="http://geonetwork-opensource.org/CAP-AU Compliancy">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#ConceptScheme" />
+    <ns3:title>CAP-AU Compliance</ns3:title>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.mysite.org/thesaurus#99d4077a-7c2d-4a9d-9c56-7898156c2c40">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="node1f4ateb4ux1">
+    <ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326" />
+    <rdf:type rdf:resource="http://www.opengis.net/gml#Envelope" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.mysite.org/thesaurus#99d4077a-7c2d-4a9d-9c56-7898156c2c40">
+    <ns5:BoundedBy rdf:nodeID="node1f4ateb4ux2" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="node1f4ateb4ux2">
+    <rdf:type rdf:resource="http://www.opengis.net/gml#Envelope" />
+    <ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.mysite.org/thesaurus#ef82b147-b2ea-4424-9266-34c27fbab050">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.mysite.org/thesaurus#99d4077a-7c2d-4a9d-9c56-7898156c2c40">
+    <ns2:scopeNote xml:lang="cs" />
+    <ns2:scopeNote xml:lang="de" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.mysite.org/thesaurus#ef82b147-b2ea-4424-9266-34c27fbab050">
+    <ns5:BoundedBy rdf:nodeID="node1f4ateb4ux3" />
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="node1f4ateb4ux3">
+    <rdf:type rdf:resource="http://www.opengis.net/gml#Envelope" />
+    <ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.mysite.org/thesaurus#dd09d7e3-00ba-4789-82f7-24d23ae0ea77">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <ns2:prefLabel xml:lang="ko" />
+    <ns2:prefLabel xml:lang="fr" />
+    <ns5:BoundedBy rdf:nodeID="node1f4ateb4ux1" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.mysite.org/thesaurus#99d4077a-7c2d-4a9d-9c56-7898156c2c40">
+    <ns2:scopeNote xml:lang="ru" />
+    <ns2:scopeNote xml:lang="ko" />
+    <ns2:prefLabel xml:lang="es" />
+    <ns2:prefLabel xml:lang="fi" />
+    <ns2:prefLabel xml:lang="it" />
+    <ns2:prefLabel xml:lang="ca" />
+    <ns2:prefLabel xml:lang="pt" />
+    <ns2:prefLabel xml:lang="en">CAP-AU compliant</ns2:prefLabel>
+    <ns2:prefLabel xml:lang="is" />
+    <ns2:prefLabel xml:lang="nl" />
+    <ns2:prefLabel xml:lang="zh" />
+    <ns2:prefLabel xml:lang="cs" />
+    <ns2:prefLabel xml:lang="sk" />
+    <ns2:prefLabel xml:lang="de" />
+    <ns2:prefLabel xml:lang="ru" />
+    <ns2:prefLabel xml:lang="fr" />
+    <ns2:prefLabel xml:lang="ko" />
+    <ns2:scopeNote xml:lang="it" />
+    <ns2:scopeNote xml:lang="zh" />
+    <ns2:scopeNote xml:lang="nl" />
+    <ns2:scopeNote xml:lang="ca" />
+    <ns2:scopeNote xml:lang="en">Is compliant with CAP-AU</ns2:scopeNote>
+    <ns2:scopeNote xml:lang="es" />
+    <ns2:scopeNote xml:lang="fi" />
+    <ns2:scopeNote xml:lang="is" />
+    <ns2:scopeNote xml:lang="pt" />
+    <ns2:scopeNote xml:lang="sk" />
+    <ns2:scopeNote xml:lang="fr" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.mysite.org/thesaurus#dd09d7e3-00ba-4789-82f7-24d23ae0ea77">
+    <ns2:prefLabel xml:lang="ru" />
+    <ns2:prefLabel xml:lang="de" />
+    <ns2:scopeNote xml:lang="cs" />
+    <ns2:scopeNote xml:lang="ko" />
+    <ns2:scopeNote xml:lang="ru" />
+    <ns2:scopeNote xml:lang="de" />
+    <ns2:scopeNote xml:lang="fr" />
+    <ns2:scopeNote xml:lang="sk" />
+    <ns2:scopeNote xml:lang="pt" />
+    <ns2:scopeNote xml:lang="is" />
+    <ns2:scopeNote xml:lang="fi" />
+    <ns2:scopeNote xml:lang="es" />
+    <ns2:scopeNote xml:lang="en">Not known whether it's CAP-AU compliant</ns2:scopeNote>
+    <ns2:scopeNote xml:lang="ca" />
+    <ns2:scopeNote xml:lang="nl" />
+    <ns2:scopeNote xml:lang="zh" />
+    <ns2:scopeNote xml:lang="it" />
+    <ns2:prefLabel xml:lang="es" />
+    <ns2:prefLabel xml:lang="fi" />
+    <ns2:prefLabel xml:lang="it" />
+    <ns2:prefLabel xml:lang="ca" />
+    <ns2:prefLabel xml:lang="pt" />
+    <ns2:prefLabel xml:lang="en">CAP-AU Unknown</ns2:prefLabel>
+    <ns2:prefLabel xml:lang="is" />
+    <ns2:prefLabel xml:lang="nl" />
+    <ns2:prefLabel xml:lang="zh" />
+    <ns2:prefLabel xml:lang="cs" />
+    <ns2:prefLabel xml:lang="sk" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.mysite.org/thesaurus#ef82b147-b2ea-4424-9266-34c27fbab050">
+    <ns2:prefLabel xml:lang="es" />
+    <ns2:prefLabel xml:lang="fi" />
+    <ns2:prefLabel xml:lang="it" />
+    <ns2:prefLabel xml:lang="ca" />
+    <ns2:prefLabel xml:lang="pt" />
+    <ns2:prefLabel xml:lang="en">CAP-AU Incompliant</ns2:prefLabel>
+    <ns2:prefLabel xml:lang="is" />
+    <ns2:prefLabel xml:lang="nl" />
+    <ns2:prefLabel xml:lang="zh" />
+    <ns2:prefLabel xml:lang="cs" />
+    <ns2:prefLabel xml:lang="sk" />
+    <ns2:prefLabel xml:lang="de" />
+    <ns2:prefLabel xml:lang="ru" />
+    <ns2:prefLabel xml:lang="fr" />
+    <ns2:prefLabel xml:lang="ko" />
+    <ns2:scopeNote xml:lang="it" />
+    <ns2:scopeNote xml:lang="zh" />
+    <ns2:scopeNote xml:lang="nl" />
+    <ns2:scopeNote xml:lang="ca" />
+    <ns2:scopeNote xml:lang="en">Isn't CAP-AU compliant</ns2:scopeNote>
+    <ns2:scopeNote xml:lang="es" />
+    <ns2:scopeNote xml:lang="fi" />
+    <ns2:scopeNote xml:lang="is" />
+    <ns2:scopeNote xml:lang="pt" />
+    <ns2:scopeNote xml:lang="sk" />
+    <ns2:scopeNote xml:lang="fr" />
+    <ns2:scopeNote xml:lang="de" />
+    <ns2:scopeNote xml:lang="ru" />
+    <ns2:scopeNote xml:lang="ko" />
+    <ns2:scopeNote xml:lang="cs" />
+  </rdf:Description>
+</rdf:RDF>
+

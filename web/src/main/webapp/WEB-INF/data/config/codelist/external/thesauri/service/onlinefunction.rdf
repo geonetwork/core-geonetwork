@@ -1,0 +1,494 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:cycAnnot="http://sw.cyc.com/CycAnnotations_v1#" xmlns:skosxl="http://www.w3.org/2008/05/skos-xl#" xmlns:owl="http://www.w3.org/2002/07/owl#" xmlns:csw="http://semantic-web.at/ontologies/csw.owl#" xmlns:xsd="http://www.w3.org/2001/XMLSchema#" xmlns:freebase="http://rdf.freebase.com/ns/" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:dbpedia="http://dbpedia.org/resource/" xmlns:cyc="http://sw.cyc.com/concept/" xmlns:tags="http://www.holygoat.co.uk/owl/redwood/0.1/tags/" xmlns:opencyc="http://sw.opencyc.org/concept/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:ctag="http://commontag.org/ns#" xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:fn="http://www.w3.org/2005/xpath-functions#" xmlns:sesame="http://www.openrdf.org/schema/sesame#">
+  <rdf:Description rdf:about="http://www.w3.org/1999/02/22-rdf-syntax-ns#type">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:domain rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class" />
+    <rdfs:subPropertyOf rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#type" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class" />
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property" />
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/1999/02/22-rdf-syntax-ns#subject">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:domain rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Statement" />
+    <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:subPropertyOf rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#subject" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/1999/02/22-rdf-syntax-ns#predicate">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:domain rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Statement" />
+    <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:subPropertyOf rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#predicate" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/1999/02/22-rdf-syntax-ns#object">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:domain rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Statement" />
+    <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:subPropertyOf rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#object" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/1999/02/22-rdf-syntax-ns#first">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:domain rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#List" />
+    <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:subPropertyOf rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#first" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/1999/02/22-rdf-syntax-ns#rest">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:domain rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#List" />
+    <rdfs:range rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#List" />
+    <rdfs:subPropertyOf rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#rest" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/1999/02/22-rdf-syntax-ns#value">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:domain rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:subPropertyOf rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#value" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#List" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/1999/02/22-rdf-syntax-ns#List">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class" />
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#List" />
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/2000/01/rdf-schema#domain">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:domain rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property" />
+    <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class" />
+    <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#domain" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/2000/01/rdf-schema#Resource">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class" />
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/2000/01/rdf-schema#range">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:domain rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property" />
+    <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class" />
+    <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#range" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/2000/01/rdf-schema#subPropertyOf">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:domain rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property" />
+    <rdfs:range rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property" />
+    <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#subPropertyOf" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/2000/01/rdf-schema#subClassOf">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:domain rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class" />
+    <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class" />
+    <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#subClassOf" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/2000/01/rdf-schema#Class">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class" />
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/1999/02/22-rdf-syntax-ns#Statement">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class" />
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Statement" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/2000/01/rdf-schema#member">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:domain rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#member" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/2000/01/rdf-schema#seeAlso">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:domain rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#seeAlso" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/2000/01/rdf-schema#isDefinedBy">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:domain rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#seeAlso" />
+    <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#isDefinedBy" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/2000/01/rdf-schema#comment">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:domain rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal" />
+    <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#comment" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/2000/01/rdf-schema#label">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:domain rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal" />
+    <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#label" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/2000/01/rdf-schema#Literal">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class" />
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/1999/02/22-rdf-syntax-ns#Alt">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class" />
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Alt" />
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#Container" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/2000/01/rdf-schema#Container">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class" />
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#Container" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/1999/02/22-rdf-syntax-ns#Bag">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class" />
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#Container" />
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Bag" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/1999/02/22-rdf-syntax-ns#Seq">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class" />
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#Container" />
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Seq" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/2000/01/rdf-schema#ContainerMembershipProperty">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class" />
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property" />
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#ContainerMembershipProperty" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Datatype" />
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal" />
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/2000/01/rdf-schema#Datatype">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class" />
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class" />
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#Datatype" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://pid.geoscience.gov.au/def/voc/ga/onlinefunction/upload">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">upload</skos:prefLabel>
+    <skos:topConceptOf rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/onlinefunction" />
+    <dcterms:contributor rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2018-12-12T03:07:36Z</dcterms:modified>
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2017-10-16T23:15:18Z</dcterms:created>
+    <dcterms:creator rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <dcterms:source xml:lang="en">ISO19115-1:2014</dcterms:source>
+    <skos:definition xml:lang="en">online resource upload capability provided</skos:definition>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/2004/02/skos/core#prefLabel">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2004/02/skos/core#prefLabel" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/2004/02/skos/core#topConceptOf">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2004/02/skos/core#topConceptOf" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://pid.geoscience.gov.au/def/voc/ga/onlinefunction">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#ConceptScheme" />
+    <rdfs:label xml:lang="en">OnLine Function Type</rdfs:label>
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2017-11-15T09:46:06Z</dcterms:modified>
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2017-10-16T23:15:18Z</dcterms:created>
+    <dcterms:creator rdf:resource="http://editor.vocabs.ands.org.au/user/Nicholas-Car" />
+    <dcterms:description xml:lang="en">This vocabulary is an extension to the ISO19115-1 standard's OnLine Function Code list. It includes additional terms implemented by Geoscience Australia to allow for online functions not included in the original codelist. An example of an extension term in this vocabulary is "provenance query service" which, in the SKOS structure of this vocabulary, is given as a narrower concept of the "information" concept which is one of the original ISO19115-1 concepts. An object indicated as having an online function of a "provenance query service" should be understood to perform a specialised form of an "information" function by allowing provenance querying. Further details are given in the term's description.</dcterms:description>
+    <dcterms:publisher rdf:resource="http://editor.vocabs.ands.org.au/user/Geoscience-Australia" />
+    <dcterms:subject xml:lang="en">online functions</dcterms:subject>
+    <dcterms:title xml:lang="en">OnLine Function</dcterms:title>
+    <skos:hasTopConcept rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/onlinefunction/upload" />
+    <skos:hasTopConcept rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/onlinefunction/browseGraphic" />
+    <skos:hasTopConcept rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/onlinefunction/browsing" />
+    <skos:hasTopConcept rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/onlinefunction/completeMetadata" />
+    <skos:hasTopConcept rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/onlinefunction/download" />
+    <skos:hasTopConcept rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/onlinefunction/fileAccess" />
+    <skos:hasTopConcept rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/onlinefunction/information" />
+    <skos:hasTopConcept rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/onlinefunction/offlineAccess" />
+    <skos:hasTopConcept rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/onlinefunction/order" />
+    <skos:hasTopConcept rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/onlinefunction/search" />
+    <skos:hasTopConcept rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/onlinefunction/emailService" />
+    <dcterms:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#string">2018-12-12</dcterms:issued>
+    <owl:versionInfo rdf:datatype="http://www.w3.org/2001/XMLSchema#string">v1.0</owl:versionInfo>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://purl.org/dc/terms/Agent" />
+    <dcterms:contributor rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Car.Nicholas" />
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2017-10-24T01:59:40Z</dcterms:modified>
+    <foaf:name rdf:datatype="http://www.w3.org/2001/XMLSchema#string">GA_Sedgmen.Lara_Admin</foaf:name>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://purl.org/dc/terms/contributor">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:subPropertyOf rdf:resource="http://purl.org/dc/terms/contributor" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://editor.vocabs.ands.org.au/user/GA_Car.Nicholas">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://purl.org/dc/terms/Agent" />
+    <foaf:name rdf:datatype="http://www.w3.org/2001/XMLSchema#string">GA_Car.Nicholas</foaf:name>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://purl.org/dc/terms/modified">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:subPropertyOf rdf:resource="http://purl.org/dc/terms/modified" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://editor.vocabs.ands.org.au/user/Geoscience-Australia">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://purl.org/dc/terms/Agent" />
+    <dcterms:contributor rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Car.Nicholas" />
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2017-10-24T01:58:50Z</dcterms:modified>
+    <foaf:name rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Geoscience Australia</foaf:name>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://editor.vocabs.ands.org.au/user/Nicholas-Car">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://purl.org/dc/terms/Agent" />
+    <dcterms:contributor rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Car.Nicholas" />
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2017-10-24T01:59:52Z</dcterms:modified>
+    <foaf:name rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Nicholas-Car</foaf:name>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://purl.org/dc/terms/created">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:subPropertyOf rdf:resource="http://purl.org/dc/terms/created" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://purl.org/dc/terms/creator">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:subPropertyOf rdf:resource="http://purl.org/dc/terms/creator" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://purl.org/dc/terms/description">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:subPropertyOf rdf:resource="http://purl.org/dc/terms/description" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://purl.org/dc/terms/publisher">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:subPropertyOf rdf:resource="http://purl.org/dc/terms/publisher" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://purl.org/dc/terms/subject">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:subPropertyOf rdf:resource="http://purl.org/dc/terms/subject" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://purl.org/dc/terms/title">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:subPropertyOf rdf:resource="http://purl.org/dc/terms/title" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/2004/02/skos/core#ConceptScheme">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class" />
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/2004/02/skos/core#ConceptScheme" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/2004/02/skos/core#hasTopConcept">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2004/02/skos/core#hasTopConcept" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://pid.geoscience.gov.au/def/voc/ga/onlinefunction/browseGraphic">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">browseGraphic</skos:prefLabel>
+    <skos:topConceptOf rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/onlinefunction" />
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2017-10-16T23:15:18Z</dcterms:created>
+    <dcterms:creator rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <dcterms:source xml:lang="en">ISO19115-1:2014</dcterms:source>
+    <skos:definition xml:lang="en">browse graphic provided</skos:definition>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://pid.geoscience.gov.au/def/voc/ga/onlinefunction/browsing">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">browsing</skos:prefLabel>
+    <skos:topConceptOf rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/onlinefunction" />
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2017-10-16T23:15:18Z</dcterms:created>
+    <dcterms:creator rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <dcterms:source xml:lang="en">ISO19115-1:2014</dcterms:source>
+    <skos:definition xml:lang="en">online browsing provided</skos:definition>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://pid.geoscience.gov.au/def/voc/ga/onlinefunction/completeMetadata">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">completeMetadata</skos:prefLabel>
+    <skos:topConceptOf rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/onlinefunction" />
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2017-10-16T23:15:18Z</dcterms:created>
+    <dcterms:creator rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <dcterms:source xml:lang="en">ISO19115-1:2014</dcterms:source>
+    <skos:definition xml:lang="en">complete metadata provided</skos:definition>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://pid.geoscience.gov.au/def/voc/ga/onlinefunction/download">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">download</skos:prefLabel>
+    <skos:topConceptOf rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/onlinefunction" />
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2017-10-16T23:15:18Z</dcterms:created>
+    <dcterms:creator rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <dcterms:source xml:lang="en">ISO19115-1:2014</dcterms:source>
+    <skos:definition xml:lang="en">online instructions for transferring data from one stor- age device or system to another</skos:definition>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://pid.geoscience.gov.au/def/voc/ga/onlinefunction/fileAccess">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">fileAccess</skos:prefLabel>
+    <skos:topConceptOf rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/onlinefunction" />
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2017-10-16T23:15:18Z</dcterms:created>
+    <dcterms:creator rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <dcterms:source xml:lang="en">ISO19115-1:2014</dcterms:source>
+    <skos:definition xml:lang="en">online file access provided</skos:definition>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://pid.geoscience.gov.au/def/voc/ga/onlinefunction/information">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">information</skos:prefLabel>
+    <skos:topConceptOf rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/onlinefunction" />
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2017-10-16T23:15:18Z</dcterms:created>
+    <dcterms:creator rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <dcterms:source xml:lang="en">ISO19115-1:2014</dcterms:source>
+    <skos:definition xml:lang="en">online information about the resource</skos:definition>
+    <skos:narrower rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/onlinefunction/provenanceQueryService" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://pid.geoscience.gov.au/def/voc/ga/onlinefunction/offlineAccess">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">offlineAccess</skos:prefLabel>
+    <skos:topConceptOf rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/onlinefunction" />
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2017-10-16T23:15:18Z</dcterms:created>
+    <dcterms:creator rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <dcterms:source xml:lang="en">ISO19115-1:2014</dcterms:source>
+    <skos:definition xml:lang="en">online instructions for requesting the resource from the provider</skos:definition>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://pid.geoscience.gov.au/def/voc/ga/onlinefunction/order">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">order</skos:prefLabel>
+    <skos:topConceptOf rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/onlinefunction" />
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2017-10-16T23:15:18Z</dcterms:created>
+    <dcterms:creator rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <dcterms:source xml:lang="en">ISO19115-1:2014</dcterms:source>
+    <skos:definition xml:lang="en">online order process for obtaining the resource</skos:definition>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://pid.geoscience.gov.au/def/voc/ga/onlinefunction/search">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">search</skos:prefLabel>
+    <skos:topConceptOf rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/onlinefunction" />
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2017-10-16T23:15:18Z</dcterms:created>
+    <dcterms:creator rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <dcterms:source xml:lang="en">ISO19115-1:2014</dcterms:source>
+    <skos:definition xml:lang="en">online search interface for seeking out information about the resource</skos:definition>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://purl.org/dc/terms/source">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:subPropertyOf rdf:resource="http://purl.org/dc/terms/source" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/2004/02/skos/core#Concept">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class" />
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/2004/02/skos/core#definition">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2004/02/skos/core#definition" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/2004/02/skos/core#narrower">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2004/02/skos/core#narrower" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://pid.geoscience.gov.au/def/voc/ga/onlinefunction/provenanceQueryService">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">provenanceQueryService</skos:prefLabel>
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2017-10-16T23:15:18Z</dcterms:created>
+    <dcterms:creator rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <dcterms:source xml:lang="en">Geoscience Australia / PROV-O</dcterms:source>
+    <skos:definition xml:lang="en">an online service that allows querying for provenance records about the resource. The provenance records delivered are conformat to the W3C's PROV Data Model</skos:definition>
+    <skos:broader rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/onlinefunction/information" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/2004/02/skos/core#broader">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2004/02/skos/core#broader" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://pid.geoscience.gov.au/def/voc/ga/onlinefunction/emailService">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept" />
+    <skos:prefLabel xml:lang="en">emailService</skos:prefLabel>
+    <skos:topConceptOf rdf:resource="http://pid.geoscience.gov.au/def/voc/ga/onlinefunction" />
+    <dcterms:contributor rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2018-12-12T03:33:40Z</dcterms:modified>
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2018-12-12T03:08:09Z</dcterms:created>
+    <dcterms:creator rdf:resource="http://editor.vocabs.ands.org.au/user/GA_Sedgmen.Lara_Admin" />
+    <dcterms:source xml:lang="en">ISO19115-1:2014</dcterms:source>
+    <skos:definition xml:lang="en">online email service provided</skos:definition>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://purl.org/dc/terms/Agent">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class" />
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:subClassOf rdf:resource="http://purl.org/dc/terms/Agent" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://xmlns.com/foaf/0.1/name">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:subPropertyOf rdf:resource="http://xmlns.com/foaf/0.1/name" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://editor.vocabs.ands.org.au/user/GeoNetwork">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdf:type rdf:resource="http://purl.org/dc/terms/Agent" />
+    <foaf:name rdf:datatype="http://www.w3.org/2001/XMLSchema#string">GeoNetwork</foaf:name>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://purl.org/dc/terms/issued">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:subPropertyOf rdf:resource="http://purl.org/dc/terms/issued" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.w3.org/2002/07/owl#versionInfo">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property" />
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource" />
+    <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2002/07/owl#versionInfo" />
+  </rdf:Description>
+</rdf:RDF>
+

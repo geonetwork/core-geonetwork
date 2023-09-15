@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+	xmlns:ns3="http://purl.org/dc/elements/1.1/"
+	xmlns:ns5="http://www.opengis.net/gml#"
+	xmlns:ns2="http://www.w3.org/2004/02/skos/core#"
+	xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+
+<rdf:Description rdf:about="http://geonetwork-opensource.org/Jurisdiction">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#ConceptScheme"/>
+	<ns3:title>Jurisdiction</ns3:title>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://localhost:8080/thesaurus/platform/jurisdiction#14af8ba0-8730-4326-b092-5c14cc73abec">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="en">ACT</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="en">Australian Capital Territory</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f33sfn6lx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f33sfn6lx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://localhost:8080/thesaurus/platform/jurisdiction#15621134-72d0-4794-b783-7a8cf7ccae82">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="en">NSW</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="en">New South Wales</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f33sge1mx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f33sge1mx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://localhost:8080/thesaurus/platform/jurisdiction#4f60ec23-cb4a-4e44-bb15-20bf37e54394">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="en">Qld</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="en">Queensland</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f33shkqmx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f33shkqmx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://localhost:8080/thesaurus/platform/jurisdiction#1f54fd9f-c5ce-4810-ac52-b417b2ab1fac">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="en">NT</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="en">Northern Territories</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f33si34tx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f33si34tx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://localhost:8080/thesaurus/platform/jurisdiction#370a334e-fbf2-4e78-97c3-330a13fdb593">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="en">SA</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="en">South Australia</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f33sij2tx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f33sij2tx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://localhost:8080/thesaurus/platform/jurisdiction#39317bfe-51fa-45f5-bf08-209921f4cc9f">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="en">Tas</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="en">Tasmania</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f33sj48ux1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f33sj48ux1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://localhost:8080/thesaurus/platform/jurisdiction#b67ece8c-01a8-4d18-b2db-f5bb97cff16f">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="en">Vic</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="en">Victoria</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f33sjkt2x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f33sjkt2x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://localhost:8080/thesaurus/platform/jurisdiction#775deb9e-8f26-4b3f-b940-aa50033e0c38">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="en">WA</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="en">West Australia</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f33sk0jkx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f33sk0jkx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://localhost:8080/thesaurus/platform/jurisdiction#4a5ad39c-e4b6-4667-b8eb-ab267e578e0b">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="en">Federal</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="en">Australian federal government</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f33skioex1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f33skioex1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://localhost:8080/thesaurus/platform/jurisdiction#a2f1e177-ef9f-4b66-b9bc-82c3dde32207">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="en">Industry</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1f33sl81rx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f33sl81rx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://localhost:8080/thesaurus/platform/jurisdiction#0b656b5e-7db3-47d7-9aa2-5fb80e9b057b">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="en">NGO</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="en">Non Government Organisation</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f33slkfvx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f33slkfvx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://localhost:8080/thesaurus/platform/jurisdiction#b353ace3-b213-4691-a74b-0b19dc3765e4">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="en">Research</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="en">Universities and other knowledge seekers</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1f33smf23x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f33smf23x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://localhost:8080/thesaurus/platform/jurisdiction#1bc646f3-2233-4b53-aee0-37dae8027702">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="en">Other</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1f33smrq3x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f33smrq3x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+</rdf:RDF>

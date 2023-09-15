@@ -907,7 +907,7 @@
       <tab id="descriptiveKeywordsIcsm">
         <section name="mri:descriptiveKeywords">
           <field xpath="/mdb:MD_Metadata/mdb:identificationInfo/*/mri:descriptiveKeywords"
-                 or="descriptiveKeywords" in="/mdb:MD_Metadata/mdb:identificationInfo/*" del="."/>
+                 or="descriptiveKeywords" in="/mdb:MD_Metadata/mdb:identificationInfo/*" del=".."/>
         </section>
       </tab>
       <tab id="spatialInfoIcsm" mode="flat" displayIfRecord="count(mdb:MD_Metadata/mdb:metadataScope/mdb:MD_MetadataScope/mdb:resourceScope[*/@codeListValue ='attributeType']) = 0 ">

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+	xmlns:ns3="http://purl.org/dc/elements/1.1/"
+	xmlns:ns5="http://www.opengis.net/gml#"
+	xmlns:ns2="http://www.w3.org/2004/02/skos/core#"
+	xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+
+<rdf:Description rdf:about="http://geonetwork-opensource.org/Hazard Type">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#ConceptScheme"/>
+	<ns3:title>Hazard Type</ns3:title>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://localhost:8080/thesaurus/theme/hazards#85637d5b-9171-48df-8ca9-edd81f617157">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="en">Bushfire</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1f33sonvox1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f33sonvox1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://localhost:8080/thesaurus/theme/hazards#46095bab-04c8-4d0a-962b-c91f2f59c8ef">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="en">Cyclone</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1f33sou7gx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f33sou7gx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://localhost:8080/thesaurus/theme/hazards#750eecc4-3bb9-4150-b556-f48d2bc41b88">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="en">Earthquake</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1f33sp6bex1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f33sp6bex1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://localhost:8080/thesaurus/theme/hazards#bf05d604-f1d4-4419-9e2e-7ccb8ede3931">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="en">Flood</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1f33spci9x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f33spci9x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://localhost:8080/thesaurus/theme/hazards#ed92f6ea-d411-4291-b4e5-3156acc25179">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="en">Storm Surge</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1f33spk47x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f33spk47x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://localhost:8080/thesaurus/theme/hazards#326dfedb-b030-4a9a-bdc0-44e063398bf1">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="en">Tsunami</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1f33sprvmx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f33sprvmx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://localhost:8080/thesaurus/theme/hazards#5e41cf40-309c-4b1d-bf54-7ba26a190dd9">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="en">Severe Weather</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1f33sq4ofx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1f33sq4ofx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+</rdf:RDF>
