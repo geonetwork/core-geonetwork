@@ -7,6 +7,6 @@
 * Maintainer
 * [API](api/index.md)
 * [Contributing](contributing/index.md)
-* Customization
+* [Customization](customizing-application/index.md)
 * [Tutorials](tutorials.index.md)
 * Annexes

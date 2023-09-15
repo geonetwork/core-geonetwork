@@ -1,0 +1,15 @@
+# Customizing guide
+
+-   [Search Ui Index](search-ui/index.md)
+-   [Creating Custom View](creating-custom-view.md)
+-   [Editor Ui Creating Custom Editor](editor-ui/creating-custom-editor.md)
+-   [Editor Ui Custom Editor Examples](editor-ui/custom-editor-examples.md)
+-   [Editor Ui Tutorial](editor-ui/tutorial.md)
+-   [Changing Layout](changing-layout.md)
+-   [Configuring Search Fields](configuring-search-fields.md)
+-   [Configuring Faceted Search](configuring-faceted-search.md)
+-   [Advanced Configuration](advanced-configuration.md)
+-   [Adding Static Pages](adding-static-pages.md)
+-   [Implementing A Schema Plugin](implementing-a-schema-plugin.md)
+-   [Characterset](characterset.md)
+-   [Misc](misc.md)

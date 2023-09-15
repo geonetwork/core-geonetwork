@@ -171,6 +171,72 @@ nav:
     - contributing/translating.md
     - contributing/making-a-pull-request.md
     - contributing/doing-a-release.md
+  - 'Customization':
+    - customizing-application/index.md
+    - 'Search':
+      - customizing-application/search-ui/index.md
+      - customizing-application/search-ui/configdefault.md
+      - customizing-application/search-ui/customview.md
+      - customizing-application/search-ui/enrichview.md
+      - customizing-application/search-ui/loadview.md
+      - customizing-application/search-ui/wro4jdependencies.md
+    - customizing-application/creating-custom-view.md
+    - customizing-application/editor-ui/creating-custom-editor.md
+    - customizing-application/editor-ui/custom-editor-examples.md
+    - customizing-application/editor-ui/tutorial.md
+    - customizing-application/changing-layout.md
+    - customizing-application/configuring-search-fields.md
+    - customizing-application/configuring-faceted-search.md
+    - customizing-application/advanced-configuration.md
+    - customizing-application/adding-static-pages.md
+    - customizing-application/characterset.md
+    - customizing-application/implementing-a-schema-plugin.md
+    - customizing-application/misc.md
+  - 'Tutorials':
+    - tutorials/index.md
+    - 'Introduction':
+       - tutorials/introduction/index.md
+       - 'Overview':
+         - tutorials/introduction/introduction/index.md
+         - tutorials/introduction/introduction/discover.md
+         - tutorials/introduction/introduction/map.md
+         - tutorials/introduction/introduction/schema.md
+         - 'Deployment':
+           - tutorials/introduction/deployment/index.md
+           - tutorials/introduction/deployment/build.md
+           - tutorials/introduction/deployment/deploy.md
+           - tutorials/introduction/deployment/docker.md
+         - tutorials/introduction/setup/index.md
+         - 'Edit':
+           - tutorials/introduction/edit/index.md
+           - tutorials/introduction/edit/edit.md
+           - tutorials/introduction/edit/editor.md
+         - tutorials/introduction/harvesting/index.md
+         - tutorials/introduction/extra/index.md
+    - 'Custom':
+      - tutorials/customui/index.md
+      - 'Search':
+        - tutorials/customui/search/index.md
+        - tutorials/customui/search/customview.md
+        - tutorials/customui/search/defaultview.md
+        - tutorials/customui/search/loadpage.md
+      - 'View':
+        - tutorials/customui/view/index.md
+        - tutorials/customui/view/formatter.md
+    - 'Hook':
+      - tutorials/hookcustomizations/index.md
+      - tutorials/hookcustomizations/events/index.md
+      - tutorials/hookcustomizations/newproject/index.md
+      - tutorials/hookcustomizations/schemaplugins/index.md
+      - tutorials/hookcustomizations/searchfields/index.md
+      - tutorials/hookcustomizations/ui/index.md
+    - 'Inspire':
+      - tutorials/inspire/index.md
+      - tutorials/inspire/download-atom.md
+      - tutorials/inspire/download-geoserver.md
+      - tutorials/inspire/view-geoserver.md
+      - tutorials/inspire/view-mapserver.md
+
   - 'Development':
     - 'devel/index.md'
     - 'devel/docs/docs.md'
