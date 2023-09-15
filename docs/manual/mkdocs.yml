@@ -113,7 +113,7 @@ nav:
       - 'overview/change-log/stable.md'
       - 'overview/change-log/maintenance.md'
       - 'overview/change-log/archive.md'
-  - 'Install Guide':
+  - 'Install':
       - install-guide/index.md
       - install-guide/installing-from-zip.md
       - install-guide/installing-from-war-file.md
@@ -125,10 +125,10 @@ nav:
       - install-guide/logging.md
       - install-guide/map-print-setup.md
       - install-guide/loading-samples.md
-  - 'User Guide':
+  - 'User':
     - 'user-guide/index.md'
     - 'user-guide/quick-start/index.md'
-  - 'Administrator Guide':
+  - 'Administrator':
     - administrator-guide/index.md
     - 'Catalog':
       - administrator-guide/configuring-the-catalog/index.md
@@ -155,6 +155,15 @@ nav:
       - administrator-guide/managing-metadata-standards/configure-validation.md
       - administrator-guide/managing-metadata-standards/metadata-identifier.md
       - administrator-guide/managing-metadata-standards/standards.md
+  - 'Maintainer':
+      - maintainer-guide/index.md
+      - 'Statistics':
+        - maintainer-guide/statistics/index.md
+        - maintainer-guide/statistics/setup-elasticsearch.md
+        - maintainer-guide/statistics/setup-kibana.md
+        - maintainer-guide/statistics/setup-geonetwork.md
+      - maintainer-guide/production-use/index.md
+      - maintainer-guide/updating/index.md
   - 'API':
     - 'api/index.md'
     - 'api/the-geonetwork-api.md'
@@ -213,7 +222,7 @@ nav:
            - tutorials/introduction/edit/editor.md
          - tutorials/introduction/harvesting/index.md
          - tutorials/introduction/extra/index.md
-    - 'Custom':
+    - 'Customize':
       - tutorials/customui/index.md
       - 'Search':
         - tutorials/customui/search/index.md

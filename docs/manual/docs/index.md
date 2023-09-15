@@ -4,7 +4,7 @@
 * [Installation](install-guide/index.md)
 * [User-guide](user-guide/index.md)
 * [Administration](administor-guide/index.md)
-* Maintainer
+* [Maintainer](maintainer-guide/index.md)
 * [API](api/index.md)
 * [Contributing](contributing/index.md)
 * [Customization](customizing-application/index.md)
