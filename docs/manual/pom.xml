@@ -33,6 +33,9 @@
   <artifactId>gn-guide</artifactId>
   <name>GeoNetwork Guide</name>
   <packaging>pom</packaging>
+  <properties>
+     <french>false</french>
+  </properties>
   <licenses>
     <license>
       <name>Creative Commons Attribution 3.0 License</name>
@@ -55,7 +58,9 @@
             <configuration>
               <target>
                 <exec executable="mkdocs" failonerror="true" dir="${basedir}">
+                  <env key="FRENCH" value="${french}"/>
                   <arg line="build"/>
+                  <arg line="--no-directory-urls"/>
                 </exec>
               </target>
             </configuration>
@@ -97,5 +102,19 @@
       </plugin>
     </plugins>
   </build>
+
+<profiles>
+  <profile>
+    <id>french</id>
+    <activation>
+      <property>
+        <name>all</name>
+      </property>
+    </activation>
+    <properties>
+       <french>true</french>
+    </properties>
+  </profile>
+</profiles>
 
 </project>

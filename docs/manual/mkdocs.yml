@@ -40,7 +40,6 @@ theme:
 
 plugins:
   - search
-  - offline
   - i18n:
       docs_structure: suffix
       languages:
@@ -51,7 +50,7 @@ plugins:
           site_name: 'GeoNetwork (en)'
         - locale: fr
           name: Français
-          build: true
+          build: !ENV [FRENCH,false]
           site_name: 'GeoNetwork (fr)'
           nav_translations:
             Home: Home
