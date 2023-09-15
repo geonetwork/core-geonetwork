@@ -21,7 +21,7 @@ To start the catalog:
 
     Tip: If you are using the command line, you can view the log messages directly in the console.
 
-2.  Open a web browser and go to the GeoNetwork homepage. If you installed it on your computer, use this link `http://localhost:8080/geonetwork`.
+2.  Open a web browser and go to the GeoNetwork homepage. If you installed it on your computer, use this link ``http://localhost:8080/geonetwork``.
 
 3.  The GeoNetwork catalog page is displayed.
 
@@ -85,24 +85,29 @@ Search results display main information about each resources: title, abstract, c
 To view detailed information about the resources, click the record. These details include:
 
 -   Download and links
+
 -   About the resource
+
 -   Technical information
+
 -   Metadata details
 
-![](img/a-record.png)
+    ![](img/a-record.png)
 
 -   To get more information, switch the advanced view mode.
+
 -   To update the record, click Edit.
 
-::: {#quick_start-3D}
 From the results or the record view, you can add WMS layers referenced in a metadata record on the map. Using the map, you can:
-:::
 
 -   Visualize your data,
+
 -   Choose your background maps,
+
 -   Query objects,
+
 -   Display on a 3D globe
 
-![](img/map-africa-basin.png)
+    ![](img/map-africa-basin.png)
 
-Read more about use of the [map viewer](map-viewer-as-user.md).
+Read more about use of the [map-viewer-as-user](map-viewer-as-user.md)

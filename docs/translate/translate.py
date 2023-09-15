@@ -254,12 +254,8 @@ def _preprocess_rst_toctree(text: str):
           if line[0:3] == '   ':
              # processing directive
              link = line[3:-4]
-             if link.endswith("/index"):
-                label = link
-             else:
-                label = link
-
-             label = label.replace("/index.md", "")
+             label = link
+             label = label.replace("/index", "")
              label = label.replace("-", " ")
              label = label.replace("/", " ")
              label = label.title()
@@ -393,6 +389,10 @@ def _postprocess_pandoc_fenced_divs(text: str) -> str:
 
           # sphinx-build directives mapping to fenced blogs
           # https://www.sphinx-doc.org/en/master/usage/restructuredtext/directives.html
+          if type == 'todo':
+             type = 'info'
+             title = 'Todo'
+             note = ''
           if type == 'admonition':
              type = 'abstract'
              title = ''
