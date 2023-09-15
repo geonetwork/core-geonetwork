@@ -8,5 +8,5 @@
 * [API](api/index.md)
 * [Contributing](contributing/index.md)
 * Customization
-* Tutorials
+* [Tutorials](tutorials.index.md)
 * Annexes
