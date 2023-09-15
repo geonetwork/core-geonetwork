@@ -255,11 +255,13 @@ def _preprocess_rst_toctree(text: str):
              # processing directive
              link = line[3:-4]
              if link.endswith("/index"):
-                label = link[0:-6]
+                label = link
              else:
                 label = link
 
+             label = label.replace("/index.md", "")
              label = label.replace("-", " ")
+             label = label.replace("/", " ")
              label = label.title()
 
              toctree += f"* `{label} <{link}.md>`__\n"
@@ -388,11 +390,13 @@ def _postprocess_pandoc_fenced_divs(text: str) -> str:
              type = 'tip'
           if type == 'warning':
              type = 'warning'
-          if type == 'admonition':
-             type = 'abstract'
 
           # sphinx-build directives mapping to fenced blogs
           # https://www.sphinx-doc.org/en/master/usage/restructuredtext/directives.html
+          if type == 'admonition':
+             type = 'abstract'
+             title = ''
+
           if type == 'deprecated':
              type = 'warning'
              title = 'Deprecated'
@@ -413,15 +417,13 @@ def _postprocess_pandoc_fenced_divs(text: str) -> str:
              type = 'info'
              title = 'Version Changed'
              note = ''
-
+          log("process:'"+line+"'")
           log('start:',type," title:", title)
           continue
 
        if admonition:
           # processing fenced div
           log("process:'"+line+"'")
-          if line.strip() == '':
-             continue
 
           if match and match.group(2) == 'title':
              # start title processing, next line title
@@ -432,6 +434,9 @@ def _postprocess_pandoc_fenced_divs(text: str) -> str:
           if title == '':
              title = line.strip() # title obtained
              log("title",title)
+             if type == 'abstract':
+                # .. admonition:: Explore does not use seperate ::: marker between title and note
+                note = ''
              continue
 
           if match and note == None:
@@ -460,36 +465,51 @@ def _postprocess_pandoc_fenced_divs(text: str) -> str:
 
              admonition = False
              type = None
+             ident = ''
              title = None
              note = None
              continue
 
           if note != None:
+             if note == '' and line.strip() == '':
+                # skip initial blank line
+                continue
              note += line + '\n'
+             log("note:"+line)
              continue
 
           # unexpected
-          log("unexpected:")
-          log("  admonition",admonition)
-          log("  type",type)
-          log("  title",title)
-          log("  note",note)
-          raise ValueError('unclear what to process')
+          print("unexpected:")
+          print("  admonition",admonition)
+          print("  type",type)
+          print("  title",title)
+          print("  note",note)
+          print("  line",line)
+          print("  process",len(process))
+          print()
+          print(process)
+          raise ValueError('unclear what to process '+str(type)+" "+str(title))
 
        else:
           process += line + '\n'
 
    if admonition:
       # fenced div was at end of file
+      print("unexpected:")
+      print("  admonition",admonition)
+      print("  type",type)
+      print("  title",title)
+      print("  note",note)
       raise ValueError('Expected ::: to end fence dive '+str(type)+' '+str(title)+' '+str(note))
 
    return process
 
 def log(*args):
-   message = ''
-#    for value in args:
-#       message += str(value) + ' '
-#    print(message)
+   if False:
+      message = ''
+      for value in args:
+         message += str(value) + ' '
+      print(message)
 
 def convert_markdown(md_file: str) -> str:
     """
