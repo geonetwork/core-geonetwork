@@ -9,4 +9,4 @@
 * [Contributing](contributing/index.md)
 * [Customization](customizing-application/index.md)
 * [Tutorials](tutorials.index.md)
-* Annexes
+* [Annexes](annexes/index.md)

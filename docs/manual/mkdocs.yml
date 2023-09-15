@@ -309,7 +309,17 @@ nav:
       - tutorials/inspire/download-geoserver.md
       - tutorials/inspire/view-geoserver.md
       - tutorials/inspire/view-mapserver.md
-
+  - 'Annexes':
+    - annexes/index.md
+    - annexes/mef-format.md
+    - annexes/gallery/gallery.md
+    - annexes/glossary/index.md
+    - 'Standards':
+      - annexes/standards/index.md
+      - annexes/standards/iso19115-3.2018.md
+      - annexes/standards/iso19139.md
+      - annexes/standards/iso19110.md
+      - annexes/standards/dublin-core.md
   - 'Development':
     - 'devel/index.md'
     - 'devel/docs/docs.md'
