@@ -8,17 +8,17 @@ The available options are:
 
 -   **Site**
 
-    > -   *Name* - A short description of this Z3950 harvester. It will be shown in the harvesting main page using this name.
-    > -   *Z3950 Server(s)* - These are the Z3950 servers that will be searched. You can select one or more of these servers.
-    > -   *Z3950 Query* - Specify the Z3950 query to use when searching the selected Z3950 servers. At present this field is known to support the Prefix Query Format (also known as Prefix Query Notation) which is described at this URL: <http://www.indexdata.com/yaz/doc/tools.html#PQF>. See below for more information and some simple examples.
-    > -   *Icon* - An icon to assign to harvested metadata. The icon will be used when showing search results.
+    -   *Name* - A short description of this Z3950 harvester. It will be shown in the harvesting main page using this name.
+    -   *Z3950 Server(s)* - These are the Z3950 servers that will be searched. You can select one or more of these servers.
+    -   *Z3950 Query* - Specify the Z3950 query to use when searching the selected Z3950 servers. At present this field is known to support the Prefix Query Format (also known as Prefix Query Notation) which is described at this URL: <http://www.indexdata.com/yaz/doc/tools.html#PQF>. See below for more information and some simple examples.
+    -   *Icon* - An icon to assign to harvested metadata. The icon will be used when showing search results.
 
 -   **Options** - Scheduling options.
 
 -   **Harvested Content**
 
-    > -   *Apply this XSLT to harvested records* - Choose an XSLT here that will convert harvested records to a different format.
-    > -   *Validate* - If checked, records that do not/cannot be validated will be rejected.
+    -   *Apply this XSLT to harvested records* - Choose an XSLT here that will convert harvested records to a different format.
+    -   *Validate* - If checked, records that do not/cannot be validated will be rejected.
 
 -   **Privileges**
 
@@ -35,7 +35,7 @@ PQF is a rather arcane query language. It is based around the idea of attributes
 
 The most useful attribute types in the GEO attribute set are as follows:
 
-| \@attr number | Meaning    | Description                                      |
+| @attr number | Meaning    | Description                                      |
 |---------------|------------|--------------------------------------------------|
 | 1             | Use        | What field to search                             |
 | 2             | Relation   | How to compare the term specified                |
@@ -44,39 +44,26 @@ The most useful attribute types in the GEO attribute set are as follows:
 
 In GeoNetwork the numeric values that can be specified for `@attr 1` map to the lucene index field names as follows:
 
-+----------------------+-------------------------------+-------------------------------------------------------------------------------------------------------------+
-| \@attr 1=            | Lucene index field            | ISO19139 element                                                                                            |
-+======================+===============================+=============================================================================================================+
+| @attr 1=            | Lucene index field            | ISO19139 element                                                                                            |
+| -------------------- | ----------------------------- |-------------------------------------------------------------------------------------------------------------|
 | 1016                 | any                           | All text from all metadata elements                                                                         |
-+----------------------+-------------------------------+-------------------------------------------------------------------------------------------------------------+
 | 4                    | title, altTitle               | gmd:identificationInfo//gmd:citation//gmd:title/gco:CharacterString                                         |
-+----------------------+-------------------------------+-------------------------------------------------------------------------------------------------------------+
 | 62                   | abstract                      | gmd:identificationInfo//gmd:abstract/gco:CharacterString                                                    |
-+----------------------+-------------------------------+-------------------------------------------------------------------------------------------------------------+
-| 1012                 | _changeDate                  | Not a metadata element (maintained by GeoNetwork)                                                           |
-+----------------------+-------------------------------+-------------------------------------------------------------------------------------------------------------+
+| 1012                 | _changeDate                   | Not a metadata element (maintained by GeoNetwork)                                                           |
 | 30                   | createDate                    | gmd:MD_Metadata/gmd:dateStamp/gco:Date                                                                      |
-+----------------------+-------------------------------+-------------------------------------------------------------------------------------------------------------+
-| 31                   | publicationDate               | > gmd:identificationInfo//gmd:citation//gmd:date/gmd:<CI_DateCode/@codeListValue>='publication'           |
-+----------------------+-------------------------------+-------------------------------------------------------------------------------------------------------------+
+| 31                   | publicationDate               | > gmd:identificationInfo//gmd:citation//gmd:date/gmd:<CI_DateCode/@codeListValue>='publication'             |
 | 2072                 | tempExtentBegin               | > gmd:identificationInfo//gmd:extent//gmd:temporalElement//gml:begin(Position)                              |
-+----------------------+-------------------------------+-------------------------------------------------------------------------------------------------------------+
 | 2073                 | tempExtentEnd                 | > gmd:identificationInfo//gmd:extent//gmd:temporalElement//gml:end(Position)                                |
-+----------------------+-------------------------------+-------------------------------------------------------------------------------------------------------------+
-| 2012                 | fileId                        | gmd:MD_Metadata/gmd:fileIdentifier/*                                                                       |
-+----------------------+-------------------------------+-------------------------------------------------------------------------------------------------------------+
-| 12                   | identifier                    | gmd:identificationInfo//gmd:citation//gmd:identifier//gmd:code/*                                           |
-+----------------------+-------------------------------+-------------------------------------------------------------------------------------------------------------+
-| 21,29,2002,3121,3122 | keyword                       | gmd:identificationInfo//gmd:keyword/*                                                                      |
-+----------------------+-------------------------------+-------------------------------------------------------------------------------------------------------------+
-| 2060                 | northBL,eastBL,southBL,westBL | gmd:identificationInfo//gmd:extent//gmd:EX_GeographicBoundingBox/gmd:westBoundLongitude*/gco:Decimal (etc) |
-+----------------------+-------------------------------+-------------------------------------------------------------------------------------------------------------+
+| 2012                 | fileId                        | gmd:MD_Metadata/gmd:fileIdentifier/*                                                                        |
+| 12                   | identifier                    | gmd:identificationInfo//gmd:citation//gmd:identifier//gmd:code/*                                            |
+| 21,29,2002,3121,3122 | keyword                       | gmd:identificationInfo//gmd:keyword/*                                                                       |
+| 2060                 | northBL,eastBL,southBL,westBL | gmd:identificationInfo//gmd:extent//gmd:EX_GeographicBoundingBox/gmd:westBoundLongitude*/gco:Decimal (etc)  |
 
 Note that this is not a complete set of the mappings between Z3950 GEO attribute set and the GeoNetwork lucene index field names for ISO19139. Check out INSTALL_DIR/web/geonetwork/xml/search/z3950Server.xsl and INSTALL_DIR/web/geonetwork/xml/schemas/iso19139/index-fields.xsl for more details and annexe A of the GEO attribute set for Z3950 at <http://www.fgdc.gov/standards/projects/GeoProfile/annex_a.html> for more details.
 
 Common values for the relation attribute (`@attr=2`):
 
-| \@attr 2= | Description              |
+| @attr 2= | Description              |
 |-----------|--------------------------|
 | 1         | Less than                |
 | 2         | Less than or equal to    |
@@ -103,7 +90,7 @@ A more sophisticated search on a bounding box might be formulated as:
 -   `@attr 4=201` means that the query contains coordinate strings
 -   `@attr 2=7` means that we are searching for records whose bounding box overlaps the query box specified at the end of the query
 
-## Notes
+!!! Notes
 
--   Z3950 servers must be configured for GeoNetwork in `INSTALL_DIR/web/geonetwork/WEB-INF/classes/JZKitConfig.xml.tem`
--   every time the harvester runs, it will remove previously harvested records and create new ones.
+    -   Z3950 servers must be configured for GeoNetwork in `INSTALL_DIR/web/geonetwork/WEB-INF/classes/JZKitConfig.xml.tem`
+    -   every time the harvester runs, it will remove previously harvested records and create new ones.

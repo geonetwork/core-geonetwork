@@ -46,26 +46,26 @@ One you add some templates, your catalog is ready to be used.
 
 Although you can enable user self-registration, it is more usual to create the users manually, so you control exactly who have access to what. The catalog uses the concept of Users, Groups and User Profiles.
 
-> -   A User can be part of one or more Groups.
-> -   A User has a Role in a Group.
-> -   The Administrator Role is not related to a Group as it relates to the whole platform.
+-   A User can be part of one or more Groups.
+-   A User has a Role in a Group.
+-   The Administrator Role is not related to a Group as it relates to the whole platform.
 
 Users can have different roles in different groups. A role defines what tasks the user can perform:
 
-> -   Guest is a user that can see records on the group, but cannot modify them.
-> -   Editor is a user that can create or edit records on the group.
-> -   Reviewer is a user that can edit and publish records on the group.
-> -   UserAdmin is a user that has administrative privileges over the records and users on the group.
+-   Guest is a user that can see records on the group, but cannot modify them.
+-   Editor is a user that can create or edit records on the group.
+-   Reviewer is a user that can edit and publish records on the group.
+-   UserAdmin is a user that has administrative privileges over the records and users on the group.
 
 To add a new user to the GeoNetwork system you do the following:
 
-> -   Select the Administration button in the menu
-> -   On the Administration page, select User management
-> -   Click the button Add a new user
-> -   Provide the information required for the new user
-> -   Assign the correct profile
-> -   Assign the user to a group
-> -   Click on Save
+-   Select the Administration button in the menu
+-   On the Administration page, select User management
+-   Click the button Add a new user
+-   Provide the information required for the new user
+-   Assign the correct profile
+-   Assign the user to a group
+-   Click on Save
 
 ![image](img/createuser.png)
 
@@ -77,10 +77,10 @@ For each possible role, there is a list of groups. This way, a user can have dif
 
 To create new groups you should be logged on with an account that has Administrative privileges.
 
-> -   Select the Administration button in the menu. On the Administration page, select Group management.
-> -   Select Add a new group. You may want to remove the Sample group;
-> -   Fill out the details. The email address will be used to send feedback on data downloads when they occur for resources that are part of the Group.
-> -   Click on Save
+-   Select the Administration button in the menu. On the Administration page, select Group management.
+-   Select Add a new group. You may want to remove the Sample group;
+-   Fill out the details. The email address will be used to send feedback on data downloads when they occur for resources that are part of the Group.
+-   Click on Save
 
 Access privileges can be set per metadata record. You can define privileges on a per Group basis.
 

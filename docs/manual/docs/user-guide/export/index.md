@@ -38,22 +38,21 @@ in the first file, it is necessary to proceed as in the following:
 
 -   to comment the elements `id, title, abstract` except
 
-```{=html}
-<!-- -->
-```
+    ``` xml
     <uuid>
           <xsl:value-of select="gn:info/uuid"/>
     </uuid>
+    ```
 
 -   to add a similar line in between the abstract and category elements:
 
-```{=html}
-<!-- -->
-```
+    ``` xml
     <myfield>myfieldvalue</myfield>
+    ```
 
-For example:
+    For example:
 
+    ``` xml
     <title>
        <xsl:copy-of select="mdb:identificationInfo/*/mri:citation/*/cit:title"/>
     </title>
@@ -63,14 +62,19 @@ For example:
     <category>
       <xsl:value-of select="mdb:metadataScope/*/mdb:resourceScope/*/@codeListValue"/>
     </category>
+    ```
 
 About cloud coverage percentage, in particular, please remember to add the namespace if missing:
 
-`xmlns:mrc="http://standards.iso.org/iso/19115/-3/mrc/2.0"`
+``` xml
+xmlns:mrc="http://standards.iso.org/iso/19115/-3/mrc/2.0"
+```
 
 If not interested in other information, please comment all other lines except:
 
-    <xsl:copy-of select="gn:info"/>
+``` xml
+<xsl:copy-of select="gn:info"/>
+```
 
 because it is used to sort results by schema.
 
@@ -80,20 +84,26 @@ About the second file, *csv-search.xsl*, to avoid printing automatically the 3 c
 
 you have to comment the following lines:
 
-    <xsl:text>"schema"</xsl:text>
-    <xsl:value-of select="$sep"/>
-    <xsl:text>"uuid"</xsl:text>
-    <xsl:value-of select="$sep"/>
-    <xsl:text>"id"</xsl:text>
-    <xsl:value-of select="$sep"/>
+``` xml
+<xsl:text>"schema"</xsl:text>
+<xsl:value-of select="$sep"/>
+<xsl:text>"uuid"</xsl:text>
+<xsl:value-of select="$sep"/>
+<xsl:text>"id"</xsl:text>
+<xsl:value-of select="$sep"/>
+```
 
 and
 
-    <xsl:value-of select="concat('&quot;', $metadata/geonet:info/schema, '&quot;', $sep, 
-    '&quot;', $metadata/geonet:info/uuid, '&quot;', $sep, 
-    '&quot;', $metadata/geonet:info/id, '&quot;', $sep)"/>
+``` xml
+<xsl:value-of select="concat('&quot;', $metadata/geonet:info/schema, '&quot;', $sep, 
+'&quot;', $metadata/geonet:info/uuid, '&quot;', $sep, 
+'&quot;', $metadata/geonet:info/id, '&quot;', $sep)"/>
+```
 
 These changes will create the desired output:
 
-    "uuid","title","cloud_coverage_percentage","category","date-creation"  
-    "c94da70e-066e-11ea-aa22-02000a08f492","S2A_MSIL1C_20180320T101021_N0206_R022_T33TUM_20180320T122057","36.0368","dataset","2018-03-20T12:20:57",
+``` xml
+"uuid","title","cloud_coverage_percentage","category","date-creation"  
+"c94da70e-066e-11ea-aa22-02000a08f492","S2A_MSIL1C_20180320T101021_N0206_R022_T33TUM_20180320T122057","36.0368","dataset","2018-03-20T12:20:57",
+```

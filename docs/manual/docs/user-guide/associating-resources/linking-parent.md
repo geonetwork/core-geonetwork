@@ -4,9 +4,9 @@ In some situations, a dataset is part of a temporal or spatial collections of re
 
 -   Corine Land Cover
 
-> -   Corine Land Cover 2002
-> -   Corine Land Cover 2012
-> -   \...
+    -   Corine Land Cover 2002
+    -   Corine Land Cover 2012
+    -   \...
 
 Parent/child relations can be set on ISO19139 and Dublin Core records. In ISO19139, the link to a parent record is encoded in the child record using the following:
 

@@ -510,7 +510,7 @@ The `et` you configured on your OpenID server.
 
 **OPENIDCONNECT_SERVERMETADATA_CONFIG_URL**
 
-URL to the external OIDC server's JSON metadata document. This is typically at [/.well-known/openid-configuration]{.title-ref} on the IDP server.
+URL to the external OIDC server's JSON metadata document. This is typically at [/.well-known/openid-configuration] on the IDP server.
 
 !!! note
 
@@ -533,7 +533,7 @@ Where, in the ID Token, are the users roles/groups stored (i.e. "groups", "roles
 
 This provides simple role conversion from the OpenID server to Geonetwork roles.
 
-ie. ["GeonetworkAdmin=Administrator,GeonetworkEditor=Editor"]{.title-ref}
+ie. ["GeonetworkAdmin=Administrator,GeonetworkEditor=Editor"]
 
 This will convert "GeonetworkAdmin" (from the OpenID Server) to the Geonetwork "Administrator" role.
 
@@ -772,13 +772,13 @@ Install keycloak from its instructions or use this example setup in docker <http
 
 Keycloak details are defined via environment variables
 
-> ``` text
+``` text
 > KEYCLOAK_AUTH_SERVER_URL={keycloak url}
 > KEYCLOAK_REALM={realm name}
 > KEYCLOAK_RESOURCE={client name}
 > KEYCLOAK_SECRET={client secret}
 > KEYCLOAK_DISABLE_TRUST_MANAGER={true|false}
-> ```
+```
 
 You can setup more advance keycloak settings by editing the file `WEB-INF/config-security/keycloak.json`{.interpreted-text role="file"}
 

@@ -31,34 +31,27 @@ If the configuration is missing or wrong, the error is reported:
 
 For DOI creation, the task is a 2 steps actions:
 
-> -   First check if all prerequisite are covered (below the record is not valid in DataCite format).
+-   First check if all prerequisite are covered (below the record is not valid in DataCite format).
 
 The DataCite format requires some mandatory fields:
 
-> -   Identifier (with mandatory type sub-property)
-> -   Creator (with optional given name, family name, name identifier and affiliation sub-properties)
-> -   Title (with optional type sub-properties)
-> -   Publisher
-> -   PublicationYear
-> -   ResourceType (with mandatory general type description subproperty)
+-   Identifier (with mandatory type sub-property)
+-   Creator (with optional given name, family name, name identifier and affiliation sub-properties)
+-   Title (with optional type sub-properties)
+-   Publisher
+-   PublicationYear
+-   ResourceType (with mandatory general type description subproperty)
 
 The mapping with ISO standards is the following:
 
-  -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-  Property          ISO 19139                                                                                                   ISO 19115-3
-  ----------------- ----------------------------------------------------------------------------------------------------------- -----------------------------------------------------------------------------------------------------------
-  Identifier        gmd:MD_Metadata/gmd:fileIdentifier/*/text()                                                                mdb:MD_Metadata/mdb:metadataIdentifier/*/mcc:code/*/text()
-
-  Creator           gmd:identificationInfo/*/gmd:pointOfContact with role 'pointOfContact' or 'custodian'                  mdb:identificationInfo/*/mri:pointOfContact with role 'pointOfContact' or 'custodian'
-
-  Title             gmd:identificationInfo/*/gmd:citation/*/gmd:title                                                         mdb:identificationInfo/*/mri:citation/*/cit:title
-
-  Publisher         gmd:distributorContact[1]/*/gmd:organisationName/gco:CharacterString                                     mrd:distributorContact[1]/*/cit:party/*/cit:organisationName/gco:CharacterString
-
-  PublicationYear   gmd:identificationInfo/*/gmd:citation/*/gmd:date/*[gmd:dateType/*/@codeListValue = 'publication']   mdb:identificationInfo/*/mri:citation/*/cit:date/*[cit:dateType/*/@codeListValue = 'publication']
-
-  ResourceType      gmd:hierarchyLevel/*/@codeListValue                                                                        mdb:metadataScope/*/mdb:resourceScope/*/@codeListValue
-  -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+| Property          | ISO 19139                                                                                                   | ISO 19115-3
+| ----------------- | ----------------------------------------------------------------------------------------------------------- | -----------------------------------------------------------------------------------------------------------
+| Identifier        | gmd:MD_Metadata/gmd:fileIdentifier/*/text()                                                                 | mdb:MD_Metadata/mdb:metadataIdentifier/*/mcc:code/*/text()
+| Creator           | gmd:identificationInfo/*/gmd:pointOfContact with role 'pointOfContact' or 'custodian'                       | mdb:identificationInfo/*/mri:pointOfContact with role 'pointOfContact' or 'custodian'
+| Title             | gmd:identificationInfo/*/gmd:citation/*/gmd:title                                                           | mdb:identificationInfo/*/mri:citation/*/cit:title
+| Publisher         | gmd:distributorContact[1]/*/gmd:organisationName/gco:CharacterString                                        | mrd:distributorContact[1]/*/cit:party/*/cit:organisationName/gco:CharacterString
+| PublicationYear   | gmd:identificationInfo/*/gmd:citation/*/gmd:date/*[gmd:dateType/*/@codeListValue = 'publication']           | mdb:identificationInfo/*/mri:citation/*/cit:date/*[cit:dateType/*/@codeListValue = 'publication']
+| ResourceType      | gmd:hierarchyLevel/*/@codeListValue                                                                         | mdb:metadataScope/*/mdb:resourceScope/*/@codeListValue
 
 The mapping can be customized in:
 
@@ -103,10 +96,10 @@ The REST API allows to access the DOI related operations:
 
 The check preconditions API returns exception if one of the pre requisite is not met:
 
-> -   DataCite API is not configured
-> -   Record is not public
-> -   Record already has a DOI
-> -   Record is not valid for DataCite (ie. XSD errors returned by DataCite XSD validation)
+-   DataCite API is not configured
+-   Record is not public
+-   Record already has a DOI
+-   Record is not valid for DataCite (ie. XSD errors returned by DataCite XSD validation)
 
 ![](img/doi-api-check.png)
 

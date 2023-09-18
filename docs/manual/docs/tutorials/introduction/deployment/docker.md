@@ -6,7 +6,7 @@ Ensure the system on which you will install the software has a recent [Docker en
 
 Open a command-line panel verify that docker engine is running:
 
->     $ docker --version
+     $ docker --version
 
 Clone or download as a zip file the repository <https://github.com/geonetwork/docker-geonetwork>. The relevant folder in that repository is the latest 4.0.x.
 
@@ -22,14 +22,14 @@ It is important to verify if the ports used in that orchestration (80, 8080, 920
 
 Spin up the orchestration with:
 
->     $ docker-compose up
+     $ docker-compose up
 
 After a while, the application should be available via <http://localhost/geonetwork>.
 
 On console to see a list of running containers type:
 
->     $ docker ps
+     $ docker ps
 
 You can verify logs of the geonetwork container with:
 
->     $ docker logs geonetwork
+     $ docker logs geonetwork

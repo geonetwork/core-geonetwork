@@ -6,9 +6,9 @@ From the editor board, editors can do batch editing on multiple records.
 
 Batch editing consists of 3 steps:
 
-> -   Choose a set of records
-> -   Define edits
-> -   Apply changes
+-   Choose a set of records
+-   Define edits
+-   Apply changes
 
 ## Defining edits
 

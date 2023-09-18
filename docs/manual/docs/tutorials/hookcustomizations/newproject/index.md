@@ -10,8 +10,10 @@ The best way to work with GeoNetwork and easily upgrade later is add your own Ma
 
 To do this, go to the root folder of the source code and create a new folder. This can be done on a GNU/Linux terminal using the following command:
 
->     cd core-geonetwork
->     mkdir custom
+``` shell
+cd core-geonetwork
+mkdir custom
+```
 
 Then we have to tell Maven this is a new project that can be built. So we add a new file called pom.xml on this "custom" folder and add the following:
 
@@ -92,10 +94,10 @@ And on the same file, we should also add our resources folder to the build (if w
 
 ``` xml
 <resourcesAsCSV>
-${project.basedir}/src/main/webapp,
-${rootProjectDir}/web-ui/src/main/resources/,    
-${rootProjectDir}/custom/src/main/resources/,
-${build.webapp.resources}
+  ${project.basedir}/src/main/webapp,
+  ${rootProjectDir}/web-ui/src/main/resources/,    
+  ${rootProjectDir}/custom/src/main/resources/,
+  ${build.webapp.resources}
 </resourcesAsCSV>
 ```
 

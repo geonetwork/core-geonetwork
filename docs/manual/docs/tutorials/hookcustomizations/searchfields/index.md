@@ -10,7 +10,7 @@ Each schema contains a file index-fields/default.xsl where the fields stored on 
 
 ``` xml
 <xsl:for-each select="gmd:pointOfContact[1]/*/gmd:role/*/@codeListValue">
-<Field name="responsiblePartyRole" string="{string(.)}" store="true" index="true"/>
+  <Field name="responsiblePartyRole" string="{string(.)}" store="true" index="true"/>
 </xsl:for-each>
 ```
 
@@ -26,7 +26,7 @@ This summary is a list of the most common values for certain fields. This summar
 
 ``` xml
 <summaryType name="results">
-<item facet="keyword" max="100"/>
+  <item facet="keyword" max="100"/>
 </summaryType>
 ```
 
@@ -38,12 +38,12 @@ Sometimes we want some field to be more relevant on the search than others. We c
 
 ``` xml
 <fieldBoosting>
-<Field name="_op0" boost="0.0F"/>
-<Field name="_op1" boost="0.0F"/>
-<Field name="_op2" boost="0.0F"/>
-<Field name="_dummy" boost="0.0F"/>
-<Field name="_isTemplate" boost="2.0F"/>
-<Field name="_owner" boost="5.0F"/>
+  <Field name="_op0" boost="0.0F"/>
+  <Field name="_op1" boost="0.0F"/>
+  <Field name="_op2" boost="0.0F"/>
+  <Field name="_dummy" boost="0.0F"/>
+  <Field name="_isTemplate" boost="2.0F"/>
+  <Field name="_owner" boost="5.0F"/>
 </fieldBoosting>
 ```
 

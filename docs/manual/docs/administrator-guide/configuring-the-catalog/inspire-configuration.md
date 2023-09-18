@@ -2,7 +2,7 @@
 
 ## Enabling INSPIRE
 
-From the :**Admin console \--> Settings** user can configure INSPIRE directive support.
+From the **Admin console -> Settings** user can configure INSPIRE directive support.
 
 When enabled, the INSPIRE support activate the following:
 

@@ -6,9 +6,9 @@ Portals can be configured under the `sources` section in `admin console` > `sett
 
 There are 3 types of sources:
 
-> -   the main catalogue,
-> -   sub-portal, which can be a subset of the main catalogue
-> -   harvesters.
+-   the main catalogue,
+-   sub-portal, which can be a subset of the main catalogue
+-   harvesters.
 
 ![](img/portal-types.png)
 

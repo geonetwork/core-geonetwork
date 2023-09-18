@@ -1,9 +1,9 @@
 # Configuring the catalog
 
--   [system-configuration](system-configuration.md)
--   [user-interface-configuration](user-interface-configuration.md)
--   [css-configuration](css-configuration.md)
--   [csw-configuration](csw-configuration.md)
--   [portal-configuration](portal-configuration.md)
--   [inspire-configuration](inspire-configuration.md)
--   [map-server-configuration](map-server-configuration.md)
+-   [System configuration](system-configuration.md)
+-   [User Interface Configuration](user-interface-configuration.md)
+-   [Configuring CSS & Style](css-configuration.md)
+-   [Configuring CSW](csw-configuration.md)
+-   [Portal Configuration](portal-configuration.md)
+-   [Configuring for the INSPIRE Directive](inspire-configuration.md)
+-   [Map servers configuration for geopublication](map-server-configuration.md)
