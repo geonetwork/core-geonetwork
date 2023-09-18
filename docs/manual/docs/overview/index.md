@@ -24,6 +24,6 @@ Help
 
 [Maintainers Guide](../maintainer-guide)
 
-::: {.toctree maxdepth="2"}
-about.rst license.rst authors.rst change-log/index.rst
-:::
+-   [Statistics Index](statistics/index.md)
+-   [Updating Index](updating/index.md)
+-   [Production Use Index](production-use/index.md)

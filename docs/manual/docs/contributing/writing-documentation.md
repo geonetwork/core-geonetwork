@@ -1,5 +1,9 @@
 # Writing documentation
 
+!!! Warning "Deprecated"
+
+    The Sphinx writing guidelines have been replaced by Markdown Guidelines
+
 This section provides some guidelines for writing consistent documentation for GeoNetwork.
 
 !!! info "See Also"

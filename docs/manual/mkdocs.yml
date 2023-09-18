@@ -28,6 +28,7 @@ theme:
 
   features:
     - content.code.annotate
+    - content.code.copy
     - content.tabs.link
     - navigation.tabs
     - navigation.tracking
@@ -47,11 +48,11 @@ plugins:
           name: English
           build: true
           default: true
-          site_name: 'GeoNetwork (en)'
+          site_name: 'GeoNetwork Opensource (EN)'
         - locale: fr
           name: Français
           build: !ENV [FRENCH,false]
-          site_name: 'GeoNetwork (fr)'
+          site_name: 'GeoNetwork Opensource (FR)'
           nav_translations:
             Home: Home
             Search: Search
@@ -82,6 +83,7 @@ markdown_extensions:
       pygments_lang_class: true
   - pymdownx.inlinehilite
   - pymdownx.keys
+  - pymdownx.smartsymbols
   - pymdownx.snippets
   - pymdownx.superfences:
       custom_fences:
@@ -113,19 +115,21 @@ nav:
       - 'overview/change-log/stable.md'
       - 'overview/change-log/maintenance.md'
       - 'overview/change-log/archive.md'
-  - 'Install':
-      - install-guide/index.md
-      - install-guide/installing-from-zip.md
-      - install-guide/installing-from-war-file.md
-      - install-guide/installing-with-docker.md
-      - install-guide/installing-from-source-code.md
-      - install-guide/installing-index.md
-      - install-guide/configuring-database.md
-      - install-guide/customizing-data-directory.md
-      - install-guide/logging.md
-      - install-guide/map-print-setup.md
-      - install-guide/loading-samples.md
-  - 'User':
+  - 'Installation Guide':
+      - 'Installing':
+        - install-guide/index.md
+        - install-guide/installing-from-zip.md
+        - install-guide/installing-from-war-file.md
+        - install-guide/installing-with-docker.md
+        - install-guide/installing-from-source-code.md
+        - install-guide/installing-index.md
+      - 'Configuration':
+        - install-guide/configuring-database.md
+        - install-guide/customizing-data-directory.md
+        - install-guide/logging.md
+        - install-guide/map-print-setup.md
+        - install-guide/loading-samples.md
+  - 'User Guide':
     - user-guide/index.md
     - user-guide/quick-start/index.md
     - user-guide/map/index.md
@@ -239,7 +243,9 @@ nav:
     - 'api/z39-50.md'
   - 'Contributing':
     - contributing/index.md
-    - contributing/writing-documentation.md
+    - 'Writing Documentation':
+      - 'Markdown': devel/docs/docs.md
+      - 'Sphinx - Deprecated': contributing/writing-documentation.md
     - contributing/style-guide.md
     - contributing/translating.md
     - contributing/making-a-pull-request.md
@@ -266,7 +272,7 @@ nav:
     - customizing-application/implementing-a-schema-plugin.md
     - customizing-application/misc.md
   - 'Tutorials':
-    - tutorials/index.md
+#    - tutorials/index.md
     - 'Introduction':
        - tutorials/introduction/index.md
        - 'Overview':
@@ -322,5 +328,5 @@ nav:
       - annexes/standards/dublin-core.md
   - 'Development':
     - 'devel/index.md'
-    - 'devel/docs/docs.md'
+
 

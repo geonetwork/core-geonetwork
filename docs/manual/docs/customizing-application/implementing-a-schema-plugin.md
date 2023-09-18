@@ -125,28 +125,28 @@ Once created, you need to register your new plugin in the build of the applicati
 
 -   Add the plugin as a module of the schemas module (see `schemas/pom.xml`):
 
-``` xml
-<module>iso19139.xyz</module>
-```
+    ``` xml
+    <module>iso19139.xyz</module>
+    ```
 
 -   Register the plugin in the webapp in the `copy-schemas` execution (see `web/pom.xml`):
 
-``` xml
-<resource>
-   <directory>${project.basedir}/../schemas/iso19139.xyz/src/main/plugin</directory>
-   <targetPath>${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins</targetPath>
- </resource>
-```
+    ``` xml
+    <resource>
+       <directory>${project.basedir}/../schemas/iso19139.xyz/src/main/plugin</directory>
+       <targetPath>${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins</targetPath>
+     </resource>
+    ```
 
 -   Optionally register the dependency if you plugin implement custom Java (see `web/pom.xml`):
 
-``` xml
-<dependency>
-  <groupId>${project.groupId}</groupId>
-  <artifactId>schema-iso19139.xyz</artifactId>
-  <version>${project.version}</version>
-</dependency>
-```
+    ``` xml
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>schema-iso19139.xyz</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    ```
 
 ### Example - ISO19115/19139 Marine Community Profile (MCP)
 
@@ -216,87 +216,87 @@ The autodetect section of schema-ident.xml is used when GeoNetwork needs to iden
 
 The five rules that can be used in this section in order of evaluation are:
 
-**1. Attributes** - Find one or more attributes and/or namespaces in the document. An example use case is a profile of ISO19115/19139 that adds optional elements under a new namespace to gmd:identificationInfo/gmd:MD_DataIdentification. To detect records that belong to this profile the autodetect section in the schema-ident.xml file could look something like the following:
+1.  **Attributes** - Find one or more attributes and/or namespaces in the document. An example use case is a profile of ISO19115/19139 that adds optional elements under a new namespace to gmd:identificationInfo/gmd:MD_DataIdentification. To detect records that belong to this profile the autodetect section in the schema-ident.xml file could look something like the following:
 
-``` xml
-<autodetect xmlns:cmar="http://www.marine.csiro.au/schemas/cmar.xsd">
-  <!-- catch all cmar records that have the cmar vocab element -->
-  <attributes cmar:vocab="http://www.marine.csiro.au/vocabs/projectCodes.xml"/>
-</autodetect>
-```
+    ``` xml
+    <autodetect xmlns:cmar="http://www.marine.csiro.au/schemas/cmar.xsd">
+      <!-- catch all cmar records that have the cmar vocab element -->
+      <attributes cmar:vocab="http://www.marine.csiro.au/vocabs/projectCodes.xml"/>
+    </autodetect>
+    ```
 
-Some other points about attributes autodetect:
+    Some other points about attributes autodetect:
 
--   multiple attributes can be specified - all must be match for the record to be recognized as belonging to this schema.
--   if the attributes have a namespace then the namespace should be specified on the autodetect element or somewhere in the schema-ident.xml document.
+    -   multiple attributes can be specified - all must be match for the record to be recognized as belonging to this schema.
+    -   if the attributes have a namespace then the namespace should be specified on the autodetect element or somewhere in the schema-ident.xml document.
 
-**2. Elements** - Find one or more elements in the document. An example use case is the one shown in the example schema-ident.xml file earlier:
+2.  **Elements** - Find one or more elements in the document. An example use case is the one shown in the example schema-ident.xml file earlier:
 
-``` xml
-<autodetect xmlns:mcp="http://bluenet3.antcrc.utas.edu.au/mcp"
-            xmlns:gmd="http://www.isotc211.org/2005/gmd"
-            xmlns:gco="http://www.isotc211.org/2005/gco">
-  <elements>
-    <gmd:metadataStandardName>
-      <gco:CharacterString>
-        Australian Marine Community Profile of ISO 19115:2005/19139|
-        Marine Community Profile of ISO 19115:2005/19139
-      </gco:CharacterString>
-    </gmd:metadataStandardName>
-    <gmd:metadataStandardVersion>
-      <gco:CharacterString>
-        1.5-experimental|
-        MCP:BlueNet V1.5-experimental|
-        MCP:BlueNet V1.5
-      </gco:CharacterString>
-    </gmd:metadataStandardVersion>
-  </elements>
-</autodetect>
-```
+    ``` xml
+    <autodetect xmlns:mcp="http://bluenet3.antcrc.utas.edu.au/mcp"
+                xmlns:gmd="http://www.isotc211.org/2005/gmd"
+                xmlns:gco="http://www.isotc211.org/2005/gco">
+      <elements>
+        <gmd:metadataStandardName>
+          <gco:CharacterString>
+            Australian Marine Community Profile of ISO 19115:2005/19139|
+            Marine Community Profile of ISO 19115:2005/19139
+          </gco:CharacterString>
+        </gmd:metadataStandardName>
+        <gmd:metadataStandardVersion>
+          <gco:CharacterString>
+            1.5-experimental|
+            MCP:BlueNet V1.5-experimental|
+            MCP:BlueNet V1.5
+          </gco:CharacterString>
+        </gmd:metadataStandardVersion>
+      </elements>
+    </autodetect>
+    ```
 
-Some other points about elements autodetect:
+    Some other points about elements autodetect:
 
--   multiple elements can be specified - eg. as in the above, both metadataStandardName and metadataStandardVersion have been specified - all must be match for the record to be recognized as belonging to this schema.
--   multiple values for the elements can be specified. eg. as in the above, a match for gmd:metadataStandardVersion will be found for `1.5-experimental` OR `MCP:BlueNet V1.5-experimental` OR `MCP:BlueNet V1.5` - the vertical line or pipe character '\|' is used to separate the options here. Regular expression can be used also.
--   if the elements have a namespace then the namespace(s) should be specified on the autodetect element or somewhere in the schema-ident.xml document before the element in which they are used - eg. in the above there are there namespace declarations on the autodetect element so as not to clutter the content.
+    -   multiple elements can be specified - eg. as in the above, both metadataStandardName and metadataStandardVersion have been specified - all must be match for the record to be recognized as belonging to this schema.
+    -   multiple values for the elements can be specified. eg. as in the above, a match for gmd:metadataStandardVersion will be found for `1.5-experimental` OR `MCP:BlueNet V1.5-experimental` OR `MCP:BlueNet V1.5` - the vertical line or pipe character '\|' is used to separate the options here. Regular expression can be used also.
+    -   if the elements have a namespace then the namespace(s) should be specified on the autodetect element or somewhere in the schema-ident.xml document before the element in which they are used - eg. in the above there are there namespace declarations on the autodetect element so as not to clutter the content.
 
-**3. Root element** - root element of the document must match. An example use case is the one used for the eml-gbif schema. Documents belonging to this schema always have root element of eml:eml so the autodetect section for this schema is:
+3.  **Root element** - root element of the document must match. An example use case is the one used for the eml-gbif schema. Documents belonging to this schema always have root element of eml:eml so the autodetect section for this schema is:
 
-``` xml
-<autodetect xmlns:eml="eml://ecoinformatics.org/eml-2.1.1">
-  <elements type="root">
-    <eml:eml/>
-  </elements>
-</autodetect>
-```
+    ``` xml
+    <autodetect xmlns:eml="eml://ecoinformatics.org/eml-2.1.1">
+      <elements type="root">
+        <eml:eml/>
+      </elements>
+    </autodetect>
+    ```
 
-Some other points about root element autodetect:
+    Some other points about root element autodetect:
 
--   multiple elements can be specified - any element in the set that matches the root element of the record will trigger a match.
--   if the elements have a namespace then the namespace(s) should be specified on the autodetect element or somewhere in the schema-ident.xml document before the element that uses them - eg. as in the above there is a namespace declaration on the autodetect element for clarity.
+    -   multiple elements can be specified - any element in the set that matches the root element of the record will trigger a match.
+    -   if the elements have a namespace then the namespace(s) should be specified on the autodetect element or somewhere in the schema-ident.xml document before the element that uses them - eg. as in the above there is a namespace declaration on the autodetect element for clarity.
 
-**4. Namespaces** - Find one or more namespaces in the document. An example use case is the one used for the csw:Record schema. Records belonging to the csw:Record schema can have three possible root elements: csw:Record, csw:SummaryRecord and csw:BriefRecord, but instead of using a multiple element root autodetect, we could use the common csw namespace for autodetect as follows:
+4.  **Namespaces** - Find one or more namespaces in the document. An example use case is the one used for the csw:Record schema. Records belonging to the csw:Record schema can have three possible root elements: csw:Record, csw:SummaryRecord and csw:BriefRecord, but instead of using a multiple element root autodetect, we could use the common csw namespace for autodetect as follows:
 
-``` xml
-<autodetect>
-  <namespaces xmlns:csw="http://www.opengis.net/cat/csw/2.0.2"/>
-</autodetect>
-```
+    ``` xml
+    <autodetect>
+      <namespaces xmlns:csw="http://www.opengis.net/cat/csw/2.0.2"/>
+    </autodetect>
+    ```
 
-Some other points about namespaces autodetect:
+    Some other points about namespaces autodetect:
 
--   multiple namespaces can be specified - all must be present for the record to be recognized as belonging to this schema.
--   the prefix is ignored. A namespace match occurs if the namespace URI found in the record matches the namespace URI specified in the namespaces autodetect element.
+    -   multiple namespaces can be specified - all must be present for the record to be recognized as belonging to this schema.
+    -   the prefix is ignored. A namespace match occurs if the namespace URI found in the record matches the namespace URI specified in the namespaces autodetect element.
 
-**5. Default schema** - This is the fail-safe provision for records that don't match any of the installed schemas. The value for the default schema is specified in the appHandler configuration of the `INSTALL_DIR/web/geonetwork/WEB-INF/config.xml` config file or it could be a default specified by the operation calling autodetect (eg. a value parsed from a user bulk loading some metadata records). For flexibility and accuracy reasons it is preferable that records be detected using the autodetect information of an installed schema. The default schema is just a 'catch all' method of assigning records to a specific schema. The config element in `INSTALL_DIR/web/geonetwork/WEB-INF/config.xml` looks like the following:
+5.  **Default schema** - This is the fail-safe provision for records that don't match any of the installed schemas. The value for the default schema is specified in the appHandler configuration of the `INSTALL_DIR/web/geonetwork/WEB-INF/config.xml` config file or it could be a default specified by the operation calling autodetect (eg. a value parsed from a user bulk loading some metadata records). For flexibility and accuracy reasons it is preferable that records be detected using the autodetect information of an installed schema. The default schema is just a 'catch all' method of assigning records to a specific schema. The config element in `INSTALL_DIR/web/geonetwork/WEB-INF/config.xml` looks like the following:
 
-``` xml
-<appHandler class="org.fao.geonet.Geonetwork">
-  .....
-  <param name="preferredSchema" value="iso19139" />
-  .....
-</appHandler>
-```
+    ``` xml
+    <appHandler class="org.fao.geonet.Geonetwork">
+      .....
+      <param name="preferredSchema" value="iso19139" />
+      .....
+    </appHandler>
+    ```
 
 #### More on autodetect evaluation
 
@@ -327,42 +327,42 @@ return matched schema
 
 As an example, suppose we have three schemas iso19139.mcp, iso19139.mcp-1.4 and iso19139.mcp-cmar with the following autodetect elements:
 
-**iso19139.mcp-1.4:**
+=== "iso19139.mcp-1.4"
 
-``` xml
-<autodetect xmlns:mcp="http://bluenet3.antcrc.utas.edu.au/mcp"
-            xmlns:gmd="http://www.isotc211.org/2005/gmd"
-            xmlns:gco="http://www.isotc211.org/2005/gco">
-  <elements>
-    <gmd:metadataStandardName>
-      <gco:CharacterString>
-        Australian Marine Community Profile of ISO 19115:2005/19139
-      </gco:CharacterString>
-    </gmd:metadataStandardName>
-    <gmd:metadataStandardVersion>
-      <gco:CharacterString>MCP:BlueNet V1.4</gco:CharacterString>
-    </gmd:metadataStandardVersion>
-  </elements>
-</autodetect>
-```
+    ``` xml
+    <autodetect xmlns:mcp="http://bluenet3.antcrc.utas.edu.au/mcp"
+                xmlns:gmd="http://www.isotc211.org/2005/gmd"
+                xmlns:gco="http://www.isotc211.org/2005/gco">
+      <elements>
+        <gmd:metadataStandardName>
+          <gco:CharacterString>
+            Australian Marine Community Profile of ISO 19115:2005/19139
+          </gco:CharacterString>
+        </gmd:metadataStandardName>
+        <gmd:metadataStandardVersion>
+          <gco:CharacterString>MCP:BlueNet V1.4</gco:CharacterString>
+        </gmd:metadataStandardVersion>
+      </elements>
+    </autodetect>
+    ```
 
-**iso19139.mcp-cmar:**
+=== "iso19139.mcp-cmar"
 
-``` xml
-<autodetect>
-    <attributes xmlns:mcp-cmar="http://www.marine.csiro.au/schemas/mcp-cmar">
-</autodetect>
-```
+    ``` xml
+    <autodetect>
+        <attributes xmlns:mcp-cmar="http://www.marine.csiro.au/schemas/mcp-cmar">
+    </autodetect>
+    ```
 
-**iso19139.mcp:**
+=== "iso19139.mcp"
 
-``` xml
-<autodetect xmlns:mcp="http://bluenet3.antcrc.utas.edu.au/mcp">
-  <elements type="root">
-    <mcp:MD_Metadata/>
-  </elements>
-</autodetect>
-```
+    ``` xml
+    <autodetect xmlns:mcp="http://bluenet3.antcrc.utas.edu.au/mcp">
+      <elements type="root">
+        <mcp:MD_Metadata/>
+      </elements>
+    </autodetect>
+    ```
 
 A record going through autodetect processing (eg. on import) would be checked against:
 
