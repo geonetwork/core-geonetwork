@@ -407,6 +407,9 @@
                 if (extension.uuid) {
                   layer.metadataUuid = extension.uuid;
                 }
+                if (extension.enabled) {
+                  layer.enabled = extension.enabled;
+                }
 
                 dimensions.forEach(function (dimension) {
                   if (extension[dimension.toLowerCase() + "DimensionValue"]) {
@@ -705,7 +708,9 @@
           if (processInputs) {
             extension.processInputs = processInputs;
           }
-
+          if (layer.showInfo) {
+            extension.enabled = true; // Enabled in layer manager
+          }
           dimensions.forEach(function (dimension) {
             if (source.getParams()[dimension]) {
               extension[dimension.toLowerCase() + "DimensionValue"] =
@@ -804,6 +809,9 @@
             olL.set("bgIdx", bgIdx);
           } else if (index) {
             olL.set("tree_index", index);
+          }
+          if (layer.enabled) {
+            olL.showInfo = layer.enabled; // Enabled in layer manager
           }
           var params = olL.getSource().getParams() || {};
           dimensions.forEach(function (dimension) {
