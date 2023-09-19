@@ -23,28 +23,13 @@
 
 package org.fao.geonet.api.records.formatters;
 
-import com.google.common.collect.Maps;
 import com.google.common.io.Files;
-
-import groovy.util.XmlSlurper;
-import groovy.util.slurpersupport.GPathResult;
-
+import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Constants;
 import org.fao.geonet.SystemInfo;
 import org.fao.geonet.TestFunction;
 import org.fao.geonet.api.records.formatters.cache.Key;
-import org.fao.geonet.api.records.formatters.groovy.EnvironmentProxy;
-import org.fao.geonet.api.records.formatters.groovy.Handler;
-import org.fao.geonet.api.records.formatters.groovy.Handlers;
-import org.fao.geonet.api.records.formatters.groovy.TransformationContext;
-import org.fao.geonet.api.records.formatters.groovy.Transformer;
-import org.fao.geonet.domain.ISODate;
-import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.domain.MetadataDataInfo;
-import org.fao.geonet.domain.MetadataHarvestInfo;
-import org.fao.geonet.domain.MetadataSourceInfo;
-import org.fao.geonet.domain.MetadataType;
-import org.fao.geonet.domain.Pair;
+import org.fao.geonet.domain.*;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.UpdateDatestamp;
@@ -55,7 +40,6 @@ import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
-import org.jdom.Namespace;
 import org.junit.Before;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -63,10 +47,6 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.web.context.request.ServletWebRequest;
 
 import java.io.File;
-import java.util.Collections;
-import java.util.Map;
-
-import jeeves.server.context.ServiceContext;
 
 import static com.google.common.xml.XmlEscapers.xmlContentEscaper;
 
@@ -92,14 +72,6 @@ public abstract class AbstractFormatterTest extends AbstractServiceIntegrationTe
     @Autowired
     private IsoLanguagesMapper mapper;
 
-    public static GPathResult parseXml(String xmlString, Namespace... namespaces) throws Exception {
-        Map<String, String> namespaceUriToPrefix = Maps.newHashMap();
-        for (Namespace namespace : namespaces) {
-            namespaceUriToPrefix.put(namespace.getPrefix(), namespace.getURI());
-        }
-        final XmlSlurper xmlSlurper = new XmlSlurper(false, false);
-        return xmlSlurper.parseText(xmlString).declareNamespace(namespaceUriToPrefix);
-    }
 
     @Before
     public void setUp() throws Exception {
@@ -134,17 +106,6 @@ public abstract class AbstractFormatterTest extends AbstractServiceIntegrationTe
 
     protected abstract File getTestMetadataFile() throws Exception;
 
-    protected Handlers getHandlers(MockHttpServletRequest request, String formatterId) throws Exception {
-        final Pair<FormatterImpl, FormatterParams> formatterAndParams = getFormatterFormatterParamsPair(request, formatterId);
-
-        if (formatterAndParams.one() instanceof GroovyFormatter) {
-            GroovyFormatter formatter = (GroovyFormatter) formatterAndParams.one();
-            final Transformer transformer = formatter.findTransformer(formatterAndParams.two());
-            return transformer.getHandlers();
-        } else {
-            throw new AssertionError("This method only applies to groovy formatters");
-        }
-    }
 
     protected Pair<FormatterImpl, FormatterParams> getFormatterFormatterParamsPair(MockHttpServletRequest request, String formatterId) throws Exception {
         final ServletWebRequest webRequest = new ServletWebRequest(request);
@@ -175,21 +136,6 @@ public abstract class AbstractFormatterTest extends AbstractServiceIntegrationTe
 
     private double round(double num) {
         return Math.round(num * 1000) / 1000;
-    }
-
-    protected String executeHandler(MockHttpServletRequest request, String formatterId, GPathResult elem, Handler handler) throws Exception {
-
-        final Pair<FormatterImpl, FormatterParams> formatterFormatterParamsPair = getFormatterFormatterParamsPair(request, formatterId);
-        try {
-            EnvironmentProxy.setCurrentEnvironment(formatterFormatterParamsPair.two());
-            TransformationContext context = new TransformationContext(null, null, new EnvironmentProxy());
-            context.setThreadLocal();
-            StringBuilder result = new StringBuilder();
-            handler.handle(context, Collections.singletonList(elem), result);
-            return result.toString();
-        } finally {
-            EnvironmentProxy.clearContext();
-        }
     }
 
     protected String escapeXmlText(String text) {

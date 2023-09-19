@@ -20,35 +20,19 @@
  * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
  * Rome - Italy. email: geonetwork@osgeo.org
  */
-
-package org.fao.geonet.api.records.formatters.groovy;
-
-import groovy.lang.Closure;
-import groovy.util.slurpersupport.GPathResult;
-
-import java.util.Comparator;
+package org.fao.geonet.api.records.formatters;
 
 /**
- * A sorter where the matcher is a function.
- *
- * @author Jesse on 10/20/2014.
+ * @author Jesse on 11/28/2014.
  */
-public class SorterFunctionSelect extends Sorter {
-    private final Closure select;
+public interface CurrentLanguageHolder {
+    /**
+     * 3 letter language code of the UI.
+     */
+    String getLang3();
 
-    @SuppressWarnings("unchecked")
-    public SorterFunctionSelect(int priority, Closure select, Comparator comparator) {
-        super(priority, comparator);
-        this.select = select;
-    }
-
-    @Override
-    public boolean select(TransformationContext context, GPathResult parentElement) {
-        return (Boolean) this.select.call(parentElement);
-    }
-
-    @Override
-    protected String extraToString() {
-        return "";
-    }
+    /**
+     * 2 letter language code of the UI.
+     */
+    String getLang2();
 }

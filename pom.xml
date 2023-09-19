@@ -386,17 +386,10 @@
           </exclusion>
         </exclusions>
       </dependency>
-
       <dependency>
         <groupId>org.jsoup</groupId>
         <artifactId>jsoup</artifactId>
         <version>1.15.3</version>
-      </dependency>
-
-      <dependency>
-        <groupId>org.codehaus.groovy</groupId>
-        <artifactId>groovy-all</artifactId>
-        <version>2.4.21</version>
       </dependency>
 
       <!-- universal character set detector -->
