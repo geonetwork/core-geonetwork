@@ -186,6 +186,9 @@ def preprocess_rst(rst_file:str, rst_prep: str) -> str:
     if '.. toctree::' in text:
         text = _preprocess_rst_toctree(text)
 
+    if ':doc:' in text:
+        text = _preprocess_rst_doc(text)
+
     # gui-label and menuselection represented: **Cancel**
     text = re.sub(
         r":guilabel:`(.*)`",
@@ -236,8 +239,39 @@ def preprocess_rst(rst_file:str, rst_prep: str) -> str:
     with open(rst_prep,'w') as rst:
         rst.write(text)
 
-def _preprocess_rst_toctree(text: str):
-   # scan document for toctree directives to process
+def _preprocess_rst_doc(text: str) -> str:
+   """
+   Preprocess rst file replacing doc references with links.
+   """
+   # doc links processed in order from most to least complicated
+   # :doc:`normal <link.rst>`
+   text = re.sub(
+       r":doc:`(.*) <(.*).rst>`",
+       r"`\1 <\2.md>`_",
+       text,
+       flags=re.MULTILINE
+   )
+   # :doc:`../folder/index.rst`
+   # `folder <index.md>`_
+   text = re.sub(
+       r":doc:`((\.\./)*(.*)/index)\.rst`",
+       r"`\3 <\1/index.md>`_",
+       text,
+       flags=re.MULTILINE
+   )
+   # :doc:`simple.rst`
+   text = re.sub(
+       r":doc:`(.*)\.rst`",
+       r"`\1 <\1.md>`_",
+       text,
+       flags=re.MULTILINE
+   )
+   return text
+
+def _preprocess_rst_toctree(text: str) -> str:
+   """
+   scan document for toctree directives to process
+   """
    toctree = None
    process = ''
    for line in text.splitlines():
@@ -254,16 +288,13 @@ def _preprocess_rst_toctree(text: str):
           if line[0:3] == '   ':
              # processing directive
              link = line[3:-4]
-             label = link
-             label = label.replace("/index", "")
-             label = label.replace("-", " ")
-             label = label.replace("/", " ")
-             label = label.title()
+             label = _labelify(link)
 
              toctree += f"* `{label} <{link}.md>`__\n"
           else:
              # end directive
-             process += toctree
+             process += toctree + '\n'
+             process += line + '\n'
              toctree = None
        else:
           process += line + '\n'
@@ -273,6 +304,20 @@ def _preprocess_rst_toctree(text: str):
       process += toctree
 
    return process
+
+def _labelify(link: str) -> str:
+   """
+   Create a label basde on a link
+   """
+   label = link.replace('.rst','')
+   label = label.replace('.md','')
+   label = label.replace('/index', '')
+   label = label.replace('-', ' ')
+   label = label.replace('_', ' ')
+   label = label.replace('/', ' ')
+   label = label.title()
+
+   return label
 
 def postprocess_rst_markdown(md_file: str, md_clean: str):
     """
