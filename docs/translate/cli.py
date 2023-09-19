@@ -16,6 +16,7 @@ from typing_extensions import Annotated
 import translate.translate
 from translate import __app_name__, __version__
 from .translate import collect_paths
+from .translate import index_rst
 from .translate import load_anchors
 from .translate import fix_anchors
 from .translate import convert_rst
@@ -53,7 +54,41 @@ def french(
     print(md_fr,"\n")
 
 @app.command()
-def anchor(
+def index(
+        base_path: Annotated[str, typer.Argument(help="base path for referencs")],
+        rst_path: Annotated[List[str], typer.Argument(help="path to rst file(s)")],
+        anchor_txt: Optional[str] = typer.Option(
+           "anchors.txt",
+           "--anchor",
+           help="anchors.txt file recording reference locations",
+        ),
+    ):
+    """
+    Scan rst files collecting doc and ref targets into anchors.txt
+    """
+    if not os.path.exists(base_path):
+       raise FileNotFoundError(errno.ENOENT, f"The base_path does not exist at location:", base_path)
+    anchor_path = os.path.join(base_path,anchor_txt)
+
+    collected = collect_paths(rst_path,'rst')
+
+    index = ''
+    for file in collected:
+       index += index_rst(base_path,file)
+
+    print(index)
+
+#     anchor_path = base_path+'/'+anchor_txt
+#     anchor_dir = os.path.dirname(anchor_path)
+#     if not os.path.exists(anchor_dir):
+#        print("RST index directory:",anchor_dir)
+#        os.makedirs(anchor_dir)
+#
+#     with open(anchor_path,'w') as anchor_file:
+#         anchor_file.write(index)
+
+@app.command()
+def fix_references(
         anchor_txt: str, md_path: Annotated[List[str], typer.Argument(help="path to md file(s)")]
     ):
     """
@@ -65,19 +100,6 @@ def anchor(
     for md_file in collect_paths(md_path,'md'):
       count = fix_anchors(anchors,md_file)
       print(md_file,"fixed",count)
-    print()
-
-@app.command()
-def collect(
-        rst_path: Annotated[List[str], typer.Argument(help="path to rst file(s)")]
-    ):
-    """
-    List all rst files for conversion.
-    """
-    collected = collect_paths(rst_path,'rst')
-
-    for file in collected:
-       print(file)
     print()
 
 @app.command()

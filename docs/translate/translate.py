@@ -82,6 +82,83 @@ def collect_paths(paths: list[str], extension: str) -> list[str]:
 
     return files
 
+def index_rst(base_path: str, rst_file: str) -> str:
+    """
+    Scan through rst_file producing doc and ref indexs
+    """
+    if not os.path.exists(base_path):
+       raise FileNotFoundError(errno.ENOENT, f"RST base_path does not exist at location: {base_path}")
+
+    common_path = os.path.commonpath([base_path,rst_file])
+    if common_path != base_path:
+       raise FileNotFoundError(errno.ENOENT, f"RST base_path '{base_path}' does not contain rst_file: '{rst_file}'")
+
+    with open(rst_file, 'r') as file:
+        text = file.read()
+
+    relative_path = rst_file[len(base_path):]
+    print("base_path path:", base_path)
+    print("rst_file  path:", rst_file)
+    print("relative  path:", relative_path)
+    ref = relative_path
+    heading = None
+    index = ''
+
+    # Scan line by line for references and headings
+    # # with overline, for parts
+    h1 = '#############################################################################################################'
+    # * with overline, for chapters
+    h2 = '*************************************************************************************************************'
+    # =, for sections
+    h3 = '============================================================================================================='
+    # -, for subsections
+    h4 = '-------------------------------------------------------------------------------------------------------------'
+    # ^, for subsubsections
+    h5 = '^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^'
+    # “, for paragraphs
+    h6 = '"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""'
+
+    with open(rst_file, 'r') as file:
+        text = file.read()
+
+    lines = text.splitlines()
+    for i in range(2,len(lines)):
+        line = lines[i]
+        length = len(line)
+        print("scan:",line)
+
+        if length == 0:
+            continue
+
+        if ref:
+            # scan for headlines
+            if line == h1[0:length] or line == h2[0:length]:
+                if i < len(lines)-2:
+                    # if we are an overline, expect an underline 2 lines down
+                    line2 = lines[i+2]
+                    length2 = len(line2)
+                    if length2 > 0 and (line2 == h1[0:length] or line2 == h2[0:length]):
+                        # wait to process until underline
+                        continue
+            if (
+                   line == h1[0:length] or line == h2[0:length] or
+                   line == h2[0:length] or line == h3[0:length]
+               ):
+                before = lines[i-1]
+                if len(before) > 0 and len(before) <= length:
+                    # heading identified
+                    heading = before
+                    anchor = heading
+                    index += ref + '.path=' + relative_path + '#' + anchor + "\n"
+                    index += ref + '.text=' + heading + "\n"
+                    return index
+                else:
+                    continue
+        else:
+            # scan for next reference
+            continue
+    return index
+
 # administrator-guide/managing-metadata-standards/configure-validation.md
 def fix_anchors(anchors: dict[str,str], md_file: str) -> int:
     """
