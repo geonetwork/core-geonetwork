@@ -1,33 +1,48 @@
+# Project information
 site_name: GeoNetwork opensource
+site description: >-
+   GeoNetwork catalogue for listing, searching and reviewing records.
 site_dir: target/html
+
+# Repository
+repo_name: geonetwork/core-geonetwork
+repo_url: https://github.com/geocat/core-geonetwork
+edit_uri: edit/mkdocs/docs/manual/docs
+
+# Copyright
+copyright: Copyright &copy; 2001 - 2023 FAO-UN and others
+
+
 extra_css:
   - stylesheets/extra.css
+
+# Configuration
 theme:
   name: material
   language: en
   custom_dir: overrides
   logo: assets/geonetwork-logo.svg
   favicon: assets/geonetwork-logo.png
+  icon:
+    repo: fontawesome/brands/github
   palette:
-
     # Palette toggle for light mode
     - media: "(prefers-color-scheme: light)"
       scheme: default
       primary: blue
-
       toggle:
         icon: material/weather-night
         name: Switch to dark mode
-
     # Palette toggle for dark mode
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
       toggle:
         icon: material/weather-sunny
         name: Switch to light mode
-
   features:
-    - content.code.annotate
+    - content.action.view
+    - content.action.edit
+#   - content.code.annotate
     - content.code.copy
     - content.tabs.link
     - navigation.tabs
@@ -36,9 +51,10 @@ theme:
     - navigation.indexes
     - toc.follow
     - navigation.top
-    - navigation.footer
+#   - navigation.footer
     - announce.dismiss
 
+# Plugins - install using: pip3 install -r requirements.txt
 plugins:
   - search
   - i18n:
@@ -61,11 +77,18 @@ plugins:
   - exclude:
       glob:
         - 'overview/change-log/version*'
-        - 'annexes/gallery/README.md'
-        # in progress
-
+        - annexes/gallery/README.md
   - include-markdown
 
+# Customizations
+extra:
+  social:
+    - icon: fontawesome/solid/arrow-up-right-from-square
+      link: https://geonetwork-opensource.org/
+      name: GeoNetwork Website
+
+# Extensions
+# - These are carefully chosen to work with pandoc markdown support for whole document translation
 markdown_extensions:
   - admonition
   - attr_list
@@ -94,27 +117,22 @@ markdown_extensions:
       alternate_style: true
   - tables
 
-extra:
-  social:
-    - icon: fontawesome/solid/arrow-up-right-from-square
-      link: https://geonetwork-opensource.org/
-      name: GeoNetwork Website
-
+# Page tree
 nav:
   - 'Home':
-    - 'index.md'
+    - index.md
   - 'Overview':
-    - 'overview/index.md'
-    - 'overview/about.md'
+    - overview/index.md
+    - overview/about.md
     - 'License':
-      - 'overview/license/index.md'
-      - 'overview/license/GPL.md'
-    - 'overview/authors.md'
+      - overview/license/index.md
+      - overview/license/GPL.md
+    - overview/authors.md
     - 'Changelog':
-      - 'overview/change-log/index.md'
-      - 'overview/change-log/stable.md'
-      - 'overview/change-log/maintenance.md'
-      - 'overview/change-log/archive.md'
+      - overview/change-log/index.md
+      - overview/change-log/stable.md
+      - overview/change-log/maintenance.md
+      - overview/change-log/archive.md
   - 'Installation Guide':
       - 'Installing':
         - install-guide/index.md
@@ -233,14 +251,14 @@ nav:
       - 'Updating the application': maintainer-guide/updating/index.md
       - maintainer-guide/production-use/index.md
   - 'API':
-    - 'api/index.md'
-    - 'api/the-geonetwork-api.md'
-    - 'api/search.md'
-    - 'api/csw.md'
-    - 'api/opensearch.md'
-    - 'api/rdf-dcat.md'
-    - 'api/oai-pmh.md'
-    - 'api/z39-50.md'
+    - api/index.md
+    - api/the-geonetwork-api.md
+    - api/search.md
+    - api/csw.md
+    - api/opensearch.md
+    - api/rdf-dcat.md
+    - api/oai-pmh.md
+    - api/z39-50.md
   - 'Contributing':
     - contributing/index.md
     - 'Writing Documentation':
@@ -327,6 +345,6 @@ nav:
       - annexes/standards/iso19110.md
       - annexes/standards/dublin-core.md
   - 'Development':
-    - 'devel/index.md'
-
+    - devel/index.md
+    - devel/docs/docs.md
 
