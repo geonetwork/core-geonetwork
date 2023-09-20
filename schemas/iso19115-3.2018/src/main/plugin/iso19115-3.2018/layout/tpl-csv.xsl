@@ -63,9 +63,11 @@
         </xsl:apply-templates>
       </Discription>
 
-      <Point_of_Contact>
-        <xsl:value-of select="mdb:contact/cit:CI_Responsibility/cit:party/*/cit:contactInfo/*/cit:address/*/cit:electronicMailAddress"/>
-      </Point_of_Contact>
+      <xsl:for-each select="mdb:identificationInfo/*/mri:pointOfContact/*[cit:role/cit:CI_RoleCode/codeListValue='pointOfContact']">
+        <Point_of_Contact>
+          <xsl:value-of select="mdb:identificationInfo/*/mri:pointOfContact/*/cit:party/*/cit:contactInfo/*/cit:address/*/cit:electronicMailAddress"/>
+        </Point_of_Contact>
+      </xsl:for-each>
 
       <xsl:variable name="classification" select="mdb:identificationInfo/*/mri:resourceConstraints/mco:MD_SecurityConstraints/mco:useLimitation/*"/>
       <Access_Rights>
@@ -75,11 +77,11 @@
           <xsl:otherwise>Open</xsl:otherwise>
         </xsl:choose>
       </Access_Rights>
-      <Security_Constraints>
+      <Security_Classification>
         <xsl:value-of select="$classification"/>
-      </Security_Constraints>
+      </Security_Classification>
 
-      <xsl:for-each select="mdb:identificationInfo/*/mri:pointOfContact/*[cit:role/cit:CI_RoleCode/codeListValue='pointOfContact']">
+      <xsl:for-each select="mdb:identificationInfo/*/mri:pointOfContact/*[cit:role/cit:CI_RoleCode/codeListValue='custodian']">
         <Data_Custodian>
           <xsl:value-of select="mdb:identificationInfo/*/mri:pointOfContact/*/cit:party/*/cit:name"/>
         </Data_Custodian>
@@ -226,9 +228,23 @@
             <xsl:value-of select="."/>
           </xsl:if>
         </xsl:for-each>
-
       </Disposal>
 
+      <Data_Status>
+        <xsl:value-of select="mdb:identificationInfo/*/mri:status/mcc:MD_ProgressCode/@codeListValue"></xsl:value-of>
+      </Data_Status>
+
+      <File_size>
+        <xsl:value-of select="mdb:distributionInfo/*/mrd:transferOptions/*/mrd:transferSize"></xsl:value-of>
+      </File_size>
+
+      <Format>
+        <xsl:value-of select="mdb:distributionInfo/*/mrd:distributionFormat/*/mrd:formatSpecificationCitation/*/cit:title"></xsl:value-of>
+      </Format>
+
+      <Language>
+        <xsl:value-of select="mdb:defaultLocale/*/lan:language/lan:LanguageCode/@codeListValue"/>
+      </Language>
       <!--<xsl:for-each select="mdb:identificationInfo/*/*/mco:MD_Constraints/*">
         <Constraints>
           <xsl:copy-of select="."/>
