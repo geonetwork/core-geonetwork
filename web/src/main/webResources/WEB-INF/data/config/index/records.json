@@ -2,6 +2,7 @@
   "settings": {
     "index": {
       "max_result_window": ${es.index.max_result_window.limit},
+      "max_inner_result_window": ${es.index.max_inner_result_window.limit},
       "query.default_field": "any.default",
       "mapping.total_fields.limit": ${es.index.mapping.total_fields.limit},
       "analysis": {
