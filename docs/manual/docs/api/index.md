@@ -1,4 +1,4 @@
-# API guide
+# API Guide
 
 The API guide describes entry points that can be used to interact with the catalog.
 

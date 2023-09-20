@@ -1,4 +1,4 @@
-# User guide
+# User Guide
 
 Operational user-guide describing the editing, review and management of records.
 

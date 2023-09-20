@@ -41,4 +41,4 @@ The dataset feed is accessible at: `http://localhost:8080/geonetwork/srv/atom/de
 
 Examples:
 
--   <http://catalog.inspire.geoportail.lu/geonetwork>
+-   <https://catalog.inspire.geoportail.lu/geonetwork>
