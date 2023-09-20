@@ -10,10 +10,8 @@ import yaml
 
 from translate import __app_name__, __version__
 
-# "gfm+definition_lists+fenced_divs+pipe_tables-fenced_code_attributes",
-md_extensions_to = 'markdown+definition_lists+fenced_divs+backtick_code_blocks+fenced_code_attributes+pipe_tables-simple_tables'
+md_extensions_to = 'markdown+definition_lists+fenced_divs+backtick_code_blocks+fenced_code_attributes-simple_tables+pipe_tables'
 
-# "gfm+definition_lists+fenced_divs+pipe_tables",
 md_extensions_from = 'markdown+definition_lists+fenced_divs+backtick_code_blocks+fenced_code_attributes+pipe_tables'
 
 anchors = {}
@@ -266,6 +264,9 @@ def preprocess_rst(rst_file:str, rst_prep: str) -> str:
     if ':doc:' in text:
         text = _preprocess_rst_doc(text)
 
+    if ':ref:' in text:
+        text = _preprocess_rst_ref(text)
+
     # gui-label and menuselection represented: **Cancel**
     text = re.sub(
         r":guilabel:`(.*)`",
@@ -275,7 +276,7 @@ def preprocess_rst(rst_file:str, rst_prep: str) -> str:
     )
     text = re.sub(
         r":menuselection:`(.*)`",
-        r":**\1**",
+        r"**\1**",
         text,
         flags=re.MULTILINE
     )
@@ -318,7 +319,7 @@ def preprocess_rst(rst_file:str, rst_prep: str) -> str:
 
 def _preprocess_rst_doc(text: str) -> str:
    """
-   Preprocess rst file replacing doc references with links.
+   Preprocess rst content replacing doc references with links.
    """
    # doc links processed in order from most to least complicated
    # :doc:`normal <link.rst>`
@@ -339,6 +340,27 @@ def _preprocess_rst_doc(text: str) -> str:
    # :doc:`simple.rst`
    text = re.sub(
        r":doc:`(.*)\.rst`",
+       r"`\1 <\1.md>`_",
+       text,
+       flags=re.MULTILINE
+   )
+   return text
+
+def _preprocess_rst_ref(text: str) -> str:
+   """
+   Preprocess rst content replacing ref references with links.
+   """
+   # ref links processed in order from most to least complicated
+   # :ref:`normal <link>`
+   text = re.sub(
+       r":ref:`(.*) <((\w|-)*)>`",
+       r"`\1 <\2.md>`_",
+       text,
+       flags=re.MULTILINE
+   )
+   # :ref:`simple`
+   text = re.sub(
+       r":ref:`((\w|-)*)\`",
        r"`\1 <\1.md>`_",
        text,
        flags=re.MULTILINE
@@ -438,18 +460,18 @@ def postprocess_rst_markdown(md_file: str, md_clean: str):
 
        # non-code clean content
        # fix references into broken links
-       line = re.sub(
-           r'`((\w|-)*)`{\.interpreted-text role="ref"}',
-           r'[\1](\1.md)',
-           line,
-           flags=re.MULTILINE
-       )
-       line = re.sub(
-           r'`((\w|\s)*) <(.*?)>`{\.interpreted-text role="ref"}',
-           r'[\1](\3.md)',
-           line,
-           flags=re.MULTILINE
-       )
+#        line = re.sub(
+#            r'`((\w|-)*)`{\.interpreted-text role="ref"}',
+#            r'[\1](\1.md)',
+#            line,
+#            flags=re.MULTILINE
+#        )
+#        line = re.sub(
+#            r'`((\w|\s)*) <(.*?)>`{\.interpreted-text role="ref"}',
+#            r'[\1](\3.md)',
+#            line,
+#            flags=re.MULTILINE
+#        )
 
        # Pandoc escapes characters over-aggressively when writing markdown
        # https://github.com/jgm/pandoc/issues/6259
@@ -465,8 +487,15 @@ def postprocess_rst_markdown(md_file: str, md_clean: str):
        line = line.replace(r'\[', '[')
        line = line.replace(r'\]', ']')
        line = line.replace(r'\*', '*')
+       line = line.replace(r'\-', '-')
+       line = line.replace(r'\|', '|')
+       line = line.replace(r'\@', '@')
 
        clean += line + '\n'
+
+    if code:
+       print(code)
+       clean += code
 
     with open(md_clean,'w') as markdown:
         markdown.write(clean)
