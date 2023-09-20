@@ -2,7 +2,9 @@
 
 Schema plugin documentation for contributors:
 
-* [Documentation](docs/docs.md)
+* [Documentation](docs)
+* [Customization](/customizing-application)
+* [Contributing](/contributing)
 
 For additional information see https://github.com/metadata101/iso19139.ca.HNAP
 

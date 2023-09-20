@@ -185,20 +185,17 @@ nav:
       - overview/change-log/version-3.0.2.md
       - overview/change-log/version-3.0.1.md
       - overview/change-log/version-3.0.0.md
-  - 'Installation Guide':
-      - 'Installing':
-        - install-guide/index.md
-        - install-guide/installing-from-zip.md
-        - install-guide/installing-from-war-file.md
-        - install-guide/installing-with-docker.md
-        - install-guide/installing-from-source-code.md
-        - install-guide/installing-index.md
-      - 'Configuration':
-        - install-guide/configuring-database.md
-        - install-guide/customizing-data-directory.md
-        - install-guide/logging.md
-        - install-guide/map-print-setup.md
-        - install-guide/loading-samples.md
+  - 'Help':
+    - help/index.md
+    - 'Home page':
+      - help/home/index.md
+    - 'Search page':
+      - help/search/index.md
+    - 'Detail page':
+      - help/record/index.md
+    - 'Map page':
+      - help/map/index.md
+      - help/map/visualize/index.md
   - 'User Guide':
     - user-guide/index.md
     - user-guide/quick-start/index.md
@@ -266,42 +263,56 @@ nav:
       - user-guide/harvesting/harvesting-wfs-features.md
       - user-guide/harvesting/harvesting-z3950.md
     - user-guide/export/index.md
-  - 'Administrator':
-    - administrator-guide/index.md
-    - 'Catalog':
-      - administrator-guide/configuring-the-catalog/index.md
-      - administrator-guide/configuring-the-catalog/system-configuration.md
-      - administrator-guide/configuring-the-catalog/user-interface-configuration.md
-      - administrator-guide/configuring-the-catalog/css-configuration.md
-      - administrator-guide/configuring-the-catalog/csw-configuration.md
-      - administrator-guide/configuring-the-catalog/portal-configuration.md
-      - administrator-guide/configuring-the-catalog/inspire-configuration.md
-      - administrator-guide/configuring-the-catalog/map-server-configuration.md
-    - 'Users and Groups':
-      - administrator-guide/managing-users-and-groups/index.md
-      - administrator-guide/managing-users-and-groups/authentication-mode.md
-      - administrator-guide/managing-users-and-groups/creating-group.md
-      - administrator-guide/managing-users-and-groups/creating-user.md
-      - administrator-guide/managing-users-and-groups/user-self-registration.md
-    - 'Classification Systems':
-      - administrator-guide/managing-classification-systems/index.md
-      - administrator-guide/managing-classification-systems/managing-categories.md
-      - administrator-guide/managing-classification-systems/managing-directories.md
-      - administrator-guide/managing-classification-systems/managing-thesaurus.md
-    - 'Metadata Standards':
-      - administrator-guide/managing-metadata-standards/index.md
-      - administrator-guide/managing-metadata-standards/configure-validation.md
-      - administrator-guide/managing-metadata-standards/metadata-identifier.md
-      - administrator-guide/managing-metadata-standards/standards.md
-  - 'Maintainer':
+  - 'Maintainer Guide':
       - maintainer-guide/index.md
+      - 'Installation':
+          - 'Installing':
+            - install-guide/index.md
+            - install-guide/installing-from-zip.md
+            - install-guide/installing-from-war-file.md
+            - install-guide/installing-with-docker.md
+            - install-guide/installing-from-source-code.md
+            - install-guide/installing-index.md
+          - 'Configuration':
+            - install-guide/configuring-database.md
+            - install-guide/customizing-data-directory.md
+            - install-guide/logging.md
+            - install-guide/map-print-setup.md
+            - install-guide/loading-samples.md
+      - 'Setup':
+        - administrator-guide/index.md
+        - 'Catalog':
+          - administrator-guide/configuring-the-catalog/index.md
+          - administrator-guide/configuring-the-catalog/system-configuration.md
+          - administrator-guide/configuring-the-catalog/user-interface-configuration.md
+          - administrator-guide/configuring-the-catalog/css-configuration.md
+          - administrator-guide/configuring-the-catalog/csw-configuration.md
+          - administrator-guide/configuring-the-catalog/portal-configuration.md
+          - administrator-guide/configuring-the-catalog/inspire-configuration.md
+          - administrator-guide/configuring-the-catalog/map-server-configuration.md
+        - 'Users and Groups':
+          - administrator-guide/managing-users-and-groups/index.md
+          - administrator-guide/managing-users-and-groups/authentication-mode.md
+          - administrator-guide/managing-users-and-groups/creating-group.md
+          - administrator-guide/managing-users-and-groups/creating-user.md
+          - administrator-guide/managing-users-and-groups/user-self-registration.md
+        - 'Classification Systems':
+          - administrator-guide/managing-classification-systems/index.md
+          - administrator-guide/managing-classification-systems/managing-categories.md
+          - administrator-guide/managing-classification-systems/managing-directories.md
+          - administrator-guide/managing-classification-systems/managing-thesaurus.md
+        - 'Metadata Standards':
+          - administrator-guide/managing-metadata-standards/index.md
+          - administrator-guide/managing-metadata-standards/configure-validation.md
+          - administrator-guide/managing-metadata-standards/metadata-identifier.md
+          - administrator-guide/managing-metadata-standards/standards.md
       - 'Setting up search/content statistics':
         - maintainer-guide/statistics/index.md
         - maintainer-guide/statistics/setup-elasticsearch.md
         - maintainer-guide/statistics/setup-kibana.md
         - maintainer-guide/statistics/setup-geonetwork.md
-      - 'Updating the application': maintainer-guide/updating/index.md
       - maintainer-guide/production-use/index.md
+      - 'Updating the application': maintainer-guide/updating/index.md
   - 'API':
     - api/index.md
     - api/the-geonetwork-api.md
@@ -311,36 +322,39 @@ nav:
     - api/rdf-dcat.md
     - api/oai-pmh.md
     - api/z39-50.md
-  - 'Contributing':
-    - contributing/index.md
-    - 'Writing Documentation':
-      - 'Markdown': devel/docs/docs.md
-      - 'Sphinx - Deprecated': contributing/writing-documentation.md
-    - contributing/style-guide.md
-    - contributing/translating.md
-    - contributing/making-a-pull-request.md
-    - contributing/doing-a-release.md
-  - 'Customization':
-    - customizing-application/index.md
-    - 'Search':
-      - customizing-application/search-ui/index.md
-      - customizing-application/search-ui/configdefault.md
-      - customizing-application/search-ui/customview.md
-      - customizing-application/search-ui/enrichview.md
-      - customizing-application/search-ui/loadview.md
-      - customizing-application/search-ui/wro4jdependencies.md
-    - customizing-application/creating-custom-view.md
-    - customizing-application/editor-ui/creating-custom-editor.md
-    - customizing-application/editor-ui/custom-editor-examples.md
-    - customizing-application/editor-ui/tutorial.md
-    - customizing-application/changing-layout.md
-    - customizing-application/configuring-search-fields.md
-    - customizing-application/configuring-faceted-search.md
-    - customizing-application/advanced-configuration.md
-    - customizing-application/adding-static-pages.md
-    - customizing-application/characterset.md
-    - customizing-application/implementing-a-schema-plugin.md
-    - customizing-application/misc.md
+  - 'Development':
+    - devel/index.md
+    - devel/docs/index.md
+    - 'Customization':
+      - customizing-application/index.md
+      - 'Search':
+        - customizing-application/search-ui/index.md
+        - customizing-application/search-ui/configdefault.md
+        - customizing-application/search-ui/customview.md
+        - customizing-application/search-ui/enrichview.md
+        - customizing-application/search-ui/loadview.md
+        - customizing-application/search-ui/wro4jdependencies.md
+      - customizing-application/creating-custom-view.md
+      - customizing-application/editor-ui/creating-custom-editor.md
+      - customizing-application/editor-ui/custom-editor-examples.md
+      - customizing-application/editor-ui/tutorial.md
+      - customizing-application/changing-layout.md
+      - customizing-application/configuring-search-fields.md
+      - customizing-application/configuring-faceted-search.md
+      - customizing-application/advanced-configuration.md
+      - customizing-application/adding-static-pages.md
+      - customizing-application/characterset.md
+      - customizing-application/implementing-a-schema-plugin.md
+      - customizing-application/misc.md
+    - 'Contributing':
+      - contributing/index.md
+      - 'Writing Documentation':
+        - 'Markdown': devel/docs/docs.md
+        - 'Sphinx - Deprecated': contributing/writing-documentation.md
+      - contributing/style-guide.md
+      - contributing/translating.md
+      - contributing/making-a-pull-request.md
+      - contributing/doing-a-release.md
   - 'Tutorials':
     - tutorials/index.md
     - 'Introduction':
@@ -396,7 +410,4 @@ nav:
       - annexes/standards/iso19139.md
       - annexes/standards/iso19110.md
       - annexes/standards/dublin-core.md
-  - 'Development':
-    - devel/index.md
-    - devel/docs/docs.md
 

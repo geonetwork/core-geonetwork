@@ -4,7 +4,7 @@ hide:
   - toc
 ---
 
-# Contents
+# GeoNetwork
 
 * [Overview](overview/index.md)
 * [Installation Guide](install-guide/index.md)
