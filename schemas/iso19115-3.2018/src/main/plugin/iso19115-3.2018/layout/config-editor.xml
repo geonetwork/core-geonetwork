@@ -112,26 +112,19 @@
                     &lt;cit:party&gt;
                       &lt;cit:CI_Organisation&gt;
                         &lt;cit:name&gt;
-                          &lt;gco:CharacterString&gt;&lt;/gco:CharacterString&gt;
+                          &lt;gco:CharacterString&gt;Org Name&lt;/gco:CharacterString&gt;
                         &lt;/cit:name&gt;
                         &lt;cit:contactInfo&gt;
                           &lt;cit:CI_Contact&gt;
                             &lt;cit:address&gt;
                               &lt;cit:CI_Address&gt;
                                 &lt;cit:electronicMailAddress&gt;
-                                  &lt;gco:CharacterString&gt;&lt;/gco:CharacterString&gt;
+                                  &lt;gco:CharacterString&gt;email@adre.ss&lt;/gco:CharacterString&gt;
                                 &lt;/cit:electronicMailAddress&gt;
                               &lt;/cit:CI_Address&gt;
                             &lt;/cit:address&gt;
                           &lt;/cit:CI_Contact&gt;
                         &lt;/cit:contactInfo&gt;
-                        &lt;cit:individual&gt;
-                          &lt;cit:CI_Individual&gt;
-                            &lt;cit:name&gt;
-                              &lt;gco:CharacterString&gt;&lt;/gco:CharacterString&gt;
-                            &lt;/cit:name&gt;
-                          &lt;/cit:CI_Individual&gt;
-                        &lt;/cit:individual&gt;
                       &lt;/cit:CI_Organisation&gt;
                     &lt;/cit:party&gt;
                   &lt;/cit:CI_Responsibility&gt;"
@@ -165,26 +158,19 @@
                     &lt;cit:party&gt;
                       &lt;cit:CI_Organisation&gt;
                         &lt;cit:name&gt;
-                          &lt;gco:CharacterString&gt;&lt;/gco:CharacterString&gt;
+                          &lt;gco:CharacterString&gt;Org Name&lt;/gco:CharacterString&gt;
                         &lt;/cit:name&gt;
                         &lt;cit:contactInfo&gt;
                           &lt;cit:CI_Contact&gt;
                             &lt;cit:address&gt;
                               &lt;cit:CI_Address&gt;
                                 &lt;cit:electronicMailAddress&gt;
-                                  &lt;gco:CharacterString&gt;&lt;/gco:CharacterString&gt;
+                                  &lt;gco:CharacterString&gt;email@adre.ss&lt;/gco:CharacterString&gt;
                                 &lt;/cit:electronicMailAddress&gt;
                               &lt;/cit:CI_Address&gt;
                             &lt;/cit:address&gt;
                           &lt;/cit:CI_Contact&gt;
                         &lt;/cit:contactInfo&gt;
-                        &lt;cit:individual&gt;
-                          &lt;cit:CI_Individual&gt;
-                            &lt;cit:name&gt;
-                              &lt;gco:CharacterString&gt;&lt;/gco:CharacterString&gt;
-                            &lt;/cit:name&gt;
-                          &lt;/cit:CI_Individual&gt;
-                        &lt;/cit:individual&gt;
                       &lt;/cit:CI_Organisation&gt;
                     &lt;/cit:party&gt;
                   &lt;/cit:CI_Responsibility&gt;"
@@ -207,26 +193,19 @@
                     &lt;cit:party&gt;
                       &lt;cit:CI_Organisation&gt;
                         &lt;cit:name&gt;
-                          &lt;gco:CharacterString&gt;&lt;/gco:CharacterString&gt;
+                          &lt;gco:CharacterString&gt;Org Name&lt;/gco:CharacterString&gt;
                         &lt;/cit:name&gt;
                         &lt;cit:contactInfo&gt;
                           &lt;cit:CI_Contact&gt;
                             &lt;cit:address&gt;
                               &lt;cit:CI_Address&gt;
                                 &lt;cit:electronicMailAddress&gt;
-                                  &lt;gco:CharacterString&gt;&lt;/gco:CharacterString&gt;
+                                  &lt;gco:CharacterString&gt;email@adre.ss&lt;/gco:CharacterString&gt;
                                 &lt;/cit:electronicMailAddress&gt;
                               &lt;/cit:CI_Address&gt;
                             &lt;/cit:address&gt;
                           &lt;/cit:CI_Contact&gt;
                         &lt;/cit:contactInfo&gt;
-                        &lt;cit:individual&gt;
-                          &lt;cit:CI_Individual&gt;
-                            &lt;cit:name&gt;
-                              &lt;gco:CharacterString&gt;&lt;/gco:CharacterString&gt;
-                            &lt;/cit:name&gt;
-                          &lt;/cit:CI_Individual&gt;
-                        &lt;/cit:individual&gt;
                       &lt;/cit:CI_Organisation&gt;
                     &lt;/cit:party&gt;
                   &lt;/cit:CI_Responsibility&gt;"
@@ -249,26 +228,19 @@
                     &lt;cit:party&gt;
                       &lt;cit:CI_Organisation&gt;
                         &lt;cit:name&gt;
-                          &lt;gco:CharacterString&gt;&lt;/gco:CharacterString&gt;
+                          &lt;gco:CharacterString&gt;Org Name&lt;/gco:CharacterString&gt;
                         &lt;/cit:name&gt;
                         &lt;cit:contactInfo&gt;
                           &lt;cit:CI_Contact&gt;
                             &lt;cit:address&gt;
                               &lt;cit:CI_Address&gt;
                                 &lt;cit:electronicMailAddress&gt;
-                                  &lt;gco:CharacterString&gt;&lt;/gco:CharacterString&gt;
+                                  &lt;gco:CharacterString&gt;email@adre.ss&lt;/gco:CharacterString&gt;
                                 &lt;/cit:electronicMailAddress&gt;
                               &lt;/cit:CI_Address&gt;
                             &lt;/cit:address&gt;
                           &lt;/cit:CI_Contact&gt;
                         &lt;/cit:contactInfo&gt;
-                        &lt;cit:individual&gt;
-                          &lt;cit:CI_Individual&gt;
-                            &lt;cit:name&gt;
-                              &lt;gco:CharacterString&gt;&lt;/gco:CharacterString&gt;
-                            &lt;/cit:name&gt;
-                          &lt;/cit:CI_Individual&gt;
-                        &lt;/cit:individual&gt;
                       &lt;/cit:CI_Organisation&gt;
                     &lt;/cit:party&gt;
                   &lt;/cit:CI_Responsibility&gt;"
@@ -291,26 +263,19 @@
                     &lt;cit:party&gt;
                       &lt;cit:CI_Organisation&gt;
                         &lt;cit:name&gt;
-                          &lt;gco:CharacterString&gt;&lt;/gco:CharacterString&gt;
+                          &lt;gco:CharacterString&gt;Org Name&lt;/gco:CharacterString&gt;
                         &lt;/cit:name&gt;
                         &lt;cit:contactInfo&gt;
                           &lt;cit:CI_Contact&gt;
                             &lt;cit:address&gt;
                               &lt;cit:CI_Address&gt;
                                 &lt;cit:electronicMailAddress&gt;
-                                  &lt;gco:CharacterString&gt;&lt;/gco:CharacterString&gt;
+                                  &lt;gco:CharacterString&gt;email@adre.ss&lt;/gco:CharacterString&gt;
                                 &lt;/cit:electronicMailAddress&gt;
                               &lt;/cit:CI_Address&gt;
                             &lt;/cit:address&gt;
                           &lt;/cit:CI_Contact&gt;
                         &lt;/cit:contactInfo&gt;
-                        &lt;cit:individual&gt;
-                          &lt;cit:CI_Individual&gt;
-                            &lt;cit:name&gt;
-                              &lt;gco:CharacterString&gt;&lt;/gco:CharacterString&gt;
-                            &lt;/cit:name&gt;
-                          &lt;/cit:CI_Individual&gt;
-                        &lt;/cit:individual&gt;
                       &lt;/cit:CI_Organisation&gt;
                     &lt;/cit:party&gt;
                   &lt;/cit:CI_Responsibility&gt;"
@@ -331,6 +296,14 @@
         data-insert-modes=""/>
     </for>
 
+    <for name="gex:verticalCRSId" addDirective="data-gn-directory-entry-selector">
+      <directiveAttributes
+        data-template-add-action="true"
+        data-search-action="true"
+        data-template-type="CRS"
+        data-filter='{"root": "mrs:MD_ReferenceSystem"}'
+        data-insert-modes=""/>
+    </for>
 
     <for name="mri:extent" addDirective="data-gn-directory-entry-selector">
       <directiveAttributes
@@ -917,7 +890,7 @@
           <field xpath="/mdb:MD_Metadata/mdb:identificationInfo/*/mri:extent/gex:EX_Extent/gex:geographicElement/gex:EX_GeographicBoundingBox" or="geographicElement"
                    in="/mdb:MD_Metadata/mdb:identificationInfo/*/mri:extent/gex:EX_Extent" />
           <field xpath="/mdb:MD_Metadata/mdb:identificationInfo/*/mri:extent/gex:EX_Extent/gex:verticalElement" or="verticalElement"
-                 in="/mdb:MD_Metadata/mdb:identificationInfo/*/mri:extent/gex:EX_Extent"/>
+                 in="/mdb:MD_Metadata/mdb:identificationInfo/*/mri:extent/gex:EX_Extent" del=".." />
           <section name="gex:EX_TemporalExtent" >
             <field name="Temporal extents"
                    xpath="/mdb:MD_Metadata/mdb:identificationInfo/*/mri:extent/gex:EX_Extent/gex:temporalElement"
@@ -1047,7 +1020,8 @@
         <for name="srv:scopedName"/>
         <for name="srv:resourceReference"/>
         <for name="srv:SV_OperationMetadata"/>
-
+        <for name="gex:verticalCRSId"/>
+        <for name="mdq:report"/>
         <for name="mri:descriptiveKeywords"/>
         <for name="gex:geographicElement" />
         <for name="gex:description" />
