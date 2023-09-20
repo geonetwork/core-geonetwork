@@ -140,6 +140,20 @@
                       </option>
                     </select>
 
+                      <select data-ng-switch-when="metadata/batchediting/accesslevel"
+                              class="form-control"
+                              name="{{s.name}}">
+                        <option value="Editor"
+                                ng-selected="'Editor' == s.value">{{'Editor' | translate}}
+                        </option>
+                        <option value="Reviewer"
+                                ng-selected="'Reviewer' == s.value">{{'Reviewer' | translate}}
+                        </option>
+                        <option value="Administrator"
+                                ng-selected="'Administrator' == s.value">{{'Administrator' | translate}}
+                        </option>
+                      </select>
+
                     <div data-ng-switch-when="metadata/workflow/draftWhenInGroup">
                       <input type="radio" class="gn-no-setting" data-ng-model="draftInAllGroups"
                              data-ng-value="true" /> {{'draftWhenInGroup-all' | translate}}<br>
