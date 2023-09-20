@@ -111,7 +111,7 @@ If enabled, the catalog will calculate user ratings for metadata from this node 
 
 ## Metadata XLink {#xlink_config}
 
-The XLink resolver replaces the content of elements with an attribute \@xlink:href (except for some elements like srv:operatesOn) with the content obtained from the URL content of \@xlink:href. The XLink resolver should be enabled if you want to harvest metadata fragments or reuse fragments of metadata in your metadata records (eg. when using a contact directory).
+The XLink resolver replaces the content of elements with an attribute @xlink:href (except for some elements like srv:operatesOn) with the content obtained from the URL content of @xlink:href. The XLink resolver should be enabled if you want to harvest metadata fragments or reuse fragments of metadata in your metadata records (eg. when using a contact directory).
 
 -   **Enable XLink resolution**: Enables/disables the XLink resolver.
 -   **Enable local XLink** Local XLinks are using local://<lang>/<service> URL to make references to related sections instead of HTTP URL. Local XLinks are usually faster than HTTP XLinks.
