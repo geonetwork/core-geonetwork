@@ -2,7 +2,7 @@
 
 The GeoNetwork project started out in year 2001 as a Spatial Data Catalogue System for the Food and Agriculture organisation of the United Nations ([FAO](http://www.fao.org)), the United Nations World Food Programme ([WFP](http://www.wfp.org)) and the United Nations Environmental Programme ([UNEP](http://www.unep.org)).
 
-At present the project is widely used as the basis of Spatial Data Infrastructures all around the world (See [gallery](gallery.md)).
+The project is widely used as the foundation of Spatial Data Infrastructures all around the world (See [gallery](gallery.md)).
 
 The GeoNetwork project is part of the Open Source Geospatial Foundation ([OSGeo](https://www.osgeo.org)) and can be found at [GeoNetwork opensource](https://geonetwork-opensource.org).
 

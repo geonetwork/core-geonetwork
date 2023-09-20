@@ -17,7 +17,7 @@ Parameter Reference:
 
 !!! note
 
-    GeoNetwork 4
+    GeoNetwork 3
 
 
 The Q Search endpoint allows you to query the catalog programmatically. It is available in the local catalog at `http://localhost:8080/geonetwork/srv/eng/q` (otherwise substitute your catalog URL).
