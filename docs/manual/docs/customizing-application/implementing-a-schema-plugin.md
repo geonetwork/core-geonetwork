@@ -257,7 +257,7 @@ The five rules that can be used in this section in order of evaluation are:
     Some other points about elements autodetect:
 
     -   multiple elements can be specified - eg. as in the above, both metadataStandardName and metadataStandardVersion have been specified - all must be match for the record to be recognized as belonging to this schema.
-    -   multiple values for the elements can be specified. eg. as in the above, a match for gmd:metadataStandardVersion will be found for `1.5-experimental` OR `MCP:BlueNet V1.5-experimental` OR `MCP:BlueNet V1.5` - the vertical line or pipe character '\|' is used to separate the options here. Regular expression can be used also.
+    -   multiple values for the elements can be specified. eg. as in the above, a match for gmd:metadataStandardVersion will be found for `1.5-experimental` OR `MCP:BlueNet V1.5-experimental` OR `MCP:BlueNet V1.5` - the vertical line or pipe character '|' is used to separate the options here. Regular expression can be used also.
     -   if the elements have a namespace then the namespace(s) should be specified on the autodetect element or somewhere in the schema-ident.xml document before the element in which they are used - eg. in the above there are there namespace declarations on the autodetect element so as not to clutter the content.
 
 3.  **Root element** - root element of the document must match. An example use case is the one used for the eml-gbif schema. Documents belonging to this schema always have root element of eml:eml so the autodetect section for this schema is:
@@ -327,42 +327,42 @@ return matched schema
 
 As an example, suppose we have three schemas iso19139.mcp, iso19139.mcp-1.4 and iso19139.mcp-cmar with the following autodetect elements:
 
-=== "iso19139.mcp-1.4"
+##### iso19139.mcp-1.4
 
-    ``` xml
-    <autodetect xmlns:mcp="http://bluenet3.antcrc.utas.edu.au/mcp"
-                xmlns:gmd="http://www.isotc211.org/2005/gmd"
-                xmlns:gco="http://www.isotc211.org/2005/gco">
-      <elements>
-        <gmd:metadataStandardName>
-          <gco:CharacterString>
-            Australian Marine Community Profile of ISO 19115:2005/19139
-          </gco:CharacterString>
-        </gmd:metadataStandardName>
-        <gmd:metadataStandardVersion>
-          <gco:CharacterString>MCP:BlueNet V1.4</gco:CharacterString>
-        </gmd:metadataStandardVersion>
-      </elements>
-    </autodetect>
-    ```
+``` xml
+<autodetect xmlns:mcp="http://bluenet3.antcrc.utas.edu.au/mcp"
+            xmlns:gmd="http://www.isotc211.org/2005/gmd"
+            xmlns:gco="http://www.isotc211.org/2005/gco">
+  <elements>
+    <gmd:metadataStandardName>
+      <gco:CharacterString>
+        Australian Marine Community Profile of ISO 19115:2005/19139
+      </gco:CharacterString>
+    </gmd:metadataStandardName>
+    <gmd:metadataStandardVersion>
+      <gco:CharacterString>MCP:BlueNet V1.4</gco:CharacterString>
+    </gmd:metadataStandardVersion>
+  </elements>
+</autodetect>
+```
 
-=== "iso19139.mcp-cmar"
+##### iso19139.mcp-cmar
 
-    ``` xml
-    <autodetect>
-        <attributes xmlns:mcp-cmar="http://www.marine.csiro.au/schemas/mcp-cmar">
-    </autodetect>
-    ```
+``` xml
+<autodetect>
+    <attributes xmlns:mcp-cmar="http://www.marine.csiro.au/schemas/mcp-cmar">
+</autodetect>
+```
 
-=== "iso19139.mcp"
+##### iso19139.mcp
 
-    ``` xml
-    <autodetect xmlns:mcp="http://bluenet3.antcrc.utas.edu.au/mcp">
-      <elements type="root">
-        <mcp:MD_Metadata/>
-      </elements>
-    </autodetect>
-    ```
+``` xml
+<autodetect xmlns:mcp="http://bluenet3.antcrc.utas.edu.au/mcp">
+  <elements type="root">
+    <mcp:MD_Metadata/>
+  </elements>
+</autodetect>
+```
 
 A record going through autodetect processing (eg. on import) would be checked against:
 
@@ -925,7 +925,7 @@ Once again, for profiles of an existing schema, it makes sense to use a slightly
 This template splits the processing between the base iso19139 schema and a brief template that handles elements specific to the profile. This assumes that:
 
 1.  The base schema has separated the <metadata> element from the remainder of its brief processing so that it can be called by profiles
-2.  The profile includes links to equivalent elements that can be used by the base schema to process common elements eg. for ISO19139, elements in the profile have gco:isoType attributes that give the name of the base element and can be used in XPath matches such as "gmd:MD_DataIdentification\|*[@gco:isoType='gmd:MD_DataIdentification']".
+2.  The profile includes links to equivalent elements that can be used by the base schema to process common elements eg. for ISO19139, elements in the profile have gco:isoType attributes that give the name of the base element and can be used in XPath matches such as "gmd:MD_DataIdentification|*[@gco:isoType='gmd:MD_DataIdentification']".
 
 -   templates that match on elements specific to the schema. Here is an example from the eml-gbif schema:
 

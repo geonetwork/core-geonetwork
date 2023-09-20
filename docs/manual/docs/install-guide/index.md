@@ -15,6 +15,11 @@ Before you can use GeoNetwork on your own computer, you need to install it. Ther
 -   [Installing From Source Code](installing-from-source-code.md)
 -   [Installing Index](installing-index.md)
 
+!!! note
+
+    A windows installer is also available from the GeoNetwork download page, [Installing a third-party distribution](https://geonetwork-opensource.org/downloads.html#third-party-distributions) .
+
+
 After installing the application, you can configure the following:
 
 -   [Configuring Database](configuring-database.md)

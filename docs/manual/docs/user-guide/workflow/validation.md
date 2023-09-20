@@ -1,22 +1,22 @@
 # Validating records {#validation}
 
--   In the metadata editor, click Validate to trigger the validation. The right panel displays all validation results by levels:
+1.  In the metadata editor, click Validate to trigger the validation. The right panel displays all validation results by levels:
 
-    ![](img/validation.png)
+![](img/validation.png)
 
--   Click the thumbs up or down icons to display errors. Errors reported in blue are for information only and do not affect the global validation of the record:
+1.  Click the thumbs up or down icons to display errors. Errors reported in blue are for information only and do not affect the global validation of the record:
 
     ![](img/validation-details.png)
 
-  - The editor also reports error messages where applicable (as all error messages cannot be shown in the editor):
+    The editor also reports error messages where applicable (as all error messages cannot be shown in the editor):
 
-![](img/validation-inline.png)
+    ![](img/validation-inline.png)
 
--   Once a record is validated, the validation status is saved and is displayed in the editor board page:
+2.  Once a record is validated, the validation status is saved and is displayed in the editor board page:
 
     ![](img/validation-status.png)
 
-    You can filter the Validation status using a facet in the editor board.
+You can filter the Validation status using a facet in the editor board.
 
 ## Configuring validation
 

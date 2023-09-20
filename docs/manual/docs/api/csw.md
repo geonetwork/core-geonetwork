@@ -4,8 +4,8 @@ The CSW end point exposes the metadata records in your catalog in XML format usi
 
 Two protocols are available:
 
- -   CSW: Provides the ability to search and publish metadata for data, services and related information.
- -   CSW-T: Provides an interface for creating, modifying and deleting catalog records via the CSW protocol.
+-   CSW: Provides the ability to search and publish metadata for data, services and related information.
+-   CSW-T: Provides an interface for creating, modifying and deleting catalog records via the CSW protocol.
 
 ## Configuration
 
@@ -15,11 +15,11 @@ See [csw-configuration](csw-configuration.md) for details of how to configure th
 
 The following URL is the standard end point for the catalog (substitute your GeoNetwork URL):
 
- -   <http://localhost:8080/geonetwork/srv/eng/csw>?
+-   <http://localhost:8080/geonetwork/srv/eng/csw>?
 
 Generally, the `VERSION` and `SERVICE` parameter are also added, along with the `REQUEST` parameter as detailed below:
 
- -   <http://localhost:8080/geonetwork/srv/eng/csw?SERVICE=CSW&VERSION=2.0.2&REQUEST=GetCapabilities>
+-   <http://localhost:8080/geonetwork/srv/eng/csw?SERVICE=CSW&VERSION=2.0.2&REQUEST=GetCapabilities>
 
 ## Requests
 
@@ -29,12 +29,12 @@ See [csw-configuration](csw-configuration.md) for more details of this function.
 
 When using the GetRecords operation for searching, 2 types of parameter can be use for searching:
 
- -   The list of queryable listed in the GetCapabilities document
- -   The fields in the index
+-   The list of queryable listed in the GetCapabilities document
+-   The fields in the index
 
 Example of a request using a standard queryable:
 
-```xml
+``` xml
 <csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2"
                 service="CSW" version="2.0.2">
   <csw:Query typeNames="csw:Record">
@@ -52,7 +52,7 @@ Example of a request using a standard queryable:
 
 Example of a request using an index field name:
 
-```xml
+``` xml
 <csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2"
                 service="CSW" version="2.0.2">
   <csw:Query typeNames="csw:Record">

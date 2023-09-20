@@ -52,7 +52,7 @@ The settings page offers to set the configuration of a proxy server. This config
 -   **Port** The proxy port
 -   **Proxy username** The username
 -   **Proxy user password** The username password
--   **Ignore host list** To bypass specific hosts enter a specific IP address or host name such as www.mydomain.com or an address range using wildcards, such as 192.168.2.\*. Use \| to separate the different host values.
+-   **Ignore host list** To bypass specific hosts enter a specific IP address or host name such as www.mydomain.com or an address range using wildcards, such as 192.168.2.*. Use | to separate the different host values.
 
 JVM proxy parameters may also be required to properly set the proxy for all remote access.
 

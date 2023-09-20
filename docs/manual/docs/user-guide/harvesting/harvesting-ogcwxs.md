@@ -14,7 +14,6 @@ An OGC service implements a GetCapabilities operation that GeoNetwork, acting as
 Configuration options:
 
 -   **Site**
-
     -   *Name* - The name of the catalogue and will be one of the search criteria.
     -   *Type* - The type of OGC service indicates if the harvester has to query for a specific kind of service. Supported type are WMS (1.0.0, 1.1.1, 1.3.0), WFS (1.0.0 and 1.1.0), WCS (1.0.0), WPS (0.4.0 and 1.0.0), CSW (2.0.2) and SOS (1.0.0).
     -   *Service URL* - The service URL is the URL of the service to contact (without parameters like "REQUEST=GetCapabilities", "VERSION=", \...). It has to be a valid URL like <http://your.preferred.ogcservice/type_wms>.
@@ -26,17 +25,13 @@ Configuration options:
         -   *Create thumbnails for WMS layers*: If harvesting from an OGC WMS, then checking this options means that thumbnails will be created during harvesting.
     -   *Target schema* - The metadata schema of the dataset metadata records that will be created by this harvester.
     -   *Icon* - The default icon displayed as attribution logo for metadata created by this harvester.
-
 -   **Options** - Scheduling Options.
-
 -   **Privileges**
-
 -   **Category for service** - Metadata for the harvested service is assigned to the category selected in this option (eg. "interactive resources").
-
 -   **Category for datasets** - Metadata for the harvested datasets is assigned to the category selected in this option (eg. "datasets").
 
-!!! Notes
+## Notes
 
-    -   every time the harvester runs, it will remove previously harvested records and create new records. GeoNetwork will generate the uuid for all metadata (both service and datasets). The exception to this rule is dataset metadata created using the MetadataUrl tag is in the GetCapabilities document, in that case, the uuid of the remote XML document is used instead
-    -   thumbnails can only be generated when harvesting an OGC Web Map Service (WMS). The WMS should support the WGS84 projection
-    -   the chosen *Target schema* must have the support XSLTs which are used by the harvester to convert the GetCapabilities statement to metadata records from that schema. If in doubt, use iso19139.
+-   every time the harvester runs, it will remove previously harvested records and create new records. GeoNetwork will generate the uuid for all metadata (both service and datasets). The exception to this rule is dataset metadata created using the MetadataUrl tag is in the GetCapabilities document, in that case, the uuid of the remote XML document is used instead
+-   thumbnails can only be generated when harvesting an OGC Web Map Service (WMS). The WMS should support the WGS84 projection
+-   the chosen *Target schema* must have the support XSLTs which are used by the harvester to convert the GetCapabilities statement to metadata records from that schema. If in doubt, use iso19139.

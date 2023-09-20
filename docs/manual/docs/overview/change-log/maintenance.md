@@ -5,15 +5,17 @@ This series is under active use by our community, with regular improvements, doc
 
 ## Latest
 
-{%
-   include-markdown './version-3.12.9.md'
-   heading-offset=3
-%}
+* [Version 3.12.10](version-3.12.10.md)
 
 ## History
 
-{%
-   include-markdown './version-3.12.*.md'
-   exclude = './version-3.12.9.md'
-   heading-offset = 3
-%}
+* [Version 3.12.9](version-3.12.9.md)
+* [Version 3.12.8](version-3.12.8.md)
+* [Version 3.12.7](version-3.12.7.md)
+* [Version 3.12.6](version-3.12.6.md)
+* [Version 3.12.5](version-3.12.5.md)
+* [Version 3.12.4](version-3.12.4.md)
+* [Version 3.12.3](version-3.12.3.md)
+* [Version 3.12.3](version-3.12.2.md)
+* [Version 3.12.1](version-3.12.1.md)
+* [Version 3.12.0](version-3.12.0.md)

@@ -1,6 +1,9 @@
 # RDF DCAT end point {#rdf-dcat}
 
-!!! warning "Not yet available in version 4"
+!!! warning
+
+    Not yet available in version 4.
+
 
 The RDF DCAT end point provides a way of getting information about the catalog, the datasets and services, and links to distributed resources in a machine-readable format. The formats of the output are based on DCAT, an RDF vocabulary that is designed to facilitate interoperability between web-based data catalogs.
 

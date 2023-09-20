@@ -25,5 +25,6 @@ The editor form provides uploading of data, graphics, documents, pdf files and a
 -   [Editing Metadata](editing-metadata.md)
 -   [Deleting Metadata](deleting-metadata.md)
 -   [Multilingual Editing](multilingual-editing.md)
+-   [Inspire Editing](inspire-editing.md)
 
-* [Inspire Editing](inspire-editing.md) to their informations and tasks.
+Based on user profiles (see [creating-user](creating-user.md)), a dashboard provides easy access to their informations and tasks.

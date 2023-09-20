@@ -3,7 +3,6 @@
 In some situations, a dataset is part of a temporal or spatial collections of records which could share the same specification (eg. Land cover for different years). In order to group this set of records, a general description of the collection may be done in the parent metadata which can then be attached to each dataset of the series.
 
 -   Corine Land Cover
-
     -   Corine Land Cover 2002
     -   Corine Land Cover 2012
     -   \...

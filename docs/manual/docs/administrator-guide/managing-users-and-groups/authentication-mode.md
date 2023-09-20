@@ -9,9 +9,9 @@ By default the catalog uses the internal database for user management and authen
 -   [authentication-keycloak](authentication-keycloak.md)
 -   [authentication-shibboleth](authentication-shibboleth.md)
 
-Which mode to use is configured in `WEB-INF/config-security/config-security.xml`{.interpreted-text role="file"} or via an environment variable `geonetwork.security.type`.
+Which mode to use is configured in **`WEB-INF/config-security/config-security.xml`** or via an environment variable `geonetwork.security.type`.
 
-Uncomment the relevant line in `WEB-INF/config-security/config-security.xml`{.interpreted-text role="file"}:
+Uncomment the relevant line in **`WEB-INF/config-security/config-security.xml`**:
 
 ``` xml
 <import resource="config-security-{mode}.xml"/>
@@ -185,7 +185,7 @@ An attribute could define both the profile and the group for a user. To extract 
     </bean>
     ```
 
-3.  Define custom location for extracting group and role (no support for group/role combination) (use LDAPUserDetailsContextMapperWithProfileSearch in `config-security.xml`{.interpreted-text role="file"}).
+3.  Define custom location for extracting group and role (no support for group/role combination) (use LDAPUserDetailsContextMapperWithProfileSearch in **`config-security.xml`**).
 
     ``` text
     ldap.privilege.search.group.attribute=cn
@@ -287,7 +287,9 @@ Before you start configuring, you will need to know;
 !!! note
 
     Should I use the Hierarchy or Original configuration?
+    
     If you already have an existing (Original) configuration, there's no need to move to the new one. Most of the code between the two is the same.
+    
     If you are starting a new configuration, I would recommend the Hierarchy configuration. It's a little simpler and supported by test cases and test infrastructure. It also supports LDAPs where users/groups are in multiple directories.
 
 
@@ -297,7 +299,7 @@ GeoNetwork comes with a sample LDAP configuration that you can use in Apache Dir
 
 !!! note
 
-    To use this configuration, uncomment the "<import resource="config-security-ldap-recursive.xml"/>" line in [web/src/main/webapp/WEB-INF/config-security/config-security.xml]{.title-ref}
+    To use this configuration, uncomment the "<import resource="config-security-ldap-recursive.xml"/>" line in ``web/src/main/webapp/WEB-INF/config-security/config-security.xml``
 
 
 1.  Configure the `ce` bean with a reference to your LDAP server and a user that can execute LDAP queries.
@@ -486,11 +488,11 @@ Basic Setup Steps:
     4.  Record the Client Secret
     5.  Get the Server's JSON metadata document
 2.  Configure Geonetwork via environment variables
-    1.  [GEONETWORK_SECURITY_TYPE=openidconnect]{.title-ref}
-    2.  [OPENIDCONNECT_CLIENTSECRET=\...]{.title-ref} (from your IDP server)
-    3.  [OPENIDCONNECT_CLIENTID=\...]{.title-ref} (from your IDP server)
-    4.  [OPENIDCONNECT_SERVERMETADATA_JSON_TEXT='\...']{.title-ref} (the text of your Server's JSON metadata document)
-    5.  [OPENIDCONNECT_IDTOKENROLELOCATION=\...]{.title-ref} (location of the user's roles in the ID Token)
+    1.  ``GEONETWORK_SECURITY_TYPE=openidconnect``
+    2.  ``OPENIDCONNECT_CLIENTSECRET=\...`` (from your IDP server)
+    3.  ``OPENIDCONNECT_CLIENTID=\...`` (from your IDP server)
+    4.  ``OPENIDCONNECT_SERVERMETADATA_JSON_TEXT='\...'`` (the text of your Server's JSON metadata document)
+    5.  ``OPENIDCONNECT_IDTOKENROLELOCATION=\...`` (location of the user's roles in the ID Token)
 
 Geonetwork's Open ID Connect plugin has a lot of configuration options - please see the `WEB-INF/config-security/config-security-openidconnect.xml` and `WEB-INF/config-security/config-security-openidconnect-overrides.properties` files.
 
@@ -510,7 +512,7 @@ The `et` you configured on your OpenID server.
 
 **OPENIDCONNECT_SERVERMETADATA_CONFIG_URL**
 
-URL to the external OIDC server's JSON metadata document. This is typically at [/.well-known/openid-configuration] on the IDP server.
+URL to the external OIDC server's JSON metadata document. This is typically at ``/.well-known/openid-configuration`` on the IDP server.
 
 !!! note
 
@@ -533,7 +535,7 @@ Where, in the ID Token, are the users roles/groups stored (i.e. "groups", "roles
 
 This provides simple role conversion from the OpenID server to Geonetwork roles.
 
-ie. ["GeonetworkAdmin=Administrator,GeonetworkEditor=Editor"]
+ie. ``"GeonetworkAdmin=Administrator,GeonetworkEditor=Editor"``
 
 This will convert "GeonetworkAdmin" (from the OpenID Server) to the Geonetwork "Administrator" role.
 
@@ -546,19 +548,19 @@ This will convert "GeonetworkAdmin" (from the OpenID Server) to the Geonetwork "
 
 Every user who authenticates against the OpenID server will be given this role.
 
-Default is ["RegisteredUser"]{.title-ref}.
+Default is ``"RegisteredUser"``.
 
 **OPENIDCONNECT_USERPROFILEUPDATEENABLED**
 
 When a user logs on, update their Geotwork profile from the OpenID server's ID Token.
 
-Default is ["true"]{.title-ref}.
+Default is ``"true"``.
 
 **OPENIDCONNECT_USERGROUPUPDATEENABLED**
 
 When a user logs on, update their Geotwork group/role permissions.
 
-Default is ["true"]{.title-ref}.
+Default is ``"true"``.
 
 **OPENIDCONNECT_SCOPES**
 
@@ -594,8 +596,8 @@ This will configure keycloak backed by **another OpenID IDP** (for example, by a
 
 1.  Create a realm (i.e. `lm`)
 2.  Create an openid client (i.e. `nt`). This is your ClientID.
-    1.  Root URL: [http://localhost:7777/geonetwork]{.title-ref} (this is the GN root URL)
-    2.  Valid Redirect URIs: [http://localhost:7777/geonetwork/\*]{.title-ref}
+    1.  Root URL: ``http://localhost:7777/geonetwork`` (this is the GN root URL)
+    2.  Valid Redirect URIs: ``http://localhost:7777/geonetwork/*``
     3.  Access Type: Confidential
     4.  On the `ls` tab, get the secret (this is your Client Secret)
     5.  On the `es` tab, create some roles: Administrator, Editor, Reviewer, RegisteredGuest
@@ -716,7 +718,7 @@ OPENIDCONNECT_IDTOKENROLELOCATION='roles'
     You don't typically have to do any role conversion since the role name will be used in the ID Token.
 
 
-### OIDC Bearer Tokens {#OIDC Bearer Tokens}
+### OIDC Bearer Tokens {#oidc_bearer_tokens}
 
 Bearer Tokens are also supported - you can attach the JWT Bearer token to any request by setting the HTTP header like this:
 
@@ -727,9 +729,9 @@ Authorization: Bearer:  <JWT token>
 Bearer Tokens are mostly used for automated (desktop or application) API calls - real users should just login normally using OIDC.
 
 1.  Setup your OIDC configuration (see [authentication-openid](authentication-openid.md))
-2.  Setup the OIDC Bearer token configuration (see [Bearer Token Configuration](Bearer Token Configuration.md))
+2.  Setup the OIDC Bearer token configuration (see [bearer_token_configuration](bearer_token_configuration.md))
 3.  Obtain a Bearer token from the OIDC server. This is the hard part and there are several ways to do this. One way that is used is via the OAuth 2.0 Device Authorization Grant ("Device Flow") workflow.
-4.  Attach it to your request headers (see [OIDC Bearer Tokens](OIDC Bearer Tokens.md))
+4.  Attach it to your request headers (see [oidc_bearer_tokens](oidc_bearer_tokens.md))
 5.  Make protected requests to the Geonetwork API
 
 This has been tested with Keycloak and with Azure AD. It should work with other JWT-based OIDC services.
@@ -739,10 +741,10 @@ This has been tested with Keycloak and with Azure AD. It should work with other 
 The token is validated in three major ways:
 
 1.  The bearer token will be used to access the `fo` ("token validation") endpoint specified in the OIDC configuration. This means the IDP validates the token (at the very least its signature and expiry).
-2.  The bearer token (JWT) will be checked that the audience for it is the same as our configurated OIDC configuration. This will ensure that someone isn't getting a token from a different service and attempting to use it here. See [AudienceAccessTokenValidator.java]{.title-ref}
-3.  The bearer token (JWT) will be checked that the subject of the JWT and the `fo` (returned from the IDP) are the same. This shouldnt be a problem in our use-case, but the OAUTH2 specification recommends this check. See [SubjectAccessTokenValidator.java]{.title-ref}
+2.  The bearer token (JWT) will be checked that the audience for it is the same as our configurated OIDC configuration. This will ensure that someone isn't getting a token from a different service and attempting to use it here. See ``AudienceAccessTokenValidator.java``
+3.  The bearer token (JWT) will be checked that the subject of the JWT and the `fo` (returned from the IDP) are the same. This shouldnt be a problem in our use-case, but the OAUTH2 specification recommends this check. See ``SubjectAccessTokenValidator.java``
 
-#### Configuration {#Bearer Token Configuration}
+#### Configuration {#bearer_token_configuration}
 
 Configure OIDC as above - ensure this is working.
 
@@ -753,7 +755,7 @@ Inside `WEB-INF/config-security/config-security-openidconnectbearer.xml`:
 1.  If you are using keycloak (configured with Groups in the `fo` response), then uncomment the `er` bean and comment out the `er` bean.
 2.  If you are using Azure AD (MS Graph API for the user's groups), then then uncomment the `er` bean and comment out the `er` bean.
 
-The easiest way to test is to obtain a Bearer Token, and then use a browser plugin to add the [Authorization: Bearer <token>]{.title-ref} header to all requests. When you visit the Geonetwork website, you should see yourself logged in with the appropriate permissions.
+The easiest way to test is to obtain a Bearer Token, and then use a browser plugin to add the ``Authorization: Bearer <token>`` header to all requests. When you visit the Geonetwork website, you should see yourself logged in with the appropriate permissions.
 
 #### Other Providers
 
@@ -773,18 +775,18 @@ Install keycloak from its instructions or use this example setup in docker <http
 Keycloak details are defined via environment variables
 
 ``` text
-> KEYCLOAK_AUTH_SERVER_URL={keycloak url}
-> KEYCLOAK_REALM={realm name}
-> KEYCLOAK_RESOURCE={client name}
-> KEYCLOAK_SECRET={client secret}
-> KEYCLOAK_DISABLE_TRUST_MANAGER={true|false}
+KEYCLOAK_AUTH_SERVER_URL={keycloak url}
+KEYCLOAK_REALM={realm name}
+KEYCLOAK_RESOURCE={client name}
+KEYCLOAK_SECRET={client secret}
+KEYCLOAK_DISABLE_TRUST_MANAGER={true|false}
 ```
 
-You can setup more advance keycloak settings by editing the file `WEB-INF/config-security/keycloak.json`{.interpreted-text role="file"}
+You can setup more advance keycloak settings by editing the file **`WEB-INF/config-security/keycloak.json`**
 
 ### Geonetwork client URL configuration
 
-Ensure that when you configure your client that you setup the valid redirect uris to your geonetwork installation. i.e. [https://localhost:8443/geonetwork/\](https://localhost:8443/geonetwork/\)\*. If this is not setup correctly you may get and error indicating that a wrong redirect uri was supplied. Also if wanting to test the client backchannel logout then ensure that the admin URL is also set to the geonetwork installation.
+Ensure that when you configure your client that you setup the valid redirect uris to your geonetwork installation. i.e. `https://localhost:8443/geonetwork/*`. If this is not setup correctly you may get and error indicating that a wrong redirect uri was supplied. Also if wanting to test the client backchannel logout then ensure that the admin URL is also set to the geonetwork installation.
 
 ### Sample user/role/group setup
 
@@ -828,9 +830,9 @@ To enable EU Login, set up authentication by including `WEB-INF/config-security/
 
 EU-login requires an ecas-plugin provided by the European Union. The ecas plugin is available via [CITnet](https://citnet.tech.ec.europa.eu/CITnet/nexus) for various java containers, such as Tomcat and JBoss.
 
-For tomcat, add two files to the tomcat lib folder: ecas-tomcat-x.y.z.jar and log4j-x.y.z.jar. Inside the lib folder copy two folders from \`eulogin-tomcat-x.y.z-config.zip\`: [org/apache/catalina/authenticator]{.title-ref} and [org/apache/catalina/startup]{.title-ref}. The mbeans folder contains a file [mbeans-descriptors.xml]{.title-ref}. The startup folder contains a file [Authenticators.properties]{.title-ref}. Verify that the JDK trusts the [ECAS certificates](https://webgate.ec.europa.eu/CITnet/confluence/display/IAM/Downloads-Certificates) else import them on the keystore of the JVM.
+For tomcat, add two files to the tomcat lib folder: ecas-tomcat-x.y.z.jar and log4j-x.y.z.jar. Inside the lib folder copy two folders from **`eulogin-tomcat-x.y.z-config.zip`**: **`org/apache/catalina/authenticator`** and **`org/apache/catalina/startup`**. The mbeans folder contains a file **`mbeans-descriptors.xml`**. The startup folder contains a file **`Authenticators.properties`**. Verify that the JDK trusts the [ECAS certificates](https://webgate.ec.europa.eu/CITnet/confluence/display/IAM/Downloads-Certificates) else import them on the keystore of the JVM.
 
-The EU Login configuration is defined in `WEB-INF/config-security/config-security.properties`. You can configure your environment by updating the previous file or by defining property overrides in the file `WEB-INF/config-security/config-security-overrides.properties`:
+The EU Login configuration is defined in **`WEB-INF/config-security/config-security.properties`**. You can configure your environment by updating the previous file or by defining property overrides in the file **`WEB-INF/config-security/config-security-overrides.properties`**:
 
 ``` text
 cas.baseURL=https://webgate.ec.europa.eu/cas

@@ -21,7 +21,9 @@ A detailed description of what constitutes a metadata schema for GeoNetwork can 
 To add a metadata schema to the catalog, a rebuild of the sources is required. In a source-code tree there are 4 actions to be done in the settings (database).
 
 -   Place the schema-folder in /schemas
+
 -   Verify and if compatible update the version of GeoNetwork (parent) referenced from the pom.xml file in the schema plugin.
+
 -   Add a reference in /schemas/pom.xml to the newly added schema
 
     ``` xml

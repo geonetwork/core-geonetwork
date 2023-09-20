@@ -44,14 +44,14 @@ The DataCite format requires some mandatory fields:
 
 The mapping with ISO standards is the following:
 
-| Property          | ISO 19139                                                                                                   | ISO 19115-3
-| ----------------- | ----------------------------------------------------------------------------------------------------------- | -----------------------------------------------------------------------------------------------------------
-| Identifier        | gmd:MD_Metadata/gmd:fileIdentifier/*/text()                                                                 | mdb:MD_Metadata/mdb:metadataIdentifier/*/mcc:code/*/text()
-| Creator           | gmd:identificationInfo/*/gmd:pointOfContact with role 'pointOfContact' or 'custodian'                       | mdb:identificationInfo/*/mri:pointOfContact with role 'pointOfContact' or 'custodian'
-| Title             | gmd:identificationInfo/*/gmd:citation/*/gmd:title                                                           | mdb:identificationInfo/*/mri:citation/*/cit:title
-| Publisher         | gmd:distributorContact[1]/*/gmd:organisationName/gco:CharacterString                                        | mrd:distributorContact[1]/*/cit:party/*/cit:organisationName/gco:CharacterString
-| PublicationYear   | gmd:identificationInfo/*/gmd:citation/*/gmd:date/*[gmd:dateType/*/@codeListValue = 'publication']           | mdb:identificationInfo/*/mri:citation/*/cit:date/*[cit:dateType/*/@codeListValue = 'publication']
-| ResourceType      | gmd:hierarchyLevel/*/@codeListValue                                                                         | mdb:metadataScope/*/mdb:resourceScope/*/@codeListValue
+| Property        | ISO 19139                                                                                                             | ISO 19115-3                                                                                                           |
+|-----------------|-----------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------|
+| Identifier      | ``gmd:MD_Metadata/gmd:fileIdentifier/*/text()``                                                            | ``mdb:MD_Metadata/mdb:metadataIdentifier/*/mcc:code/*/text()``                                            |
+| Creator         | ``gmd:identificationInfo/*/gmd:pointOfContact`` with role 'pointOfContact' or 'custodian'              | ``mdb:identificationInfo/*/mri:pointOfContact`` with role 'pointOfContact' or 'custodian'              |
+| Title           | ``gmd:identificationInfo/*/gmd:citation/*/gmd:title``                                                     | ``mdb:identificationInfo/*/mri:citation/*/cit:title``                                                     |
+| Publisher       | ``gmd:distributorContact[1]/*/gmd:organisationName/gco:CharacterString``                                 | ``mrd:distributorContact[1]/*/cit:party/*/cit:organisationName/gco:CharacterString``                    |
+| PublicationYear | ``gmd:identificationInfo/*/gmd:citation/*/gmd:date/*[gmd:dateType/*/@codeListValue = 'publication'`` | ``mdb:identificationInfo/*/mri:citation/*/cit:date/*[cit:dateType/*/@codeListValue = 'publication'`` |
+| ResourceType    | ``gmd:hierarchyLevel/*/@codeListValue`` `                                                                 | mdb:metadataScope/*/mdb:resourceScope/*/@codeListValue`                                                              |
 
 The mapping can be customized in:
 

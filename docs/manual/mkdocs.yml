@@ -76,8 +76,8 @@ plugins:
             Map: Map
   - exclude:
       glob:
-        - 'overview/change-log/version*'
         - annexes/gallery/README.md
+        - 'overview/change-log/version*'
   - include-markdown
 
 # Customizations
@@ -119,8 +119,7 @@ markdown_extensions:
 
 # Page tree
 nav:
-  - 'Home':
-    - index.md
+  - index.md
   - 'Overview':
     - overview/index.md
     - overview/about.md
@@ -290,7 +289,7 @@ nav:
     - customizing-application/implementing-a-schema-plugin.md
     - customizing-application/misc.md
   - 'Tutorials':
-#    - tutorials/index.md
+    - tutorials/index.md
     - 'Introduction':
        - tutorials/introduction/index.md
        - 'Overview':

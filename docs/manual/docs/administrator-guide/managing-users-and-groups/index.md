@@ -5,7 +5,7 @@
 -   [User Self Registration](user-self-registration.md)
 -   [Authentication Mode](authentication-mode.md)
 
-## Default user
+## Default user {#user-defaults}
 
 Upon installation a default user with name `admin` and password `admin` is created. It is recommended to log in with these credentials directly after the installation has completed and to change the default password.
 

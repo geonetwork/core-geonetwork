@@ -1,10 +1,10 @@
 # Customizing guide
 
--   [Search UI Index](search-ui/index.md)
+-   [Search Ui](search-ui/index.md)
 -   [Creating Custom View](creating-custom-view.md)
--   [Editor UI Creating Custom Editor](editor-ui/creating-custom-editor.md)
--   [Editor UI Custom Editor Examples](editor-ui/custom-editor-examples.md)
--   [Editor UI Tutorial](editor-ui/tutorial.md)
+-   [Editor Ui Creating Custom Editor](editor-ui/creating-custom-editor.md)
+-   [Editor Ui Custom Editor Examples](editor-ui/custom-editor-examples.md)
+-   [Editor Ui Tutorial](editor-ui/tutorial.md)
 -   [Changing Layout](changing-layout.md)
 -   [Configuring Search Fields](configuring-search-fields.md)
 -   [Configuring Faceted Search](configuring-faceted-search.md)

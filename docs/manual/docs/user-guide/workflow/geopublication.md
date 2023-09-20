@@ -9,15 +9,15 @@ This topic describes how to publish GIS data in a map server.
 
 To publish data from the metadata editor in a remote map server:
 
--   When a spatial resource is detected and one or more map servers are configured, the geopublication wizard is available in the metadata editor.
+1.  When a spatial resource is detected and one or more map servers are configured, the geopublication wizard is available in the metadata editor.
 
     ![](img/geopublication-wizard.png)
 
--   Choose a resource from the list to display the wizard. The wizard display the list of map servers available:
+2.  Choose a resource from the list to display the wizard. The wizard display the list of map servers available:
 
     ![](img/geopublication-wizard-serverlist.png)
 
--   Choose the server you want to publish the data in. When selected, the catalog will check if the dataset is already published.
+3.  Choose the server you want to publish the data in. When selected, the catalog will check if the dataset is already published.
 
     If found, it is added to the map.
 
@@ -27,7 +27,7 @@ To publish data from the metadata editor in a remote map server:
 
     ![](img/geopublication-wizard-notavailable.png)
 
--   From the menu, control the publication process:
+4.  From the menu, control the publication process:
 
     ![](img/geopublication-wizard-menu.png)
 

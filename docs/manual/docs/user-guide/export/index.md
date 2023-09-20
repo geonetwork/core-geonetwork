@@ -19,9 +19,10 @@ When a selected set of metadata records is exported as a CSV/TXT file, the follo
 
 An example of an ISO metadata record in CSV format is shown as follows:
 
-    "schema","uuid","id","title","metadatacreationdate","geoBox"
-
-    "iso19115-3.2018","27b5f8b8-053a-11ea-aa46-02000a08f492","1312","S2A_MSIL1C_20161218T102432_N0204_R065_T32TMS_20161218T102606","2019-11-12T10:49:52,"7.691141905380134###9.128266945124432###45.958258688896564###46.95363733424615"
+``` csv
+"schema","uuid","id","title","metadatacreationdate","geoBox"
+"iso19115-3.2018","27b5f8b8-053a-11ea-aa46-02000a08f492","1312","S2A_MSIL1C_20161218T102432_N0204_R065_T32TMS_20161218T102606","2019-11-12T10:49:52,"7.691141905380134###9.128266945124432###45.958258688896564###46.95363733424615"
+```
 
 It is possible to override the brief summary of metadata elements by creating a special template in the presentation XSLT of the metadata schema. As an example of how to do this, we will override the brief summary for the iso19115-3.2018 schema and replace it with other possible useful information.
 
@@ -32,7 +33,9 @@ In the case of iso19115-3.2018 there are the two files to be modified:
 
 For example, to export the following elements:
 
-`"uuid","title","cloud_coverage_percentage","category","date-creation"`
+``` csv
+"uuid","title","cloud_coverage_percentage","category","date-creation"
+```
 
 in the first file, it is necessary to proceed as in the following:
 
@@ -80,7 +83,9 @@ because it is used to sort results by schema.
 
 About the second file, *csv-search.xsl*, to avoid printing automatically the 3 columns:
 
-`"schema","uuid","id",`
+``` csv
+"schema","uuid","id",
+```
 
 you have to comment the following lines:
 
@@ -96,14 +101,14 @@ you have to comment the following lines:
 and
 
 ``` xml
-<xsl:value-of select="concat('&quot;', $metadata/geonet:info/schema, '&quot;', $sep, 
-'&quot;', $metadata/geonet:info/uuid, '&quot;', $sep, 
+<xsl:value-of select="concat('&quot;', $metadata/geonet:info/schema, '&quot;', $sep,
+'&quot;', $metadata/geonet:info/uuid, '&quot;', $sep,
 '&quot;', $metadata/geonet:info/id, '&quot;', $sep)"/>
 ```
 
 These changes will create the desired output:
 
-``` xml
-"uuid","title","cloud_coverage_percentage","category","date-creation"  
+``` csv
+"uuid","title","cloud_coverage_percentage","category","date-creation"
 "c94da70e-066e-11ea-aa22-02000a08f492","S2A_MSIL1C_20180320T101021_N0206_R022_T33TUM_20180320T122057","36.0368","dataset","2018-03-20T12:20:57",
 ```

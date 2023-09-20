@@ -19,6 +19,8 @@ The following sources can be harvested:
 -   [Harvesting Wfs Features](harvesting-wfs-features.md)
 -   [Harvesting Z3950](harvesting-z3950.md)
 
+## Mechanism overview
+
 The harvesting mechanism relies on the concept of a `universally unique identifier (UUID)`. This is a special id because it is not only unique locally to the node that generated it but it is globally unique. It is a combination of :
 
 -   the network interface MAC address,
@@ -89,38 +91,42 @@ Harvesting between GeoNetwork nodes may require the HTTPS protocol. If harvestin
 
 If you don't have a trusted certificate in the JVM keystore being used by GeoNetwork, the harvester may issue an exception like this when you try to harvest from the https GeoNetwork:
 
-    javax.net.ssl.SSLHandshakeException: 
-       sun.security.validator.ValidatorException: PKIX path building failed: 
-       sun.security.provider.certpath.SunCertPathBuilderException: 
-       unable to find valid certification path to requested target
+``` text
+javax.net.ssl.SSLHandshakeException:
+   sun.security.validator.ValidatorException: PKIX path building failed:
+   sun.security.provider.certpath.SunCertPathBuilderException:
+   unable to find valid certification path to requested target
 
-    Caused by: sun.security.validator.ValidatorException: 
-       PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: 
-       unable to find valid certification path to requested target
+Caused by: sun.security.validator.ValidatorException:
+   PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException:
+   unable to find valid certification path to requested target
 
-    Caused by: sun.security.provider.certpath.SunCertPathBuilderException: 
-       unable to find valid certification path to requested target
+Caused by: sun.security.provider.certpath.SunCertPathBuilderException:
+   unable to find valid certification path to requested target
+```
 
 The server certificate for the GeoNetwork server being harvested needs to be added to the JVM keystore with [keytool](http://docs.oracle.com/javase/6/docs/technotes/tools/solaris/keytool.html) in order to be trusted.
 
 An alternative way to add the certificate is to use a script like:
 
-    ## JAVA SSL Certificate import script
-    ## Based on original MacOs script by LouiSe@louise.hu : http://louise.hu
-    ##
-    ## Usage: ./ssl_key_import.sh <sitename> <port>
-    ##
-    ## Example: ./ssl_key_import.sh mail.google.com 443 (to read certificate from https://mail.google.com)
+``` bash
+## JAVA SSL Certificate import script
+## Based on original MacOs script by LouiSe@louise.hu : http://louise.hu
+##
+## Usage: ./ssl_key_import.sh <sitename> <port>
+##
+## Example: ./ssl_key_import.sh mail.google.com 443 (to read certificate from https://mail.google.com)
 
-    ## Compile and start 
-    javac InstallCert.java
-    java InstallCert $1:$2
+## Compile and start
+javac InstallCert.java
+java InstallCert $1:$2
 
-    ## Copy new cert into local JAVA keystore
-    echo "Please, enter administrator password:"
-    sudo cp jssecacerts $JAVA_HOME/jre/lib/security/jssecacerts
-    # Comment previous line and uncomment next one for MacOs
-    #sudo cp jssecacerts /Library/Java/Home/lib/security/
+## Copy new cert into local JAVA keystore
+echo "Please, enter administrator password:"
+sudo cp jssecacerts $JAVA_HOME/jre/lib/security/jssecacerts
+# Comment previous line and uncomment next one for MacOs
+#sudo cp jssecacerts /Library/Java/Home/lib/security/
+```
 
 To use the script, the Java compiler must be installed and the file [InstallCert.java](http://code.google.com/p/java-use-examples/source/browse/trunk/src/com/aw/ad/util/InstallCert.java), must be downloaded and placed in the same directory as the script.
 
@@ -142,7 +148,6 @@ The page shows a list of the currently defined harvesters and a set of buttons f
 6.  *Run at* and *Every*: Scheduling of harvester runs. Essentially the time of the day + how many hours between repeats and on which days the harvester will run.
 7.  *Last run* The date, in ISO 8601 format, of the most recent harvesting run.
 8.  *Operation* A list of buttons/links to operations on a harvester.
-
     -   Selecting *Edit* will allow you to change the parameters for a harvester.
     -   Selecting *Clone* will allow you to create a clone of this harvester and start editing the details of the clone.
     -   Selecting *History* will allow you to view/change the harvesting history for a harvester - see [harvest_history](harvest_history.md).

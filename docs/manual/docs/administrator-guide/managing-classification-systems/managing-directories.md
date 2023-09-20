@@ -151,7 +151,7 @@ Subtemplate indexing is based on the schema (see index-fields folder for details
 In ISO19115-3
 
 -   cit:CI_Responsibility
--   \*[mdq:result]
+-   *[mdq:result]
 -   gex:EX_Extent
 
 Other configuration examples to collect:

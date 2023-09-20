@@ -204,4 +204,4 @@ Notice that a URL pointing to the source thesaurus is included in the Thesaurus 
 
 ## Search criteria: keywords
 
-You can search on keywords using the facet panel. All keywords are stored in the index field `` `tag ``[ and are also available in field depending on thesaurus name eg. ]{.title-ref}`th_theme`\` for INSPIRE themes. The field name is based on the thesaurus type and filename.
+You can search on keywords using the facet panel. All keywords are stored in the index field `tag` and are also available in field depending on thesaurus name eg. `th_theme` for INSPIRE themes. The field name is based on the thesaurus type and filename.

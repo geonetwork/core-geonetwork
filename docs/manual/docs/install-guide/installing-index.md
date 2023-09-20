@@ -1,6 +1,6 @@
 # Installing search platform {#installing-index}
 
-The GeoNetwork search engine is built on top of Elasticsearch. The platform is used to index record and also to analyze WFS data (See [analyzing_data](analyzing_data.md)), an ``Elasticsearch <https://www.elastic.co/products/elasticsearch>`` instance must be installed next to the catalog.
+The GeoNetwork search engine is built on top of Elasticsearch. The platform is used to index records and also to analyze WFS data (See [analyzing_data](analyzing_data.md) ), an [Elasticsearch](https://www.elastic.co/products/elasticsearch) instance must be installed next to the catalog.
 
 ## Manual installation
 
@@ -69,3 +69,6 @@ es.host=localhost
 es.url=${es.protocol}://${es.host}:${es.port}
 es.username=
 es.password=
+```
+
+It is not needed nor recommended to open port 9200 to the outside. GeoNetwork is protecting the Elasticsearch instance exposing only the search API and taking care of user privileges.

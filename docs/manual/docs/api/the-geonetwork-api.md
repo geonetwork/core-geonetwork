@@ -2,7 +2,7 @@
 
 The REST API and documentation are available in your catalog at page <http://localhost:8080/geonetwork/doc/api/> and linked from the footer on the home page.
 
-In version 4, the API description is using OpenAPI specification. Old path to the API including the version [/srv/api/0.1/\...]{.title-ref} is replaced by [/srv/api/\...]{.title-ref}. The version of the API correspond to the version of the GeoNetwork instance.
+In version 4, the API description is using OpenAPI specification. Old path to the API including the version ``/srv/api/0.1/\...`` is replaced by ``/srv/api/\...``. The version of the API correspond to the version of the GeoNetwork instance.
 
 ## Using the API to apply an XSL process
 
@@ -76,7 +76,7 @@ curl "$SERVER/srv/api/search/records/_search" \
     -X 'POST' \
     -H 'Accept: application/json, text/plain, */*' \
     -H 'Content-Type: application/json;charset=UTF-8' \
-    --data-raw "{"query":{"query_string":{"query": "+isHarvested:false +resourceType: $type"}},"from":$from, "size":$size, "_source": {"include": ["resourceTitleObject.default"]}, "sort": [{"resourceTitleObject.default.keyword": "asc"}]}" \
+    --data-raw "{\"query\":{\"query_string\":{\"query\": \"+isHarvested:false +resourceType: $type\"}},\"from\":$from, \"size\":$size, \"_source\": {\"include\": [\"resourceTitleObject.default\"]}, \"sort\": [{\"resourceTitleObject.default.keyword\": \"asc\"}]}" \
     -H "X-XSRF-TOKEN: $TOKEN" -H "Cookie: XSRF-TOKEN=$TOKEN; JSESSIONID=$JSESSIONID" \
     --compressed \
     -o results.json
@@ -120,14 +120,14 @@ for hit in $(jq -r '.hits.hits[] | @base64' results.json); do
     -H 'Content-Type: application/json;charset=UTF-8' \
     -H "X-XSRF-TOKEN: $TOKEN" \
     -H "Cookie: XSRF-TOKEN=$TOKEN; JSESSIONID=$JSESSIONID" \
-    --data-raw "[{"xpath":"/gmd:identificationInfo/*/gmd:citation/*/gmd:identifier[position() > 2]","value":"<gn_delete/>"}]" \
+    --data-raw "[{\"xpath\":\"/gmd:identificationInfo/*/gmd:citation/*/gmd:identifier[position() > 2]\",\"value\":\"<gn_delete/>\"}]" \
     --compressed
 done;
 ```
 
 ## Using the search API in Google sheet
 
-In Extensions \> App script create a new function. Here we create a function which run a search and return a list of matching UUIDs:
+In Extensions > App script create a new function. Here we create a function which run a search and return a list of matching UUIDs:
 
 ![](img/googlesheets-script.png)
 
@@ -136,7 +136,7 @@ function getUuidForSearch(query) {
   var options = {
     'method' : 'post',
     'contentType': 'application/json',
-    'payload' : "{"query":{"query_string":{"query":"" + query + ""}}}"
+    'payload' : "{\"query\":{\"query_string\":{\"query\":\"" + query + "\"}}}"
   };
   var response = UrlFetchApp.fetch('http://localhost:8080/catalogue/srv/api/search/records/_search', options);
   var hits = JSON.parse(response).hits;

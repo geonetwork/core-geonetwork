@@ -14,31 +14,32 @@ This harvester connects to a remote server via a simple URL to retrieve metadata
     -   *pageFromParam* : Property indicating the first record item on the current "page" eg. `start`
     -   *pageSizeParam* : Property indicating the number of records containned in the current "page" eg. `rows`
     -   *toISOConversion* : Name of the conversion schema to use, which must be available as XSL on the GN instance. eg. `OPENDATASOFT-to-ISO19115-3-2018`
-    
-    !!! Note
+
+    !!! note
 
         GN looks for schemas by name in <https://github.com/geonetwork/core-geonetwork/tree/4.0.x/web/src/main/webapp/xsl/conversion/import>. These schemas might internally include schemas from other locations like <https://github.com/geonetwork/core-geonetwork/tree/4.0.x/schemas/iso19115-3.2018/src/main/plugin/iso19115-3.2018/convert>. To indicate the `fromJsonOpenDataSoft` schema for example, from the latter location directly in the admin UI the following syntax can be used: `schema:iso19115-3.2018:convert/fromJsonOpenDataSoft`.
-    
+
+
     **Sample configuration for opendatasoft**
-    
+
     -   *loopElement* - `/datasets`
     -   *numberOfRecordPath* : `/nhits`
     -   *recordIdPath* : `datasetid`
     -   *pageFromParam* : `start`
     -   *pageSizeParam* : `rows`
     -   *toISOConversion* : `OPENDATASOFT-to-ISO19115-3-2018`
-    
+
     **Sample configuration for ESRI**
-    
+
     -   *loopElement* - `/dataset`
     -   *numberOfRecordPath* : `/result/count`
     -   *recordIdPath* : `landingPage`
     -   *pageFromParam* : `start`
     -   *pageSizeParam* : `rows`
     -   *toISOConversion* : `ESRIDCAT-to-ISO19115-3-2018`
-    
+
     **Sample configuration for DKAN**
-    
+
     -   *loopElement* - `/result/0`
     -   *numberOfRecordPath* : `/result/count`
     -   *recordIdPath* : `id`

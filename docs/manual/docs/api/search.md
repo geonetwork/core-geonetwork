@@ -2,23 +2,27 @@
 
 ## OpenAPI Search
 
-!!! note "GeoNetwork 4"
+!!! note
 
-In GeoNetwork 4 the main search service is the ``/srv/api/search/records/_search`` endpoint.
+    GeoNetwork 4
 
-Reference:
 
-* [Search API](https://www.elastic.co/guide/en/elasticsearch/reference/current/search-search.html) (Elasticsearch)
+The Q Search endpoint is replaced by the ``/srv/api/search/records/_search`` endpoint.
+
+Parameter Reference:
+
+-   [Serach API](https://www.elastic.co/guide/en/elasticsearch/reference/current/search-search.html) (Elasticsearch)
 
 ## Q Search
 
-!!! note "GeoNetwork 3"
+!!! note
 
-The Q Search endpoint allows you to query the catalog programmatically. It is available in the local catalog at <http://localhost:8080/geonetwork/srv/eng/q> (otherwise substitute your catalog URL).
+    GeoNetwork 4
 
-This is based on the [Apache Lucene](https://lucene.apache.org/) engine.
 
-## Query results parameters
+The Q Search endpoint allows you to query the catalog programmatically. It is available in the local catalog at `http://localhost:8080/geonetwork/srv/eng/q` (otherwise substitute your catalog URL).
+
+### Query results parameters
 
 The following parameters can be appended to your request to format the results:
 
@@ -51,7 +55,7 @@ The following parameters can be appended to your request to format the results:
 -   `extraDumpFields`: a comma-separated list of additional fields that you wish to return alongside the fields returned according to the resultType you have chosen. The wildcard character `*` can be used to match multiple fields. For example `extraDumpFields=mycustomfield*` would match mycustomfield1 and mycustomfield2.
 -   Other values in the summaries section are allowed
 
-## Query filter parameters
+### Query filter parameters
 
 You can search on any field(s) indexed in Lucene. For a complete reference see <https://github.com/geonetwork/core-geonetwork/blob/master/schemas/iso19139/src/main/plugin/iso19139/index-fields/default.xsl>
 
@@ -82,7 +86,7 @@ An OR query of several fields can be executed using the format: `field1_OR_field
 
 Additionally an OR query of several values for a single field can be executed, if the Lucene configuration for that field allows it, with the following format: `field=value1 or value2 or ...` For example `topicCat=biota or farming`, returns the metadata where the topic category is either biota OR farming. If the query was executed as `topicCat=biota&topicCat=farming` then only the metadata with BOTH topic categories would be returned.
 
-## Date Searches
+### Date Searches
 
 There are a number of ways that you can search by date. Date searches should be of the form YYYY-MM-DD
 
@@ -90,7 +94,7 @@ There are a number of ways that you can search by date. Date searches should be 
 -   creationDateFrom/To: uses the creation date.
 -   revisionDateFrom/To: uses the revision date.
 
-## Query examples
+### Query examples
 
 Query with any field for metadata containing the string 'infrastructure', returning json, using the fast index to return results, and returning the fields configured in `config-summary.xml`:
 

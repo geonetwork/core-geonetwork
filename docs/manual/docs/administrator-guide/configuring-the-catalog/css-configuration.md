@@ -1,6 +1,6 @@
 # Configuring CSS & Style {#css-configuration}
 
-To get to the CSS & Style configuration, you must be logged on as administrator. Open 'Settings' from the Administration page and select [CCS & Style]{.title-ref} configuration.
+To get to the CSS & Style configuration, you must be logged on as administrator. Open 'Settings' from the Administration page and select ``CCS & Style`` configuration.
 
 ![](img/css-screen.png)
 

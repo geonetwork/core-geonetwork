@@ -63,7 +63,7 @@ To setup this kind of configuration, the basic principle is to have:
 
 To configure this, apply the following steps:
 
--   Create a group for the partner eg. [oca` (see `creating-group](oca` (see `creating-group.md)).
+-   Create a group for the partner eg. `oca` (see [creating-group](creating-group.md)).
 -   Create at least one user for the partner (see [creating-user](creating-user.md)). The user must be member of the group `oca`. If you want the user to be able to configure the sub-portal (eg. change the name, choose a logo), the user must have at least the `UserAdmin` profile for the group `oca`.
 -   Create a sub-portal. This can have the same name as the group, eg. `oca` but this is not essential. The filter can be created using the fact that a record published in the group `oca` should be in this sub-portal, using the syntax `+_groupPublished:oca`. Once created the sub-portal is accessible at <http://localhost:8080/geonetwork/oca>.
 -   (Optional) Link the sub-portal to a user admin group to allow `UserAdmin` to configure their sub-portal.

@@ -69,9 +69,9 @@ This action is called when status is changed by a user. What happens depends on 
     To: "reviewer@localgeonetwork.org.au" <Reviewer@localgeonetwork.org.au>
     Reply-to: User One <userone@localgeonetwork.org.au.au>
     Message-id: <1968852534.01323741538713.JavaMail.geonetwork@localgeonetwork.org.au>
-    
+
     These records are complete. Please review.
-    
+
     Records are available from the following URL:
     http://localgeonetwork.org.au/geonetwork/srv/en/main.search?_status=4&_statusChangeDate=2011-12-13T12:58:58
     ```
@@ -85,9 +85,9 @@ This action is called when status is changed by a user. What happens depends on 
     To: "User One" <userone@localgeonetwork.org.au>
     Message-ID: <1064170697.31323826081004.JavaMail.geonetwork@localgeonetwork.org.au>
     Reply-To: Reviewer <reviewer@localgeonetwork.org.au>
-    
+
     Records approved - please resubmit for approval when online resources attached
-    
+
     Records are available from the following URL:
     http://localgeonetwork.org.au/geonetwork/srv/en/main.search?_status=2&_statusChangeDate=2011-12-14T12:28:00
     ```
