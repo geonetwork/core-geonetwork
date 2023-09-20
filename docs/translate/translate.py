@@ -323,6 +323,15 @@ def _preprocess_rst_doc(text: str) -> str:
    Preprocess rst content replacing doc references with links.
    """
    # doc links processed in order from most to least complicated
+
+   # :doc:`normal <../folder/index.rst>`
+   text = re.sub(
+       r":doc:`(.*) <((\.\./)*(.*)/index)\.rst>`",
+       r"`\1 <\4>`_",
+       text,
+       flags=re.MULTILINE
+   )
+
    # :doc:`normal <link.rst>`
    text = re.sub(
        r":doc:`(.*) <(.*).rst>`",
@@ -330,11 +339,12 @@ def _preprocess_rst_doc(text: str) -> str:
        text,
        flags=re.MULTILINE
    )
+
    # :doc:`../folder/index.rst`
    # `folder <index.md>`_
    text = re.sub(
        r":doc:`((\.\./)*(.*)/index)\.rst`",
-       r"`\3 <\1/index.md>`_",
+       r"`\3 <\1/>`_",
        text,
        flags=re.MULTILINE
    )
