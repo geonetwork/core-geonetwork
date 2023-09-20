@@ -1,3 +1,8 @@
+---
+hide:
+  - navigation
+  - toc
+---
 # Version 4.0.6 {#version-406}
 
 This new release of GeoNetwork contains a *lot* of improvements and fixes made during the past 8 months that should make it much more easy to use and customizable. This version also benefited from most of the fixes and improvements made for the GeoNetwork 3.10 and 12 versions during the past months.

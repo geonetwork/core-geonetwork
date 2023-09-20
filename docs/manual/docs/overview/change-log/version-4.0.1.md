@@ -1,3 +1,9 @@
+---
+hide:
+  - navigation
+  - toc
+---
+
 # Version 4.0.1 {#version-401}
 
 GeoNetwork 4.0.1 release is a minor release aligned with GeoNetwork 3.10.5 (see [version-3105](version-3105.md)) with some changes:

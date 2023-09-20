@@ -1,3 +1,8 @@
+---
+hide:
+  - navigation
+  - toc
+---
 # Version 4.0.2 {#version-402}
 
 GeoNetwork 4.0.2 release is a minor release but adds a better multilingual support which may require some changes in your installations:

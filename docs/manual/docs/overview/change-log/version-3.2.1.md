@@ -1,3 +1,8 @@
+---
+hide:
+  - navigation
+  - toc
+---
 # Version 3.2.1 {#version-321}
 
 This is a maintenance release with [lots of bug fixed](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+is%3Aclosed+milestone%3A3.2.1) and some new features:

@@ -1,3 +1,8 @@
+---
+hide:
+  - navigation
+  - toc
+---
 # Version 4.0.0-alpha.2 {#version-400-alpha2}
 
 -   [Home page categories can now be configured from admin console](https://github.com/geonetwork/core-geonetwork/pull/4933)

@@ -1,3 +1,8 @@
+---
+hide:
+  - navigation
+  - toc
+---
 # Version 4.2.0 {#version-420}
 
 GeoNetwork 4.2.0 release is a major release.

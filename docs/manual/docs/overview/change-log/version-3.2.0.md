@@ -1,3 +1,8 @@
+---
+hide:
+  - navigation
+  - toc
+---
 # Version 3.2.0 {#version-320}
 
 ## New requirements

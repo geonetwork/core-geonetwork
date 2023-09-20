@@ -1,3 +1,8 @@
+---
+hide:
+  - navigation
+  - toc
+---
 # Version 4.0.0 {#version-400}
 
 GeoNetwork 4.0.0 release is the first version of GeoNetwork using Elasticsearch as search engine!

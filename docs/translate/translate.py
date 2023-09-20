@@ -123,7 +123,7 @@ def index_rst(base_path: str, rst_file: str) -> str:
     for i in range(2,len(lines)):
         line = lines[i]
         length = len(line)
-        print("scan:",line)
+#        print("scan:",line)
 
         if length == 0:
             continue
@@ -155,6 +155,7 @@ def index_rst(base_path: str, rst_file: str) -> str:
         else:
             # scan for next reference
             continue
+
     return index
 
 # administrator-guide/managing-metadata-standards/configure-validation.md

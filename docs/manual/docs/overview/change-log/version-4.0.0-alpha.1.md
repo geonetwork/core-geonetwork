@@ -1,3 +1,8 @@
+---
+hide:
+  - navigation
+  - toc
+---
 # Version 4.0.0-alpha.1 {#version-400-alpha1}
 
 ## Why 4.0.0-alpha.1?

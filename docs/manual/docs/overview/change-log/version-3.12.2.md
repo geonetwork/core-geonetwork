@@ -1,3 +1,8 @@
+---
+hide:
+  - navigation
+  - toc
+---
 # Version 3.12.2 {#version-3122}
 
 ## New features/fixes

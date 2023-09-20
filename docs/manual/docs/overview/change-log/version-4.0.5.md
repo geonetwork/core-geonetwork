@@ -1,3 +1,8 @@
+---
+hide:
+  - navigation
+  - toc
+---
 # Version 4.0.5 {#version-405}
 
 GeoNetwork 4.0.5 release is a minor release with some changes:

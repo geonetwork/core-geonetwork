@@ -1,3 +1,8 @@
+---
+hide:
+  - navigation
+  - toc
+---
 # Version 3.6.0 {#version-360}
 
 ## New features/fixes
