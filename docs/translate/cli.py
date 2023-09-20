@@ -55,16 +55,16 @@ def french(
 
 @app.command()
 def index(
-        base_path: Annotated[str, typer.Argument(help="base path for referencs")],
+        base_path: Annotated[str, typer.Argument(help="base path for references")],
         rst_path: Annotated[List[str], typer.Argument(help="path to rst file(s)")],
         anchor_txt: Optional[str] = typer.Option(
-           "anchors.txt",
+           None,
            "--anchor",
            help="anchors.txt file recording reference locations",
         ),
     ):
     """
-    Scan rst files collecting doc and ref targets into anchors.txt
+    Scan rst files collecting doc and ref targets (supply anchors_txt to write to file).
     """
     if not os.path.exists(base_path):
        raise FileNotFoundError(errno.ENOENT, f"The base_path does not exist at location:", base_path)
@@ -76,16 +76,17 @@ def index(
     for file in collected:
        index += index_rst(base_path,file)
 
-    print(index)
+    if anchor_txt:
+        anchor_path = base_path+'/'+anchor_txt
+        anchor_dir = os.path.dirname(anchor_path)
+        if not os.path.exists(anchor_dir):
+           print("RST index directory:",anchor_dir)
+           os.makedirs(anchor_dir)
 
-#     anchor_path = base_path+'/'+anchor_txt
-#     anchor_dir = os.path.dirname(anchor_path)
-#     if not os.path.exists(anchor_dir):
-#        print("RST index directory:",anchor_dir)
-#        os.makedirs(anchor_dir)
-#
-#     with open(anchor_path,'w') as anchor_file:
-#         anchor_file.write(index)
+        with open(anchor_path,'w') as anchor_file:
+            anchor_file.write(index)
+    else:
+        print(index)
 
 @app.command()
 def fix_references(

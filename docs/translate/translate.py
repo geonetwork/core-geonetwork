@@ -95,9 +95,9 @@ def index_rst(base_path: str, rst_file: str) -> str:
         text = file.read()
 
     relative_path = rst_file[len(base_path):]
-    print("base_path path:", base_path)
-    print("rst_file  path:", rst_file)
-    print("relative  path:", relative_path)
+#    print("base_path path:", base_path)
+#    print("rst_file  path:", rst_file)
+#    print("relative  path:", relative_path)
     doc = relative_path
     ref = None
     heading = None
@@ -108,33 +108,31 @@ def index_rst(base_path: str, rst_file: str) -> str:
 
     lines = text.splitlines()
 
-    for i in range(2,len(lines)):
+    for i in range(0,len(lines)):
         line = lines[i]
-        # print("scan:",line)
-
         if len(line) == 0:
-            continue
-
-        if doc:
-            heading = scan_heading(i,lines)
-            if heading:
-                print(" +- page:",heading)
-                index += doc + '.path=' + relative_path + "\n"
-                index += doc + '.text=' + heading + "\n"
-                doc = None
-
             continue
 
         if ref:
             heading = scan_heading(i,lines)
             if heading:
-                print(" +- heading:",heading)
+#                print(" +- heading:",heading)
                 anchor = ref
-                index += ref + '.path=' + relative_path + '#' + ref + "\n"
+                if doc:
+                    # reference to doc heading, no need for anchor
+                    index += ref + '=' + relative_path + "\n"
+                else:
+                    index += ref + '=' + relative_path + '#' + ref + "\n"
                 index += ref + '.text=' + heading + "\n"
                 ref = None
 
-            continue
+        if doc:
+            heading = scan_heading(i,lines)
+            if heading:
+#                print(" +- page:",heading)
+                index += doc + '=' + relative_path + "\n"
+                index += doc + '.text=' + heading + "\n"
+                doc = None
 
 #         heading = scan_heading(i,lines)
 #         if heading:
@@ -145,10 +143,13 @@ def index_rst(base_path: str, rst_file: str) -> str:
 #            index += relative_path + '#' + anchor + '.text=' + heading + "\n"
 #            continue
 
-        match = re.search(r"^.. _(\w*):$", line)
+        match = re.search(r"^.. _((\w|.|-)*):$", line)
         if match:
+            if ref:
+                print("reference "+ref+" defined without a heading, skipped")
+
             ref = match.group(1)
-            print(" |   ref:",ref)
+#            print(" |   ref:",ref)
 
     return index
 
@@ -172,7 +173,7 @@ def scan_heading(index: int, lines: list[str] ) -> str:
     # “, for paragraphs
     h6 = '"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""'
     h7 = "`````````````````````````````````````````````````````````````````````````````````````````````````````````````"
-
+    h8 = "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
     if index >= len(lines)-1:
        return None # last line cannot be a heading
 
@@ -190,7 +191,8 @@ def scan_heading(index: int, lines: list[str] ) -> str:
        under == h4[0:under_length] or \
        under == h5[0:under_length] or \
        under == h6[0:under_length] or \
-       under == h7[0:under_length]:
+       under == h7[0:under_length] or \
+       under == h8[0:under_length]:
 
        return line
 
