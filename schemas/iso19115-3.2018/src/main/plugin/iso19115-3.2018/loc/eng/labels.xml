@@ -832,6 +832,12 @@
     <label>Measure</label>
     <description></description>
   </element>
+  <element name="cit:description" id="401.0">
+    <label>Description</label>
+    <description iso="true">Decrription of the contact</description>
+    <help/>
+    <condition/>
+  </element>
   <element name="mdq:evaluationMethod">
     <label>Evaluation method</label>
     <description></description>
