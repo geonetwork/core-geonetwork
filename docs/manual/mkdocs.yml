@@ -402,7 +402,6 @@ nav:
   - 'Annexes':
     - annexes/index.md
     - annexes/mef-format.md
-    - annexes/gallery/gallery.md
     - annexes/glossary/index.md
     - 'Standards':
       - annexes/standards/index.md

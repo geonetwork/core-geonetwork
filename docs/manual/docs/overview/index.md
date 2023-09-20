@@ -7,6 +7,6 @@ The project is widely used as the foundation of Spatial Data Infrastructures all
 The GeoNetwork project is part of the Open Source Geospatial Foundation ([OSGeo](https://www.osgeo.org)) and can be found at [GeoNetwork opensource](https://geonetwork-opensource.org).
 
 -   [About](about.md)
--   [License](license.md)
+-   [License](license/index.md)
 -   [Authors](authors.md)
 -   [Change Log](change-log/index.md)

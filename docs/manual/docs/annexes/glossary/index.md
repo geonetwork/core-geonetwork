@@ -1,7 +1,0 @@
-sorted
-
-:   
-
-# Glossary
-
-Empty
