@@ -98,10 +98,66 @@ def index_rst(base_path: str, rst_file: str) -> str:
     print("base_path path:", base_path)
     print("rst_file  path:", rst_file)
     print("relative  path:", relative_path)
-    ref = relative_path
+    doc = relative_path
+    ref = None
     heading = None
     index = ''
 
+    with open(rst_file, 'r') as file:
+        text = file.read()
+
+    lines = text.splitlines()
+
+    for i in range(2,len(lines)):
+        line = lines[i]
+        # print("scan:",line)
+
+        if len(line) == 0:
+            continue
+
+        if doc:
+            heading = scan_heading(i,lines)
+            if heading:
+                print(" +- page:",heading)
+                index += doc + '.path=' + relative_path + "\n"
+                index += doc + '.text=' + heading + "\n"
+                doc = None
+
+            continue
+
+        if ref:
+            heading = scan_heading(i,lines)
+            if heading:
+                print(" +- heading:",heading)
+                anchor = ref
+                index += ref + '.path=' + relative_path + '#' + ref + "\n"
+                index += ref + '.text=' + heading + "\n"
+                ref = None
+
+            continue
+
+#         heading = scan_heading(i,lines)
+#         if heading:
+#            anchor = heading.replace(' ','-').lower()
+#            print(" | heading:",heading)
+#            print(" +- anchor:",anchor)
+#            index += relative_path + '#' + anchor + '.path=' + relative_path + '#' + anchor + "\n"
+#            index += relative_path + '#' + anchor + '.text=' + heading + "\n"
+#            continue
+
+        match = re.search(r"^.. _(\w*):$", line)
+        if match:
+            ref = match.group(1)
+            print(" |   ref:",ref)
+
+    return index
+
+def scan_heading(index: int, lines: list[str] ) -> str:
+    """
+    Detect and return headline
+
+    @return headline, or None
+    """
     # Scan line by line for references and headings
     # # with overline, for parts
     h1 = '#############################################################################################################'
@@ -115,48 +171,30 @@ def index_rst(base_path: str, rst_file: str) -> str:
     h5 = '^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^'
     # “, for paragraphs
     h6 = '"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""'
+    h7 = "`````````````````````````````````````````````````````````````````````````````````````````````````````````````"
 
-    with open(rst_file, 'r') as file:
-        text = file.read()
+    if index >= len(lines)-1:
+       return None # last line cannot be a heading
 
-    lines = text.splitlines()
-    for i in range(2,len(lines)):
-        line = lines[i]
-        length = len(line)
-#        print("scan:",line)
+    line = lines[index]
+    line_length = len(line)
+    under = lines[index+1]
+    under_length = len(line)
 
-        if length == 0:
-            continue
+    if under_length < line_length:
+       return None # not a heading
 
-        if ref:
-            # scan for headlines
-            if line == h1[0:length] or line == h2[0:length]:
-                if i < len(lines)-2:
-                    # if we are an overline, expect an underline 2 lines down
-                    line2 = lines[i+2]
-                    length2 = len(line2)
-                    if length2 > 0 and (line2 == h1[0:length] or line2 == h2[0:length]):
-                        # wait to process until underline
-                        continue
-            if (
-                   line == h1[0:length] or line == h2[0:length] or
-                   line == h2[0:length] or line == h3[0:length]
-               ):
-                before = lines[i-1]
-                if len(before) > 0 and len(before) <= length:
-                    # heading identified
-                    heading = before
-                    anchor = heading
-                    index += ref + '.path=' + relative_path + '#' + anchor + "\n"
-                    index += ref + '.text=' + heading + "\n"
-                    return index
-                else:
-                    continue
-        else:
-            # scan for next reference
-            continue
+    if under == h1[0:under_length] or \
+       under == h2[0:under_length] or \
+       under == h3[0:under_length] or \
+       under == h4[0:under_length] or \
+       under == h5[0:under_length] or \
+       under == h6[0:under_length] or \
+       under == h7[0:under_length]:
 
-    return index
+       return line
+
+    return None
 
 # administrator-guide/managing-metadata-standards/configure-validation.md
 def fix_anchors(anchors: dict[str,str], md_file: str) -> int:
