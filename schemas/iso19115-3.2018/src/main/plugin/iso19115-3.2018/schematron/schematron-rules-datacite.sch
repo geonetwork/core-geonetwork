@@ -85,7 +85,7 @@
 
 
       <sch:let name="publisher"
-               value="(mdb:distributionInfo//mrd:distributorContact)[1]//cit:CI_Organisation/cit:name/gco:CharacterString"/>
+               value="mdb:identificationInfo/*/mri:pointOfContact/*[cit:role/*/@codeListValue = 'publisher']"/>
 
       <sch:assert test="$publisher != ''">$loc/strings/datacite.publisher.missing</sch:assert>
       <sch:report test="$publisher != ''">
