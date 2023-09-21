@@ -388,15 +388,8 @@
     <label>Profil des métadonnées</label>
     <description>Citation du/des profil(s) de la norme de métadonnées</description>
   </element>
-  <element name="mdb:MD_MetadataScoperd" id="39.0">
-    <label>Domaine d’application des métadonnées</label>
-    <description iso="true">Informations concernant le domaine d’application de
-      la ressource.
-    </description>
-    <condition></condition>
-  </element>
   <element name="mdb:resourceScope" id="40.0">
-    <label>Domaine d’application de la ressource</label>
+    <label>Type de ressource</label>
     <description iso="true">Code pour le domaine d’application.</description>
     <condition>mandatory</condition>
   </element>
