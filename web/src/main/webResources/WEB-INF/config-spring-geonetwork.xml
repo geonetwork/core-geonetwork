@@ -309,18 +309,4 @@
   The default publication options publishes the metadata to the ALL group and the INTRANET group.
   -->
   <bean class="org.fao.geonet.config.DefaultPublicationConfig" name="publicationConfig" />
-
-
-  <!-- Resource Storage -->
-  <!-- geonetwork.store.type can be supplied
-  using the -Dgeonetwork.store.type
-  or via env as GEONETWORK_STORE_TYPE
-  If not supplied it will default to default store type.
-
-  Option include
-     default - Default file system store
-     s3      - AWS S3 storage (see config-store/config-s3.xml for more details)
-     cmis    - CMIS storage (see config-store/config-cmis.xml for more details)
-  -->
-  <import resource="classpath*:/config-store/config-${geonetwork.store.type:default}.xml"/>
 </beans>
