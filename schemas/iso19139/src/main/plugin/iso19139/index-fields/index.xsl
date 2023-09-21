@@ -1002,7 +1002,7 @@
         <xsl:for-each select="$processSteps">
           <processSteps type="object">{
             "descriptionObject": <xsl:value-of select="gn-fn-index:add-multilingual-field(
-                                'description', gmd:description, $allLanguages)"/>
+                                'description', gmd:description, $allLanguages, true())"/>
             <xsl:if test="normalize-space(gmd:dateTime) != ''">
               ,"date": "<xsl:value-of select="gmd:dateTime/gco:*/text()"/>"
             </xsl:if>
@@ -1012,7 +1012,7 @@
                 {
                   "descriptionObject": <xsl:value-of
                                           select="gn-fn-index:add-multilingual-field(
-                                            'description', gmd:description, $allLanguages)"/>
+                                            'description', gmd:description, $allLanguages, true())"/>
                 }
                 <xsl:if test="position() != last()">,</xsl:if>
               </xsl:for-each>
@@ -1028,7 +1028,7 @@
                 {
                   "organisationObject": <xsl:value-of
                                           select="gn-fn-index:add-multilingual-field(
-                                            'description', gmd:organisationName, $allLanguages)"/>
+                                            'description', gmd:organisationName, $allLanguages, true())"/>
                   <xsl:if test="gmd:individualName/gco:CharacterString/text()">
                     ,"individual":"<xsl:value-of select="gn-fn-index:json-escape(gmd:individualName/gco:CharacterString/text())"/>"
                   </xsl:if>
@@ -1109,11 +1109,11 @@
             "urlObject":{"default": "<xsl:value-of select="gn-fn-index:json-escape(gmd:linkage/gmd:URL)"/>"},
             <xsl:if test="normalize-space(gmd:name) != ''">
               "nameObject": <xsl:value-of select="gn-fn-index:add-multilingual-field(
-                                'name', gmd:name, $allLanguages)"/>,
+                                'name', gmd:name, $allLanguages, true())"/>,
             </xsl:if>
             <xsl:if test="normalize-space(gmd:description) != ''">
               "descriptionObject": <xsl:value-of select="gn-fn-index:add-multilingual-field(
-                                'description', gmd:description, $allLanguages)"/>,
+                                'description', gmd:description, $allLanguages, true())"/>,
             </xsl:if>
             <xsl:if test="../@gco:nilReason">
               "nilReason": "<xsl:value-of select="../@gco:nilReason"/>",
@@ -1270,7 +1270,7 @@
       <xsl:attribute name="type" select="'object'"/>{
       <xsl:if test="$organisationName">
         "organisationObject": <xsl:value-of select="gn-fn-index:add-multilingual-field(
-                              'organisation', $organisationName, $languages)"/>,
+                              'organisation', $organisationName, $languages, true())"/>,
       </xsl:if>
       "role":"<xsl:value-of select="$role"/>",
       "email":"<xsl:value-of select="gn-fn-index:json-escape($email[1])"/>",

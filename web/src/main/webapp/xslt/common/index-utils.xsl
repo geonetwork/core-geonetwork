@@ -187,6 +187,7 @@
    }
    ```
 
+
     A multilingual field in ISO19139 looks like:
     ```xml
     <gmd:title xsi:type="gmd:PT_FreeText_PropertyType">
@@ -203,6 +204,20 @@
       ```xml
       <dc:title xml:lang="en">...
       <dc:title xml:lang="fr">...
+      ```
+
+      Use this function in 2 modes:
+      * Adding a new field (using copy-of because output is an XML element.
+      ```xsl
+      <xsl:copy-of select="gn-fn-index:add-multilingual-field(
+                            $roleField, $organisationName, $languages)"/>
+      ```
+
+      * Populating a JSON property in an existing object (using value-of, output is text)
+      If the element is empty, `{}` is returned.
+      ```xsl
+      "organisationObject": <xsl:value-of select="gn-fn-index:add-multilingual-field(
+                              'organisation', $organisationName, $languages, true())"/>,
       ```
    -->
   <xsl:function name="gn-fn-index:add-multilingual-field" as="node()*">
@@ -294,7 +309,7 @@
         </xsl:for-each>
       </xsl:variable>
 
-      <xsl:if test="count($textObject[. != '']) > 0">
+      <xsl:if test="count($textObject[. != '']) > 0 or $asJson">
         <xsl:choose>
           <xsl:when test="$asJson">
             <xsl:if test="$isArray and position() = 1">[</xsl:if>

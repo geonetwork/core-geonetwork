@@ -1073,15 +1073,15 @@
                                         function/text())"/>",
           <xsl:if test="normalize-space(url) != ''">
             "urlObject": <xsl:value-of select="gn-fn-index:add-multilingual-field(
-                                'url', url/*, $allLanguages)"/>,
+                                'url', url/*, $allLanguages, true())"/>,
           </xsl:if>
           <xsl:if test="normalize-space(title) != ''">
             "nameObject": <xsl:value-of select="gn-fn-index:add-multilingual-field(
-                                'name', title/*, $allLanguages)"/>,
+                                'name', title/*, $allLanguages, true())"/>,
           </xsl:if>
           <xsl:if test="normalize-space(description) != ''">
             "descriptionObject": <xsl:value-of select="gn-fn-index:add-multilingual-field(
-                                'description', description/*, $allLanguages)"/>,
+                                'description', description/*, $allLanguages, true())"/>,
           </xsl:if>
           <xsl:if test="nilReason">
             "nilReason": "<xsl:value-of select="nilReason"/>",
@@ -1115,7 +1115,7 @@
         <xsl:for-each select="$processSteps">
           <processSteps type="object">{
             "descriptionObject": <xsl:value-of select="gn-fn-index:add-multilingual-field(
-                                'description', mrl:description, $allLanguages)"/>
+                                'description', mrl:description, $allLanguages, true())"/>
             <xsl:if test="normalize-space(mrl:stepDateTime) != ''">
               ,"date": "<xsl:value-of select="mrl:stepDateTime//gml:timePosition/text()"/>"
             </xsl:if>
@@ -1125,7 +1125,7 @@
                 {
                 "descriptionObject": <xsl:value-of
                 select="gn-fn-index:add-multilingual-field(
-                                            'description', mrl:description, $allLanguages)"/>
+                                            'description', mrl:description, $allLanguages, true())"/>
                 }
                 <xsl:if test="position() != last()">,</xsl:if>
               </xsl:for-each>
@@ -1143,7 +1143,7 @@
                   "organisationObject": <xsl:value-of
                 select="gn-fn-index:add-multilingual-field(
                                             'description', .//cit:CI_Organisation/cit:name,
-                                             $allLanguages)"/>
+                                             $allLanguages, true())"/>
                 <xsl:if test="$individualName != ''">
                   ,"individual":"<xsl:value-of select="gn-fn-index:json-escape($individualName)"/>"
                 </xsl:if>
@@ -1248,15 +1248,15 @@
                                               else ''"/>",
             <xsl:if test="normalize-space(cit:linkage) != ''">
               "urlObject": <xsl:value-of select="gn-fn-index:add-multilingual-field(
-                                'url', cit:linkage, $allLanguages)"/>,
+                                'url', cit:linkage, $allLanguages, true())"/>,
             </xsl:if>
             <xsl:if test="normalize-space(cit:name) != ''">
               "nameObject": <xsl:value-of select="gn-fn-index:add-multilingual-field(
-                                'name', cit:name, $allLanguages)"/>,
+                                'name', cit:name, $allLanguages, true())"/>,
             </xsl:if>
             <xsl:if test="normalize-space(cit:description) != ''">
               "descriptionObject": <xsl:value-of select="gn-fn-index:add-multilingual-field(
-                                'description', cit:description, $allLanguages)"/>,
+                                'description', cit:description, $allLanguages, true())"/>,
             </xsl:if>
             <xsl:if test="../@gco:nilReason">
               "nilReason": "<xsl:value-of select="../@gco:nilReason"/>",
@@ -1418,7 +1418,7 @@
       <xsl:attribute name="type" select="'object'"/>{
       <xsl:if test="$organisationName">
         "organisationObject": <xsl:value-of select="gn-fn-index:add-multilingual-field(
-                                'organisation', $organisationName, $languages)"/>,
+                                'organisation', $organisationName, $languages, true())"/>,
       </xsl:if>
       "role":"<xsl:value-of select="$role"/>",
       "email":"<xsl:value-of select="gn-fn-index:json-escape($email)"/>",
