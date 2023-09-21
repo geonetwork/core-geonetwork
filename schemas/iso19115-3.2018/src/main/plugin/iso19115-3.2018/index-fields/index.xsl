@@ -1073,15 +1073,15 @@
                                         function/text())"/>",
           <xsl:if test="normalize-space(url) != ''">
             "urlObject": <xsl:value-of select="gn-fn-index:add-multilingual-field(
-                                'url', url/*, $allLanguages)"/>,
+                                'url', url/*, $allLanguages, true())"/>,
           </xsl:if>
           <xsl:if test="normalize-space(title) != ''">
             "nameObject": <xsl:value-of select="gn-fn-index:add-multilingual-field(
-                                'name', title/*, $allLanguages)"/>,
+                                'name', title/*, $allLanguages, true())"/>,
           </xsl:if>
           <xsl:if test="normalize-space(description) != ''">
             "descriptionObject": <xsl:value-of select="gn-fn-index:add-multilingual-field(
-                                'description', description/*, $allLanguages)"/>,
+                                'description', description/*, $allLanguages, true())"/>,
           </xsl:if>
           "applicationProfile": "<xsl:value-of select="gn-fn-index:json-escape(
                                         applicationProfile/text())"/>"
@@ -1187,15 +1187,15 @@
                                               else ''"/>",
             <xsl:if test="normalize-space(cit:linkage) != ''">
               "urlObject": <xsl:value-of select="gn-fn-index:add-multilingual-field(
-                                'url', cit:linkage, $allLanguages)"/>,
+                                'url', cit:linkage, $allLanguages, true())"/>,
             </xsl:if>
             <xsl:if test="normalize-space(cit:name) != ''">
               "nameObject": <xsl:value-of select="gn-fn-index:add-multilingual-field(
-                                'name', cit:name, $allLanguages)"/>,
+                                'name', cit:name, $allLanguages, true())"/>,
             </xsl:if>
             <xsl:if test="normalize-space(cit:description) != ''">
               "descriptionObject": <xsl:value-of select="gn-fn-index:add-multilingual-field(
-                                'description', cit:description, $allLanguages)"/>,
+                                'description', cit:description, $allLanguages, true())"/>,
             </xsl:if>
             "function":"<xsl:value-of select="cit:function/cit:CI_OnLineFunctionCode/@codeListValue"/>",
             "applicationProfile":"<xsl:value-of select="gn-fn-index:json-escape(cit:applicationProfile/gco:CharacterString/text())"/>",
@@ -1353,7 +1353,7 @@
       <xsl:attribute name="type" select="'object'"/>{
       <xsl:if test="$organisationName">
         "organisationObject": <xsl:value-of select="gn-fn-index:add-multilingual-field(
-                                'organisation', $organisationName, $languages)"/>,
+                                'organisation', $organisationName, $languages, true())"/>,
       </xsl:if>
       "role":"<xsl:value-of select="$role"/>",
       "email":"<xsl:value-of select="gn-fn-index:json-escape($email)"/>",
