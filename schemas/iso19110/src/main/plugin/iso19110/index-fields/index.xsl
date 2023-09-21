@@ -187,7 +187,7 @@
       <xsl:attribute name="type" select="'object'"/>{
       <xsl:if test="$organisationName">
         "organisationObject": <xsl:value-of select="gn-fn-index:add-multilingual-field(
-                              'organisation', $organisationName, $languages)"/>,
+                              'organisation', $organisationName, $languages, true())"/>,
       </xsl:if>
       "role":"<xsl:value-of select="$role"/>",
       "email":"<xsl:value-of select="gn-fn-index:json-escape($email[1])"/>",

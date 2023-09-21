@@ -140,7 +140,7 @@
         }
       }
 
-      selectSchema = function (schema) {
+      var selectSchema = function (schema) {
         var idx = $scope.selectedSchemas.indexOf(schema);
         if (idx === -1) {
           $scope.selectedSchemas.push(schema);
@@ -223,7 +223,7 @@
       $scope.formatterFiles = [];
       $scope.metadataId = "";
 
-      loadFormatter = function () {
+      var loadFormatter = function () {
         $scope.formatters = [];
         $http.get("../api/formatters").then(
           function (response) {
@@ -242,7 +242,7 @@
       /**
        * Callback when error uploading file.
        */
-      loadFormatterError = function (e, data) {
+      var loadFormatterError = function (e, data) {
         if (data.jqXHR.status === 201) {
           loadFormatter();
           return;

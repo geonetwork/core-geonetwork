@@ -1303,8 +1303,6 @@
     "ui-logoInHeaderPosition-help": "Logoets placering i overskriften",
     "ui-isHeaderFixed": "Reparer overskriften",
     "ui-isHeaderFixed-help": "Overskriften er fast og forbliver øverst på siden. Bemærk: Når indstillingen [Vis logoet i sidehoved] også er valgt, skal overskriften have en indstillet højde. Dette kan gøres under [CSS &amp; Style] &gt; [Header] &gt; [Height]",
-    "ui-isMenubarAccessible": "Gør menulinjen tilgængelig",
-    "ui-isMenubarAccessible-help": "Gør menulinjeelementet åbent ved klik, ikke ved at svæve. Det betyder, at menupunkterne vil være tilgængelige med tastatur.",
     "ui-sortKeywordsAlphabetically": "Sorter søgeord / kategorier / emnekategorier alfabetisk",
     "ui-sortKeywordsAlphabetically-help": "Vis søgeord / kategorier / emnekategorier sorteret alfabetisk. Hvis det ikke er aktiveret, vises i den rækkefølge, der er tildelt metadataene.",
     "left": "Venstre",

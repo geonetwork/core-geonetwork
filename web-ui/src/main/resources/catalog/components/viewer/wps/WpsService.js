@@ -99,7 +99,7 @@
        *  requests are cancelled
        */
       this.describeProcess = function (uri, processId, options) {
-        url = gnOwsCapabilities.mergeDefaultParams(uri, {
+        var url = gnOwsCapabilities.mergeDefaultParams(uri, {
           service: "WPS",
           version: "1.0.0",
           request: "DescribeProcess",
