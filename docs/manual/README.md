@@ -84,3 +84,37 @@ If you are not familiar with python the mkdocs-material website has instructions
    ```
    mvn install -Dall
    ```
+   
+## Publish
+
+We use ``mike`` for publishing (from the `gh-pages` branch):
+
+1. To publish documentation for a new release:
+   
+   ```bash
+   mike deploy --push --update-aliases 4.2.6 latest 
+   ```
+
+2. To publish documentation for a maintenance release:
+
+   ```bash
+   mike deploy --push --update-aliases 3.12.12 latest 
+   ```
+
+3. To show published versions:
+
+   ```bash
+   mike list
+   ```
+
+4. To preview things:
+   
+   ```bash
+   mike serve
+   ```
+
+Reference:
+
+* https://squidfunk.github.io/mkdocs-material/setup/setting-up-versioning/
+* https://github.com/squidfunk/mkdocs-material-example-versioning
+* https://github.com/jimporter/mike

@@ -1,7 +1,6 @@
 # Project information
 site_name: GeoNetwork opensource
-site description: >-
-   GeoNetwork catalogue for listing, searching and reviewing records.
+site_description: GeoNetwork catalogue for listing, searching and reviewing records.
 site_dir: target/html
 
 # Repository
@@ -81,6 +80,8 @@ plugins:
 
 # Customizations
 extra:
+  version:
+    provider: mike
   social:
     - icon: fontawesome/solid/arrow-up-right-from-square
       link: https://geonetwork-opensource.org/
