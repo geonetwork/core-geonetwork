@@ -1,4 +1,4 @@
-# Geonetwork-opensource Manual
+# Geonetwork Manual and Help
 
 Documentation for GeoNetwork opensource is available via https://geonetwork-opensource.org.
 
@@ -12,36 +12,11 @@ Reference:
 
 The [project issue tracker](https://github.com/geonetwork/core-geonetwork/issues) is used for communication, with ongoing topics tagged [documentation](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+label%3Adocumenation).
 
-
-## Maven Integration
-
-1. Build documentation with ``compile`` phase:
-   ```
-   mvn compile
-   ```
-
-2. Assemble ``zip`` with ``package`` phase:
-   ```bash
-   mvn compile
-   ```
-
-3. Both ``install`` and ``deploy`` are skipped (so ``mvn clean install`` is fine).
-
-4. Use profile to include specific language:
-   ```
-   mvn install -Pfrench
-   ```
-
-   Or flag for all of them:
-   ```
-   mvn install -Dall
-   ```
-
 ## Material for MkDocs
 
 Documentation is [mkdocs-material](https://squidfunk.github.io/mkdocs-material/) which is a Markdown documentation framework written on top of [MkDocs](https://www.mkdocs.org/).
 
-If you are familiar with python:
+If you are using python3:
 
 1. Install using ``pip3`` and build:
 
@@ -86,3 +61,26 @@ If you are not familiar with python the mkdocs-material website has instructions
    
 2. Preview: http://localhost:8000
 
+## Maven Integration
+
+1. Build documentation with ``compile`` phase:
+   ```
+   mvn compile
+   ```
+
+2. Assemble ``zip`` with ``package`` phase:
+   ```bash
+   mvn compile
+   ```
+
+3. Both ``install`` and ``deploy`` are skipped (so ``mvn clean install`` is fine).
+
+4. Use profile to include specific language:
+   ```
+   mvn install -Pfrench
+   ```
+
+   Or flag for all of them:
+   ```
+   mvn install -Dall
+   ```

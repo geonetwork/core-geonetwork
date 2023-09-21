@@ -1,5 +1,6 @@
 site_name: Catalogue Help
-site_dir: target/html
+site_dir: target/help
+docs_dir: docs/help
 extra_css:
   - stylesheets/extra.css
 theme:

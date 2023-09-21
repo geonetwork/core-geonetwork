@@ -2,7 +2,6 @@
 
 
 This module contains:
-* `help` in Markdown format for mkdocs
 * `manual` in Markdown format for mkdocs
 * `manuals` in RST format for sphinx-build (vai https://github.com/geonetwork/doc)
 * Change logs txt files

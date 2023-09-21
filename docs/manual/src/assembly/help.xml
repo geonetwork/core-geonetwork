@@ -1,11 +1,11 @@
 <assembly>
-  <id>manual</id>
+  <id>help</id>
   <formats>
     <format>zip</format>
   </formats>
   <fileSets>
     <fileSet>
-      <directory>target/html</directory>
+      <directory>target/help</directory>
       <outputDirectory></outputDirectory>
       <excludes>
         <exclude>**/*.rst</exclude>

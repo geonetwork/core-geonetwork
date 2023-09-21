@@ -51,7 +51,7 @@ theme:
     - navigation.indexes
     - toc.follow
     - navigation.top
-#   - navigation.footer
+    - navigation.footer
     - announce.dismiss
 
 # Plugins - install using: pip3 install -r requirements.txt
