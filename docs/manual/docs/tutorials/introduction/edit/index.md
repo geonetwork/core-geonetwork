@@ -3,4 +3,4 @@
 On this step we will learn how to edit metadata and configure the editor.
 
 -   [Edit](edit.md)
--   [Editor](editor.md)
+-   [Customize Editor (Optional)](editor.md)

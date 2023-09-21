@@ -1,5 +1,5 @@
 # Search page {#tuto-customui-search}
 
--   [Loadpage](loadpage.md)
--   [Defaultview](defaultview.md)
--   [Customview](customview.md)
+-   [Understand loading page mechanisms](loadpage.md)
+-   [Customizing default view](defaultview.md)
+-   [Customizing default view](customview.md)

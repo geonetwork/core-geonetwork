@@ -1,9 +1,3 @@
----
-hide:
-  - navigation
-  - toc
----
-
 # GeoNetwork {#toc}
 
 Welcome to GeoNetwork. this documentation is organized into specific guides targeting different audience:

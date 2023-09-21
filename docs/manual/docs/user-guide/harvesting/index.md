@@ -7,17 +7,17 @@ Harvesting is the process of ingesting metadata from remote sources and storing 
 The following sources can be harvested:
 
 -   [Harvesting Geonetwork](harvesting-geonetwork.md)
--   [Harvesting Csw](harvesting-csw.md)
--   [Harvesting Ogcwxs](harvesting-ogcwxs.md)
--   [Harvesting Simpleurl](harvesting-simpleurl.md)
--   [Harvesting Filesystem](harvesting-filesystem.md)
--   [Harvesting Webdav](harvesting-webdav.md)
--   [Harvesting Oaipmh](harvesting-oaipmh.md)
--   [Harvesting Sde](harvesting-sde.md)
--   [Harvesting Geoportal](harvesting-geoportal.md)
--   [Harvesting Thredds](harvesting-thredds.md)
--   [Harvesting Wfs Features](harvesting-wfs-features.md)
--   [Harvesting Z3950](harvesting-z3950.md)
+-   [Harvesting CSW services](harvesting-csw.md)
+-   [Harvesting OGC Services](harvesting-ogcwxs.md)
+-   [Simple URL harvesting (opendata)](harvesting-simpleurl.md)
+-   [Local File System Harvesting](harvesting-filesystem.md)
+-   [WEBDAV Harvesting](harvesting-webdav.md)
+-   [OAIPMH Harvesting](harvesting-oaipmh.md)
+-   [Harvesting an ARCSDE Node](harvesting-sde.md)
+-   [GeoPortal REST Harvesting](harvesting-geoportal.md)
+-   [THREDDS Harvesting](harvesting-thredds.md)
+-   [WFS GetFeature Harvesting](harvesting-wfs-features.md)
+-   [Z3950 Harvesting](harvesting-z3950.md)
 
 ## Mechanism overview
 

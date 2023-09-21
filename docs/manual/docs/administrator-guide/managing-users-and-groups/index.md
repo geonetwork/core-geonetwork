@@ -1,9 +1,9 @@
 # Managing users and groups
 
--   [Creating Group](creating-group.md)
--   [Creating User](creating-user.md)
--   [User Self Registration](user-self-registration.md)
--   [Authentication Mode](authentication-mode.md)
+-   [Creating group](creating-group.md)
+-   [Creating user](creating-user.md)
+-   [User Self-Registration](user-self-registration.md)
+-   [Authentication mode](authentication-mode.md)
 
 ## Default user {#user-defaults}
 

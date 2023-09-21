@@ -118,20 +118,20 @@ def index(
             anchor_file.write(index)
         print(anchor_path)
 
-@app.command()
-def fix_references(
-        anchor_txt: str, md_path: Annotated[List[str], typer.Argument(help="path to md file(s)")]
-    ):
-    """
-    Using an anchor.txt file of reference=path#anchor to translate [reference](reference) links
-    left over from conversion from rst.
-    """
-    init_anchors()
-
-    for md_file in collect_paths(md_path,'md'):
-      count = fix_anchors(md_file)
-      print(md_file,"fixed",count)
-    print()
+# @app.command()
+# def fix_references(
+#         anchor_txt: str, md_path: Annotated[List[str], typer.Argument(help="path to md file(s)")]
+#     ):
+#     """
+#     Using an anchor.txt file of reference=path#anchor to translate [reference](reference) links
+#     left over from conversion from rst.
+#     """
+#     init_anchors()
+#
+#     for md_file in collect_paths(md_path,'md'):
+#       count = fix_anchors(md_file)
+#       print(md_file,"fixed",count)
+#     print()
 
 @app.command()
 def rst(
@@ -146,6 +146,8 @@ def rst(
     Manual cleanup required for:
       figure
     """
+    init_anchors()
+
     if not rst_path:
        rst_glob = translate.translate.rst_folder+"/**/*.rst"
        rst_path = [rst_glob]

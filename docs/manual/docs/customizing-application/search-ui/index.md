@@ -1,7 +1,7 @@
 # Search application {#customizing-searchui}
 
--   [Loadview](loadview.md)
--   [Configdefault](configdefault.md)
--   [Customview](customview.md)
--   [Enrichview](enrichview.md)
--   [Wro4Jdependencies](wro4jdependencies.md)
+-   [The view parameter](loadview.md)
+-   [Change default view configuration](configdefault.md)
+-   [Create your own view](customview.md)
+-   [Enrich your custom view](enrichview.md)
+-   [Wro4j resource management](wro4jdependencies.md)

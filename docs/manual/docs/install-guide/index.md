@@ -9,11 +9,11 @@
 
 Before you can use GeoNetwork on your own computer, you need to install it. There are several different ways to install GeoNetwork:
 
--   [Installing From Zip](installing-from-zip.md)
--   [Installing From War File](installing-from-war-file.md)
--   [Installing With Docker](installing-with-docker.md)
--   [Installing From Source Code](installing-from-source-code.md)
--   [Installing Index](installing-index.md)
+-   [Installing using a ZIP file](installing-from-zip.md)
+-   [Installing from WAR file](installing-from-war-file.md)
+-   [Installing with docker](installing-with-docker.md)
+-   [Building from Source Code](installing-from-source-code.md)
+-   [Installing search platform](installing-index.md)
 
 !!! note
 
@@ -22,8 +22,8 @@ Before you can use GeoNetwork on your own computer, you need to install it. Ther
 
 After installing the application, you can configure the following:
 
--   [Configuring Database](configuring-database.md)
--   [Customizing Data Directory](customizing-data-directory.md)
--   [Logging](logging.md)
--   [Map Print Setup](map-print-setup.md)
--   [Loading Samples](loading-samples.md)
+-   [Configuring the database](configuring-database.md)
+-   [Customizing the data directory](customizing-data-directory.md)
+-   [Customising the log file location](logging.md)
+-   [Configuring printing of the map](map-print-setup.md)
+-   [Loading templates and sample data](loading-samples.md)

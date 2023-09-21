@@ -2,13 +2,13 @@
 
 Operational user-guide describing the editing, review and management of records.
 
--   [Quick Start](quick-start/index.md)
--   [Map](map/index.md)
--   [Describing Information](describing-information/index.md)
--   [Associating Resources](associating-resources/index.md)
--   [Tag Information](tag-information/index.md)
+-   [Quick start](quick-start/index.md)
+-   [Maps and dataset visualisation](map/index.md)
+-   [Describing information](describing-information/index.md)
+-   [Associating resources](associating-resources/index.md)
+-   [Classify information](tag-information/index.md)
 -   [Publishing](publishing/index.md)
--   [Analyzing](analyzing/index.md)
+-   [Analyzing data](analyzing/index.md)
 -   [Workflow](workflow/index.md)
 -   [Harvesting](harvesting/index.md)
--   [Export](export/index.md)
+-   [Exporting records](export/index.md)

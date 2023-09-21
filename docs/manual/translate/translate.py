@@ -101,19 +101,23 @@ def load_anchors(anchor_txt:str) -> dict[str,str]:
        reference=/absolut/path/to/file.md#anchor
     """
     if not os.path.exists(anchor_txt):
+       logger.warning("Anchors definition file not avaialble - to creae run: python3 -m translate index")
        raise FileNotFoundError(errno.ENOENT, f"anchors definition file does not exist at location:", anchor_txt)
+
     index = {}
     with open(anchor_txt,'r') as file:
        for line in file:
          if '=' in line:
             (anchor,path) = line.split('=')
-            index[anchor] = path
+            index[anchor] = path[0:-1]
 
-    return anchors
+    return index
 
 def init_anchors():
     global anchors
+    global anchor_file
     anchors = load_anchors(anchor_file)
+    logging.debug("anchors loaded:"+str(len(anchors)))
 
 def collect_path(path: str, extension: str) -> list[str]:
     """
@@ -310,7 +314,7 @@ def convert_rst(rst_file: str) -> str:
 
     convert_directory = os.path.dirname(md_tmp_file)
     if not os.path.exists(convert_directory):
-       print("Conversion directory:",convert_directory)
+       logger.info("Creating conversion directory '"+convert_directory+"'")
        os.makedirs(convert_directory)
 
     rst_prep = re.sub(r"\.md",r".prep.rst", md_tmp_file)
@@ -349,7 +353,7 @@ def preprocess_rst(rst_file:str, rst_prep: str) -> str:
 
     # process toc_tree directive into a list of links
     if '.. toctree::' in text:
-        text = _preprocess_rst_toctree(text)
+        text = _preprocess_rst_toctree(rst_file,text)
 
     if ':doc:' in text:
         text = _preprocess_rst_doc(text)
@@ -411,6 +415,9 @@ def _preprocess_rst_doc(text: str) -> str:
    """
    Preprocess rst content replacing doc references with links.
    """
+   global anchors
+
+
    # doc links processed in order from most to least complicated
 
    # :doc:`normal <../folder/index.rst>`
@@ -470,7 +477,7 @@ def _preprocess_rst_ref(text: str) -> str:
    )
    return text
 
-def _preprocess_rst_toctree(text: str) -> str:
+def _preprocess_rst_toctree(path, text: str) -> str:
    """
    scan document for toctree directives to process
    """
@@ -490,8 +497,7 @@ def _preprocess_rst_toctree(text: str) -> str:
           if line[0:3] == '   ':
              # processing directive
              link = line[3:-4]
-             label = _labelify(link)
-
+             label = _labelify(path,link)
              toctree += f"* `{label} <{link}.md>`__\n"
           else:
              # end directive
@@ -507,19 +513,43 @@ def _preprocess_rst_toctree(text: str) -> str:
 
    return process
 
-def _labelify(link: str) -> str:
+def _labelify(path: str, link: str) -> str:
    """
-   Create a label basde on a link
+   Create a label title, based on a documentation link.
+   Will make use of anchors index if available to look up correct title.
    """
-   label = link.replace('.rst','')
-   label = label.replace('.md','')
-   label = label.replace('/index', '')
-   label = label.replace('-', ' ')
-   label = label.replace('_', ' ')
-   label = label.replace('/', ' ')
-   label = label.title()
+   resolved_path = _linkify(path,link)
+   # example:
+   #   /install-guide/loading-samples.rst=/install-guide/loading-samples.rst
+   #   /install-guide/loading-samples.rst.text=Loading templates and sample data
+   title_key = resolved_path+'.rst.text'
+   if title_key in anchors:
+       return anchors[title_key]
+   else:
+       label = link.replace('.rst','')
+       label = label.replace('.md','')
+       label = label.replace('/index', '')
+       label = label.replace('-', ' ')
+       label = label.replace('_', ' ')
+       label = label.replace('/', ' ')
+       label = label.title()
 
-   return label
+       return label
+
+def _linkify(path: str, link: str) ->  str:
+    """
+    Determines absolute path for link, relative to provided path.
+    :param path: path of file containing the link
+    :param link: the link (may be absolute or relative)
+    :return: absolute link
+    """
+    if link.startswith("/"):
+        return link
+    else:
+        dir = os.path.dirname(path)
+        link_path = os.path.join(dir, link)
+        doc_path = os.path.relpath(link_path, docs_folder)
+        return '/'+doc_path
 
 def postprocess_rst_markdown(md_file: str, md_clean: str):
     """

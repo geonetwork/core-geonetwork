@@ -1,5 +1,5 @@
 # Publishing
 
--   [Managing Privileges](managing-privileges.md)
--   [Restricting Information To Metadata Sections](restricting-information-to-metadata-sections.md)
--   [Transferring Privileges](transferring-privileges.md)
+-   [Managing privileges](managing-privileges.md)
+-   [Restricting information to metadata sections](restricting-information-to-metadata-sections.md)
+-   [Transferring privileges](transferring-privileges.md)

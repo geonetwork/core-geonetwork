@@ -1,4 +1,4 @@
 # Analyzing data {#analyzing}
 
--   [Metadata](metadata.md)
--   [Data](data.md)
+-   [Statistics on catalog content](metadata.md)
+-   [Analyze and visualize data](data.md)

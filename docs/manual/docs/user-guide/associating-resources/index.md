@@ -14,7 +14,7 @@ Use the wizard panel to create or delete associated resources. A list of current
 
 You can associate different types of resources:
 
--   [Linking Documents](linking-documents.md)
--   [Linking Records](linking-records.md)
--   [Doi](doi.md)
--   [Cite](cite.md)
+-   [Associating documents](linking-documents.md)
+-   [Associating another record](linking-records.md)
+-   [Digital Object Identifier (DOI)](doi.md)
+-   [Cite a resource](cite.md)

@@ -1,5 +1,5 @@
 # Managing classification system
 
--   [Managing Categories](managing-categories.md)
--   [Managing Directories](managing-directories.md)
--   [Managing Thesaurus](managing-thesaurus.md)
+-   [Managing categories](managing-categories.md)
+-   [Managing directories](managing-directories.md)
+-   [Managing thesaurus](managing-thesaurus.md)

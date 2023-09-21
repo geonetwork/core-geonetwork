@@ -18,12 +18,12 @@ At various points references are made to the product documentation to find more 
 
 ## Tutorial contents
 
--   [Introduction](introduction/index.md)
--   [Introduction Discover](introduction/discover.md)
--   [Introduction Map](introduction/map.md)
--   [Introduction Schema](introduction/schema.md)
+-   [Metadata in the spatial domain](introduction/index.md)
+-   [Discovering information](introduction/discover.md)
+-   [Maps and dataset visualisation](introduction/map.md)
+-   [Standardised exchange of records](introduction/schema.md)
 -   [Deployment.](deployment/index..md)
 -   [Setup](setup/index.md)
--   [Edit](edit/index.md)
+-   [Editing Metadata](edit/index.md)
 -   [Harvesting](harvesting/index.md)
 -   [Extra](extra/index.md)

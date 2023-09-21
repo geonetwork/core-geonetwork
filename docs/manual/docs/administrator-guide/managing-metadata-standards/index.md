@@ -1,5 +1,5 @@
 # Managing metadata & template {#metadata-and-template}
 
--   [Standards](standards.md)
--   [Configure Validation](configure-validation.md)
--   [Metadata Identifier](metadata-identifier.md)
+-   [Managing metadata standards](standards.md)
+-   [Configuring validation levels](configure-validation.md)
+-   [Configuring metadata identifier](metadata-identifier.md)

@@ -8,5 +8,5 @@ For this workshop we will focus on the use of docker, but we also provide some g
 
 -   [Docker](docker.md)
 -   [Deploy](deploy.md)
--   [Build](build.md)
+-   [Build from source code](build.md)
 -   [.md](.md)

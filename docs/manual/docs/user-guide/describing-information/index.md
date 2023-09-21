@@ -19,12 +19,12 @@ The editor form provides uploading of data, graphics, documents, pdf files and a
     Add links to corresponding section
 
 
--   [Managing Templates](managing-templates.md)
--   [Creating Metadata](creating-metadata.md)
--   [Importing Metadata](importing-metadata.md)
--   [Editing Metadata](editing-metadata.md)
--   [Deleting Metadata](deleting-metadata.md)
--   [Multilingual Editing](multilingual-editing.md)
--   [Inspire Editing](inspire-editing.md)
+-   [Managing templates](managing-templates.md)
+-   [Creating a new record](creating-metadata.md)
+-   [Importing a new record](importing-metadata.md)
+-   [Editing metadata](editing-metadata.md)
+-   [Deleting a record](deleting-metadata.md)
+-   [Multilingual editing](multilingual-editing.md)
+-   [Describing resources for the INSPIRE directive](inspire-editing.md)
 
 Based on user profiles (see [creating-user](creating-user.md)), a dashboard provides easy access to their informations and tasks.

@@ -11,6 +11,6 @@ GeoNetwork 3.8.x supports ElasticSearch/Kibana 7.2, other versions may not work 
     This guide doesn't provide a production level setup for ElasticSearch/Kibana. Please refer to the ElasticSearch/Kibana documentation to do a proper setup/configuration for a production environment.
 
 
--   [Setup Elasticsearch](setup-elasticsearch.md)
+-   [Setup ElasticSearch](setup-elasticsearch.md)
 -   [Setup Kibana](setup-kibana.md)
--   [Setup Geonetwork](setup-geonetwork.md)
+-   [Setup GeoNetwork](setup-geonetwork.md)

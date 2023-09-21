@@ -1,8 +1,8 @@
 # Workflow
 
--   [Validation](validation.md)
--   [Suggestion](suggestion.md)
--   [Life Cycle](life-cycle.md)
--   [Geopublication](geopublication.md)
+-   [Validating records](validation.md)
+-   [Suggestion for improving metadata content](suggestion.md)
+-   [Life cycle](life-cycle.md)
+-   [Publishing GIS data in a map server](geopublication.md)
 -   [Versioning](versioning.md)
--   [Batchupdate](batchupdate.md)
+-   [Updating a set of records](batchupdate.md)
