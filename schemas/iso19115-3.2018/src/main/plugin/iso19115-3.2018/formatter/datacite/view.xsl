@@ -158,6 +158,12 @@
       <!-- Return existing one -->
       <xsl:choose>
         <xsl:when test="$doiId = ''">
+          <!-- DOI can be located in different places depending on user practice.
+          At least we know three:
+          * metadata linkage (only in ISO19115-3)
+          * citation identifier
+          * onlineSrc
+          -->
           <xsl:variable name="doiFromMetadataLinkage"
                         select="normalize-space(ancestor::mdb:MD_Metadata/mdb:metadataLinkage/*/cit:linkage/gco:CharacterString[
                                         starts-with(., $defaultDoiPrefix)])"/>
