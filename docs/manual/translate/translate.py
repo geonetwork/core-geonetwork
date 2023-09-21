@@ -187,7 +187,7 @@ def index_rst(base_path: str, rst_file: str) -> str:
                     index += ref + '=' + relative_path + "\n"
                 else:
                     index += ref + '=' + relative_path + '#' + ref + "\n"
-                index += ref + '.text=' + heading + "\n"
+                index += ref + '.title=' + heading + "\n"
                 ref = None
 
         if doc:
@@ -195,7 +195,7 @@ def index_rst(base_path: str, rst_file: str) -> str:
             if heading:
                 logging.debug(" +- page:"+heading)
                 index += doc + '=' + relative_path + "\n"
-                index += doc + '.text=' + heading + "\n"
+                index += doc + '.title=' + heading + "\n"
                 doc = None
 
         match = re.search(r"^.. _((\w|.|-)*):$", line)
@@ -235,7 +235,7 @@ def scan_heading(index: int, lines: list[str] ) -> str:
     line = lines[index]
     line_length = len(line)
     under = lines[index+1]
-    under_length = len(line)
+    under_length = len(under)
 
     if under_length < line_length:
        return None # not a heading
@@ -406,7 +406,15 @@ def preprocess_rst(rst_file:str, rst_prep: str) -> str:
         text,
         flags=re.MULTILINE
     )
+    # rst_epilog stuff from config.py
     text = text.replace("|project_name|","GeoNetwork")
+    text = text.replace("|jdbc.properties|",r"**`WEB-INF/config-db/jdbc.properties`**")
+    text = text.replace("|config.node.folder|",r"**`WEB-INF/config-db/jdbc.properties`**")
+    text = text.replace("|web.xml|",r"**`WEB-INF/web.xml`**")
+    text = text.replace("|default.node|",r"`srv`")
+    text = text.replace("|default.node.config.file|",r"**`WEB-INF/config-node/srv.xml`**")
+    text = text.replace("|default.node|",r"`srv`")
+    text = text.replace("|install.homepage|",r"`http://localhost:8080/geonetwork`")
 
     with open(rst_prep,'w') as rst:
         rst.write(text)
@@ -464,14 +472,14 @@ def _preprocess_rst_ref(text: str) -> str:
    # :ref:`normal <link>`
    named_reference = re.compile(r":ref:`(.*) <((\w|-)*)>`")
    text = named_reference.sub(
-       lambda match: "'"+match.group(1)+" <"+_refify(match.group(2))+">'_",
+       lambda match: "`"+match.group(1)+" <"+_refify(match.group(2))+">`_",
        text
    )
 
    # :ref:`simple`
    simple_reference = re.compile(r":ref:`((\w|-)*)\`")
    text = simple_reference.sub(
-       lambda match: "'"+_title(match.group(1))+" <"+_refify(match.group(1))+">'_",
+       lambda match: "`"+_title(match.group(1))+" <"+_refify(match.group(1))+">`_",
        text
    )
 
@@ -498,7 +506,7 @@ def _preprocess_rst_toctree(path, text: str) -> str:
              # processing directive
              link = line[3:-4]
              label = _labelify(path,link)
-             toctree += f"* `{label} <{link}.md>`__\n"
+             toctree += f"* `{label} <{link}.rst>`__\n"
           else:
              # end directive
              process += toctree + '\n'
@@ -517,15 +525,32 @@ def _labelify(path: str, link: str) -> str:
    """
    Create a label title, based on a documentation link (using on anchors.txt index)
    """
-   resolved_path = _linkify(path,link)
+   resolved_path = _docify(path,link)
    # example:
    #   /install-guide/loading-samples.rst=/install-guide/loading-samples.rst
-   #   /install-guide/loading-samples.rst.text=Loading templates and sample data
-   title_key = resolved_path+'.rst.text'
+   #   /install-guide/loading-samples.rst.title=Loading templates and sample data
+   title_key = resolved_path+'.rst.title'
    if title_key in anchors:
        return anchors[title_key]
    else:
-       return _label(link)
+       label = _label(link)
+       logger.warning("broken doc '"+link+"' title:"+label)
+       return label
+
+def _docify(path: str, link: str) ->  str:
+    """
+    Determines absolute path for link, relative to provided path.
+    :param path: path of file containing the link
+    :param link: the link (may be absolute or relative)
+    :return: absolute link
+    """
+    if link.startswith("/"):
+        return link
+    else:
+        dir = os.path.dirname(path)
+        link_path = os.path.join(dir, link)
+        doc_path = os.path.relpath(link_path, docs_folder)
+        return '/'+doc_path
 
 def _label(link: str) -> str:
    """
@@ -551,7 +576,7 @@ def _title(reference: str) -> str:
        return anchors[title_lookup]
     else:
        label = _label(reference)
-       logger.warning("broken reference "+reference+" title:"+label)
+       logger.warning("broken reference '"+reference+"' title:"+label)
        return label
 
 def _refify(reference: str) ->  str:
@@ -562,23 +587,8 @@ def _refify(reference: str) ->  str:
        return anchors[reference]
     else:
        link = reference+"-ref.md"
-       logger.warning("broken reference "+reference+" link:"+link)
+       logger.warning("broken reference '"+reference+"' link:"+link)
        return link
-
-def _linkify(path: str, link: str) ->  str:
-    """
-    Determines absolute path for link, relative to provided path.
-    :param path: path of file containing the link
-    :param link: the link (may be absolute or relative)
-    :return: absolute link
-    """
-    if link.startswith("/"):
-        return link
-    else:
-        dir = os.path.dirname(path)
-        link_path = os.path.join(dir, link)
-        doc_path = os.path.relpath(link_path, docs_folder)
-        return '/'+doc_path
 
 def postprocess_rst_markdown(md_file: str, md_clean: str):
     """
@@ -621,19 +631,13 @@ def postprocess_rst_markdown(md_file: str, md_clean: str):
           continue;
 
        # non-code clean content
-       # fix references into broken links
-#        line = re.sub(
-#            r'`((\w|-)*)`{\.interpreted-text role="ref"}',
-#            r'[\1](\1.md)',
-#            line,
-#            flags=re.MULTILINE
-#        )
-#        line = re.sub(
-#            r'`((\w|\s)*) <(.*?)>`{\.interpreted-text role="ref"}',
-#            r'[\1](\3.md)',
-#            line,
-#            flags=re.MULTILINE
-#        )
+       # fix rst -> md links
+       line = re.sub(
+            r"\[(.*?)\]\((.*).rst\)",
+            r"[\1](\2.md)",
+            line
+       )
+
 
        # Pandoc escapes characters over-aggressively when writing markdown
        # https://github.com/jgm/pandoc/issues/6259
@@ -656,7 +660,7 @@ def postprocess_rst_markdown(md_file: str, md_clean: str):
        clean += line + '\n'
 
     if code:
-       print(code)
+       # file ended with a code block
        clean += code
 
     with open(md_clean,'w') as markdown:

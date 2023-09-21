@@ -86,16 +86,22 @@ def french(
 
 @app.command()
 def index(
-       test: Optional[bool] = typer.Option(
-           False,
+       test: Optional[str] = typer.Option(
+           None,
            "--test",
-           help="Scan only, do not update anchors.txt file",
+           help="Test scan a single file, do not update anchors.txt file",
         )
     ):
     """
     Scan rst files collecting doc and ref targets updating anchors.txt index.
     """
     rst_path = translate.translate.rst_folder
+
+    if test:
+        index = index_rst(rst_path,test)
+        print(index)
+        return
+
     rst_glob = rst_path+"/**/*.rst"
     anchor_path = translate.translate.anchor_file
 
@@ -107,16 +113,13 @@ def index(
     for file in collected:
        index += index_rst(rst_path,file)
 
-    if test:
-        print(index)
-    else:
-        anchor_dir = os.path.dirname(anchor_path)
-        if not os.path.exists(anchor_dir):
-            print("anchors.txt index directory:",anchor_dir)
-            os.makedirs(anchor_dir)
-        with open(anchor_path,'w') as anchor_file:
-            anchor_file.write(index)
-        print(anchor_path)
+    anchor_dir = os.path.dirname(anchor_path)
+    if not os.path.exists(anchor_dir):
+        print("anchors.txt index directory:",anchor_dir)
+        os.makedirs(anchor_dir)
+    with open(anchor_path,'w') as anchor_file:
+        anchor_file.write(index)
+    print(anchor_path)
 
 # @app.command()
 # def fix_references(
