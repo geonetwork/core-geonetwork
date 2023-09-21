@@ -13,10 +13,10 @@ We need an empty file on the custom/src/main/resources/catalog/views/custom/less
 Then we need to define the basic Angular module that will be used on this style. Create a file on custom/src/main/resources/catalog/views/custom/module.js and add the following content:
 
 ``` javascript
-(function() {
-  goog.provide('gn_search_custom');
-  goog.require('gn_search');
-  var module = angular.module('gn_search_custom', ['gn_search']);
+( function() {
+    goog.provide('gn_search_custom');
+    goog.require('gn_search');
+    var module = angular.module('gn_search_custom', ['gn_search']);
 })();
 ```
 
@@ -56,10 +56,10 @@ Edit custom/src/main/resources/catalog/views/custom/less/gn_search_custom.less a
 Then make the Angular module dependant of the default Angular UI module. Edit custom/src/main/resources/catalog/views/custom/module.js and replace the contents with:
 
 ``` javascript
-(function() {
-  goog.provide('gn_search_custom');
-  goog.require('gn_search_default');
-  var module = angular.module('gn_search_custom', ['gn_search_default']);
+( function() {
+    goog.provide('gn_search_custom');
+    goog.require('gn_search_default');
+    var module = angular.module('gn_search_custom', ['gn_search_default']);
 })();
 ```
 

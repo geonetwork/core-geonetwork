@@ -42,7 +42,7 @@ Additionally there is a geographic search tool in the top left.
 
     Use the Add Layers tool and type *Physiographic* in the Search box. Three results will be returned, for the three Physiographic records in the catalog. Click the + button next to the Physiography of North and Central Eurasia Landform result to add it to the map.
     
-    > Using the Manage Layers tool, select the cog symbol next to Physiography of North and Central Eurasia Landform and select Zoom to layer. The map will zoom to the extent of this layer. Select the paintbrush tool next to this layer to see the legend, showing you the classification used for the display.
+    Using the Manage Layers tool, select the cog symbol next to Physiography of North and Central Eurasia Landform and select Zoom to layer. The map will zoom to the extent of this layer. Select the paintbrush tool next to this layer to see the legend, showing you the classification used for the display.
 
 
 Layers in the map viewer can be managed from the layer panel: Reorder, change opacity, show legend and set alternative style. The map viewer has some advanced features such as map printing, distance measure and red lining.

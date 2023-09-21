@@ -12,7 +12,7 @@ Fields:
   <for name="gmd:abstract" use="textarea"/>
   <for name="gco:Distance" use="number"/>
   <for name="gmd:onLine" addDirective="data-gn-directory-entry-selector">
-    <directiveAttributes data-template-add-action="true" data-template-type="onLine" data-filter='{"_root": "gmd:CI_OnlineResource"}'/>
+  <directiveAttributes data-template-add-action="true" data-template-type="onLine" data-filter='{"_root": "gmd:CI_OnlineResource"}'/>
   </for>
 </fields>
 ```

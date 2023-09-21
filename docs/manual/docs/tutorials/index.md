@@ -1,6 +1,6 @@
 # Tutorials
 
--   [Introduction Index](introduction/index.md)
--   [Customui Index](customui/index.md)
--   [Hookcustomizations Index](hookcustomizations/index.md)
--   [Inspire Index](inspire/index.md)
+-   [Introduction](introduction/index.md)
+-   [Customui](customui/index.md)
+-   [Hookcustomizations](hookcustomizations/index.md)
+-   [Inspire I](inspire/i.md)

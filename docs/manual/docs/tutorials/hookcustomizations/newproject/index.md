@@ -65,11 +65,11 @@ Then you should add it to the list of projects Maven will automatically build. O
 
 ``` xml
 <modules>
-  <module>schemas-test</module>                
+  <module>schemas-test</module>
   <module>web-ui</module>
-  <module>custom</module>                  
-  <module>web-ui-docs</module>                 
-  <module>web-client</module>                  
+  <module>custom</module>
+  <module>web-ui-docs</module>
+  <module>web-client</module>
   <module>web</module>
 </modules>
 ```
@@ -95,7 +95,7 @@ And on the same file, we should also add our resources folder to the build (if w
 ``` xml
 <resourcesAsCSV>
   ${project.basedir}/src/main/webapp,
-  ${rootProjectDir}/web-ui/src/main/resources/,    
+  ${rootProjectDir}/web-ui/src/main/resources/,
   ${rootProjectDir}/custom/src/main/resources/,
   ${build.webapp.resources}
 </resourcesAsCSV>

@@ -5,6 +5,8 @@
     This file is produced automatically from the geonetwork-core repository. To make any suggestions to the content of the page please add your changes to [core-geonetwork/schemas/config.editor.xsd](https://github.com/geonetwork/core-geonetwork/blob/main/schemas/config-editor.xsd).
 
 
+## Creating custom editor
+
 A metadata editor configuration is defined for a specific schema plugin standard (see [implementing-a-schema-plugin](implementing-a-schema-plugin.md)).
 
 The editor configuration defines the navigation menu for the editor (i.e. list of views and tabs), the list of fields and the type of control to use. Controls can be HTML-type (e.g. text, date) or more advanced controls built using [AngularJS directives](https://docs.angularjs.org/guide/directive).

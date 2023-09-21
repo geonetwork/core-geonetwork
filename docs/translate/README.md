@@ -49,22 +49,39 @@ Please see the writing guide for what mkdocs functionality is supported.
 1. Copy everything over (so all the images and so on are present)
    
    ```
+   cd core-geonetwork/docs
    copy -r manuals/source manual/doc
    ```
+   
+   Some problems, like tables, are easier to fix in the rst files before conversion.
+   To copy any changes back.
+   ```
+   cd core-geonetwork/docs/manual/doc
+   find . -name '*.rst' | cpio -pdm  ../../manuals/source
+   ```
 
-2. Convert file by file:
+2. To index references in rst files into `docs/anchors.txt`:
+
+   ```
+   cd core-geonetwork/docs
+   python3 -m translate index manual/docs/ manual/docs/**/*.rst
+   ```
+
+3. Convert a single file:
    
    ```
-   python3 -m translate rst docs/contributing/doing-a-release.rst
+   cd core-geonetwork/docs
+   python3 -m translate rst manual/docs/contributing/doing-a-release.rst
    ```
 
-3. Bulk convert files in a folder:
+4. Bulk convert files in a folder:
    
    ```
-   python3 -m translate rst docs/contributing/*.rst
+   cd core-geonetwork/docs
+   python3 -m translate rst docs/**/*.rst
    ```
 
-4. The ``.gitignore`` has been setup to ignore:
+5. The ``.gitignore`` has been setup to ignore:
    
    * ``.rst``
    * ``.tmp.md``
@@ -81,30 +98,6 @@ Please see the writing guide for what mkdocs functionality is supported.
    find . -type f -regex ".*\.rst" -delete 
    ```
 
-5. Optional: to assist with anchors:
-
-   ```
-   cd docs
-   grep --include=\*.rst -rnw . -e "^.. _.*:$" > anchors.txt
-   ```
-
-   Grep search and replace (I used an editor):
-
-   * ``^\./`` -->  `` ``
-   * ``^([\w\-/\.\d_]+)\.rst:\d*\:\.\.\s+_([\w\-\d_\s\./]+):$`` --> ``\2=/\1.md#\2```
-   ```
-   
-   sed?
-   ```
-   sed -i '' -e 's;^\./;;' anchors.txt
-   sed -i '' -e 's;^([\w\-/\.\d_]+)\.rst:\d*\:\.\.\s+_([\w\-\d_\s\./]+):$;\2=/\1.md#\2;' anchors.txt
-   ```
-   
-   This can be used as during conversion, or to fix existing file:
-   ```
-   python3 -m translate rst docs/contributing/*.rst --anchor anchors.txt
-   python3 -m translate anchor --anchor anchors.txt docs/contributing/*.rst
-   ```
 
 ### Manual review required
 

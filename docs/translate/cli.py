@@ -1,9 +1,13 @@
-"""This module provides pandoc and deepl translation services."""
+"""
+This module provides services written around pandoc for format translation,
+and deepl for language translation services.
+"""
 # message/cli.py
 
 from typing import Optional
 
 import json
+import logging
 import os
 import shutil
 import typer
@@ -15,6 +19,10 @@ from typing_extensions import Annotated
 
 import translate.translate
 from translate import __app_name__, __version__
+from .translate import rst_folder
+from .translate import anchor_file
+from .translate import init_config
+from .translate import collect_path
 from .translate import collect_paths
 from .translate import index_rst
 from .translate import load_anchors
@@ -26,10 +34,33 @@ from .translate import deepl_document
 
 app = typer.Typer(help="Translation for mkdocs content")
 
+logger = logging.getLogger(__app_name__)
+
 def _version_callback(value: bool) -> None:
     if value:
         typer.echo(f"{__app_name__} v{__version__}")
         raise typer.Exit()
+
+def _log_callback(log: str) -> None:
+    logging_format = '%(levelname)s: %(message)s'
+    if not log:
+        logging.basicConfig(format=logging_format,level=logging.INFO)
+    elif 'DEBUG' == log.upper():
+        logging.basicConfig(format=logging_format,level=logging.DEBUG)
+    elif 'WARNING' == log.upper():
+        logging.basicConfig(format=logging_format,level=logging.WARNING)
+    elif 'INFO' == log.upper():
+        logging.basicConfig(format=logging_format,level=logging.INFO)
+    elif 'ERROR' == log.upper():
+        logging.basicConfig(format=logging_format,level=logging.ERROR)
+    elif 'CRITICAL' == log.upper():
+        logging.basicConfig(format=logging_format,level=logging.CRITICAL)
+    else:
+        logging.config.fileConfig(log)
+
+def _config_callback(config_path: str) -> None:
+    print('config',config_path)
+    init_config(config_path)
 
 @app.command()
 def french(
@@ -55,38 +86,37 @@ def french(
 
 @app.command()
 def index(
-        base_path: Annotated[str, typer.Argument(help="base path for references")],
-        rst_path: Annotated[List[str], typer.Argument(help="path to rst file(s)")],
-        anchor_txt: Optional[str] = typer.Option(
-           None,
-           "--anchor",
-           help="anchors.txt file recording reference locations",
-        ),
+       test: Optional[bool] = typer.Option(
+           False,
+           "--test",
+           help="Scan only, do not update anchors.txt file",
+        )
     ):
     """
-    Scan rst files collecting doc and ref targets (supply anchors_txt to write to file).
+    Scan rst files collecting doc and ref targets updating anchors.txt index.
     """
-    if not os.path.exists(base_path):
-       raise FileNotFoundError(errno.ENOENT, f"The base_path does not exist at location:", base_path)
-    anchor_path = os.path.join(base_path,anchor_txt)
+    rst_path = translate.translate.rst_folder
+    rst_glob = rst_path+"/**/*.rst"
+    anchor_path = translate.translate.anchor_file
 
-    collected = collect_paths(rst_path,'rst')
+    collected = collect_path(rst_glob,'rst')
+    collected.sort()
+    logger.info("Processing "+str(len(collected))+" files")
 
     index = ''
     for file in collected:
-       index += index_rst(base_path,file)
+       index += index_rst(rst_path,file)
 
-    if anchor_txt:
-        anchor_path = base_path+'/'+anchor_txt
+    if test:
+        print(index)
+    else:
         anchor_dir = os.path.dirname(anchor_path)
         if not os.path.exists(anchor_dir):
-           print("RST index directory:",anchor_dir)
-           os.makedirs(anchor_dir)
-
+            print("anchors.txt index directory:",anchor_dir)
+            os.makedirs(anchor_dir)
         with open(anchor_path,'w') as anchor_file:
             anchor_file.write(index)
-    else:
-        print(index)
+        print(anchor_path)
 
 @app.command()
 def fix_references(
@@ -105,31 +135,23 @@ def fix_references(
 
 @app.command()
 def rst(
-        rst_path: Annotated[List[str], typer.Argument(help="path to rst file(s)")],
-        anchor_txt: Optional[str] = typer.Option(
-           None,
-           "--anchor",
-           help="anchors.txt file providing reference locations",
-        ),
+        rst_path: Annotated[List[str], typer.Argument(help="path to rst file(s)")] = translate.translate.rst_folder,
     ):
     """
-    Convert rst file to markdown using pandoc.
+    Convert rst files to markdown using pandoc.
 
     The rst directives are simplified prior to conversion following our writing guide:
     gui-label, menuselection, file, command
 
     Manual cleanup required for:
-    figure
+      figure
     """
-    if anchor_txt:
-       anchors = load_anchors(anchor_txt)
+    if not rst_path:
+       rst_glob = translate.translate.rst_folder+"/**/*.rst"
+       rst_path = [rst_glob]
 
     for rst_file in collect_paths(rst_path,'rst'):
       md_file = convert_rst(rst_file)
-      if anchor_txt:
-         count = fix_anchors(anchors,md_file)
-         if count > 0:
-            print("Fixed",count,"anchor references")
       print(md_file,"\n")
 
 @app.command()
@@ -174,9 +196,27 @@ def main(
            None,
            "--version",
            "-v",
-           help="Show the application's version and exit.",
+           help="Use debug logging to trace program execution.",
            callback=_version_callback,
            is_eager=True,
         ),
+        log: Optional[str] = typer.Option(
+           None,
+           "--log",
+           help="Use logging to trace program execution (provide logging configuration file, or logging level).",
+           callback=_log_callback,
+           is_eager=True,
+        ),
+        config: Optional[str] = typer.Option(
+           None,
+           "--config",
+           help="Provide to config file to override built-in configuration.",
+           callback=_config_callback,
+           is_eager=True,
+        )
 ) -> None:
+    """
+    Services written around pandoc for format translation,
+    and deepl for language translation services.
+    """
     return

@@ -2,8 +2,8 @@
 
 For installation instructions, please refer to the [installation](installation.md).
 
--   [Installation](/install-guide)
--   [Setup](/administrator-guide)
--   [Setting up search/content statistics](statistics)
--   [Production Use](production-use)
--   [Updating the application](updating)
+-   [Installation](/install-guide/index.md)
+-   [Setup](/administrator-guide/index.md)
+-   [Setting up search/content statistics](statistics/index.md)
+-   [Production Use](production-use/index.md)
+-   [Updating the application](updating/index.md)

@@ -1,6 +1,7 @@
 import deepl
 import errno
 import glob
+import logging
 import os
 import pkgutil
 import re
@@ -10,11 +11,23 @@ import yaml
 
 from translate import __app_name__, __version__
 
+logger = logging.getLogger(__app_name__)
+
+# global configuration setup by cli._config_callback
+config = {}
+docs_folder = None
+rst_folder = None
+upload_folder = None
+convert_folder = None
+download_folder = None
+anchor_file = None
+
+anchors = {}
+docs_folder = None
+
 md_extensions_to = 'markdown+definition_lists+fenced_divs+backtick_code_blocks+fenced_code_attributes-simple_tables+pipe_tables'
 
 md_extensions_from = 'markdown+definition_lists+fenced_divs+backtick_code_blocks+fenced_code_attributes+pipe_tables'
-
-anchors = {}
 
 def load_auth() -> str:
     """
@@ -26,14 +39,61 @@ def load_auth() -> str:
 
     return AUTH
 
-def load_config() -> dict:
+def load_config(override_path: str) -> dict:
     """
     Load config.yml application configuration.
+    :param override_path: Overide config location, or None to use built-in default configuration
     """
-    raw = pkgutil.get_data('translate', "config.yml")
-    config = yaml.safe_load(raw.decode('utf-8'))
+    if override_path:
+        # override configuration
+        with open(override_path, 'r') as file:
+            text = file.read()
+            return yaml.safe_load(text)
+    else:
+        # default configuration
+        raw = pkgutil.get_data('translate', "config.yml")
+        return yaml.safe_load(raw.decode('utf-8'))
 
-    return config
+def init_config(override_path: str) -> None:
+    """
+    Initialize using provided config
+    :param override_path: Overide config location, or None to use built-in default configuration
+    """
+    global config
+    global docs_folder
+    global upload_folder
+    global convert_folder
+    global download_folder
+    global rst_folder
+    global anchor_file
+
+    config = load_config(override_path)
+
+    docs_folder = os.path.join(config['project_folder'],config['docs_folder'])
+    upload_folder = os.path.join(config['project_folder'],config['build_folder'],config['upload_folder'])
+    convert_folder = os.path.join(config['project_folder'],config['build_folder'],config['convert_folder'])
+    download_folder = os.path.join(config['project_folder'],config['build_folder'],config['download_folder'])
+    anchor_file = os.path.join(docs_folder,config['anchor_file'])
+
+    rst_folder = docs_folder
+    if 'rst_folder' in config:
+        rst_folder = config['rst_folder']
+
+    if not os.path.exists(docs_folder):
+       raise FileNotFoundError(errno.ENOENT, f"The docs folder does not exist at location:", docs_folder)
+
+    if not os.path.exists(rst_folder):
+       raise FileNotFoundError(errno.ENOENT, f"The rst folder does not exist at location:", rst_folder)
+
+    logger.debug('--- start configuration ---')
+    logger.debug('  mkdocs: %s',docs_folder)
+    logger.debug('  sphinx: %s',rst_folder)
+    logger.debug('  upload: %s',upload_folder)
+    logger.debug('download: %s',download_folder)
+    logger.debug('    docs: %s',docs_folder)
+    logger.debug(' anchors: %s',anchor_file)
+    logger.debug('--- end configuration ---')
+    return
 
 def load_anchors(anchor_txt:str) -> dict[str,str]:
     """
@@ -57,9 +117,8 @@ def collect_path(path: str, extension: str) -> list[str]:
     If the path is a single file the extension should match.
     """
     files = []
-
     if '*' in path:
-      for file in glob.glob(path):
+      for file in glob.glob(path,recursive = True):
          if file.endswith('.'+extension):
            files.append(file)
     else:
@@ -95,9 +154,6 @@ def index_rst(base_path: str, rst_file: str) -> str:
         text = file.read()
 
     relative_path = rst_file[len(base_path):]
-#    print("base_path path:", base_path)
-#    print("rst_file  path:", rst_file)
-#    print("relative  path:", relative_path)
     doc = relative_path
     ref = None
     heading = None
@@ -116,7 +172,7 @@ def index_rst(base_path: str, rst_file: str) -> str:
         if ref:
             heading = scan_heading(i,lines)
             if heading:
-#                print(" +- heading:",heading)
+                logging.debug(" +- heading:"+heading)
                 anchor = ref
                 if doc:
                     # reference to doc heading, no need for anchor
@@ -129,27 +185,18 @@ def index_rst(base_path: str, rst_file: str) -> str:
         if doc:
             heading = scan_heading(i,lines)
             if heading:
-#                print(" +- page:",heading)
+                logging.debug(" +- page:"+heading)
                 index += doc + '=' + relative_path + "\n"
                 index += doc + '.text=' + heading + "\n"
                 doc = None
 
-#         heading = scan_heading(i,lines)
-#         if heading:
-#            anchor = heading.replace(' ','-').lower()
-#            print(" | heading:",heading)
-#            print(" +- anchor:",anchor)
-#            index += relative_path + '#' + anchor + '.path=' + relative_path + '#' + anchor + "\n"
-#            index += relative_path + '#' + anchor + '.text=' + heading + "\n"
-#            continue
-
         match = re.search(r"^.. _((\w|.|-)*):$", line)
         if match:
             if ref:
-                print("reference "+ref+" defined without a heading, skipped")
+                logging.warning("reference "+ref+" defined without a heading, skipped")
 
             ref = match.group(1)
-#            print(" |   ref:",ref)
+            logging.debug(" |   ref:"+ref)
 
     return index
 
@@ -244,7 +291,6 @@ def convert_rst(rst_file: str) -> str:
     if not os.path.exists(rst_file):
        raise FileNotFoundError(errno.ENOENT, f"RST file does not exist at location:", rst_file)
 
-    config = load_config()
     if rst_file[-4:] != '.rst':
        raise FileNotFoundError(errno.ENOENT, f"Rich-structued-text 'rst' extension required:", rst_file)
 
@@ -365,14 +411,16 @@ def _preprocess_rst_doc(text: str) -> str:
    # doc links processed in order from most to least complicated
 
    # :doc:`normal <../folder/index.rst>`
-   text = re.sub(
-       r":doc:`(.*) <((\.\./)*(.*)/index)\.rst>`",
-       r"`\1 <\4>`_",
-       text,
-       flags=re.MULTILINE
-   )
+   # :doc:`normal <../folder/index.md>`
+#    text = re.sub(
+#        r":doc:`(.*) <((\.\./)*(.*)/index)\.rst>`",
+#        r"`\1 <\4/index.md>`_",
+#        text,
+#        flags=re.MULTILINE
+#    )
 
    # :doc:`normal <link.rst>`
+   # `normal <link.md>`_
    text = re.sub(
        r":doc:`(.*) <(.*).rst>`",
        r"`\1 <\2.md>`_",
@@ -381,7 +429,7 @@ def _preprocess_rst_doc(text: str) -> str:
    )
 
    # :doc:`../folder/index.rst`
-   # `folder <index.md>`_
+   # `folder <../folder/index.md>`_
    text = re.sub(
        r":doc:`((\.\./)*(.*)/index)\.rst`",
        r"`\3 <\1/>`_",
@@ -389,6 +437,7 @@ def _preprocess_rst_doc(text: str) -> str:
        flags=re.MULTILINE
    )
    # :doc:`simple.rst`
+   # `simple <simple.rst>`_
    text = re.sub(
        r":doc:`(.*)\.rst`",
        r"`\1 <\1.md>`_",

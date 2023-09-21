@@ -18,12 +18,12 @@ At various points references are made to the product documentation to find more 
 
 ## Tutorial contents
 
--   [Introduction Index](introduction/index.md)
+-   [Introduction](introduction/index.md)
 -   [Introduction Discover](introduction/discover.md)
 -   [Introduction Map](introduction/map.md)
 -   [Introduction Schema](introduction/schema.md)
--   [Deployment Index](deployment/index.md)
--   [Setup Index](setup/index.md)
--   [Edit Index](edit/index.md)
--   [Harvesting Index](harvesting/index.md)
--   [Extra Index](extra/index.md)
+-   [Deployment.](deployment/index..md)
+-   [Setup](setup/index.md)
+-   [Edit](edit/index.md)
+-   [Harvesting](harvesting/index.md)
+-   [Extra](extra/index.md)
