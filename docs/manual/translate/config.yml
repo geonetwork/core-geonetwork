@@ -1,6 +1,6 @@
 deepl_base_url: "https://api-free.deepl.com"
-project_folder: "manual"
-rst_folder: "manual/docs"
+project_folder: "."
+rst_folder: "docs"
 build_folder: "target"
 docs_folder: "docs"
 anchor_file: 'anchors.txt'

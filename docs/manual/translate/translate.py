@@ -102,14 +102,18 @@ def load_anchors(anchor_txt:str) -> dict[str,str]:
     """
     if not os.path.exists(anchor_txt):
        raise FileNotFoundError(errno.ENOENT, f"anchors definition file does not exist at location:", anchor_txt)
-    anchors = {}
+    index = {}
     with open(anchor_txt,'r') as file:
        for line in file:
          if '=' in line:
             (anchor,path) = line.split('=')
-            anchors[anchor] = path
+            index[anchor] = path
 
     return anchors
+
+def init_anchors():
+    global anchors
+    anchors = load_anchors(anchor_file)
 
 def collect_path(path: str, extension: str) -> list[str]:
     """
@@ -246,7 +250,7 @@ def scan_heading(index: int, lines: list[str] ) -> str:
     return None
 
 # administrator-guide/managing-metadata-standards/configure-validation.md
-def fix_anchors(anchors: dict[str,str], md_file: str) -> int:
+def fix_anchors(md_file: str) -> int:
     """
     Use search/replace to identify [reference](reference) links and
     fill in appropriate path to anchor.
@@ -299,8 +303,7 @@ def convert_rst(rst_file: str) -> str:
     md_file = md_file.replace(".rst",".md")
 
     # temp file for processing
-    convert_folder = config['convert_folder']
-    md_tmp_file = re.sub("^(help|manual)/docs/",convert_folder+'/', rst_file)
+    md_tmp_file = re.sub("^docs/",convert_folder+'/', rst_file)
     md_tmp_file = md_tmp_file.replace(".txt",".md")
     md_tmp_file = md_tmp_file.replace(".rst",".md")
     md_tmp_file = md_tmp_file.replace(".md",".tmp.md")

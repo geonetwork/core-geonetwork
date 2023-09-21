@@ -1,16 +1,11 @@
 # Translation
 
-Translations are listed alongside english markdown:
+A translate script is provided to facilitate working with pandoc and deepl translation services.
 
-* `example.md`
-* `example.fr.md`
-
-Using ***pandoc*** to convert to `html`, and then using the [Deepl REST API](http://deepl.com).
-
-1. The script is run from your ``core-genetwork/docs`` folder:
+1. The script is run the ``core-genetwork/docs/manual`` folder:
 
    ```
-   cd docs
+   cd core-genetwork/docs/manual
    ```
 
 2. Install script requirements, and check it runs:
@@ -26,25 +21,58 @@ Using ***pandoc*** to convert to `html`, and then using the [Deepl REST API](htt
    mkdir target
    ```
 
+This script requires ***pandoc*** be installed:
+
+Ubuntu:
+```bash
+apt-get install pandoc
+```
+
+macOS:
+``` bash
+brew install pandoc
+```
+
+References:
+
+* https://pandoc.org/installing.html
+
+## Language Translation
+
+Translations are listed alongside english markdown:
+
+* `example.md`
+* `example.fr.md`
+
+Using ***pandoc*** to convert to `html`, and then using the [Deepl REST API](http://deepl.com).
+
 4. Provide environmental variable with Deepl authentication key:
 
    ```
    export DEEPL_AUTH="xxxxxxxx-xxx-...-xxxxx:fx"
    ```
 
-5. Translate using pandoc and deepl:
+5. Translate a document to french using pandoc and deepl:
 
    ```
-   python3 -m translate french docs/example.md
+   python3 -m translate french docs/help/index.md
    ```
+   
+6. To translate several documents in a folder:
 
-See ``python3 -m translate --help`` for more options.
+   ```
+   python3 -m translate french docs/overview/*.md
+   ```
+   
+   Deepl charges by the character so bulk translation not advisable.
+
+See ``python3 -m translate french --help`` for more options.
 
 You are welcome to use  google translate, ChatGPT, or Deepl directly - keeping in mind markdown formatting may be lost.
 
 Please see the writing guide for what mkdocs functionality is supported.
 
-## sphinx-build notes
+## Format conversion from sphinx-build rst files
 
 1. Copy everything over (so all the images and so on are present)
    
@@ -63,22 +91,29 @@ Please see the writing guide for what mkdocs functionality is supported.
 2. To index references in rst files into `docs/anchors.txt`:
 
    ```
-   cd core-geonetwork/docs
-   python3 -m translate index manual/docs/ manual/docs/**/*.rst
+   cd core-geonetwork/docs/manual
+   python3 -m translate index
+   ```
+
+3. To bulk convert all content from ``rst`` to ``md``:
+   
+   ```
+   cd core-geonetwork/docs/manual
+   python3 -m translate rst docs/contributing/doing-a-release.rst
    ```
 
 3. Convert a single file:
    
    ```
-   cd core-geonetwork/docs
-   python3 -m translate rst manual/docs/contributing/doing-a-release.rst
+   cd core-geonetwork/docs/manual
+   python3 -m translate rst docs/contributing/doing-a-release.rst
    ```
 
 4. Bulk convert files in a folder:
    
    ```
-   cd core-geonetwork/docs
-   python3 -m translate rst docs/**/*.rst
+   cd core-geonetwork/docs/manual
+   python3 -m translate rst docs/introduction/**/*.rst
    ```
 
 5. The ``.gitignore`` has been setup to ignore:
@@ -88,16 +123,9 @@ Please see the writing guide for what mkdocs functionality is supported.
    * ``conf.py``
    
    To clean up ``rst`` files when you are done:
-   
-   ```
-   find . -type f -regex ".*\.rst" 
-   ```
-   
-   And then remove:
    ```
    find . -type f -regex ".*\.rst" -delete 
    ```
-
 
 ### Manual review required
 
