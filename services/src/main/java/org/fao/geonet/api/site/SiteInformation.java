@@ -141,6 +141,7 @@ public class SiteInformation {
             Geonet.Config.CODELIST_DIR,
             Geonet.Config.RESOURCES_DIR,
             Geonet.Config.SCHEMAPLUGINS_DIR,
+            Geonet.Config.SCHEMAPUBLICATION_DIR,
             Geonet.Config.CONFIG_DIR,
             Geonet.Config.INDEX_CONFIG_DIR,
             Geonet.Config.FORMATTER_PATH,
