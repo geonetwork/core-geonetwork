@@ -6,4 +6,4 @@ The tutorials in this section target specific GeoNetwork implementation scenario
 -   [Tutorial setting up INSPIRE view service with GeoNetwork and Mapserver](view-mapserver.md)
 -   [Tutorial setting up an Atom/OpenSearch based INSPIRE download service](download-atom.md)
 -   [Tutorial setting up a WFS based INSPIRE download service with GeoServer](download-geoserver.md)
--   [.md](.md)
+-   [.rst](.md)

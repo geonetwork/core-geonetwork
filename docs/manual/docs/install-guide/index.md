@@ -24,6 +24,6 @@ After installing the application, you can configure the following:
 
 -   [Configuring the database](configuring-database.md)
 -   [Customizing the data directory](customizing-data-directory.md)
--   [Customising the log file location](logging.md)
+-   [Logging](logging.md)
 -   [Configuring printing of the map](map-print-setup.md)
 -   [Loading templates and sample data](loading-samples.md)

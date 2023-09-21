@@ -14,7 +14,7 @@ There are 3 types of sources:
 
 The main catalogue corresponds to the current installation.
 
-When harvesting, at least one source is created to represent the harvester. When harvesting from another GeoNetwork node, sources from the target catalogue are also harvested to keep track of the true origin of records. This only applies to the GeoNetwork protocols which use MEF (:[mef_format](mef_format.md)) which contain the source catalogue information.
+When harvesting, at least one source is created to represent the harvester. When harvesting from another GeoNetwork node, sources from the target catalogue are also harvested to keep track of the true origin of records. This only applies to the GeoNetwork protocols which use MEF (:[Metadata Exchange Format (MEF)](/annexes/mef-format.md)) which contain the source catalogue information.
 
 The last type is sub-portal, which is described in details below.
 
@@ -54,7 +54,7 @@ Some organizations need to open the catalogue to a set of partners. In such case
 
 ![](img/portal-geocatch.png)
 
-The concept of a sub-portal allows the possibility of creating a dedicated URL for each partner. The header can contain the partner identification with name and logo. Optionally the user interface can also be customized (see [user-interface-configuration](user-interface-configuration.md)).
+The concept of a sub-portal allows the possibility of creating a dedicated URL for each partner. The header can contain the partner identification with name and logo. Optionally the user interface can also be customized (see [User Interface Configuration](/administrator-guide/configuring-the-catalog/user-interface-configuration.md)).
 
 To setup this kind of configuration, the basic principle is to have:
 
@@ -63,8 +63,8 @@ To setup this kind of configuration, the basic principle is to have:
 
 To configure this, apply the following steps:
 
--   Create a group for the partner eg. `oca` (see [creating-group](creating-group.md)).
--   Create at least one user for the partner (see [creating-user](creating-user.md)). The user must be member of the group `oca`. If you want the user to be able to configure the sub-portal (eg. change the name, choose a logo), the user must have at least the `UserAdmin` profile for the group `oca`.
+-   Create a group for the partner eg. `oca` (see [Creating group](/administrator-guide/managing-users-and-groups/creating-group.md)).
+-   Create at least one user for the partner (see [Creating user](/administrator-guide/managing-users-and-groups/creating-user.md)). The user must be member of the group `oca`. If you want the user to be able to configure the sub-portal (eg. change the name, choose a logo), the user must have at least the `UserAdmin` profile for the group `oca`.
 -   Create a sub-portal. This can have the same name as the group, eg. `oca` but this is not essential. The filter can be created using the fact that a record published in the group `oca` should be in this sub-portal, using the syntax `+_groupPublished:oca`. Once created the sub-portal is accessible at <http://localhost:8080/geonetwork/oca>.
 -   (Optional) Link the sub-portal to a user admin group to allow `UserAdmin` to configure their sub-portal.
 

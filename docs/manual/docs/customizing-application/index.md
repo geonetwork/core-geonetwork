@@ -7,7 +7,7 @@
 -   [Building a custom form step by step](editor-ui/tutorial.md)
 -   [Theming](changing-layout.md)
 -   [Configuring search fields](configuring-search-fields.md)
--   [Term aggregation on a field](configuring-faceted-search.md)
+-   [Configuring faceted search](configuring-faceted-search.md)
 -   [Advanced configuration](advanced-configuration.md)
 -   [Adding static pages](adding-static-pages.md)
 -   [Implementing schema plugins](implementing-a-schema-plugin.md)

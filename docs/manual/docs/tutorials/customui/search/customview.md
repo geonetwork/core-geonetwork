@@ -1,6 +1,6 @@
 # Customizing default view {#tuto-search-customview}
 
-Follow [instructions](customview.md) and create your first custom view.
+Follow [instructions](/customizing-application/search-ui/customview.md) and create your first custom view.
 
 ## Exercices
 

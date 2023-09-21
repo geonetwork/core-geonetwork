@@ -6,7 +6,7 @@ All datasets described in metadata records and accessible through a download ser
 
 ![](img/mechanism.png)
 
-Elasticsearch needs to be installed and configured (See [installing-index](installing-index.md)).
+Elasticsearch needs to be installed and configured (See [Installing search platform](/install-guide/installing-index.md)).
 
 Once collected, filtering is available in the map viewer for this layer. The filter interface provides faceting and export capabilities. The map viewer tries to connect to a WFS service by substituting WMS by WFS in the service URL. If a WFS service is responding with a feature type having the same name as the WMS, the filter panel provides the option to index the features. User needs to be identified to run the indexing task.
 

@@ -9,7 +9,7 @@ Two protocols are available:
 
 ## Configuration
 
-See [csw-configuration](csw-configuration.md) for details of how to configure the CSW end point.
+See [Configuring CSW](/administrator-guide/configuring-the-catalog/csw-configuration.md) for details of how to configure the CSW end point.
 
 ## URL
 
@@ -25,7 +25,7 @@ Generally, the `VERSION` and `SERVICE` parameter are also added, along with the 
 
 The full set of requests supported by GeoNetwork can be found in `CSW test`, in the `Settings` section of the Admin Dashboard.
 
-See [csw-configuration](csw-configuration.md) for more details of this function.
+See [Configuring CSW](/administrator-guide/configuring-the-catalog/csw-configuration.md) for more details of this function.
 
 When using the GetRecords operation for searching, 2 types of parameter can be use for searching:
 

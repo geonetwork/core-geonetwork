@@ -15,7 +15,7 @@ Parent/child relations can be set on ISO19139 and Dublin Core records. In ISO191
 </gmd:parentIdentifier>
 ```
 
-Parent/Child relation in ISO19139 may also be encoded using aggregates (see [linking-others](linking-others.md)).
+Parent/Child relation in ISO19139 may also be encoded using aggregates (see [Other types of resources (eg. sensor, publication)](/user-guide/associating-resources/linking-others.md)).
 
 When creating such relationship, users will be able to navigate between the records in the search and record view.
 

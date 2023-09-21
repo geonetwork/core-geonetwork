@@ -24,7 +24,7 @@ Below is a brief description for each privilege to help you identify which ones 
 
 **Notify**: Users in the specified group receive notification if data attached to the metadata record is downloaded.
 
-Review and make sure that you understand [user_profiles](user_profiles.md) in the User and Group Administration section of this manual.
+Review and make sure that you understand [Users, Groups and Roles](/administrator-guide/managing-users-and-groups/index.rst#user_profiles) in the User and Group Administration section of this manual.
 
 !!! note
 

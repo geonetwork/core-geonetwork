@@ -84,4 +84,4 @@ To create new groups you should be logged on with an account that has Administra
 
 Access privileges can be set per metadata record. You can define privileges on a per Group basis.
 
-See more on [configuring-the-catalog](configuring-the-catalog.md).
+See more on [Configuring the catalog](/administrator-guide/configuring-the-catalog/index.md).

@@ -7,7 +7,7 @@
 
 ## Creating custom editor
 
-A metadata editor configuration is defined for a specific schema plugin standard (see [implementing-a-schema-plugin](implementing-a-schema-plugin.md)).
+A metadata editor configuration is defined for a specific schema plugin standard (see [Implementing schema plugins](/customizing-application/implementing-a-schema-plugin.md)).
 
 The editor configuration defines the navigation menu for the editor (i.e. list of views and tabs), the list of fields and the type of control to use. Controls can be HTML-type (e.g. text, date) or more advanced controls built using [AngularJS directives](https://docs.angularjs.org/guide/directive).
 
@@ -32,10 +32,10 @@ An editor configuration should first define some general element descriptions an
 
 Child elements:
 
--   **fields**, Optional element (see [creating-custom-editor-fields](creating-custom-editor-fields.md))
--   **fieldsWithFieldset**, Optional element (see [creating-custom-editor-fieldsWithFieldset](creating-custom-editor-fieldsWithFieldset.md))
--   **multilingualFields**, Optional element (see [creating-custom-editor-multilingualFields](creating-custom-editor-multilingualFields.md))
--   **views**, Mandatory element (see [creating-custom-editor-views](creating-custom-editor-views.md))
+-   **fields**, Optional element (see [Defining field type](/customizing-application/editor-ui/creating-custom-editor.rst#creating-custom-editor-fields))
+-   **fieldsWithFieldset**, Optional element (see [Grouping element from the standards](/customizing-application/editor-ui/creating-custom-editor.rst#creating-custom-editor-fieldsWithFieldset))
+-   **multilingualFields**, Optional element (see [Defining multilingual fields](/customizing-application/editor-ui/creating-custom-editor.rst#creating-custom-editor-multilingualFields))
+-   **views**, Mandatory element (see [Configuring views](/customizing-application/editor-ui/creating-custom-editor.rst#creating-custom-editor-views))
 
 ## Defining field type {#creating-custom-editor-fields}
 
@@ -114,7 +114,7 @@ To create a new view, use the following:
 
 Child elements:
 
--   **view**, One or more (see [creating-custom-editor-view](creating-custom-editor-view.md))
+-   **view**, One or more (see [Defining a view](/customizing-application/editor-ui/creating-custom-editor.rst#creating-custom-editor-view))
 
 ## Defining a view {#creating-custom-editor-view}
 
@@ -204,9 +204,9 @@ displayIfRecord and displayIfServiceInfo could be combined. An AND operator is u
 
 Child elements:
 
--   **tab**, One or more (see [creating-custom-editor-tab](creating-custom-editor-tab.md))
--   **flatModeExceptions**, Optional element (see [creating-custom-editor-flatModeExceptions](creating-custom-editor-flatModeExceptions.md))
--   **thesaurusList**, Optional element (see [creating-custom-editor-thesaurusList](creating-custom-editor-thesaurusList.md))
+-   **tab**, One or more (see [Defining a tab](/customizing-application/editor-ui/creating-custom-editor.rst#creating-custom-editor-tab))
+-   **flatModeExceptions**, Optional element (see [Configuring complex element display](/customizing-application/editor-ui/creating-custom-editor.rst#creating-custom-editor-flatModeExceptions))
+-   **thesaurusList**, Optional element (see [Customizing thesaurus](/customizing-application/editor-ui/creating-custom-editor.rst#creating-custom-editor-thesaurusList))
 
 ## Defining a tab {#creating-custom-editor-tab}
 
@@ -256,7 +256,7 @@ The "flat" mode is an important concept to understand for the editor. It control
 -   complex elements are displayed (i.e. elements having children) and
 -   non-existing elements are displayed (i.e. elements in the standard, not in the current document).
 
-When a tab is in flat mode, this tab will not display elements which are not in the current metadata document and it will display complex elements as a group only if defined in the list of elements with fieldset (see [creating-custom-editor-fieldsWithFieldset](creating-custom-editor-fieldsWithFieldset.md)).
+When a tab is in flat mode, this tab will not display elements which are not in the current metadata document and it will display complex elements as a group only if defined in the list of elements with fieldset (see [Grouping element from the standards](/customizing-application/editor-ui/creating-custom-editor.rst#creating-custom-editor-fieldsWithFieldset)).
 
 Example for a contact in ""non-flat" mode:
 
@@ -365,7 +365,7 @@ The "flat" mode is an important concept to understand for the editor. It control
 -   complex elements are displayed (i.e. elements having children) and
 -   non-existing elements are displayed (i.e. elements in the standard, not in the current document).
 
-When a tab is in flat mode, this tab will not display elements which are not in the current metadata document and it will display complex elements as a group only if defined in the list of elements with fieldset (see [creating-custom-editor-fieldsWithFieldset](creating-custom-editor-fieldsWithFieldset.md)).
+When a tab is in flat mode, this tab will not display elements which are not in the current metadata document and it will display complex elements as a group only if defined in the list of elements with fieldset (see [Grouping element from the standards](/customizing-application/editor-ui/creating-custom-editor.rst#creating-custom-editor-fieldsWithFieldset)).
 
 Example for a contact in ""non-flat" mode:
 
@@ -582,7 +582,7 @@ Field type. Register here any Angular directive to be used on the client side. D
 
 Child elements:
 
--   **template**, Optional element (see [creating-custom-editor-template](creating-custom-editor-template.md))
+-   **template**, Optional element (see [Adding a template based field](/customizing-application/editor-ui/creating-custom-editor.rst#creating-custom-editor-template))
 
 ## Adding a template based field {#creating-custom-editor-template}
 
@@ -906,4 +906,4 @@ displayIfRecord and displayIfServiceInfo could be combined. An AND operator is u
 
 Child elements:
 
--   **template**, Optional element (see [creating-custom-editor-template](creating-custom-editor-template.md))
+-   **template**, Optional element (see [Adding a template based field](/customizing-application/editor-ui/creating-custom-editor.rst#creating-custom-editor-template))

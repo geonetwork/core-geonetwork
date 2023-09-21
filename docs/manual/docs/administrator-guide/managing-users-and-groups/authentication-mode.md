@@ -2,12 +2,12 @@
 
 By default the catalog uses the internal database for user management and authentication. However there are some other authentication mechanisms available:
 
--   [authentication-ldap](authentication-ldap.md)
--   [authentication-ldap-hierarchy](authentication-ldap-hierarchy.md)
--   [authentication-cas](authentication-cas.md)
--   [authentication-openid](authentication-openid.md)
--   [authentication-keycloak](authentication-keycloak.md)
--   [authentication-shibboleth](authentication-shibboleth.md)
+-   [Configuring LDAP](/administrator-guide/managing-users-and-groups/authentication-mode.rst#authentication-ldap)
+-   [Configuring LDAP - Hierarchy](/administrator-guide/managing-users-and-groups/authentication-mode.rst#authentication-ldap-hierarchy)
+-   [Configuring CAS](/administrator-guide/managing-users-and-groups/authentication-mode.rst#authentication-cas)
+-   [Configuring OAUTH2 OpenID Connect](/administrator-guide/managing-users-and-groups/authentication-mode.rst#authentication-openid)
+-   [Configuring Keycloak](/administrator-guide/managing-users-and-groups/authentication-mode.rst#authentication-keycloak)
+-   [Configuring Shibboleth](/administrator-guide/managing-users-and-groups/authentication-mode.rst#authentication-shibboleth)
 
 Which mode to use is configured in **`WEB-INF/config-security/config-security.xml`** or via an environment variable `geonetwork.security.type`.
 
@@ -21,7 +21,7 @@ Uncomment the relevant line in **`WEB-INF/config-security/config-security.xml`**
 
 [Lightweight Directory Access Protocol (LDAP)](https://en.wikipedia.org/wiki/Ldap) enables GeoNetwork to verify usernames and passwords to a remote identity store. LDAP implementation uses the default GeoNetwork Login User Interface elements.
 
-GeoNetwork currently has 2 approaches to configure LDAP. Verify also the alternative approach in [authentication-ldap-hierarchy](authentication-ldap-hierarchy.md).
+GeoNetwork currently has 2 approaches to configure LDAP. Verify also the alternative approach in [Configuring LDAP - Hierarchy](/administrator-guide/managing-users-and-groups/authentication-mode.rst#authentication-ldap-hierarchy).
 
 The LDAP configuration is defined in `WEB-INF/config-security/config-security.properties`, you can then configure your environment updating the previous file or overriding the properties in the file `WEB-INF/config-security/config-security-overrides.properties`.
 
@@ -728,10 +728,10 @@ Authorization: Bearer:  <JWT token>
 
 Bearer Tokens are mostly used for automated (desktop or application) API calls - real users should just login normally using OIDC.
 
-1.  Setup your OIDC configuration (see [authentication-openid](authentication-openid.md))
-2.  Setup the OIDC Bearer token configuration (see [bearer_token_configuration](bearer_token_configuration.md))
+1.  Setup your OIDC configuration (see [Configuring OAUTH2 OpenID Connect](/administrator-guide/managing-users-and-groups/authentication-mode.rst#authentication-openid))
+2.  Setup the OIDC Bearer token configuration (see [Configuration](/administrator-guide/managing-users-and-groups/authentication-mode.rst#bearer_token_configuration))
 3.  Obtain a Bearer token from the OIDC server. This is the hard part and there are several ways to do this. One way that is used is via the OAuth 2.0 Device Authorization Grant ("Device Flow") workflow.
-4.  Attach it to your request headers (see [oidc_bearer_tokens](oidc_bearer_tokens.md))
+4.  Attach it to your request headers (see [OIDC Bearer Tokens](/administrator-guide/managing-users-and-groups/authentication-mode.rst#oidc_bearer_tokens))
 5.  Make protected requests to the Geonetwork API
 
 This has been tested with Keycloak and with Azure AD. It should work with other JWT-based OIDC services.

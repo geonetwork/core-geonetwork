@@ -77,7 +77,7 @@ Check the updated files and commit to the doc repository.
 
 ## Editing the reStructuredText files
 
-To update the documentation, use a text editor to edit `.rst` files. Ensure you are using the correct terminology by checking [style-guide](style-guide.md). Save your changes, build the documentation and open the HTML files to preview the changes. When your changes are ready to be submitted to the project, follow the steps in [making-a-pull-request](making-a-pull-request.md).
+To update the documentation, use a text editor to edit `.rst` files. Ensure you are using the correct terminology by checking [Style Guide](/contributing/style-guide.rst). Save your changes, build the documentation and open the HTML files to preview the changes. When your changes are ready to be submitted to the project, follow the steps in [Making a pull request](/contributing/making-a-pull-request.md).
 
 ## Sphinx
 
@@ -144,16 +144,16 @@ Example, link to the Bern User Meeting (See `Meeting2015Bern`{.interpreted-text 
 The values are defined in `rst_epilog` in conf.py:
 
 ``` rst
-.. |jdbc.properties| replace:: WEB-INF/config-db/jdbc.properties
+.. **`WEB-INF/config-db/jdbc.properties`** replace:: WEB-INF/config-db/jdbc.properties
 ```
 
 Use them when appropriate:
 
 ``` rst
-Configure the database in |jdbc.properties| ...
+Configure the database in **`WEB-INF/config-db/jdbc.properties`** ...
 
 
-After installation look to |install.homepage|_ on your web browser.
+After installation look to `http://localhost:8080/geonetwork`_ on your web browser.
 ```
 
 ### versionadded, versionchanged and deprecated

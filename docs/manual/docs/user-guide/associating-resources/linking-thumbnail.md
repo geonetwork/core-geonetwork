@@ -22,7 +22,7 @@ When the overview is available as an image on the web, it could be directly link
 
 ![](img/thumb-from-url.png)
 
-If the overview is not available, attache an image (png, gif, jpeg) within the filestore (see [associating_resources_filestore](associating_resources_filestore.md)) and click its name to set the URL:
+If the overview is not available, attache an image (png, gif, jpeg) within the filestore (see [Uploading attachments](/user-guide/associating-resources/using-filestore.md)) and click its name to set the URL:
 
 ![](img/thumb-from-filestore.png)
 
@@ -32,6 +32,6 @@ You can link as many images as you want. Images associated in this mode, should 
 
 ## Generating a thumbnail using WMS layers {#linking-thumbnail-from-wms}
 
-If you have registered a WMS layer in the current metadata record (see [linking-wms-layer](linking-wms-layer.md)), a thumbnail can be generated using it on top of the base layer map. Choose the `Create thumbnail` tab and choose the area to be print on the thumbnail. The image created is added to the filestore.
+If you have registered a WMS layer in the current metadata record (see [Linking a WMS layer](/user-guide/associating-resources/linking-online-resources.rst#linking-wms-layer)), a thumbnail can be generated using it on top of the base layer map. Choose the `Create thumbnail` tab and choose the area to be print on the thumbnail. The image created is added to the filestore.
 
 ![](img/thumbprint.png)

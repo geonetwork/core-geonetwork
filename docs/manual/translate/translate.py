@@ -462,19 +462,19 @@ def _preprocess_rst_ref(text: str) -> str:
    """
    # ref links processed in order from most to least complicated
    # :ref:`normal <link>`
-   text = re.sub(
-       r":ref:`(.*) <((\w|-)*)>`",
-       r"`\1 <\2.md>`_",
-       text,
-       flags=re.MULTILINE
+   named_reference = re.compile(r":ref:`(.*) <((\w|-)*)>`")
+   text = named_reference.sub(
+       lambda match: "'"+match.group(1)+" <"+_refify(match.group(2))+">'_",
+       text
    )
+
    # :ref:`simple`
-   text = re.sub(
-       r":ref:`((\w|-)*)\`",
-       r"`\1 <\1.md>`_",
-       text,
-       flags=re.MULTILINE
+   simple_reference = re.compile(r":ref:`((\w|-)*)\`")
+   text = simple_reference.sub(
+       lambda match: "'"+_title(match.group(1))+" <"+_refify(match.group(1))+">'_",
+       text
    )
+
    return text
 
 def _preprocess_rst_toctree(path, text: str) -> str:
@@ -515,8 +515,7 @@ def _preprocess_rst_toctree(path, text: str) -> str:
 
 def _labelify(path: str, link: str) -> str:
    """
-   Create a label title, based on a documentation link.
-   Will make use of anchors index if available to look up correct title.
+   Create a label title, based on a documentation link (using on anchors.txt index)
    """
    resolved_path = _linkify(path,link)
    # example:
@@ -526,15 +525,45 @@ def _labelify(path: str, link: str) -> str:
    if title_key in anchors:
        return anchors[title_key]
    else:
-       label = link.replace('.rst','')
-       label = label.replace('.md','')
-       label = label.replace('/index', '')
-       label = label.replace('-', ' ')
-       label = label.replace('_', ' ')
-       label = label.replace('/', ' ')
-       label = label.title()
+       return _label(link)
 
+def _label(link: str) -> str:
+   """
+   Create a default label, based on a link or reference.
+   """
+   label = link.replace('.rst','')
+   label = label.replace('.md','')
+   label = label.replace('/index', '')
+   label = label.replace('-', ' ')
+   label = label.replace('_', ' ')
+   label = label.replace('/', ' ')
+   label = label.title()
+
+   return label
+
+def _title(reference: str) -> str:
+    """
+    Determines title for reference (using on anchors.txt index)
+    """
+    title_lookup = reference+".title"
+
+    if title_lookup in anchors:
+       return anchors[title_lookup]
+    else:
+       label = _label(reference)
+       logger.warning("broken reference "+reference+" title:"+label)
        return label
+
+def _refify(reference: str) ->  str:
+    """
+    Determines absolute path#anchor for reference (using on anchors.txt index)
+    """
+    if reference in anchors:
+       return anchors[reference]
+    else:
+       link = reference+"-ref.md"
+       logger.warning("broken reference "+reference+" link:"+link)
+       return link
 
 def _linkify(path: str, link: str) ->  str:
     """

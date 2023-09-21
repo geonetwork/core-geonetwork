@@ -1,6 +1,6 @@
 # Customize your GeoNetwork UI {#tuto-customui}
 
--   [Search](search/index.md)
+-   [Search page](search/index.md)
 -   [Formatter](view/index.md)
 
-For editor customization see [creating-custom-editor](creating-custom-editor.md):.
+For editor customization see [Customizing editor](/customizing-application/editor-ui/creating-custom-editor.md):.

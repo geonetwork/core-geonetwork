@@ -59,4 +59,4 @@ If the view is too big, we can also define a set of tabs inside the editor, so n
 
 Remember that you have to restart the application container (Tomcat) every time you modify this file.
 
-See more on [creating-custom-editor](creating-custom-editor.md).
+See more on [Customizing editor](/customizing-application/editor-ui/creating-custom-editor.md).

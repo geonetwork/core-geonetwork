@@ -1,6 +1,6 @@
 # Hook your own code {#tuto-hookcustomizations}
 
-At the end of this tutorial, you should be able to customize your own code into GeoNetwork on a clean and easy to upgrade way. You should start with the [tuto-introduction](tuto-introduction.md) tutorial first.
+At the end of this tutorial, you should be able to customize your own code into GeoNetwork on a clean and easy to upgrade way. You should start with the [GeoNetwork Orientation](/tutorials/introduction/index.md) tutorial first.
 
 -   [Separate your code](newproject/index.md)
 -   [Using Events](events/index.md)
@@ -8,4 +8,4 @@ At the end of this tutorial, you should be able to customize your own code into 
 -   [Schema Plugins](schemaplugins/index.md)
 -   [Search Fields](searchfields/index.md)
 
-For ui customization see [tuto-customui](tuto-customui.md).
+For ui customization see [Customize your GeoNetwork UI](/tutorials/customui/index.md).

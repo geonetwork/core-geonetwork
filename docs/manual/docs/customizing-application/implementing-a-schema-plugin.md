@@ -85,7 +85,7 @@ The following stylesheets can be present:
 -   **extract-relations.xsl**: (*Optional*) Extract the associated resources of the metadata record (eg. online source, thumbnails).
 -   **set-thumbnail.xsl**: (*Optional*) Set the browse graphic/thumbnail in the metadata record.
 -   **set-uuid.xsl**: (*Optional*) Set the UUID of the metadata record.
--   **suggest.xsl**: (*Optional*) XSLT run by metadata suggestions service. The XSLT contains processes that can be registered and run on different elements of a metadata record. eg. expand keyword field with comma separated content into multiple keyword fields. See [metadata_suggestion](metadata_suggestion.md) for more info.
+-   **suggest.xsl**: (*Optional*) XSLT run by metadata suggestions service. The XSLT contains processes that can be registered and run on different elements of a metadata record. eg. expand keyword field with comma separated content into multiple keyword fields. See [Suggestion for improving metadata content](/user-guide/workflow/suggestion.md) for more info.
 -   **unset-thumbnail.xsl**: (*Optional*) Remove the browse graphic/thumbnail from the metadata record.
 -   **update-child-from-parent-info.xsl**: (*Optional*) XSLT to specify which elements in a child record are updated from a parent record. Used to manage hierarchical relationships between metadata records.
 -   **update-fixed-info.xsl**: (*Optional*) XSLT to update 'fixed' content in metadata records.
@@ -1178,7 +1178,7 @@ At this stage, our new GeoNetwork plugin schema for MCP contains:
 
 Schematrons are rules that are used to check conditions and content in the metadata record as part of the two stage validation process used by GeoNetwork.
 
-Schematron rules are created in the schematrons directory that you checked out earlier - see [preparation](preparation.md) above.
+Schematron rules are created in the schematrons directory that you checked out earlier - see [Preparation](/customizing-application/implementing-a-schema-plugin.rst#preparation) above.
 
 An example rule is:
 
@@ -1309,7 +1309,7 @@ The effect of this would be that when an online resource element was expanded, t
 
 Once again, a good place to start when building a `schema-suggestions.xml` file for the MCP is the `schema-suggestions.xml` file for the iso19139 schema.
 
--   **schema-substitutes.xml** - Recall from the earlier [schema_and_schema_xsd](schema_and_schema_xsd.md) section, that the method we used to extend the base ISO19115/19139 schemas is to extend the base type, define a new element with the extended base type and allow the new element to substitute for the base element. So for example, in the MCP, we want to add a new resource constraint element that holds Creative Commons and other commons type licensing information. This requires that the MD_Constraints type be extended and a new mcp:MD_Commons element be defined which can substitute for gmd:MD_Constraints. This is shown in the following snippet of XSD:
+-   **schema-substitutes.xml** - Recall from the earlier [Creating the schema directory and schema.xsd file](/customizing-application/implementing-a-schema-plugin.rst#schema_and_schema_xsd) section, that the method we used to extend the base ISO19115/19139 schemas is to extend the base type, define a new element with the extended base type and allow the new element to substitute for the base element. So for example, in the MCP, we want to add a new resource constraint element that holds Creative Commons and other commons type licensing information. This requires that the MD_Constraints type be extended and a new mcp:MD_Commons element be defined which can substitute for gmd:MD_Constraints. This is shown in the following snippet of XSD:
 
 ``` xml
 <xs:complexType name="MD_CommonsConstraints_Type">
@@ -1377,6 +1377,6 @@ The OAIPMH server in GeoNetwork can deliver metadata records from any of the sch
 </schemas>
 ```
 
-In the case of the prefix oai_dc shown above, if a schema converter with prefix *oai_dc* exists in the `schema-conversions.xml` file of a GeoNetwork schema, then records that belong to this schema will be transformed and included in OAIPMH requests for the *oai_dc* prefix. See [schema_conversions](schema_conversions.md) for more info.
+In the case of the prefix oai_dc shown above, if a schema converter with prefix *oai_dc* exists in the `schema-conversions.xml` file of a GeoNetwork schema, then records that belong to this schema will be transformed and included in OAIPMH requests for the *oai_dc* prefix. See [Creating the schema-conversions.xml file](/customizing-application/implementing-a-schema-plugin.rst#schema_conversions) for more info.
 
 To add oai_dc support for the MCP, the easiest method is to copy oai_dc.xsl from the convert directory of the iso19139 schema, modify it to cope with the different namespaces and additional elements of the MCP and add it to the `schema-conversions.xml` file for the MCP.

@@ -9,10 +9,10 @@ If documents are not available, editors can upload attachments to a metadata rec
 
 ![](img/filestore.png)
 
-To upload a file, click the button and choose a file or drag&drop a file on the button. Files are stored in a folder in the data directory (see [customizing-data-directory](customizing-data-directory.md)). There is one folder per metadata containing:
+To upload a file, click the button and choose a file or drag&drop a file on the button. Files are stored in a folder in the data directory (see [Customizing the data directory](/install-guide/customizing-data-directory.md)). There is one folder per metadata containing:
 
 -   `public` folder with files accessible to all users
--   `private` folder with files accessible to identified user with download privilege (see [managing-privileges](managing-privileges.md))
+-   `private` folder with files accessible to identified user with download privilege (see [Managing privileges](/user-guide/publishing/managing-privileges.md))
 
 From the filestore:
 

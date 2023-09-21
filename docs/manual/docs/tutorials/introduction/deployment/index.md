@@ -6,7 +6,7 @@ Up to version 3 GeoNetwork could easily be deployed locally, there is even a [Wi
 
 For this workshop we will focus on the use of docker, but we also provide some guidance on how to set up the environment without docker, or even build the application from sources.
 
--   [Docker](docker.md)
--   [Deploy](deploy.md)
+-   [Pull from docker hub](docker.md)
+-   [Local deployment](deploy.md)
 -   [Build from source code](build.md)
--   [.md](.md)
+-   [.rst](.md)

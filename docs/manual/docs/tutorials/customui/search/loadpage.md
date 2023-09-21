@@ -2,7 +2,7 @@
 
 ## Objectives
 
-Read instructions in [customization section](loadsearchpage.md).
+Read instructions in [customization section](/customizing-application/search-ui/loadview.md).
 
 -   understand the XSL service output
 -   look at the `view` parameter

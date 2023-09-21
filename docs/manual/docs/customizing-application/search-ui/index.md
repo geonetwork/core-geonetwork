@@ -1,6 +1,6 @@
 # Search application {#customizing-searchui}
 
--   [The view parameter](loadview.md)
+-   [Create your own view](loadview.md)
 -   [Change default view configuration](configdefault.md)
 -   [Create your own view](customview.md)
 -   [Enrich your custom view](enrichview.md)

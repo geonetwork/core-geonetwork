@@ -26,11 +26,11 @@ Metadata fragments that are saved in the catalogue database are called subtempla
 Fragments can be inserted in metadata record in 2 modes:
 
 -   by copy/paste
--   by link (if xlink support is enabled. See [xlink_config](xlink_config.md))
+-   by link (if xlink support is enabled. See [Metadata XLink](/administrator-guide/configuring-the-catalog/system-configuration.rst#xlink_config))
 
 When using XLinks, if the fragment is updated, then the related fragment in all metadata records will also be updated (check the XLink cache).
 
-Fragments may be created by harvesting (see [harvesting_fragments](harvesting_fragments.md)) or imported using the metadata import page.
+Fragments may be created by harvesting (see [Harvesting Fragments of Metadata to support re-use](/user-guide/harvesting/index.rst#harvesting_fragments)) or imported using the metadata import page.
 
 This section of the manual describes:
 

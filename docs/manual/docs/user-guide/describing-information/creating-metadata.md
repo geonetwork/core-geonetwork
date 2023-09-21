@@ -15,7 +15,7 @@ Contact your administrator if you don't have the correct profile.
 
 ![](img/add-new-record.png)
 
-2.  From the metadata template list, select a template (see [creating-templates](creating-templates.md)), choose a group from the dropdown and click *Create*.
+2.  From the metadata template list, select a template (see [Managing templates](/user-guide/describing-information/managing-templates.md)), choose a group from the dropdown and click *Create*.
 
 ![](img/creating-metadata.png)
 

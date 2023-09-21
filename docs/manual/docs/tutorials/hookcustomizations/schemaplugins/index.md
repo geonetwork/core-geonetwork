@@ -1,3 +1,3 @@
 # Schema Plugins {#tuto-hookcustomizations-schemaplugins}
 
-See [implementing-a-schema-plugin](implementing-a-schema-plugin.md)
+See [Implementing schema plugins](/customizing-application/implementing-a-schema-plugin.md)

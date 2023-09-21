@@ -18,4 +18,4 @@ The following parameters are required:
 -   Workspace prefix and URL: The workspace information in which data will be pushed into.
 -   WMS/WFS/WCS service URL: URLs of services which will be used when adding references to the services in the metadata record after publication.
 
-See [geopublication-usage](geopublication-usage.md).
+See [Publishing GIS data in a map server](/user-guide/workflow/geopublication.md).

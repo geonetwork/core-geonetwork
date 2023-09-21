@@ -11,7 +11,7 @@ Upon installation a default user with name `admin` and password `admin` is creat
 
 ## User session
 
-After the authentication process, a user session is created. This session will be closed automatically at some point by the server for security reasons. The default session timeout is set to 35 min (see [session-timeout-configuration](session-timeout-configuration.md) for details).
+After the authentication process, a user session is created. This session will be closed automatically at some point by the server for security reasons. The default session timeout is set to 35 min (see [User session timeout configuration](/customizing-application/advanced-configuration.rst#session-timeout-configuration) for details).
 
 When there is no activity in the browser and the session is about to expire, a warning is displayed next to the user details 3 minutes before the timeout takes place:
 

@@ -1,6 +1,6 @@
 # Importing a new record {#import1}
 
-An editor can import metadata in the catalog file in different formats: XML, MEF or ZIP (see [mef_format](mef_format.md)).
+An editor can import metadata in the catalog file in different formats: XML, MEF or ZIP (see [Metadata Exchange Format (MEF)](/annexes/mef-format.md)).
 
 ## Before you begin
 
@@ -34,7 +34,7 @@ The user should have an `editor` profile to access metadata.
     > -   `Overwrite metadata with same UUID`: any existing metadata record in the catalog having the same UUID as the loaded record will be updated.
     > -   `Generate UUID for inserted metadata`: a new UUID is affected to the loaded record.
 
-    -   `Apply XSLT conversion` allows to transform the record loaded using an XSLT stylesheet. A list of predefined transformations is provided. The selected transformation should be compatible with the standard of the loaded record (see [customizing-xslt-conversion](customizing-xslt-conversion.md)).
+    -   `Apply XSLT conversion` allows to transform the record loaded using an XSLT stylesheet. A list of predefined transformations is provided. The selected transformation should be compatible with the standard of the loaded record (see [Adding XSLT conversion for import](/user-guide/workflow/batchupdate-xsl.rst#customizing-xslt-conversion)).
     -   `Validate` trigger the validation of the record before loading it. In case of error the record is rejected and an error reported.
     -   `Assign to current catalog` assign the current catalog as origin for the record, in case the MEF file indicate another source.
     -   `Assign to Group` define the group of the loaded record.

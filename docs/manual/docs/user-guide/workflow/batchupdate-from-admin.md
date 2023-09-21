@@ -14,7 +14,7 @@ From this page, user can:
 
 !!! info "See Also"
 
-    New process can be added. See [batch-process-add](batch-process-add.md).
+    New process can be added. See [Adding batch process](/user-guide/workflow/batchupdate-xsl.rst#batch-process-add).
 
 
 -   Define process parameters (if any)

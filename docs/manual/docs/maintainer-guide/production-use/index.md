@@ -4,7 +4,7 @@ This paragraph shares some guidance around setting up GeoNetwork for production 
 
 ## Database
 
-GeoNetwork arrives with a file based H2 database. In production make sure to switch to an external database system, such as PostGres, Oracle or SQL server. Read more about setting up a database at [configuring-database](configuring-database.md)
+GeoNetwork arrives with a file based H2 database. In production make sure to switch to an external database system, such as PostGres, Oracle or SQL server. Read more about setting up a database at [Configuring the database](/install-guide/configuring-database.md)
 
 JNDI is a technology that allows GeoNetwork to delegate the configuration of the database to Tomcat. By using JNDI the database can be easily configured without the need to change config files inside the application folder.
 
@@ -14,7 +14,7 @@ GeoNetwork may run out of database connections, especially if a catalogue is set
 
 GeoNetwork requires Java 8. The Oracle JRE version 8 is reaching end-of-live, we suggest to use the [openJDK](https://adoptopenjdk.net).
 
-GeoNetwork arrives with a default container called Jetty. Jetty is a powerful minimal container implementation. If you need more configuration options consider to use Tomcat. Other containers can be used, but there are not many user experiences. Read more at [installing-from-war-file](installing-from-war-file.md)
+GeoNetwork arrives with a default container called Jetty. Jetty is a powerful minimal container implementation. If you need more configuration options consider to use Tomcat. Other containers can be used, but there are not many user experiences. Read more at [Installing from WAR file](/install-guide/installing-from-war-file.md)
 
 If you run Apache in front of Tomcat, make sure to enable [AJP](https://tomcat.apache.org/tomcat-4.0-doc/config/ajp.html), else you may run into page not found errors around login. On Apache 2, enable `mod_proxy_ajp` and set the `ProxyPass` and `ProxyPassReverse` on apache2.conf to use the AJP protocol on Tomcat URL and port 8009:
 
@@ -29,7 +29,7 @@ A common challenge in production use is the fact that Java only has a limited se
 
 ## Data folder
 
-GeoNetwork requires a data folder to store objects uploaded by administrators and managers and some configuration options. By default this folder is located in **`/geonetwork/WEB-INF/data`**. In production situation configure the location of this folder outside the application and make sure the folder is backed up. You can use an environment variable to configure the location of the data folder. Read more at [customizing-data-directory](customizing-data-directory.md)
+GeoNetwork requires a data folder to store objects uploaded by administrators and managers and some configuration options. By default this folder is located in **`/geonetwork/WEB-INF/data`**. In production situation configure the location of this folder outside the application and make sure the folder is backed up. You can use an environment variable to configure the location of the data folder. Read more at [Customizing the data directory](/install-guide/customizing-data-directory.md)
 
 ## Memory
 
