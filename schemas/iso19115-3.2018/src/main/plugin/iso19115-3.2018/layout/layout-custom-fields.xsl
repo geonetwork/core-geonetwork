@@ -354,7 +354,7 @@
   <xsl:template mode="mode-iso19115-3.2018"
                 match="*[
                         *[1]/name() = $editorConfig/editor/tableFields/table/@for and
-                        preceding-sibling::*[1]/name() = name() and
+                        preceding-sibling::*[1]/*[1]/name() = *[1]/name() and
                         not(@gn:addedObj) and
                         $isFlatMode]"
                 priority="2000"/>
