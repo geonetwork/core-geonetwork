@@ -38,26 +38,19 @@
       <cit:party>
         <cit:CI_Organisation>
           <cit:name>
-            <gco:CharacterString>...blank organisation contact entry</gco:CharacterString>
+            <gco:CharacterString>Org Name</gco:CharacterString>
           </cit:name>
           <cit:contactInfo>
             <cit:CI_Contact>
               <cit:address>
                 <cit:CI_Address>
                   <cit:electronicMailAddress>
-                    <gco:CharacterString>!Manual entry</gco:CharacterString>
+                    <gco:CharacterString>email@addre.ss</gco:CharacterString>
                   </cit:electronicMailAddress>
                 </cit:CI_Address>
               </cit:address>
             </cit:CI_Contact>
           </cit:contactInfo>
-          <cit:individual>
-            <cit:CI_Individual>
-              <cit:name>
-                <gco:CharacterString>!Manual entry</gco:CharacterString>
-              </cit:name>
-            </cit:CI_Individual>
-          </cit:individual>
         </cit:CI_Organisation>
       </cit:party>
     </cit:CI_Responsibility>
@@ -174,30 +167,22 @@
               <cit:role>
                 <cit:CI_RoleCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_RoleCode" codeListValue="rightsHolder" />
               </cit:role>
-              <cit:party />
               <cit:party>
                 <cit:CI_Organisation>
                   <cit:name>
-                    <gco:CharacterString>...blank organisation contact entry</gco:CharacterString>
+                    <gco:CharacterString>Org Name</gco:CharacterString>
                   </cit:name>
                   <cit:contactInfo>
                     <cit:CI_Contact>
                       <cit:address>
                         <cit:CI_Address>
                           <cit:electronicMailAddress>
-                            <gco:CharacterString>!Manual entry</gco:CharacterString>
+                            <gco:CharacterString>email@addre.ss</gco:CharacterString>
                           </cit:electronicMailAddress>
                         </cit:CI_Address>
                       </cit:address>
                     </cit:CI_Contact>
                   </cit:contactInfo>
-                  <cit:individual>
-                    <cit:CI_Individual>
-                      <cit:name>
-                        <gco:CharacterString>!Manual entry</gco:CharacterString>
-                      </cit:name>
-                    </cit:CI_Individual>
-                  </cit:individual>
                 </cit:CI_Organisation>
               </cit:party>
             </cit:CI_Responsibility>
@@ -221,30 +206,22 @@
           <cit:role>
             <cit:CI_RoleCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_RoleCode" codeListValue="pointOfContact" />
           </cit:role>
-          <cit:party />
           <cit:party>
             <cit:CI_Organisation>
               <cit:name>
-                <gco:CharacterString>...&lt;org name&gt;</gco:CharacterString>
+                <gco:CharacterString>Org Name</gco:CharacterString>
               </cit:name>
               <cit:contactInfo>
                 <cit:CI_Contact>
                   <cit:address>
                     <cit:CI_Address>
                       <cit:electronicMailAddress>
-                        <gco:CharacterString>!Manual entry</gco:CharacterString>
+                        <gco:CharacterString>email@addre.ss</gco:CharacterString>
                       </cit:electronicMailAddress>
                     </cit:CI_Address>
                   </cit:address>
                 </cit:CI_Contact>
               </cit:contactInfo>
-              <cit:individual>
-                <cit:CI_Individual>
-                  <cit:name>
-                    <gco:CharacterString>&lt;individual name&gt;</gco:CharacterString>
-                  </cit:name>
-                </cit:CI_Individual>
-              </cit:individual>
             </cit:CI_Organisation>
           </cit:party>
         </cit:CI_Responsibility>
@@ -254,32 +231,24 @@
           <cit:role>
             <cit:CI_RoleCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_RoleCode" codeListValue="custodian" />
           </cit:role>
-          <cit:party />
           <cit:party>
-            <cit:CI_Organisation>
-              <cit:name>
-                <gco:CharacterString>...blank organisation contact entry</gco:CharacterString>
-              </cit:name>
-              <cit:contactInfo>
-                <cit:CI_Contact>
-                  <cit:address>
-                    <cit:CI_Address>
-                      <cit:electronicMailAddress>
-                        <gco:CharacterString>!Manual entry</gco:CharacterString>
-                      </cit:electronicMailAddress>
-                    </cit:CI_Address>
-                  </cit:address>
-                </cit:CI_Contact>
-              </cit:contactInfo>
-              <cit:individual>
-                <cit:CI_Individual>
+                <cit:CI_Organisation>
                   <cit:name>
-                    <gco:CharacterString>!Manual entry</gco:CharacterString>
+                    <gco:CharacterString>Org Name</gco:CharacterString>
                   </cit:name>
-                </cit:CI_Individual>
-              </cit:individual>
-            </cit:CI_Organisation>
-          </cit:party>
+                  <cit:contactInfo>
+                    <cit:CI_Contact>
+                      <cit:address>
+                        <cit:CI_Address>
+                          <cit:electronicMailAddress>
+                            <gco:CharacterString>email@addre.ss</gco:CharacterString>
+                          </cit:electronicMailAddress>
+                        </cit:CI_Address>
+                      </cit:address>
+                    </cit:CI_Contact>
+                  </cit:contactInfo>
+                </cit:CI_Organisation>
+              </cit:party>
         </cit:CI_Responsibility>
       </mri:pointOfContact>
       <mri:pointOfContact>
@@ -287,30 +256,22 @@
           <cit:role>
             <cit:CI_RoleCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_RoleCode" codeListValue="publisher" />
           </cit:role>
-          <cit:party />
           <cit:party>
             <cit:CI_Organisation>
               <cit:name>
-                <gco:CharacterString>...blank organisation contact entry</gco:CharacterString>
+                <gco:CharacterString>Org Name</gco:CharacterString>
               </cit:name>
               <cit:contactInfo>
                 <cit:CI_Contact>
                   <cit:address>
                     <cit:CI_Address>
                       <cit:electronicMailAddress>
-                        <gco:CharacterString>!Manual entry</gco:CharacterString>
+                        <gco:CharacterString>email@addre.ss</gco:CharacterString>
                       </cit:electronicMailAddress>
                     </cit:CI_Address>
                   </cit:address>
                 </cit:CI_Contact>
               </cit:contactInfo>
-              <cit:individual>
-                <cit:CI_Individual>
-                  <cit:name>
-                    <gco:CharacterString>!Manual entry</gco:CharacterString>
-                  </cit:name>
-                </cit:CI_Individual>
-              </cit:individual>
             </cit:CI_Organisation>
           </cit:party>
         </cit:CI_Responsibility>
