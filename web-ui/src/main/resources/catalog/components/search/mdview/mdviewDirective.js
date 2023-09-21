@@ -562,6 +562,27 @@
     }
   ]);
 
+  module.directive("gnMetadataSocialLink", [
+    "gnUtilityService",
+    "$http",
+    function (gnUtilityService, $http) {
+      return {
+        templateUrl: "../../catalog/components/search/mdview/partials/social.html",
+        scope: {
+          md: "=gnMetadataSocialLink"
+        },
+        link: function (scope, element, attrs) {
+          scope.mdService = gnUtilityService;
+          $http
+            .get("../api/records/" + scope.md.getUuid() + "/permalink")
+            .then(function (r) {
+              scope.socialMediaLink = r.data;
+            });
+        }
+      };
+    }
+  ]);
+
   module.directive("gnQualityMeasuresTable", [
     "gnGlobalSettings",
     function (gnGlobalSettings) {

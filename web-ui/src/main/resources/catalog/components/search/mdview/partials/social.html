@@ -1,4 +1,4 @@
-<section class="gn-md-side-social" data-ng-show="isSocialbarEnabled">
+<section class="gn-md-side-social">
   <h2 data-translate="">shareOn</h2>
   <div class="btn-group">
     <a
@@ -16,14 +16,14 @@
       ><i class="fa fa-fw fa-facebook"></i
     ></a>
     <a
-      data-ng-href="http://www.linkedin.com/shareArticle?mini=true&amp;summary={{mdView.current.record.resourceTitle}}&amp;url={{socialMediaLink | encodeURIComponent}}"
+      data-ng-href="http://www.linkedin.com/sharing/share-offsite/?url={{socialMediaLink | encodeURIComponent}}"
       title="{{'shareOnLinkedIn' | translate}}"
       target="_blank"
       class="btn btn-default"
       ><i class="fa fa-fw fa-linkedin"></i
     ></a>
     <a
-      data-ng-href="mailto:?subject={{mdView.current.record.resourceTitle}}&amp;body={{socialMediaLink | encodeURIComponent}}"
+      data-ng-href="mailto:?subject={{md.resourceTitle}}&amp;body={{socialMediaLink | encodeURIComponent}}"
       title="{{'shareByEmail' | translate}}"
       target="_blank"
       class="btn btn-default"
