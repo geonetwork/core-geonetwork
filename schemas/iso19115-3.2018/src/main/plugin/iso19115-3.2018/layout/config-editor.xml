@@ -119,7 +119,7 @@
                             &lt;cit:address&gt;
                               &lt;cit:CI_Address&gt;
                                 &lt;cit:electronicMailAddress&gt;
-                                  &lt;gco:CharacterString&gt;email@adre.ss&lt;/gco:CharacterString&gt;
+                                  &lt;gco:CharacterString&gt;email@addre.ss&lt;/gco:CharacterString&gt;
                                 &lt;/cit:electronicMailAddress&gt;
                               &lt;/cit:CI_Address&gt;
                             &lt;/cit:address&gt;
@@ -165,7 +165,7 @@
                             &lt;cit:address&gt;
                               &lt;cit:CI_Address&gt;
                                 &lt;cit:electronicMailAddress&gt;
-                                  &lt;gco:CharacterString&gt;email@adre.ss&lt;/gco:CharacterString&gt;
+                                  &lt;gco:CharacterString&gt;email@addre.ss&lt;/gco:CharacterString&gt;
                                 &lt;/cit:electronicMailAddress&gt;
                               &lt;/cit:CI_Address&gt;
                             &lt;/cit:address&gt;
@@ -200,7 +200,7 @@
                             &lt;cit:address&gt;
                               &lt;cit:CI_Address&gt;
                                 &lt;cit:electronicMailAddress&gt;
-                                  &lt;gco:CharacterString&gt;email@adre.ss&lt;/gco:CharacterString&gt;
+                                  &lt;gco:CharacterString&gt;email@addre.ss&lt;/gco:CharacterString&gt;
                                 &lt;/cit:electronicMailAddress&gt;
                               &lt;/cit:CI_Address&gt;
                             &lt;/cit:address&gt;
@@ -235,7 +235,7 @@
                             &lt;cit:address&gt;
                               &lt;cit:CI_Address&gt;
                                 &lt;cit:electronicMailAddress&gt;
-                                  &lt;gco:CharacterString&gt;email@adre.ss&lt;/gco:CharacterString&gt;
+                                  &lt;gco:CharacterString&gt;email@addre.ss&lt;/gco:CharacterString&gt;
                                 &lt;/cit:electronicMailAddress&gt;
                               &lt;/cit:CI_Address&gt;
                             &lt;/cit:address&gt;
@@ -270,7 +270,7 @@
                             &lt;cit:address&gt;
                               &lt;cit:CI_Address&gt;
                                 &lt;cit:electronicMailAddress&gt;
-                                  &lt;gco:CharacterString&gt;email@adre.ss&lt;/gco:CharacterString&gt;
+                                  &lt;gco:CharacterString&gt;email@addre.ss&lt;/gco:CharacterString&gt;
                                 &lt;/cit:electronicMailAddress&gt;
                               &lt;/cit:CI_Address&gt;
                             &lt;/cit:address&gt;
