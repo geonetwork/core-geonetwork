@@ -187,6 +187,7 @@
     "data.resources": "Resources folder: ",
     "data.backupDir": "Backup folder: ",
     "data.schemaPluginsDir": "Standard folder: ",
+    "data.schemaPublicationDir": "Schema publication folder: ",
     "data.subversionPath": "Subversion repository: ",
     "data.geonetworkDataDir": "Base directory: ",
     "databaseStatus": "Database status",
