@@ -87,18 +87,12 @@
     data-ng-repeat="rssFeed in rssFeeds"
   >
     <a
-      href="../../api/collections/main/items?{{rssFeed.url}}"
+      href="../../api/collections/{{nodeId === 'srv' ? 'main' : nodeId}}/items?{{rssFeed.url}}"
       title="{{rssFeed.label | translate}}"
       aria-label="{{rssFeed.label | translate}}"
     >
-      <span class="fa fa-rss" />
+      <span data-ng-if="rssFeeds.length > 1"> {{rssFeed.label | translate}} </span>
+      <span class="fa fa-fw fa-rss" />
     </a>
   </li>
-  <!--<li>
-    <a href="rss.search?sortBy=changeDate&georss=simplepoint"
-       title="{{'rssFeed' | translate}}"
-       aria-label="{{'rssFeed' | translate}}">
-      <span class="fa fa-rss"/>
-    </a>
-  </li>-->
 </ul>
