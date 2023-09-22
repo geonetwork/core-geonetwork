@@ -1,6 +1,6 @@
 # Portal configuration
 
-Portals can be configured under the `sources` section in `admin console` > `settings`.
+Portals can be configured under the `sources` section in `admin console` --> `settings`.
 
 ![](img/portal-access.png)
 

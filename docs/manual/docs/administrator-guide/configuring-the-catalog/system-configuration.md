@@ -1,6 +1,6 @@
 # System configuration
 
-Most of the system configuration parameters can be changed by administrator users using the web interface in `Admin console` > `Settings`.
+Most of the system configuration parameters can be changed by administrator users using the web interface in `Admin console` --> `Settings`.
 
 !!! info "Important"
 
@@ -118,7 +118,7 @@ The XLink resolver replaces the content of elements with an attribute @xlink:hre
 
 !!! info "See Also"
 
-    To improve performance the catalog will cache content that is not in the local catalog. Clear the cache of XLink from the `Admin console` > `Tools` if the fragments were updated.
+    To improve performance the catalog will cache content that is not in the local catalog. Clear the cache of XLink from the `Admin console` --> `Tools` if the fragments were updated.
 
 
 ![](img/xlink-cache-clear.png)

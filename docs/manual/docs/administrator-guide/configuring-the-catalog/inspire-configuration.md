@@ -28,7 +28,7 @@ To describe INSPIRE datasets and series, it is recommended to load relevant code
 -   Metadata codelist register --> [OnLine Description Code](https://inspire.ec.europa.eu/metadata-codelist/OnLineDescriptionCode)
 -   Metadata codelist register --> [Quality of Service Criteria](https://inspire.ec.europa.eu/metadata-codelist/QualityOfServiceCriteria)
 
-From `Admin console` > `Classification systems` > `Thesaurus`, administrators can manage thesauri. One of the options is to load a thesaurus straight from the registry.
+From `Admin console` --> `Classification systems` --> `Thesaurus`, administrators can manage thesauri. One of the options is to load a thesaurus straight from the registry.
 
 ![image](img/inspire-from-registry.png)
 
@@ -54,7 +54,7 @@ Via the schema plugin form configuration it is an option to configure a thesauru
 
 ## INSPIRE validation
 
-INSPIRE validation of metadata records is available at [the INSPIRE Validator](https://inspire.ec.europa.eu/validator/about/). It is using [ETF which is an open source testing framework for spatial data and services](https://github.com/etf-validator/etf-webapp). GeoNetwork is able to `te` any record using a service provided by an instance of ETF. To configure remote validation, go to `Admin console` > `Settings` and set the URL of the validator. The url of the main INSPIRE validator is `http://inspire.ec.europa.eu/validator/`.
+INSPIRE validation of metadata records is available at [the INSPIRE Validator](https://inspire.ec.europa.eu/validator/about/). It is using [ETF which is an open source testing framework for spatial data and services](https://github.com/etf-validator/etf-webapp). GeoNetwork is able to `te` any record using a service provided by an instance of ETF. To configure remote validation, go to `Admin console` --> `Settings` and set the URL of the validator. The url of the main INSPIRE validator is `http://inspire.ec.europa.eu/validator/`.
 
 ![image](img/inspire-configuration.png)
 
@@ -152,7 +152,7 @@ First define a filtering mechanism to identify the records in the scope of the d
 -   Add a specific keyword in the metadata record.
 -   Filter based on the conformance quality report having a reference to the EU directive.
 
-From the `Admin console` > `Settings` > `Sources`, an administrator can create a sub portal. Create a portal `inspire` and set the filter to select only records related to INSPIRE (eg. `+_groupPublished:INSPIRE` to select all records published in group INSPIRE).
+From the `Admin console` --> `Settings` --> `Sources`, an administrator can create a sub portal. Create a portal `inspire` and set the filter to select only records related to INSPIRE (eg. `+_groupPublished:INSPIRE` to select all records published in group INSPIRE).
 
 ![image](img/inspire-portal.png)
 

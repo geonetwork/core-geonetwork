@@ -42,7 +42,7 @@ This release is all about user search experience:
 
 ![](img/3990-es-facet-histogram.png)
 
--   Facets / Configuration from the admin > Settings > UI based on [Elasticsearch API](https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations.html)
+-   Facets / Configuration from the admin --> Settings --> UI based on [Elasticsearch API](https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations.html)
 -   Record view / More like this \...
 
 ![](img/3990-es-morelikethis.png)

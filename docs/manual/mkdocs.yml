@@ -116,6 +116,7 @@ markdown_extensions:
   - pymdownx.tabbed:
       alternate_style: true
   - tables
+  - md_in_html
 
 # Page tree
 nav:

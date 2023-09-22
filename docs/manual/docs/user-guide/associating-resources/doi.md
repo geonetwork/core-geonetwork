@@ -7,7 +7,7 @@ The catalogue support DOI creation using:
 -   [DataCite API](https://support.datacite.org/docs/mds-api-guide).
 -   EU publication office API <https://ra.publications.europa.eu/servlet/ws/doidata?api=medra.org>
 
-Configure the API access point in the `admin console > settings`:
+Configure the API access point in the `admin console --> settings`:
 
 ![](img/doi-admin-console.png)
 
@@ -23,7 +23,7 @@ The task is assigned to a specific user. An optional due date and comment can be
 
 ![](img/doi-request-popup.png)
 
-After submission of the task, the task owner is notified by email (if the mail server is configured, see admin console > settings). The task can then be resolved in the admin console > information > versioning section.
+After submission of the task, the task owner is notified by email (if the mail server is configured, see admin console --> settings). The task can then be resolved in the admin console ---> information --> versioning section.
 
 If the configuration is missing or wrong, the error is reported:
 

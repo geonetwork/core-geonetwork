@@ -1,6 +1,6 @@
 # User Interface Configuration
 
-Most of the configuration parameters for the user interface can be changed by an administrator using the web interface in `Admin console` > `Settings` > `User Interface`.
+Most of the configuration parameters for the user interface can be changed by an administrator using the web interface in `Admin console` --> `Settings` --> `User Interface`.
 
 !!! info "Important"
 

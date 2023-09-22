@@ -29,9 +29,9 @@ When creating such record, the following information will be used to create the 
 -   title
 -   abstract
 -   keywords
--   fees (from Distribution > ordering instructions field)
--   Access constraints (from Access constraints > Other constraints field)
--   Contact (from Identification > First point of contact)
+-   fees (from Distribution --> ordering instructions field)
+-   Access constraints (from Access constraints --> Other constraints field)
+-   Contact (from Identification --> First point of contact)
 
 The service record MUST be public.
 
@@ -63,7 +63,7 @@ For this, user can add extra conversion step during output of GetRecords and Get
 -   Adding post process to srv/eng/csw by creating for each output schema a file eg. for gmd, present/csw/gmd-csw-postprocessing.xsl
 -   Adding post process to a portal inspire/eng/csw by creating for each output schema a file eg. for gmd, present/csw/gmd-inspire-postprocessing.xsl
 
-For a portal INSPIRE, create an "inspire" portal in the admin > settings > sources. User can then setup a post processing phase for the INSPIRE CSW of the portal. Create a post processing file gmd-inspire-postprocessing.xsl in yourschema/present/csw folder. The following example, remove contact with no email and link not starting with HTTP to conform to INSPIRE validator rules.
+For a portal INSPIRE, create an "inspire" portal in the admin --> settings --> sources. User can then setup a post processing phase for the INSPIRE CSW of the portal. Create a post processing file gmd-inspire-postprocessing.xsl in yourschema/present/csw folder. The following example, remove contact with no email and link not starting with HTTP to conform to INSPIRE validator rules.
 
 ``` xml
 <?xml version="1.0" encoding="UTF-8"?>

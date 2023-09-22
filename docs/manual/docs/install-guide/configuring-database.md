@@ -76,7 +76,7 @@ Within PostgreSQL it is possible to configure `es` or `is`. In the latter case G
 
 ## Logging
 
-To see more details about the database connection and queries, the log can be switched to DEBUG level in `web/src/main/webapp/WEB-INF/classes/log4j.xml` (or see [Catalog Server](../administrator-guide/configuring-the-catalog/system-configuration.md#system-config-server) > Log level).
+To see more details about the database connection and queries, the log can be switched to DEBUG level in `web/src/main/webapp/WEB-INF/classes/log4j.xml` (or see [Catalog Server](../administrator-guide/configuring-the-catalog/system-configuration.md#system-config-server) --> Log level).
 
 ``` xml
 <logger name="org.hibernate.SQL" additivity="false">

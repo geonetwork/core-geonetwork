@@ -171,7 +171,7 @@ This is using [Elasticsearch filters aggregations](https://www.elastic.co/guide/
 }
 ```
 
-Key like `availableInViewService` may not be available in the translations. Use the translation API to add your custom translation in the database (see the Admin console > Settings > Languages).
+Key like `availableInViewService` may not be available in the translations. Use the translation API to add your custom translation in the database (see the Admin console --> Settings --> Languages).
 
 ## Filtering aggregation values
 

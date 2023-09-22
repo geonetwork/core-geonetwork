@@ -24,7 +24,7 @@ Create featuretypes according to the appschema documentation.
 
 When deploying GeoNetwork, make sure the GEMET thesauri are loaded and activate the INSPIRE editor as described in [inspire documentation](http://geonetwork-opensource.org/manuals/trunk/eng/users/administrator-guide/configuring-the-catalog/inspire-configuration.html).
 
-In Admin > Settings activate the INSPIRE extension.
+In Admin --> Settings activate the INSPIRE extension.
 
 ![image](img/image_3.png)
 
@@ -38,7 +38,7 @@ Create an OGC harvester that is able to extract a metadata for service (iso19119
 
 For each layer add a metadata url to the layer configuration of type application/vnd.ogc.csw.GetRecordByIdResponse_xml.
 
-On the WFS-settings > INSPIRE workspace add the link to the service metadata. In contradiction to WMS does WFS not link from a featuretype (layer) to metadata, instead the links to dataset metadata have to be added as part of the extende INSPIRE capabilities.
+On the WFS-settings --> INSPIRE workspace add the link to the service metadata. In contradiction to WMS does WFS not link from a featuretype (layer) to metadata, instead the links to dataset metadata have to be added as part of the extende INSPIRE capabilities.
 
 ## Validate the implementation
 

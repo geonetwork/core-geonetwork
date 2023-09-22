@@ -127,7 +127,7 @@ done;
 
 ## Using the search API in Google sheet
 
-In Extensions > App script create a new function. Here we create a function which run a search and return a list of matching UUIDs:
+In Extensions --> App script create a new function. Here we create a function which run a search and return a list of matching UUIDs:
 
 ![](img/googlesheets-script.png)
 

@@ -60,7 +60,7 @@ The Catalogue page is used to browse records, and has provides a quick search fi
 
 ## Browse Catalogue
 
-1.  Navigate to **:geonetwork-logo: My Geonetwork catalogue** to browse records.
+1.  Navigate to **My GeoNetwork catalogue** to browse records.
     In a production system the catalogue name and logo will
     match your organisation or project team.
 
@@ -75,7 +75,11 @@ The Catalogue page is used to browse records, and has provides a quick search fi
     </div>
     *Latest news*
 
-3.  Records are displayed as a :fontawesome-solid-table-cells-large: block list, :fontawesome-solid-bars: large list, or :fontawesome-solid-align-justify: small list
+3.  Records are displayed as 
+    -    :fontawesome-solid-table-cells-large: block list
+    -    :fontawesome-solid-bars: large list
+    -    :fontawesome-solid-align-justify: small list
+    
     using the toggle on the right.
 
     Click on any of the listed records to view.

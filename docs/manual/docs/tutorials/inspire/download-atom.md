@@ -20,7 +20,7 @@ GeoNetwork will soon support an internal- and external mode.
 -   in internal mode GeoNetwork will generate Atom files dynamically from metadata content.
 -   in external mode GeoNetwork will ingest Atom files that are linked to metadata records.
 
-Currently only the external mode is fully supported. Atom files can be generated in any text or xml editor following the technical guidelines. To optimise the Atom support GeoNetwork uses a convention, which is currently not mandated by the technical guidelines. The convention is that any gmd:MD_Distribution having a link to an Atom file requires the protocol field to contain a defined value to indicate the distribution as being an Atom document. Default value for this protocol is INSPIRE-ATOM, but you can change it using Admin > Settings. The benefit of this approach is that GeoNetwork doesn't need to open any file-link to determine if it is an Atom File. We've seen various member states mandate this convention in localised INSPIRE Technical Guidelines.
+Currently only the external mode is fully supported. Atom files can be generated in any text or xml editor following the technical guidelines. To optimise the Atom support GeoNetwork uses a convention, which is currently not mandated by the technical guidelines. The convention is that any gmd:MD_Distribution having a link to an Atom file requires the protocol field to contain a defined value to indicate the distribution as being an Atom document. Default value for this protocol is INSPIRE-ATOM, but you can change it using Admin --> Settings. The benefit of this approach is that GeoNetwork doesn't need to open any file-link to determine if it is an Atom File. We've seen various member states mandate this convention in localised INSPIRE Technical Guidelines.
 
 ``` xml
 <gmd:MD_DigitalTransferOptions>
@@ -42,7 +42,7 @@ Currently only the external mode is fully supported. Atom files can be generated
 
 When deploying Geonetwork, make sure the GEMET thesauri are loaded and activate the INSPIRE editor as described in [inspire configuration](http://geonetwork-opensource.org/manuals/trunk/eng/users/administrator-guide/configuring-the-catalog/inspire-configuration.html). In this file "schemas/iso19139/src/main/plugin/iso19139/loc/eng/labels.xml " (and the same file in other languages in use in the catalogue) in the gmd:protocol helper (around line 2000) add the "INSPIRE-ATOM" protocol which is used to indicate links that link to an Atom file (only links having that protocol value will be ingested).
 
-In Admin > Settings activate the INSPIRE extension and activate Atom harvesting (at certain interval). The settings page facilitates to set a protocol which is used in metadata to indicate an Atom link.
+In Admin --> Settings activate the INSPIRE extension and activate Atom harvesting (at certain interval). The settings page facilitates to set a protocol which is used in metadata to indicate an Atom link.
 
 ![image](img/image_4.png)
 
@@ -54,7 +54,7 @@ Make sure the metadata contains the same gmd:code as used in the Atom file.
 
 Now create a service metadata using the INSPIRE template and link it to the service Atom and the individual datasets (using srv:operatesOn).
 
-Before you validate the implementation, run the Atom harvester in admin > settings manually. A panel will display the number of processed Atom feeds and any errors that may have occurred while processing (more details in log file).
+Before you validate the implementation, run the Atom harvester in admin --> settings manually. A panel will display the number of processed Atom feeds and any errors that may have occurred while processing (more details in log file).
 
 ## Validate the implementation
 

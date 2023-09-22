@@ -1128,7 +1128,7 @@ After creating the presentation XSLTs, our new GeoNetwork plugin schema for MCP 
 
 This XSLT indexes the content of elements in the metadata record. The essence of this XSLT is to select elements from the metadata record and map them to index field names. Using Kibana user can browse the index and check all fields available. The number of fields depends on the catalog as some fields are dynamic eg. codelist, thesaurus.
 
-In Kibana, navigate to ``Stack Management > Index pattern``
+In Kibana, navigate to ``Stack Management --> Index pattern``
 
 ![](img/kb-index-pattern.png)
 
@@ -1136,7 +1136,7 @@ Select ``gn-records`` to retrieve the list of fields:
 
 ![](img/kb-index-fields.png)
 
-If Elasticsearch instance is accessible, user can get the details about a record using <http://localhost:9200/gn-records/_doc/7c7923b1-c387-49ac-b6c7-391ca187b7fa> (``Kibana > dev tools`` can also be used to get the document details):
+If Elasticsearch instance is accessible, user can get the details about a record using <http://localhost:9200/gn-records/_doc/7c7923b1-c387-49ac-b6c7-391ca187b7fa> (``Kibana --> dev tools`` can also be used to get the document details):
 
 ![](img/es-get-doc.png)
 

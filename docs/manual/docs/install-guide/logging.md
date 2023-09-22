@@ -17,7 +17,7 @@ GeoNetwork by default has 4 log levels: PROD, INDEX, SEARCH, DEV.
 -   Search is similar to PROD, but with extended logging around the search process.
 -   DEV is the most extended level, all debug messages will be logged.
 
-You can set the log level from the Admin > Settings page.
+You can set the log level from the Admin --> Settings page.
 
 ![](img/log-setting.png)
 

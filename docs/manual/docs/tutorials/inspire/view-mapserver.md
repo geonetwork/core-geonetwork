@@ -18,7 +18,7 @@ END
 
 When deploying Geonetwork, make sure the GEMET thesauri are loaded and activate the INSPIRE editor as described in [Geonetwork documentation](../../administrator-guide/configuring-the-catalog/inspire-configuration.md).
 
-In Admin > Settings activate the INSPIRE extension.
+In Admin --> Settings activate the INSPIRE extension.
 
 ![image](img/image_3.png)
 

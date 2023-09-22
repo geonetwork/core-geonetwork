@@ -2,7 +2,7 @@
 
 GeoNetwork 4.2.3 release is a minor release.
 
-After update, don't forget to go to admin console > tools > Delete index and reindex.
+After update, don't forget to go to admin console --> tools --> Delete index and reindex.
 
 ## List of changes
 

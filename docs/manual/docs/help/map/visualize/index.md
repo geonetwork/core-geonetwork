@@ -10,7 +10,7 @@ Catalogue homepage and select a search type.
 
 !!! Process
 
-    Discover > Combine Data/Select Data > Visualize
+    Discover > Combine Data/Select Data --> Visualize
 
 !!! Related training
 

@@ -204,6 +204,6 @@ The list of properties that can be set are:
 
 ## Check the configuration
 
-After startup, check the configuration in `Admin console` > `Statistics and status` > `Information` page.
+After startup, check the configuration in `Admin console` --> `Statistics and status` --> `Information` page.
 
 ![](img/datadirectory.png)

@@ -156,13 +156,13 @@ Use a Web Processing Service to perform analysis and display the result.
 
 1.  From the **Map** viewer, press **Maps** control
 
-2.  Press ***Downlaod > OGC context (XML)** button
+2.  Press ***Download --> OGC context (XML)** button
 
 ### Load map
 
 1.  From the **Map** viewer, press **Maps** control
 
-2.  Press ***Load > From file** button.
+2.  Press ***Load --> From file** button.
     
     Select a previously downloaded OGC context file.
 
@@ -170,7 +170,7 @@ Use a Web Processing Service to perform analysis and display the result.
 
 1.  From the **Map** viewer, press **Maps** control
 
-2.  Press ***Load > Default map** button.
+2.  Press ***Load --> Default map** button.
 
 
 ## Print
