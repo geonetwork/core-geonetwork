@@ -54,7 +54,7 @@ MEF version 2 support the following:
 -   multi-metadata support: more than one metadata record and data can be stored in a single MEF file.
 -   multi-schema support: be able to store in a single MEF n formats (eg. for an ISO profile, also store a version of that record in the base ISO19115/ISO19139 schema).
 
-Current export services that create MEF files from a metadata record with related records (eg. paent, feature catalog etc), can include these related metadata records in the MEF. See [Mef Export](mef_export-ref.md).
+Current export services that create MEF files from a metadata record with related records (eg. paent, feature catalog etc), can include these related metadata records in the MEF.
 
 MEF v2 format structure is the following:
 

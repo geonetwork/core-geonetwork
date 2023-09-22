@@ -66,9 +66,9 @@ Use the default property in record view. Depending on the UI language, the defau
 
 Each thesaurus are described by the following fields:
 
--   [th](){thesaurusId}Number with the count of non empty keywords
--   [th](){thesaurusId}, an array of multilingual keyword which may contains a link (when using Anchor)
--   (optional) [th](){thesaurusId}_tree containing hierarchy when broader terms are found. default property contains the record default language hierarchy, key property contains the hierarchy of broader terms keys. This can be used to build tree depending on UI language (thesaurus translations has to be loaded by the client app).
+-   ``th_{thesaurusId}Number`` with the count of non empty keywords
+-   ``th_{thesaurusId}``, an array of multilingual keyword which may contains a link (when using Anchor)
+-   (optional) ``th_{thesaurusId}_tree`` containing hierarchy when broader terms are found. default property contains the record default language hierarchy, key property contains the hierarchy of broader terms keys. This can be used to build tree depending on UI language (thesaurus translations has to be loaded by the client app).
 
 ``` js
 {

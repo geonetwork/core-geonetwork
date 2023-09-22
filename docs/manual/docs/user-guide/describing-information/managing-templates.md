@@ -52,4 +52,4 @@ In a template, you should:
 
 The main goal is to guide editor work without requiring too much knowledge of the standard use.
 
-For further customization, you could improve the schema plugin by defining custom documentation, recommended values, \... (see [Implementing schema plugins](/customizing-application/implementing-a-schema-plugin.rst)) or creating custom view (see [Customizing editor](/customizing-application/editor-ui/creating-custom-editor.md)).
+For further customization, you could improve the schema plugin by defining custom documentation, recommended values, \... (see [Implementing schema plugins](/customizing-application/implementing-a-schema-plugin.md)) or creating custom view (see [Customizing editor](/customizing-application/editor-ui/creating-custom-editor.md)).

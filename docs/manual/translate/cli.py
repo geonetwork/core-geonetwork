@@ -59,7 +59,6 @@ def _log_callback(log: str) -> None:
         logging.config.fileConfig(log)
 
 def _config_callback(config_path: str) -> None:
-    print('config',config_path)
     init_config(config_path)
 
 @app.command()
@@ -157,7 +156,7 @@ def rst(
 
     for rst_file in collect_paths(rst_path,'rst'):
       md_file = convert_rst(rst_file)
-      print(md_file,"\n")
+      print(md_file)
 
 @app.command()
 def internal_html(

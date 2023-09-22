@@ -319,12 +319,13 @@ def convert_rst(rst_file: str) -> str:
 
     rst_prep = re.sub(r"\.md",r".prep.rst", md_tmp_file)
 
-    print("Preprocessing ",rst_file," to ",rst_prep)
+    logging.debug("Preprocessing '"+rst_file+"' to '"+rst_prep+"'")
     preprocess_rst(rst_file,rst_prep)
 
-    print("Converting ",rst_prep," to ",md_file)
+    logging.debug("Converting '"+rst_prep+"' to '"+md_file+"'")
 
     completed = subprocess.run(["pandoc",
+#      "--verbose",
        "--from", "rst",
        "--to",md_extensions_to,
        "--wrap=none",
@@ -356,7 +357,7 @@ def preprocess_rst(rst_file:str, rst_prep: str) -> str:
         text = _preprocess_rst_toctree(rst_file,text)
 
     if ':doc:' in text:
-        text = _preprocess_rst_doc(text)
+        text = _preprocess_rst_doc(rst_file,text)
 
     if ':ref:' in text:
         text = _preprocess_rst_ref(text)
@@ -419,7 +420,7 @@ def preprocess_rst(rst_file:str, rst_prep: str) -> str:
     with open(rst_prep,'w') as rst:
         rst.write(text)
 
-def _preprocess_rst_doc(text: str) -> str:
+def _preprocess_rst_doc(path: str, text: str) -> str:
    """
    Preprocess rst content replacing doc references with links.
    """
@@ -429,38 +430,26 @@ def _preprocess_rst_doc(text: str) -> str:
    # doc links processed in order from most to least complicated
 
    # :doc:`normal <../folder/index.rst>`
-   # :doc:`normal <../folder/index.md>`
-#    text = re.sub(
-#        r":doc:`(.*) <((\.\./)*(.*)/index)\.rst>`",
-#        r"`\1 <\4/index.md>`_",
-#        text,
-#        flags=re.MULTILINE
-#    )
-
    # :doc:`normal <link.rst>`
-   # `normal <link.md>`_
+   # :doc:`normal <link>`
+   # `normal <../folder/index.rst>`
+   # `normal <link.rst>`
+   # `normal <link.rst>`
    text = re.sub(
-       r":doc:`(.*) <(.*).rst>`",
-       r"`\1 <\2.md>`_",
+       r":doc:`(.+?) <(.+?)(\.rst)?>`",
+       r"`\1 <\2.rst>`_",
        text,
        flags=re.MULTILINE
    )
 
    # :doc:`../folder/index.rst`
-   # `folder <../folder/index.md>`_
-   text = re.sub(
-       r":doc:`((\.\./)*(.*)/index)\.rst`",
-       r"`\3 <\1/>`_",
-       text,
-       flags=re.MULTILINE
-   )
    # :doc:`simple.rst`
-   # `simple <simple.rst>`_
-   text = re.sub(
-       r":doc:`(.*)\.rst`",
-       r"`\1 <\1.md>`_",
-       text,
-       flags=re.MULTILINE
+   # `title <../folder/index.rst>`_
+   # `title <simple.rst>`_
+   document_reference = re.compile(r":doc:`((\w|-|_)*?)(\.rst)?`")
+   text = document_reference.sub(
+       lambda match: "`"+_labelify(path, match.group(1))+" <"+match.group(1)+".rst>`_",
+       text
    )
    return text
 
@@ -485,7 +474,7 @@ def _preprocess_rst_ref(text: str) -> str:
 
    return text
 
-def _preprocess_rst_toctree(path, text: str) -> str:
+def _preprocess_rst_toctree(path: str, text: str) -> str:
    """
    scan document for toctree directives to process
    """
@@ -498,13 +487,13 @@ def _preprocess_rst_toctree(path, text: str) -> str:
           continue
 
        if toctree != None:
-          if len(line) == 0:
+          if len(line.strip()) == 0:
              continue
           if line[0:4] == '   :':
              continue
           if line[0:3] == '   ':
              # processing directive
-             link = line[3:-4]
+             link = line.strip().replace(".rst","")
              label = _labelify(path,link)
              toctree += f"* `{label} <{link}.rst>`__\n"
           else:
@@ -633,9 +622,10 @@ def postprocess_rst_markdown(md_file: str, md_clean: str):
        # non-code clean content
        # fix rst -> md links
        line = re.sub(
-            r"\[(.*?)\]\((.*).rst\)",
+            r"\[(.+?)\]\(((\w|-|/|\.)*)\.rst\)",
             r"[\1](\2.md)",
-            line
+            line,
+            flags=re.MULTILINE
        )
 
 
@@ -855,10 +845,10 @@ def convert_markdown(md_file: str) -> str:
 
     md_prep = re.sub(r"\.html",r".prep.md", path)
 
-    print("Preprocessing ",md_file," to ",md_prep)
+    logging.debug("Preprocessing '"+md_file+"' to '"+md_prep+"'")
     preprocess_markdown(md_file,md_prep)
 
-    print("Converting ",md_prep," to ",html_file)
+    logging.debug("Converting '"+md_prep+"' to '"+html_file+"'")
     # pandoc --from gfm --to html -o index.en.html index.md
     completed = subprocess.run(["pandoc",
        "--from", md_extensions_from,

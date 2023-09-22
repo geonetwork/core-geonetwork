@@ -3,4 +3,4 @@
 -   [GeoNetwork Orientation](introduction/index.md)
 -   [Customize your GeoNetwork UI](customui/index.md)
 -   [Hook your own code](hookcustomizations/index.md)
--   [Inspire I](inspire/i.md)
+-   [Tutorials](inspire/index.md)

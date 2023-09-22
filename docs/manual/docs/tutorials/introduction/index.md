@@ -22,7 +22,7 @@ At various points references are made to the product documentation to find more 
 -   [Discovering information](introduction/discover.md)
 -   [Maps and dataset visualisation](introduction/map.md)
 -   [Multi schema support](introduction/schema.md)
--   [Deployment.](deployment/index..md)
+-   [Deployment](deployment/index.md)
 -   [Setup](setup/index.md)
 -   [Editing Metadata](edit/index.md)
 -   [Harvesting](harvesting/index.md)
