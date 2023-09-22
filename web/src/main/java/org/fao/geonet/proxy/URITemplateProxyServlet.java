@@ -362,6 +362,7 @@ public class URITemplateProxyServlet extends org.mitre.dsmiley.httpproxy.URITemp
                 } catch (SecurityException securityException) {
                     servletResponse.sendError(HttpServletResponse.SC_FORBIDDEN,
                         securityException.getMessage());
+                    return;
                 }
 
                 // Check if the link requested is in database link list
@@ -375,19 +376,16 @@ public class URITemplateProxyServlet extends org.mitre.dsmiley.httpproxy.URITemp
                             LinkSpecs.filter(host, null, null,
                                 null, null, null));
                         if (linksFound == 0) {
-                            String message = String.format(
-                                "The proxy does not allow to access '%s' " +
-                                    "because the URL host was not registered in any metadata records.",
-                                uri
-                            );
+                            String message = "The proxy does not allow to access the requested URI " +
+                                "because the URL host was not registered in any metadata records.";
                             if (linkRepository.count() == 0) {
-                                servletResponse.sendError(HttpServletResponse.SC_FORBIDDEN,
-                                    "The proxy is configured with DB_LINK_CHECK mode " +
-                                        "but the MetadataLink table is empty. " +
-                                        "Administrator may need to analyze record links from the admin console " +
-                                        "in order to register URL allowed by the proxy. " + message);
+                                message = "The proxy is configured with DB_LINK_CHECK mode " +
+                                    "but the MetadataLink table is empty. " +
+                                    "Administrator may need to analyze record links from the admin console " +
+                                    "in order to register URL allowed by the proxy.";
                             }
                             servletResponse.sendError(HttpServletResponse.SC_FORBIDDEN, message);
+                            return;
                         }
                         proxyCallAllowed = linksFound > 0;
                     } catch (URISyntaxException e) {
