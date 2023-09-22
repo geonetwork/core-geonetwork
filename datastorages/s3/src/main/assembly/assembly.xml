@@ -26,5 +26,6 @@
     <file>
       <source>${project.build.directory}/html/license/LICENSE.html</source>
       <outputDirectory>/license</outputDirectory>
+    </file>
   </files>
 </assembly>
