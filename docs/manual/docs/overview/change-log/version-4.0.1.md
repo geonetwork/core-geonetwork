@@ -1,12 +1,6 @@
----
-hide:
-  - navigation
-  - toc
----
-
 # Version 4.0.1 {#version-401}
 
-GeoNetwork 4.0.1 release is a minor release aligned with GeoNetwork 3.10.5 (see [version-3105](version-3105.md)) with some changes:
+GeoNetwork 4.0.1 release is a minor release aligned with GeoNetwork 3.10.5 (see [Version 3.10.5](version-3.10.5.md)) with some changes:
 
 -   [Search / Facet / Fix more action when collapse state is set](https://github.com/geonetwork/core-geonetwork/pull/5122)
 -   [Search / Suggestion / Apply score](https://github.com/geonetwork/core-geonetwork/pull/5133)

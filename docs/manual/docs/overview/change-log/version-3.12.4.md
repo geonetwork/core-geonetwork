@@ -1,8 +1,3 @@
----
-hide:
-  - navigation
-  - toc
----
 # Version 3.12.4 {#version-3124}
 
 ## New features/fixes
@@ -11,7 +6,7 @@ hide:
 
 > -   [BP] [Don't allow transfer ownership to reserved groups](https://github.com/geonetwork/core-geonetwork/pull/6193)
 > -   [BP] [Fix the thumbnail generator using the metadata view services for metadata working copies](https://github.com/geonetwork/core-geonetwork/pull/6179)
-> -   [BP] [Use typeNames in the WFS URL when version is \>= "2.0.0"](https://github.com/geonetwork/core-geonetwork/pull/6143)
+> -   [BP] [Use typeNames in the WFS URL when version is >= "2.0.0"](https://github.com/geonetwork/core-geonetwork/pull/6143)
 
 -   Administration
 

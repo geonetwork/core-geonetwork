@@ -1,8 +1,3 @@
----
-hide:
-  - navigation
-  - toc
----
 # Version 4.2.4 {#version-424}
 
 GeoNetwork 4.2.4 release is a minor release.

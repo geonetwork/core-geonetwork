@@ -1,8 +1,3 @@
----
-hide:
-  - navigation
-  - toc
----
 # Version 3.8.1 {#version-381}
 
 ## New features/fixes

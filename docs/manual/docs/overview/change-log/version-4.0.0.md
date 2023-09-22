@@ -1,8 +1,3 @@
----
-hide:
-  - navigation
-  - toc
----
 # Version 4.0.0 {#version-400}
 
 GeoNetwork 4.0.0 release is the first version of GeoNetwork using Elasticsearch as search engine!
@@ -25,15 +20,15 @@ There remains opportunities to help:
 
 Before you start:
 
--   Installing the application require to install an Elasticsearch instance (see [installing-index](installing-index.md)).
+-   Installing the application require to install an Elasticsearch instance (see [Installing search platform](../../install-guide/installing-index.md)).
 
 Release highlights:
 
--   The GeoNetwork [4.0.0]{.title-ref} release is aligned with GeoNetwork 3.10.4 (see [version-3104](version-3104.md)).
+-   The GeoNetwork ``4.0.0`` release is aligned with GeoNetwork 3.10.4 (see [Version 3.10.4](version-3.10.4.md)).
 
 -   The user search experience has been greatly improved.
 
-    For more infromation see the description in [version-400-alpha1`{.interpreted-text role="ref"} and `version-400-alpha2](version-400-alpha1`{.interpreted-text role="ref"} and `version-400-alpha2.md).
+    For more infromation see the description in [Version 4.0.0-alpha.1](version-4.0.0-alpha.1.md) and [Version 4.0.0-alpha.2](version-4.0.0-alpha.2.md).
 
 -   [Search / Exact match support](https://github.com/geonetwork/core-geonetwork/pull/5072)
 

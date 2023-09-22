@@ -1,8 +1,3 @@
----
-hide:
-  - navigation
-  - toc
----
 # Version 4.2.5 {#version-425}
 
 GeoNetwork 4.2.5 release is a minor release.
@@ -20,7 +15,7 @@ GeoNetwork 4.2.5 release is a minor release.
 
 ### Index changes
 
-After update, don't forget to go to admin console \> tools \> Delete index and reindex.
+After update, don't forget to go to admin console > tools > Delete index and reindex.
 
 ### Thesaurus changes
 

@@ -1,17 +1,9 @@
----
-hide:
-  - navigation
-  - toc
----
 # Version 3.4.4 {#version-344}
 
-::: warning
-::: title
-Warning
-:::
+!!! warning
 
-The migration from 3.4.3 and earlier to 3.4.4 may cause a reset of the *Template for advanced search form* setting in the UI configuration.
-:::
+    The migration from 3.4.3 and earlier to 3.4.4 may cause a reset of the *Template for advanced search form* setting in the UI configuration.
+
 
 ## New features
 

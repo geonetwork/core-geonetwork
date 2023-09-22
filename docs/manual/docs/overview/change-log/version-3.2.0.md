@@ -1,8 +1,3 @@
----
-hide:
-  - navigation
-  - toc
----
 # Version 3.2.0 {#version-320}
 
 ## New requirements
@@ -11,7 +6,7 @@ hide:
 
 ## New features
 
--   WFS feature indexing (see [getfeature_harvester](getfeature_harvester.md))
+-   WFS feature indexing (see [WFS GetFeature Harvesting](../../user-guide/harvesting/harvesting-wfs-features.md))
 -   A new REST API (beta) is available. The documentation is available <http://localhost:8080/geonetwork/doc/api>
 -   User feedback form
 -   Editor / Associated resources can be updated without the advanced view

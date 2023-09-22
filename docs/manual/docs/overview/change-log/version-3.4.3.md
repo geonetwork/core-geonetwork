@@ -1,8 +1,3 @@
----
-hide:
-  - navigation
-  - toc
----
 # Version 3.4.3 {#version-343}
 
 ## New features/fixes

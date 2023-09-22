@@ -1,8 +1,3 @@
----
-hide:
-  - navigation
-  - toc
----
 # Version 4.0.2 {#version-402}
 
 GeoNetwork 4.0.2 release is a minor release but adds a better multilingual support which may require some changes in your installations:
@@ -44,13 +39,13 @@ cl_characterSet: [{
 }]
 ```
 
-So if using `xt` in a facet, use [cl_characterSet.default]{.title-ref} with this new version.
+So if using `xt` in a facet, use ``cl_characterSet.default`` with this new version.
 
 ### Thesaurus
 
 The `ds` field is now only used for rendering (not for query) to limit the total number of field and avoid some errors on large catalogues.
 
-Use the per thesaurus fields which were named [thesaurus_geonetwork+external/local+type+thesaurusid]{.title-ref} and are now `id`. The field is also an object composed of:
+Use the per thesaurus fields which were named ``thesaurus_geonetwork+external/local+type+thesaurusid`` and are now `id`. The field is also an object composed of:
 
 ``` js
 thesaurus_geonetworkthesaurusexternalthemeeeatopics: [
@@ -82,9 +77,9 @@ th_eea-topics: [{
 
 ### GeoTag
 
-`ag` is now stored in the [template field for keyword types](https://github.com/geonetwork/core-geonetwork/pull/5243) ie. [keywordType-place]{.title-ref}
+`ag` is now stored in the ``template field for keyword types](https://github.com/geonetwork/core-geonetwork/pull/5243) ie. [keywordType-place``
 
-For more details check [configuring-search-fields`{.interpreted-text role="ref"} and `configuring-faceted-search](configuring-search-fields`{.interpreted-text role="ref"} and `configuring-faceted-search.md).
+For more details check [Configuring search fields](../../customizing-application/configuring-search-fields.md) and [Configuring faceted search](../../customizing-application/configuring-faceted-search.md).
 
 ## Main changes in version 4.0.2
 

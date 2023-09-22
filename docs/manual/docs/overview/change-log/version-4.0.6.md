@@ -1,8 +1,3 @@
----
-hide:
-  - navigation
-  - toc
----
 # Version 4.0.6 {#version-406}
 
 This new release of GeoNetwork contains a *lot* of improvements and fixes made during the past 8 months that should make it much more easy to use and customizable. This version also benefited from most of the fixes and improvements made for the GeoNetwork 3.10 and 12 versions during the past months.
@@ -129,7 +124,7 @@ This new release of GeoNetwork contains a *lot* of improvements and fixes made d
 -   CSW / Restore possibility to store by any index fields ([#5849](https://github.com/geonetwork/core-geonetwork/pull/5849))
 -   Map / Service list / Add UI configuration filter if any ([#5854](https://github.com/geonetwork/core-geonetwork/pull/5854))
 -   ISO19139 / Formatter / Support isoType in template match for plugins ([#5853](https://github.com/geonetwork/core-geonetwork/pull/5853))
--   Remove deleteAllByMetadataIdExceptGroupId from custom implementation and use the repository \@query instead. ([#5828](https://github.com/geonetwork/core-geonetwork/pull/5828))
+-   Remove deleteAllByMetadataIdExceptGroupId from custom implementation and use the repository @query instead. ([#5828](https://github.com/geonetwork/core-geonetwork/pull/5828))
 -   Small adjustments to UI settings in the Admin ([#5839](https://github.com/geonetwork/core-geonetwork/pull/5839))
 -   Restyle topics on the Home page ([#5837](https://github.com/geonetwork/core-geonetwork/pull/5837))
 -   Escape login redirect url ([#5829](https://github.com/geonetwork/core-geonetwork/pull/5829))
@@ -164,7 +159,7 @@ This new release of GeoNetwork contains a *lot* of improvements and fixes made d
 
 ## Fixes
 
--   Use typeNames in the WFS URL when version is \>= "2.0.0" ([#6143](https://github.com/geonetwork/core-geonetwork/pull/6143))
+-   Use typeNames in the WFS URL when version is >= "2.0.0" ([#6143](https://github.com/geonetwork/core-geonetwork/pull/6143))
 -   URL rewrite / Make "/geonetwork?uuid=..." links work again ([#6139](https://github.com/geonetwork/core-geonetwork/pull/6139))
 -   Fix the cron expression for the INSPIRE ATOM harvester ([#6131](https://github.com/geonetwork/core-geonetwork/pull/6131))
 -   Fix issue with CMIS connection during startup ([#6106](https://github.com/geonetwork/core-geonetwork/pull/6106))
@@ -206,7 +201,7 @@ This new release of GeoNetwork contains a *lot* of improvements and fixes made d
 -   Fix CSW ES mapping for sortBy and bbox ([#5927](https://github.com/geonetwork/core-geonetwork/pull/5927))
 -   Handle CSW BBOX Filter correctly ([#5913](https://github.com/geonetwork/core-geonetwork/pull/5913))
 -   Encryptor env variable should be uppercase as this it the general standard otherwise it will not find the variable on unix ([#5873](https://github.com/geonetwork/core-geonetwork/pull/5873))
--   Fix issue with localized exception where with\* functions were returning LocalizedException instead of the class. i.e. ResourceNotFoundException ([#5531](https://github.com/geonetwork/core-geonetwork/pull/5531))
+-   Fix issue with localized exception where with* functions were returning LocalizedException instead of the class. i.e. ResourceNotFoundException ([#5531](https://github.com/geonetwork/core-geonetwork/pull/5531))
 -   API / Avoid browser cache issue when the same API Path serving various formats. ([#5901](https://github.com/geonetwork/core-geonetwork/pull/5901))
 -   ISO19139 / CRS indexing fails on multilingual records ([#5900](https://github.com/geonetwork/core-geonetwork/pull/5900))
 -   HTML / Page tab title empty ([#5895](https://github.com/geonetwork/core-geonetwork/pull/5895))

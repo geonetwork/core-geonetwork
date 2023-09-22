@@ -1,8 +1,3 @@
----
-hide:
-  - navigation
-  - toc
----
 # Version 4.0.0-alpha.1 {#version-400-alpha1}
 
 ## Why 4.0.0-alpha.1?
@@ -47,7 +42,7 @@ This release is all about user search experience:
 
 ![](img/3990-es-facet-histogram.png)
 
--   Facets / Configuration from the admin \> Settings \> UI based on [Elasticsearch API](https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations.html)
+-   Facets / Configuration from the admin > Settings > UI based on [Elasticsearch API](https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations.html)
 -   Record view / More like this \...
 
 ![](img/3990-es-morelikethis.png)
@@ -70,15 +65,15 @@ Regarding search protocols, only CSW has been migrated for now (ie. OAI-PMH, RDF
 
 More details can be found in <https://github.com/geonetwork/core-geonetwork/pull/2830>.
 
-For the installation check [installation](installation.md).
+For the installation check [Installation guide](../../install-guide/index.md).
 
 For reporting any issues go to <https://github.com/geonetwork/core-geonetwork/issues>.
 
 ## Some features now removed
 
--   CSW / Virtual CSW is replaced by sub-portal (see [portal-configuration](portal-configuration.md))
+-   CSW / Virtual CSW is replaced by sub-portal (see [Portal configuration](../../administrator-guide/configuring-the-catalog/portal-configuration.md))
 -   CSW / results_with_summary custom GeoNetwork output schema is removed. To retrieve facets use the main search API.
--   Deprecated Jeeves services removed (ie. services not used by Angular application like harvester config). Use the swagger API instead (see [geonetwork-api](geonetwork-api.md)).
+-   Deprecated Jeeves services removed (ie. services not used by Angular application like harvester config). Use the swagger API instead (see [GeoNetwork API](../../api/the-geonetwork-api.md)).
 -   Metadata notifier manager (can be replaced by event system)
 -   Overrides mechanism of configuration file
 

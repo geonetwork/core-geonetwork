@@ -1,8 +1,3 @@
----
-hide:
-  - navigation
-  - toc
----
 # Version 3.0.2 {#version-302}
 
 ## New features
@@ -14,7 +9,7 @@ hide:
 -   Thesaurus / Update region thesaurus based on Natural Earth and Sea Vox
 -   Processing / Vacuum batch process help cleaning ISO19139 and Dublin Core records
 -   Harvester / Filesystem harvester can harvest subtemplates
--   Administration / End of session notification (See [user-session](user-session.md))
+-   Administration / End of session notification (See [User session](../../administrator-guide/managing-users-and-groups/index.md#user-session))
 
 ## Bug Fixes
 
