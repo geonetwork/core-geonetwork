@@ -402,7 +402,7 @@ nav:
       - tutorials/inspire/view-mapserver.md
   - 'Annexes':
     - annexes/index.md
-    - annexes/gallery/gallery.md
+    - annexes/gallery/index.md
     - annexes/mef-format.md
     - 'Standards':
       - annexes/standards/index.md
