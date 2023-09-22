@@ -64,7 +64,7 @@ The batch edit report explains how many records were processed:
 
 ![](img/batch-editing-report.png)
 
-Batch editing can also be applied using the [API](%7Cdemo_url%7C/doc/api/index.html#/records/batchEdit)
+Batch editing can also be applied using the API: ``doc/api/index.html#/records/batchEdit>``
 
 ## Examples
 

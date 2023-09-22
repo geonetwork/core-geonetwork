@@ -350,7 +350,7 @@ nav:
     - 'Contributing':
       - contributing/index.md
       - 'Writing Documentation':
-        - 'Markdown': devel/docs/docs.md
+        - 'Markdown': devel/docs/index.md
         - 'Sphinx - Deprecated': contributing/writing-documentation.md
       - contributing/style-guide.md
       - contributing/translating.md
@@ -402,8 +402,8 @@ nav:
       - tutorials/inspire/view-mapserver.md
   - 'Annexes':
     - annexes/index.md
+    - annexes/gallery/gallery.md
     - annexes/mef-format.md
-    - annexes/glossary/index.md
     - 'Standards':
       - annexes/standards/index.md
       - annexes/standards/iso19115-3.2018.md
