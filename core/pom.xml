@@ -53,6 +53,10 @@
       <artifactId>xalan</artifactId>
     </dependency>
     <dependency>
+      <groupId>xalan</groupId>
+      <artifactId>serializer</artifactId>
+    </dependency>
+    <dependency>
       <groupId>net.sf.saxon</groupId>
       <artifactId>saxon-dom</artifactId>
     </dependency>
@@ -477,6 +481,10 @@
         <exclusion>
           <groupId>xalan</groupId>
           <artifactId>xalan</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>xalan</groupId>
+          <artifactId>serializer</artifactId>
         </exclusion>
         <exclusion>
           <groupId>org.apache.xmlgraphics</groupId>
