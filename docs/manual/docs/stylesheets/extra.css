@@ -18,7 +18,7 @@ img + em, .browser-border + em, .browser-mockup + em {
 .md-typeset .grid dl {
   display: grid;
   grid-template-columns: repeat(auto-fit,minmax(16rem,1fr));
-  margin: 1em 0;
+  margin: 0;
 }
 .md-typeset .grid.cards dt, .md-typeset .grid.cards dd {
   border: 0.05rem solid var(--md-default-fg-color--lightest);
