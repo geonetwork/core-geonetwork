@@ -77,7 +77,7 @@ Check the updated files and commit to the doc repository.
 
 ## Editing the reStructuredText files
 
-To update the documentation, use a text editor to edit `.rst` files. Ensure you are using the correct terminology by checking [Style Guide](/contributing/style-guide.md). Save your changes, build the documentation and open the HTML files to preview the changes. When your changes are ready to be submitted to the project, follow the steps in [Making a pull request](/contributing/making-a-pull-request.md).
+To update the documentation, use a text editor to edit `.rst` files. Ensure you are using the correct terminology by checking [Style Guide](style-guide.md). Save your changes, build the documentation and open the HTML files to preview the changes. When your changes are ready to be submitted to the project, follow the steps in [Making a pull request](making-a-pull-request.md).
 
 ## Sphinx
 

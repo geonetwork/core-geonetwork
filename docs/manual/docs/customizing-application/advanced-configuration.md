@@ -2,7 +2,7 @@
 
 ## User session timeout configuration {#session-timeout-configuration}
 
-Default session timeout is set to 35 minutes (See [User session](/administrator-guide/managing-users-and-groups/index.rst#user-session)). This timeout can be configured in `WEB-INF/web.xml` by changing the value of the session-timeout (time is in minute):
+Default session timeout is set to 35 minutes (See [User session](../administrator-guide/managing-users-and-groups/index.md#user-session)). This timeout can be configured in `WEB-INF/web.xml` by changing the value of the session-timeout (time is in minute):
 
 ``` xml
 <session-config>

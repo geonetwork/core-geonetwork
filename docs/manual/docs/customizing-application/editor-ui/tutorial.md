@@ -1,6 +1,6 @@
 # Building a custom form step by step {#editor-tutorial}
 
-First of all, create a good template with all the default values required which are common to your organization (eg. default contact for the record, for the resources, coordinate system, type of resource). See [Managing templates](/user-guide/describing-information/managing-templates.md).
+First of all, create a good template with all the default values required which are common to your organization (eg. default contact for the record, for the resources, coordinate system, type of resource). See [Managing templates](../../user-guide/describing-information/managing-templates.md).
 
 The editor form configuration depends on the standard used. In this tutorial, we use ISO19115-3 (see `schemas/iso19115-3.2018/src/main/plugin/iso19115-3.2018/layout/config-editor.xml`).
 
@@ -18,7 +18,7 @@ Before adding new fields, create a new editor form first. An editor form is name
 
 ![](img/tutorial-1-view.png)
 
-The view can define custom CSS classes in order to customize the look of the form. To learn more about the default style options, check [Defining a view](/customizing-application/editor-ui/creating-custom-editor.rst#creating-custom-editor-view).
+The view can define custom CSS classes in order to customize the look of the form. To learn more about the default style options, check [Defining a view](creating-custom-editor.md#creating-custom-editor-view).
 
 To update the form, building the schema plugin is usually necessary. But updating only the XML configuration file of the form is quicker while in the process of creation of the form:
 

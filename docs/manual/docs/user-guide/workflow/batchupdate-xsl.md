@@ -139,7 +139,7 @@ Set priority to 2 in order for your template to take priority over the main temp
 
 ## Registering a process as a suggestion {#customizing-xslt-suggestion}
 
-See [Suggestion for improving metadata content](/user-guide/workflow/suggestion.md).
+See [Suggestion for improving metadata content](suggestion.md).
 
 ## Registering a process as an editor action {#xslt-in-editor}
 

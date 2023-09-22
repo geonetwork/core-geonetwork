@@ -41,7 +41,7 @@ If an error occurred while building the capabilities document from the service r
 
 ## CSW Configuration for INSPIRE {#csw-configuration_inspire}
 
-If your catalogue also focus on INSPIRE (see [Configuring for the INSPIRE Directive](/administrator-guide/configuring-the-catalog/inspire-configuration.md)), it may be relevant to also populate the following to properly configure your discovery service:
+If your catalogue also focus on INSPIRE (see [Configuring for the INSPIRE Directive](inspire-configuration.md)), it may be relevant to also populate the following to properly configure your discovery service:
 
 -   metadata language (+ additional languages if any) (use for SupportedLanguages, DefaultLanguage)
 -   INSPIRE themes

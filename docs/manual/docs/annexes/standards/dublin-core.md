@@ -10,15 +10,15 @@ More details:<http://dublincore.org/documents/dces/>
 
 This standard can be encoded using 3 view(s).
 
--   [View: Simple (default)](/annexes/standards/dublin-core.rst#dublin-core-view-default)
--   [View: Full (advanced)](/annexes/standards/dublin-core.rst#dublin-core-view-advanced)
--   [View: XML (xml)](/annexes/standards/dublin-core.rst#dublin-core-view-xml)
+-   [View: Simple (default)](dublin-core.md#dublin-core-view-default)
+-   [View: Full (advanced)](dublin-core.md#dublin-core-view-advanced)
+-   [View: XML (xml)](dublin-core.md#dublin-core-view-xml)
 
 ### View: Simple (default) {#dublin-core-view-default}
 
 This view is composed of1tab(s).
 
--   [Tab: Simple (default)](/annexes/standards/dublin-core.rst#dublin-core-tab-default)
+-   [Tab: Simple (default)](dublin-core.md#dublin-core-tab-default)
 
 This view also allows to add the following element even if not in the current record:
 
@@ -32,13 +32,13 @@ This tab display elements from the XML metadata record.
 
 ##### Section: Metadata
 
-See [Metadata](/annexes/standards/dublin-core.rst#dublin-core-elem-simpledc-8506dd4a73872a53513368db419204a3)
+See [Metadata](dublin-core.md#dublin-core-elem-simpledc-8506dd4a73872a53513368db419204a3)
 
 ### View: Full (advanced) {#dublin-core-view-advanced}
 
 This view is composed of1tab(s).
 
--   [Tab: Full (advanced)](/annexes/standards/dublin-core.rst#dublin-core-tab-advanced)
+-   [Tab: Full (advanced)](dublin-core.md#dublin-core-tab-advanced)
 
 #### Tab: Full (advanced) {#dublin-core-tab-advanced}
 
@@ -46,13 +46,13 @@ This tab display elements from the XML metadata record and also provide controls
 
 ##### Section: Metadata
 
-See [Metadata](/annexes/standards/dublin-core.rst#dublin-core-elem-simpledc-8506dd4a73872a53513368db419204a3)
+See [Metadata](dublin-core.md#dublin-core-elem-simpledc-8506dd4a73872a53513368db419204a3)
 
 ### View: XML (xml) {#dublin-core-view-xml}
 
 This view is composed of1tab(s).
 
--   [Tab: XML (xml)](/annexes/standards/dublin-core.rst#dublin-core-tab-xml)
+-   [Tab: XML (xml)](dublin-core.md#dublin-core-tab-xml)
 
 #### Tab: XML (xml) {#dublin-core-tab-xml}
 

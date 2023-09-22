@@ -8,8 +8,8 @@ The basics of Atom/OpenSearch is that for each dataset a number of file-download
 
 See:
 
--   [Linking data using ATOM feeds](/user-guide/associating-resources/linking-online-resources.rst#linking-data-using-atom-feed)
--   [OpenSearch and INSPIRE ATOM](/api/opensearch.md)
+-   [Linking data using ATOM feeds](../../user-guide/associating-resources/linking-online-resources.md#linking-data-using-atom-feed)
+-   [OpenSearch and INSPIRE ATOM](../../api/opensearch.md)
 
 ## External mode implementation
 

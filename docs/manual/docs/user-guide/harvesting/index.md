@@ -46,7 +46,7 @@ Metadata properties (like categories, privileges etc\...) on harvested metadata 
 
 !!! note
 
-    if you really want to edit harvested metadata records and aren't worried by the possible issues described above, there is now a configuration setting which will permit this. See [Metadata import](/administrator-guide/configuring-the-catalog/system-configuration.rst#editing_harvested_records) for more details.
+    if you really want to edit harvested metadata records and aren't worried by the possible issues described above, there is now a configuration setting which will permit this. See [Metadata import](../../administrator-guide/configuring-the-catalog/system-configuration.md#editing_harvested_records) for more details.
     
     Another option would be to assign the harvested records to the local catalog and then modify them. For the time being, no interface allows to change record's source catalog.
 
@@ -143,14 +143,14 @@ The page shows a list of the currently defined harvesters and a set of buttons f
 1.  *Select* Check box to select one or more harvesters. The selected harvesters will be affected by the first row of buttons (activate, deactivate, run, remove). For example, if you select three harvesters and press the Remove button, they will all be removed.
 2.  *Name* This is the harvester name provided by the administrator.
 3.  *Type* The harvester type (eg. GeoNetwork, WebDAV etc\...).
-4.  *Status* An icon showing current status. See [Harvesting Status and Error Icons](/user-guide/harvesting/index.rst#admin_harvesting_status) for the different icons and status descriptions.
-5.  *Errors* An icon showing the result of the last harvesting run, which could have succeeded or not. See [Harvesting Status and Error Icons](/user-guide/harvesting/index.rst#admin_harvesting_status) for the different icons and error descriptions. Hovering the cursor over the icon will show detailed information about the last harvesting run.
+4.  *Status* An icon showing current status. See [Harvesting Status and Error Icons](index.md#admin_harvesting_status) for the different icons and status descriptions.
+5.  *Errors* An icon showing the result of the last harvesting run, which could have succeeded or not. See [Harvesting Status and Error Icons](index.md#admin_harvesting_status) for the different icons and error descriptions. Hovering the cursor over the icon will show detailed information about the last harvesting run.
 6.  *Run at* and *Every*: Scheduling of harvester runs. Essentially the time of the day + how many hours between repeats and on which days the harvester will run.
 7.  *Last run* The date, in ISO 8601 format, of the most recent harvesting run.
 8.  *Operation* A list of buttons/links to operations on a harvester.
     -   Selecting *Edit* will allow you to change the parameters for a harvester.
     -   Selecting *Clone* will allow you to create a clone of this harvester and start editing the details of the clone.
-    -   Selecting *History* will allow you to view/change the harvesting history for a harvester - see [Harvest History](/user-guide/harvesting/index.rst#harvest_history).
+    -   Selecting *History* will allow you to view/change the harvesting history for a harvester - see [Harvest History](index.md#harvest_history).
 
 At the bottom of the list of harvesters are two rows of buttons. The first row contains buttons that can operate on a selected set of harvesters. You can select the harvesters you want to operate on using the check box in the Select column and then press one of these buttons. When the button finishes its action, the check boxes are cleared. Here is the meaning of each button:
 
@@ -164,7 +164,7 @@ The second row contains general purpose buttons. Here is the meaning of each but
 1.  *Back* Simply returns to the main administration page.
 2.  *Add* This button creates a new harvester.
 3.  *Refresh* Refreshes the current list of harvesters from the server. This can be useful to see if the harvesting list has been altered by someone else or to get the status of any running harvesters.
-4.  *History* Show the harvesting history of all harvesters. See [Harvest History](/user-guide/harvesting/index.rst#harvest_history) for more details.
+4.  *History* Show the harvesting history of all harvesters. See [Harvest History](index.md#harvest_history) for more details.
 
 ## Harvesting Status and Error Icons {#admin_harvesting_status}
 

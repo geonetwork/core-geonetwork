@@ -1,6 +1,6 @@
 # Adding new User Interface {#tuto-hookcustomizations-ui}
 
-To completely understand this part of the tutorial, it would be good to be familiarized with the [Customize your GeoNetwork UI](/tutorials/customui/index.md) tutorial first.
+To completely understand this part of the tutorial, it would be good to be familiarized with the [Customize your GeoNetwork UI](../../customui/index.md) tutorial first.
 
 In GeoNetwork you can have more than one style installed on the same deployment. You can select which style to use on the Settings manager. Also, you can use the parameter "?view=\$name" to force a specific style on a page request.
 

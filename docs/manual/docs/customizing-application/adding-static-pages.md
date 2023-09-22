@@ -27,7 +27,7 @@ Some restrictions:
 
 ## Examples of API usage
 
-Before executing the following examples, see [Example of CSRF call using curl](/customizing-application/misc.rst#example-csrf-curl) for details on the usage of the CSRF token (instead of the value `"X-XSRF-TOKEN: e934f557-17a3-47f2-8e6b-bdf1a3c90a97"` used in the examples) and cookies in the requests.
+Before executing the following examples, see [Example of CSRF call using curl](misc.md#example-csrf-curl) for details on the usage of the CSRF token (instead of the value `"X-XSRF-TOKEN: e934f557-17a3-47f2-8e6b-bdf1a3c90a97"` used in the examples) and cookies in the requests.
 
 ### Load a page in the top menu bar
 

@@ -10,7 +10,7 @@ Facets also known as aggregation in Elasticsearch are used to provide simple sea
 
     ![](img/agg-search.png)
 
-All facet configurations are stored in the user interface configuration (see [User Interface Configuration](/administrator-guide/configuring-the-catalog/user-interface-configuration.md)). The configuration are defined using JSON following Elasticsearch API (See <https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations-bucket.html>).
+All facet configurations are stored in the user interface configuration (see [User Interface Configuration](../administrator-guide/configuring-the-catalog/user-interface-configuration.md)). The configuration are defined using JSON following Elasticsearch API (See <https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations-bucket.html>).
 
 By default, the facet configurations are defined as (see `web-ui/src/main/resources/catalog/js/CatController.js`). The home page display on the left side `th_httpinspireeceuropaeutheme-theme_tree.key` and `cl_topic.key` and on the right side, the last facet defined `resourceType`.
 

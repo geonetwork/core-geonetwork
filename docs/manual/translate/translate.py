@@ -26,9 +26,11 @@ anchors = {}
 docs_folder = None
 
 md_extensions_to = 'markdown+definition_lists+fenced_divs+backtick_code_blocks+fenced_code_attributes-simple_tables+pipe_tables'
-
 md_extensions_from = 'markdown+definition_lists+fenced_divs+backtick_code_blocks+fenced_code_attributes+pipe_tables'
 
+#
+# CLI SUPPORT AND CONFIGURATION
+#
 def load_auth() -> str:
     """
     Look up DEEPL_AUTH environmental variable for authentication.
@@ -147,6 +149,9 @@ def collect_paths(paths: list[str], extension: str) -> list[str]:
 
     return files
 
+#
+# RST INDEX MANAGEMENT AND USE
+#
 def index_rst(base_path: str, rst_file: str) -> str:
     """
     Scan through rst_file producing doc and ref indexs
@@ -253,43 +258,105 @@ def scan_heading(index: int, lines: list[str] ) -> str:
 
     return None
 
-# administrator-guide/managing-metadata-standards/configure-validation.md
-def fix_anchors(md_file: str) -> int:
+def _doc_title(rst_path: str, doc_link: str) -> str:
+   """
+   Create a label title, based on a documentation link (using on anchors.txt index)
+   """
+   resolved_path = _doc_location(rst_path,doc_link)
+   # example:
+   #   /install-guide/loading-samples.rst=/install-guide/loading-samples.rst
+   #   /install-guide/loading-samples.rst.title=Loading templates and sample data
+   title_key = resolved_path+'.rst.title'
+   if title_key in anchors:
+       return anchors[title_key]
+   else:
+       label = _label(doc_link)
+       logger.warning("broken doc '"+doc_link+"' title:"+label)
+       return label
+
+def _doc_location(rst_path: str, doc_link: str) ->  str:
     """
-    Use search/replace to identify [reference](reference) links and
-    fill in appropriate path to anchor.
+    Determines absolute path location for link, relative to provided path.
+
+    Do not use as is, mkdocs only works with relative links
+
+    :param rst_path: path of rst file providing the documentation link
+    :param doc_link: documentation link (may be absolute or relative)
+    :return: absolute path, indicating location relative to docs folder. Used for looking up title.
     """
-    if not os.path.exists(md_file):
-       raise FileNotFoundError(errno.ENOENT, f"Markdown file does not exist at location:", md_file)
+    if doc_link.startswith("/"):
+        return doc_link
+    else:
+        dir = os.path.dirname(rst_path)
+        link_path = os.path.join(dir, doc_link)
+        location = os.path.relpath(link_path, docs_folder)
+        return '/'+location
 
-    with open(md_file, 'r') as file:
-        text = file.read()
+def _label(link: str) -> str:
+   """
+   Create a default label, based on a doc link or reference.
+   """
+   label = link.replace('.rst','')
+   label = label.replace('.md','')
+   label = label.replace('/index', '')
+   label = label.replace('-', ' ')
+   label = label.replace('_', ' ')
+   label = label.replace('/', ' ')
+   label = label.title()
 
-    count = 0;
-    fixed = ''
-    for line in text.splitlines():
-       match = re.search(r"\[(.+)\]\((.+)\.md\)", line)
-       if match:
-          text = match.group(1)
-          link = match.group(2)
-          if text == link:
-             path = anchors.get(text)
-             log("anchor:",link,"->",path)
-             if path:
-                line = re.sub(
-                   r"\[(.+)\]\((.+)\.md\)",
-                   r"[\1]("+path+")",
-                   line
-                )
-                count += 1
-                log("fixed:",line)
-       fixed += line + "\n"
+   return label
 
-    with open(md_file,'w') as rst:
-        rst.write(fixed)
+def _ref_title(reference: str) -> str:
+    """
+    Determines title for reference (using on anchors.txt index)
+    :param reference: reference to document or heading
+    :return: title for reference
+    """
+    title_lookup = reference+".title"
 
-    return count
+    if title_lookup in anchors:
+       return anchors[title_lookup]
+    else:
+       label = _label(reference)
+       logger.warning("broken reference '"+reference+"' title:"+label)
+       return label
 
+def _ref_location(reference: str) ->  str:
+    """
+    Determines absolute path#anchor for reference (using on anchors.txt index)
+    :param reference: reference to document or heading
+    :return: absolute path, indicating location relative to docs folder. Used to determine a relative path.
+    """
+    if reference in anchors:
+       return anchors[reference]
+    else:
+       link = reference+"-broken.rst"
+       logger.warning("broken reference '"+reference+"' link:"+link)
+       return link
+
+def _ref_path(rst_path: str, reference: str) ->  str:
+    """
+    Generate a relative link for the provided reference.
+    """
+    logging.debug("ref: "+reference)
+    ref_location = _ref_location(reference)
+
+    rst_location = os.path.relpath(os.path.dirname(rst_path),docs_folder)
+    if ref_location.startswith("/"):
+        ref_location = ref_location[1:]
+
+    logging.debug("--: "+rst_location)
+    logging.debug("--> "+ref_location)
+
+    link = os.path.relpath(ref_location,rst_location)
+
+    logging.debug("--> "+link)
+    return link
+
+
+#
+# RST PANDOC CONVERSION
+#
 def convert_rst(rst_file: str) -> str:
     """
     Use pandoc to convert rich-structured-text file to markdown file for mkdocs
@@ -360,7 +427,7 @@ def preprocess_rst(rst_file:str, rst_prep: str) -> str:
         text = _preprocess_rst_doc(rst_file,text)
 
     if ':ref:' in text:
-        text = _preprocess_rst_ref(text)
+        text = _preprocess_rst_ref(rst_file,text)
 
     # gui-label and menuselection represented: **Cancel**
     text = re.sub(
@@ -448,12 +515,12 @@ def _preprocess_rst_doc(path: str, text: str) -> str:
    # `title <simple.rst>`_
    document_reference = re.compile(r":doc:`((\w|-|_)*?)(\.rst)?`")
    text = document_reference.sub(
-       lambda match: "`"+_labelify(path, match.group(1))+" <"+match.group(1)+".rst>`_",
+       lambda match: "`"+_doc_title(path, match.group(1))+" <"+match.group(1)+".rst>`_",
        text
    )
    return text
 
-def _preprocess_rst_ref(text: str) -> str:
+def _preprocess_rst_ref(path: str, text: str) -> str:
    """
    Preprocess rst content replacing ref references with links.
    """
@@ -461,14 +528,14 @@ def _preprocess_rst_ref(text: str) -> str:
    # :ref:`normal <link>`
    named_reference = re.compile(r":ref:`(.*) <((\w|-)*)>`")
    text = named_reference.sub(
-       lambda match: "`"+match.group(1)+" <"+_refify(match.group(2))+">`_",
+       lambda match: "`"+match.group(1)+" <"+_ref_path(path,match.group(2))+">`_",
        text
    )
 
    # :ref:`simple`
    simple_reference = re.compile(r":ref:`((\w|-)*)\`")
    text = simple_reference.sub(
-       lambda match: "`"+_title(match.group(1))+" <"+_refify(match.group(1))+">`_",
+       lambda match: "`"+_ref_title(match.group(1))+" <"+_ref_path(path,match.group(1))+">`_",
        text
    )
 
@@ -494,7 +561,7 @@ def _preprocess_rst_toctree(path: str, text: str) -> str:
           if line[0:3] == '   ':
              # processing directive
              link = line.strip().replace(".rst","")
-             label = _labelify(path,link)
+             label = _doc_title(path,link)
              toctree += f"* `{label} <{link}.rst>`__\n"
           else:
              # end directive
@@ -509,75 +576,6 @@ def _preprocess_rst_toctree(path: str, text: str) -> str:
       process += toctree
 
    return process
-
-def _labelify(path: str, link: str) -> str:
-   """
-   Create a label title, based on a documentation link (using on anchors.txt index)
-   """
-   resolved_path = _docify(path,link)
-   # example:
-   #   /install-guide/loading-samples.rst=/install-guide/loading-samples.rst
-   #   /install-guide/loading-samples.rst.title=Loading templates and sample data
-   title_key = resolved_path+'.rst.title'
-   if title_key in anchors:
-       return anchors[title_key]
-   else:
-       label = _label(link)
-       logger.warning("broken doc '"+link+"' title:"+label)
-       return label
-
-def _docify(path: str, link: str) ->  str:
-    """
-    Determines absolute path for link, relative to provided path.
-    :param path: path of file containing the link
-    :param link: the link (may be absolute or relative)
-    :return: absolute link
-    """
-    if link.startswith("/"):
-        return link
-    else:
-        dir = os.path.dirname(path)
-        link_path = os.path.join(dir, link)
-        doc_path = os.path.relpath(link_path, docs_folder)
-        return '/'+doc_path
-
-def _label(link: str) -> str:
-   """
-   Create a default label, based on a link or reference.
-   """
-   label = link.replace('.rst','')
-   label = label.replace('.md','')
-   label = label.replace('/index', '')
-   label = label.replace('-', ' ')
-   label = label.replace('_', ' ')
-   label = label.replace('/', ' ')
-   label = label.title()
-
-   return label
-
-def _title(reference: str) -> str:
-    """
-    Determines title for reference (using on anchors.txt index)
-    """
-    title_lookup = reference+".title"
-
-    if title_lookup in anchors:
-       return anchors[title_lookup]
-    else:
-       label = _label(reference)
-       logger.warning("broken reference '"+reference+"' title:"+label)
-       return label
-
-def _refify(reference: str) ->  str:
-    """
-    Determines absolute path#anchor for reference (using on anchors.txt index)
-    """
-    if reference in anchors:
-       return anchors[reference]
-    else:
-       link = reference+"-ref.md"
-       logger.warning("broken reference '"+reference+"' link:"+link)
-       return link
 
 def postprocess_rst_markdown(md_file: str, md_clean: str):
     """
@@ -620,14 +618,13 @@ def postprocess_rst_markdown(md_file: str, md_clean: str):
           continue;
 
        # non-code clean content
-       # fix rst -> md links
+       # fix rst#anchor -> md links#anchor
        line = re.sub(
-            r"\[(.+?)\]\(((\w|-|/|\.)*)\.rst\)",
-            r"[\1](\2.md)",
+            r"\[(.+?)\]\(((\w|-|/|\.)*)\.rst(#.*?)?\)",
+            r"[\1](\2.md\4)",
             line,
             flags=re.MULTILINE
        )
-
 
        # Pandoc escapes characters over-aggressively when writing markdown
        # https://github.com/jgm/pandoc/issues/6259

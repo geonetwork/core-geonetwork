@@ -1,6 +1,6 @@
 # Tagging with categories
 
-A catalog can define a set of categories that can be used to classify metadata records for easy searching or management purposes (see [Managing categories](/administrator-guide/managing-classification-systems/managing-categories.md)). Categories are added to the metadata records itself and cannot be exported when the record is harvested (eg. when using CSW protocol). If the category needs to be propagated with the metadata, use other harvesting protocols (eg. GeoNetwork) or use keywords (see [Tagging with keywords](/user-guide/tag-information/tagging-with-keywords.md)).
+A catalog can define a set of categories that can be used to classify metadata records for easy searching or management purposes (see [Managing categories](../../administrator-guide/managing-classification-systems/managing-categories.md)). Categories are added to the metadata records itself and cannot be exported when the record is harvested (eg. when using CSW protocol). If the category needs to be propagated with the metadata, use other harvesting protocols (eg. GeoNetwork) or use keywords (see [Tagging with keywords](tagging-with-keywords.md)).
 
 There are two ways to assign categories to a metadata record:
 

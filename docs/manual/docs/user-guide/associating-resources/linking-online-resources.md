@@ -61,7 +61,7 @@ To add a WMS layer:
 
 ## Linking a database table or a GIS file on the network {#linking-online-resources-georesource}
 
-To reference a GIS file or a database table, user can upload or link to a that resource (see [Linking a document](/user-guide/associating-resources/linking-online-resources.rst#linking-online-resources-doc)). The type of protocol depends on the type of resource associated:
+To reference a GIS file or a database table, user can upload or link to a that resource (see [Linking a document](linking-online-resources.md#linking-online-resources-doc)). The type of protocol depends on the type of resource associated:
 
 | Type of resource | Vector file uploaded (eg. zipped Shapefile)                                                                                                     |
 |------------------|-------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -81,7 +81,7 @@ To reference a GIS file or a database table, user can upload or link to a that r
 | Protocol         | DB:POSTGIS                                           |
 | Name             | Table name                                           |
 
-When having information about the database or file on the local network, it may be relevant to hide those informations for public users (see [Restricting information to metadata sections](/user-guide/publishing/restricting-information-to-metadata-sections.md)).
+When having information about the database or file on the local network, it may be relevant to hide those informations for public users (see [Restricting information to metadata sections](../publishing/restricting-information-to-metadata-sections.md)).
 
 !!! info "Todo"
 
@@ -122,7 +122,7 @@ Examples:
 
 -   [NGR National Georegister](https://www.nationaalgeoregister.nl/geonetwork/srv/dut/catalog.search#/search?any=atom&fast=index), [Statistics Netherlands Land Use 2015 ATOM](https://www.nationaalgeoregister.nl/geonetwork/srv/dut/catalog.search#/metadata/a657f732-e1b3-4638-9933-67cab10d9081)
 
-The catalog also provides the capability to produce ATOM feeds for services and datasets from metadata records. To enable this, check the ATOM API (see [OpenSearch and INSPIRE ATOM](/api/opensearch.md)). A GML dataset can be exposed using the following encoding in order to be published in a dataset ATOM feed:
+The catalog also provides the capability to produce ATOM feeds for services and datasets from metadata records. To enable this, check the ATOM API (see [OpenSearch and INSPIRE ATOM](../../api/opensearch.md)). A GML dataset can be exposed using the following encoding in order to be published in a dataset ATOM feed:
 
 ``` xml
 <gmd:transferOptions>

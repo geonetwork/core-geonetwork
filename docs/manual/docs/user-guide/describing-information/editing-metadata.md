@@ -49,6 +49,6 @@ The scroll-spy highlights the visible sections, helps user to return to the top 
     Add details about directory / thesaurus
 
 
-Depending on the view configuration (see [Customizing editor](/customizing-application/editor-ui/creating-custom-editor.md)), editors can reorder elements using up and down controls.
+Depending on the view configuration (see [Customizing editor](../../customizing-application/editor-ui/creating-custom-editor.md)), editors can reorder elements using up and down controls.
 
 ![](img/editor-control-updown.png)

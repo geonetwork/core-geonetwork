@@ -28,4 +28,4 @@ While the harvester is running, there will be an animated circle. Once the harve
 
 ![image](img/harvester1.png)
 
-See more on [Harvesting](/user-guide/harvesting/index.md).
+See more on [Harvesting](../../../user-guide/harvesting/index.md).

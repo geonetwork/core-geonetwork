@@ -2,7 +2,7 @@
 
 When describing information in the scope of the INSPIRE Directive, editors must follows the [Technical Guidance for the implementation of INSPIRE dataset and service metadata based on ISO/TS 19139:2007 (INSPIRE TG2)](https://inspire.ec.europa.eu/id/document/tg/metadata-iso19139).
 
-To follow the technical guideline, the catalogue administrator has to setup INSPIRE configuration for the catalogue (see [Configuring for the INSPIRE Directive](/administrator-guide/configuring-the-catalog/inspire-configuration.md))
+To follow the technical guideline, the catalogue administrator has to setup INSPIRE configuration for the catalogue (see [Configuring for the INSPIRE Directive](../../administrator-guide/configuring-the-catalog/inspire-configuration.md))
 
 ## Metadata information
 
@@ -10,7 +10,7 @@ File identifier is automatically set by the catalogue. The metadata last update 
 
 ## Languages
 
-The metadata language is mandatory. This information usually does not change in records part of the same catalogue. So it is recommended to properly set the value in the template used. The language code is a 3 letter code from the list of [official languages of the European Union](http://ec.europa.eu/languages/policy/linguistic-diversity/official-languages-eu_en.htm). A record can be multilingual (see [Multilingual editing](/user-guide/describing-information/multilingual-editing.md)).
+The metadata language is mandatory. This information usually does not change in records part of the same catalogue. So it is recommended to properly set the value in the template used. The language code is a 3 letter code from the list of [official languages of the European Union](http://ec.europa.eu/languages/policy/linguistic-diversity/official-languages-eu_en.htm). A record can be multilingual (see [Multilingual editing](multilingual-editing.md)).
 
 The resource language is also mandatory and follow the same rule. The catalogue provides a list of languages to easily choose the language code.
 
@@ -1222,4 +1222,4 @@ Below is a list of examples for ISO19139, ISO19115-3 or ISO19139 national profil
 -   Netherland <https://github.com/metadata101/iso19139.nl.geografie.1.3.1/blob/3.6/src/main/plugin/iso19139.nl.geografie.1.3.1/process/upgrade200-schemaupgrade.xsl>
 -   Sweden <https://github.com/sdi-sweden/se-core-geonetwork/blob/develop/schemas/iso19139/src/main/plugin/iso19139/present/csw/gmd-csw-postprocessing.xsl>
 
-See [Updating a set of records using XSLT](/user-guide/workflow/batchupdate-xsl.md) to preview or apply the process.
+See [Updating a set of records using XSLT](../workflow/batchupdate-xsl.md) to preview or apply the process.

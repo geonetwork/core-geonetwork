@@ -7,12 +7,12 @@ You can use the map components in GeoNetwork in following ways:
 
 !!! note
 
-    Instead of using the embedded map viewer, GeoNetwork can use an external map viewer (for example an existing WebGIS framework in your organisation). An administrator can configure GeoNetwork to connect it to an external web map application. For such configurations, all map interaction is delegated to the external application. See [Map Application](/administrator-guide/configuring-the-catalog/user-interface-configuration.rst#user-interface-config-mappage).
+    Instead of using the embedded map viewer, GeoNetwork can use an external map viewer (for example an existing WebGIS framework in your organisation). An administrator can configure GeoNetwork to connect it to an external web map application. For such configurations, all map interaction is delegated to the external application. See [Map Application](../../administrator-guide/configuring-the-catalog/user-interface-configuration.md#user-interface-config-mappage).
 
 
 ## Map viewer
 
-You can open the map viewer from a metadata details view using the 'add to map' button or directly from the map tab. A list of tools display in the right toolbar. Hover over the tools to display a tooltip explaining their meaning. The tools that are available are configured by the administrator, see [Map Application](/administrator-guide/configuring-the-catalog/user-interface-configuration.rst#user-interface-config-mappage).
+You can open the map viewer from a metadata details view using the 'add to map' button or directly from the map tab. A list of tools display in the right toolbar. Hover over the tools to display a tooltip explaining their meaning. The tools that are available are configured by the administrator, see [Map Application](../../administrator-guide/configuring-the-catalog/user-interface-configuration.md#user-interface-config-mappage).
 
 Tools for using the Map are arranged in two groups in the right-hand side of the map. The top group looks like this:
 

@@ -47,4 +47,4 @@ Sometimes we want some field to be more relevant on the search than others. We c
 </fieldBoosting>
 ```
 
-See more on [Configuring search fields](/customizing-application/configuring-search-fields.md)
+See more on [Configuring search fields](../../../customizing-application/configuring-search-fields.md)

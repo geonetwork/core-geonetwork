@@ -27,4 +27,4 @@ The editor form provides uploading of data, graphics, documents, pdf files and a
 -   [Multilingual editing](multilingual-editing.md)
 -   [Describing resources for the INSPIRE directive](inspire-editing.md)
 
-Based on user profiles (see [Creating user](/administrator-guide/managing-users-and-groups/creating-user.md)), a dashboard provides easy access to their informations and tasks.
+Based on user profiles (see [Creating user](../../administrator-guide/managing-users-and-groups/creating-user.md)), a dashboard provides easy access to their informations and tasks.

@@ -1,6 +1,6 @@
 # User Self-Registration {#user_self_registration}
 
-To enable the self-registration functions, see [System configuration](/administrator-guide/configuring-the-catalog/system-configuration.md). When self-registration is enabled, for users that are not logged in, an additional link is shown on the login page:
+To enable the self-registration functions, see [System configuration](../configuring-the-catalog/system-configuration.md). When self-registration is enabled, for users that are not logged in, an additional link is shown on the login page:
 
 ![](img/selfregistration-start.png)
 
@@ -39,7 +39,7 @@ When a user self-registration occurs, the user receives an email with the new ac
     Yours sincerely,
     The team at The Greenhouse GeoNetwork Site
 
-Notice that the user has requested an 'Editor' profile. As a result an email will be sent to the Email address nominated in the Feedback (see [Feedback](/administrator-guide/configuring-the-catalog/system-configuration.rst#system-config-feedback)) section of the `System Administration` menu which looks something like the following:
+Notice that the user has requested an 'Editor' profile. As a result an email will be sent to the Email address nominated in the Feedback (see [Feedback](../configuring-the-catalog/system-configuration.md#system-config-feedback)) section of the `System Administration` menu which looks something like the following:
 
 Notice also that the user has been added to the built-in user group 'GUEST'. This is a security restriction. An administrator/user-administrator can add the user to other groups if that is required later.
 

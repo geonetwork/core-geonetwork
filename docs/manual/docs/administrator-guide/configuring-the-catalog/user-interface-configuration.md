@@ -11,7 +11,7 @@ Most of the configuration parameters for the user interface can be changed by an
 
 By default the catalog will use the default UI configuration, named `srv`. To view and edit the settings for this configuration, choose `Create a default UI configuration`.
 
-To add a new configuration, such as for a sub-portal (see [Portal configuration](/administrator-guide/configuring-the-catalog/portal-configuration.md)) choose `Add new UI configuration` and choose one or more portal identifiers from the dropdown list `UI Configuration identifier`. Additional configurations can also be used for building an external JS application, which is able to load a specific configuration.
+To add a new configuration, such as for a sub-portal (see [Portal configuration](portal-configuration.md)) choose `Add new UI configuration` and choose one or more portal identifiers from the dropdown list `UI Configuration identifier`. Additional configurations can also be used for building an external JS application, which is able to load a specific configuration.
 
 !!! note
 
@@ -77,7 +77,7 @@ To add a new configuration, such as for a sub-portal (see [Portal configuration]
 ![](img/ui-settings-searchpage3.png)
 
 -   **Default template used for search results**: Define the template page for the search. Generally this can be left as the default.
--   **List of formatter for record view**: Determine the formatter used to display the search results. See [Customizing metadata views](/customizing-application/creating-custom-view.md) for information on creating a new formatter. To add an additional view, click the blue `+` button below the list and provide a name and a URL.
+-   **List of formatter for record view**: Determine the formatter used to display the search results. See [Customizing metadata views](../../customizing-application/creating-custom-view.md) for information on creating a new formatter. To add an additional view, click the blue `+` button below the list and provide a name and a URL.
 
 ![](img/ui-settings-searchpage3.png)
 
@@ -116,7 +116,7 @@ This section describes how an administrator can configure the different maps in 
 ### External viewer
 
 -   **Use an external viewer**: This option allows a third party mapping application to be used in place of the default GeoNetwork map. In this case, most of the settings below will no longer be used.
--   **Allow 3D mode**: If enabled, the user has the option to switch to 3D mode in the main map (see [Quick start](/user-guide/quick-start/index.md)).
+-   **Allow 3D mode**: If enabled, the user has the option to switch to 3D mode in the main map (see [Quick start](../../user-guide/quick-start/index.md)).
 -   **Allow users to save maps as metadata record**: This option enables users to save layers and base maps configuration as a record in the catalog. Optionally users can add a title and an abstract.
 -   **Export map as image**: If enabled, users can export the map as an image but requires CORS to be enabled on any external WMS services displayed on the map. This option is disabled by default to avoid issues with WMS layers.
 
@@ -205,11 +205,11 @@ This WMS layer will be shown but only when the map is on `EPSG:4326`:
 
 ### Search Map Configuration
 
-This section defines the configuration for the mini map shown on the search page. It uses the same options as in [Viewer Map Configuration](/administrator-guide/configuring-the-catalog/user-interface-configuration.rst#user-interface-config-viewermap).
+This section defines the configuration for the mini map shown on the search page. It uses the same options as in [Viewer Map Configuration](user-interface-configuration.md#user-interface-config-viewermap).
 
 ### Editor Map Configuration
 
-This section defines the configuration for the map shown when editing a record. It uses the same options as in [Viewer Map Configuration](/administrator-guide/configuring-the-catalog/user-interface-configuration.rst#user-interface-config-viewermap).
+This section defines the configuration for the map shown when editing a record. It uses the same options as in [Viewer Map Configuration](user-interface-configuration.md#user-interface-config-viewermap).
 
 ## Gazetteer
 

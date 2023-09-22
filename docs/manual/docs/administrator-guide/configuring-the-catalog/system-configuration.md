@@ -61,7 +61,7 @@ JVM proxy parameters may also be required to properly set the proxy for all remo
 Email may be sent by the catalog.
 
 -   you are using the User Self-registration system
--   you are using the metadata status workflow (See [Life cycle](/user-guide/workflow/life-cycle.md))
+-   you are using the metadata status workflow (See [Life cycle](../../user-guide/workflow/life-cycle.md))
 -   a file uploaded with a metadata record is downloaded and notify privilege is selected
 
 This section configure the mail server to use.
@@ -81,15 +81,15 @@ Configuration settings in this group determine what the limits are on user inter
 
 ## Catalog Service for the Web (CSW)
 
-See [Configuring CSW](/administrator-guide/configuring-the-catalog/csw-configuration.md).
+See [Configuring CSW](csw-configuration.md).
 
 ## Shibboleth
 
-See [Configuring Shibboleth](/administrator-guide/managing-users-and-groups/authentication-mode.rst#authentication-shibboleth).
+See [Configuring Shibboleth](../managing-users-and-groups/authentication-mode.md#authentication-shibboleth).
 
 ## User self-registration
 
-Enable the self registration form. See [User Self-Registration](/administrator-guide/managing-users-and-groups/user-self-registration.md).
+Enable the self registration form. See [User Self-Registration](../managing-users-and-groups/user-self-registration.md).
 
 ## system/userFeedback
 
@@ -147,7 +147,7 @@ Restart the catalog to take all OAI settings into account.
 
 ## INSPIRE Directive configuration
 
-See [Configuring for the INSPIRE Directive](/administrator-guide/configuring-the-catalog/inspire-configuration.md).
+See [Configuring for the INSPIRE Directive](inspire-configuration.md).
 
 ## INSPIRE Atom Feed
 

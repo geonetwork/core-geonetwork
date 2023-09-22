@@ -12,7 +12,7 @@ You can:
 
 ![](img/save-as-templates.png)
 
-You can assign templates to limited groups, so only these groups can use the template in their work process (See [Managing privileges](/user-guide/publishing/managing-privileges.md)).
+You can assign templates to limited groups, so only these groups can use the template in their work process (See [Managing privileges](../publishing/managing-privileges.md)).
 
 ## Loading default templates
 
@@ -52,4 +52,4 @@ In a template, you should:
 
 The main goal is to guide editor work without requiring too much knowledge of the standard use.
 
-For further customization, you could improve the schema plugin by defining custom documentation, recommended values, \... (see [Implementing schema plugins](/customizing-application/implementing-a-schema-plugin.md)) or creating custom view (see [Customizing editor](/customizing-application/editor-ui/creating-custom-editor.md)).
+For further customization, you could improve the schema plugin by defining custom documentation, recommended values, \... (see [Implementing schema plugins](../../customizing-application/implementing-a-schema-plugin.md)) or creating custom view (see [Customizing editor](../../customizing-application/editor-ui/creating-custom-editor.md)).

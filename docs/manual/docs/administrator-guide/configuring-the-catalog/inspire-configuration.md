@@ -6,11 +6,11 @@ From the **Admin console --> Settings** user can configure INSPIRE directive sup
 
 When enabled, the INSPIRE support activate the following:
 
--   Enable indexing of INSPIRE themes and annexes (INSPIRE themes thesaurus MUST be added to the list of thesaurus from the INSPIRE Registry - see [Managing thesaurus](/administrator-guide/managing-classification-systems/managing-thesaurus.md)).
+-   Enable indexing of INSPIRE themes and annexes (INSPIRE themes thesaurus MUST be added to the list of thesaurus from the INSPIRE Registry - see [Managing thesaurus](../managing-classification-systems/managing-thesaurus.md)).
 
     ![image](img/inspire-configuration.png)
 
-To configure the discovery service, a dedicated service metadata record MUST be created in order to provide a complete GetCapabilities document ([CSW Configuration for INSPIRE](/administrator-guide/configuring-the-catalog/csw-configuration.rst#csw-configuration_inspire)).
+To configure the discovery service, a dedicated service metadata record MUST be created in order to provide a complete GetCapabilities document ([CSW Configuration for INSPIRE](csw-configuration.md#csw-configuration_inspire)).
 
 ## Loading INSPIRE codelists
 

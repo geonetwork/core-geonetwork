@@ -70,4 +70,4 @@ For example, we can call an external REST API that gets triggered every time a M
 
 ## GeoNetwork API
 
-There is also a new API you can use to interact with GeoNetwork from an external script. See more on [API Guide](/api/index.md).
+There is also a new API you can use to interact with GeoNetwork from an external script. See more on [API Guide](../../../api/index.md).

@@ -8,8 +8,8 @@ GeoNetwork uses a database to persist aspects such as metadata records, privileg
 
 By default, a [H2](http://www.h2database.com/html/main.html) database is configured and created when the application first starts. The H2 database named `gn.h2.db` is created:
 
--   In the **`jetty`** folder of the GeoNetwork application folder when using the [ZIP distribution](/install-guide/installing-from-zip.md).
--   In the **`bin`** folder of Tomcat when deploying the [WAR](/install-guide/installing-from-war-file.md) on Tomcat (started using `startup.sh`).
+-   In the **`jetty`** folder of the GeoNetwork application folder when using the [ZIP distribution](installing-from-zip.md).
+-   In the **`bin`** folder of Tomcat when deploying the [WAR](installing-from-war-file.md) on Tomcat (started using `startup.sh`).
 
 !!! note
 
@@ -76,7 +76,7 @@ Within PostgreSQL it is possible to configure `es` or `is`. In the latter case G
 
 ## Logging
 
-To see more details about the database connection and queries, the log can be switched to DEBUG level in `web/src/main/webapp/WEB-INF/classes/log4j.xml` (or see [Catalog Server](/administrator-guide/configuring-the-catalog/system-configuration.rst#system-config-server) > Log level).
+To see more details about the database connection and queries, the log can be switched to DEBUG level in `web/src/main/webapp/WEB-INF/classes/log4j.xml` (or see [Catalog Server](../administrator-guide/configuring-the-catalog/system-configuration.md#system-config-server) > Log level).
 
 ``` xml
 <logger name="org.hibernate.SQL" additivity="false">

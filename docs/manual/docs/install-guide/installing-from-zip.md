@@ -10,4 +10,4 @@ Please download the desired ZIP file and extract it to a preferred location on y
 
 In the application root folder, you will find a `readme.html` file that includes some details on how to get started with GeoNetwork. Double-click it to view it in your browser.
 
-Then install the Elasticsearch instance (see [Installing search platform](/install-guide/installing-index.md)).
+Then install the Elasticsearch instance (see [Installing search platform](installing-index.md)).

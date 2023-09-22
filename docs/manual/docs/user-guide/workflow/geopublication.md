@@ -4,8 +4,8 @@ This topic describes how to publish GIS data in a map server.
 
 ## Before you begin
 
--   The catalog administrator needs to configure connection to map servers in the administration interface (see [Map servers configuration for geopublication](/administrator-guide/configuring-the-catalog/map-server-configuration.md)).
--   The editors reference GIS files or spatial database tables in the metadata record (see [Linking a database table or a GIS file on the network](/user-guide/associating-resources/linking-online-resources.rst#linking-online-resources-georesource)).
+-   The catalog administrator needs to configure connection to map servers in the administration interface (see [Map servers configuration for geopublication](../../administrator-guide/configuring-the-catalog/map-server-configuration.md)).
+-   The editors reference GIS files or spatial database tables in the metadata record (see [Linking a database table or a GIS file on the network](../associating-resources/linking-online-resources.md#linking-online-resources-georesource)).
 
 To publish data from the metadata editor in a remote map server:
 
@@ -38,4 +38,4 @@ To publish data from the metadata editor in a remote map server:
 
 ## Next steps
 
-Once you have registered a WMS layer in a metadata record, you can generate an overview using the service (see [Generating a thumbnail using WMS layers](/user-guide/associating-resources/linking-thumbnail.rst#linking-thumbnail-from-wms)).
+Once you have registered a WMS layer in a metadata record, you can generate an overview using the service (see [Generating a thumbnail using WMS layers](../associating-resources/linking-thumbnail.md#linking-thumbnail-from-wms)).

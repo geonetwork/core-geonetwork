@@ -3,4 +3,4 @@
 -   [Search page](search/index.md)
 -   [Formatter](view/index.md)
 
-For editor customization see [Customizing editor](/customizing-application/editor-ui/creating-custom-editor.md):.
+For editor customization see [Customizing editor](../../customizing-application/editor-ui/creating-custom-editor.md):.

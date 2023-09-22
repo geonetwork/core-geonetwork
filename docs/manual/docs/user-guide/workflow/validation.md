@@ -20,4 +20,4 @@ You can filter the Validation status using a facet in the editor board.
 
 ## Configuring validation
 
-Catalog administrators can force validation every time an editor exits or closes the metadata editing interface (see [System configuration](/administrator-guide/configuring-the-catalog/system-configuration.md)). To configure validation levels (see [Configuring validation levels](/administrator-guide/managing-metadata-standards/configure-validation.md)). In case of INSPIRE records, you can use remote validator (see [INSPIRE validation](/administrator-guide/configuring-the-catalog/inspire-configuration.rst#inspire-validation))
+Catalog administrators can force validation every time an editor exits or closes the metadata editing interface (see [System configuration](../../administrator-guide/configuring-the-catalog/system-configuration.md)). To configure validation levels (see [Configuring validation levels](../../administrator-guide/managing-metadata-standards/configure-validation.md)). In case of INSPIRE records, you can use remote validator (see [INSPIRE validation](../../administrator-guide/configuring-the-catalog/inspire-configuration.md#inspire-validation))

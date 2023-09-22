@@ -57,7 +57,7 @@ Host ports requirements:
 
     Open <http://localhost:9200> in your web browser to check that Elasticsearch is running.
 
-    To use an existing instance check `on` in [Installing search platform](/install-guide/installing-index.md).
+    To use an existing instance check `on` in [Installing search platform](installing-index.md).
 
 5.  Up and running?
 
@@ -67,6 +67,6 @@ Host ports requirements:
 
     You have now a default GeoNetwork up and running.
 
-    To customize your catalog, you may follow the next steps to configure the database (See [Configuring the database](/install-guide/configuring-database.md)) instead of using the default H2 database and the data directory (See [Customizing the data directory](/install-guide/customizing-data-directory.md)) .
+    To customize your catalog, you may follow the next steps to configure the database (See [Configuring the database](configuring-database.md)) instead of using the default H2 database and the data directory (See [Customizing the data directory](customizing-data-directory.md)) .
 
-    See [Loading templates and sample data](/install-guide/loading-samples.md) to start loading metadata records.
+    See [Loading templates and sample data](loading-samples.md) to start loading metadata records.

@@ -34,7 +34,7 @@ The `gnSearchSettings` object contains all settings regarding to the main search
 
 ## Update this settings
 
-Note that some settings are set in the database (for example the `viewerSettings.mapConfig` object comes from database settings) so you can edit them in [settings admin page](/administrator-guide/configuring-the-catalog/system-configuration.md).
+Note that some settings are set in the database (for example the `viewerSettings.mapConfig` object comes from database settings) so you can edit them in [settings admin page](../../administrator-guide/configuring-the-catalog/system-configuration.md).
 
 For others, you can just edit the config file (See `web-ui/src/main/resources/catalog/views/default/config.js`) and change some setting values.
 

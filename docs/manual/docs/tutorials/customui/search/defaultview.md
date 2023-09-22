@@ -2,7 +2,7 @@
 
 ## Objectives
 
-Read instructions about [default view customization](/customizing-application/search-ui/configdefault.md).
+Read instructions about [default view customization](../../../customizing-application/search-ui/configdefault.md).
 
 -   Understand view settings.
 -   Be able to customize the default view.

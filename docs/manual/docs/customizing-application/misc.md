@@ -106,7 +106,7 @@ The following approach uses the h2 tool.
 
 ### Find the Geonetwork database
 
-This is called `gn.h2.db`. The location is dependent on which web server you are using, and where your data directory is. See [Configuring the database](/install-guide/configuring-database.md) for more information. Note that on windows you will need to use a path of the form `driveletter/path/to/gn.h2.db`.
+This is called `gn.h2.db`. The location is dependent on which web server you are using, and where your data directory is. See [Configuring the database](../install-guide/configuring-database.md) for more information. Note that on windows you will need to use a path of the form `driveletter/path/to/gn.h2.db`.
 
 ### Using the H2 tool
 
