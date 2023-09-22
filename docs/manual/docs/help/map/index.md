@@ -26,7 +26,7 @@ The map viewer has a number of features to explore the data:
 
 * Controls used to add and manage map contents.
 
-* Navigation including ***Zoom in*, **Zoom out**, **Zoom to extent**.
+* Navigation including **Zoom in**, **Zoom out**, **Zoom to extent**.
 
 * Location search including searching for your current position.
 
