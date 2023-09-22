@@ -1,0 +1,55 @@
+<mco:MD_LegalConstraints xmlns:mco="http://standards.iso.org/iso/19115/-3/mco/1.0" xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/2.0" xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0" xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0" xmlns:gcx="http://standards.iso.org/iso/19115/-3/gcx/1.0" xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <mco:useLimitation>
+    <gco:CharacterString>CC0 (Public Domain)</gco:CharacterString>
+  </mco:useLimitation>
+  <mco:constraintApplicationScope>
+    <mcc:MD_Scope>
+      <mcc:level>
+        <mcc:MD_ScopeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_ScopeCode" codeListValue="document" />
+      </mcc:level>
+    </mcc:MD_Scope>
+  </mco:constraintApplicationScope>
+  <mco:reference>
+    <cit:CI_Citation>
+      <cit:title>
+        <gco:CharacterString>CC0 1.0 Universal (CC0 1.0) Public Domain Dedication</gco:CharacterString>
+      </cit:title>
+      <cit:onlineResource>
+        <cit:CI_OnlineResource>
+          <cit:linkage>
+            <gco:CharacterString>https://creativecommons.org/publicdomain/zero/1.0/</gco:CharacterString>
+          </cit:linkage>
+          <cit:protocol>
+            <gco:CharacterString>https</gco:CharacterString>
+          </cit:protocol>
+          <cit:name>
+            <gco:CharacterString>CC0 1.0 Universal (CC0 1.0) Public Domain Dedication</gco:CharacterString>
+          </cit:name>
+          <cit:description>
+            <gco:CharacterString>Human readable summary of CC0 Public Domain dedication</gco:CharacterString>
+          </cit:description>
+          <cit:function>
+            <cit:CI_OnLineFunctionCode codeList="" codeListValue="" />
+          </cit:function>
+        </cit:CI_OnlineResource>
+      </cit:onlineResource>
+    </cit:CI_Citation>
+  </mco:reference>
+  <mco:releasability>
+    <mco:MD_Releasability>
+      <mco:addressee />
+      <mco:statement>
+        <gco:CharacterString>Dedicated to the Public Domain via CC0</gco:CharacterString>
+      </mco:statement>
+      <mco:disseminationConstraints>
+        <mco:MD_RestrictionCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_RestrictionCode" codeListValue="license" />
+      </mco:disseminationConstraints>
+    </mco:MD_Releasability>
+  </mco:releasability>
+  <mco:accessConstraints>
+    <mco:MD_RestrictionCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_RestrictionCode" codeListValue="copyright" />
+  </mco:accessConstraints>
+  <mco:useConstraints>
+    <mco:MD_RestrictionCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_RestrictionCode" codeListValue="" />
+  </mco:useConstraints>
+</mco:MD_LegalConstraints>
