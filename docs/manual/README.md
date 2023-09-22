@@ -29,8 +29,15 @@ If you are using python3:
    ```bash
    mkdocs serve
    ```
-
 3. Preview: http://localhost:8000
+
+4. Optional: Preview online help:
+   
+   ```bash
+   mkdocs serve --config-file help.yml  
+   ```
+
+### VirtualEnv
 
 If you use a python virtual environment:
 
@@ -49,6 +56,8 @@ If you use a python virtual environment:
    ```
 
 3. Preview: http://localhost:8000
+
+### Docker
 
 If you are not familiar with python the mkdocs-material website has instructions for docker:
 

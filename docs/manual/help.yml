@@ -96,14 +96,12 @@ extra:
 
 nav:
   - 'index.md'
-  - 'Home page':
-    - 'home/index.md'
-  - 'Search page':
-    - 'search/index.md'
-  - 'Detail page':
-    - 'record/index.md'
+  - 'Home':
+    - home/index.md
+  - 'Search':
+    - search/index.md
+  - 'Detail':
+    - record/index.md
   - 'Map':
-    - 'map/index.md'
-    - 'map/visualize/index.md'
-  - 'Tags':
-      - tags.md
+    - map/index.md
+    - map/visualize/index.md
