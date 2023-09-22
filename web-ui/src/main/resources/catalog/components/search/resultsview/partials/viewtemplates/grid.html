@@ -33,6 +33,7 @@
             title="{{md.resourceTitle}}"
             class="gn-break"
           >
+            <i data-ng-show="mdResourceTitle.trim()=='' || md.resourceTitle===undefined">{{'missingTitle' | translate}}</i>
             {{(md.resourceTitle) | characters:80}}
           </a>
         </h1>
