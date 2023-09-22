@@ -235,17 +235,22 @@
                         </option>
                       </select>
 
-                      <select data-ng-switch-when="metadata/batchediting/accesslevel"
-                              class="form-control"
-                              name="{{s.name}}">
-                        <option value="Editor"
-                                ng-selected="'Editor' == s.value">{{'Editor' | translate}}
+                      <select
+                        data-ng-switch-when="metadata/batchediting/accesslevel"
+                        class="form-control"
+                        name="{{s.name}}"
+                      >
+                        <option value="Editor" ng-selected="'Editor' == s.value">
+                          {{'Editor' | translate}}
                         </option>
-                        <option value="Reviewer"
-                                ng-selected="'Reviewer' == s.value">{{'Reviewer' | translate}}
+                        <option value="Reviewer" ng-selected="'Reviewer' == s.value">
+                          {{'Reviewer' | translate}}
                         </option>
-                        <option value="Administrator"
-                                ng-selected="'Administrator' == s.value">{{'Administrator' | translate}}
+                        <option
+                          value="Administrator"
+                          ng-selected="'Administrator' == s.value"
+                        >
+                          {{'Administrator' | translate}}
                         </option>
                       </select>
 
