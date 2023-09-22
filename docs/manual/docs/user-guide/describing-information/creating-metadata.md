@@ -13,13 +13,15 @@ Contact your administrator if you don't have the correct profile.
 
 1.  From the home page, go to the *contribute* section or directly click on `add new record` menu.
 
-![](img/add-new-record.png)
+    ![](img/add-new-record.png)
 
 2.  From the metadata template list, select a template (see [Managing templates](managing-templates.md)), choose a group from the dropdown and click *Create*.
 
-![](img/creating-metadata.png)
+    ![](img/creating-metadata.png)
 
-Note: If only one group is defined in the catalog, the default group is selected.
+!!! Note
+
+    If only one group is defined in the catalog, the default group is selected.
 
 Next steps:
 

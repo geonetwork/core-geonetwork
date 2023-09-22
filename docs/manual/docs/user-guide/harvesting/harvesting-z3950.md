@@ -84,7 +84,7 @@ A more sophisticated search on a bounding box might be formulated as:
 -   `@attr 4=201` means that the query contains coordinate strings
 -   `@attr 2=7` means that we are searching for records whose bounding box overlaps the query box specified at the end of the query
 
-## Notes
+!!! Notes
 
--   Z3950 servers must be configured for GeoNetwork in `INSTALL_DIR/web/geonetwork/WEB-INF/classes/JZKitConfig.xml.tem`
--   every time the harvester runs, it will remove previously harvested records and create new ones.
+    -   Z3950 servers must be configured for GeoNetwork in `INSTALL_DIR/web/geonetwork/WEB-INF/classes/JZKitConfig.xml.tem`
+    -   every time the harvester runs, it will remove previously harvested records and create new ones.

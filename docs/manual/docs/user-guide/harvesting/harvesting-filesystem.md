@@ -19,6 +19,6 @@ The figure above shows the options available:
 -   **Privileges** - Assign privileges to harvested metadata.
 -   **Categories**
 
-## Notes
+!!! Notes
 
--   in order to be successfully harvested, metadata records retrieved from the file system must match a metadata schema in the local GeoNetwork instance
+    -   in order to be successfully harvested, metadata records retrieved from the file system must match a metadata schema in the local GeoNetwork instance

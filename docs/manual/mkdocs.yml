@@ -338,7 +338,6 @@ nav:
     - api/z39-50.md
   - 'Development':
     - devel/index.md
-    - devel/docs/index.md
     - 'Customization':
       - customizing-application/index.md
       - 'Search':

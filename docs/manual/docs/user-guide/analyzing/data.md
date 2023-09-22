@@ -38,32 +38,34 @@ The customisation is done by a JSON config inserted in the gmd:applicationProfil
 
 Here the options:
 
-    {
-    "fields": [{
-      "name": "PNT_PROF",
-      // non disponible actuellement
-      "type": "double",
-      "fq" : {
-        "facet.interval": "PNT_PROF_d",
-        "facet.interval.set": ["[0,10]", "(10,10000]"],
-       or
-        "facet.range": "PNT_PROF_d",
-        "facet.range.start": "0",
-        "facet.range.end": "10000",
-        "facet.range.gap": "300"
-       or
-        "facet.range": "PNT_PROF_d",
-        "facet.range.classes": "5" // Get min, max and compute gap on 5 classes
-      }
-    }, {
-      "name": "GRIDCODE"
-    }, {
-      "name": "LABEL",
-      "label" : {"fr": "monLabel", "en": "myLabel"}
-    }],
-    "tokenize": {"GRIDCODE": ",", "PARCELLE": "/"},
-    "heatmap": true
+``` json
+{
+  "fields": [{
+    "name": "PNT_PROF",
+    // non disponible actuellement
+    "type": "double",
+    "fq" : {
+      "facet.interval": "PNT_PROF_d",
+      "facet.interval.set": ["[0,10]", "(10,10000]"],
+     or
+      "facet.range": "PNT_PROF_d",
+      "facet.range.start": "0",
+      "facet.range.end": "10000",
+      "facet.range.gap": "300"
+     or
+      "facet.range": "PNT_PROF_d",
+      "facet.range.classes": "5" // Get min, max and compute gap on 5 classes
     }
+  }, {
+    "name": "GRIDCODE"
+  }, {
+    "name": "LABEL",
+    "label" : {"fr": "monLabel", "en": "myLabel"}
+  }],
+  "tokenize": {"GRIDCODE": ",", "PARCELLE": "/"},
+  "heatmap": true
+}
+```
 
 You can
 

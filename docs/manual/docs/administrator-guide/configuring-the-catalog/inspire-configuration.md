@@ -19,14 +19,14 @@ To describe INSPIRE datasets and series, it is recommended to load relevant code
 -   [INSPIRE Theme](https://inspire.ec.europa.eu/theme)
 -   [Application schema](https://inspire.ec.europa.eu/applicationschema)
 -   [Media types](https://inspire.ec.europa.eu/media-types)
--   Metadata codelist register > [Protocols](https://inspire.ec.europa.eu/metadata-codelist/ProtocolValue)
--   Metadata codelist register > [Spatial scope](https://inspire.ec.europa.eu/metadata-codelist/SpatialScope)
--   Metadata codelist register > [INSPIRE priority data set](https://inspire.ec.europa.eu/metadata-codelist/PriorityDataset)
--   Metadata codelist register > [Spatial Data Service Category](https://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory)
--   Metadata codelist register > [Conditions applying to Access and Use](https://inspire.ec.europa.eu/metadata-codelist/ConditionsApplyingToAccessAndUse)
--   Metadata codelist register > [Limitations on Public Access](https://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess)
--   Metadata codelist register > [OnLine Description Code](https://inspire.ec.europa.eu/metadata-codelist/OnLineDescriptionCode)
--   Metadata codelist register > [Quality of Service Criteria](https://inspire.ec.europa.eu/metadata-codelist/QualityOfServiceCriteria)
+-   Metadata codelist register --> [Protocols](https://inspire.ec.europa.eu/metadata-codelist/ProtocolValue)
+-   Metadata codelist register --> [Spatial scope](https://inspire.ec.europa.eu/metadata-codelist/SpatialScope)
+-   Metadata codelist register --> [INSPIRE priority data set](https://inspire.ec.europa.eu/metadata-codelist/PriorityDataset)
+-   Metadata codelist register --> [Spatial Data Service Category](https://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory)
+-   Metadata codelist register --> [Conditions applying to Access and Use](https://inspire.ec.europa.eu/metadata-codelist/ConditionsApplyingToAccessAndUse)
+-   Metadata codelist register --> [Limitations on Public Access](https://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess)
+-   Metadata codelist register --> [OnLine Description Code](https://inspire.ec.europa.eu/metadata-codelist/OnLineDescriptionCode)
+-   Metadata codelist register --> [Quality of Service Criteria](https://inspire.ec.europa.eu/metadata-codelist/QualityOfServiceCriteria)
 
 From `Admin console` > `Classification systems` > `Thesaurus`, administrators can manage thesauri. One of the options is to load a thesaurus straight from the registry.
 

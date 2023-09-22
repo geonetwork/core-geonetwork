@@ -1,4 +1,4 @@
-# Tutorial setting up a WFS based INSPIRE download service with GeoServer {#tuto-download-geoserver}
+# Setting up a WFS based INSPIRE download service with GeoServer {#tuto-download-geoserver}
 
 This tutorial shows how one can set up a combination of GeoNetwork and GeoServer to provide download services following [technical guidelines for download services](http://inspire.ec.europa.eu/documents/technical-guidance-implementation-inspire-download-services).
 

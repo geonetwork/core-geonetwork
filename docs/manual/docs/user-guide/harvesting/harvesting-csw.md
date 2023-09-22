@@ -17,5 +17,3 @@ The figure above shows the options available:
     -   *Validate* - If checked, the metadata will be validated after retrieval. If the validation does not pass, the metadata will be skipped.
 -   **Privileges** - Assign privileges to harvested metadata.
 -   **Categories**
-
-## Notes

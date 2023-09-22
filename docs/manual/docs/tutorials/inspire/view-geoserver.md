@@ -1,4 +1,4 @@
-# Tutorial setting up INSPIRE view service with GeoNetwork and GeoServer {#tuto-view-geoserver}
+# Setting up INSPIRE view service with GeoNetwork and GeoServer {#tuto-view-geoserver}
 
 This tutorial shows how one can set up a combination of GeoServer and GeoNetwork to provide view services following [technical guidelines for view services](http://inspire.ec.europa.eu/documents/Network_Services/TechnicalGuidance_ViewServices_v3.1.pdf).
 

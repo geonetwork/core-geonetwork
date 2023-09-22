@@ -2,9 +2,9 @@
 
 1.  In the metadata editor, click Validate to trigger the validation. The right panel displays all validation results by levels:
 
-![](img/validation.png)
+    ![](img/validation.png)
 
-1.  Click the thumbs up or down icons to display errors. Errors reported in blue are for information only and do not affect the global validation of the record:
+2.  Click the thumbs up or down icons to display errors. Errors reported in blue are for information only and do not affect the global validation of the record:
 
     ![](img/validation-details.png)
 
@@ -12,7 +12,7 @@
 
     ![](img/validation-inline.png)
 
-2.  Once a record is validated, the validation status is saved and is displayed in the editor board page:
+3.  Once a record is validated, the validation status is saved and is displayed in the editor board page:
 
     ![](img/validation-status.png)
 

@@ -6,11 +6,11 @@ From this page, user can:
 
 -   Select a set of records by running a search and selecting records to modify
 
-![](img/batch-search-and-select.png)
+    ![](img/batch-search-and-select.png)
 
 -   Choose a process from the list
 
-![](img/batch-choose-a-process.png)
+    ![](img/batch-choose-a-process.png)
 
 !!! info "See Also"
 

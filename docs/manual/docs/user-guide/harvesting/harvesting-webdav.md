@@ -17,6 +17,6 @@ This harvesting type uses the WebDAV (Distributed Authoring and Versioning) prot
 -   **Privileges** - Assign privileges to harvested metadata.
 -   **Categories**
 
-## Notes
+!!! Notes
 
--   The same metadata could be harvested several times by different instances of the WebDAV harvester. This is not good practise because copies of the same metadata record will have a different UUID.
+    -   The same metadata could be harvested several times by different instances of the WebDAV harvester. This is not good practise because copies of the same metadata record will have a different UUID.

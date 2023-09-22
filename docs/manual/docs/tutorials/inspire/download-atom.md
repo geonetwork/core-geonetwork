@@ -1,4 +1,4 @@
-# Tutorial setting up an Atom/OpenSearch based INSPIRE download service {#tuto-download-atom}
+# Setting up an Atom/OpenSearch based INSPIRE download service {#tuto-download-atom}
 
 This tutorial shows how one can set up GeoNetwork to provide download services following [technical guidelines for download services](http://inspire.ec.europa.eu/documents/technical-guidance-implementation-inspire-download-services).
 

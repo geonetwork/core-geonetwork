@@ -14,7 +14,7 @@ There are 3 types of sources:
 
 The main catalogue corresponds to the current installation.
 
-When harvesting, at least one source is created to represent the harvester. When harvesting from another GeoNetwork node, sources from the target catalogue are also harvested to keep track of the true origin of records. This only applies to the GeoNetwork protocols which use MEF (:[Metadata Exchange Format (MEF)](../../annexes/mef-format.md)) which contain the source catalogue information.
+When harvesting, at least one source is created to represent the harvester. When harvesting from another GeoNetwork node, sources from the target catalogue are also harvested to keep track of the true origin of records. This only applies to the GeoNetwork protocols which use MEF ([Metadata Exchange Format (MEF)](../../annexes/mef-format.md)) which contain the source catalogue information.
 
 The last type is sub-portal, which is described in details below.
 

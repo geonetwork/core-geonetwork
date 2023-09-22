@@ -18,12 +18,12 @@ Read instructions in [customization section](../../../customizing-application/se
     -   [search page](https://github.com/geonetwork/core-geonetwork/blob/main/web/src/main/webapp/xslt/ui-search/search.xsl).
 -   Template files
 
-<https://github.com/geonetwork/core-geonetwork/blob/main/web-ui/src/main/resources/catalog/views/default/templates/index.html>
+    <https://github.com/geonetwork/core-geonetwork/blob/main/web-ui/src/main/resources/catalog/views/default/templates/index.html>
 
 -   AngularJS module
 
-<https://github.com/geonetwork/core-geonetwork/blob/main/web-ui/src/main/resources/catalog/views/default/module.js>
+    <https://github.com/geonetwork/core-geonetwork/blob/main/web-ui/src/main/resources/catalog/views/default/module.js>
 
 -   Less file
 
-<https://github.com/geonetwork/core-geonetwork/blob/main/web-ui/src/main/resources/catalog/views/default/module.js>
+    <https://github.com/geonetwork/core-geonetwork/blob/main/web-ui/src/main/resources/catalog/views/default/module.js>
