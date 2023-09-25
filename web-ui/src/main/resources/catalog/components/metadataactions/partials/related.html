@@ -233,14 +233,17 @@
             }"
         >
           <span>
-            <span data-ng-if="!md.properties || (md.properties && md.properties.associationType == '')">
+            <span
+              data-ng-if="!md.properties || (md.properties && md.properties.associationType == '')"
+            >
               {{(config.getLabel(mainType, type)) | translate}}</span
             >
             <span
               data-ng-if="md.properties && md.properties.associationType"
               data-ng-show="md.properties && md.properties.associationType"
               title="{{(config.getLabel(mainType, type)) | translate}}"
-            > {{'associatedTo' | translate}}
+            >
+              {{'associatedTo' | translate}}
               <b title="{{'associationType' | translate}}">
                 <i
                   class="fa fa-fw {{icon}} gn-icon-association-{{md.properties.associationType}}"
