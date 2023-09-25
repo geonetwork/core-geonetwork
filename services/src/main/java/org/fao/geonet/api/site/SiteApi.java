@@ -64,6 +64,7 @@ import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.lib.ProxyConfiguration;
 import org.fao.geonet.repository.*;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.resources.Resources;
@@ -161,12 +162,12 @@ public class SiteApi {
         try {
             // Load proxy information into Jeeves
             ProxyInfo pi = JeevesProxyInfo.getInstance();
-            boolean useProxy = settingMan.getValueAsBool(Settings.SYSTEM_PROXY_USE, false);
+            boolean useProxy = Lib.net.getProxyConfiguration().isEnabled();
             if (useProxy) {
-                String proxyHost = settingMan.getValue(Settings.SYSTEM_PROXY_HOST);
-                String proxyPort = settingMan.getValue(Settings.SYSTEM_PROXY_PORT);
-                String username = settingMan.getValue(Settings.SYSTEM_PROXY_USERNAME);
-                String password = settingMan.getValue(Settings.SYSTEM_PROXY_PASSWORD);
+                String proxyHost = Lib.net.getProxyConfiguration().getHost();
+                String proxyPort = Lib.net.getProxyConfiguration().getPort();
+                String username = Lib.net.getProxyConfiguration().getUsername();
+                String password = Lib.net.getProxyConfiguration().getPassword();
                 pi.setProxyInfo(proxyHost, Integer.valueOf(proxyPort), username, password);
             } else {
                 pi.setProxyInfo(null, -1, null, null);
@@ -733,6 +734,24 @@ public class SiteApi {
     @ResponseBody
     public StatusValueNotificationLevel[] getNotificationLevel() {
         return StatusValueNotificationLevel.values();
+    }
+
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Get proxy configuration details",
+        description = "Get the proxy configuration.")
+    @RequestMapping(
+        path = "/info/proxy",
+        produces = MediaType.APPLICATION_JSON_VALUE,
+        method = RequestMethod.GET)
+    @ResponseStatus(HttpStatus.OK)
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Proxy configuration.")
+    })
+    @PreAuthorize("hasAuthority('Administrator')")
+    @ResponseBody
+    public ProxyConfiguration getProxyConfiguration(
+    ) {
+        return Lib.net.getProxyConfiguration();
     }
 
     @io.swagger.v3.oas.annotations.Operation(
