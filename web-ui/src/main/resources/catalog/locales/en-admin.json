@@ -1453,6 +1453,7 @@
     "ui-footerCustomMenu-help": "List of static page IDs associated with the footer section to display: <ul><li>When a list is provided, the links are displayed in the order provided and only for the pages listed.</li><li>When a list is not provided, all static pages configured for the footer section are displayed, with no guaranteed order.</li>",
     "es.url": "ElasticSearch server",
     "es.version": "ElasticSearch version",
-    "es.index": "Index name"
+    "es.index": "Index name",
+    "systemPropertiesProxyConfiguration": "Using http proxy settings in system properties."
 }
 
