@@ -26,7 +26,7 @@
                 xmlns:gns="http://geonetwork-opensource.org/schemas/schema-ident"
                 xmlns:gndoc="http://geonetwork-opensource.org/doc"
                 exclude-result-prefixes="xs"
-                version="2.0">
+                version="3.0">
 
   <xsl:import href="rst-writer.xsl"/>
 

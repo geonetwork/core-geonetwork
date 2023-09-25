@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:fn="http://www.w3.org/2005/xpath-functions"
                 xmlns:gn-fn-render="http://geonetwork-opensource.org/xsl/functions/render"
                 xmlns:gn-fn-core="http://geonetwork-opensource.org/xsl/functions/core"
-                xmlns:tr="java:org.fao.geonet.api.records.formatters.SchemaLocalizations"
+                xmlns:tr="https://geonetwork-opensource.org/xsl-extension/schema"
                 xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
-                xmlns:utils="java:org.fao.geonet.util.XslUtil"
+                xmlns:util="https://geonetwork-opensource.org/xsl-extension"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
-                xmlns:saxon="http://saxon.sf.net/"
-                extension-element-prefixes="saxon"
                 exclude-result-prefixes="#all"
-                version="2.0">
+                version="3.0">
 
   <xsl:import href="common/render-html.xsl"/>
   <xsl:import href="common/functions-core.xsl"/>
@@ -77,7 +76,9 @@
   -->
   <xsl:template name="render-language-meta">
     <xsl:variable name="metadataOtherLanguages">
-      <saxon:call-template name="{concat('get-', $schema, '-other-languages')}"/>
+      <xsl:copy-of select="fn:function-lookup(
+                                  xs:QName('gn-fn-metadata:get-' || $schema || '-other-languages'), 1)
+                                  ($metadata)"/>
     </xsl:variable>
 
     <xsl:variable name="defaultLanguage"
@@ -85,7 +86,7 @@
 
     <xsl:for-each select="$metadataOtherLanguages/*">
       <link rel="alternate"
-            hreflang="{utils:twoCharLangCode(@code)}"
+            hreflang="{util:twoCharLangCode(@code)}"
             href="{$nodeUrl}api/records/{$metadataUuid}?language={@code}" />
     </xsl:for-each>
     <xsl:if test="count($metadataOtherLanguages/*) > 1">
@@ -108,7 +109,9 @@
           </script>
 
           <xsl:variable name="metadataOtherLanguages">
-            <saxon:call-template name="{concat('get-', $schema, '-other-languages')}"/>
+            <xsl:copy-of select="fn:function-lookup(
+                                  xs:QName('gn-fn-metadata:get-' || $schema || '-other-languages'), 1)
+                                  ($metadata)"/>
           </xsl:variable>
 
           <xsl:variable name="defaultLanguage"
@@ -119,7 +122,7 @@
               <a id="{if (@default) then 'gn-default-lang-link' else ''}"
                  onclick="gnLandingPage.displayLanguage('{@code}', this);">
                 <xsl:variable name="label"
-                              select="utils:getIsoLanguageLabel(@code, @code)"/>
+                              select="util:getIsoLanguageLabel(@code, @code)"/>
                 <xsl:value-of select="if ($label != '') then $label else @code"/><xsl:text> </xsl:text>
               </a>
             </li>
@@ -174,7 +177,7 @@
             <div>
               <xsl:choose>
                 <xsl:when test="$template != ''">
-                  <saxon:call-template name="{$template}"/>
+<!--                  <xsl:call-template name="{$template}"/>-->
                 </xsl:when>
                 <xsl:otherwise>
                   <xsl:apply-templates mode="render-toc" select="$viewConfig"/>
@@ -286,7 +289,7 @@
               <a class="btn btn-block btn-primary"
                  href="{if ($portalLink != '')
                         then replace($portalLink, '\$\{uuid\}', $metadataUuid)
-                        else utils:getDefaultUrl($metadataUuid, $language)}">
+                        else util:getDefaultUrl($metadataUuid, $language)}">
                 <i class="fa fa-fw fa-link"><xsl:comment select="'icon'"/></i>
                 <xsl:value-of select="$schemaStrings/linkToPortal"/>
               </a>
@@ -463,10 +466,9 @@
 
     <!-- Matching nodes -->
     <xsl:variable name="nodes">
-      <saxon:call-template name="{concat('evaluate-', $schema)}">
-        <xsl:with-param name="base" select="$base"/>
-        <xsl:with-param name="in" select="concat('/../', @xpath)"/>
-      </saxon:call-template>
+      <xsl:copy-of select="fn:function-lookup(
+                      xs:QName('gn-fn-metadata:evaluate-' || $schema ), 2)
+                        ($base, @xpath)"/>
     </xsl:variable>
 
     <xsl:variable name="fieldName">
@@ -503,11 +505,9 @@
       <xsl:variable name="fields" select="template/values/key"/>
 
       <xsl:variable name="elements">
-        <saxon:call-template name="{concat('evaluate-', $schema)}">
-          <xsl:with-param name="base" select="$base"/>
-          <xsl:with-param name="in"
-                          select="concat('/../', $fieldXpath)"/>
-        </saxon:call-template>
+        <xsl:copy-of select="fn:function-lookup(
+                      xs:QName('gn-fn-metadata:evaluate-' || $schema ), 2)
+                        ($base, $fieldXpath)"/>
       </xsl:variable>
 
       <!-- Loop on each element matching current field -->
@@ -517,12 +517,10 @@
           <!-- Loop on each fields -->
           <xsl:for-each select="$fields">
             <xsl:variable name="nodes">
-              <saxon:call-template name="{concat('evaluate-', $schema)}">
-                <xsl:with-param name="base" select="$element"/>
-                <xsl:with-param name="in"
-                                select="concat('/./',
-                               replace(@xpath, '/gco:CharacterString', ''))"/>
-              </saxon:call-template>
+              <xsl:copy-of select="fn:function-lookup(
+                      xs:QName('gn-fn-metadata:evaluate-' || $schema ), 2)
+                            ($element,
+                             concat('/./', replace(@xpath, '/gco:CharacterString', '')))"/>
             </xsl:variable>
 
             <xsl:variable name="fieldName">
@@ -551,11 +549,11 @@
 
     <!-- Matching nodes -->
     <xsl:variable name="nodes">
-      <saxon:call-template name="{concat('evaluate-', $schema)}">
-        <xsl:with-param name="base" select="$base"/>
-        <xsl:with-param name="in" select="concat('/../', .)"/>
-      </saxon:call-template>
+      <xsl:copy-of select="fn:function-lookup(
+                      xs:QName('gn-fn-metadata:evaluate-' || $schema ), 2)
+                        ($base, concat('../', .))"/>
     </xsl:variable>
+
 
     <xsl:variable name="fieldName">
       <xsl:if test="../@name">
@@ -585,7 +583,7 @@
                     select="$configuration/editor/tableFields/table[@for = current()/*/name()]"/>
       <dl class="gn-table">
         <dt>
-          <xsl:value-of select="tr:nodeLabel(tr:create($schema), name(), null)"/>
+          <xsl:value-of select="tr:nodeLabel($schema, '', name(), null)"/>
         </dt>
         <dd>
           <table class="table">
@@ -593,7 +591,7 @@
               <tr>
                 <xsl:for-each select="$tableConfig/header/col[@label]">
                   <th>
-                    <xsl:value-of select="tr:nodeLabel(tr:create($schema), @label, null)"/>
+                    <xsl:value-of select="tr:nodeLabel($schema, '', @label, null)"/>
                   </th>
                 </xsl:for-each>
               </tr>
@@ -629,10 +627,9 @@
     <xsl:if test="$root/*">
       <xsl:for-each select="$tableConfig/row/col[@xpath]">
         <xsl:variable name="node">
-          <saxon:call-template name="{concat('evaluate-', $schema)}">
-            <xsl:with-param name="base" select="$root/*"/>
-            <xsl:with-param name="in" select="concat('/', @xpath)"/>
-          </saxon:call-template>
+          <xsl:copy-of select="fn:function-lookup(
+                      xs:QName('gn-fn-metadata:evaluate-' || $schema ), 2)
+                        ($root/*, concat('/', @xpath))"/>
         </xsl:variable>
         <td><xsl:apply-templates mode="render-value"
                                  select="if ($node//@codeListValue) then $node//@codeListValue else $node"/></td>

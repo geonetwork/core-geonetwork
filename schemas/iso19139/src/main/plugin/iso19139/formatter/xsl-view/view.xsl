@@ -32,14 +32,13 @@
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
                 xmlns:srv="http://www.isotc211.org/2005/srv"
-                xmlns:tr="java:org.fao.geonet.api.records.formatters.SchemaLocalizations"
+                xmlns:tr="https://geonetwork-opensource.org/xsl-extension/schema"
                 xmlns:gn-fn-render="http://geonetwork-opensource.org/xsl/functions/render"
                 xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
                 xmlns:gn-fn-iso19139="http://geonetwork-opensource.org/xsl/functions/profiles/iso19139"
-                xmlns:xslUtils="java:org.fao.geonet.util.XslUtil"
-                xmlns:saxon="http://saxon.sf.net/"
+                xmlns:fn="http://www.w3.org/2005/xpath-functions"
+                xmlns:xslUtils="https://geonetwork-opensource.org/xsl-extension"
                 version="2.0"
-                extension-element-prefixes="saxon"
                 exclude-result-prefixes="#all">
 
   <!-- This formatter render an ISO19139 record based on the
@@ -417,7 +416,7 @@
       <dt>
         <xsl:value-of select="if ($fieldName)
                                   then $fieldName
-                                  else tr:node-label(tr:create($schema), name(), null)"/>
+                                  else tr:node-label($schema, '', name(), null)"/>
       </dt>
       <dd>
         <xsl:value-of select="$schemaStrings/nilValue"/>
@@ -465,7 +464,8 @@
       <xsl:when test="$fieldName = '' and $language = 'all' and count($languages/lang) > 0">
         <xsl:for-each select="$languages/lang">
           <div xml:lang="{@code}">
-            <xsl:value-of select="tr:nodeLabel(tr:create($schema, @code), $name, $context)"/>
+            <xsl:value-of select="tr:nodeLabel($schema, @code, $name, $context)"/>
+            <xsl:value-of select="tr:nodeLabel($schema, @code, $name)"/>---
             <xsl:if test="$contextLabel">
               <xsl:variable name="extraLabel">
                 <xsl:apply-templates mode="render-value"
@@ -486,7 +486,7 @@
           <xsl:variable name="lang3"
                         select="$metadata//gmd:locale/*[@id = $id]/gmd:languageCode/*/@codeListValue"/>
           <div xml:lang="{$lang3}">
-            <xsl:value-of select="tr:nodeLabel(tr:create($schema, $lang3), $name, $context)"/>
+            <xsl:value-of select="tr:nodeLabel($schema, $lang3, $name, $context)"/>
           </div>
         </xsl:for-each>
       </xsl:when>
@@ -494,7 +494,7 @@
         <!-- Overriden label or element name in current UI language. -->
         <xsl:value-of select="if ($fieldName)
                                 then $fieldName
-                                else tr:nodeLabel(tr:create($schema), $name, $context)"/>
+                                else tr:nodeLabel($schema, '', $name, $context)"/>
         <xsl:if test="$contextLabel">
           <xsl:variable name="extraLabel">
             <xsl:apply-templates mode="render-value"
@@ -1141,7 +1141,7 @@
                                     '&lt;a href=''$1''&gt;$1&lt;/a&gt;')"/>
 
         <xsl:if test="$textWithLinks != ''">
-          <xsl:copy-of select="saxon:parse(
+          <xsl:copy-of select="fn:parse-xml(
                           concat('&lt;p&gt;',
                           replace($textWithLinks, '&amp;', '&amp;amp;'),
                           '&lt;/p&gt;'))"/>
@@ -1269,7 +1269,7 @@
 
     <xsl:variable name="codelistTranslation"
                   select="tr:codelist-value-label(
-                            if ($forcedLanguage = '') then tr:create($schema) else tr:create($schema, $forcedLanguage),
+                            $schema, $forcedLanguage,
                             if ($name = 'indeterminatePosition') then 'indeterminatePosition' else $parentName,
                             $id)"/>
     <xsl:choose>
@@ -1278,13 +1278,13 @@
         <xsl:for-each select="$allLanguages/lang">
           <xsl:variable name="codelistTranslation"
                         select="tr:codelist-value-label(
-                            tr:create($schema, @code),
+                            $schema, @code,
                             if ($name = 'indeterminatePosition') then 'indeterminatePosition' else $parentName,
                             $id)"/>
 
           <div xml:lang="{@code}"
                title="{if ($codelistTranslation != '') then tr:codelist-value-desc(
-                            tr:create($schema),
+                            $schema, '',
                             $parentName, $id) else ''}">
             <xsl:value-of select="if ($codelistTranslation != '') then $codelistTranslation else $id"/>
           </div>
@@ -1293,7 +1293,7 @@
       <xsl:when test="$codelistTranslation != ''">
         <xsl:variable name="codelistDesc"
                       select="tr:codelist-value-desc(
-                            if ($forcedLanguage = '') then tr:create($schema) else tr:create($schema, $forcedLanguage),
+                            $schema, $forcedLanguage,
                             $parentName, $id)"/>
         <span title="{$codelistDesc}">
           <xsl:value-of select="$codelistTranslation"/>

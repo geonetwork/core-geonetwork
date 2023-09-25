@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ogc="http://www.opengis.net/ogc"
-                version="1.0">
+                version="3.0">
 
   <xsl:template match="/">
     <ogc:Filter>

@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-  xmlns:mdb="http://standards.iso.org/iso/19115/-3/mdb/2.0"
-  xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0"
-  xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0"
-  xmlns:gex="http://standards.iso.org/iso/19115/-3/gex/1.0"
-  xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/2.0"
-  xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
-  xmlns:mrs="http://standards.iso.org/iso/19115/-3/mrs/1.0"
-  xmlns:gts="http://www.isotc211.org/2005/gts"
-  xmlns:gml="http://www.opengis.net/gml/3.2"
-  xmlns:xlink="http://www.w3.org/1999/xlink"
-  xmlns:gn="http://www.fao.org/geonetwork"
-  xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
-  xmlns:java-xsl-util="java:org.fao.geonet.util.XslUtil"
-  xmlns:saxon="http://saxon.sf.net/"
-  extension-element-prefixes="saxon"
-  exclude-result-prefixes="#all">
+<xsl:stylesheet version="3.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:fn="http://www.w3.org/2005/xpath-functions"
+                xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                xmlns:mdb="http://standards.iso.org/iso/19115/-3/mdb/2.0"
+                xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0"
+                xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0"
+                xmlns:gex="http://standards.iso.org/iso/19115/-3/gex/1.0"
+                xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/2.0"
+                xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
+                xmlns:mrs="http://standards.iso.org/iso/19115/-3/mrs/1.0"
+                xmlns:gts="http://www.isotc211.org/2005/gts"
+                xmlns:gml="http://www.opengis.net/gml/3.2"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+                xmlns:gn="http://www.fao.org/geonetwork"
+                xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
+                xmlns:java-xsl-util="https://geonetwork-opensource.org/xsl-extension"
+                exclude-result-prefixes="#all">
 
 
   <!-- Readonly elements -->
@@ -180,8 +180,9 @@
         </div>
 
         <textarea id="_{$elementRef}_config" class="hidden">
-          <xsl:copy-of select="java-xsl-util:xmlToJson(
-              saxon:serialize($helper, 'default-serialize-mode'))"/></textarea>
+<!--          <xsl:copy-of select="java-xsl-util:xmlToJson(-->
+<!--              fn:serialize($helper, map{'method':'xml', 'indent': true()}))"/> TODO-SAXON -->
+        </textarea>
       </div>
       <div class="col-sm-1 gn-control">
         <xsl:call-template name="render-form-field-control-remove">
@@ -320,7 +321,7 @@
                         select="concat('_X', ./gn:element/@ref, '_replace')"/>
 
           <br />
-          <gn-bounding-polygon polygon-xml="{saxon:serialize($geometry, 'default-serialize-mode')}"
+          <gn-bounding-polygon polygon-xml="{fn:serialize($geometry, map{'method':'xml', 'indent': true()})}"
                                identifier="{$identifier}"
                                read-only="{$readonly}">
           </gn-bounding-polygon>
@@ -404,19 +405,17 @@
                 <xsl:if test="@del != ''">
                   <xsl:attribute name="remove" select="'true'"/>
 
-                  <saxon:call-template name="{concat('evaluate-', $schema)}">
-                    <xsl:with-param name="base" select="$base"/>
-                    <xsl:with-param name="in"
-                                    select="concat('/', @del, '/gn:element')"/>
-                  </saxon:call-template>
+                  <xsl:copy-of select="fn:function-lookup(
+                                  xs:QName('gn-fn-metadata:evaluate-' || $schema), 2)
+                                  ($base,
+                                   concat('/', @del, '/gn:element'))"/>
                 </xsl:if>
 
                 <xsl:if test="@xpath != ''">
-                  <saxon:call-template name="{concat('evaluate-', $schema)}">
-                    <xsl:with-param name="base" select="$base"/>
-                    <xsl:with-param name="in"
-                                    select="concat('/', @xpath)"/>
-                  </saxon:call-template>
+                  <xsl:copy-of select="fn:function-lookup(
+                                  xs:QName('gn-fn-metadata:evaluate-' || $schema), 2)
+                                  ($base,
+                                   concat('/', @xpath))"/>
                 </xsl:if>
               </col>
             </xsl:for-each>
@@ -428,28 +427,6 @@
                 <xsl:apply-templates mode="form-builder" select=".">
                   <xsl:with-param name="base" select="$base"/>
                 </xsl:apply-templates>
-                <!--<xsl:variable name="nodes">
-
-                <saxon:call-template name="{concat('evaluate-', $schema)}">
-                  <xsl:with-param name="base" select="$base"/>
-                  <xsl:with-param name="in"
-                                  select="concat('/', @xpath)"/>
-                </saxon:call-template>
-                </xsl:variable>
-
-                <xsl:for-each select="$nodes">
-                  <saxon:call-template name="{concat('dispatch-', $schema)}">
-                    <xsl:with-param name="base" select="."/>
-                  </saxon:call-template>
-                </xsl:for-each>
-
-                <xsl:if test="@or and @in">
-                  <saxon:call-template name="{concat('evaluate-', $schema)}">
-                    <xsl:with-param name="base" select="$base"/>
-                    <xsl:with-param name="in"
-                                    select="concat('/../', @in, '/gn:child[@name=''', @or, ''']')"/>
-                  </saxon:call-template>
-                </xsl:if>-->
               </col>
             </row>
           </xsl:for-each>

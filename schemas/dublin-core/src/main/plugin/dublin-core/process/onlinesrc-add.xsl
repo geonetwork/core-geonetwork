@@ -28,7 +28,7 @@ Stylesheet used to update metadata adding a reference to a parent record.
 <xsl:stylesheet xmlns:dc="http://purl.org/dc/elements/1.1/"
                 xmlns:dct="http://purl.org/dc/terms/"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                version="2.0">
+                version="3.0">
 
   <xsl:param name="url"/>
   <xsl:param name="updateKey"/>

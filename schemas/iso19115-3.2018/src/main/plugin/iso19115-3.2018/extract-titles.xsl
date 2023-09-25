@@ -7,7 +7,7 @@
         xmlns:lan="http://standards.iso.org/iso/19115/-3/lan/1.0"
         xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/2.0"
         xmlns:mdb="http://standards.iso.org/iso/19115/-3/mdb/2.0"
-        xmlns:java="java:org.fao.geonet.util.XslUtil">
+        xmlns:java="https://geonetwork-opensource.org/xsl-extension">
 
 
   <xsl:variable name="mainLanguage"

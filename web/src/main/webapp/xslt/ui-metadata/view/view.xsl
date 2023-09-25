@@ -22,9 +22,8 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:saxon="http://saxon.sf.net/"
-                version="2.0"
-                extension-element-prefixes="saxon"
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                version="3.0"
                 exclude-result-prefixes="#all">
 
   <xsl:import href="../../common/base-variables-metadata.xsl"/>
@@ -45,9 +44,9 @@
 
       <!-- Dispatch to profile mode -->
       <xsl:variable name="profileTemplate" select="concat('render-',$schema)"/>
-      <saxon:call-template name="{$profileTemplate}">
+      <xsl:call-template name="{$profileTemplate}">
         <xsl:with-param name="base" select="$metadata"/>
-      </saxon:call-template>
+      </xsl:call-template>
 
     </article>
   </xsl:template>

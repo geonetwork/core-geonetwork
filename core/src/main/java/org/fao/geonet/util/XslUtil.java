@@ -452,7 +452,7 @@ public final class XslUtil {
         return ApplicationContextHolder.get().getBean(org.fao.geonet.NodeInfo.class).getId();
     }
 
-    
+
     public static String getNodeLogo(String key) {
         Optional<Source> source = getSource(key);
         return source.isPresent() ? source.get().getLogo() : "";
@@ -538,12 +538,16 @@ public final class XslUtil {
     /**
      * Check if user is authenticated.
      */
-    public static boolean isAuthenticated() throws Exception {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || AnonymousAuthenticationToken.class.isAssignableFrom(authentication.getClass())) {
+    public static boolean isAuthenticated() {
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            if (authentication == null || AnonymousAuthenticationToken.class.isAssignableFrom(authentication.getClass())) {
+                return false;
+            }
+            return authentication.isAuthenticated();
+        } catch (Exception exception) {
             return false;
         }
-        return authentication.isAuthenticated();
     }
 
 
@@ -1407,7 +1411,7 @@ public final class XslUtil {
      * <xsl:stylesheet
      * xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
      * ...
-     * xmlns:java="java:org.fao.geonet.util.XslUtil" ...>
+     * xmlns:java="https://geonetwork-opensource.org/xsl-extension" ...>
      * <p>
      * <xsl:variable name="thesauriDir" select="java:getThesaurusDir()"/>
      *
@@ -1437,7 +1441,7 @@ public final class XslUtil {
      * <xsl:stylesheet
      * xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
      * ...
-     * xmlns:java="java:org.fao.geonet.util.XslUtil" ...>
+     * xmlns:java="https://geonetwork-opensource.org/xsl-extension" ...>
      * <p>
      * <xsl:variable name="thesauriDir" select="java:getIsoLanguageLabel('dut', 'eng')"/>
      *

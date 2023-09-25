@@ -26,7 +26,7 @@
                 xmlns:dc="http://purl.org/dc/elements/1.1/"
                 xmlns:dct="http://purl.org/dc/terms/"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
-                xmlns:tr="java:org.fao.geonet.api.records.formatters.SchemaLocalizations"
+                xmlns:tr="https://geonetwork-opensource.org/xsl-extension/schema"
                 xmlns:gn-fn-render="http://geonetwork-opensource.org/xsl/functions/render"
                 version="2.0"
                 exclude-result-prefixes="#all">
@@ -149,7 +149,7 @@
       <dt>
         <xsl:value-of select="if ($fieldName)
                                 then $fieldName
-                                else tr:nodeLabel(tr:create($schema), name(), null)"/>
+                                else tr:nodeLabel($schema, '', name(), null)"/>
       </dt>
       <dd>
         <xsl:apply-templates mode="render-value" select="."/>

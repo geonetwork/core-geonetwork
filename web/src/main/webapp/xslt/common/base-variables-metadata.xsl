@@ -23,12 +23,12 @@
   -->
 
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                xmlns:fn="http://www.w3.org/2005/xpath-functions"
                 xmlns:gn="http://www.fao.org/geonetwork"
-                xmlns:util="java:org.fao.geonet.util.XslUtil"
-                xmlns:saxon="http://saxon.sf.net/"
                 xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
-                version="2.0" extension-element-prefixes="saxon"
->
+                xmlns:util="https://geonetwork-opensource.org/xsl-extension"
+                version="3.0">
   <!-- Global XSL variables about the metadata record. This should be included for
   service dealing with one metadata record (eg. viewing, editing). -->
 
@@ -49,21 +49,21 @@
   <xsl:variable name="isTemplate" select="$metadataInfo/isTemplate"/>
 
   <xsl:variable name="isService">
-    <saxon:call-template name="{concat('get-', $schema, '-is-service')}"/>
+    <xsl:copy-of select="fn:function-lookup(xs:QName('gn-fn-metadata:get-' || $schema || '-is-service'), 1)($metadata)"/>
   </xsl:variable>
 
   <xsl:variable name="metadataTitle">
-    <saxon:call-template name="{concat('get-', $schema, '-title')}"/>
+    <xsl:copy-of select="fn:function-lookup(xs:QName('gn-fn-metadata:get-' || $schema || '-title'), 1)($metadata)"/>
   </xsl:variable>
 
   <xsl:variable name="metadataLanguage">
-    <saxon:call-template name="{concat('get-', $schema, '-language')}"/>
+    <xsl:copy-of select="fn:function-lookup(xs:QName('gn-fn-metadata:get-' || $schema || '-language'), 1)($metadata)"/>
   </xsl:variable>
   <xsl:variable name="metadataOtherLanguages">
-    <saxon:call-template name="{concat('get-', $schema, '-other-languages')}"/>
+    <xsl:copy-of select="fn:function-lookup(xs:QName('gn-fn-metadata:get-' || $schema || '-other-languages'), 1)($metadata)"/>
   </xsl:variable>
   <xsl:variable name="metadataOtherLanguagesAsJson">
-    <saxon:call-template name="{concat('get-', $schema, '-other-languages-as-json')}"/>
+    <xsl:copy-of select="fn:function-lookup(xs:QName('gn-fn-metadata:get-' || $schema || '-other-languages-as-json'), 1)($metadata)"/>
   </xsl:variable>
   <xsl:variable name="metadataIsMultilingual" select="count($metadataOtherLanguages/*[not(@default)]) > 0"/>
 
@@ -92,12 +92,18 @@
   <xsl:variable name="withXPath" select="false()"/>
 
   <xsl:variable name="editorConfig">
-    <saxon:call-template name="{concat('get-', $schema, '-configuration')}"/>
+    <xsl:variable name="fn"
+                  select="fn:function-lookup(xs:QName('gn-fn-metadata:get-' || $schema || '-configuration'), 0)"
+                  as="function(*)?"/>
+    <xsl:if test="fn:exists($fn)">
+      <xsl:copy-of select="$fn()"/>
+    </xsl:if>
+<!--    <xsl:copy-of select="fn:function-lookup(xs:QName('gn-fn-metadata:get-iso19115-3.2018-configuration'), 0)()"/>-->
   </xsl:variable>
 
   <xsl:variable name="iso19139EditorConfig">
     <!-- TODO only load for ISO profiles -->
-    <xsl:call-template name="get-iso19139-configuration"/>
+    <xsl:copy-of select="gn-fn-metadata:get-iso19139-configuration()"/>
   </xsl:variable>
 
 
@@ -123,29 +129,31 @@
     else $tabConfig/@mode = 'flat'"/>
 
   <xsl:variable name="resourceContainerDescription"
-                select="util:getResourceContainerDescription($metadataInfo/uuid, ($metadataInfo/draft != 'y'))"/>
+                select="'{}'"/>
+<!--               TODO-SAXON select="util:getResourceContainerDescription($metadataInfo/uuid, ($metadataInfo/draft != 'y'))"/>-->
 
   <xsl:variable name="resourceManagementExternalProperties"
-                select="util:getResourceManagementExternalProperties()"/>
+                select="'{}'"/>
+  <!--               TODO-SAXON select="util:getResourceManagementExternalProperties()"/>-->
 
-  <xsl:variable name="isDisplayingAttributes"
-                select="if (/root/request/displayAttributes)
-                        then /root/request/displayAttributes = 'true'
-                        else if ($viewConfig/@displayAttributes)
-                        then $viewConfig/@displayAttributes = 'true'
-                        else false()"/>
-  <xsl:variable name="isDisplayingTooltips"
-                select="if (/root/request/displayTooltips)
-                        then /root/request/displayTooltips = 'true'
-                        else if ($viewConfig/@displayTooltips)
-                        then $viewConfig/@displayTooltips = 'true'
-                        else false()"/>
-  <xsl:variable name="displayTooltipsMode"
-                select="if (/root/request/displayTooltipsMode)
-                        then /root/request/displayTooltipsMode
-                        else if ($viewConfig/@displayTooltipsMode)
-                        then $viewConfig/@displayTooltipsMode
-                        else ''"/>
+    <xsl:variable name="isDisplayingAttributes"
+                  select="if (/root/request/displayAttributes)
+                          then /root/request/displayAttributes = 'true'
+                          else if ($viewConfig/@displayAttributes)
+                          then $viewConfig/@displayAttributes = 'true'
+                          else false()"/>
+    <xsl:variable name="isDisplayingTooltips"
+                  select="if (/root/request/displayTooltips)
+                          then /root/request/displayTooltips = 'true'
+                          else if ($viewConfig/@displayTooltips)
+                          then $viewConfig/@displayTooltips = 'true'
+                          else false()"/>
+    <xsl:variable name="displayTooltipsMode"
+                  select="if (/root/request/displayTooltipsMode)
+                          then /root/request/displayTooltipsMode
+                          else if ($viewConfig/@displayTooltipsMode)
+                          then $viewConfig/@displayTooltipsMode
+                          else ''"/>
 
 
-</xsl:stylesheet>
+  </xsl:stylesheet>

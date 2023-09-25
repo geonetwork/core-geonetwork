@@ -27,7 +27,7 @@
                 xmlns:gml="http://www.opengis.net/gml/3.2"
                 xmlns:gml320="http://www.opengis.net/gml"
                 xmlns:gco="http://www.isotc211.org/2005/gco"
-                version="2.0">
+                version="3.0">
 
   <xsl:output method="xml" indent="no"/>
 

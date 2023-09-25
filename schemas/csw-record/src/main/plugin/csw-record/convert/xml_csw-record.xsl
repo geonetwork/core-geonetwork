@@ -26,7 +26,7 @@
 <xsl:stylesheet xmlns:csw="http://www.opengis.net/cat/csw/2.0.2"
                 xmlns:geonet="http://www.fao.org/geonetwork"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                version="1.0">
+                version="3.0">
 
   <!-- This stylesheet produces iso19135 metadata in XML format -->
   <xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes"/>

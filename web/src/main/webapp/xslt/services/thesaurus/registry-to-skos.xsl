@@ -23,7 +23,6 @@
   -->
 
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                xmlns:saxon="http://saxon.sf.net/"
                 xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
                 xmlns:dc="http://purl.org/dc/elements/1.1/"
                 xmlns:dcterms="http://purl.org/dc/terms/"
@@ -31,8 +30,7 @@
                 xmlns:regcd="http://inspire.ec.europa
                 .eu/codelist_register/codelist"
                 xmlns:regmdcd="http://inspire.ec.europa.eu/metadata-codelist_register/metadata-codelist"
-                version="2.0"
-                extension-element-prefixes="saxon"
+                version="3.0"
                 exclude-result-prefixes="#all">
 
   <!-- Convert a combination of codelist from Registry tools into one SKOS thesaurus.

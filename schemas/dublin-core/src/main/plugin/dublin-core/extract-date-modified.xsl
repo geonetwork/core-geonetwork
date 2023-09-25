@@ -25,7 +25,7 @@
 
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:dct="http://purl.org/dc/terms/"
-                version="1.0">
+                version="3.0">
 
   <xsl:template match="simpledc">
     <dateStamp>

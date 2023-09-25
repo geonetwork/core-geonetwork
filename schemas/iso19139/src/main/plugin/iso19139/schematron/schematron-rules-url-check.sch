@@ -7,7 +7,7 @@
     <sch:ns prefix="gco" uri="http://www.isotc211.org/2005/gco" />
     <sch:ns prefix="geonet" uri="http://www.fao.org/geonetwork" />
     <sch:ns prefix="xlink" uri="http://www.w3.org/1999/xlink" />
-    <sch:ns prefix="xslutil" uri="java:org.fao.geonet.util.XslUtil" />
+    <sch:ns prefix="xslutil" uri="https://geonetwork-opensource.org/xsl-extension" />
 
     <sch:pattern>
         <sch:title>$loc/strings/invalidURLCheck</sch:title>

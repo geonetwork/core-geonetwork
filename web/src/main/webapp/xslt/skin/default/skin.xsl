@@ -8,10 +8,10 @@
 
 -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                xmlns:util="java:org.fao.geonet.util.XslUtil"
+                xmlns:util="https://geonetwork-opensource.org/xsl-extension"
                 xmlns:geonet="http://www.fao.org/geonetwork"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
-                version="2.0"
+                version="3.0"
                 exclude-result-prefixes="#all">
 
   <xsl:function name="geonet:updateUrlPlaceholder" as="xs:string">

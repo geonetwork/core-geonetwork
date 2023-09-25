@@ -7,9 +7,9 @@
                 xmlns:srv="http://standards.iso.org/iso/19115/-3/srv/2.1"
                 xmlns:mdb="http://standards.iso.org/iso/19115/-3/mdb/2.0"
                 xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0"
-                xmlns:util="java:org.fao.geonet.util.XslUtil"
-                xmlns:saxon="http://saxon.sf.net/"
-                version="2.0" exclude-result-prefixes="#all">
+                xmlns:fn="http://www.w3.org/2005/xpath-functions"
+                xmlns:util="https://geonetwork-opensource.org/xsl-extension"
+                version="3.0" exclude-result-prefixes="#all">
 
   <xsl:import href="process-utility.xsl"/>
 
@@ -191,7 +191,7 @@
     <xsl:variable name="contactDetails" select="util:getUserDetails($contactId)"/>
 
     <xsl:if test="$contactDetails != ''">
-      <xsl:variable name="user" select="saxon:parse($contactDetails)" />
+      <xsl:variable name="user" select="fn:parse-xml($contactDetails)" />
       <cit:CI_Responsibility>
         <cit:role>
           <cit:CI_RoleCode codeList="codeListLocation#CI_RoleCode" codeListValue="{$contactRole}"></cit:CI_RoleCode>

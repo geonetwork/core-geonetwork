@@ -26,7 +26,7 @@
                 xmlns:geonet="http://www.fao.org/geonetwork"
                 xmlns:gco="http://www.isotc211.org/2005/gco"
                 xmlns:gmd="http://www.isotc211.org/2005/gmd"
-                xmlns:java="java:org.fao.geonet.util.XslUtil" version="2.0"
+                xmlns:java="https://geonetwork-opensource.org/xsl-extension" version="2.0"
                 exclude-result-prefixes="#all">
 
   <xsl:import href="process-utility.xsl"/>

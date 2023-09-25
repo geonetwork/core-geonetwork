@@ -31,7 +31,7 @@
                 xmlns:gco="http://www.isotc211.org/2005/gco"
                 xmlns:gmd="http://www.isotc211.org/2005/gmd"
                 xmlns:srv="http://www.isotc211.org/2005/srv"
-                xmlns:util="java:org.fao.geonet.util.XslUtil"
+                xmlns:util="https://geonetwork-opensource.org/xsl-extension"
                 version="2.0" exclude-result-prefixes="#all">
   <!--
       Analyze topic categories and INSPIRE themes in the metadata record and suggest to add matching :

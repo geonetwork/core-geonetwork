@@ -26,11 +26,10 @@
                 xmlns:gmd="http://www.isotc211.org/2005/gmd"
                 xmlns:gmx="http://www.isotc211.org/2005/gmx"
                 xmlns:gml="http://www.opengis.net/gml/3.2"
+                xmlns:fn="http://www.w3.org/2005/xpath-functions"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 xmlns:gn="http://geonetwork-opensource.org"
-                xmlns:saxon="http://saxon.sf.net/"
-                version="2.0"
-                extension-element-prefixes="saxon"
+                version="3.0"
                 exclude-result-prefixes="#all">
 
   <xsl:param name="uuid" as="xs:string"/>
@@ -72,7 +71,7 @@
       </gmd:geographicElement>
 
       <xsl:if test="$geometry and $onlyBoundingBox != true()">
-        <xsl:variable name="theGeom" select="saxon:parse($geometry)"/>
+        <xsl:variable name="theGeom" select="fn:parse-xml($geometry)"/>
         <gmd:geographicElement>
           <gmd:EX_BoundingPolygon>
             <gmd:polygon>

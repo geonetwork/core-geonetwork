@@ -380,13 +380,8 @@
 
       <dependency>
         <groupId>net.sf.saxon</groupId>
-        <artifactId>saxon</artifactId>
-        <version>9.1.0.8b-patch</version>
-      </dependency>
-      <dependency>
-        <groupId>net.sf.saxon</groupId>
-        <artifactId>saxon-dom</artifactId>
-        <version>9.1.0.8b</version>
+        <artifactId>Saxon-HE</artifactId>
+        <version>${saxon.version}</version>
       </dependency>
       <dependency>
         <groupId>org.locationtech.jts</groupId>
@@ -1596,6 +1591,7 @@
     <httpcomponents.version>4.5.14</httpcomponents.version>
     <jasypt.version>1.9.3</jasypt.version>
     <jupiter.version>5.9.1</jupiter.version>
+    <saxon.version>12.3</saxon.version>
 
     <sonar.organization>geonetwork</sonar.organization>
     <sonar.host.url>https://sonarcloud.io</sonar.host.url>

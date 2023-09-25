@@ -42,7 +42,7 @@
                 xmlns:gml="http://www.opengis.net/gml/3.2"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
                 xmlns:xd="http://www.oxygenxml.com/ns/doc/xsl"
-                xmlns:java-xsl-util="java:org.fao.geonet.util.XslUtil"
+                xmlns:java-xsl-util="https://geonetwork-opensource.org/xsl-extension"
                 exclude-result-prefixes="#all">
 
   <xsl:import href="protocol-mapping.xsl"></xsl:import>

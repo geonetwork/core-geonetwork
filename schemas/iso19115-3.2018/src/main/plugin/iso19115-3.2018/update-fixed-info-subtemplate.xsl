@@ -21,7 +21,7 @@
   ~ Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="3.0"
                 xmlns:gml="http://www.opengis.net/gml/3.2"
                 xmlns:srv="http://standards.iso.org/iso/19115/-3/srv/2.1"
                 xmlns:gex="http://standards.iso.org/iso/19115/-3/gex/1.0"
@@ -42,16 +42,11 @@
                 xmlns:gn-fn-iso19115-3.2018="http://geonetwork-opensource.org/xsl/functions/profiles/iso19115-3.2018"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
-                xmlns:saxon="http://saxon.sf.net/"
                 xmlns:gn-fn-iso19139="http://geonetwork-opensource.org/xsl/functions/profiles/iso19139"
-                extension-element-prefixes="saxon"
-                xmlns:java="java:org.fao.geonet.util.XslUtil"
+                xmlns:java="https://geonetwork-opensource.org/xsl-extension"
                 xmlns:mime="java:org.fao.geonet.util.MimeTypeFinder"
                 xmlns:gn="http://www.fao.org/geonetwork"
                 exclude-result-prefixes="#all">
-
-  <xsl:output name="default-serialize-mode" indent="no"
-              omit-xml-declaration="yes"/>
 
   <xsl:variable name="isExtentSubtemplate"
                 select="count(/root/gex:EX_Extent) = 1"/>
@@ -110,7 +105,7 @@
   <xsl:template mode="compute-bbox-for-polygon"
                 match="gex:polygon">
     <xsl:variable name="bbox"
-                  select="java:geomToBbox(saxon:serialize(./gml:*, 'default-serialize-mode'))"/>
+                  select="java:geomToBbox(fn:serialize(./gml:*, map{'method':'xml', 'indent': true()}))"/>
     <xsl:if test="$bbox != ''">
       <xsl:variable name="bboxCoordinates"
                     select="tokenize($bbox, '\|')"/>

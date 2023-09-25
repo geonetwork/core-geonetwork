@@ -25,9 +25,7 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:geonet="http://www.fao.org/geonetwork"
                 xmlns:gco="http://www.isotc211.org/2005/gco"
                 xmlns:gmd="http://www.isotc211.org/2005/gmd"
-                xmlns:saxon="http://saxon.sf.net/"
-                version="2.0"
-                extension-element-prefixes="saxon"
+                version="3.0"
                 exclude-result-prefixes="#all">
 
 
@@ -152,7 +150,6 @@
 
         <!-- Other type, replace the value -->
         <xsl:otherwise>
-          <!--<xsl:copy-of select="saxon:parse($contactAsXML)"/>-->
           <xsl:call-template name="replaceValueForField">
             <xsl:with-param name="fieldId" select="$fieldId"/>
             <xsl:with-param name="value" select="."/>

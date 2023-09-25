@@ -20,7 +20,7 @@
   xmlns:gn-fn-iso19115-3.2018="http://geonetwork-opensource.org/xsl/functions/profiles/iso19115-3.2018"
   xmlns:xlink="http://www.w3.org/1999/xlink"
   xmlns:xs="http://www.w3.org/2001/XMLSchema"
-  xmlns:java="java:org.fao.geonet.util.XslUtil"
+  xmlns:java="https://geonetwork-opensource.org/xsl-extension"
   xmlns:mime="java:org.fao.geonet.util.MimeTypeFinder"
   xmlns:gn="http://www.fao.org/geonetwork"
   exclude-result-prefixes="#all">

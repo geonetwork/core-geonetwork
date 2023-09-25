@@ -23,9 +23,7 @@
   -->
 
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                xmlns:saxon="http://saxon.sf.net/"
-                extension-element-prefixes="saxon"
-                version="2.0">
+                version="3.0">
 
 
   <!-- Register here the list of process for the schema-->
@@ -50,12 +48,9 @@
           <!-- Filter process if user ask for a specific one. If not loop over all. -->
           <xsl:for-each select="if ($process='') then $processes/p else $processes/p[.=$process]">
             <xsl:variable name="tplName" select="concat($action, '-',.)"/>
-            <saxon:call-template name="{$tplName}">
+            <xsl:call-template name="{$tplName}">
               <xsl:with-param name="root" select="$root"/>
-              <xsl:fallback>
-                <xsl:message>Fall back as no saxon:call-template exists</xsl:message>
-              </xsl:fallback>
-            </saxon:call-template>
+            </xsl:call-template>
           </xsl:for-each>
         </suggestions>
       </xsl:when>

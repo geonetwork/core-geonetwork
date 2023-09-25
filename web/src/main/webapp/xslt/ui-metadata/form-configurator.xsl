@@ -23,12 +23,11 @@
   -->
 
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:fn="http://www.w3.org/2005/xpath-functions"
                 xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
                 xmlns:gn="http://www.fao.org/geonetwork"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
-                xmlns:saxon="http://saxon.sf.net/"
-                extension-element-prefixes="saxon"
-                exclude-result-prefixes="#all" version="2.0">
+                exclude-result-prefixes="#all" version="3.0">
   <!--
     Build the form from the schema plugin form configuration.
     -->
@@ -113,10 +112,9 @@
       <xsl:variable name="del" select="@del"/>
 
       <xsl:variable name="nodes">
-        <saxon:call-template name="{concat('evaluate-', $schema)}">
-          <xsl:with-param name="base" select="$base"/>
-          <xsl:with-param name="in" select="concat($xpathPrefix, @forEach)"/>
-        </saxon:call-template>
+        <xsl:copy-of select="fn:function-lookup(
+                                  xs:QName('gn-fn-metadata:evaluate-' || $schema), 2)
+                                  ($base, concat($xpathPrefix, @forEach))"/>
       </xsl:variable>
 
       <xsl:variable name="sectionName" select="@name"/>
@@ -236,10 +234,9 @@
     <xsl:param name="base" as="node()"/>
 
     <xsl:variable name="nodes">
-      <saxon:call-template name="{concat('evaluate-', $schema)}">
-        <xsl:with-param name="base" select="$base"/>
-        <xsl:with-param name="in" select="concat('/../', @xpath)"/>
-      </saxon:call-template>
+      <xsl:copy-of select="fn:function-lookup(
+                                  xs:QName('gn-fn-metadata:evaluate-' || $schema), 2)
+                                  ($base, concat('/../', @xpath))"/>
     </xsl:variable>
 
     <xsl:variable name="mode" select="@mode"/>
@@ -249,10 +246,9 @@
                     select="gn-fn-metadata:getOriginalNode($base, .)"/>
 
       <xsl:for-each select="$originalNode">
-        <saxon:call-template name="{$mode}">
-          <xsl:with-param name="base" select="$base"/>
-          <xsl:with-param name="config" select="$config"/>
-        </saxon:call-template>
+        <xsl:copy-of select="fn:function-lookup(
+                                  xs:QName('gn-fn-metadata:' || $mode), 2)
+                                  ($base, $config)"/>
       </xsl:for-each>
     </xsl:for-each>
   </xsl:template>
@@ -286,9 +282,9 @@
 
       <!-- Search any nodes in the metadata matching the XPath.
 
-      We could have called saxon-evaluate from here like:
+      We could have called xsl:evaluate from here like:
       <xsl:variable name="nodes"
-        select="saxon:evaluate(concat('$p1/..', @xpath), $base)"/>
+        select="xsl:evaluate(concat('$p1/..', @xpath), $base)"/>
       but this does not work here because namespace of the context
       (ie. this XSLT) are used to resolve the xpath.
       It needs to be in a profile specific XSL which declare all
@@ -296,22 +292,18 @@
 
       That's why each schema should define its evaluate-<schemaid> template. -->
       <xsl:variable name="nodes">
-        <saxon:call-template name="{concat('evaluate-', $schema)}">
-          <xsl:with-param name="base" select="$base"/>
-          <xsl:with-param name="in"
-                          select="concat($xpathPrefix, @xpath)"/>
-        </saxon:call-template>
+        <xsl:copy-of select="fn:function-lookup(
+                                  xs:QName('gn-fn-metadata:evaluate-' || $schema), 2)
+                                  ($base, concat($xpathPrefix, @xpath))"/>
       </xsl:variable>
 
       <!-- Match any gn:child nodes from the metadocument which
       correspond to non existing node but available in the schema. -->
       <xsl:variable name="nonExistingChildParent">
         <xsl:if test="@or and @in">
-          <saxon:call-template name="{concat('evaluate-', $schema)}">
-            <xsl:with-param name="base" select="$base"/>
-            <xsl:with-param name="in"
-                            select="concat($xpathPrefix, @in, '[gn:child/@name=''', @or, ''']')"/>
-          </saxon:call-template>
+          <xsl:copy-of select="fn:function-lookup(
+                                  xs:QName('gn-fn-metadata:evaluate-' || $schema), 2)
+                                  ($base, concat($xpathPrefix, @in, '[gn:child/@name=''', @or, ''']'))"/>
         </xsl:if>
       </xsl:variable>
 
@@ -324,15 +316,15 @@
                     select="gn-fn-metadata:check-elementandsession-visibility(
                   $schema, $base, $serviceInfo, @if, @displayIfServiceInfo)"/>
 
-      <!-- 
+      <!--
       <xsl:message> Field: <xsl:value-of select="@name"/></xsl:message>
-      <xsl:message>Xpath: <xsl:copy-of select="@xpath"/></xsl:message>
+      <xsl:message>Xpath: <xsl:value-of select="@xpath"/></xsl:message>
       <xsl:message>TemplateModeOnly: <xsl:value-of select="@templateModeOnly"/></xsl:message>
       <xsl:message>Display: <xsl:copy-of select="$isDisplayed"/></xsl:message>
       <xsl:message><xsl:value-of select="count($nodes/*)"/> matching nodes: <xsl:copy-of select="$nodes"/></xsl:message>
       <xsl:message>Non existing child path: <xsl:value-of select="concat(@in, '/gn:child[@name = ''', @or, ''']')"/></xsl:message>
-      <xsl:message>Non existing child: <xsl:copy-of select="$nonExistingChildParent"/></xsl:message> -->
-
+      <xsl:message>Non existing child: <xsl:copy-of select="$nonExistingChildParent"/></xsl:message>
+      -->
 
 
       <xsl:variable name="del" select="@del"/>
@@ -376,15 +368,19 @@
                   </xsl:call-template>
                 </xsl:variable>
 
-                <saxon:call-template name="{concat('dispatch-', $schema)}">
-                  <xsl:with-param name="base" select="$originalNode"/>
-                  <xsl:with-param name="overrideLabel"
-                                  select="if ($configName != '' and $overrideLabel != '')
-                                        then $overrideLabel
-                                        else ''"/>
-                  <xsl:with-param name="refToDelete" select="$refToDelete/gn:element"/>
-                  <xsl:with-param name="config" select="$config"/>
-                </saxon:call-template>
+
+                <xsl:variable name="fn"
+                              select="fn:function-lookup(
+                                  xs:QName('gn-fn-metadata:dispatch-' || $schema), 4)"/>
+                <xsl:if test="fn:exists($fn)">
+                  <xsl:copy-of select="$fn(
+                                          $originalNode,
+                                          if ($configName != '' and $overrideLabel != '')
+                                              then $overrideLabel
+                                              else '',
+                                          $refToDelete/gn:element,
+                                          $config)"/>
+                </xsl:if>
               </xsl:when>
               <xsl:otherwise>
                 <xsl:for-each select="$nodes/*">
@@ -400,15 +396,18 @@
                     </xsl:call-template>
                   </xsl:variable>
 
-                  <saxon:call-template name="{concat('dispatch-', $schema)}">
-                    <xsl:with-param name="base" select="$originalNode"/>
-                    <xsl:with-param name="overrideLabel"
-                                    select="if ($configName != '' and $overrideLabel != '')
-                                        then $overrideLabel
-                                        else ''"/>
-                    <xsl:with-param name="refToDelete" select="$refToDelete/gn:element"/>
-                    <xsl:with-param name="config" select="$config"/>
-                  </saxon:call-template>
+                  <xsl:variable name="fn"
+                                select="fn:function-lookup(
+                                  xs:QName('gn-fn-metadata:dispatch-' || $schema), 4)"/>
+                  <xsl:if test="fn:exists($fn)">
+                    <xsl:copy-of select="$fn(
+                                            $originalNode,
+                                            if ($configName != '' and $overrideLabel != '')
+                                                then $overrideLabel
+                                                else '',
+                                            $refToDelete/gn:element,
+                                            $config)"/>
+                  </xsl:if>
                 </xsl:for-each>
               </xsl:otherwise>
             </xsl:choose>
@@ -434,14 +433,15 @@
               <xsl:variable name="labelConfig"
                             select="gn-fn-metadata:getLabel($schema, $name, $labels)"/>
 
-              <saxon:call-template name="{concat('dispatch-', $schema)}">
-                <xsl:with-param name="base" select="."/>
-                <xsl:with-param name="overrideLabel"
-                                select="if ($configName != '')
+
+              <xsl:copy-of select="fn:function-lookup(
+                                  xs:QName('gn-fn-metadata:dispatch-' || $schema), 4)(
+                                    .,
+                                    if ($configName != '')
                                         then $strings/*[name() = $configName]
-                                        else $labelConfig/label"/>
-                <xsl:with-param name="config" select="$config"/>
-              </saxon:call-template>
+                                        else $labelConfig/label,
+                                    null,
+                                    $config)"/>
             </xsl:for-each>
           </xsl:if>
 
@@ -497,10 +497,9 @@
             <xsl:variable name="readonly">
               <xsl:choose>
                 <xsl:when test="$template/values/@readonlyIf">
-                  <saxon:call-template name="{concat('evaluate-', $schema, '-boolean')}">
-                    <xsl:with-param name="base" select="$currentNode"/>
-                    <xsl:with-param name="in" select="concat('/', $template/values/@readonlyIf)"/>
-                  </saxon:call-template>
+                  <xsl:copy-of select="fn:function-lookup(
+                                  xs:QName('gn-fn-metadata:evaluate-' || $schema || '-boolean'), 2)
+                                  ($base, concat('/', $template/values/@readonlyIf))"/>
                 </xsl:when>
               </xsl:choose>
             </xsl:variable>
@@ -612,11 +611,9 @@
       <xsl:when test="$delXpath != ''">
         <!-- Search in the context of the metadata (current context is a node with no parent due to the saxon eval selection. -->
         <xsl:variable name="ancestor">
-          <saxon:call-template name="{concat('evaluate-', $schema)}">
-            <xsl:with-param name="base" select="$node"/>
-            <xsl:with-param name="in"
-                            select="concat('/descendant-or-self::node()[gn:element/@ref = ''', $node/gn:element/@ref, ''']/', $delXpath)"/>
-          </saxon:call-template>
+          <xsl:copy-of select="fn:function-lookup(
+                                  xs:QName('gn-fn-metadata:evaluate-' || $schema || '-boolean'), 2)
+                                  ($node, concat('/descendant-or-self::node()[gn:element/@ref = ''', $node/gn:element/@ref, ''']/', $delXpath))"/>
         </xsl:variable>
         <xsl:choose>
           <xsl:when test="exists($ancestor/*/gn:element)">
@@ -645,10 +642,9 @@
         </xsl:if>
 
         <xsl:variable name="matchingNodeValue">
-          <saxon:call-template name="{concat('evaluate-', $schema)}">
-            <xsl:with-param name="base" select="$currentNode"/>
-            <xsl:with-param name="in" select="concat('/', @xpath)"/>
-          </saxon:call-template>
+          <xsl:copy-of select="fn:function-lookup(
+                                  xs:QName('gn-fn-metadata:evaluate-' || $schema), 2)
+                                  ($currentNode, concat('/', @xpath))"/>
         </xsl:variable>
         <value>
           <xsl:value-of select="normalize-space($matchingNodeValue)"/>
@@ -669,10 +665,9 @@
         <xsl:for-each select="directiveAttributes/attribute::*">
           <xsl:if test="starts-with(., 'eval#')">
             <directiveAttributes name="{name()}">
-              <saxon:call-template name="{concat('evaluate-', $schema)}">
-                <xsl:with-param name="base" select="$currentNode"/>
-                <xsl:with-param name="in" select="concat('/', substring-after(., 'eval#'))"/>
-              </saxon:call-template>
+              <xsl:copy-of select="fn:function-lookup(
+                                  xs:QName('gn-fn-metadata:evaluate-' || $schema), 2)
+                                  ($currentNode, concat('/', substring-after(., 'eval#')))"/>
             </directiveAttributes>
           </xsl:if>
         </xsl:for-each>
@@ -717,7 +712,9 @@
 
 
   <xsl:template mode="form-builder" match="section[@template]">
-    <saxon:call-template name="{@template}"/>
+    <xsl:copy-of select="fn:function-lookup(
+                                  xs:QName('gn-fn-metadata:' || @template), 1)
+                                  (.)"/>
   </xsl:template>
 
   <xsl:template mode="form-builder" match="action[@type='add']">
@@ -733,21 +730,17 @@
       correspond to non existing node but available in the schema. -->
     <xsl:variable name="nonExistingChildParent">
       <xsl:if test="@or and @in">
-        <saxon:call-template name="{concat('evaluate-', $schema)}">
-          <xsl:with-param name="base" select="$base"/>
-          <xsl:with-param name="in" select="concat($xpathPrefix, @in, '[gn:child/@name=''', @or, ''']')"/>
-        </saxon:call-template>
+        <xsl:copy-of select="fn:function-lookup(
+                                  xs:QName('gn-fn-metadata:evaluate-' || $schema), 2)
+                                  ($base, concat($xpathPrefix, @in, '[gn:child/@name=''', @or, ''']'))"/>
       </xsl:if>
     </xsl:variable>
 
     <xsl:variable name="elementOfSameKind">
       <xsl:if test="@or and @in">
-        <saxon:call-template name="{concat('evaluate-', $schema)}">
-          <xsl:with-param name="base" select="$base"/>
-          <xsl:with-param name="in"
-                          select="concat($xpathPrefix, @in,
-                            '/*[local-name() = ''', @or, ''']')"/>
-        </saxon:call-template>
+        <xsl:copy-of select="fn:function-lookup(
+                                  xs:QName('gn-fn-metadata:evaluate-' || $schema), 2)
+                                  ($base, concat($xpathPrefix, @in, '/*[local-name() = ''', @or, ''']'))"/>
       </xsl:if>
     </xsl:variable>
 

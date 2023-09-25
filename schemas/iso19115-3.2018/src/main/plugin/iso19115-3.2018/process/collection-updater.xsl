@@ -11,9 +11,7 @@
                   xmlns:srv="http://standards.iso.org/iso/19115/-3/srv/2.1"
                   xmlns:xs="http://www.w3.org/2001/XMLSchema"
                   xmlns:geonet="http://www.fao.org/geonetwork"
-                  xmlns:util="java:org.fao.geonet.util.XslUtil"
-                  xmlns:saxon="http://saxon.sf.net/"
-                  extension-element-prefixes="saxon"
+                  xmlns:util="https://geonetwork-opensource.org/xsl-extension"
                   exclude-result-prefixes="#all">
 
   <xsl:import href="sibling-utility.xsl"/>

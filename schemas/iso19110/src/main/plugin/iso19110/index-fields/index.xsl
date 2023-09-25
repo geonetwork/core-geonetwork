@@ -29,10 +29,10 @@
                 xmlns:gco="http://www.isotc211.org/2005/gco"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
-                xmlns:util="java:org.fao.geonet.util.XslUtil"
+                xmlns:util="https://geonetwork-opensource.org/xsl-extension"
                 xmlns:date-util="java:org.fao.geonet.utils.DateUtil"
                 xmlns:gn-fn-index="http://geonetwork-opensource.org/xsl/functions/index"
-                version="2.0">
+                version="3.0">
 
   <xsl:import href="common/index-utils.xsl"/>
 

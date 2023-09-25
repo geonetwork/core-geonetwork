@@ -21,16 +21,14 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<xsl:stylesheet xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco"
+<xsl:stylesheet xmlns:gmd="http://www.isotc211.org/2005/gmd"
+                xmlns:gco="http://www.isotc211.org/2005/gco"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                xmlns:date="http://exslt.org/dates-and-times"
-                xmlns:java="java:org.fao.geonet.util.XslUtil"
-                xmlns:date-util="java:org.fao.geonet.utils.DateUtil"
-                xmlns:mime="java:org.fao.geonet.util.MimeTypeFinder"
+                xmlns:util="https://geonetwork-opensource.org/xsl-extension"
+                xmlns:date-util="util:org.fao.geonet.utils.DateUtil"
                 version="2.0"
                 exclude-result-prefixes="#all">
 
-  <!-- ========================================================================================= -->
   <!-- latlon coordinates indexed as numeric. -->
 
   <xsl:template match="*" mode="latLon">
@@ -57,9 +55,8 @@
                 gmd:northBoundLatitude/gco:Decimal
                 )}" store="true" index="false"/>
     </xsl:if>
-
   </xsl:template>
-  <!-- ================================================================== -->
+
 
   <xsl:template name="fixSingle">
     <xsl:param name="value"/>
@@ -74,76 +71,17 @@
     </xsl:choose>
   </xsl:template>
 
-  <!-- ================================================================== -->
-
   <xsl:template name="getMimeTypeFile">
     <xsl:param name="datadir"/>
     <xsl:param name="fname"/>
-    <xsl:value-of select="mime:detectMimeTypeFile($datadir,$fname)"/>
+    <xsl:value-of select="util:detectMimeTypeFile($datadir, $fname)"/>
   </xsl:template>
-
-  <!-- ==================================================================== -->
 
   <xsl:template name="getMimeTypeUrl">
     <xsl:param name="linkage"/>
-    <xsl:value-of select="mime:detectMimeTypeUrl($linkage)"/>
+    <xsl:value-of select="util:detectMimeTypeUrl($linkage)"/>
   </xsl:template>
 
-  <!-- ==================================================================== -->
-  <xsl:template name="fixNonIso">
-    <xsl:param name="value"/>
-
-    <xsl:variable name="now" select="date:date-time()"/>
-    <xsl:choose>
-      <xsl:when
-        test="$value='' or lower-case($value)='unknown' or lower-case($value)='current' or lower-case($value)='now'">
-        <xsl:variable name="miy" select="date:month-in-year($now)"/>
-        <xsl:variable name="month">
-          <xsl:call-template name="fixSingle">
-            <xsl:with-param name="value" select="$miy"/>
-          </xsl:call-template>
-        </xsl:variable>
-        <xsl:variable name="dim" select="date:day-in-month($now)"/>
-        <xsl:variable name="day">
-          <xsl:call-template name="fixSingle">
-            <xsl:with-param name="value" select="$dim"/>
-          </xsl:call-template>
-        </xsl:variable>
-        <xsl:value-of select="concat(date:year($now),'-',$month,'-',$day,'T23:59:59')"/>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:value-of select="$value"/>
-      </xsl:otherwise>
-    </xsl:choose>
-  </xsl:template>
-
-  <!-- ==================================================================== -->
-
-  <xsl:template name="newGmlTime">
-    <xsl:param name="begin"/>
-    <xsl:param name="end"/>
-
-
-    <xsl:variable name="value1">
-      <xsl:call-template name="fixNonIso">
-        <xsl:with-param name="value" select="normalize-space($begin)"/>
-      </xsl:call-template>
-    </xsl:variable>
-
-    <xsl:variable name="value2">
-      <xsl:call-template name="fixNonIso">
-        <xsl:with-param name="value" select="normalize-space($end)"/>
-      </xsl:call-template>
-    </xsl:variable>
-
-    <!-- must be a full ISODateTimeFormat - so parse it and make sure it is
-         returned as a long format (Check org.fao.geonet.utils.DateUtil.parseIsoDateTimes formatter -->
-    <xsl:variable name="output" select="date-util:parseISODateTimes($value1,$value2)"/>
-    <xsl:value-of select="$output"/>
-
-  </xsl:template>
-
-  <!-- ================================================================== -->
   <!-- iso3code from the supplied gmdlanguage
        It will prefer LanguageCode if it exists over CharacterString -->
   <xsl:template name="langId_from_gmdlanguage19139">
@@ -166,7 +104,7 @@
 
   <xsl:template name="langId19139">
     <xsl:param name="md" select="/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']"/>
-    <xsl:param name="defaultLanguage" select="java:getDefaultLangCode()"/>
+    <xsl:param name="defaultLanguage" select="util:getDefaultLangCode()"/>
     <xsl:variable name="tmp">
       <xsl:choose>
         <xsl:when test="$md/gmd:language/gmd:LanguageCode/@codeListValue|
@@ -198,7 +136,7 @@
             <xsl:value-of select="concat('#',$langIdFromlocale)"/>
           </xsl:when>
           <xsl:otherwise>
-            <xsl:value-of select="concat('#',upper-case(java:twoCharLangCode($isoDocLangId)))"/>
+            <xsl:value-of select="concat('#',upper-case(util:twoCharLangCode($isoDocLangId)))"/>
           </xsl:otherwise>
         </xsl:choose>
     </xsl:variable>
@@ -241,7 +179,7 @@
             <xsl:value-of select="concat('#',$langIdFromlocale)"/>
           </xsl:when>
           <xsl:otherwise>
-            <xsl:value-of select="concat('#',upper-case(java:twoCharLangCode($isoDocLangId)))"/>
+            <xsl:value-of select="concat('#',upper-case(util:twoCharLangCode($isoDocLangId)))"/>
           </xsl:otherwise>
         </xsl:choose>
     </xsl:variable>

@@ -23,9 +23,7 @@
   -->
 
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                xmlns:saxon="http://saxon.sf.net/"
-                version="2.0"
-                extension-element-prefixes="saxon"
+                version="3.0"
                 exclude-result-prefixes="#all">
 
   <xsl:output method="xml" encoding="UTF-8" indent="yes"/>
@@ -42,7 +40,7 @@
     <xsl:choose>
       <xsl:when test="/root/request/transformation != ''">
         <xsl:for-each select="$subtemplate">
-          <saxon:call-template name="{/root/request/transformation}"/>
+          <xsl:call-template name="{/root/request/transformation}"/>
         </xsl:for-each>
       </xsl:when>
       <xsl:otherwise>

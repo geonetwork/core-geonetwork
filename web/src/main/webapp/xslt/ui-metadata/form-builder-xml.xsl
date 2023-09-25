@@ -23,8 +23,8 @@
   -->
 
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                xmlns:saxon="http://saxon.sf.net/"
-                version="2.0" extension-element-prefixes="saxon"
+                xmlns:fn="http://www.w3.org/2005/xpath-functions"
+                version="3.0"
                 exclude-result-prefixes="#all">
 
   <!--
@@ -41,8 +41,9 @@
         <!-- Render XML in textarea -->
         <div id="xmleditor"
              ui-ace="{{useWrapMode:true,showGutter:true,mode:'xml',onLoad:xmlEditorLoaded,onChange:xmlEditorChange}}">
+          <!-- TODO-SAXON : check indent in XML view -->
           <xsl:value-of
-            select="saxon:serialize($strippedXml, 'default-indent-mode')"/>
+            select="fn:serialize($strippedXml, map{'method':'xml', 'indent': true()})"/>
         </div>
         <textarea name="data" class="hidden">
         </textarea>

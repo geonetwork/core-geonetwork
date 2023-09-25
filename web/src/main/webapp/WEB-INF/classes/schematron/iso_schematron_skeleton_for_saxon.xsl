@@ -2055,7 +2055,7 @@
 
   <!-- It would be nice to use this but xsl:namespace does not
     allow a fallback -->
-  <!--xsl:template name="handle-namespace" version="2.0">
+  <!--xsl:template name="handle-namespace" version="3.0">
      <xsl:namespace name="{@prefix}" select="@uri">
   </xsl:template-->
 

@@ -26,13 +26,16 @@
                 xmlns:gco="http://www.isotc211.org/2005/gco"
                 xmlns:gmx="http://www.isotc211.org/2005/gmx"
                 xmlns:gn="http://www.fao.org/geonetwork"
-                xmlns:xslutil="java:org.fao.geonet.util.XslUtil"
-                version="2.0"
+                xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
+                xmlns:xslutil="https://geonetwork-opensource.org/xsl-extension"
+                version="3.0"
                 exclude-result-prefixes="#all">
 
 
   <!-- Get the main metadata languages -->
-   <xsl:template name="get-iso19139-language">
+   <xsl:function name="gn-fn-metadata:get-iso19139-language">
+     <xsl:param name="metadata" as="node()"/>
+
     <xsl:variable name="isTemplate" select="$metadata/gn:info[position() = last()]/isTemplate"/>
     <xsl:choose>
       <xsl:when test="$isTemplate = 's' or $isTemplate = 't'">
@@ -52,10 +55,11 @@
           </xsl:choose>
       </xsl:otherwise>
     </xsl:choose>
-   </xsl:template>
+   </xsl:function>
 
   <!-- Get the list of other languages in JSON -->
-  <xsl:template name="get-iso19139-other-languages-as-json">
+  <xsl:function name="gn-fn-metadata:get-iso19139-other-languages-as-json">
+    <xsl:param name="metadata" as="node()"/>
 
     <xsl:variable name="isTemplate" select="$metadata/gn:info[position() = last()]/isTemplate"/>
     <xsl:variable name="langs">
@@ -72,7 +76,7 @@
         </xsl:when>
         <xsl:otherwise>
           <xsl:variable name="mainLanguage">
-            <xsl:call-template name="get-iso19139-language"/>
+            <xsl:value-of select="gn-fn-metadata:get-iso19139-language($metadata)"/>
           </xsl:variable>
           <xsl:if test="$mainLanguage">
             <xsl:variable name="mainLanguageId"
@@ -96,10 +100,11 @@
       </xsl:choose>
     </xsl:variable>
     <xsl:text>{</xsl:text><xsl:value-of select="string-join($langs/lang, ',')"/><xsl:text>}</xsl:text>
-  </xsl:template>
+  </xsl:function>
 
-  <!-- Get the list of other languages -->
-  <xsl:template name="get-iso19139-other-languages">
+  <xsl:function name="gn-fn-metadata:get-iso19139-other-languages">
+    <xsl:param name="metadata" as="node()"/>
+
     <xsl:variable name="isTemplate" select="$metadata/gn:info[position() = last()]/isTemplate"/>
     <xsl:choose>
       <xsl:when test="$isTemplate = 's' or $isTemplate = 't'">
@@ -112,7 +117,7 @@
       </xsl:when>
       <xsl:otherwise>
         <xsl:variable name="mainLanguage">
-          <xsl:call-template name="get-iso19139-language"/>
+          <xsl:value-of select="gn-fn-metadata:get-iso19139-language($metadata)"/>
         </xsl:variable>
         <xsl:for-each select="$metadata/gmd:locale/gmd:PT_Locale">
           <xsl:variable name="langCode"
@@ -125,6 +130,11 @@
         </xsl:for-each>
       </xsl:otherwise>
     </xsl:choose>
+  </xsl:function>
+
+  <!-- Get the list of other languages -->
+  <xsl:template name="get-iso19139-other-languages">
+    <xsl:copy-of select="gn-fn-metadata:get-iso19139-other-languages($metadata)"/>
   </xsl:template>
 
   <!-- Template used to return a translation if one found,

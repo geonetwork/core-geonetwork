@@ -18,6 +18,7 @@
   xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/2.0"
   xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
   xmlns:gfc="http://standards.iso.org/iso/19110/gfc/1.1"
+  xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
   xmlns:gn-fn-index="http://geonetwork-opensource.org/xsl/functions/index"
   xmlns:gn="http://www.fao.org/geonetwork"
   xmlns:xs="http://www.w3.org/2001/XMLSchema" exclude-result-prefixes="#all">
@@ -25,17 +26,19 @@
   <xsl:import href="common/index-utils.xsl"/>
   <xsl:include href="utility-tpl-multilingual.xsl"/>
 
-  <xsl:template name="get-iso19115-3.2018-is-service">
+  <xsl:function name="gn-fn-metadata:get-iso19115-3.2018-is-service">
+    <xsl:param name="metadata" as="node()"/>
     <xsl:value-of
-            select="count($metadata/mdb:identificationInfo/srv:SV_ServiceIdentification) > 0"/>
-  </xsl:template>
+      select="count($metadata/mdb:identificationInfo/srv:SV_ServiceIdentification) > 0"/>
+  </xsl:function>
 
-  <xsl:template name="get-iso19115-3.2018-title">
+  <xsl:function name="gn-fn-metadata:get-iso19115-3.2018-title">
+    <xsl:param name="metadata" as="node()"/>
     <xsl:value-of select="($metadata/mdb:identificationInfo/*/mri:citation/*/cit:title/gco:CharacterString
                           |$metadata/mdb:contentInfo/*/mrc:featureCatalogue/*/cat:name[*/text() != '']
                           |$metadata/mdb:contentInfo/*/mrc:featureCatalogue/*/gfc:featureType/*/gfc:typeName[text() != ''])[1]
 "/>
-  </xsl:template>
+  </xsl:function>
 
   <xsl:template mode="get-formats-as-json" match="mdb:MD_Metadata">
     [
@@ -48,8 +51,9 @@
   </xsl:template>
 
 
-  <xsl:template name="get-iso19115-3.2018-extents-as-json">[
-   <xsl:for-each select="//mdb:identificationInfo/*/mri:extent
+  <xsl:function name="gn-fn-metadata:get-iso19115-3.2018-extents-as-json">
+    <xsl:param name="metadata" as="node()"/>[
+   <xsl:for-each select="$metadata//mdb:identificationInfo/*/mri:extent
                           //gex:geographicElement/gex:EX_GeographicBoundingBox[
             number(gex:westBoundLongitude/gco:Decimal)
             and number(gex:southBoundLatitude/gco:Decimal)
@@ -71,9 +75,10 @@
       <xsl:if test="position() != last()">,</xsl:if>
     </xsl:for-each>
     ]
-  </xsl:template>
+  </xsl:function>
 
-  <xsl:template name="get-iso19115-3.2018-online-source-config">
+  <xsl:function name="gn-fn-metadata:get-iso19115-3.2018-online-source-config">
+    <xsl:param name="metadata" as="node()"/>
     <xsl:param name="pattern"/>
     <config>
       <xsl:for-each select="$metadata/descendant::mrd:onLine[
@@ -114,5 +119,5 @@
         </xsl:if>
       </xsl:for-each>
     </config>
-  </xsl:template>
+  </xsl:function>
 </xsl:stylesheet>

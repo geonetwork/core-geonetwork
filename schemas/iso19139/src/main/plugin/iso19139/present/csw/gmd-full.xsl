@@ -30,7 +30,7 @@
                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                 xmlns:geonet="http://www.fao.org/geonetwork"
                 exclude-result-prefixes="#all"
-                version="2.0">
+                version="3.0">
 
   <!-- Convert ISO profile elements to their base type -->
   <xsl:template match="*[@gco:isoType]" priority="99">

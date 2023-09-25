@@ -23,14 +23,33 @@
   -->
 <xsl:stylesheet xmlns:dc="http://purl.org/dc/elements/1.1/"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                version="2.0"
+                xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
+                version="3.0"
                 exclude-result-prefixes="#all">
-  <xsl:template name="get-dublin-core-language">
+  <xsl:function name="gn-fn-metadata:get-dublin-core-title">
+    <xsl:param name="metadata" as="node()"/>
+    <xsl:value-of select="$metadata/descendant::node()/dc:title[1][text() != '']"/>
+  </xsl:function>
+  <xsl:function name="gn-fn-metadata:get-dublin-core-is-service">
+    <xsl:param name="metadata" as="node()"/>
+  </xsl:function>
+  <xsl:function name="gn-fn-metadata:get-dublin-core-language">
+    <xsl:param name="metadata" as="node()"/>
     <xsl:value-of select="$metadata/descendant::node()/dc:language[1]"/>
-  </xsl:template>
+  </xsl:function>
   <!-- No multilingual support in Dublin core -->
-  <xsl:template name="get-dublin-core-other-languages-as-json"/>
-  <xsl:template name="get-dublin-core-other-languages"/>
-  <xsl:template name="get-dublin-core-online-source-config"/>
-  <xsl:template name="get-dublin-core-extents-as-json">[]</xsl:template>
+  <xsl:function name="gn-fn-metadata:get-dublin-core-other-languages-as-json">
+    <xsl:param name="metadata" as="node()"/>
+  </xsl:function>
+  <xsl:function name="gn-fn-metadata:get-dublin-core-other-languages">
+    <xsl:param name="metadata" as="node()"/>
+  </xsl:function>
+  <xsl:function name="gn-fn-metadata:get-dublin-core-online-source-config">
+    <xsl:param name="metadata" as="node()"/>
+    <xsl:param name="pattern"/>
+  </xsl:function>
+  <xsl:function name="gn-fn-metadata:get-dublin-core-extents-as-json">
+    <xsl:param name="metadata" as="node()"/>
+    []
+  </xsl:function>
 </xsl:stylesheet>

@@ -23,10 +23,15 @@
 
 package org.fao.geonet.utils;
 
+import net.sf.saxon.Configuration;
+import net.sf.saxon.TransformerFactoryImpl;
+import net.sf.saxon.trans.XPathException;
+
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.stream.StreamSource;
 
-import java.util.Properties;
+import java.io.File;
 
 /**
  * This class is to prevent the situation that rogue applications running in the same JVM as does
@@ -43,21 +48,38 @@ public class TransformerFactoryFactory {
     public final static String SYSTEM_PROPERTY_NAME = "javax.xml.transform.TransformerFactory";
     public static final String TRANSFORMER_PATH = "/WEB-INF/classes/META-INF/services/" + SYSTEM_PROPERTY_NAME;
 
-    private static TransformerFactory factory;
+    /**
+     * See https://www.saxonica.com/html/documentation10/configuration/configuration-file/
+     */
+    public static final String SAXON_CONFIGURATION_PATH = "/WEB-INF/saxon-configuration.xml";
 
-    public static void init(String implementationName) {
+    private static TransformerFactoryImpl factory;
+
+    public static void init(String implementationName, File saxonConfiguration) {
+        if (saxonConfiguration == null) {
+            return;
+        }
+
         debug("Implementation name: " + implementationName);
         if (implementationName != null && implementationName.length() > 0) {
-            factory = TransformerFactory.newInstance(implementationName, null);
+            factory = (TransformerFactoryImpl) TransformerFactory.newInstance(implementationName, null);
         } else {
-            factory = TransformerFactory.newInstance();
+            factory = (TransformerFactoryImpl) TransformerFactory.newInstance();
+        }
+
+        try {
+            Configuration configuration = Configuration
+                .readConfiguration(new StreamSource(saxonConfiguration));
+            factory.setConfiguration(configuration);
+        } catch (XPathException e) {
+            Log.error(Log.ENGINE, "Check saxon configuration", e);
         }
     }
 
-    public static TransformerFactory getTransformerFactory() throws TransformerConfigurationException {
+    public static TransformerFactoryImpl getTransformerFactory() throws TransformerConfigurationException {
         if (factory == null) {
             debug("TransformerFactoryFactory is null. Initializing ...");
-            init(null);
+            init(null, null);
         }
         debug("TransformerFactoryFactory: "
             + factory.getClass().getName()
@@ -67,7 +89,7 @@ public class TransformerFactoryFactory {
     }
 
     // used for JUnit testing into Eclipse (which selects an incompatible TransformerFactory)
-    public static void setTransformerFactory(TransformerFactory _factory) {
+    public static void setTransformerFactory(TransformerFactoryImpl _factory) {
         factory = _factory;
     }
 

@@ -27,7 +27,7 @@
                 xmlns:dc="http://purl.org/dc/elements/1.1/"
                 xmlns:geonet="http://www.fao.org/geonetwork"
                 exclude-result-prefixes="#all"
-                version="2.0">
+                version="3.0">
   <xsl:param name="thumbnail_url"/>
 
   <xsl:template match="@*|node()">

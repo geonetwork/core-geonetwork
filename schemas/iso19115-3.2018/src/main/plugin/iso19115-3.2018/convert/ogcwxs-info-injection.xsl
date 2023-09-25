@@ -57,11 +57,10 @@
                 xmlns:ows11="http://www.opengis.net/ows/1.1"
                 xmlns:inspire_vs="http://inspire.ec.europa.eu/schemas/inspire_vs/1.0"
                 xmlns:inspire_common="http://inspire.ec.europa.eu/schemas/common/1.0"
-                xmlns:saxon="http://saxon.sf.net/"
                 xmlns:math="http://exslt.org/math"
-                extension-element-prefixes="saxon math"
+                extension-element-prefixes="math"
                 exclude-result-prefixes="#all"
-                version="2.0">
+                version="3.0">
 
   <xsl:import href="ogcwxs-resp-party.xsl"/>
 
@@ -554,7 +553,7 @@
                              select="."/>
       </xsl:for-each>
 
-      <!-- If no '<AccessConstraints>' in "getCapabilities" response then 
+      <!-- If no '<AccessConstraints>' in "getCapabilities" response then
            copy constraints from template record -->
       <xsl:if test="not($constraints)">
         <xsl:apply-templates mode="copy" select="mri:resourceConstraints"/>

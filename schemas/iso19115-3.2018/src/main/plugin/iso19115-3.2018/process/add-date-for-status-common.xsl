@@ -51,8 +51,7 @@
 
       <xsl:variable name="statusLabel"
                     select="tr:codelist-value-label(
-                            if ($guiLang = '') then tr:create($schema)
-                            else tr:create($schema, $guiLang),
+                            $schema, $guiLang,
                             'MD_ProgressCode',
                             $status)"/>
 
@@ -61,8 +60,7 @@
 
       <xsl:variable name="dateTypeLabel"
                     select="tr:codelist-value-label(
-                            if ($guiLang = '') then tr:create($schema)
-                            else tr:create($schema, $guiLang),
+                            $schema, $guiLang,
                             'CI_DateTypeCode',
                             $dateTypeForStatus)"/>
 

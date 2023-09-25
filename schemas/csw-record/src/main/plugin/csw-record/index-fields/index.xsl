@@ -27,19 +27,11 @@
                 xmlns:dct="http://purl.org/dc/terms/"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
                 xmlns:daobs="http://daobs.org"
-                xmlns:saxon="http://saxon.sf.net/"
                 xmlns:date-util="java:org.fao.geonet.utils.DateUtil"
-                extension-element-prefixes="saxon"
                 exclude-result-prefixes="#all"
-                version="2.0">
+                version="3.0">
 
   <xsl:output method="xml" indent="yes"/>
-
-  <xsl:output name="default-serialize-mode"
-              indent="no"
-              omit-xml-declaration="yes"
-              encoding="utf-8"
-              escape-uri-attributes="yes"/>
 
   <!-- List of keywords to search for to flag a record as opendata.
    Do not put accents or upper case letters here as comparison will not
@@ -74,9 +66,6 @@
       <docType>metadata</docType>
 
       <!-- Index the metadata document as XML -->
-      <document>
-        <!--<xsl:value-of select="saxon:serialize(., 'default-serialize-mode')"/>-->
-      </document>
       <uuid>
         <xsl:value-of select="$identifier"/>
       </uuid>

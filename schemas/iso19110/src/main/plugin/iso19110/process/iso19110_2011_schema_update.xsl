@@ -26,7 +26,7 @@
                 xmlns:gfc="http://www.isotc211.org/2005/gfc"
                 xmlns:gmx="http://www.isotc211.org/2005/gmx"
                 xmlns:geonet="http://www.fao.org/geonetwork" exclude-result-prefixes="xsl geonet"
-                version="2.0">
+                version="3.0">
 
   <!--
     Usage:

@@ -33,7 +33,7 @@
                 xmlns:gco="http://www.isotc211.org/2005/gco"
                 xmlns:gmx="http://www.isotc211.org/2005/gmx"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
-                xmlns:util="java:org.fao.geonet.util.XslUtil"
+                xmlns:util="https://geonetwork-opensource.org/xsl-extension"
                 xmlns:gn-fn-rel="http://geonetwork-opensource.org/xsl/functions/relations"
                 version="2.0"
                 exclude-result-prefixes="#all">

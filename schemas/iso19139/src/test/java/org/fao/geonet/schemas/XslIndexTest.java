@@ -9,6 +9,7 @@ import org.jdom.Element;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -22,7 +23,8 @@ public class XslIndexTest {
     @Test
     @Ignore
     public void nominal() throws Exception {
-        TransformerFactoryFactory.init("net.sf.saxon.TransformerFactoryImpl");
+        File saxonConfiguration = new File(this.getClass().getResource("saxon-configuration.xml").getFile());
+        TransformerFactoryFactory.init("net.sf.saxon.TransformerFactoryImpl", saxonConfiguration);
         Element metadata = Xml.loadFile(this.getClass().getResource("xsl/process/input.xml"));
         Path styleSheetToTest = Paths.get(this.getClass().getResource("/index-fields/index.xsl").toURI());
         Element xmlDoc = Xml.transform(metadata, styleSheetToTest);

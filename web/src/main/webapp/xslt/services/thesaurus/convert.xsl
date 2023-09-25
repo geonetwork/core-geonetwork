@@ -23,9 +23,7 @@
   -->
 
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                xmlns:saxon="http://saxon.sf.net/"
-                version="2.0"
-                extension-element-prefixes="saxon"
+                version="3.0"
                 exclude-result-prefixes="#all">
 
   <xsl:output method="xml" encoding="UTF-8" indent="yes"/>
@@ -50,11 +48,11 @@
       <xsl:when test="$keywords">
         <xsl:for-each-group select="$keywords"
                             group-by="thesaurus/key">
-          <saxon:call-template name="{$tpl}"/>
+          <xsl:call-template name="{$tpl}"/>
         </xsl:for-each-group>
       </xsl:when>
       <xsl:otherwise>
-        <saxon:call-template name="{$tpl}"/>
+        <xsl:call-template name="{$tpl}"/>
       </xsl:otherwise>
     </xsl:choose>
 

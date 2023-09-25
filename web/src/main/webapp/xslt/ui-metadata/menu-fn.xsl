@@ -22,11 +22,11 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                xmlns:fn="http://www.w3.org/2005/xpath-functions"
                 xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
-                xmlns:saxon="http://saxon.sf.net/"
-                version="2.0"
-                extension-element-prefixes="saxon"
+                version="3.0"
                 exclude-result-prefixes="#all">
 
   <xsl:function name="gn-fn-metadata:check-condition" as="xs:boolean">
@@ -40,13 +40,11 @@
               to work in evaluate function. If root element eg. /gmd:MD_Metadata...
               then we prepend /.. if 'gui' context or a child node, we use current. -->
         <xsl:variable name="prefixPath"
-                      select="if (local-name($base) = 'gui'
-                              or count($base/ancestor::*) = 0)
-                               then '/' else '/../'"/>
-        <saxon:call-template name="{concat('evaluate-', $schema, '-boolean')}">
-          <xsl:with-param name="base" select="$base"/>
-          <xsl:with-param name="in" select="concat($prefixPath, $condition)"/>
-        </saxon:call-template>
+                      select="if (local-name($base) = 'gui' or count($base/ancestor::*) = 0)
+                              then '/' else '/../'"/>
+        <xsl:value-of select="fn:function-lookup(
+                                xs:QName('gn-fn-metadata:evaluate-' || $schema || '-boolean'), 2)
+                                ($base, concat($prefixPath, $condition))"/>
       </xsl:when>
       <xsl:otherwise>
         <xsl:value-of select="false()"/>

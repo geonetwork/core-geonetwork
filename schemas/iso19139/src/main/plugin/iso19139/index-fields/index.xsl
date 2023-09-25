@@ -23,6 +23,7 @@
   -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                xmlns:fn="http://www.w3.org/2005/xpath-functions"
                 xmlns:gmd="http://www.isotc211.org/2005/gmd"
                 xmlns:gmx="http://www.isotc211.org/2005/gmx"
                 xmlns:gmi="http://www.isotc211.org/2005/gmi"
@@ -31,25 +32,18 @@
                 xmlns:gml="http://www.opengis.net/gml/3.2"
                 xmlns:gml320="http://www.opengis.net/gml"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
+                xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
                 xmlns:gn-fn-index="http://geonetwork-opensource.org/xsl/functions/index"
                 xmlns:index="java:org.fao.geonet.kernel.search.EsSearchManager"
-                xmlns:util="java:org.fao.geonet.util.XslUtil"
-                xmlns:date-util="java:org.fao.geonet.utils.DateUtil"
+                xmlns:util="https://geonetwork-opensource.org/xsl-extension"
                 xmlns:daobs="http://daobs.org"
-                xmlns:saxon="http://saxon.sf.net/"
-                extension-element-prefixes="saxon"
                 exclude-result-prefixes="#all"
-                version="2.0">
+                version="3.0">
 
   <xsl:import href="fn.xsl"/>
   <xsl:import href="common/inspire-constant.xsl"/>
   <xsl:import href="common/index-utils.xsl"/>
 
-  <xsl:output name="default-serialize-mode"
-              indent="no"
-              omit-xml-declaration="yes"
-              encoding="utf-8"
-              escape-uri-attributes="yes"/>
 
   <xsl:param name="fastIndexMode" select="false()"/>
 
@@ -137,11 +131,6 @@
 
       <xsl:copy-of select="gn-fn-index:add-field('docType', 'metadata')"/>
 
-      <!-- Index the metadata document as XML -->
-      <document>
-        <!--<xsl:value-of select="saxon:serialize(., 'default-serialize-mode')"/>-->
-      </document>
-
       <xsl:copy-of select="gn-fn-index:add-field('metadataIdentifier', $identifier)"/>
 
       <xsl:for-each select="gmd:metadataStandardName">
@@ -172,7 +161,7 @@
       eg. 2017-02-08T13:18:03.138+00:02
       -->
       <xsl:for-each select="(gmd:dateStamp/*[gn-fn-index:is-isoDate(.)])[1]">
-        <dateStamp><xsl:value-of select="date-util:convertToISOZuluDateTime(normalize-space(.))"/></dateStamp>
+        <dateStamp><xsl:value-of select="util:convertToISOZuluDateTime(normalize-space(.))"/></dateStamp>
       </xsl:for-each>
 
 
@@ -280,7 +269,7 @@
 
             <xsl:variable name="zuluDateTime" as="xs:string?">
               <xsl:if test="gn-fn-index:is-isoDate($date)">
-                <xsl:value-of select="date-util:convertToISOZuluDateTime(normalize-space($date))"/>
+                <xsl:value-of select="util:convertToISOZuluDateTime(normalize-space($date))"/>
               </xsl:if>
             </xsl:variable>
 
@@ -311,7 +300,7 @@
                           select="string(gmd:date[1]/gco:Date|gmd:date[1]/gco:DateTime)"/>
 
             <xsl:variable name="zuluDate"
-                          select="date-util:convertToISOZuluDateTime($date)"/>
+                          select="util:convertToISOZuluDateTime($date)"/>
             <xsl:if test="$zuluDate != ''">
               <resourceDate type="object">
                 {"type": "<xsl:value-of select="$dateType"/>", "date": "<xsl:value-of select="$zuluDate"/>"}
@@ -323,7 +312,7 @@
             <xsl:for-each-group select="gmd:date/gmd:CI_Date[gn-fn-index:is-isoDate(gmd:date/*/text())]/gmd:date/*/text()"
                                 group-by=".">
               <xsl:variable name="zuluDate"
-                            select="date-util:convertToISOZuluDateTime(.)"/>
+                            select="util:convertToISOZuluDateTime(.)"/>
               <xsl:if test="$zuluDate != ''">
                 <resourceTemporalDateRange type="object">{
                   "gte": "<xsl:value-of select="$zuluDate"/>",
@@ -421,7 +410,7 @@
             <xsl:for-each select="gco:CharacterString[. != '']|
                                 gmx:Anchor[. != '']">
               <xsl:variable name="inspireTheme" as="xs:string"
-                            select="index:analyzeField('synInspireThemes', text())"/>
+                            select="util:analyzeField('synInspireThemes', text())"/>
 
               <inspireTheme_syn>
                 <xsl:value-of select="text()"/>
@@ -445,17 +434,17 @@
                 <xsl:if test="$inspireTheme != ''">
                   <inspireAnnexForFirstTheme>
                     <xsl:value-of
-                      select="index:analyzeField('synInspireAnnexes', $inspireTheme)"/>
+                      select="util:analyzeField('synInspireAnnexes', $inspireTheme)"/>
                   </inspireAnnexForFirstTheme>
                 </xsl:if>
               </xsl:if>
               <xsl:if test="$inspireTheme != ''">
                 <inspireAnnex>
                   <xsl:value-of
-                    select="index:analyzeField('synInspireAnnexes', $inspireTheme)"/>
+                    select="util:analyzeField('synInspireAnnexes', $inspireTheme)"/>
                 </inspireAnnex>
                 <xsl:variable name="inspireThemeUri" as="xs:string"
-                              select="index:analyzeField('synInspireThemeUris', $inspireTheme)"/>
+                              select="util:analyzeField('synInspireThemeUris', $inspireTheme)"/>
                 <inspireThemeUri>
                   <xsl:value-of select="$inspireThemeUri"/>
                 </inspireThemeUri>
@@ -650,7 +639,7 @@
         <xsl:for-each select="*/gmd:EX_Extent/*/gmd:EX_BoundingPolygon/gmd:polygon">
           <xsl:variable name="geojson"
                         select="util:gmlToGeoJson(
-                                  saxon:serialize((gml:*|gml320:*), 'default-serialize-mode'),
+                                  fn:serialize((gml:*|gml320:*), map{'method':'xml', 'indent': true()}),
                                   true(), 5)"/>
           <xsl:choose>
             <xsl:when test="$geojson = ''"></xsl:when>
@@ -766,9 +755,9 @@
                                   |gml320:end/gml320:TimeInstant/gml320:timePosition"/>
 
             <xsl:variable name="zuluStartDate"
-                          select="date-util:convertToISOZuluDateTime($start)"/>
+                          select="util:convertToISOZuluDateTime($start)"/>
             <xsl:variable name="zuluEndDate"
-                          select="date-util:convertToISOZuluDateTime($end)"/>
+                          select="util:convertToISOZuluDateTime($end)"/>
 
             <xsl:choose>
               <xsl:when test="$zuluStartDate castable as xs:dateTime
@@ -830,7 +819,7 @@
           </serviceType>
           <xsl:if test="$inspireEnable = 'true'">
             <xsl:variable name="inspireServiceType" as="xs:string"
-                          select="index:analyzeField(
+                          select="util:analyzeField(
                                   'keepInspireServiceTypes', text())"/>
 
             <xsl:if test="$inspireServiceType != ''">
@@ -1210,7 +1199,7 @@
                       select="util:getTargetAssociatedResourcesAsNode(
                                         $identifier,
                                         gmd:parentIdentifier/*[text() != '']/text())"/>
-        <xsl:copy-of select="$recordsLinks//recordLink"/>
+<!-- TODO-SAXON       <xsl:copy-of select="$recordsLinks//recordLink"/>-->
       </xsl:if>
 
       <!-- Index more fields in this element -->

@@ -29,10 +29,10 @@
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
                 xmlns:gn="http://www.fao.org/geonetwork"
-                xmlns:xslutil="java:org.fao.geonet.util.XslUtil"
+                xmlns:xslutil="https://geonetwork-opensource.org/xsl-extension"
                 xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
                 xmlns:gn-fn-iso19139="http://geonetwork-opensource.org/xsl/functions/profiles/iso19139"
-                xmlns:java="java:org.fao.geonet.util.XslUtil"
+                xmlns:java="https://geonetwork-opensource.org/xsl-extension"
                 version="2.0"
                 exclude-result-prefixes="#all">
 
@@ -187,7 +187,7 @@
     <xsl:choose>
       <xsl:when test="$thesaurusConfig">
         <!-- If defined dc:title with xml:lang use it for thesaurus label in the editor -->
-        <xsl:variable name="uiLang2code" select="xslutil:twoCharLangCode($lang, 'en')" />
+        <xsl:variable name="uiLang2code" select="xslutil:twoCharLangCode($lang)" />
 
         <xsl:variable name="thesaurusTitleTranslated" select="$listOfThesaurus/thesaurus[title=$thesaurusTitle]/multilingualTitles/multilingualTitle[lang=$uiLang2code]/title" />
         <xsl:variable name="thesaurusTitleForEditor" select="if (string($thesaurusTitleTranslated)) then $thesaurusTitleTranslated else $thesaurusTitle" />

@@ -5,7 +5,7 @@
                 xmlns:ows-context="http://www.opengis.net/ows-context"
                 xmlns:ows="http://www.opengis.net/ows"
                 xmlns:gco="http://www.isotc211.org/2005/gco"
-                xmlns:java="java:org.fao.geonet.util.XslUtil"
+                xmlns:java="https://geonetwork-opensource.org/xsl-extension"
                 version="2.0"
                 exclude-result-prefixes="#all">
 

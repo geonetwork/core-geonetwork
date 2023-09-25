@@ -30,28 +30,17 @@ import net.sf.json.JSON;
 import net.sf.json.xml.XMLSerializer;
 import net.sf.saxon.Configuration;
 import net.sf.saxon.Controller;
-import net.sf.saxon.FeatureKeys;
-import org.apache.commons.io.IOUtils;
+import net.sf.saxon.TransformerFactoryImpl;
+import net.sf.saxon.lib.FeatureKeys;
 import org.apache.fop.apps.Fop;
 import org.apache.fop.apps.FopFactory;
 import org.apache.fop.apps.MimeConstants;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.xml.resolver.tools.CatalogResolver;
 import org.fao.geonet.exceptions.XSDValidationErrorEx;
 import org.fao.geonet.utils.nio.NioPathAwareEntityResolver;
 import org.fao.geonet.utils.nio.NioPathHolder;
 import org.fao.geonet.utils.nio.PathStreamSource;
-import org.jdom.Attribute;
-import org.jdom.Content;
-import org.jdom.DocType;
-import org.jdom.Document;
-import org.jdom.Element;
-import org.jdom.JDOMException;
-import org.jdom.Namespace;
-import org.jdom.Text;
+import org.jdom.*;
 import org.jdom.filter.ElementFilter;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
@@ -69,27 +58,14 @@ import org.xml.sax.SAXException;
 import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
-import javax.xml.transform.Result;
-import javax.xml.transform.Source;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.URIResolver;
+import javax.xml.transform.*;
 import javax.xml.transform.sax.SAXResult;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.ValidatorHandler;
-import java.io.BufferedOutputStream;
-import java.io.ByteArrayInputStream;
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.PrintStream;
-import java.io.StringReader;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -100,25 +76,15 @@ import java.nio.charset.CharacterCodingException;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CharsetEncoder;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystemNotFoundException;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static org.fao.geonet.Constants.ENCODING;
-
-//=============================================================================
 
 /**
  * General class of useful static methods.
@@ -458,13 +424,13 @@ public final class Xml {
             transFact.setAttribute(FeatureKeys.VERSION_WARNING, false);
             transFact.setAttribute(FeatureKeys.LINE_NUMBERING, true);
             transFact.setAttribute(FeatureKeys.PRE_EVALUATE_DOC_FUNCTION, true);
-            transFact.setAttribute(FeatureKeys.RECOVERY_POLICY, Configuration.RECOVER_SILENTLY);
             // Add the following to get timing info on xslt transformations
             //transFact.setAttribute(FeatureKeys.TIMING,true);
         } catch (IllegalArgumentException e) {
             Log.warning(Log.ENGINE, "WARNING: transformerfactory doesnt like saxon attributes!", e);
         } finally {
             Transformer t = transFact.newTransformer(xslt);
+
             if (xmlParam != null) {
                 t.setParameter(xmlParamName, new StreamSource(new StringReader(xmlParam)));
             }
@@ -498,35 +464,23 @@ public final class Xml {
             // Dear old saxon likes to yell loudly about each and every XSLT 1.0
             // stylesheet so switch it off but trap any exceptions because this
             // code is run on transformers other than saxon
-            TransformerFactory transFact = TransformerFactoryFactory.getTransformerFactory();
+            TransformerFactoryImpl transFact = TransformerFactoryFactory.getTransformerFactory();
             transFact.setURIResolver(new JeevesURIResolver());
-            try {
-                transFact.setAttribute(FeatureKeys.VERSION_WARNING, false);
-                transFact.setAttribute(FeatureKeys.LINE_NUMBERING, true);
-                transFact.setAttribute(FeatureKeys.PRE_EVALUATE_DOC_FUNCTION, false);
-                transFact.setAttribute(FeatureKeys.RECOVERY_POLICY, Configuration.RECOVER_SILENTLY);
 
-                // Add the following to get timing info on xslt transformations
-                //transFact.setAttribute(FeatureKeys.TIMING,true);
-            } catch (IllegalArgumentException e) {
-                Log.warning(Log.ENGINE, "WARNING: transformerfactory doesnt like saxon attributes!", e);
-            } finally {
-                transFact.setURIResolver(new JeevesURIResolver());
-                Transformer t = transFact.newTransformer(srcSheet);
-                if (params != null) {
-                    for (Map.Entry<String, Object> param : params.entrySet()) {
-                        t.setParameter(param.getKey(), param.getValue());
-                    }
-
-                if (params.containsKey("geonet-force-xml")) {
-                    ((Controller) t).setOutputProperty("indent", "yes");
-                    ((Controller) t).setOutputProperty("method", "xml");
-                    ((Controller) t).setOutputProperty("{http://saxon.sf.net/}indent-spaces", "3");
+            Transformer t = transFact.newTransformer(srcSheet);
+            if (params != null) {
+                for (Map.Entry<String, Object> param : params.entrySet()) {
+                    t.setParameter(param.getKey(), param.getValue());
                 }
 
-                }
-                t.transform(srcXml, result);
+//                if (params.containsKey("geonet-force-xml")) {
+//                    ((Controller) t).setOutputProperty("indent", "yes");
+//                    ((Controller) t).setOutputProperty("method", "xml");
+//                    ((Controller) t).setOutputProperty("{http://saxon.sf.net/}indent-spaces", "3");
+//                }
+
             }
+            t.transform(srcXml, result);
         }
     }
 
@@ -573,7 +527,6 @@ public final class Xml {
             try {
                 factory.setAttribute(FeatureKeys.VERSION_WARNING, false);
                 factory.setAttribute(FeatureKeys.LINE_NUMBERING, true);
-                factory.setAttribute(FeatureKeys.RECOVERY_POLICY, Configuration.RECOVER_SILENTLY);
             } catch (IllegalArgumentException e) {
                 Log.warning(Log.ENGINE, "WARNING: transformerfactory doesnt like saxon attributes!", e);
             } finally {

@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:wmc="http://www.opengis.net/context"
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:wmc="http://www.opengis.net/context"
                 xmlns:wmc11="http://www.opengeospatial.net/context"
                 xmlns:ows-context="http://www.opengis.net/ows-context"
                 xmlns:ows="http://www.opengis.net/ows"
                 xmlns:gmd="http://www.isotc211.org/2005/gmd"
                 xmlns:gco="http://www.isotc211.org/2005/gco"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
-                xmlns:java="java:org.fao.geonet.util.XslUtil"
-                xmlns:saxon="http://saxon.sf.net/"
-                version="2.0"
+                xmlns:fn="http://www.w3.org/2005/xpath-functions"
+                xmlns:java="https://geonetwork-opensource.org/xsl-extension"
+                version="3.0"
                 exclude-result-prefixes="#all">
 
   <xsl:param name="lang">eng</xsl:param>
@@ -315,7 +316,7 @@
     <xsl:variable name="fromEpsg" select="if (@crs) then string(@crs) else string(./@SRS)"/>
     <xsl:variable name="reprojected"
                   select="java:reprojectCoords($minx,$miny,$maxx,$maxy,$fromEpsg)"/>
-    <xsl:copy-of select="saxon:parse($reprojected)"/>
+    <xsl:copy-of select="fn:parse-xml($reprojected)"/>
   </xsl:template>
 
 </xsl:stylesheet>

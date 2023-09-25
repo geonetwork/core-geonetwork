@@ -9,7 +9,7 @@
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 xmlns:gn="http://www.fao.org/geonetwork"
                 xmlns:gn-fn-iso19115-3.2018="http://geonetwork-opensource.org/xsl/functions/profiles/iso19115-3.2018"
-                exclude-result-prefixes="#all" version="2.0">
+                exclude-result-prefixes="#all" version="3.0">
 
   <xsl:import href="../layout/utility-fn.xsl"/>
 

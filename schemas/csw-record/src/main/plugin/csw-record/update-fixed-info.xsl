@@ -27,7 +27,7 @@
                 xmlns:dct="http://purl.org/dc/terms/"
                 xmlns:ows="http://www.opengis.net/ows"
                 xmlns:csw="http://www.opengis.net/cat/csw/2.0.2"
-                version="1.0">
+                version="3.0">
 
   <!-- ================================================================= -->
 

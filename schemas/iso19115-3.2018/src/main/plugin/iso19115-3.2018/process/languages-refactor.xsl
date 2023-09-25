@@ -6,7 +6,7 @@
   xmlns:lan="http://standards.iso.org/iso/19115/-3/lan/1.0"
   xmlns:gcx="http://standards.iso.org/iso/19115/-3/gcx/1.0"
   xmlns:gmd="http://www.isotc211.org/2005/gmd"
-  xmlns:java="java:org.fao.geonet.util.XslUtil"
+  xmlns:java="https://geonetwork-opensource.org/xsl-extension"
   xmlns:xs="http://www.w3.org/2001/XMLSchema"
   xmlns:gn="http://www.fao.org/geonetwork"
   exclude-result-prefixes="#all">

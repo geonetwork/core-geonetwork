@@ -39,7 +39,7 @@ https://github.com/geonetwork/core-geonetwork/pull/3399
                 xmlns:geonet="http://www.fao.org/geonetwork"
                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                 exclude-result-prefixes="#all"
-                version="2.0">
+                version="3.0">
 
   <xsl:output indent="yes"/>
 
@@ -90,7 +90,7 @@ https://github.com/geonetwork/core-geonetwork/pull/3399
                   select="gco:CharacterString"/>
     <xsl:variable name="themeInThesaurus"
                   select="$inspire-themes[skos:prefLabel = $theme]"/>
-    
+
     <xsl:choose>
       <xsl:when test="$theme != '' and
                       $themeInThesaurus">

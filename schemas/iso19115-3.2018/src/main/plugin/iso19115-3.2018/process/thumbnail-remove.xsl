@@ -3,10 +3,10 @@
   xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0"
   xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0"
   xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
-  xmlns:gn="http://www.fao.org/geonetwork" exclude-result-prefixes="#all" version="2.0">
+  xmlns:gn="http://www.fao.org/geonetwork" exclude-result-prefixes="#all" version="3.0">
 
-  <!-- 
-      Usage: 
+  <!--
+      Usage:
         thumbnail-from-url-remove?thumbnail_url=http://geonetwork.org/thumbnails/image.png
     -->
   <xsl:param name="thumbnail_url"/>

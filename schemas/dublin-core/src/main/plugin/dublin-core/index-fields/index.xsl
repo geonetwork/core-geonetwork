@@ -28,22 +28,13 @@
                 xmlns:xlink="http://www.w3.org/1999/xlink"
                 xmlns:gn-fn-index="http://geonetwork-opensource.org/xsl/functions/index"
                 xmlns:daobs="http://daobs.org"
-                xmlns:saxon="http://saxon.sf.net/"
-                xmlns:util="java:org.fao.geonet.util.XslUtil"
-                xmlns:date-util="java:org.fao.geonet.utils.DateUtil"
-                extension-element-prefixes="saxon"
+                xmlns:util="https://geonetwork-opensource.org/xsl-extension"
                 exclude-result-prefixes="#all"
-                version="2.0">
+                version="3.0">
 
   <xsl:import href="common/index-utils.xsl"/>
 
   <xsl:output method="xml" indent="yes"/>
-
-  <xsl:output name="default-serialize-mode"
-              indent="no"
-              omit-xml-declaration="yes"
-              encoding="utf-8"
-              escape-uri-attributes="yes"/>
 
   <xsl:variable name="dateFormat" as="xs:string"
                 select="'[Y0001]-[M01]-[D01]T[H01]:[m01]:[s01][ZN]'"/>
@@ -87,12 +78,7 @@
     <doc>
       <xsl:copy-of select="gn-fn-index:add-field('docType', 'metadata')"/>
 
-      <!-- Index the metadata document as XML -->
-      <document>
-        <!--<xsl:value-of select="saxon:serialize(., 'default-serialize-mode')"/>-->
-      </document>
       <xsl:copy-of select="gn-fn-index:add-field('metadataIdentifier', $identifier)"/>
-
 
       <!-- Since GN sets the timezone in system/server/timeZone setting as Java system default
         timezone we can rely on XSLT functions to get current date in the right timezone -->
@@ -119,7 +105,7 @@
       <xsl:for-each select="dct:created[. != '']">
 
         <xsl:variable name="creationDate"
-                      select="date-util:convertToISOZuluDateTime(string(current()))"/>
+                      select="util:convertToISOZuluDateTime(string(current()))"/>
         <xsl:element name="{$creationDateType}DateForResource">
           <xsl:value-of select="$creationDate"/>
         </xsl:element>
@@ -129,14 +115,14 @@
         <xsl:element name="{$creationDateType}MonthForResource">
           <xsl:value-of select="substring($creationDate, 0, 8)"/>
         </xsl:element>
-        <!--creationDateForResource><xsl:value-of select="date-util:convertToISOZuluDateTime(string(.))"/></creationDateForResource-->
+        <!--creationDateForResource><xsl:value-of select="util:convertToISOZuluDateTime(string(.))"/></creationDateForResource-->
       </xsl:for-each>
 
       <xsl:for-each select="dct:modified[. != '']">
-        <dateStamp><xsl:value-of select="date-util:convertToISOZuluDateTime(normalize-space(.))"/></dateStamp>
+        <dateStamp><xsl:value-of select="util:convertToISOZuluDateTime(normalize-space(.))"/></dateStamp>
 
         <xsl:variable name="revisionDate"
-                      select="date-util:convertToISOZuluDateTime(string(current()))"/>
+                      select="util:convertToISOZuluDateTime(string(current()))"/>
         <xsl:element name="{$revisionDateType}DateForResource">
           <xsl:value-of select="$revisionDate"/>
         </xsl:element>
@@ -146,7 +132,7 @@
         <xsl:element name="{$revisionDateType}MonthForResource">
           <xsl:value-of select="substring($revisionDate, 0, 8)"/>
         </xsl:element>
-        <!--revisionDateForResource><xsl:value-of select="date-util:convertToISOZuluDateTime(string(.))"/></revisionDateForResource-->
+        <!--revisionDateForResource><xsl:value-of select="util:convertToISOZuluDateTime(string(.))"/></revisionDateForResource-->
       </xsl:for-each>
 
       <xsl:for-each select="dc:format">
@@ -244,13 +230,6 @@
       <xsl:for-each select="$overviews">
         <overview type="object">{
           "url":"<xsl:value-of select="current()"/>"
-          <xsl:if test="$isStoringOverviewInIndex">
-            <xsl:variable name="data"
-                          select="util:buildDataUrl(., 140)"/>
-            <xsl:if test="$data != ''">,
-              "data": "<xsl:value-of select="$data"/>"
-            </xsl:if>
-          </xsl:if>
           }</overview>
       </xsl:for-each>
 

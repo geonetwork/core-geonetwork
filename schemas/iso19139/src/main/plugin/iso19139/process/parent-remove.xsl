@@ -28,7 +28,7 @@ Stylesheet used to remove a reference to a parent record.
 <xsl:stylesheet xmlns:geonet="http://www.fao.org/geonetwork"
                 xmlns:gmd="http://www.isotc211.org/2005/gmd"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                version="2.0">
+                version="3.0">
 
   <!-- Do a copy of every nodes and attributes -->
   <xsl:template match="@*|node()">

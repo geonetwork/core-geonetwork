@@ -28,7 +28,7 @@
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 xmlns:gn-fn-index="http://geonetwork-opensource.org/xsl/functions/index"
-                xmlns:util="java:org.fao.geonet.util.XslUtil"
+                xmlns:util="https://geonetwork-opensource.org/xsl-extension"
                 version="2.0"
 >
 
@@ -101,6 +101,9 @@
       }</resourceTitleObject>
 
     <xsl:copy-of select="gn-fn-index:add-field('Org', $org)"/>
+
+    <any type="object">{"common": "<xsl:value-of
+      select="gn-fn-index:json-escape(normalize-space(.))"/>"}</any>
 
     <xsl:for-each
       select="gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress/gco:CharacterString">

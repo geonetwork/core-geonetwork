@@ -22,20 +22,20 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:gmd="http://www.isotc211.org/2005/gmd"
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:fn="http://www.w3.org/2005/xpath-functions"
+                xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                xmlns:gmd="http://www.isotc211.org/2005/gmd"
                 xmlns:gts="http://www.isotc211.org/2005/gts"
                 xmlns:gco="http://www.isotc211.org/2005/gco"
                 xmlns:gmx="http://www.isotc211.org/2005/gmx"
                 xmlns:gml="http://www.opengis.net/gml/3.2"
                 xmlns:gml320="http://www.opengis.net/gml"
-                xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 xmlns:gn="http://www.fao.org/geonetwork"
                 xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
-                xmlns:java-xsl-util="java:org.fao.geonet.util.XslUtil"
-                xmlns:saxon="http://saxon.sf.net/"
+                xmlns:java-xsl-util="https://geonetwork-opensource.org/xsl-extension"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
                 version="2.0"
-                extension-element-prefixes="saxon"
                 exclude-result-prefixes="#all">
 
   <xsl:include href="layout-custom-fields-keywords.xsl"/>
@@ -131,8 +131,8 @@
         </div>
 
         <textarea id="_{$elementRef}_config" class="hidden">
-          <xsl:copy-of select="java-xsl-util:xmlToJson(
-              saxon:serialize($helper, 'default-serialize-mode'))"/>
+<!--          <xsl:copy-of select="java-xsl-util:xmlToJson(-->
+<!--              fn:serialize($helper, map{'method':'xml', 'indent': true()}))"/> TODO-SAXON -->
         </textarea>
       </div>
       <div class="col-sm-1 col-xs-1 gn-control">
@@ -295,7 +295,7 @@
         <xsl:variable name="readonly" select="ancestor-or-self::node()[@xlink:href] != ''"/>
 
         <br />
-        <gn-bounding-polygon polygon-xml="{saxon:serialize($geometry, 'default-serialize-mode')}"
+        <gn-bounding-polygon polygon-xml="{fn:serialize($geometry, map{'method':'xml', 'indent': true()})}"
                              identifier="{$identifier}"
                              read-only="{$readonly}">
         </gn-bounding-polygon>
