@@ -202,14 +202,23 @@ public class SchemaManager {
     /**
      * initialize and configure schema manager. should only be on startup.
      *
-     * @param basePath         the web app base path
-     * @param schemaPluginsCat the schema catalogue file
-     * @param sPDir            the schema plugin directory
-     * @param defaultLang      the default language (taken from context)
-     * @param defaultSchema    the default schema (taken from config.xml)
+     * @param basePath               the web app base path
+     * @param resourcePath           the resource folder (eg. images, logo)
+     * @param schemaPublicationDir   the schema publication folder (ie. schema plugin XSDs)
+     * @param schemaPluginsCat       the schema catalogue file (ie. schemaplugin-uri-catalog.xml)
+     * @param sPDir                  the schema plugin directory
+     * @param defaultLang            the default language (taken from context)
+     * @param defaultSchema          the default schema (taken from config.xml)
      */
-    public void configure(ApplicationContext applicationContext, Path basePath, Path resourcePath, Path schemaPublicationDir, Path schemaPluginsCat,
-                          Path sPDir, String defaultLang, String defaultSchema, boolean createOrUpdateSchemaCatalog) throws Exception {
+    public void configure(ApplicationContext applicationContext,
+                          Path basePath,
+                          Path resourcePath,
+                          Path schemaPublicationDir,
+                          Path schemaPluginsCat,
+                          Path sPDir,
+                          String defaultLang,
+                          String defaultSchema,
+                          boolean createOrUpdateSchemaCatalog) throws Exception {
 
         hmSchemas.clear();
 
