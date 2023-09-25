@@ -14,7 +14,9 @@
           gn-metadata-open="record"
           data-app-url="catalog.search"
         >
-          <i class="fa {{icon}}" />
+          <i
+            class="fa fa-fw {{icon}} gn-icon-association-{{record.properties.associationType}} gn-icon-initiative-{{record.properties.initiativeType}}"
+          />
           {{record.resourceTitle}}
         </a>
         <a
