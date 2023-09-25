@@ -4,13 +4,8 @@
 @import "../lib/style/bootstrap/less/variables.less";
 
 @font-face {
-  font-family: 'gn-doi';
-  src: url('../catalog/style/doi/gn-doi.eot');
-  src: url('../catalog/style/doi/gn-doi.eot') format('embedded-opentype'),
-  url('../catalog/style/doi/gn-doi.woff2') format('woff2'),
-  url('../catalog/style/doi/gn-doi.woff') format('woff'),
-  url('../catalog/style/doi/gn-doi.ttf') format('truetype'),
-  url('../catalog/style/doi/gn-doi.svg') format('svg');
+  font-family: "gn-doi";
+  src: url("../catalog/style/doi/gn.ttf") format("truetype");
 }
 
 /* used to display icons with resource types - iso19139 hierarchylevel */
@@ -255,10 +250,9 @@
   content: @fa-var-file-zipper;
 }
 
-
 .gn-icon-doi {
   display: inline-block;
-  font: normal normal normal 1em/1 'gn-doi';
+  font: normal normal normal 1em/1 "gn-doi";
   color: inherit;
   flex-shrink: 0;
   -webkit-font-smoothing: antialiased;
