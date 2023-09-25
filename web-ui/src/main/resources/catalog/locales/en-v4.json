@@ -410,5 +410,8 @@
   "text/xml; subtype=gml/2.1.2": "GML 2.1.2",
   "text/xml; subtype=gml/3.1.1": "GML 3.1.1",
   "text/xml; subtype=gml/3.2": "GML 3.2",
-  "lastCreatedRecords": "Last created records"
+  "lastCreatedRecords": "Last created records",
+  "associationType": "Association type",
+  "initiativeType": "Initiative type",
+  "associatedTo": "Associated "
 }
