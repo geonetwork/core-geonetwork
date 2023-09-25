@@ -38,8 +38,7 @@ public class RefreshHarvesterJob implements Job {
                 harvestManager.refreshHarvesters();
             }
         } catch (SchedulerException e) {
-            Log.error(Geonet.HARVEST_MAN, e.getMessage());
-            e.printStackTrace();
+            Log.error(Geonet.HARVEST_MAN, e.getMessage(), e);
         }
     }
 }
