@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Copyright (C) 2001-2020 Food and Agriculture Organization of the
+  ~ Copyright (C) 2001-2023 Food and Agriculture Organization of the
   ~ United Nations (FAO-UN), United Nations World Food Programme (WFP)
   ~ and United Nations Environment Programme (UNEP)
   ~
@@ -97,11 +97,6 @@
                   select="gmd:fileIdentifier/gco:CharacterString[. != '']"/>
 
 
-    <!-- In ISO19139 consider datestamp element the last update date
-    even if the standard says creation date. Most of the catalog implementations
-    update the datestamp on change. -->
-    <xsl:variable name="lastRevisionDate" as="xs:string?"
-                  select="gmd:dateStamp[1]/gco:DateTime[gn-fn-index:is-isoDate(.)]"/>
 
     <xsl:variable name="mainLanguageCode" as="xs:string?"
                   select="gmd:language[1]/gmd:LanguageCode/
@@ -164,15 +159,19 @@
 
       <!-- Indexing record information -->
       <!-- # Date -->
-      <!-- TODO improve date formatting maybe using Joda parser
-      Select first one because some records have 2 dates !
+      <!-- Select first one because some records have 2 dates !
       eg. fr-784237539-bdref20100101-0105
 
       Remove millisec and timezone until not supported
       eg. 2017-02-08T13:18:03.138+00:02
       -->
-      <xsl:for-each select="(gmd:dateStamp/*[gn-fn-index:is-isoDate(.)])[1]">
-        <dateStamp><xsl:value-of select="date-util:convertToISOZuluDateTime(normalize-space(.))"/></dateStamp>
+      <xsl:for-each select="(gmd:dateStamp/*[string(date-util:convertToISOZuluDateTime(.)) != ''])[1]">
+        <xsl:variable name="datestamp" select="date-util:convertToISOZuluDateTime(normalize-space(.))" />
+        <dateStamp><xsl:value-of select="$datestamp"/></dateStamp>
+      </xsl:for-each>
+      <!-- report wrong dates -->
+      <xsl:for-each select="(gmd:dateStamp/*[string(date-util:convertToISOZuluDateTime(.)) = ''])">
+        <indexingErrorMsg>Warning / Date stamp with value '<xsl:value-of select="normalize-space(.)"/>' was not a valid date format.</indexingErrorMsg>
       </xsl:for-each>
 
 
@@ -271,18 +270,14 @@
           <xsl:copy-of select="gn-fn-index:add-multilingual-field('resourceTitle', gmd:title, $allLanguages)"/>
           <xsl:copy-of select="gn-fn-index:add-multilingual-field('resourceAltTitle', gmd:alternateTitle, $allLanguages)"/>
 
-          <xsl:for-each select="gmd:date/gmd:CI_Date[gn-fn-index:is-isoDate(gmd:date/*/text())]">
+          <xsl:for-each select="gmd:date/gmd:CI_Date[string(date-util:convertToISOZuluDateTime(gmd:date/*/text())) != '']">
             <xsl:variable name="dateType"
                           select="gmd:dateType[1]/gmd:CI_DateTypeCode/@codeListValue"
                           as="xs:string?"/>
             <xsl:variable name="date"
                           select="string(gmd:date[1]/gco:Date|gmd:date[1]/gco:DateTime)"/>
 
-            <xsl:variable name="zuluDateTime" as="xs:string?">
-              <xsl:if test="gn-fn-index:is-isoDate($date)">
-                <xsl:value-of select="date-util:convertToISOZuluDateTime(normalize-space($date))"/>
-              </xsl:if>
-            </xsl:variable>
+            <xsl:variable name="zuluDateTime" as="xs:string?" select="string(date-util:convertToISOZuluDateTime(normalize-space($date)))" />
 
             <xsl:choose>
               <xsl:when test="$zuluDateTime != ''">
@@ -303,7 +298,7 @@
           </xsl:for-each>
 
 
-          <xsl:for-each select="gmd:date/gmd:CI_Date[gn-fn-index:is-isoDate(gmd:date/*/text())]">
+          <xsl:for-each select="gmd:date/gmd:CI_Date[string(date-util:convertToISOZuluDateTime(gmd:date/*/text())) != '']">
             <xsl:variable name="dateType"
                           select="gmd:dateType[1]/gmd:CI_DateTypeCode/@codeListValue"
                           as="xs:string?"/>
@@ -311,26 +306,54 @@
                           select="string(gmd:date[1]/gco:Date|gmd:date[1]/gco:DateTime)"/>
 
             <xsl:variable name="zuluDate"
-                          select="date-util:convertToISOZuluDateTime($date)"/>
-            <xsl:if test="$zuluDate != ''">
-              <resourceDate type="object">
-                {"type": "<xsl:value-of select="$dateType"/>", "date": "<xsl:value-of select="$zuluDate"/>"}
-              </resourceDate>
-            </xsl:if>
+                          select="normalize-space(date-util:convertToISOZuluDateTime($date))"/>
+
+            <xsl:choose>
+              <xsl:when test="$zuluDate != ''">
+                <resourceDate type="object">
+                  {"type": "<xsl:value-of select="$dateType"/>", "date": "<xsl:value-of select="$zuluDate"/>"}
+                </resourceDate>
+              </xsl:when>
+              <xsl:otherwise>
+                <indexingErrorMsg>Warning / Date <xsl:value-of select="$dateType"/> with value '<xsl:value-of select="$date"/>' was not a valid date format.</indexingErrorMsg>
+              </xsl:otherwise>
+            </xsl:choose>
+          </xsl:for-each>
+
+          <!-- report wrong dates -->
+          <xsl:for-each select="gmd:date/gmd:CI_Date[string(date-util:convertToISOZuluDateTime(gmd:date/*/text())) = '']">
+            <xsl:variable name="dateType"
+                          select="gmd:dateType[1]/gmd:CI_DateTypeCode/@codeListValue"
+                          as="xs:string?"/>
+            <xsl:variable name="date"
+                          select="string(gmd:date[1]/gco:Date|gmd:date[1]/gco:DateTime)"/>
+            <indexingErrorMsg>Warning / Date <xsl:value-of select="$dateType"/> with value '<xsl:value-of select="$date"/>' was not a valid date format.</indexingErrorMsg>
           </xsl:for-each>
 
           <xsl:if test="$useDateAsTemporalExtent">
-            <xsl:for-each-group select="gmd:date/gmd:CI_Date[gn-fn-index:is-isoDate(gmd:date/*/text())]/gmd:date/*/text()"
+            <xsl:for-each-group select="gmd:date/gmd:CI_Date[string(date-util:convertToISOZuluDateTime(gmd:date/*/text())) != '']/gmd:date/*/text()"
                                 group-by=".">
               <xsl:variable name="zuluDate"
-                            select="date-util:convertToISOZuluDateTime(.)"/>
-              <xsl:if test="$zuluDate != ''">
-                <resourceTemporalDateRange type="object">{
-                  "gte": "<xsl:value-of select="$zuluDate"/>",
-                  "lte": "<xsl:value-of select="$zuluDate"/>"
-                  }</resourceTemporalDateRange>
-              </xsl:if>
+                            select="normalize-space(date-util:convertToISOZuluDateTime(.))"/>
+
+              <xsl:choose>
+                <xsl:when test="$zuluDate != ''">
+                  <resourceTemporalDateRange type="object">{
+                    "gte": "<xsl:value-of select="$zuluDate"/>",
+                    "lte": "<xsl:value-of select="$zuluDate"/>"
+                    }</resourceTemporalDateRange>
+                </xsl:when>
+                <xsl:otherwise>
+                  <indexingErrorMsg>Warning / Date with value '<xsl:value-of select="."/>' was not a valid date format. Resource temporal date range not indexed.</indexingErrorMsg>
+                </xsl:otherwise>
+              </xsl:choose>
             </xsl:for-each-group>
+            <!-- report wrong dates -->
+            <xsl:for-each-group select="gmd:date/gmd:CI_Date[string(date-util:convertToISOZuluDateTime(gmd:date/*/text())) = '']/gmd:date/*/text()"
+                                group-by=".">
+              <indexingErrorMsg>Warning / Date with value '<xsl:value-of select="."/>' was not a valid date format. Resource temporal date range not indexed.</indexingErrorMsg>
+            </xsl:for-each-group>
+
           </xsl:if>
 
           <xsl:for-each select="gmd:identifier/*[string(gmd:code/*)]">
@@ -787,7 +810,12 @@
                   }</resourceTemporalExtentDateRange>
               </xsl:when>
               <xsl:otherwise>
-                <indexingErrorMsg>Warning / Field resourceTemporalDateRange / Lower and upper bounds empty or not valid dates. Date range not indexed.</indexingErrorMsg>
+                <xsl:if test="normalize-space($zuluStartDate) = ''">
+                  <indexingErrorMsg>Warning / Field resourceTemporalDateRange / Lower bound empty or with wrong format. Lower range bound '<xsl:value-of select="$start"/>'. Date range not indexed.</indexingErrorMsg>
+                </xsl:if>
+                <xsl:if test="normalize-space($zuluEndDate) = '' and $end/@indeterminatePosition != 'now'">
+                  <indexingErrorMsg>Warning / Field resourceTemporalDateRange / Upper bound empty or with wrong format. Upper range bound '<xsl:value-of select="$end"/>'. Date range not indexed.</indexingErrorMsg>
+                </xsl:if>
               </xsl:otherwise>
             </xsl:choose>
 
@@ -900,7 +928,7 @@
         <xsl:if test="string($title)">
           <specificationConformance type="object">{
             "title": "<xsl:value-of select="gn-fn-index:json-escape($title)" />",
-            <xsl:if test="gn-fn-index:is-isoDate((*/gmd:specification/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date/gco:Date)[1])">
+            <xsl:if test="string(date-util:convertToISOZuluDateTime((*/gmd:specification/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date/gco:Date)[1])) != ''">
               "date": "<xsl:value-of select="(*/gmd:specification/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date/gco:Date)[1]" />",
             </xsl:if>
             <xsl:if test="*/gmd:specification/*/gmd:title/*/@xlink:href">
@@ -912,6 +940,11 @@
             "pass": "<xsl:value-of select="$pass" />"
             }
           </specificationConformance>
+          <!-- report date errors -->
+          <xsl:if test="normalize-space((*/gmd:specification/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date/gco:Date)[1]) != '' and
+            string(date-util:convertToISOZuluDateTime((*/gmd:specification/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date/gco:Date)[1])) = ''">
+            <indexingErrorMsg>Warning / Date with value '<xsl:value-of select="normalize-space((*/gmd:specification/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date/gco:Date)[1])"/>' was not a valid date format.</indexingErrorMsg>
+          </xsl:if>
         </xsl:if>
 
         <xsl:element name="conformTo_{replace(normalize-space($title), '[^a-zA-Z0-9]', '')}">

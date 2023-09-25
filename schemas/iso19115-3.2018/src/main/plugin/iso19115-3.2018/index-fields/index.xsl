@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Copyright (C) 2001-2020 Food and Agriculture Organization of the
+  ~ Copyright (C) 2001-2023 Food and Agriculture Organization of the
   ~ United Nations (FAO-UN), United Nations World Food Programme (WFP)
   ~ and United Nations Environment Programme (UNEP)
   ~
@@ -128,10 +128,6 @@
     <xsl:variable name="identifier" as="xs:string"
                   select="mdb:metadataIdentifier/mcc:MD_Identifier/mcc:code/gco:CharacterString[. != '']"/>
 
-    <xsl:variable name="lastRevisionDate" as="xs:string?"
-                  select="mdb:dateInfo/*[
-                              cit:dateType/*/@codeListValue = 'revision'
-                            ]/cit:date/gco:DateTime[gn-fn-index:is-isoDate(.)]"/>
 
     <xsl:variable name="mainLanguage" as="xs:string?"
                   select="mdb:defaultLocale/lan:PT_Locale/
@@ -205,12 +201,20 @@
       <!-- Indexing record information -->
       <!-- # Date -->
       <!-- Select first one because some records have 2 dates !
-      eg. fr-784237539-bdref20100101-0105
+      e.g. fr-784237539-bdref20100101-0105
       -->
       <xsl:for-each select="(mdb:dateInfo/
                               cit:CI_Date[cit:dateType/cit:CI_DateTypeCode/@codeListValue = 'revision']/
-                                cit:date/*[gn-fn-index:is-isoDate(.)])[1]">
-        <dateStamp><xsl:value-of select="date-util:convertToISOZuluDateTime(normalize-space(.))"/></dateStamp>
+                                cit:date/*[string(date-util:convertToISOZuluDateTime(.)) != ''])[1]">
+        <xsl:variable name="datestamp" select="date-util:convertToISOZuluDateTime(.)" />
+        <dateStamp><xsl:value-of select="$datestamp"/></dateStamp>
+      </xsl:for-each>
+
+      <!-- report invalid revision dates -->
+      <xsl:for-each select="mdb:dateInfo/
+                              cit:CI_Date[cit:dateType/cit:CI_DateTypeCode/@codeListValue = 'revision']/
+                                cit:date/*[string(date-util:convertToISOZuluDateTime(.)) = '']">
+        <indexingErrorMsg>Warning / Revision date with value '<xsl:value-of select="normalize-space(.)"/>' was not a valid date format.</indexingErrorMsg>
       </xsl:for-each>
 
 
@@ -314,17 +318,17 @@
           <xsl:copy-of select="gn-fn-index:add-multilingual-field('resourceAltTitle', cit:alternateTitle, $allLanguages)"/>
 
           <xsl:for-each select="cit:date/cit:CI_Date[
-                                        cit:date/*/text() != ''
-                                        and gn-fn-index:is-isoDate(cit:date/*/text())]">
+                                        string(date-util:convertToISOZuluDateTime(cit:date/*/text())) != '']">
             <xsl:variable name="dateType"
                           select="cit:dateType/cit:CI_DateTypeCode/@codeListValue"
                           as="xs:string?"/>
             <xsl:variable name="date"
                           select="string(cit:date/gco:Date|cit:date/gco:DateTime)"/>
 
-            <xsl:variable name="zuluDateTime" as="xs:string?">
-              <xsl:value-of select="date-util:convertToISOZuluDateTime(normalize-space($date))"/>
-            </xsl:variable>
+            <xsl:variable name="zuluDateTime"
+                          as="xs:string?"
+                          select="string(date-util:convertToISOZuluDateTime($date))" />
+
             <xsl:choose>
               <xsl:when test="$zuluDateTime != ''">
                 <xsl:element name="{$dateType}DateForResource">
@@ -342,36 +346,75 @@
               </xsl:otherwise>
             </xsl:choose>
           </xsl:for-each>
+          <!-- Report wrong dates -->
+          <xsl:for-each select="cit:date/cit:CI_Date[
+                                        string(date-util:convertToISOZuluDateTime(cit:date/*/text())) = '']">
+            <xsl:variable name="date"
+                          select="string(cit:date/gco:Date | cit:date/gco:DateTime)"/>
+            <xsl:variable name="dateType"
+                          select="cit:dateType/cit:CI_DateTypeCode/@codeListValue"
+                          as="xs:string?"/>
+            <indexingErrorMsg>Warning / Date <xsl:value-of select="$dateType"/> with value '<xsl:value-of select="$date"/>' was not a valid date format.</indexingErrorMsg>
 
-          <xsl:for-each select="cit:date/cit:CI_Date[gn-fn-index:is-isoDate(cit:date/*/text())]">
-              <xsl:variable name="dateType"
-                            select="cit:dateType/cit:CI_DateTypeCode/@codeListValue"
-                            as="xs:string?"/>
-              <xsl:variable name="date"
-                            select="string(cit:date/gco:Date|cit:date/gco:DateTime)"/>
+
+          </xsl:for-each>
+
+          <xsl:for-each select="cit:date/cit:CI_Date[string(date-util:convertToISOZuluDateTime(cit:date/*/text())) != '']">
+            <xsl:variable name="dateType"
+                          select="cit:dateType/cit:CI_DateTypeCode/@codeListValue"
+                          as="xs:string?"/>
+            <xsl:variable name="date"
+                          select="string(cit:date/gco:Date|cit:date/gco:DateTime)"/>
 
             <xsl:variable name="zuluDate"
-                          select="date-util:convertToISOZuluDateTime($date)"/>
-            <xsl:if test="$zuluDate != ''">
-              <resourceDate type="object">
-                {"type": "<xsl:value-of select="$dateType"/>", "date": "<xsl:value-of select="$zuluDate"/>"}
-              </resourceDate>
-            </xsl:if>
+                          select="normalize-space(date-util:convertToISOZuluDateTime($date))"/>
+
+            <xsl:choose>
+              <xsl:when test="$zuluDate != ''">
+                <resourceDate type="object">
+                  {"type": "<xsl:value-of select="$dateType"/>", "date": "<xsl:value-of select="$zuluDate"/>"}
+                </resourceDate>
+              </xsl:when>
+              <xsl:otherwise>
+                <indexingErrorMsg>Warning / Date of '<xsl:value-of select="$dateType" />' with value '<xsl:value-of select="$date"/>' was not a valid date format.</indexingErrorMsg>
+              </xsl:otherwise>
+            </xsl:choose>
+          </xsl:for-each>
+          <!-- report wrong dates -->
+          <xsl:for-each select="cit:date/cit:CI_Date[string(date-util:convertToISOZuluDateTime(cit:date/*/text())) = '']">
+            <xsl:variable name="date"
+                          select="string(cit:date/gco:Date|cit:date/gco:DateTime)"/>
+            <xsl:variable name="dateType"
+                          select="cit:dateType/cit:CI_DateTypeCode/@codeListValue"
+                          as="xs:string?"/>
+            <indexingErrorMsg>Warning / Date of '<xsl:value-of select="$dateType" />' with value '<xsl:value-of select="$date"/>' was not a valid date format.</indexingErrorMsg>
           </xsl:for-each>
 
 
+
           <xsl:if test="$useDateAsTemporalExtent">
-            <xsl:for-each-group select="cit:date/cit:CI_Date[gn-fn-index:is-isoDate(cit:date/*/text())]/cit:date/*/text()"
+            <xsl:for-each-group select="cit:date/cit:CI_Date[string(date-util:convertToISOZuluDateTime(cit:date/*/text())) != '']/cit:date/*/text()"
                                 group-by=".">
 
               <xsl:variable name="zuluDate"
-                            select="date-util:convertToISOZuluDateTime(.)"/>
-              <xsl:if test="$zuluDate != ''">
-                <resourceTemporalDateRange type="object">{
-                  "gte": "<xsl:value-of select="$zuluDate"/>",
-                  "lte": "<xsl:value-of select="$zuluDate"/>"
-                  }</resourceTemporalDateRange>
-              </xsl:if>
+                            select="normalize-space(date-util:convertToISOZuluDateTime(.))"/>
+
+              <xsl:choose>
+                <xsl:when test="$zuluDate != ''">
+                  <resourceTemporalDateRange type="object">{
+                    "gte": "<xsl:value-of select="$zuluDate"/>",
+                    "lte": "<xsl:value-of select="$zuluDate"/>"
+                    }</resourceTemporalDateRange>
+                </xsl:when>
+                <xsl:otherwise>
+                  <indexingErrorMsg>Warning / Date with value '<xsl:value-of select="."/>' was not a valid date format. Resource temporal date range not indexed.</indexingErrorMsg>
+                </xsl:otherwise>
+              </xsl:choose>
+            </xsl:for-each-group>
+            <!-- report wrong dates -->
+            <xsl:for-each-group select="cit:date/cit:CI_Date[string(date-util:convertToISOZuluDateTime(cit:date/*/text())) != '']/cit:date/*/text()"
+                                group-by=".">
+              <indexingErrorMsg>Warning / Date with value '<xsl:value-of select="."/>' was not a valid date format. Resource temporal date range not indexed.</indexingErrorMsg>
             </xsl:for-each-group>
           </xsl:if>
 
@@ -819,9 +862,9 @@
 
 
             <xsl:variable name="zuluStartDate"
-                          select="date-util:convertToISOZuluDateTime($start)"/>
+                          select="normalize-space(date-util:convertToISOZuluDateTime($start))"/>
             <xsl:variable name="zuluEndDate"
-                          select="date-util:convertToISOZuluDateTime($end)"/>
+                          select="normalize-space(date-util:convertToISOZuluDateTime($end))"/>
 
             <xsl:choose>
               <xsl:when test="$zuluStartDate != ''
@@ -837,10 +880,15 @@
                   <xsl:if test="$start &lt; $end and not($end/@indeterminatePosition = 'now')">
                     ,"lte": "<xsl:value-of select="$zuluEndDate"/>"
                   </xsl:if>
-                }</resourceTemporalExtentDateRange>
+                  }</resourceTemporalExtentDateRange>
               </xsl:when>
               <xsl:otherwise>
-                <indexingErrorMsg>Warning / Field resourceTemporalDateRange / Lower and upper bounds empty. Date range not indexed.</indexingErrorMsg>
+                <xsl:if test="$zuluStartDate = ''">
+                  <indexingErrorMsg>Warning / Field resourceTemporalDateRange / Lower bound empty or with wrong format. Lower range bound '<xsl:value-of select="$start"/>'. Date range not indexed.</indexingErrorMsg>
+                </xsl:if>
+                <xsl:if test="$zuluEndDate = '' and $end/@indeterminatePosition != 'now'">
+                  <indexingErrorMsg>Warning / Field resourceTemporalDateRange / Upper bound empty or with wrong format. Upper range bound '<xsl:value-of select="$end"/>'. Date range not indexed.</indexingErrorMsg>
+                </xsl:if>
               </xsl:otherwise>
             </xsl:choose>
 
@@ -955,7 +1003,7 @@
         <xsl:if test="string($title)">
           <specificationConformance type="object">{
             "title": "<xsl:value-of select="gn-fn-index:json-escape($title)" />",
-            <xsl:if test="gn-fn-index:is-isoDate((*/mdq:specification/cit:CI_Citation/cit:date/cit:CI_Date/cit:date/gco:Date)[1])">
+            <xsl:if test="string(date-util:convertToISOZuluDateTime((*/mdq:specification/cit:CI_Citation/cit:date/cit:CI_Date/cit:date/gco:Date)[1])) != ''">
               "date": "<xsl:value-of select="(*/mdq:specification/cit:CI_Citation/cit:date/cit:CI_Date/cit:date/gco:Date)[1]" />",
             </xsl:if>
             <xsl:if test="*/mdq:specification/*/cit:title/*/@xlink:href">
@@ -967,6 +1015,10 @@
             "pass": "<xsl:value-of select="$pass" />"
             }
           </specificationConformance>
+          <xsl:if test="normalize-space((*/mdq:specification/cit:CI_Citation/cit:date/cit:CI_Date/cit:date/gco:Date)[1]) != ''
+            and string(date-util:convertToISOZuluDateTime((*/mdq:specification/cit:CI_Citation/cit:date/cit:CI_Date/cit:date/gco:Date)[1])) = ''">
+            <indexingErrorMsg>Warning / Specification conformance date with value '<xsl:value-of select="(*/mdq:specification/cit:CI_Citation/cit:date/cit:CI_Date/cit:date/gco:Date)[1]"/>' was not a valid date format.</indexingErrorMsg>
+          </xsl:if>
         </xsl:if>
 
         <xsl:element name="conformTo_{gn-fn-index:build-field-name($title)}">
@@ -1435,9 +1487,9 @@
         ,"identifiers":[
         <xsl:for-each select="$identifiers">
           {
-            "code": "<xsl:value-of select="gn-fn-index:json-escape(mcc:code/(gco:CharacterString|gcx:Anchor))"/>",
-            "codeSpace": "<xsl:value-of select="(mcc:codeSpace/(gco:CharacterString|gcx:Anchor))[1]/normalize-space()"/>",
-            "link": "<xsl:value-of select="mcc:code/gcx:Anchor/@xlink:href"/>"
+          "code": "<xsl:value-of select="gn-fn-index:json-escape(mcc:code/(gco:CharacterString|gcx:Anchor))"/>",
+          "codeSpace": "<xsl:value-of select="(mcc:codeSpace/(gco:CharacterString|gcx:Anchor))[1]/normalize-space()"/>",
+          "link": "<xsl:value-of select="mcc:code/gcx:Anchor/@xlink:href"/>"
           }
           <xsl:if test="position() != last()">,</xsl:if>
         </xsl:for-each>

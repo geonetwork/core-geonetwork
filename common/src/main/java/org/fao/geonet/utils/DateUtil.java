@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2020 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2023 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -149,7 +149,7 @@ public class DateUtil {
             odt1 = idt.withZoneSameInstant(ZoneOffset.UTC);
             odt = idt.withZoneSameInstant(ZoneOffset.UTC).format(ISO_OFFSET_DATE_TIME_NANOSECONDS);
         } catch (Exception e) {
-            Log.error("geonetwork.domain",
+            Log.warning("geonetwork.domain",
                 String.format("Error parsing ISO DateTimes '%s'. Error is: %s",
                     dateTimeString, e.getMessage()), e);
             return DEFAULT_DATE_TIME;
