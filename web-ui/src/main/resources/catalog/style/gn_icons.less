@@ -3,6 +3,16 @@
 @import "../lib/style/font-awesome/less/_shims";
 @import "../lib/style/bootstrap/less/variables.less";
 
+@font-face {
+  font-family: 'gn-doi';
+  src: url('../catalog/style/doi/gn-doi.eot');
+  src: url('../catalog/style/doi/gn-doi.eot') format('embedded-opentype'),
+  url('../catalog/style/doi/gn-doi.woff2') format('woff2'),
+  url('../catalog/style/doi/gn-doi.woff') format('woff'),
+  url('../catalog/style/doi/gn-doi.ttf') format('truetype'),
+  url('../catalog/style/doi/gn-doi.svg') format('svg');
+}
+
 /* used to display icons with resource types - iso19139 hierarchylevel */
 .gn-icon-dataset:before,
 .gn-icon-datasets:before {
@@ -245,8 +255,18 @@
   content: @fa-var-file-zipper;
 }
 
+
+.gn-icon-doi {
+  display: inline-block;
+  font: normal normal normal 1em/1 'gn-doi';
+  color: inherit;
+  flex-shrink: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
 .gn-icon-doi:before {
-  content: @fa-var-info-circle;
+  content: "\ea01";
 }
 
 .gn-icon-parent:before {
