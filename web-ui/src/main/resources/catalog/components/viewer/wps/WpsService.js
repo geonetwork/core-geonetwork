@@ -240,19 +240,23 @@
           // when bbox is cleared value is still set to ',,,'
           if (input.boundingBoxData && data && data != ",,,") {
             var bbox = data.split(",");
-            
+
             var geomCrs = "EPSG:4326";
-            if (input.boundingBoxData._default &&
+            if (
+              input.boundingBoxData._default &&
               input.boundingBoxData._default.crs &&
-              input.boundingBoxData._default.crs !== geomCrs) {
+              input.boundingBoxData._default.crs !== geomCrs
+            ) {
               geomCrs = input.boundingBoxData._default.crs;
               try {
                 bbox = ol.proj.transformExtent(bbox, "EPSG:4326", geomCrs);
               } catch (e) {
-                console.warn("WPS | Failed to convert boundingBoxData to requested CRS " + geomCrs);
+                console.warn(
+                  "WPS | Failed to convert boundingBoxData to requested CRS " + geomCrs
+                );
               }
             }
-            
+
             request.value.dataInputs.input.push({
               identifier: {
                 value: input.identifier.value
