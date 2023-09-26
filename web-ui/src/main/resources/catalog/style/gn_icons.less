@@ -3,6 +3,11 @@
 @import "../lib/style/font-awesome/less/_shims";
 @import "../lib/style/bootstrap/less/variables.less";
 
+@font-face {
+  font-family: "geonetwork";
+  src: url("../catalog/style/gn.ttf") format("truetype");
+}
+
 /* used to display icons with resource types - iso19139 hierarchylevel */
 .gn-icon-dataset:before,
 .gn-icon-datasets:before {
@@ -245,8 +250,17 @@
   content: @fa-var-file-zipper;
 }
 
+.gn-icon-doi {
+  display: inline-block;
+  font: normal normal normal 1em/1 "geonetwork";
+  color: inherit;
+  flex-shrink: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
 .gn-icon-doi:before {
-  content: @fa-var-info-circle;
+  content: "\ea01";
 }
 
 .gn-icon-parent:before {
