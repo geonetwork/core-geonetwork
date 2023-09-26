@@ -151,6 +151,9 @@
           <protocol><xsl:value-of select="$docType/@protocol"/></protocol>
           <function><xsl:value-of select="$docType/@function"/></function>
           <type><xsl:value-of select="$docType/@type"/></type>
+          <xsl:if test="$forIndexing and ../../../@gco:nilReason">
+            <nilReason><xsl:value-of select="../../../@gco:nilReason"/></nilReason>
+          </xsl:if>
         </item>
       </xsl:for-each>
     </xsl:for-each>

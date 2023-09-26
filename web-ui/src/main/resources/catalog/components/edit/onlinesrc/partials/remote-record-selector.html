@@ -28,13 +28,19 @@
     </div>
   </form>
 
-  <div class="list-group" data-ng-if="remoteRecord.title">
+  <div class="col-md-offset-2 list-group" data-ng-if="remoteRecord.uuid">
     <li
       class="list-group-item"
       data-ng-click="updateSelection();triggerSearch();"
       data-ng-class="{'active' : selectionList[0].uuid === remoteRecord.uuid}"
     >
-      {{remoteRecord.title}} ({{remoteRecord.uuid}})
+      <input
+        type="text"
+        class="form-control"
+        data-ng-model="remoteRecord.title"
+        placeholder="{{'remoteAssociatedMetadataTitlePlaceholder' | translate}}"
+      />
+      ({{remoteRecord.uuid}})
     </li>
   </div>
 

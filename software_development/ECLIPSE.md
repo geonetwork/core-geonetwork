@@ -14,7 +14,7 @@ In order to import the source code, follow instructions below:
 2. In new dialog Select **Maven** > **Existing Maven Projects**
 3. Press *Next*
 
-   ![Import existing projects into Eclipse](../eclipse-import-existing-projects.png)
+   ![Import existing projects into Eclipse](eclipse-import-existing-projects.png)
 
 4. In **Select root directory** field enter the location of your source code:
 

@@ -45,7 +45,7 @@
       /**
        * Load list of logos
        */
-      loadLogo = function () {
+      var loadLogo = function () {
         $scope.logos = [];
         $http.get("../api/logos").then(function (response) {
           $scope.logos = response.data;
@@ -55,7 +55,7 @@
       /**
        * Callback when error uploading file.
        */
-      loadLogoError = function (e, data) {
+      var loadLogoError = function (e, data) {
         if (data.jqXHR.status !== 201) {
           $rootScope.$broadcast("StatusUpdated", {
             title: $translate.instant("logoUploadError"),

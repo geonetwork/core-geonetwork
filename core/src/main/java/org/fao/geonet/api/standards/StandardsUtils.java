@@ -114,8 +114,25 @@ public class StandardsUtils {
         return result;
     }
 
+    /**
+     * Loop in the schema entries to find a match.
+     *
+     * If requireContextMatch = false, try to find a match a standard default with no context defined.
+     *
+     * @param scm
+     * @param schema
+     * @param entries
+     * @param context
+     * @param name
+     * @param isoType
+     * @param displayIf
+     * @param requireContextMatch
+     * @return
+     * @throws OperationAbortedEx
+     */
     private static Element checkEntries(SchemaManager scm, String schema, Element entries, String context,
                                         String name, String isoType, String displayIf, boolean requireContextMatch) throws OperationAbortedEx {
+        Element tentativeElement = null;
 
         for (Object o : entries.getChildren()) {
             Element currElem = (Element) o;
@@ -168,13 +185,18 @@ public class StandardsUtils {
                 return (Element) currElem.clone();
             }
             if (!requireContextMatch && displayIfAttribute == null) {
-                // Return an element not matching any context attribute
-                // or displayIf condition. Usually the default value of the standard.
-                return (Element) currElem.clone();
+                if (currContext != null) {
+                    // Keep tentative, in case there is a standard default with no context defined.
+                    tentativeElement = (Element) currElem.clone();
+                } else {
+                    // Return an element not matching any context attribute
+                    // or displayIf condition. Usually the default value of the standard.
+                    return (Element) currElem.clone();
+                }
             }
         }
 
-        return null; // no match found
+        return tentativeElement;
 
     }
 

@@ -61,6 +61,10 @@
           <artifactId>handlebars</artifactId>
         </exclusion>
         <exclusion>
+          <groupId>org.webjars.npm</groupId>
+          <artifactId>cli</artifactId>
+        </exclusion>
+        <exclusion>
           <groupId>me.n4u.sass</groupId>
           <artifactId>sass-gems</artifactId>
         </exclusion>

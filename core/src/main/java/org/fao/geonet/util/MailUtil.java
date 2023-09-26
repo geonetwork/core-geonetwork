@@ -68,6 +68,7 @@ public class MailUtil {
 
         email.setSubject(subject);
         try {
+            email.setCharset(EmailConstants.UTF_8);
             email.setHtmlMsg(htmlMessage);
         } catch (EmailException e1) {
             Log.error("Error setting email HTML content. Subject:" + subject, e1);

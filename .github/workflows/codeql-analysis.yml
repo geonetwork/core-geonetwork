@@ -38,12 +38,14 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v3
-      
-    - name: Setup Java JDK
-      uses: actions/setup-java@v3.10.0
+      uses: actions/checkout@v4
       with:
-        java-version: 8
+        show-progress: 'false'
+
+    - name: Setup Java JDK
+      uses: actions/setup-java@v3.12.0
+      with:
+        java-version: 11
         # Java distribution. See the list of supported distributions in README file
         distribution: temurin
         # The package type (jdk, jre, jdk+fx, jre+fx)

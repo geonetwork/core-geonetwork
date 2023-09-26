@@ -518,7 +518,7 @@ Insert is made in first transferOptions found.
 
   <xsl:template name="setProtocol">
     <xsl:choose>
-      <xsl:when test="$mimeTypeStrategy = 'mimeType'">
+      <xsl:when test="$mimeTypeStrategy = 'mimeType' and $mimeType != ''">
         <gmx:MimeFileType type="{$mimeType}">
           <xsl:value-of select="$protocol"/>
         </gmx:MimeFileType>

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2023 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -36,6 +36,7 @@ import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SelectionManager;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.search.index.BatchOpsMetadataReindexer;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,6 +66,9 @@ public class MetadataIndexApi {
 
     @Autowired
     SettingManager settingManager;
+
+    @Autowired
+    IMetadataUtils metadataUtils;
 
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Index a set of records",
@@ -96,17 +100,11 @@ public class MetadataIndexApi {
         )
             String bucket,
         @Parameter(hidden = true)
-            HttpSession httpSession,
-        @Parameter(hidden = true)
-            HttpServletRequest request
+            HttpSession httpSession
     )
         throws Exception {
 
-        ServiceContext serviceContext = ApiUtils.createServiceContext(request);
         UserSession session = ApiUtils.getUserSession(httpSession);
-
-        SelectionManager selectionManager =
-            SelectionManager.getManager(serviceContext.getUserSession());
 
         Set<String> records = ApiUtils.getUuidsParameterOrSelection(uuids, bucket, session);
         Set<Integer> ids = Sets.newHashSet();
@@ -114,10 +112,7 @@ public class MetadataIndexApi {
 
         for (String uuid : records) {
             try {
-                final String metadataId = dataManager.getMetadataId(uuid);
-                if (metadataId != null) {
-                    ids.add(Integer.valueOf(metadataId));
-                }
+                metadataUtils.findAllByUuid(uuid).forEach(m -> ids.add(m.getId()));
             } catch (Exception e) {
                 try {
                     ids.add(Integer.valueOf(uuid));

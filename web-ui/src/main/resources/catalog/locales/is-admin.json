@@ -1303,8 +1303,6 @@
     "ui-logoInHeaderPosition-help": "Staðsetning merkis í hausnum",
     "ui-isHeaderFixed": "Fix the header",
     "ui-isHeaderFixed-help": "The header is fixed and stays at the top of the page. Attention: when the option [Show the logo in header] is also selected, the header needs a set height. This can be done under [CSS & Style] > [Header] > [Height]",
-    "ui-isMenubarAccessible": "Make menubar Accessible",
-    "ui-isMenubarAccessible-help": "Make menubar item open on click, not on hover. This means that the menuitems will be accessible by keyboard.",
     "ui-sortKeywordsAlphabetically": "Sort keywords / categories / topic categories alphabetically",
     "ui-sortKeywordsAlphabetically-help": "Display the keywords / categories /  topic categories sorted alphabetically. If not enabled are displayed in the order that are assigned to the metadata.",
     "left": "Vinstri",

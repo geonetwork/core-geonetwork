@@ -94,6 +94,7 @@
       // eg. name="{type=arcgis,name=0,1,2,3,4}"
       var reT = /type=([^,}|^]*)/;
       var reL = /name=([^}]*)\}?\s*$/;
+      var dimensions = ["TIME", "ELEVATION"];
 
       /**
        * @ngdoc method
@@ -236,7 +237,7 @@
                 layerAttributionArray = [];
                 for (var a = 0; a < layer.vendorExtension.attribution.length; a++) {
                   var attribution = layer.vendorExtension.attribution[a];
-                  layerAttribution = attribution.title;
+                  var layerAttribution = attribution.title;
                   // If href exist then make the title a link
                   if (attribution.onlineResource && attribution.onlineResource[0].href) {
                     var link = document.createElement("a");
@@ -406,6 +407,16 @@
                 if (extension.uuid) {
                   layer.metadataUuid = extension.uuid;
                 }
+                if (extension.enabled) {
+                  layer.enabled = extension.enabled;
+                }
+
+                dimensions.forEach(function (dimension) {
+                  if (extension[dimension.toLowerCase() + "DimensionValue"]) {
+                    layer[dimension.toLowerCase() + "DimensionValue"] =
+                      extension[dimension.toLowerCase() + "DimensionValue"];
+                  }
+                });
 
                 var layerIndex = map.getLayers().push(loadingLayer) - 1;
                 var p = self.createLayer(layer, map, undefined, i, currentStyle);
@@ -697,6 +708,15 @@
           if (processInputs) {
             extension.processInputs = processInputs;
           }
+          if (layer.showInfo) {
+            extension.enabled = true; // Enabled in layer manager
+          }
+          dimensions.forEach(function (dimension) {
+            if (source.getParams()[dimension]) {
+              extension[dimension.toLowerCase() + "DimensionValue"] =
+                source.getParams()[dimension];
+            }
+          });
 
           layerParams.extension = {
             name: "Extension",
@@ -776,6 +796,32 @@
         }
         var createOnly = angular.isDefined(bgIdx) || angular.isDefined(index);
 
+        function setMapLayerProperties(olL, layer) {
+          olL.set("group", layer.group);
+          olL.set("groupcombo", layer.groupcombo);
+          olL.setOpacity(layer.opacity);
+          olL.setVisible(!layer.hidden);
+          var title = layer.title ? layer.title : olL.get("label");
+          olL.set("title", title || "");
+          olL.set("label", title || "");
+          olL.set("metadataUuid", layer.metadataUuid || "");
+          if (bgIdx) {
+            olL.set("bgIdx", bgIdx);
+          } else if (index) {
+            olL.set("tree_index", index);
+          }
+          if (layer.enabled) {
+            olL.showInfo = layer.enabled; // Enabled in layer manager
+          }
+          var params = olL.getSource().getParams() || {};
+          dimensions.forEach(function (dimension) {
+            if (layer[dimension.toLowerCase() + "DimensionValue"]) {
+              params[dimension] = layer[dimension.toLowerCase() + "DimensionValue"];
+              olL.getSource().updateParams(params);
+            }
+          });
+        }
+
         if (layer.name && layer.name.match(reT)) {
           var type = reT.exec(layer.name)[1];
           var name = reL.exec(layer.name)[1];
@@ -813,22 +859,7 @@
 
           return promise
             .then(function (olL) {
-              olL.set("group", layer.group);
-              olL.set("groupcombo", layer.groupcombo);
-              olL.setOpacity(layer.opacity);
-              olL.setVisible(!layer.hidden);
-              if (layer.title) {
-                olL.set("title", layer.title);
-                olL.set("label", layer.title);
-              }
-              if (layer.metadataUuid) {
-                olL.set("metadataUuid", layer.metadataUuid);
-              }
-              if (bgIdx) {
-                olL.set("bgIdx", bgIdx);
-              } else if (index) {
-                olL.set("tree_index", index);
-              }
+              setMapLayerProperties(olL, layer);
               return olL;
             })
             .catch(function () {});
@@ -854,15 +885,7 @@
                     layer.group = decodeURIComponent(escape(layer.group));
                   }
                 } catch (e) {}
-                olL.set("group", layer.group);
-                olL.set("groupcombo", layer.groupcombo);
-                olL.set("tree_index", index);
-                olL.setOpacity(layer.opacity);
-                olL.setVisible(!layer.hidden);
-                var title = layer.title ? layer.title : olL.get("label");
-                olL.set("title", title || "");
-                olL.set("label", title || "");
-                olL.set("metadataUuid", layer.metadataUuid || "");
+                setMapLayerProperties(olL, layer);
                 $rootScope.$broadcast("layerAddedFromContext", olL);
                 return olL;
               }
