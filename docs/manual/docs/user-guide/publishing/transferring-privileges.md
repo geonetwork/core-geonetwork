@@ -14,10 +14,10 @@ How to open the Transfer Ownership page
 
     The Transfer Ownership panel
 
--   **Select New Owner**: Select a user in this auto-complete.
+    -  **Select New Owner**: Select a user in this auto-complete.
 
     !!! note
 
         The drop down is filled with all Editors visible to you. If you are not an Administrator, you will view only a subset of all Editors.
 
--   **Select group**: Select one of the groups this user is a member of. Privileges to groups All and Intranet are not transferable.
+    -   **Select group**: Select one of the groups this user is a member of. Privileges to groups All and Intranet are not transferable.

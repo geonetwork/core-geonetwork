@@ -75,7 +75,7 @@ plugins:
             Map: Map
   - exclude:
       glob:
-        - annexes/gallery/README.md
+        - annexes/gallery/bin/README.md
   - include-markdown
 
 # Customizations
@@ -140,6 +140,7 @@ nav:
         - overview/change-log/version-4.2.0.md
       - 'Maintenance':
         - overview/change-log/maintenance.md
+        - overview/change-log/version-3.12.10.md
         - overview/change-log/version-3.12.9.md
         - overview/change-log/version-3.12.8.md
         - overview/change-log/version-3.12.7.md
@@ -268,6 +269,34 @@ nav:
       - user-guide/harvesting/harvesting-wfs-features.md
       - user-guide/harvesting/harvesting-z3950.md
     - user-guide/export/index.md
+    - 'Administration':
+      - administrator-guide/index.md
+      - 'Catalog':
+        - administrator-guide/configuring-the-catalog/index.md
+        - administrator-guide/configuring-the-catalog/system-configuration.md
+        - administrator-guide/configuring-the-catalog/user-interface-configuration.md
+        - administrator-guide/configuring-the-catalog/css-configuration.md
+        - administrator-guide/configuring-the-catalog/csw-configuration.md
+        - administrator-guide/configuring-the-catalog/portal-configuration.md
+        - administrator-guide/configuring-the-catalog/inspire-configuration.md
+        - administrator-guide/configuring-the-catalog/map-server-configuration.md
+      - 'Users and Groups':
+        - administrator-guide/managing-users-and-groups/index.md
+        - administrator-guide/managing-users-and-groups/authentication-mode.md
+        - administrator-guide/managing-users-and-groups/creating-group.md
+        - administrator-guide/managing-users-and-groups/creating-user.md
+        - administrator-guide/managing-users-and-groups/user-self-registration.md
+      - 'Classification Systems':
+        - administrator-guide/managing-classification-systems/index.md
+        - administrator-guide/managing-classification-systems/managing-categories.md
+        - administrator-guide/managing-classification-systems/managing-directories.md
+        - administrator-guide/managing-classification-systems/managing-thesaurus.md
+      - 'Metadata Standards':
+        - administrator-guide/managing-metadata-standards/index.md
+        - administrator-guide/managing-metadata-standards/configure-validation.md
+        - administrator-guide/managing-metadata-standards/metadata-identifier.md
+        - administrator-guide/managing-metadata-standards/standards.md
+
   - 'Maintainer Guide':
       - maintainer-guide/index.md
       - 'Installation':
@@ -284,33 +313,6 @@ nav:
             - install-guide/logging.md
             - install-guide/map-print-setup.md
             - install-guide/loading-samples.md
-      - 'Setup':
-        - administrator-guide/index.md
-        - 'Catalog':
-          - administrator-guide/configuring-the-catalog/index.md
-          - administrator-guide/configuring-the-catalog/system-configuration.md
-          - administrator-guide/configuring-the-catalog/user-interface-configuration.md
-          - administrator-guide/configuring-the-catalog/css-configuration.md
-          - administrator-guide/configuring-the-catalog/csw-configuration.md
-          - administrator-guide/configuring-the-catalog/portal-configuration.md
-          - administrator-guide/configuring-the-catalog/inspire-configuration.md
-          - administrator-guide/configuring-the-catalog/map-server-configuration.md
-        - 'Users and Groups':
-          - administrator-guide/managing-users-and-groups/index.md
-          - administrator-guide/managing-users-and-groups/authentication-mode.md
-          - administrator-guide/managing-users-and-groups/creating-group.md
-          - administrator-guide/managing-users-and-groups/creating-user.md
-          - administrator-guide/managing-users-and-groups/user-self-registration.md
-        - 'Classification Systems':
-          - administrator-guide/managing-classification-systems/index.md
-          - administrator-guide/managing-classification-systems/managing-categories.md
-          - administrator-guide/managing-classification-systems/managing-directories.md
-          - administrator-guide/managing-classification-systems/managing-thesaurus.md
-        - 'Metadata Standards':
-          - administrator-guide/managing-metadata-standards/index.md
-          - administrator-guide/managing-metadata-standards/configure-validation.md
-          - administrator-guide/managing-metadata-standards/metadata-identifier.md
-          - administrator-guide/managing-metadata-standards/standards.md
       - 'Setting up search/content statistics':
         - maintainer-guide/statistics/index.md
         - maintainer-guide/statistics/setup-elasticsearch.md
@@ -329,6 +331,11 @@ nav:
     - api/z39-50.md
   - 'Development':
     - devel/index.md
+    - 'Documentation':
+      - devel/docs/index.md
+      - devel/docs/style/index.md
+      - devel/docs/markdown/index.md
+      - devel/docs/translation/index.md
     - 'Customization':
       - customizing-application/index.md
       - 'Search':
@@ -352,10 +359,6 @@ nav:
       - customizing-application/misc.md
     - 'Contributing':
       - contributing/index.md
-      - 'Writing Documentation':
-        - 'Markdown': devel/docs/index.md
-        - 'Sphinx - Deprecated': contributing/writing-documentation.md
-      - contributing/style-guide.md
       - contributing/translating.md
       - contributing/making-a-pull-request.md
       - contributing/doing-a-release.md

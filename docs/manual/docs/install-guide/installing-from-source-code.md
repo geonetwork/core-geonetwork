@@ -12,6 +12,11 @@ Because GeoNetwork is developed with Java 8 (LTS), this has the following implic
 -   Java 11 (LTS) is **not supported** at this time.
 -   GeoNetwork won't run at all with Java 7 (1.6) or earlier releases.
 
+
+!!! Note
+    
+    GeoNetwork 4.4.0 is scheduled to support Java 11
+
 ### Application Server
 
 Next, you need a servlet container. GeoNetwork ships with an embedded container, [Eclipse Jetty](https://www.eclipse.org/jetty/), which is fast and well-suited for most applications.

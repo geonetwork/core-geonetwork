@@ -5,7 +5,7 @@ hide:
 
 # GeoNetwork {#toc}
 
-Welcome to GeoNetwork. this documentation is organized into specific guides targeting different audience:
+Welcome to GeoNetwork. this documentation is organized into specific guides targeting different audience.
 
 <div class="grid cards" markdown>
 
