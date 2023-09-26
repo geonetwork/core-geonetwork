@@ -19,7 +19,10 @@
         >
           <h1>
             <span class="clamp-2">
-              <i data-ng-show="mdResourceTitle.trim()=='' || md.resourceTitle===undefined">{{'missingTitle' | translate}}</i>
+              <i
+                data-ng-show="md.resourceTitle.trim()=='' || md.resourceTitle===undefined"
+                >{{'missingTitle' | translate}}</i
+              >
               {{md.resourceTitle}}
             </span>
           </h1>
