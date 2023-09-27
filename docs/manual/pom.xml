@@ -34,7 +34,7 @@
   <name>GeoNetwork Guide</name>
   <packaging>pom</packaging>
   <properties>
-     <french>false</french>
+     <french>true</french>
   </properties>
   <licenses>
     <license>
@@ -123,14 +123,9 @@
 
 <profiles>
   <profile>
-    <id>french</id>
-    <activation>
-      <property>
-        <name>all</name>
-      </property>
-    </activation>
+    <id>default</id>
     <properties>
-       <french>true</french>
+       <french>false</french>
     </properties>
   </profile>
 </profiles>

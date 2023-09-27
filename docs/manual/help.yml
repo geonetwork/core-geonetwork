@@ -42,10 +42,7 @@ plugins:
   - search
   - offline
   - i18n:
-      default_language: en
       docs_structure: suffix
-      search_reconfigure: true
-      material_alternate: true
       languages:
         - locale: en
           default: true
@@ -53,13 +50,13 @@ plugins:
           build: true
         - locale: fr
           name: Français
-          build: true
-      nav_translations:
-        fr:
-          Home: Home
-          Search: Search
-          Record: Record
-          Map: Map
+          build: !ENV [FRENCH,false]
+          site_name: 'Online Help (FR)'
+          nav_translations:
+            Home: Home
+            Search: Search
+            Record: Record
+            Map: Map
 
 markdown_extensions:
   - admonition

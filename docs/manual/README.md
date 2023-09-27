@@ -84,14 +84,10 @@ If you are not familiar with python the mkdocs-material website has instructions
 
 3. Both ``install`` and ``deploy`` are skipped (so ``mvn clean install`` is fine).
 
-4. Use profile to include specific language:
-   ```
-   mvn install -Pfrench
-   ```
+4. Use default profile to only build the default english docs:
 
-   Or flag for all of them:
    ```
-   mvn install -Dall
+   mvn install -Pdefault
    ```
    
 ## Publish

@@ -28,34 +28,41 @@ Specific ***pandoc*** extensions are used to match the capabilities of ***mkdocs
 
 Other differences in markdown requires pre/post processing of markdown and html files. These steps are automated in the ***translate*** python script (check comments for details).
 
-To translate provide environmental variable with Deepl authentication key:
+1. Install [mkdocs_translate](https://github.com/jodygarnett/translate) python script:
+   
+   ```
+   pip3 install git+https://github.com/jodygarnett/translate.git
+   ```
 
-```
-cd core-geonetwork/docs
-mkdir target
-export DEEPL_AUTH="xxxxxxxx-xxx-...-xxxxx:fx"
-```
+2. To translate provide environmental variable with Deepl authentication key:
 
-And translate a file:
-``` bash
-python3 -m translate fr manual/docs/contributing/style-guide.md
-```
+   ```
+   cd core-geonetwork/docs
+   mkdir target
+   export DEEPL_AUTH="xxxxxxxx-xxx-...-xxxxx:fx"
+   ```
 
-To test each stage individually:
+3. And translate a file:
 
-```
-python3 -m translate html manual/docs/contributing/style-guide.md
-python3 -m translate document target/contributing/style-guide.html target/contributing/style-guide.fr.html
-python3 -m translate markdown target/contributing/style-guide.fr.html
+   ``` bash
+   python3 -m mkdocs_translate french manual/docs/contributing/style-guide.md
+   ```
+   
+4. To test each stage individually:
 
-cp target/contributing/style-guide.fr.md manual/docs/contributing/style-guide.fr.md
-```
+   ```
+   python3 -m mkdocs_translate internal-html manual/docs/contributing/style-guide.md
+   python3 -m mkdocs_translate internal-document target/contributing/style-guide.html target/contributing/style-guide.fr.html
+   python3 -m mkdocs_translate internal-markdown target/contributing/style-guide.fr.html
 
-To test markdown / html only:
+   cp target/contributing/style-guide.fr.md manual/docs/contributing/style-guide.fr.md
+   ```
 
-```
-python3 -m translate convert manual/docs/contributing/style-guide.md
-python3 -m translate markdown target/contributing/style-guide.html
+5. To test markdown / html only:
 
-diff manual/docs/contributing/style-guide.md target/contributing/style-guide.md
-```
+   ```
+   python3 -m translate convert manual/docs/contributing/style-guide.md
+   python3 -m translate markdown target/contributing/style-guide.html
+
+   diff manual/docs/contributing/style-guide.md target/contributing/style-guide.md
+   ```

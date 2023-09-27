@@ -58,6 +58,7 @@ plugins:
   - search
   - i18n:
       docs_structure: suffix
+      reconfigure_material: true
       languages:
         - locale: en
           name: English
@@ -68,6 +69,7 @@ plugins:
           name: Français
           build: !ENV [FRENCH,false]
           site_name: 'GeoNetwork Opensource (FR)'
+          site_description: Catalogue GeoNetwork pour répertorier, rechercher et examiner les enregistrements.
           nav_translations:
             Home: Home
             Search: Search
