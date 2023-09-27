@@ -1,9 +1,0 @@
-deepl_base_url: "https://api-free.deepl.com"
-project_folder: "."
-rst_folder: "docs"
-build_folder: "target"
-docs_folder: "docs"
-anchor_file: 'anchors.txt'
-upload_folder: "translate"
-convert_folder: "convert"
-download_folder: "translate"
