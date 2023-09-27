@@ -1303,8 +1303,6 @@
     "ui-logoInHeaderPosition-help": "Posición del logo en el header.",
     "ui-isHeaderFixed": "Arreglar el encabezado",
     "ui-isHeaderFixed-help": "El encabezado es fijo y permanece en la parte superior de la página. Atención: cuando la opción [Mostrar el logo en el encabezado] también está seleccionada, el encabezado necesita una altura establecida. Esto se puede hacer en [CSS y estilo]&gt; [Encabezado]&gt; [Alto]",
-    "ui-isMenubarAccessible": "Make menubar Accessible",
-    "ui-isMenubarAccessible-help": "Make menubar item open on click, not on hover. This means that the menuitems will be accessible by keyboard.",
     "ui-sortKeywordsAlphabetically": "Sort keywords / categories / topic categories alphabetically",
     "ui-sortKeywordsAlphabetically-help": "Display the keywords / categories /  topic categories sorted alphabetically. If not enabled are displayed in the order that are assigned to the metadata.",
     "left": "Izquierda",

@@ -17,7 +17,7 @@
             type="radio"
             data-ng-click="select(o)"
             name="ignore_{{ref}}"
-            data-ng-checked="o['@value'] === config.value"
+            data-ng-checked="o['@value'] == config.value"
           />
           {{o['#text']}}
         </label>
@@ -70,9 +70,7 @@
         class="form-control"
         data-ng-model="config.selected"
         data-ng-options="o as o['#text'] disable when o.disabled for o in config.option"
-      >
-        <option value="" disabled="" data-translate="">recommendedValues</option>
-      </select>
+      ></select>
     </div>
   </div>
 </span>

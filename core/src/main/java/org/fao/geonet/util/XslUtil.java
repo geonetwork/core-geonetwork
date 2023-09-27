@@ -84,6 +84,7 @@ import org.geotools.geometry.jts.JTS;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
+import org.geotools.referencing.crs.DefaultProjectedCRS;
 import org.geotools.xsd.Parser;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -186,6 +187,22 @@ public final class XslUtil {
 
                 if (geom == null) {
                     return "Warning: GML geometry is null.";
+                }
+
+                Object userData = geom.getUserData();
+                if (userData instanceof DefaultProjectedCRS) {
+                    geom = JTS.transform(
+                        geom,
+                        CRS.findMathTransform((DefaultProjectedCRS) userData,
+                            CRS.decode("EPSG:4326", true), true)
+                    );
+                }
+                else if (userData instanceof DefaultGeographicCRS) {
+                    geom = JTS.transform(
+                        geom,
+                        CRS.findMathTransform((DefaultGeographicCRS) userData,
+                            CRS.decode("EPSG:4326", true), true)
+                    );
                 }
 
                 if (!geom.isValid()) {

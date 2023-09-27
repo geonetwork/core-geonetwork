@@ -15,13 +15,14 @@ jobs:
           - os: ubuntu-22.04
             jdk: 11
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         # 500 commits, set to 0 to get all
         fetch-depth: 500
         submodules: 'recursive'
+        show-progress: 'false'
     - name: Set up JDK
-      uses: actions/setup-java@v3.10.0
+      uses: actions/setup-java@v3.12.0
       with:
         distribution: 'temurin'
         java-version: ${{ matrix.jdk }}
@@ -42,13 +43,14 @@ jobs:
   QA:
     runs-on: ubuntu-22.04
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         # 500 commits, set to 0 to get all
         fetch-depth: 500
         submodules: 'recursive'
+        show-progress: 'false'
     - name: Set up JDK
-      uses: actions/setup-java@v3.10.0
+      uses: actions/setup-java@v3.12.0
       with:
         distribution: 'temurin'
         java-version: 11

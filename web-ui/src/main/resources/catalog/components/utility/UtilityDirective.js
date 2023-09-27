@@ -484,7 +484,7 @@
 
           function setDefault() {
             var defaultThesaurus = attrs["default"];
-            for (t in scope.regionTypes) {
+            for (var t in scope.regionTypes) {
               if (scope.regionTypes[t].name === defaultThesaurus) {
                 scope.regionType = scope.regionTypes[t];
                 return;
@@ -729,7 +729,7 @@
         link: function (scope, element, attrs) {
           if (attrs["gnRegionType"]) {
             gnRegionService.loadList().then(function (data) {
-              for (i = 0; i < data.length; ++i) {
+              for (var i = 0; i < data.length; ++i) {
                 if (attrs["gnRegionType"] == data[i].name) {
                   scope.regionType = data[i];
                 }
@@ -2591,6 +2591,41 @@
             scope.md = md;
             scope.uuid = md.uuid;
           };
+        }
+      };
+    }
+  ]);
+
+  module.directive("gnInspireUsageDetails", [
+    "$http",
+    function ($http) {
+      return {
+        restrict: "A",
+        replace: true,
+        scope: {
+          inspireApiUrl: "=gnInspireUsageDetails",
+          inspireApiKey: "=apiKey"
+        },
+        templateUrl: "../../catalog/components/utility/partials/inspireapiusage.html",
+        link: function (scope, element, attrs) {
+          scope.inspireApiUsage = undefined;
+          if (
+            scope.inspireApiUrl &&
+            scope.inspireApiUrl.length > 0 &&
+            scope.inspireApiKey &&
+            scope.inspireApiKey.length > 0
+          ) {
+            $http
+              .get(scope.inspireApiUrl + "/v2/Usages/" + scope.inspireApiKey + "/")
+              .then(
+                function (response) {
+                  scope.inspireApiUsage = response.data;
+                },
+                function (error) {
+                  console.warn("Error while retrieving INSPIRE API quotas: ", error);
+                }
+              );
+          }
         }
       };
     }

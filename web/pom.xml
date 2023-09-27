@@ -84,6 +84,10 @@
       <artifactId>xalan</artifactId>
     </dependency>
     <dependency>
+      <groupId>xalan</groupId>
+      <artifactId>serializer</artifactId>
+    </dependency>
+    <dependency>
       <groupId>net.sf.saxon</groupId>
       <artifactId>saxon-dom</artifactId>
     </dependency>
@@ -334,6 +338,10 @@
         <exclusion>
           <groupId>xalan</groupId>
           <artifactId>xalan</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>xalan</groupId>
+          <artifactId>serializer</artifactId>
         </exclusion>
         <exclusion>
           <groupId>org.apache.xmlgraphics</groupId>
@@ -1043,6 +1051,13 @@
             <groupId>ro.isdc.wro4j</groupId>
             <artifactId>wro4j-maven-plugin</artifactId>
             <version>${wro.version}</version>
+            <dependencies>
+              <dependency>
+                <groupId>org.webjars.npm</groupId>
+                <artifactId>glob</artifactId>
+                <version>7.1.1</version>
+              </dependency>
+            </dependencies>
             <executions>
               <execution>
                 <id>wro4j-prebuild-cache</id>

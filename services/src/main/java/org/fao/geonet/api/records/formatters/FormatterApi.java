@@ -285,7 +285,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
             long roundedChangeDate = changeDateAsTime / 1000 * 1000;
             if (request.checkNotModified(language, roundedChangeDate) &&
                 context.getBean(CacheConfig.class).allowCaching(key)) {
-                if (!skipPopularityBool) {
+                if (!skipPopularityBool && approved) {
                     context.getBean(DataManager.class).increasePopularity(context, String.valueOf(metadata.getId()));
                 }
                 return;
@@ -310,7 +310,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
             bytes = context.getBean(FormatterCache.class).get(key, validator, formatMetadata, false);
         }
         if (bytes != null) {
-            if (!skipPopularityBool) {
+            if (!skipPopularityBool && approved) {
                 context.getBean(DataManager.class).increasePopularity(context, String.valueOf(metadata.getId()));
             }
             writeOutResponse(context, metadataUuid,

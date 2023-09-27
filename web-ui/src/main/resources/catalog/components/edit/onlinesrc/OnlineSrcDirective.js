@@ -270,14 +270,12 @@
                 // No UUID can be easily extracted.
                 try {
                   scope.remoteRecord.title = doc.replace(
-                    /(.|[\r\n])*<title>(.*)<\/title>(.|[\r\n])*/,
-                    "$2"
+                    /(.|[\r\n])*<title(.*)>(.*)<\/title>(.|[\r\n])*/,
+                    "$3"
                   );
+
                   scope.remoteRecord.uuid = scope.remoteRecord.remoteUrl;
 
-                  if (scope.remoteRecord.title === "") {
-                    return false;
-                  }
                   // Looking for schema.org tags or json+ld format could also be an option.
                 } catch (e) {
                   console.warn(e);
@@ -724,7 +722,7 @@
               scope.generateThumbnail = function () {
                 //Added mandatory custom params here to avoid
                 //changing other printing services
-                jsonSpec = angular.extend(scope.jsonSpec, {
+                var jsonSpec = angular.extend(scope.jsonSpec, {
                   hasNoTitle: true
                 });
 
@@ -867,8 +865,6 @@
                 } else {
                   return DEFAULT_CONFIG;
                 }
-
-                return DEFAULT_CONFIG;
               }
 
               gnOnlinesrc.register("onlinesrc", function (linkToEditOrType) {
@@ -1309,7 +1305,9 @@
                           function (l) {
                             if (angular.isDefined(l.name)) {
                               scope.layers.push({
-                                Name: l.name.prefix + ":" + l.name.localPart,
+                                Name:
+                                  (l.name.prefix ? l.name.prefix + ":" : "") +
+                                  l.name.localPart,
                                 abstract: angular.isArray(l._abstract)
                                   ? l._abstract[0].value
                                   : l._abstract,
@@ -1940,6 +1938,24 @@
                 };
 
                 /**
+                 * Checks if there are selected records and the selected records have a title.
+                 *
+                 * @param selectRecords
+                 * @returns {boolean}
+                 */
+                scope.canEnableLinkButton = function (selectRecords) {
+                  if (selectRecords.length < 1) return false;
+
+                  // Check if the metadata titles are defined
+                  for (var i = 0; i < selectRecords.length; i++) {
+                    if (!selectRecords[i].title && !selectRecords[i].resourceTitle)
+                      return false;
+                  }
+
+                  return true;
+                };
+
+                /**
                  * Register a method on popup open to reset
                  * the search form and trigger a search.
                  */
@@ -2124,7 +2140,7 @@
                  * Return the index or -1 if not present.
                  */
                 var findObj = function (md) {
-                  for (i = 0; i < scope.selection.length; ++i) {
+                  for (var i = 0; i < scope.selection.length; ++i) {
                     if (scope.selection[i].md === md) {
                       return i;
                     }
@@ -2172,7 +2188,7 @@
                  */
                 scope.linkToResource = function () {
                   var uuids = [];
-                  for (i = 0; i < scope.selection.length; ++i) {
+                  for (var i = 0; i < scope.selection.length; ++i) {
                     var obj = scope.selection[i],
                       parameter =
                         obj.md.uuid +

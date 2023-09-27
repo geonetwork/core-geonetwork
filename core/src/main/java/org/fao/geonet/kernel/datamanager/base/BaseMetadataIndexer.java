@@ -409,13 +409,13 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
                 fields.put(IndexFields.DRAFT, "n");
                 fields.put(IndexFields.INDEXING_ERROR_FIELD, true);
                 fields.put(IndexFields.INDEXING_ERROR_MSG, String.format(
-                    "Schema '%s' is not registerd in this catalog. Install it or remove those records",
+                    "Schema '%s' is not registered in this catalog. Install it or remove those records",
                     schema
                 ));
                 searchManager.index(null, md, indexKey, fields, metadataType,
                     forceRefreshReaders, indexingMode);
                 Log.error(Geonet.DATA_MANAGER, String.format(
-                    "Record %s / Schema '%s' is not registerd in this catalog. Install it or remove those records. Record is indexed indexing error flag.",
+                    "Record %s / Schema '%s' is not registered in this catalog. Install it or remove those records. Record is indexed indexing error flag.",
                     metadataId, schema));
             } else {
 

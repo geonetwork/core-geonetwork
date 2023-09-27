@@ -368,7 +368,7 @@
                         tooltipsMode === "onhover" ? "hover" : isField ? "focus" : "click"
                     });
 
-                    if (tooltipsMode === "" || tooltipsMode === "onfocus") {
+                    if (tooltipsMode !== "onhover") {
                       // Remove first the event, to avoid ending with multiple events
                       // every time a new popup is displayed.
                       $(document)

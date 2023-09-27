@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2019 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2023 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -31,6 +31,7 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.LinkStatus;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.lib.Lib;
 import org.fao.geonet.lib.NetLib;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -149,8 +150,7 @@ public class UrlChecker {
                     Log.info(Geonet.GEONETWORK,"UrlChecker: cannot determine hostname from url: "+url);
                  }
                 //now we have hostname, we can configure proxy
-                NetLib netLib = new NetLib();
-                netLib.setupProxy(settingManager, originalConfig, hostname);
+                Lib.net.setupProxy(settingManager, originalConfig, hostname);
                 return null;
             }
         };

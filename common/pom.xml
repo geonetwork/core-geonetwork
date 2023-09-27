@@ -86,6 +86,10 @@
       <artifactId>jcs</artifactId>
     </dependency>
     <dependency>
+      <groupId>xalan</groupId>
+      <artifactId>serializer</artifactId>
+    </dependency>
+    <dependency>
       <groupId>net.sf.saxon</groupId>
       <artifactId>saxon</artifactId>
     </dependency>

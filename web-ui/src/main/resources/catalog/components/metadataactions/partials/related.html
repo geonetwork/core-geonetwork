@@ -224,7 +224,7 @@
         formatter-url="formatter.defaultUrl"
       >
         <span
-          class="label label-default gn-card-badge"
+          class="gn-card-badge"
           data-ng-class="{
             'gn-card-series': type === 'parent',
             'gn-card-nonGeographicDataset': type === 'nonGeographicDataset',
@@ -232,22 +232,38 @@
             'gn-card-dataset': type !== 'parent' && type !== 'services' && type !== 'application' && type !== 'nonGeographicDataset'
             }"
         >
-          <i class="fa {{icon}}" />
-          <span data-ng-hide="md.properties && !md.properties.associationType">
-            {{(config.getLabel(mainType, type)) | translate}}</span
-          >
-          <span
-            data-ng-show="md.properties && md.properties.associationType"
-            title="{{(config.getLabel(mainType, type)) | translate}}"
-          >
-            {{md.properties.associationType | translate}}
-            <span data-ng-if="md.properties && md.properties.initiativeType">
-              ({{md.properties.initiativeType | translate}})
+          <span>
+            <span
+              data-ng-if="!md.properties || (md.properties && md.properties.associationType == '')"
+            >
+              {{(config.getLabel(mainType, type)) | translate}}</span
+            >
+            <span
+              data-ng-if="md.properties && md.properties.associationType"
+              data-ng-show="md.properties && md.properties.associationType"
+              title="{{(config.getLabel(mainType, type)) | translate}}"
+            >
+              {{'associatedTo' | translate}}
+              <b title="{{'associationType' | translate}}">
+                <i
+                  class="fa fa-fw {{icon}} gn-icon-association-{{md.properties.associationType}}"
+                />
+                {{md.properties.associationType | translate}}
+              </b>
+              <span data-ng-if="md.properties && md.properties.initiativeType">
+                >
+                <b title="{{'initiativeType' | translate}}">
+                  <i
+                    class="fa fa-fw {{icon}} gn-icon-initiative-{{md.properties.initiativeType}}"
+                  />
+                  {{md.properties.initiativeType | translate}}
+                </b>
+              </span>
             </span>
           </span>
           <i
             data-ng-if="md.origin === 'remote'"
-            class="fa fa-external-link"
+            class="fa fa-fw fa-external-link"
             title="{{'remoteRecord' | translate}}"
           ></i>
         </span>

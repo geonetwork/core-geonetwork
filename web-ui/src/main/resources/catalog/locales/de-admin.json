@@ -1303,8 +1303,6 @@
     "ui-logoInHeaderPosition-help": "Position des Logos in der Kopfzeile",
     "ui-isHeaderFixed": "Korrigiere den Header",
     "ui-isHeaderFixed-help": "Der Header ist fixiert und bleibt oben auf der Seite. Achtung: Wenn auch die Option [Zeige Logo im Header] ausgewählt ist, benötigt der Header eine festgelegte Höhe. Dies kann unter [CSS &amp; Style]&gt; [Header]&gt; [Height] erfolgen.",
-    "ui-isMenubarAccessible": "Menüleiste zugänglich machen",
-    "ui-isMenubarAccessible-help": "Öffnen Sie das Menüleistenelement beim Klicken und nicht beim Schweben. Dies bedeutet, dass die Menüs über die Tastatur zugänglich sind.",
     "ui-sortKeywordsAlphabetically": "Sort keywords / categories / topic categories alphabetically",
     "ui-sortKeywordsAlphabetically-help": "Display the keywords / categories /  topic categories sorted alphabetically. If not enabled are displayed in the order that are assigned to the metadata.",
     "left": "Links",

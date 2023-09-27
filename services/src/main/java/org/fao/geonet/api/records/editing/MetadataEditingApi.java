@@ -373,6 +373,10 @@ public class MetadataEditingApi {
 
             boolean reindex = false;
 
+            String lang = String.valueOf(languageUtils.parseAcceptLanguage(request.getLocales()));
+            ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages",
+                new Locale(lang));
+
             // Save validation if the forceValidationOnMdSave is enabled
             if (forceValidationOnMdSave) {
                 validator.doValidate(metadata, context.getLanguage());
@@ -412,7 +416,7 @@ public class MetadataEditingApi {
                         metadataStatus.setChangeDate(new ISODate());
                         metadataStatus.setUserId(session.getUserIdAsInt());
                         metadataStatus.setStatusValue(statusValue);
-                        metadataStatus.setChangeMessage("Save and submit metadata");
+                        metadataStatus.setChangeMessage(messages.getString("metadata_save_submit_text"));
 
                         List<MetadataStatus> listOfStatusChange = new ArrayList<>(1);
                         listOfStatusChange.add(metadataStatus);
@@ -434,7 +438,7 @@ public class MetadataEditingApi {
                         metadataStatus.setChangeDate(new ISODate());
                         metadataStatus.setUserId(session.getUserIdAsInt());
                         metadataStatus.setStatusValue(statusValue);
-                        metadataStatus.setChangeMessage("Save and approve metadata");
+                        metadataStatus.setChangeMessage(messages.getString("metadata_save_approve_text"));
 
                         List<MetadataStatus> listOfStatusChange = new ArrayList<>(1);
                         listOfStatusChange.add(metadataStatus);

@@ -311,7 +311,6 @@
           field: field,
           insertMode: insertMode || field.insertMode,
           xpath: xpath,
-          condition: condition,
           value: template && value !== "" ? template.replace("{{value}}", value) : value,
           isXpath: isXpath || false,
           condition: condition || ""
@@ -454,7 +453,6 @@
       $scope.defaultCurrentXpath = {
         field: "",
         xpath: "",
-        condition: "",
         value: "",
         insertMode: "gn_add",
         condition: ""
