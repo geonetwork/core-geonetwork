@@ -50,7 +50,7 @@ plugins:
           build: true
         - locale: fr
           name: Français
-          build: !ENV [FRENCH,false]
+          build: !ENV [FRENCH,true]
           site_name: 'Online Help (FR)'
           nav_translations:
             Home: Home

@@ -202,7 +202,7 @@ Types de liens spécifiques :
 
 Référence à une autre section du document (une certaine attention est requise pour faire référence à un titre spécifique) :
 
-Les éditeurs ont la possibilité de [gérer les](../editor/publish/index.md#publish-records) enregistrements.
+Les éditeurs ont la possibilité de [gérer les](index.md) enregistrements.
 
 ```
 Editors have option to :ref:`manage <Publish records>` records.
