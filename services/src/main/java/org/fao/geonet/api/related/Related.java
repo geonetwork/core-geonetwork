@@ -121,13 +121,7 @@ public class Related implements ApplicationContextAware {
 
         for (String uuid : uuids) {
             try {
-                int metadataId;
-                if (Lib.type.isInteger(uuid)) {
-                    metadataId = Integer.parseInt(uuid);
-                } else {
-                    metadataId = getAndCheckMetadataId(uuid, approved);
-                }
-                md = ApiUtils.canViewRecord(metadataId, request);
+                md = ApiUtils.canViewRecord(uuid, approved, request);
                 Element raw = new Element("root").addContent(Arrays.asList(
                     new Element("gui").addContent(Arrays.asList(
                         new Element("language").setText(language.getISO3Language()),

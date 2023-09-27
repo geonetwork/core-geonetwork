@@ -311,17 +311,6 @@ public class ApiUtils {
         return metadata;
     }
 
-    public static AbstractMetadata canViewRecord(Integer metadataId, HttpServletRequest request) throws Exception {
-        AbstractMetadata metadata = getRecord(String.valueOf(metadataId));
-        try {
-            Lib.resource.checkPrivilege(createServiceContext(request), String.valueOf(metadata.getId()), ReservedOperation.view);
-        } catch (Exception e) {
-            throw new SecurityException(String.format(
-                "You can't view record with ID %s", metadataId));
-        }
-        return metadata;
-    }
-
     /**
      * @param img
      * @param outFile
