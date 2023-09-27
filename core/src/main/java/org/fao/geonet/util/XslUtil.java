@@ -194,14 +194,14 @@ public final class XslUtil {
                     geom = JTS.transform(
                         geom,
                         CRS.findMathTransform((DefaultProjectedCRS) userData,
-                            DefaultGeographicCRS.WGS84, true)
+                            CRS.decode("EPSG:4326", true), true)
                     );
                 }
                 else if (userData instanceof DefaultGeographicCRS) {
                     geom = JTS.transform(
                         geom,
                         CRS.findMathTransform((DefaultGeographicCRS) userData,
-                            DefaultGeographicCRS.WGS84, true)
+                            CRS.decode("EPSG:4326", true), true)
                     );
                 }
 
