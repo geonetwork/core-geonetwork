@@ -9,25 +9,25 @@ Bienvenue à GeoNetwork. Cette documentation est organisée en guides spécifiqu
 
 <div class="grid cards" markdown>
 
-:fontawesome-solid-signs-post: [Vue d\'ensemble](overview/index.md)
+:fontawesome-solid-signs-post: [Vue d'ensemble](overview/index.md)
 
 :   Historique de GeoNetwork, communauté, détails de la licence et derniers changements.
 
 :fontawesome-solid-circle-info: [Aide en ligne](help/index.md)
 
-:   Aide en ligne pour les visiteurs du catalogue (aucune connexion n\'est requise).
+:   Aide en ligne pour les visiteurs du catalogue (aucune connexion n'est requise).
 
-:fontawesome-solid-person-circle-question: [Guide de l\'utilisateur](user-guide/index.md)
+:fontawesome-solid-person-circle-question: [Guide de l'utilisateur](user-guide/index.md)
 
-:   Guide de l\'utilisateur opérationnel décrivant l\'édition, la révision et la gestion des enregistrements (nécessite une connexion).
+:   Guide de l'utilisateur opérationnel décrivant l'édition, la révision et la gestion des enregistrements (nécessite une connexion).
 
 :fontawesome-solid-screwdriver-wrench: [Guide du mainteneur](maintainer-guide/index.md)
 
-:   Instructions d\'installation, de configuration et de mise à jour
+:   Instructions d'installation, de configuration et de mise à jour
 
 :fontawesome-solid-user-graduate: [Tutoriels](tutorials/index.md)
 
-:   Explorer des sujets à l\'aide de tutoriels étape par étape
+:   Explorer des sujets à l'aide de tutoriels étape par étape
 
 :fontawesome-solid-plug: [Référence API](api/index.md)
 
