@@ -41,6 +41,15 @@ img + em, .browser-border + em, .browser-mockup + em {
 .md-typeset .grid.cards dd p {
   margin: 0;
 }
+@media (max-width: 768px) {
+  .md-typeset .grid dl {
+    display: inline-block;
+    margin-bottom: 20px;
+  }
+  .md-typeset .grid.cards dt, .md-typeset .grid.cards dd {
+    width: calc(100vw - 1.2rem - 1.2rem);
+  }
+}
 
 /* definition list used to display general inputs */
 .md-typeset dl dd {
