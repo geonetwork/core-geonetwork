@@ -31,8 +31,8 @@ You can create new widgets to add to your customized user interface. Using the s
 
 You just have to take care of two things:
 
-> -   Visualization: define an html div where your widget will display information
-> -   Manipulation of information: add some functionality (like a search connector) so the visualization has data to show.
+-   Visualization: define an html div where your widget will display information
+-   Manipulation of information: add some functionality (like a search connector) so the visualization has data to show.
 
 ## Using outside GeoNetwork
 

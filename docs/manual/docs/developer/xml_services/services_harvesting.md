@@ -589,8 +589,8 @@ Each **record** element in the embedded **response** element contains the detail
 -   **deleted** - has the harvester that ran been deleted? 'y' - yes, 'n' - no
 -   **info** - results of the harvest. May contain one of the following elements:
 
-> -   **result** - details of the successful harvest (a harvester dependent list of results from the harvest)
-> -   **error** - an exception from an unsuccessful harvest - see [Exception handling](services_calling.md#exception_handling) for content details of this element
+-   **result** - details of the successful harvest (a harvester dependent list of results from the harvest)
+-   **error** - an exception from an unsuccessful harvest - see [Exception handling](services_calling.md#exception_handling) for content details of this element
 
 -   **params** - the parameters that the harvester had been configured with for the harvest
 

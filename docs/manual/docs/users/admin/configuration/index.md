@@ -38,9 +38,9 @@ Clicking the link bring up the system configuration menu. A detailed description
 
 Note: at the bottom of the page (you will need to scroll down) there are three buttons with the following purpose:
 
-> -   **Back** Simply returns to the main administration page, ignoring any changes you may have made.
-> -   **Save** Saves the current options. If some options are invalid, the system will show a dialogue with the wrong parameter and will focus its text field on the page. Once the configuration is saved a success dialogue will be shown.
-> -   **Refresh** Reads the settings from the database again and refreshes the options with those values.
+-   **Back** Simply returns to the main administration page, ignoring any changes you may have made.
+-   **Save** Saves the current options. If some options are invalid, the system will show a dialogue with the wrong parameter and will focus its text field on the page. Once the configuration is saved a success dialogue will be shown.
+-   **Refresh** Reads the settings from the database again and refreshes the options with those values.
 
 ## Site parameters
 
@@ -177,8 +177,8 @@ Enables/disables the INSPIRE support:
 
 -   CSW GetCapabilities includes the INSPIRE section (ie. ExtendedCapabilities) that administrator can customize in xml/csw/capabilities_inspire.xml and response support language extensions. The language provided defines:
 
-> -   Natural language fields are returned in the language requested (see [OGC CSW server configuration](../csw-configuration/index.md))
-> -   The end-points are returned for the language requested
+-   Natural language fields are returned in the language requested (see [OGC CSW server configuration](../csw-configuration/index.md))
+-   The end-points are returned for the language requested
 
 -   INSPIRE themes are indexed (check that INSPIRE themes thesaurus is available and reindex the catalog)
 -   Enables/disables INSPIRE search panel: Add INSPIRE criteria in the advanced search panel (eg. Annex, INSPIRE theme)

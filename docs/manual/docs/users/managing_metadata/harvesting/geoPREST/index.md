@@ -13,9 +13,9 @@ The figure above shows the options available:
 
 -   **Site** - Options about the remote site.
 
-    > -   *Name* - This is a short description of the remote site. It will be shown in the harvesting main page as the name for this instance of the GeoPortal REST harvester.
-    > -   *Base URL* - The base URL of the GeoPortal server to be harvested. eg. <http://yourhost.com/geoportal>. The harvester will add the additional path required to access the REST services on the GeoPortal server.
-    > -   *Icon* - An icon to assign to harvested metadata. The icon will be used when showing harvested metadata records in the search results.
+    -   *Name* - This is a short description of the remote site. It will be shown in the harvesting main page as the name for this instance of the GeoPortal REST harvester.
+    -   *Base URL* - The base URL of the GeoPortal server to be harvested. eg. <http://yourhost.com/geoportal>. The harvester will add the additional path required to access the REST services on the GeoPortal server.
+    -   *Icon* - An icon to assign to harvested metadata. The icon will be used when showing harvested metadata records in the search results.
 
 -   **Search criteria** - Using the Add button, you can add several search criteria. You can query any field on the GeoPortal server using the Lucene query syntax described at <http://webhelp.esri.com/geoportal_extension/9.3.1/index.htm#srch_lucene.htm>.
 
@@ -38,8 +38,8 @@ The figure above shows the options available:
 
 -   this harvester uses two REST services from the GeoPortal API:
 
-> -   `rest/find/document` with searchText parameter to return an RSS listing of metadata records that meet the search criteria (maximum 100000)
-> -   `rest/document` with id parameter from each result returned in the RSS listing
+-   `rest/find/document` with searchText parameter to return an RSS listing of metadata records that meet the search criteria (maximum 100000)
+-   `rest/document` with id parameter from each result returned in the RSS listing
 
 -   this harvester has been tested with GeoPortal 9.3.x and 10.x. It can be used in preference to the CSW harvester if there are issues with the handling of the OGC standards etc.
 

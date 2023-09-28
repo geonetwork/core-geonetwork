@@ -21,6 +21,10 @@ Clicking the link will open the metadata import page. You will then have to spec
 
 We'll describe the options you see on this page because they are common ways you can import metadata records in this interface.
 
+{%
+   include-markdown "users/managing_metadata/import/importActions.md"
+%}
+
 ### MEF file import
 
 <figure>
@@ -56,6 +60,10 @@ Clicking the link will open the batch import page. You will then have to specify
 </figure>
 
 -   *Directory* This is the full path on the server's file system of the directory to scan. GeoNetwork will look for and try to import all XML or MEF files present into this directory. It is important to notice that this is the directory on the *server* machine and *not* on the client of the user that is doing the import.
+
+{%
+   include-markdown "users/managing_metadata/import/importActions.md"
+%}
 
 At the bottom of the page there are two buttons:
 

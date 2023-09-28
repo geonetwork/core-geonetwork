@@ -13,17 +13,17 @@ The XML request should contain at least one type parameter to indicate the kind 
 -   **site**: Returns general information about the site like its name, id, etc\...
 -   **users**: Depending upon the profile of the user making the call, information about users of the site will be returned. The rules are:
 
-> -   Administrators can see all users
-> -   User administrators can see all users they administer and all other user administrators in the same group set. The group set is defined by all groups visible to the user administrator (except for the All and Intranet groups).
-> -   An authenticated user can only see their own information.
-> -   A guest cannot see any user information at all.
+-   Administrators can see all users
+-   User administrators can see all users they administer and all other user administrators in the same group set. The group set is defined by all groups visible to the user administrator (except for the All and Intranet groups).
+-   An authenticated user can only see their own information.
+-   A guest cannot see any user information at all.
 
 -   **groups**: Returns all user groups visible to the requesting user. Note: If the user is not authenticated, only the `Intranet` and `All` groups will be returned.
 -   **sources**: Returns all GeoNetwork sources (remote sites) that are known about at the site. This will include:
 
-> -   Node name and siteId
-> -   All source UUIDs and site names that have been discovered through harvesting
-> -   All source UUIDs and site names from MEF files imported by the site
+-   Node name and siteId
+-   All source UUIDs and site names that have been discovered through harvesting
+-   All source UUIDs and site names from MEF files imported by the site
 
 -   **schemas**: Returns all registered metadata schemas for the site
 -   **categories**: Returns the metadata categories for the site

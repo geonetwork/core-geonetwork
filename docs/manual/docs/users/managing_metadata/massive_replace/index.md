@@ -22,12 +22,12 @@ To define the replacements to apply to the selected metadata:
 
 1.  Select the package that contains the metadata element to replace:
 
-    > -   Metadata.
-    > -   Data Identification.
-    > -   Service Identification.
-    > -   Maintenance information.
-    > -   Content information.
-    > -   Distribution information.
+    -   Metadata.
+    -   Data Identification.
+    -   Service Identification.
+    -   Maintenance information.
+    -   Content information.
+    -   Distribution information.
 
 2.  Select the metadata element you want to replace in the package selected.
 

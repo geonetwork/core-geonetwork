@@ -2,19 +2,19 @@
 
 The following related resources are managed:
 
-> -   A thumbnail (linked using a URL or a file to upload)
-> -   A parent metadata record (UUID to the metadata)
-> -   A service metadata record
-> -   A dataset metadata record
-> -   A source dataset
-> -   An online resource
-> -   A feature catalog
-> -   A sibling
+-   A thumbnail (linked using a URL or a file to upload)
+-   A parent metadata record (UUID to the metadata)
+-   A service metadata record
+-   A dataset metadata record
+-   A source dataset
+-   An online resource
+-   A feature catalog
+-   A sibling
 
 There is 2 ways of creating link between resources:
 
-> -   using the relation manager
-> -   or the metadata editor
+-   using the relation manager
+-   or the metadata editor
 
 The relation manager is only available for ISO19139 records (or ISO19139 profiles) but when related resources are metadata records, those records could be in any of the catalog supported standards (eg. ISO19110 for feature catalog, dublin core).
 
@@ -30,8 +30,8 @@ New relation could be added using the top right menu:
 
 Two types of thumbnails could be linked to a metadata record:
 
-> -   an image linked using its URL (the image needs to be published online)
-> -   an image uploaded in the record data directory. During upload a small thumbnail could be created if requested.
+-   an image linked using its URL (the image needs to be published online)
+-   an image uploaded in the record data directory. During upload a small thumbnail could be created if requested.
 
 ![](link/geonetwork-add-thumbnails-by-url.png)
 
@@ -77,10 +77,10 @@ In both cases, the information could be improved or updated using the editor fro
 
 The relation manager allows to add an online resource element defining the following information:
 
-> -   URL or a file to upload
-> -   name
-> -   description
-> -   protocol
+-   URL or a file to upload
+-   name
+-   description
+-   protocol
 
 ![](link/geonetwork-add-simple-online-resource.png)
 
@@ -226,7 +226,7 @@ In order to link a new dataset, do the following:
 | Protocol | File for download WWW:DOWNLOAD                                                                                                        | idem                |
 | Name     | File name (readonly)                                                                                                                  | idem                |
 
-> -   For PostGIS table or file on local network :
+-   For PostGIS table or file on local network :
 
 | Fields   | Vector (ZIP Shapefile)                                                | RASTER (ZIP or not)                    |
 |----------|-----------------------------------------------------------------------|----------------------------------------|
@@ -295,9 +295,9 @@ ISO Metadata records can be related to another record with different type of rel
 
 In order to add a sibling link:
 
-> -   choose a type of association
-> -   choose a type of initiative
-> -   and search for the records to link
+-   choose a type of association
+-   choose a type of initiative
+-   and search for the records to link
 
 ![](link/geonetwork-add-siblings.png)
 

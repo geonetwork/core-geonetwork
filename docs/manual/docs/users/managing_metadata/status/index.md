@@ -42,7 +42,7 @@ A default pair of metadata status change actions defined in Java is provided wit
 
 **statusChange**: This action is called when status is changed by a user. What happens depends on the status change taking place:
 
-> -   when an 'Editor' changes the state on a metadata record(s) from 'Draft' or 'Unknown' to 'Submitted', the Content Reviewers from the groupOwner of the record are informed of the status change via email which looks like the following. They can log in and click on the link supplied in the email to access the submitted records. Here is an example email sent by this action:
+-   when an 'Editor' changes the state on a metadata record(s) from 'Draft' or 'Unknown' to 'Submitted', the Content Reviewers from the groupOwner of the record are informed of the status change via email which looks like the following. They can log in and click on the link supplied in the email to access the submitted records. Here is an example email sent by this action:
 >
 > ```{=html}
 > <!-- -->
@@ -59,7 +59,7 @@ A default pair of metadata status change actions defined in Java is provided wit
 >     Records are available from the following URL:
 >     http://localgeonetwork.org.au/geonetwork/srv/en/main.search?_status=4&_statusChangeDate=2011-12-13T12:58:58
 >
-> -   when a 'Content Reviewer' changes the state on a metadata record(s) from 'Submitted' to 'Accepted' or 'Rejected', the owner of the metadata record is informed of the status change via email. The email received by the metadata record owner looks like the following. Again, the user can log in and use the link supplied in the email to access the approved/rejected records. Here is an example email sent by this action:
+-   when a 'Content Reviewer' changes the state on a metadata record(s) from 'Submitted' to 'Accepted' or 'Rejected', the owner of the metadata record is informed of the status change via email. The email received by the metadata record owner looks like the following. Again, the user can log in and use the link supplied in the email to access the approved/rejected records. Here is an example email sent by this action:
 >
 > ```{=html}
 > <!-- -->

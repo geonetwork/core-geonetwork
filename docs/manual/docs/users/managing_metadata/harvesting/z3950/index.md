@@ -13,10 +13,10 @@ The available options are:
 
 -   **Site**
 
-    > -   *Name* - A short description of this Z3950 harvester. It will be shown in the harvesting main page using this name.
-    > -   *Z3950 Server(s)* - These are the Z3950 servers that will be searched. You can select one or more of these servers.
-    > -   *Z3950 Query* - Specify the Z3950 query to use when searching the selected Z3950 servers. At present this field is known to support the Prefix Query Format (also known as Prefix Query Notation) which is described at this URL: <http://www.indexdata.com/yaz/doc/tools.html#PQF>. See below for more information and some simple examples.
-    > -   *Icon* - An icon to assign to harvested metadata. The icon will be used when showing search results.
+    -   *Name* - A short description of this Z3950 harvester. It will be shown in the harvesting main page using this name.
+    -   *Z3950 Server(s)* - These are the Z3950 servers that will be searched. You can select one or more of these servers.
+    -   *Z3950 Query* - Specify the Z3950 query to use when searching the selected Z3950 servers. At present this field is known to support the Prefix Query Format (also known as Prefix Query Notation) which is described at this URL: <http://www.indexdata.com/yaz/doc/tools.html#PQF>. See below for more information and some simple examples.
+    -   *Icon* - An icon to assign to harvested metadata. The icon will be used when showing search results.
 
 -   **Options** - Scheduling options.
 
@@ -25,8 +25,8 @@ The available options are:
 ```
 -   **Harvested Content**
 
-    > -   *Apply this XSLT to harvested records* - Choose an XSLT here that will convert harvested records to a different format.
-    > -   *Validate* - If checked, records that do not/cannot be validated will be rejected.
+    -   *Apply this XSLT to harvested records* - Choose an XSLT here that will convert harvested records to a different format.
+    -   *Validate* - If checked, records that do not/cannot be validated will be rejected.
 
 -   **Privileges**
 

@@ -108,8 +108,8 @@ Called with a metadata id or uuid, one or more file names (if more than one file
 
 The service returns HTTP status code 200 along with a zip archive containing:
 
-> -   the file resources requested in the **fname** parameter(s)
-> -   a copy of the metadata record (as a mef) - called `metadata.zip`
-> -   a copy of the html license generated (as provided by the `xml.file.disclaimer` service) - called `license-annex.html`
+ -   the file resources requested in the **fname** parameter(s)
+ -   a copy of the metadata record (as a mef) - called `metadata.zip`
+ -   a copy of the html license generated (as provided by the `xml.file.disclaimer` service) - called `license-annex.html`
 
 If an exception occurs or the `xml.file.disclaimer` service has not been executed by the same user, then a zero-length file will be returned. Unlike other GeoNetwork services, no other indication of an exception is given.

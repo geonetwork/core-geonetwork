@@ -15,12 +15,12 @@ Configuration options:
 
 -   **Site**
 
-    > -   *Name* - This is a short description of the node. It will be shown in the harvesting main page.
-    > -   *Server* - ArcSde server IP address or name
-    > -   *Port* - ArcSde service port (typically 5151)
-    > -   *Username* - Username to connect to ArcSDE server
-    > -   *Password* - Password of the ArcSDE user
-    > -   *Database name* - ArcSDE instance name (typically esri_sde)
+    -   *Name* - This is a short description of the node. It will be shown in the harvesting main page.
+    -   *Server* - ArcSde server IP address or name
+    -   *Port* - ArcSde service port (typically 5151)
+    -   *Username* - Username to connect to ArcSDE server
+    -   *Password* - Password of the ArcSDE user
+    -   *Database name* - ArcSDE instance name (typically esri_sde)
 
 -   **Options**
 

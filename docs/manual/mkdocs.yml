@@ -77,8 +77,9 @@ plugins:
             Map: Map
   - exclude:
       glob:
-        - annexes/gallery/bin/README.md
-# - include-markdown
+        # ignore, used with include-markdown below
+        - users/managing_metadata/import/importActions.md
+  - include-markdown
 
 # Customizations
 extra:
@@ -128,99 +129,113 @@ markdown_extensions:
 # Page tree
 nav:
   - index.md
-  - 'Developer':
-    - developer/index.md
-    - developer/development/index.md
-    - developer/harvesting/index.md
-    - developer/mef/index.md
-    - developer/release/index.md
-    - developer/schemaPlugins/index.md
-    - developer/settings/index.md
-    - developer/userinterface/index.md
-    - developer/userinterface/html5ui/index.md
-    - developer/userinterface/widgets/index.md
-    - developer/xml_services/index.md
-    - developer/xml_services/category_xml_services.md
-    - developer/xml_services/csw_services.md
-    - developer/xml_services/group_xml_services.md
-    - developer/xml_services/java_xml_services.md
-    - developer/xml_services/login_xml_services.md
-    - developer/xml_services/metadata_xml_categories.md
-    - developer/xml_services/metadata_xml_insert_update_delete.md
-    - developer/xml_services/metadata_xml_ownership.md
-    - developer/xml_services/metadata_xml_privileges.md
-    - developer/xml_services/metadata_xml_processing.md
-    - developer/xml_services/metadata_xml_relations.md
-    - developer/xml_services/metadata_xml_search_retrieve.md
-    - developer/xml_services/metadata_xml_select.md
-    - developer/xml_services/metadata_xml_status.md
-    - developer/xml_services/metadata_xml_validation.md
-    - developer/xml_services/metadata_xml_versioning.md
-    - developer/xml_services/schema_services.md
-    - developer/xml_services/services_calling.md
-    - developer/xml_services/services_download.md
-    - developer/xml_services/services_harvesting.md
-    - developer/xml_services/services_mef.md
-    - developer/xml_services/services_site_info_forwarding.md
-    - developer/xml_services/system_configuration.md
-    - developer/xml_services/user_xml_services.md
   - 'User':
     - users/index.md
-    - users/faq.md
-    - users/glossary.md
-    - users/preface.md
-    - users/admin/index.md
-    - users/admin/advanced-configuration/index.md
-    - users/admin/authentication/index.md
-    - users/admin/configuration/index.md
-    - users/admin/csw-configuration/index.md
-    - users/admin/localization/index.md
-    - users/admin/monitoring/index.md
-    - users/admin/usersandgroups/index.md
-    - users/appendix/foss4g/index.md
-    - users/appendix/glossary_of_metadata/index.md
-    - users/appendix/iso_topic_categories/index.md
-    - users/features/index.md
-    - users/features/multilingual/index.md
-    - users/features/search_statistics/index.md
-    - users/features/thesaurus/index.md
-    - users/features/user-self-registration/index.md
-    - users/managing_metadata/index.md
-    - users/managing_metadata/export/index.md
-    - users/managing_metadata/formatter/index.md
-    - users/managing_metadata/fragments/index.md
-    - users/managing_metadata/harvesting/index.md
-    - users/managing_metadata/harvesting/common_categories.md
-    - users/managing_metadata/harvesting/common_notes.md
-    - users/managing_metadata/harvesting/common_options.md
-    - users/managing_metadata/harvesting/common_privileges.md
-    - users/managing_metadata/harvesting/csw/index.md
-    - users/managing_metadata/harvesting/geoPREST/index.md
-    - users/managing_metadata/harvesting/gn/index.md
-    - users/managing_metadata/harvesting/gn2.0/index.md
-    - users/managing_metadata/harvesting/localfilesystem/index.md
-    - users/managing_metadata/harvesting/oaipmh/index.md
-    - users/managing_metadata/harvesting/ogcwxs/index.md
-    - users/managing_metadata/harvesting/sde/index.md
-    - users/managing_metadata/harvesting/thredds/index.md
-    - users/managing_metadata/harvesting/webdav/index.md
-    - users/managing_metadata/harvesting/wfs-getfeatures/index.md
-    - users/managing_metadata/harvesting/z3950/index.md
-    - users/managing_metadata/import/index.md
-    - users/managing_metadata/import/importActions.md
-    - users/managing_metadata/massive_replace/index.md
-    - users/managing_metadata/ownership/index.md
-    - users/managing_metadata/processing/index.md
-    - users/managing_metadata/schemas/index.md
-    - users/managing_metadata/status/index.md
-    - users/managing_metadata/templates/index.md
-    - users/managing_metadata/versioning/index.md
-    - users/quickstartguide/index.md
-    - users/quickstartguide/geographic_management/index.md
-    - users/quickstartguide/getting_started/index.md
-    - users/quickstartguide/installing/index.md
-    - users/quickstartguide/metadata_concepts/index.md
-    - users/quickstartguide/new_metadata/index.md
-    - users/quickstartguide/new_metadata/linking.md
-    - users/quickstartguide/newfeatures/index.md
-    - users/quickstartguide/viewing/index.md
+
+    - 'Preface':
+      - users/preface.md
+    - 'Quick Start Guide':
+      - users/quickstartguide/index.md
+      - users/quickstartguide/geographic_management/index.md
+      - users/quickstartguide/getting_started/index.md
+      - users/quickstartguide/installing/index.md
+      - users/quickstartguide/metadata_concepts/index.md
+      - users/quickstartguide/new_metadata/index.md
+      - users/quickstartguide/new_metadata/linking.md
+      - users/quickstartguide/newfeatures/index.md
+      - users/quickstartguide/viewing/index.md
+    - 'Administration':
+      - users/admin/index.md
+      - users/admin/advanced-configuration/index.md
+      - users/admin/authentication/index.md
+      - users/admin/configuration/index.md
+      - users/admin/csw-configuration/index.md
+      - users/admin/localization/index.md
+      - users/admin/monitoring/index.md
+      - users/admin/usersandgroups/index.md
+    - 'Managing Metadata':
+      - users/managing_metadata/index.md
+      - 'Templates': users/managing_metadata/templates/index.md
+      - 'Ownership and Privileges': users/managing_metadata/ownership/index.md
+      - 'Import facilities': users/managing_metadata/import/index.md
+      - users/managing_metadata/export/index.md
+      - users/managing_metadata/status/index.md
+      - users/managing_metadata/versioning/index.md
+      - 'Harvesting':
+        - users/managing_metadata/harvesting/index.md
+        - users/managing_metadata/harvesting/common_categories.md
+        - users/managing_metadata/harvesting/common_notes.md
+        - users/managing_metadata/harvesting/common_options.md
+        - users/managing_metadata/harvesting/common_privileges.md
+        - users/managing_metadata/harvesting/csw/index.md
+        - users/managing_metadata/harvesting/geoPREST/index.md
+        - users/managing_metadata/harvesting/gn/index.md
+        - users/managing_metadata/harvesting/gn2.0/index.md
+        - users/managing_metadata/harvesting/localfilesystem/index.md
+        - users/managing_metadata/harvesting/oaipmh/index.md
+        - users/managing_metadata/harvesting/ogcwxs/index.md
+        - users/managing_metadata/harvesting/sde/index.md
+        - users/managing_metadata/harvesting/thredds/index.md
+        - users/managing_metadata/harvesting/webdav/index.md
+        - users/managing_metadata/harvesting/wfs-getfeatures/index.md
+        - users/managing_metadata/harvesting/z3950/index.md
+      - users/managing_metadata/formatter/index.md
+      - 'Processing': users/managing_metadata/processing/index.md
+      - users/managing_metadata/fragments/index.md
+      - 'Adding a schema': users/managing_metadata/schemas/index.md
+      - 'Define the replacement(s)': users/managing_metadata/massive_replace/index.md
+    - 'Features':
+      - users/features/index.md
+      - users/features/multilingual/index.md
+      - users/features/search_statistics/index.md
+      - users/features/thesaurus/index.md
+      - users/features/user-self-registration/index.md
+    - 'Glossary of Metadata Fields Description': users/appendix/glossary_of_metadata/index.md
+    - 'ISO Topic Categories': users/appendix/iso_topic_categories/index.md
+    - 'Free and Open Source Software for Geospatial Information Systems': users/appendix/foss4g/index.md
+    - 'Frequently Asked Questions': users/faq.md
+    - 'Glossary': users/glossary.md
+  - 'Developer':
+    - developer/index.md
+    - 'Software development':
+       - developer/development/index.md
+    - 'Create a release':
+      - developer/release/index.md
+    - 'Harvesting':
+      - developer/harvesting/index.md
+    - 'Schema Plugins':
+      - developer/schemaPlugins/index.md
+    - 'Metadata Exchange Format':
+      - developer/mef/index.md
+    - 'Settings hierarchy':
+      - developer/settings/index.md
+    - 'XML Services':
+      - developer/xml_services/index.md
+      - developer/xml_services/category_xml_services.md
+      - developer/xml_services/csw_services.md
+      - developer/xml_services/group_xml_services.md
+      - developer/xml_services/java_xml_services.md
+      - developer/xml_services/login_xml_services.md
+      - developer/xml_services/metadata_xml_categories.md
+      - developer/xml_services/metadata_xml_insert_update_delete.md
+      - developer/xml_services/metadata_xml_ownership.md
+      - developer/xml_services/metadata_xml_privileges.md
+      - developer/xml_services/metadata_xml_processing.md
+      - developer/xml_services/metadata_xml_relations.md
+      - developer/xml_services/metadata_xml_search_retrieve.md
+      - developer/xml_services/metadata_xml_select.md
+      - developer/xml_services/metadata_xml_status.md
+      - developer/xml_services/metadata_xml_validation.md
+      - developer/xml_services/metadata_xml_versioning.md
+      - developer/xml_services/schema_services.md
+      - developer/xml_services/services_calling.md
+      - developer/xml_services/services_download.md
+      - developer/xml_services/services_harvesting.md
+      - developer/xml_services/services_mef.md
+      - developer/xml_services/services_site_info_forwarding.md
+      - developer/xml_services/system_configuration.md
+      - developer/xml_services/user_xml_services.md
+    - 'User Interface':
+      - developer/userinterface/index.md
+      - developer/userinterface/html5ui/index.md
+      - developer/userinterface/widgets/index.md

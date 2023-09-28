@@ -11,11 +11,11 @@ This harvesting type uses the WebDAV (Distributed Authoring and Versioning) prot
 
 -   **Site** - Options about the remote site.
 
-    > -   *Subtype* - Select WebDAV or WAF according to the type of server being harvested.
-    > -   *Name* - This is a short description of the remote site. It will be shown in the harvesting main page as the name for this instance of the WebDAV harvester.
-    > -   *URL* - The remote URL from which metadata will be harvested. Each file found that ends with .xml is assumed to be a metadata record.
-    > -   *Icon* - An icon to assign to harvested metadata. The icon will be used when showing search results.
-    > -   *Use account* - Account credentials for basic HTTP authentication on the WebDAV/WAF server.
+    -   *Subtype* - Select WebDAV or WAF according to the type of server being harvested.
+    -   *Name* - This is a short description of the remote site. It will be shown in the harvesting main page as the name for this instance of the WebDAV harvester.
+    -   *URL* - The remote URL from which metadata will be harvested. Each file found that ends with .xml is assumed to be a metadata record.
+    -   *Icon* - An icon to assign to harvested metadata. The icon will be used when showing search results.
+    -   *Use account* - Account credentials for basic HTTP authentication on the WebDAV/WAF server.
 
 -   **Options** - Scheduling options.
 
@@ -24,8 +24,8 @@ This harvesting type uses the WebDAV (Distributed Authoring and Versioning) prot
 ```
 -   **Options** - Specific harvesting options for this harvester.
 
-    > -   *Validate* - If checked, the metadata will be validated after retrieval. If the validation does not pass, the metadata will be skipped.
-    > -   *Recurse* - When the harvesting engine will find folders, it will recursively descend into them.
+    -   *Validate* - If checked, the metadata will be validated after retrieval. If the validation does not pass, the metadata will be skipped.
+    -   *Recurse* - When the harvesting engine will find folders, it will recursively descend into them.
 
 -   **Privileges** - Assign privileges to harvested metadata.
 

@@ -33,23 +33,20 @@ A description of the options follows:
 
 -   **Privileges** - Use this section to handle remote group privileges. Press the **Retrieve groups** button and the list of groups on the remote site will be returned. You can then assign a copy policy to each group.
 
-    > -   The **All** group has a different policy to the other groups:
-    >
-    >     > 1.  Copy: Privileges are copied.
-    >     >
-    >     > 2.  Copy to Intranet: Privileges are copied but to the Intranet group. This allows public metadata to be protected.
-    >     >
-    >     > 3.  
-    >     >
-    >     >     Don't copy: Privileges are not copied and harvested metadata will
-    >     >
-    >     >     :   not be publicly visible.
-    >
-    > -   For all other groups the policies are these:
-    >
-    >     > 1.  Copy: Privileges are copied only if there is a local group with the same (not localised) name as the remote group.
-    >     > 2.  Create and copy: Privileges are copied. If there is no local group with the same name as the remote group then it is created.
-    >     > 3.  Don't copy: Privileges are not copied.
+    -   The **All** group has a different policy to the other groups:
+    
+        1.  Copy: Privileges are copied.
+
+        2.  Copy to Intranet: Privileges are copied but to the Intranet group. This allows public metadata to be protected.
+
+        3.  Don't copy: Privileges are not copied and harvested metadata will not be publicly visible.
+
+    -   For all other groups the policies are these:
+    
+        1.  Copy: Privileges are copied only if there is a local group with the same (not localised) name as the remote group.
+        2.  Create and copy: Privileges are copied. If there is no local group with the same name as the remote group then it is created.
+        
+        3.  Don't copy: Privileges are not copied.
 
 !!! note
 

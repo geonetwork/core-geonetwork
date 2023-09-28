@@ -16,32 +16,26 @@ To create new groups you should be logged on with an account that has Administra
 
 1.  Select the *Administration* button in the menu. On the Administration page, select *Group management*.
 
-    > <figure>
-    > <img src="admin-group-management.png" alt="admin-group-management.png" />
-    > <figcaption><em>Administration page - Group management</em></figcaption>
-    > </figure>
+    ![image](admin-group-management.png)
+
+    *Administration page - Group management*
 
 2.  Select *Add a new group*. You may want to remove the *Sample* group;
 
-    > <figure>
-    > <img src="GroupManag.png" alt="GroupManag.png" />
-    > <figcaption><em>Group management</em></figcaption>
-    > </figure>
+    ![image](GroupManag.png)
+
+    *Group management*
 
 3.  Fill out the details. The email address will be used to send feedback on data downloads when they occur for resources that are part of the Group.
 
-    > ::: warning
-    > ::: title
-    > Warning
-    > :::
-    >
-    > The Name should *NOT* contain spaces! You can use the Localization panel to provide localized names for groups.
-    > :::
-    >
-    > <figure>
-    > <img src="addGroup.png" alt="addGroup.png" />
-    > <figcaption><em>Group edit form</em></figcaption>
-    > </figure>
+    !!! warning
+
+        The Name should *NOT* contain spaces! You can use the Localization panel to provide localized names for groups.
+
+
+    ![image](addGroup.png)
+
+    *Group edit form*
 
 4.  Click on *Save*
 
@@ -55,10 +49,9 @@ Privileges that can be set relate to visibility of the Metadata (*Publish*), dat
 
 Below is an example of the privileges management table related to a dataset.
 
-<figure>
-<img src="privilegesSetting1.png" alt="privilegesSetting1.png" />
-<figcaption><em>Privilege settings</em></figcaption>
-</figure>
+![image](privilegesSetting1.png)
+
+*Privilege settings*
 
 ## Creating new Users
 
@@ -66,28 +59,27 @@ To add a new user to the GeoNetwork system you do the following:
 
 1.  Select the *Administration* button in the menu. On the Administration page, select *User management*.
 
-    > <figure>
-    > <img src="admin-user-management.png" alt="admin-user-management.png" />
-    > <figcaption><em>Administration page - User management</em></figcaption>
-    > </figure>
+    ![image](admin-user-management.png)
+
+    *Administration page - User management*
 
 2.  Click the button *Add a new user*;
 
-> <figure>
-> <img src="AddUser.png" alt="AddUser.png" />
-> <figcaption><em>User administration form</em></figcaption>
-> </figure>
+    ![image](AddUser.png)
 
-1.  Provide the *information* required for the new user;
+    *User administration form*
 
-> <figure>
-> <img src="InsertUserInfo.png" alt="InsertUserInfo.png" />
-> <figcaption><em>User information form</em></figcaption>
-> </figure>
+3.  Provide the *information* required for the new user;
 
-1.  Assign the correct *profile*;
-2.  Assign the user to a *group*;
-3.  Click on *Save*.
+    ![image](InsertUserInfo.png)
+
+    *User information form*
+
+4.  Assign the correct *profile*;
+
+5.  Assign the user to a *group*;
+
+6.  Click on *Save*.
 
 ## User Profiles {#user_profiles}
 

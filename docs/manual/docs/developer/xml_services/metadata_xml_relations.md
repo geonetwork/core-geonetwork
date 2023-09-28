@@ -38,45 +38,45 @@ Each relation element has a type attribute indicating the type of relation with 
 
 -   **relation type=parent**: elements describe the parent metadata record of the specified metadata record:
 
-> -   **id**: GeoNetwork internal id (integer)
-> -   **uuid**: Metadata uuid
-> -   **title**: Metadata title
-> -   **abstract**: A brief explanation of the metadata
+-   **id**: GeoNetwork internal id (integer)
+-   **uuid**: Metadata uuid
+-   **title**: Metadata title
+-   **abstract**: A brief explanation of the metadata
 
 -   **relation type=children**: **metadata** element describes the child metadata record of the specified metadata record
 
-> -   **metadata**: container for child metadata record
->     -   **title**: Metadata title
->     -   **abstract**: A brief explanation of the metadata
->         -   *Other elements returned by a brief presentation of the child metadata record*
+-   **metadata**: container for child metadata record
+    -   **title**: Metadata title
+    -   **abstract**: A brief explanation of the metadata
+        -   *Other elements returned by a brief presentation of the child metadata record*
 
 -   **relation type=services**: multiple **metadata** elements describing the service metadata records that operate on the specified metadata record:
 
-> -   **metadata**: container for a service metadata record
->     -   **title**: Metadata title
->     -   **abstract**: A brief explanation of the metadata
->         -   *Other elements returned by a brief presentation of the service metadata record*
+-   **metadata**: container for a service metadata record
+    -   **title**: Metadata title
+    -   **abstract**: A brief explanation of the metadata
+        -   *Other elements returned by a brief presentation of the service metadata record*
 
 -   **relation type=fcats**: multiple **metadata** elements describing the feature catalog metadata records that are related to the specified metadata record
 
-> -   **metadata**: container for feature catalog metadata record
->     -   **title**: Metadata title
->     -   **abstract**: A brief explanation of the metadata
->         -   *Other elements returned by a brief presentation of the feature catalog metadata record*
+-   **metadata**: container for feature catalog metadata record
+    -   **title**: Metadata title
+    -   **abstract**: A brief explanation of the metadata
+        -   *Other elements returned by a brief presentation of the feature catalog metadata record*
 
 -   **relation type=hasfeaturecat**: **metadata** element describing the metadata record that has a feature catalog relation to this feature catalog record
 
-> -   **metadata**: container for metadata record
->     -   **title**: Metadata title
->     -   **abstract**: A brief explanation of the metadata
->         -   *Other elements returned by a brief presentation of the metadata record*
+-   **metadata**: container for metadata record
+    -   **title**: Metadata title
+    -   **abstract**: A brief explanation of the metadata
+        -   *Other elements returned by a brief presentation of the metadata record*
 
 -   **relation type=related**: elements describe a related metadata record to the specified metadata record:
 
-> -   **id**: GeoNetwork internal id (integer)
-> -   **uuid**: Metadata uuid
-> -   **title**: Metadata title
-> -   **abstract**: A brief explanation of the metadata
+-   **id**: GeoNetwork internal id (integer)
+-   **uuid**: Metadata uuid
+-   **title**: Metadata title
+-   **abstract**: A brief explanation of the metadata
 
 If the response did not execute successfully then an HTTP error code 500 is returned along with an XML document describing the exception/what went wrong. An example of such an error response is::
 
