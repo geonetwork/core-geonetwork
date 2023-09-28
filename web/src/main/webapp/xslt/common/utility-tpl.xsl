@@ -143,7 +143,7 @@
   <xsl:template name="hyperlink-mailaddress">
     <xsl:param name="string" select="." />
     <xsl:analyze-string select="$string"
-                        regex="([\w\.]+)@([a-zA-Z_]+?\.[a-zA-Z]{{2,3}})">
+                        regex="([A-Za-z0-9._%+-]{{1,64}}@([A-Za-z0-9-]{{1,63}}\.)+[A-Za-z]{{2,63}})">
       <xsl:matching-substring>
         <a href="mailto:{.}">
           <xsl:value-of select="." />
@@ -152,7 +152,7 @@
       <xsl:non-matching-substring>
 
         <!-- See previous comment about the usage of the char ◿ -->
-        <xsl:analyze-string select="$string"
+        <xsl:analyze-string select="."
                             regex="◿">
           <xsl:matching-substring>
             <br/>

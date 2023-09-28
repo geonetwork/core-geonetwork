@@ -613,6 +613,12 @@
       <artifactId>gn-schema-iso19115-3.2018</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>org.xmlunit</groupId>
+      <artifactId>xmlunit-matchers</artifactId>
+      <version>${xmlunit.version}</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <build>
@@ -792,6 +798,21 @@
                 <source>${basedir}/src/main/java</source>
                 <source>${basedir}/src/main/webapp/WEB-INF/classes/setup/sql/migrate</source>
               </sources>
+            </configuration>
+          </execution>
+          <execution>
+            <id>add-test-resource</id>
+            <phase>generate-test-resources</phase>
+            <goals>
+              <goal>add-test-resource</goal>
+            </goals>
+            <configuration>
+              <resources>
+                <resource>
+                  <directory>${basedir}/src/main/webapp/xslt</directory>
+                  <targetPath>resources/xslt</targetPath>
+                </resource>
+              </resources>
             </configuration>
           </execution>
         </executions>
