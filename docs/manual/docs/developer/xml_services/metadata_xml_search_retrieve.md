@@ -111,14 +111,14 @@ The response is the metadata record with additional **geonet:info** section. The
 
     -   **metadata**: Container for each metadata record found. Each container has a **geonet:info** element with the following information:
 
-        > -   **id**: Metadata internal identifier
-        > -   **uuid** : Metadata Universally Unique Identifier (UUID)
-        > -   **schema**: Metadata schema
-        > -   **createDate**: Metadata creation date
-        > -   **changeDate**: Metadata last modification date
-        > -   **source**: Source catalogue the metadata
-        > -   **category**: Metadata category (Can be multiple elements)
-        > -   **score**: Value indicating the accuracy of search
+        -   **id**: Metadata internal identifier
+        -   **uuid** : Metadata Universally Unique Identifier (UUID)
+        -   **schema**: Metadata schema
+        -   **createDate**: Metadata creation date
+        -   **changeDate**: Metadata last modification date
+        -   **source**: Source catalogue the metadata
+        -   **category**: Metadata category (Can be multiple elements)
+        -   **score**: Value indicating the accuracy of search
 
 Metadata search response example:
 

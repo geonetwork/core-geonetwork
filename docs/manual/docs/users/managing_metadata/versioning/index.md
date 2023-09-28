@@ -2,8 +2,8 @@
 
 There are many use cases where it is important to be able to track (over time):
 
-> -   changes to the metadata record
-> -   changes to properties of the metadata record eg. privileges, categories, status
+-   changes to the metadata record
+-   changes to properties of the metadata record eg. privileges, categories, status
 
 GeoNetwork uses a subversion repository to capture these changes and allow the user to examine the changes through the various visual interfaces to subversion repositories that already exist eg. viewvc. Apart from the advantage of ready to use tools for examining the changes, the subversion approach is efficient for XML files and simple to maintain.
 
@@ -33,11 +33,11 @@ Due to recent changes in the way in which GeoNetwork database sessions are commi
 
 The metadata record and its properties are stored in the subversion repository as XML files. The structure of the XML files describing the properties of the metadata is that returned by SELECT statements on the relevant database tables. The typical structure of a directory for a metadata record in the repository consists of a directory (named after the id of the metadata record) which contains:
 
-> -   metadata.xml - the XML metadata record
-> -   owner.xml - an XML file describing the owner of the metadata record
-> -   privileges.xml - an XML file describing the privileges of the metadata record
-> -   categories.xml - an XML file describing the categories to which the metadata record has been assigned
-> -   status.xml - an XML file describing the status of the metadata (eg. Approved, Rejected, etc)
+-   metadata.xml - the XML metadata record
+-   owner.xml - an XML file describing the owner of the metadata record
+-   privileges.xml - an XML file describing the privileges of the metadata record
+-   categories.xml - an XML file describing the categories to which the metadata record has been assigned
+-   status.xml - an XML file describing the status of the metadata (eg. Approved, Rejected, etc)
 
 A typical example of a privileges.xml file stored in the repository
 

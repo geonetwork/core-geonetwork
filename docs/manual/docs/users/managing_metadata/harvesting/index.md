@@ -156,9 +156,9 @@ The page shows a list of the currently defined harvesters and a set of buttons f
 7.  *Last run* The date, in ISO 8601 format, of the most recent harvesting run.
 8.  *Operation* A list of buttons/links to operations on a harvester.
 
-> -   Selecting *Edit* will allow you to change the parameters for a harvester.
-> -   Selecting *Clone* will allow you to create a clone of this harvester and start editing the details of the clone.
-> -   Selecting *History* will allow you to view/change the harvesting history for a harvester - see [Harvest History](index.md#harvest_history).
+-   Selecting *Edit* will allow you to change the parameters for a harvester.
+-   Selecting *Clone* will allow you to create a clone of this harvester and start editing the details of the clone.
+-   Selecting *History* will allow you to view/change the harvesting history for a harvester - see [Harvest History](index.md#harvest_history).
 
 At the bottom of the list of harvesters are two rows of buttons. The first row contains buttons that can operate on a selected set of harvesters. You can select the harvesters you want to operate on using the check box in the Select column and then press one of these buttons. When the button finishes its action, the check boxes are cleared. Here is the meaning of each button:
 

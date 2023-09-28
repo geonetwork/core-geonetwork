@@ -90,17 +90,17 @@ In order to define which groups the user is member of and which profile is the u
 
 Attributes configuration:
 
-> -   privilege attribute contains the group this user is member of. More than one group is allowed.
-> -   profile attribute contains the profile of the user
+-   privilege attribute contains the group this user is member of. More than one group is allowed.
+-   profile attribute contains the profile of the user
 
 User valid profiles are:
 
-> -   Administrator
-> -   UserAdmin
-> -   Reviewer
-> -   Editor
-> -   RegisteredUser
-> -   Guest
+-   Administrator
+-   UserAdmin
+-   Reviewer
+-   Editor
+-   RegisteredUser
+-   Guest
 
 ##### Profile mapping configuration
 
@@ -149,11 +149,11 @@ The LDAP attribute can contains the following configuration to define the differ
 
 A synchronization task is taking care of removing LDAP user which may be deleted. For example:
 
-> -   T0: a user A sign in the catalog. A local user A is created in the user database
-> -   T1: A is deleted from the LDAP (A could not sign in in the catalog anymore)
-> -   T2: the synchronization task will check that all local LDAP users exist in LDAP:
->     -   if user is not owner of any records, it will be deleted
->     -   if user is owner of metadata records, warning message is avaialable on the catalog logging system. record's owner should be changed to another user before the task could remove the user.
+-   T0: a user A sign in the catalog. A local user A is created in the user database
+-   T1: A is deleted from the LDAP (A could not sign in in the catalog anymore)
+-   T2: the synchronization task will check that all local LDAP users exist in LDAP:
+    -   if user is not owner of any records, it will be deleted
+    -   if user is owner of metadata records, warning message is avaialable on the catalog logging system. record's owner should be changed to another user before the task could remove the user.
 
 By default the task is runned once every day. Configuration could be changed in config-security.properties:
 

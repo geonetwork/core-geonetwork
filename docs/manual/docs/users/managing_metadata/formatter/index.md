@@ -6,17 +6,12 @@ The metadata.show service (the metadata viewer) displays a metadata document usi
 
 To this end the metadata.formatter.html and metadata.formatter.xml services allow an alternate stylesheet to be used for displaying the metadata. The urls of interest to an end-user are:
 
-> -   /geonetwork/srv/<langCode>/metadata.formatter.html?xsl=<formatterId>&id=<metadataId>
->
-> > -   Applies the stylesheet identified by xsl parameter to the metadata identified by id param and returns the document with the *html* contentType
->
-> -   /geonetwork/srv/<langCode>/metadata.formatter.xml?xsl=<formatterId>&id=<metadataId>
->
-> > -   Applies the stylesheet identified by xsl parameter to the metadata identified by id param and returns the document with the *xml* contentType
->
-> -   /geonetwork/srv/<langCode>/metadata.formatter.list
->
-> > -   Lists all of the metadata formatter ids
+-   /geonetwork/srv/<langCode>/metadata.formatter.html?xsl=<formatterId>&id=<metadataId>
+-   Applies the stylesheet identified by xsl parameter to the metadata identified by id param and returns the document with the *html* contentType
+-   /geonetwork/srv/<langCode>/metadata.formatter.xml?xsl=<formatterId>&id=<metadataId>
+-   Applies the stylesheet identified by xsl parameter to the metadata identified by id param and returns the document with the *xml* contentType
+-   /geonetwork/srv/<langCode>/metadata.formatter.list
+-   Lists all of the metadata formatter ids
 
 Another use-case for metadata formatters is to embed the metadata in other websites. Often a metadata document contains a very large amount of data and perhaps only a subset is interesting for a particular website or perhaps the branding/stylesheets needs to be customized to match the website.
 
@@ -26,9 +21,9 @@ A metadata formatter is a bundle of files that can be uploaded to Geonetwork as 
 
 An administration user interface exists for managing these bundles. The starting page of the ui contains a list of the available bundles and has a field for uploading new bundles. There are three upload options:
 
-> -   *Single xsl file* - A new bundle will be created for the xsl file and the name of the bundle will be based on the xsl file name
-> -   *Zip file (flat)* - A zip file which contains a view.xsl file and other required resources at the root of the zip file so that when unzipped the files will be unzipped into the current directory
-> -   *Zip file (folder)* - A zip file with a single folder that contains a view.xsl file and the other required resources so that when unzipped a single directory will be created that contains the formatter resources.
+-   *Single xsl file* - A new bundle will be created for the xsl file and the name of the bundle will be based on the xsl file name
+-   *Zip file (flat)* - A zip file which contains a view.xsl file and other required resources at the root of the zip file so that when unzipped the files will be unzipped into the current directory
+-   *Zip file (folder)* - A zip file with a single folder that contains a view.xsl file and the other required resources so that when unzipped a single directory will be created that contains the formatter resources.
 
 If a bundle is uploaded any existing bundles with the same name will be replaced with the new version.
 
@@ -36,9 +31,9 @@ See Bundle format section below for more details about what files can be contain
 
 When a format in the formatter list is selected the following options become enabled:
 
-> -   Delete - Delete the format bundler from Geonetwork
-> -   Download - Download the bundle. This allows the administrator to download the bundle and edit the contents then upload at a later date
-> -   Edit - This provides some online edit capabilities of the bundle. At the moment it allows editing of *existing* text files. Adding new files etc\... maybe added in the future but is not possible at the moment. When edit is clicked a dialog with a list of all editable files are displayed in a tree and double clicking on a file will open a new window/tab with a text area containing the contents of the file. The webpage has buttons for saving the file or viewing a metadata with the style. The view options do *NOT* save the document before execution, that must be done before pressing the view buttons.
+-   Delete - Delete the format bundler from Geonetwork
+-   Download - Download the bundle. This allows the administrator to download the bundle and edit the contents then upload at a later date
+-   Edit - This provides some online edit capabilities of the bundle. At the moment it allows editing of *existing* text files. Adding new files etc\... maybe added in the future but is not possible at the moment. When edit is clicked a dialog with a list of all editable files are displayed in a tree and double clicking on a file will open a new window/tab with a text area containing the contents of the file. The webpage has buttons for saving the file or viewing a metadata with the style. The view options do *NOT* save the document before execution, that must be done before pressing the view buttons.
 
 ## Bundle format
 
@@ -50,29 +45,32 @@ The view.xsl stylesheet is executed on an xml file with essentially the followin
 
 -   root
 
-> -   url - text of the url tag is the base url to make requests to geonetwork. An example is /geonetwork/
->
-> -   locUrl - text of the url tag is the localised url to make requests to geonetwork. An example is /geonetwork/srv/eng/
->
-> -   resourceUrl - a base url for accessing a resource from the bundle. An example of image tag might be:
->
->         <img src="{/root/resourceURL}/img.png"/>
->
-> -   <metadata> - the root of the metadata document
->
-> -   loc
->
-> > -   lang - the text of this tag is the lang code of the localization files that are loaded in this section
-> > -   <bundle loc file> - the contents of the bundles loc/<locale>/*.xml files
->
-> -   strings - the contents of geonetwork/loc/<locale>/xml/strings.xml
-> -   schemas
->
-> > -   <schema> - the name of the schema of the labels and codelists strings to come
-> >
-> > > -   labels - the localised labels for the schema as defined in the schema_plugins/<schema>/loc/<locale>/labels.xml
-> > > -   codelists - the localised codelists labels for the schema as defined in the schema_plugins/<schema>/loc/<locale>/codelists.xml
-> > > -   strings - the localised strings for the schema as defined in the schema_plugins/<schema>/loc/<locale>/strings.xml
+-   url - text of the url tag is the base url to make requests to geonetwork. An example is /geonetwork/
+
+-   locUrl - text of the url tag is the localised url to make requests to geonetwork. An example is /geonetwork/srv/eng/
+
+-   resourceUrl - a base url for accessing a resource from the bundle. An example of image tag might be:
+    
+    ``` xml
+         <img src="{/root/resourceURL}/img.png"/>
+       <metadata>
+    ```
+    
+    The root of the metadata document
+
+-   loc
+
+-   lang - the text of this tag is the lang code of the localization files that are loaded in this section
+
+     -   `<bundle loc file>` - the contents of the bundles loc/<locale>/*.xml files
+
+-   strings - the contents of geonetwork/loc/<locale>/xml/strings.xml
+-   schemas
+
+    -   `<schema>` - the name of the schema of the labels and codelists strings to come
+    -   labels - the localised labels for the schema as defined in the `schema_plugins/<schema>/loc/<locale>/labels.xml`
+    -   codelists - the localised codelists labels for the schema as defined in the `schema_plugins/<schema>/loc/<locale>/codelists.xml`
+    -   strings - the localised strings for the schema as defined in the `schema_plugins/<schema>/loc/<locale>/strings.xml`
 
 If the view.xsl output needs to access resources in the formatter bundle (like css files or javascript files) the xml document contains a tag: resourceUrl that contains the url for obtaining that resource. An example of an image tag is:
 
@@ -98,15 +96,15 @@ Only the view.xsl is required. If a single xsl file is uploaded then the rest of
 
 The config.properties file contains some configuration options used when creating the xml document. Some of the properties include:
 
-> -   *fixedLang* - sets the language of the strings to the fixed language, this ensures that the formatter will always use the same language for its labels, strings, etc\... no matter what language code is in the url.
-> -   *loadGeonetworkStrings* - if true or non-existent then geonetwork strings will be added to the xml document before view.xsl is applied. The default is true so if this parameter is not present then the strings will be loaded
-> -   *schemasToLoad* - defines which schema localization files should be loaded and added to the xml document before view.xsl is applied
->
-> > -   if a comma separated list then only those schemas will be loaded
-> > -   if all then all will be loaded
-> > -   if none then no schemas will be loaded
->
-> -   *applicableSchemas* - declares which schemas the bundle can format
->
-> > -   A comma separated list indicates specifically which schemas the bundle applies to
-> > -   If the value is all (or value is empty) then all schemas are considered supported
+-   *fixedLang* - sets the language of the strings to the fixed language, this ensures that the formatter will always use the same language for its labels, strings, etc\... no matter what language code is in the url.
+-   *loadGeonetworkStrings* - if true or non-existent then geonetwork strings will be added to the xml document before view.xsl is applied. The default is true so if this parameter is not present then the strings will be loaded
+-   *schemasToLoad* - defines which schema localization files should be loaded and added to the xml document before view.xsl is applied
+
+-   if a comma separated list then only those schemas will be loaded
+-   if all then all will be loaded
+-   if none then no schemas will be loaded
+
+-   *applicableSchemas* - declares which schemas the bundle can format
+
+-   A comma separated list indicates specifically which schemas the bundle applies to
+-   If the value is all (or value is empty) then all schemas are considered supported

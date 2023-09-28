@@ -242,16 +242,14 @@ Successful execution returns HTTP status code 200 and an XML document with the r
 -   **root**: This is the container for the response
 -   **response**: This is the container for the response
 
-> -   **group**: A group which has privileges over the metadata records owned by the user with user id **id** (can be multiple **group** elements). These groups can be used as the source group list for the transfer ownership service.
->
-> > -   **id, name, description, email, referrer, label**: Group information
->
-> -   **targetGroup**: A user group to which the user running this service has been assigned (can be multiple **targetGroup** elements). The groups can be used as the target group list and the editors from the groups can be target editors for the transfer ownership service.
->
-> > -   **id, name, description, email, referrer, label**: Group information
-> > -   **editor**: Users from the group that can edit metadata (can be multiple **editor** elements)
-> >
-> > > -   **id,surname, name**: Metadata user owner information
+-   **group**: A group which has privileges over the metadata records owned by the user with user id **id** (can be multiple **group** elements). These groups can be used as the source group list for the transfer ownership service.
+
+    -   **id, name, description, email, referrer, label**: Group information
+
+-   **targetGroup**: A user group to which the user running this service has been assigned (can be multiple **targetGroup** elements). The groups can be used as the target group list and the editors from the groups can be target editors for the transfer ownership service.
+    -   **id, name, description, email, referrer, label**: Group information
+    -   **editor**: Users from the group that can edit metadata (can be multiple **editor** elements)
+        -   **id,surname, name**: Metadata user owner information
 
 Response example:
 

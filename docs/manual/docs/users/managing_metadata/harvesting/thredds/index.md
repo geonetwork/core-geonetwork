@@ -13,19 +13,19 @@ The available options are:
 
 -   **Site**
 
-    > -   *Name* - This is a short description of the THREDDS catalog. It will be shown in the harvesting main page as the name of this THREDDS harvester instance.
+    -   *Name* - This is a short description of the THREDDS catalog. It will be shown in the harvesting main page as the name of this THREDDS harvester instance.
     >
-    > -   *Catalog URL* - The remote URL of the THREDDS Catalog from which metadata will be harvested. This must be the xml version of the catalog (i.e. ending with .xml). The harvester will crawl through all datasets and services defined in this catalog creating metadata for them as specified by the options described further below.
+    -   *Catalog URL* - The remote URL of the THREDDS Catalog from which metadata will be harvested. This must be the xml version of the catalog (i.e. ending with .xml). The harvester will crawl through all datasets and services defined in this catalog creating metadata for them as specified by the options described further below.
     >
-    > -   *Metadata language* - Use this option to specify the language of the metadata to be harvested.
+    -   *Metadata language* - Use this option to specify the language of the metadata to be harvested.
     >
-    > -   *ISO topic category* - Use this option to specify the ISO topic category of service metadata.
+    -   *ISO topic category* - Use this option to specify the ISO topic category of service metadata.
     >
-    > -   *Create ISO19119 metadata for all services in catalog* - Select this option to generate iso19119 metadata for services defined in the THREDDS catalog (eg. OpenDAP, OGC WCS, ftp) and for the THREDDS catalog itself.
+    -   *Create ISO19119 metadata for all services in catalog* - Select this option to generate iso19119 metadata for services defined in the THREDDS catalog (eg. OpenDAP, OGC WCS, ftp) and for the THREDDS catalog itself.
     >
-    > -   *Create metadata for Collection datasets* - Select this option to generate metadata for each collection dataset (THREDDS dataset containing other datasets). Creation of metadata can be customised using options that are displayed when this option is selected as described further below.
+    -   *Create metadata for Collection datasets* - Select this option to generate metadata for each collection dataset (THREDDS dataset containing other datasets). Creation of metadata can be customised using options that are displayed when this option is selected as described further below.
     >
-    > -   *Create metadata for Atomic datasets* - Select this option to generate metadata for each atomic dataset (THREDDS dataset not containing other datasets -- for example cataloguing a netCDF dataset). Creation of metadata can be customised using options that are displayed when this option is selected as described further below.
+    -   *Create metadata for Atomic datasets* - Select this option to generate metadata for each atomic dataset (THREDDS dataset not containing other datasets -- for example cataloguing a netCDF dataset). Creation of metadata can be customised using options that are displayed when this option is selected as described further below.
     >
     >     > -   *Ignore harvesting attribute* - Select this option to harvest metadata for selected datasets regardless of the harvest attribute for the dataset in the THREDDS catalog. If this option is not selected, metadata will only be created for datasets that have a harvest attribute set to true.
     >     >
@@ -37,11 +37,11 @@ The available options are:
     >     >     > -   *Stylesheet to create metadata fragments* - Select a stylesheet to use to convert metadata for the dataset (THREDDS metadata and netCDF ncml where applicable) into metadata fragments. These stylesheets can be found in the directory convert/ThreddsToFragments in the schema directory eg. for iso19139 this would be `GEONETWORK_DATA_DIR/config/schema_plugins/iso19139/convert/ThreddsToFragments`.
     >     >     > -   *Create subtemplates for fragments and XLink them into template* - Select this option to create a subtemplate (=metadata fragment stored in GeoNetwork catalog) for each metadata fragment generated.
     >     >     > -   *Template to combine with fragments* - Select a template that will be filled in with the metadata fragments generated for each dataset. The generated metadata fragments are used to replace referenced elements in the templates with an xlink to a subtemplate if the *Create subtemplates* option is checked. If *Create subtemplates* is not checked, then the fragments are simply copied into the template metadata record.
-    >     >     > -   For Atomic Datasets , one additional option is provided *Harvest new or modified datasets only*. If this option is checked only datasets that have been modified or didn't exist when the harvester was last run will be harvested.
+    >     >     -   For Atomic Datasets , one additional option is provided *Harvest new or modified datasets only*. If this option is checked only datasets that have been modified or didn't exist when the harvester was last run will be harvested.
     >
-    > -   *Create Thumbnails* - Select this option to create thumbnails for WMS layers in referenced WMS services
+    -   *Create Thumbnails* - Select this option to create thumbnails for WMS layers in referenced WMS services
     >
-    > -   *Icon* - An icon to assign to harvested metadata. The icon will be used when showing search results.
+    -   *Icon* - An icon to assign to harvested metadata. The icon will be used when showing search results.
 
 -   **Options** - Scheduling Options.
 

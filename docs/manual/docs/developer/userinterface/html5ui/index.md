@@ -54,12 +54,12 @@ Maps are always loaded even if they are not displayed. You can change this behav
 
 To change this behaviour you should take a look at GlobalFunctions.js file. For each "view" you have one function that shows it and hides it. You can change them to allow, for example, that the big map is not hidden when results are shown:
 
-> -   showBrowse
-> -   hideBrowse
-> -   showAdvancedSearch
-> -   hideAdvancedSearch
-> -   showBigMap
-> -   \...
+-   showBrowse
+-   hideBrowse
+-   showAdvancedSearch
+-   hideAdvancedSearch
+-   showBigMap
+-   \...
 
 If you add a new "view", you should update all this functions so the view is
 
@@ -75,8 +75,8 @@ You can find here some global configuration settings for the UI. Usually you won
 
 There are constants like:
 
-> -   GeoNetwork.Settings.facetListConfig: used to configure the keywords for the facet search.
-> -   OpenLayers.ProxyHostURL: (relative or absolute) path to url required by openlayers.
+-   GeoNetwork.Settings.facetListConfig: used to configure the keywords for the facet search.
+-   OpenLayers.ProxyHostURL: (relative or absolute) path to url required by openlayers.
 
 ### js/map/Settings.js
 
@@ -84,10 +84,10 @@ You can find here some specific map configuration settings for the UI. You can u
 
 There are constants like:
 
-> -   GeoNetwork.map.PROJECTION: Basic projection for maps. EPSG 900913 by default.
-> -   GeoNetwork.map.BACKGROUND_LAYERS: Base layers for the maps.
-> -   GeoNetwork.map.MAIN_MAP_OPTIONS: Used by the constructor of the main (big) map.
-> -   GeoNetwork.map.MAP_OPTIONS: When the user interface creates a new secondary map, it uses this options on the constructor. Right now it works for the mini-map, but will be used on each view a secondary map is shown.
+-   GeoNetwork.map.PROJECTION: Basic projection for maps. EPSG 900913 by default.
+-   GeoNetwork.map.BACKGROUND_LAYERS: Base layers for the maps.
+-   GeoNetwork.map.MAIN_MAP_OPTIONS: Used by the constructor of the main (big) map.
+-   GeoNetwork.map.MAP_OPTIONS: When the user interface creates a new secondary map, it uses this options on the constructor. Right now it works for the mini-map, but will be used on each view a secondary map is shown.
 
 ## Changing more complex features
 

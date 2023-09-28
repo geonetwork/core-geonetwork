@@ -18,12 +18,12 @@ Parameters:
 -   **id** or **uuid**: Identifier of metadata to update
 -   **status**: One of the status identifiers take from the database table `statusvalues`. Status identifiers can be retrieved using the `xml.info`{.interpreted-text role="ref"} service. The core status identifiers are:
 
-> -   0: unknown
-> -   1: draft
-> -   2: approved
-> -   3: retired
-> -   4: submitted
-> -   5: rejected
+    - 0: unknown
+    - 1: draft
+    - 2: approved
+    - 3: retired
+    - 4: submitted
+    - 5: rejected
 
 -   **changeMessage**: description of why the status has changed.
 
@@ -103,12 +103,12 @@ Parameters:
 
 -   **status**: One of the status identifiers take from the database table `statusvalues`. Status identifiers can be retrieved using the `xml.info`{.interpreted-text role="ref"} service. The core status identifiers are:
 
-> -   0: unknown
-> -   1: draft
-> -   2: approved
-> -   3: retired
-> -   4: submitted
-> -   5: rejected
+    - 0: unknown
+    - 1: draft
+    - 2: approved
+    - 3: retired
+    - 4: submitted
+    - 5: rejected
 
 -   **changeMessage**: description of why the status has changed.
 

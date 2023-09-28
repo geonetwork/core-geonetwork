@@ -18,17 +18,17 @@ Parameters:
 -   **id** or **uuid**: Identifier of metadata to update
 -   **_G_O**: (can be multiple elements)
 
-> -   **G**: Group identifier
-> -   **O**: Privilege (Operation) identifier. Privilege identifiers:
+-   **G**: Group identifier
+-   **O**: Privilege (Operation) identifier. Privilege identifiers:
 >
-> > -   0: view
-> > -   1: download
-> > -   2: editing
-> > -   3: notify
-> > -   4: dynamic
-> > -   5: featured
+-   0: view
+-   1: download
+-   2: editing
+-   3: notify
+-   4: dynamic
+-   5: featured
 >
-> -   Group and Operation Identifiers can be obtained using `xml.info`{.interpreted-text role="ref"} service.
+-   Group and Operation Identifiers can be obtained using `xml.info`{.interpreted-text role="ref"} service.
 
 Request example:
 
@@ -107,17 +107,17 @@ Parameters:
 
 -   **_G_O**: (can be multiple elements)
 
-> -   **G**: Group identifier
-> -   **O**: Privilege (Operation) identifier. Privilege identifiers:
+-   **G**: Group identifier
+-   **O**: Privilege (Operation) identifier. Privilege identifiers:
 >
-> > -   0: view
-> > -   1: download
-> > -   2: editing
-> > -   3: notify
-> > -   4: dynamic
-> > -   5: featured
+-   0: view
+-   1: download
+-   2: editing
+-   3: notify
+-   4: dynamic
+-   5: featured
 >
-> -   Group and Operation Identifiers can be obtained using `xml.info`{.interpreted-text role="ref"} service.
+-   Group and Operation Identifiers can be obtained using `xml.info`{.interpreted-text role="ref"} service.
 
 Example request:
 

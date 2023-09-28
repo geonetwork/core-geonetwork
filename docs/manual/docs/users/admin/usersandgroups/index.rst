@@ -24,24 +24,25 @@ To create new groups you should be logged on with an account that has Administra
 
 #. Select the *Administration* button in the menu. On the Administration page, select *Group management*.
 
-    .. figure:: admin-group-management.png
+   .. figure:: admin-group-management.png
 
-        *Administration page - Group management*
+      Administration page - Group management
 
 #. Select *Add a new group*. You may want to remove the *Sample* group;
 
-    .. figure:: GroupManag.png
+   .. figure:: GroupManag.png
 
-        *Group management*
+      Group management
 
 #. Fill out the details. The email address will be used to send feedback on data downloads when they occur for resources that are part of the Group.
 
-    .. warning:: 
-        The Name should *NOT* contain spaces! You can use the Localization panel to provide localized names for groups.
+   .. warning:: 
+   
+      The Name should *NOT* contain spaces! You can use the Localization panel to provide localized names for groups.
 
-    .. figure:: addGroup.png
+   .. figure:: addGroup.png
 
-        *Group edit form*
+      *Group edit form*
 
 #. Click on *Save*
 
@@ -58,7 +59,7 @@ Below is an example of the privileges management table related to a dataset.
 
 .. figure:: privilegesSetting1.png
 
-  *Privilege settings*
+   *Privilege settings*
 
 Creating new Users
 ------------------
@@ -67,21 +68,21 @@ To add a new user to the GeoNetwork system you do the following:
 
 #. Select the *Administration* button in the menu. On the Administration page, select *User management*.
 
-      .. figure:: admin-user-management.png
-    
-        *Administration page - User management*
+   .. figure:: admin-user-management.png
+   
+      Administration page - User management
 
 #. Click the button *Add a new user*;
 
-  .. figure:: AddUser.png
+   .. figure:: AddUser.png
   
-    *User administration form*
+      User administration form
 
 #. Provide the *information* required for the new user;
 
-  .. figure:: InsertUserInfo.png
+   .. figure:: InsertUserInfo.png
   
-    *User information form*
+      User information form
 
 #. Assign the correct *profile*;
 

@@ -71,10 +71,10 @@ The installer allows to install these additional packages:
 2.  GeoServer: Web Map Server that provides default base layers for the GeoNetwork map viewer.
 3.  European Union INSPIRE Directive configuration pack: Enables INSPIRE support in GeoNetwork.
 
-> -   INSPIRE validation rules.
-> -   Thesaurus files (GEMET, Inspire themes).
-> -   INSPIRE search panel.
-> -   INSPIRE metadata view.
+-   INSPIRE validation rules.
+-   Thesaurus files (GEMET, Inspire themes).
+-   INSPIRE search panel.
+-   INSPIRE metadata view.
 
 ### Installation using the platform independent installer
 
@@ -143,9 +143,9 @@ Widgets can be used to build custom interfaces. GeoNetwork provides a Javascript
 
 This interface can be configured using the following attributes:
 
-> -   **parameter** is used to define custom application properties like default map extent for example or change the default language to be loaded
-> -   **createParameter** is appended to URL when the application is called from the administration > New metadata menu (usually "#create").
-> -   **stateId** is the identifier of the search form (usually "s") in the application. It is used to build quick links section in the administration and permalinks.
+-   **parameter** is used to define custom application properties like default map extent for example or change the default language to be loaded
+-   **createParameter** is appended to URL when the application is called from the administration > New metadata menu (usually "#create").
+-   **stateId** is the identifier of the search form (usually "s") in the application. It is used to build quick links section in the administration and permalinks.
 
 Sample configuration:
 
