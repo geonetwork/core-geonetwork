@@ -573,5 +573,6 @@
     "batchSubmitInfo": "Cette option propose les fiches sélectionnées appartenant à l'utilisateur.",
     "reviewerNotAllowedPublish": "Les relecteurs ne sont pas autorisés à publier des fiches.",
     "reviewerNotAllowedUnpublish": "Les relecteurs ne sont pas autorisés à dépublier des fiches",
-    "reviewerNotAllowedPublishUnpublish": "Les relecteurs ne sont pas autorisés à publier/dépublier des fiches"
+    "reviewerNotAllowedPublishUnpublish": "Les relecteurs ne sont pas autorisés à publier/dépublier des fiches",
+    "missingTitle": "Missing title"
 }
