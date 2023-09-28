@@ -1019,6 +1019,10 @@
               <value>5000000</value>
             </systemProperty>
             <systemProperty>
+              <name>org.eclipse.jetty.server.Request.maxFormKeys</name>
+              <value>8000</value>
+            </systemProperty>
+            <systemProperty>
               <name>org.eclipse.jetty.classInheritanceMap</name>
               <value>true</value>
             </systemProperty>

@@ -109,8 +109,9 @@
       <zipfileset dir="./bin" excludes="**.sh" prefix="bin" />
       <zipfileset dir="./bin" includes="**.sh" prefix="bin" filemode="774"/>
       <zipfileset dir="${propsdir}" includes="readme.html, license.html" />
-      <zipfileset dir="./jetty" prefix="jetty" excludes="logs/*.log, logs/archive/*.log" />
-      <zipfileset src="../web/target/geonetwork.war" prefix="web/geonetwork" />
+      <zipfileset dir="./jetty" prefix="jetty" excludes="lib/mail/**, logs/*.log, logs/archive/*.log" />
+      <zipfileset src="../web/target/geonetwork.war" prefix="apps/geonetwork" />
+      <zipfileset dir="." includes="geonetwork.xml" prefix="web" />
     </zip>
 
     <checksum

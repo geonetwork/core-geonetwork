@@ -147,6 +147,32 @@
         }
       });
 
+      $scope.infoSection = [
+        {
+          key: "catalogue",
+          label: "catalogInformation",
+          help: "installing-datadirectory"
+        },
+        {
+          key: "database",
+          label: "dbInformation",
+          help: "installing-db"
+        },
+        {
+          key: "index",
+          help: "installing-index"
+        },
+        {
+          key: "version"
+        },
+        {
+          key: "main",
+          label: "systemInformation"
+        },
+        {
+          key: "env"
+        }
+      ];
       $http.get("../api/site/info").then(function (response) {
         $scope.info = response.data;
       });

@@ -34,8 +34,6 @@ import org.fao.geonet.domain.HarvestHistory;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.Profile;
-import org.fao.geonet.domain.Source;
-import org.fao.geonet.domain.SourceType;
 import org.fao.geonet.exceptions.BadInputEx;
 import org.fao.geonet.exceptions.JeevesException;
 import org.fao.geonet.exceptions.MissingParameterEx;
@@ -48,15 +46,12 @@ import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
 import org.fao.geonet.kernel.harvest.harvester.HarversterJobListener;
 import org.fao.geonet.kernel.setting.HarvesterSettingsManager;
-import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.HarvestHistoryRepository;
-import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
-import org.quartz.SchedulerException;
+import org.quartz.*;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -65,28 +60,23 @@ import java.sql.SQLException;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TimeZone;
+import java.util.*;
+
+import static org.quartz.CronScheduleBuilder.cronSchedule;
+import static org.quartz.SimpleScheduleBuilder.simpleSchedule;
 
 /**
  * TODO Javadoc.
  */
 public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
 
+    private int harvesterRefreshIntervalMinutes = 0;
+
     private final List<String> summaryHarvesterSettings =
         Arrays.asList("harvesting", "node", "site", "name", "uuid",
             "url", "capabUrl", "baseUrl", "host", "useAccount",
             "ogctype", "options", "status", "info", "lastRun",
             "ownerGroup", "ownerUser");
-    //---------------------------------------------------------------------------
-    //---
-    //--- Vars
-    //---
-    //---------------------------------------------------------------------------
     private HarvesterSettingsManager settingMan;
     private DataManager dataMan;
     private Path xslPath;
@@ -124,11 +114,29 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
         applicationContext = context.getApplicationContext();
 
         this.readOnly = isReadOnly;
-        Log.debug(Geonet.HARVEST_MAN, "HarvesterManager initializing, READONLYMODE is " + this.readOnly);
+        Log.debug(Geonet.HARVEST_MAN,
+            String.format("HarvesterManager initializing, readonly: %s, refresh interval: %d min",
+                this.readOnly, harvesterRefreshIntervalMinutes));
         xslPath = context.getAppPath().resolve(Geonet.Path.STYLESHEETS).resolve("xml/harvesting/");
         AbstractHarvester.getScheduler().getListenerManager().addJobListener(
             HarversterJobListener.getInstance(this));
 
+
+        initialiseHarvesters(context);
+        if (harvesterRefreshIntervalMinutes > 0) {
+            // ... and schedule a periodic refresh of the configuration
+            // in case a non harvesting node modify the harvester config.
+            long now = System.currentTimeMillis();
+            long nextSecond = (now / 1000) * 1000 + 1000;
+            long toSleep = nextSecond - now + 500;
+
+            Log.debug(Geonet.HARVEST_MAN, String.format("Artificially sleeping to not refresh 'on' the minute for %s.", toSleep));
+            Thread.sleep(toSleep);
+            startHarvesterRefreshJob();
+        }
+    }
+
+    public synchronized void initialiseHarvesters(ServiceContext context) {
         final Element harvesting = settingMan.getList(null);
         if (harvesting != null) {
             Element entries = harvesting.getChild("children");
@@ -156,10 +164,59 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
                     } catch (OperationAbortedEx oae) {
                         Log.error(Geonet.HARVEST_MAN, "Cannot create harvester " + id + " of type \""
                             + type + "\"", oae);
+                    } catch (SchedulerException e) {
+                        // Badly configured schedules prevent Geonetwork from starting successfully, this prevents that.
+                        Log.error(Geonet.HARVEST_MAN, "Could not schedule harvester " + id + " of type "
+                            + type, e);
                     }
                 }
             }
         }
+    }
+
+    private synchronized void stopHarvesters() {
+        for (AbstractHarvester ah : hmHarvesters.values()) {
+            try {
+                ah.shutdown();
+            } catch (SchedulerException e) {
+                Log.error(Geonet.HARVEST_MAN, "Error shutting down" + ah.getID(), e);
+            }
+        }
+        hmHarvesters.clear();
+    }
+
+    private void startHarvesterRefreshJob() throws SchedulerException {
+        Scheduler scheduler = AbstractHarvester.getScheduler();
+        scheduler.getContext().put("harvest-manager", this);
+        String group = "harvester-refresh";
+        JobDetail jobDetail = JobBuilder.newJob()
+            .ofType(RefreshHarvesterJob.class)
+            .withIdentity("refresh-job", group)
+            .build();
+        Trigger trigger = TriggerBuilder.newTrigger()
+            .withIdentity("refresh-timer", group)
+            .withSchedule(simpleSchedule().withIntervalInMinutes(harvesterRefreshIntervalMinutes).repeatForever())
+            .startNow()
+            .build();
+        scheduler.scheduleJob(jobDetail, trigger);
+    }
+
+    @Override
+    public synchronized void refreshHarvesters() {
+        // remove all harvesters
+        stopHarvesters();
+        // restart them
+        initialiseHarvesters(context);
+        // log the new state
+        Log.debug(Geonet.HARVEST_MAN, String.format("thread(%s) Refreshed harvesters (%s)",
+            Thread.currentThread().getName(),
+            hmHarvesters.size()));
+        hmHarvesters.forEach((s, abstractHarvester) ->
+            Log.debug(Geonet.HARVEST_MAN, String.format("thread(%s) > harvester (%s) id (%s) every(%s)",
+                Thread.currentThread().getName(),
+                s,
+                abstractHarvester.getID(),
+                abstractHarvester.getParams().getEvery())));
     }
 
     /**
@@ -688,4 +745,13 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
         }
 
     }
+
+    public int getHarvesterRefreshIntervalMinutes() {
+        return harvesterRefreshIntervalMinutes;
+    }
+
+    public void setHarvesterRefreshIntervalMinutes(int harvesterRefreshIntervalMinutes) {
+        this.harvesterRefreshIntervalMinutes = harvesterRefreshIntervalMinutes;
+    }
+
 }
