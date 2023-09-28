@@ -169,6 +169,7 @@
   "ui-facetConfig": "Facets configuration",
   "ui-facetConfig-help": "This configuration is used to display facets, using either terms aggregations or filters. See <a href=\"https://geonetwork-opensource.org/manuals/4.0.x/en/customizing-application/configuring-faceted-search.html\">the documentation</a> for more information.",
   "resourceEvents": "Resource events",
+  "resourceEdition": "Edition",
   "resourceVerticalRange": "Vertical extent",
   "searchBadRequest": "Query returned an error. Check the console for details.",
   "searchInvalidResponse": "Query returned an invalid response. Check the console for details.",

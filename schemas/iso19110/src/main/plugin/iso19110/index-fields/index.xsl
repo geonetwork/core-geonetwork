@@ -65,27 +65,34 @@
 
       <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
       <!-- === Version identifier === -->
-      <versionIdentifier>
+      <resourceEdition>
         <xsl:value-of select="string(/gfc:FC_FeatureCatalogue/gmx:versionNumber/gco:CharacterString|
         /gfc:FC_FeatureCatalogue/gfc:versionNumber/gco:CharacterString)"/>
-      </versionIdentifier>
+      </resourceEdition>
 
       <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
       <!-- === Responsible organization === -->
       <xsl:for-each select="/gfc:FC_FeatureCatalogue/gfc:producer">
         <xsl:apply-templates mode="index-contact"
                              select=".">
-          <xsl:with-param name="type" select="'resource'"/>
-          <xsl:with-param name="fieldPrefix" select="'responsibleParty'"/>
-          <xsl:with-param name="position" select="position()"/>
+          <xsl:with-param name="fieldSuffix" select="''"/>
+        </xsl:apply-templates>
+        <xsl:apply-templates mode="index-contact"
+                             select=".">
+          <xsl:with-param name="fieldSuffix" select="'ForResource'"/>
         </xsl:apply-templates>
       </xsl:for-each>
 
       <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
       <!-- === Revision date === -->
-      <xsl:for-each select="/gfc:FC_FeatureCatalogue/gmx:versionDate/gco:Date|
-        /gfc:FC_FeatureCatalogue/gfc:versionDate/gco:Date">
-        <revisionDate><xsl:value-of select="date-util:convertToISOZuluDateTime(string(.))"/></revisionDate>
+      <xsl:for-each select="/gfc:FC_FeatureCatalogue/gmx:versionDate/(gco:Date|gco:DateTime)
+                           |/gfc:FC_FeatureCatalogue/gfc:versionDate/(gco:Date|gco:DateTime)">
+        <xsl:variable name="dateStamp"
+                      select="date-util:convertToISOZuluDateTime(string(.))"/>
+        <resourceDate type="object">
+          {"type": "revision", "date": "<xsl:value-of select="$dateStamp"/>"}
+        </resourceDate>
+        <dateStamp><xsl:value-of select="$dateStamp"/></dateStamp>
       </xsl:for-each>
 
       <xsl:variable name="jsonFeatureTypes">[
