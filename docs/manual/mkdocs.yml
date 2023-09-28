@@ -42,7 +42,6 @@ theme:
   features:
     - content.action.view
     - content.action.edit
-#   - content.code.annotate
     - content.code.copy
     - content.tabs.link
     - navigation.tabs
@@ -79,13 +78,18 @@ plugins:
   - exclude:
       glob:
         - annexes/gallery/bin/README.md
-  - include-markdown
+# - include-markdown
 
 # Customizations
 extra:
   version:
     provider: mike
+    default: stable
   social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/geonetwork
+    - icon: fontawesome/brands/docker
+      link: https://hub.docker.com/_/geonetwork
     - icon: fontawesome/solid/arrow-up-right-from-square
       link: https://geonetwork-opensource.org/
       name: GeoNetwork Website
