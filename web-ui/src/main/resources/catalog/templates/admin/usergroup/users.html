@@ -493,9 +493,9 @@
             <i class="fa fa-search" />&nbsp;
             <ng-pluralize
               count="searchResults.count"
-              when="{'0': ('noRecordFound' | translate),
-                    'one': '1 ' +  ('userRecord' | translate) + ' {{userSelected.name}} {{userSelected.surname}}',
-                    'other': '{} ' +  ('userRecords' | translate) + ' {{userSelected.name}} {{userSelected.surname}}'}"
+              when="{'0': '{{&quot;noRecordFound&quot; | translate}}',
+                    'one': '1 ' +  '{{&quot;userRecord&quot; | translate}}' + ' {{userSelected.name}} {{userSelected.surname}}',
+                    'other': '{} ' +  '{{&quot;userRecords&quot; | translate}}' + ' {{userSelected.name}} {{userSelected.surname}}'}"
             ></ng-pluralize>
           </div>
           <div class="panel-body">
