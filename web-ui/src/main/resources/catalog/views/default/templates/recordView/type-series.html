@@ -1,7 +1,6 @@
 <div
   class="row gn-card gn-card-{{mdView.current.record.resourceType[0]}} gn-margin-bottom gn-margin-top"
 >
-  <div ng-include="'../../catalog/views/default/templates/recordView/status.html'" />
   <div class="col-md-8 gn-record gn-{{mdView.current.record.resourceType[0]}}">
     <div class="">
       <div
@@ -11,6 +10,8 @@
     </div>
   </div>
   <div class="col-md-4 gn-md-side">
+    <div ng-include="'../../catalog/views/default/templates/recordView/status.html'" />
+
     <div gn-record-is-replaced-by="mdView.current.record.uuid"></div>
 
     <div
