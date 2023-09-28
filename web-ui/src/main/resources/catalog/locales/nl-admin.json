@@ -1332,8 +1332,6 @@
     "ui-logoInHeaderPosition-help": "Positie van logo in de kop",
     "ui-isHeaderFixed": "Fixeer de kop",
     "ui-isHeaderFixed-help": "De kop staat vast en blijft bovenaan de pagina staan. Let op: wanneer ook de optie [Toon het logo in kop] is geselecteerd, heeft de kop een vaste hoogte nodig. Dit kan worden ingesteld onder [CSS & Stijl] > [Kop] > [Hoogte]",
-    "ui-isMenubarAccessible": "Menubalk toegankelijk maken",
-    "ui-isMenubarAccessible-help": "Maak menubalkitem open bij klikken, niet bij hoveren. Dit betekent dat de menu-items toegankelijk zijn via het toetsenbord.",
     "ui-sortKeywordsAlphabetically": "Sort keywords / categories / topic categories alphabetically",
     "ui-sortKeywordsAlphabetically-help": "Display the keywords / categories /  topic categories sorted alphabetically. If not enabled are displayed in the order that are assigned to the metadata.",
     "left": "Links",

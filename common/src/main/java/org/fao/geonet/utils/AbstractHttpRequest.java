@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2023 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -83,7 +83,7 @@ public class AbstractHttpRequest {
     private boolean useProxy;
     private String proxyHost;
     private int proxyPort;
-    private ArrayList<NameValuePair> alSimpleParams = new ArrayList<NameValuePair>();
+    private ArrayList<NameValuePair> alSimpleParams = new ArrayList<>();
     private String postData;
     private boolean preemptiveBasicAuth;
     private HttpClientContext httpClientContext;
@@ -303,9 +303,9 @@ public class AbstractHttpRequest {
         }
 
         if (host == null || protocol == null) {
-            throw new IllegalStateException(String.format(getClass().getSimpleName() + " is not ready to be executed: \n\tprotocol: '%s' " +
+            throw new IllegalStateException(String.format("%s is not ready to be executed: \n\tprotocol: '%s' " +
                 "\n\tuserinfo: '%s'\n\thost: '%s' \n\tport: '%s' \n\taddress: '%s'\n\tquery '%s'" +
-                "\n\tfragment: '%s'", protocol, userInfo, host, port, address, query, fragment));
+                "\n\tfragment: '%s'", getClass().getSimpleName(), protocol, userInfo, host, port, address, query, fragment));
         }
 
         HttpRequestBase httpMethod;
@@ -352,25 +352,25 @@ public class AbstractHttpRequest {
 
     protected String getSentData(HttpRequestBase httpMethod) {
         URI uri = httpMethod.getURI();
-        StringBuilder sentData = new StringBuilder(httpMethod.getMethod()).append(" ").append(uri.getPath());
+        StringBuilder sentDataValue = new StringBuilder(httpMethod.getMethod()).append(" ").append(uri.getPath());
 
         if (uri.getQuery() != null) {
-            sentData.append("?" + uri.getQuery());
+            sentDataValue.append("?" + uri.getQuery());
         }
 
-        sentData.append("\r\n");
+        sentDataValue.append("\r\n");
 
         for (Header h : httpMethod.getAllHeaders()) {
-            sentData.append(h);
+            sentDataValue.append(h);
         }
 
-        sentData.append("\r\n");
+        sentDataValue.append("\r\n");
 
         if (httpMethod instanceof HttpPost) {
-            sentData.append(postData);
+            sentDataValue.append(postData);
         }
 
-        return sentData.toString();
+        return sentDataValue.toString();
     }
 
     private Element soapEmbed(Element elem) {
@@ -393,7 +393,7 @@ public class AbstractHttpRequest {
 
         List<Element> list = body.getChildren();
 
-        if (list.size() == 0)
+        if (list.isEmpty())
             throw new BadSoapResponseEx(envelope);
 
         return list.get(0);

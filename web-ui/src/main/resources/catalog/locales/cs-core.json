@@ -573,5 +573,6 @@
     "batchSubmitInfo": "Tato možnost odešle vybraná metadata vlastněná uživatelem.",
     "reviewerNotAllowedPublish": "Prohlížející nemá oprávnění publikovat metadata",
     "reviewerNotAllowedUnpublish": "Prohlížející nemůže zrušit publikování metadat",
-    "reviewerNotAllowedPublishUnpublish": "Prohlížející nemá oprávnění publikovat/zrušit publikování metadat"
+    "reviewerNotAllowedPublishUnpublish": "Prohlížející nemá oprávnění publikovat/zrušit publikování metadat",
+    "missingTitle": "Missing title"
 }

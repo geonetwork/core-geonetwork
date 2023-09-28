@@ -1071,6 +1071,10 @@
                 "type": "keyword",
                 "copy_to": ["any.langita"]
               },
+              "langdut": {
+                "type": "keyword",
+                "copy_to": ["any.langdut"]
+              },
               "langspa": {
                 "type": "keyword",
                 "copy_to": ["any.langspa"]

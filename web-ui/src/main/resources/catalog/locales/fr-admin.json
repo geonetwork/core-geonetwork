@@ -1332,8 +1332,6 @@
     "ui-logoInHeaderPosition-help": "Placement du logo dans l'en-tête",
     "ui-isHeaderFixed": "Fixer l'en-tête",
     "ui-isHeaderFixed-help": "L'en-tête est fixe et reste en haut de la page. Attention: Quand l'option  [Show the logo in header] est aussi activée, l'en-tête doit avoir une hauteur. Cf. [CSS & Style] > [Header] > [Height]",
-    "ui-isMenubarAccessible": "Barre de menu accessible",
-    "ui-isMenubarAccessible-help": "La barre de menu s'ouvre au click au lieu de \"on hover\". Le menu est alors accessible avec le clavier.",
     "ui-sortKeywordsAlphabetically": "Trier les mots clés, catégories et catégories ISO par ordre alphabétique ",
     "ui-sortKeywordsAlphabetically-help": "Sinon, ces éléments sont affichés dans l'ordre de saisie dans la fiche.",
     "left": "Gauche",

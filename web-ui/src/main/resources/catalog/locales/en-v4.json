@@ -446,5 +446,8 @@
   "harvestProcessID": "Process ID",
   "harvestUpdateDetails": "Update detailed status",
   "facet-th_INSPIRE-priority-data-set": "Priority dataset",
-  "facet-th_INSPIRE-priority-data-setNumber": "Number of priority datasets"
+  "facet-th_INSPIRE-priority-data-setNumber": "Number of priority datasets",
+  "associationType": "Association type",
+  "initiativeType": "Initiative type",
+  "associatedTo": "Associated "
 }

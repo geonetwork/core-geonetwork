@@ -26,10 +26,12 @@
  */
 package org.fao.geonet.repository;
 
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.domain.UserGroup;
 import org.fao.geonet.domain.UserGroupId;
 import org.fao.geonet.domain.UserGroupId_;
 import org.fao.geonet.domain.UserGroup_;
+import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,7 +44,9 @@ import javax.persistence.criteria.Root;
 import javax.persistence.metamodel.SingularAttribute;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Implementation object for methods in {@link UserGroupRepositoryCustom}.
@@ -89,6 +93,21 @@ public class UserGroupRepositoryCustomImpl implements UserGroupRepositoryCustom 
         query.where(predicate);
         query.distinct(true);
         return _entityManager.createQuery(query).getResultList();
+    }
+
+     public void updateUserGroups(int userId, Set<UserGroup> newUserGroups) {
+         UserGroupRepository userGroupRepository = ApplicationContextHolder.get().getBean(UserGroupRepository.class);
+
+         List<UserGroup> currentUserGroupLists = userGroupRepository.findAll(UserGroupSpecs.hasUserId(userId));
+         Set<UserGroup> currentUserGroups = new HashSet<>(currentUserGroupLists);
+
+         // If the new user groups are not the same as what is in the database then update database so that they are the same.
+         if (!newUserGroups.equals(currentUserGroups)) {
+             userGroupRepository.deleteAll(UserGroupSpecs.hasUserId(userId));
+             for (UserGroup ug : newUserGroups) {
+                 userGroupRepository.save(ug);
+             }
+         }
     }
 
 }

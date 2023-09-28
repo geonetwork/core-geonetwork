@@ -45,6 +45,7 @@
 
     <!--
     Example for TMS:
+    Also contains sample attributions
 
     <ows-context:Layer name="type=tms,name=capabaseargenmap"
                        group="Background layers"
@@ -54,6 +55,15 @@
       <ows-context:Server service="urn:ogc:serviceType:WMTS">
         <ows-context:OnlineResource xlink:href="http://wms.ign.gob.ar/geoserver/gwc/service/tms/1.0.0/capabaseargenmap@EPSG:3857@png/{z}/{x}/{-y}.png" xmlns:xlink="http://www.w3.org/1999/xlink"/>
       </ows-context:Server>
+      <ows-context:VendorExtension>
+        <ows-context:Attribution>
+          <ows-context:Title><![CDATA[<a href="https://www.example.com">Example</a> Attribution]]></ows-context:Title>
+        </ows-context:Attribution>
+        <ows-context:Attribution>
+          <ows-context:Title>Example2 Attribution</ows-context:Title>
+          <ows-context:OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="https://www.example.com"/>
+        </ows-context:Attribution>
+      </ows-context:VendorExtension>
     </ows-context:Layer>
 
 

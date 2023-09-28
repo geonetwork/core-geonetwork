@@ -292,7 +292,7 @@
 - Support gmx:Anchor in extract relations xslt process - refactor
 - Support gmx:Anchor in extract relations xslt process
 - fix pdf generation from full view, flying saucer trouble with float: left
-- in manage record priviledges help groups sorter to sort
+- in manage record privileges help groups sorter to sort
 - Metadata editor - associated panel doesn't remove error red highlight when filling the url in thumbnail mode #3756
 - Fix JS build.
 - Fixes empty owner select in admin's batch process

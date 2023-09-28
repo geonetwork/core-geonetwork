@@ -28,8 +28,13 @@
                 data-ng-href="catalog.search#/{{(md.draft == 'y')?'metadraf':'metadata'}}/{{md.uuid}}"
                 title="{{md.resourceAbstract}}"
                 class="gn-break"
-                >{{md.resourceTitle}}</a
               >
+                <i
+                  data-ng-show="md.resourceTitle.trim()=='' || md.resourceTitle===undefined"
+                  >{{'missingTitle' | translate}}</i
+                >
+                {{md.resourceTitle}}
+              </a>
               <span data-ng-show="md.isTemplate == 's'">{{md.resourceTitle}}</span>
               <div class="gn-record-details text-muted">
                 <small><span data-translate="">owner</span>:</small>

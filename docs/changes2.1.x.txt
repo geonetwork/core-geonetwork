@@ -769,7 +769,7 @@
 === Changes
 ================================================================================
 
-- Search for templates is hidden to simple registerd users (only allow from editors up)
+- Search for templates is hidden to simple registered users (only allow from editors up)
 
 - Moved login info to the righ
 

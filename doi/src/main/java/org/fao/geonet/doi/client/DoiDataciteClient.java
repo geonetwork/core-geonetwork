@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2010 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2023 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -169,9 +169,8 @@ public class DoiDataciteClient extends BaseDoiClient implements IDoiClient {
 
             deleteMethod = new HttpDelete(createUrl("metadata/" + doi));
 
-            httpResponse = requestFactory.execute(
-                deleteMethod,
-                new UsernamePasswordCredentials(username, password), AuthScope.ANY);
+            httpResponse = executeRequest(deleteMethod);
+
             int status = httpResponse.getRawStatusCode();
 
             Log.debug(LOGGER_NAME, "   -- Request status code: " + status);
@@ -186,7 +185,7 @@ public class DoiDataciteClient extends BaseDoiClient implements IDoiClient {
             }
 
         } catch (Exception ex) {
-            Log.error(LOGGER_NAME, "   -- Error (exception): " + ex.getMessage());
+            Log.error(LOGGER_NAME, "   -- Error (exception): " + ex.getMessage(), ex);
             throw new DoiClientException(ex.getMessage());
 
         } finally {
@@ -210,9 +209,8 @@ public class DoiDataciteClient extends BaseDoiClient implements IDoiClient {
 
             deleteMethod = new HttpDelete(createUrl("doi/" + doi));
 
-            httpResponse = requestFactory.execute(
-                deleteMethod,
-                new UsernamePasswordCredentials(username, password), AuthScope.ANY);
+            httpResponse = executeRequest(deleteMethod);
+
             int status = httpResponse.getRawStatusCode();
 
             Log.debug(LOGGER_NAME, "   -- Request status code: " + status);
@@ -227,7 +225,7 @@ public class DoiDataciteClient extends BaseDoiClient implements IDoiClient {
             }
 
         } catch (Exception ex) {
-            Log.error(LOGGER_NAME, "   -- Error (exception): " + ex.getMessage());
+            Log.error(LOGGER_NAME, "   -- Error (exception): " + ex.getMessage(), ex);
             throw new DoiClientException(ex.getMessage());
 
         } finally {

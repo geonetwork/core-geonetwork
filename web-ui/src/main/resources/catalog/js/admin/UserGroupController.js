@@ -691,10 +691,10 @@
         });
       };
 
-      var createOrModifyGroupError = function (data) {
+      var createOrModifyGroupError = function (response) {
         $rootScope.$broadcast("StatusUpdated", {
           title: $translate.instant("groupUpdateError"),
-          error: data,
+          error: response.data,
           timeout: 0,
           type: "danger"
         });
