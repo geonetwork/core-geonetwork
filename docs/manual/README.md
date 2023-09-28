@@ -29,7 +29,13 @@ If you are using python3:
    ```bash
    mkdocs serve
    ```
+      
 3. Preview: http://localhost:8000
+
+   Preview uses a single version, so expect some warnings from version chooser:
+   ```
+   "GET /versions.json HTTP/1.1" code 404
+   ```
 
 4. Optional: Preview online help:
    
@@ -94,16 +100,22 @@ If you are not familiar with python the mkdocs-material website has instructions
 
 We use ``mike`` for publishing (from the `gh-pages` branch):
 
+1. To publish development docs from the `main` branch:
+
+   ```bash
+   mike deploy --update-aliases 4.4.x latest 
+   ```
+    
 1. To publish documentation for a new release:
    
    ```bash
-   mike deploy --push --update-aliases 4.2.6 latest 
+   mike deploy --push --update-aliases 4.2.5 stable
    ```
 
 2. To publish documentation for a maintenance release:
 
    ```bash
-   mike deploy --push --update-aliases 3.12.12 latest 
+   mike deploy --push --update-aliases 3.12.10 maintenance
    ```
 
 3. To show published versions:
@@ -112,7 +124,7 @@ We use ``mike`` for publishing (from the `gh-pages` branch):
    mike list
    ```
 
-4. To preview things:
+4. To preview things locally (uses your local ``gh-pages`` branch):
    
    ```bash
    mike serve
