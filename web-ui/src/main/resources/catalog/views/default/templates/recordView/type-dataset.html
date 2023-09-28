@@ -25,6 +25,9 @@
 <!-- map & extent -->
 <div
   class="row gn-section gn-section-{{mdView.current.record.resourceType[0]}} gn-padding-top"
+  data-ng-if="mdView.current.record.geom
+              || mdView.current.record.extentDescriptionObject
+              || mdView.current.record.extentIdentifierObject"
 >
   <div class="gn-record" data-ng-class="showDataBrowser ? 'col-md-12' : 'col-md-8'">
     <div data-ng-if="mdView.current.record.geom">
