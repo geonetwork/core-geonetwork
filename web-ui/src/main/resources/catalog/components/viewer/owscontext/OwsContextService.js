@@ -813,13 +813,16 @@
           if (layer.enabled) {
             olL.showInfo = layer.enabled; // Enabled in layer manager
           }
-          var params = olL.getSource().getParams() || {};
-          dimensions.forEach(function (dimension) {
-            if (layer[dimension.toLowerCase() + "DimensionValue"]) {
-              params[dimension] = layer[dimension.toLowerCase() + "DimensionValue"];
-              olL.getSource().updateParams(params);
-            }
-          });
+          // WMTS layers for example doesn't have this type of information
+          if (typeof olL.getSource().getParams === "function") {
+            var params = olL.getSource().getParams() || {};
+            dimensions.forEach(function (dimension) {
+              if (layer[dimension.toLowerCase() + "DimensionValue"]) {
+                params[dimension] = layer[dimension.toLowerCase() + "DimensionValue"];
+                olL.getSource().updateParams(params);
+              }
+            });
+          }
         }
 
         if (layer.name && layer.name.match(reT)) {
@@ -862,7 +865,9 @@
               setMapLayerProperties(olL, layer);
               return olL;
             })
-            .catch(function () {});
+            .catch(function (error) {
+              console.error(error);
+            });
         } else {
           // we suppose it's WMS
           // TODO: Would be good to attach the MD
@@ -891,7 +896,9 @@
               }
               return olL;
             })
-            .catch(function () {});
+            .catch(function (error) {
+              console.error(error);
+            });
         }
       };
     }
