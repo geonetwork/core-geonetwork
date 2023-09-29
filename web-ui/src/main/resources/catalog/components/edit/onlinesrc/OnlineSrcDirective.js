@@ -1473,7 +1473,7 @@
                     // Editing an online resource after saving the metadata doesn't trigger the params.protocol watcher
                     processSelectedWMSLayers();
                   });
-                  scope.isImage = curUrl.match(/.*.(png|jpg|jpeg|gif)$/i);
+                  scope.isImage = curUrl.match(/.*.(png|jpg|jpeg|gif)(\?.*)?$/i);
                 }
               };
               scope.$watch("params.url", updateImageTag, true);
