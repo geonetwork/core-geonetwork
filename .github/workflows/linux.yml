@@ -61,7 +61,7 @@ jobs:
         maven-version: 3.6.3
     - name: Test with maven
       run: |
-        mvn resources:resources@copy-index-schema-to-source -f web
+        mvn -B resources:resources@copy-index-schema-to-source -f web
         mvn -B -V -fae verify -Pit
     - name: Remove SNAPSHOT jars from repository
       run: |
