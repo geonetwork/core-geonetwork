@@ -23,8 +23,6 @@
 
 package org.fao.geonet.api;
 
-import static org.fao.geonet.api.records.attachments.AbstractStore.getAndCheckMetadataId;
-
 import com.google.common.collect.Sets;
 import jeeves.constants.Jeeves;
 import jeeves.server.UserSession;
@@ -118,7 +116,11 @@ public class ApiUtils {
         throws Exception {
 
         IMetadataUtils metadataUtils = ApplicationContextHolder.get().getBean(IMetadataUtils.class);
-        String id = String.valueOf(metadataUtils.findOneByUuid(uuidOrInternalId).getId());
+        AbstractMetadata metadata = metadataUtils.findOneByUuid(uuidOrInternalId);
+        String id = null;
+        if (metadata != null) {
+            id = String.valueOf(metadataUtils.findOneByUuid(uuidOrInternalId).getId());
+        }
 
         if (StringUtils.isEmpty(id)) {
             //It wasn't a UUID
@@ -489,7 +491,7 @@ public class ApiUtils {
         String metadataId;
         if (!approved) {
             // If the record is not approved then we need to get the id of the record.
-            metadataId = String.valueOf(getAndCheckMetadataId(metadataUuid, approved));
+            metadataId = getInternalId(metadataUuid, approved);
         } else {
             // Otherwise use the uuid or id that was supplied.
             metadataId = metadataUuid;
@@ -499,9 +501,8 @@ public class ApiUtils {
         if (previous != null) previous.clearAsThreadLocal();
 
         try (ServiceContext context = createServiceContext(request)) {
-            return canViewRecord(metadataId,context);
-        }
-        finally {
+            return canViewRecord(metadataId, context);
+        } finally {
             if (previous != null) previous.setAsThreadLocal();
         }
     }
@@ -527,7 +528,7 @@ public class ApiUtils {
         String metadataId;
         if (!approved) {
             // If the record is not approved then we need to get the id of the record.
-            metadataId = String.valueOf(getAndCheckMetadataId(metadataUuid, approved));
+            metadataId = getInternalId(metadataUuid, approved);
         } else {
             // Otherwise use the uuid or id that was supplied.
             metadataId = metadataUuid;
