@@ -87,6 +87,7 @@ import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.Updater;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
+import org.fao.geonet.util.UserUtil;
 import org.fao.geonet.utils.FilePathChecker;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
@@ -102,8 +103,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -1023,7 +1022,7 @@ public class MetadataInsertDeleteApi {
                 StringUtils.defaultIfBlank(settingManager.getValue(Settings.METADATA_IMPORT_USERPROFILE), Profile.Editor.toString());
 
             // Is the user profile is higher than the profile allowed to import metadata?
-            if (!hasHierarchyRole(allowedUserProfileToImportMetadata, this.roleHierarchy)) {
+            if (!UserUtil.hasHierarchyRole(allowedUserProfileToImportMetadata, this.roleHierarchy)) {
                 throw new NotAllowedException("The user has no permissions to import metadata.");
             }
         }
@@ -1041,31 +1040,10 @@ public class MetadataInsertDeleteApi {
                 StringUtils.defaultIfBlank(settingManager.getValue(Settings.METADATA_PUBLISHED_DELETE_USERPROFILE), Profile.Editor.toString());
 
             // Is the user profile is higher than the profile allowed to import metadata?
-            if (!hasHierarchyRole(allowedUserProfileToImportMetadata, this.roleHierarchy)) {
+            if (!UserUtil.hasHierarchyRole(allowedUserProfileToImportMetadata, this.roleHierarchy)) {
                 throw new NotAllowedException("The user has no permissions to delete published metadata.");
             }
         }
 
-    }
-
-    /**
-     * Checks if the current user has a role using the role hierarchy.
-     *
-     * @param role  Role to check.
-     * @param roleHierarchy  Role hierarchy.
-     * @return true if the current user has a role using the role hierarchy, otherwise false.
-     */
-    private boolean hasHierarchyRole(String role, RoleHierarchy roleHierarchy) {
-        Collection<? extends GrantedAuthority> authorities = SecurityContextHolder.getContext().getAuthentication().getAuthorities();
-
-        Collection<? extends GrantedAuthority> hierarchyAuthorities = roleHierarchy.getReachableGrantedAuthorities(authorities);
-
-        for (GrantedAuthority authority : hierarchyAuthorities) {
-            if (authority.getAuthority().equals(role)) {
-                return true;
-            }
-        }
-
-        return false;
     }
 }
