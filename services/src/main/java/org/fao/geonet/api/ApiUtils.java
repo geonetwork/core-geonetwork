@@ -113,7 +113,11 @@ public class ApiUtils {
         throws Exception {
 
         IMetadataUtils metadataUtils = ApplicationContextHolder.get().getBean(IMetadataUtils.class);
-        String id = String.valueOf(metadataUtils.findOneByUuid(uuidOrInternalId).getId());
+        AbstractMetadata metadata = metadataUtils.findOneByUuid(uuidOrInternalId);
+        String id = null;
+        if (metadata != null) {
+            id = String.valueOf(metadata.getId());
+        }
 
         if (StringUtils.isEmpty(id)) {
             //It wasn't a UUID
