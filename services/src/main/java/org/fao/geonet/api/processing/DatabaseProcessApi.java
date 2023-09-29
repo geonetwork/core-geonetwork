@@ -36,15 +36,19 @@ import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
+import org.fao.geonet.api.exception.NotAllowedException;
 import org.fao.geonet.api.processing.report.MetadataReplacementProcessingReport;
 import org.fao.geonet.api.processing.report.XsltMetadataProcessingReport;
 import org.fao.geonet.domain.AbstractMetadata;
+import org.fao.geonet.domain.Profile;
 import org.fao.geonet.events.history.RecordProcessingChangeEvent;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MetadataIndexerProcessor;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
+import org.fao.geonet.util.UserUtil;
 import org.fao.geonet.utils.Diff;
 import org.fao.geonet.utils.DiffType;
 import org.fao.geonet.utils.Log;
@@ -56,6 +60,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -90,6 +95,9 @@ public class DatabaseProcessApi {
 
     @Autowired
     SettingManager settingManager;
+
+    @Autowired
+    RoleHierarchy roleHierarchy;
 
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Preview of search and replace text.",
@@ -175,6 +183,9 @@ public class DatabaseProcessApi {
         Element preview = new Element("preview");
 
         try {
+            ServiceContext serviceContext = ApiUtils.createServiceContext(request);
+            checkUserProfileToBatchEditMetadata(serviceContext.getUserSession());
+
             Set<String> records = ApiUtils.getUuidsParameterOrSelection(uuids, bucket, session);
 
             final String siteURL = request.getRequestURL().toString() + "?" + request.getQueryString();
@@ -182,7 +193,7 @@ public class DatabaseProcessApi {
                 String id = dataMan.getMetadataId(uuid);
                 Log.info("org.fao.geonet.services.metadata",
                     "Processing metadata for preview with id:" + id);
-                ServiceContext serviceContext = ApiUtils.createServiceContext(request);
+
                 Element record = DatabaseProcessUtils.process(
                     serviceContext,
                     id, useRegexp, search, replace, regexpFlags,
@@ -307,6 +318,8 @@ public class DatabaseProcessApi {
             new MetadataReplacementProcessingReport(search + "-" + replace);
 
         try {
+            ServiceContext serviceContext = ApiUtils.createServiceContext(request);
+            checkUserProfileToBatchEditMetadata(serviceContext.getUserSession());
             Set<String> records = ApiUtils.getUuidsParameterOrSelection(uuids, bucket, session);
             UserSession userSession = ApiUtils.getUserSession(httpSession);
 
@@ -315,7 +328,7 @@ public class DatabaseProcessApi {
             processingReport.setTotalRecords(records.size());
 
             BatchDatabaseUpdateMetadataReindexer m = new BatchDatabaseUpdateMetadataReindexer(
-                ApiUtils.createServiceContext(request),
+                serviceContext,
                 dataMan, records, useRegexp, search, replace, regexpFlags, httpSession, siteURL,
                 processingReport, request, index, updateDateStamp, userSession.getUserIdAsInt());
             m.process(settingManager.getSiteId());
@@ -401,5 +414,23 @@ public class DatabaseProcessApi {
                     processingReport.getProcessId()).publish(appContext);
             }
         }
+    }
+
+    /**
+     * Checks if the user profile is allowed to batch edit metadata.
+     *
+     * @param userSession
+     */
+    private void checkUserProfileToBatchEditMetadata(UserSession userSession) {
+        if (userSession.getProfile() != Profile.Administrator) {
+            String allowedUserProfileToImportMetadata =
+                StringUtils.defaultIfBlank(settingManager.getValue(Settings.METADATA_BATCH_EDITING_ACCESS_LEVEL), Profile.Editor.toString());
+
+            // Is the user profile is higher than the profile allowed to import metadata?
+            if (!UserUtil.hasHierarchyRole(allowedUserProfileToImportMetadata, this.roleHierarchy)) {
+                throw new NotAllowedException("The user has no permissions to batch edit metadata.");
+            }
+        }
+
     }
 }
