@@ -1111,6 +1111,8 @@
     "ui-isExportMapAsImageEnabled-help": "This requires CORS to be enabled on the WMS services used in the map application. If not sure, you should disable that option as it may cause trouble displaying WMS layers.",
     "ui-is3DModeAllowed": "Allow 3D mode",
     "ui-is3DModeAllowed-help": "If enabled, user can switch the map to 3D mode. The map viewer needs to be enabled also. If you don't want to enable the 3D mode for all users, adding 'catalog.search?with3d' in the URL will also load 3D mode.",
+    "ui-singleTileWMS": "Use a single tile for WMS services",
+    "ui-singleTileWMS-help": "If enabled, a single image is requested to the WMS service, otherwise tiles are requested. When the 3D mode is enabled, the value of this setting is ignored and it's used tiling as 3D mode doesn't support single tiles.",
     "ui-isUserRecordsOnly": "Only my records ",
     "ui-isUserRecordsOnly-help": "If enabled, the checkbox \"Only my records\" will be checked by default in the editor dashboard",
     "ui-isFilterTagsDisplayed": "Display filter tags in dashboard",
