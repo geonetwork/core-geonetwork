@@ -38,11 +38,9 @@ import org.apache.http.client.methods.HttpUriRequest;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Constants;
 import org.fao.geonet.SystemInfo;
-import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.records.extent.MapRenderer;
 import org.fao.geonet.api.records.formatters.cache.*;
-import org.fao.geonet.api.records.formatters.groovy.ParamValue;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.*;
@@ -446,7 +444,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
         final boolean hideWithheld = Boolean.TRUE.equals(hide_withheld) ||
             !context.getBean(AccessManager.class).canEdit(context, resolvedId);
         Key key = new Key(Integer.parseInt(resolvedId), lang, formatType, xslid, hideWithheld, width);
-        final boolean skipPopularityBool = new ParamValue(skipPopularity).toBool();
+        final boolean skipPopularityBool = skipPopularity.equals("y");
 
         ISODate changeDate = context.getBean(EsSearchManager.class).getDocChangeDate(resolvedId);
 
@@ -607,14 +605,10 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
         fparams.formatterInSchemaPlugin = isFormatterInSchemaPlugin(formatDir, schemaDir);
 
         Path viewXslFile = formatDir.resolve(FormatterConstants.VIEW_XSL_FILENAME);
-        Path viewGroovyFile = formatDir.resolve(FormatterConstants.VIEW_GROOVY_FILENAME);
         FormatterImpl formatter;
         if (Files.exists(viewXslFile)) {
             fparams.viewFile = viewXslFile.toRealPath();
             formatter = context.getBean(XsltFormatter.class);
-        } else if (Files.exists(viewGroovyFile)) {
-            fparams.viewFile = viewGroovyFile.toRealPath();
-            formatter = context.getBean(GroovyFormatter.class);
         } else {
             throw new IllegalArgumentException("The 'xsl' parameter must be a valid id of a formatter");
         }
