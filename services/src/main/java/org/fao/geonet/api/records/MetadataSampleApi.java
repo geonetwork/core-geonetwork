@@ -125,7 +125,7 @@ public class MetadataSampleApi {
 
         Element params = new Element("params");
         params.addContent(new Element(Params.FILE_TYPE).setText("mef"));
-        params.addContent(new Element(Params.UUID_ACTION).setText(MEFLib.UuidAction.GENERATEUUID.toString()));
+        params.addContent(new Element(Params.UUID_ACTION).setText(MEFLib.UuidAction.NOTHING.toString()));
         for (String schemaName : schema) {
             Log.info(Geonet.DATA_MANAGER, "Loading sample data for schema "
                 + schemaName);
