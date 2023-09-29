@@ -23,8 +23,6 @@
 
 package org.fao.geonet.api;
 
-import static org.fao.geonet.api.records.attachments.AbstractStore.getAndCheckMetadataId;
-
 import com.google.common.collect.Sets;
 import jeeves.constants.Jeeves;
 import jeeves.server.UserSession;
@@ -295,7 +293,7 @@ public class ApiUtils {
         String metadataId;
         if (!approved) {
             // If the record is not approved then we need to get the id of the record.
-            metadataId = String.valueOf(getAndCheckMetadataId(metadataUuid, approved));
+            metadataId = getInternalId(metadataUuid, approved);
         } else {
             // Otherwise use the uuid or id that was supplied.
             metadataId = metadataUuid;

@@ -73,7 +73,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.fao.geonet.api.ApiParams.*;
-import static org.fao.geonet.api.records.attachments.AbstractStore.getAndCheckMetadataId;
+
 import static org.fao.geonet.kernel.mef.MEFLib.Version.Constants.MEF_V1_ACCEPT_TYPE;
 import static org.fao.geonet.kernel.mef.MEFLib.Version.Constants.MEF_V2_ACCEPT_TYPE;
 
