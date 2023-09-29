@@ -54,11 +54,11 @@
       var canceller = $q.defer();
       var request = $http({
         method: 'get',
-        url: '../api/records/' + uuidOrId + '/related?type=' +
+        url: '../api/records/' + uuidOrId + '/related' +
             (types ?
-             types.split('|').join('&type=') :
+            '?type=' + types.split('|').join('&type=') :
             '') +
-          (approved === false ? "&approved=false" : ""),
+          (approved === false ? (types ? "&" : "?" ) + "approved=false" : ""),
         timeout: canceller.promise,
         cache: true
       });

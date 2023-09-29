@@ -565,13 +565,7 @@ public class MetadataApi {
       try (ServiceContext context = ApiUtils.createServiceContext(request)) {
         AbstractMetadata md;
         try {
-            int metadataId;
-            if (Lib.type.isInteger(metadataUuid)) {
-                metadataId = Integer.parseInt(metadataUuid);
-            } else {
-                metadataId = getAndCheckMetadataId(metadataUuid, approved);
-            }
-            md = ApiUtils.canViewRecord(String.valueOf(metadataId), request);
+            md = ApiUtils.canViewRecord(metadataUuid, approved, request);
         } catch (SecurityException e) {
             Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
             throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
@@ -633,7 +627,7 @@ public class MetadataApi {
         Map<String, String[]> decodeMap = new HashMap<>();
 
         try {
-            RelatedResponse related = getRelated(metadataUuid, type, approved,1, 100, request);
+            RelatedResponse related = getRelated(metadataUuid, type, approved, 1, 100, request);
 
             if (isIncludedAttributeTable(related.getFcats())) {
                 for (AttributeTable.Element element : related.getFcats().getItem().get(0).getFeatureType().getAttributeTable().getElement()) {

@@ -230,9 +230,9 @@
         getAllResources: function(types) {
 
           var defer = $q.defer();
-          var url = '../api/records/' + gnCurrentEdit.uuid + '/related?type=' +
-                      (angular.isArray(types) ? types.join('&type=') : '') + 
-                      (gnCurrentEdit.metadata.draft === 'y' ? '&approved=false' : '');
+          var url = '../api/records/' + gnCurrentEdit.uuid + '/related' +
+                      (angular.isArray(types) ? '?' + types.join('&type=') : '') +
+                      (gnCurrentEdit.metadata.draft === 'y' ? (angular.isArray(types) ? "&" : "?") + 'approved=false' : '');
           $http.get(url, {
             headers: {
               'Accept': 'application/json'
