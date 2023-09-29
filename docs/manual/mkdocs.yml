@@ -67,7 +67,7 @@ plugins:
           site_name: 'GeoNetwork Opensource (EN)'
         - locale: fr
           name: Français
-          build: !ENV [FRENCH,true]
+          build: !ENV [FRENCH,false]
           site_name: 'GeoNetwork Opensource (FR)'
           site_description: Catalogue GeoNetwork pour répertorier, rechercher et examiner les enregistrements.
           nav_translations:
