@@ -23,23 +23,14 @@
 
 package org.fao.geonet.kernel.harvest.harvester.csw;
 
-import java.net.URL;
-import java.nio.file.Path;
-import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
-
 import com.google.common.collect.ImmutableSet;
+import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.csw.common.ConstraintLanguage;
-import org.fao.geonet.csw.common.Csw;
-import org.fao.geonet.csw.common.CswOperation;
-import org.fao.geonet.csw.common.CswServer;
-import org.fao.geonet.csw.common.ElementSetName;
-import org.fao.geonet.csw.common.ResultType;
-import org.fao.geonet.csw.common.TypeName;
+import org.fao.geonet.csw.common.*;
 import org.fao.geonet.csw.common.exceptions.CatalogException;
 import org.fao.geonet.csw.common.requests.CatalogRequest;
 import org.fao.geonet.csw.common.requests.GetRecordsRequest;
@@ -47,10 +38,12 @@ import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.exceptions.BadXmlResponseEx;
 import org.fao.geonet.exceptions.OperationAbortedEx;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.HarvestValidationEnum;
 import org.fao.geonet.kernel.harvest.harvester.HarvestError;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.harvest.harvester.IHarvester;
 import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
+import org.fao.geonet.kernel.harvest.event.HarvesterTaskCompletedEvent;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.utils.AbstractHttpRequest;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
@@ -58,9 +51,13 @@ import org.fao.geonet.utils.Xml;
 import org.fao.geonet.utils.XmlRequest;
 import org.jdom.Content;
 import org.jdom.Element;
-
-import jeeves.server.context.ServiceContext;
 import org.jdom.Namespace;
+
+import java.net.URL;
+import java.nio.file.Path;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
 
 class Harvester implements IHarvester<HarvestResult> {
     // FIXME : Currently switch from POST to GET for testing mainly.
@@ -372,7 +369,6 @@ class Harvester implements IHarvester<HarvestResult> {
             // Note that some servers may return less records than requested (it's ok for CSW protocol)
             start += returnedCount;
         }
-
         log.debug("Records added to result list : " + uuids.size());
     }
 

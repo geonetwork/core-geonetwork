@@ -24,11 +24,12 @@
 
 <beans xmlns:context="http://www.springframework.org/schema/context"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:task="http://www.springframework.org/schema/task"
        default-lazy-init="true"
        xmlns="http://www.springframework.org/schema/beans" xsi:schemaLocation="http://www.springframework.org/schema/beans
 		http://www.springframework.org/schema/beans/spring-beans.xsd
         http://www.springframework.org/schema/context
-        http://www.springframework.org/schema/context/spring-context-3.2.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+        http://www.springframework.org/schema/context/spring-context-3.2.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
 
   <context:property-placeholder location="${app.properties},file://#{systemEnvironment['geonetwork_dir']}/config/app.properties"
                                 ignore-unresolvable="true"
@@ -43,6 +44,9 @@
   <context:component-scan base-package="org.fao.geonet.guiservices"/>
   <context:component-scan base-package="org.fao.geonet.services"/>
   <context:component-scan base-package="org.fao.geonet.util"/>
+
+  <task:executor id="taskExecutor" pool-size="2"/>
+  <task:annotation-driven executor="taskExecutor"/>
 
   <bean id="defaultLanguage" class="java.lang.String">
     <constructor-arg index="0" value="\${language.default}"/>
@@ -138,4 +142,12 @@
   </bean>
 
   <bean id="userFeedbackService" class="org.fao.geonet.api.userfeedback.service.UserFeedbackDatabaseService"/>
+
+  <bean class="org.fao.geonet.api.records.PostHarvestingValidationTask"
+        lazy-init="false">
+    <property name="applyInternalValidation" value="true"/>
+    <!-- Only supported for ISO19139 records. -->
+    <property name="applyRemoteInspireValidation" value="false"/>
+    <property name="xsltPostProcess" value=""/>
+  </bean>
 </beans>

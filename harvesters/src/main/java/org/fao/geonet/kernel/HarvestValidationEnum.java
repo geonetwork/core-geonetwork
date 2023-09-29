@@ -57,6 +57,15 @@ public enum HarvestValidationEnum {
             DataManager.validateExternalMetadata(schema, xml, context, groupOwnerId);
         }
 
+    },
+
+    /**
+     * Validate metadata record and save validation status in the database.
+     */
+    COMPUTE_VALIDATION_AFTER_HARVEST {
+        public void validate(DataManager dataMan, ServiceContext context, Element xml, Integer groupOwnerId) {
+        }
+
     };
 
     public static HarvestValidationEnum lookup(final String name) {
@@ -74,6 +83,9 @@ public enum HarvestValidationEnum {
         }
         if (HarvestValidationEnum.SCHEMATRONVALIDATION.name().equals(name)) {
             return HarvestValidationEnum.SCHEMATRONVALIDATION;
+        }
+        if (HarvestValidationEnum.COMPUTE_VALIDATION_AFTER_HARVEST.name().equals(name)) {
+            return HarvestValidationEnum.COMPUTE_VALIDATION_AFTER_HARVEST;
         }
         return HarvestValidationEnum.NOVALIDATION;
     }

@@ -4,7 +4,6 @@ import jeeves.server.context.ServiceContext;
 import jeeves.transaction.TransactionManager;
 import jeeves.transaction.TransactionTask;
 import org.apache.commons.lang.StringUtils;
-import org.apache.http.HttpStatus;
 import org.fao.geonet.NodeInfo;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.records.editing.InspireValidatorUtils;
