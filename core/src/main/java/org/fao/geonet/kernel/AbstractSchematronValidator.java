@@ -89,11 +89,11 @@ public class AbstractSchematronValidator {
 
             // If an error occurs that prevents to verify schematron rules, add to show in report
             Element errorReport = new Element("schematronVerificationError", Edit.NAMESPACE);
-            errorReport.addContent("Schematron error ocurred, rules could not be verified: " + e.getMessage());
+            errorReport.addContent("Schematron error occurred, rules could not be verified: " + e.getMessage());
             report.addContent(errorReport);
 
-            // As the validation failed due to an exception lets identify the metadata as invalid.
-            metadataValidationStatus = MetadataValidationStatus.INVALID;
+            // As the validation failed due to an exception lets identify the metadata as never validated.
+            metadataValidationStatus = MetadataValidationStatus.NEVER_CALCULATED;
         } finally {
             if (metadataValidationStatus != null && validations != null) {
                 validations.add(new MetadataValidation().
