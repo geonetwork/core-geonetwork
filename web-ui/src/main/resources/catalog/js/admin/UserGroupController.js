@@ -797,7 +797,7 @@
         // Retrieve records in that group
         $scope.$broadcast("resetSearch", {
           isTemplate: ["y", "n", "s", "t"],
-          group: g.id,
+          groupOwner: g.id,
           sortBy: "resourceTitleObject.default.sort"
         });
 
