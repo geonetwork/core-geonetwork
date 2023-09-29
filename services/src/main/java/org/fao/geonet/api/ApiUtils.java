@@ -119,7 +119,7 @@ public class ApiUtils {
         AbstractMetadata metadata = metadataUtils.findOneByUuid(uuidOrInternalId);
         String id = null;
         if (metadata != null) {
-            id = String.valueOf(metadataUtils.findOneByUuid(uuidOrInternalId).getId());
+            id = String.valueOf(metadata.getId());
         }
 
         if (StringUtils.isEmpty(id)) {
