@@ -657,7 +657,7 @@ public class InspireValidatorUtils {
     public void waitUntilReady(ServiceContext context, String endPoint, String testId) throws Exception {
         int checkCounter = 1;
 
-        while (checkCounter++ <= maxNumberOfEtfChecks) {
+        while (checkCounter++ < maxNumberOfEtfChecks) {
             if (isReady(context, endPoint, testId)) {
                 return;
             }
@@ -665,7 +665,7 @@ public class InspireValidatorUtils {
             Thread.sleep(intervalBetweenEtfChecks);
         }
 
-        throw new Exception("ETF validation task hasn't finish after " + maxNumberOfEtfChecks + " checks.");
+        throw new Exception("ETF validation task hasn't finished after " + maxNumberOfEtfChecks + " checks.");
     }
 
     /**

@@ -216,10 +216,16 @@ public class PostHarvestingValidationTask {
                 new InspireValidationRunnable(context, inspireValidatorUrl, testId, metadata.getId());
 
             ListeningExecutorService executor = MoreExecutors.newDirectExecutorService();
-            CompletableFuture<Void> completed = CompletableFuture.runAsync(inspireValidationRunnable, executor);
-            completed.thenRun(() -> logger.debug("ValidationTask / {} / INSPIRE validation {} done in {}s.",
-                metadata.getUuid(), testsuite,
-                Duration.between(start, Instant.now()).toSeconds()));
+            CompletableFuture.runAsync(inspireValidationRunnable, executor)
+                .exceptionally((e) -> {
+                    logger.error("ValidationTask / {} / INSPIRE validation {} exception ({}) in {}s.",
+                        metadata.getUuid(), testsuite, e.getMessage(),
+                        Duration.between(start, Instant.now()).toSeconds());
+                    return null;
+                })
+                .thenRun(() -> logger.debug("ValidationTask / {} / INSPIRE validation {} done in {}s.",
+                    metadata.getUuid(), testsuite,
+                    Duration.between(start, Instant.now()).toSeconds()));
         } catch (Exception e) {
             logger.debug("ValidationTask / {} / INSPIRE validation error: {}",
                 metadata.getUuid(), e.getMessage());
