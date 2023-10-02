@@ -1,0 +1,2334 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="GeoNetwork catalogue for listing, searching and reviewing records.">
+      
+      
+      
+        <link rel="canonical" href="https://docs.geonetwork-opensource.org/2.10/developer/settings/">
+      
+      
+        <link rel="prev" href="../mef/">
+      
+      
+        <link rel="next" href="../xml_services/">
+      
+      
+      <link rel="icon" href="../../assets/geonetwork-logo.png">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.4.0">
+    
+    
+      
+        <title>Settings hierarchy - GeoNetwork Opensource (EN)</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.9f615399.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.649f08f9.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="indigo">
+  
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#hierarchy" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="GeoNetwork Opensource (EN)" class="md-header__button md-logo" aria-label="GeoNetwork Opensource (EN)" data-md-component="logo">
+      
+  <img src="../../assets/geonetwork-logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            GeoNetwork Opensource (EN)
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Settings hierarchy
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3 3.19.09m3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95 2.06.05m-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31Z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_2">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5c-.84 0-1.65.15-2.39.42L12 2M3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29L3.34 7m.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14L3.36 17M20.65 7l-1.77 3.79a7.023 7.023 0 0 0-2.38-4.15l4.15.36m-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29L20.64 17M12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44L12 22Z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/geonetwork/core-geonetwork" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    geonetwork/core-geonetwork
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+    
+  
+  GeoNetwork
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../users/" class="md-tabs__link">
+          
+  
+    
+  
+  User
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
+          
+  
+    
+  
+  Developer
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="GeoNetwork Opensource (EN)" class="md-nav__button md-logo" aria-label="GeoNetwork Opensource (EN)" data-md-component="logo">
+      
+  <img src="../../assets/geonetwork-logo.svg" alt="logo">
+
+    </a>
+    GeoNetwork Opensource (EN)
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/geonetwork/core-geonetwork" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    geonetwork/core-geonetwork
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    GeoNetwork
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+    <a href="../../users/" class="md-nav__link">
+      
+  
+  <span class="md-ellipsis">
+    User
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Developer
+  </span>
+  
+
+            </a>
+            
+              <label class="md-nav__link " for="__nav_3">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Developer
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+      
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+    <a href="../development/" class="md-nav__link">
+      
+  
+  <span class="md-ellipsis">
+    Software development
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+      
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+    <a href="../release/" class="md-nav__link">
+      
+  
+  <span class="md-ellipsis">
+    Create a release
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+      
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+    <a href="../harvesting/" class="md-nav__link">
+      
+  
+  <span class="md-ellipsis">
+    Harvesting
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+      
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+    <a href="../schemaPlugins/" class="md-nav__link">
+      
+  
+  <span class="md-ellipsis">
+    Schema Plugins
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+      
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+    <a href="../mef/" class="md-nav__link">
+      
+  
+  <span class="md-ellipsis">
+    Metadata Exchange Format
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_7" checked>
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="./" class="md-nav__link md-nav__link--active">
+              
+  
+  <span class="md-ellipsis">
+    Settings hierarchy
+  </span>
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_7_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3_7">
+            <span class="md-nav__icon md-icon"></span>
+            Settings hierarchy
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+    <a href="../xml_services/" class="md-nav__link">
+      
+  
+  <span class="md-ellipsis">
+    XML Services
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+    
+    
+      
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+    <a href="../userinterface/" class="md-nav__link">
+      
+  
+  <span class="md-ellipsis">
+    User Interface
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#introduction" class="md-nav__link">
+    Introduction
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#system-node" class="md-nav__link">
+    System node
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#harvesting_nodes" class="md-nav__link">
+    Harvesting nodes
+  </a>
+  
+    <nav class="md-nav" aria-label="Harvesting nodes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#geonetwork_harvesting" class="md-nav__link">
+    Harvesting node geonetwork
+  </a>
+  
+    <nav class="md-nav" aria-label="Harvesting node geonetwork">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#xml-example" class="md-nav__link">
+    XML Example
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#notes" class="md-nav__link">
+    Notes
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#webdav_harvesting" class="md-nav__link">
+    Harvesting node webdav
+  </a>
+  
+    <nav class="md-nav" aria-label="Harvesting node webdav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#xml-example_1" class="md-nav__link">
+    XML Example
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#notes_1" class="md-nav__link">
+    Notes
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#csw_harvesting" class="md-nav__link">
+    Harvesting node csw
+  </a>
+  
+    <nav class="md-nav" aria-label="Harvesting node csw">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#xml-example_2" class="md-nav__link">
+    XML Example
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#notes_2" class="md-nav__link">
+    Notes
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#z3950_harvesting" class="md-nav__link">
+    Harvesting node z3950
+  </a>
+  
+    <nav class="md-nav" aria-label="Harvesting node z3950">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#xml-example_3" class="md-nav__link">
+    XML Example
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#oaipmh_harvesting" class="md-nav__link">
+    Harvesting node oaipmh
+  </a>
+  
+    <nav class="md-nav" aria-label="Harvesting node oaipmh">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#xml-example_4" class="md-nav__link">
+    XML Example
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#notes_3" class="md-nav__link">
+    Notes
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#thredds_harvesting" class="md-nav__link">
+    Harvesting node thredds
+  </a>
+  
+    <nav class="md-nav" aria-label="Harvesting node thredds">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#xml-example_5" class="md-nav__link">
+    XML Example
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#notes_4" class="md-nav__link">
+    Notes
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wfsfeatures_harvesting" class="md-nav__link">
+    Harvesting node wfsfeatures
+  </a>
+  
+    <nav class="md-nav" aria-label="Harvesting node wfsfeatures">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#xml-example_6" class="md-nav__link">
+    XML Example
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#notes_5" class="md-nav__link">
+    Notes
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filesystem_harvesting" class="md-nav__link">
+    Harvesting node filesystem
+  </a>
+  
+    <nav class="md-nav" aria-label="Harvesting node filesystem">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#xml-example_7" class="md-nav__link">
+    XML Example
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#arcsde_harvesting" class="md-nav__link">
+    Harvesting node arcsde
+  </a>
+  
+    <nav class="md-nav" aria-label="Harvesting node arcsde">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#xml-example_8" class="md-nav__link">
+    XML Example
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#notes_6" class="md-nav__link">
+    Notes
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ogcwxs_harvesting" class="md-nav__link">
+    Harvesting node ogcwxs
+  </a>
+  
+    <nav class="md-nav" aria-label="Harvesting node ogcwxs">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#xml-example_9" class="md-nav__link">
+    XML Example
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#geoportal_rest_harvesting" class="md-nav__link">
+    Harvesting node geoPREST
+  </a>
+  
+    <nav class="md-nav" aria-label="Harvesting node geoPREST">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#xml-example_10" class="md-nav__link">
+    XML Example
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#notes_7" class="md-nav__link">
+    Notes
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+    <a href="https://github.com/geonetwork/core-geonetwork/edit/mkdocs/docs/manual/docs/developer/settings/index.md" title="Edit this page" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4v-2m10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1 2.1 2.1Z"/></svg>
+    </a>
+  
+  
+    
+      
+    
+    <a href="https://github.com/geonetwork/core-geonetwork/raw/mkdocs/docs/manual/docs/developer/settings/index.md" title="View source of this page" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 18c.56 0 1 .44 1 1s-.44 1-1 1-1-.44-1-1 .44-1 1-1m0-3c-2.73 0-5.06 1.66-6 4 .94 2.34 3.27 4 6 4s5.06-1.66 6-4c-.94-2.34-3.27-4-6-4m0 6.5a2.5 2.5 0 0 1-2.5-2.5 2.5 2.5 0 0 1 2.5-2.5 2.5 2.5 0 0 1 2.5 2.5 2.5 2.5 0 0 1-2.5 2.5M9.27 20H6V4h7v5h5v4.07c.7.08 1.36.25 2 .49V8l-6-6H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h4.5a8.15 8.15 0 0 1-1.23-2Z"/></svg>
+    </a>
+  
+
+
+<h1 id="hierarchy">Settings hierarchy</h1>
+<h2 id="introduction">Introduction</h2>
+<p>GeoNetwork stores configuration settings in the Settings table. The settings are organized into a 'tree' structure where the leaf nodes of the tree are key/value pairs.</p>
+<p>A key is limited to 64 characters whilst a value is effectively unlimited in most databases supported by GeoNetwork.</p>
+<p>The root of the tree contains two nodes:</p>
+<ul>
+<li><strong>system</strong>: contains nodes that describe system configuration settings</li>
+<li><strong>harvesting</strong>: contains nodes that describe the settings used by harvesters</li>
+</ul>
+<p>In the following sections:</p>
+<ul>
+<li>the indentation is used to show hierarchy</li>
+<li>names in <strong>bold</strong> represent keys</li>
+<li>
+<p>the datatype of the value is shown in parenthesis after the key.</p>
+<ul>
+<li>an <em>italic</em> font is used to indicate types: string, integer, boolean, enumerated (values separated by a '|' represent the set of allowed values).</li>
+<li>a missing datatype means that the value of the node is not used.</li>
+</ul>
+</li>
+<li>
+<p>square brackets indicate cardinality. If they are missing, a cardinality of [1..1] should be inferred.</p>
+</li>
+</ul>
+<h2 id="system-node">System node</h2>
+<p>Some examples of system configuration settings nodes contained in the system node are shown in the hierarchy below.</p>
+<ul>
+<li>
+<p><strong>system</strong>: information on system configuration settings</p>
+<ul>
+<li>
+<p><strong>site</strong>: Contains information about the site</p>
+</li>
+<li>
+<p><strong>name</strong> (<em>string</em>): Name used to present this site to other sites. Used to fill comboboxes or lists.</p>
+</li>
+<li><strong>organisation</strong> (<em>string</em>): Name of the organization/company/institute that is running GeoNetwork</li>
+<li>
+<p><strong>siteId</strong> (<em>string</em>): A UUID that uniquely identifies the site. It is generated by the installer.</p>
+</li>
+<li>
+<p><strong>platform</strong>: Contains information about the current software version</p>
+</li>
+<li>
+<p><strong>version</strong> (<em>string</em>): GeoNetwork's version in the X.Y.Z format</p>
+</li>
+<li>
+<p><strong>subVersion</strong> (<em>string</em>): A small extra description about the version, like 'alpha-1', 'beta' etc...</p>
+</li>
+<li>
+<p><strong>server</strong>: Used when it is necessary to build absolute URLs to the GeoNetwork server. This is the case, for example, when creating links inside a metadata record or when providing CSW capabilities.</p>
+</li>
+<li>
+<p><strong>host</strong> (<em>string</em>): HTTP server address</p>
+</li>
+<li>
+<p><strong>port</strong> (<em>integer</em>): HTTP server port (can be empty which means port 80)</p>
+</li>
+<li>
+<p><strong>Intranet</strong>: specify the network address details of the Intranet</p>
+</li>
+<li>
+<p><strong>network</strong> (<em>string</em>): Intranet address</p>
+</li>
+<li>
+<p><strong>netmask</strong> (<em>string</em>): Intranet netmask</p>
+</li>
+<li>
+<p><strong>z3950</strong>: A container for Z39.50 server parameters</p>
+</li>
+<li>
+<p><strong>enable</strong> (<em>boolean</em>): If true, GeoNetwork will start the Z30.50 server</p>
+</li>
+<li>
+<p><strong>port</strong> (<em>integer</em>): The port opened by GeoNetwork to listen to Z39.50 requests. Usually 2100.</p>
+</li>
+<li>
+<p><strong>proxy</strong>: This container specifies the proxy configuration for GeoNetwork to use when making outgoing connections</p>
+</li>
+<li>
+<p><strong>use</strong> (<em>boolean</em>): If true, GeoNetwork will use the given proxy for outgoing connections</p>
+</li>
+<li><strong>host</strong> (<em>string</em>): Proxy host name</li>
+<li><strong>port</strong> (<em>integer</em>): Proxy host port</li>
+<li><strong>username</strong> (<em>string</em>): Proxy credentials.</li>
+<li>
+<p><strong>password</strong> (<em>string</em>): Proxy credentials.</p>
+</li>
+<li>
+<p><strong>feedback</strong>: email messages sent via web feedback form or when downloading a resource.</p>
+</li>
+<li>
+<p><strong>email</strong> (<em>string</em>): email address of person who will receive feedback</p>
+</li>
+<li>
+<p><strong>mailServer</strong>: This container configures the mail server that will be used to send email</p>
+<ul>
+<li><strong>host</strong> (<em>string</em>): Address of the SMTP server to use</li>
+<li><strong>port</strong> (<em>string</em>): SMTP port on server to use</li>
+</ul>
+</li>
+<li>
+<p><strong>removedMetadata</strong>: This container contains settings about removed metadata.</p>
+</li>
+<li>
+<p><strong>dir</strong>: This folder will contain removed metadata in MEF format. It gets populated when the user deletes a metadata using the web interface.</p>
+</li>
+<li>
+<p><strong>LDAP</strong>: Parameters for LDAP authentication by GeoNetwork</p>
+</li>
+<li>
+<p><strong>use</strong> (<em>boolean</em>): If true, GeoNetwork will use LDAP authentication for usernames and passwords</p>
+</li>
+<li><strong>host</strong> (<em>string</em>): LDAP host</li>
+<li><strong>port</strong> (<em>integer</em>): Port number on LDAP host</li>
+<li><strong>defaultProfile</strong> (<em>string</em>): Default GeoNetwork profile to use when the profile user attribute does not exist in the LDAP attributes.</li>
+<li><strong>login</strong> - optional credentials used to obtain access to the LDAP service<ul>
+<li><strong>userDN</strong> (<em>string</em>)</li>
+<li><strong>password</strong> (<em>string</em>)</li>
+</ul>
+</li>
+<li><strong>distinguishedNames</strong> - optional LDAP info used by GeoNetwork to locate user credentials<ul>
+<li><strong>base</strong> (<em>string</em>)</li>
+<li><strong>users</strong> (<em>string</em>)</li>
+</ul>
+</li>
+<li><strong>userAttribs</strong>: A container for user attributes present into the LDAP directory that must be retrieved and used to create the user in GeoNetwork.<ul>
+<li><strong>name</strong> (<em>string</em>)</li>
+<li><strong>password</strong> (<em>string</em>)</li>
+<li><strong>profile</strong> (<em>string</em>)</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="harvesting_nodes">Harvesting nodes</h2>
+<p>All harvesters share a common set of nodes, which are retrieved by the harvesting engine for all harvesters. These common nodes are described in the hierarchy below.</p>
+<ul>
+<li>
+<p><strong>harvesting</strong></p>
+<ul>
+<li><strong>node</strong> [0..n] (<em>geonetwork|csw|arcsde|filesystem|geonetwork20|oaipmh|</em> <em>ogcwxs|thredds|webdav|wfsfeatures|z3950|z3950Config|geoPREST</em>): Type of harvesting node</li>
+<li><strong>site</strong>: A container for site information.<ul>
+<li><strong>name</strong> (<em>string</em>): Name of harvest instance (shown in the harvester user interface).</li>
+<li><strong>uuid</strong> (<em>string</em>): A unique identifier assigned by the system when the harvesting node is created.</li>
+<li><strong>useAccount</strong> (<em>boolean</em>): Indicates if the harvester has to authenticate to access the data.<ul>
+<li><strong>username</strong> (<em>string</em>): credentials to be used for authentication</li>
+<li><strong>password</strong> (<em>string</em>): credentials to be used for authentication</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>options</strong>:<ul>
+<li><strong>every</strong> (<em>string</em>): Harvesting schedule - similar to the Unix CRON format</li>
+<li><strong>oneRunOnly</strong> (<em>boolean</em>): If true, the harvester will harvest just once and then it will set the status to inactive.</li>
+<li><strong>status</strong> (<em>active|inactive</em>): Indicates if the harvesting from this node is stopped (inactive) or if the harvester is waiting for the next scheduled harvest (active).</li>
+</ul>
+</li>
+<li><strong>content</strong>: A container for options relating to processing content after harvesting but before storage in the GeoNetwork database<ul>
+<li><strong>importxslt</strong> (<em>string</em>): Name of XSLT to apply to metadata records before being stored and indexed in GeoNetwork (<strong>note:</strong> not every harvester supports this option - see notes section for each harvester in the harvester settings descriptions below). A list of the possible XSLTs that can be used for this parameter can be obtained from the <code>xml.harvesting.info</code> service - see <code class="interpreted-text" role="ref">xml_harvesting_info&amp;type=importStylesheets</code>.</li>
+<li><strong>validate</strong> (<em>boolean</em>): If true, the harvester will validate the metadata record against the matching metadata schema in GeoNetwork. (<strong>note:</strong> not every harvester supports this option - see notes section for each harvester in the harvester settings descriptions below)</li>
+</ul>
+</li>
+<li><strong>privileges</strong> [0..1]: This is a container for privileges to assign to each harvested metadata record.<ul>
+<li><strong>group</strong> (<em>integer</em>) [0..n]: A local group. The value is the local identifier of the group. There can be several group nodes each with its own set of privileges.<ul>
+<li><strong>operation</strong> (<em>integer</em>) [0..n]: Privilege to assign to the group. The value is the numeric id of the operation like 0=view, 1=download, 2=edit etc...</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>categories</strong> [0..1]: This is a container for categories to assign to each harvested metadata record.<ul>
+<li><strong>category</strong> (<em>integer</em>) [0..n]: A local category. The value is the local identifier of the category.</li>
+</ul>
+</li>
+<li><strong>info</strong>: Container for status information about harvesting from this node.<ul>
+<li><strong>lastRun</strong> (<em>string</em>): When the harvester was last run. The value is the current time in milliseconds since 1 January, 1970. If empty then the harvester has not yet been run.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>Settings for each of the different harvesters that show the additional elements specific to those harvesters are in the following sections.</p>
+<h3 id="geonetwork_harvesting">Harvesting node geonetwork</h3>
+<p>This is the native harvesting supported by GeoNetwork 2.1 and above.</p>
+<ul>
+<li><strong>node</strong> (<em>string</em>): geonetwork<ul>
+<li><strong>site</strong>: Contains host and account information<ul>
+<li><strong>host</strong> (<em>string</em>) eg. <a href="http://localhost:8080/geonetwork">http://localhost:8080/geonetwork</a></li>
+<li><strong>createRemoteCategory</strong> (<em>boolean</em>) True: If local category exists with same name as the remote category, then assign harvested metadata to that category. False: Ignore categories.</li>
+<li><strong>mefFormatFull</strong> (<em>boolean</em>) True: harvest remote metadata as a <strong>full</strong> MEF file. ie. metadata plus thumbnails and data files uploaded with metadata.</li>
+<li><strong>importXslt</strong> (<em>string</em>) Name and parameters of a metadata processing XSLT - see <a href="../xml_services/metadata_xml_processing/">Metadata Processing services</a> for more details.</li>
+</ul>
+</li>
+<li><strong>search</strong> [0..n]: Contains the search parameters. If this element is missing, an unconstrained search will be performed.<ul>
+<li><strong>freeText</strong> (<em>string</em>) - free text search on remote instance</li>
+<li><strong>title</strong> (<em>string</em>) - search title on remote instance</li>
+<li><strong>abstract</strong> (<em>string</em>) - search abstract on remote instance</li>
+<li><strong>keywords</strong> (<em>string</em>) - search keywords on remote instance</li>
+<li><strong>digital</strong> (<em>boolean</em>) - search for records marked 'digital' on remote instance</li>
+<li><strong>hardcopy</strong> (<em>boolean</em>) - search for records marked 'hardcopy' on remote instance</li>
+<li><strong>sourceUuid</strong> (<em>string</em>) - search for records that come from source with this uuid on the remote instance</li>
+<li><strong>sourceName</strong> (<em>string</em>) - search for records that come from source with this name on the remote instance</li>
+</ul>
+</li>
+<li><strong>groupsCopyPolicy</strong> [0..n]: Represents a copy policy for a remote group. It is used to maintain remote privileges on harvested metadata.<ul>
+<li><strong>name</strong> (<em>string</em>): Internal name (not localised) of a remote group.</li>
+<li><strong>policy</strong> (<em>string</em>): Copy policy. For the group all, policies are: copy, copyToIntranet. For all other groups, policies are: copy, createAndCopy. The Intranet group is not considered.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="xml-example">XML Example</h4>
+<p>Harvester settings in XML are used by the harvester services - see <a href="../xml_services/services_harvesting/">Harvesting services</a>.</p>
+<p><em>Example of GeoNetwork harvester settings in XML:</em>:</p>
+<div class="language-text highlight"><pre><span></span><code>&lt;node id=&quot;954&quot; type=&quot;geonetwork&quot;&gt;
+ &lt;site&gt;
+   &lt;name&gt;test&lt;/name&gt;
+   &lt;uuid&gt;683bfc02-73e2-4100-a601-369936b6f82a&lt;/uuid&gt;
+   &lt;account&gt;
+     &lt;use&gt;true&lt;/use&gt;
+     &lt;username&gt;admin&lt;/username&gt;
+     &lt;password&gt;admin&lt;/password&gt;
+   &lt;/account&gt;
+   &lt;host&gt;http://localhost:8080/geonetwork&lt;/host&gt;
+   &lt;createRemoteCategory&gt;true&lt;/createRemoteCategory&gt;
+   &lt;mefFormatFull&gt;true&lt;/mefFormatFull&gt;
+   &lt;xslfilter /&gt;
+ &lt;/site&gt;
+ &lt;content&gt;
+   &lt;validate&gt;true&lt;/validate&gt;
+   &lt;importxslt&gt;none&lt;/importxslt&gt;
+ &lt;/content&gt;
+ &lt;options&gt;
+   &lt;every&gt;0 0 0/3 ? * *&lt;/every&gt;
+   &lt;oneRunOnly&gt;false&lt;/oneRunOnly&gt;
+   &lt;status&gt;inactive&lt;/status&gt;
+ &lt;/options&gt;
+ &lt;searches&gt;
+   &lt;search&gt;
+     &lt;freeText&gt;Maps&lt;/freeText&gt;
+     &lt;title&gt;&lt;/title&gt;
+     &lt;abstract&gt;&lt;/abstract&gt;
+     &lt;keywords&gt;&lt;/keywords&gt;
+     &lt;digital&gt;false&lt;/digital&gt;
+     &lt;hardcopy&gt;true&lt;/hardcopy&gt;
+     &lt;source&gt;
+       &lt;uuid&gt;b7ce20f2-888a-4139-8802-916730c4be06&lt;/uuid&gt;
+       &lt;name&gt;My GeoNetwork catalogue&lt;/name&gt;
+     &lt;/source&gt;
+   &lt;/search&gt;
+ &lt;/searches&gt;
+ &lt;categories&gt;
+   &lt;category id=&quot;5&quot; /&gt;
+ &lt;/categories&gt;
+ &lt;groupsCopyPolicy /&gt;
+ &lt;info&gt;
+   &lt;lastRun /&gt;
+   &lt;running&gt;false&lt;/running&gt;
+ &lt;/info&gt; 
+&lt;/node&gt;
+</code></pre></div>
+<h4 id="notes">Notes</h4>
+<div class="language-text highlight"><pre><span></span><code>-    this harvester does not use the content/importXslt setting - instead a more sophisticated approach using the metadata processing services can be applied through the **importXslt** setting - for more details and an example see [Metadata Processing services](../xml_services/metadata_xml_processing.md) for more details.
+</code></pre></div>
+<h3 id="webdav_harvesting">Harvesting node webdav</h3>
+<p>This harvester type is capable of connecting to a web server which is WebDAV enabled (WebDAV is WEB Distributed Authoring and Versioning) or WAF (Web Accessible Folder) enabled.</p>
+<div class="language-text highlight"><pre><span></span><code>-    **node** (*string*): webdav
+ -   **site**: Contains the URL to connect to and account information
+     -   **url** (*string*): URL to connect to. Must be well formed, starting with `http://`, `file://` or a supported protocol.
+     -   **icon** (*string*): This is the icon that will be used as the metadata source logo. The image is taken from the `images/harvesting` folder and copied to the `images/logos` folder. A list of the possible values that can be used for this parameter can be obtained from the `xml.harvesting.info` service - see `xml_harvesting_info&amp;type=icons`{.interpreted-text role=&quot;ref&quot;}.
+ -   **options**
+     -   **recurse** (*boolean*): Indicates if the remote folder must be recursively scanned for metadata.
+     -   **validate** (*boolean*): If set, the harvester will validate the metadata against its schema and the metadata will be harvested only if it is valid.
+     -   **subtype** (*waf|webdav*): Indicates the type of server being harvested
+</code></pre></div>
+<h4 id="xml-example_1">XML Example</h4>
+<p>Harvester settings in XML are used by the harvester services - see <a href="../xml_services/services_harvesting/">Harvesting services</a>.</p>
+<p><em>Example of WEBDAV/WAF harvester settings in XML:</em>:</p>
+<div class="language-text highlight"><pre><span></span><code>&lt;node id=&quot;1039&quot; type=&quot;webdav&quot;&gt;
+ &lt;site&gt;
+   &lt;name&gt;burbble&lt;/name&gt;
+   &lt;uuid&gt;b64e006a-a26c-4268-85ec-0bf0450be966&lt;/uuid&gt;
+   &lt;account&gt;
+     &lt;use&gt;true&lt;/use&gt;
+     &lt;username&gt;apples&lt;/username&gt;
+     &lt;password&gt;oranges&lt;/password&gt;
+   &lt;/account&gt;
+   &lt;url&gt;http://davtest.com/webdav&lt;/url&gt;
+   &lt;icon&gt;webdav.gif&lt;/icon&gt;
+ &lt;/site&gt;
+ &lt;content&gt;
+   &lt;validate&gt;true&lt;/validate&gt;
+   &lt;importxslt&gt;none&lt;/importxslt&gt;
+ &lt;/content&gt;
+ &lt;options&gt;
+   &lt;every&gt;0 0 0 ? * *&lt;/every&gt;
+   &lt;oneRunOnly&gt;false&lt;/oneRunOnly&gt;
+   &lt;status&gt;inactive&lt;/status&gt;
+   &lt;validate&gt;true&lt;/validate&gt;
+   &lt;recurse&gt;true&lt;/recurse&gt;
+   &lt;subtype&gt;webdav&lt;/subtype&gt;
+ &lt;/options&gt;
+ &lt;privileges&gt;
+   &lt;group id=&quot;1&quot;&gt;
+     &lt;operation name=&quot;view&quot; /&gt;
+   &lt;/group&gt;
+ &lt;/privileges&gt;
+ &lt;categories&gt;
+   &lt;category id=&quot;2&quot; /&gt;
+ &lt;/categories&gt;
+ &lt;info&gt;
+   &lt;lastRun /&gt;
+   &lt;running&gt;false&lt;/running&gt;
+ &lt;/info&gt;
+&lt;/node&gt;
+</code></pre></div>
+<h4 id="notes_1">Notes</h4>
+<div class="language-text highlight"><pre><span></span><code>-    this harvester does not use the content/importXslt setting
+</code></pre></div>
+<h3 id="csw_harvesting">Harvesting node csw</h3>
+<p>This harvester type is capable of querying an OGC Catalogue Services for the Web (CSW) server and harvesting metadata.</p>
+<div class="language-text highlight"><pre><span></span><code>-    **node** (*string*): csw
+ -   **site**
+     -   **capabUrl** (*string*): URL of the GetCapabilities statement. This will be used to retrieve the operations and server address.
+     -   **icon** (*string*): This is the icon that will be used as the metadata source logo. The image is taken from the `images/harvesting` folder and copied to the `images/logos` folder. A list of the possible values that can be used for this parameter can be obtained from the `xml.harvesting.info` service - see `xml_harvesting_info&amp;type=icons`{.interpreted-text role=&quot;ref&quot;}.
+ -   **search** [0..n]: Contains search parameters. If this element is missing, an unconstrained search will be performed.
+     -   **freeText** (*string*)
+     -   **title** (*string*)
+     -   **abstract** (*string*)
+     -   **subject** (*string*)
+     -   **minscale** (*integer*) - minimum scale denominator
+     -   **maxscale** (*integer*) - maximum scale denominator
+</code></pre></div>
+<h4 id="xml-example_2">XML Example</h4>
+<p>Harvester settings in XML are used by the harvester services - see <a href="../xml_services/services_harvesting/">Harvesting services</a>. <em>Example of CSW harvester settings in XML:</em>:</p>
+<div class="language-text highlight"><pre><span></span><code>&lt;node id=&quot;1122&quot; type=&quot;csw&quot;&gt;
+ &lt;site&gt;
+   &lt;name&gt;blonks&lt;/name&gt;
+   &lt;uuid&gt;723953dc-1308-4905-abc0-9869f18af132&lt;/uuid&gt;
+   &lt;account&gt;
+     &lt;use&gt;true&lt;/use&gt;
+     &lt;username&gt;frogmouth&lt;/username&gt;
+     &lt;password&gt;tawny&lt;/password&gt;
+   &lt;/account&gt;
+   &lt;capabilitiesUrl&gt;http://cswserver.com/services/csw?request=GetCapabilities&amp;amp;service=CSW&lt;/capabilitiesUrl&gt;
+   &lt;icon&gt;csw.gif&lt;/icon&gt;
+ &lt;/site&gt;
+ &lt;content&gt;
+   &lt;validate&gt;false&lt;/validate&gt;
+   &lt;importxslt&gt;none&lt;/importxslt&gt;
+ &lt;/content&gt;
+ &lt;options&gt;
+   &lt;every&gt;0 0 0 ? * *&lt;/every&gt;
+   &lt;oneRunOnly&gt;false&lt;/oneRunOnly&gt;
+   &lt;status&gt;inactive&lt;/status&gt;
+ &lt;/options&gt;
+ &lt;searches&gt;
+   &lt;search&gt;
+     &lt;freeText&gt;cobblers&lt;/freeText&gt;
+     &lt;title /&gt;
+     &lt;abstract /&gt;
+     &lt;subject /&gt;
+     &lt;minscale&gt;25000&lt;/minscale&gt;
+     &lt;maxscale&gt;400000&lt;/maxscale&gt;
+   &lt;/search&gt;
+ &lt;/searches&gt;
+ &lt;privileges&gt;
+   &lt;group id=&quot;1&quot;&gt;
+     &lt;operation name=&quot;view&quot; /&gt;
+   &lt;/group&gt;
+ &lt;/privileges&gt;
+ &lt;categories&gt;
+   &lt;category id=&quot;2&quot; /&gt;
+ &lt;/categories&gt;
+ &lt;info&gt;
+   &lt;lastRun /&gt;
+   &lt;running&gt;false&lt;/running&gt;
+ &lt;/info&gt;
+&lt;/node&gt;
+</code></pre></div>
+<h4 id="notes_2">Notes</h4>
+<div class="language-text highlight"><pre><span></span><code>-    this harvester does not use the content/importXslt setting
+</code></pre></div>
+<h3 id="z3950_harvesting">Harvesting node z3950</h3>
+<p>This harvester type is capable of querying one or more Z3950 servers and harvesting metadata.</p>
+<div class="language-text highlight"><pre><span></span><code>-    **node** (*string*): z3950
+ -   **site**
+     -   **query** (*string*): Z3950 query in Prefix Query Format (mandatory). See the discussion on PQF in the Z3950 Harvester section of the Users Manual and/or &lt;http://www.indexdata.com/yaz/doc/tools.html#PQF&gt;.
+     -   **icon** (*string*): This is the icon that will be used as the metadata source logo. The image is taken from the `images/harvesting` folder and copied to the `images/logos` folder. A list of the possible values that can be used for this parameter can be obtained from the `xml.harvesting.info` service - see `xml_harvesting_info&amp;type=icons`{.interpreted-text role=&quot;ref&quot;}.
+     -   **repositories**
+         -   **repository** [0..n]: Contains the Z3950 repository ids that will be harvested. Z3950 repository ids in GeoNetwork can be obtained through the `xml.info`{.interpreted-text role=&quot;ref&quot;} service.
+</code></pre></div>
+<h4 id="xml-example_3">XML Example</h4>
+<p>Harvester settings in XML are used by the harvester services - see <a href="../xml_services/services_harvesting/">Harvesting services</a>. <em>Example of Z3950 harvester settings in XML:</em>:</p>
+<div class="language-text highlight"><pre><span></span><code>&lt;node id=&quot;1090&quot; type=&quot;z3950&quot;&gt;
+ &lt;site&gt;
+   &lt;name&gt;testz3950&lt;/name&gt;
+   &lt;uuid&gt;8554ec2b-2b80-4f9e-9d9d-028e2407ee89&lt;/uuid&gt;
+   &lt;account&gt;
+     &lt;use&gt;true&lt;/use&gt;
+     &lt;username /&gt;
+     &lt;password /&gt;
+   &lt;/account&gt;
+   &lt;query&gt;@attrset geo @attr 1=1016 @attr 4=6 @attr 2=3 &quot;water&quot;&lt;/query&gt;
+   &lt;icon&gt;Z3950.gif&lt;/icon&gt;
+   &lt;repositories&gt;
+     &lt;repository id=&quot;act&quot; /&gt;
+     &lt;repository id=&quot;geonetwork-auscope&quot; /&gt;
+     &lt;repository id=&quot;product&quot; /&gt;
+     &lt;repository id=&quot;publication&quot; /&gt;
+     &lt;repository id=&quot;source&quot; /&gt;
+     &lt;repository id=&quot;geonetwork-aims&quot; /&gt;
+   &lt;/repositories&gt;
+ &lt;/site&gt;
+ &lt;content&gt;
+   &lt;validate&gt;false&lt;/validate&gt;
+   &lt;importxslt&gt;none&lt;/importxslt&gt;
+ &lt;/content&gt;
+ &lt;options&gt;
+   &lt;every&gt;0 0 0 ? * *&lt;/every&gt;
+   &lt;oneRunOnly&gt;false&lt;/oneRunOnly&gt;
+   &lt;status&gt;inactive&lt;/status&gt;
+ &lt;/options&gt;
+ &lt;privileges&gt;
+   &lt;group id=&quot;1&quot;&gt;
+     &lt;operation name=&quot;view&quot; /&gt;
+     &lt;operation name=&quot;dynamic&quot; /&gt;
+     &lt;operation name=&quot;featured&quot; /&gt;
+   &lt;/group&gt;
+ &lt;/privileges&gt;
+ &lt;categories&gt;
+   &lt;category id=&quot;2&quot; /&gt;
+ &lt;/categories&gt;
+ &lt;info&gt;
+   &lt;lastRun /&gt;
+   &lt;running&gt;false&lt;/running&gt;
+ &lt;/info&gt;
+&lt;/node&gt;
+</code></pre></div>
+<h3 id="oaipmh_harvesting">Harvesting node oaipmh</h3>
+<p>This harvester type is capable of querying an OAIPMH (Open Archives Initiative Protocol for Metadata Harvesting version 2.0) server and harvesting metadata.</p>
+<div class="language-text highlight"><pre><span></span><code>-    **node** (*string*): oaipmh
+ -   **site**
+     -   **url** (*string*): OAIPMH server URL
+     -   **icon** (*string*): This is the icon that will be used as the metadata source logo. The image is taken from the `images/harvesting` folder and copied to the `images/logos` folder. A list of the possible values that can be used for this parameter can be obtained from the `xml.harvesting.info` service - see `xml_harvesting_info&amp;type=icons`{.interpreted-text role=&quot;ref&quot;}.
+ -   **options**
+     -   **validate** (*boolean*): Validate metadata before saving to database. This option will be deprecated in favour of content/validate.
+ -   **search** [0..n]: Contains search parameters which because they are constrained to follow the OAIPMH version 2.0 standard, are curiously limited to a date range, prefix and metadata set name. If this element is missing, an unconstrained search will be performed.
+     -   **from** (*string*) from date search
+     -   **until** (*string*) to date search
+     -   **set** (*string*) metadata set name on OAIPMH server (possible values can be retrieved using &lt;http://your_oaipmhservername?verb=ListSets&gt;)
+     -   **prefix** (*string*) metadata prefix name on OAIPMH server (possible values can be retrieved using &lt;http://your_oaipmhservername?verb=ListMetadataFormats&gt;)
+</code></pre></div>
+<h4 id="xml-example_4">XML Example</h4>
+<p>Harvester settings in XML are used by the harvester services - see <a href="../xml_services/services_harvesting/">Harvesting services</a>. <em>Example of OAIPMH harvester settings in XML:</em>:</p>
+<div class="language-text highlight"><pre><span></span><code>&lt;node id=&quot;1152&quot; type=&quot;oaipmh&quot;&gt;
+ &lt;site&gt;
+   &lt;name&gt;oaitest&lt;/name&gt;
+   &lt;uuid&gt;0a3e4a4a-4c4c-4f82-860f-551b6cf12341&lt;/uuid&gt;
+   &lt;account&gt;
+     &lt;use&gt;true&lt;/use&gt;
+     &lt;username /&gt;
+     &lt;password /&gt;
+   &lt;/account&gt;
+   &lt;url&gt;http://localhost:6060/joai&lt;/url&gt;
+   &lt;icon&gt;oai-mhp.gif&lt;/icon&gt;
+ &lt;/site&gt;
+ &lt;content&gt;
+   &lt;validate&gt;false&lt;/validate&gt;
+   &lt;importxslt&gt;{IMPORTXSLT}&lt;/importxslt&gt;
+ &lt;/content&gt;
+ &lt;options&gt;
+   &lt;every&gt;0 0 0 ? * *&lt;/every&gt;
+   &lt;oneRunOnly&gt;false&lt;/oneRunOnly&gt;
+   &lt;status&gt;inactive&lt;/status&gt;
+   &lt;validate&gt;false&lt;/validate&gt;
+ &lt;/options&gt;
+ &lt;searches&gt;
+   &lt;search&gt;
+     &lt;from&gt;2013-01-08&lt;/from&gt;
+     &lt;until&gt;2013-01-30&lt;/until&gt;
+     &lt;set&gt;iso19139&lt;/set&gt;
+     &lt;prefix&gt;gmd&lt;/prefix&gt;
+     &lt;stylesheet /&gt;
+   &lt;/search&gt;
+ &lt;/searches&gt;
+ &lt;privileges&gt;
+   &lt;group id=&quot;1&quot;&gt;
+     &lt;operation name=&quot;view&quot; /&gt;
+   &lt;/group&gt;
+ &lt;/privileges&gt;
+ &lt;categories&gt;
+   &lt;category id=&quot;2&quot; /&gt;
+ &lt;/categories&gt;
+ &lt;info&gt;
+   &lt;lastRun /&gt;
+   &lt;running&gt;false&lt;/running&gt;
+ &lt;/info&gt;
+&lt;/node&gt;
+</code></pre></div>
+<h4 id="notes_3">Notes</h4>
+<div class="language-text highlight"><pre><span></span><code>-    this harvester does not use the content/importXslt setting
+-    this harvester does not use the content/validate setting - this will change
+</code></pre></div>
+<h3 id="thredds_harvesting">Harvesting node thredds</h3>
+<p>This harvester type is capable of harvesting metadata from a THREDDS (Thematic Real-time Environmental Data Directory Service). The metadata fragments are:</p>
+<ul>
+<li>transformed into ISO19115/19139 (or profile) metadata fragments</li>
+<li>copied or linked into an ISO19115/19139 (or profile) template</li>
+</ul>
+<p>The harvester supports metadata fragments following the Unidata Data Discovery Conventions (<a href="http://www.unidata.ucar.edu/software/netcdf-java/formats/DataDiscoveryAttConvention.html">http://www.unidata.ucar.edu/software/netcdf-java/formats/DataDiscoveryAttConvention.html</a>) from two types of THREDDS datasets:</p>
+<ul>
+<li>collections: essentially datasets that contain other datasets (like directories in a filesystem tree)</li>
+<li>atomics: datasets that do not contain other datasets (like files in a filesystem tree)</li>
+</ul>
+<p>The settings for a THREDDS harvester type are:</p>
+<div class="language-text highlight"><pre><span></span><code>-    **node** (*string*): thredds
+ -   **site**
+     -   **url** (*string*): THREDDS catalog server URL - should always be the URL of an XML THREDDS catalog eg. &lt;http://motherlode.ucar.edu:8080/thredds/catalog/satellite/3.9/WEST-CONUS_4km/catalog.xml&gt; - HTML URLs will **not** work!
+     -   **icon** (*string*): This is the icon that will be used as the metadata source logo. The image is taken from the `images/harvesting` folder and copied to the `images/logos` folder. A list of the possible values that can be used for this parameter can be obtained from the `xml.harvesting.info` service - see `xml_harvesting_info&amp;type=icons`{.interpreted-text role=&quot;ref&quot;}.
+ -   **options**
+     -   **lang** (*string*) - three letter language code describing language of metadata being harvested (almost always **eng**) - this value is used to set the metadata language in the records harvested from THREDDS
+     -   **topic** (*string*) - ISO topic category describing the harvested metadata
+     -   **createThumbnails** (*boolean*) - If true and the THREDDS catalog delivers WMS images for a dataset whose metadata is being harvested then a thumbnail will be created from the WMS for the harvested metadata
+     -   **createServiceMd** (*boolean*) - If true then a skeleton ISO19119 service metadata record will be created for the services specified in the THREDDS catalog.
+     -   **createCollectionDatasetMd** (*boolean*) - If true then metadata records will be created using harvested metadata fragments from collection datasets in the THREDDS catalog.
+     -   **collectionGeneration** (*fragments|default*) - Use *fragments*. *default* refers to DIF metadata extraction which will be deprecated.
+     -   **outputSchemaOnCollectionsFragments** (*string*) Metadata schema of ISO records that will be created from THREDDS catalog collection metadata. A list of possible values for this parameter can be obtained from the `xml.harvesting.info` service, see `xml_harvesting_info&amp;type=threddsFragmentSchemas`{.interpreted-text role=&quot;ref&quot;}.
+     -   **collectionMetadataTemplate** (*integer*) Template record that harvested fragments will copied or linked into to create metadata records. Use &lt;http://your_geonetwork/geonetwork/srv/eng/xml.info?type=templates&gt; to get a list of template metadata record ids that can be used for this setting.
+     -   **createCollectionSubtemplates** (*boolean*) - If true then subtemplates are created from the metadata fragments harvested from the THREDDS catalog datasets. The subtemplates are stored in the GeoNetwork database and linked into the **collectionMetadataTemplate** template record to create the harvested metadata records. If false, then subtemplates are not created, instead the harvested fragments are copied into the **collectionMetadataTemplate** record to create normal metadata records.
+     -   **collectionFragmentStylesheet** (*string*) Stylesheet that turns collection metadata fragments in the THREDDS catalog into ISO metadata fragments. A list of possible values for this parameter can be obtained from the `xml.harvesting.info` service, see `xml_harvesting_info&amp;type=threddsFragmentStylesheets`{.interpreted-text role=&quot;ref&quot;}.
+     -   **createAtomicDatasetMd** (*boolean*) - If true then metadata records will be created using harvested metadata fragments from atom datasets in the THREDDS catalog.
+     -   **atomicGeneration** (*fragments|default*) - Use *fragments*. *default* refers to DIF metadata extraction which will be deprecated.
+     -   **outputSchemaOnAtomicFragments** (*string*) Metadata schema of ISO records that will be created from THREDDS catalog atomic metadata. A list of possible values for this parameter can be obtained from the `xml.harvesting.info` service, see `xml_harvesting_info&amp;type=threddsFragmentSchemas`{.interpreted-text role=&quot;ref&quot;}.
+     -   **atomicMetadataTemplate** (*integer*) Template record that harvested fragments will copied or linked into to create metadata records. Use &lt;http://your_geonetwork/geonetwork/srv/eng/xml.info?type=templates&gt; to get a list of template metadata record ids that can be used for this setting.
+     -   **createAtomicSubtemplates** (*boolean*) - If true then subtemplates are created from the metadata fragments harvested from the THREDDS catalog atoms. The subtemplates are stored in the GeoNetwork database and linked into the **atomicMetadataTemplate** template record to create the harvested metadata records. If false, then subtemplates are not created, instead the harvested fragments are copied into the **atomicMetadataTemplate** record to create normal metadata records.
+     -   **atomicFragmentStylesheet** (*string*) Stylesheet that turns atom metadata fragments in the THREDDS catalog into ISO metadata fragments. A list of possible values for this parameter can be obtained from the `xml.harvesting.info` service, see `xml_harvesting_info&amp;type=threddsFragmentStylesheets`{.interpreted-text role=&quot;ref&quot;}.
+</code></pre></div>
+<h4 id="xml-example_5">XML Example</h4>
+<p>Harvester settings in XML are used by the harvester services - see <a href="../xml_services/services_harvesting/">Harvesting services</a>. <em>Example of THREDDS harvester settings in XML:</em></p>
+<div class="language-text highlight"><pre><span></span><code>&lt;node id=&quot;977&quot; type=&quot;thredds&quot;&gt;
+ &lt;site&gt;
+   &lt;name&gt;test thredds with motherlode&lt;/name&gt;
+   &lt;uuid&gt;b3307257-6b2a-48e7-80f5-74acadeff66f&lt;/uuid&gt;
+   &lt;account&gt;
+     &lt;use&gt;true&lt;/use&gt;
+     &lt;username /&gt;
+     &lt;password /&gt;
+   &lt;/account&gt;
+   &lt;url&gt;http://motherlode.ucar.edu:8080/thredds/catalog/satellite/3.9/WEST-CONUS_4km/catalog.xml&lt;/url&gt;
+   &lt;icon&gt;thredds.gif&lt;/icon&gt;
+ &lt;/site&gt;
+ &lt;content&gt;
+   &lt;validate&gt;false&lt;/validate&gt;
+   &lt;importxslt&gt;{IMPORTXSLT}&lt;/importxslt&gt;
+ &lt;/content&gt;
+ &lt;options&gt;
+   &lt;every&gt;0 0 0 ? * *&lt;/every&gt;
+   &lt;oneRunOnly&gt;false&lt;/oneRunOnly&gt;
+   &lt;status&gt;inactive&lt;/status&gt;
+   &lt;lang&gt;eng&lt;/lang&gt;
+   &lt;topic&gt;environment&lt;/topic&gt;
+   &lt;createThumbnails&gt;true&lt;/createThumbnails&gt;
+   &lt;createServiceMd&gt;true&lt;/createServiceMd&gt;
+   &lt;createCollectionDatasetMd&gt;true&lt;/createCollectionDatasetMd&gt;
+   &lt;createAtomicDatasetMd&gt;true&lt;/createAtomicDatasetMd&gt;
+   &lt;ignoreHarvestOnAtomics&gt;true&lt;/ignoreHarvestOnAtomics&gt;
+   &lt;atomicGeneration&gt;fragments&lt;/atomicGeneration&gt;
+   &lt;modifiedOnly&gt;true&lt;/modifiedOnly&gt;
+   &lt;atomicFragmentStylesheet&gt;thredds-metadata.xsl&lt;/atomicFragmentStylesheet&gt;
+   &lt;atomicMetadataTemplate&gt;7&lt;/atomicMetadataTemplate&gt;
+   &lt;createAtomicSubtemplates&gt;true&lt;/createAtomicSubtemplates&gt;
+   &lt;outputSchemaOnAtomicsDIF /&gt;
+   &lt;outputSchemaOnAtomicsFragments&gt;iso19139&lt;/outputSchemaOnAtomicsFragments&gt;
+   &lt;ignoreHarvestOnCollections&gt;true&lt;/ignoreHarvestOnCollections&gt;
+   &lt;collectionGeneration&gt;fragments&lt;/collectionGeneration&gt;
+   &lt;collectionFragmentStylesheet&gt;thredds-metadata.xsl&lt;/collectionFragmentStylesheet&gt;
+   &lt;collectionMetadataTemplate&gt;7&lt;/collectionMetadataTemplate&gt;
+   &lt;createCollectionSubtemplates&gt;true&lt;/createCollectionSubtemplates&gt;
+   &lt;outputSchemaOnCollectionsDIF /&gt;
+   &lt;outputSchemaOnCollectionsFragments&gt;iso19139&lt;/outputSchemaOnCollectionsFragments&gt;
+   &lt;datasetCategory&gt;2&lt;/datasetCategory&gt;
+ &lt;/options&gt;
+ &lt;privileges&gt;
+   &lt;group id=&quot;1&quot;&gt;
+     &lt;operation name=&quot;view&quot; /&gt;
+   &lt;/group&gt;
+ &lt;/privileges&gt;
+ &lt;categories&gt;
+   &lt;category id=&quot;3&quot; /&gt;
+ &lt;/categories&gt;
+ &lt;info&gt;
+   &lt;lastRun /&gt;
+   &lt;running&gt;false&lt;/running&gt;
+ &lt;/info&gt;
+&lt;/node&gt;
+</code></pre></div>
+<h4 id="notes_4">Notes</h4>
+<div class="language-text highlight"><pre><span></span><code>-    this harvester does not use the content/importXslt setting
+-    this harvester does not use the content/validate setting
+</code></pre></div>
+<h3 id="wfsfeatures_harvesting">Harvesting node wfsfeatures</h3>
+<p>This harvester type is capable of querying and harvesting metadata from the GetFeature response from an OGC Web Feature Service (WFS). The metadata fragments are:</p>
+<ul>
+<li>transformed into ISO19115/19139 (or profile) metadata fragments</li>
+<li>copied or linked into an ISO19115/19139 (or profile) template</li>
+</ul>
+<p>The settings for a WFS Features harvester type are:</p>
+<div class="language-text highlight"><pre><span></span><code>-    **node** (*string*): wfsfeatures
+ -   **site**
+     -   **url** (*string*): OGC WFS service URL. eg. &lt;http://localhost:7070/deegree/services&gt; - the harvester adds the necessary parameters to call the GetFeature service with the query provided from the **options**.
+     -   **icon** (*string*): This is the icon that will be used as the metadata source logo. The image is taken from the `images/harvesting` folder and copied to the `images/logos` folder. A list of the possible values that can be used for this parameter can be obtained from the `xml.harvesting.info` service - see `xml_harvesting_info&amp;type=icons`{.interpreted-text role=&quot;ref&quot;}.
+ -   **options**
+     -   **lang** (*string*) - three letter language code describing language of metadata being harvested (almost always **eng**) - this value is used to set the metadata language in the records harvested from THREDDS
+     -   **query** (*string*) - An OGC WFS GetFeature query
+     -   **outputSchema** (*string*) Metadata schema of ISO records that will be created from WFS GetFeature harvester. A list of possible values for this parameter can be obtained from the `xml.harvesting.info` service, see `xml_harvesting_info&amp;type=wfsFragmentSchemas`{.interpreted-text role=&quot;ref&quot;}.
+     -   **stylesheet** (*string*) Stylesheet that turns WFS Features into ISO metadata fragments. A list of possible values for this parameter can be obtained from the `xml.harvesting.info` service, see `xml_harvesting_info&amp;type=wfsFragmentStylesheets`{.interpreted-text role=&quot;ref&quot;}.
+     -   **streamFeatures** (*boolean*) - If true then responses will be saved to disk and features will be extracted using the streaming XML parser. Use for large WFS GetFeatures responses.
+     -   **createSubtemplates** (*boolean*) - If true then subtemplates are created from the metadata fragments harvested from the WFS GetFeatures response. The subtemplates are stored in the GeoNetwork database and linked into the **templateId** template record to create the harvested metadata records. If false, then subtemplates are not created, instead the harvested fragments are copied into the **templateId** record to create normal metadata records.
+     -   **templateId** (*integer*) Template record that harvested fragments will copied or linked into to create metadata records. Use &lt;http://your_geonetwork/geonetwork/srv/eng/xml.info?type=templates&gt; to get a list of template metadata record ids that can be used for this setting.
+     -   **recordsCategory** (*integer*) Category id of GeoNetwork category that will be assigned to the metadata records created by the harvester. Use &lt;http://your_geonetwork/geonetwork/srv/eng/xml.info?type=categories&gt; to get a list of category ids that can be used for this setting.
+</code></pre></div>
+<h4 id="xml-example_6">XML Example</h4>
+<p>Harvester settings in XML are used by the harvester services - see <a href="../xml_services/services_harvesting/">Harvesting services</a>. <em>Example of WFS Features harvester settings in XML:</em></p>
+<div class="language-text highlight"><pre><span></span><code>&lt;node id=&quot;1201&quot; type=&quot;wfsfeatures&quot;&gt;
+ &lt;site&gt;
+   &lt;name&gt;test wfs&lt;/name&gt;
+   &lt;uuid&gt;588ea4fa-a105-40fd-9697-8082d23cc967&lt;/uuid&gt;
+   &lt;account&gt;
+     &lt;use&gt;true&lt;/use&gt;
+     &lt;username /&gt;
+     &lt;password /&gt;
+   &lt;/account&gt;
+   &lt;url&gt;http://localhost:6060/deegree/services&lt;/url&gt;
+   &lt;icon&gt;wfs.gif&lt;/icon&gt;
+ &lt;/site&gt;
+ &lt;content&gt;
+   &lt;validate&gt;false&lt;/validate&gt;
+   &lt;importxslt&gt;{IMPORTXSLT}&lt;/importxslt&gt;
+ &lt;/content&gt;
+ &lt;options&gt;
+   &lt;every&gt;0 0 0 ? * *&lt;/every&gt;
+   &lt;oneRunOnly&gt;false&lt;/oneRunOnly&gt;
+   &lt;status&gt;inactive&lt;/status&gt;
+   &lt;lang&gt;eng&lt;/lang&gt;
+   &lt;query&gt;&amp;lt;wfs:GetFeature service=&quot;WFS&quot; version=&quot;1.1.0&quot;
+       xmlns:wfs=&quot;http://www.opengis.net/wfs&quot;&amp;gt;
+    &amp;lt;wfs:Query typeName=&quot;gboundaries&quot;/&amp;gt;&amp;lt;/wfs:GetFeature&amp;gt;&lt;/query&gt;
+   &lt;outputSchema&gt;iso19139&lt;/outputSchema&gt;
+   &lt;stylesheet&gt;geoserver_boundary_fragments.xsl&lt;/stylesheet&gt;
+   &lt;streamFeatures&gt;false&lt;/streamFeatures&gt;
+   &lt;createSubtemplates&gt;true&lt;/createSubtemplates&gt;
+   &lt;templateId&gt;2&lt;/templateId&gt;
+   &lt;recordsCategory&gt;2&lt;/recordsCategory&gt;
+ &lt;/options&gt;
+ &lt;privileges&gt;
+   &lt;group id=&quot;1&quot;&gt;
+     &lt;operation name=&quot;view&quot; /&gt;
+     &lt;operation name=&quot;dynamic&quot; /&gt;
+     &lt;operation name=&quot;featured&quot; /&gt;
+   &lt;/group&gt;
+ &lt;/privileges&gt;
+ &lt;categories&gt;
+   &lt;category id=&quot;2&quot; /&gt;
+ &lt;/categories&gt;
+ &lt;info&gt;
+   &lt;lastRun /&gt;
+   &lt;running&gt;false&lt;/running&gt;
+ &lt;/info&gt;
+&lt;/node&gt;
+</code></pre></div>
+<h4 id="notes_5">Notes</h4>
+<div class="language-text highlight"><pre><span></span><code>-    this harvester does not use the content/importXslt setting
+-    this harvester does not use the content/validate setting
+</code></pre></div>
+<h3 id="filesystem_harvesting">Harvesting node filesystem</h3>
+<p>This harvester type is capable of querying and harvesting metadata (filename *.xml) from a directory tree on a filesystem accessible to the GeoNetwork server.</p>
+<p>The settings for the filesystem harvester type are:</p>
+<div class="language-text highlight"><pre><span></span><code>-    **node** (*string*): filesystem
+ -   **site**
+     -   **directory** (*string*): This is the filesystem directory (on the server) from which metadata files (*.xml) will be harvested.
+     -   **recurse** (*boolean*): If true, then any directories in the fileystem directory will be checked for *.xml files (and any directories in those directories etc etc).
+     -   **nodelete** (*boolean*): If true, then metadata from previous executions of the filesystem harvester will be left in the catalog (ie. they will not be deleted)
+     -   **icon** (*string*): This is the icon that will be used as the metadata source logo. The image is taken from the `images/harvesting` folder and copied to the `images/logos` folder. A list of the possible values that can be used for this parameter can be obtained from the `xml.harvesting.info` service - see `xml_harvesting_info&amp;type=icons`{.interpreted-text role=&quot;ref&quot;}.
+</code></pre></div>
+<h4 id="xml-example_7">XML Example</h4>
+<p>Harvester settings in XML are used by the harvester services - see <a href="../xml_services/services_harvesting/">Harvesting services</a>. <em>Example of Filesystem harvester settings in XML:</em></p>
+<div class="language-text highlight"><pre><span></span><code>&lt;node id=&quot;1234&quot; type=&quot;filesystem&quot;&gt;
+ &lt;site&gt;
+   &lt;name&gt;/Users filesystem harvester&lt;/name&gt;
+   &lt;uuid&gt;c7b7660a-337a-4aa1-843b-648280ad8d86&lt;/uuid&gt;
+   &lt;account&gt;
+     &lt;use&gt;false&lt;/use&gt;
+     &lt;username /&gt;
+     &lt;password /&gt;
+   &lt;/account&gt;
+   &lt;directory&gt;/Users&lt;/directory&gt;
+   &lt;recurse&gt;true&lt;/recurse&gt;
+   &lt;nodelete&gt;true&lt;/nodelete&gt;
+   &lt;icon&gt;filesystem.gif&lt;/icon&gt;
+ &lt;/site&gt;
+ &lt;content&gt;
+   &lt;validate&gt;true&lt;/validate&gt;
+   &lt;importxslt&gt;DIF-to-ISO19139.xsl&lt;/importxslt&gt;
+ &lt;/content&gt;
+ &lt;options&gt;
+   &lt;every&gt;0 0 0 ? * *&lt;/every&gt;
+   &lt;oneRunOnly&gt;false&lt;/oneRunOnly&gt;
+   &lt;status&gt;inactive&lt;/status&gt;
+ &lt;/options&gt;
+ &lt;searches /&gt;
+ &lt;privileges&gt;
+   &lt;group id=&quot;1&quot;&gt;
+     &lt;operation name=&quot;view&quot; /&gt;
+   &lt;/group&gt;
+ &lt;/privileges&gt;
+ &lt;categories&gt;
+   &lt;category id=&quot;2&quot; /&gt;
+ &lt;/categories&gt;
+ &lt;info&gt;
+   &lt;lastRun /&gt;
+   &lt;running&gt;false&lt;/running&gt;
+ &lt;/info&gt;
+&lt;/node&gt;
+</code></pre></div>
+<h3 id="arcsde_harvesting">Harvesting node arcsde</h3>
+<p>This harvester type is capable of harvesting metadata from an arcsde server.</p>
+<p>The settings for the arcsde harvester type are:</p>
+<div class="language-text highlight"><pre><span></span><code>-    **node** (*string*): arcsde
+ -   **site**
+     -   **server** (*string*): This is the name of the arcde server.
+     -   **port** (*integer*): Port number of arcsde server.
+     -   **username** (*string*): arcsde username
+     -   **password** (*string*): arcsde password
+     -   **database** (*string*): Name of arcsde database
+     -   **icon** (*string*): This is the icon that will be used as the metadata source logo. The image is taken from the `images/harvesting` folder and copied to the `images/logos` folder. A list of the possible values that can be used for this parameter can be obtained from the `xml.harvesting.info` service - see `xml_harvesting_info&amp;type=icons`{.interpreted-text role=&quot;ref&quot;}.
+</code></pre></div>
+<h4 id="xml-example_8">XML Example</h4>
+<p>Harvester settings in XML are used by the harvester services - see <a href="../xml_services/services_harvesting/">Harvesting services</a>. <em>Example of arcsde harvester settings in XML:</em></p>
+<div class="language-text highlight"><pre><span></span><code>&lt;node id=&quot;1259&quot; type=&quot;arcsde&quot;&gt;
+ &lt;site&gt;
+   &lt;name&gt;test arcsde harvester&lt;/name&gt;
+   &lt;uuid&gt;5b5070d3-464a-484e-941a-e56812e46431&lt;/uuid&gt;
+   &lt;account&gt;
+     &lt;use&gt;false&lt;/use&gt;
+     &lt;username /&gt;
+     &lt;password /&gt;
+   &lt;/account&gt;
+   &lt;server&gt;arcsde_server.esri.com&lt;/server&gt;
+   &lt;port&gt;5151&lt;/port&gt;
+   &lt;username&gt;sde_user&lt;/username&gt;
+   &lt;password&gt;sde_password&lt;/password&gt;
+   &lt;database&gt;esri_sde&lt;/database&gt;
+   &lt;icon&gt;esri.gif&lt;/icon&gt;
+ &lt;/site&gt;
+ &lt;content&gt;
+   &lt;validate&gt;true&lt;/validate&gt;
+   &lt;importxslt&gt;none&lt;/importxslt&gt;
+ &lt;/content&gt;
+ &lt;options&gt;
+   &lt;every&gt;0 0 0 ? * *&lt;/every&gt;
+   &lt;oneRunOnly&gt;false&lt;/oneRunOnly&gt;
+   &lt;status&gt;inactive&lt;/status&gt;
+ &lt;/options&gt;
+ &lt;searches /&gt;
+ &lt;categories&gt;
+   &lt;category id=&quot;4&quot; /&gt;
+ &lt;/categories&gt;
+ &lt;info&gt;
+   &lt;lastRun /&gt;
+   &lt;running&gt;false&lt;/running&gt;
+ &lt;/info&gt;
+&lt;/node&gt;
+</code></pre></div>
+<h4 id="notes_6">Notes</h4>
+<div class="language-text highlight"><pre><span></span><code>-    this harvester does not use the content/importXslt setting
+-    ArcSDE java API libraries need to be installed by the user in GeoNetwork (folder `INSTALL_DIR/web/geonetwork/WEB-INF/lib`), as these are proprietary libraries not distributed with GeoNetwork. The following jars are required:
+
+-     jpe_sdk.jar
+-     jsde_sdk.jar
+</code></pre></div>
+<h3 id="ogcwxs_harvesting">Harvesting node ogcwxs</h3>
+<p>This harvester type is capable of harvesting metadata from the GetCapabilities response of OGC services.</p>
+<p>The settings for an OGCWxS harvester type are:</p>
+<div class="language-text highlight"><pre><span></span><code>-    **node** (*string*): ogcwxs
+ -   **site**
+     -   **url** (*string*): OGC WxS service URL entry point. eg. &lt;http://localhost:7070/deegree/services&gt; - the harvester adds the necessary parameters to call the GetCapabilities service.
+     -   **ogctype** (*WMS1.0.0|WMS1.1.1|WMS1.3.0|WFS1.0.0|WFS1.1.0|* *|WCS1.0.0|WPS0.4.0|WPS1.0.0|CSW2.0.2|SOS1.0.0*): Type and version of OGC service being harvested.
+     -   **icon** (*string*): This is the icon that will be used as the metadata source logo. The image is taken from the `images/harvesting` folder and copied to the `images/logos` folder. A list of the possible values that can be used for this parameter can be obtained from the `xml.harvesting.info` service - see `xml_harvesting_info&amp;type=icons`{.interpreted-text role=&quot;ref&quot;}.
+ -   **options**
+     -   **lang** (*string*) - three letter language code describing language of metadata being harvested - this value is used to set the metadata language in the records created by this harvester. Use &lt;http://your_geonetwork/geonetwork/srv/eng/xml.info?type=isolanguages&gt; to get a list of language codes that can be used for this setting.
+     -   **topic** (*string*) - ISO Topic Category. List of values comes from codelist of ISO topic category element (gmd:topicCategory).
+     -   **createThumbnails** (*boolean*) - if true and service is a WMS then thumbnails will be created for dataset metadata, if false then thumbnails will not be created
+     -   **useLayer** (*boolean*) - Create metadata for layer elements using GetCapabilities information
+     -   **useLayerMd** (*boolean*) - Create metadata for layer elements using remote metadata provided in the MetadataURL attribute (if the remote metadata doesn&#39;t exist/isn&#39;t recognized then GetCapabilities info will be used).
+     -   **datasetCategory** - (*integer*) Category id of GeoNetwork category that will be assigned to the dataset metadata records created by the harvester. Use &lt;http://your_geonetwork/geonetwork/srv/eng/xml.info?type=categories&gt; to get a list of category ids that can be used for this setting.
+     -   **outputSchema** (*string*) Metadata schema of ISO records that will be created from OGCWxS GetCapabilities harvester. A list of possible values for this parameter can be obtained from the `xml.harvesting.info` service, see `xml_harvesting_info&amp;type=ogcwxsOutputSchemas`{.interpreted-text role=&quot;ref&quot;}.
+</code></pre></div>
+<h4 id="xml-example_9">XML Example</h4>
+<p>Harvester settings in XML are used by the harvester services - see <a href="../xml_services/services_harvesting/">Harvesting services</a>. <em>Example of OGCWxS GetCapabilities harvester settings in XML:</em></p>
+<div class="language-text highlight"><pre><span></span><code>&lt;node id=&quot;1138&quot; type=&quot;ogcwxs&quot;&gt;
+ &lt;site&gt;
+   &lt;name&gt;test ogcwxs&lt;/name&gt;
+   &lt;uuid&gt;87852766-536a-40b7-875a-3ab5ff24fa78&lt;/uuid&gt;
+   &lt;account&gt;
+     &lt;use&gt;false&lt;/use&gt;
+     &lt;username /&gt;
+     &lt;password /&gt;
+   &lt;/account&gt;
+   &lt;url&gt;http://localhost:6060/deegree2/services&lt;/url&gt;
+   &lt;ogctype&gt;WFS1.1.0&lt;/ogctype&gt;
+   &lt;icon&gt;default.gif&lt;/icon&gt;
+ &lt;/site&gt;
+ &lt;content&gt;
+   &lt;validate&gt;false&lt;/validate&gt;
+   &lt;importxslt&gt;none&lt;/importxslt&gt;
+ &lt;/content&gt;
+ &lt;options&gt;
+   &lt;every&gt;0 0 0 ? * *&lt;/every&gt;
+   &lt;oneRunOnly&gt;true&lt;/oneRunOnly&gt;
+   &lt;status&gt;inactive&lt;/status&gt;
+   &lt;lang&gt;eng&lt;/lang&gt;
+   &lt;topic&gt;elevation&lt;/topic&gt;
+   &lt;createThumbnails&gt;true&lt;/createThumbnails&gt;
+   &lt;useLayer&gt;true&lt;/useLayer&gt;
+   &lt;useLayerMd&gt;true&lt;/useLayerMd&gt;
+   &lt;datasetCategory&gt;2&lt;/datasetCategory&gt;
+   &lt;outputSchema&gt;iso19139&lt;/outputSchema&gt;
+ &lt;/options&gt;
+ &lt;privileges&gt;
+   &lt;group id=&quot;1&quot;&gt;
+     &lt;operation name=&quot;view&quot; /&gt;
+     &lt;operation name=&quot;dynamic&quot; /&gt;
+     &lt;operation name=&quot;featured&quot; /&gt;
+   &lt;/group&gt;
+ &lt;/privileges&gt;
+ &lt;categories&gt;
+   &lt;category id=&quot;3&quot; /&gt;
+ &lt;/categories&gt;
+ &lt;info&gt;
+   &lt;lastRun /&gt;
+   &lt;running&gt;false&lt;/running&gt;
+ &lt;/info&gt;
+&lt;/node&gt;
+</code></pre></div>
+<h3 id="geoportal_rest_harvesting">Harvesting node geoPREST</h3>
+<p>This harvester type is capable of querying a GeoPortal 9.3.x site and harvesting metadata using the GeoPortal REST API.</p>
+<div class="language-text highlight"><pre><span></span><code>-    **node** (*string*): geoPREST
+ -   **site**
+     -   **baseUrl** (*string*): Base URL of the GeoPortal server site. eg. &lt;http://yoursite.com/geoportal&gt;. REST URLs will be built from this URL.
+     -   **icon** (*string*): This is the icon that will be used as the metadata source logo. The image is taken from the `images/harvesting` folder and copied to the `images/logos` folder. A list of the possible values that can be used for this parameter can be obtained from the `xml.harvesting.info` service - see `xml_harvesting_info&amp;type=icons`{.interpreted-text role=&quot;ref&quot;}.
+ -   **search** [0..n]: Contains search parameters. If this element is missing, no results will be returned. You can use the Lucene query syntax documented at &lt;http://webhelp.esri.com/geoportal_extension/9.3.1/index.htm#srch_lucene.htm&gt;.
+     -   **freeText** (*string*)
+</code></pre></div>
+<h4 id="xml-example_10">XML Example</h4>
+<p>Harvester settings in XML are used by the harvester services - see <a href="../xml_services/services_harvesting/">Harvesting services</a>. <em>Example of geoPREST harvester settings in XML:</em>:</p>
+<div class="language-text highlight"><pre><span></span><code>&lt;node id=&quot;978&quot; type=&quot;geoPREST&quot;&gt;
+ &lt;site&gt;
+   &lt;name&gt;qldtest&lt;/name&gt;
+   &lt;uuid&gt;4b9de966-1d5f-4133-97da-f4232fb7761a&lt;/uuid&gt;
+   &lt;account&gt;
+     &lt;use&gt;true&lt;/use&gt;
+     &lt;username /&gt;
+     &lt;password /&gt;
+   &lt;/account&gt;
+   &lt;baseUrl&gt;http://qspatial.information.qld.gov.au/geoportal&lt;/baseUrl&gt;
+   &lt;icon&gt;default.gif&lt;/icon&gt;
+ &lt;/site&gt;
+ &lt;content&gt;
+   &lt;validate&gt;false&lt;/validate&gt;
+   &lt;importxslt&gt;none&lt;/importxslt&gt;
+ &lt;/content&gt;
+ &lt;options&gt;
+   &lt;every&gt;0 0 0 ? * *&lt;/every&gt;
+   &lt;oneRunOnly&gt;true&lt;/oneRunOnly&gt;
+   &lt;status&gt;inactive&lt;/status&gt;
+ &lt;/options&gt;
+ &lt;searches&gt;
+   &lt;search&gt;
+     &lt;freeText&gt;Barrier Reef&lt;/freeText&gt;
+   &lt;/search&gt;
+   &lt;search&gt;
+     &lt;freeText&gt;Cadastral&lt;/freeText&gt;
+   &lt;/search&gt;
+ &lt;/searches&gt;
+ &lt;privileges&gt;
+   &lt;group id=&quot;1&quot;&gt;
+     &lt;operation name=&quot;view&quot; /&gt;
+     &lt;operation name=&quot;dynamic&quot; /&gt;
+     &lt;operation name=&quot;featured&quot; /&gt;
+   &lt;/group&gt;
+ &lt;/privileges&gt;
+ &lt;categories&gt;
+   &lt;category id=&quot;2&quot; /&gt;
+ &lt;/categories&gt;
+ &lt;info&gt;
+   &lt;lastRun /&gt;
+   &lt;running&gt;false&lt;/running&gt;
+   &lt;result&gt;
+     &lt;total&gt;119&lt;/total&gt;
+     &lt;added&gt;87&lt;/added&gt;
+     &lt;updated&gt;32&lt;/updated&gt;
+     &lt;unchanged&gt;0&lt;/unchanged&gt;
+     &lt;unknownSchema&gt;0&lt;/unknownSchema&gt;
+     &lt;removed&gt;0&lt;/removed&gt;
+     &lt;unretrievable&gt;0&lt;/unretrievable&gt;
+     &lt;badFormat&gt;0&lt;/badFormat&gt;
+     &lt;doesNotValidate&gt;0&lt;/doesNotValidate&gt;
+   &lt;/result&gt;
+ &lt;/info&gt;
+&lt;/node&gt;
+</code></pre></div>
+<h4 id="notes_7">Notes</h4>
+<ul>
+<li>
+<p>this harvester uses two REST services from the GeoPortal API:</p>
+<ul>
+<li><code>rest/find/document</code> with searchText parameter to return an RSS listing of metadata records that meet the search criteria</li>
+<li><code>rest/document</code> with id parameter from each result returned in the RSS listing</li>
+</ul>
+</li>
+<li>
+<p>this harvester has been tested with GeoPortal 9.3.x. It should be used for that version of GeoPortal in preference to the CSW harvester.</p>
+</li>
+</ul>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var tab,labels=set.querySelector(".tabbed-labels");for(tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12Z"/></svg>
+            Back to top
+          </button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../mef/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Metadata Exchange Format" rel="prev">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Metadata Exchange Format
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../xml_services/" class="md-footer__link md-footer__link--next" aria-label="Next: XML Services" rel="next">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                XML Services
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <!--
+  Copyright (c) 2016-2022 Martin Donath <martin.donath@squidfunk.com>
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+<!-- Copyright and theme information -->
+<div class="md-copyright">
+  
+  <span class="md-copyright__highlight">
+    Copyright &copy; 2001 - 2023 FAO-UN and others
+  </span>
+  
+  
+  &mdash; Made by the
+  <a
+          href="https://geonetwork-opensource.org/"
+          target="_blank" rel="noopener"
+  >GeoNetwork Community</a>,
+  built with
+  <a
+          href="https://squidfunk.github.io/mkdocs-material/"
+          target="_blank" rel="noopener"
+  >
+    Material for MkDocs
+  </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/geonetwork" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://hub.docker.com/_/geonetwork" target="_blank" rel="noopener" title="hub.docker.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M349.9 236.3h-66.1v-59.4h66.1v59.4zm0-204.3h-66.1v60.7h66.1V32zm78.2 144.8H362v59.4h66.1v-59.4zm-156.3-72.1h-66.1v60.1h66.1v-60.1zm78.1 0h-66.1v60.1h66.1v-60.1zm276.8 100c-14.4-9.7-47.6-13.2-73.1-8.4-3.3-24-16.7-44.9-41.1-63.7l-14-9.3-9.3 14c-18.4 27.8-23.4 73.6-3.7 103.8-8.7 4.7-25.8 11.1-48.4 10.7H2.4c-8.7 50.8 5.8 116.8 44 162.1 37.1 43.9 92.7 66.2 165.4 66.2 157.4 0 273.9-72.5 328.4-204.2 21.4.4 67.6.1 91.3-45.2 1.5-2.5 6.6-13.2 8.5-17.1l-13.3-8.9zm-511.1-27.9h-66v59.4h66.1v-59.4zm78.1 0h-66.1v59.4h66.1v-59.4zm78.1 0h-66.1v59.4h66.1v-59.4zm-78.1-72.1h-66.1v60.1h66.1v-60.1z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+    <a href="https://geonetwork-opensource.org/" target="_blank" rel="noopener" title="GeoNetwork Website" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M320 0c-17.7 0-32 14.3-32 32s14.3 32 32 32h82.7L201.4 265.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L448 109.3V192c0 17.7 14.3 32 32 32s32-14.3 32-32V32c0-17.7-14.3-32-32-32H320zM80 32C35.8 32 0 67.8 0 112v320c0 44.2 35.8 80 80 80h320c44.2 0 80-35.8 80-80V320c0-17.7-14.3-32-32-32s-32 14.3-32 32v112c0 8.8-7.2 16-16 16H80c-8.8 0-16-7.2-16-16V112c0-8.8 7.2-16 16-16h112c17.7 0 32-14.3 32-32s-14.3-32-32-32H80z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["content.action.view", "content.action.edit", "content.code.copy", "content.tabs.link", "navigation.tabs", "navigation.tracking", "navigation.prune", "navigation.indexes", "toc.follow", "navigation.top", "navigation.footer", "announce.dismiss"], "search": "../../assets/javascripts/workers/search.a264c092.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"default": "stable", "provider": "mike"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.4e0fa4ba.min.js"></script>
+      
+    
+  </body>
+</html>

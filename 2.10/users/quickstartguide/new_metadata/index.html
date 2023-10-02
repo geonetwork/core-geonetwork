@@ -1,0 +1,1781 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="GeoNetwork catalogue for listing, searching and reviewing records.">
+      
+      
+      
+        <link rel="canonical" href="https://docs.geonetwork-opensource.org/2.10/users/quickstartguide/new_metadata/">
+      
+      
+        <link rel="prev" href="../metadata_concepts/">
+      
+      
+        <link rel="next" href="linking/">
+      
+      
+      <link rel="icon" href="../../../assets/geonetwork-logo.png">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.4.0">
+    
+    
+      
+        <title>Adding a metadata record - GeoNetwork Opensource (EN)</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.9f615399.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.649f08f9.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="indigo">
+  
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#new_metadata" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="GeoNetwork Opensource (EN)" class="md-header__button md-logo" aria-label="GeoNetwork Opensource (EN)" data-md-component="logo">
+      
+  <img src="../../../assets/geonetwork-logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            GeoNetwork Opensource (EN)
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Adding a metadata record
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3 3.19.09m3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95 2.06.05m-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31Z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_2">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5c-.84 0-1.65.15-2.39.42L12 2M3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29L3.34 7m.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14L3.36 17M20.65 7l-1.77 3.79a7.023 7.023 0 0 0-2.38-4.15l4.15.36m-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29L20.64 17M12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44L12 22Z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/geonetwork/core-geonetwork" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    geonetwork/core-geonetwork
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+    
+  
+  GeoNetwork
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../" class="md-tabs__link">
+          
+  
+    
+  
+  User
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../developer/" class="md-tabs__link">
+          
+  
+    
+  
+  Developer
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="GeoNetwork Opensource (EN)" class="md-nav__button md-logo" aria-label="GeoNetwork Opensource (EN)" data-md-component="logo">
+      
+  <img src="../../../assets/geonetwork-logo.svg" alt="logo">
+
+    </a>
+    GeoNetwork Opensource (EN)
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/geonetwork/core-geonetwork" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    geonetwork/core-geonetwork
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    GeoNetwork
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    User
+  </span>
+  
+
+            </a>
+            
+              <label class="md-nav__link " for="__nav_2">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            User
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+      
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+    <a href="../../preface/" class="md-nav__link">
+      
+  
+  <span class="md-ellipsis">
+    Preface
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" checked>
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Quick Start Guide
+  </span>
+  
+
+            </a>
+            
+              <label class="md-nav__link " for="__nav_2_3">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            Quick Start Guide
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../geographic_management/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Geographic Information Management for all
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting_started/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Getting Started
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../installing/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Installing the software
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../metadata_concepts/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Metadata in Spatial Data Management
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Adding a metadata record
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Adding a metadata record
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#creating-a-new-record-using-the-metadata-editor" class="md-nav__link">
+    Creating a New Record using the Metadata Editor
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-steps-in-more-details" class="md-nav__link">
+    The steps in more details
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#switching-editing-views-from-default-to-advanced-to-xml-view" class="md-nav__link">
+    Switching Editing Views from Default to Advanced to XML View
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#using-basic-commands-of-the-editor" class="md-nav__link">
+    Using basic commands of the editor
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#example-entering-metadata-for-a-thematic-map" class="md-nav__link">
+    Example: Entering metadata for a Thematic Map
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#metadata-validation" class="md-nav__link">
+    Metadata validation
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#creating-a-thumbnail" class="md-nav__link">
+    Creating a Thumbnail
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#compute-bounding-box-from-keywords" class="md-nav__link">
+    Compute bounding box from keywords
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#assigning-privileges" class="md-nav__link">
+    Assigning Privileges
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#assigning-categories" class="md-nav__link">
+    Assigning Categories
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#multilingual-metadata-in-iso19139" class="md-nav__link">
+    Multilingual metadata in ISO19139
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="linking/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Link metadata and other resources
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../newfeatures/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    New Features
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../viewing/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Viewing and Analysing the Data
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+    
+    
+      
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+    <a href="../../admin/" class="md-nav__link">
+      
+  
+  <span class="md-ellipsis">
+    Administration
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+    
+    
+      
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+    <a href="../../managing_metadata/" class="md-nav__link">
+      
+  
+  <span class="md-ellipsis">
+    Managing Metadata
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+    
+    
+      
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+    <a href="../../features/" class="md-nav__link">
+      
+  
+  <span class="md-ellipsis">
+    Features
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/glossary_of_metadata/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Glossary of Metadata Fields Description
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/iso_topic_categories/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    ISO Topic Categories
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/foss4g/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Free and Open Source Software for Geospatial Information Systems
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../faq/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Frequently Asked Questions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../glossary/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Glossary
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+    <a href="../../../developer/" class="md-nav__link">
+      
+  
+  <span class="md-ellipsis">
+    Developer
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#creating-a-new-record-using-the-metadata-editor" class="md-nav__link">
+    Creating a New Record using the Metadata Editor
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-steps-in-more-details" class="md-nav__link">
+    The steps in more details
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#switching-editing-views-from-default-to-advanced-to-xml-view" class="md-nav__link">
+    Switching Editing Views from Default to Advanced to XML View
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#using-basic-commands-of-the-editor" class="md-nav__link">
+    Using basic commands of the editor
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#example-entering-metadata-for-a-thematic-map" class="md-nav__link">
+    Example: Entering metadata for a Thematic Map
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#metadata-validation" class="md-nav__link">
+    Metadata validation
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#creating-a-thumbnail" class="md-nav__link">
+    Creating a Thumbnail
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#compute-bounding-box-from-keywords" class="md-nav__link">
+    Compute bounding box from keywords
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#assigning-privileges" class="md-nav__link">
+    Assigning Privileges
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#assigning-categories" class="md-nav__link">
+    Assigning Categories
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#multilingual-metadata-in-iso19139" class="md-nav__link">
+    Multilingual metadata in ISO19139
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+    <a href="https://github.com/geonetwork/core-geonetwork/edit/mkdocs/docs/manual/docs/users/quickstartguide/new_metadata/index.md" title="Edit this page" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4v-2m10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1 2.1 2.1Z"/></svg>
+    </a>
+  
+  
+    
+      
+    
+    <a href="https://github.com/geonetwork/core-geonetwork/raw/mkdocs/docs/manual/docs/users/quickstartguide/new_metadata/index.md" title="View source of this page" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 18c.56 0 1 .44 1 1s-.44 1-1 1-1-.44-1-1 .44-1 1-1m0-3c-2.73 0-5.06 1.66-6 4 .94 2.34 3.27 4 6 4s5.06-1.66 6-4c-.94-2.34-3.27-4-6-4m0 6.5a2.5 2.5 0 0 1-2.5-2.5 2.5 2.5 0 0 1 2.5-2.5 2.5 2.5 0 0 1 2.5 2.5 2.5 2.5 0 0 1-2.5 2.5M9.27 20H6V4h7v5h5v4.07c.7.08 1.36.25 2 .49V8l-6-6H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h4.5a8.15 8.15 0 0 1-1.23-2Z"/></svg>
+    </a>
+  
+
+
+<h1 id="new_metadata">Adding a metadata record</h1>
+<p>This section guides you through the process of adding new metadata records with associated data and/or services into the GeoNetwork catalog. You will use metadata template records, add thumbnails, upload data, link to services and set access privileges to the metadata and the data it describes.</p>
+<p>To add or edit metadata, you must be <strong>registered</strong> as a user with an <strong>Editor</strong> profile or higher. That user should be a member of the User Group you want to add information for. Contact your administrator if you are not a registered Editor for your User Group.</p>
+<p>For metadata creation using the online editor, GeoNetwork provides a set of simplified metadata templates based on the cited standards available in your GeoNetwork instance: typically ISO19139 (an implementation of ISO19115), FGDC and Dublin Core. The templates for describing vector or raster geographic data based on ISO19139 are preferred because they are devised in a way that hides much of the complexity of the ISO19115 standard in the default view. At the same time those templates are extensible with new elements to fit specialized needs through the advanced view.</p>
+<dl>
+<dt>To produce a good metadata record, always try to:</dt>
+<dd>
+<ul>
+<li>gather as many details as possible on the resource that you want to describe taking into account the metadata elements that have been presented in the previous chapter</li>
+<li>develop and reuse the same terms or phrases to describe the concepts you want to capture. A record of these terms and phrases will be helpful for others in understanding your metadata.</li>
+</ul>
+</dd>
+</dl>
+<p>The next step is to fill out properly the fields provided by the metadata templates, while at the same time avoiding duplication of information throughout the form.</p>
+<p>The most important fields that may not be waived while compiling a standard based metadata record are the following: <strong>Title, Date of Creation or Publication, Abstract, Language used for documenting data, Topic Category, Scale, Maintenance and Update Frequency, Metadata Author, Language Used for Documenting Metadata.</strong></p>
+<p>In addition to the main mandatory fields, we recommend you to fill out these optional but critical fields (if information is available): <strong>Purpose - Keywords - Presentation Form - Status - Spatial Representation Type - Geographic Location - Reference System Info - Temporal Extent - Data Quality Info - Access and Use Constraints - Point of Contact - Distribution Info: Online Resources.</strong></p>
+<p><em>You should also prepare an image of your data that is required to be displayed in search results as thumbnail.</em></p>
+<p><em>Next section will guide you through the process of metadata creation using the online editor.</em></p>
+<h2 id="creating-a-new-record-using-the-metadata-editor">Creating a New Record using the Metadata Editor</h2>
+<ol>
+<li>In the home page, click on the <strong>Administration Tab</strong>.</li>
+<li>Select <strong>New Metadata</strong> from the List of the admin page.</li>
+<li>Select the metadata standard <strong>Template</strong>, if possible, using the preferred ones. GeoNetwork opensource comes by default with support for three metadata standards, ISO19139, FGDC and Dublin core. For the ISO standard, two templates have been developed; one for vector and one for raster data. Both contain a relevant set of elements to describe the respective types of data. More templates can be developed online.</li>
+<li>Select the <strong>Group</strong> the metadata will belong to. These are the groups authorized to add metadata to by your administrator.</li>
+<li>Click on <strong>Create</strong>.</li>
+</ol>
+<h2 id="the-steps-in-more-details">The steps in more details</h2>
+<ol>
+<li>
+<p>Enter your username and password and click on the login button. The system will identify you and assign the correct privileges to work with.</p>
+<blockquote>
+<p><figure>
+<img src="login.png" alt="login.png" />
+<figcaption><em>Login</em></figcaption>
+</figure></p>
+</blockquote>
+</li>
+<li>
+<p>Open the Administration page by clicking the Administration button in the banner and then click on the New metadata link.</p>
+<blockquote>
+<p><figure>
+<img src="Admin.png" alt="Admin.png" />
+<figcaption><em>Administration panel</em></figcaption>
+</figure></p>
+</blockquote>
+</li>
+<li>
+<p>From the metadata creation page, select the metadata standard to use from the dropdown list (Figure 4.3, "Template selection")</p>
+<blockquote>
+<p><figure>
+<img src="metadataCreation.png" alt="metadataCreation.png" />
+<figcaption><em>Template selection</em></figcaption>
+</figure></p>
+</blockquote>
+</li>
+<li>
+<p>After selecting the correct template, you should identify which group of users the metadata will belong to and finally click on <strong>Create</strong>.</p>
+<blockquote>
+<p><figure>
+<img src="selectGroup.png" alt="selectGroup.png" />
+<figcaption><em>Group selection</em></figcaption>
+</figure></p>
+</blockquote>
+</li>
+<li>
+<p>A new metadata form based on the selected template will be displayed for you to fill out.</p>
+</li>
+</ol>
+<h2 id="switching-editing-views-from-default-to-advanced-to-xml-view">Switching Editing Views from Default to Advanced to XML View</h2>
+<p>Once you create a new record, you can choose between <strong>Default, Advanced</strong> or <strong>XML View</strong>. To switch view, simply click on the view you want to switch to on the left column of the page. The view in <strong>bold</strong> is the view you are currently using.</p>
+<figure>
+<img src="switchViews.png" alt="switchViews.png" />
+<figcaption><em>Metadata view options</em></figcaption>
+</figure>
+
+<p>In the previous chapter you have analyzed the metadata structure as it is presented in the <strong>Default View</strong>. A selection of the main fields from different categories of information is shown in one single view. The minimum set of metadata required to serve the full range of metadata applications (data discovery, determination of data fitness for use, data access, data transfer and use of digital data) is defined here, along with optional metadata elements to allow for a more extensive standard description of geographic data, if required. However, if should be there a need to add more metadata elements, you can switch to the advanced view at any time while editing.</p>
+<p>In the <strong>Advanced View</strong>, the ISO profile offers the possibility to visualize and edit the entire metadata structure organized in sections accessible through tabs from the left column. You can use this view to write more advanced metadata descriptions or templates to fit specialized needs.</p>
+<figure>
+<img src="advancedView.png" alt="advancedView.png" />
+<figcaption><em>Advanced view</em></figcaption>
+</figure>
+
+<p>The <strong>XML View</strong> shows the entire content of the metadata in the original hierarchical structure; different colors allow to distinguish between an element's name and its value. The XML structure is composed of tags and to every tag must correspond a closing tag. The content is entirely contained withing the two, i.e.:</p>
+<div class="language-text highlight"><pre><span></span><code>&lt;gmd:language&gt;
+  &lt;gco:CharacterString&gt;eng&lt;/gco:CharacterString&gt;
+&lt;/gmd:language&gt;
+</code></pre></div>
+<figure>
+<img src="xmlView1.png" alt="xmlView1.png" />
+<figcaption><em>XML view</em></figcaption>
+</figure>
+
+<p>Nevertheless, the use of the XML view requires some knowledge of the XML language.</p>
+<p>Both the <strong>Default</strong> and the <strong>Advanced Views</strong> are composed of <code>mandatory</code>, <code>conditional</code> and <code>optional</code> metadata fields. The meaning of mandatory and optional is fairly intuitive; the mandatory fields are required, like <code>Title</code> and <code>Abstract</code> for instance, whereas the optional fields can be provided but are not fundamental, depending on the metadata author. The conditional fields may be considered mandatory under certain circumstances: essentially a conditional requirement indicates that the presence of a specified data element is dependent on the value or presence of other data elements in the same section. For instance, the <code>Individual name</code> metadata element of the <code>Point of Contact</code>, which is a conditional element of the Identification section, becomes mandatory if another element of the same section, <code>Organization name</code> or <code>Position name</code> is not already defined.</p>
+<figure>
+<img src="PoC_Maint.png" alt="PoC_Maint.png" />
+<figcaption><em>Point of Contact</em></figcaption>
+</figure>
+
+<p>The <strong>mandatory fields</strong> as well as those <strong>highly recommended</strong> are flagged with <strong>red asterisk [*]</strong>. The standard definition for each field can be read by passing the mouse on the element name.</p>
+<p>The <strong>Default View</strong> is the preferred view as it provides a selection of the available metadata elements, facilitating both the user and the editor in reading and editing a metadata record, and at the same time it ensures that a geospatial data can be properly described, through :</p>
+<ul>
+<li>the minimum set of metadata required to serve the full range of metadata applications (data discovery, determination of data fitness for use, data access, data transfer, and use of digital data);</li>
+<li>optional metadata elements - to allow for a more extensive standard description of geographic data, if required;</li>
+<li>a method for extending metadata to fit specialized needs.</li>
+</ul>
+<h2 id="using-basic-commands-of-the-editor">Using basic commands of the editor</h2>
+<p>Fields are either <strong>free text fields</strong> or <strong>drop down lists</strong>. Free text means you can type any text into that field. Drop down lists allow you to select only one option from the list. You can add multiple fields of the same kind by clicking on the <strong>[+]</strong> symbol next to the element. Every new field that you will add in the advanced view will then be visible in the default view. You can also delete existing fields by clicking on the <strong>[x]</strong> symbol next to the element. Clearly, mandatory fields cannot be deleted. One example of the need to add multiple fields can arise if the content of your dataset has some text written in two different languages.</p>
+<figure>
+<img src="multipleElement.png" alt="multipleElement.png" />
+<figcaption><em>Describing multilingual data</em></figcaption>
+</figure>
+
+<h2 id="example-entering-metadata-for-a-thematic-map">Example: Entering metadata for a Thematic Map</h2>
+<p>As we mentioned in the introduction to this guide, GeoNetwork provides tools to describe any type of geographic data (vector layers, raster, tables, map services, etc.) as well as general documents like reports, projects, papers, etc. For the purpose of this Quick Start Guide, an example of required and useful metadata elements to properly describe a thematic map will be provided hereafter. You should gather as much information as possible to identify and understand the map's resource and characteristics you want to describe. Use the default view to start. If necessary, you can always switch to advanced view or come back later and edit the record with the additional information collected.</p>
+<p>Please follow these steps to enter your map's metadata. Note that we will only go through the fields that have been identified as compulsory (i.e. those fields marked with the asterix [*], mandatory or highly recommended).</p>
+<p><strong>Title</strong> *: Under the Identification Info field, give your map a name. There will be a default name of your data. Use free text to describe your map here.</p>
+<p><strong>Date</strong> *: Indicate the exact date of creation, publication or revision on your map.</p>
+<p><strong>Presentation Form</strong>: Specify the type of presentation, i.e. digital, hard copy, table, etc.</p>
+<p><strong>Abstract</strong> *: Enter some description of the map.</p>
+<p><strong>Purpose</strong>: Enter a short summary of the purposes for your map to be developed.</p>
+<p><strong>Status</strong>: Specify the status of your map within the following options: completed, historical archive, obsolete, ongoing, planned, required, under development.</p>
+<p><strong>Point of Contact</strong>: Enter all mandatory information and others you have at hand for the contact of the person(s) associated with this resources of the map. Note that some fields are only conditionally mandatory, such as Organization Name if Individual Name and Position are not entered.</p>
+<p><strong>Maintenance and update frequency</strong> * : Specify the frequency with which you expect to make changes and additions to your map after the initial version is completed. If any changes are scheduled you can leave As Needed selected from the drop-down list.</p>
+<p><strong>Descriptive Keywords</strong>: Enter keywords that describe your map. Also specify the type of keyword you are entering, i.e. place, theme, etc. Remember that you can add another keyword field if you need to add different types of keywords.</p>
+<p><strong>Access Constraints</strong>: Enter an access constraint here, such as a copyright, trademark, etc. to assure the protection of privacy and intellectual property.</p>
+<p><strong>User Constraints</strong>: Enter a user constraint here to assure the protection of privacy and intellectual property.</p>
+<p><strong>Other Constraints</strong> * : Enter other constraint here to assure the protection of privacy and intellectual property. Note that this field is conditionally mandatory if Access and Use constraints are not entered.</p>
+<p><strong>Spatial representation type</strong>: Select, from the drop-down list the method used to spatially represent your data. The options are: vector, grid, text table, stereo model, video.</p>
+<p><strong>Scale Denominator</strong> * : Enter the denominator for an equivalent scale of a hard copy of the map.</p>
+<p><strong>Language</strong>* : Select the language used within your map</p>
+<p><strong>Topic category</strong> * : Specify the main ISO category/ies through which your map could be classified (see Annex for the complete list of ISO topic categories).</p>
+<p><strong>Temporal Extent</strong> * : Enter the starting and ending date of the validity period.</p>
+<p><strong>Geographic Bounding Box</strong> * : Enter the longitude and latitude for the map or select a region from the predefined drop-down list. Make sure you use degrees for the unit of the geographic coordinates as they are the basis for the geographic searches.</p>
+<p><strong>Supplemental Information</strong>: Enter any other descriptive information about your map that can help the user to better understand its content.</p>
+<p><strong>Distribution Info</strong>: Enter information about the distributor and about options for obtaining your map.</p>
+<p><strong>Online Resource</strong>: Enter information about online resources for the map, such as where a user may download it, etc. This information should include a link, the link type (protocol) and a description of the resource.</p>
+<p><strong>Reference System Info</strong>: Enter information about the spatial reference system of your map. The default view contains one element to provide the alphanumeric value identifying the reference system used. GNos uses the EPSG codes which are numeric codes associated with coordinate system definitions. For instance, EPSG:4326 is Geographic lat-long WGS84, and EPSG:32611 is "UTM zone 11 North, WGS84". Using elements from the advanced view, you may add more details on data projection, ellipsoid and datum. Note that if this information is provided, a reference system identifier is not mandatory.</p>
+<p><strong>Data Quality</strong>: Specify the hierarchal level of the data (dataset series, dataset, features, attributes, etc.) and provide a general explanation on the production processes (lineage) used for creating the data. The statement element is mandatory if the hierarchical level element is equal to dataset or series. Detailed information on completeness, logical consistency and positional, thematic and temporal accuracy can be directly added into the advanced form.</p>
+<p><strong>Metadata Author</strong> * : Provide information about the author of the map, including the person's name, organization, position, role and any other contact information available.</p>
+<p>After completion of this section, you may select the Type of document that you are going to save in the catalogue. You have three options: Metadata, Template, Sub-template. By default Metadata is set up.</p>
+<p>When done, you may click <code>Save</code> or <code>Save and Close</code> to close the editing session.</p>
+<h2 id="metadata-validation">Metadata validation</h2>
+<p>In editing mode, editors can validate the current metadata record against standard rules and recommendations.</p>
+<p>For all standards, a first level of validation is made for XML metadata validation based on XML Schema (XSD). For ISO19139 records, other rules are checked:</p>
+<ul>
+<li>ISO recommendations</li>
+<li>GeoNetwork recommendations</li>
+<li>(Optional and not available by default) INSPIRE recommendations</li>
+</ul>
+<p>The validation report display the list of rules checked and their status (pass or failed). The top checkbox allows to display only errors or all.</p>
+<p><img alt="" src="validationreport.png" /></p>
+<h2 id="creating-a-thumbnail">Creating a Thumbnail</h2>
+<p>To help the user identify a metadata record of interest, you can create a graphic overview (or thumbnail) in the form of an image and attach it to the metadata record. For example, if your metadata record describes some geographic dataset then the the graphic overview could be an image of the map with legend produced by an OGC Web Map Service.</p>
+<p>You can associate two thumbnails with a record: a small thumbnail, which will be displayed in search results and a large thumbnail with more details in case the user is interested in more information. The large thumbnail will be displayed when the user clicks on the small thumbnail.</p>
+<p>To create a thumbnail, go to the editing menu. If you are no longer in editing mode, retrieve the metadata record using one of the search options then click on Edit. Then follow these simple steps:</p>
+<p>From the editing menu, click on the Thumbnails button on the top or bottom of the page.</p>
+<figure>
+<img src="thumButton.png" alt="thumButton.png" />
+<figcaption><em>The thumbnail wizard button</em></figcaption>
+</figure>
+
+<ul>
+<li>You will be taken to the Thumbnail Management wizard.</li>
+<li>To create a small or large thumbnail, click on the Browse button next to either one. It is recommended that you use 180 pixels for small thumbnails and 800x600 for large thumbnails. Using the 'Large thumbnail' option allows you to create both a small and large thumbnail in one go.</li>
+<li>You can use GIF, PNG and JPEG images as input for the thumbnails.</li>
+<li>A pop up window will appear allowing you to browse your files on your computer. Select the file you wish to create a thumbnail with by double-clicking on it.</li>
+<li>Click on <code>Add</code>.</li>
+<li>Your thumbnail will be added and displayed on the following page.</li>
+<li>You can then click on Back to Editing and save your record.</li>
+</ul>
+<figure>
+<img src="thumbManag.png" alt="thumbManag.png" />
+<figcaption><em>Thumbnail wizard</em></figcaption>
+</figure>
+
+<figure>
+<img src="thumbManag2.png" alt="thumbManag2.png" />
+<figcaption><em>Completed thumbnail wizard</em></figcaption>
+</figure>
+
+<h2 id="compute-bounding-box-from-keywords">Compute bounding box from keywords</h2>
+<p>Editor can add extent information based on keyword analysis.</p>
+<ul>
+<li>For each keywords</li>
+<li>Search for the keyword in thesaurus</li>
+<li>If keyword in the thesaurus has an extent</li>
+<li>Add an extent with a description and a bounding box to the metadata record.</li>
+</ul>
+<p>The process could be run in 2 modes :</p>
+<ul>
+<li>Add : Keep existing extent elements and add the new one at the end. Editor could clean the section after processing.</li>
+<li>Replace : Remove all extent having only a bounding box (temporal, vertical and bounding polygon are not removed), and add the new one at the end.</li>
+</ul>
+<p>Editor need to select keyword from a thesaurus with spatial information. The name is added to the extent description field.</p>
+<p><img alt="" src="computebbox-selectkeyword.png" /></p>
+<p>Then in the other actions menu, the compute boundinx box menus are available:</p>
+<p><img alt="" src="computebbox-button.png" /></p>
+<p>The metadata is saved during the process and one extent is added for each keywords.</p>
+<p><img alt="" src="computebbox-results.png" /></p>
+<p>If user manually add keywords just before computing bounding box, then it's recommended to save your metadata record before launching the action in order to have latest keywords taken into account.</p>
+<h2 id="assigning-privileges">Assigning Privileges</h2>
+<p>To assign privileges to your metadata record and any attached data you will need to identify User Groups and the privileges you want to assign to users in these groups. eg. View the metadata, download the data attached to the record, etc.</p>
+<p>For instance, you can specify that the metadata and related services are visible to all (Internet users) or just to internal users only (Intranet). Privileges are assigned on a per group basis. Depending on the user profile (Guest, Registered User, Editor, Admin etc.) access to these functions may differ on a per user basis.</p>
+<p>To assign privileges, follow these steps:</p>
+<ul>
+<li>Find your metadata record by using the search option. Whether you have multiple or single results from the search, on top of the individual record or next to the record you will always see a row of buttons including a Privileges button.</li>
+</ul>
+<figure>
+<img src="privilegesButton.png" alt="privilegesButton.png" />
+<figcaption><em>The editing toolbar with Privileges button</em></figcaption>
+</figure>
+
+<ul>
+<li>Click on the Privileges button. A drop down menu will appear from which you can assign certain privileges to specific groups using checkboxes. Simply click on the small box next to the privilege to place or remove a checkmark. Set All and Clear All buttons allow you to place and remove the checkmarks all at once.</li>
+</ul>
+<figure>
+<img src="privilegesSetting1.png" alt="privilegesSetting1.png" />
+<figcaption><em>Privileges settings</em></figcaption>
+</figure>
+
+<p>Below is a brief description for each privilege to help you identify which ones you should assign to which group(s).</p>
+<p><strong>Publish</strong>: Users in the specified group/s are able to view the metadata eg. if it matches search criteria entered by such a user.</p>
+<p><strong>Download</strong>: Users in the specified group/s are able to download the data.</p>
+<p><strong>Interactive Map</strong>: Users in the specified group/s are able to get an interactive map. The interactive map has to be created separately using a Web Map Server such as GeoServer, which is distributed with GeoNetwork.</p>
+<p><strong>Featured</strong>: When randomly selected by GeoNetwork, the metadata record can appear in the <code>ed</code> section of the GeoNetwork home page.</p>
+<p><strong>Notify</strong>: Users in the specified group receive notification if data attached to the metadata record is downloaded.</p>
+<h2 id="assigning-categories">Assigning Categories</h2>
+<p>Each GeoNetwork site has a set of local categories that can be used to classify metadata records for easy searching. To assign categories to a metadata record, follow these steps:</p>
+<ul>
+<li>Find your metadata record using the search option. Whether you have just one or many results from your search, you will always see a row of buttons including a <strong>Categories</strong> button.</li>
+<li>Click on the <strong>Categories</strong> button. A drop down menu will appear from which you can assign one or more categories using checkboxes. Simply click on the small box next to the category to place or remove a checkmark.</li>
+</ul>
+<figure>
+<img src="categoriesManag.png" alt="categoriesManag.png" />
+<figcaption><em>Category management</em></figcaption>
+</figure>
+
+<h2 id="multilingual-metadata-in-iso19139">Multilingual metadata in ISO19139</h2>
+<p>Editors can create multilingual metadata for ISO19139. A default template is provided but user could add translation to an existing record.</p>
+<p>To declare a new language in a metadata record:</p>
+<ul>
+<li>First check, the main language is defined in the metadata section</li>
+<li>then add one or more languages in the other language in the metadata section.</li>
+</ul>
+<p>In editing mode, each multilingual elements are composed of:</p>
+<ul>
+<li>text input</li>
+<li>language selection list (language declared on the other language section are listed here)</li>
+</ul>
+<p>By default, the selected language is the GUI language if language is defined in the metadata.</p>
+<p><img alt="" src="editor-multilingual.png" /></p>
+<p>Alternatively, Google translation service could be used. Translation could be suggested to the editor using the small icon right to the language selector. The translation convert the default metadata character string in the current selected language.</p>
+<p>In view mode, according to GUI language : if GUI language is available in the metadata, the element is displayed in this language else the element is displayed in metadata default language. This behaviour is also applied to dublin core output for CSW services.</p>
+<h1 id="uploading-a-new-record-using-the-xml-metadata-insert-tool">Uploading a New Record using the XML Metadata Insert Tool</h1>
+<p>A more advanced procedure to upload a new metadata record in the GeoNetwork system is using an XML document. This procedure is particularly useful for users who already have metadata in XML format, for instance created by some GIS application. To this regard, it has to be noted that the metadata must be in one of the standards used by GeoNetwork: ISO19115, FGDC and Dublin Core.</p>
+<p>To start the metadata uploading process through the <strong>XML Metadata Insert</strong> tool, you should log in and select the appropriate option from the Administration page.</p>
+<figure>
+<img src="administration_panel.png" alt="administration_panel.png" />
+<figcaption><em>Administration panel</em></figcaption>
+</figure>
+
+<p>The main part of the page <strong>Import XML Formatted Metadata</strong> that is displayed is the <strong>Metadata</strong> text area, where the user can paste the XML metadata to import. Below this, there is the <strong>Type</strong> choice, which allows you select the type of record that you are going to create (Metadata, Template and Subtemplate). Then you can apply a stylesheet to convert your metadata input from ArcCatalog8 to ISO1915 or from ISO19115 to ISO19139, if required. Otherwise you can just leave none selected. The <strong>Destination schema</strong> list provides you with four options to choose the final standard layout for your metadata (ISO19115, ISO19139, FGDC and Dublin Core). Finally you should select the <strong>Group</strong> as main group in charge of the metadata and the <strong>Category</strong> that you want to assign to your metadata. By clicking the <strong>Insert</strong> button the metadata is imported into the system; please note that all links to external files, for instance to thumbnails or data for download, have to be removed from the metadata input, to avoid any conflict within the data repository.</p>
+<figure>
+<img src="xmlImporTool.png" alt="xmlImporTool.png" />
+<figcaption><em>XML metadata import tool</em></figcaption>
+</figure>
+
+<p>If your metadata is already in ISO19115 format, the main actions to be performed are the following:</p>
+<ol>
+<li>Paste the XML file that contains the metadata information in the <strong>Metadata</strong> text area;</li>
+<li>Select Metadata as <strong>type</strong> of record that you are going to create</li>
+<li>Select the metadata schema ISO19139 that will be the final <strong>destination schema</strong>;</li>
+<li>Select the <strong>validate</strong> check box if you want your metadata to be validated according to the related schema.</li>
+<li>Select the <strong>group</strong> in charge of the metadata from the drop down list;</li>
+<li>Select <strong>Maps and Graphics</strong> from the list of categories;</li>
+<li>Click the <strong>Insert</strong> button and the metadata will be imported into the system.</li>
+</ol>
+<figure>
+<img src="xmlImporTool2.png" alt="xmlImporTool2.png" />
+<figcaption><em>XML metadata import 2</em></figcaption>
+</figure>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var tab,labels=set.querySelector(".tabbed-labels");for(tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12Z"/></svg>
+            Back to top
+          </button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../metadata_concepts/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Metadata in Spatial Data Management" rel="prev">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Metadata in Spatial Data Management
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="linking/" class="md-footer__link md-footer__link--next" aria-label="Next: Link metadata and other resources" rel="next">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Link metadata and other resources
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <!--
+  Copyright (c) 2016-2022 Martin Donath <martin.donath@squidfunk.com>
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+<!-- Copyright and theme information -->
+<div class="md-copyright">
+  
+  <span class="md-copyright__highlight">
+    Copyright &copy; 2001 - 2023 FAO-UN and others
+  </span>
+  
+  
+  &mdash; Made by the
+  <a
+          href="https://geonetwork-opensource.org/"
+          target="_blank" rel="noopener"
+  >GeoNetwork Community</a>,
+  built with
+  <a
+          href="https://squidfunk.github.io/mkdocs-material/"
+          target="_blank" rel="noopener"
+  >
+    Material for MkDocs
+  </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/geonetwork" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://hub.docker.com/_/geonetwork" target="_blank" rel="noopener" title="hub.docker.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M349.9 236.3h-66.1v-59.4h66.1v59.4zm0-204.3h-66.1v60.7h66.1V32zm78.2 144.8H362v59.4h66.1v-59.4zm-156.3-72.1h-66.1v60.1h66.1v-60.1zm78.1 0h-66.1v60.1h66.1v-60.1zm276.8 100c-14.4-9.7-47.6-13.2-73.1-8.4-3.3-24-16.7-44.9-41.1-63.7l-14-9.3-9.3 14c-18.4 27.8-23.4 73.6-3.7 103.8-8.7 4.7-25.8 11.1-48.4 10.7H2.4c-8.7 50.8 5.8 116.8 44 162.1 37.1 43.9 92.7 66.2 165.4 66.2 157.4 0 273.9-72.5 328.4-204.2 21.4.4 67.6.1 91.3-45.2 1.5-2.5 6.6-13.2 8.5-17.1l-13.3-8.9zm-511.1-27.9h-66v59.4h66.1v-59.4zm78.1 0h-66.1v59.4h66.1v-59.4zm78.1 0h-66.1v59.4h66.1v-59.4zm-78.1-72.1h-66.1v60.1h66.1v-60.1z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+    <a href="https://geonetwork-opensource.org/" target="_blank" rel="noopener" title="GeoNetwork Website" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M320 0c-17.7 0-32 14.3-32 32s14.3 32 32 32h82.7L201.4 265.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L448 109.3V192c0 17.7 14.3 32 32 32s32-14.3 32-32V32c0-17.7-14.3-32-32-32H320zM80 32C35.8 32 0 67.8 0 112v320c0 44.2 35.8 80 80 80h320c44.2 0 80-35.8 80-80V320c0-17.7-14.3-32-32-32s-32 14.3-32 32v112c0 8.8-7.2 16-16 16H80c-8.8 0-16-7.2-16-16V112c0-8.8 7.2-16 16-16h112c17.7 0 32-14.3 32-32s-14.3-32-32-32H80z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "../../..", "features": ["content.action.view", "content.action.edit", "content.code.copy", "content.tabs.link", "navigation.tabs", "navigation.tracking", "navigation.prune", "navigation.indexes", "toc.follow", "navigation.top", "navigation.footer", "announce.dismiss"], "search": "../../../assets/javascripts/workers/search.a264c092.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"default": "stable", "provider": "mike"}}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.4e0fa4ba.min.js"></script>
+      
+    
+  </body>
+</html>

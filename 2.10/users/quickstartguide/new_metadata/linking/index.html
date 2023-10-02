@@ -1,0 +1,1944 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="GeoNetwork catalogue for listing, searching and reviewing records.">
+      
+      
+      
+        <link rel="canonical" href="https://docs.geonetwork-opensource.org/2.10/users/quickstartguide/new_metadata/linking/">
+      
+      
+        <link rel="prev" href="../">
+      
+      
+        <link rel="next" href="../../newfeatures/">
+      
+      
+      <link rel="icon" href="../../../../assets/geonetwork-logo.png">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.4.0">
+    
+    
+      
+        <title>Link metadata and other resources - GeoNetwork Opensource (EN)</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.9f615399.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.649f08f9.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="indigo">
+  
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#metadata_link" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../../.." title="GeoNetwork Opensource (EN)" class="md-header__button md-logo" aria-label="GeoNetwork Opensource (EN)" data-md-component="logo">
+      
+  <img src="../../../../assets/geonetwork-logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            GeoNetwork Opensource (EN)
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Link metadata and other resources
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3 3.19.09m3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95 2.06.05m-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31Z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_2">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5c-.84 0-1.65.15-2.39.42L12 2M3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29L3.34 7m.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14L3.36 17M20.65 7l-1.77 3.79a7.023 7.023 0 0 0-2.38-4.15l4.15.36m-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29L20.64 17M12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44L12 22Z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/geonetwork/core-geonetwork" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    geonetwork/core-geonetwork
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../.." class="md-tabs__link">
+        
+  
+    
+  
+  GeoNetwork
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../../" class="md-tabs__link">
+          
+  
+    
+  
+  User
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../developer/" class="md-tabs__link">
+          
+  
+    
+  
+  Developer
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../.." title="GeoNetwork Opensource (EN)" class="md-nav__button md-logo" aria-label="GeoNetwork Opensource (EN)" data-md-component="logo">
+      
+  <img src="../../../../assets/geonetwork-logo.svg" alt="logo">
+
+    </a>
+    GeoNetwork Opensource (EN)
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/geonetwork/core-geonetwork" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    geonetwork/core-geonetwork
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    GeoNetwork
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    User
+  </span>
+  
+
+            </a>
+            
+              <label class="md-nav__link " for="__nav_2">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            User
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+      
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+    <a href="../../../preface/" class="md-nav__link">
+      
+  
+  <span class="md-ellipsis">
+    Preface
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" checked>
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Quick Start Guide
+  </span>
+  
+
+            </a>
+            
+              <label class="md-nav__link " for="__nav_2_3">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            Quick Start Guide
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../geographic_management/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Geographic Information Management for all
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting_started/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Getting Started
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../installing/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Installing the software
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../metadata_concepts/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Metadata in Spatial Data Management
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Adding a metadata record
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Link metadata and other resources
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Link metadata and other resources
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#add-a-thumbnail" class="md-nav__link">
+    Add a thumbnail
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#add-an-online-source" class="md-nav__link">
+    Add an online source
+  </a>
+  
+    <nav class="md-nav" aria-label="Add an online source">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#linking-wms-online-resources" class="md-nav__link">
+    Linking WMS online resources
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#linking-data-for-download" class="md-nav__link">
+    Linking data for download
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#linking-wms-for-data-visualization" class="md-nav__link">
+    Linking WMS for data visualization
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#GeoPublisher" class="md-nav__link">
+    Publish uploaded data as WMS, WFS
+  </a>
+  
+    <nav class="md-nav" aria-label="Publish uploaded data as WMS, WFS">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#configuration" class="md-nav__link">
+    Configuration
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#link-your-data" class="md-nav__link">
+    Link your data
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#publish-your-data" class="md-nav__link">
+    Publish your data
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#link-the-services-to-the-metadata" class="md-nav__link">
+    Link the services to the metadata
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#add-a-parent-metadata-record" class="md-nav__link">
+    Add a parent metadata record
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#add-a-sibling" class="md-nav__link">
+    Add a sibling
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#add-a-source-dataset" class="md-nav__link">
+    Add a source dataset
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#add-a-feature-catalog" class="md-nav__link">
+    Add a feature catalog
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#metadata-on-dataset-metadata-on-service-relation" class="md-nav__link">
+    Metadata on dataset / metadata on service relation
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../newfeatures/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    New Features
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../viewing/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Viewing and Analysing the Data
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+    
+    
+      
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+    <a href="../../../admin/" class="md-nav__link">
+      
+  
+  <span class="md-ellipsis">
+    Administration
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+    
+    
+      
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+    <a href="../../../managing_metadata/" class="md-nav__link">
+      
+  
+  <span class="md-ellipsis">
+    Managing Metadata
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+    
+    
+      
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+    <a href="../../../features/" class="md-nav__link">
+      
+  
+  <span class="md-ellipsis">
+    Features
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../appendix/glossary_of_metadata/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Glossary of Metadata Fields Description
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../appendix/iso_topic_categories/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    ISO Topic Categories
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../appendix/foss4g/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Free and Open Source Software for Geospatial Information Systems
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../faq/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Frequently Asked Questions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../glossary/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Glossary
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+    <a href="../../../../developer/" class="md-nav__link">
+      
+  
+  <span class="md-ellipsis">
+    Developer
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#add-a-thumbnail" class="md-nav__link">
+    Add a thumbnail
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#add-an-online-source" class="md-nav__link">
+    Add an online source
+  </a>
+  
+    <nav class="md-nav" aria-label="Add an online source">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#linking-wms-online-resources" class="md-nav__link">
+    Linking WMS online resources
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#linking-data-for-download" class="md-nav__link">
+    Linking data for download
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#linking-wms-for-data-visualization" class="md-nav__link">
+    Linking WMS for data visualization
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#GeoPublisher" class="md-nav__link">
+    Publish uploaded data as WMS, WFS
+  </a>
+  
+    <nav class="md-nav" aria-label="Publish uploaded data as WMS, WFS">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#configuration" class="md-nav__link">
+    Configuration
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#link-your-data" class="md-nav__link">
+    Link your data
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#publish-your-data" class="md-nav__link">
+    Publish your data
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#link-the-services-to-the-metadata" class="md-nav__link">
+    Link the services to the metadata
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#add-a-parent-metadata-record" class="md-nav__link">
+    Add a parent metadata record
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#add-a-sibling" class="md-nav__link">
+    Add a sibling
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#add-a-source-dataset" class="md-nav__link">
+    Add a source dataset
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#add-a-feature-catalog" class="md-nav__link">
+    Add a feature catalog
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#metadata-on-dataset-metadata-on-service-relation" class="md-nav__link">
+    Metadata on dataset / metadata on service relation
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+    <a href="https://github.com/geonetwork/core-geonetwork/edit/mkdocs/docs/manual/docs/users/quickstartguide/new_metadata/linking.md" title="Edit this page" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4v-2m10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1 2.1 2.1Z"/></svg>
+    </a>
+  
+  
+    
+      
+    
+    <a href="https://github.com/geonetwork/core-geonetwork/raw/mkdocs/docs/manual/docs/users/quickstartguide/new_metadata/linking.md" title="View source of this page" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 18c.56 0 1 .44 1 1s-.44 1-1 1-1-.44-1-1 .44-1 1-1m0-3c-2.73 0-5.06 1.66-6 4 .94 2.34 3.27 4 6 4s5.06-1.66 6-4c-.94-2.34-3.27-4-6-4m0 6.5a2.5 2.5 0 0 1-2.5-2.5 2.5 2.5 0 0 1 2.5-2.5 2.5 2.5 0 0 1 2.5 2.5 2.5 2.5 0 0 1-2.5 2.5M9.27 20H6V4h7v5h5v4.07c.7.08 1.36.25 2 .49V8l-6-6H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h4.5a8.15 8.15 0 0 1-1.23-2Z"/></svg>
+    </a>
+  
+
+
+<h1 id="metadata_link">Link metadata and other resources</h1>
+<p>The following related resources are managed:</p>
+<ul>
+<li>A thumbnail (linked using a URL or a file to upload)</li>
+<li>A parent metadata record (UUID to the metadata)</li>
+<li>A service metadata record</li>
+<li>A dataset metadata record</li>
+<li>A source dataset</li>
+<li>An online resource</li>
+<li>A feature catalog</li>
+<li>A sibling</li>
+</ul>
+<p>There is 2 ways of creating link between resources:</p>
+<ul>
+<li>using the relation manager</li>
+<li>or the metadata editor</li>
+</ul>
+<p>The relation manager is only available for ISO19139 records (or ISO19139 profiles) but when related resources are metadata records, those records could be in any of the catalog supported standards (eg. ISO19110 for feature catalog, dublin core).</p>
+<p>The relation manager provides a list of related resources and links to remove them.</p>
+<p><img alt="" src="../link/geonetwork-relation-manager.png" /></p>
+<p>New relation could be added using the top right menu:</p>
+<p><img alt="" src="../link/geonetwork-relation-manager-actions.png" /></p>
+<h2 id="add-a-thumbnail">Add a thumbnail</h2>
+<p>Two types of thumbnails could be linked to a metadata record:</p>
+<ul>
+<li>an image linked using its URL (the image needs to be published online)</li>
+<li>an image uploaded in the record data directory. During upload a small thumbnail could be created if requested.</li>
+</ul>
+<p><img alt="" src="../link/geonetwork-add-thumbnails-by-url.png" /></p>
+<p><img alt="" src="../link/geonetwork-add-thumbnails.png" /></p>
+<p>The relation panel allows to quickly remove a thumbnail.</p>
+<p>When the image is uploaded, the XML snippet corresponding to the image is the following:</p>
+<div class="language-xml highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="cm">&lt;!-- Thumbnail added by  upload --&gt;</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nt">&lt;gmd:graphicOverview&gt;</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="nt">&lt;gmd:MD_BrowseGraphic&gt;</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">        </span><span class="nt">&lt;gmd:fileName&gt;</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">            </span><span class="nt">&lt;gco:CharacterString&gt;</span>http://localhost:8080/geonetwork/srv/eng/resources.get?uuid=7e512c38-f916-43ba-8367-85f17dcadca1<span class="ni">&amp;amp;</span>fname=thumbnail.jpg<span class="nt">&lt;/gco:CharacterString&gt;</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">        </span><span class="nt">&lt;/gmd:fileName&gt;</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">        </span><span class="nt">&lt;gmd:fileDescription&gt;</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">            </span><span class="nt">&lt;gco:CharacterString&gt;</span>large_thumbnail<span class="nt">&lt;/gco:CharacterString&gt;</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">        </span><span class="nt">&lt;/gmd:fileDescription&gt;</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">        </span><span class="nt">&lt;gmd:fileType&gt;</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">            </span><span class="nt">&lt;gco:CharacterString&gt;</span>jpg<span class="nt">&lt;/gco:CharacterString&gt;</span>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">        </span><span class="nt">&lt;/gmd:fileType&gt;</span>
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">    </span><span class="nt">&lt;/gmd:MD_BrowseGraphic&gt;</span>
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="nt">&lt;/gmd:graphicOverview&gt;</span>
+</span></code></pre></div>
+<p>When linking using a URL, the following XML snippet is inserted</p>
+<div class="language-xml highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="cm">&lt;!-- Thumbnail added by URL --&gt;</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nt">&lt;gmd:graphicOverview&gt;</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span><span class="nt">&lt;gmd:MD_BrowseGraphic&gt;</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">        </span><span class="nt">&lt;gmd:fileName&gt;</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">            </span><span class="nt">&lt;gco:CharacterString&gt;</span>http://organization.org/images/thumbnail.jpg<span class="nt">&lt;/gco:CharacterString&gt;</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">        </span><span class="nt">&lt;/gmd:fileName&gt;</span>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span><span class="nt">&lt;/gmd:MD_BrowseGraphic&gt;</span>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="nt">&lt;/gmd:graphicOverview&gt;</span>
+</span></code></pre></div>
+<p>In both cases, the information could be improved or updated using the editor from the advanced view &gt; identification section.</p>
+<h2 id="add-an-online-source">Add an online source</h2>
+<p>The relation manager allows to add an online resource element defining the following information:</p>
+<ul>
+<li>URL or a file to upload</li>
+<li>name</li>
+<li>description</li>
+<li>protocol</li>
+</ul>
+<p><img alt="" src="../link/geonetwork-add-simple-online-resource.png" /></p>
+<p>This information could be improved or updated using the editor from the advanced view &gt; Distribution section.</p>
+<h3 id="linking-wms-online-resources">Linking WMS online resources</h3>
+<p>Metadata records in ISO19139 could be related to resources defined in WMS services. When searching metadata that has related WMS online resources, the <em>Interactive Map</em> button is displayed to load the WMS layer/s in the map viewer. A WMS online resource can be referenced in metadata like:</p>
+<ul>
+<li>
+<p>Selecting protocol <strong>OCG-WMS Web Map Capabilities 1.1.1</strong> or <strong>OCG-WMS Web Map Capabilities 1.3.0</strong>:</p>
+</li>
+<li>
+<p><em>URL</em>: Url of WMS service</p>
+</li>
+<li>Name of the resource: empty.</li>
+</ul>
+<figure>
+<img src="onlineResourceWebMapService2.png" alt="onlineResourceWebMapService2.png" />
+<figcaption><em>WMS online resource</em></figcaption>
+</figure>
+
+<p>The <em>Interactive Map</em> button opens a window to select the layer/s defined in WMS capabilities document to load in map viewer.</p>
+<figure>
+<img src="onlineResourceWebMapService2SelectLayer.png" alt="onlineResourceWebMapService2SelectLayer.png" />
+<figcaption><em>Window to select WMS layer/s referenced in online resource to load in map viewer</em></figcaption>
+</figure>
+
+<ul>
+<li>
+<p>Selecting protocols <strong>OGC-WMS Web Map Service</strong>, <strong>OGC Web Map Service 1.1.1</strong> or <strong>OGC Web Map Service 1.3.0</strong>:</p>
+</li>
+<li>
+<p><em>URL</em>: Url of WMS service</p>
+</li>
+<li><em>Name of the resource</em>: WMS layer name (optional)</li>
+</ul>
+<figure>
+<img src="onlineResourceWebMapService1.png" alt="onlineResourceWebMapService1.png" />
+<figcaption><em>WMS online resource</em></figcaption>
+</figure>
+
+<p>The behaviour the <em>Interactive Map</em> button depends if user indicated the layer name in the field <em>Name of the resource</em> or not, to show the window to select the layer/s to load in map viewer or load the layer directly.</p>
+<h3 id="linking-data-for-download">Linking data for download</h3>
+<p>You can upload a dataset stored on your local computer and create a link between data and the metadata description. Files in whatever format can be uploaded: doc, PDF, images, vector layers, etc. For the latter the distribution in a compressed file is recommended. You can include the vector data, the legend, any documentation that can help the interpretation of the data, related reports, detailed descriptions of the data processing, base data used to create the dataset specified and/or other relevant information. Follow these guidelines for uploading datasets:</p>
+<ul>
+<li>Make sure the total size of the compressed file is reasonable (eg. less than 100 MB). Should your data be bigger than 100MB, consider a different mechanism to serve this data, e.g. through an FTP or HTTP server and than link the resource through an online resource 'Web address (URL)'.</li>
+<li>Create several smaller files when appropriate and upload them sequentially.</li>
+<li>Add the size of the file at the end of the description field.</li>
+</ul>
+<p>To Upload a Dataset, follow these steps:</p>
+<ol>
+<li>The URL field can be left empty when uploading a file. The system will automatically fill this field out;</li>
+<li>Select the correct protocol to be used. If you do not see the buttons to browse and upload when File for download is selected, save the metadata and return to the upload section. Both buttons should appear;</li>
+<li>Provide a short description of the data;</li>
+<li>Click the Browse button and navigate to the folder where the file to be released is stored. Consider if you want to upload multiple files as one unique zip file or as multiple separate downloads. It is a good idea to add additional documentation with the datasets that provide the user with information related to the data described. Reminder: by default, the size of a single file upload cannot exceed 100 Mbytes unless your system administrator has configured a larger limit in the GeoNetwork config.xml file;</li>
+<li>Click Upload and then Save the metadata record.</li>
+</ol>
+<figure>
+<img src="uploadData.png" alt="uploadData.png" />
+<figcaption><em>An online resource</em></figcaption>
+</figure>
+
+<h3 id="linking-wms-for-data-visualization">Linking WMS for data visualization</h3>
+<p>You can link a dataset published in an OGC WMS service using the online resource section.</p>
+<ol>
+<li>Edit the metadata record</li>
+<li>Move to the distribution tab</li>
+<li>The URL field contains the WMS service URL;</li>
+<li>Select the correct protocol to be used (ie. OGC Web Map Service ver 1.1.1);</li>
+<li>The name of the resource is the name of the layer in the service (as defined in the GetCapabilities document);</li>
+<li>The description is optional;</li>
+<li>Click save.</li>
+</ol>
+<p><img alt="" src="../linkwms.png" /></p>
+<h3 id="GeoPublisher">Publish uploaded data as WMS, WFS</h3>
+<p>Integration of a map server allows users to quickly configure their data for interactive access without the need to go through the complexities of setting up and configuring a web map server. Web map server supported are:</p>
+<ul>
+<li>GeoServer embedded with GeoNetwork</li>
+<li>Remote GeoServer node (tested with 2.x or sup.)</li>
+</ul>
+<p><img alt="" src="../geopub-tiff.png" /></p>
+<p>This mechanism allows users to publish the following GIS resources:</p>
+<ul>
+<li>RASTER GeoTiff, ECW : ZIP or not or file path</li>
+<li>ESRI Shapefile : ZIP or file path</li>
+<li>Table PostGIS</li>
+</ul>
+<p>In case of ZIP file, the resource must be uploaded to the metadata record.</p>
+<h4 id="configuration">Configuration</h4>
+<p>If after uploading data, you cannot see the geopublisher button, ask the catalogue administrator to check the configuration. This feature is disabled by default. It could be activated in the config-gui.xml configuration file.</p>
+<p>If you cannot see your GeoServer node, ask the catalogue administrator to add the new node in geoserver-nodes.xml configuration file and check the config-gui.xml file:</p>
+<div class="language-text highlight"><pre><span></span><code>&lt;!-- Display the geopublisher option for all updloaded files--&gt;
+&lt;editor-geopublisher/&gt;
+</code></pre></div>
+<p>In order to add a new node, define the configuration in geoserver-nodes.xml:</p>
+<div class="language-text highlight"><pre><span></span><code>&lt;!-- 
+   Add here all geoserver node which could
+   be configure by GeoNetwork.
+
+   GeoServer 2.x or later are supported. The REST API must be installed in the GeoServer node.
+   If you want to be able to publish in different workspaces, create as many nodes as 
+   workspaces.
+
+   @param name         Name of the GeoServer node, display to metadata editor
+   @param namespace    Namespace to use. If not set, GeoServer will link store to another namespace.
+   @param adminUrl     GeoServer REST service config URL
+   @param wmsUrl       GeoServer WMS service URL use to display map preview
+   @param wfsUrl       (Not used) GeoServer WFS service URL use to display map preview
+   @param stylerUrl    (Optional) GeoServer WFS service URL use to display map preview
+   @param user         GeoServer user login
+   @param password     GeoServer user password 
+--&gt;
+&lt;node&gt;
+   &lt;id&gt;geoserverEmbedded&lt;/id&gt;
+   &lt;name&gt;GeoServer (workspace: gn)&lt;/name&gt;
+   &lt;namespacePrefix&gt;gn&lt;/namespacePrefix&gt;
+   &lt;namespaceUrl&gt;http://geonetwork-opensource.org&lt;/namespaceUrl&gt;
+   &lt;adminUrl&gt;http://localhost:8080/geoserver/rest&lt;/adminUrl&gt;
+   &lt;wmsUrl&gt;http://localhost:8080/geoserver/wms&lt;/wmsUrl&gt;
+   &lt;wfsUrl&gt;http://localhost:8080/geoserver/wfs&lt;/wfsUrl&gt;
+   &lt;wcsUrl&gt;http://localhost:8080/geoserver/wcs&lt;/wcsUrl&gt;
+   &lt;stylerUrl&gt;http://localhost:8080/geoserver/styler/index.html&lt;/stylerUrl&gt;
+   &lt;user&gt;admin&lt;/user&gt;
+   &lt;password&gt;geoserver&lt;/password&gt;
+&lt;/node&gt;
+</code></pre></div>
+<h4 id="link-your-data">Link your data</h4>
+<p>In order to link a new dataset, do the following:</p>
+<ul>
+<li>Open the record in edit mode</li>
+<li>If you have a ZIP file or RASTER image, upload the data to the record from the advanced view &gt; Distribution section or the relation manager.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Fields</th>
+<th>Vector (ZIP Shapefile)</th>
+<th>RASTER (ZIP or not)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>URL</td>
+<td>URL to the file uploaded in the catalog <a href="http://localhost:8080/geonetwork/srv/en/resources.get?id=1631">http://localhost:8080/geonetwork/srv/en/resources.get?id=1631</a> &amp;fname=CCM.zip&amp;access=private</td>
+<td>idem</td>
+</tr>
+<tr>
+<td>Protocol</td>
+<td>File for download WWW:DOWNLOAD</td>
+<td>idem</td>
+</tr>
+<tr>
+<td>Name</td>
+<td>File name (readonly)</td>
+<td>idem</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>For PostGIS table or file on local network :</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Fields</th>
+<th>Vector (ZIP Shapefile)</th>
+<th>RASTER (ZIP or not)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>URL</td>
+<td>DB connexion URL jdbc:postgresql://localhost:5432/login:<a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#112;&#97;&#115;&#115;&#119;&#111;&#114;&#100;&#64;&#100;&#98;">&#112;&#97;&#115;&#115;&#119;&#111;&#114;&#100;&#64;&#100;&#98;</a></td>
+<td>Directory name <file:///home/geodata/></td>
+</tr>
+<tr>
+<td>Protocol</td>
+<td>PostGIS Table DB:POSTGIS</td>
+<td>File RASTER <FILE:RASTER></td>
+</tr>
+<tr>
+<td>Name</td>
+<td>Table name</td>
+<td>File name</td>
+</tr>
+</tbody>
+</table>
+<h4 id="publish-your-data">Publish your data</h4>
+<p>The geopublication wizard is then available:</p>
+<p><img alt="" src="../geopub-wizard-button.png" /></p>
+<ul>
+<li>Select a not to publish into</li>
+</ul>
+<p><img alt="" src="../geopub-node-selector.png" /></p>
+<ul>
+<li>The catalog check that file is valid</li>
+</ul>
+<p><img alt="" src="../geopub-menu.png" /></p>
+<ul>
+<li>Publish button: Publish current dataset to remote node. If dataset is already publish in that node, it will be updated.</li>
+<li>Unpublish button: Remove current dataset from remote node.</li>
+<li>Add online source button: Add an onlinesource section to the current metadata record pointing to the WMS and layername in order to display the layer in the map viewer of the search interface.</li>
+<li>Style button: Only available if the GeoServer styler has been installed and declared in the configuration.</li>
+</ul>
+<p>No layer names are asked to the user. Layer name is compute from the file name.</p>
+<p>In case of ZIP compression, ZIP file base name must be equal to Shapefile or GeoTiff base name (ie. if the shapefile is rivers.shp, ZIP file name must be rivers.zip).</p>
+<p>One Datastore, FeatureType, Layer and Style are created for a vector dataset (one to one relation). One CoverageStore, Coverage, Layer are created for a raster dataset (one to one relation).</p>
+<h4 id="link-the-services-to-the-metadata">Link the services to the metadata</h4>
+<p>The link to metadata button add information to the metadata record in order to be link the services to the metadata. This will be used to visualize the layer on the map viewer for example.</p>
+<p><img alt="" src="../geopub-service-type.png" /></p>
+<h2 id="add-a-parent-metadata-record">Add a parent metadata record</h2>
+<p>In order to add a link to a parent metadata record, search for the target record and select the parent metadata to link to the current in editing.</p>
+<p><img alt="" src="../link/geonetwork-add-parents.png" /></p>
+<p>Once added, the following XML fragment is inserted in the metadata record:</p>
+<div class="language-xml highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nt">&lt;gmd:parentIdentifier&gt;</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">    </span><span class="nt">&lt;gco:CharacterString&gt;</span>SDN:PRODUCT:1850:Time<span class="w"> </span>Series<span class="w"> </span>Tributyltin<span class="w"> </span>(TBT)<span class="w"> </span>in<span class="w"> </span>Sediment<span class="nt">&lt;/gco:CharacterString&gt;</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nt">&lt;/gmd:parentIdentifier&gt;</span>
+</span></code></pre></div>
+<p>In the editor, the relation could be updated in the metadata section:</p>
+<p><img alt="" src="../link/geonetwork-edit-parents.png" /></p>
+<p>When a record has children records, the update children wizard could be executed:</p>
+<p><img alt="" src="../relationUpdateChild.png" /></p>
+<p>This information could be improved or updated using the editor from the advanced view &gt; Metadata section.</p>
+<h2 id="add-a-sibling">Add a sibling</h2>
+<p>ISO Metadata records can be related to another record with different type of relations. The elements in the ISO standard providing those links is the aggregationInfo element. Sibling relationships types can be specified using the initiative type and association type fields.</p>
+<p>In order to add a sibling link:</p>
+<ul>
+<li>choose a type of association</li>
+<li>choose a type of initiative</li>
+<li>and search for the records to link</li>
+</ul>
+<p><img alt="" src="../link/geonetwork-add-siblings.png" /></p>
+<p>Multiple sibling could be linked to the record in one time defining for each element the association type and initiative type to use:</p>
+<p><img alt="" src="../link/geonetwork-add-multiple-siblings.png" /></p>
+<p>The type of sibling is displayed in the relation manager which allows to quickly remove the relation if needed:</p>
+<p><img alt="" src="../link/geonetwork-add-siblings-ref.png" /></p>
+<p>Once added, the following XML is inserted in the metadata record:</p>
+<div class="language-xml highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nt">&lt;gmd:aggregationInfo&gt;</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">    </span><span class="nt">&lt;gmd:MD_AggregateInformation&gt;</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">        </span><span class="nt">&lt;gmd:aggregateDataSetIdentifier&gt;</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">            </span><span class="nt">&lt;gmd:MD_Identifier&gt;</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">                </span><span class="cm">&lt;!-- optional gmd:authority here: could have details of a register describing the some details of the sibling record --&gt;</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">                </span><span class="cm">&lt;!-- code is UUID/urn of the sibling record, could be a gmx:Anchor --&gt;</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">                </span><span class="nt">&lt;gmd:code&gt;</span>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">                    </span><span class="nt">&lt;gco:CharacterString&gt;</span>urn:marine.csiro.au:project:1532<span class="nt">&lt;/gco:CharacterString&gt;</span>
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">                </span><span class="nt">&lt;/gmd:code&gt;</span>
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">            </span><span class="nt">&lt;/gmd:MD_Identifier&gt;</span>
+</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">        </span><span class="nt">&lt;/gmd:aggregateDataSetIdentifier&gt;</span>
+</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">        </span><span class="nt">&lt;gmd:associationType&gt;</span>
+</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">            </span><span class="nt">&lt;gmd:DS_AssociationTypeCode</span><span class="w"> </span><span class="na">codeList=</span><span class="s">&quot;http://...#DS_AssociationTypeCode&quot;</span><span class="w"> </span>
+</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="w">                                        </span><span class="na">codeListValue=</span><span class="s">&quot;crossReference&quot;</span><span class="nt">&gt;</span>crossReference<span class="nt">&lt;/gmd:DS_AssociationTypeCode&gt;</span>
+</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="w">        </span><span class="nt">&lt;/gmd:associationType&gt;</span>
+</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="w">        </span><span class="cm">&lt;!-- initiative type describes the type of sibling relationship - in this case the code is a project </span>
+</span><span id="__span-3-17"><a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="cm">             related to the record that contains this aggregateInformation --&gt;</span>
+</span><span id="__span-3-18"><a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="w">        </span><span class="nt">&lt;gmd:initiativeType&gt;</span>
+</span><span id="__span-3-19"><a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="w">            </span><span class="nt">&lt;gmd:DS_InitiativeTypeCode</span><span class="w"> </span><span class="na">codeList=</span><span class="s">&quot;http://...#DS_InitiativeTypeCode&quot;</span><span class="w"> </span>
+</span><span id="__span-3-20"><a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="w">                                       </span><span class="na">codeListValue=</span><span class="s">&quot;project&quot;</span><span class="nt">&gt;</span>project<span class="nt">&lt;/gmd:DS_InitiativeTypeCode&gt;</span>
+</span><span id="__span-3-21"><a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a><span class="w">        </span><span class="nt">&lt;/gmd:initiativeType&gt;</span>
+</span><span id="__span-3-22"><a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a><span class="w">    </span><span class="nt">&lt;/gmd:MD_AggregateInformation&gt;</span>
+</span><span id="__span-3-23"><a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a><span class="nt">&lt;/gmd:aggregationInfo&gt;</span>
+</span></code></pre></div>
+<p>This information could be improved or updated using the editor from the advanced view &gt; Identification section.</p>
+<h2 id="add-a-source-dataset">Add a source dataset</h2>
+<p>In the data quality section, the source dataset could be linked to a record.</p>
+<p>Once added, the following XML fragment is inserted in the metadata record:</p>
+<div class="language-xml highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nt">&lt;gmd:source</span><span class="w"> </span><span class="na">uuidref=</span><span class="s">&quot;095cdc57-f44b-4613-894c-f09f1b672140&quot;</span><span class="nt">&gt;</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nt">&lt;/gmd:source&gt;</span>
+</span></code></pre></div>
+<p>In the editor, the relation could be updated in the data quality section:</p>
+<p><img alt="" src="../link/geonetwork-edit-sources.png" /></p>
+<p>This information could be improved or updated using the editor from the advanced view &gt; Data quality section.</p>
+<h2 id="add-a-feature-catalog">Add a feature catalog</h2>
+<p>The feature catalog is used to describe the data model of a dataset using the ISO19110 standards. In the content information section, the feature catalog could be linked to a record. The relation panel filter ISO19110 record in order to quickly link a feature catalog.</p>
+<p>Once added, the following XML fragment is inserted in the metadata record:</p>
+<div class="language-xml highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nt">&lt;gmd:contentInfo&gt;</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">    </span><span class="nt">&lt;gmd:MD_FeatureCatalogueDescription&gt;</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">        </span><span class="nt">&lt;gmd:includedWithDataset/&gt;</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">        </span><span class="nt">&lt;gmd:featureCatalogueCitation</span><span class="w"> </span><span class="na">uuidref=</span><span class="s">&quot;46ce9c2f-6c37-4ae7-9511-63940ece5760&quot;</span><span class="w"> </span><span class="na">xlink:href=</span><span class="s">&quot;http://localhost:8080/geonetwork/srv/en/csw?service=CSW&amp;amp;request=GetRecordById&amp;amp;version=2.0.2&amp;amp;outputSchema=http://www.isotc211.org/2005/gmd&amp;amp;elementSetName=full&amp;amp;id=46ce9c2f-6c37-4ae7-9511-63940ece5760&quot;</span><span class="nt">/&gt;</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">    </span><span class="nt">&lt;/gmd:MD_FeatureCatalogueDescription&gt;</span>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="nt">&lt;/gmd:contentInfo&gt;</span>
+</span></code></pre></div>
+<p>In the editor, the relation could be updated in the content information section:</p>
+<p><img alt="" src="../link/geonetwork-edit-fcats.png" /></p>
+<p>This information could be improved or updated using the editor from the advanced view &gt; Content information section.</p>
+<h2 id="metadata-on-dataset-metadata-on-service-relation">Metadata on dataset / metadata on service relation</h2>
+<p>Linking a dataset to a service or a service to a dataset is made using the following panel:</p>
+<p><img alt="" src="../relationCreateService.png" /></p>
+<p>Editor could define a layer name using the combo box (which try to retrieve layers from the WMS GetCapabilities document) or typing the layer name in the text field. This information is required to display the layer using the map viewer.</p>
+<p>Relation is stored in :</p>
+<div class="language-xml highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nt">&lt;srv:operatesOn</span><span class="w"> </span><span class="na">uuidref=</span><span class="s">&quot;&quot;</span><span class="w"> </span><span class="na">xlink:href=</span><span class="s">&quot;&quot;</span><span class="nt">/&gt;</span>
+</span></code></pre></div>
+<p>and (according to ISO CSW profil)</p>
+<div class="language-xml highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nt">&lt;srv:coupledResource&gt;</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span><span class="nt">&lt;srv:SV_CoupledResource&gt;</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">    </span><span class="nt">&lt;srv:operationName&gt;&lt;/srv:operationName&gt;</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">    </span><span class="nt">&lt;srv:identifier&gt;&lt;/srv:identifier&gt;</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">    </span><span class="nt">&lt;gco:ScopedName&gt;&lt;/gco:ScopedName&gt;</span>
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">  </span><span class="nt">&lt;/srv:SV_CoupledResource&gt;</span>
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="nt">&lt;/srv:coupledResource&gt;</span>
+</span></code></pre></div>
+<p>Only relation between records in the same catalogue are handle. Use of XLink attributes are not supported to create relation between datasets and services.</p>
+<p>This information could be improved or updated using the editor from the advanced view &gt; Identification section.</p>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var tab,labels=set.querySelector(".tabbed-labels");for(tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12Z"/></svg>
+            Back to top
+          </button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../" class="md-footer__link md-footer__link--prev" aria-label="Previous: Adding a metadata record" rel="prev">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Adding a metadata record
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../../newfeatures/" class="md-footer__link md-footer__link--next" aria-label="Next: New Features" rel="next">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                New Features
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <!--
+  Copyright (c) 2016-2022 Martin Donath <martin.donath@squidfunk.com>
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+<!-- Copyright and theme information -->
+<div class="md-copyright">
+  
+  <span class="md-copyright__highlight">
+    Copyright &copy; 2001 - 2023 FAO-UN and others
+  </span>
+  
+  
+  &mdash; Made by the
+  <a
+          href="https://geonetwork-opensource.org/"
+          target="_blank" rel="noopener"
+  >GeoNetwork Community</a>,
+  built with
+  <a
+          href="https://squidfunk.github.io/mkdocs-material/"
+          target="_blank" rel="noopener"
+  >
+    Material for MkDocs
+  </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/geonetwork" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://hub.docker.com/_/geonetwork" target="_blank" rel="noopener" title="hub.docker.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M349.9 236.3h-66.1v-59.4h66.1v59.4zm0-204.3h-66.1v60.7h66.1V32zm78.2 144.8H362v59.4h66.1v-59.4zm-156.3-72.1h-66.1v60.1h66.1v-60.1zm78.1 0h-66.1v60.1h66.1v-60.1zm276.8 100c-14.4-9.7-47.6-13.2-73.1-8.4-3.3-24-16.7-44.9-41.1-63.7l-14-9.3-9.3 14c-18.4 27.8-23.4 73.6-3.7 103.8-8.7 4.7-25.8 11.1-48.4 10.7H2.4c-8.7 50.8 5.8 116.8 44 162.1 37.1 43.9 92.7 66.2 165.4 66.2 157.4 0 273.9-72.5 328.4-204.2 21.4.4 67.6.1 91.3-45.2 1.5-2.5 6.6-13.2 8.5-17.1l-13.3-8.9zm-511.1-27.9h-66v59.4h66.1v-59.4zm78.1 0h-66.1v59.4h66.1v-59.4zm78.1 0h-66.1v59.4h66.1v-59.4zm-78.1-72.1h-66.1v60.1h66.1v-60.1z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+    <a href="https://geonetwork-opensource.org/" target="_blank" rel="noopener" title="GeoNetwork Website" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M320 0c-17.7 0-32 14.3-32 32s14.3 32 32 32h82.7L201.4 265.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L448 109.3V192c0 17.7 14.3 32 32 32s32-14.3 32-32V32c0-17.7-14.3-32-32-32H320zM80 32C35.8 32 0 67.8 0 112v320c0 44.2 35.8 80 80 80h320c44.2 0 80-35.8 80-80V320c0-17.7-14.3-32-32-32s-32 14.3-32 32v112c0 8.8-7.2 16-16 16H80c-8.8 0-16-7.2-16-16V112c0-8.8 7.2-16 16-16h112c17.7 0 32-14.3 32-32s-14.3-32-32-32H80z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "../../../..", "features": ["content.action.view", "content.action.edit", "content.code.copy", "content.tabs.link", "navigation.tabs", "navigation.tracking", "navigation.prune", "navigation.indexes", "toc.follow", "navigation.top", "navigation.footer", "announce.dismiss"], "search": "../../../../assets/javascripts/workers/search.a264c092.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"default": "stable", "provider": "mike"}}</script>
+    
+    
+      <script src="../../../../assets/javascripts/bundle.4e0fa4ba.min.js"></script>
+      
+    
+  </body>
+</html>
