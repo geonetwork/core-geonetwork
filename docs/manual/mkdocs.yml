@@ -12,7 +12,6 @@ edit_uri: edit/main/docs/manual/docs
 # deploy configuration for mike
 #    git remote add website https://github.com/geonetwork/geonetwork.github.io
 remote_name: website
-remote_branch: main
 
 # Copyright
 copyright: Copyright &copy; 2001 - 2023 FAO-UN and others
