@@ -11,7 +11,7 @@ edit_uri: edit/main/docs/manual/docs
 
 # deploy
 #    git remote add website https://github.com/geonetwork/geonetwork.github.io
-remote_name = website
+remote_name: website
 
 # Copyright
 copyright: Copyright &copy; 2001 - 2023 FAO-UN and others
@@ -95,7 +95,7 @@ extra:
       link: https://github.com/geonetwork
     - icon: fontawesome/brands/docker
       link: https://hub.docker.com/_/geonetwork
-    - icon: fontawesome/solid/arrow-up-right-from-square
+    - icon: geonetwork/logo_bw
       link: https://geonetwork-opensource.org/
       name: GeoNetwork Website
 
