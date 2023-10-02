@@ -9,10 +9,6 @@ repo_name: core-geonetwork
 repo_url: https://github.com/geonetwork/core-geonetwork
 edit_uri: edit/main/docs/manual/docs
 
-# deploy configuration for mike
-#    git remote add website https://github.com/geonetwork/geonetwork.github.io
-remote_name: website
-
 # Copyright
 copyright: Copyright &copy; 2001 - 2023 FAO-UN and others
 
