@@ -745,8 +745,7 @@
                   <includes>
                     <include>META-INF/MANIFEST.MF</include>
                     <include>data/**</include>
-                    <include>doc/en/**</include>
-                    <include>doc/fr/**</include>
+                    <include>doc/**</include>
                     <include>images/logos/*</include>
                     <include>images/logos/statTmp</include>
                     <include>scripts/lib/**</include>
@@ -857,7 +856,7 @@
               <outputDirectory>${build.webapp.resources}</outputDirectory>
               <resources>
                 <resource>
-                  <directory>${project.basedir}/../docs/manuals/target/doc</directory>
+                  <directory>${project.basedir}/../docs/manual/target/help</directory>
                   <targetPath>${basedir}/src/main/webapp/doc</targetPath>
                 </resource>
               </resources>

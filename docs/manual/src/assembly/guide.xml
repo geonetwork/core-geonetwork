@@ -1,0 +1,18 @@
+<assembly>
+  <id>manual</id>
+  <formats>
+    <format>zip</format>
+  </formats>
+  <fileSets>
+    <fileSet>
+      <directory>target/html</directory>
+      <outputDirectory></outputDirectory>
+      <excludes>
+        <exclude>**/*.rst</exclude>
+        <exclude>confy.py</exclude>
+        <exclude>anchors.txt</exclude>
+        <exclude>404.html</exclude>
+      </excludes>
+    </fileSet>
+  </fileSets>
+</assembly>
