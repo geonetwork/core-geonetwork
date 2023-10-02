@@ -100,25 +100,13 @@ If you are not familiar with python the mkdocs-material website has instructions
 
 We use ``mike`` for publishing to https://geonetwork.github.io using `<major>.<minor>` version:
 
-1. Define the remote `website`:
-   
-   ```bash
-   git remote add website https://github.com/geonetwork/geonetwork.github.io
-   git fetch website
-   git checkout -b gh-pages website/gh-pages
-   git branch --set-upstream-to=websigte/gh-pages
-   ```
-   
-   The file ``mkdocs.yml`` setting for ``remote_name`` is set to ``website``.
-   To test with your own for, use ``--remote origion`` in the examples below.
-   
-2. To deploy SNAPSHOT development docs from the `main` branch to website `gh-pages` branch:
+1. To deploy SNAPSHOT development docs from the `main` branch to website `gh-pages` branch:
 
    ```bash
    mike deploy --push --update-aliases 4.4 devel
    ```
     
-3. To deploy documentation for a new release:
+2. To deploy documentation for a new release:
    
    ```bash
    mike deploy --push --update-aliases 4.2 stable
@@ -130,20 +118,20 @@ We use ``mike`` for publishing to https://geonetwork.github.io using `<major>.<m
    mike set-default --push 4.2
    ```
 
-4. To publish documentation for a maintenance release:
+3. To publish documentation for a maintenance release:
 
    ```bash
    mike deploy --push --update-aliases 3.12 maintenance
    ```
 
-5. To show published versions:
+4. To show published versions:
 
    ```bash
    
    mike list
    ```
 
-4. To preview things locally (uses your local ``gh-pages`` branch):
+5. To preview things locally (uses your local ``gh-pages`` branch):
    
    ```bash
    mike serve
