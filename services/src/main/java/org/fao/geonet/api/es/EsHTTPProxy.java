@@ -171,7 +171,7 @@ public class EsHTTPProxy {
             related = MetadataUtils.getAssociated(
                 context,
                 context.getBean(IMetadataUtils.class)
-                    .findOneByUuid(doc.get("_id").asText()),
+                    .findOne(doc.get("_source").get("id").asText()),
                 relatedTypes, 0, 1000);
         } catch (Exception e) {
             LOGGER.warn("Failed to load related types for {}. Error is: {}",
