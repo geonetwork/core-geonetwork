@@ -2,12 +2,16 @@
 site_name: GeoNetwork opensource
 site_description: GeoNetwork catalogue for listing, searching and reviewing records.
 site_dir: target/html
-site_url: http://jodygarnett.github.io/core-geonetwork/
+site_url: https://docs.geonetwork-opensource.org/
 
 # Repository
 repo_name: geonetwork/core-geonetwork
 repo_url: https://github.com/geocat/core-geonetwork
-edit_uri: edit/mkdocs/docs/manual/docs
+edit_uri: edit/main/docs/manual/docs
+
+# deploy
+#    git remote add website https://github.com/geonetwork/geonetwork.github.io
+remote_name = website
 
 # Copyright
 copyright: Copyright &copy; 2001 - 2023 FAO-UN and others
@@ -78,7 +82,8 @@ plugins:
   - exclude:
       glob:
         - annexes/gallery/bin/README.md
-# - include-markdown
+  - mike:
+      canonical_version: latest
 
 # Customizations
 extra:

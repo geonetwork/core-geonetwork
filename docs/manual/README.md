@@ -85,7 +85,7 @@ If you are not familiar with python the mkdocs-material website has instructions
 
 2. Assemble ``zip`` with ``package`` phase:
    ```bash
-   mvn compile
+   mvn package
    ```
 
 3. Both ``install`` and ``deploy`` are skipped (so ``mvn clean install`` is fine).
@@ -96,31 +96,47 @@ If you are not familiar with python the mkdocs-material website has instructions
    mvn install -Pdefault
    ```
    
-## Publish
+## Deploy
 
-We use ``mike`` for publishing (from the `gh-pages` branch):
+We use ``mike`` for publishing to https://geonetwork.github.io using `<major>.<minor>` version:
 
-1. To publish development docs from the `main` branch:
-
-   ```bash
-   mike deploy --update-aliases 4.4.x latest 
-   ```
-    
-1. To publish documentation for a new release:
+1. Define the remote `website`:
    
    ```bash
-   mike deploy --push --update-aliases 4.2.5 stable
+   git remote add website https://github.com/geonetwork/geonetwork.github.io
    ```
-
-2. To publish documentation for a maintenance release:
+   
+   The file ``mkdocs.yml`` setting for ``remote_name`` is set to ``website``.
+   To test with your own for, use ``--remote origion`` in the examples below.
+   
+2. To deploy SNAPSHOT development docs from the `main` branch to website `gh-pages` branch:
 
    ```bash
-   mike deploy --push --update-aliases 3.12.10 maintenance
+   mike deploy --push --update-aliases 4.4 devel
+   ```
+    
+3. To deploy documentation for a new release:
+   
+   ```bash
+   mike deploy --push --update-aliases 4.2 stable
+   ```
+   
+   When starting a new branch you can make it the default:
+   
+   ```bash
+   mike set-default -push 4.2
    ```
 
-3. To show published versions:
+4. To publish documentation for a maintenance release:
 
    ```bash
+   mike deploy --push --update-aliases 3.12 maintenance
+   ```
+
+5. To show published versions:
+
+   ```bash
+   
    mike list
    ```
 
