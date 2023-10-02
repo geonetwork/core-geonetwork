@@ -1,0 +1,18 @@
+<assembly>
+  <id>help</id>
+  <formats>
+    <format>zip</format>
+  </formats>
+  <fileSets>
+    <fileSet>
+      <directory>target/help</directory>
+      <outputDirectory></outputDirectory>
+      <excludes>
+        <exclude>**/*.rst</exclude>
+        <exclude>confy.py</exclude>
+        <exclude>anchors.txt</exclude>
+        <exclude>404.html</exclude>
+      </excludes>
+    </fileSet>
+  </fileSets>
+</assembly>
