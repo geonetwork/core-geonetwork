@@ -104,6 +104,9 @@ We use ``mike`` for publishing to https://geonetwork.github.io using `<major>.<m
    
    ```bash
    git remote add website https://github.com/geonetwork/geonetwork.github.io
+   git fetch website
+   git checkout -b gh-pages website/gh-pages
+   git branch --set-upstream-to=websigte/gh-pages
    ```
    
    The file ``mkdocs.yml`` setting for ``remote_name`` is set to ``website``.
@@ -124,7 +127,7 @@ We use ``mike`` for publishing to https://geonetwork.github.io using `<major>.<m
    When starting a new branch you can make it the default:
    
    ```bash
-   mike set-default -push 4.2
+   mike set-default --push 4.2
    ```
 
 4. To publish documentation for a maintenance release:
