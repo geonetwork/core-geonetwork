@@ -5,7 +5,7 @@ site_dir: target/html
 site_url: https://docs.geonetwork-opensource.org/
 
 # Repository
-repo_name: geonetwork/core-geonetwork
+repo_name: core-geonetwork
 repo_url: https://github.com/geocat/core-geonetwork
 edit_uri: edit/main/docs/manual/docs
 
