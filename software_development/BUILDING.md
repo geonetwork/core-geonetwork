@@ -1,6 +1,6 @@
 # Building
 
-See [Installing from source code](https://geonetwork-opensource.org/manuals/trunk/en/maintainer-guide/installing/installing-from-source-code.html) (Maintainer Guide)
+See [Installing from source code](https://geonetwork-opensource.org/manuals/4.0.x/en/install-guide/installing-from-source-code.html) (Installation Guide)
 
 Build GeoNetwork
 ----------------
@@ -64,12 +64,24 @@ Many Maven build options are available, for instance, you might like to use foll
   mvn install -o -DskipTests -T 2C
   ```
 
-Please refer to the maven documentation for additional options, [Maven: The Complete Reference](http://www.sonatype.com/books/mvnref-book/reference/public-book.html)
+Please refer to the maven documentation for additional options, [Maven: The Complete Reference](https://books.sonatype.com/mvnref-book/pdf/mvnref-pdf.pdf)
 
 Maven Profiles
 --------------
 
-Maven profiles are used to enable additional build configuration.
+Maven profiles are used to enable additional build configuration or optional modules:
+
+```
+mvn install -Pdatastorage-s3
+```
+
+Some build profiles are activated with specific properties, such as `release` to build release bundles:
+
+```
+mvn install -Drelease
+```
+
+The `release` flag above asks `datastorage-s3`, `datastorage-jcloud`, `datastorage-cmis` and the `release` module to produce `zip` bundles for distribution.
 
 Run Elasticsearch
 -----------------
@@ -150,27 +162,3 @@ To start the application under the root context, use:
    cd web
    mvn jetty:run -Dgeonetwork.webapp.contextpath=/
    ```
-
-
-Tool chain
-----------
-
-GeoNetwork requires Java 8 at this time. If you have multiple JDK environments installed
-our build can make use of an optional `~/.m2/toolchains.xml` file.
-
-```xml
-<?xml version="1.0" encoding="UTF8"?>
-<toolchains>
-  <toolchain>
-    <type>jdk</type>
-    <provides>
-      <version>8</version>
-    </provides>
-    <configuration>
-    <jdkHome>/Library/Java/JavaVirtualMachines/adoptopenjdk-8.jdk/Contents/Home</jdkHome>
-    </configuration>
-  </toolchain>
-</toolchains>
-```
-
-If the `toolchains.xml` file is available a profile will be engaged to ensure a JDK `8` is used. For more information see [guide to using toolchains](https://maven.apache.org/guides/mini/guide-using-toolchains.html).

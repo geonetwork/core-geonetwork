@@ -1,12 +1,9 @@
 <!-- Display the first metadata status (apply to ISO19139 record) -->
-<div
-  data-ng-if="mdView.current.record.cl_status.length > 0"
-  data-ng-repeat="c in mdView.current.record.cl_status track by $index"
-  class="col-md-12 gn-nopadding-left"
->
+<div data-ng-if="mdView.current.record.cl_status.length > 0" class="gn-status-container">
   <div
     data-ng-if="showStatusWatermarkFor.indexOf(c.key) === -1 && showStatusTopBarFor.indexOf(c.key) === -1"
-    class="gn-status gn-status-{{c.key}} gn-status-topright gn-status-md"
+    data-ng-repeat="c in mdView.current.record.cl_status track by $index"
+    class="gn-status gn-status-{{c.key}} gn-status-md"
   >
     {{c.key | translate}}
   </div>

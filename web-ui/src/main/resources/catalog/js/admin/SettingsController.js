@@ -34,6 +34,7 @@
   goog.require("gn_sources_controller");
   goog.require("gn_system_settings_controller");
   goog.require("gn_languages_controller");
+  goog.require("gn_static_pages_controller");
 
   var module = angular.module("gn_settings_controller", [
     "gn_system_settings_controller",
@@ -45,7 +46,8 @@
     "gn_sources_controller",
     "gn_metadata_identifier_templates_controller",
     "gn_cssstyle_settings_controller",
-    "gn_scroll_spy"
+    "gn_scroll_spy",
+    "gn_static_pages_controller"
   ]);
 
   module.controller("GnSettingsController", [
@@ -123,6 +125,12 @@
             icon: "fa-globe",
             label: "manageMapServers",
             href: "#/settings/mapservers"
+          },
+          {
+            type: "static-pages",
+            icon: "fa-link",
+            label: "manageStaticPages",
+            href: "#/settings/static-pages"
           }
         ]
       };

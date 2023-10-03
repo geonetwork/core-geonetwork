@@ -65,27 +65,34 @@
 
       <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
       <!-- === Version identifier === -->
-      <versionIdentifier>
+      <resourceEdition>
         <xsl:value-of select="string(/gfc:FC_FeatureCatalogue/gmx:versionNumber/gco:CharacterString|
         /gfc:FC_FeatureCatalogue/gfc:versionNumber/gco:CharacterString)"/>
-      </versionIdentifier>
+      </resourceEdition>
 
       <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
       <!-- === Responsible organization === -->
       <xsl:for-each select="/gfc:FC_FeatureCatalogue/gfc:producer">
         <xsl:apply-templates mode="index-contact"
                              select=".">
-          <xsl:with-param name="type" select="'resource'"/>
-          <xsl:with-param name="fieldPrefix" select="'responsibleParty'"/>
-          <xsl:with-param name="position" select="position()"/>
+          <xsl:with-param name="fieldSuffix" select="''"/>
+        </xsl:apply-templates>
+        <xsl:apply-templates mode="index-contact"
+                             select=".">
+          <xsl:with-param name="fieldSuffix" select="'ForResource'"/>
         </xsl:apply-templates>
       </xsl:for-each>
 
       <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
       <!-- === Revision date === -->
-      <xsl:for-each select="/gfc:FC_FeatureCatalogue/gmx:versionDate/gco:Date|
-        /gfc:FC_FeatureCatalogue/gfc:versionDate/gco:Date">
-        <revisionDate><xsl:value-of select="date-util:convertToISOZuluDateTime(string(.))"/></revisionDate>
+      <xsl:for-each select="/gfc:FC_FeatureCatalogue/gmx:versionDate/(gco:Date|gco:DateTime)
+                           |/gfc:FC_FeatureCatalogue/gfc:versionDate/(gco:Date|gco:DateTime)">
+        <xsl:variable name="dateStamp"
+                      select="date-util:convertToISOZuluDateTime(string(.))"/>
+        <resourceDate type="object">
+          {"type": "revision", "date": "<xsl:value-of select="$dateStamp"/>"}
+        </resourceDate>
+        <dateStamp><xsl:value-of select="$dateStamp"/></dateStamp>
       </xsl:for-each>
 
       <xsl:variable name="jsonFeatureTypes">[
@@ -110,6 +117,9 @@
               "code": "<xsl:value-of select="gn-fn-index:json-escape(*/gfc:code/*/text())"/>",
               "link": "<xsl:value-of select="*/gfc:code/*/@xlink:href"/>",
               "type": "<xsl:value-of select="*/gfc:valueType/gco:TypeName/gco:aName/*/text()"/>"
+              <xsl:if test="*/gfc:cardinality">
+                ,"cardinality": "<xsl:value-of select="concat(*/gfc:cardinality//gco:lower/*/text(), '..', */gfc:cardinality//gco:upper/*/text())"/>"
+              </xsl:if>
               <xsl:if test="*/gfc:listedValue">
                 ,"values": [
                 <xsl:for-each select="*/gfc:listedValue">{
@@ -184,7 +194,7 @@
       <xsl:attribute name="type" select="'object'"/>{
       <xsl:if test="$organisationName">
         "organisationObject": <xsl:value-of select="gn-fn-index:add-multilingual-field(
-                              'organisation', $organisationName, $languages)"/>,
+                              'organisation', $organisationName, $languages, true())"/>,
       </xsl:if>
       "role":"<xsl:value-of select="$role"/>",
       "email":"<xsl:value-of select="gn-fn-index:json-escape($email[1])"/>",

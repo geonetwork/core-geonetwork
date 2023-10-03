@@ -84,6 +84,7 @@ import org.geotools.geometry.jts.JTS;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
+import org.geotools.referencing.crs.DefaultProjectedCRS;
 import org.geotools.xsd.Parser;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -100,11 +101,13 @@ import org.opengis.referencing.operation.MathTransform;
 import org.owasp.esapi.errors.EncodingException;
 import org.owasp.esapi.reference.DefaultEncoder;
 import org.springframework.beans.factory.BeanCreationException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.BeanFactoryAnnotationUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
@@ -184,6 +187,22 @@ public final class XslUtil {
 
                 if (geom == null) {
                     return "Warning: GML geometry is null.";
+                }
+
+                Object userData = geom.getUserData();
+                if (userData instanceof DefaultProjectedCRS) {
+                    geom = JTS.transform(
+                        geom,
+                        CRS.findMathTransform((DefaultProjectedCRS) userData,
+                            CRS.decode("EPSG:4326", true), true)
+                    );
+                }
+                else if (userData instanceof DefaultGeographicCRS) {
+                    geom = JTS.transform(
+                        geom,
+                        CRS.findMathTransform((DefaultGeographicCRS) userData,
+                            CRS.decode("EPSG:4326", true), true)
+                    );
                 }
 
                 if (!geom.isValid()) {
@@ -438,9 +457,33 @@ public final class XslUtil {
             + (withOrganization ? " - " + settingsMan.getValue(SYSTEM_SITE_ORGANIZATION) : "");
     }
 
+
+    /**
+     * Return the ID of the current node (catalog or subportal).
+     * If the main one, then srv.
+     * If a sub portal, use the sub portal key.
+     *
+     * @return
+     */
+    public static String getNodeId() {
+        return ApplicationContextHolder.get().getBean(org.fao.geonet.NodeInfo.class).getId();
+    }
+
+    
     public static String getNodeLogo(String key) {
         Optional<Source> source = getSource(key);
         return source.isPresent() ? source.get().getLogo() : "";
+    }
+
+    public static String getDiscoveryServiceUuid(String key) {
+        Optional<Source> source = getSource(key);
+        if (source.isPresent() && source.get().getType() == SourceType.subportal) {
+            return source.get().getServiceRecord();
+        } else {
+            SettingManager settingsMan = ApplicationContextHolder.get().getBean(SettingManager.class);
+            String uuid = settingsMan.getValue(SYSTEM_CSW_CAPABILITY_RECORD_UUID);
+            return "-1".equals(uuid) ? "" : uuid;
+        }
     }
 
     private static Optional<Source> getSource(String idOrUuid) {
@@ -509,7 +552,19 @@ public final class XslUtil {
         return null;
     }
 
-	/**
+    /**
+     * Check if user is authenticated.
+     */
+    public static boolean isAuthenticated() throws Exception {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || AnonymousAuthenticationToken.class.isAssignableFrom(authentication.getClass())) {
+            return false;
+        }
+        return authentication.isAuthenticated();
+    }
+
+
+    /**
 	 * Check if security provider require login form
 	 */
 	public static boolean isDisableLoginForm() {
@@ -1189,6 +1244,7 @@ public final class XslUtil {
         String extension = Files.getFileExtension(url).toLowerCase();
         if (extension.matches(supportedExtension)) {
 
+            InputStream in = null;
             try {
                 SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
                 Matcher m = Pattern.compile(settingManager.getNodeURL() + "api/records/(.*)/attachments/(.*)$").matcher(url);
@@ -1202,7 +1258,12 @@ public final class XslUtil {
                         image = ImageIO.read(file.getPath().toFile());
                     }
                 } else {
-                    image = ImageIO.read(new URL(url));
+                    URL imageUrl = new URL(url);
+                    URLConnection con = imageUrl.openConnection();
+                    con.setConnectTimeout(1000);
+                    con.setReadTimeout(10000);
+                    in = con.getInputStream();
+                    image = ImageIO.read(in);
                 }
 
                 if (image != null) {
@@ -1225,6 +1286,8 @@ public final class XslUtil {
                 Log.info(Geonet.GEONETWORK, String.format(
                     "Image '%s' is not accessible or can't be converted to Data URL. Error is: %s",
                     url, e.getMessage()));
+            } finally {
+                IOUtils.closeQuietly(in);
             }
         } else {
             Log.info(Geonet.GEONETWORK, String.format(

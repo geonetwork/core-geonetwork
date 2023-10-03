@@ -2,9 +2,15 @@
   "settings": {
     "index": {
       "max_result_window": ${es.index.max_result_window.limit},
+      "max_inner_result_window": ${es.index.max_inner_result_window.limit},
       "query.default_field": "any.default",
       "mapping.total_fields.limit": ${es.index.mapping.total_fields.limit},
       "analysis": {
+        "normalizer": {
+          "sorting": {
+            "filter": ["lowercase", "asciifolding"]
+          }
+        },
         "analyzer": {
           "trigram": {
             "type": "custom",
@@ -1025,6 +1031,14 @@
   "mappings": {
     "dynamic_templates": [
       {
+        "conformTo": {
+          "match": "conformTo_*",
+          "mapping": {
+            "type": "keyword"
+          }
+        }
+      },
+      {
         "numbers": {
           "match": "*Number",
           "mapping": {
@@ -1058,6 +1072,10 @@
                 "type": "keyword",
                 "copy_to": ["any.langita"]
               },
+              "langdut": {
+                "type": "keyword",
+                "copy_to": ["any.langdut"]
+              },
               "langspa": {
                 "type": "keyword",
                 "copy_to": ["any.langspa"]
@@ -1083,6 +1101,11 @@
                   "keyword": {
                     "type": "keyword",
                     "ignore_above": ${es.index.ignore_above}
+                  },
+                  "sort": {
+                    "type": "keyword",
+                    "ignore_above": ${es.index.ignore_above},
+                    "normalizer": "sorting"
                   },
                   "trigram": {
                     "type": "text",
@@ -1297,6 +1320,14 @@
             "properties": {
               "organisation": {
                 "type": "keyword"
+              },
+              "email": {
+                "type": "keyword",
+                "copy_to": ["any.default"]
+              },
+              "individual": {
+                "type": "keyword",
+                "copy_to": ["any.default"]
               },
               "role": {
                 "type": "keyword"
@@ -1567,9 +1598,6 @@
       "isOpenData": {
         "type": "keyword"
       },
-      "lineage": {
-        "type": "text"
-      },
       "resolutionScaleDenominator": {
         "type": "integer"
       },
@@ -1601,6 +1629,23 @@
           },
           "pass": {
             "type": "keyword"
+          }
+        }
+      },
+      "processSteps": {
+        "type": "nested",
+        "properties": {
+          "descriptionObject": {
+            "type": "object"
+          },
+          "date": {
+            "type": "date"
+          },
+          "source": {
+            "type": "object"
+          },
+          "processor": {
+            "type": "object"
           }
         }
       },
@@ -1812,6 +1857,9 @@
               "type": {
                 "type": "keyword"
               },
+              "cardinality": {
+                "type": "keyword"
+              },
               "values": {
                 "type": "object",
                 "properties": {
@@ -1925,6 +1973,26 @@
       },
       "userSavedCount": {
         "type": "long"
+      },
+      "resourceTemporalExtentDetails": {
+        "properties": {
+          "start": {
+            "properties": {
+              "date": {
+                "type": "date",
+                "format": "date_optional_time"
+              }
+            }
+          },
+          "end": {
+            "properties": {
+              "date": {
+                "type": "date",
+                "format": "date_optional_time"
+              }
+            }
+          }
+        }
       }
     }
   }

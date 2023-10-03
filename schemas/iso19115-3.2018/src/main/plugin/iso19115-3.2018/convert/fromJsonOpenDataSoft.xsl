@@ -136,6 +136,16 @@
               <gco:DateTime><xsl:value-of select="(metas/modified|dataset/metas/default/metadata_processed)[1]"/></gco:DateTime>
             </cit:date>
             <cit:dateType>
+              <cit:CI_DateTypeCode codeList="codeListLocation#CI_DateTypeCode" codeListValue="publication"/>
+            </cit:dateType>
+          </cit:CI_Date>
+        </mdb:dateInfo>
+        <mdb:dateInfo>
+          <cit:CI_Date>
+            <cit:date>
+              <gco:DateTime><xsl:value-of select="metas/metadata_processed"/></gco:DateTime>
+            </cit:date>
+            <cit:dateType>
               <cit:CI_DateTypeCode codeList="codeListLocation#CI_DateTypeCode" codeListValue="revision"/>
             </cit:dateType>
           </cit:CI_Date>
@@ -164,7 +174,17 @@
                       </gco:DateTime>
                     </cit:date>
                     <cit:dateType>
-                      <cit:CI_DateTypeCode codeList="codeListLocation#CI_DateTypeCode" codeListValue="creation"/>
+                      <cit:CI_DateTypeCode codeList="codeListLocation#CI_DateTypeCode" codeListValue="publication"/>
+                    </cit:dateType>
+                  </cit:CI_Date>
+                </cit:date>
+                <cit:date>
+                  <cit:CI_Date>
+                    <cit:date>
+                      <gco:DateTime><xsl:value-of select="metas/data_processed"/></gco:DateTime>
+                    </cit:date>
+                    <cit:dateType>
+                      <cit:CI_DateTypeCode codeList="codeListLocation#CI_DateTypeCode" codeListValue="revision"/>
                     </cit:dateType>
                   </cit:CI_Date>
                 </cit:date>
@@ -244,9 +264,16 @@
               </mri:pointOfContact>
             </xsl:for-each>
 
-            <mri:topicCategory>
-              <mri:MD_TopicCategoryCode></mri:MD_TopicCategoryCode>
-            </mri:topicCategory>
+            <!-- ODS themes copied as topicCategory -->
+            <xsl:if test="metas/theme">
+                <xsl:for-each select="metas/theme">
+                  <mri:topicCategory>
+                    <mri:MD_TopicCategoryCode>
+                      <xsl:value-of select="."/>
+                    </mri:MD_TopicCategoryCode>
+                  </mri:topicCategory>
+                </xsl:for-each>
+            </xsl:if>
 
             <!-- ODS keywords copied without type -->
             <xsl:variable name="keywords"
@@ -261,25 +288,6 @@
                       </gco:CharacterString>
                     </mri:keyword>
                   </xsl:for-each>
-                </mri:MD_Keywords>
-              </mri:descriptiveKeywords>
-            </xsl:if>
-
-            <!-- ODS themes copied as keywords with type 'theme' -->
-            <xsl:if test="metas/theme">
-              <mri:descriptiveKeywords>
-                <mri:MD_Keywords>
-                  <xsl:for-each select="metas/theme">
-                    <mri:keyword>
-                      <gco:CharacterString>
-                        <xsl:value-of select="."/>
-                      </gco:CharacterString>
-                    </mri:keyword>
-                  </xsl:for-each>
-                  <mri:type>
-                    <mri:MD_KeywordTypeCode codeListValue="theme"
-                                            codeList="./resources/codeList.xml#MD_KeywordTypeCode"/>
-                  </mri:type>
                 </mri:MD_Keywords>
               </mri:descriptiveKeywords>
             </xsl:if>
@@ -474,7 +482,7 @@
 
                 <!-- Data download links are inferred from the record metadata -->
                 <xsl:variable name="count"
-                              select="dataset/metas/default/records_count"/>
+                              select="metas/records_count|dataset/metas/default/records_count"/>
                 <xsl:if test="$count > 0">
                   <xsl:call-template name="dataLink">
                     <xsl:with-param name="format">csv</xsl:with-param>
@@ -488,7 +496,7 @@
                     </xsl:call-template>
                     <xsl:if test="$count &lt; 5000">
                       <xsl:call-template name="dataLink">
-                        <xsl:with-param name="format">shapefile</xsl:with-param>
+                        <xsl:with-param name="format">shp</xsl:with-param>
                       </xsl:call-template>
                     </xsl:if>
                   </xsl:if>
@@ -554,10 +562,9 @@
           <cit:linkage>
             <gco:CharacterString>
               <xsl:value-of select="concat(nodeUrl,
-                                   '/explore/dataset/',
+                                   '/api/explore/v2.1/catalog/datasets/',
                                    (datasetid|dataset/dataset_id)[1],
-                                   '/download?format=', $format,
-                                   '&amp;timezone=Europe/Berlin&amp;use_labels_for_header=false')" />
+                                   '/exports/', $format, '?use_labels=true')" />
             </gco:CharacterString>
           </cit:linkage>
           <cit:protocol>

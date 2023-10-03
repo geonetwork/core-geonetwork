@@ -39,6 +39,7 @@ import javax.persistence.Lob;
 import javax.persistence.Table;
 
 import org.fao.geonet.domain.GeonetEntity;
+import org.hibernate.annotations.Type;
 
 /**
  * A page with content and properties
@@ -56,11 +57,13 @@ public class Page extends GeonetEntity implements Serializable {
     private List<PageSection> sections;
     private PageStatus status;
 
+    private String label;
+
     public Page() {
 
     }
 
-    public Page(PageIdentity pageIdentity, byte[] data, String link, PageFormat format, List<PageSection> sections, PageStatus status) {
+    public Page(PageIdentity pageIdentity, byte[] data, String link, PageFormat format, List<PageSection> sections, PageStatus status, String label) {
         super();
         this.pageIdentity = pageIdentity;
         this.data = data;
@@ -68,6 +71,7 @@ public class Page extends GeonetEntity implements Serializable {
         this.format = format;
         this.sections = sections;
         this.status = status;
+        this.label = label;
     }
 
     public enum PageStatus {
@@ -75,12 +79,18 @@ public class Page extends GeonetEntity implements Serializable {
     }
 
     public enum PageFormat {
-        LINK, HTML, TEXT, MARKDOWN, WIKI;
+        LINK, HTML, HTMLPAGE, TEXT;
     }
 
     // These are the sections where is shown the link to the Page object
     public enum PageSection {
-        ALL, TOP, FOOTER, MENU, SUBMENU, CUSTOM_MENU1, CUSTOM_MENU2, CUSTOM_MENU3, DRAFT;
+        TOP, FOOTER, MENU, SUBMENU, CUSTOM_MENU1, CUSTOM_MENU2, CUSTOM_MENU3;
+    }
+
+    public enum PageExtension {
+        HTML,
+        TXT,
+        MD
     }
 
     @EmbeddedId
@@ -96,9 +106,10 @@ public class Page extends GeonetEntity implements Serializable {
         return data;
     }
 
-    @Column
-    @Nullable
+    @Lob
     @Basic(fetch = FetchType.LAZY)
+    @Type(type = "org.hibernate.type.TextType")
+    @Column(unique = true)
     public String getLink() {
         return link;
     }
@@ -123,6 +134,11 @@ public class Page extends GeonetEntity implements Serializable {
         return status;
     }
 
+    @Column(nullable = false)
+    public String getLabel() {
+        return label;
+    }
+
     public void setPageIdentity(PageIdentity pageIdentity) {
         this.pageIdentity = pageIdentity;
     }
@@ -145,6 +161,10 @@ public class Page extends GeonetEntity implements Serializable {
 
     public void setStatus(PageStatus status) {
         this.status = status;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
     }
 
     @Override

@@ -24,15 +24,12 @@
 package org.fao.geonet.resources;
 
 import com.google.common.collect.Maps;
-
+import com.google.common.collect.Sets;
 import jeeves.config.springutil.JeevesDelegatingFilterProxy;
-
 import org.fao.geonet.NodeInfo;
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.utils.Log;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.MediaType;
 import org.springframework.web.context.request.ServletWebRequest;
@@ -40,7 +37,6 @@ import org.springframework.web.context.request.ServletWebRequest;
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.attribute.FileTime;
@@ -83,6 +79,7 @@ public class ResourceFilter implements Filter {
         private final ServletResponse response;
 
         private final Path resourcesDir;
+        private final Path schemaPublicationDir;
         private final Path appPath;
         private final String nodeId;
         private final String siteId;
@@ -96,13 +93,14 @@ public class ResourceFilter implements Filter {
             this.resources = applicationContext.getBean(Resources.class);
             this.siteId = applicationContext.getBean(SettingManager.class).getSiteId();
             this.resourcesDir = resources.locateResourcesDir(servletContext, applicationContext);
+            this.schemaPublicationDir = applicationContext.getBean(GeonetworkDataDirectory.class).getSchemaPublicationDir();
             if (defaultImage == null) {
                 defaultImage = resources.loadResource(resourcesDir, servletContext, appPath, "images/logos/" + siteId + ".png", new byte[0], -1);
             }
             this.nodeId = applicationContext.getBean(NodeInfo.class).getId();
             if (!faviconMap.containsKey(nodeId)) {
                 final byte[] defaultImageBytes = defaultImage.one();
-                AddFavIcon(nodeId, resources.loadResource(resourcesDir, servletContext, appPath, "images/logos/" + siteId + ".ico",
+                addFavIcon(nodeId, resources.loadResource(resourcesDir, servletContext, appPath, "images/logos/" + siteId + ".ico",
                                                           defaultImageBytes, -1));
             }
 
@@ -133,21 +131,27 @@ public class ResourceFilter implements Filter {
                     return;
                 }
 
-                // Resources are images for logos, XML for map config or XSD
-                String contentType =  "xml".equals(ext) || "xsd".equals(ext)
-                    ? MediaType.APPLICATION_XML_VALUE
-                    : "image/" + ext;
+                // Figure out the content type based on the extensions, defaulting to an image
+                String contentType = extensionToMediaType(ext);
 
                 httpServletResponse.setContentType(contentType);
                 httpServletResponse.addHeader("Cache-Control", "max-age=" + SIX_HOURS + ", public");
                 if (filename.equals("images/logos/" + siteId + ".ico")) {
                     favicon = resources.loadResource(resourcesDir, servletContext, appPath, "images/logos/" + siteId + ".ico", favicon.one(),
                                                      favicon.two());
-                    AddFavIcon(nodeId, favicon);
+                    addFavIcon(nodeId, favicon);
 
                     httpServletResponse.setContentLength(favicon.one().length);
                     httpServletResponse.addHeader("Cache-Control", "max-age=" + FIVE_DAYS + ", public");
                     response.getOutputStream().write(favicon.one());
+                } else if(filename.startsWith("/xml/schemas/")) {
+                    Pair<byte[], Long> loadedResource = resources.loadResource(schemaPublicationDir, servletContext, appPath, filename, null, -1);
+                    if(loadedResource.two() == -1) {
+                        httpServletResponse.sendError(HttpServletResponse.SC_NOT_FOUND);
+                    } else {
+                        httpServletResponse.setContentLength(loadedResource.one().length);
+                        response.getOutputStream().write(loadedResource.one());
+                    }
                 } else {
                     byte[] defaultData = null;
 
@@ -167,12 +171,24 @@ public class ResourceFilter implements Filter {
             }
         }
 
-        private synchronized void AddFavIcon(String nodeId, Pair<byte[], Long> favicon) {
+        private synchronized void addFavIcon(String nodeId, Pair<byte[], Long> favicon) {
             if (faviconMap.containsKey(nodeId)) {
                 faviconMap.replace(nodeId, favicon);
             } else {
                 faviconMap.putIfAbsent(nodeId, favicon);
             }
         }
+    }
+
+    private String extensionToMediaType(String ext) {
+        final String contentType;
+        if(Sets.newHashSet("xml", "xsd", "sch", "dtd").contains(ext)) {
+            contentType = MediaType.APPLICATION_XML_VALUE;
+        } else if(ext.equals("txt")) {
+            contentType = MediaType.TEXT_PLAIN_VALUE;
+        } else {
+            contentType = "image/" + ext;
+        }
+        return contentType;
     }
 }

@@ -514,14 +514,18 @@ public class UserFeedbackAPI {
                     String title = XslUtil.getIndexField(null, userFeedbackDto.getMetadataUUID(), "resourceTitleObject", "");
 
                     if (toAddress.size() > 0) {
-                        MailUtil.sendMail(toAddress,
-                            String.format(
-                                messages.getString("new_user_rating"),
-                                catalogueName, title),
-                            String.format(
-                                messages.getString("new_user_rating_text"),
-                                metadataUtils.getDefaultUrl(userFeedbackDto.getMetadataUUID(), locale.getISO3Language())),
-                            settingManager);
+                        try {
+                            MailUtil.sendMail(toAddress,
+                                String.format(
+                                    messages.getString("new_user_rating"),
+                                    catalogueName, title),
+                                String.format(
+                                    messages.getString("new_user_rating_text"),
+                                    metadataUtils.getDefaultUrl(userFeedbackDto.getMetadataUUID(), locale.getISO3Language())),
+                                settingManager);
+                        } catch (IllegalArgumentException ex) {
+                            Log.warning(API.LOG_MODULE_NAME, ex.getMessage(), ex);
+                        }
                     }
                 }
             }

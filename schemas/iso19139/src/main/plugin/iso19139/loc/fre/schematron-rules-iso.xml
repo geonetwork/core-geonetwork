@@ -220,6 +220,7 @@
     <div>Au moins le nom ou l'identifiant du jeu de données aggregé doit être renseigné</div>
   </alert.M23>
   <report.M23>aggregateDataSetName ou aggregateDataSetIdentifier renseigné.</report.M23>
+<report.M23-dup>An associated resource is declared multiple time with same association and initiative type.</report.M23-dup>
   <alert.M26.obligation>
     <div>L'obligation est obligatoire si le type de valeur n'est pas 'liste de code', 'énumeration',
       'élément d'une liste de code'

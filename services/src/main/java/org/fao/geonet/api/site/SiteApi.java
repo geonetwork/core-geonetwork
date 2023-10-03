@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2021 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2023 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -32,7 +32,7 @@ import jeeves.config.springutil.ServerBeanPropertyUpdater;
 import jeeves.server.JeevesProxyInfo;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.core.CountRequest;
 import org.elasticsearch.client.core.CountResponse;
@@ -64,6 +64,7 @@ import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.lib.ProxyConfiguration;
 import org.fao.geonet.repository.*;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.resources.Resources;
@@ -87,7 +88,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.imageio.ImageIO;
-import javax.persistence.criteria.Root;
+import javax.servlet.ServletRegistration;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.awt.image.BufferedImage;
@@ -161,12 +162,12 @@ public class SiteApi {
         try {
             // Load proxy information into Jeeves
             ProxyInfo pi = JeevesProxyInfo.getInstance();
-            boolean useProxy = settingMan.getValueAsBool(Settings.SYSTEM_PROXY_USE, false);
+            boolean useProxy = Lib.net.getProxyConfiguration().isEnabled();
             if (useProxy) {
-                String proxyHost = settingMan.getValue(Settings.SYSTEM_PROXY_HOST);
-                String proxyPort = settingMan.getValue(Settings.SYSTEM_PROXY_PORT);
-                String username = settingMan.getValue(Settings.SYSTEM_PROXY_USERNAME);
-                String password = settingMan.getValue(Settings.SYSTEM_PROXY_PASSWORD);
+                String proxyHost = Lib.net.getProxyConfiguration().getHost();
+                String proxyPort = Lib.net.getProxyConfiguration().getPort();
+                String username = Lib.net.getProxyConfiguration().getUsername();
+                String password = Lib.net.getProxyConfiguration().getPassword();
                 pi.setProxyInfo(proxyHost, Integer.valueOf(proxyPort), username, password);
             } else {
                 pi.setProxyInfo(null, -1, null, null);
@@ -233,6 +234,15 @@ public class SiteApi {
                     .setValue(StringUtils.isEmpty(source.get().getLabel(iso3langCode))
                         ? source.get().getName() : source.get().getLabel(iso3langCode)));
         }
+
+        // Setting for OGC API Records service enabled
+        String microservicesTargetUri = (String) request.getServletContext().getAttribute("MicroServicesProxy.targetUri");
+
+        response.getSettings().add(
+            new Setting().setName(Settings.MICROSERVICES_ENABLED)
+                .setValue(Boolean.toString(StringUtils.isNotBlank(microservicesTargetUri)))
+                .setDataType(SettingDataType.BOOLEAN));
+
         return response;
     }
 
@@ -354,7 +364,6 @@ public class SiteApi {
         @Parameter(hidden = true)
             HttpSession httpSession
     ) throws Exception {
-        ConfigurableApplicationContext appContext = ApplicationContextHolder.get();
         UserSession session = ApiUtils.getUserSession(httpSession);
         Profile profile = session == null ? null : session.getProfile();
 
@@ -419,10 +428,10 @@ public class SiteApi {
         String newSiteName = settingManager.getSiteName();
         // Update site source name/translations if the site name is updated
         if (!oldSiteName.equals(newSiteName)) {
-            SourceRepository sourceRepository = applicationContext.getBean(SourceRepository.class);
-            Source siteSource = sourceRepository.findById(currentUuid).get();
+            Optional<Source> siteSourceOpt = sourceRepository.findById(currentUuid);
 
-            if (siteSource != null) {
+            if (siteSourceOpt.isPresent()) {
+                Source siteSource = siteSourceOpt.get();
                 siteSource.setName(newSiteName);
                 siteSource.getLabelTranslations().forEach(
                     (l, t) -> siteSource.getLabelTranslations().put(l, newSiteName)
@@ -442,25 +451,23 @@ public class SiteApi {
         String newUuid = allRequestParams.get(Settings.SYSTEM_SITE_SITE_ID_PATH);
 
         if (newUuid != null && !currentUuid.equals(newUuid)) {
-            final IMetadataManager metadataRepository = applicationContext.getBean(IMetadataManager.class);
-            final SourceRepository sourceRepository = applicationContext.getBean(SourceRepository.class);
-            final Source source = sourceRepository.findById(currentUuid).get();
-            Source newSource = new Source(newUuid, source.getName(), source.getLabelTranslations(), source.getType());
-            sourceRepository.save(newSource);
+            final IMetadataManager metadataManager = applicationContext.getBean(IMetadataManager.class);
+            final Optional<Source> sourceOpt = sourceRepository.findById(currentUuid);
 
-            PathSpec<Metadata, String> servicesPath = new PathSpec<Metadata, String>() {
-                @Override
-                public javax.persistence.criteria.Path<String> getPath(Root<Metadata> root) {
-                    return root.get(Metadata_.sourceInfo).get(MetadataSourceInfo_.sourceId);
-                }
-            };
-            metadataRepository.createBatchUpdateQuery(servicesPath, newUuid, MetadataSpecs.isHarvested(false));
-            sourceRepository.delete(source);
+            if (sourceOpt.isPresent()) {
+                Source source = sourceOpt.get();
+                Source newSource = new Source(newUuid, source.getName(), source.getLabelTranslations(), source.getType());
+                sourceRepository.save(newSource);
+
+                PathSpec<Metadata, String> servicesPath = root -> root.get(Metadata_.sourceInfo).get(MetadataSourceInfo_.sourceId);
+                metadataManager.createBatchUpdateQuery(servicesPath, newUuid, MetadataSpecs.isHarvested(false));
+                sourceRepository.delete(source);
+            }
         }
 
-        SettingInfo info = applicationContext.getBean(SettingInfo.class);
+        SettingInfo settingInfo = applicationContext.getBean(SettingInfo.class);
         ServiceContext context = ApiUtils.createServiceContext(request);
-        ServerBeanPropertyUpdater.updateURL(info.getSiteUrl() +
+        ServerBeanPropertyUpdater.updateURL(settingInfo.getSiteUrl() +
                 context.getBaseUrl(),
             applicationContext);
 
@@ -657,7 +664,7 @@ public class SiteApi {
     public Map<String, Object> indexAndDbSynchronizationStatus(
         HttpServletRequest request
     ) throws Exception {
-        Map<String, Object> info = new HashMap<>();
+        Map<String, Object> infoIndexDbSynch = new HashMap<>();
         long dbCount = metadataRepository.count();
 
         boolean isMdWorkflowEnable = settingManager.getValueAsBool(Settings.METADATA_WORKFLOW_ENABLE);
@@ -665,14 +672,14 @@ public class SiteApi {
             dbCount += metadataDraftRepository.count();
         }
 
-        info.put("db.count", dbCount);
+        infoIndexDbSynch.put("db.count", dbCount);
 
         EsSearchManager searchMan = ApplicationContextHolder.get().getBean(EsSearchManager.class);
         CountResponse countResponse = esRestClient.getClient().count(
             new CountRequest(searchMan.getDefaultIndex()),
             RequestOptions.DEFAULT);
-        info.put("index.count", countResponse.getCount());
-        return info;
+        infoIndexDbSynch.put("index.count", countResponse.getCount());
+        return infoIndexDbSynch;
     }
 
 
@@ -727,6 +734,24 @@ public class SiteApi {
     @ResponseBody
     public StatusValueNotificationLevel[] getNotificationLevel() {
         return StatusValueNotificationLevel.values();
+    }
+
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Get proxy configuration details",
+        description = "Get the proxy configuration.")
+    @RequestMapping(
+        path = "/info/proxy",
+        produces = MediaType.APPLICATION_JSON_VALUE,
+        method = RequestMethod.GET)
+    @ResponseStatus(HttpStatus.OK)
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Proxy configuration.")
+    })
+    @PreAuthorize("hasAuthority('Administrator')")
+    @ResponseBody
+    public ProxyConfiguration getProxyConfiguration(
+    ) {
+        return Lib.net.getProxyConfiguration();
     }
 
     @io.swagger.v3.oas.annotations.Operation(

@@ -130,12 +130,15 @@ public class Settings {
     public static final String REGION_GETMAP_SUMMARY_WIDTH = "region/getmap/summaryWidth";
     public static final String METADATA_WORKFLOW_ENABLE = "metadata/workflow/enable";
     public static final String METADATA_WORKFLOW_DRAFT_WHEN_IN_GROUP = "metadata/workflow/draftWhenInGroup";
-    public static final String METADATA_WORKFLOW_ALLOW_SUBMIT_APPROVE_INVALID_MD = "metadata/workflow/allowSumitApproveInvalidMd";
+    public static final String METADATA_WORKFLOW_ALLOW_SUBMIT_APPROVE_INVALID_MD = "metadata/workflow/allowSubmitApproveInvalidMd";
     public static final String METADATA_WORKFLOW_ALLOW_PUBLISH_INVALID_MD = "metadata/workflow/allowPublishInvalidMd";
     public static final String METADATA_WORKFLOW_ALLOW_PUBLISH_NON_APPROVED_MD = "metadata/workflow/allowPublishNonApprovedMd";
+    public static final String METADATA_WORKFLOW_AUTOMATIC_UNPUBLISH_INVALID_MD = "metadata/workflow/automaticUnpublishInvalidMd";
+    public static final String METADATA_WORKFLOW_FORCE_VALIDATION_ON_MD_SAVE = "metadata/workflow/forceValidationOnMdSave";
     public static final String METADATA_LINK_EXCLUDEPATTERN = "metadata/link/excludedUrlPattern";
     public static final String METADATA_IMPORT_RESTRICT = "metadata/import/restrict";
     public static final String METADATA_IMPORT_USERPROFILE = "metadata/import/userprofile";
+    public static final String METADATA_BATCH_EDITING_ACCESS_LEVEL = "metadata/batchediting/accesslevel";
     public static final String METADATA_PUBLISHED_DELETE_USERPROFILE = "metadata/delete/profilePublishedMetadata";
     public static final String METADATA_PUBLISH_USERPROFILE = "metadata/publication/profilePublishMetadata";
     public static final String METADATA_UNPUBLISH_USERPROFILE = "metadata/publication/profileUnpublishMetadata";
@@ -152,6 +155,7 @@ public class Settings {
     public static final String SYSTEM_SECURITY_PASSWORDENFORCEMENT_PATTERN = "system/security/passwordEnforcement/pattern";
     public static final String SYSTEM_SECURITY_PASSWORD_ALLOWADMINRESET = "system/security/password/allowAdminReset";
 
+    public static final String MICROSERVICES_ENABLED = "microservices/enabled";
 
     public static class GNSetting {
         private String name;

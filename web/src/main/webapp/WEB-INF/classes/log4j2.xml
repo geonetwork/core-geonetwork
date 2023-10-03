@@ -57,7 +57,7 @@
     <Logger name="geonetwork.geoserver.rest" level="error"/>
     <Logger name="geonetwork.harvest.wfs.features" level="debug"/>
     <Logger name="geonetwork.harvester" level="info"/>
-    <Logger name="geonetwork.harvester" level="info"/>
+    <Logger name="geonetwork.harvest-man" level="error"/>
     <Logger name="geonetwork.index" level="error"/>
     <Logger name="geonetwork.ldap" level="error"/>
     <Logger name="geonetwork.lucene" level="error"/>
@@ -73,6 +73,7 @@
     <Logger name="geonetwork.thesaurus-man" level="error"/>
     <Logger name="geonetwork.userwatchlist" level="error"/>
     <Logger name="geonetwork.wro4j" level="error"/>
+    <Logger name="geonetwork.doi" level="error"/>
 
     <!--  Jeeves module and submodule logger configuration -->
     <Logger name="geonetwork.engine" level="error"/>
@@ -82,6 +83,7 @@
     <Logger name="geonetwork.transformerFactory" level="error"/>
     <Logger name="geonetwork.xlinkprocessor" level="error"/>
     <Logger name="geonetwork.xmlresolver" level="error"/>
+
 
     <!--  Spring logging configuration -->
     <Logger name="org.springframework" level="error" additivity="false">

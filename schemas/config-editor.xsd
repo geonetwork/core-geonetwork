@@ -73,6 +73,7 @@ a set of views with at least one defined view.
         <xs:element minOccurs="0" maxOccurs="1" ref="multilingualFields"/>
         <xs:element minOccurs="0" maxOccurs="1" ref="tableFields"/>
         <xs:element minOccurs="1" maxOccurs="1" ref="views"/>
+        <xs:element minOccurs="0" maxOccurs="1" ref="snippets"/>
         <xs:element minOccurs="0" maxOccurs="1" ref="batchEditing"/>
       </xs:sequence>
     </xs:complexType>
@@ -342,6 +343,60 @@ Element to match for creating the table.
   </xs:element>
 
 
+  <xs:element name="snippets">
+    <xs:annotation>
+      <xs:documentation>
+        <![CDATA[
+
+Defining reusable list of snippets which can be referenced in templates.
+----------------------------------------------------------------------------------
+
+Defining reusable list of snippets which can be referenced in templates.
+
+.. code-block:: xml
+
+    <editor>
+        <snippets>
+            <list name="reports">
+                <snippet label="inspire-address">
+                    <gmd:report>...</gmd:report>
+                </snippet>
+                <snippet label="inspire-administrative-units">
+                    <gmd:report>...</gmd:report>
+                </snippet>
+            </list>
+        </snippets>
+
+        <!-- ... -->
+        <action type="add" ...>
+            <template>
+                <snippets name="reports"/>
+            <template>
+        </action>
+        ]]></xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="list">
+          <xs:complexType>
+            <xs:attribute name="name" use="required">
+              <xs:annotation>
+                <xs:documentation>
+                  <![CDATA[
+Snippet list name to be used as a reference.
+                  ]]>
+                </xs:documentation>
+              </xs:annotation>
+            </xs:attribute>
+            <xs:sequence>
+              <xs:element minOccurs="1" maxOccurs="unbounded" ref="snippet"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
   <xs:element name="header">
     <xs:annotation>
       <xs:documentation>
@@ -479,6 +534,7 @@ relevant to have parent defined to have more control over the list.
     <xs:complexType>
       <xs:sequence>
         <xs:element ref="directiveAttributes" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="template" minOccurs="0" maxOccurs="1"/>
       </xs:sequence>
       <xs:attribute name="name" type="xs:string" use="required">
         <xs:annotation>
@@ -620,6 +676,16 @@ The key of the view name stored in ``{schema}/loc/{lang}/strings.xml`` or the el
             ]]></xs:documentation>
         </xs:annotation>
       </xs:attribute>
+      <xs:attribute name="default" type="xs:boolean" fixed="true">
+        <xs:annotation>
+          <xs:documentation><![CDATA[
+One default view per schema can be configured. The default tab of the default
+view will be used if no tab parameter set. To customize the tab to use
+on a per metadata record basis, check the EditorController.js file schemaCustomConfig
+function.
+            ]]></xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
       <xs:attribute name="disabled" type="xs:boolean" fixed="true">
         <xs:annotation>
           <xs:documentation><![CDATA[
@@ -669,15 +735,16 @@ Display help documentation for all elements by default when loading the view.
 ]]></xs:documentation>
         </xs:annotation>
       </xs:attribute>
-      <xs:attribute name="displayTooltipsMode" type="xs:string">
+      <xs:attribute name="displayTooltipsMode">
         <xs:annotation>
           <xs:documentation><![CDATA[
-Display help documentation onhover elements (default) or by clicking on an icon.
+Display help documentation onfocus (default), onhover or by clicking on an icon.
 ]]></xs:documentation>
         </xs:annotation>
         <xs:simpleType>
           <xs:restriction base="xs:string">
             <xs:enumeration value="icon"/>
+            <xs:enumeration value="onfocus"/>
             <xs:enumeration value="onhover"/>
           </xs:restriction>
         </xs:simpleType>
@@ -910,10 +977,12 @@ record, or if the field should be displayed to enable the user to add new occurr
 Customizing thesaurus
 ~~~~~~~~~~~~~~~~~~~~~
 
-To configure the type of transformations,
-or the number of keywords allowed, or if the widget
-has to be displayed in a fieldset, or as simple field for a
-thesaurus define a specific configuration:
+To configure:
+ * the type of transformations (eg. to-iso19139-keyword, to-iso19139-keyword-with-anchor - see convert/thesaurus-transformation.xsl in each plugins),
+ * the number of keywords allowed,
+ * if the widget has to be displayed in a fieldset or as simple field
+ * if the concept relationships are browsable (enable by default)
+
 
 e.g. only 2 INSPIRE themes:
 
@@ -938,6 +1007,7 @@ e.g. only 2 INSPIRE themes:
             <xs:attribute name="maxtags" type="xs:integer" use="optional"/>
             <xs:attribute name="orderById" type="xs:boolean" use="optional"/>
             <xs:attribute name="fieldset" type="xs:string" use="optional" fixed="false"/>
+            <xs:attribute name="browsable" type="xs:string" use="optional" fixed="false"/>
             <xs:attribute name="transformations" type="xs:string" use="optional"/>
           </xs:complexType>
         </xs:element>
@@ -1360,7 +1430,14 @@ Warning: Template based field does not support multilingual editing for ISO stan
             <xs:documentation>The list of values to match from the template.</xs:documentation>
           </xs:annotation>
         </xs:element>
-        <xs:element minOccurs="1" maxOccurs="unbounded" ref="snippet"/>
+        <xs:choice>
+          <xs:element minOccurs="1" maxOccurs="unbounded" ref="snippet"/>
+          <xs:element minOccurs="1" maxOccurs="1" name="snippets">
+            <xs:complexType>
+              <xs:attribute name="name" use="required" type="xs:string"/>
+            </xs:complexType>
+          </xs:element>
+        </xs:choice>
       </xs:sequence>
     </xs:complexType>
   </xs:element>

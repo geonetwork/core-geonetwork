@@ -66,10 +66,12 @@
           ) {
             scope.attributeTable = [scope.attributeTable];
           }
-          scope.showCodeColumn = false;
+          scope.columnVisibility = {
+            code: false
+          };
           angular.forEach(scope.attributeTable, function (elem) {
             if (elem.code > "") {
-              scope.showCodeColumn = true;
+              scope.columnVisibility.code = true;
             }
           });
         }
@@ -107,8 +109,7 @@
       return {
         restrict: "A",
         replace: true,
-        templateUrl:
-          "../../catalog/views/default/directives/" + "partials/mdactionmenu.html",
+        templateUrl: "../../catalog/views/default/directives/partials/mdactionmenu.html",
         link: function linkFn(scope, element, attrs) {
           scope.mdService = gnMetadataActions;
           scope.md = scope.$eval(attrs.gnMdActionsMenu);
@@ -127,6 +128,8 @@
             scope.iso2Lang = gnLangs.getIso2Lang(gnLangs.getCurrent());
           });
 
+          scope.status = undefined;
+
           scope.buildFormatter = function (url, uuid, isDraft) {
             if (url.indexOf("${uuid}") !== -1) {
               return url.replace("${lang}", scope.lang).replace("${uuid}", uuid);
@@ -135,12 +138,66 @@
                 "../api/records/" +
                 uuid +
                 url.replace("${lang}", scope.lang) +
-                (url.indexOf("?") !== -1 ? "&" : "?") +
-                "approved=" +
-                (isDraft != "y")
+                (isDraft == "y"
+                  ? (url.indexOf("?") !== -1 ? "&" : "?") + "approved=false"
+                  : "")
               );
             }
           };
+
+          function loadWorkflowStatus() {
+            return $http
+              .get("../api/status/workflow", { cache: true })
+              .then(function (response) {
+                scope.status = {};
+                response.data.forEach(function (s) {
+                  scope.status[s.name] = s.id;
+                });
+
+                scope.statusEffects = {
+                  editor: [
+                    {
+                      from: "draft",
+                      to: "submitted"
+                    },
+                    {
+                      from: "retired",
+                      to: "draft"
+                    },
+                    {
+                      from: "submitted",
+                      to: "draft"
+                    }
+                  ],
+                  reviewer: [
+                    {
+                      from: "draft",
+                      to: "submitted"
+                    },
+                    {
+                      from: "submitted",
+                      to: "approved"
+                    },
+                    {
+                      from: "submitted",
+                      to: "draft"
+                    },
+                    {
+                      from: "draft",
+                      to: "approved"
+                    },
+                    {
+                      from: "approved",
+                      to: "retired"
+                    },
+                    {
+                      from: "retired",
+                      to: "draft"
+                    }
+                  ]
+                };
+              });
+          }
 
           function loadTasks() {
             return $http
@@ -188,17 +245,18 @@
            * @param user
            * @returns {*|boolean|false|boolean}
            */
-          scope.displayPublicationOption = function (md, user) {
+          scope.displayPublicationOption = function (md, user, pubOption) {
             return (
               md.canReview &&
               md.draft != "y" &&
               md.mdStatus != 3 &&
-              ((md.isPublished() && user.canUnpublishMetadata()) ||
-                (!md.isPublished() && user.canPublishMetadata()))
+              ((md.isPublished(pubOption) && user.canUnpublishMetadata()) ||
+                (!md.isPublished(pubOption) && user.canPublishMetadata()))
             );
           };
 
           loadTasks();
+          loadWorkflowStatus();
 
           scope.$watch(attrs.gnMdActionsMenu, function (a) {
             scope.md = a;

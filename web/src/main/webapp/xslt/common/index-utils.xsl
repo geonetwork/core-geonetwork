@@ -187,6 +187,7 @@
    }
    ```
 
+
     A multilingual field in ISO19139 looks like:
     ```xml
     <gmd:title xsi:type="gmd:PT_FreeText_PropertyType">
@@ -203,6 +204,20 @@
       ```xml
       <dc:title xml:lang="en">...
       <dc:title xml:lang="fr">...
+      ```
+
+      Use this function in 2 modes:
+      * Adding a new field (using copy-of because output is an XML element.
+      ```xsl
+      <xsl:copy-of select="gn-fn-index:add-multilingual-field(
+                            $roleField, $organisationName, $languages)"/>
+      ```
+
+      * Populating a JSON property in an existing object (using value-of, output is text)
+      If the element is empty, `{}` is returned.
+      ```xsl
+      "organisationObject": <xsl:value-of select="gn-fn-index:add-multilingual-field(
+                              'organisation', $organisationName, $languages, true())"/>,
       ```
    -->
   <xsl:function name="gn-fn-index:add-multilingual-field" as="node()*">
@@ -294,35 +309,25 @@
         </xsl:for-each>
       </xsl:variable>
 
-      <xsl:choose>
-        <xsl:when test="count($textObject[. != '']) > 0">
-          <xsl:choose>
-            <xsl:when test="$asJson">
-              <xsl:if test="$isArray and position() = 1">[</xsl:if>
-              {<xsl:value-of select="string-join($textObject/text(), ', ')"/>}
-              <xsl:if test="$isArray and position() != last()">,</xsl:if>
-              <xsl:if test="$isArray and position() = last()">]</xsl:if>
-            </xsl:when>
-            <xsl:when test="$asXml">
-              <xsl:copy-of select="$textObject"/>
-            </xsl:when>
-            <xsl:otherwise>
-              <xsl:element name="{$fieldName}Object">
-                <xsl:attribute name="type" select="'object'"/>
-                {<xsl:value-of select="string-join($textObject/text(), ', ')"/>}
-              </xsl:element>
-            </xsl:otherwise>
-          </xsl:choose>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:if test="not($asJson) and not($asXml)">
+      <xsl:if test="count($textObject[. != '']) > 0 or $asJson">
+        <xsl:choose>
+          <xsl:when test="$asJson">
+            <xsl:if test="$isArray and position() = 1">[</xsl:if>
+            {<xsl:value-of select="string-join($textObject/text(), ', ')"/>}
+            <xsl:if test="$isArray and position() != last()">,</xsl:if>
+            <xsl:if test="$isArray and position() = last()">]</xsl:if>
+          </xsl:when>
+          <xsl:when test="$asXml">
+            <xsl:copy-of select="$textObject"/>
+          </xsl:when>
+          <xsl:otherwise>
             <xsl:element name="{$fieldName}Object">
               <xsl:attribute name="type" select="'object'"/>
-              {}
+              {<xsl:value-of select="string-join($textObject/text(), ', ')"/>}
             </xsl:element>
-          </xsl:if>
-        </xsl:otherwise>
-      </xsl:choose>
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:if>
     </xsl:for-each>
   </xsl:function>
 
@@ -388,17 +393,20 @@
 
     <!-- Build index field for type
     keywordType-place: [{default: France}]-->
-    <xsl:for-each-group select="$allKeywords" group-by="thesaurus/info/@type">
-      <xsl:element name="keywordType-{current-grouping-key()}">
-        <xsl:attribute name="type" select="'object'"/>
-        [<xsl:for-each select="$allKeywords/thesaurus[info/@type = current-grouping-key()]/keywords/keyword">
-        {
-        <xsl:value-of select="string-join(values/value, ', ')"/>
-        <xsl:if test="@uri != ''">, "link": "<xsl:value-of select="@uri"/>"</xsl:if>
-        }
-        <xsl:if test="position() != last()">,</xsl:if>
-      </xsl:for-each>]
-      </xsl:element>
+    <xsl:for-each-group select="$allKeywords"
+                        group-by="thesaurus/info/@type">
+      <xsl:if test="matches(current-grouping-key(), '^[A-Za-z\-_]+$')">
+        <xsl:element name="keywordType-{current-grouping-key()}">
+          <xsl:attribute name="type" select="'object'"/>
+          [<xsl:for-each select="$allKeywords/thesaurus[info/@type = current-grouping-key()]/keywords/keyword">
+          {
+          <xsl:value-of select="string-join(values/value, ', ')"/>
+          <xsl:if test="@uri != ''">, "link": "<xsl:value-of select="@uri"/>"</xsl:if>
+          }
+          <xsl:if test="position() != last()">,</xsl:if>
+        </xsl:for-each>]
+        </xsl:element>
+      </xsl:if>
     </xsl:for-each-group>
 
     <!-- Fields with keywords and keyword count of a thesaurus, eg. th_regions, th_regionsNumber -->

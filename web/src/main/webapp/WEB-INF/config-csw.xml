@@ -45,7 +45,7 @@
           <xpath schema="iso19139" path="*/gmd:MD_Keywords/gmd:keyword/gco:CharacterString"/>
         </parameter>
 
-        <parameter name="Title" field="resourceTitleObject.*" sortField="resourceTitleObject.default.keyword" type="SupportedISOQueryables">
+        <parameter name="Title" field="resourceTitleObject.*" sortField="resourceTitleObject.default.sort" type="SupportedISOQueryables">
           <xpath schema="iso19139"
                  path="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:title/gco:CharacterString"/>
         </parameter>

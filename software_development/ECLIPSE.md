@@ -14,7 +14,7 @@ In order to import the source code, follow instructions below:
 2. In new dialog Select **Maven** > **Existing Maven Projects**
 3. Press *Next*
 
-   ![Import existing projects into Eclipse](../eclipse-import-existing-projects.png)
+   ![Import existing projects into Eclipse](eclipse-import-existing-projects.png)
 
 4. In **Select root directory** field enter the location of your source code:
 
@@ -86,8 +86,8 @@ Tomcat Plugin for controlling a Tomcat Service.
 
 ## Remote Debugging
 
-* [How do I configure Tomcat to support remote debugging?](http://wiki.apache.org/tomcat/FAQ/Developing#Q1)
-* [How do I remotely debug Tomcat using Eclipse?](http://wiki.apache.org/tomcat/FAQ/Developing#Q2)
+* [How do I configure Tomcat to support remote debugging?](https://cwiki.apache.org/confluence/display/TOMCAT/Developing#Developing-Q1)
+* [How do I remotely debug Tomcat using Eclipse?](https://cwiki.apache.org/confluence/display/TOMCAT/Developing#Developing-Q2)
 
 ## Code Quality Tools in Eclipse
 

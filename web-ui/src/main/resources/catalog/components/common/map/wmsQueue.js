@@ -125,6 +125,21 @@
         };
         return getLayerIndex(queue[getMapType(map)], layer) >= 0;
       };
+
+      /**
+       *
+       * @param {ol.Map} map
+       */
+      this.clear = function (map) {
+        var type = (map && map.get && map.get("type")) || "viewer";
+        if (queue[type]) {
+          queue[type] = [];
+        }
+
+        if (errors[type]) {
+          errors[type] = [];
+        }
+      };
     }
   ]);
 })();

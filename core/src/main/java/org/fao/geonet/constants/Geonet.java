@@ -535,6 +535,7 @@ public final class Geonet {
      */
     public static final class Config {
         public static final String HTMLCACHE_DIR = "htmlCacheDir";
+        public static final String SCHEMAPUBLICATION_DIR = "schemaPublicationDir";
         public static final String INDEX_CONFIG_DIR = "indexConfigDir";
         /**
          * Profiles of languages for autodetection using https://code.google.com/p/language-detection/.
@@ -660,6 +661,8 @@ public final class Geonet {
         public static final String ANY = "any";
         public static final String LOCALE = "locale";
         public static final String IS_PUBLISHED_TO_ALL = "isPublishedToAll";
+        public static final String IS_PUBLISHED_TO_INTRANET = "isPublishedToIntranet";
+        public static final String IS_PUBLISHED_TO_GUEST = "isPublishedToGuest";
         public static final String FEEDBACKCOUNT = "feedbackCount";
         public static final String DRAFT = "draft";
         public static final String DRAFT_ID = "draftId";

@@ -123,6 +123,8 @@
 
   <xsl:variable name="metadata"
                 select="//mdb:MD_Metadata"/>
+  <xsl:variable name="metadataUuid"
+                select="$metadata/mdb:metadataIdentifier/*/mcc:code/*/text()"/>
 
   <!-- TODO: Convert language code eng > en_US ? -->
   <xsl:variable name="metadataLanguage"
@@ -156,9 +158,34 @@
       <!-- Return existing one -->
       <xsl:choose>
         <xsl:when test="$doiId = ''">
+          <!-- DOI can be located in different places depending on user practice.
+          At least we know three:
+          * metadata linkage (only in ISO19115-3)
+          * citation identifier
+          * onlineSrc
+          -->
           <xsl:variable name="doiFromMetadataLinkage"
-                        select="normalize-space(ancestor::mdb:MD_Metadata/mdb:metadataLinkage/*/cit:linkage/gco:CharacterString[starts-with(., $defaultDoiPrefix) or ../../cit:function/*/@codeListValue = 'doi'])"/>
-          <xsl:value-of select="$doiFromMetadataLinkage"/>
+                        select="normalize-space(ancestor::mdb:MD_Metadata/mdb:metadataLinkage/*/cit:linkage/gco:CharacterString[
+                                        starts-with(., $defaultDoiPrefix)])"/>
+          <xsl:if test="$doiFromMetadataLinkage != ''">
+            <xsl:value-of select="$doiFromMetadataLinkage"/>
+          </xsl:if>
+
+          <xsl:variable name="doiFromIdentifier"
+                        select="normalize-space(ancestor::mdb:MD_Metadata/mdb:identificationInfo/*/mri:citation/*/
+                                        cit:identifier/*/mcc:code[
+                                          starts-with(*/text(), $defaultDoiPrefix)
+                                          or starts-with(*/@xlink:href, $defaultDoiPrefix)])"/>
+          <xsl:if test="$doiFromMetadataLinkage = '' and $doiFromIdentifier != ''">
+            <xsl:value-of select="$doiFromIdentifier[1]"/>
+          </xsl:if>
+
+          <xsl:variable name="doiFromOnlineSrc"
+                        select="normalize-space(ancestor::mdb:MD_Metadata/mdb:distributionInfo//mrd:onLine/*[
+                                        matches(cit:protocol/gco:CharacterString, $doiProtocolRegex)]/cit:linkage/gco:CharacterString)"/>
+          <xsl:if test="$doiFromMetadataLinkage = '' and $doiFromIdentifier = '' and $doiFromOnlineSrc != ''">
+            <xsl:value-of select="$doiFromOnlineSrc"/>
+          </xsl:if>
         </xsl:when>
         <xsl:otherwise>
           <!-- Build a new one -->
@@ -460,12 +487,17 @@ eg.
       <datacite:publisher>DataCite</datacite:publisher>
       <datacite:publicationYear>2014</datacite:publicationYear>
 
-      TODO: Define who is the publisher ? Only one allowed.
+  publisher is the first distributor contact
+  or the first point of contact having the role "distributor"
   -->
   <xsl:template mode="toDatacite"
                 match="mdb:distributionInfo[1]">
     <datacite:publisher>
-      <xsl:value-of select="($metadata//mrd:distributorContact)[1]/*/cit:party//cit:CI_Organisation/cit:name/*/text()"/>
+      <xsl:variable name="publisher"
+                    select="if ($metadata//mrd:distributorContact)
+                            then $metadata//mrd:distributorContact
+                            else $metadata/mdb:identificationInfo/*/mri:pointOfContact[*/cit:role/*/@codeListValue = 'distributor']"/>
+      <xsl:value-of select="$publisher[1]/*/cit:party//cit:CI_Organisation/cit:name/*/text()"/>
     </datacite:publisher>
 
     <!--

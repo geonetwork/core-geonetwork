@@ -728,6 +728,21 @@
           scope.userGroupDefined = false;
           scope.userGroups = null;
 
+          scope.ownerUserName = "";
+          scope.ownerGroupName = "";
+
+          if (ownerId) {
+            $http.get("../api/users/" + ownerId).then(function (response) {
+              scope.ownerUserName = response.data.username;
+            });
+          }
+
+          if (groupOwner) {
+            $http.get("../api/groups/" + groupOwner).then(function (response) {
+              scope.ownerGroupName = response.data.name;
+            });
+          }
+
           scope.selectGroup = function (group) {
             scope.selectedGroup = group;
           };

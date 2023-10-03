@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2023 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -38,7 +38,9 @@ import org.fao.geonet.api.processing.report.MetadataProcessingReport;
 import org.fao.geonet.api.processing.report.SimpleMetadataProcessingReport;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.AbstractMetadata;
+import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataCategory;
+import org.fao.geonet.domain.MetadataDraft;
 import org.fao.geonet.domain.utils.ObjectJSONUtils;
 import org.fao.geonet.events.history.RecordCategoryChangeEvent;
 import org.fao.geonet.kernel.AccessManager;
@@ -192,8 +194,16 @@ public class MetadataTagApi {
             }
             fields.put(Geonet.IndexFieldNames.CAT, categories);
         }
-        searchManager.updateFields(metadata.getUuid(), fields,
-            Sets.newHashSet(new String[] {Geonet.IndexFieldNames.CAT}));
+
+        if (metadata instanceof MetadataDraft) {
+            searchManager.updateFields(metadata.getUuid() + "-draft", fields,
+                Sets.newHashSet(new String[] {Geonet.IndexFieldNames.CAT}));
+        } else {
+            searchManager.updateFields(metadata.getUuid(), fields,
+                Sets.newHashSet(new String[] {Geonet.IndexFieldNames.CAT}));
+        }
+
+
     }
 
     @io.swagger.v3.oas.annotations.Operation(

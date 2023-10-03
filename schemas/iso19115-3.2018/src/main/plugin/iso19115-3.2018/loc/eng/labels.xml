@@ -398,14 +398,8 @@
     </description>
     <condition></condition>
   </element>
-  <element name="mdb:MD_MetadataScoperd" id="39.0">
-    <label>Resource scope</label>
-    <description iso="true">Information about the scope of the resource.
-    </description>
-    <condition></condition>
-  </element>
   <element name="mdb:resourceScope" id="40.0">
-    <label>Resource scope</label>
+    <label>Resource type</label>
     <description iso="true">Code for the scope.</description>
     <condition>mandatory</condition>
   </element>
@@ -1324,6 +1318,14 @@
   <element name="cit:extent" id="378.0" context="cit:CI_Responsibility">
     <label>Extent</label>
     <description iso="true">Spatial or temporal extent of the role</description>
+  </element>
+  <element name="lan:language" id="448.0" context="/mdb:MD_Metadata/mdb:defaultLocale/lan:PT_Locale/lan:language">
+    <label>Metadata language</label>
+    <description iso="true">Designation of the locale language</description>
+  </element>
+  <element name="lan:language" id="448.0" context="/mdb:MD_Metadata/mdb:otherLocale/lan:PT_Locale/lan:language">
+    <label>Other language</label>
+    <description iso="true">Additional metadata language</description>
   </element>
   <element name="lan:language" id="448.0">
     <label>Language</label>

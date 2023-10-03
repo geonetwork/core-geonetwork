@@ -43,6 +43,7 @@
     ) {
       this.SEARCH = "/search";
       this.SEARCHPAGES = /\/search|\/board/;
+      this.EDITORBOARD = /\/board|\/batchedit/;
       this.MAP = "/map";
       this.METADATA = "/metadata/";
       this.DRAFT = "/metadraf/";
@@ -65,6 +66,10 @@
 
       this.isSearch = function (path) {
         return (path || $location.path()).match(this.SEARCHPAGES) !== null;
+      };
+
+      this.isEditorBoard = function (path) {
+        return (path || $location.path()).match(this.EDITORBOARD) !== null;
       };
 
       this.isMdView = function (path) {
@@ -94,13 +99,13 @@
       this.getFormatterPath = function (defaultFormatter) {
         var tokens = $location.path().split("/");
         if (tokens.length > 2 && tokens[3] === "formatters") {
-          return "../api/records/" + $location.url().split(/^metadraf|metadata\//)[1];
+          return "../api/records/" + $location.url().split(/^\/(metadraf|metadata)\//)[2];
         } else if (tokens.length > 2 && tokens[3] === "main") {
           return undefined; // Angular view
         } else if (defaultFormatter) {
           return (
             "../api/records/" +
-            $location.url().split(/^metadraf|metadata\//)[1] +
+            $location.url().split(/^\/(metadraf|metadata)\//)[2] +
             defaultFormatter
           );
         } else {

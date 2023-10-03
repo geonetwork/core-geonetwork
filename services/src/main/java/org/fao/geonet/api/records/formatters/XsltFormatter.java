@@ -24,14 +24,24 @@
 package org.fao.geonet.api.records.formatters;
 
 import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.search.JSONLocCacheLoader;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 import static org.fao.geonet.api.records.formatters.SchemaLocalizations.loadSchemaLocalizations;
 
@@ -50,6 +60,16 @@ import static org.fao.geonet.api.records.formatters.SchemaLocalizations.loadSche
  */
 @Component
 public class XsltFormatter implements FormatterImpl {
+
+    private final Map<String, Element> translationElements =  new HashMap<>();
+
+    private final ConfigurableApplicationContext configurableApplicationContext;
+
+    @Autowired
+    public XsltFormatter(ConfigurableApplicationContext configurableApplicationContext)  {
+        this.configurableApplicationContext = configurableApplicationContext;
+    }
+
 
     /**
      * @param schema            Use all to return all schemas translations
@@ -97,9 +117,33 @@ public class XsltFormatter implements FormatterImpl {
 
         root.addContent(new Element("lang").setText(fparams.context.getLanguage()));
         root.addContent(new Element("url").setText(fparams.url));
-        // FIXME: This is a hack to mimic what Jeeves service are doing.
-        // Some XSLT are used by both formatters and Jeeves and Spring MVC services
-        Element translations = new Element("translations");
+
+        if (!translationElements.containsKey(fparams.context.getLanguage())) {
+            // Get translation keys and add them to the cache
+            Element translations = new Element("translations");
+            Map<String, String> translationMap = new JSONLocCacheLoader(configurableApplicationContext, fparams.context.getLanguage()).call();
+            for (Map.Entry<String, String> entry : translationMap.entrySet()) {
+                // Attempt to only use name that are valid element names.
+                //   https://www.w3.org/TR/REC-xml/#NT-Name
+                //   https://www.w3.org/TR/REC-xml/#NT-NameStartChar
+                // Skip keys that are not alphanumeric only including "." - otherwise certain chars like ':?+...' can cause problem when creating element as they are invalid element names
+                // i.e. some properties look like the following
+                //      "cron-0 0 12 * * ?": "Fire at 12pm (noon) every day"
+                //      "system/feedback"="Feedback"
+
+                if (entry.getKey().matches("[a-zA-Z0-9\\.]+")) {
+                    try {
+                        translations.addContent(new Element(entry.getKey()).setText(entry.getValue()));
+                    } catch (Exception e) {
+                        // If errors are generated here then it may mean that the regular expression needs to be updated.
+                        Log.error(Geonet.GEONETWORK, "Failed to add translation key for \"" + entry.getKey() + "\"=\"" + entry.getValue() + "\". " + e.getMessage());
+                    }
+                }
+            }
+
+            translationElements.put(fparams.context.getLanguage(), translations);
+        }
+        root.addContent((Element)translationElements.get(fparams.context.getLanguage()).clone());
         Element gui = new Element("gui");
         String baseUrl = settingManager.getBaseURL();
         String context = baseUrl.replace(settingManager.getServerURL(), "");
@@ -107,6 +151,7 @@ public class XsltFormatter implements FormatterImpl {
             context.substring(0, context.length() - 1)
         ));
         gui.addContent(new Element("nodeUrl").setText(settingManager.getNodeURL()));
+        gui.addContent(new Element("nodeId").setText(settingManager.getNodeId()));
         gui.addContent(new Element("baseUrl").setText(baseUrl));
         gui.addContent(new Element("serverUrl").setText(settingManager.getServerURL()));
         gui.addContent(new Element("language").setText(fparams.context.getLanguage()));

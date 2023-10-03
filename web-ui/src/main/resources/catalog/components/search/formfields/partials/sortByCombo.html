@@ -8,7 +8,7 @@
     >
       <span
         data-translate=""
-        data-translate-values="{field: '{{('sortBy-' + params.sortBy) | translate}}'}"
+        data-translate-values="{field: '{{('sortBy-' + params.sortBy + (params.sortOrder | capitalize)) | translate}}'}"
         class=""
         >sortedBy</span
       >
@@ -18,10 +18,11 @@
       <li
         data-ng-repeat="v in ::values"
         role="menuitem"
-        data-ng-class="v.sortBy === params.sortBy ? 'disabled' : ''"
+        data-ng-class="v.sortBy === params.sortBy && v.sortOrder === params.sortOrder ? 'disabled' : ''"
       >
         <a href="" data-ng-click="sortBy(v)"
-          >{{('sortBy-' + v.sortBy) | translate | capitalize}}</a
+          >{{('sortBy-' + v.sortBy + (v.sortOrder | capitalize)) | translate |
+          capitalize}}</a
         >
       </li>
     </ul>

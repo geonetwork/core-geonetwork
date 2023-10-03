@@ -23,6 +23,7 @@
 
 package org.fao.geonet.kernel.metadata;
 
+import com.google.common.base.Joiner;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
@@ -47,8 +48,6 @@ import java.util.*;
 
 import static org.fao.geonet.kernel.setting.Settings.SYSTEM_FEEDBACK_EMAIL;
 
-import com.google.common.base.Joiner;
-
 public class DefaultStatusActions implements StatusActions {
 
     protected ServiceContext context;
@@ -65,6 +64,7 @@ public class DefaultStatusActions implements StatusActions {
     private String replyToDescr;
     private StatusValueRepository statusValueRepository;
     protected IMetadataStatus metadataStatusManager;
+    private IMetadataUtils metadataRepository;
 
     /**
      * Constructor.
@@ -105,6 +105,8 @@ public class DefaultStatusActions implements StatusActions {
         dm = applicationContext.getBean(DataManager.class);
         metadataStatusManager = applicationContext.getBean(IMetadataStatus.class);
         siteUrl = sm.getSiteURL(context);
+
+        metadataRepository = context.getBean(IMetadataUtils.class);
     }
 
     /**
@@ -116,13 +118,11 @@ public class DefaultStatusActions implements StatusActions {
     public void onEdit(int id, boolean minorEdit) throws Exception {
         if (Log.isTraceEnabled(Geonet.DATA_MANAGER)) {
             Log.trace(Geonet.DATA_MANAGER, "DefaultStatusActions.onEdit(" + id + ", " + minorEdit + ") with status "
-                    + dm.getCurrentStatus(id));
+                + dm.getCurrentStatus(id));
         }
         if (!minorEdit && dm.getCurrentStatus(id).equals(StatusValue.Status.APPROVED)) {
-        //if (!minorEdit && dm.getCurrentStatus(id).equals(StatusValue.Status.APPROVED)
-            //        && (context.getBean(IMetadataManager.class) instanceof DraftMetadataManager)) {
             ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages",
-                    new Locale(this.language));
+                new Locale(this.language));
             String changeMessage = String.format(messages.getString("status_email_text"), replyToDescr, replyTo, id);
             Log.trace(Geonet.DATA_MANAGER, "Set DRAFT to current record with id " + id);
             dm.setStatus(context, id, Integer.valueOf(StatusValue.Status.DRAFT), new ISODate(), changeMessage);
@@ -136,15 +136,19 @@ public class DefaultStatusActions implements StatusActions {
      * @return
      * @throws Exception
      */
-    public Set<Integer> onStatusChange(List<MetadataStatus> listOfStatus) throws Exception {
+    public Map<Integer, StatusChangeType> onStatusChange(List<MetadataStatus> listOfStatus) throws Exception {
 
-        Set<Integer> unchanged = new HashSet<>();
+        if (listOfStatus.stream().map(MetadataStatus::getMetadataId).distinct().count() != listOfStatus.size()) {
+            throw new IllegalArgumentException("Multiple status update received on the same metadata");
+        }
 
-        // -- process the metadata records to set status
+        Map<Integer, StatusChangeType> results = new HashMap<>();
+
+        // process the metadata records to set status
         for (MetadataStatus status : listOfStatus) {
             MetadataStatus currentStatus = dm.getStatus(status.getMetadataId());
-            String currentStatusId = (currentStatus != null)?
-                String.valueOf(currentStatus.getStatusValue().getId()):"";
+            String currentStatusId = (currentStatus != null) ?
+                String.valueOf(currentStatus.getStatusValue().getId()) : "";
 
 
             String statusId = status.getStatusValue().getId() + "";
@@ -152,21 +156,32 @@ public class DefaultStatusActions implements StatusActions {
             listOfId.add(status.getMetadataId());
 
 
-            // --- For the workflow, if the status is already set to value
+            // For the workflow, if the status is already set to value
             // of status then do nothing. This does not apply to task and event.
             if (status.getStatusValue().getType().equals(StatusValueType.workflow) &&
-               (statusId).equals(currentStatusId)) {
+                (statusId).equals(currentStatusId)) {
                 if (context.isDebugEnabled())
                     context.debug(String.format("Metadata %s already has status %s ",
                         status.getMetadataId(), status.getStatusValue().getId()));
-                unchanged.add(status.getMetadataId());
+                results.put(status.getMetadataId(), StatusChangeType.UNCHANGED);
                 continue;
             }
 
-            // --- set status, indexing is assumed to take place later
-            metadataStatusManager.setStatusExt(status);
+            // if not possible to go from one status to the other, don't continue
+            AbstractMetadata metadata = metadataRepository.findOne(status.getMetadataId());
+            if (!isStatusChangePossible(session.getProfile(), metadata, currentStatusId, statusId)) {
+                results.put(status.getMetadataId(), StatusChangeType.UNCHANGED);
+                continue;
+            }
 
-            // --- inform content reviewers if the status is submitted
+            // debug output if necessary
+            if (context.isDebugEnabled())
+                context.debug("Change status of metadata with id " + status.getMetadataId() + " from " + currentStatusId + " to " + statusId);
+
+            // we know we are allowed to do the change, apply any side effects
+            boolean deleted = applyStatusChange(status.getMetadataId(), status, statusId);
+
+            // inform content reviewers if the status is submitted
             try {
                 notify(getUserToNotify(status), status);
             } catch (Exception e) {
@@ -175,21 +190,40 @@ public class DefaultStatusActions implements StatusActions {
                     status.getMetadataId(), status.getStatusValue().getId(), e.getMessage()));
             }
 
-            //Throw events
+            if (deleted) {
+                results.put(status.getMetadataId(), StatusChangeType.DELETED);
+            } else {
+                results.put(status.getMetadataId(), StatusChangeType.UPDATED);
+            }
+            // throw events
             Log.trace(Geonet.DATA_MANAGER, "Throw workflow events.");
             for (Integer mid : listOfId) {
-                if (!unchanged.contains(mid)) {
+                if (results.get(mid) != StatusChangeType.DELETED) {
                     Log.debug(Geonet.DATA_MANAGER, "  > Status changed for record (" + mid + ") to status " + status);
                     context.getApplicationContext().publishEvent(new MetadataStatusChanged(
                         metadataUtils.findOne(mid),
                         status.getStatusValue(), status.getChangeMessage(),
-                        status.getUserId()));
+                        status.getUserId()
+                    ));
                 }
             }
 
         }
 
-        return unchanged;
+        return results;
+    }
+
+    /**
+     * Placeholder to apply any side effects.
+     * eg. if APPROVED, publish a record,
+     * if RETIRED, unpublish or delete the record.
+     */
+    private boolean applyStatusChange(int metadataId, MetadataStatus status, String toStatusId) throws Exception {
+        boolean deleted = false;
+        if (!deleted) {
+            metadataStatusManager.setStatusExt(status);
+        }
+        return deleted;
     }
 
 
@@ -213,7 +247,7 @@ public class DefaultStatusActions implements StatusActions {
         String subjectTemplate = "";
         try {
             subjectTemplate = messages
-                    .getString("status_change_" + status.getStatusValue().getName() + "_email_subject");
+                .getString("status_change_" + status.getStatusValue().getName() + "_email_subject");
         } catch (MissingResourceException e) {
             subjectTemplate = messages.getString("status_change_default_email_subject");
         }
@@ -230,6 +264,11 @@ public class DefaultStatusActions implements StatusActions {
             textTemplate = messages.getString("status_change_default_email_text");
         }
 
+        // Replace link in message
+        ApplicationContext applicationContext = ApplicationContextHolder.get();
+        SettingManager sm = applicationContext.getBean(SettingManager.class);
+        textTemplate = textTemplate.replace("{{link}}", sm.getNodeURL()+ "api/records/'{{'index:uuid'}}'");
+
         UserRepository userRepository = context.getBean(UserRepository.class);
         User owner = userRepository.findById(status.getOwner()).orElse(null);
 
@@ -239,16 +278,16 @@ public class DefaultStatusActions implements StatusActions {
         String metadataUrl = metadataUtils.getDefaultUrl(metadata.getUuid(), this.language);
 
         String message = MessageFormat.format(textTemplate, replyToDescr, // Author of the change
-                status.getChangeMessage(), translatedStatusName, status.getChangeDate(), status.getDueDate(),
-                status.getCloseDate(),
-                owner == null ? "" : Joiner.on(" ").skipNulls().join( owner.getName(), owner.getSurname()),
+            status.getChangeMessage(), translatedStatusName, status.getChangeDate(), status.getDueDate(),
+            status.getCloseDate(),
+            owner == null ? "" : Joiner.on(" ").skipNulls().join(owner.getName(), owner.getSurname()),
             metadataUrl);
 
 
         subject = MailUtil.compileMessageWithIndexFields(subject, metadata.getUuid(), this.language);
         message = MailUtil.compileMessageWithIndexFields(message, metadata.getUuid(), this.language);
         for (User user : userToNotify) {
-            String salutation = Joiner.on(" ").skipNulls().join( user.getName(), user.getSurname());
+            String salutation = Joiner.on(" ").skipNulls().join(user.getName(), user.getSurname());
             //If we have a salutation then end it with a ","
             if (StringUtils.isEmpty(salutation)) {
                 salutation = "";
@@ -268,6 +307,16 @@ public class DefaultStatusActions implements StatusActions {
      */
     protected List<User> getUserToNotify(MetadataStatus status) {
         StatusValueNotificationLevel notificationLevel = status.getStatusValue().getNotificationLevel();
+
+        // If new status is DRAFT and previous status is not SUBMITTED (which means a rejection),
+        // ignore notifications as the DRAFT status is used also when creating the working copy.
+        // We don't want to notify when creating a working copy.
+        if (status.getStatusValue().getId() == Integer.parseInt(StatusValue.Status.DRAFT) &&
+            ((StringUtils.isEmpty(status.getPreviousState())) ||
+                (Integer.parseInt(status.getPreviousState()) != Integer.parseInt(StatusValue.Status.SUBMITTED)))) {
+                return new ArrayList<>();
+        }
+
         // TODO: Status does not provide batch update
         // So taking care of one record at a time.
         // Currently the code could notify a mix of reviewers
@@ -277,7 +326,7 @@ public class DefaultStatusActions implements StatusActions {
         return getUserToNotify(notificationLevel, listOfId, status.getOwner());
     }
 
-     public static List<User> getUserToNotify(StatusValueNotificationLevel notificationLevel, Set<Integer> recordIds, Integer ownerId) {
+    public static List<User> getUserToNotify(StatusValueNotificationLevel notificationLevel, Set<Integer> recordIds, Integer ownerId) {
         UserRepository userRepository = ApplicationContextHolder.get().getBean(UserRepository.class);
         List<User> users = new ArrayList<>();
 
@@ -332,7 +381,7 @@ public class DefaultStatusActions implements StatusActions {
         return users;
     }
 
-     public static List<Group> getGroupToNotify(StatusValueNotificationLevel notificationLevel, List<String> groupNames) {
+    public static List<Group> getGroupToNotify(StatusValueNotificationLevel notificationLevel, List<String> groupNames) {
         GroupRepository groupRepository = ApplicationContextHolder.get().getBean(GroupRepository.class);
         List<Group> groups = new ArrayList<>();
 
@@ -364,7 +413,7 @@ public class DefaultStatusActions implements StatusActions {
         StatusValue s = statusValueRepository.findOneById(statusValueId);
         if (s == null) {
             translatedStatusName = statusValueId
-                    + " (Status not found in database translation table. Check the content of the StatusValueDes table.)";
+                + " (Status not found in database translation table. Check the content of the StatusValueDes table.)";
         } else {
             translatedStatusName = s.getLabel(this.language);
         }
@@ -386,11 +435,41 @@ public class DefaultStatusActions implements StatusActions {
             ApplicationContext applicationContext = ApplicationContextHolder.get();
             SettingManager sm = applicationContext.getBean(SettingManager.class);
             // Doesn't make sense go further without any mailserver set...
-            if(StringUtils.isNotBlank(sm.getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_HOST))) {
+            if (StringUtils.isNotBlank(sm.getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_HOST))) {
                 List<String> to = new ArrayList<>();
                 to.add(sendTo);
                 MailUtil.sendMail(to, subject, message, null, sm, replyTo, replyToDescr);
             }
         }
+    }
+
+    /**
+     * Placeholder to test whether a given status change for a given role is allowed or not.
+     * <p>
+     *
+     * @param profile    the role that tries to execute the status change
+     * @param fromStatus the status from which we start
+     * @param toStatus   the status to which we'd like to change
+     * @return whether the change is allowed
+     */
+    private boolean isStatusChangePossible(Profile profile, AbstractMetadata metadata, String fromStatus, String toStatus) throws Exception {
+        return true;
+        //  Example:
+        //  if (StringUtils.isEmpty(fromStatus) && toStatus.equals(StatusValue.Status.DRAFT))
+        //            return true;
+        //        // figure out whether we can switch from status to status, depending on the profile
+        //        Set<String> toProfiles = new HashSet<>();
+        //        switch (profile) {
+        //            case Editor:
+        //                toProfiles = getEditorFlow().get(fromStatus);
+        //                break;
+        //            case Administrator:
+        //                toProfiles = getAdminFlow().get(fromStatus);
+        //                break;
+        //            case Reviewer:
+        //                toProfiles = getReviewerFlow().get(fromStatus);
+        //                break;
+        //        }
+        //        return toProfiles != null && toProfiles.contains(toStatus);
     }
 }

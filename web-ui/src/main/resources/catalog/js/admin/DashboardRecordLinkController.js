@@ -81,7 +81,7 @@
       };
 
       $scope.analyzeLinks = function () {
-        $http.post("../api/records/links?analyze=true");
+        $http.post("../api/records/links/analyze?analyze=true");
       };
       $scope.testLink = function (url) {
         $http.post("../api/records/links/analyze?url=" + url);
@@ -147,7 +147,6 @@
           sidePagination: "server",
           queryParamsType: "page,size",
           contentType: "application/x-www-form-urlencoded",
-          method: "get",
           pagination: true,
           paginationLoop: true,
           paginationHAlign: "right",
@@ -170,7 +169,12 @@
               pageSize: res.size
             };
           },
-
+          ajaxOptions: {
+            method: "POST",
+            headers: {
+              "X-XSRF-TOKEN": $rootScope.csrf
+            }
+          },
           queryParams: function (params) {
             if ($scope.selectionFilter != "") {
               var filter = {};

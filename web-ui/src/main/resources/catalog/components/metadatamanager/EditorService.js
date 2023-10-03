@@ -157,7 +157,7 @@
           ];
           gnCurrentEdit.tab
             ? params.push("&currTab=", gnCurrentEdit.tab)
-            : params.push("&currTab=", "default");
+            : params.push("&currTab=", "");
           gnCurrentEdit.withAttributes &&
             params.push("&withAttributes=", gnCurrentEdit.displayAttributes);
           return params.join("");
@@ -183,16 +183,6 @@
               }
             );
           return defer.promise;
-        },
-        /**
-         * Save the metadata record currently in editing session.
-         *
-         * If refreshForm is true, then will also update the current form.
-         * This is required while switching tab for example. Update the tab
-         * value in the form and trigger save to update the view.
-         */
-        save: function (refreshForm, silent, terminate) {
-          save(refreshForm, silent, terminate, false, false);
         },
         /**
          * Save the metadata record currently in editing session.
@@ -614,12 +604,12 @@
                 checkAddControls(target.get(0), true);
                 checkMoveControls(target.get(0));
 
-                target.slideUp(duration, function () {
+                target.slideUp(duration);
+                target.promise().done(function () {
                   $(this).remove();
+                  // TODO: Take care of moving the + sign
+                  defer.resolve(response.data);
                 });
-
-                // TODO: Take care of moving the + sign
-                defer.resolve(response.data);
               },
               function (response) {
                 defer.reject(response.data);

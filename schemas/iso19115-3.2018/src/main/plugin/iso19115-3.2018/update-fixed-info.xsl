@@ -100,7 +100,16 @@
       </xsl:for-each>
 
       <xsl:apply-templates select="mdb:defaultLocale"/>
-      <xsl:apply-templates select="mdb:parentMetadata"/>
+
+      <xsl:choose>
+        <xsl:when test="/root/env/parentUuid != ''">
+          <mdb:parentMetadata uuidref="{/root/env/parentUuid}"/>
+        </xsl:when>
+        <xsl:when test="mdb:parentMetadata">
+          <xsl:apply-templates select="mdb:parentMetadata"/>
+        </xsl:when>
+      </xsl:choose>
+
       <xsl:apply-templates select="mdb:metadataScope"/>
       <xsl:apply-templates select="mdb:contact"/>
 
@@ -119,29 +128,14 @@
                     or (/root/env/createDate != ''
                         and /root/env/newRecord = 'true')">
         <mdb:dateInfo>
-          <cit:CI_Date>
-            <cit:date>
-              <gco:DateTime><xsl:value-of select="/root/env/createDate"/></gco:DateTime>
-            </cit:date>
-            <cit:dateType>
-              <cit:CI_DateTypeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_DateTypeCode" codeListValue="creation"/>
-            </cit:dateType>
-          </cit:CI_Date>
+          <xsl:copy-of select="gn-fn-iso19115-3.2018:write-date-or-dateTime(/root/env/createDate, 'creation')"/>
         </mdb:dateInfo>
       </xsl:if>
       <xsl:if test="not($isRevisionDateAvailable)">
         <mdb:dateInfo>
-          <cit:CI_Date>
-            <cit:date>
-              <gco:DateTime><xsl:value-of select="/root/env/changeDate"/></gco:DateTime>
-            </cit:date>
-            <cit:dateType>
-              <cit:CI_DateTypeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_DateTypeCode" codeListValue="revision"/>
-            </cit:dateType>
-          </cit:CI_Date>
+          <xsl:copy-of select="gn-fn-iso19115-3.2018:write-date-or-dateTime(/root/env/changeDate, 'revision')"/>
         </mdb:dateInfo>
       </xsl:if>
-
 
       <!-- Preserve date order -->
       <xsl:for-each select="mdb:dateInfo">
@@ -150,14 +144,7 @@
         <xsl:choose>
           <xsl:when test="$currentDateType = 'revision' and /root/env/changeDate">
             <mdb:dateInfo>
-              <cit:CI_Date>
-                <cit:date>
-                  <gco:DateTime><xsl:value-of select="/root/env/changeDate"/></gco:DateTime>
-                </cit:date>
-                <cit:dateType>
-                  <cit:CI_DateTypeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_DateTypeCode" codeListValue="revision"/>
-                </cit:dateType>
-              </cit:CI_Date>
+              <xsl:copy-of select="gn-fn-iso19115-3.2018:write-date-or-dateTime(/root/env/changeDate, 'revision')"/>
             </mdb:dateInfo>
           </xsl:when>
           <xsl:when test="$currentDateType = 'creation'
@@ -190,7 +177,7 @@
 
       <xsl:apply-templates select="mdb:metadataProfile"/>
       <xsl:apply-templates select="mdb:alternativeMetadataReference"/>
-      <xsl:apply-templates select="mdb:otherLocale"/>
+      <xsl:apply-templates select="mdb:otherLocale[*/lan:language/*/@codeListValue != $mainLanguage]"/>
       <xsl:apply-templates select="mdb:metadataLinkage"/>
 
       <xsl:variable name="pointOfTruthUrl" select="concat(/root/env/nodeURL, 'api/records/', $uuid)"/>
@@ -519,10 +506,10 @@
   <xsl:template match="mdb:MD_Metadata/*/lan:PT_Locale">
     <xsl:element name="lan:{local-name()}">
       <xsl:variable name="id"
-                    select="upper-case(java:twoCharLangCode(lan:language/lan:LanguageCode/@codeListValue))"/>
+                    select="upper-case(java:twoCharLangCode(lan:language/lan:LanguageCode/@codeListValue, ''))"/>
 
       <xsl:apply-templates select="@*"/>
-      <xsl:if test="normalize-space(@id)='' or normalize-space(@id)!=$id">
+      <xsl:if test="normalize-space(@id) = '' or normalize-space(@id) != $id">
         <xsl:attribute name="id">
           <xsl:value-of select="$id"/>
         </xsl:attribute>

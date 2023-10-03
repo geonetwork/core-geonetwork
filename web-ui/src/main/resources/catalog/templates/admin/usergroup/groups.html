@@ -295,9 +295,9 @@
           <h3>
             <ng-pluralize
               count="searchResults.count"
-              when="{'0': ('noRecordFound' | translate),
-                'one': '1' +  ('groupRecord' | translate) + ' {{groupSelected.label[lang]}}',
-                'other': '{}' +  ('groupRecords' | translate) + ' {{groupSelected.label[lang]}}'}"
+              when="{'0': '{{&quot;noRecordFound&quot; | translate}}',
+                'one': '1' + '{{&quot;groupRecord&quot; | translate}}' + ' {{groupSelected.label[lang]}}',
+                'other': '{}' + '{{&quot;groupRecords&quot; | translate}}' + ' {{groupSelected.label[lang]}}'}"
             ></ng-pluralize>
           </h3>
           <div

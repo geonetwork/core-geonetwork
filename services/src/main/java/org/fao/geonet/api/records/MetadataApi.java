@@ -42,6 +42,7 @@ import org.fao.geonet.api.records.model.related.*;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.AbstractMetadata;
+import org.fao.geonet.domain.MetadataDraft;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
@@ -72,6 +73,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.fao.geonet.api.ApiParams.*;
+import static org.fao.geonet.api.records.attachments.AbstractStore.getAndCheckMetadataId;
 import static org.fao.geonet.kernel.mef.MEFLib.Version.Constants.MEF_V1_ACCEPT_TYPE;
 import static org.fao.geonet.kernel.mef.MEFLib.Version.Constants.MEF_V2_ACCEPT_TYPE;
 
@@ -85,7 +87,7 @@ import static org.fao.geonet.kernel.mef.MEFLib.Version.Constants.MEF_V2_ACCEPT_T
 public class MetadataApi {
 
     @Autowired
-    SchemaManager _schemaManager;
+    SchemaManager schemaManager;
 
     @Autowired
     LanguageUtils languageUtils;
@@ -311,12 +313,9 @@ public class MetadataApi {
 
         }
 
-        if (increasePopularity) {
-            dataManager.increasePopularity(context, metadata.getId() + "");
-        }
-
-
-        boolean withValidationErrors = false, keepXlinkAttributes = false, forEditing = false;
+        boolean withValidationErrors = false;
+        boolean keepXlinkAttributes = false;
+        boolean forEditing = false;
 
         String mdId = String.valueOf(metadata.getId());
 
@@ -324,6 +323,11 @@ public class MetadataApi {
         //ApiUtils.canViewRecord already filtered draft for non editors.
         if (approved) {
             mdId = String.valueOf(metadataRepository.findOneByUuid(metadata.getUuid()).getId());
+
+            // Only increase popularity for the no working copy
+            if (increasePopularity) {
+                dataManager.increasePopularity(context, mdId + "");
+            }
         }
 
         Element xml = withInfo ?
@@ -332,7 +336,7 @@ public class MetadataApi {
             dataManager.getMetadataNoInfo(context, mdId + "");
 
         if (addSchemaLocation) {
-            Attribute schemaLocAtt = _schemaManager.getSchemaLocation(
+            Attribute schemaLocAtt = schemaManager.getSchemaLocation(
                 metadata.getDataInfo().getSchemaId(), context);
 
             if (schemaLocAtt != null) {
@@ -440,7 +444,7 @@ public class MetadataApi {
         }
         Path stylePath = dataDirectory.getWebappDir().resolve(Geonet.Path.SCHEMAS);
         Path file = null;
-        ServiceContext context = ApiUtils.createServiceContext(request);
+        ServiceContext serviceContext = ApiUtils.createServiceContext(request);
         MEFLib.Version version = MEFLib.Version.find(acceptHeader);
         try {
             if (version == MEFLib.Version.V1) {
@@ -456,7 +460,7 @@ public class MetadataApi {
                 }
 
                 file = MEFLib.doExport(
-                    context, id, format.toString(),
+                    serviceContext, id, format.toString(),
                     skipUUID, withXLinksResolved, withXLinkAttribute, addSchemaLocation
                 );
                 response.setContentType(MEFLib.Version.Constants.MEF_V1_ACCEPT_TYPE);
@@ -468,7 +472,7 @@ public class MetadataApi {
                     // Adding children in MEF file
 
                     RelatedResponse related = getAssociatedResources(
-                        metadataUuid, null, 0, 100, request);
+                        metadataUuid, null, approved, 0, 100, request);
                     uuidsToExport.addAll(getUuidsOfAssociatedRecords(related.getParent()));
                     uuidsToExport.addAll(getUuidsOfAssociatedRecords(related.getChildren()));
                     uuidsToExport.addAll(getUuidsOfAssociatedRecords(related.getDatasets()));
@@ -483,7 +487,7 @@ public class MetadataApi {
                 Log.info(Geonet.MEF, "Building MEF2 file with " + uuidsToExport.size()
                     + " records.");
 
-                file = MEFLib.doMEF2Export(context, uuidsToExport, format.toString(), false, stylePath, withXLinksResolved, withXLinkAttribute, false, addSchemaLocation, approved);
+                file = MEFLib.doMEF2Export(serviceContext, uuidsToExport, format.toString(), false, stylePath, withXLinksResolved, withXLinkAttribute, false, addSchemaLocation, approved);
 
                 response.setContentType(MEFLib.Version.Constants.MEF_V2_ACCEPT_TYPE);
             }
@@ -529,6 +533,11 @@ public class MetadataApi {
         AbstractMetadata metadata;
         try {
             metadata = ApiUtils.canViewRecord(metadataUuid, request);
+
+            // If the workflow is enabled, don't use the working copy to increase the popularity
+            if (metadata instanceof MetadataDraft) {
+                metadata = metadataRepository.findOneByUuid(metadataUuid);
+            }
         } catch (ResourceNotFoundException e) {
             Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
             throw e;
@@ -563,6 +572,11 @@ public class MetadataApi {
         AbstractMetadata metadata;
         try {
             metadata = ApiUtils.canViewRecord(metadataUuid, request);
+
+            // If the workflow is enabled, don't use the working copy to increase the popularity
+            if (metadata instanceof MetadataDraft) {
+                metadata = metadataRepository.findOneByUuid(metadataUuid);
+            }
         } catch (ResourceNotFoundException e) {
             Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
             throw e;
@@ -570,9 +584,9 @@ public class MetadataApi {
             Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
             throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
         }
-        ServiceContext context = ApiUtils.createServiceContext(request);
+        ServiceContext serviceContext = ApiUtils.createServiceContext(request);
 
-        dataManager.increasePopularity(context, metadata.getId() + "");
+        dataManager.increasePopularity(serviceContext, metadata.getId() + "");
 
         return new ResponseEntity<>(metadata.getDataInfo().getPopularity() + "",
             HttpStatus.CREATED);
@@ -606,6 +620,9 @@ public class MetadataApi {
         )
         @RequestParam(defaultValue = "")
         RelatedItemType[] type,
+        @Parameter(description = "Use approved version or not", example = "true")
+        @RequestParam(required = false, defaultValue = "true")
+        Boolean approved,
         @Parameter(description = "Start offset for paging. Default 1. Only applies to related metadata records (ie. not for thumbnails).",
             required = false
         )
@@ -618,16 +635,16 @@ public class MetadataApi {
 
         AbstractMetadata md;
         try {
-            md = ApiUtils.canViewRecord(metadataUuid, request);
+            md = ApiUtils.canViewRecord(metadataUuid, approved, request);
         } catch (SecurityException e) {
             Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
             throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
         }
 
         String language = languageUtils.getIso3langCode(request.getLocales());
-        final ServiceContext context = ApiUtils.createServiceContext(request);
+        final ServiceContext serviceContext = ApiUtils.createServiceContext(request);
 
-        return getAssociatedResources(language, context, md, type, start, rows);
+        return getAssociatedResources(language, serviceContext, md, type, start, rows);
     }
 
     @io.swagger.v3.oas.annotations.Operation(
@@ -651,6 +668,9 @@ public class MetadataApi {
             required = true)
         @PathVariable
         String metadataUuid,
+        @Parameter(description = "Use approved version or not", example = "true")
+        @RequestParam(required = false, defaultValue = "true")
+        Boolean approved,
         HttpServletRequest request) throws ResourceNotFoundException {
 
         RelatedItemType[] type = {RelatedItemType.fcats};
@@ -661,7 +681,7 @@ public class MetadataApi {
 
         try {
             RelatedResponse related = getAssociatedResources(
-                metadataUuid, type, 0, 100, request);
+                metadataUuid, type, approved, 0, 100, request);
 
             if (isIncludedAttributeTable(related.getFcats())) {
                 // TODO: Make consistent with document in index? and add codelists
@@ -694,7 +714,7 @@ public class MetadataApi {
     private boolean isIncludedAttributeTable(RelatedResponse.Fcat fcat) {
         return fcat != null
             && fcat.getItem() != null
-            && fcat.getItem().size() > 0
+            && !fcat.getItem().isEmpty()
             && fcat.getItem().get(0).getFeatureType() != null
             && fcat.getItem().get(0).getFeatureType().getAttributeTable() != null
             && fcat.getItem().get(0).getFeatureType().getAttributeTable().getElement() != null;

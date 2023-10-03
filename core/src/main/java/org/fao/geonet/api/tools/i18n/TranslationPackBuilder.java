@@ -136,12 +136,21 @@ public class TranslationPackBuilder {
                     );
                 } else if (config[0].equals(TranslationType.standards.name())
                            && config.length == 4) {
-                    // standards/iso19115-3.2018/codelists/cit:CI_DateTypeCode+...
                     String[] codelistKeys = config[3].split(LIST_SEPARATOR);
-                    translations.putAll(
-                        self.getStandardCodelist(
-                            language, config[1], Arrays.asList(codelistKeys), context)
-                    );
+
+                    if ("labels".equals(config[2])) {
+                        // standards/iso19139/labels/gmd:DQ_AbsoluteExternalPositionalAccuracy+gmd
+                        translations.putAll(
+                            self.getStandardLabel(
+                                language, config[1], Arrays.asList(codelistKeys), context)
+                        );
+                    } else {
+                        // standards/iso19115-3.2018/codelists/cit:CI_DateTypeCode+...
+                        translations.putAll(
+                            self.getStandardCodelist(
+                                language, config[1], Arrays.asList(codelistKeys), context)
+                        );
+                    }
                 } else {
                     throw new IllegalArgumentException(
                         String.format(
@@ -193,6 +202,28 @@ public class TranslationPackBuilder {
         return translations;
     }
 
+    @Cacheable(value = "translations",
+        cacheManager = "cacheManager",
+        key = "{#schema, #language, #label}")
+    public Map<String, String> getStandardLabel(
+        String language, String schema, List<String> label,
+        ServiceContext context) {
+        Map<String, String> translations = new HashMap<>();
+        context.setLanguage(language);
+
+        for (String c : label) {
+            Element e = null;
+            try {
+                e = StandardsUtils.getLabel(c, schemaManager,
+                    schema, null, null, null, null, context);
+                translations.put(c.split(":")[1], e.getChildText("label"));
+            } catch (Exception exception) {
+                exception.printStackTrace();
+            }
+        }
+        return translations;
+    }
+
     @Cacheable(value = "translations", cacheManager = "cacheManager")
     public Map<String, String> getDbTranslation(String language, List<String> type) {
         Map<String, String> translations = new HashMap<>();
@@ -201,72 +232,59 @@ public class TranslationPackBuilder {
 
         if (type == null || type.contains("StatusValue")) {
             List<StatusValue> valueList = statusValueRepository.findAll();
-            Iterator<StatusValue> valueIterator = valueList.iterator();
-            while (valueIterator.hasNext()) {
-                StatusValue entity = valueIterator.next();
-                translations.put("status-" + entity.getId() + "",
-                    getLabelOrKey(entity, language, entity.getId() + ""));
+            for (StatusValue entity : valueList) {
+                String label = getLabelOrKey(entity, language, entity.getId() + "");
+                translations.put("status-" + entity.getId(), label);
+                translations.put("status-" + entity.getName(), label);
             }
         }
 
         if (type == null || type.contains("MetadataCategory")) {
             List<MetadataCategory> metadataCategoryList = categoryRepository.findAll();
-            Iterator<MetadataCategory> metadataCategoryIterator = metadataCategoryList.iterator();
-            while (metadataCategoryIterator.hasNext()) {
-                MetadataCategory entity = metadataCategoryIterator.next();
-                translations.put("cat-" + entity.getName() + "",
+            for (MetadataCategory entity : metadataCategoryList) {
+                translations.put("cat-" + entity.getName(),
                     getLabelOrKey(entity, language, entity.getName()));
             }
         }
 
         if (type == null || type.contains("Group")) {
             List<Group> groupList = groupRepository.findAll();
-            Iterator<Group> groupIterator = groupList.iterator();
-            while (groupIterator.hasNext()) {
-                Group entity = groupIterator.next();
-                translations.put("group-" + entity.getId() + "",
+            for (Group entity : groupList) {
+                translations.put("group-" + entity.getId(),
                     getLabelOrKey(entity, language, entity.getName()));
             }
         }
 
         if (type == null || type.contains("Operation")) {
             List<Operation> operationList = operationRepository.findAll();
-            Iterator<Operation> operationIterator = operationList.iterator();
-            while (operationIterator.hasNext()) {
-                Operation entity = operationIterator.next();
-                translations.put("op-" + entity.getId() + "",
-                    getLabelOrKey(entity, language, entity.getId() + ""));
-                translations.put("op-" + entity.getName() + "",
+            for (Operation entity : operationList) {
+                translations.put("op-" + entity.getId(),
+                    getLabelOrKey(entity, language, String.valueOf(entity.getId())));
+                translations.put("op-" + entity.getName(),
                     getLabelOrKey(entity, language, entity.getName()));
             }
         }
 
         if (type == null || type.contains("Source")) {
             List<Source> sourceList = sourceRepository.findAll();
-            Iterator<Source> sourceIterator = sourceList.iterator();
-            while (sourceIterator.hasNext()) {
-                Source entity = sourceIterator.next();
-                translations.put("source-" + entity.getUuid() + "",
+            for (Source entity : sourceList) {
+                translations.put("source-" + entity.getUuid(),
                     getLabelOrKey(entity, language, entity.getUuid()));
             }
         }
 
         if (type == null || type.contains("Schematron")) {
             List<Schematron> schematronList = schematronRepository.findAll();
-            Iterator<Schematron> schematronIterator = schematronList.iterator();
-            while (schematronIterator.hasNext()) {
-                Schematron entity = schematronIterator.next();
-                translations.put("sch-" + entity.getRuleName() + "",
+            for (Schematron entity : schematronList) {
+                translations.put("sch-" + entity.getRuleName(),
                     getLabelOrKey(entity, language, entity.getRuleName()));
             }
         }
 
         if (type == null || type.contains("IsoLanguage")) {
             List<IsoLanguage> isoLanguageList = isoLanguageRepository.findAll();
-            Iterator<IsoLanguage> isoLanguageIterator = isoLanguageList.iterator();
-            while (isoLanguageIterator.hasNext()) {
-                IsoLanguage entity = isoLanguageIterator.next();
-                translations.put("lang-" + entity.getCode() + "",
+            for (IsoLanguage entity : isoLanguageList) {
+                translations.put("lang-" + entity.getCode(),
                     getLabelOrKey(entity, language, entity.getCode()));
             }
         }

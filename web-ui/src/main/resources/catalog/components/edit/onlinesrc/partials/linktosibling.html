@@ -91,8 +91,16 @@
             <tbody>
               <tr data-ng-repeat="obj in selection">
                 <td>{{obj.md.resourceTitle}}</td>
-                <td>{{obj.associationType | translate}}</td>
-                <td>{{obj.initiativeType | translate}}</td>
+                <td>
+                  <i
+                    class="fa fa-fw gn-icon-association-{{obj.associationType}} gn-margin-right-sm"
+                  />{{obj.associationType | translate}}
+                </td>
+                <td>
+                  <i
+                    class="fa fa-fw gn-icon-initiative-{{obj.initiativeType}} gn-margin-right-sm"
+                  />{{obj.initiativeType | translate}}
+                </td>
                 <td class="text-center">
                   <a
                     title="{{'removeFromSelection' | translate}}"

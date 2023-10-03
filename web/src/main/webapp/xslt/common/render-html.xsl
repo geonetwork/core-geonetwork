@@ -54,6 +54,7 @@
         <title><xsl:value-of select="if($title != '')
                   then $title
                   else /root/gui/systemConfig/settings/system/site/name"/></title>
+        <base href="{$nodeUrl}eng/catalog.search"/>
         <meta charset="utf-8"/>
 
         <xsl:copy-of select="$meta"/>

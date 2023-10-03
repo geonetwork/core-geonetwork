@@ -1029,14 +1029,28 @@ gn-geometry-tool .btn-group {
   right: auto;
   left: 4px;
   height: auto;
-  padding: 5px;
+  padding: 3px;
   border-radius: 0;
+  border: 1px solid #ccc;
+  text-align: left;
+  white-space: nowrap;
   ul {
     font-size: 1rem;
     padding-left: 0;
-    padding-right: 10px;
+    padding-right: 0px;
+    max-width: 350px;
+    border: 2px solid white;
     li {
       white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: block;
+    }
+    li:hover {
+      display: inline-block;
+      overflow: inherit;
+      text-overflow: inherit;
+      white-space: normal;
     }
   }
 }

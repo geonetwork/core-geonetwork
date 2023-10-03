@@ -46,7 +46,10 @@
             search: function (scope, loc, query) {
               var lang = gnGlobalSettings.lang;
 
-              if (query.length < 1) return;
+              if (query.length < 1) {
+                scope.results = [];
+                return;
+              }
               var coord = gnGetCoordinate(
                 scope.map.getView().getProjection().getWorldExtent(),
                 query

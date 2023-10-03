@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2007 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2023 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -33,7 +33,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.http.client.methods.HttpGet;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Logger;
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.harvest.harvester.HarvestError;
@@ -154,7 +153,6 @@ class Harvester implements IHarvester<HarvestResult> {
             }
             Map<String, Element> allUuids = new HashMap<>();
             try {
-                Map<String, Element> uuids = new HashMap<>();
                 List<String> listOfUrlForPages = buildListOfUrl(params, numberOfRecordsToHarvest);
                 for (int i = 0; i < listOfUrlForPages.size(); i++) {
                     if (i != 0) {
@@ -167,6 +165,8 @@ class Harvester implements IHarvester<HarvestResult> {
                     }
                     if (StringUtils.isNotEmpty(params.loopElement)
                         || type == SimpleUrlResourceType.RDFXML) {
+                        Map<String, Element> uuids = new HashMap<>();
+
                         try {
                             if (type == SimpleUrlResourceType.XML) {
                                 collectRecordsFromXml(xmlObj, uuids, aligner);

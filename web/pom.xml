@@ -30,7 +30,7 @@
   <parent>
     <groupId>org.geonetwork-opensource</groupId>
     <artifactId>geonetwork</artifactId>
-    <version>4.2.4-SNAPSHOT</version>
+    <version>4.4.0-SNAPSHOT</version>
   </parent>
 
 
@@ -82,6 +82,10 @@
     <dependency>
       <groupId>xalan</groupId>
       <artifactId>xalan</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>xalan</groupId>
+      <artifactId>serializer</artifactId>
     </dependency>
     <dependency>
       <groupId>net.sf.saxon</groupId>
@@ -334,6 +338,10 @@
         <exclusion>
           <groupId>xalan</groupId>
           <artifactId>xalan</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>xalan</groupId>
+          <artifactId>serializer</artifactId>
         </exclusion>
         <exclusion>
           <groupId>org.apache.xmlgraphics</groupId>
@@ -613,6 +621,12 @@
       <artifactId>gn-schema-iso19115-3.2018</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>org.xmlunit</groupId>
+      <artifactId>xmlunit-matchers</artifactId>
+      <version>${xmlunit.version}</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <build>
@@ -739,8 +753,7 @@
                   <includes>
                     <include>META-INF/MANIFEST.MF</include>
                     <include>data/**</include>
-                    <include>doc/en/**</include>
-                    <include>doc/fr/**</include>
+                    <include>doc/**</include>
                     <include>images/logos/*</include>
                     <include>images/logos/statTmp</include>
                     <include>scripts/lib/**</include>
@@ -794,6 +807,21 @@
               </sources>
             </configuration>
           </execution>
+          <execution>
+            <id>add-test-resource</id>
+            <phase>generate-test-resources</phase>
+            <goals>
+              <goal>add-test-resource</goal>
+            </goals>
+            <configuration>
+              <resources>
+                <resource>
+                  <directory>${basedir}/src/main/webapp/xslt</directory>
+                  <targetPath>resources/xslt</targetPath>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
         </executions>
       </plugin>
 
@@ -836,7 +864,7 @@
               <outputDirectory>${build.webapp.resources}</outputDirectory>
               <resources>
                 <resource>
-                  <directory>${project.basedir}/../docs/manuals/target/doc</directory>
+                  <directory>${project.basedir}/../docs/manual/target/help</directory>
                   <targetPath>${basedir}/src/main/webapp/doc</targetPath>
                 </resource>
               </resources>
@@ -950,23 +978,30 @@
             WEB-INF/data/index/**,
             WEB-INF/data/data/backup/**,
             WEB-INF/data/data/resources/htmlcache/**,
-            catalog/lib/style/bootstrap/docs/**,
-            catalog/lib/style/bootstrap/fonts/**,
-            catalog/lib/style/bootstrap/grunt/**,
-            catalog/lib/style/bootstrap/test-infra/**,
-            catalog/lib/style/font-awesome/css/**,
-            catalog/lib/style/font-awesome/src/**,
+            catalog/lib/style/font-awesome/.github/**,
+            catalog/lib/style/font-awesome/js/**,
+            catalog/lib/style/font-awesome/js-packages/**,
+            catalog/lib/style/font-awesome/metadata/**,
+            catalog/lib/style/font-awesome/sprites/**,
+            catalog/lib/style/font-awesome/otfs/**,
             catalog/lib/style/font-awesome/scss/**,
+            catalog/lib/style/font-awesome/svgs/**,
             catalog/lib/style/font-awesome/*.json,
-            catalog/lib/style/font-awesome/Gemfile*,
-            catalog/lib/style/font-awesome/.*,
             catalog/lib/style/font-awesome/*.txt,
             catalog/lib/style/font-awesome/*.md,
             catalog/lib/style/bootstrap/*.json,
             catalog/lib/style/bootstrap/Gemfile*,
             catalog/lib/style/bootstrap/.*,
             catalog/lib/style/bootstrap/*.txt,
+            catalog/lib/style/bootstrap/*.yml,
+            catalog/lib/style/bootstrap/*.js,
             catalog/lib/style/bootstrap/*.md,
+            catalog/lib/style/bootstrap/CNAME,
+            catalog/lib/style/bootstrap/docs/**,
+            catalog/lib/style/bootstrap/fonts/**,
+            catalog/lib/style/bootstrap/nuget/**,
+            catalog/lib/style/bootstrap/grunt/**,
+            catalog/lib/style/bootstrap/test-infra/**,
             catalog/lib/bootstrap-table/*.json,
             catalog/lib/bootstrap-table/Gemfile*,
             catalog/lib/bootstrap-table/.*,
@@ -1004,6 +1039,10 @@
               <value>5000000</value>
             </systemProperty>
             <systemProperty>
+              <name>org.eclipse.jetty.server.Request.maxFormKeys</name>
+              <value>8000</value>
+            </systemProperty>
+            <systemProperty>
               <name>org.eclipse.jetty.classInheritanceMap</name>
               <value>true</value>
             </systemProperty>
@@ -1036,6 +1075,13 @@
             <groupId>ro.isdc.wro4j</groupId>
             <artifactId>wro4j-maven-plugin</artifactId>
             <version>${wro.version}</version>
+            <dependencies>
+              <dependency>
+                <groupId>org.webjars.npm</groupId>
+                <artifactId>glob</artifactId>
+                <version>7.1.1</version>
+              </dependency>
+            </dependencies>
             <executions>
               <execution>
                 <id>wro4j-prebuild-cache</id>
@@ -1271,6 +1317,39 @@
         <dependency>
           <groupId>${project.groupId}</groupId>
           <artifactId>slave</artifactId>
+          <version>${project.version}</version>
+        </dependency>
+      </dependencies>
+    </profile>
+
+    <profile>
+      <id>datastorage-cmis</id>
+      <dependencies>
+        <dependency>
+          <groupId>org.geonetwork-opensource.datastorage</groupId>
+          <artifactId>gn-datastorage-cmis</artifactId>
+          <version>${project.version}</version>
+        </dependency>
+      </dependencies>
+    </profile>
+
+    <profile>
+      <id>datastorage-jcloud</id>
+      <dependencies>
+        <dependency>
+          <groupId>org.geonetwork-opensource.datastorage</groupId>
+          <artifactId>gn-datastorage-jcloud</artifactId>
+          <version>${project.version}</version>
+        </dependency>
+      </dependencies>
+    </profile>
+
+    <profile>
+      <id>datastorage-s3</id>
+      <dependencies>
+        <dependency>
+          <groupId>org.geonetwork-opensource.datastorage</groupId>
+          <artifactId>gn-datastorage-s3</artifactId>
           <version>${project.version}</version>
         </dependency>
       </dependencies>

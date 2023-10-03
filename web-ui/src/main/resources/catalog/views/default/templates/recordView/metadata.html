@@ -5,6 +5,7 @@
   <a
     class="btn btn-default btn-sm"
     data-ng-href="../api/records/{{mdView.current.record.uuid}}/formatters/xml"
+    target="_blank"
   >
     <span data-translate="">metadataInXML</span>
   </a>
@@ -32,7 +33,7 @@
   <div>
     <h3 data-translate="">metadataLanguage</h3>
     <ul class="gn-comma-list">
-      <li data-ng-repeat="l in mdLanguages">{{l | translate}}</li>
+      <li data-ng-repeat="l in mdLanguages | unique">{{l | translate}}</li>
     </ul>
   </div>
 </div>

@@ -107,6 +107,10 @@
                 processes: false
               };
 
+              Object.keys(scope.activeTools).forEach(function (key) {
+                scope.activeTools[key] = gnViewerSettings.mapConfig.defaultTool === key;
+              });
+
               /** optional tabs **/
               scope.disabledTools = gnViewerSettings.mapConfig.disabledTools;
 
