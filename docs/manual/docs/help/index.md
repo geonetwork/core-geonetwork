@@ -10,6 +10,6 @@ GeoNetwork is a catalog application to manage spatially referenced resources. It
 
 !!! info "Reference"
 
-    [GeoNetwork Manual](https://geonetwork-opensource.org/manuals/4.0.x/en/#)
+    [GeoNetwork Manual](https://docs.geonetwork-opensource.org/4.4)
 
     [GeoNetwork opensource](http://geonetwork-opensource.org)

@@ -1,11 +1,11 @@
 #!/bin/bash
 
-# Usage to update branch from a release 2.6.2 version to 2.6.3-SNAPSHOT version 		
+# Usage to update branch from a release 2.6.2 version to 2.6.3-SNAPSHOT version
 # In root folder of branch code: ./updateBranchVersion.sh 2.6.2 2.6.3
 
-function showUsage 
+function showUsage
 {
-  echo -e "\nThis script is used to update branch from a release version to next SNAPSHOT version. Should be used in branch after creating a new release (tag)." 
+  echo -e "\nThis script is used to update branch from a release version to next SNAPSHOT version. Should be used in branch after creating a new release (tag)."
   echo
   echo -e "Usage: ./`basename $0 $1` actual_version next_version"
   echo
@@ -14,7 +14,7 @@ function showUsage
   echo
 }
 
-if [ "$1" = "-h" ] 
+if [ "$1" = "-h" ]
 then
 	showUsage
 	exit
@@ -58,15 +58,12 @@ else
 fi
 
 echo
-echo 'Your Operating System is' $OSTYPE 
+echo 'Your Operating System is' $OSTYPE
 echo 'sed will use the following option: ' $sedopt
 echo
 
 version="$1"
 new_version="$2"
-
-# Update version in sphinx doc files
-sed $sedopt "s/${version}/${new_version}-SNAPSHOT/g" docs/manuals/source/conf.py
 
 # Update release properties
 sed $sedopt "s/version=${version}/version=${new_version}/g" release/build.properties

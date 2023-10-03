@@ -4,7 +4,7 @@ In this paragraph some guidance will be provided to build GeoNetwork from source
 
 The source code of GeoNetwork is available at [Github](https://github.com/geonetwork/core-geonetwork). This means that you can clone, fork and propose pushes of your custom changes. If you are not familiar with repositories of code or git, you should check [this quick manual](https://try.github.io/levels/1/challenges/1).
 
-GeoNetwork is a java project using [Maven version 3+](https://Maven.apache.org/). It is written on **Java 8**. It works both with OpenJDK or the Oracle version. There are several ways to install this on your local machine; for example if you have a Debian based OS (like Ubuntu), you can install them with just this command:
+GeoNetwork 4.4 is a java project using [Maven version 3+](https://Maven.apache.org/). It is written on **Java 11**. It works both with OpenJDK or the Oracle version. There are several ways to install this on your local machine; for example if you have a Debian based OS (like Ubuntu), you can install them with just this command:
 
 ``` bash
 $ sudo apt-get install maven git

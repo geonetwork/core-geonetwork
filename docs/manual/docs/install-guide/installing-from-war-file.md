@@ -11,6 +11,10 @@ Host ports requirements:
 -   [Kibana](https://www.elastic.co/kibana/): 5601
 -   Database eg. 5432 for a default [PostgreSQL](https://www.postgresql.org/) installation
 
+
+For  [Apache Tomcat](http://tomcat.apache.org/)  we recommend the following versions: 8.5.x and 9.0.x.
+For [Jetty](https://www.eclipse.org/jetty/) we the following versions: 9.4.x.
+
 1.  Download the WAR file
 
     GeoNetwork releases are available in <https://sourceforge.net/projects/geonetwork/files/GeoNetwork_opensource/>
@@ -37,6 +41,9 @@ Host ports requirements:
 
         You need to ensure Tomcat is configured with enough memory for GeoNetwork to launch. This can be be configured via the `setenv` script in tomcat with the appropriate memory for the JAVA_OPTS property). `-Xms2g -Xmx2g` is usually fine.
 
+    !!! note
+
+        For the  `/monitor/metrics` endpoint to work correctly, you must add to `JAVA_OPTS` the following option: `--add-opens=jdk.management/com.sun.management.internal=ALL-UNNAMED` 
 
 4.  Configure the search platform
 

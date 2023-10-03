@@ -12,7 +12,7 @@ GeoNetwork may run out of database connections, especially if a catalogue is set
 
 ## Java container
 
-GeoNetwork requires Java 8. The Oracle JRE version 8 is reaching end-of-live, we suggest to use the [openJDK](https://adoptopenjdk.net).
+GeoNetwork 4.4 requires Java 11. The Oracle JRE version 8 is reaching end-of-live, we suggest to use the [openJDK](https://adoptopenjdk.net).
 
 GeoNetwork arrives with a default container called Jetty. Jetty is a powerful minimal container implementation. If you need more configuration options consider to use Tomcat. Other containers can be used, but there are not many user experiences. Read more at [Installing from WAR file](../../install-guide/installing-from-war-file.md)
 
