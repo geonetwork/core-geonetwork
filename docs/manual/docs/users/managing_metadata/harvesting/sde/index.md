@@ -24,14 +24,14 @@ Configuration options:
 
 -   **Options**
 
-```{=html}
-<!-- -->
-```
+    --8<-- "common_options.md"
+
 -   **Harvested Content**
     -   *Validate* - if checked then harvested metadata records will be validated against the relevant metadata schema. Invalid records will be rejected.
 -   **Privileges**
 
-```{=html}
-<!-- -->
-```
+    --8<-- "common_privileges.md"
+
 -   **Categories**
+
+    --8<-- "common_categories.md"

@@ -24,9 +24,8 @@ A description of the options follows:
 
 -   **Options** - Scheduling Options.
 
-```{=html}
-<!-- -->
-```
+    --8<-- "common_options.md"
+
 -   **Harvested Content**
 
     -   *Validate* - if checked then harvested metadata records will be validated against the relevant metadata schema. Invalid records will be rejected.
@@ -56,8 +55,10 @@ A description of the options follows:
 -   **Categories**
     -   Select one or more categories from the scrolling list. The harvested metadata will be assigned to the selected categories (except where the **Set categories if exist locally** option described above causes the metadata to be assigned to a matching local category).
 
-## Notes
+!!! Notes
 
--   This harvester will not work if the remote site has a version prior to GeoNetwork 2.1 eg. GeoNetwork 2.0.2.
--   During harvesting, site icons are harvested and local copies are updated. Icons are propagated to new sites as soon as those sites harvest from this one.
--   The metadata record uuid is taken from the info.xml file of the MEF bundle.
+    -   This harvester will not work if the remote site has a version prior to GeoNetwork 2.1 eg. GeoNetwork 2.0.2.
+    -   During harvesting, site icons are harvested and local copies are updated. Icons are propagated to new sites as soon as those sites harvest from this one.
+    -   The metadata record uuid is taken from the info.xml file of the MEF bundle.
+
+    --8<-- "common_notes.md"

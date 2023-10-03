@@ -20,9 +20,8 @@ The available options are:
 
 -   **Options** - Scheduling options.
 
-```{=html}
-<!-- -->
-```
+    --8<-- "common_options.md"
+
 -   **Harvested Content**
 
     -   *Apply this XSLT to harvested records* - Choose an XSLT here that will convert harvested records to a different format.
@@ -30,10 +29,11 @@ The available options are:
 
 -   **Privileges**
 
-```{=html}
-<!-- -->
-```
+    --8<-- "common_privileges.md"
+
 -   **Categories**
+
+    --8<-- "common_categories.md"
 
 !!! note
 
@@ -55,33 +55,20 @@ The most useful attribute types in the GEO attribute set are as follows:
 
 In GeoNetwork the numeric values that can be specified for `@attr 1` map to the lucene index field names as follows:
 
-+----------------------+-------------------------------+-------------------------------------------------------------------------------------------------------------+
 | @attr 1=            | Lucene index field            | ISO19139 element                                                                                            |
-+======================+===============================+=============================================================================================================+
+| ------------------- | ----------------------------- | ----------------------------------------------------------------------------------------------------------- |
 | 1016                 | any                           | All text from all metadata elements                                                                         |
-+----------------------+-------------------------------+-------------------------------------------------------------------------------------------------------------+
 | 4                    | title, altTitle               | gmd:identificationInfo//gmd:citation//gmd:title/gco:CharacterString                                         |
-+----------------------+-------------------------------+-------------------------------------------------------------------------------------------------------------+
 | 62                   | abstract                      | gmd:identificationInfo//gmd:abstract/gco:CharacterString                                                    |
-+----------------------+-------------------------------+-------------------------------------------------------------------------------------------------------------+
 | 1012                 | _changeDate                  | Not a metadata element (maintained by GeoNetwork)                                                           |
-+----------------------+-------------------------------+-------------------------------------------------------------------------------------------------------------+
 | 30                   | createDate                    | gmd:MD_Metadata/gmd:dateStamp/gco:Date                                                                      |
-+----------------------+-------------------------------+-------------------------------------------------------------------------------------------------------------+
 | 31                   | publicationDate               | > gmd:identificationInfo//gmd:citation//gmd:date/gmd:<CI_DateCode/@codeListValue>='publication'           |
-+----------------------+-------------------------------+-------------------------------------------------------------------------------------------------------------+
 | 2072                 | tempExtentBegin               | > gmd:identificationInfo//gmd:extent//gmd:temporalElement//gml:begin(Position)                              |
-+----------------------+-------------------------------+-------------------------------------------------------------------------------------------------------------+
 | 2073                 | tempExtentEnd                 | > gmd:identificationInfo//gmd:extent//gmd:temporalElement//gml:end(Position)                                |
-+----------------------+-------------------------------+-------------------------------------------------------------------------------------------------------------+
 | 2012                 | fileId                        | gmd:MD_Metadata/gmd:fileIdentifier/*                                                                       |
-+----------------------+-------------------------------+-------------------------------------------------------------------------------------------------------------+
 | 12                   | identifier                    | gmd:identificationInfo//gmd:citation//gmd:identifier//gmd:code/*                                           |
-+----------------------+-------------------------------+-------------------------------------------------------------------------------------------------------------+
 | 21,29,2002,3121,3122 | keyword                       | gmd:identificationInfo//gmd:keyword/*                                                                      |
-+----------------------+-------------------------------+-------------------------------------------------------------------------------------------------------------+
 | 2060                 | northBL,eastBL,southBL,westBL | gmd:identificationInfo//gmd:extent//gmd:EX_GeographicBoundingBox/gmd:westBoundLongitude*/gco:Decimal (etc) |
-+----------------------+-------------------------------+-------------------------------------------------------------------------------------------------------------+
 
 Note that this is not a complete set of the mappings between Z3950 GEO attribute set and the GeoNetwork lucene index field names for ISO19139. Check out INSTALL_DIR/web/geonetwork/xml/search/z3950Server.xsl and INSTALL_DIR/web/geonetwork/xml/schemas/iso19139/index-fields.xsl for more details and annexe A of the GEO attribute set for Z3950 at <http://www.fgdc.gov/standards/projects/GeoProfile/annex_a.html> for more details.
 
@@ -114,7 +101,7 @@ A more sophisticated search on a bounding box might be formulated as:
 -   `@attr 4=201` means that the query contains coordinate strings
 -   `@attr 2=7` means that we are searching for records whose bounding box overlaps the query box specified at the end of the query
 
-## Notes
+!!! Notes
 
--   Z3950 servers must be configured for GeoNetwork in `INSTALL_DIR/web/geonetwork/WEB-INF/classes/JZKitConfig.xml.tem`
--   every time the harvester runs, it will remove previously harvested records and create new ones.
+    -   Z3950 servers must be configured for GeoNetwork in `INSTALL_DIR/web/geonetwork/WEB-INF/classes/JZKitConfig.xml.tem`
+    -   every time the harvester runs, it will remove previously harvested records and create new ones.

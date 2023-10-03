@@ -21,31 +21,32 @@ The figure above shows the options available:
 
 -   **Options** - Scheduling options.
 
-```{=html}
-<!-- -->
-```
+    --8<-- "common_options.md"
+
 -   **Harvested Content** - Options that are applied to harvested content.
     -   *Apply this XSLT to harvested records* - Choose an XSLT here that will convert harvested records to a different format. See notes section below for typical usage.
     -   *Validate* - If checked, the metadata will be validated after retrieval. If the validation does not pass, the metadata will be skipped.
 -   **Privileges** - Assign privileges to harvested metadata.
 
-```{=html}
-<!-- -->
-```
+    --8<-- "common_privileges.md.md"
+
 -   **Categories**
 
-## Notes
+    --8<-- "common_categories.md"
 
--   this harvester uses two REST services from the GeoPortal API:
+!!! Notes
+   
+    -    this harvester uses two REST services from the GeoPortal API:
 
--   `rest/find/document` with searchText parameter to return an RSS listing of metadata records that meet the search criteria (maximum 100000)
--   `rest/document` with id parameter from each result returned in the RSS listing
+    -   `rest/find/document` with searchText parameter to return an RSS listing of metadata records that meet the search criteria (maximum 100000)
+    -   `rest/document` with id parameter from each result returned in the RSS listing
 
--   this harvester has been tested with GeoPortal 9.3.x and 10.x. It can be used in preference to the CSW harvester if there are issues with the handling of the OGC standards etc.
+    -   this harvester has been tested with GeoPortal 9.3.x and 10.x. It can be used in preference to the CSW harvester if there are issues with the handling of the OGC standards etc.
 
-<figure>
-<img src="web-harvesting-geoportal-10-rest.png" alt="web-harvesting-geoportal-10-rest.png" />
-<figcaption><em>GeoPortal REST harvester for a version 10 site</em></figcaption>
-</figure>
+    <figure>
+    <img src="web-harvesting-geoportal-10-rest.png" alt="web-harvesting-geoportal-10-rest.png" />
+    <figcaption><em>GeoPortal REST harvester for a version 10 site</em></figcaption>
+    </figure>
 
--   typically ISO19115 metadata produced by the Geoportal software will not have a 'gmd' prefix for the namespace `http://www.isotc211.org/2005/gmd`. GeoNetwork XSLTs will not have any trouble understanding this metadata but will not be able to map titles and codelists in the viewer/editor. To fix this problem, please select the ``Add-gmd-prefix`` XSLT for the *Apply this XSLT to harvested records* in the **Harvested Content** set of options described earlier
+    -   typically ISO19115 metadata produced by the Geoportal software will not have a 'gmd' prefix for the namespace `http://www.isotc211.org/2005/gmd`. GeoNetwork XSLTs will not have any trouble understanding this metadata but will not be able to map titles and codelists in the viewer/editor. To fix this problem, please select the ``Add-gmd-prefix`` XSLT for the *Apply this XSLT to harvested records* in the **Harvested Content** set of options described earlier
+

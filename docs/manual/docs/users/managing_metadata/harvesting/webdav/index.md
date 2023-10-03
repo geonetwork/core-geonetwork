@@ -19,9 +19,8 @@ This harvesting type uses the WebDAV (Distributed Authoring and Versioning) prot
 
 -   **Options** - Scheduling options.
 
-```{=html}
-<!-- -->
-```
+    --8<-- "common_options.md"
+
 -   **Options** - Specific harvesting options for this harvester.
 
     -   *Validate* - If checked, the metadata will be validated after retrieval. If the validation does not pass, the metadata will be skipped.
@@ -29,11 +28,13 @@ This harvesting type uses the WebDAV (Distributed Authoring and Versioning) prot
 
 -   **Privileges** - Assign privileges to harvested metadata.
 
-```{=html}
-<!-- -->
-```
+    --8<-- "common_privileges.md"
+
 -   **Categories**
 
-## Notes
+    --8<-- "common_categories.md"
 
--   The same metadata could be harvested several times by different instances of the WebDAV harvester. This is not good practise because copies of the same metadata record will have a different UUID.
+!!! Notes
+
+    -   The same metadata could be harvested several times by different instances of the WebDAV harvester. This is not good practise because copies of the same metadata record will have a different UUID.
+    --8<-- "common_notes.md"

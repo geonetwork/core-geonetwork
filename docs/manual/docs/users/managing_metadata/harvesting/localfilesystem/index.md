@@ -21,19 +21,19 @@ The figure above shows the options available:
 
 -   **Options** - Scheduling options.
 
-```{=html}
-<!-- -->
-```
+    --8<-- "common_options.md"
+
 -   **Harvested Content** - Options that are applied to harvested content.
     -   *Apply this XSLT to harvested records* - Choose an XSLT here that will convert harvested records to a different format.
     -   *Validate* - If checked, the metadata will be validated after retrieval. If the validation does not pass, the metadata will be skipped.
 -   **Privileges** - Assign privileges to harvested metadata.
 
-```{=html}
-<!-- -->
-```
+    --8<-- "common_privileges.md.md"
+
 -   **Categories**
 
-## Notes
+    --8<-- "common_categories.md"
 
--   in order to be successfully harvested, metadata records retrieved from the file system must match a metadata schema in the local GeoNetwork instance
+!!! Notes
+
+    -   in order to be successfully harvested, metadata records retrieved from the file system must match a metadata schema in the local GeoNetwork instance
