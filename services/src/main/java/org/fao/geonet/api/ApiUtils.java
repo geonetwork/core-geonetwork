@@ -489,13 +489,7 @@ public class ApiUtils {
      */
     public static AbstractMetadata canViewRecord(String metadataUuid, boolean approved, HttpServletRequest request) throws Exception {
         String metadataId;
-        if (!approved) {
-            // If the record is not approved then we need to get the id of the record.
-            metadataId = getInternalId(metadataUuid, approved);
-        } else {
-            // Otherwise use the uuid or id that was supplied.
-            metadataId = metadataUuid;
-        }
+        metadataId = getInternalId(metadataUuid, approved);
 
         ServiceContext previous = ServiceContext.get();
         if (previous != null) previous.clearAsThreadLocal();
