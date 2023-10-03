@@ -9,7 +9,6 @@ The following sources can be harvested:
 -   [GeoNetwork 2.0 Harvester](harvesting-geonetwork.md)
 -   [Harvesting CSW services](harvesting-csw.md)
 -   [Harvesting OGC Services](harvesting-ogcwxs.md)
--   [Simple URL harvesting (opendata)](harvesting-simpleurl.md)
 -   [Local File System Harvesting](harvesting-filesystem.md)
 -   [WEBDAV Harvesting](harvesting-webdav.md)
 -   [OAIPMH Harvesting](harvesting-oaipmh.md)

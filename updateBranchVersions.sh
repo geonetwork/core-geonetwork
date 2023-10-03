@@ -55,9 +55,6 @@ version="$1"
 # Remove patch number for SNAPSHOT version
 new_version="${version%.*}"
 
-# Update version in sphinx doc files
-sed $sedopt "s/${version}/${new_version}-SNAPSHOT/g" docs/manuals/source/conf.py
-
 # Update release properties
 sed $sedopt "s/version=${version}/version=${new_version}/g" release/build.properties
 sed $sedopt "s/subVersion=0/subVersion=SNAPSHOT/g" release/build.properties

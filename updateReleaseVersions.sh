@@ -53,8 +53,6 @@ version="$1"
 # Remove the patch version: 3.10.2 --> 3.10
 versionnopatchinfo="${version%.*}"
 
-# Update version in sphinx doc files
-sed $sedopt "s/${versionnopatchinfo}-SNAPSHOT/${version}/g" docs/manuals/source/conf.py
 
 # Update release subversion
 sed $sedopt "s/version=.*/version=${version}/g" release/build.properties

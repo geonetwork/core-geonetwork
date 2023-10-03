@@ -98,12 +98,6 @@ echo
 
 # TODO: check that version is the version in the file to be updated.
 
-# Update version in sphinx doc files
-echo 'Documentation'
-echo ' * updating docs/manuals/source/conf.py'
-sed $sedopt "s/${version}/${new_version_main}/g" docs/manuals/source/conf.py
-echo
-
 
 # Update release properties
 echo 'Release (ZIP bundle)'
