@@ -170,7 +170,8 @@
         finalParams,
         $scope.searchObj.state,
         $scope.searchObj.configId,
-        $scope.searchObj.filters
+        $scope.searchObj.filters,
+        $scope.resultTemplate && $scope.resultTemplate.source
       );
 
       function buildSearchKey(esParams) {
@@ -218,8 +219,8 @@
           // which was not depending on the current template but
           // only specific case for the list.html.
           var template =
-              $scope.resultTemplate.tplUrl
-              && $scope.resultTemplate.tplUrl.endsWith("list.html")
+              $scope.resultTemplate.tplUrl &&
+              $scope.resultTemplate.tplUrl.endsWith("list.html")
                 ? "grid"
                 : "",
             templateConfig = gnGlobalSettings.gnCfg.mods.search[template];
