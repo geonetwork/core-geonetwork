@@ -33,31 +33,31 @@ In addition to the main mandatory fields, we recommend you to fill out these opt
 
 1.  Enter your username and password and click on the login button. The system will identify you and assign the correct privileges to work with.
 
-    > <figure>
-    > <img src="login.png" alt="login.png" />
-    > <figcaption><em>Login</em></figcaption>
-    > </figure>
+    <figure>
+    <img src="login.png" alt="login.png" />
+    <figcaption><em>Login</em></figcaption>
+    </figure>
 
 2.  Open the Administration page by clicking the Administration button in the banner and then click on the New metadata link.
 
-    > <figure>
-    > <img src="Admin.png" alt="Admin.png" />
-    > <figcaption><em>Administration panel</em></figcaption>
-    > </figure>
+    <figure>
+    <img src="Admin.png" alt="Admin.png" />
+    <figcaption><em>Administration panel</em></figcaption>
+    </figure>
 
 3.  From the metadata creation page, select the metadata standard to use from the dropdown list (Figure 4.3, "Template selection")
 
-    > <figure>
-    > <img src="metadataCreation.png" alt="metadataCreation.png" />
-    > <figcaption><em>Template selection</em></figcaption>
-    > </figure>
+    <figure>
+    <img src="metadataCreation.png" alt="metadataCreation.png" />
+    <figcaption><em>Template selection</em></figcaption>
+    </figure>
 
 4.  After selecting the correct template, you should identify which group of users the metadata will belong to and finally click on **Create**.
 
-    > <figure>
-    > <img src="selectGroup.png" alt="selectGroup.png" />
-    > <figcaption><em>Group selection</em></figcaption>
-    > </figure>
+    <figure>
+    <img src="selectGroup.png" alt="selectGroup.png" />
+    <figcaption><em>Group selection</em></figcaption>
+    </figure>
 
 5.  A new metadata form based on the selected template will be displayed for you to fill out.
 

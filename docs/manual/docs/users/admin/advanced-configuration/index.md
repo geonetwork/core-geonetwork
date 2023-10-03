@@ -327,13 +327,17 @@ Example:
 
 -   Add the following java properties to start-geonetwork.sh script:
 
-    > java -Xms48m -Xmx512m -Xss2M -XX:MaxPermSize=128m -Dgeonetwork.dir=/app/geonetwork_data_dir -Dgeonetwork.lucene.dir=/ssd/geonetwork_lucene_dir
-
+    ``` shell
+    java -Xms48m -Xmx512m -Xss2M -XX:MaxPermSize=128m -Dgeonetwork.dir=/app/geonetwork_data_dir -Dgeonetwork.lucene.dir=/ssd/geonetwork_lucene_dir
+    ```
+    
 -   Add the following system properties to start-geonetwork.sh script:
     
-    > # Set custom data directory location using system property
-    > export geonetwork_dir=/app/geonetwork_data_dir
-    > export geonetwork_lucene_dir=/ssd/geonetwork_lucene_dir
+    ``` shell
+    # Set custom data directory location using system property
+    export geonetwork_dir=/app/geonetwork_data_dir
+    export geonetwork_lucene_dir=/ssd/geonetwork_lucene_dir
+    ```
 
 ### System information
 
@@ -379,84 +383,86 @@ The property should be a path or a URL. The method used to find a overrides file
 
 An example of a overrides file is as follows:
 
-    <overrides>
-        <!-- import values.  The imported values are put at top of sections -->
-        <import file="./imported-config-overrides.xml" />
-         <!-- properties allow some properties to be defined that will be substituted -->
-         <!-- into text or attributes where ${property} is the substitution pattern -->
-         <!-- The properties can reference other properties -->
-         <properties>
-             <enabled>true</enabled>
-             <dir>xml</dir>
-             <aparam>overridden</aparam>
-         </properties>
-         <!-- A regular expression for matching the file affected. -->
-         <file name=".*WEB-INF/config\.xml">
-             <!-- This example will update the file attribute of the xml element with the name attribute 'countries' -->
-             <replaceAtt xpath="default/gui/xml[@name = 'countries']" attName="file" value="${dir}/europeanCountries.xml"/>
-             <!-- if there is no value then the attribute is removed -->
-             <replaceAtt xpath="default/gui" attName="removeAtt"/>
-             <!-- If the attribute does not exist it is added -->
-             <replaceAtt xpath="default/gui" attName="newAtt" value="newValue"/>
+``` xml
+<overrides>
+    <!-- import values.  The imported values are put at top of sections -->
+    <import file="./imported-config-overrides.xml" />
+     <!-- properties allow some properties to be defined that will be substituted -->
+     <!-- into text or attributes where ${property} is the substitution pattern -->
+     <!-- The properties can reference other properties -->
+     <properties>
+         <enabled>true</enabled>
+         <dir>xml</dir>
+         <aparam>overridden</aparam>
+     </properties>
+     <!-- A regular expression for matching the file affected. -->
+     <file name=".*WEB-INF/config\.xml">
+         <!-- This example will update the file attribute of the xml element with the name attribute 'countries' -->
+         <replaceAtt xpath="default/gui/xml[@name = 'countries']" attName="file" value="${dir}/europeanCountries.xml"/>
+         <!-- if there is no value then the attribute is removed -->
+         <replaceAtt xpath="default/gui" attName="removeAtt"/>
+         <!-- If the attribute does not exist it is added -->
+         <replaceAtt xpath="default/gui" attName="newAtt" value="newValue"/>
 
-             <!-- This example will replace all the xml in resources with the contained xml -->
-             <replaceXML xpath="resources">
-               <resource enabled="${enabled}">
-                 <name>main-db</name>
-                 <provider>jeeves.resources.dbms.DbmsPool</provider>
-                  <config>
-                      <user>admin</user>
-                      <password>admin</password>
-                      <driver>oracle.jdbc.driver.OracleDriver</driver>
-                      <!-- ${host} will be updated to be local host -->
-                      <url>jdbc:oracle:thin:@${host}:1521:fs</url>
-                      <poolSize>10</poolSize>
-                  </config>
-               </resource>
-             </replaceXML>
-             <!-- This example simple replaces the text of an element -->
-             <replaceText xpath="default/language">${lang}</replaceText>
-             <!-- This examples shows how only the text is replaced not the nodes -->
-             <replaceText xpath="default/gui">ExtraText</replaceText>
-             <!-- append xml as a child to a section (If xpath == "" then that indicates the root of the document),
-                  this case adds nodes to the root document -->
-             <addXML xpath=""><newNode/></addXML>
-             <!-- append xml as a child to a section, this case adds nodes to the root document -->
-             <addXML xpath="default/gui"><newNode2/></addXML>
-             <!-- remove a single node -->
-             <removeXML xpath="default/gui/xml[@name = countries2]"/>
-             <!-- The logging files can also be overridden, although not as easily as other files.  
-                  The files are assumed to be property files and all the properties are loaded in order.  
-                  The later properties overriding the previously defined parameters. Since the normal
-                  log file is not automatically located, the base must be also defined.  It can be the once
-                  shipped with geonetwork or another. -->
-             <logging>
-                 <logFile>/WEB-INF/log4j.cfg</logFile>
-                 <logFile>/WEB-INF/log4j-jeichar.cfg</logFile>
-             </logging>
-         </file>
-         <file name=".*WEB-INF/config2\.xml">
-             <replaceText xpath="default/language">de</replaceText>
-         </file>
-         <!-- a normal file tag is for updating XML configuration files -->
-         <!-- textFile tags are for updating normal text files like sql files -->
-         <textFile name="test-sql.sql">
-             <!-- each line in the text file is matched against the linePattern attribute and the new value is used for substitution -->
-             <update linePattern="(.*) Relations">$1 NewRelations</update>
-             <update linePattern="(.*)relatedId(.*)">$1${aparam}$2</update>
-         </textFile>
-        <!-- configure the spring aspects of geonetwork -->
-        <spring>
-          <!-- import a complete spring xml file -->
-          <import file="./config-spring-overrides.xml"/>
-          <!-- declare a file as a spring properties override file: See http://static.springsource.org/spring/docs/3.0.x/api/org/springframework/beans/factory/config/PropertyOverrideConfigurer.html -->
-          <propertyOverrides file="./config-property-overrides.properties" />
-          <!-- set a property on one bean to reference another bean -->
-          <set>beanName.propertyName=beanName</set>
-          <!-- add a references to a bean to a property on another bean.  This assumes the property is a collection -->
-          <add>beanName.propertyName=beanName</add>
-        </spring>
-     </overrides>
+         <!-- This example will replace all the xml in resources with the contained xml -->
+         <replaceXML xpath="resources">
+           <resource enabled="${enabled}">
+             <name>main-db</name>
+             <provider>jeeves.resources.dbms.DbmsPool</provider>
+              <config>
+                  <user>admin</user>
+                  <password>admin</password>
+                  <driver>oracle.jdbc.driver.OracleDriver</driver>
+                  <!-- ${host} will be updated to be local host -->
+                  <url>jdbc:oracle:thin:@${host}:1521:fs</url>
+                  <poolSize>10</poolSize>
+              </config>
+           </resource>
+         </replaceXML>
+         <!-- This example simple replaces the text of an element -->
+         <replaceText xpath="default/language">${lang}</replaceText>
+         <!-- This examples shows how only the text is replaced not the nodes -->
+         <replaceText xpath="default/gui">ExtraText</replaceText>
+         <!-- append xml as a child to a section (If xpath == "" then that indicates the root of the document),
+              this case adds nodes to the root document -->
+         <addXML xpath=""><newNode/></addXML>
+         <!-- append xml as a child to a section, this case adds nodes to the root document -->
+         <addXML xpath="default/gui"><newNode2/></addXML>
+         <!-- remove a single node -->
+         <removeXML xpath="default/gui/xml[@name = countries2]"/>
+         <!-- The logging files can also be overridden, although not as easily as other files.  
+              The files are assumed to be property files and all the properties are loaded in order.  
+              The later properties overriding the previously defined parameters. Since the normal
+              log file is not automatically located, the base must be also defined.  It can be the once
+              shipped with geonetwork or another. -->
+         <logging>
+             <logFile>/WEB-INF/log4j.cfg</logFile>
+             <logFile>/WEB-INF/log4j-jeichar.cfg</logFile>
+         </logging>
+     </file>
+     <file name=".*WEB-INF/config2\.xml">
+         <replaceText xpath="default/language">de</replaceText>
+     </file>
+     <!-- a normal file tag is for updating XML configuration files -->
+     <!-- textFile tags are for updating normal text files like sql files -->
+     <textFile name="test-sql.sql">
+         <!-- each line in the text file is matched against the linePattern attribute and the new value is used for substitution -->
+         <update linePattern="(.*) Relations">$1 NewRelations</update>
+         <update linePattern="(.*)relatedId(.*)">$1${aparam}$2</update>
+     </textFile>
+    <!-- configure the spring aspects of geonetwork -->
+    <spring>
+      <!-- import a complete spring xml file -->
+      <import file="./config-spring-overrides.xml"/>
+      <!-- declare a file as a spring properties override file: See http://static.springsource.org/spring/docs/3.0.x/api/org/springframework/beans/factory/config/PropertyOverrideConfigurer.html -->
+      <propertyOverrides file="./config-property-overrides.properties" />
+      <!-- set a property on one bean to reference another bean -->
+      <set>beanName.propertyName=beanName</set>
+      <!-- add a references to a bean to a property on another bean.  This assumes the property is a collection -->
+      <add>beanName.propertyName=beanName</add>
+    </spring>
+ </overrides>
+```
 
 ## Lucene configuration {#adv_configuration_lucene}
 

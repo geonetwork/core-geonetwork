@@ -6,18 +6,18 @@ Harvesting is the process of collecting metadata from a remote source and storin
 
 GeoNetwork is able to harvest from the following sources (for more details see below):
 
-> 1.  Another GeoNetwork node (version 2.1 or above). See [GeoNetwork Harvesting](gn/index.md)
-> 2.  An old GeoNetwork 2.0 node (deprecated). See [GeoNetwork 2.0 Harvester](gn2.0/index.md)
-> 3.  A WebDAV server. See [WEBDAV Harvesting](webdav/index.md)
-> 4.  A CSW 2.0.1 or 2.0.2 catalogue server. See [CSW Harvesting](csw/index.md)
-> 5.  A GeoPortal 9.3.x or 10.x server. See [GeoPortal REST Harvesting](geoPREST/index.md)
-> 6.  A File system acessible by GeoNetwork. See [Local File System Harvesting](localfilesystem/index.md)
-> 7.  An OAI-PMH server. See [OAIPMH Harvesting](oaipmh/index.md)
-> 8.  An OGC service using its GetCapabilities document. These include WMS, WFS, WPS and WCS services. See [Harvesting OGC Services](ogcwxs/index.md)
-> 9.  An ArcSDE server. See [Harvesting an ARCSDE Node](sde/index.md)
-> 10. A THREDDS catalog. See [THREDDS Harvesting](thredds/index.md)
-> 11. An OGC WFS using a GetFeature query. See [WFS GetFeature Harvesting](wfs-getfeatures/index.md)
-> 12. One or more Z3950 servers. See [Z3950 Harvesting](z3950/index.md)
+1.  Another GeoNetwork node (version 2.1 or above). See [GeoNetwork Harvesting](gn/index.md)
+2.  An old GeoNetwork 2.0 node (deprecated). See [GeoNetwork 2.0 Harvester](gn2.0/index.md)
+3.  A WebDAV server. See [WEBDAV Harvesting](webdav/index.md)
+4.  A CSW 2.0.1 or 2.0.2 catalogue server. See [CSW Harvesting](csw/index.md)
+5.  A GeoPortal 9.3.x or 10.x server. See [GeoPortal REST Harvesting](geoPREST/index.md)
+6.  A File system acessible by GeoNetwork. See [Local File System Harvesting](localfilesystem/index.md)
+7.  An OAI-PMH server. See [OAIPMH Harvesting](oaipmh/index.md)
+8.  An OGC service using its GetCapabilities document. These include WMS, WFS, WPS and WCS services. See [Harvesting OGC Services](ogcwxs/index.md)
+9.  An ArcSDE server. See [Harvesting an ARCSDE Node](sde/index.md)
+10. A THREDDS catalog. See [THREDDS Harvesting](thredds/index.md)
+11. An OGC WFS using a GetFeature query. See [WFS GetFeature Harvesting](wfs-getfeatures/index.md)
+12. One or more Z3950 servers. See [Z3950 Harvesting](z3950/index.md)
 
 ## Mechanism overview
 

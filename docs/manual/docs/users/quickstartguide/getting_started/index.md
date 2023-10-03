@@ -133,10 +133,10 @@ At last, you can customise the number of output results per page in the *Hits Pe
 
 If INSPIRE Search panel is enable in Administration > System configuration page, an additional section is displayed to allow searching INSPIRE metadata in the catalog.
 
-> <figure>
-> <img src="advanced_search_inspire.png" alt="advanced_search_inspire.png" />
-> <figcaption><em>"Inspire" section in the Advanced search</em></figcaption>
-> </figure>
+<figure>
+<img src="advanced_search_inspire.png" alt="advanced_search_inspire.png" />
+<figcaption><em>"Inspire" section in the Advanced search</em></figcaption>
+</figure>
 
 -   *Annex*: Allows to search for metadata related to a specific Inspire annex. The Inspire annexes for a metadata are based on the Inspire theme keywords assigned to it.
 -   *Source type*: Allows to search for dataset or service metadata.
@@ -157,29 +157,29 @@ The output of a search provides you a list of the metadata records that should f
 
 2.  **Download**: Depending on the privileges that have been set for each record, when this button is present, the dataset is available and downloadable. The process for retrieving data is simple and quick by just clicking the download button or by using the proper link in the specific metadata section for distribution info in the full metadata view.
 
-    > <figure>
-    > <img src="search_output1.png" alt="search_output1.png" />
-    > <figcaption><em>A single search result</em></figcaption>
-    > </figure>
-    >
-    > <figure>
-    > <img src="download.png" alt="download.png" />
-    > <figcaption><em>Available services related to the resource</em></figcaption>
-    > </figure>
+    <figure>
+    <img src="search_output1.png" alt="search_output1.png" />
+    <figcaption><em>A single search result</em></figcaption>
+    </figure>
+    
+    <figure>
+    <img src="download.png" alt="download.png" />
+    <figcaption><em>Available services related to the resource</em></figcaption>
+    </figure>
 
 3.  **Interactive Map**: The map service is also optional. When this button is shown, an interactive map for this layer is available and, by default, it will be displayed on the map screen of the simple search. To better visualise the map through the map viewer, **click** on **Show Map** on the top of search results panel.
 
-    > <figure>
-    > <img src="interactive_map.png" alt="interactive_map.png" />
-    > <figcaption><em>The interactive map viewer</em></figcaption>
-    > </figure>
+    <figure>
+    <img src="interactive_map.png" alt="interactive_map.png" />
+    <figcaption><em>The interactive map viewer</em></figcaption>
+    </figure>
 
 4.  **Graphic Overviews**: There are small and large overviews of the map used to properly evaluate usefulness of the data, especially if the interactive map is not available. Simply click on the small image to enlarge it.
 
-    > <figure>
-    > <img src="thumbnail.png" alt="thumbnail.png" />
-    > <figcaption><em>Large preview image</em></figcaption>
-    > </figure>
+    <figure>
+    <img src="thumbnail.png" alt="thumbnail.png" />
+    <figcaption><em>Large preview image</em></figcaption>
+    </figure>
 
 ## Privileges, roles and user groups
 

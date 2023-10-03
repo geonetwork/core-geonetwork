@@ -304,11 +304,11 @@ During the build process FindBugs and Checkstyle are ran. If a violation is foun
 
 Since the FindBugs and Checkstyle processes can be quite time consuming adding -DskipTests to the maven commandline will skip those processes as well as tests. For example:
 
-> mvn install -DskipTests
+    mvn install -DskipTests
 
 Or if you want to run the tests but skip static analysis:
 
-> mvn install -P-run-static-analysis
+    mvn install -P-run-static-analysis
 
 That disables the profile that executes the static analysis tasks.
 

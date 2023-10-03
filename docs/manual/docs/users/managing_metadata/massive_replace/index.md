@@ -12,7 +12,7 @@ To use this feature the user you must be **registered** as **Reviewer**, **User 
 
 3.  Select **Actions on selection** > **Massive metadata update**.
 
-    > ![](massive_update.png)
+    ![](massive_update.png)
 
 This form allows to configure the replacements to apply to the metadata selection.
 
@@ -39,7 +39,7 @@ To define the replacements to apply to the selected metadata:
 
 Once all the replacements are defined, you can test it before applying it. Click **Test** button to produce a report with the metadata that will be updated:
 
-> ![](massive_update_test.png)
+![](massive_update_test.png)
 
 !!! note
 
@@ -48,7 +48,7 @@ Once all the replacements are defined, you can test it before applying it. Click
 
 To apply the replacements and save the changes, click **Update metadata** button. A confirmation message is displayed before executing the process.
 
-> ![](massive_update_confirmation.png)
+![](massive_update_confirmation.png)
 
 The process will replace any occurrence of the text indicated in (3) with the text indicated in (4) for the metadata element indicated in (2) and can take several time, depending on the size of the selection.
 
@@ -58,7 +58,7 @@ At the end of the process a summary is displayed.
 
 2.  Number of records updated: total records that have been updated.
 
-    > ![](massive_update_result.png)
+    ![](massive_update_result.png)
 
 ## Replacements available
 

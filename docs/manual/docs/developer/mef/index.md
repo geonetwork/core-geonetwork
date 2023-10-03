@@ -103,7 +103,7 @@ Any other element or attribute should be ignored by readers that don't understan
 
 ### Date format
 
-Unless differently specified, all dates in this file must be in the ISO/8601 format. The pattern must be YYYY-MM-DDTHH:mm:SS and the timezone should be the local one.
+Unless differently specified, all dates in this file must be in the ISO/8601 format. The pattern must be `YYYY-MM-DDTHH:mm:SS` and the timezone should be the local one.
 
 #### Date format example {#info_xml}
 
