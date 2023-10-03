@@ -208,7 +208,7 @@
             } else if (url && url.indexOf('www.') == 0) {
               return window.open('http://' + url, '_blank');
             } else if (link.title &&
-              angular.isString(record.title) &&
+              angular.isString(link.title) &&
               link.title.match("^(http|ftp|sftp|\\\\|//)")) {
               return window.location.assign(link.title);
             } else {
