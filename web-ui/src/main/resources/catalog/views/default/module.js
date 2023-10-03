@@ -362,6 +362,8 @@
               ? "esrirest"
               : link.protocol == "OGC:3DTILES"
               ? "3dtiles"
+              : link.protocol == "OGC:COG"
+              ? "cog"
               : "wms",
           url: $filter("gnLocalized")(link.url) || link.url
         };
