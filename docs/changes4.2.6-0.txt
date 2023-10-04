@@ -1,0 +1,107 @@
+================================================================================
+===
+=== GeoNetwork 4.2.6: List of changes
+===
+================================================================================
+- Doc / Changelog / 4.2.6. (#7393)
+- [BP] Changed GENERATEUUID to NOTHING based on discussion on issue #7274
+- Documentation 4.2: Update link to the 4.2 manual and release scripts (#7380)
+- [BP] Fixed typos for SOURCE.md (#7384)
+- [BP] Update MkDocs configuration to publish to gh-pages branch (#7375)
+- [BP] Workflow / Related records of the draft (#7377)
+- [BP]  User Manual refresh using Markdown and MkDocs (#7329)
+- [BP] batch edit user profile check in APIs (#7243)
+- [BP] Record view / Support multiple status.
+- [BP] Groups maintenance / fix the display of the metadata owned by a group (#7371)
+- [BP] Map viewer / Option to configure WMS tiling (#7312)
+- [BP] Fix working copy display so that links go to working copy (#7248)
+- [BP] Send metadata mail notifications for public metadata when is re-approved - fill missing information for submitter, reviewer and publisher user (#7292)
+- [BP] Map viewer / context map / only WMS layers have dimensions information
+- [BP] Standard / ISO19110 improvements
+- [BP] fix for untranslated userRecord and userRecords labels in user admin page (#7354)
+- [BP] Add support for emails with subdomains (#7314)
+- [BP] Improved handling of empty titles (#7362)
+- [BP] Indexing / Bounding Polygon / Coordinate order (#7364)
+- [BP] Indexing / Bounding Polygon / Reproject if needed #7340
+- [BP] Editor / Online source / Fix button icon
+- [BP] Fix CORSInterceptor, usage of a variable before is defined. Related to #5941 (#7361)
+- [BP] Display the login menu for authenticated users when the setting 'gnCfg.mods.authentication.enabled' is disabled
+- [BP] Map / WMS dimension saved in map (#7339)
+- [BP] Add icons for related types (association and initiative) (#7264)
+- [BP] WFS layer improvements (#7317)
+- [BP] Create metadata category - check doesn't exist a category with the same name (#7296)
+- Fix HTML/Javascript prettier formatting / 4.2.x branch (#7356)
+- [BP] Portal / RSS feeds point to current portal (#7343)
+- [BP] Prevent invalid date written into xml (#7321)
+- [BP] Fix write after response commit on proxy response (#7353)
+- [BP] Map / Localisation / Empty results if no query (#7338)
+- [BP] Indexing / Do not create empty object if no text (#7349)
+- [BP] Indexing / Do not create empty object if no text (#7294)
+- [BP] Batch Editing access level in general system settings (#7238)
+- [BP] User feedback API fixes: - Update mail message, related to #6792. - Don't fail the user feedback creation if the mail server is not configured
+- [BP] Remove configuration for the UI setting 'isMenubarAccessible', removed in #7138
+- [BP] Batch editing / Update xpath spec link
+- [BP] Fix robots.txt and sitemap 500 errors if no right content type is provided (#7327)
+- [BP] INSPIRE ATOM - retrieve the metadata ATOM feed using only the resource identifier (#7305)
+- fix(ods): add CI_OnlineResource linkages for ods v1
+- [BP] Hide thumbnail image in metadata page when the image can't be loaded due to an error. (#7319)
+- feat(ods): use ods explore api for CI_OnlineResource linkages
+- [BP] Bump actions/checkout from 3 to 4 (#7318)
+- [BP] Updated embedded documentation on naming convention for postprocessing files for sub-portals (#7310)
+- [BP] Fix permalink option in the application footer
+- [BP] Fix the check to display the Transfer ownership option in the metadata detail page
+- [BP] Minor cleanup (#7301)
+- [BP] Fix metadata editor tooltips close button when using the icon mode
+- [BP] Notifications / Errors / Fix message on group creation (#7295)
+- [BP] Metadata editor / recommended values for fields show an empty value. (#7232)
+- [BP] Standard / ISO / Mimefiletype encoding.
+- [BP] WMS tile images - if HEAD request fails, default to OL image src set
+- [BP] Search / Aggregation on organisation in Dutch (#7290)
+- [BP] Do not break link in the middle of a word.
+- [BP] Set html emails as utf-8
+- [BP] ISO19139 / ISO19115-3.2018 / Don't index resource identifiers with empty code
+- [BP] Update GeonetHttpRequestFactory to use system proxy defined in JAVA_OPTS
+- [BP] Update AbstractHttpRequest to use system proxy defined in JAVA_OPTS
+- [BP] fix ui issue (#7256)
+- [BP] Use resource files for messages (#7281)
+- [BP] API / Attachements / Stream files to servlet response (#7287)
+- [BP] Metadata index set of records - index the approved and working copies when the workflow is enabled (#7269)
+- [BP] Bump actions/setup-java from 3.10.0 to 3.12.0 (#7239)
+- [BP] Metadata editor / display metadata uuid for remote resources if the metadata title is not available
+- [BP] Handle empty allGroupOpsAfter instead of throwing error. If we cannot find publishedAfter then default to publishedBefore so that no emails are sent.
+- [BP] Full view on working copy fails. Fixes #7270
+- [BP] WMS time dimension - basic support for time intervals (#7280)
+- [BP] Fix error that would occur when there were duplicate languages. (#7275)
+- [BP] Fix deletion sequence in editor: wait for DOM update before saving
+- [BP] Standard / ISO19115-3 / Processing / Metadata contact lost. (#7278)
+- [BP] Add XmlTransient annotation to ISODate.getDateAndTimeUtc
+- [BP] Fix directive to display the most popular records, to display the most popular first
+- [BP] Fix DOI logging
+- [BP] Use http proxy in DOI client
+- [BP] Fix record history parameter name. Related to #7074 (#7249)
+- [BP] Fix German typo of the label for 'otherRestrictions' (#7245)
+- [BP] Fix wmsQueue clear method logic
+- Update Github actions for 4.2.x branch (#7225)
+- [BP] Escape {{ to avoid error parsing argument. (#7237)
+- [BP] Update skin.xsl so that it works better in nojs mode. (#7015)
+- [BP]When authenticating user, only update the usergroups in the database if they have changed (#7165)
+- [BP] Map viewer / 'Default map' javascript error. Fixes #7228
+- [BP] Add support for OL Attributions (#7062)
+- Update status emails to contain link to metadata which does not contain anchor. (#7130)
+- [BP] Use Apache Commons StringUtils to join keywords in atom service description
+- Record view / Contact / Move website to popup (#7220)
+- ISO19139 - Improve metadata full view for contacts when fields information is missing (#7214)
+- Prettier formatting updates (#7222)
+- Record view / Decorate map with geographic identifier or description. (#7221)
+- Standard / ISO19139 / Indexing / Temporal range in GML 3.2.0 (#7218)
+- ArcSDE harvester / If the metadata stored in ArcSDE is matched against a known metadata schema, harvest the record as it is.
+- Increase the limit to retrieve the related metadata in the search results
+- Standard / ISO19115-3 / Do not declare main language in other languages (#7188)
+- changed english display text for batch editor xpath gn_add and gn_update modes
+- Standard / ISO19115-3 / Formatter / Layout improvements (#7187)
+- avoid race condition, resize map once target size ok (#6931)
+- camel tests, avoid side effects (#6836)
+- [gn] Support negative dates for temporal extents (#6843)
+- Metadata workflow / Don't increase popularity when viewing a metadata working copy
+- Map / WFS Features / Improvements (#7000)
+- Standard / ISO19110 / Add cardinality. (#7182)
