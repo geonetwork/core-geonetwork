@@ -1,0 +1,182 @@
+================================================================================
+===
+=== GeoNetwork 4.4.0: List of changes
+===
+================================================================================
+- Doc / Changelog / 4.2.6 and 4.4.0 (#7392)
+- Changed GENERATEUUID to NOTHING based on discussion on issue #7274
+- Make samples generate new uuid so that they don't overwrite any existing data. Fix for #7274
+- Jetty bundle / Add JAVA_OPTS configuration for the /monitor/metrics endpoint to work correctly (#7385)
+- Documentation 4.4: Update Java references to Java 11, update link to the manual and release scripts (#7378)
+- Fixed typos for SOURCE.md (#7384)
+- Update Java version and include the information in the readme.html in the release bundle (#7383)
+- Update MkDocs configuration to publish to gh-pages branch (#7375)
+- Workflow / Related records of the draft (#7377)
+- Create CNAME
+- User Manual refresh using Markdown and MkDocs (#7329)
+- batch edit user profile check in APIs (#7243)
+- Record view / Support multiple status.
+- Groups maintenance / fix the display of the metadata owned by a group (#7371)
+- Map viewer / Option to configure WMS tiling (#7312)
+- Fix working copy display so that links go to working copy (#7248)
+- Move datastorage providers to maven modules and include them in the build on demand (#7302)
+- Send metadata mail notifications for public metadata when is re-approved - fill missing information for submitter, reviewer and publisher user (#7292)
+- Map viewer / context map / only WMS layers have dimensions information
+- Formatter / Remove unused Groovy mode. (#7346)
+- fix for untranslated userRecord and userRecords labels in user admin page (#7354)
+- Standard / ISO19110 improvements
+- Add support for emails with subdomains (#7314)
+- Improved handling of empty titles (#7362)
+- Merge pull request #7337 from geonetwork/ha
+- Indexing / Bounding Polygon / Coordinate order (#7364)
+- Indexing / Bounding Polygon / Reproject if needed #7340
+- Editor / Online source / Fix button icon
+- Fix CORSInterceptor, usage of a variable before is defined. Related to #5941 (#7361)
+- Add a new DOI icon (#7357)
+- Display the login menu for authenticated users when the setting 'gnCfg.mods.authentication.enabled' is disabled
+- Map / WMS dimension saved in map (#7339)
+- Add icons for related types (association and initiative) (#7264)
+- Update harvesters/src/main/java/org/fao/geonet/kernel/harvest/RefreshHarvesterJob.java
+- Java doc. Check also GeoNetworkDataDirectory for description of folders.
+- WFS layer improvements (#7317)
+- Map / WPS / Add support for custom parameter CRS
+- Don't override proxy configuration when saving the settings, if the http proxy is configured in Java system properties (#7325)
+- Create metadata category - check doesn't exist a category with the same name (#7296)
+- Editor / Preserve scroll position on Firefox
+- Portal / RSS feeds point to current portal (#7343)
+- Fix HTML/Javascript prettier formatting / main branch
+- Prevent invalid date written into xml (#7321)
+- Record view / Add configuration to support statistics on more than 100 (#7348)
+- Update xalan dependency (remove potential vuln) (#7140)
+- Fix write after response commit on proxy response (#7353)
+- Standard / ISO / Labels improvements (#7341)
+- RSS / Fix number of records parameter
+- Display metadata user and group owner in the transfer ownership dialog
+-  Adding schemapublication_dir to admin info panel
+- DOI / ISO19115-3 / Support DOI set in resource identifier or distribution (#7288)
+- Map / Localisation / Empty results if no query (#7338)
+- Record view / Social network link points to permalink. (#7347)
+- Metadata editor / link to remote dataset improvements (#7324)
+- Indexing / Do not create empty object if no text (#7349)
+- Batch Editing access level in general system settings (#7238)
+- Indexing / Do not create empty object if no text (#7294)
+- User feedback API fixes: - Update mail message, related to #6792. - Don't fail the user feedback creation if the mail server is not configured
+- Jetty / Update version and fix sending mail
+- Jetty / Form config consistent with default docker one
+- Test / Remove duplicated prop.
+- Test / Add new properties.
+- HA / Introducing scheduled refresh of harvesterjobs.
+- HA / Added hostname to the system information panel.
+- Remove configuration for the UI setting 'isMenubarAccessible', removed in #7138
+- Batch editing / Update xpath spec link
+- Library / Update to wro4j 1.10.1 (#7315)
+- Fix robots.txt and sitemap 500 errors if no right content type is provided (#7327)
+- API / Sitemap / Improve speed
+- Merge remote-tracking branch 'origin/main' into ha
+- INSPIRE ATOM - retrieve the metadata ATOM feed using only the resource identifier (#7305)
+- Hide thumbnail image in metadata page when the image can't be loaded due to an error. (#7319)
+- Merge pull request #7253 from tkohr/core-main-ods-api
+- Bump actions/checkout from 3 to 4 (#7318)
+- Updated embedded documentation on naming convention for postprocessing files for sub-portals (#7310)
+- Fix permalink option in the application footer
+- Fix the check to display the Transfer ownership option in the metadata detail page
+- Merge branch '440-harvesterscheduleconfig' into ha
+- Merge branch '424-multipleinstances' into ha
+- Minor cleanup (#7301)
+- Record view / Lineage & Quality section improvements (#7180)
+- Editor / Top bar / Avoid hiding editor tabs with tool bar actions. (#7073)
+- Fix metadata editor tooltips close button when using the icon mode
+- Extend ElasticSearch proxy to filter out elements defined in the schema filters configurations (#6869)
+- Notifications / Errors / Fix message on group creation (#7295)
+- Metadata editor / recommended values for fields show an empty value. (#7232)
+- Standard / ISO / Mimefiletype encoding.
+- WMS tile images - if HEAD request fails, default to OL image src set
+- Search / Aggregation on organisation in Dutch (#7290)
+- Do not break link in the middle of a word.
+- API / CSV export / Add support for custom export. (#7132)
+- Extend keyword picker directive to support displaying all the suggested values when there is a selected value.
+- Set html emails as utf-8
+- ISO19139 / ISO19115-3.2018 / Don't index resource identifiers with empty code
+- Metadata tooltips - improve the check method to try to find a match a standard default with no context defined, if there is no entry with the element context
+- Update GeonetHttpRequestFactory to use system proxy defined in JAVA_OPTS
+- Update AbstractHttpRequest to use system proxy defined in JAVA_OPTS
+- INSPIRE / Validation / Add API usage.
+- fix ui issue (#7256)
+- Use resource files for messages (#7281)
+- API / Attachements / Stream files to servlet response (#7287)
+- Metadata index set of records - index the approved and working copies when the workflow is enabled (#7269)
+- Bump actions/setup-java from 3.10.0 to 3.12.0 (#7239)
+- Metadata editor / display metadata uuid for remote resources if the metadata title is not available
+- Handle empty allGroupOpsAfter instead of throwing error. If we cannot find publishedAfter then default to publishedBefore so that no emails are sent.
+- Full view on working copy fails. Fixes #7270
+- WMS time dimension - basic support for time intervals (#7280)
+- Fix error that would occur when there were duplicate languages. (#7275)
+- Standard / ISO19115-3 / Processing / Metadata contact lost. (#7278)
+- Merge pull request #7186 from geonetwork/lib-spring5java11
+- Add XmlTransient annotation to ISODate.getDateAndTimeUtc
+- Make editor snippets referenceable and reusable
+- Fix directive to display the most popular records, to display the most popular first
+- Allow mulitple conditional default tabs in a single editor view
+- Fix deletion sequence in editor: wait for DOM update before saving
+- Fix DOI logging
+- Use http proxy in DOI client
+- feat(ods): use ods explore api for CI_OnlineResource linkages
+- Fix record history parameter name. Related to #7074 (#7249)
+- Fix German typo of the label for 'otherRestrictions' (#7245)
+- fix(ods): add CI_OnlineResource linkages for ods v1
+- Escape {{ to avoid error parsing argument. (#7237)
+- Update skin.xsl so that it works better in nojs mode. (#7015)
+- Fix wmsQueue clear method logic
+- When authenticating user, only update the usergroups in the database if they have changed (#7165)
+- Map viewer / 'Default map' javascript error. Fixes #7228
+- Add support for OL Attributions (#7062)
+- Update MetadataExtentApiTest hashes, probably images differ due to JVM change to version 11
+- Update status emails to contain link to metadata which does not contain anchor. (#7130)
+- Update GitHub actions configuration
+- Update GitHub actions configuration
+- Remove Java 8 maven configuration
+- Update services/src/main/java/org/fao/geonet/api/OpenApiController.java
+- Update harvesters/src/main/java/org/fao/geonet/kernel/harvest/harvester/geoPREST/Harvester.java
+- Update harvesters/src/main/java/org/fao/geonet/kernel/harvest/harvester/geoPREST/Harvester.java
+- Update harvesters/src/main/java/org/fao/geonet/kernel/harvest/harvester/geoPREST/Harvester.java
+- Update harvesters/src/main/java/org/fao/geonet/kernel/harvest/harvester/geoPREST/Harvester.java
+- Update GitHub actions configuration
+- Merge branch 'main' into lib-spring5java11
+- Use Apache Commons StringUtils to join keywords in atom service description
+- Update to version 4.4.x (#7223)
+- Record view / Contact / Move website to popup (#7220)
+- ISO19139 - Improve metadata full view for contacts when fields information is missing (#7214)
+- Prettier formatting updates (#7222)
+- Record view / Decorate map with geographic identifier or description. (#7221)
+- Prettier.
+- Standard / ISO19139 / Indexing / Temporal range in GML 3.2.0 (#7218)
+- ArcSDE harvester / If the metadata stored in ArcSDE is matched against a known metadata schema, harvest the record as it is.
+- Increase the limit to retrieve the related metadata in the search results
+- System info / Add env variables related to database migration and harvester scheduler. Add some more precise doc links.
+- Java header.
+- Proposal to disable harvesters.
+- Bad configuration of a harvester could prevent geonetwork startup
+- Missing translations.
+- Translations / Add better message in case of harvester save issue.
+- Standard / ISO19115-3 / Do not declare main language in other languages (#7188)
+- changed english display text for batch editor xpath gn_add and gn_update modes
+- Standard / ISO19115-3 / Formatter / Layout improvements (#7187)
+- avoid race condition, resize map once target size ok (#6931)
+- camel tests, avoid side effects (#6836)
+- [gn] Support negative dates for temporal extents (#6843)
+- Metadata workflow / Don't increase popularity when viewing a metadata working copy
+- Map / WFS Features / Improvements (#7000)
+- Standard / ISO19110 / Add cardinality. (#7182)
+- Update version to 4.2.6-SNAPSHOT
+- Test / Fix related to XSD publication dir.
+- Lib / update snakeyaml to version 2.0
+- Remove toolchain for Java 8 and update maven compiler configuration for integration tests to use Java 11
+- Lib / Update / Spring 5, Hibernate 5, Jetty 9.
+- harvesters - disabling tests
+- harvester - attempt to fix date parsing tests with Jdk11
+- commons - jdk11 - better fix for test
+- jdk11 - fixing tests
+- being able to use a more recent jdk (11)
+- API / Site info / Add all data directory info
+- Data directory / Add parameter for XML schemas.
+- WRO4J / Move cache to HTML cache folder.
