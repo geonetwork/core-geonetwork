@@ -103,11 +103,30 @@ echo
 
 # Update SQL - needs improvements
 echo 'SQL script'
-sed $sedopt "s/'system\/platform\/version', '.*', 0/'system\/platform\/version', '${new_version_main}', 0/g" web/src/main/webapp/WEB-INF/classes/setup/sql/data/data-db-default.sql
-sed $sedopt "s/'system\/platform\/subVersion', '.*', 0/'system\/platform\/subVersion', '${sub_version}', 0/g" web/src/main/webapp/WEB-INF/classes/setup/sql/data/data-db-default.sql
+echo '  * Set version in initial data'
+sqlscriptfolder=web/src/main/webapp/WEB-INF/classes/setup/sql
+sed $sedopt "s/'system\/platform\/version', '.*', 0/'system\/platform\/version', '${new_version_main}', 0/g" $sqlscriptfolder/data/data-db-default.sql
+sed $sedopt "s/'system\/platform\/subVersion', '.*', 0/'system\/platform\/subVersion', '${sub_version}', 0/g" $sqlscriptfolder/data/data-db-default.sql
 
-find . -wholename *v${new_version_main_nopoint//[.]/}/migrate-default.sql -exec sed $sedopt "s/value='${version}' WHERE name='system\/platform\/version'/value='${new_version_main}' WHERE name='system\/platform\/version'/g" {} \;
-find . -wholename *v${new_version_main_nopoint//[.]/}/migrate-default.sql -exec sed $sedopt "s/value='.*' WHERE name='system\/platform\/subVersion'/value='${sub_version}' WHERE name='system\/platform\/subVersion'/g" {} \;
+
+
+echo "  * Set version in migration script v${new_version_main_nopoint//[.]/}/migrate-default.sql"
+
+sqlmigrationfile=$sqlscriptfolder/migrate/v${new_version_main_nopoint//[.]/}/migrate-default.sql
+
+if [ -f "$sqlmigrationfile" ]; then
+  echo "    * Updating version in existing migration script $sqlmigrationfile."
+  sed $sedopt "s/value='${version}' WHERE name='system\/platform\/version'/value='${new_version_main}' WHERE name='system\/platform\/version'/g" $sqlmigrationfile
+  sed $sedopt "s/value='.*' WHERE name='system\/platform\/subVersion'/value='${sub_version}' WHERE name='system\/platform\/subVersion'/g" $sqlmigrationfile
+else
+  echo "    * Creating migration script $sqlmigrationfile."
+  mkdir $sqlscriptfolder/migrate/v${new_version_main_nopoint//[.]/}
+  cat <<EOF > $sqlmigrationfile
+UPDATE Settings SET value='${new_version_main}' WHERE name='system/platform/version';
+UPDATE Settings SET value='${sub_version}' WHERE name='system/platform/subVersion';
+EOF
+fi
+
 
 # Update version pom files
 mvn versions:set-property -Dproperty=gn.project.version -DnewVersion=${new_version}
