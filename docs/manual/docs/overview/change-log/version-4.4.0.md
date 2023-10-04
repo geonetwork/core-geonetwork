@@ -14,7 +14,7 @@ GeoNetwork 4.4.0 release is a major release.
 
 ### Installation changes
 
--   Datastore / To use CMIS, JCloud or S3 download the packages ([More information](https://github.com/geonetwork/core-geonetwork/pull/7302)).
+-   Datastore / [To use CMIS, JCloud or S3 download the corresponding package](https://sourceforge.net/projects/geonetwork/files/GeoNetwork_opensource/v4.4.0/).
 
 ### Index changes
 
