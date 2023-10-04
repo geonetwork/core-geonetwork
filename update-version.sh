@@ -110,9 +110,9 @@ sed $sedopt "s/'system\/platform\/subVersion', '.*', 0/'system\/platform\/subVer
 
 
 
-echo "  * Set version in migration script v${new_version_main_nopoint//[.]/}/migrate-default.sql"
+echo "  * Set version in migration script v${new_version_main_nopoint}/migrate-default.sql"
 
-sqlmigrationfile=$sqlscriptfolder/migrate/v${new_version_main_nopoint//[.]/}/migrate-default.sql
+sqlmigrationfile=$sqlscriptfolder/migrate/v${new_version_main_nopoint}/migrate-default.sql
 
 if [ -f "$sqlmigrationfile" ]; then
   echo "    * Updating version in existing migration script $sqlmigrationfile."
@@ -120,12 +120,13 @@ if [ -f "$sqlmigrationfile" ]; then
   sed $sedopt "s/value='.*' WHERE name='system\/platform\/subVersion'/value='${sub_version}' WHERE name='system\/platform\/subVersion'/g" $sqlmigrationfile
 else
   echo "    * Creating migration script $sqlmigrationfile."
-  mkdir $sqlscriptfolder/migrate/v${new_version_main_nopoint//[.]/}
+  mkdir $sqlscriptfolder/migrate/v${new_version_main_nopoint}
   cat <<EOF > $sqlmigrationfile
 UPDATE Settings SET value='${new_version_main}' WHERE name='system/platform/version';
 UPDATE Settings SET value='${sub_version}' WHERE name='system/platform/subVersion';
 EOF
 fi
+
 
 
 # Update version pom files
