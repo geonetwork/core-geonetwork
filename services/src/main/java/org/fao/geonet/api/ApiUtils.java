@@ -28,6 +28,7 @@ import jeeves.constants.Jeeves;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
@@ -69,6 +70,8 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.List;
 import java.util.*;
+
+import static org.fao.geonet.api.records.attachments.AbstractStore.getAndCheckMetadataId;
 
 /**
  * API utilities mainly to deal with parameters.
@@ -489,7 +492,14 @@ public class ApiUtils {
      */
     public static AbstractMetadata canViewRecord(String metadataUuid, boolean approved, HttpServletRequest request) throws Exception {
         String metadataId;
-        metadataId = getInternalId(metadataUuid, approved);
+
+        // If provided in metadataUuid a metadata uuid (non numeric value),
+        // retrieve the internal id, otherwise use the value as the metadata internal id
+        if (!NumberUtils.isParsable(metadataUuid)) {
+            metadataId = String.valueOf(getAndCheckMetadataId(metadataUuid, approved));
+        } else {
+            metadataId = metadataUuid;
+        }
 
         ServiceContext previous = ServiceContext.get();
         if (previous != null) previous.clearAsThreadLocal();
