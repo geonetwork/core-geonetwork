@@ -100,38 +100,40 @@ If you are not familiar with python the mkdocs-material website has instructions
 
 We use ``mike`` for publishing to https://geonetwork.github.io using `<major>.<minor>` version:
 
-1. To deploy SNAPSHOT development docs from the `main` branch to website `gh-pages` branch:
+1. To deploy docs from the `main` branch to website `gh-pages` branch:
 
    ```bash
-   mike deploy --push --update-aliases 4.4 devel
+   mike deploy --push --no-redirect --update-aliases 4.4 latest
    ```
     
 2. To deploy documentation for a new release:
    
    ```bash
-   mike deploy --push --update-aliases 4.2 stable
+   mike deploy --push --no-redirect --update-aliases 4.2 stable
    ```
    
-   When starting a new branch you can make it the default:
+3. When starting a new branch you can make it the default:
    
    ```bash
    mike set-default --push 4.2
    ```
+   
+   Hint: When starting a new branch update `overview/changelog/` navigation tree also.
 
-3. To publish documentation for a maintenance release:
+4. To publish documentation for a maintenance release:
 
    ```bash
-   mike deploy --push --update-aliases 3.12 maintenance
+   mike deploy --push --no-redirect --update-aliases 3.12 maintenance
    ```
 
-4. To show published versions:
+5. To show published versions:
 
    ```bash
    
    mike list
    ```
 
-5. To preview things locally (uses your local ``gh-pages`` branch):
+6. To preview things locally (uses your local ``gh-pages`` branch):
    
    ```bash
    mike serve

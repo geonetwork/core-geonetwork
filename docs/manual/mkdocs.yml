@@ -78,8 +78,6 @@ plugins:
   - exclude:
       glob:
         - annexes/gallery/bin/README.md
-  - mike:
-      canonical_version: stable
 
 # Customizations
 extra:
@@ -138,16 +136,9 @@ nav:
     - overview/authors.md
     - 'Changelog':
       - overview/change-log/index.md
-      - 'Stable':
-        - overview/change-log/stable.md
-        - overview/change-log/version-4.2.5.md
-        - overview/change-log/version-4.2.4.md
-        - overview/change-log/version-4.2.3.md
-        - overview/change-log/version-4.2.2.md
-        - overview/change-log/version-4.2.1.md
-        - overview/change-log/version-4.2.0.md
       - 'Maintenance':
-        - overview/change-log/maintenance.md
+        - overview/change-log/maintenance/index.md
+        - overview/change-log/version-3.12.11.md
         - overview/change-log/version-3.12.10.md
         - overview/change-log/version-3.12.9.md
         - overview/change-log/version-3.12.8.md
@@ -160,16 +151,7 @@ nav:
         - overview/change-log/version-3.12.1.md
         - overview/change-log/version-3.12.0.md
       - 'Archive':
-        - overview/change-log/archive.md
-        - overview/change-log/version-4.0.6.md
-        - overview/change-log/version-4.0.5.md
-        - overview/change-log/version-4.0.4.md
-        - overview/change-log/version-4.0.3.md
-        - overview/change-log/version-4.0.2.md
-        - overview/change-log/version-4.0.1.md
-        - overview/change-log/version-4.0.0.md
-        - overview/change-log/version-4.0.0-alpha.2.md
-        - overview/change-log/version-4.0.0-alpha.1.md
+        - overview/change-log/archive/index.md
         - overview/change-log/version-3.10.10.md
         - overview/change-log/version-3.10.9.md
         - overview/change-log/version-3.10.8.md
@@ -271,7 +253,6 @@ nav:
       - user-guide/harvesting/harvesting-oaipmh.md
       - user-guide/harvesting/harvesting-ogcwxs.md
       - user-guide/harvesting/harvesting-sde.md
-      - user-guide/harvesting/harvesting-simpleurl.md
       - user-guide/harvesting/harvesting-thredds.md
       - user-guide/harvesting/harvesting-webdav.md
       - user-guide/harvesting/harvesting-wfs-features.md
