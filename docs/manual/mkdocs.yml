@@ -2,7 +2,7 @@
 site_name: GeoNetwork opensource
 site_description: GeoNetwork catalogue for listing, searching and reviewing records.
 site_dir: target/html
-site_url: https://docs.geonetwork-opensource.org/
+site_url: https://jodygarnett.github.io/core-geonetwork
 
 # Repository
 repo_name: core-geonetwork
