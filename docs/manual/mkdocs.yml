@@ -136,9 +136,6 @@ nav:
     - overview/authors.md
     - 'Changelog':
       - overview/change-log/index.md
-      - 'Latest':
-        - overview/change-log/latest/index.md
-        - overview/change-log/version-4.4.0.md
       - 'Stable':
         - overview/change-log/stable/index.md
         - overview/change-log/version-4.2.6.md
