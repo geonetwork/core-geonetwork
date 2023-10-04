@@ -940,8 +940,8 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#java-8" class="md-nav__link">
-    Java 8
+  <a href="#java-11" class="md-nav__link">
+    Java 11
   </a>
   
 </li>
@@ -1450,8 +1450,8 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#java-8" class="md-nav__link">
-    Java 8
+  <a href="#java-11" class="md-nav__link">
+    Java 11
   </a>
   
 </li>
@@ -1570,18 +1570,14 @@
 
 <h1 id="installing-from-source-code">Building from Source Code</h1>
 <h2 id="system-requirements">System Requirements</h2>
-<h3 id="java-8">Java 8</h3>
-<p>GeoNetwork is a Java 8 application that runs as a servlet, which means that a Java Development Kit (JDK) must be installed in order to build and run it. You can get a Java 8 JDK from your Linux distribution, <a href="http://openjdk.java.net/">Oracle OpenJDK</a> or <a href="https://adoptopenjdk.net">AdoptOpenJDK</a>. Please note that the Java 8 <a href="http://www.oracle.com/technetwork/java/javase/downloads">Oracle JDK</a> is currently only being distributed for testing purposes.</p>
-<p>Because GeoNetwork is developed with Java 8 (LTS), this has the following implications:</p>
+<h3 id="java-11">Java 11</h3>
+<p>GeoNetwork 4.4 is a Java 11 application that runs as a servlet, which means that a Java Development Kit (JDK) must be installed in order to build and run it. You can get a Java 11 JDK from your Linux distribution, <a href="http://openjdk.java.net/">Oracle OpenJDK</a> or <a href="https://adoptopenjdk.net">AdoptOpenJDK</a>. Please note that the Java 11 <a href="http://www.oracle.com/technetwork/java/javase/downloads">Oracle JDK</a> is currently only being distributed for testing purposes.</p>
+<p>Because GeoNetwork is developed with Java 11 (LTS), it  won't run at all with earlier releases.</p>
 <ul>
 <li>GeoNetwork should not be developed with newer versions of Java.</li>
-<li>Java 11 (LTS) is <strong>not supported</strong> at this time.</li>
-<li>GeoNetwork won't run at all with Java 7 (1.6) or earlier releases.</li>
+<li>It  won't run at all with earlier releases.</li>
+<li>Java 17 (LTS) is <strong>not supported</strong> at this time.</li>
 </ul>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>GeoNetwork 4.4.0 is scheduled to support Java 11</p>
-</div>
 <h3 id="application-server">Application Server</h3>
 <p>Next, you need a servlet container. GeoNetwork ships with an embedded container, <a href="https://www.eclipse.org/jetty/">Eclipse Jetty</a>, which is fast and well-suited for most applications.</p>
 <p>If you need a more powerful container, we recommend <a href="http://tomcat.apache.org">Apache Tomcat</a>. Tomcat provides load balancing, fault tolerance and other production features. Apache Tomcat is widely used with many organizations standardizing on Tomcat for all their Java Web Applications.</p>
@@ -1604,7 +1600,7 @@
 <h2 id="tools">Tools</h2>
 <p>The following tools are required to be installed to setup a development environment for GeoNetwork:</p>
 <ul>
-<li><strong>Java 8</strong> - Developing with GeoNetwork requires Java Development Kit (JDK) 1.8.</li>
+<li><strong>Java 11</strong> - Developing with GeoNetwork requires Java Development Kit (JDK) 11.</li>
 <li><strong>Maven</strong> 3.1.0+ - GeoNetwork uses <a href="http://maven.apache.org/">Maven</a> to manage the build process and the dependencies. Once is installed, you should have the mvn command in your path (on Windows systems, you have to open a shell to check).</li>
 <li><strong>Git</strong> - GeoNetwork source code is stored and versioned in <a href="https://github.com/geonetwork/core-geonetwork">a Git repository on Github</a>. Depending on your operating system a variety of Git clients are available. Please check the Git website for some <a href="http://git-scm.com/downloads/guis">alternatives</a> and good <a href="http://git-scm.com/documentation">documentation</a>. More documentation can be found on the <a href="https://help.github.com/">Github website</a>.</li>
 <li><strong>Ant</strong> - GeoNetwork uses <a href="http://ant.apache.org/">Ant</a> to build the installer. Version 1.6.5 works but any other recent version should be OK. Once installed, you should have the Ant command in your path (on Windows systems, you have to open a shell to check).</li>

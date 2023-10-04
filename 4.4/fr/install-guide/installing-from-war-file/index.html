@@ -1346,9 +1346,11 @@
 <li>Java web server <a href="http://tomcat.apache.org/">Apache Tomcat</a> or <a href="https://www.eclipse.org/jetty/">Jetty</a>: 8080</li>
 <li><a href="https://www.elastic.co/elasticsearch/">ElasticSearch</a>: 9200</li>
 <li><a href="https://www.elastic.co/kibana/">Kibana</a>: 5601</li>
-<li>
-<p>Database eg. 5432 for a default <a href="https://www.postgresql.org/">PostgreSQL</a> installation</p>
-</li>
+<li>Database eg. 5432 for a default <a href="https://www.postgresql.org/">PostgreSQL</a> installation</li>
+</ul>
+<p>For  <a href="http://tomcat.apache.org/">Apache Tomcat</a>  we recommend the following versions: 8.5.x and 9.0.x.
+For <a href="https://www.eclipse.org/jetty/">Jetty</a> we the following versions: 9.4.x.</p>
+<ol>
 <li>
 <p>Download the WAR file</p>
 <p>GeoNetwork releases are available in <a href="https://sourceforge.net/projects/geonetwork/files/GeoNetwork_opensource/">https://sourceforge.net/projects/geonetwork/files/GeoNetwork_opensource/</a></p>
@@ -1368,6 +1370,10 @@
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>You need to ensure Tomcat is configured with enough memory for GeoNetwork to launch. This can be be configured via the <code>setenv</code> script in tomcat with the appropriate memory for the JAVA_OPTS property). <code>-Xms2g -Xmx2g</code> is usually fine.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For the  <code>/monitor/metrics</code> endpoint to work correctly, you must add to <code>JAVA_OPTS</code> the following option: <code>--add-opens=jdk.management/com.sun.management.internal=ALL-UNNAMED</code> </p>
 </div>
 </li>
 <li>
@@ -1392,7 +1398,7 @@
 <p>To customize your catalog, you may follow the next steps to configure the database (See <a href="../configuring-database/">Configuring the database</a>) instead of using the default H2 database and the data directory (See <a href="../customizing-data-directory/">Customizing the data directory</a>) .</p>
 <p>See <a href="../loading-samples/">Loading templates and sample data</a> to start loading metadata records.</p>
 </li>
-</ul>
+</ol>
 
 
 
