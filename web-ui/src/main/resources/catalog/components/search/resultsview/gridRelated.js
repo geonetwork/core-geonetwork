@@ -51,9 +51,12 @@
             var uuids = mds.map(function(md) {
               return md.getUuid();
             });
+            var approved = mds.map(function (md) {
+              return md.draft !== "y";
+            });
             if (uuids.length) {
               gnGridRelatedList.promise =
-                  gnRelatedService.getMdsRelated(uuids, types).then(
+                  gnRelatedService.getMdsRelated(uuids, types, approved).then(
                   function(response) {
                     gnGridRelatedList.list = response.data;
                   });

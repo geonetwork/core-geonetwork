@@ -116,7 +116,11 @@ public class ApiUtils {
         throws Exception {
 
         IMetadataUtils metadataUtils = ApplicationContextHolder.get().getBean(IMetadataUtils.class);
-        String id = String.valueOf(metadataUtils.findOneByUuid(uuidOrInternalId).getId());
+        AbstractMetadata metadata = metadataUtils.findOneByUuid(uuidOrInternalId);
+        String id = null;
+        if (metadata != null) {
+            id = String.valueOf(metadata.getId());
+        }
 
         if (StringUtils.isEmpty(id)) {
             //It wasn't a UUID
@@ -459,7 +463,7 @@ public class ApiUtils {
     }
 
     /**
-     * Check if the current user can view this record.
+     * Check if the current user can view this approved record
      *
      * This method creates a temporary service context using the provided request to check record access,
      * if you have a service context already please use {@link #canViewRecord(String, ServiceContext)}.
@@ -470,13 +474,29 @@ public class ApiUtils {
      * @throws SecurityException if user is not allowed to view
      */
     public static AbstractMetadata canViewRecord(String metadataUuid, HttpServletRequest request) throws Exception {
+        return canViewRecord(metadataUuid, true, request);
+    }
+    /**
+     * Check if the current user can view this record.
+     *
+     * This method creates a temporary service context using the provided request to check record access,
+     * if you have a service context already please use {@link #canViewRecord(String, ServiceContext)}.
+     *
+     * @param metadataUuid Look up metadata record
+     * @param request Request to identify current user
+     * @return metadata record
+     * @throws SecurityException if user is not allowed to view
+     */
+    public static AbstractMetadata canViewRecord(String metadataUuid, boolean approved, HttpServletRequest request) throws Exception {
+        String metadataId;
+        metadataId = getInternalId(metadataUuid, approved);
+
         ServiceContext previous = ServiceContext.get();
         if (previous != null) previous.clearAsThreadLocal();
 
         try (ServiceContext context = createServiceContext(request)) {
-            return canViewRecord(metadataUuid,context);
-        }
-        finally {
+            return canViewRecord(metadataId, context);
+        } finally {
             if (previous != null) previous.setAsThreadLocal();
         }
     }
@@ -488,7 +508,27 @@ public class ApiUtils {
      * @throws SecurityException if user is not allowed to view
      */
     public static AbstractMetadata canViewRecord(String metadataUuid, ServiceContext context) throws Exception {
-        AbstractMetadata metadata = getRecord(metadataUuid);
+        return canViewRecord(metadataUuid, true, context);
+    }
+
+    /**
+     * Check if the current user can view this record.
+     *
+     * @param metadataUuid Look up metadata record
+     * @return metadata record
+     * @throws SecurityException if user is not allowed to view
+     */
+    public static AbstractMetadata canViewRecord(String metadataUuid, boolean approved, ServiceContext context) throws Exception {
+        String metadataId;
+        if (!approved) {
+            // If the record is not approved then we need to get the id of the record.
+            metadataId = getInternalId(metadataUuid, approved);
+        } else {
+            // Otherwise use the uuid or id that was supplied.
+            metadataId = metadataUuid;
+        }
+
+        AbstractMetadata metadata = getRecord(metadataId);
         try {
             Lib.resource.checkPrivilege(context, String.valueOf(metadata.getId()), ReservedOperation.view);
         } catch (Exception e) {

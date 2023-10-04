@@ -1485,7 +1485,7 @@
                 '<div class="modal-dialog gn-img-modal in">' +
                 '  <button type=button class="btn btn-link gn-btn-modal-img">' +
                 '<i class="fa fa-times text-danger"/></button>' +
-                '  <img src="' + (img.lUrl || img.url || img.id) + '"/>' +
+                '  <img src="' + (attr.ngSrc || img.lUrl || img.url || img.id) + '"/>' +
                 (label != '' ? labelDiv : '') +
                 '</div>' +
                 '</div>');

@@ -41,6 +41,7 @@ import org.fao.geonet.api.records.model.related.RelatedResponse;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
+import org.fao.geonet.lib.Lib;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
@@ -63,6 +64,8 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import jeeves.server.context.ServiceContext;
 import jeeves.services.ReadWriteController;
+
+import static org.fao.geonet.api.records.attachments.AbstractStore.getAndCheckMetadataId;
 
 @RequestMapping(value = {
     "/{portal}/api/related",
@@ -117,6 +120,10 @@ public class Related implements ApplicationContextAware {
         )
         @RequestParam(defaultValue = "",name="uuid")
             String[] uuids,
+        @ApiParam(value = "Use approved version or not",
+            required = false, defaultValue = "true")
+        @RequestParam(required = false, defaultValue = "true")
+        boolean approved,
         HttpServletRequest request) throws Exception {
 
       try (ServiceContext context = ApiUtils.createServiceContext(request)) {
@@ -128,7 +135,7 @@ public class Related implements ApplicationContextAware {
 
         for(String uuid : uuids) {
             try{
-                md = ApiUtils.canViewRecord(uuid, context);
+                md = ApiUtils.canViewRecord(uuid, approved, context);
                 Element raw = new Element("root").addContent(Arrays.asList(
                     new Element("gui").addContent(Arrays.asList(
                         new Element("language").setText(language.getISO3Language()),
