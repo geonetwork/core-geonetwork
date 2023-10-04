@@ -79,7 +79,6 @@ web/src/main/webapp/WEB-INF/data/wro4j*.db
 web/src/main/webapp/WEB-INF/data/wro4j-cache*
 web/src/main/webapp/WEB-INF/data_*
 web/src/main/webapp/WEB-INF/metadata_subversion/
-web/src/main/webapp/WEB-INF/server.prop
 web/src/main/webapp/WEB-INF/prebuilt
 web/src/main/webapp/data/
 web/src/main/webapp/doc/en
