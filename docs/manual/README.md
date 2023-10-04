@@ -103,13 +103,13 @@ We use ``mike`` for publishing to https://geonetwork.github.io using `<major>.<m
 1. To deploy SNAPSHOT development docs from the `main` branch to website `gh-pages` branch:
 
    ```bash
-   mike deploy --push --update-aliases 4.4 devel
+   mike deploy --push --no-redirect --update-aliases 4.4 devel
    ```
     
 2. To deploy documentation for a new release:
    
    ```bash
-   mike deploy --push --update-aliases 4.2 stable
+   mike deploy --push --no-redirect--update-aliases 4.2 stable
    ```
    
    When starting a new branch you can make it the default:
@@ -121,7 +121,7 @@ We use ``mike`` for publishing to https://geonetwork.github.io using `<major>.<m
 3. To publish documentation for a maintenance release:
 
    ```bash
-   mike deploy --push --update-aliases 3.12 maintenance
+   mike deploy --push --no-redirect --update-aliases 3.12 maintenance
    ```
 
 4. To show published versions:
