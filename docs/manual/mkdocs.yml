@@ -79,7 +79,7 @@ plugins:
       glob:
         - annexes/gallery/bin/README.md
   - mike:
-      canonical_version: latest
+      canonical_version: stable
 
 # Customizations
 extra:
