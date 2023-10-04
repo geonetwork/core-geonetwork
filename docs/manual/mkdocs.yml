@@ -78,8 +78,6 @@ plugins:
   - exclude:
       glob:
         - annexes/gallery/bin/README.md
-  - mike:
-      canonical_version: stable
 
 # Customizations
 extra:
