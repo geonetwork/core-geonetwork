@@ -33,3 +33,4 @@ eclipse/
 web/src/main/webapp/WEB-INF/data/data
 web/src/main/webapp/WEB-INF/data/index
 web-itest/jcs_caching
+.DS_Store

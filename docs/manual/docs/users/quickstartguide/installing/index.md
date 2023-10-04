@@ -55,15 +55,11 @@ If you use Windows, the following steps will guide you to complete the installat
 4.  Click Start>Programs>GeoNetwork desktop>Start server to start the Geonetwork opensource Web server. The first time you do this, the system will require about 1 minute to complete startup.
 5.  Click Start>Programs>Geonetwork desktop>Open GeoNetwork opensource to start using GeoNetwork opensource, or connect your Web browser to <http://localhost:8080/geonetwork/>
 
-<figure>
-<img src="installer.png" alt="installer.png" />
-<figcaption><em>Installer</em></figcaption>
-</figure>
+![figure](installer.png)
+*Installer*
 
-<figure>
-<img src="install_packages.png" alt="install_packages.png" />
-<figcaption><em>Packages to be installed</em></figcaption>
-</figure>
+![figure](install_packages.png)
+*Packages to be installed*
 
 The installer allows to install these additional packages:
 
@@ -84,10 +80,8 @@ Follow the instructions on screen (see also the section called On Windows).
 
 At the end of the installation process you can choose to save the installation script.
 
-<figure>
-<img src="install_script.png" alt="install_script.png" />
-<figcaption><em>Save the installation script for commandline installations</em></figcaption>
-</figure>
+![figure](install_script.png)
+*Save the installation script for commandline installations*
 
 ### Commandline installation
 

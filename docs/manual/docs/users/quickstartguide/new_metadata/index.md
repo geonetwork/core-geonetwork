@@ -33,31 +33,23 @@ In addition to the main mandatory fields, we recommend you to fill out these opt
 
 1.  Enter your username and password and click on the login button. The system will identify you and assign the correct privileges to work with.
 
-    > <figure>
-    > <img src="login.png" alt="login.png" />
-    > <figcaption><em>Login</em></figcaption>
-    > </figure>
+    ![figure](login.png)
+    *Login*
 
 2.  Open the Administration page by clicking the Administration button in the banner and then click on the New metadata link.
 
-    > <figure>
-    > <img src="Admin.png" alt="Admin.png" />
-    > <figcaption><em>Administration panel</em></figcaption>
-    > </figure>
+    ![figure](Admin.png)
+    *Administration panel*
 
 3.  From the metadata creation page, select the metadata standard to use from the dropdown list (Figure 4.3, "Template selection")
 
-    > <figure>
-    > <img src="metadataCreation.png" alt="metadataCreation.png" />
-    > <figcaption><em>Template selection</em></figcaption>
-    > </figure>
+    ![figure](metadataCreation.png)
+    *Template selection*
 
 4.  After selecting the correct template, you should identify which group of users the metadata will belong to and finally click on **Create**.
 
-    > <figure>
-    > <img src="selectGroup.png" alt="selectGroup.png" />
-    > <figcaption><em>Group selection</em></figcaption>
-    > </figure>
+    ![figure](selectGroup.png)
+    *Group selection*
 
 5.  A new metadata form based on the selected template will be displayed for you to fill out.
 
@@ -65,19 +57,15 @@ In addition to the main mandatory fields, we recommend you to fill out these opt
 
 Once you create a new record, you can choose between **Default, Advanced** or **XML View**. To switch view, simply click on the view you want to switch to on the left column of the page. The view in **bold** is the view you are currently using.
 
-<figure>
-<img src="switchViews.png" alt="switchViews.png" />
-<figcaption><em>Metadata view options</em></figcaption>
-</figure>
+![figure](switchViews.png)
+*Metadata view options*
 
 In the previous chapter you have analyzed the metadata structure as it is presented in the **Default View**. A selection of the main fields from different categories of information is shown in one single view. The minimum set of metadata required to serve the full range of metadata applications (data discovery, determination of data fitness for use, data access, data transfer and use of digital data) is defined here, along with optional metadata elements to allow for a more extensive standard description of geographic data, if required. However, if should be there a need to add more metadata elements, you can switch to the advanced view at any time while editing.
 
 In the **Advanced View**, the ISO profile offers the possibility to visualize and edit the entire metadata structure organized in sections accessible through tabs from the left column. You can use this view to write more advanced metadata descriptions or templates to fit specialized needs.
 
-<figure>
-<img src="advancedView.png" alt="advancedView.png" />
-<figcaption><em>Advanced view</em></figcaption>
-</figure>
+![figure](advancedView.png)
+*Advanced view*
 
 The **XML View** shows the entire content of the metadata in the original hierarchical structure; different colors allow to distinguish between an element's name and its value. The XML structure is composed of tags and to every tag must correspond a closing tag. The content is entirely contained withing the two, i.e.:
 
@@ -85,19 +73,15 @@ The **XML View** shows the entire content of the metadata in the original hierar
       <gco:CharacterString>eng</gco:CharacterString>
     </gmd:language>
 
-<figure>
-<img src="xmlView1.png" alt="xmlView1.png" />
-<figcaption><em>XML view</em></figcaption>
-</figure>
+![figure](xmlView1.png)
+*XML view*
 
 Nevertheless, the use of the XML view requires some knowledge of the XML language.
 
 Both the **Default** and the **Advanced Views** are composed of `mandatory`, `conditional` and `optional` metadata fields. The meaning of mandatory and optional is fairly intuitive; the mandatory fields are required, like `Title` and `Abstract` for instance, whereas the optional fields can be provided but are not fundamental, depending on the metadata author. The conditional fields may be considered mandatory under certain circumstances: essentially a conditional requirement indicates that the presence of a specified data element is dependent on the value or presence of other data elements in the same section. For instance, the `Individual name` metadata element of the `Point of Contact`, which is a conditional element of the Identification section, becomes mandatory if another element of the same section, `Organization name` or `Position name` is not already defined.
 
-<figure>
-<img src="PoC_Maint.png" alt="PoC_Maint.png" />
-<figcaption><em>Point of Contact</em></figcaption>
-</figure>
+![figure](PoC_Maint.png)
+*Point of Contact*
 
 The **mandatory fields** as well as those **highly recommended** are flagged with **red asterisk [*]**. The standard definition for each field can be read by passing the mouse on the element name.
 
@@ -111,10 +95,8 @@ The **Default View** is the preferred view as it provides a selection of the ava
 
 Fields are either **free text fields** or **drop down lists**. Free text means you can type any text into that field. Drop down lists allow you to select only one option from the list. You can add multiple fields of the same kind by clicking on the **[+]** symbol next to the element. Every new field that you will add in the advanced view will then be visible in the default view. You can also delete existing fields by clicking on the **[x]** symbol next to the element. Clearly, mandatory fields cannot be deleted. One example of the need to add multiple fields can arise if the content of your dataset has some text written in two different languages.
 
-<figure>
-<img src="multipleElement.png" alt="multipleElement.png" />
-<figcaption><em>Describing multilingual data</em></figcaption>
-</figure>
+![figure](multipleElement.png)
+*Describing multilingual data*
 
 ## Example: Entering metadata for a Thematic Map
 
@@ -198,10 +180,8 @@ To create a thumbnail, go to the editing menu. If you are no longer in editing m
 
 From the editing menu, click on the Thumbnails button on the top or bottom of the page.
 
-<figure>
-<img src="thumButton.png" alt="thumButton.png" />
-<figcaption><em>The thumbnail wizard button</em></figcaption>
-</figure>
+![figure](thumButton.png)
+*The thumbnail wizard button*
 
 -   You will be taken to the Thumbnail Management wizard.
 -   To create a small or large thumbnail, click on the Browse button next to either one. It is recommended that you use 180 pixels for small thumbnails and 800x600 for large thumbnails. Using the 'Large thumbnail' option allows you to create both a small and large thumbnail in one go.
@@ -211,15 +191,11 @@ From the editing menu, click on the Thumbnails button on the top or bottom of th
 -   Your thumbnail will be added and displayed on the following page.
 -   You can then click on Back to Editing and save your record.
 
-<figure>
-<img src="thumbManag.png" alt="thumbManag.png" />
-<figcaption><em>Thumbnail wizard</em></figcaption>
-</figure>
+![figure](thumbManag.png)
+*Thumbnail wizard*
 
-<figure>
-<img src="thumbManag2.png" alt="thumbManag2.png" />
-<figcaption><em>Completed thumbnail wizard</em></figcaption>
-</figure>
+![figure](thumbManag2.png)
+*Completed thumbnail wizard*
 
 ## Compute bounding box from keywords
 
@@ -259,17 +235,13 @@ To assign privileges, follow these steps:
 
 -   Find your metadata record by using the search option. Whether you have multiple or single results from the search, on top of the individual record or next to the record you will always see a row of buttons including a Privileges button.
 
-<figure>
-<img src="privilegesButton.png" alt="privilegesButton.png" />
-<figcaption><em>The editing toolbar with Privileges button</em></figcaption>
-</figure>
+![figure](privilegesButton.png)
+*The editing toolbar with Privileges button*
 
 -   Click on the Privileges button. A drop down menu will appear from which you can assign certain privileges to specific groups using checkboxes. Simply click on the small box next to the privilege to place or remove a checkmark. Set All and Clear All buttons allow you to place and remove the checkmarks all at once.
 
-<figure>
-<img src="privilegesSetting1.png" alt="privilegesSetting1.png" />
-<figcaption><em>Privileges settings</em></figcaption>
-</figure>
+![figure](privilegesSetting1.png)
+*Privileges settings*
 
 Below is a brief description for each privilege to help you identify which ones you should assign to which group(s).
 
@@ -290,10 +262,8 @@ Each GeoNetwork site has a set of local categories that can be used to classify 
 -   Find your metadata record using the search option. Whether you have just one or many results from your search, you will always see a row of buttons including a **Categories** button.
 -   Click on the **Categories** button. A drop down menu will appear from which you can assign one or more categories using checkboxes. Simply click on the small box next to the category to place or remove a checkmark.
 
-<figure>
-<img src="categoriesManag.png" alt="categoriesManag.png" />
-<figcaption><em>Category management</em></figcaption>
-</figure>
+![figure](categoriesManag.png)
+*Category management*
 
 ## Multilingual metadata in ISO19139
 
@@ -323,17 +293,13 @@ A more advanced procedure to upload a new metadata record in the GeoNetwork syst
 
 To start the metadata uploading process through the **XML Metadata Insert** tool, you should log in and select the appropriate option from the Administration page.
 
-<figure>
-<img src="administration_panel.png" alt="administration_panel.png" />
-<figcaption><em>Administration panel</em></figcaption>
-</figure>
+![figure](administration_panel.png)
+*Administration panel*
 
 The main part of the page **Import XML Formatted Metadata** that is displayed is the **Metadata** text area, where the user can paste the XML metadata to import. Below this, there is the **Type** choice, which allows you select the type of record that you are going to create (Metadata, Template and Subtemplate). Then you can apply a stylesheet to convert your metadata input from ArcCatalog8 to ISO1915 or from ISO19115 to ISO19139, if required. Otherwise you can just leave none selected. The **Destination schema** list provides you with four options to choose the final standard layout for your metadata (ISO19115, ISO19139, FGDC and Dublin Core). Finally you should select the **Group** as main group in charge of the metadata and the **Category** that you want to assign to your metadata. By clicking the **Insert** button the metadata is imported into the system; please note that all links to external files, for instance to thumbnails or data for download, have to be removed from the metadata input, to avoid any conflict within the data repository.
 
-<figure>
-<img src="xmlImporTool.png" alt="xmlImporTool.png" />
-<figcaption><em>XML metadata import tool</em></figcaption>
-</figure>
+![figure](xmlImporTool.png)
+*XML metadata import tool*
 
 If your metadata is already in ISO19115 format, the main actions to be performed are the following:
 
@@ -345,7 +311,5 @@ If your metadata is already in ISO19115 format, the main actions to be performed
 6.  Select **Maps and Graphics** from the list of categories;
 7.  Click the **Insert** button and the metadata will be imported into the system.
 
-<figure>
-<img src="xmlImporTool2.png" alt="xmlImporTool2.png" />
-<figcaption><em>XML metadata import 2</em></figcaption>
-</figure>
+![figure](xmlImporTool2.png)
+*XML metadata import 2*

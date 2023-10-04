@@ -23,8 +23,6 @@ To add a widget you should wait for the page to be loaded. This may be approache
 
 On this example, we just have to set up four properties on the constructor: the catalogue variable which makes all , the query which will be sent to the server to provide the items to show, the renderTo id of the div where the tag cloud will be drawn and the onSuccess function which will decorate and give style to the results of the tag cloud search.
 
-You can find the whole [API of widgets here.](./../../../../widgets)
-
 ## Create a new widget
 
 You can create new widgets to add to your customized user interface. Using the same example as before, you can see that you can easily create new widgets.

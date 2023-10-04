@@ -6,52 +6,42 @@ Metadata can be present in the tables of a relational databases, which are commo
 
 An OGC web feature service (WFS) implements a GetFeature query operation that returns data in the form of features (usually rows from related tables in a relational database). GeoNetwork, acting as a client, can read the GetFeature response and apply a user-supplied XSLT stylesheet to produce metadata fragments that can be linked or copied into a user-supplied template to build metadata records.
 
-<figure>
-<img src="web-harvesting-features.png" alt="web-harvesting-features.png" />
-<figcaption><em>Adding an OGC WFS GetFeature harvester</em></figcaption>
-</figure>
+![figure](web-harvesting-features.png)
+*Adding an OGC WFS GetFeature harvester*
 
 The available options are:
 
 -   **Site**
 
 -   *Name* - This is a short description of the harvester. It will be shown in the harvesting main page as the name for this WFS GetFeature harvester.
->
 -   *Service URL* - The bare URL of the WFS service (no OGC params required)
->
 -   *Metadata language* - The language that will be used in the metadata records created by the harvester
->
 -   *OGC WFS GetFeature Query* - The OGC WFS GetFeature query used to extract features from the WFS.
->
 -   *Schema for output metadata records* - choose the metadata schema or profile for the harvested metadata records. Note: only the schemas that have WFS fragment stylesheets will be displayed in the list (see the next option for the location of these stylesheets).
->
->     > -   *Stylesheet to create fragments* - User-supplied stylesheet that transforms the GetFeature response to a metadata fragments document (see below for the format of that document). Stylesheets exist in the WFSToFragments directory which is in the convert directory of the selected output schema. eg. for the iso19139 schema, this directory is `GEONETWORK_DATA_DIR/config/schema_plugins/iso19139/convert/WFSToFragments`.
->     > -   *Save large response to disk* - Check this box if you expect the WFS GetFeature response to be large (eg. greater than 10MB). If checked, the GetFeature response will be saved to disk in a temporary file. Each feature will then be extracted from the temporary file and used to create the fragments and metadata records. If not checked, the response will be held in RAM.
->     > -   *Create subtemplates* - Check this box if you want the harvested metadata fragments to be saved as subtemplates in the metadata catalog and xlink'd into the metadata template (see next option). If not checked, the fragments will be copied into the metadata template.
->     > -   *Template to use to build metadata using fragments* - Choose the metadata template that will be combined with the harvested metadata fragments to create metadata records. This is a standard GeoNetwork metadata template record.
->
+
+    -   *Stylesheet to create fragments* - User-supplied stylesheet that transforms the GetFeature response to a metadata fragments document (see below for the format of that document). Stylesheets exist in the WFSToFragments directory which is in the convert directory of the selected output schema. eg. for the iso19139 schema, this directory is `GEONETWORK_DATA_DIR/config/schema_plugins/iso19139/convert/WFSToFragments`.
+    -   *Save large response to disk* - Check this box if you expect the WFS GetFeature response to be large (eg. greater than 10MB). If checked, the GetFeature response will be saved to disk in a temporary file. Each feature will then be extracted from the temporary file and used to create the fragments and metadata records. If not checked, the response will be held in RAM.
+    -   *Create subtemplates* - Check this box if you want the harvested metadata fragments to be saved as subtemplates in the metadata catalog and xlink'd into the metadata template (see next option). If not checked, the fragments will be copied into the metadata template.
+    -   *Template to use to build metadata using fragments* - Choose the metadata template that will be combined with the harvested metadata fragments to create metadata records. This is a standard GeoNetwork metadata template record.
+
 -   *Category for records built with linked fragments* - Choose the metadata template that will be combined with the harvested metadata fragments to create metadata records. This is a standard GeoNetwork metadata template record.
 
 -   **Options**
 
-```{=html}
-<!-- -->
-```
+    --8<-- "common_options.md"
+
 -   **Privileges**
 
-```{=html}
-<!-- -->
-```
+    --8<-- "common_privileges.md"
+
 -   **Category for subtemplates** - When fragments are saved to GeoNetwork as subtemplates they will be assigned to the category selected here.
 
 ## More about turning the GetFeature Response into metadata fragments
 
 The structure of the metadata fragments document that your XSLT (see *Stylesheet used to create fragments* above) must produce from the GetFeature response is shown below.
 
-<figure>
-<img src="web-harvesting-metadatafragmentsdocument.png" alt="web-harvesting-metadatafragmentsdocument.png" />
-<figcaption><em>An example metadata fragments document produced by a user-supplied XSLT</em></figcaption>
-</figure>
+![figure](web-harvesting-metadatafragmentsdocument.png)
+*An example metadata fragments document produced by a user-supplied XSLT*
 
 Within the root <record> element there can be zero to many <record> elements. When generating metadata, each record element will result in the generation of one metadata document, otherwise, the <record> element is used to group metadata fragments as required only (e.g. fragments generated for a dataset or feature).
 
@@ -84,15 +74,14 @@ The procedure to follow is:
 -   Give it a *Name* (eg. gboundaries) and enter the URL of the wfs service from the bundled geoserver (eg. <http://localhost:8080/geoserver/wfs>) in the *Service URL* field.
 -   We'll use a simple GetFeature query to select all countries from the boundaries shapefile behind the WFS. The XML for such a query (which is to be entered in the *GetFeature Query* textarea) is:
 
-```{=html}
-<!-- -->
-```
+    ``` xml
     <wfs:GetFeature service="WFS" version="1.1.0"
         xmlns:wfs="http://www.opengis.net/wfs">
 
      <wfs:Query typeName="gboundaries"/>
 
     </wfs:GetFeature>
+    ```
 
 -   Choose an output schema - we'll choose *iso19139* as this schema has the example stylesheets and templates we need for this example. Notice that after this option is chosen the following options become visible and we'll take the following actions:
 
@@ -101,10 +90,8 @@ The procedure to follow is:
 
 -   Choose a category for the records created by the harvester, check the *One run only* box, add some privileges (simplest is to let All users have View rights). At this stage your harvester entry form should look like the following screenshot.
 
-<figure>
-<img src="web-harvesting-features-boundaries-example.png" alt="web-harvesting-features-boundaries-example.png" />
-<figcaption><em>Adding an OGC WFS GetFeature harvester - boundaries example</em></figcaption>
-</figure>
+![figure](web-harvesting-features-boundaries-example.png)
+*Adding an OGC WFS GetFeature harvester - boundaries example*
 
 -   *Save* the harvester entry form.
 -   You will be returned to the harvester operations menu where you can *Activate* the harvester and then *Run* it.
@@ -128,9 +115,7 @@ The procedure to follow is:
 -   Give it a *Name* (eg. deegree22-philosopher-test) and enter the URL of your deegree 2.2 installation in the *Service URL* field.
 -   We'll use a simple GetFeature query to select all philosophers from the database under the WFS. The XML for such a query (which is to be entered in the *GetFeature Query* textarea) is:
 
-```{=html}
-<!-- -->
-```
+    ``` xml
     <wfs:GetFeature version="1.1.0" xmlns:app="http://www.deegree.org/app" 
                xmlns:wfs="http://www.opengis.net/wfs">
 
@@ -138,6 +123,7 @@ The procedure to follow is:
      <wfs:Query typeName="app:Philosopher"/>
 
     </wfs:GetFeature>
+    ```
 
 -   Choose an output schema - we'll choose *iso19139* as this schema has the example stylesheets and templates we need for this example. Notice that after this option is chosen the following options become visible and we'll take the following actions:
 
@@ -146,10 +132,8 @@ The procedure to follow is:
 
 -   Choose a category for the records created by the harvester, check the *One run only* box, add some privileges (simplest is to let All users have View rights). At this stage your harvester entry form should look like the following screenshot.
 
-<figure>
-<img src="web-harvesting-features.png" alt="web-harvesting-features.png" />
-<figcaption><em>Adding an OGC WFS GetFeature harvester - philosopher example</em></figcaption>
-</figure>
+![figure](web-harvesting-features.png)
+*Adding an OGC WFS GetFeature harvester - philosopher example*
 
 -   *Save* the harvester entry form.
 -   You will be returned to the harvester operations menu where you can *Activate* the harvester and then *Run* it.

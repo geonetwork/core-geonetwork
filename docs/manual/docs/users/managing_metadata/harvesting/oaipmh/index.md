@@ -6,10 +6,8 @@ This is a harvesting protocol that is widely used among libraries. GeoNetwork im
 
 An OAI-PMH server implements a harvesting protocol that GeoNetwork, acting as a client, can use to harvest metadata.
 
-<figure>
-<img src="web-harvesting-oaipmh.png" alt="web-harvesting-oaipmh.png" />
-<figcaption><em>Adding an OAI-PMH harvesting harvester</em></figcaption>
-</figure>
+![figure](web-harvesting-oaipmh.png)
+*Adding an OAI-PMH harvesting harvester*
 
 Configuration options:
 
@@ -32,18 +30,20 @@ Configuration options:
 
 -   **Options** - Scheduling Options.
 
-```{=html}
-<!-- -->
-```
+    --8<-- "common_options.md"
+
 -   **Privileges**
 
-```{=html}
-<!-- -->
-```
+    --8<-- "common_privileges.md.md"
+
 -   **Categories**
 
-## Notes
+    --8<-- "common_categories.md"
 
--   if you request the oai_dc output format, GeoNetwork will convert it to Dublin Core format.
--   when you edit a previously created OAIPMH harvester instance, both the *set* and *prefix* drop down lists will be empty. You have to press the retrieve info button again to connect to the remote server and retrieve set and prefix information.
--   the id of the remote server must be a UUID. If not, metadata can be harvested but during hierarchical propagation id clashes could corrupt harvested metadata.
+!!! Notes
+
+    -   if you request the oai_dc output format, GeoNetwork will convert it to Dublin Core format.
+    -   when you edit a previously created OAIPMH harvester instance, both the *set* and *prefix* drop down lists will be empty. You have to press the retrieve info button again to connect to the remote server and retrieve set and prefix information.
+    -   the id of the remote server must be a UUID. If not, metadata can be harvested but during hierarchical propagation id clashes could corrupt harvested metadata.
+
+    --8<-- "common_notes.md"

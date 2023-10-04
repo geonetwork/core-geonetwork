@@ -6,18 +6,18 @@ Harvesting is the process of collecting metadata from a remote source and storin
 
 GeoNetwork is able to harvest from the following sources (for more details see below):
 
-> 1.  Another GeoNetwork node (version 2.1 or above). See [GeoNetwork Harvesting](gn/index.md)
-> 2.  An old GeoNetwork 2.0 node (deprecated). See [GeoNetwork 2.0 Harvester](gn2.0/index.md)
-> 3.  A WebDAV server. See [WEBDAV Harvesting](webdav/index.md)
-> 4.  A CSW 2.0.1 or 2.0.2 catalogue server. See [CSW Harvesting](csw/index.md)
-> 5.  A GeoPortal 9.3.x or 10.x server. See [GeoPortal REST Harvesting](geoPREST/index.md)
-> 6.  A File system acessible by GeoNetwork. See [Local File System Harvesting](localfilesystem/index.md)
-> 7.  An OAI-PMH server. See [OAIPMH Harvesting](oaipmh/index.md)
-> 8.  An OGC service using its GetCapabilities document. These include WMS, WFS, WPS and WCS services. See [Harvesting OGC Services](ogcwxs/index.md)
-> 9.  An ArcSDE server. See [Harvesting an ARCSDE Node](sde/index.md)
-> 10. A THREDDS catalog. See [THREDDS Harvesting](thredds/index.md)
-> 11. An OGC WFS using a GetFeature query. See [WFS GetFeature Harvesting](wfs-getfeatures/index.md)
-> 12. One or more Z3950 servers. See [Z3950 Harvesting](z3950/index.md)
+1.  Another GeoNetwork node (version 2.1 or above). See [GeoNetwork Harvesting](gn/index.md)
+2.  An old GeoNetwork 2.0 node (deprecated). See [GeoNetwork 2.0 Harvester](gn2.0/index.md)
+3.  A WebDAV server. See [WEBDAV Harvesting](webdav/index.md)
+4.  A CSW 2.0.1 or 2.0.2 catalogue server. See [CSW Harvesting](csw/index.md)
+5.  A GeoPortal 9.3.x or 10.x server. See [GeoPortal REST Harvesting](geoPREST/index.md)
+6.  A File system acessible by GeoNetwork. See [Local File System Harvesting](localfilesystem/index.md)
+7.  An OAI-PMH server. See [OAIPMH Harvesting](oaipmh/index.md)
+8.  An OGC service using its GetCapabilities document. These include WMS, WFS, WPS and WCS services. See [Harvesting OGC Services](ogcwxs/index.md)
+9.  An ArcSDE server. See [Harvesting an ARCSDE Node](sde/index.md)
+10. A THREDDS catalog. See [THREDDS Harvesting](thredds/index.md)
+11. An OGC WFS using a GetFeature query. See [WFS GetFeature Harvesting](wfs-getfeatures/index.md)
+12. One or more Z3950 servers. See [Z3950 Harvesting](z3950/index.md)
 
 ## Mechanism overview
 
@@ -75,10 +75,8 @@ For example, you may only be interested in harvesting the geographic extent and/
 
 To support this capability, both the WFS GetFeature Harvester and the THREDDS harvester, allow fragments of metadata to be harvested and linked or copied into a template record to create metadata records. Fragments that are saved into the GeoNetwork database are called subtemplates and can be used in more than one metadata record. These concepts are shown in the diagram below.
 
-<figure>
-<img src="web-harvesting-fragments.png" alt="web-harvesting-fragments.png" />
-<figcaption><em>Harvesting Metadata Fragments</em></figcaption>
-</figure>
+![figure](web-harvesting-fragments.png)
+*Harvesting Metadata Fragments*
 
 As shown above, an example of a metadata fragment is the gmd:contactInfo element of an iso19139 document. This element contains contact details for an individual or an organisation. If a fragment is stored in the geonetwork database as a subtemplate for a given person or organisation, then this fragment can be referenced in metadata records where this organisation or individual is specified using an XML linking mechanism called XLink. An example of an XLink is shown in the following diagram.
 
@@ -133,17 +131,13 @@ The script will add the certificate to the JVM keystore, if you run it as follow
 
 To access the harvesting main page you have to be logged in as an administrator. From the administration page, click the link shown below with a red rectangle.
 
-<figure>
-<img src="web-harvesting-where.png" alt="web-harvesting-where.png" />
-<figcaption><em>How to access the harvesting main page</em></figcaption>
-</figure>
+![figure](web-harvesting-where.png)
+*How to access the harvesting main page*
 
 The harvesting main page will then be displayed.
 
-<figure>
-<img src="web-harvesting-list.png" alt="web-harvesting-list.png" />
-<figcaption><em>The harvesting main page</em></figcaption>
-</figure>
+![figure](web-harvesting-list.png)
+*The harvesting main page*
 
 The page shows a list of the currently defined harvesters and a set of buttons for management functions. The meaning of each column in the list of harvesters is as follows:
 
@@ -265,10 +259,8 @@ When a harvester runs and completes, a tool tip showing detailed information abo
 
 The Add button in the main page allows you to add new harvesters. A drop down list is then shown with all the available harvester protocols.
 
-<figure>
-<img src="web-harvesting-add.png" alt="web-harvesting-add.png" />
-<figcaption><em>Adding a new harvester</em></figcaption>
-</figure>
+![figure](web-harvesting-add.png)
+*Adding a new harvester*
 
 You can choose the type of harvest you intend to perform and press *Add* to begin the process of adding the harvester. The supported harvesters and details of what to do next are in the following sections:
 
@@ -278,20 +270,14 @@ You can choose the type of harvest you intend to perform and press *Add* to begi
 
 Each time a harvester is run, it generates a status report of what was harvested and/or what went wrong (eg. exception report). These reports are stored in a table in the database used by GeoNetwork. The entire harvesting history for all harvesters can be recalled using the History button on the Harvesting Management page. The harvest history for an individual harvester can also be recalled using the History link in the Operations for that harvester.
 
-<figure>
-<img src="web-harvesting-with-history.png" alt="web-harvesting-with-history.png" />
-<figcaption><em>An example of the Harvesting Management Page with History functions</em></figcaption>
-</figure>
+![figure](web-harvesting-with-history.png)
+*An example of the Harvesting Management Page with History functions*
 
-<figure>
-<img src="web-harvesting-all-harvesters-history.png" alt="web-harvesting-all-harvesters-history.png" />
-<figcaption><em>An example of the Harvesting History for all harvesters</em></figcaption>
-</figure>
+![figure](web-harvesting-all-harvesters-history.png)
+*An example of the Harvesting History for all harvesters*
 
-<figure>
-<img src="web-harvesting-harvester-history.png" alt="web-harvesting-harvester-history.png" />
-<figcaption><em>An example of the Harvesting History for a harvester</em></figcaption>
-</figure>
+![figure](web-harvesting-harvester-history.png)
+*An example of the Harvesting History for a harvester*
 
 Once the harvest history has been displayed it is possible to:
 

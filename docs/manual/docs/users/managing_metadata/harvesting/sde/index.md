@@ -6,10 +6,8 @@ This is a harvesting protocol for metadata stored in an ArcSDE installation.
 
 The harvester identifies the ESRI metadata format: ESRI ISO, ESRI FGDC to apply the required xslts to transform metadata to ISO19139
 
-<figure>
-<img src="web-harvesting-sde.png" alt="web-harvesting-sde.png" />
-<figcaption><em>Adding an ArcSDE harvesting node</em></figcaption>
-</figure>
+![figure](web-harvesting-sde.png)
+*Adding an ArcSDE harvesting node*
 
 Configuration options:
 
@@ -24,14 +22,14 @@ Configuration options:
 
 -   **Options**
 
-```{=html}
-<!-- -->
-```
+    --8<-- "common_options.md"
+
 -   **Harvested Content**
     -   *Validate* - if checked then harvested metadata records will be validated against the relevant metadata schema. Invalid records will be rejected.
 -   **Privileges**
 
-```{=html}
-<!-- -->
-```
+    --8<-- "common_privileges.md"
+
 -   **Categories**
+
+    --8<-- "common_categories.md"

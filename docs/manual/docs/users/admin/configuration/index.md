@@ -14,27 +14,19 @@ To get to the System configuration parameters, you must be logged on as administ
     New installations of GeoNetwork use admin for both username and password. It is important to change the password using the links in the Administration page the first time you log on!
 
 
-<figure>
-<img src="web-config-where.png" alt="web-config-where.png" />
-<figcaption><em>The link to the System configuration page</em></figcaption>
-</figure>
+![figure](web-config-where.png)
+*The link to the System configuration page*
 
 Clicking the link bring up the system configuration menu. A detailed description of these parameters follows.
 
-<figure>
-<img src="web-config-options-1.png" alt="web-config-options-1.png" />
-<figcaption><em>The configuration options - part 1</em></figcaption>
-</figure>
+![figure](web-config-options-1.png)
+*The configuration options - part 1*
 
-<figure>
-<img src="web-config-options-2.png" alt="web-config-options-2.png" />
-<figcaption><em>The configuration options - part 2</em></figcaption>
-</figure>
+![figure](web-config-options-2.png)
+*The configuration options - part 2*
 
-<figure>
-<img src="web-config-options-3.png" alt="web-config-options-3.png" />
-<figcaption><em>The configuration options - part 3</em></figcaption>
-</figure>
+![figure](web-config-options-3.png)
+*The configuration options - part 3*
 
 Note: at the bottom of the page (you will need to scroll down) there are three buttons with the following purpose:
 
@@ -203,10 +195,8 @@ For some functions (eg. harvesting) GeoNetwork must be able to connect to remote
 
 *Use*: Checking this box will display the proxy configuration options panel.
 
-<figure>
-<img src="web-config-options-proxy.png" alt="web-config-options-proxy.png" />
-<figcaption><em>The proxy configuration options</em></figcaption>
-</figure>
+![figure](web-config-options-proxy.png)
+*The proxy configuration options*
 
 *Host*: The proxy server name or address to use (usually an IP address).
 

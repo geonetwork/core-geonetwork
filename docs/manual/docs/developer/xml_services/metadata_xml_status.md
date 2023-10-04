@@ -242,4 +242,4 @@ See [Exception handling](services_calling.md#exception_handling) for more detail
 
 ## Defining status actions
 
-The behaviour of GeoNetwork when a status changes can be defined by the programmer. See [Java Metadata Status Actions](../../java_metadata_status_actions-broken.md).
+The behaviour of GeoNetwork when a status changes can be defined by the programmer. See [Java Metadata Status Actions](../../users/managing_metadata/status/index.md).

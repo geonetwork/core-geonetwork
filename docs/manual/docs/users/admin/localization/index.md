@@ -4,10 +4,8 @@
 
 The user interface of GeoNetwork can be localized into several languages through XML language files. Beside static text, there is also more dynamic text that can be added and changed interactively. This text is stored in the database and is translated using the Localization form that is part of the administrative functions.
 
-<figure>
-<img src="localization-where.png" alt="localization-where.png" />
-<figcaption><em>How to open the Localization form</em></figcaption>
-</figure>
+![figure](localization-where.png)
+*How to open the Localization form*
 
 The form allows you to localize the following entities: *Groups*, *Categories*, *Operations* and *Regions*. The localization form is subdivided in a left and a right panel.
 
@@ -27,7 +25,5 @@ Use the Save button to store the updated label and move to the next element.
     If the user changes a label and chooses another target language without saving, the label change is lost.
 
 
-<figure>
-<img src="localization.png" alt="localization.png" />
-<figcaption><em>The Localization form</em></figcaption>
-</figure>
+![figure](localization.png)
+*The Localization form*

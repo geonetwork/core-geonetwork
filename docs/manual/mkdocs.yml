@@ -115,7 +115,8 @@ markdown_extensions:
   - pymdownx.inlinehilite
   - pymdownx.keys
   - pymdownx.smartsymbols
-  - pymdownx.snippets
+  - pymdownx.snippets:
+      base_path: 'docs/users/managing_metadata/harvesting/'
   - pymdownx.superfences:
       custom_fences:
         - name: mermaid

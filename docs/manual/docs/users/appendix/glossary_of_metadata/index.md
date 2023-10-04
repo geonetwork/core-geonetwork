@@ -16,7 +16,7 @@ Administrative area
 
 Temporal extent - Begin date
 
-:   Formatted as 2007-09-12T15:00:00 (YYYY-MM-DDTHH:mm:ss)
+:   Formatted as 2007-09-12T15:00:00 (`YYYY-MM-DDTHH:mm:ss`)
 
 Character set
 
@@ -44,11 +44,11 @@ Data quality info
 
 Date
 
-:   Reference date and event used to describe it (YYYY-MM-DD)
+:   Reference date and event used to describe it (`YYYY-MM-DD`)
 
 Date stamp
 
-:   Date that the metadata was created (YYYY-MM-DDThh:mm:ss)
+:   Date that the metadata was created (`YYYY-MM-DDThh:mm:ss`)
 
 Date type
 
@@ -104,7 +104,7 @@ Electronic mail address
 
 Temporal extent - End date
 
-:   Formatted as 2007-09-12T15:00:00 (YYYY-MM-DDTHH:mm:ss)
+:   Formatted as 2007-09-12T15:00:00 (`YYYY-MM-DDTHH:mm:ss`)
 
 Equivalent scale
 

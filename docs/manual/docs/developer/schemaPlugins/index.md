@@ -591,9 +591,7 @@ There are certain XSLT templates that the presentation XSLT must have:
 
 -   the **main** template, which must be called: metadata-<schema-name>. For the MCP profile of iso19139 the main template would look like the following (taken from metadata-iso19139.mcp.xsl):
 
-```{=html}
-<!-- -->
-```
+    ``` xml
     <xsl:template name="metadata-iso19139.mcp">
       <xsl:param name="schema"/>
       <xsl:param name="edit" select="false()"/>
@@ -605,6 +603,7 @@ There are certain XSLT templates that the presentation XSLT must have:
         <xsl:with-param name="embedded" select="$embedded" />
       </xsl:apply-templates>
     </xsl:template>
+    ```
 
 Analyzing this template:
 
@@ -613,9 +612,7 @@ Analyzing this template:
 
 -   a **completeTab** template, which must be called: <schema-name>CompleteTab. This template will display all tabs, apart from the 'default' (or simple mode) and the 'XML View' tabs, in the left hand frame of the editor/viewer screen. Here is an example for the MCP:
 
-```{=html}
-<!-- -->
-```
+    ``` xml
     <xsl:template name="iso19139.mcpCompleteTab">
       <xsl:param name="tabLink"/>
 
@@ -650,7 +647,8 @@ Analyzing this template:
      GEONETWORK_DATA_DIR/schema_plugins/iso19139/present/
      metadata-iso19139.xsl) ......
 
-    </xsl:template>  
+    </xsl:template>
+    ````
 
 This template is called by the template named "tab" (which also adds the "default" and "XML View" tabs) in `INSTALL_DIR/web/geonetwork/xsl/metadata-tab-utils.xsl` using the schema name. That XSLT also has the code for the "displayTab" template.
 
@@ -658,9 +656,7 @@ This template is called by the template named "tab" (which also adds the "defaul
 
 -   a **root element** processing tab. This tab should match on the root element of the metadata record. For example, for the iso19139 schema:
 
-```{=html}
-<!-- -->
-```
+    ``` xml
     <xsl:template mode="iso19139" match="gmd:MD_Metadata">
       <xsl:param name="schema"/>
       <xsl:param name="edit"/>
@@ -687,14 +683,13 @@ This template is called by the template named "tab" (which also adds the "defaul
       .........
 
     </xsl:template>
+    ```
 
 This template is basically a very long "choose" statement with "when" clauses that test the value of the currently defined tab (in global variable currTab). Each "when" clause will display the set of metadata elements that correspond to the tab definition using "elementEP" directly (as in the "when" clause for the 'identification' tab above) or via a named template (as in the 'metadata' tab above). For the MCP our template is similar to the one above for iso19139, except that the match would be on "mcp:MD_Metadata" (and the processing mode may differ - see the section 'An alternative XSLT design for profiles' below for more details).
 
 -   a **brief** template, which must be called: <schema-name>Brief. This template processes the metadata record and extracts from it a format neutral summary of the metadata for purposes such as displaying the search results. Here is an example for the eml-gbif schema (because it is fairly short!):
 
-```{=html}
-<!-- -->
-```
+    ``` xml
     <xsl:template match="eml-gbifBrief">
      <xsl:for-each select="/metadata/*[1]">
       <metadata>
@@ -715,6 +710,7 @@ This template is basically a very long "choose" statement with "when" clauses th
       </metadata>
      </xsl:for-each>
     </xsl:template>
+    ```
 
 Analyzing this template:
 
@@ -741,9 +737,7 @@ This template splits the processing between the base iso19139 schema and a brief
 
 -   templates that match on elements specific to the schema. Here is an example from the eml-gbif schema:
 
-```{=html}
-<!-- -->
-```
+    ``` xml
     <!-- keywords are processed to add thesaurus name in brackets afterwards 
          in view mode -->
 
@@ -778,6 +772,7 @@ This template splits the processing between the base iso19139 schema and a brief
         </xsl:otherwise>
       </xsl:choose>
     </xsl:template>
+    ```
 
 Analyzing this template:
 
@@ -838,9 +833,7 @@ Here is an example for the MCP (iso19139.mcp) with base schema iso19139:
 
 -   the **main** template, which must be called: metadata-iso19139.mcp.xsl:
 
-```{=html}
-<!-- -->
-```
+    ``` xml
     <!-- main template - the way into processing iso19139.mcp -->
     <xsl:template name="metadata-iso19139.mcp">
       <xsl:param name="schema"/>
@@ -873,6 +866,7 @@ Here is an example for the MCP (iso19139.mcp) with base schema iso19139:
           </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
+    ```
 
 Analyzing this template:
 
@@ -881,36 +875,33 @@ Analyzing this template:
 
 -   templates that match on elements specific to the profile have mode iso19139.mcp:
 
-```{=html}
-<!-- -->
-```
+    ``` xml
     <xsl:template mode="iso19139.mcp" match="mcp:taxonomicElement">
       <xsl:param name="schema"/>
       <xsl:param name="edit"/>
 
       .....
     </xsl:template> 
+    ```
 
 -   templates that override elements in the base schema are processed in the profile mode iso19139.mcp
 
-```{=html}
-<!-- -->
-```
+    ``` xml
     <xsl:template mode="iso19139.mcp" match="gmd:keyword">
       <xsl:param name="schema"/>
       <xsl:param name="edit"/>
 
       .....
     </xsl:template> 
+    ```
 
 Notice that the template header of the profile has a simpler design than that used for the original design? Neither the priority attribute or the schema XPath condition is required because we are using a different mode to the base schema.
 
 -   To support processing in two modes we need to add a null template to the profile mode iso19139.mcp as follows:
 
-```{=html}
-<!-- -->
-```
+    ``` xml
     <xsl:template mode="iso19139.mcp" match="*|@*"/> 
+    ```
 
 This template will match all elements that we don't have a specific template for in the profile mode iso19139.mcp. These elements will be processed in the base schema mode iso19139 instead because the null template returns nothing (see the main template discussion above).
 
@@ -1074,9 +1065,7 @@ The three XSLTs that support this interface are:
 
 -   **extract-thumbnails.xsl** - this XSLT extracts the thumbnails/browse graphics from the metadata record, turning it into generic XML that is the same for all metadata schemas. The elements need to have content that GeoNetwork understands. The following is an example of what the thumbnail interface for iso19139 expects (we'll duplicate this requirement for MCP):
 
-```{=html}
-<!-- -->
-```
+    ``` xml
     <gmd:graphicOverview>
       <gmd:MD_BrowseGraphic>
         <gmd:fileName>
@@ -1103,6 +1092,7 @@ The three XSLTs that support this interface are:
         </gmd:fileType>
       </gmd:MD_BrowseGraphic>
     </gmd:graphicOverview> 
+    ```
 
 When `extract-thumbnails.xsl` is run, it creates a small XML hierarchy from this information which looks something like the following:
 
@@ -1125,12 +1115,11 @@ Because the MCP is a profile of ISO19115/19139, the easiest path to creating the
 -   **update-child-from-parent-info.xsl** - this XSLT is run when a child record needs to have content copied into it from a parent record. It is an XSLT that changes the content of a few elements and leaves the remaining elements untouched. The behaviour of this XSLT would depend on which elements of the parent record will be used to update elements of the child record.
 -   **update-fixed-info.xsl** - this XSLT is run after editing to fix certain elements and content in the metadata record. For the MCP there are a number of actions we would like to take to 'hard-wire' certain elements and content. To do this the XSLT the following processing logic:
 
-```{=html}
-<!-- -->
-```
+    ``` xml
     if the element is one that we want to process then 
       add a template with a match condition for that element and process it
     else copy the element to output
+    ```
 
 Because the MCP is a profile of ISO19115/19139, the easiest path to creating this XSLT is to copy update-fixed-info.xsl from the iso19139 schema and modify it for the changes in namespace required by the MCP and then to include the processing we want.
 
@@ -1172,14 +1161,13 @@ This is a simple directory. Put XML metadata files to be used as templates in th
 
 -   **schema-suggestions.xml** - The default behaviour of the GeoNetwork advanced editor when building the editor forms is to show elements that are not in the metadata record as unexpanded elements. To add these elements to the record, the user will have to click on the '+' icon next to the element name. This can be tedious especially as some metadata standards have elements nested in others (ie. complex elements). The schema-suggestions.xml file allows you to specify elements that should be automatically expanded by the editor. An example of this is the online resource information in the ISO19115/19139 standard. If the following XML was added to the `schema-suggestions.xml` file:
 
-```{=html}
-<!-- -->
-```
+    ``` xml
     <field name="gmd:CI_OnlineResource">
       <suggest name="gmd:protocol"/>
       <suggest name="gmd:name"/>
       <suggest name="gmd:description"/>
     </field>
+    ```
 
 The effect of this would be that when an online resource element was expanded, then input fields for the protocol (a drop down/select list), name and description would automatically appear in the editor.
 
@@ -1187,9 +1175,7 @@ Once again, a good place to start when building a `schema-suggestions.xml` file 
 
 -   **schema-substitutes.xml** - Recall from the earlier [Creating the schema directory and schema.xsd file](index.md#schema_and_schema_xsd) section, that the method we used to extend the base ISO19115/19139 schemas is to extend the base type, define a new element with the extended base type and allow the new element to substitute for the base element. So for example, in the MCP, we want to add a new resource constraint element that holds Creative Commons and other commons type licensing information. This requires that the MD_Constraints type be extended and a new mcp:MD_Commons element be defined which can substitute for gmd:MD_Constraints. This is shown in the following snippet of XSD:
 
-```{=html}
-<!-- -->
-```
+    ``` xml
     <xs:complexType name="MD_CommonsConstraints_Type">
       <xs:annotation>
         <xs:documentation>
@@ -1216,6 +1202,7 @@ Once again, a good place to start when building a `schema-suggestions.xml` file 
     </xs:complexType>
 
     <xs:element name="MD_Commons" substitutionGroup="gmd:MD_Constraints" type="mcp:MD_CommonsConstraints_Type"/>
+    ```
 
 For MCP records, the GeoNetwork editor will show a choice of elements from the substitution group for gmd:MD_Constraints when adding 'Resource Constraints' to the metadata document. This will now include mcp:MD_Commons.
 

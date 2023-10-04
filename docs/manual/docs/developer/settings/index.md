@@ -196,9 +196,9 @@ Harvester settings in XML are used by the harvester services - see [Harvesting s
      </info> 
     </node>
 
-#### Notes
+!!! Notes
 
-    -    this harvester does not use the content/importXslt setting - instead a more sophisticated approach using the metadata processing services can be applied through the **importXslt** setting - for more details and an example see [Metadata Processing services](../xml_services/metadata_xml_processing.md) for more details.
+    -   this harvester does not use the content/importXslt setting - instead a more sophisticated approach using the metadata processing services can be applied through the **importXslt** setting - for more details and an example see [Metadata Processing services](../xml_services/metadata_xml_processing.md) for more details.
 
 ### Harvesting node webdav {#webdav_harvesting}
 
@@ -257,7 +257,7 @@ Harvester settings in XML are used by the harvester services - see [Harvesting s
      </info>
     </node> 
 
-#### Notes
+!!! Notes
 
     -    this harvester does not use the content/importXslt setting
 
@@ -326,7 +326,7 @@ Harvester settings in XML are used by the harvester services - see [Harvesting s
      </info>
     </node> 
 
-#### Notes
+!!! Notes
 
     -    this harvester does not use the content/importXslt setting
 
@@ -455,7 +455,7 @@ Harvester settings in XML are used by the harvester services - see [Harvesting s
      </info>
     </node>  
 
-#### Notes
+!!! Notes
 
     -    this harvester does not use the content/importXslt setting
     -    this harvester does not use the content/validate setting - this will change
@@ -557,7 +557,7 @@ Harvester settings in XML are used by the harvester services - see [Harvesting s
      </info>
     </node> 
 
-#### Notes
+!!! Notes
 
     -    this harvester does not use the content/importXslt setting
     -    this harvester does not use the content/validate setting
@@ -636,7 +636,7 @@ Harvester settings in XML are used by the harvester services - see [Harvesting s
      </info>
     </node>
 
-#### Notes
+!!! Notes
 
     -    this harvester does not use the content/importXslt setting
     -    this harvester does not use the content/validate setting
@@ -750,7 +750,7 @@ Harvester settings in XML are used by the harvester services - see [Harvesting s
      </info>
     </node>
 
-#### Notes
+!!! Notes
 
     -    this harvester does not use the content/importXslt setting
     -    ArcSDE java API libraries need to be installed by the user in GeoNetwork (folder `INSTALL_DIR/web/geonetwork/WEB-INF/lib`), as these are proprietary libraries not distributed with GeoNetwork. The following jars are required:
@@ -898,11 +898,11 @@ Harvester settings in XML are used by the harvester services - see [Harvesting s
      </info>
     </node>
 
-#### Notes
+!!! Notes
 
--   this harvester uses two REST services from the GeoPortal API:
+    -   this harvester uses two REST services from the GeoPortal API:
 
-    -    `rest/find/document` with searchText parameter to return an RSS listing of metadata records that meet the search criteria
-    -    `rest/document` with id parameter from each result returned in the RSS listing
+        -    `rest/find/document` with searchText parameter to return an RSS listing of metadata records that meet the search criteria
+        -    `rest/document` with id parameter from each result returned in the RSS listing
 
--   this harvester has been tested with GeoPortal 9.3.x. It should be used for that version of GeoPortal in preference to the CSW harvester.
+    -   this harvester has been tested with GeoPortal 9.3.x. It should be used for that version of GeoPortal in preference to the CSW harvester.

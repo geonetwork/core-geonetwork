@@ -95,27 +95,21 @@ Metadata records in ISO19139 could be related to resources defined in WMS servic
 1.  *URL*: Url of WMS service
 2.  Name of the resource: empty.
 
-<figure>
-<img src="onlineResourceWebMapService2.png" alt="onlineResourceWebMapService2.png" />
-<figcaption><em>WMS online resource</em></figcaption>
-</figure>
+![onlineResourceWebMapService2.png](onlineResourceWebMapService2.png)
+WMS online resource
 
 The *Interactive Map* button opens a window to select the layer/s defined in WMS capabilities document to load in map viewer.
 
-<figure>
-<img src="onlineResourceWebMapService2SelectLayer.png" alt="onlineResourceWebMapService2SelectLayer.png" />
-<figcaption><em>Window to select WMS layer/s referenced in online resource to load in map viewer</em></figcaption>
-</figure>
+![onlineResourceWebMapService2SelectLayer.png](onlineResourceWebMapService2SelectLayer.png)
+Window to select WMS layer/s referenced in online resource to load in map viewer
 
 -   Selecting protocols **OGC-WMS Web Map Service**, **OGC Web Map Service 1.1.1** or **OGC Web Map Service 1.3.0**:
 
 1.  *URL*: Url of WMS service
 2.  *Name of the resource*: WMS layer name (optional)
 
-<figure>
-<img src="onlineResourceWebMapService1.png" alt="onlineResourceWebMapService1.png" />
-<figcaption><em>WMS online resource</em></figcaption>
-</figure>
+![onlineResourceWebMapService1.png](onlineResourceWebMapService1.png)
+WMS online resource
 
 The behaviour the *Interactive Map* button depends if user indicated the layer name in the field *Name of the resource* or not, to show the window to select the layer/s to load in map viewer or load the layer directly.
 
@@ -135,10 +129,8 @@ To Upload a Dataset, follow these steps:
 4.  Click the Browse button and navigate to the folder where the file to be released is stored. Consider if you want to upload multiple files as one unique zip file or as multiple separate downloads. It is a good idea to add additional documentation with the datasets that provide the user with information related to the data described. Reminder: by default, the size of a single file upload cannot exceed 100 Mbytes unless your system administrator has configured a larger limit in the GeoNetwork config.xml file;
 5.  Click Upload and then Save the metadata record.
 
-<figure>
-<img src="uploadData.png" alt="uploadData.png" />
-<figcaption><em>An online resource</em></figcaption>
-</figure>
+![uploadData.png](uploadData.png)
+An online resource
 
 ### Linking WMS for data visualization
 
