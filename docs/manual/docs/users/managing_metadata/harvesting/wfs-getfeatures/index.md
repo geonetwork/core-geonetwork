@@ -6,10 +6,8 @@ Metadata can be present in the tables of a relational databases, which are commo
 
 An OGC web feature service (WFS) implements a GetFeature query operation that returns data in the form of features (usually rows from related tables in a relational database). GeoNetwork, acting as a client, can read the GetFeature response and apply a user-supplied XSLT stylesheet to produce metadata fragments that can be linked or copied into a user-supplied template to build metadata records.
 
-<figure>
-<img src="web-harvesting-features.png" alt="web-harvesting-features.png" />
-<figcaption><em>Adding an OGC WFS GetFeature harvester</em></figcaption>
-</figure>
+![figure](web-harvesting-features.png)
+*Adding an OGC WFS GetFeature harvester*
 
 The available options are:
 
@@ -42,10 +40,8 @@ The available options are:
 
 The structure of the metadata fragments document that your XSLT (see *Stylesheet used to create fragments* above) must produce from the GetFeature response is shown below.
 
-<figure>
-<img src="web-harvesting-metadatafragmentsdocument.png" alt="web-harvesting-metadatafragmentsdocument.png" />
-<figcaption><em>An example metadata fragments document produced by a user-supplied XSLT</em></figcaption>
-</figure>
+![figure](web-harvesting-metadatafragmentsdocument.png)
+*An example metadata fragments document produced by a user-supplied XSLT*
 
 Within the root <record> element there can be zero to many <record> elements. When generating metadata, each record element will result in the generation of one metadata document, otherwise, the <record> element is used to group metadata fragments as required only (e.g. fragments generated for a dataset or feature).
 
@@ -94,10 +90,8 @@ The procedure to follow is:
 
 -   Choose a category for the records created by the harvester, check the *One run only* box, add some privileges (simplest is to let All users have View rights). At this stage your harvester entry form should look like the following screenshot.
 
-<figure>
-<img src="web-harvesting-features-boundaries-example.png" alt="web-harvesting-features-boundaries-example.png" />
-<figcaption><em>Adding an OGC WFS GetFeature harvester - boundaries example</em></figcaption>
-</figure>
+![figure](web-harvesting-features-boundaries-example.png)
+*Adding an OGC WFS GetFeature harvester - boundaries example*
 
 -   *Save* the harvester entry form.
 -   You will be returned to the harvester operations menu where you can *Activate* the harvester and then *Run* it.
@@ -138,10 +132,8 @@ The procedure to follow is:
 
 -   Choose a category for the records created by the harvester, check the *One run only* box, add some privileges (simplest is to let All users have View rights). At this stage your harvester entry form should look like the following screenshot.
 
-<figure>
-<img src="web-harvesting-features.png" alt="web-harvesting-features.png" />
-<figcaption><em>Adding an OGC WFS GetFeature harvester - philosopher example</em></figcaption>
-</figure>
+![figure](web-harvesting-features.png)
+*Adding an OGC WFS GetFeature harvester - philosopher example*
 
 -   *Save* the harvester entry form.
 -   You will be returned to the harvester operations menu where you can *Activate* the harvester and then *Run* it.

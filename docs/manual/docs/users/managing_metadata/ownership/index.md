@@ -65,10 +65,8 @@ The following rules apply:
 
 When metadata ownership needs to be transferred from one user to another for all or specific metadata records, the *Transfer Ownership* option is available. It is located in the Administration page and once selected, leads to the following page.
 
-<figure>
-<img src="web-ownership-where.png" alt="web-ownership-where.png" />
-<figcaption><em>How to open the Transfer Ownership page</em></figcaption>
-</figure>
+![figure](web-ownership-where.png)
+*How to open the Transfer Ownership page*
 
 Initially, the page shows only a dropdown for a Source editor (the current metadata owner). The dropdown is filled with all GeoNetwork Users that have the Editor role and own some metadata. Selecting an Editor will select all metadata that is managed by that Editor. An empty dropdown means that there are no Editors with metadata associated and hence no transfer is possible.
 
@@ -77,10 +75,8 @@ Initially, the page shows only a dropdown for a Source editor (the current metad
     The drop down will be filled with all Editors visible to you. If you are not an Administrator, you will view only a subset of all Editors.
 
 
-<figure>
-<img src="web-ownership-options.png" alt="web-ownership-options.png" />
-<figcaption><em>The Transfer Ownership page</em></figcaption>
-</figure>
+![figure](web-ownership-options.png)
+*The Transfer Ownership page*
 
 Once a Source Editor has been selected, a set of rows is displayed. Each row refers to the group of the Editor for which there are privileges. The meaning of each column is the following:
 

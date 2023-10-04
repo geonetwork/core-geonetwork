@@ -24,19 +24,15 @@ The requested language is determined as follows (in this order):
 
 -   request parameter: in the GUI, the user may select a language:
 
-<figure>
-<img src="requested-language-in-search-form.png" alt="requested-language-in-search-form.png" />
-<figcaption>For XML searches, the client may add::
-<blockquote>
-<p>&lt;requestedLanguage&gt;language-code&lt;/requestedLanguage&gt;</p>
-</blockquote></figcaption>
-</figure>
+    ![figure](requested-language-in-search-form.png)
+    
+    For XML searches, the client may add: ``<requestedLanguage>language-code</requestedLanguage>``
 
-where language-code is one of the ISO 639-2 (three-character) language codes, see <http://www.loc.gov/standards/iso639-2/php/code_list.php>.
+    Where language-code is one of the ISO 639-2 (three-character) language codes, see <http://www.loc.gov/standards/iso639-2/php/code_list.php>.
 
 -   if the request parameter is not sent (the user selected "any" language, or it's not in the XML request), the requested language may be automatically detected, if an Administrator user has enabled this in the System Configuration:
 
-![](enable-auto-detection.png)
+    ![](enable-auto-detection.png)
 
 The auto-detection feature uses Language Detection Library for Java, see <https://code.google.com/p/language-detection/>. This library tries to detect the language of search terms in parameter 'any'. This may not work very well, depending on the language, if there is only one or very few search terms. This is why this feature is disabled by default. At the time of writing the auto-detection supports these languages:
 

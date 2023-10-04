@@ -6,10 +6,8 @@ This is a harvesting protocol that is widely used among libraries. GeoNetwork im
 
 An OAI-PMH server implements a harvesting protocol that GeoNetwork, acting as a client, can use to harvest metadata.
 
-<figure>
-<img src="web-harvesting-oaipmh.png" alt="web-harvesting-oaipmh.png" />
-<figcaption><em>Adding an OAI-PMH harvesting harvester</em></figcaption>
-</figure>
+![figure](web-harvesting-oaipmh.png)
+*Adding an OAI-PMH harvesting harvester*
 
 Configuration options:
 

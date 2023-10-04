@@ -4,10 +4,8 @@ This harvesting type uses the WebDAV (Distributed Authoring and Versioning) prot
 
 ## Adding a WebDAV harvester
 
-<figure>
-<img src="web-harvesting-webdav.png" alt="web-harvesting-webdav.png" />
-<figcaption><em>Adding a WebDAV harvester</em></figcaption>
-</figure>
+![figure](web-harvesting-webdav.png)
+*Adding a WebDAV harvester*
 
 -   **Site** - Options about the remote site.
 

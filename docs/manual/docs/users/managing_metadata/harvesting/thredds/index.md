@@ -4,10 +4,8 @@ THREDDS catalogs describe inventories of datasets. They are organised in a hiera
 
 ## Adding a THREDDS Catalog Harvester
 
-<figure>
-<img src="web-harvesting-thredds.png" alt="web-harvesting-thredds.png" />
-<figcaption><em>Adding a THREDDS catalog harvester</em></figcaption>
-</figure>
+![figure](web-harvesting-thredds.png)
+*Adding a THREDDS catalog harvester*
 
 The available options are:
 
@@ -56,10 +54,8 @@ At the bottom of the page there are the following buttons:
 
 THREDDS catalogs can include elements from the DIF metadata standard. The Unidata netcdf-java library provides a DIFWriter process that can create a DIF metadata record from these elements. GeoNetwork has a DIFToISO stylesheet to transform these DIF records to ISO. An example of a THREDDS Catalog with DIF-compliant metadata elements is shown below.
 
-<figure>
-<img src="web-harvesting-examplethreddsdifmetadata.png" alt="web-harvesting-examplethreddsdifmetadata.png" />
-<figcaption><em>A THREDDS catalog with DIF compliant metadata elements</em></figcaption>
-</figure>
+![figure](web-harvesting-examplethreddsdifmetadata.png)
+*A THREDDS catalog with DIF compliant metadata elements*
 
 ## More about harvesting Unidata dataset discovery metadata with the THREDDS Harvester
 
@@ -69,10 +65,8 @@ The options described above for the *Extract Unidata dataset discovery metadata 
 2.  This document is then transformed using the specified stylesheet (see *Stylesheet* option above) to obtain a metadata fragments document.
 3.  The metadata fragment harvester is then called to create subtemplates and/or metadata for the each dataset as requested
 
-<figure>
-<img src="web-harvesting-threddsdocument.png" alt="web-harvesting-threddsdocument.png" />
-<figcaption><em>An example THREDDS dataset document created by the THREDDS fragment harvester</em></figcaption>
-</figure>
+![figure](web-harvesting-threddsdocument.png)
+*An example THREDDS dataset document created by the THREDDS fragment harvester*
 
 ## Example
 
@@ -84,17 +78,13 @@ A sample template 'HARVESTING TEMPLATE -- THREDDS -- DATA DISCOVERY' has been pr
 
 We'll now give an example of how to set up a harvester and harvest THREDDS metadata from one of the public unidata motherlode catalogs at <http://motherlode.ucar.edu:8080/thredds/catalog/satellite/3.9/WEST-CONUS_4km/catalog.xml>. If you were to paste this URL into your browser, you would see the XML representation of this THREDDS catalog. This is the document that is read and converted into metadata by the THREDDS harvester. A snippet of this catalog is shown below.
 
-<figure>
-<img src="web-harvesting-thredds-motherlode-catalogxml.png" alt="web-harvesting-thredds-motherlode-catalogxml.png" />
-<figcaption><em>Example XML THREDDS catalog</em></figcaption>
-</figure>
+![figure](web-harvesting-thredds-motherlode-catalogxml.png)
+*Example XML THREDDS catalog*
 
 In GeoNetwork, go into the Administration menu, choose Harvesting Management as described earlier. Add a THREDDS Catalog harvester. Fill out the harvesting management form as shown in the form below.
 
-<figure>
-<img src="web-harvesting-thredds-motherlode-example.png" alt="web-harvesting-thredds-motherlode-example.png" />
-<figcaption><em>THREDDS harvester form for motherlode THREDDS catalog example</em></figcaption>
-</figure>
+![figure](web-harvesting-thredds-motherlode-example.png)
+*THREDDS harvester form for motherlode THREDDS catalog example*
 
 The first thing to notice is that the *Service URL* should be <http://motherlode.ucar.edu:8080/thredds/catalog/satellite/3.9/WEST-CONUS_4km/catalog.xml>. Make sure that you use the xml version of the catalog. If you use an html version, you will not be able to harvest any metadata.
 
@@ -120,16 +110,12 @@ You can then fill out the remainder of the form according to how often you want 
 
 Save the harvester screen. Then from the harvesting management screen, check the box beside the newly created harvester, *Activate* it and then *Run* it. After a few moments (depending on your internet connection and machine) you should click on *Refresh*. If your harvest has been successful you should see a results panel appear something like the one shown in the following screenshot.
 
-<figure>
-<img src="web-harvesting-thredds-motherlode-example-results.png" alt="web-harvesting-thredds-motherlode-example-results.png" />
-<figcaption><em>Results of harvesting collection records from a motherlode THREDDS catalog</em></figcaption>
-</figure>
+![figure](web-harvesting-thredds-motherlode-example-results.png)
+*Results of harvesting collection records from a motherlode THREDDS catalog*
 
 Notice that there were 48 metadata records created for the 48 collection level datasets in this THREDDS catalog. Each metadata record was formed by duplicating the metadata template and then copying 13 fragments of metadata into it - hence the total of 624 fragments harvested.
 
 An example of one of the collection level metadata records created by the harvester in this example and rendered by GeoNetwork is shown below.
 
-<figure>
-<img src="web-harvesting-thredds-outputisometadata.png" alt="web-harvesting-thredds-outputisometadata.png" />
-<figcaption><em>ISO Metadata record harvested from a motherlode THREDDS catalog</em></figcaption>
-</figure>
+![figure](web-harvesting-thredds-outputisometadata.png)
+*ISO Metadata record harvested from a motherlode THREDDS catalog*

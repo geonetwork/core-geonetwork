@@ -35,15 +35,11 @@ The new GeoNetwork opensource comes with substantial upgrades of different compo
 
 -   **Javascript widget user interface:** A new user interface using one of the latest Javascript widget libraries (extJS) has been added to support searching, editing and viewing metadata records. The user interface is now much easier for Javascript developers to reorganize and customize. GeoNetwork comes with two flavours of home page: one has the sidebar search similar to the old interface and the other uses a tabbed search layout. The 2.6.x user interface is still available as the default and has been updated.
 
-<figure>
-<img src="Home_page_tn.png" alt="Home_page_tn.png" />
-<figcaption><em>New home page of GeoNetwork opensource using JavaScript Widgets - tab layout</em></figcaption>
-</figure>
+![figure](Home_page_tn.png)
+*New home page of GeoNetwork opensource using JavaScript Widgets - tab layout*
 
-<figure>
-<img src="Home_page_n.png" alt="Home_page_n.png" />
-<figcaption><em>New home page of GeoNetwork opensource using JavaScript Widgets- sidebar layout</em></figcaption>
-</figure>
+![figure](Home_page_n.png)
+*New home page of GeoNetwork opensource using JavaScript Widgets- sidebar layout*
 
 ### Administration
 

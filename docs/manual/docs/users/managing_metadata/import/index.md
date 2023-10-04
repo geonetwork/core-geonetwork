@@ -14,10 +14,8 @@ In order to use this facility, you have to be logged in as an editor. After the 
 
 Clicking the link will open the metadata import page. You will then have to specify a set of parameters. The following screenshot shows the parameters for importing an XML file.
 
-<figure>
-<img src="xmlfileimport-options.png" alt="xmlfileimport-options.png" />
-<figcaption><em>The XML file import options</em></figcaption>
-</figure>
+![figure](xmlfileimport-options.png)
+*The XML file import options*
 
 We'll describe the options you see on this page because they are common ways you can import metadata records in this interface.
 
@@ -27,19 +25,15 @@ We'll describe the options you see on this page because they are common ways you
 
 ### MEF file import
 
-<figure>
-<img src="meffileimport-options.png" alt="meffileimport-options.png" />
-<figcaption><em>The MEF file import options</em></figcaption>
-</figure>
+![figure](meffileimport-options.png)
+*The MEF file import options*
 
 If you select *MEF file* in the *File type* option, only the Import actions option group is show. See above for more details. Note: a MEF file can contain more than one metadata record.
 
 ### Copy/Paste XML
 
-<figure>
-<img src="xmlinsert-options.png" alt="xmlinsert-options.png" />
-<figcaption><em>The XML insert options</em></figcaption>
-</figure>
+![figure](xmlinsert-options.png)
+*The XML insert options*
 
 If you select *Copy/Paste* in the Insert mode option, then a text box appears. You can copy the XML from another window and paste it into that text box. The options for loading that XML are the same as those for loading an XML file - see above.
 
@@ -47,17 +41,13 @@ If you select *Copy/Paste* in the Insert mode option, then a text box appears. Y
 
 The batch import facility allows you to import a set of metadata records in the form of XML or MEF files. In order to use this facility, you have to be logged in as an administrator. After the login step, go to the administration page and select the *Batch Import* link.
 
-<figure>
-<img src="web-batchimport-where.png" alt="web-batchimport-where.png" />
-<figcaption><em>How to reach the batch import page</em></figcaption>
-</figure>
+![figure](web-batchimport-where.png)
+*How to reach the batch import page*
 
 Clicking the link will open the batch import page. You will then have to specify a set of parameters. The following screenshot shows the parameters for batch import of a set of XML or MEF files.
 
-<figure>
-<img src="web-batchimport-options.png" alt="web-batchimport-options.png" />
-<figcaption><em>The batch import options</em></figcaption>
-</figure>
+![figure](web-batchimport-options.png)
+*The batch import options*
 
 -   *Directory* This is the full path on the server's file system of the directory to scan. GeoNetwork will look for and try to import all XML or MEF files present into this directory. It is important to notice that this is the directory on the *server* machine and *not* on the client of the user that is doing the import.
 

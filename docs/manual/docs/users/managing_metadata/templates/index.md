@@ -8,17 +8,13 @@ The *Metadata and Templates* options in the Administration page allows you to ma
 
 You can define the order in which Templates are listed when an Editor creates a new metadata record.
 
-<figure>
-<img src="templates-newmetadata.png" alt="templates-newmetadata.png" />
-<figcaption><em>The listing as shown to Editors</em></figcaption>
-</figure>
+![figure](templates-newmetadata.png)
+*The listing as shown to Editors*
 
 Use drag and drop to re-order the templates.
 
-<figure>
-<img src="templates-sort.png" alt="templates-sort.png" />
-<figcaption><em>Sort Templates panel</em></figcaption>
-</figure>
+![figure](templates-sort.png)
+*Sort Templates panel*
 
 ## Add templates
 

@@ -4,5 +4,5 @@ Welcome to the GeoNetwork User Manual v2.10. The manual is a guide describing ho
 
 Other documents:
 
-* [GeoNetwork Developer Manual](../developer/index.html)
+* [GeoNetwork Developer Manual](../developer/index.md)
 * [GeoNetwork User Manual (PDF)](https://geonetwork-opensource.org/manuals/2.10.4/eng/users/GeoNetworkUserManual.pdf)

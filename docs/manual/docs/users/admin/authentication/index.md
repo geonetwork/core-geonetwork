@@ -189,10 +189,8 @@ To enable CAS support:
 
 When using either the GeoNetwork database or LDAP for authentication, you can also configure shibboleth to allow authentication against access federations.
 
-<figure>
-<img src="web-config-options-shibboleth.png" alt="web-config-options-shibboleth.png" />
-<figcaption><em>The Shibboleth configuration options</em></figcaption>
-</figure>
+![figure](web-config-options-shibboleth.png)
+*The Shibboleth configuration options*
 
 Shibboleth authentication requires interaction with Apache web server. In particular, the apache web server must be configured to require Shibboleth authentication to access the path entered in the configuration. The apache web server configuration will contain the details of the shibboleth server that works out where a user is located (sometimes called a 'where are you from' server).
 

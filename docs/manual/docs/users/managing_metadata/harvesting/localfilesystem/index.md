@@ -4,10 +4,8 @@ This harvester will harvest metadata as XML files from a filesystem available on
 
 ## Adding a Local File System harvester
 
-<figure>
-<img src="web-harvesting-localfilesystem.png" alt="web-harvesting-localfilesystem.png" />
-<figcaption><em>Adding a Local Filesystem harvester</em></figcaption>
-</figure>
+![figure](web-harvesting-localfilesystem.png)
+*Adding a Local Filesystem harvester*
 
 The figure above shows the options available:
 

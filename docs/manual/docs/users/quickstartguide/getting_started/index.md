@@ -19,35 +19,27 @@ The default search allows you to search text within the entire record, such as k
 
 Text and operators (and, or, not) are not case sensitive.
 
-<figure>
-<img src="what.png" alt="what.png" />
-<figcaption><em>The free text field.</em></figcaption>
-</figure>
+![figure](what.png)
+*The free text field.*
 
 **Geographic search.** For the geographic search, two options are available for selecting a particular region to limit the search:
 
 You can select a **region** from a predefined list;
 
-<figure>
-<img src="where1.png" alt="where1.png" />
-<figcaption><em>The region field</em></figcaption>
-</figure>
+![figure](where1.png)
+*The region field*
 
 You can select your own *area of interest* in a more interactive way. A small global map is shown on the screen from which you can drag and drop the frame of your location area. Just click on the button on the upper right of the map screen.
 
-<figure>
-<img src="where2.png" alt="where2.png" />
-<figcaption><em>Interactive Area Of Interest map</em></figcaption>
-</figure>
+![figure](where2.png)
+*Interactive Area Of Interest map*
 
 **Perform search.** Both types of search, free text search and geographic search can be combined to restrict the query further.
 
 Click the *Search* button to proceed and show the results.
 
-<figure>
-<img src="search_button.png" alt="search_button.png" />
-<figcaption><em>The Search button</em></figcaption>
-</figure>
+![figure](search_button.png)
+*The Search button*
 
 ## Searching by Categories
 
@@ -55,36 +47,28 @@ An additional way to search data within the GeoNetwork database, from the home p
 
 To search only for maps, click on **Maps and Graphics**. A list of maps will be displayed from which you may view details of every single map; just clicking on the **Metadata** button of the map you wish to review.
 
-<figure>
-<img src="Categories.png" alt="Categories.png" />
-<figcaption><em>Search by Category</em></figcaption>
-</figure>
+![figure](Categories.png)
+*Search by Category*
 
 ## Advanced Search
 
 The advanced search option works similarly to the default search. However, you can be more specific in your search criteria as it offers different elements to look for data, each of them focusing one of the following aspects: *What?, Where?, When?*
 
-<figure>
-<img src="advanced_search1.png" alt="advanced_search1.png" />
-<figcaption><em>Advanced search options</em></figcaption>
-</figure>
+![figure](advanced_search1.png)
+*Advanced search options*
 
 To perform an **advanced search**, from the home page **click Advanced** just below the search bottom.
 
-<figure>
-<img src="advanced_search_button.png" alt="advanced_search_button.png" />
-<figcaption><em>Show advanced search options</em></figcaption>
-</figure>
+![figure](advanced_search_button.png)
+*Show advanced search options*
 
 In the **WHAT?** section the elements are all related to the data content. Through them, in addition to searching only free keywords in the entire metadata content, you can also search directly in the title or abstract fields and add more keywords to customise your search further. You can also specify the level of accuracy you wish to reach in performing your search.
 
 -   To search by **Title, Abstract, Free Text, or Keyword(s)** type any text into the respective field. You can enter information in one or multiple field(s). If you do not want to search by a given field, simply leave it blank;
 -   You can choose the **accuracy of your search**, in terms of spelling words, from **Precise** = 1 to **Imprecise** = 0.2, through 3 more consecutive steps which are equal to 0.8, 0.6, 0.4.
 
-<figure>
-<img src="advanced_search_what.png" alt="advanced_search_what.png" />
-<figcaption><em>"What" section in the Advanced search</em></figcaption>
-</figure>
+    ![figure](advanced_search_what.png)
+    *"What" section in the Advanced search*
 
 The **WHERE?** parameters, which are related to the spatial extent, allow you, as in the default search, either to select your own area of interest or to select a predefined region from the drop-down list. In this section you can also type the geographic coordinates of a specific location that is not available from the above list.
 
@@ -92,10 +76,8 @@ The **WHERE?** parameters, which are related to the spatial extent, allow you, a
 -   To use **free coordinates**, type the lat-long geographic references in the appropriate fields around the map screen, without any limitation of decimal figures;
 -   To use the coordinates of a **predefined region**, select the region from the drop-down list.
 
-<figure>
-<img src="advanced_search_where.png" alt="advanced_search_where.png" />
-<figcaption><em>"Where" section in the Advanced search</em></figcaption>
-</figure>
+    ![figure](advanced_search_where.png)
+    *"Where" section in the Advanced search*
 
 Whatever type of geographic search you decide to perform, in the **Spatial search type** field, you can choose from different options: **is**, **overlaps**, **encloses**, **is fully outside of**. If you use this field, be cautious as this limits your output data as follows:
 
@@ -109,10 +91,8 @@ The **WHEN?** section gives you the possibility to restrict your search in terms
 -   To specify a range of time, click on the date selector button next to **From -- To** fields. Make use of the symbols **>** and **>>** on top of the calendar to select the month and the year first and then click on the exact day; a complete date will be filled in using the following standard order: YY-MM-DD.
 -   To clean the time fields, simply click on the white cross on their right; the box **Any** will be automatically selected and the search will be performed without any restriction on the time period.
 
-<figure>
-<img src="advanced_search_when.png" alt="advanced_search_when.png" />
-<figcaption><em>"When" section in the Advanced search</em></figcaption>
-</figure>
+![figure](advanced_search_when.png)
+*"When" section in the Advanced search*
 
 Finally, the advanced search allows you to apply further restrictions on the basis of additional parameters as data source, data categories and data format.
 
@@ -124,19 +104,15 @@ At last, you can customise the number of output results per page in the *Hits Pe
 
 -   Click the **Search** button.
 
-<figure>
-<img src="advanced_search_morerest.png" alt="advanced_search_morerest.png" />
-<figcaption><em>Other options in the Advanced search</em></figcaption>
-</figure>
+    ![figure](advanced_search_morerest.png)
+    *Other options in the Advanced search*
 
 ### Inspire
 
 If INSPIRE Search panel is enable in Administration > System configuration page, an additional section is displayed to allow searching INSPIRE metadata in the catalog.
 
-<figure>
-<img src="advanced_search_inspire.png" alt="advanced_search_inspire.png" />
-<figcaption><em>"Inspire" section in the Advanced search</em></figcaption>
-</figure>
+![figure](advanced_search_inspire.png)
+*"Inspire" section in the Advanced search*
 
 -   *Annex*: Allows to search for metadata related to a specific Inspire annex. The Inspire annexes for a metadata are based on the Inspire theme keywords assigned to it.
 -   *Source type*: Allows to search for dataset or service metadata.
@@ -148,38 +124,28 @@ If INSPIRE Search panel is enable in Administration > System configuration page,
 
 The output of a search provides you a list of the metadata records that should fit your request. For each record, the result page shows the title, an abstract and the keywords. According to the privileges that have been set for each metadata, a maximum of four sections can be consulted, as shown below.
 
-<figure>
-<img src="search_output2.png" alt="search_output2.png" />
-<figcaption><em>Search results</em></figcaption>
-</figure>
+![figure](search_output2.png)
+*Search results*
 
 1.  **Metadata**: The metadata section describes the dataset (e.g.: citation, data owner, temporal/spatial/methodological information) and could contain links to other web sites that could provide further information about the dataset.
 
 2.  **Download**: Depending on the privileges that have been set for each record, when this button is present, the dataset is available and downloadable. The process for retrieving data is simple and quick by just clicking the download button or by using the proper link in the specific metadata section for distribution info in the full metadata view.
 
-    <figure>
-    <img src="search_output1.png" alt="search_output1.png" />
-    <figcaption><em>A single search result</em></figcaption>
-    </figure>
-    
-    <figure>
-    <img src="download.png" alt="download.png" />
-    <figcaption><em>Available services related to the resource</em></figcaption>
-    </figure>
+    ![figure](search_output1.png)
+    *A single search result*
+   
+    ![figure](download.png)
+    *Available services related to the resource*
 
 3.  **Interactive Map**: The map service is also optional. When this button is shown, an interactive map for this layer is available and, by default, it will be displayed on the map screen of the simple search. To better visualise the map through the map viewer, **click** on **Show Map** on the top of search results panel.
 
-    <figure>
-    <img src="interactive_map.png" alt="interactive_map.png" />
-    <figcaption><em>The interactive map viewer</em></figcaption>
-    </figure>
+    ![figure](interactive_map.png)
+    *The interactive map viewer*
 
 4.  **Graphic Overviews**: There are small and large overviews of the map used to properly evaluate usefulness of the data, especially if the interactive map is not available. Simply click on the small image to enlarge it.
 
-    <figure>
-    <img src="thumbnail.png" alt="thumbnail.png" />
-    <figcaption><em>Large preview image</em></figcaption>
-    </figure>
+    ![figure](thumbnail.png)
+     *Large preview image*
 
 ## Privileges, roles and user groups
 
@@ -189,10 +155,8 @@ There are no restrictions for users to search and access **public information** 
 
 To log in, simply go to the home page and enter your username and password in the dedicated fields on the top right corner, then click the login button.
 
-<figure>
-<img src="login.png" alt="login.png" />
-<figcaption><em>Login</em></figcaption>
-</figure>
+![figure](login.png)
+*Login*
 
 **Privileges.** Depending on the privileges set on a metadata record and on your role as an authenticated user, you will be able to read about a resource and download or interactively browse data related to that resource.
 

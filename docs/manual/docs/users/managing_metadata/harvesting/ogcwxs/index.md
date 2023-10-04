@@ -11,10 +11,8 @@ An OGC service implements a GetCapabilities operation that GeoNetwork, acting as
 
 ## Adding an OGC Service Harvester
 
-<figure>
-<img src="web-harvesting-ogc.png" alt="web-harvesting-ogc.png" />
-<figcaption><em>Adding an OGC service harvesting node</em></figcaption>
-</figure>
+![figure](web-harvesting-ogc.png)
+*Adding an OGC service harvesting node*
 
 Configuration options:
 

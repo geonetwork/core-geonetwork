@@ -4,10 +4,8 @@ Z3950 is a remote search and harvesting protocol that is commonly used to permit
 
 ## Adding a Z3950 Harvester
 
-<figure>
-<img src="web-harvesting-z3950.png" alt="web-harvesting-z3950.png" />
-<figcaption><em>Adding a Z3950 harvester</em></figcaption>
-</figure>
+![figure](web-harvesting-z3950.png)
+*Adding a Z3950 harvester*
 
 The available options are:
 

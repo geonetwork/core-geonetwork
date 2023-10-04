@@ -4,10 +4,8 @@ This harvester will connect to a remote CSW server and retrieve metadata records
 
 ## Adding a CSW harvester
 
-<figure>
-<img src="web-harvesting-csw.png" alt="web-harvesting-csw.png" />
-<figcaption><em>Adding a Catalogue Services for the Web harvesting node</em></figcaption>
-</figure>
+![figure](web-harvesting-csw.png)
+*Adding a Catalogue Services for the Web harvesting node*
 
 The figure above shows the options available:
 
