@@ -128,6 +128,18 @@ EOF
 fi
 
 
+sqlmigrationconfig=web/src/main/webResources/WEB-INF/config-db/database_migration.xml
+if hash xmlstarlet 2>/dev/null; then
+  xmlstarlet ed -L \
+      -s "//*[@id='dataMigrationMap' and not(*[local-name() = 'entry' and @key ='${new_version_main}'])]" -t elem -n "newentry" \
+      -i //newentry -t attr -n "key" -v "${new_version_main}" \
+      -s //newentry -t elem -n "list" \
+      -s //newentry/list -t elem -n "value" -v "WEB-INF/classes/setup/sql/migrate/v${new_version_main_nopoint}/migrate-" \
+      -r //newentry -v entry \
+      $sqlmigrationconfig
+else
+    echo "  * WARNING: Can't update automatically $sqlmigrationconfig. Install xmlstarlet utility or update file manually."
+fi
 
 # Update version pom files
 mvn versions:set-property -Dproperty=gn.project.version -DnewVersion=${new_version}
