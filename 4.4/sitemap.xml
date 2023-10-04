@@ -820,6 +820,13 @@
         <xhtml:link rel="alternate" hreflang="fr" href="https://docs.geonetwork-opensource.org/latestfr/overview/change-log/version-3.12.10/"/>
     </url>
     <url>
+        <loc>https://docs.geonetwork-opensource.org/latest/overview/change-log/version-3.12.11/</loc>
+        <lastmod>2023-10-04</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/latest/overview/change-log/version-3.12.11/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://docs.geonetwork-opensource.org/latestfr/overview/change-log/version-3.12.11/"/>
+    </url>
+    <url>
         <loc>https://docs.geonetwork-opensource.org/latest/overview/change-log/version-3.12.2/</loc>
         <lastmod>2023-10-04</lastmod>
         <changefreq>daily</changefreq>
@@ -2568,6 +2575,13 @@
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="fr" href="https://docs.geonetwork-opensource.org/latest/fr/overview/change-log/version-3.12.10/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/latestoverview/change-log/version-3.12.10/"/>
+    </url>
+    <url>
+        <loc>https://docs.geonetwork-opensource.org/latest/fr/overview/change-log/version-3.12.11/</loc>
+        <lastmod>2023-10-04</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://docs.geonetwork-opensource.org/latest/fr/overview/change-log/version-3.12.11/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/latestoverview/change-log/version-3.12.11/"/>
     </url>
     <url>
         <loc>https://docs.geonetwork-opensource.org/latest/fr/overview/change-log/version-3.12.2/</loc>
