@@ -5,6 +5,7 @@ This series is under active use by our community, with regular improvements, doc
 
 ## Latest
 
+-   [Version 4.4.0](version-4.4.0.md)
 -   [Version 4.2.6](version-4.2.6.md)
 -   [Version 4.2.5](version-4.2.5.md)
 
