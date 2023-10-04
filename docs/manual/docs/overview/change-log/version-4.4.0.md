@@ -12,6 +12,10 @@ GeoNetwork 4.4.0 release is a major release.
 
 -   Groovy formatter support is removed. ([More information](https://github.com/geonetwork/core-geonetwork/pull/7346)).
 
+### Installation changes
+
+-   Datastore / To use CMIS, JCloud or S3 download the packages ([More information](https://github.com/geonetwork/core-geonetwork/pull/7302)).
+
 ### Index changes
 
 After update, don't forget to go to admin console --> tools --> Delete index and reindex.
@@ -21,6 +25,7 @@ After update, don't forget to go to admin console --> tools --> Delete index and
 Major changes:
 
 -   [Java 11 support](https://github.com/geonetwork/core-geonetwork/pull/7186)
+-   [Move datastorage providers to maven modules and include them in the build on demand](https://github.com/geonetwork/core-geonetwork/pull/7302)
 -   [Docker configuration improvements](https://github.com/geonetwork/docker-geonetwork/pull/107)
 -   [Improvements to allow future deployment of multiple instances](https://github.com/geonetwork/core-geonetwork/pull/7337)
 -   [API / CSV export / Add support for custom export](https://github.com/geonetwork/core-geonetwork/pull/7132)
