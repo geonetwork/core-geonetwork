@@ -1,16 +1,2667 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <title>Redirecting</title>
-  <noscript>
-    <meta http-equiv="refresh" content="1; url=../../../../4.4/overview/change-log/version-4.0.6/" />
-  </noscript>
-  <script>
-    window.location.replace("../../../../4.4/overview/change-log/version-4.0.6/" + window.location.hash);
-  </script>
-</head>
-<body>
-  Redirecting to <a href="../../../../4.4/overview/change-log/version-4.0.6/">../../../../4.4/overview/change-log/version-4.0.6/</a>...
-</body>
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="GeoNetwork catalogue for listing, searching and reviewing records.">
+      
+      
+      
+        <link rel="canonical" href="https://docs.geonetwork-opensource.org/stable/overview/change-log/version-4.0.6/">
+      
+      
+        <link rel="prev" href="../archive/">
+      
+      
+        <link rel="next" href="../version-4.0.5/">
+      
+      
+      <link rel="icon" href="../../../assets/geonetwork-logo.png">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.4.0">
+    
+    
+      
+        <title>Version 4.0.6 - GeoNetwork Opensource (EN)</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.9f615399.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.649f08f9.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="indigo">
+  
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#version-406" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="GeoNetwork Opensource (EN)" class="md-header__button md-logo" aria-label="GeoNetwork Opensource (EN)" data-md-component="logo">
+      
+  <img src="../../../assets/geonetwork-logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            GeoNetwork Opensource (EN)
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Version 4.0.6
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3 3.19.09m3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95 2.06.05m-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31Z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_2">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5c-.84 0-1.65.15-2.39.42L12 2M3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29L3.34 7m.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14L3.36 17M20.65 7l-1.77 3.79a7.023 7.023 0 0 0-2.38-4.15l4.15.36m-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29L20.64 17M12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44L12 22Z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Select language">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.52 17.52 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11.76-2.04M18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2l-4.5-12m-2.62 7 1.62-4.33L19.12 17h-3.24Z"/></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="../../../fr/overview/change-log/version-4.0.6/" hreflang="fr" class="md-select__link">
+              Français
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/geonetwork/core-geonetwork" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    core-geonetwork
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+    
+  
+  GeoNetwork
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../" class="md-tabs__link">
+          
+  
+    
+  
+  Overview
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../help/" class="md-tabs__link">
+          
+  
+    
+  
+  Help
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../user-guide/" class="md-tabs__link">
+          
+  
+    
+  
+  User Guide
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../maintainer-guide/" class="md-tabs__link">
+          
+  
+    
+  
+  Maintainer Guide
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../api/" class="md-tabs__link">
+          
+  
+    
+  
+  API
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../devel/" class="md-tabs__link">
+          
+  
+    
+  
+  Development
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../tutorials/" class="md-tabs__link">
+          
+  
+    
+  
+  Tutorials
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../annexes/" class="md-tabs__link">
+          
+  
+    
+  
+  Annexes
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="GeoNetwork Opensource (EN)" class="md-nav__button md-logo" aria-label="GeoNetwork Opensource (EN)" data-md-component="logo">
+      
+  <img src="../../../assets/geonetwork-logo.svg" alt="logo">
+
+    </a>
+    GeoNetwork Opensource (EN)
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/geonetwork/core-geonetwork" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    core-geonetwork
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    GeoNetwork
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Overview
+  </span>
+  
+
+            </a>
+            
+              <label class="md-nav__link " for="__nav_2">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Overview
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../about/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    About
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+      
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+    <a href="../../license/" class="md-nav__link">
+      
+  
+  <span class="md-ellipsis">
+    License
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../authors/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Author
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_5" checked>
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Changelog
+  </span>
+  
+
+            </a>
+            
+              <label class="md-nav__link " for="__nav_2_5">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_5">
+            <span class="md-nav__icon md-icon"></span>
+            Changelog
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+    <a href="../stable/" class="md-nav__link">
+      
+  
+  <span class="md-ellipsis">
+    Stable
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+    <a href="../maintenance/" class="md-nav__link">
+      
+  
+  <span class="md-ellipsis">
+    Maintenance
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_5_4" checked>
+        
+          <label class="md-nav__link" for="__nav_2_5_4" id="__nav_2_5_4_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Archive
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_5_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_5_4">
+            <span class="md-nav__icon md-icon"></span>
+            Archive
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../archive/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Archived
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Version 4.0.6
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Version 4.0.6
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#highlights" class="md-nav__link">
+    Highlights
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#security" class="md-nav__link">
+    Security
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#features-and-improvements" class="md-nav__link">
+    Features and improvements
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fixes" class="md-nav__link">
+    Fixes
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../version-4.0.5/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Version 4.0.5
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../version-4.0.4/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Version 4.0.4
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../version-4.0.3/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Version 4.0.3
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../version-4.0.2/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Version 4.0.2
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../version-4.0.1/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Version 4.0.1
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../version-4.0.0/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Version 4.0.0
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../version-4.0.0-alpha.2/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Version 4.0.0-alpha.2
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../version-4.0.0-alpha.1/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Version 4.0.0-alpha.1
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../version-3.10.10/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Version 3.10.10
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../version-3.10.9/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Version 3.10.9
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../version-3.10.8/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Version 3.10.8
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../version-3.10.7/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Version 3.10.7
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../version-3.10.6/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Version 3.10.6
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../version-3.10.5/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Version 3.10.5
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../version-3.10.4/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Version 3.10.4
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../version-3.10.3/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Version 3.10.3
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../version-3.10.2/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Version 3.10.2
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../version-3.10.1/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Version 3.10.1
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../version-3.10.0/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Version 3.10.0
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../version-3.8.3/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Version 3.8.3
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../version-3.8.2/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Version 3.8.2
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../version-3.8.1/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Version 3.8.1
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../version-3.8.0/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Version 3.8.0
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../version-3.6.0/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Version 3.6.0
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../version-3.4.4/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Version 3.4.4
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../version-3.4.3/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Version 3.4.3
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../version-3.4.2/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Version 3.4.2
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../version-3.4.1/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Version 3.4.1
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../version-3.4.0/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Version 3.4.0
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../version-3.2.2/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Version 3.2.2
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../version-3.2.1/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Version 3.2.1
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../version-3.2.0/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Version 3.2.0
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../version-3.0.4/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Version 3.0.4
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../version-3.0.3/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Version 3.0.3
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../version-3.0.2/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Version 3.0.2
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../version-3.0.1/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Version 3.0.1
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../version-3.0.0/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Version 3.0.0
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+    <a href="../../../help/" class="md-nav__link">
+      
+  
+  <span class="md-ellipsis">
+    Help
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+          
+        
+      
+        
+      
+    
+    
+      
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+    <a href="../../../user-guide/" class="md-nav__link">
+      
+  
+  <span class="md-ellipsis">
+    User Guide
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+    
+    
+      
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+    <a href="../../../maintainer-guide/" class="md-nav__link">
+      
+  
+  <span class="md-ellipsis">
+    Maintainer Guide
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+    <a href="../../../api/" class="md-nav__link">
+      
+  
+  <span class="md-ellipsis">
+    API
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+    <a href="../../../devel/" class="md-nav__link">
+      
+  
+  <span class="md-ellipsis">
+    Development
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+    <a href="../../../tutorials/" class="md-nav__link">
+      
+  
+  <span class="md-ellipsis">
+    Tutorials
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+    <a href="../../../annexes/" class="md-nav__link">
+      
+  
+  <span class="md-ellipsis">
+    Annexes
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#highlights" class="md-nav__link">
+    Highlights
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#security" class="md-nav__link">
+    Security
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#features-and-improvements" class="md-nav__link">
+    Features and improvements
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fixes" class="md-nav__link">
+    Fixes
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+    <a href="https://github.com/geonetwork/core-geonetwork/edit/main/docs/manual/docs/overview/change-log/version-4.0.6.md" title="Edit this page" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4v-2m10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1 2.1 2.1Z"/></svg>
+    </a>
+  
+  
+    
+      
+    
+    <a href="https://github.com/geonetwork/core-geonetwork/raw/main/docs/manual/docs/overview/change-log/version-4.0.6.md" title="View source of this page" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 18c.56 0 1 .44 1 1s-.44 1-1 1-1-.44-1-1 .44-1 1-1m0-3c-2.73 0-5.06 1.66-6 4 .94 2.34 3.27 4 6 4s5.06-1.66 6-4c-.94-2.34-3.27-4-6-4m0 6.5a2.5 2.5 0 0 1-2.5-2.5 2.5 2.5 0 0 1 2.5-2.5 2.5 2.5 0 0 1 2.5 2.5 2.5 2.5 0 0 1-2.5 2.5M9.27 20H6V4h7v5h5v4.07c.7.08 1.36.25 2 .49V8l-6-6H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h4.5a8.15 8.15 0 0 1-1.23-2Z"/></svg>
+    </a>
+  
+
+
+<h1 id="version-406">Version 4.0.6</h1>
+<p>This new release of GeoNetwork contains a <em>lot</em> of improvements and fixes made during the past 8 months that should make it much more easy to use and customizable. This version also benefited from most of the fixes and improvements made for the GeoNetwork 3.10 and 12 versions during the past months.</p>
+<h2 id="highlights">Highlights</h2>
+<ul>
+<li>Fix for the <a href="https://en.wikipedia.org/wiki/Log4Shell">log4shell CVE</a></li>
+<li>A new flexible <a href="https://github.com/geonetwork/core-geonetwork/pull/5942">JSON harvester</a> which currently supports CKAN, ODS and ESRI</li>
+<li>Restyled <a href="https://github.com/geonetwork/core-geonetwork/pull/5837">topics and categories</a> in the homepage</li>
+<li>Better UI for the <a href="https://github.com/geonetwork/core-geonetwork/pull/5926">harvester administration</a></li>
+<li>The possibility to <a href="https://github.com/geonetwork/core-geonetwork/pull/6080">put the search map in the facets column</a></li>
+<li>Improvements to the search experience and facets</li>
+<li>Improvements to the INSPIRE Atom feed</li>
+<li>Improvements to the DOI creation process</li>
+<li>Improvements to the Editor UI and Admin UI</li>
+</ul>
+<h2 id="security">Security</h2>
+<ul>
+<li>Bump log4j2 from 2.17.0 to 2.17.1 (<a href="https://github.com/geonetwork/core-geonetwork/pull/6110">#6110</a>)</li>
+<li>Update log4j2 from 2.16.0 to 2.17.0 to address CVE-2021-45105 (<a href="https://github.com/geonetwork/core-geonetwork/pull/6083">#6083</a>)</li>
+<li>Bump log4j-core and log4j-api from 2.15.0 to 2.16.0 (<a href="https://github.com/geonetwork/core-geonetwork/pull/6079">#6079</a>)</li>
+<li>Update log4j2 from from 2.7 to 2.15.0 (<a href="https://github.com/geonetwork/core-geonetwork/pull/6075">#6075</a>)</li>
+</ul>
+<h2 id="features-and-improvements">Features and improvements</h2>
+<ul>
+<li>Display the alert message within the online resource popup (<a href="https://github.com/geonetwork/core-geonetwork/pull/6109">#6109</a>)</li>
+<li>Updated keycloak to use the correct granted authority (<a href="https://github.com/geonetwork/core-geonetwork/pull/6134">#6134</a>)</li>
+<li>DOI - add identifier / online resource url using the DOI proxy url (<a href="https://github.com/geonetwork/core-geonetwork/pull/6124">#6124</a>)</li>
+<li>CSW Harvester / add typeahead support for filter field names (<a href="https://github.com/geonetwork/core-geonetwork/pull/5796">#5796</a>)</li>
+<li>Sort groups and users in transfer ownership (<a href="https://github.com/geonetwork/core-geonetwork/pull/6093">#6093</a>)</li>
+<li>Metadata update and internal reports updates (<a href="https://github.com/geonetwork/core-geonetwork/pull/6082">#6082</a>)</li>
+<li>Service record for CSW capabilities - INSPIRE improvements (<a href="https://github.com/geonetwork/core-geonetwork/pull/6081">#6081</a>)</li>
+<li>Update UI configuration selected by default: select the current node if defined in the configuration, otherwise the first one (<a href="https://github.com/geonetwork/core-geonetwork/pull/6094">#6094</a>)</li>
+<li>Don't allow to delete a group if it owns metadata (<a href="https://github.com/geonetwork/core-geonetwork/pull/6072">#6072</a>)</li>
+<li>Confirmation dialog to delete an UI configuration (<a href="https://github.com/geonetwork/core-geonetwork/pull/6092">#6092</a>)</li>
+<li>Replace Travis badge by Github Actions Badge (<a href="https://github.com/geonetwork/core-geonetwork/pull/6097">#6097</a>)</li>
+<li>Enable to display map in left column of search UI (<a href="https://github.com/geonetwork/core-geonetwork/pull/6080">#6080</a>)</li>
+<li>Add maven caching to GraphQL analysis (<a href="https://github.com/geonetwork/core-geonetwork/pull/6085">#6085</a>)</li>
+<li>Editor / Error message fixes (<a href="https://github.com/geonetwork/core-geonetwork/pull/6029">#6029</a>)</li>
+<li>Add the doi-get query for ISO19115-3.2018 standard (<a href="https://github.com/geonetwork/core-geonetwork/pull/6065">#6065</a>)</li>
+<li>Add proxy level security support for map services (<a href="https://github.com/geonetwork/core-geonetwork/pull/5941">#5941</a>)</li>
+<li>INSPIRE Atom feed / Update retrieve dataset UUID to handle multiple atom feed entries for the same dataset (<a href="https://github.com/geonetwork/core-geonetwork/pull/6078">#6078</a>)</li>
+<li>Metadata get status service - return the status change date for all types of statuses (<a href="https://github.com/geonetwork/core-geonetwork/pull/6074">#6074</a>)</li>
+<li>User custom dialog to ask for users / groups delete confirmation (<a href="https://github.com/geonetwork/core-geonetwork/pull/6070">#6070</a>)</li>
+<li>Add a confirm popup when deleting a logo (<a href="https://github.com/geonetwork/core-geonetwork/pull/6067">#6067</a>)</li>
+<li>Misc. updates to Dutch translations</li>
+<li>Upgrade jsoup library (<a href="https://github.com/geonetwork/core-geonetwork/pull/6057">#6057</a>)</li>
+<li>Update label texts for workflow dialog / actions. Fixes <a href="https://github.com/geonetwork/core-geonetwork/issues/4992">#4992</a> (<a href="https://github.com/geonetwork/core-geonetwork/pull/5840">#5840</a>)</li>
+<li>Opendata harvesting / add a resource for the landing page (<a href="https://github.com/geonetwork/core-geonetwork/pull/6062">#6062</a>)</li>
+<li>Configuration option to restrict the usage of non-predefined map services in the Regions API. Related to #5166 (<a href="https://github.com/geonetwork/core-geonetwork/pull/6045">#6045</a>)</li>
+<li>Change the forgot password message (<a href="https://github.com/geonetwork/core-geonetwork/pull/6015">#6015</a>)</li>
+<li>Don't display the delete button when creating a new group (<a href="https://github.com/geonetwork/core-geonetwork/pull/6040">#6040</a>)</li>
+<li>Don't display the reset password button when creating a new user (<a href="https://github.com/geonetwork/core-geonetwork/pull/6041">#6041</a>)</li>
+<li>Use the Map projection Region API setting in Regions/geometry related services (<a href="https://github.com/geonetwork/core-geonetwork/pull/6050">#6050</a>)</li>
+<li>Metadata status migration - add FK for relatedMetadataStatusId (<a href="https://github.com/geonetwork/core-geonetwork/pull/6010">#6010</a>)</li>
+<li>Encode view parameter in URL (<a href="https://github.com/geonetwork/core-geonetwork/pull/6030">#6030</a>)</li>
+<li>Uses Java 8 in the code analysis</li>
+<li>Add support for UI settings migrations. Migration for mods.header.isMenubarAccessible (<a href="https://github.com/geonetwork/core-geonetwork/pull/6044">#6044</a>)</li>
+<li>Enable CodeQL analysis in CI workflow</li>
+<li>Add mimetype in WWW:DOWNLOAD protocol on OpenDataSoft harvesting (<a href="https://github.com/geonetwork/core-geonetwork/pull/6043">#6043</a>)</li>
+<li>Metadata retired status support (<a href="https://github.com/geonetwork/core-geonetwork/pull/5943">#5943</a>)</li>
+<li>Allow to reset the users / groups filters (<a href="https://github.com/geonetwork/core-geonetwork/pull/6042">#6042</a>)</li>
+<li>Datacite formatter - process for creators only point of contacts with roles pointOfContact and custodian (<a href="https://github.com/geonetwork/core-geonetwork/pull/6039">#6039</a>)</li>
+<li>Map viewer / support to add layers from ESRI Rest services (<a href="https://github.com/geonetwork/core-geonetwork/pull/5931">#5931</a>)</li>
+<li>JSON Harvester / Improve ESRI and OpenDataSoft harvesting (<a href="https://github.com/geonetwork/core-geonetwork/pull/6023">#6023</a>)</li>
+<li>option for duplicate API to copy attachments or not (<a href="https://github.com/geonetwork/core-geonetwork/pull/6009">#6009</a>)</li>
+<li>Added MetadataPreRemove event before backup operation (<a href="https://github.com/geonetwork/core-geonetwork/pull/5954">#5954</a>)</li>
+<li>Remove username from forgot password service url (<a href="https://github.com/geonetwork/core-geonetwork/pull/5993">#5993</a>)</li>
+<li>Unblock missing user/group information from user profile (<a href="https://github.com/geonetwork/core-geonetwork/pull/6005">#6005</a>)</li>
+<li>Update XslProcessApi to process the draft copies for the metadata in a workflow (<a href="https://github.com/geonetwork/core-geonetwork/pull/5811">#5811</a>)</li>
+<li>Add statusIds list to MetadataWorkflowApi.getStatusByType API (<a href="https://github.com/geonetwork/core-geonetwork/pull/5984">#5984</a>)</li>
+<li>i18n / Add custom translations to the default language packages (<a href="https://github.com/geonetwork/core-geonetwork/pull/5919">#5919</a>)</li>
+<li>Configure how to extract the WMS layer name from metadata online resources to add them to the map viewer (<a href="https://github.com/geonetwork/core-geonetwork/pull/5987">#5987</a>)</li>
+<li>Validation / INSPIRE / Return message when quota exceeded. (<a href="https://github.com/geonetwork/core-geonetwork/pull/5995">#5995</a>)</li>
+<li>Add index folder information in the catalog information table (admin<ul>
+<li>statistics and status) (<a href="https://github.com/geonetwork/core-geonetwork/pull/5976">#5976</a>)</li>
+</ul>
+</li>
+<li>Add logic to only run encryptor once on password during the migration. (<a href="https://github.com/geonetwork/core-geonetwork/pull/5865">#5865</a>)</li>
+<li>Used nv-i18n library to add better support for iso639-2/T iso639-2/B support (<a href="https://github.com/geonetwork/core-geonetwork/pull/5982">#5982</a>)</li>
+<li>Update iso19139 template for uuidref attribute to apply only for srv:operatesOn element (<a href="https://github.com/geonetwork/core-geonetwork/pull/5924">#5924</a>)</li>
+<li>INSPIRE Atom feed / Process data feed download links with multiple download files/links per datafeed entry (<a href="https://github.com/geonetwork/core-geonetwork/pull/5985">#5985</a>)</li>
+<li>ISO19115-3 - jsonld formatter - support online resources multilingual for name and description (<a href="https://github.com/geonetwork/core-geonetwork/pull/5989">#5989</a>)</li>
+<li>ISO19139 - jsonld formatter - support online resources multilingual for name and description (<a href="https://github.com/geonetwork/core-geonetwork/pull/5955">#5955</a>)</li>
+<li>Add a split button for <code>Validate</code> in the 'edit' toolbar so the label is always displayed (whether the submenu is there or not). (<a href="https://github.com/geonetwork/core-geonetwork/pull/5966">#5966</a>)</li>
+<li>Add a new Json harvester (<a href="https://github.com/geonetwork/core-geonetwork/pull/5942">#5942</a>)</li>
+<li>Remove secure port setting (<a href="https://github.com/geonetwork/core-geonetwork/pull/5569">#5569</a>)</li>
+<li>Avoid loading Recaptcha API by angular-recaptcha if Recaptcha is disabled in the settings (<a href="https://github.com/geonetwork/core-geonetwork/pull/5562">#5562</a>)</li>
+<li>Small UI improvements for the Harvester Settings page (<a href="https://github.com/geonetwork/core-geonetwork/pull/5926">#5926</a>)</li>
+<li>Display topic categories tooltip in the metadata editor when tooltips are enabled (<a href="https://github.com/geonetwork/core-geonetwork/pull/5935">#5935</a>)</li>
+<li>Editor / ISO / Compute extent from one keyword or add one extent from all keywords (<a href="https://github.com/geonetwork/core-geonetwork/pull/5917">#5917</a>)</li>
+<li>Record view / ISO / Temporal range details support. (<a href="https://github.com/geonetwork/core-geonetwork/pull/5918">#5918</a>)</li>
+<li>Homepage / Add a title to info block (<a href="https://github.com/geonetwork/core-geonetwork/pull/5922">#5922</a>)</li>
+<li>Map list / Open map in the viewer, not the record view (<a href="https://github.com/geonetwork/core-geonetwork/pull/5921">#5921</a>)</li>
+<li>Add localizedException logic so that errors can be displayed in multiple languages (<a href="https://github.com/geonetwork/core-geonetwork/pull/5323">#5323</a>)</li>
+<li>Search / Facet / Remove count if undefined (<a href="https://github.com/geonetwork/core-geonetwork/pull/5915">#5915</a>)</li>
+<li>Search / Add search options (eg. titleonly) to permalink (<a href="https://github.com/geonetwork/core-geonetwork/pull/5914">#5914</a>)</li>
+<li>Record status / Highlight superseded record like obsolete one. (<a href="https://github.com/geonetwork/core-geonetwork/pull/5898">#5898</a>)</li>
+<li>Formatter / Admin API / Migrate to Spring. (<a href="https://github.com/geonetwork/core-geonetwork/pull/5905">#5905</a>)</li>
+<li>Update search options of the editor (harmonisation of the search functions between search page and editor) (<a href="https://github.com/geonetwork/core-geonetwork/pull/5907">#5907</a>)</li>
+<li>Search / Active filter / Misc improvements. (<a href="https://github.com/geonetwork/core-geonetwork/pull/5903">#5903</a>)</li>
+<li>INSPIRE / Validation from a portal endpoint. (<a href="https://github.com/geonetwork/core-geonetwork/pull/5899">#5899</a>)</li>
+<li>Data / WFS harvester / Don't diplay widget if WFS is down (<a href="https://github.com/geonetwork/core-geonetwork/pull/5898">#5898</a>)</li>
+<li>Admin / Reports / Consistent CSV format with other exports. (<a href="https://github.com/geonetwork/core-geonetwork/pull/5897">#5897</a>)</li>
+<li>Resources / Load using relative path. (<a href="https://github.com/geonetwork/core-geonetwork/pull/5902">#5902</a>)</li>
+<li>Only extractTitles for type METADATA (<a href="https://github.com/geonetwork/core-geonetwork/pull/5892">#5892</a>)</li>
+<li>Small UI improvements to the (advanced) search on the search page (<a href="https://github.com/geonetwork/core-geonetwork/pull/5877">#5877</a>)</li>
+<li>Record view / Preserve debug mode in links (<a href="https://github.com/geonetwork/core-geonetwork/pull/5894">#5894</a>)</li>
+<li>Dublin core / Improvements (<a href="https://github.com/geonetwork/core-geonetwork/pull/5893">#5893</a>)</li>
+<li>Editor / ISO topic category / Return list corresponding to schema plugins. (<a href="https://github.com/geonetwork/core-geonetwork/pull/5887">#5887</a>)</li>
+<li>Editor / Avoid error if records contains multiple all thesaurus block (<a href="https://github.com/geonetwork/core-geonetwork/pull/5885">#5885</a>)</li>
+<li>Editor board / Validation filter translations. (<a href="https://github.com/geonetwork/core-geonetwork/pull/5884">#5884</a>)</li>
+<li>Break words in table on the record view page (<a href="https://github.com/geonetwork/core-geonetwork/pull/5879">#5879</a>)</li>
+<li>Plugin / SchemaLocation is removed on save in ISO19139 (not in other plugins). (<a href="https://github.com/geonetwork/core-geonetwork/pull/5878">#5878</a>)</li>
+<li>Record view / More like this improvements. (<a href="https://github.com/geonetwork/core-geonetwork/pull/5858">#5858</a>)</li>
+<li>Record view / Add conditional formatter support (<a href="https://github.com/geonetwork/core-geonetwork/pull/5820">#5820</a>)</li>
+<li>Facet / Translation / Distinction between zip code and ZIP format (<a href="https://github.com/geonetwork/core-geonetwork/pull/5876">#5876</a>)</li>
+<li>MetadataManager / Add utility to check if record is valid. (5875)</li>
+<li>Setting / Integer / Get with default value. (<a href="https://github.com/geonetwork/core-geonetwork/pull/5874">#5874</a>)</li>
+<li>Editor / Associated resource / Check null protocol or url (<a href="https://github.com/geonetwork/core-geonetwork/pull/5880">#5880</a>)</li>
+<li>Home page / Facet / Add CSS class (<a href="https://github.com/geonetwork/core-geonetwork/pull/5869">#5869</a>)</li>
+<li>GML / Add required id attribute to TimePeriod (<a href="https://github.com/geonetwork/core-geonetwork/pull/5867">#5867</a>)</li>
+<li>Restyle the logo list in the Settings (<a href="https://github.com/geonetwork/core-geonetwork/pull/5855">#5855</a>)</li>
+<li>Refactor sql to use binding (<a href="https://github.com/geonetwork/core-geonetwork/pull/5868">#5868</a>)</li>
+<li>Facet / Add translation sort and filtering support. (<a href="https://github.com/geonetwork/core-geonetwork/pull/5852">#5852</a>)</li>
+<li>CSW / Restore possibility to store by any index fields (<a href="https://github.com/geonetwork/core-geonetwork/pull/5849">#5849</a>)</li>
+<li>Map / Service list / Add UI configuration filter if any (<a href="https://github.com/geonetwork/core-geonetwork/pull/5854">#5854</a>)</li>
+<li>ISO19139 / Formatter / Support isoType in template match for plugins (<a href="https://github.com/geonetwork/core-geonetwork/pull/5853">#5853</a>)</li>
+<li>Remove deleteAllByMetadataIdExceptGroupId from custom implementation and use the repository @query instead. (<a href="https://github.com/geonetwork/core-geonetwork/pull/5828">#5828</a>)</li>
+<li>Small adjustments to UI settings in the Admin (<a href="https://github.com/geonetwork/core-geonetwork/pull/5839">#5839</a>)</li>
+<li>Restyle topics on the Home page (<a href="https://github.com/geonetwork/core-geonetwork/pull/5837">#5837</a>)</li>
+<li>Escape login redirect url (<a href="https://github.com/geonetwork/core-geonetwork/pull/5829">#5829</a>)</li>
+<li>Add a Bootstrap layout and column to a static page (<a href="https://github.com/geonetwork/core-geonetwork/pull/5843">#5843</a>)</li>
+<li>Aggregation / Add terms script support (<a href="https://github.com/geonetwork/core-geonetwork/pull/5745">#5745</a>)</li>
+<li>Editor / Associated resources / Do not add wildcard on all search (<a href="https://github.com/geonetwork/core-geonetwork/pull/5792">#5792</a>)</li>
+<li>Admin / Tools / Add action to drop data index. (<a href="https://github.com/geonetwork/core-geonetwork/pull/5812">#5812</a>)</li>
+<li>Add exact match and title only search options (<a href="https://github.com/geonetwork/core-geonetwork/pull/5783">#5783</a>)</li>
+<li>Add copy resource interface, implement cmis resource copy with additional properties (<a href="https://github.com/geonetwork/core-geonetwork/pull/5776">#5776</a>)</li>
+<li>Make the editor menu scrollable on small screens (<a href="https://github.com/geonetwork/core-geonetwork/pull/5795">#5795</a>)</li>
+<li>User Profile Readonly for keycloak users (<a href="https://github.com/geonetwork/core-geonetwork/pull/5769">#5769</a>)</li>
+<li>Add confirm to delete Category and Cancel edits to metadata (<a href="https://github.com/geonetwork/core-geonetwork/pull/5813">#5813</a>)</li>
+<li>Editor / Online source / Check URL with a HEAD call (<a href="https://github.com/geonetwork/core-geonetwork/pull/5741">#5741</a>)</li>
+<li>Map / Apply filter to layer search (<a href="https://github.com/geonetwork/core-geonetwork/pull/5803">#5803</a>)</li>
+<li>iso19139 full view - codelist elements - display the codelistValue translation only if the element has a text also (<a href="https://github.com/geonetwork/core-geonetwork/pull/5793">#5793</a>)</li>
+<li>Add a scrollbar to the privileges popup when group names are too long (<a href="https://github.com/geonetwork/core-geonetwork/pull/5799">#5799</a>)</li>
+<li>Display the facet filter on a single row (<a href="https://github.com/geonetwork/core-geonetwork/pull/5762">#5762</a>)</li>
+<li>History / Display close task only when it applies (<a href="https://github.com/geonetwork/core-geonetwork/pull/5786">#5786</a>)</li>
+<li>Revise security policy with example of email list and issue tracker as public forums (<a href="https://github.com/geonetwork/core-geonetwork/pull/5754">#5754</a>)</li>
+<li>Update instructions for local development (<a href="https://github.com/geonetwork/core-geonetwork/pull/5627">#5627</a>)</li>
+<li>Search / Add all title's translations in the default search (<a href="https://github.com/geonetwork/core-geonetwork/pull/5750">#5750</a>)</li>
+<li>Indexing / Temporal extent / Add support for now in range upper bound. (<a href="https://github.com/geonetwork/core-geonetwork/pull/5784">#5784</a>)</li>
+<li>Add new styling options to display the status of metadata records (<a href="https://github.com/geonetwork/core-geonetwork/pull/5759">#5759</a>)</li>
+<li>Move release build properties to separate file (<a href="https://github.com/geonetwork/core-geonetwork/pull/5348">#5348</a>)</li>
+<li>Add <code>register</code> and <code>lost password</code> option to accessible login menu (<a href="https://github.com/geonetwork/core-geonetwork/pull/5571">#5571</a>)</li>
+<li>Styling and multiple columns for the language list in the <code>Create Thesaurus Window</code> (<a href="https://github.com/geonetwork/core-geonetwork/pull/5572">#5572</a>)</li>
+<li>Add a new accessible menubar (clickable and keyboard accessible): (<a href="https://github.com/geonetwork/core-geonetwork/pull/5518">#5518</a>)</li>
+<li>Modify spring security so that it can be set at runtime startup (<a href="https://github.com/geonetwork/core-geonetwork/pull/5312">#5312</a>)</li>
+<li>Add salutation to notification message. (<a href="https://github.com/geonetwork/core-geonetwork/pull/5686">#5686</a>)</li>
+<li>Refactor - autowire settingManager bean to make code cleaner. (<a href="https://github.com/geonetwork/core-geonetwork/pull/5773">#5773</a>)</li>
+<li>Editor / option to disable OGC Capabilities layer processing in the online resource panel. (<a href="https://github.com/geonetwork/core-geonetwork/pull/5763">#5763</a>)</li>
+</ul>
+<h2 id="fixes">Fixes</h2>
+<ul>
+<li>Use typeNames in the WFS URL when version is &gt;= "2.0.0" (<a href="https://github.com/geonetwork/core-geonetwork/pull/6143">#6143</a>)</li>
+<li>URL rewrite / Make "/geonetwork?uuid=..." links work again (<a href="https://github.com/geonetwork/core-geonetwork/pull/6139">#6139</a>)</li>
+<li>Fix the cron expression for the INSPIRE ATOM harvester (<a href="https://github.com/geonetwork/core-geonetwork/pull/6131">#6131</a>)</li>
+<li>Fix issue with CMIS connection during startup (<a href="https://github.com/geonetwork/core-geonetwork/pull/6106">#6106</a>)</li>
+<li>Fix removal of sort by and hits per page elements in the UI configuration (<a href="https://github.com/geonetwork/core-geonetwork/pull/6091">#6091</a>)</li>
+<li>Fix to display the role translation instead of the role code in the iso19139 full view formatter (<a href="https://github.com/geonetwork/core-geonetwork/pull/6123">#6123</a>)</li>
+<li>XSLT formatter / remove debug mode (<a href="https://github.com/geonetwork/core-geonetwork/pull/6127">#6127</a>)</li>
+<li>Fix default URL for the metadata full view (<a href="https://github.com/geonetwork/core-geonetwork/pull/6125">#6125</a>)</li>
+<li>Metadata view / correctly escape quotes in links title to avoid runtime error (<a href="https://github.com/geonetwork/core-geonetwork/pull/6095">#6095</a>)</li>
+<li>Fix for the height of a Modal popup in the Editor (<a href="https://github.com/geonetwork/core-geonetwork/pull/6098">#6098</a>)</li>
+<li>Fix check for layer already in map - case insensitive check of the url (<a href="https://github.com/geonetwork/core-geonetwork/pull/6090">#6090</a>)</li>
+<li>Fix coordinate order in jsonld GeoShape element (<a href="https://github.com/geonetwork/core-geonetwork/pull/6071">#6071</a>)</li>
+<li>Add styles and classes to fix the button bars not really fitting inside the headers on admin pages (<a href="https://github.com/geonetwork/core-geonetwork/pull/6061">#6061</a>)</li>
+<li>Fix the registration of the <code>surname</code> and <code>country</code> for the 'self' registration process (<a href="https://github.com/geonetwork/core-geonetwork/pull/6060">#6060</a>)</li>
+<li>Fix the list of elements to process in CSW ElementSet strategy 'context' (<a href="https://github.com/geonetwork/core-geonetwork/pull/6017">#6017</a>)</li>
+<li>Fix the display of the service metadata title for CSW and portals (<a href="https://github.com/geonetwork/core-geonetwork/pull/6026">#6026</a>)</li>
+<li>Fix check for layer already in map (<a href="https://github.com/geonetwork/core-geonetwork/pull/6031">#6031</a>)</li>
+<li>Fix feedback email with multiple recipients (<a href="https://github.com/geonetwork/core-geonetwork/pull/6033">#6033</a>)</li>
+<li>Fixed issue with missing keycloakSecurityContextRequestFilter that was causing keycloak not to refresh the token correctly. (<a href="https://github.com/geonetwork/core-geonetwork/pull/6035">#6035</a>)</li>
+<li>DOI creation / Change the links to buttons so that they become actually disabled when clicked (<a href="https://github.com/geonetwork/core-geonetwork/pull/6037">#6037</a>)</li>
+<li>Convert iso639_2T to iso639_2B language codes in form-builder (<a href="https://github.com/geonetwork/core-geonetwork/pull/6024">#6024</a>)</li>
+<li>Reset search parameter after metadata status change to "approved" (<a href="https://github.com/geonetwork/core-geonetwork/pull/5970">#5970</a>)</li>
+<li>Fix gn-fn-index:is-isoDate - invalid dates like 2021-04-207 match, causing indexing errors (<a href="https://github.com/geonetwork/core-geonetwork/pull/6022">#6022</a>)</li>
+<li>Fix credentials autocomplete in harvesters (<a href="https://github.com/geonetwork/core-geonetwork/pull/6011">#6011</a>)</li>
+<li>Admin / better handle harvester types translation (<a href="https://github.com/geonetwork/core-geonetwork/pull/6006">#6006</a>)</li>
+<li>Add missing 3.12.x upgrade steps (<a href="https://github.com/geonetwork/core-geonetwork/pull/5866">#5866</a>)</li>
+<li>Admin / Users / Fix the users that a UserAdmin can manage (<a href="https://github.com/geonetwork/core-geonetwork/pull/5886">#5886</a>)</li>
+<li>Validation / INSPIRE / Fix when setting is 'null' (<a href="https://github.com/geonetwork/core-geonetwork/pull/5973">#5973</a>)</li>
+<li>Fix a bug when the url doesn't contain the ? sign (<a href="https://github.com/geonetwork/core-geonetwork/pull/5994">#5994</a>)</li>
+<li>Fixes some challenges in google-structured-data-test (<a href="https://github.com/geonetwork/core-geonetwork/pull/5988">#5988</a>)</li>
+<li>Remove duplicated dependency (<a href="https://github.com/geonetwork/core-geonetwork/pull/5986">#5986</a>)</li>
+<li>Updated default language so that is comes from common java location. (<a href="https://github.com/geonetwork/core-geonetwork/pull/5981">#5981</a>)</li>
+<li>INSPIRE / Validation / Add API Key. (<a href="https://github.com/geonetwork/core-geonetwork/pull/5975">#5975</a>)</li>
+<li>Fix workflow mail notifications for metadata with a working copy (<a href="https://github.com/geonetwork/core-geonetwork/pull/5971">#5971</a>)</li>
+<li>Small fix for long titles on Topic blocks (<a href="https://github.com/geonetwork/core-geonetwork/pull/5960">#5960</a>)</li>
+<li>Editor / Avoid hiding part of the Add Resource dropdown in sidebar. (<a href="https://github.com/geonetwork/core-geonetwork/pull/5916">#5916</a>)</li>
+<li>External viewer / Fix error when adding layer (<a href="https://github.com/geonetwork/core-geonetwork/pull/5959">#5959</a>)</li>
+<li>Rollback exceptions handled in GlobalExceptionController. Fixes <a href="https://github.com/geonetwork/core-geonetwork/issues/5944">#5944</a> (<a href="https://github.com/geonetwork/core-geonetwork/pull/5948">#5948</a>)</li>
+<li>Remove online resource - fix resource name comparison (<a href="https://github.com/geonetwork/core-geonetwork/pull/5934">#5934</a>)</li>
+<li>Fix CSW ES mapping for sortBy and bbox (<a href="https://github.com/geonetwork/core-geonetwork/pull/5927">#5927</a>)</li>
+<li>Handle CSW BBOX Filter correctly (<a href="https://github.com/geonetwork/core-geonetwork/pull/5913">#5913</a>)</li>
+<li>Encryptor env variable should be uppercase as this it the general standard otherwise it will not find the variable on unix (<a href="https://github.com/geonetwork/core-geonetwork/pull/5873">#5873</a>)</li>
+<li>Fix issue with localized exception where with* functions were returning LocalizedException instead of the class. i.e. ResourceNotFoundException (<a href="https://github.com/geonetwork/core-geonetwork/pull/5531">#5531</a>)</li>
+<li>API / Avoid browser cache issue when the same API Path serving various formats. (<a href="https://github.com/geonetwork/core-geonetwork/pull/5901">#5901</a>)</li>
+<li>ISO19139 / CRS indexing fails on multilingual records (<a href="https://github.com/geonetwork/core-geonetwork/pull/5900">#5900</a>)</li>
+<li>HTML / Page tab title empty (<a href="https://github.com/geonetwork/core-geonetwork/pull/5895">#5895</a>)</li>
+<li>Record view / Refactor getFormatterForRecord / Fix default url</li>
+<li>Record view / Fix display of topic category. (<a href="https://github.com/geonetwork/core-geonetwork/pull/5891">#5891</a>)</li>
+<li>Search results / PDF / Missing title in TOC (<a href="https://github.com/geonetwork/core-geonetwork/pull/5888">#5888</a>)</li>
+<li>Fit view to exact extent (fixes issue #5791) (<a href="https://github.com/geonetwork/core-geonetwork/pull/5847">#5847</a>)</li>
+<li>Fix ops for public metadata inserted with CSW-T (<a href="https://github.com/geonetwork/core-geonetwork/pull/5202">#5202</a>)</li>
+<li>Record view / Fix display of CRS label. (<a href="https://github.com/geonetwork/core-geonetwork/pull/5883">#5883</a>)</li>
+<li>Record view / Group not set in prod mode (<a href="https://github.com/geonetwork/core-geonetwork/pull/5851">#5851</a>)</li>
+<li>Fix empty metadata list with -1 count in user profile. Fixes <a href="https://github.com/geonetwork/core-geonetwork/issues/5871">#5871</a>. (<a href="https://github.com/geonetwork/core-geonetwork/pull/5872">#5872</a>)</li>
+<li>Encryption / Application fails to start if encryption error on harvester passwords (<a href="https://github.com/geonetwork/core-geonetwork/pull/5859">#5859</a>)</li>
+<li>Admin / Status / Fix facet more (<a href="https://github.com/geonetwork/core-geonetwork/pull/5848">#5848</a>)</li>
+<li>Record view / Advanced / Fix search by keyword links (<a href="https://github.com/geonetwork/core-geonetwork/pull/5832">#5832</a>)</li>
+<li>Indexing / documentStandard is not an array. (<a href="https://github.com/geonetwork/core-geonetwork/pull/5834">#5834</a>)</li>
+<li>Indexing / Do not add twice indexingDate field (<a href="https://github.com/geonetwork/core-geonetwork/pull/5823">#5823</a>)</li>
+<li>User \$translateProvider.useSanitizeValueStrategy('escapeParameters') for encoding sanitizing (<a href="https://github.com/geonetwork/core-geonetwork/pull/5461">#5461</a>)</li>
+<li>Fix for validation result gets lost when approving record and copy validation results when creating a draft. Fixes <a href="https://github.com/geonetwork/core-geonetwork/issues/5209">#5209</a> (<a href="https://github.com/geonetwork/core-geonetwork/pull/5418">#5418</a>)</li>
+<li>Overview / Removal / Do not delete attachment from other records (<a href="https://github.com/geonetwork/core-geonetwork/pull/5821">#5821</a>)</li>
+<li>INSPIRE Atom feed xslt fix for resource constraints with multiple gmd:otherConstraints elements (<a href="https://github.com/geonetwork/core-geonetwork/pull/5815">#5815</a>)</li>
+<li>Index / Avoid error on multiple results in DQ conformance. (<a href="https://github.com/geonetwork/core-geonetwork/pull/5814">#5814</a>)</li>
+<li>Correct the OpenAPI document so that it does not generate errors that were identified in #5431 (<a href="https://github.com/geonetwork/core-geonetwork/pull/5809">#5809</a>)</li>
+<li>Fix Thumbnail generator (<a href="https://github.com/geonetwork/core-geonetwork/pull/5757">#5757</a>)</li>
+<li>OpenAPI / Restore missing method. (<a href="https://github.com/geonetwork/core-geonetwork/pull/5752">#5752</a>)</li>
+<li>Locale loader: fix to load translation files using the format <code>relativepath|type</code>, like <code>../../catalog/views/myview/locales/|core</code> (<a href="https://github.com/geonetwork/core-geonetwork/pull/5710">#5710</a>)</li>
+<li>Search results - metadata with a working copy display a label 'Working copy' if the metadata has a draft copy, even for public users. Fixes <a href="https://github.com/geonetwork/core-geonetwork/issues/5580">#5580</a> (<a href="https://github.com/geonetwork/core-geonetwork/pull/5805">#5805</a>)</li>
+<li>Create user form issues 2 requests to userselection api that return status code 400. Fixes <a href="https://github.com/geonetwork/core-geonetwork/issues/4545">#4545</a> (<a href="https://github.com/geonetwork/core-geonetwork/pull/5804">#5804</a>)</li>
+<li>Users without groups assigned are listed in the users lists for any UserAdmin (<a href="https://github.com/geonetwork/core-geonetwork/pull/5798">#5798</a>)</li>
+<li>Selection / PDF / Fix errors due to index schema changes (<a href="https://github.com/geonetwork/core-geonetwork/pull/5787">#5787</a>)</li>
+<li>Fix editor overview manager. Fixes <a href="https://github.com/geonetwork/core-geonetwork/issues/5806">#5806</a> (<a href="https://github.com/geonetwork/core-geonetwork/pull/5807">#5807</a>)</li>
+<li>Self-register option doesn't work. Fixes <a href="https://github.com/geonetwork/core-geonetwork/issues/5778">#5778</a> (<a href="https://github.com/geonetwork/core-geonetwork/pull/5779">#5779</a>)</li>
+<li>Updated the index fieldname to match the es index names. (<a href="https://github.com/geonetwork/core-geonetwork/pull/5772">#5772</a>)</li>
+<li>Fix bug in signin link - regression cause by #5518 which used older variable. (<a href="https://github.com/geonetwork/core-geonetwork/pull/5782">#5782</a>)</li>
+<li>Fixed CMIS resource bug where the wrong key function was called causing an invalid key to be generated. (<a href="https://github.com/geonetwork/core-geonetwork/pull/5775">#5775</a>)</li>
+<li>3.12.x cmis jcloud updates cherry pick (<a href="https://github.com/geonetwork/core-geonetwork/pull/5767">#5767</a>)</li>
+</ul>
+<p>A huge thanks to all contributors and maintainers alike!</p>
+<p>See <a href="https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+milestone%3A4.0.6+is%3Aclosed">4.0.6 issues</a> and <a href="https://github.com/geonetwork/core-geonetwork/pulls?q=is%3Apr+milestone%3A4.0.6+is%3Aclosed">pull requests</a> for full details.</p>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var tab,labels=set.querySelector(".tabbed-labels");for(tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12Z"/></svg>
+            Back to top
+          </button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../archive/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Archived" rel="prev">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Archived
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../version-4.0.5/" class="md-footer__link md-footer__link--next" aria-label="Next: Version 4.0.5" rel="next">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Version 4.0.5
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <!--
+  Copyright (c) 2016-2022 Martin Donath <martin.donath@squidfunk.com>
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+<!-- Copyright and theme information -->
+<div class="md-copyright">
+  
+  <span class="md-copyright__highlight">
+    Copyright &copy; 2001 - 2023 FAO-UN and others
+  </span>
+  
+  
+  &mdash; Made by the
+  <a
+          href="https://geonetwork-opensource.org/"
+          target="_blank" rel="noopener"
+  >GeoNetwork Community</a>,
+  built with
+  <a
+          href="https://squidfunk.github.io/mkdocs-material/"
+          target="_blank" rel="noopener"
+  >
+    Material for MkDocs
+  </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/geonetwork" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://hub.docker.com/_/geonetwork" target="_blank" rel="noopener" title="hub.docker.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M349.9 236.3h-66.1v-59.4h66.1v59.4zm0-204.3h-66.1v60.7h66.1V32zm78.2 144.8H362v59.4h66.1v-59.4zm-156.3-72.1h-66.1v60.1h66.1v-60.1zm78.1 0h-66.1v60.1h66.1v-60.1zm276.8 100c-14.4-9.7-47.6-13.2-73.1-8.4-3.3-24-16.7-44.9-41.1-63.7l-14-9.3-9.3 14c-18.4 27.8-23.4 73.6-3.7 103.8-8.7 4.7-25.8 11.1-48.4 10.7H2.4c-8.7 50.8 5.8 116.8 44 162.1 37.1 43.9 92.7 66.2 165.4 66.2 157.4 0 273.9-72.5 328.4-204.2 21.4.4 67.6.1 91.3-45.2 1.5-2.5 6.6-13.2 8.5-17.1l-13.3-8.9zm-511.1-27.9h-66v59.4h66.1v-59.4zm78.1 0h-66.1v59.4h66.1v-59.4zm78.1 0h-66.1v59.4h66.1v-59.4zm-78.1-72.1h-66.1v60.1h66.1v-60.1z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+    <a href="https://geonetwork-opensource.org/" target="_blank" rel="noopener" title="GeoNetwork Website" class="md-social__link">
+      <?xml version="1.0" encoding="UTF-8"?>
+<svg width="300px" height="301px" viewBox="0 0 300 301" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 51.3 (57544) - http://www.bohemiancoding.com/sketch -->
+    <title>gn_logo</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="GNlogo" transform="translate(-157.000000, -1.000000)" fill-rule="nonzero">
+            <g id="Group" transform="translate(157.000000, 0.105590)">
+                <g id="Logo" transform="translate(0.000000, 3.000000)">
+                    <path d="M212.641304,294.371739 L212.648758,294.371739 C211.621118,289.141304 184.624845,288.163043 152.745652,288.163043 C107.719565,288.163043 69.957764,281.73354 59.7475155,273.835714 L59.7624224,273.811491 C43.4925466,261.290683 29.876087,245.535093 19.7431677,227.549068 C27.2031056,240.93913 83.907764,251.501553 152.746584,251.501553 C177.136025,251.501553 199.39472,253.253106 216.299068,256.084472 C236.027329,259.390062 248.462422,264.279503 248.462422,269.645963 C248.462422,270.981056 247.693789,272.418634 246.235714,273.668012 L246.233851,274.000621 C235.996584,281.941304 224.719565,287.895652 212.641304,294.371739 Z M274.503727,242.340373 C274.503727,243.565528 274.131056,244.685404 273.408075,245.707453 C284.601242,231.096894 293.863043,214.198137 299.207143,196.107764 C299.464286,195.332609 299.591925,194.480124 299.591925,193.693789 C299.591925,176.150311 233.848137,161.931056 152.745652,161.931056 C69.4229814,161.931056 1.80838509,147.961491 1.80838509,130.421739 L1.79720497,130.077019 C0.69689441,137.475466 0.126708075,145.048137 0.126708075,152.751242 C0.126708075,163.990062 1.34161491,174.948447 3.64658385,185.495031 C6.00745342,196.595031 35.2006211,206.095342 77.6534161,211.368634 C99.7108696,214.112422 125.36646,215.536025 152.745652,215.536025 C219.988509,215.536025 274.503727,227.537888 274.503727,242.340373 Z M183.136025,88.9462733 C184.804658,105.557143 185.843478,123.795652 186.11646,143.003106 C251.136335,139.733851 299.564907,127.125466 299.564907,112.063043 C299.564907,111.274845 299.465217,110.480124 299.207143,109.709627 C293.730745,91.05 284.782919,73.8791925 273.115528,58.9350932 C274.025776,60.2552795 274.502795,61.6080745 274.502795,62.9822981 C274.503727,75.4770186 235.679814,85.9742236 183.136025,88.9462733 Z M152.67205,54.1462733 C144.200311,54.1462733 136.35559,53.9515528 128.525776,53.5779503 C126.538509,64.202795 124.82795,76.1189441 123.537578,89.0086957 C70.4180124,86.1270186 31.0071429,75.5673913 31.0071429,62.9804348 C31.0071429,61.6015528 31.4785714,60.2431677 32.3916149,58.9164596 C20.6487578,73.9555901 11.5462733,91.2186335 6.07919255,110.013354 C5.88074534,110.692547 5.86118012,111.374534 5.86118012,112.06118 C5.86118012,129.601863 72.6959627,143.82205 152.67205,143.82205 L152.67205,54.1462733 Z M209.906832,14.6962733 C209.906832,11.9813665 205.993789,9.46397516 199.340683,7.40590062 L199.348137,7.38167702 C184.654658,2.67950311 168.998758,0.136024845 152.745652,0.136024845 C136.015528,0.136024845 119.920807,2.8257764 104.851863,7.8 L104.859317,7.82049689 C98.9953416,9.7984472 95.5863354,12.1611801 95.5863354,14.6962733 C95.5863354,21.6447205 121.174845,27.2822981 152.746584,27.2822981 C184.311801,27.2822981 209.906832,21.6437888 209.906832,14.6962733 Z" id="Shape"  fill="#BABABA"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "../../..", "features": ["content.action.view", "content.action.edit", "content.code.copy", "content.tabs.link", "navigation.tabs", "navigation.tracking", "navigation.prune", "navigation.indexes", "toc.follow", "navigation.top", "navigation.footer", "announce.dismiss"], "search": "../../../assets/javascripts/workers/search.a264c092.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"default": "stable", "provider": "mike"}}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.4e0fa4ba.min.js"></script>
+      
+    
+  </body>
 </html>
