@@ -55,10 +55,7 @@ import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.geotools.xsd.Configuration;
 import org.geotools.xsd.Parser;
-import org.jdom.Attribute;
-import org.jdom.Content;
-import org.jdom.Element;
-import org.jdom.Namespace;
+import org.jdom.*;
 import org.opengis.filter.Filter;
 import org.opengis.filter.capability.FilterCapabilities;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -483,15 +480,19 @@ public class SearchController {
                 AbstractMetadata metadata = metadataUtils.findOne(mdId);
 
                 String displayLanguage = context.getLanguage();
-                Element resultMD = retrieveMetadata(context, metadata.getId() + "",
-                    setName, outSchema, elemNames, typeName, resultType, strategy, displayLanguage);
+                try {
+                    Element resultMD = retrieveMetadata(context, metadata.getId() + "",
+                        setName, outSchema, elemNames, typeName, resultType, strategy, displayLanguage);
 
-                if (resultMD != null) {
-                    if (resultType == ResultType.RESULTS) {
-                        results.addContent(resultMD);
+                    if (resultMD != null) {
+                        if (resultType == ResultType.RESULTS) {
+                            results.addContent(resultMD);
+                        }
+
+                        counter++;
                     }
-
-                    counter++;
+                } catch (InvalidParameterValueEx e) {
+                    results.addContent(new Comment(e.getMessage()));
                 }
 
             }
