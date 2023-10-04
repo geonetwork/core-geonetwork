@@ -178,6 +178,33 @@
                            scope.relations[idx] = value;
                          }
 
+                         // For draft version append "approved=false" to url
+                         if (scope.md.draft === "y" && idx === "onlines") {
+                           for (var i = 0; i < scope.relations[idx].length; i++) {
+                             if (scope.relations[idx][i].url) {
+                               if (typeof scope.relations[idx][i].url === 'string') {
+                                 if (
+                                   scope.relations[idx][i].url.match(
+                                     ".*/api/records/" + scope.md['geonet:info'].uuid + "/attachments/.*"
+                                   ) != null
+                                 ) {
+                                   scope.relations[idx][i].url += "?approved=false";
+                                 }
+                               } else if (typeof scope.relations[idx][i].url === 'object') {
+                                 for (u in scope.relations[idx][i].url) {
+                                   if (
+                                     scope.relations[idx][i].url[u].match(
+                                       ".*/api/records/" + scope.md['geonet:info'].uuid + "/attachments/.*"
+                                     ) != null
+                                   ) {
+                                     scope.relations[idx][i].url[u] += "?approved=false";
+                                   }
+                                 }
+                               }
+                             }
+                           }
+                         }
+
                          if (scope.relations.siblings && scope.relations.associated) {
                            for (var i = 0; i < scope.relations.associated.length; i++) {
                              if (scope.relations.siblings.filter(function (e) {
