@@ -11,6 +11,7 @@ After update, don't forget to go to admin console --> tools --> Delete index and
 ## List of changes
 
 Major changes:
+
 -   [API / CSV export / Add support for custom export](https://github.com/geonetwork/core-geonetwork/pull/7132)
 -   [Map / WFS Features / Improvements](https://github.com/geonetwork/core-geonetwork/pull/7000)
 
