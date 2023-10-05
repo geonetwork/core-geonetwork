@@ -226,6 +226,13 @@ public class SiteInformation {
             connection = context.getBean(DataSource.class).getConnection();
             dbURL = connection.getMetaData().getURL();
             databaseProperties.put("db.openattempt", "Database Opened Successfully");
+            databaseProperties.put("db.product", connection.getMetaData().getDatabaseProductName());
+            databaseProperties.put("db.version", connection.getMetaData().getDatabaseProductVersion());
+            databaseProperties.put("db.driver", connection.getMetaData().getDriverName());
+            databaseProperties.put("db.driverVersion", connection.getMetaData().getDriverVersion());
+            databaseProperties.put("db.username", connection.getMetaData().getUserName());
+            databaseProperties.put("db.schema", connection.getSchema());
+            databaseProperties.put("db.name", connection.getCatalog());
 
             if (connection instanceof BasicDataSource) {
                 BasicDataSource basicDataSource = (BasicDataSource) connection;
