@@ -102,7 +102,6 @@ GeoNetwork requires an Elasticsearch instance as an index.
 
 3. For alternatives see [es/readme](../es/README.md).
 
-
 Run Kibana
 ----------
 

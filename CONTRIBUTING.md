@@ -29,6 +29,6 @@ Thank you for contributing to GeoNetwork:
 
 * Build documentation: All build and development instructions managed in repository `README.md` files.
 
-* New libraries: Do not commit jars, use maven `pom.xml` to declare dependencies where needed, and `src/pom.xml` dependency management to manage version numbers. Document what the library does in GeoNetwork, how it interacts or extends GeoNetwork, with references to official library tutorials or documentation.
+* New libraries: Do not commit jars, use maven `pom.xml` to declare dependencies where needed, and `src/pom.xml` dependency management to manage version numbers. Use build documentation to share what the library does in GeoNetwork, how it interacts or extends GeoNetwork, with references to official library tutorials or documentation.
 
 For more information see [How to contribute](https://github.com/geonetwork/core-geonetwork/wiki/How-to-contribute) (wiki).
