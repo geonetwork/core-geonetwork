@@ -668,7 +668,7 @@
       };
 
       /**
-       * takes an ElasticSearch request object as input and ouputs a simplified
+       * takes an Elasticsearch request object as input and ouputs a simplified
        * object with properties describing names and values of the defined
        * filters.
        * Values are always an array holding the different values if any.
@@ -723,7 +723,7 @@
       };
 
       /**
-       * takes an ElasticSearch request object as input and ouputs an object
+       * takes an Elasticsearch request object as input and ouputs an object
        * with human readable properties.
        * note: full text search & bbox extent are ignored
        *
