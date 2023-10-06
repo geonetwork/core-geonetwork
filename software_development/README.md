@@ -16,6 +16,7 @@ This manual is for developers customizing or developing GeoNetwork:
   See [Installing from source code](https://docs.geonetwork-opensource.org/latest/install-guide/installing-from-source-code/) (Installation Guide)
 
 * Writing documentation: see [Documentation Guide](https://docs.geonetwork-opensource.org/latest/devel/docs/) (Contributing Guide).
+* Writing documentation: see [Documentation Guide](https://docs.geonetwork-opensource.org/latest/devel/docs/) (Contributing Guide).
 * Release process: See [Doing a release](https://docs.geonetwork-opensource.org/latest/contributing/doing-a-release/) (Contributing Guide).
 
 If you just want to use the software and are looking for instructions on how to do that,
