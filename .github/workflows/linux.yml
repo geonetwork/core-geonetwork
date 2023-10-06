@@ -3,7 +3,7 @@ name: Linux GitHub CI
 on: [pull_request,push,workflow_dispatch]
 
 env:
-  MAVEN_OPTS: -Dmaven.wagon.httpconnectionManager.ttlSeconds=25 -Dmaven.wagon.http.retryHandler.count=3 -Xmx512m -Dorg.slf4j.simpleLogger.showDateTime=true -Dorg.slf4j.simpleLogger.dateTimeFormat=HH:mm:ss,SSS
+  MAVEN_OPTS: -Dmaven.wagon.httpconnectionManager.ttlSeconds=25 -Dmaven.wagon.http.retryHandler.count=3 -Xmx512m -Dorg.slf4j.simpleLogger.showDateTime=true -Dorg.slf4j.simpleLogger.dateTimeFormat=HH:mm:ss,SSS -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
   TAKARI_SMART_BUILDER_VERSION: 0.6.1
 
 jobs:
@@ -27,12 +27,20 @@ jobs:
         distribution: 'temurin'
         java-version: ${{ matrix.jdk }}
         cache: 'maven'
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: 3.x
+    - name: mkdocs install
+      working-directory: docs/manual
+      run: pip install --upgrade pip && pip install -r requirements.txt
     - name: Set up Maven
       uses: stCarolas/setup-maven@v4
       with:
         maven-version: 3.6.3
     - name: Build with Maven
-      run: mvn -B -V install -DskipTests=true -Dmaven.javadoc.skip=true
+      run: |
+        mvn -B -ntp -V install -DskipTests=true -Dmaven.javadoc.skip=true -Pwith-doc
     - name: Remove SNAPSHOT jars from repository
       run: |
         find ~/.m2/repository -name "*SNAPSHOT*" -type d | xargs rm -rf {}
@@ -62,7 +70,7 @@ jobs:
     - name: Test with maven
       run: |
         mvn -B resources:resources@copy-index-schema-to-source -f web
-        mvn -B -V -fae verify -Pit
+        mvn -B -ntp -V -fae verify -Pit
     - name: Remove SNAPSHOT jars from repository
       run: |
         find ~/.m2/repository -name "*SNAPSHOT*" -type d | xargs rm -rf {}
