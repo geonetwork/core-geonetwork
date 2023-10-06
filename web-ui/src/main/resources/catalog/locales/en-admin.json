@@ -1463,6 +1463,8 @@
     "es.url": "ElasticSearch server",
     "es.version": "ElasticSearch version",
     "es.index": "Index name",
-    "systemPropertiesProxyConfiguration": "Using http proxy settings in system properties."
+    "systemPropertiesProxyConfiguration": "Using http proxy settings in system properties.",
+    "app.version": "Application version",
+    "app.subVersion": "Application minor version"
 }
 
