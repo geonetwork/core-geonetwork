@@ -200,7 +200,7 @@
     "db.version": "Version",
     "db.driver": "JDBC Driver",
     "db.driverVersion": "JDBC Driver Version",
-    "db.username": "username",
+    "db.username": "Username",
     "db.schema": "Schema",
     "db.name": "Name",
     "dbInformation": "Database",
