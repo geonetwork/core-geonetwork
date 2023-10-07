@@ -115,10 +115,6 @@ with the following utilities: ***sed***, ***xmlstarlet*** and ***sftp***.
 
     # Deploy to osgeo repository (requires credentials in ~/.m2/settings.xml)
     mvn deploy
-    
-    # Deploy docs for (series=4.4)
-    cd docs/mannual
-    mike deploy --push $series
     ```
 
 4.  Test
