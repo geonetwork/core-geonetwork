@@ -23,8 +23,6 @@
 
 package org.fao.geonet.api.processing.report;
 
-import org.geotools.api.annotation.XmlElement;
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 

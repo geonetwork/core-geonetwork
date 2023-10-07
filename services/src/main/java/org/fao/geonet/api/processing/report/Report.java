@@ -24,7 +24,6 @@
 package org.fao.geonet.api.processing.report;
 
 import org.fao.geonet.domain.ISODate;
-import org.geotools.api.annotation.XmlElement;
 
 /**
  * A simple report.
