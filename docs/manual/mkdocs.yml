@@ -126,7 +126,7 @@ markdown_extensions:
 
 # Page tree
 nav:
-  - index.md
+  - 'GeoNetwork': index.md
   - 'Overview':
     - overview/index.md
     - overview/about.md
