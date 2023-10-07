@@ -661,7 +661,7 @@
       <!-- GeoTools and spatial search stuff -->
       <dependency>
         <groupId>org.geotools</groupId>
-        <artifactId>gt-opengis</artifactId>
+        <artifactId>gt-api</artifactId>
         <version>${geotools.version}</version>
       </dependency>
       <dependency>
@@ -1585,9 +1585,9 @@
 
     <!-- NOTE: When updating GeoTools, check which version
     of Postgres is used and update pg.version if needed. -->
-    <geotools.version>28.2</geotools.version>
-    <jts.version>1.18.2</jts.version>
-    <pg.version>42.3.3</pg.version>
+    <geotools.version>30-RC</geotools.version>
+    <jts.version>1.19.0</jts.version>
+    <pg.version>42.6.0</pg.version>
 
     <spring.version>5.3.30</spring.version>
     <spring.security.version>5.8.7</spring.security.version>
