@@ -12,10 +12,11 @@ with the following utilities: ***sed***, ***xmlstarlet*** and ***sftp***.
 
     ``` shell
     # Setup properties
+    from=origin
     frombranch=origin/main
     series=4.2
     versionbranch=$series.x
-    version=$series.3
+    version=4.2.3
     minorversion=0
     release=stable
     newversion=$version-$minorversion
@@ -53,10 +54,44 @@ with the following utilities: ***sed***, ***xmlstarlet*** and ***sftp***.
     git log --pretty='format:- %s' $previousversion... >> docs/changes/changes$newversion.txt
     ```
 
-3.  Create a new documentation page: `docs/manual/docs/overview/change-log/`
+2.  Prepare change-log notes.
+
+    Git notes are managed similar to push and pulling tags. Start by pulling the latest notes:
+    ```
+    git pull origin refs/notes/commits 
+    ```
+    
+    Review changes along with any notes:
+    ```
+    git log --pretty='format:%h: %s %n      note: %N' $previousversion...
+    ```
+    
+    Use `git note append` to document commits adding major features.
+    
+    ```
+    git notes append <sha> -m "<description of major feature>"
+    ```
+    
+    Use `git note remove` if you need to clear a note and start again:
+    ```
+    git notes remove <sha>
+    ```
+    
+    Preview changes using:
+    
+    ```
+     git log --pretty='format:* %N' $previousversion... | grep -v "^* $"
+    ```
+    
+    Save your notes:
+    ```
+    git push origin refs/notes/commits
+    ```
+
+3.  Create change log page: `docs/manual/docs/overview/change-log/`
 
     ``` shell
-    cat <<EOF > docs/changes/changes$newversion.txt
+    cat <<EOF > docs/manual/docs/overview/changes/version-$newversion.md
     # Version $version
     
     GeoNetwork $version is a minor release.
@@ -73,23 +108,37 @@ with the following utilities: ***sed***, ***xmlstarlet*** and ***sftp***.
 
     Major changes:
     
-    * 
+    EOF
+
+    git log --pretty='format:* %N' $previousversion.. | grep -v "^* $" >> docs/manual/docs/overview/changes/version-$newversion.md
+
+    cat <<EOF > docs/manual/docs/overview/changes/version-$newversion.md
     
     and more \... see [$version issues](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+milestone%3A$version+is%3Aclosed) and [pull requests](https://github.com/geonetwork/core-geonetwork/pulls?page=3&q=is%3Apr+milestone%3A$version+is%3Aclosed) for full details.
     EOF
     ```
     
-    Update above markdown file. 
+    Fill in the above markdown file, removing any unused headings.
 
-    Update links and navigation:
+4. Update links and navigation:
     
     * ``docs/manual/mkdocs.yml``
     * ``docs/manual/docs/overview/change-log/index.md``
     * ``docs/manual/docs/overview/change-log/latest.md``
     * ``docs/manual/docs/overview/change-log/stable.md``
     * ``docs/manual/docs/overview/change-log/archive.md``
+    
+    Test documentation locally:
+    ```
+    cd docs/manual
+    mkdocs serve
+    ```
+    Once running check the new page:
+    ```
+    open http://localhost:8000/ocverview/change-log/$newversion
+    ```
 
-2.  Commit & tag the new version
+5.  Commit & tag the new version
 
     ``` shell
     # Then commit the new version
