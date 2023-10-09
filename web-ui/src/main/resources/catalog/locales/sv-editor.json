@@ -44,13 +44,13 @@
     "removeField": "Ta bort detta fält",
     "addXpath-help": "Att uppdatera poster med XPath kräver noggrant definierade ändringar. En ändring definieras av:",
     "addXpathTitle": "en valfri titel",
-    "addXpathXpath": "en obligatorisk <a href='http://xmlfr.org/w3c/TR/xpath/'> XPath </a> som pekar på elementet/elementen som ska uppdateras. XPath kan inte innehålla ett filteruttryck.",
+    "addXpathXpath": "a mandatory <a href='https://www.w3.org/TR/1999/REC-xpath-19991116/'>XPath</a> to point to the element(s) to update. XPath may contain a filter expression.",
     "addXpathInsertMode": "en slags uppdatering",
     "xpath": "XPath",
     "xpathValue": "Text eller XML - värde",
     "gn_create": "Skapa elementet",
-    "gn_add": "Lägg till eller skapa ett element eller värde (i den första motsvarande föräldern)",
-    "gn_replace": "Byt ut element eller värde (i den första motsvarande föräldern)",
+    "gn_add": "Add the element or value (in all matching parents) or create it",
+    "gn_replace": "Replace the element or value (in all matching parents)",
     "gn_delete": "Ta bort alla matchande element",
     "addXpathValue": "ett värde som kan vara ett XML-utdrag om inställningen inte tas bort",
     "chooseASet": "1. Välj poster",
@@ -428,5 +428,6 @@
     "confirmCancelEdit": "Vill du annullera alla ändringar och stänga redigeraren?",
     "allowEditGroupMembers": "Allow group editors to edit",
     "wmsSelectedLayers": "Selected layers",
-    "wmsSelectedLayersNone": "No layers selected"
+    "wmsSelectedLayersNone": "No layers selected",
+    "remoteAssociatedMetadataTitlePlaceholder": "Remote associated metadata title"
 }
