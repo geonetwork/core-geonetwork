@@ -390,8 +390,8 @@
               case "stamen":
                 //We make watercolor the default layer
                 var type = layerInfo.name ? layerInfo.name : "watercolor",
-                  source = new ol.source.Stamen({
-                    layer: type
+                  source = new ol.source.StadiaMaps({
+                    layer: type.indexOf("stamen_") === 0 ? type : "stamen_" + type
                   });
                 source.set("type", type);
                 defer.resolve(
@@ -911,6 +911,9 @@
             };
 
             var loadFunction = function (imageTile, src) {
+              imageTile.getImage().src = src;
+              return;
+              // TODO: OL8
               $http.head(src).then(
                 function (r) {
                   imageTile.getImage().src = src;
@@ -2331,8 +2334,8 @@
               case "stamen":
                 //We make watercolor the default layer
                 var type = opt && opt.name ? opt.name : "watercolor",
-                  source = new ol.source.Stamen({
-                    layer: type
+                  source = new ol.source.StadiaMaps({
+                    layer: type.indexOf("stamen_") === 0 ? type : "stamen_" + type
                   });
                 source.set("type", type);
                 return new ol.layer.Tile({
