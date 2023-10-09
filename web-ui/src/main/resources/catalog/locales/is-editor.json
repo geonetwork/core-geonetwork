@@ -44,13 +44,13 @@
     "removeField": "Fjarlægja þennan dálk",
     "addXpath-help": "Ef uppfæra þarf færslur með því að nota XPath þarf vandlega skilgreiningu á þeim breytingum. Breyting er skilgreind sem: ",
     "addXpathTitle": "valfrjáls titill",
-    "addXpathXpath": "a mandatory <a href='http://xmlfr.org/w3c/TR/xpath/'>XPath</a> to point to the element(s) to update. XPath may contain a filter expression.",
+    "addXpathXpath": "a mandatory <a href='https://www.w3.org/TR/1999/REC-xpath-19991116/'>XPath</a> to point to the element(s) to update. XPath may contain a filter expression.",
     "addXpathInsertMode": "gerð uppfærslu",
     "xpath": "XPath",
     "xpathValue": "Texti eða XML gildi",
     "gn_create": "Búa til þáttinn",
-    "gn_add": "Bættu við þætti eða gildi (í fyrsta samsvarandi yfirflokki) eða búðu það til",
-    "gn_replace": "Skipta út þætti eða gildi (í fyrsta samsvarandi foreldri)",
+    "gn_add": "Add the element or value (in all matching parents) or create it",
+    "gn_replace": "Replace the element or value (in all matching parents)",
     "gn_delete": "Fjarlægja öll samsvarandi atriði",
     "addXpathValue": "a value, which could be an XML snippet if the mode is not 'delete'",
     "chooseASet": "1. Veldu sett af færslum",
@@ -428,5 +428,6 @@
     "confirmCancelEdit": "Do you want to cancel all changes and close the editor?",
     "allowEditGroupMembers": "Allow group editors to edit",
     "wmsSelectedLayers": "Selected layers",
-    "wmsSelectedLayersNone": "No layers selected"
+    "wmsSelectedLayersNone": "No layers selected",
+    "remoteAssociatedMetadataTitlePlaceholder": "Remote associated metadata title"
 }
