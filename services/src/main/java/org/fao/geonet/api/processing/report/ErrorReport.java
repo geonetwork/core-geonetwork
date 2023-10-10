@@ -27,11 +27,8 @@ import org.fao.geonet.Util;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
 
-/**
- * Created by francois on 20/05/16.
- */
-@XmlElement(value = "error")
 @XmlAccessorType(XmlAccessType.PUBLIC_MEMBER)
 public class ErrorReport extends Report {
     private String stack;
@@ -46,7 +43,7 @@ public class ErrorReport extends Report {
         this.stack = "";
     }
 
-    @XmlElement(value = "stacktrace")
+    @XmlElement(name = "stacktrace")
     public String getStack() {
         return stack;
     }

@@ -25,6 +25,8 @@ package org.fao.geonet.api.processing.report;
 
 import org.fao.geonet.domain.ISODate;
 
+import javax.xml.bind.annotation.XmlElement;
+
 /**
  * A simple report.
  */
@@ -40,7 +42,6 @@ public abstract class Report {
         this.date = new ISODate();
     }
 
-    @XmlElement(value = "message")
     public String getMessage() {
         return message;
     }
@@ -50,7 +51,6 @@ public abstract class Report {
         return this;
     }
 
-    @XmlElement(value = "uuid")
     public String getUuid() {
         return uuid;
     }
@@ -60,7 +60,6 @@ public abstract class Report {
         return this;
     }
 
-    @XmlElement(value = "draft")
     public boolean isDraft() {
         return draft;
     }
@@ -70,7 +69,6 @@ public abstract class Report {
         return this;
     }
 
-    @XmlElement(value = "approved")
     public boolean isApproved() {
         return approved;
     }
@@ -80,7 +78,7 @@ public abstract class Report {
         return this;
     }
 
-    @XmlElement(value = "datetime")
+    @XmlElement(name = "datetime")
     public String getDate() {
         return date.getDateAndTime();
     }

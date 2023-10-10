@@ -146,7 +146,6 @@ public abstract class ProcessingReport
         unregister();
     }
 
-    @XmlElement(value = "errors")
     public List<Report> getErrors() {
         return errors;
     }
@@ -155,7 +154,6 @@ public abstract class ProcessingReport
         this.errors.add(new ErrorReport(error));
     }
 
-    @XmlElement(value = "infos")
     public List<InfoReport> getInfos() {
         return infos;
     }
