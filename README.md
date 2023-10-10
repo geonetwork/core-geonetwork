@@ -1,10 +1,10 @@
 # GeoNetwork Open-source
 
-# Build Health
+## Build Health
 
 [![Build Status](https://github.com/geonetwork/core-geonetwork/actions/workflows/linux.yml/badge.svg?branch=main)](https://github.com/geonetwork/core-geonetwork/actions/workflows/linux.yml?query=branch%3Amain)
 
-# Features
+## Features
 
 * Immediate search access to local and distributed geospatial catalogues
 * Uploading and downloading of data, graphics, documents, pdf files and any other content type
@@ -15,15 +15,18 @@
 * Fine-grained access control with group and user management
 * Multi-lingual user interface
 
-# Documentation
+## Documentation
 
-User documentation is managed in the [geonetwork/doc](https://github.com/geonetwork/doc) repository covering all releases of GeoNetwork.
+The Geonetwork Manual and Online Help are included in the `docs/manual` folder. This content is compiled into html pages during a release for a publishing on docs.geonetwork-opensource.org website.
 
-The `docs` folder includes [geonetwork/doc](https://github.com/geonetwork/doc) as a git submodule. This documentation is compiled into html pages during a release for publishing on the [geonetwork-opensource.org](http://geonetwork-opensource.org) website.
+* [docs.geonetwork-opensource.org](https://docs.geonetwork-opensource.org)
 
-Developer documentation located in README.md files in the code-base:
+The online help is compiled into html pages during a release and is included in the `war` web archive.
 
-* General documentation for the project as a whole is in this README.md
-* [Software Development Documentation](/software_development/) provides instructions for setting up a development environment, building Geonetwork, compiling user documentation, and making a releases
-* Module specific documentation can be found in each module (assuming there is module specific documentation required)
+## Developer Documentation
 
+Developer documentation located in ``README.md`` files in the code-base:
+
+* General documentation for the project as a whole is in this [README.md](README.md)
+* [Software Development Documentation](/software_development/) provides instructions for setting up a development environment, building Geonetwork, compiling user documentation, and making a releases.
+* Module specific documentation can be found in each module:
