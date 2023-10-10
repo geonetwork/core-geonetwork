@@ -40,7 +40,7 @@ jobs:
         maven-version: 3.6.3
     - name: Build with Maven
       run: |
-        mvn -B -ntp -V install -DskipTests=true -Dmaven.javadoc.skip=true -Pwith-doc
+        mvn -B -ntp -V install -DskipTests=true -Dmaven.javadoc.skip=true -Pdocs
     - name: Remove SNAPSHOT jars from repository
       run: |
         find ~/.m2/repository -name "*SNAPSHOT*" -type d | xargs rm -rf {}
