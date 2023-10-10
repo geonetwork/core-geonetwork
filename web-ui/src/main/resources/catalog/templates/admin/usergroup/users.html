@@ -545,6 +545,7 @@
           <form id="gn-password-reset" class="form-horizontal" name="gnPasswordReset">
             <input type="hidden" name="_csrf" value="{{csrf}}" />
             <div
+              data-ng-if="!user.isAdministratorOrMore()"
               class="form-group"
               data-ng-class="gnPasswordReset.passwordOld.$error.required ? 'has-error' : ''"
             >
