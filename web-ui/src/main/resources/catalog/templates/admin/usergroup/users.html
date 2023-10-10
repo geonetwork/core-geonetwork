@@ -378,7 +378,9 @@
         <div class="modal-body">
           <form id="gn-password-reset" class="form-horizontal" name="gnPasswordReset">
               <input type="hidden" name="_csrf" value="{{csrf}}"/>
-            <div class="form-group"
+            <div
+		data-ng-if="!user.isAdministratorOrMore()" 
+		class="form-group"
                  data-ng-class="gnPasswordReset.passwordOld.$error.required ? 'has-error' : ''">
               <label class="control-label col-sm-3" data-translate="">passwordOld</label>
               <div class="col-sm-9">
