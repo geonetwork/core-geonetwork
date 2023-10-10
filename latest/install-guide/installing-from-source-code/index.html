@@ -99,7 +99,7 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../.." title="GeoNetwork Opensource (EN)" class="md-header__button md-logo" aria-label="GeoNetwork Opensource (EN)" data-md-component="logo">
+    <a href="https://geonetwork-opensource.org/" title="GeoNetwork Opensource (EN)" class="md-header__button md-logo" aria-label="GeoNetwork Opensource (EN)" data-md-component="logo">
       
   <img src="../../assets/geonetwork-logo.svg" alt="logo">
 
@@ -444,7 +444,7 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../.." title="GeoNetwork Opensource (EN)" class="md-nav__button md-logo" aria-label="GeoNetwork Opensource (EN)" data-md-component="logo">
+    <a href="https://geonetwork-opensource.org/" title="GeoNetwork Opensource (EN)" class="md-nav__button md-logo" aria-label="GeoNetwork Opensource (EN)" data-md-component="logo">
       
   <img src="../../assets/geonetwork-logo.svg" alt="logo">
 
@@ -1583,8 +1583,8 @@
 <p>If you need a more powerful container, we recommend <a href="http://tomcat.apache.org">Apache Tomcat</a>. Tomcat provides load balancing, fault tolerance and other production features. Apache Tomcat is widely used with many organizations standardizing on Tomcat for all their Java Web Applications.</p>
 <p>We recommend the following stable releases of Tomcat:</p>
 <ul>
-<li>Apache Tomcat 8.5</li>
 <li>Apache Tomcat 9.0</li>
+<li>Apache Tomcat 8.5</li>
 </ul>
 <h3 id="database">Database</h3>
 <p>Regarding storage, you need a Database Management System (DBMS) like Oracle, MySQL, Postgresql etc. GeoNetwork comes with an embedded DBMS (H2) which is used by default during installation. This DBMS can be used for small or desktop installations of no more than a few thousand metadata records with one or two users. If you have heavier demands then you should use a professional, stand alone DBMS.</p>
@@ -1682,13 +1682,13 @@
 </span></code></pre></div>
 <p>Please refer to the <a href="http://www.sonatype.com/books/mvnref-book/reference/public-book.html">Maven documentation</a> for any other options.</p>
 <h3 id="run-embedded-jetty-server">Run embedded Jetty server</h3>
-<p>Maven comes with built-in support for Jetty via a <a href="http://docs.codehaus.org/display/JETTY/Maven+Jetty+Plugin">plug-in</a>.</p>
+<p>Maven comes with built-in support for Jetty via a <a href="https://eclipse.dev/jetty/documentation/jetty-9/index.html#maven-and-jetty">plug-in</a>.</p>
 <p>To run GeoNetwork with the embedded Jetty server you have to change directory to the root of the <strong>web</strong> module, and then execute the following Maven command:</p>
 <div class="language-shell highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>mvn<span class="w"> </span>jetty:run<span class="w"> </span>-Penv-dev
 </span></code></pre></div>
-<p>After a while, GeoNetwork should be accessible at: <a href="http://localhost:8080/geonetwork">http://localhost:8080/geonetwork</a></p>
-<p>For changes related to the user interface in the <code>web-ui</code> module or the metadata schemas in the <code>as</code> module, these can be deployed in Jetty executing the following Maven command in the <strong>web</strong> module:</p>
-<div class="language-shell highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>mvn<span class="w"> </span>process-resources
+<p>After some moments of startup and initialization, GeoNetwork is available at: <a href="http://localhost:8080/geonetwork">http://localhost:8080/geonetwork</a></p>
+<p>For changes related to the user interface in the <code>web-ui</code> module or the metadata schemas in the <code>schemeas</code> module, these can be deployed in Jetty executing the following Maven command in the <strong>web</strong> module:</p>
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>mvn<span class="w"> </span>process-resources<span class="w"> </span>-DschemasCopy<span class="o">=</span><span class="nb">true</span>
 </span></code></pre></div>
 
 
