@@ -89,7 +89,10 @@ public class URITemplateProxyServlet extends org.mitre.dsmiley.httpproxy.URITemp
             "Vary",
             "Access-Control-Allow-Credentials",
             "Strict-Transport-Security",
-            "Etag"};
+            "Etag",
+            "X-Forwarded-Host",
+            "X-Forwarded-Proto",
+            "X-Forwarded-Prefix"};
         for (String header : headers) {
             hopByHopHeaders.addHeader(new BasicHeader(header, null));
         }
