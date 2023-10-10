@@ -12,7 +12,6 @@ edit_uri: edit/mkdocs/docs/manual/docs
 # Copyright
 copyright: Copyright &copy; 2001 - 2023 FAO-UN and others
 
-
 extra_css:
   - stylesheets/extra.css
 
@@ -86,6 +85,7 @@ extra:
   version:
     provider: mike
     default: stable
+  homepage: https://geonetwork-opensource.org/
   social:
     - icon: fontawesome/brands/github
       link: https://github.com/geonetwork
