@@ -49,6 +49,10 @@
           if (scope.showPortalSwitcher) {
             getPortals();
           }
+
+          scope.sortByLabel = function (portal) {
+            return portal.label[scope.lang];
+          };
         }
       };
     }
