@@ -99,7 +99,7 @@ public class CswFilter2Es extends AbstractFilterVisitor {
 
     private boolean useFilter = true;
 
-    // Stack to build the ElasticSearch Query
+    // Stack to build the Elasticsearch Query
     Deque<String> stack = new ArrayDeque<String>();
 
     private final String templateNot = " {\"bool\": {\n" +

@@ -7,7 +7,7 @@ At the end of the installation process you will end up with the web applications
 Host ports requirements:
 
 -   Java web server [Apache Tomcat](http://tomcat.apache.org/) or [Jetty](https://www.eclipse.org/jetty/): 8080
--   [ElasticSearch](https://www.elastic.co/elasticsearch/): 9200
+-   [Elasticsearch](https://www.elastic.co/elasticsearch/): 9200
 -   [Kibana](https://www.elastic.co/kibana/): 5601
 -   Database eg. 5432 for a default [PostgreSQL](https://www.postgresql.org/) installation
 

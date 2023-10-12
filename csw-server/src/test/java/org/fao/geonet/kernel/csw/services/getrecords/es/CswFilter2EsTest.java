@@ -45,7 +45,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
- * CswFilter2Es converts (XML-based) CSW queries into ElasticSearch queries.
+ * CswFilter2Es converts (XML-based) CSW queries into Elasticsearch queries.
  * These ES-queries are in JSON-notation. We do not want to test the resulting
  * JSON-String char-by-char as this is error-prone.<br>
  * <p>
@@ -292,10 +292,10 @@ class CswFilter2EsTest {
 
     /**
      * Converts xml-string into OGC Filter expression using a specific filter
-     * version. This Filter is then finally converted to an ElasticSearch expression
+     * version. This Filter is then finally converted to an Elasticsearch expression
      * and checked against the expected output.
      *
-     * @param expected          JsonNode representing the expected ElasticSearch
+     * @param expected          JsonNode representing the expected Elasticsearch
      *                          query.
      * @param actual            XML text of the OGC Filter.
      * @param filterSpecVersion see {@link FilterCapabilities}

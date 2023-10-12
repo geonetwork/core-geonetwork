@@ -153,7 +153,7 @@ public class EsSearchManager implements ISearchManager {
             .build();
 
         FIELDLIST_RELATED_SCRIPTED = ImmutableMap.<String, String>builder()
-            // ElasticSearch scripted field to get the first overview url. Scripted fields must return single values.
+            // Elasticsearch scripted field to get the first overview url. Scripted fields must return single values.
             .put("overview", "return params['_source'].overview == null ? [] : params['_source'].overview.stream().map(f -> f.url).findFirst().orElse('');")
             .build();
     }
