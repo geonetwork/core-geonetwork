@@ -83,6 +83,7 @@ class RemoteHarvester implements IHarvester<CswRemoteHarvestResult> {
         RemoteHarvesterConfiguration remoteHarvesterConfiguration = new RemoteHarvesterConfiguration();
         remoteHarvesterConfiguration.setUrl(params.capabUrl);
         remoteHarvesterConfiguration.setLongTermTag(params.getName());
+        remoteHarvesterConfiguration.setDoNotSort(params.doNotSort);
         remoteHarvesterConfiguration.setNumberOfRecordsPerRequest(params.numberOfRecordsPerRequest);
         remoteHarvesterConfiguration.setLookForNestedDiscoveryService(params.remoteHarvesterNestedServices);
         remoteHarvesterConfiguration.setErrorConfigDuplicatedUuids(params.errorConfigDuplicatedUuids);
