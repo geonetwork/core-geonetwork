@@ -219,7 +219,7 @@
                   aria-label="{{'remove' | translate}} {{resource.title | gnLocalized: lang}}"
                   data-ng-if="readonly !== true"
                   data-gn-confirm-click="{{'removeOnlinesrcConfirm' | translate:{url: resource.lUrl} }}"
-                  data-gn-click-and-spin="onlinesrcService.removeOnlinesrc(resource)"
+                  data-gn-click-and-spin="onlinesrcService.removeOnlinesrc(resource, relations.onlines)"
                 >
                   <i class="fa fa-times text-danger"></i>
                 </a>

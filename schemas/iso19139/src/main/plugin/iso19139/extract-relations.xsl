@@ -34,6 +34,7 @@
                 xmlns:gmx="http://www.isotc211.org/2005/gmx"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
                 xmlns:util="java:org.fao.geonet.util.XslUtil"
+                xmlns:uuid="java:java.util.UUID"
                 xmlns:gn-fn-rel="http://geonetwork-opensource.org/xsl/functions/relations"
                 version="2.0"
                 exclude-result-prefixes="#all">
@@ -126,8 +127,9 @@
               <xsl:value-of select="concat('#', upper-case(util:twoCharLangCode($lang, 'EN')))"/>
             </xsl:variable>
             <xsl:variable name="url" select="gmd:linkage/gmd:URL"/>
+            <xsl:variable name="uid" select="uuid:randomUUID()"/>
             <id>
-              <xsl:value-of select="$url"/>
+              <xsl:value-of select="$uid"/>
             </id>
             <title>
               <xsl:apply-templates mode="get-iso19139-localized-string"

@@ -712,7 +712,16 @@
          *
          * @param {Object} onlinesrc the online resource to remove
          */
-        removeOnlinesrc: function (onlinesrc) {
+        removeOnlinesrc: function (onlinesrc, onlines) {
+          //Passing the index of the xml/xpath into the remove process xsl
+          var xslIndex = -1;
+          for (var i = 0; i < onlines.length; i++) {
+            if (onlinesrc.id === onlines[i].id) {
+              xslIndex = i+1;
+              break;
+            }
+          }
+
           var url = onlinesrc.lUrl || onlinesrc.url;
           if (
             url.match(".*/api/records/' + gnCurrentEdit.uuid + '/attachments/.*") != null
@@ -724,6 +733,7 @@
             this,
             setParams("onlinesrc-remove", {
               id: gnCurrentEdit.id,
+              resourceIndex: xslIndex,
               url: url,
               name: $filter("gnLocalized")(onlinesrc.title)
             })

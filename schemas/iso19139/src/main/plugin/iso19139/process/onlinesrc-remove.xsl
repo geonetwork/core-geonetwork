@@ -30,6 +30,7 @@ Stylesheet used to remove a reference to a online resource.
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 version="2.0">
 
+  <xsl:param name="resourceIndex"/>
   <xsl:param name="url"/>
   <xsl:param name="name"/>
 
@@ -42,12 +43,12 @@ Stylesheet used to remove a reference to a online resource.
 
   <!-- Remove geonet:* elements. -->
   <xsl:template
-    match="geonet:*|gmd:onLine[normalize-space(gmd:CI_OnlineResource/gmd:linkage/gmd:URL) = $url and normalize-space(gmd:CI_OnlineResource/gmd:name/gco:CharacterString) = normalize-space($name)]"
+    match="geonet:*|gmd:onLine[normalize-space(gmd:CI_OnlineResource/gmd:linkage/gmd:URL) = $url and normalize-space(gmd:CI_OnlineResource/gmd:name/gco:CharacterString) = normalize-space($name)][number($resourceIndex)]"
     priority="2"/>
   <xsl:template
-    match="geonet:*|gmd:onLine[normalize-space(gmd:CI_OnlineResource/gmd:linkage/gmd:URL) = $url and count(gmd:CI_OnlineResource/gmd:name/gmd:PT_FreeText/gmd:textGroup[gmd:LocalisedCharacterString = $name]) > 0]"
+    match="geonet:*|gmd:onLine[normalize-space(gmd:CI_OnlineResource/gmd:linkage/gmd:URL) = $url and count(gmd:CI_OnlineResource/gmd:name/gmd:PT_FreeText/gmd:textGroup[gmd:LocalisedCharacterString = $name]) > 0][number($resourceIndex)]"
     priority="2"/>
   <xsl:template
-    match="geonet:*|gmd:onLine[normalize-space(gmd:CI_OnlineResource/gmd:linkage/gmd:URL) = $url and normalize-space(gmd:CI_OnlineResource/gmd:protocol/*) = 'WWW:DOWNLOAD-1.0-http--download']"
+    match="geonet:*|gmd:onLine[normalize-space(gmd:CI_OnlineResource/gmd:linkage/gmd:URL) = $url and normalize-space(gmd:CI_OnlineResource/gmd:protocol/*) = 'WWW:DOWNLOAD-1.0-http--download'][number($resourceIndex)]"
     priority="2"/>
 </xsl:stylesheet>
