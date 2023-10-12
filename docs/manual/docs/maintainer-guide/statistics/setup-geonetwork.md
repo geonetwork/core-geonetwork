@@ -2,7 +2,7 @@
 
 !!! note
 
-    GeoNetwork package should be build using the Maven `es` profile in order to be able to configure the search/content statistics to use ElasticSearch/Kibana:
+    GeoNetwork package should be build using the Maven `es` profile in order to be able to configure the search/content statistics to use Elasticsearch/Kibana:
     
     ``` shell
     $ cd GN_SOURCES/
@@ -47,9 +47,9 @@ To setup the search/content statistics in GeoNetwork, do the following steps:
 
 ## Content statistics/validation
 
-Content and validation status statistics are available also from to `us` in <http://localhost:8080/geonetwork/srv/eng/admin.console#/dashboard>, but require to index manually the content in ElasticSearch. This will be improved in future versions.
+Content and validation status statistics are available also from to `us` in <http://localhost:8080/geonetwork/srv/eng/admin.console#/dashboard>, but require to index manually the content in Elasticsearch. This will be improved in future versions.
 
--   To index the content and validation status in ElasticSearch, go to <http://localhost:8080/geonetwork/srv/eng/admin.console#/tools> and select the following option:
+-   To index the content and validation status in Elasticsearch, go to <http://localhost:8080/geonetwork/srv/eng/admin.console#/tools> and select the following option:
 
     ![](img/content-indexing.png)
 

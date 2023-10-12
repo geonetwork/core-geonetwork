@@ -43,7 +43,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.util.List;
 
 /**
- * CswFilter2Es converts (XML-based) CSW queries into ElasticSearch queries.
+ * CswFilter2Es converts (XML-based) CSW queries into Elasticsearch queries.
  * These ES-queries are in JSON-notation. We do not want to test the resulting
  * JSON-String char-by-char as this is error-prone.<br>
  * <p>
