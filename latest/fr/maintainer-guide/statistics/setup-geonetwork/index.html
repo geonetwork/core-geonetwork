@@ -1737,7 +1737,7 @@
         
   
   <span class="md-ellipsis">
-    Setup ElasticSearch
+    Setup Elasticsearch
   </span>
   
 
@@ -2858,7 +2858,7 @@
 <h1 id="statistics_geonetwork">Setup GeoNetwork</h1>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>GeoNetwork package should be build using the Maven <code>es</code> profile in order to be able to configure the search/content statistics to use ElasticSearch/Kibana:</p>
+<p>GeoNetwork package should be build using the Maven <code>es</code> profile in order to be able to configure the search/content statistics to use Elasticsearch/Kibana:</p>
 <div class="language-shell highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>GN_SOURCES/
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>$<span class="w"> </span>mvn<span class="w"> </span>clean<span class="w"> </span>install<span class="w"> </span>-Penv-prod,es
 </span></code></pre></div>
@@ -2898,10 +2898,10 @@
 </li>
 </ul>
 <h2 id="content-statisticsvalidation">Content statistics/validation</h2>
-<p>Content and validation status statistics are available also from to <code>us</code> in <a href="http://localhost:8080/geonetwork/srv/eng/admin.console#/dashboard">http://localhost:8080/geonetwork/srv/eng/admin.console#/dashboard</a>, but require to index manually the content in ElasticSearch. This will be improved in future versions.</p>
+<p>Content and validation status statistics are available also from to <code>us</code> in <a href="http://localhost:8080/geonetwork/srv/eng/admin.console#/dashboard">http://localhost:8080/geonetwork/srv/eng/admin.console#/dashboard</a>, but require to index manually the content in Elasticsearch. This will be improved in future versions.</p>
 <ul>
 <li>
-<p>To index the content and validation status in ElasticSearch, go to <a href="http://localhost:8080/geonetwork/srv/eng/admin.console#/tools">http://localhost:8080/geonetwork/srv/eng/admin.console#/tools</a> and select the following option:</p>
+<p>To index the content and validation status in Elasticsearch, go to <a href="http://localhost:8080/geonetwork/srv/eng/admin.console#/tools">http://localhost:8080/geonetwork/srv/eng/admin.console#/tools</a> and select the following option:</p>
 <p><img alt="" src="../../../../maintainer-guide/statistics/img/content-indexing.png" /></p>
 </li>
 <li>
