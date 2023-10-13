@@ -169,7 +169,7 @@
   "ui-facetConfig": "Konfigurace faset",
   "ui-facetConfig-help": "Tato konfigurace se používá k zobrazení fazet pomocí agregace termínů nebo filtrů. Další informace najdete <a href=\"https://geonetwork-opensource.org/manuals/4.0.x/en/customizing-application/configuring-faceted-search.html\">v dokumentaci</a> .",
   "resourceEvents": "Zdrojové události",
-  "resourceEdition": "Edition",
+  "resourceEdition": "Edice",
   "resourceVerticalRange": "Vertikální rozsah",
   "searchBadRequest": "Dotaz vrátil chybu. Podrobnosti najdete na konzole.",
   "searchInvalidResponse": "Dotaz vrátil neplatnou odpověď. Podrobnosti najdete na konzole.",
@@ -412,7 +412,7 @@
   "text/xml; subtype=gml/3.1.1": "GML 3.1.1",
   "text/xml; subtype=gml/3.2": "GML 3.2",
   "lastCreatedRecords": "Naposledy vytvořené záznamy",
-  "associationType": "Association type",
-  "initiativeType": "Initiative type",
-  "associatedTo": "Associated "
+  "associationType": "Typ přidružení",
+  "initiativeType": "Typ iniciativy",
+  "associatedTo": "Přidružený"
 }

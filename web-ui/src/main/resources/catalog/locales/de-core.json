@@ -379,6 +379,7 @@
     "layerNotAvailableInMapProj": "Der Dienst stellt den Layer in der Kartenprojektion '{{proj}}' nicht zur Verfügung. Der Layer wird zwar der Karte hinzugefügt, wird jedoch möglicherweise deswegen nicht richtig angezeigt.",
     "layerCRSNotFound": "Der Layer enthält keine Informationen zum Koordinatenreferenzsystem. Das kann mit einer WMS Version kleiner als 1.3.0 zusammenhängen.",
     "layerTileLoadError": "Beim Laden der Kachel <a href='{{url}}' target='_blank'>'{{url | limitTo: 30}} ...'</a> für Layer'{{layer}}' ging irgendetwas schief.",
+    "layerProtocolNotSupported": "The following protocol is not supported yet in the map viewer: {{type}}",
     "getCapFailure": "Die WMS GetCapabilities Anfrage ist fehlgeschlagen",
     "standards": "Metadatenstandard",
     "documentStandard": "Output-Schema",

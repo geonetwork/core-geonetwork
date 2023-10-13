@@ -379,6 +379,7 @@
     "layerNotAvailableInMapProj": "The service biedt geen laag in de kaart projectie '{{proj}}'. De laag wordt aan de kaart toegevoegd maar wordt misschien niet goed weergegeven.",
     "layerCRSNotFound": "De service bevat geen projectie informatie. Mogelijk hangt dit samen met een WMS versie lager dan 1.3.0.",
     "layerTileLoadError": "Er is iets mis gegaan bij het laden van tegel <a href='{{url}}' target='_blank'>'{{url | limitTo: 30}} ...'</a> voor laag '{{layer}}'.",
+    "layerProtocolNotSupported": "The following protocol is not supported yet in the map viewer: {{type}}",
     "getCapFailure": "Het was niet mogelijk verbinding te leggen met de WMS service.  Het WMS getCapabilites request faalde.",
     "standards": "Metadata standaard",
     "documentStandard": "Metadata standaard",

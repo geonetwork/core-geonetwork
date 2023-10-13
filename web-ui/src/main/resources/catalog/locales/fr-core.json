@@ -379,6 +379,7 @@
     "layerNotAvailableInMapProj": "Le service ne fournit par la couche dans le système de projection de la carte '{{proj}}'. La couche sera ajoutée mais risque de ne pas s'afficher correctement.",
     "layerCRSNotFound": "La couche n'indique pas de système de projection. Cela peut être lié à un problème de version WMS < 1.3.0.",
     "layerTileLoadError": "Un incident est survenu lors du chargement de la tuile <a href='{{url}}' target='_blank'>'{{url | limitTo: 30}} ...'</a> pour la couche '{{layer}}'.",
+    "layerProtocolNotSupported": "The following protocol is not supported yet in the map viewer: {{type}}",
     "getCapFailure": "Les demandes GetCapabilities du WMS ont échoué",
     "standards": "Standards",
     "documentStandard": "Standards",
