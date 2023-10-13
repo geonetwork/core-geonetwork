@@ -1460,8 +1460,8 @@
     "ui-topCustomMenu-help": "Liste des ID des pages statiques à afficher dans l'en-tête : <ul><li>Quand une liste est fournie, uniquement les pages configurées sont affichées dans l'ordre.</li><li>Quand aucune liste n'est fournie, la liste des pages créées pour l'en-tête sont affichées.</li>.\nLes pages peuvent être insérées entre les menus du catalogue : <pre>[\"gn-site-name-menu\",\n    \"gn-portal-switcher\",\n    \"gn-search-menu\",\n    \"gn-map-menu\",\n    \"gn-contribute-menu\",\n    \"gn-admin-menu\"]</pre>. Une page peut être insérée comme un menu eg. <pre>\"documentation\"</pre> ou avec un sous menu : <pre>{\"Quick search\": [\n  \"searchForAfrica\", \n  \"forReview\"\n]}</pre>",
     "ui-footerCustomMenu": "Personnalisation des menus du pied de page",
     "ui-footerCustomMenu-help": "Liste des identifiants des pages associée avec une section : <ul><li>Quand une liste est fournie, les liens sont affichés dans cet ordre.</li><li>Quand aucune liste n'est fournie, toutes les pages de cette section sont affichées sans ordre spécifique.</li>",
-    "es.url": "ElasticSearch server",
-    "es.version": "ElasticSearch version",
+    "es.url": "Elasticsearch server",
+    "es.version": "Elasticsearch version",
     "es.index": "Nom de l'index",
     "systemPropertiesProxyConfiguration": "Utilisation des paramètres de proxy http dans les propriétés du système."
 }

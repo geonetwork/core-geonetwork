@@ -1460,8 +1460,8 @@
     "ui-topCustomMenu-help": "List of static page IDs associated with the header section to display: <ul><li>When a list is provided, the links are displayed in the order provided and only for the pages listed.</li><li>When a list is not provided, all static pages configured for the header section are displayed, with no guaranteed order.</li>.\nPages can be inserted in between catalogue default menu which are: <pre>[\"gn-site-name-menu\",\n    \"gn-portal-switcher\",\n    \"gn-search-menu\",\n    \"gn-map-menu\",\n    \"gn-contribute-menu\",\n    \"gn-admin-menu\"]</pre>. Insert a page as a simple menu using its id eg. <pre>\"documentation\"</pre> or as a submenu using an object: <pre>{\"Quick search\": [\n  \"searchForAfrica\", \n  \"forReview\"\n]}</pre>",
     "ui-footerCustomMenu": "Footer custom menu items",
     "ui-footerCustomMenu-help": "List of static page IDs associated with the footer section to display: <ul><li>When a list is provided, the links are displayed in the order provided and only for the pages listed.</li><li>When a list is not provided, all static pages configured for the footer section are displayed, with no guaranteed order.</li>",
-    "es.url": "ElasticSearch server",
-    "es.version": "ElasticSearch version",
+    "es.url": "Elasticsearch server",
+    "es.version": "Elasticsearch version",
     "es.index": "Index name",
     "systemPropertiesProxyConfiguration": "Using http proxy settings in system properties."
 }
