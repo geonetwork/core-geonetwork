@@ -379,6 +379,7 @@
     "layerNotAvailableInMapProj": "Í þjónustunni kemur lagið kemur ekki í kortvörpuninni '{{proj}}'. Laginu verður bætt á kortið en mun ekki birtast rétt. ",
     "layerCRSNotFound": "Þetta lag veitir ekki upplýsingar um hnitakerfi. Þetta gæti tengst því að WMS versionin er eldri en 1.3.0.",
     "layerTileLoadError": "Eitthvað fór úrskeiðis meðan verið var að hlaða tile <a href='{{url}}' target='_blank'>'{{url | limitTo: 30}} ...'</a> fyrir lag '{{layer}}'.",
+    "layerProtocolNotSupported": "The following protocol is not supported yet in the map viewer: {{type}}",
     "getCapFailure": "WMS getCapabilities beiðnin heppnaðist ekki",
     "standards": "Lýsigagnastaðall",
     "documentStandard": "Lýsigagnastaðall",

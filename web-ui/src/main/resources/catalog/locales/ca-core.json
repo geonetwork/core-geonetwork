@@ -379,6 +379,7 @@
     "layerNotAvailableInMapProj": "The service does not provide the layer in the map projection '{{proj}}'. The layer will be added to the map but may not be displayed properly.",
     "layerCRSNotFound": "La capa no conté informació del sistema de coordenades. Això podria ser degut a una versió de WMS anterior a 1.3.0.",
     "layerTileLoadError": "Something went wrong while loading tile <a href='{{url}}' target='_blank'>'{{url | limitTo: 30}} ...'</a> for layer '{{layer}}'.",
+    "layerProtocolNotSupported": "The following protocol is not supported yet in the map viewer: {{type}}",
     "getCapFailure": "La petició WMS GetCapabilities ha fallat",
     "standards": "Estàndard de metadades",
     "documentStandard": "Estàndard de metadades",

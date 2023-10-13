@@ -379,6 +379,7 @@
     "layerNotAvailableInMapProj": "The service does not provide the layer in the map projection '{{proj}}'. The layer will be added to the map but may not be displayed properly.",
     "layerCRSNotFound": "Tasolle ei ole saatavissa koordinaattijärjestelmätietoa. Tämä saattaa liittyä 1.3.0 vanhempaan WMS-versioon.",
     "layerTileLoadError": "Something went wrong while loading tile <a href='{{url}}' target='_blank'>'{{url | limitTo: 30}} ...'</a> for layer '{{layer}}'.",
+    "layerProtocolNotSupported": "The following protocol is not supported yet in the map viewer: {{type}}",
     "getCapFailure": "WMS 'getCapabilities'-pyyntö epäonnistui",
     "standards": "Metatietostandardi",
     "documentStandard": "Metatietostandardi",
