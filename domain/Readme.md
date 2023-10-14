@@ -52,10 +52,10 @@ Spring Data allows four different ways to write queries. (For more in-depth expl
    - The implementation will use the normal EntityManager (JPA) API for constructing the queries.
    - **Examples: (See tests for example usage)**
      * [MetadataRepositoryCustom](src/main/java/org/fao/geonet/repository/MetadataRepositoryCustom.java)
-     * [MetadataRepositoryImpl](src/main/java/org/fao/geonet/repository/MetadataRepositoryImpl.java)
+     * [MetadataRepositoryCustomImpl](src/main/java/org/fao/geonet/repository/MetadataRepositoryCustomImpl.java)
 4. Standard JPA querying
    - One can obtain an EntityManager by using the @PersistentContext annotation on a field in a Spring bean.
    - The EntityManager can be used to write queries.
    - All Queries should be contained in the same module as the domain object that it is querying, unless the module is a plugin module.
    - **Examples: (See tests for example usage)**
-     * [MetadataStatisticsQueries](src/main/java/org/fao/geonet/repository/statistic/MetadataStatisticsQueries.java)
+     * [MetadataReportsQueries](src/main/java/org/fao/geonet/repository/reports/MetadataReportsQueries.java)
