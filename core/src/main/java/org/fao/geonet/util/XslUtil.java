@@ -23,6 +23,7 @@
 
 package org.fao.geonet.util;
 
+import co.elastic.clients.elasticsearch.core.search.Hit;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -44,16 +45,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.lucene.search.join.ScoreMode;
-import org.elasticsearch.action.search.MultiSearchRequest;
-import org.elasticsearch.action.search.MultiSearchResponse;
-import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.client.RequestOptions;
-import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.QueryBuilder;
-import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.search.SearchHits;
-import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.SystemInfo;
 import org.fao.geonet.api.records.attachments.FilesystemStore;
@@ -1588,7 +1580,8 @@ public final class XslUtil {
         Element recordLinks = new Element("recordLinks");
 
         try {
-            MultiSearchRequest request = new MultiSearchRequest();
+            // TODO: ES 8
+            /*MultiSearchRequest request = new MultiSearchRequest();
 
 
             SearchRequest serviceRequest = new SearchRequest(searchManager.getDefaultIndex());
@@ -1657,7 +1650,7 @@ public final class XslUtil {
 
             if (hasParent) {
                 recordLinks.addContent(buildRecordLink(response.getResponses()[3].getResponse().getHits(), "brothersAndSisters"));
-            }
+            }*/
         } catch (Exception e) {
             Log.error(Geonet.GEONETWORK,
                     "Get related document '" + uuid + "' error: " + e.getMessage(), e);
@@ -1678,24 +1671,27 @@ public final class XslUtil {
         return null;
     }
 
-    private static List<Element> buildRecordLink(SearchHits hits, String type) {
+    private static List<Element> buildRecordLink(List<Hit> hits, String type) {
         ObjectMapper mapper = new ObjectMapper();
         SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
         String recordUrlPrefix = settingManager.getNodeURL() + "api/records/";
         ArrayList<Element> listOfLinks = new ArrayList<>();
+
+        ObjectMapper objectMapper = new ObjectMapper();
+
         hits.forEach(record -> {
             Element recordLink = new Element("recordLink");
             recordLink.setAttribute("type", "object");
             ObjectNode recordLinkProperties = mapper.createObjectNode();
 
-            recordLinkProperties.put("to", record.getId());
+            recordLinkProperties.put("to", record.id());
             recordLinkProperties.put("origin", "catalog");
             recordLinkProperties.put("created", "bySearch");
-            Map<String, String> titleObject = (Map<String, String>) record.getSourceAsMap().get("resourceTitleObject");
+            Map<String, String> titleObject = (Map<String, String>) objectMapper.convertValue(record.source(), Map.class).get("resourceTitleObject");
             if (titleObject != null) {
                 recordLinkProperties.put("title", titleObject.get("default"));
             }
-            recordLinkProperties.put("url", recordUrlPrefix + record.getId());
+            recordLinkProperties.put("url", recordUrlPrefix + record.id());
             recordLinkProperties.put("type", type);
 
             try {

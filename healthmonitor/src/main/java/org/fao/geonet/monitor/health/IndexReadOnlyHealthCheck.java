@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2023 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -23,13 +23,11 @@
 
 package org.fao.geonet.monitor.health;
 
+import co.elastic.clients.elasticsearch.indices.GetIndicesSettingsRequest;
+import co.elastic.clients.elasticsearch.indices.GetIndicesSettingsResponse;
 import com.yammer.metrics.core.HealthCheck;
 import jeeves.monitor.HealthCheckFactory;
 import jeeves.server.context.ServiceContext;
-import org.elasticsearch.action.admin.indices.settings.get.GetSettingsRequest;
-import org.elasticsearch.action.admin.indices.settings.get.GetSettingsResponse;
-import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.client.RequestOptions;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.springframework.context.ApplicationContext;
@@ -54,12 +52,16 @@ public class IndexReadOnlyHealthCheck implements HealthCheckFactory {
                     ApplicationContext applicationContext = ApplicationContextHolder.get();
                     EsSearchManager searchMan = applicationContext.getBean(EsSearchManager.class);
                     String indexBlockRead = "index.blocks.read_only_allow_delete";
-                    GetSettingsRequest request = new GetSettingsRequest();
-                    request.names(indexBlockRead);
-                    GetSettingsResponse settings = searchMan.getClient().getClient()
-                        .indices().getSettings(request, RequestOptions.DEFAULT);
 
-                    Boolean isReadOnly = "true".equals(settings.getSetting(searchMan.getDefaultIndex(),  indexBlockRead));
+                    GetIndicesSettingsRequest request = GetIndicesSettingsRequest.of(
+                        b -> b.index(searchMan.getDefaultIndex())
+                            .name(indexBlockRead)
+                    );
+
+                    GetIndicesSettingsResponse settings = searchMan.getClient().getClient()
+                        .indices().getSettings(request);
+
+                    Boolean isReadOnly = "true".equals(settings.get(indexBlockRead).toString());
 
                     if (!isReadOnly) {
                         return Result.healthy(String.format(

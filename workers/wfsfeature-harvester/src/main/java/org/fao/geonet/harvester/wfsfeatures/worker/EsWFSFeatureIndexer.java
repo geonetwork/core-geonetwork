@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2015 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2023 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -23,6 +23,11 @@
 
 package org.fao.geonet.harvester.wfsfeatures.worker;
 
+import co.elastic.clients.elasticsearch._types.Result;
+import co.elastic.clients.elasticsearch.core.BulkRequest;
+import co.elastic.clients.elasticsearch.core.BulkResponse;
+import co.elastic.clients.elasticsearch.core.IndexRequest;
+import co.elastic.clients.elasticsearch.core.IndexResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -33,14 +38,6 @@ import com.google.common.collect.ImmutableMap;
 import org.apache.camel.Exchange;
 import org.apache.camel.spring.SpringCamelContext;
 import org.apache.jcs.access.exception.InvalidArgumentException;
-import org.elasticsearch.action.ActionListener;
-import org.elasticsearch.action.bulk.BulkRequest;
-import org.elasticsearch.action.bulk.BulkResponse;
-import org.elasticsearch.action.index.IndexRequest;
-import org.elasticsearch.action.index.IndexResponse;
-import org.elasticsearch.client.RequestOptions;
-import org.elasticsearch.xcontent.XContentType;
-import org.elasticsearch.rest.RestStatus;
 import org.fao.geonet.harvester.wfsfeatures.model.WFSHarvesterParameter;
 import org.fao.geonet.index.es.EsRestClient;
 import org.fao.geonet.kernel.search.EsSearchManager;
@@ -82,8 +79,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static org.elasticsearch.rest.RestStatus.CREATED;
-import static org.elasticsearch.rest.RestStatus.OK;
 
 
 // TODO: GeoServer WFS 1.0.0 in some case return
@@ -545,18 +540,21 @@ public class EsWFSFeatureIndexer {
         }
 
         public boolean saveHarvesterReport() {
-            IndexRequest request = new IndexRequest(index);
-            request.id(report.get("id").toString());
-            request.source(report);
+            IndexRequest request = IndexRequest.of(
+                b -> b.index(index)
+                    .id(report.get("id").toString())
+                    .document(report)
+            );
+
             try {
-                IndexResponse response = client.getClient().index(request, RequestOptions.DEFAULT);
-                if (response.status() == RestStatus.CREATED || response.status() == RestStatus.OK) {
+                IndexResponse response = client.getClient().index(request);
+                if (response.result() == Result.Created) {
                     LOGGER.info("Report saved for service {} and typename {}. Report id is {}",
                         url, typeName, report.get("id"));
                 } else {
                     LOGGER.info("Failed to save report for {}. Error was '{}'.",
                         typeName,
-                        response.getResult());
+                        response.result());
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -588,7 +586,8 @@ public class EsWFSFeatureIndexer {
         protected BulkRequest bulk;
         protected int bulkSize;
         protected int failuresCount;
-        ActionListener<BulkResponse> listener;
+        // TODO: ES 8
+        //ActionListener<BulkResponse> listener;
 
         public BulkResutHandler(Phaser phaser, String typeName, String url, int firstFeatureIndex, Report report, String metadataUuid) {
             this.phaser = phaser;
@@ -598,22 +597,23 @@ public class EsWFSFeatureIndexer {
             this.report = report;
 
             this.metadataUuid = metadataUuid;
-            this.bulk = new BulkRequest(index);
+            this.bulk = new BulkRequest.Builder().index(index).build();
             this.bulkSize = 0;
             this.failuresCount = 0;
             LOGGER.debug("  {} - Indexing bulk (size {}) starting at {} ...",
                 typeName, featureCommitInterval, firstFeatureIndex);
 
-            listener = new ActionListener<BulkResponse>() {
+            // TODO: ES 8
+            /*listener = new ActionListener<BulkResponse>() {
                 @Override
                 public void onResponse(BulkResponse bulkResponse) {
                     AtomicInteger bulkFailures = new AtomicInteger();
-                    if (bulkResponse.hasFailures()) {
-                        Arrays.stream(bulkResponse.getItems()).forEach(e -> {
-                            if (e.status() != OK
-                                && e.status() != CREATED) {
+                    if (bulkResponse.errors()) {
+                        bulkResponse.items().forEach(e -> {
+                            if (e.status() != 200
+                                && e.status() != 201) {
                                 String msg = String.format(
-                                    "Feature %s: Indexing error. Error is: %s", e.getId(), e.getFailure().toString());
+                                    "Feature %s: Indexing error. Error is: %s", e.id(), e.error().toString());
                                 report.put("error_ss", msg);
                                 LOGGER.warn(msg);
                                 bulkFailures.getAndIncrement();
@@ -623,7 +623,7 @@ public class EsWFSFeatureIndexer {
                     LOGGER.debug("  {} - Features [{}-{}] indexed in {} ms{}.", new Object[]{
                         typeName, firstFeatureIndex, firstFeatureIndex + bulkSize,
                         System.currentTimeMillis() - begin,
-                        bulkResponse.hasFailures() ?
+                        bulkResponse.errors() ?
                             " but with " + bulkFailures + " errors" : ""
                     });
                     failuresCount = bulkFailures.get();
@@ -642,7 +642,7 @@ public class EsWFSFeatureIndexer {
                     LOGGER.error(msg);
                     phaser.arriveAndDeregister();
                 }
-            };
+            };*/
         }
 
         public int getBulkSize() {
@@ -661,8 +661,10 @@ public class EsWFSFeatureIndexer {
             }
 
             String id = String.format("%s#%s#%s", url, typeName, featureId);
-            bulk.add(new IndexRequest(index).id(id)
-                .source(jacksonMapper.writeValueAsString(rootNode), XContentType.JSON));
+            // TODO: ES 8
+            //bulk.operations().add(new IndexRequest.Builder().index(index).id(id)
+            //    .document(jacksonMapper.writeValueAsString(rootNode)).build());
+
 //                .routing(ROUTING_KEY));
             bulkSize++;
         }
@@ -683,7 +685,9 @@ public class EsWFSFeatureIndexer {
 
         public void launchBulk(EsRestClient client) throws Exception {
             prepareLaunch();
-            client.getClient().bulkAsync(this.bulk, RequestOptions.DEFAULT, this.listener);
+
+            // TODO: ES 8
+            //client.getAsynchClient().bulk(this.bulk, this.listener);
         }
     }
 

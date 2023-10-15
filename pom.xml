@@ -1192,9 +1192,10 @@
         <artifactId>jaxb-impl</artifactId>
         <version>2.3.1</version>
       </dependency>
+
       <dependency>
-        <groupId>org.elasticsearch.client</groupId>
-        <artifactId>elasticsearch-rest-high-level-client</artifactId>
+        <groupId>co.elastic.clients</groupId>
+        <artifactId>elasticsearch-java</artifactId>
         <version>${es.version}</version>
       </dependency>
       <dependency>
@@ -1527,10 +1528,10 @@
     <jetty.port>8080</jetty.port>
     <jetty.stop.port>8090</jetty.stop.port>
 
-    <es.version>7.17.15</es.version>
+    <es.version>8.10.4</es.version>
     <es.platform>linux-x86_64</es.platform>
     <es.installer.extension>tar.gz</es.installer.extension>
-    <es.protocol>http</es.protocol>
+    <es.protocol>https</es.protocol>
     <es.port>9200</es.port>
     <es.host>localhost</es.host>
     <es.url>${es.protocol}://${es.host}:${es.port}</es.url>

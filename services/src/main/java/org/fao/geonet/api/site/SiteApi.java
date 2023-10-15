@@ -23,6 +23,8 @@
 
 package org.fao.geonet.api.site;
 
+import co.elastic.clients.elasticsearch.core.CountRequest;
+import co.elastic.clients.elasticsearch.core.CountResponse;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -34,8 +36,6 @@ import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.client.RequestOptions;
-import org.elasticsearch.client.core.CountRequest;
-import org.elasticsearch.client.core.CountResponse;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.NodeInfo;
@@ -683,9 +683,9 @@ public class SiteApi {
 
         EsSearchManager searchMan = ApplicationContextHolder.get().getBean(EsSearchManager.class);
         CountResponse countResponse = esRestClient.getClient().count(
-            new CountRequest(searchMan.getDefaultIndex()),
-            RequestOptions.DEFAULT);
-        infoIndexDbSynch.put("index.count", countResponse.getCount());
+            CountRequest.of(b -> b.index(searchMan.getDefaultIndex()))
+        );
+        infoIndexDbSynch.put("index.count", countResponse.count());
         return infoIndexDbSynch;
     }
 
