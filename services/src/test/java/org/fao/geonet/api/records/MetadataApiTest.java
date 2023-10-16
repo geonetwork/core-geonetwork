@@ -46,6 +46,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -235,11 +236,12 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
             mockMvc.perform(get("/srv/api/records/" + this.uuid)
                     .session(mockHttpSession)
                     .accept(entry.getKey()))
-                .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(forwardedUrl(entry.getValue()));
         }
     }
+
+
 
     @Test
     public void getRecordThruSpringLocalServiceInvoker() throws Exception {
@@ -262,7 +264,6 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
         mockMvc.perform(get("/srv/api/records/" + this.uuid + "/formatters/xml")
                 .session(mockHttpSession)
                 .accept(MediaType.APPLICATION_XML))
-            .andDo(print())
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_XML))
             .andExpect(header().string(HttpHeaders.CONTENT_DISPOSITION,
@@ -273,7 +274,6 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
         mockMvc.perform(get("/srv/api/records/" + this.uuid + "/formatters/json")
                 .session(mockHttpSession)
                 .accept(MediaType.APPLICATION_JSON))
-            .andDo(print())
             .andExpect(status().isOk())
             .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
             .andExpect(header().string(HttpHeaders.CONTENT_DISPOSITION,
@@ -291,7 +291,6 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
         mockMvc.perform(get("/srv/api/records/" + this.uuid + "/formatters/xml").param("addSchemaLocation", "true")
                 .session(mockHttpSession)
                 .accept(MediaType.APPLICATION_XML))
-            .andDo(print())
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_XML))
             .andExpect(header().string(HttpHeaders.CONTENT_DISPOSITION,
@@ -303,7 +302,6 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
         mockMvc.perform(get("/srv/api/records/" + this.uuid + "/formatters/xml").param("addSchemaLocation", "false")
                 .session(mockHttpSession)
                 .accept(MediaType.APPLICATION_XML))
-            .andDo(print())
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_XML))
             .andExpect(header().string(HttpHeaders.CONTENT_DISPOSITION,
@@ -323,7 +321,6 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
         mockMvc.perform(get("/srv/api/records/" + this.uuid + "/formatters/xml").param("increasePopularity", "true")
                 .session(mockHttpSession)
                 .accept(MediaType.APPLICATION_XML))
-            .andDo(print())
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_XML))
             .andExpect(header().string(HttpHeaders.CONTENT_DISPOSITION,
@@ -344,7 +341,6 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
         mockMvc.perform(get("/srv/api/records/" + this.uuid + "/formatters/xml").param("increasePopularity", "false")
                 .session(mockHttpSession)
                 .accept(MediaType.APPLICATION_XML))
-            .andDo(print())
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_XML))
             .andExpect(header().string(HttpHeaders.CONTENT_DISPOSITION,
@@ -416,7 +412,6 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
 //        mockMvc.perform(get("/srv/api/records/" + this.uuid + "/formatters/zip")
 //            .session(mockHttpSession)
 //            .accept("application/zip"))
-//            .andDo(print())
 //            .andExpect(status().isOk())
 //            .andExpect(content().contentType(MEF_V2_ACCEPT_TYPE))
 //            .andExpect(header().string(HttpHeaders.CONTENT_DISPOSITION,
@@ -426,7 +421,6 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
         mockMvc.perform(get("/srv/api/records/" + this.uuid + "/formatters/zip")
                 .session(mockHttpSession)
                 .accept(MEF_V1_ACCEPT_TYPE))
-            .andDo(print())
             .andExpect(status().isOk())
             .andExpect(content().contentType(MEF_V1_ACCEPT_TYPE))
             .andExpect(header().string(HttpHeaders.CONTENT_DISPOSITION,
@@ -436,7 +430,6 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
         mockMvc.perform(get("/srv/api/records/" + this.uuid + "/formatters/zip")
                 .session(mockHttpSession)
                 .accept(MEF_V1_ACCEPT_TYPE))
-            .andDo(print())
             .andExpect(status().isOk())
             .andExpect(content().contentType(MEF_V1_ACCEPT_TYPE))
             .andExpect(header().string(HttpHeaders.CONTENT_DISPOSITION,
