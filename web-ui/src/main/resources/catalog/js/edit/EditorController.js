@@ -206,6 +206,7 @@
 
           // Enable workflow functions
           $scope.isMdWorkflowEnable = gnConfig["metadata.workflow.enable"];
+          $scope.viewConfig = gnGlobalSettings.gnCfg.mods.recordview;
 
           if ($routeParams.id) {
             // Check requested metadata exists

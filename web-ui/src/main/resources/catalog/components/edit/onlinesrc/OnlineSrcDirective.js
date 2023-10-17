@@ -879,6 +879,13 @@
                 }
 
                 scope.isEditing = angular.isDefined(linkToEdit);
+
+                // In edit mode or in add mode when the link type is provided and
+                // it's not the default addOnlinesrc value, can't be edited
+                scope.isEditableLinkType =
+                  !scope.isEditing &&
+                  (!angular.isDefined(linkType) || linkType === "addOnlinesrc");
+
                 // Flag used when editing an online resource to prevent the watcher to update the online
                 // resource description when loading the dialog.
                 scope.processSelectedWMSLayer = false;

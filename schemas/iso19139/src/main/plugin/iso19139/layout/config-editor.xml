@@ -519,7 +519,17 @@
       <sidePanel>
         <directive data-gn-need-help="creating-metadata"/>
         <directive data-gn-validation-report=""/>
-        <directive data-gn-onlinesrc-list=""/>
+        <directive data-gn-onlinesrc-list=""
+                   data-types="parent|dataset|service|source|sibling|associated|fcats"/>
+
+        <directive data-gn-distribution-resources-panel="gnCurrentEdit.metadata"
+                   data-mode="viewConfig.distributionConfig.layout || ''"
+                   data-editable="true"
+                   data-related-config="[{ types: 'onlines', filter: 'protocol:OGC:.*|ESRI:.*|atom.*', title: 'API', editActions: ['addOnlinesrc']},
+                                         { types: 'onlines', filter: 'protocol:.*DOWNLOAD.*|DB:.*|FILE:.*', title: 'download', editActions: ['addOnlinesrc']},
+                                         { types: 'onlines', filter:'-protocol:OGC:.*|ESRI:.*|atom.*|.*DOWNLOAD.*|DB:.*|FILE:.* AND -function:legend|featureCatalogue|dataQualityReport', title: 'links', editActions: ['addOnlinesrc']}]"
+        />
+
         <directive gn-geo-publisher=""
                    data-ng-if="gnCurrentEdit.geoPublisherConfig"
                    data-config="{{gnCurrentEdit.geoPublisherConfig}}"
@@ -3190,7 +3200,15 @@
                    data-type="onlines"/>
 
         <directive data-gn-onlinesrc-list=""
-                   data-types="onlinesrc|parent|dataset|service|source|sibling|associated|fcats"/>
+                   data-types="parent|dataset|service|source|sibling|associated|fcats"/>
+
+        <directive data-gn-distribution-resources-panel="gnCurrentEdit.metadata"
+                   data-mode="viewConfig.distributionConfig.layout || ''"
+                   data-editable="false"
+                   data-related-config="[{ types: 'onlines', filter: 'protocol:OGC:.*|ESRI:.*|atom.*', title: 'API', editActions: ['addOnlinesrc']},
+                                         { types: 'onlines', filter: 'protocol:.*DOWNLOAD.*|DB:.*|FILE:.*', title: 'download', editActions: ['addOnlinesrc']},
+                                         { types: 'onlines', filter:'-protocol:OGC:.*|ESRI:.*|atom.*|.*DOWNLOAD.*|DB:.*|FILE:.* AND -function:legend|featureCatalogue|dataQualityReport', title: 'links', editActions: ['addOnlinesrc']}]"
+        />
 
         <directive gn-geo-publisher=""
                    data-ng-if="gnCurrentEdit.geoPublisherConfig"
@@ -3306,7 +3324,17 @@
       <sidePanel>
         <directive data-gn-need-help="creating-metadata"/>
         <directive data-gn-validation-report=""/>
-        <directive data-gn-onlinesrc-list=""/>
+        <directive data-gn-onlinesrc-list=""
+                   data-types="parent|dataset|service|source|sibling|associated|fcats"/>
+
+        <directive data-gn-distribution-resources-panel="gnCurrentEdit.metadata"
+                   data-mode="viewConfig.distributionConfig.layout || ''"
+                   data-editable="true"
+                   data-related-config="[{ types: 'onlines', filter: 'protocol:OGC:.*|ESRI:.*|atom.*', title: 'API', editActions: ['addOnlinesrc']},
+                                         { types: 'onlines', filter: 'protocol:.*DOWNLOAD.*|DB:.*|FILE:.*', title: 'download', editActions: ['addOnlinesrc']},
+                                         { types: 'onlines', filter:'-protocol:OGC:.*|ESRI:.*|atom.*|.*DOWNLOAD.*|DB:.*|FILE:.* AND -function:legend|featureCatalogue|dataQualityReport', title: 'links', editActions: ['addOnlinesrc']}]"
+        />
+
         <directive gn-geo-publisher=""
                    data-ng-if="gnCurrentEdit.geoPublisherConfig"
                    data-config="{{gnCurrentEdit.geoPublisherConfig}}"

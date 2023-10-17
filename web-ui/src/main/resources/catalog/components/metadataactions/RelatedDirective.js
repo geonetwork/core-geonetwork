@@ -189,6 +189,326 @@
     }
   ]);
 
+  /**
+   * Directive to display a panel in the metadata editor with a header and a list of distributions grouped by type.
+   *
+   */
+  module.directive("gnDistributionResourcesPanel", [
+    function () {
+      return {
+        restrict: "A",
+        templateUrl: function (elem, attrs) {
+          return (
+            attrs.template ||
+            "../../catalog/components/metadataactions/partials/distributionResourcesPanel.html"
+          );
+        },
+        scope: {
+          md: "=gnDistributionResourcesPanel",
+          mode: "=",
+          relatedConfig: "=",
+          editable: "="
+        },
+        link: function (scope, element, attrs, controller) {}
+      };
+    }
+  ]);
+
+  /**
+   * Directive to display a list of distributions grouped by type.
+   */
+  module.directive("gnDistributionResourcesContainer", [
+    "gnRelatedResources",
+    "gnConfigService",
+    "gnOnlinesrc",
+    function (gnRelatedResources, gnConfigService, gnOnlinesrc) {
+      return {
+        restrict: "A",
+        templateUrl: function (elem, attrs) {
+          return (
+            attrs.template ||
+            "../../catalog/components/metadataactions/partials/distributionResourcesContainer.html"
+          );
+        },
+        scope: {
+          md: "=gnDistributionResourcesContainer",
+          mode: "=",
+          relatedConfig: "=",
+          editable: "="
+        },
+        link: function (scope, element, attrs, controller) {
+          scope.lang = scope.lang || scope.$parent.lang;
+          scope.relations = {};
+          scope.relatedConfigUI = [];
+          scope.config = gnRelatedResources;
+          scope.onlinesrcService = gnOnlinesrc;
+
+          var convertLinkForOnlinesrcDialog = function (links) {
+            if (angular.isArray(links)) {
+              for (var i = 0; i < links.length; i++) {
+                links[i] = {
+                  id: links[i].url,
+                  url: { eng: links[i].url },
+                  type: "onlinesrc",
+                  title: { eng: links[i].name },
+                  protocol: links[i].protocol,
+                  description: { eng: links[i].description },
+                  function: links[i]["function"],
+                  mimeType: links[i].mimeType,
+                  applicationProfile: links[i].applicationProfile,
+                  lUrl: links[i].url,
+                  locTitle: links[i].nameObject["default"],
+                  locDescription: links[i].descriptionObject["default"],
+                  locUrl: links[i].urlObject["default"]
+                };
+              }
+            }
+
+            return links;
+          };
+
+          scope.relatedConfig.forEach(function (config) {
+            // TODO: Is this required, multiple types per section?
+            var t = config.types.split("|");
+
+            config.relations = {};
+
+            t.forEach(function (type) {
+              // TODO Review: this directive is only for onlines
+              if (type !== "onlines") return;
+
+              //config.relations[type] = scope.md.link || {};
+              config.relations[type] = convertLinkForOnlinesrcDialog(scope.md.link || {});
+
+              //config.relations[type] =
+              //  (type === "onlines" ? scope.md.link : scope.md.related[type]) || {};
+              config.relationFound = config.relations[type].length > 0;
+
+              var value = config.relations[type];
+
+              // Check if tabs needs to be displayed
+              if (scope.mode === "tabset" && config.filter && angular.isArray(value)) {
+                var filters = gnConfigService.parseFilters(config.filter);
+
+                config.relations[type] = [];
+                for (var i = 0; i < value.length; i++) {
+                  gnConfigService.testFilters(filters, value[i]) &&
+                    config.relations[type].push(value[i]);
+                }
+                config.relationFound = config.relations[type].length > 0;
+              } else {
+                config.relations[type] = value;
+              }
+
+              scope.relatedConfigUI.push(config);
+            });
+          });
+        }
+      };
+    }
+  ]);
+
+  module.directive("gnRelatedDistribution", [
+    "gnRelatedService",
+    "gnGlobalSettings",
+    "gnSearchSettings",
+    "gnRelatedResources",
+    "gnExternalViewer",
+    "gnConfigService",
+    "gnUrlUtils",
+    "gnOnlinesrc",
+    function (
+      gnRelatedService,
+      gnGlobalSettings,
+      gnSearchSettings,
+      gnRelatedResources,
+      gnExternalViewer,
+      gnConfigService,
+      gnUrlUtils,
+      gnOnlinesrc
+    ) {
+      return {
+        restrict: "A",
+        templateUrl: function (elem, attrs) {
+          return (
+            attrs.template ||
+            "../../catalog/components/metadataactions/partials/relatedDistribution.html"
+          );
+        },
+        scope: {
+          md: "=gnRelatedDistribution",
+          template: "@",
+          types: "@",
+          title: "@",
+          altTitle: "@",
+          list: "@",
+          // Filter a type based on an attribute.
+          // Can't be used when multiple types are requested
+          // eg. data-filter="associationType:upstreamData"
+          // data-filter="protocol:OGC:.*|ESRI:.*"
+          // data-filter="-protocol:OGC:.*"
+          filter: "@",
+          container: "@",
+          user: "=",
+          hasResults: "=?",
+          layout: "@",
+          // Only apply to card layout
+          size: "@",
+          editable: "="
+        },
+        require: "?^gnRelatedObserver",
+        link: function (scope, element, attrs, controller) {
+          var promise;
+          var elem = element[0];
+          scope.lang = scope.lang || scope.$parent.lang;
+          scope.onlinesrcService = gnOnlinesrc;
+          element.on("$destroy", function () {
+            // Unregister the directive in the observer if it is defined
+            if (controller) {
+              controller.unregisterGnRelated(elem);
+            }
+          });
+
+          if (controller) {
+            // Register the directive in the observer
+            controller.registerGnRelated(elem);
+          }
+
+          scope.sizeConfig = {};
+          scope.showAllItems = function (type) {
+            scope.sizeConfig[type] =
+              scope.sizeConfig[type] === scope.size
+                ? scope.relations[type].length
+                : scope.size;
+          };
+          scope.loadRelations = function (relation) {
+            var relationCount = 0;
+            scope.relationFound = false;
+            angular.forEach(relation, function (value, idx) {
+              if (!value) {
+                return;
+              }
+
+              if (idx !== "onlines") return;
+
+              // init object if required
+              scope.relations = scope.relations || {};
+              scope.hasResults = true;
+
+              if (!scope.relations[idx]) {
+                scope.relations[idx] = [];
+                scope.sizeConfig[idx] = scope.size;
+              }
+              if (scope.filter && angular.isArray(value)) {
+                var filters = gnConfigService.parseFilters(scope.filter);
+
+                scope.relations[idx] = [];
+                for (var i = 0; i < value.length; i++) {
+                  gnConfigService.testFilters(filters, value[i]) &&
+                    scope.relations[idx].push(value[i]);
+                }
+              } else {
+                scope.relations[idx] = value;
+              }
+
+              // For draft version append "approved=false" to url
+              if (scope.md.draft === "y") {
+                for (var i = 0; i < scope.relations[idx].length; i++) {
+                  if (
+                    scope.relations[idx][i].url.match(
+                      ".*/api/records/" + scope.md.uuid + "/attachments/.*"
+                    ) != null
+                  ) {
+                    scope.relations[idx][i].url = gnUrlUtils.remove(
+                      scope.relations[idx][i].url,
+                      ["approved"],
+                      true
+                    );
+                    scope.relations[idx][i].url = gnUrlUtils.append(
+                      scope.relations[idx][i].url,
+                      "approved=false"
+                    );
+                  }
+                }
+              }
+
+              relationCount += scope.relations[idx].length;
+            });
+            scope.relationFound = relationCount > 0;
+          };
+
+          scope.updateRelations = function () {
+            scope.relations = null;
+            if (scope.id) {
+              scope.relationFound = false;
+              if (controller) {
+                controller.startGnRelatedRequest(elem);
+              }
+              (promise = gnRelatedService.get(
+                scope.id,
+                scope.types,
+                scope.md.draft !== "y"
+              )).then(
+                function (data) {
+                  scope.loadRelations(data);
+                  if (angular.isDefined(scope.container) && scope.relations == null) {
+                    $(scope.container).hide();
+                  }
+                  if (controller) {
+                    controller.finishRequest(elem, scope.relationFound);
+                  }
+                },
+                function () {
+                  if (controller) {
+                    controller.finishRequest(elem, false);
+                  }
+                }
+              );
+            }
+          };
+
+          scope.getTitle = function (link) {
+            return link.title["#text"] || link.title;
+          };
+
+          scope.getOrderBy = function (link) {
+            return link && link.resourceTitle ? link.resourceTitle : link.locTitle;
+          };
+
+          scope.externalViewerAction = function (mainType, link, md) {
+            gnExternalViewer.viewService(md, link);
+          };
+          scope.hasAction = gnRelatedResources.hasAction;
+          scope.getBadgeLabel = gnRelatedResources.getBadgeLabel;
+          scope.isLayerProtocol = gnRelatedResources.isLayerProtocol;
+          scope.externalViewerActionEnabled = gnExternalViewer.isEnabledViewAction();
+
+          scope.config = gnRelatedResources;
+
+          scope.$watchCollection("md", function (n, o) {
+            if ((n && n !== o) || angular.isUndefined(scope.id)) {
+              if (promise && angular.isFunction(promise.abort)) {
+                promise.abort();
+              }
+              if (scope.md != null) {
+                if (scope.md.related || scope.md.link) {
+                  var relations = {};
+                  scope.types.split("|").map(function (t) {
+                    relations[t] = t === "onlines" ? scope.md.link : scope.md.related[t];
+                  });
+                  scope.loadRelations(relations);
+                } else {
+                  scope.id = scope.md.id;
+                  scope.updateRelations();
+                }
+              }
+            }
+          });
+        }
+      };
+    }
+  ]);
+
   module.directive("gnRelatedList", [
     "gnRelatedResources",
     function (gnRelatedResources) {
