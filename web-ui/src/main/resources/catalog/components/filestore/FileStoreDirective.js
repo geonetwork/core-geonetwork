@@ -147,11 +147,12 @@
       ) {
         return {
           restrict: "A",
-          templateUrl: "../../catalog/components/filestore/" + "partials/filestore.html",
+          templateUrl: "../../catalog/components/filestore/partials/filestore.html",
           scope: {
             uuid: "=gnFileStore",
             selectCallback: "&",
-            filter: "="
+            filter: "=",
+            layout: "@"
           },
           link: function (scope, element, attrs, controller) {
             scope.autoUpload =
@@ -161,13 +162,15 @@
               : attrs["defaultStatus"];
             scope.onlinesrcService = gnOnlinesrc;
             scope.gnCurrentEdit = gnCurrentEdit;
+            scope.selectOptions = { current: undefined };
+            scope.metadataResources = [];
 
             scope.setResource = function (r) {
               scope.selectCallback({ selected: r });
             };
-            scope.metadataResources = [];
 
             scope.loadMetadataResources = function () {
+              console.log(scope.layout, "load");
               return gnfilestoreService
                 .get(scope.uuid, scope.filter)
                 .then(function (response) {
@@ -195,14 +198,21 @@
                 }
               );
             };
+
             scope.deleteResource = function (r) {
               gnfilestoreService.delete(r).then(scope.loadMetadataResources);
             };
+
             scope.$on("gnFileStoreUploadDone", scope.loadMetadataResources);
 
             scope.$watch("filter", function (newValue, oldValue) {
               if (angular.isDefined(scope.uuid) && newValue != oldValue) {
                 scope.loadMetadataResources();
+              }
+            });
+            scope.$watch("selectOptions.current", function (newValue, oldValue) {
+              if (newValue != oldValue) {
+                scope.setResource(scope.selectOptions.current);
               }
             });
             scope.$watch("uuid", function (newValue, oldValue) {
@@ -221,6 +231,9 @@
                 };
               }
             });
+            if (angular.isDefined(scope.uuid)) {
+              scope.loadMetadataResources();
+            }
           }
         };
       }

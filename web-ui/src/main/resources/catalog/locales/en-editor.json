@@ -171,6 +171,8 @@
     "linkToSourceTitle": "Link a source dataset to the current metadata",
     "linkUrl": "URL to remove",
     "fileStore": "Metadata file store",
+    "filestoreUploadAFile": "or upload a new file",
+    "filestoreChooseAFile": "or choose a file from the filestore",
     "openResource": "Open resource",
     "linkMetadata": "Link metadata",
     "setResourceStatus": "Change resource status. This will not update references which may be contained in the metadata document.",
