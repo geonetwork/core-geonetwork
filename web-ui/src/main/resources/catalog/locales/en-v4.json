@@ -31,6 +31,7 @@
   "language.id": "Identifier",
   "language.remove": "Remove language",
   "layerName": "Layer name",
+  "layerNameTooltip": "A layer name from the GetCapabilities document",
   "ogcServiceUrl": "Service URL",
   "translation.addFor": "Add a new translation for",
   "translation.add": "Add",
@@ -414,5 +415,6 @@
   "lastCreatedRecords": "Last created records",
   "associationType": "Association type",
   "initiativeType": "Initiative type",
-  "associatedTo": "Associated "
+  "associatedTo": "Associated ",
+  "overviewDescription": "Overview description"
 }

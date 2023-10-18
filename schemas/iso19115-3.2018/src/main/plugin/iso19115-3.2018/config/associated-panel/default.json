@@ -18,6 +18,7 @@
             "param": "thumbnail_url"
           },
           "name": {
+            "label": "overviewDescription",
             "param": "thumbnail_desc"
           }
         }
@@ -72,14 +73,18 @@
         "process": "onlinesrc-add",
         "fields": {
           "url": {
-            "isMultilingual": false
+            "isMultilingual": false,
+            "label": "ogcServiceUrl"
           },
           "protocol": {
             "value": "OGC:WMS",
             "hidden": true,
             "isMultilingual": false
           },
-          "name": {},
+          "name": {
+            "label": "layerName",
+            "tooltip": "layerNameTooltip"
+          },
           "desc": {},
           "function": {
             "value": "browsing",
@@ -105,7 +110,8 @@
         "process": "onlinesrc-add",
         "fields": {
           "url": {
-            "isMultilingual": false
+            "isMultilingual": false,
+            "label": "ogcServiceUrl"
           },
           "protocol": {
             "value": "OGC:WMS",
@@ -143,7 +149,8 @@
         "process": "onlinesrc-add",
         "fields": {
           "url": {
-            "isMultilingual": false
+            "isMultilingual": false,
+            "label": "ogcServiceUrl"
           },
           "protocol": {
             "value": "OGC:WMTS",
@@ -324,7 +331,8 @@
         "process": "onlinesrc-add",
         "fields": {
           "url": {
-            "isMultilingual": false
+            "isMultilingual": false,
+            "label": "ogcServiceUrl"
           },
           "protocol": {
             "value": "OGC:WFS",
@@ -357,7 +365,8 @@
         "process": "onlinesrc-add",
         "fields": {
           "url": {
-            "isMultilingual": false
+            "isMultilingual": false,
+            "label": "ogcServiceUrl"
           },
           "protocol": {
             "value": "OGC:WCS",
@@ -390,7 +399,8 @@
         "process": "onlinesrc-add",
         "fields": {
           "url": {
-            "isMultilingual": false
+            "isMultilingual": false,
+            "label": "ogcServiceUrl"
           },
           "protocol": {
             "value": "OGC:WFS",

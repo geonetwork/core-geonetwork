@@ -69,7 +69,9 @@
                 class="col-sm-2 control-label"
                 data-gn-field-tooltip="{{schema}}|{{params.linkType.fields.function.tooltip}}"
               >
-                <span data-translate="">onlineFunction</span>
+                <span>
+                  {{(params.linkType.fields.function.label || 'onlineFunction') | translate}}
+                </span>
               </label>
               <div class="col-sm-9">
                 <div
@@ -101,7 +103,9 @@
                 class="col-sm-2 control-label"
                 data-gn-field-tooltip="{{schema}}|{{params.linkType.fields.protocol.tooltip}}"
               >
-                <span data-translate="">protocol</span>
+                <span>
+                  {{(params.linkType.fields.protocol.label || 'protocol') | translate}}
+                </span>
               </label>
               <div class="col-sm-9">
                 <div
@@ -131,7 +135,9 @@
                 class="col-sm-2 control-label"
                 data-gn-field-tooltip="{{schema}}|{{params.linkType.fields.mimeType.tooltip}}"
               >
-                <span data-translate="">mimeType</span>
+                <span>
+                  {{(params.linkType.fields.mimeType.label || 'mimeType') | translate}}
+                </span>
               </label>
               <div class="col-sm-9">
                 <input
@@ -156,9 +162,8 @@
                   id="gn-addonlinesrc-url-label"
                   for="gn-addonlinesrc-url-list-single-input"
                   class="col-sm-2 control-label"
-                  data-translate=""
                   data-gn-field-tooltip="{{schema}}|{{params.linkType.fields.url.tooltip}}"
-                  >url</label
+                  >{{(params.linkType.fields.url.label || 'url') | translate}}</label
                 >
 
                 <div
@@ -315,7 +320,7 @@
                 class="col-sm-2 control-label"
                 data-translate=""
                 data-gn-field-tooltip="{{schema}}|{{params.linkType.fields.name.tooltip}}"
-                >onlineResourceName</label
+                >{{(params.linkType.fields.name.label || 'onlineResourceName') | translate}}</label
               >
               <div
                 id="gn-addonlinesrc-name-single-row"
@@ -370,9 +375,10 @@
                 id="gn-addonlinesrc-description-label"
                 for="gn-addonlinesrc-description-single-textarea"
                 class="col-sm-2 control-label"
-                data-translate=""
                 data-gn-field-tooltip="{{schema}}|{{params.linkType.fields.desc.tooltip}}"
-                >description</label
+                >
+                {{(params.linkType.fields.desc.label || 'description') | translate}}
+              </label
               >
               <div class="col-sm-9" data-ng-if="!params.linkType.fields.desc.directive">
                 <div
@@ -440,7 +446,9 @@
                 class="col-sm-2 control-label"
                 data-translate=""
                 data-gn-field-tooltip="{{schema}}|{{params.linkType.fields.applicationProfile.tooltip}}"
-                >applicationProfile</label
+                >
+                {{(params.linkType.fields.applicationProfile.label || 'applicationProfile') | translate}}
+                </label
               >
               <div class="col-sm-9">
                 <input
