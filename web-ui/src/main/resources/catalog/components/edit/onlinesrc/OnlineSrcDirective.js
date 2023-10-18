@@ -1599,10 +1599,9 @@
               scope.selectUploadedResource = function (res) {
                 if (res && res.url) {
                   var o = {
-                    name: decodeURI(res.id.split("/").splice(2).join("/")),
                     url: res.url
                   };
-                  ["url", "name"].forEach(function (pName) {
+                  ["url"].forEach(function (pName) {
                     setParameterValue(pName, o[pName]);
                   });
                   scope.params.protocol = scope.params.protocol || "WWW:DOWNLOAD";
