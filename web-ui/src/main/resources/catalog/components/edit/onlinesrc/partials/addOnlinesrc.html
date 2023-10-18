@@ -253,6 +253,8 @@
                 <div class="col-sm-1 gn-control"></div>
               </div>
 
+              <div data-gn-url-validator=""></div>
+
               <div
                 id="gn-addonlinesrc-overview-row"
                 class="form-group"
@@ -633,21 +635,5 @@
       data-gn-need-help="linking-documents"
       class="pull-right"
     ></div>
-    <br />
-    <div
-      id="gn-addonlinesrc-add-alert"
-      class="alert alert-warning"
-      data-ng-show="gnAddLink.$valid && !isUrlOk"
-    >
-      <span data-translate="">areYouSureToAddALinkWithError</span>
-      <a
-        class="btn btn-link"
-        target="_blank"
-        data-ng-href="params.url[ctrl.urlCurLang]"
-        data-ng-show="gnAddLink.$valid && !isUrlOk"
-      >
-        {{params.url[ctrl.urlCurLang]}}
-      </a>
-    </div>
   </div>
 </div>

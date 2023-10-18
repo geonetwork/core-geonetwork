@@ -179,6 +179,15 @@
       "gn_urlutils_service",
       "gn_related_directive"
     ])
+    .directive("gnUrlValidator", [
+      function () {
+        return {
+          restrict: "A",
+          templateUrl:
+            "../../catalog/components/edit/onlinesrc/partials/urlValidator.html"
+        };
+      }
+    ])
     .directive("gnRemoteRecordSelector", [
       "$http",
       "gnGlobalSettings",
@@ -1239,6 +1248,14 @@
               scope.onAddSuccess = function () {
                 gnEditor.refreshEditorForm();
                 scope.onlinesrcService.reload = true;
+              };
+
+              scope.isUrlEmpty = function () {
+                var url = scope.params.url;
+                if (angular.isObject(url)) {
+                  url = url[scope.ctrl.urlCurLang];
+                }
+                return (url || "") === "";
               };
 
               /**
