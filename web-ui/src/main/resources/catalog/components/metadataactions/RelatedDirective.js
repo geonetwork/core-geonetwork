@@ -215,7 +215,52 @@
   ]);
 
   /**
-   * Directive to display a list of distributions grouped by type.
+   * Displays a panel with different types of distributions available in the metadata object 'md'.
+   *
+   *  - mode: mode to display the distributions.
+   *      - tabset: displays the distributions in a tabset panel.
+   *      - (other value): displays the distributions in different div blocks.
+   *
+   *  - layout: Layout for the distribution items.
+   *      - card: display the distribution items as a card.
+   *      - (other value): display the distribution items as a list.
+   *
+   *  - editable: when used in the metadata editor, set to true.
+   *
+   *  - relatedConfig: array with the configuration of the distributions to display. For each distribution:
+   *      - types: a list of relation types separated by '|'.
+   *      - filter: Filter a type based on an attribute.
+   *                Can't be used when multiple types are requested
+   *                eg. data-filter="associationType:upstreamData"
+   *                    data-filter="protocol:OGC:.*|ESRI:.*"
+   *                    data-filter="-protocol:OGC:.*"
+   *      - title: title translation key for the relations section.
+   *      - editActions: List of edit actions to add online resources to the distribution.
+   *                     eg. editActions: ['addOnlinesrc'] -> adds a button to open the default dialog to add
+   *                            an online resource.
+   *                         editActions: ['addOnlinesrc', 'onlineDiscoverWMS', 'onlineDiscoverArcGIS'] ->
+   *                            adds a button to open the default dialog to add an online resourceand other 2 buttons
+   *                            with predefined values to add WMS and ArcGIS resources.
+   *
+   * Example configuration (view mode):
+   *
+   * <div data-gn-distribution-resources-container="md"
+   *      data-mode="tabset"
+   *      data-related-config="[{'types': 'onlines', 'filter': 'protocol:OGC:.*|ESRI:.*|atom.*', 'title': 'API'},
+   *                      {'types': 'onlines', 'filter': 'protocol:.*DOWNLOAD.*|DB:.*|FILE:.*', 'title': 'download'},
+   *                      {'types': 'onlines', 'filter': '-protocol:OGC:.*|ESRI:.*|atom.*|.*DOWNLOAD.*|DB:.*|FILE:.*', 'title': 'links'}]">
+   *
+   * </div>
+   *
+   * Example configuration (edit mode):
+   *
+   * <div data-gn-distribution-resources-container="md"
+   *      data-related-config="[{'types': 'onlines', 'filter': 'protocol:OGC:.*|ESRI:.*|atom.*', 'title': 'API', editActions: ['addOnlinesrc']},
+   *                      {'types': 'onlines', 'filter': 'protocol:.*DOWNLOAD.*|DB:.*|FILE:.*', 'title': 'download', editActions: ['addOnlinesrc']},
+   *                      {'types': 'onlines', 'filter': '-protocol:OGC:.*|ESRI:.*|atom.*|.*DOWNLOAD.*|DB:.*|FILE:.*', 'title': 'links', editActions: ['addOnlinesrc']}]">
+   *
+   * </div>
+   *
    */
   module.directive("gnDistributionResourcesContainer", [
     "gnRelatedResources",
@@ -257,27 +302,23 @@
               // TODO Review: this directive is only for onlines
               if (type !== "onlines") return;
 
-              config.relations[type] = scope.md.link || {};
-              //config.relations[type] = convertLinkForOnlinesrcDialog(scope.md.link || {});
+              config.relations = scope.md.link || {};
+              config.relationFound = config.relations.length > 0;
 
-              //config.relations[type] =
-              //  (type === "onlines" ? scope.md.link : scope.md.related[type]) || {};
-              config.relationFound = config.relations[type].length > 0;
-
-              var value = config.relations[type];
+              var value = config.relations;
 
               // Check if tabs needs to be displayed
               if (scope.mode === "tabset" && config.filter && angular.isArray(value)) {
                 var filters = gnConfigService.parseFilters(config.filter);
 
-                config.relations[type] = [];
-                for (var i = 0; i < value.length; i++) {
-                  gnConfigService.testFilters(filters, value[i]) &&
-                    config.relations[type].push(value[i]);
+                config.relations = [];
+                for (var j = 0; j < value.length; j++) {
+                  gnConfigService.testFilters(filters, value[j]) &&
+                    config.relations.push(value[j]);
                 }
-                config.relationFound = config.relations[type].length > 0;
+                config.relationFound = config.relations.length > 0;
               } else {
-                config.relations[type] = value;
+                config.relations = value;
               }
 
               scope.relatedConfigUI.push(config);
