@@ -220,8 +220,8 @@
   module.directive("gnDistributionResourcesContainer", [
     "gnRelatedResources",
     "gnConfigService",
-    "gnOnlinesrc",
-    function (gnRelatedResources, gnConfigService, gnOnlinesrc) {
+    "$injector",
+    function (gnRelatedResources, gnConfigService, $injector) {
       return {
         restrict: "A",
         templateUrl: function (elem, attrs) {
@@ -241,31 +241,9 @@
           scope.relations = {};
           scope.relatedConfigUI = [];
           scope.config = gnRelatedResources;
-          scope.onlinesrcService = gnOnlinesrc;
-
-          var convertLinkForOnlinesrcDialog = function (links) {
-            if (angular.isArray(links)) {
-              for (var i = 0; i < links.length; i++) {
-                links[i] = {
-                  id: links[i].url,
-                  url: { eng: links[i].url },
-                  type: "onlinesrc",
-                  title: { eng: links[i].name },
-                  protocol: links[i].protocol,
-                  description: { eng: links[i].description },
-                  function: links[i]["function"],
-                  mimeType: links[i].mimeType,
-                  applicationProfile: links[i].applicationProfile,
-                  lUrl: links[i].url,
-                  locTitle: links[i].nameObject["default"],
-                  locDescription: links[i].descriptionObject["default"],
-                  locUrl: links[i].urlObject["default"]
-                };
-              }
-            }
-
-            return links;
-          };
+          if ($injector.has("gnOnlinesrc")) {
+            scope.onlinesrcService = $injector.get("gnOnlinesrc");
+          }
 
           scope.relatedConfig.forEach(function (config) {
             // TODO: Is this required, multiple types per section?
@@ -273,12 +251,14 @@
 
             config.relations = {};
 
-            t.forEach(function (type) {
+            for (var i = 0; i < t.length; i++) {
+              var type = t[i];
+
               // TODO Review: this directive is only for onlines
               if (type !== "onlines") return;
 
-              //config.relations[type] = scope.md.link || {};
-              config.relations[type] = convertLinkForOnlinesrcDialog(scope.md.link || {});
+              config.relations[type] = scope.md.link || {};
+              //config.relations[type] = convertLinkForOnlinesrcDialog(scope.md.link || {});
 
               //config.relations[type] =
               //  (type === "onlines" ? scope.md.link : scope.md.related[type]) || {};
@@ -301,7 +281,7 @@
               }
 
               scope.relatedConfigUI.push(config);
-            });
+            }
           });
         }
       };
@@ -316,7 +296,7 @@
     "gnExternalViewer",
     "gnConfigService",
     "gnUrlUtils",
-    "gnOnlinesrc",
+    "$injector",
     function (
       gnRelatedService,
       gnGlobalSettings,
@@ -325,7 +305,7 @@
       gnExternalViewer,
       gnConfigService,
       gnUrlUtils,
-      gnOnlinesrc
+      $injector
     ) {
       return {
         restrict: "A",
@@ -361,7 +341,9 @@
           var promise;
           var elem = element[0];
           scope.lang = scope.lang || scope.$parent.lang;
-          scope.onlinesrcService = gnOnlinesrc;
+          if ($injector.has("gnOnlinesrc")) {
+            scope.onlinesrcService = $injector.get("gnOnlinesrc");
+          }
           element.on("$destroy", function () {
             // Unregister the directive in the observer if it is defined
             if (controller) {
@@ -381,6 +363,29 @@
                 ? scope.relations[type].length
                 : scope.size;
           };
+
+          scope.convertLinkToEdit = function (link) {
+            var convertedLink = {
+              id: link.url,
+              url: { eng: link.url },
+              type: "onlinesrc",
+              title: { eng: link.name },
+              protocol: link.protocol,
+              description: { eng: link.description },
+              function: link["function"],
+              mimeType: link.mimeType,
+              applicationProfile: link.applicationProfile,
+              lUrl: link.url,
+              locTitle: link.nameObject ? link.nameObject["default"] : "",
+              locDescription: link.descriptionObject
+                ? link.descriptionObject["default"]
+                : "",
+              locUrl: link.urlObject["default"]
+            };
+
+            return convertedLink;
+          };
+
           scope.loadRelations = function (relation) {
             var relationCount = 0;
             scope.relationFound = false;

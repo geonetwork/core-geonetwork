@@ -7,12 +7,14 @@
   <div data-ng-if="title.indexOf('<') === 0" data-ng-bind-html="title"></div>
 
   <div class="" data-ng-repeat="(type, items) in relations track by $index">
+    <!-- View mode -->
     <div
       data-ng-init="mainType = config.getType(r, type);
                        badge = config.getBadgeLabel(mainType, r);
                        icon = config.getClassIcon(mainType);"
       class="row list-group-item gn-related-item gn-related-{{type}} gn-relation-type-{{mainType}}"
       data-ng-repeat="r in items | orderBy:getOrderBy"
+      data-ng-if="!editable"
       gn-popover=""
     >
       <div
@@ -49,6 +51,7 @@
             {{r.protocol}}
           </div>
         </div>
+
         <!-- Always display title if available -->
         <h3>
           <a data-ng-href="{{::r.locUrl}}"> {{::r.locTitle || r.locUrl}} </a>
@@ -122,28 +125,6 @@
               data-btn-class="btn btn-default btn-block"
               data-record="md"
             ></div>
-
-            <div data-ng-if="editable">
-              <a
-                href=""
-                class="onlinesrc-remove"
-                title="{{'edit' | translate}}"
-                aria-label="{{'edit' | translate}}"
-                data-ng-click="onlinesrcService.onOpenPopup('onlinesrc', r)"
-              >
-                <i class="fa fa-pencil"></i>
-              </a>
-              <a
-                href=""
-                class="onlinesrc-remove"
-                title="{{'remove' | translate}} {{r.title | gnLocalized: lang}}"
-                aria-label="{{'remove' | translate}} {{r.title | gnLocalized: lang}}"
-                data-gn-confirm-click="{{'removeOnlinesrcConfirm' | translate:{url: r.lUrl} }}"
-                data-gn-click-and-spin="onlinesrcService.removeOnlinesrc(r)"
-              >
-                <i class="fa fa-times text-danger"></i>
-              </a>
-            </div>
           </div>
           <div class="col-md-4 gn-nopadding-right">
             <div
@@ -153,18 +134,130 @@
               data-tooltip="copyUrlToClipboard"
             ></div>
           </div>
+
+          <button
+            type="button"
+            class="btn btn-default btn-sm btn-block gn-btn-addtoexternal text-wrap"
+            data-ng-if="externalViewerActionEnabled
+                          && (mainType === 'WMS' || mainType === 'WMSSERVICE')"
+            data-ng-click="externalViewerAction(mainType, r, md)"
+            data-translate=""
+          >
+            viewInExternalViewer
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit mode -->
+    <div
+      data-ng-init="mainType = config.getType(r, type);
+                       badge = config.getBadgeLabel(mainType, r);
+                       icon = config.getClassIcon(mainType);"
+      class="row list-group-item gn-related-item gn-related-{{type}} gn-relation-type-{{mainType}}"
+      data-ng-repeat="r in items | orderBy:getOrderBy"
+      data-ng-if="editable"
+    >
+      <!-- Always display title if available -->
+      <h3>
+        <a data-ng-href="{{::r.locUrl}}" target="_blank">
+          {{::r.locTitle || r.locUrl}}
+        </a>
+      </h3>
+      <!-- Display description if available -->
+      <p
+        data-ng-if="::r.locDescription.length > 0
+                       && r.locDescription !== r.locTitle"
+        title="{{::r.locDescription}}"
+        data-gn-read-more=""
+        data-line-number="3"
+      >
+        {{::r.locDescription | striptags}}
+      </p>
+      <div data-ng-switch on="mainType">
+        <div data-ng-switch-when="WFS">
+          <div
+            data-ng-if="::isLayerProtocol(r)"
+            data-gn-wfs-download=""
+            data-typename="{{::isLayerProtocol(r) ? r.locTitle : ''}}"
+            data-url="{{::r.locUrl}}"
+          ></div>
         </div>
 
-        <button
-          type="button"
-          class="btn btn-default btn-sm btn-block gn-btn-addtoexternal text-wrap"
-          data-ng-if="externalViewerActionEnabled
+        <div data-ng-switch-when="ATOM">
+          <div
+            data-gn-atom-download="r.title"
+            data-layer-name="{{r.title | gnLocalized: lang}}"
+            data-url="{{r.locUrl}}"
+            data-md="md"
+          ></div>
+        </div>
+
+        <div data-ng-switch-when="DB">
+          <p class="text-muted">
+            <span
+              data-translate=""
+              data-translate-values="{url:'{{r.locUrl | json}}', layer:'{{r.locTitle | json}}'}"
+            >
+              databaseLayerDetails</span
+            >
+          </p>
+        </div>
+
+        <div data-ng-switch-when="FILE">
+          <p class="text-muted">
+            <span
+              data-translate=""
+              data-translate-values="{url:'{{r.locUrl | json}}', name:'{{r.locTitle | json}}'}"
+            >
+              fileLayerDetails</span
+            >
+            <input
+              class="form-control"
+              type="text"
+              onClick="this.setSelectionRange(0, this.value.length)"
+              value="{{::r.locUrl}}"
+            />
+          </p>
+        </div>
+      </div>
+
+      <div class="col-xs-12 col-sm-3">
+        <div class="row">
+          <div class="col-md-8 gn-nopadding-left gn-nopadding-right">
+            <a
+              href=""
+              class="onlinesrc-remove"
+              title="{{'edit' | translate}}"
+              aria-label="{{'edit' | translate}}"
+              data-ng-click="onlinesrcService.onOpenPopup('onlinesrc', convertLinkToEdit(r))"
+            >
+              <i class="fa fa-pencil"></i>
+            </a>
+
+            <a
+              href=""
+              class="onlinesrc-remove"
+              title="{{'remove' | translate}} {{r.title | gnLocalized: lang}}"
+              aria-label="{{'remove' | translate}} {{r.title | gnLocalized: lang}}"
+              data-gn-confirm-click="{{'removeOnlinesrcConfirm' | translate:{url: r.lUrl} }}"
+              data-gn-click-and-spin="onlinesrcService.removeOnlinesrc(convertLinkToEdit(r))"
+            >
+              <i class="fa fa-times text-danger"></i>
+            </a>
+          </div>
+
+          <button
+            type="button"
+            class="btn btn-default btn-sm btn-block gn-btn-addtoexternal text-wrap"
+            data-ng-if="externalViewerActionEnabled
                           && (mainType === 'WMS' || mainType === 'WMSSERVICE')"
-          data-ng-click="externalViewerAction(mainType, r, md)"
-          data-translate=""
-        >
-          viewInExternalViewer
-        </button>
+            data-ng-click="externalViewerAction(mainType, r, md)"
+            data-translate=""
+          >
+            viewInExternalViewer
+          </button>
+        </div>
       </div>
     </div>
   </div>
