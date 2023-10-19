@@ -209,7 +209,7 @@
           relatedConfig: "=",
           editable: "="
         },
-        link: function (scope, element, attrs, controller) {}
+        link: function (scope, element, attrs) {}
       };
     }
   ]);
@@ -228,7 +228,6 @@
    *  - editable: when used in the metadata editor, set to true.
    *
    *  - relatedConfig: array with the configuration of the distributions to display. For each distribution:
-   *      - types: a list of relation types separated by '|'.
    *      - filter: Filter a type based on an attribute.
    *                Can't be used when multiple types are requested
    *                eg. data-filter="associationType:upstreamData"
@@ -246,18 +245,18 @@
    *
    * <div data-gn-distribution-resources-container="md"
    *      data-mode="tabset"
-   *      data-related-config="[{'types': 'onlines', 'filter': 'protocol:OGC:.*|ESRI:.*|atom.*', 'title': 'API'},
-   *                      {'types': 'onlines', 'filter': 'protocol:.*DOWNLOAD.*|DB:.*|FILE:.*', 'title': 'download'},
-   *                      {'types': 'onlines', 'filter': '-protocol:OGC:.*|ESRI:.*|atom.*|.*DOWNLOAD.*|DB:.*|FILE:.*', 'title': 'links'}]">
+   *      data-related-config="[{'filter': 'protocol:OGC:.*|ESRI:.*|atom.*', 'title': 'API'},
+   *                      {'filter': 'protocol:.*DOWNLOAD.*|DB:.*|FILE:.*', 'title': 'download'},
+   *                      {'filter': '-protocol:OGC:.*|ESRI:.*|atom.*|.*DOWNLOAD.*|DB:.*|FILE:.*', 'title': 'links'}]">
    *
    * </div>
    *
    * Example configuration (edit mode):
    *
    * <div data-gn-distribution-resources-container="md"
-   *      data-related-config="[{'types': 'onlines', 'filter': 'protocol:OGC:.*|ESRI:.*|atom.*', 'title': 'API', editActions: ['addOnlinesrc']},
-   *                      {'types': 'onlines', 'filter': 'protocol:.*DOWNLOAD.*|DB:.*|FILE:.*', 'title': 'download', editActions: ['addOnlinesrc']},
-   *                      {'types': 'onlines', 'filter': '-protocol:OGC:.*|ESRI:.*|atom.*|.*DOWNLOAD.*|DB:.*|FILE:.*', 'title': 'links', editActions: ['addOnlinesrc']}]">
+   *      data-related-config="[{'filter': 'protocol:OGC:.*|ESRI:.*|atom.*', 'title': 'API', editActions: ['addOnlinesrc']},
+   *                      {'filter': 'protocol:.*DOWNLOAD.*|DB:.*|FILE:.*', 'title': 'download', editActions: ['addOnlinesrc']},
+   *                      {'filter': '-protocol:OGC:.*|ESRI:.*|atom.*|.*DOWNLOAD.*|DB:.*|FILE:.*', 'title': 'links', editActions: ['addOnlinesrc']}]">
    *
    * </div>
    *
@@ -291,38 +290,26 @@
           }
 
           scope.relatedConfig.forEach(function (config) {
-            // TODO: Is this required, multiple types per section?
-            var t = config.types.split("|");
+            config.relations = scope.md.link || {};
+            config.relationFound = config.relations.length > 0;
 
-            config.relations = {};
+            var value = config.relations;
 
-            for (var i = 0; i < t.length; i++) {
-              var type = t[i];
+            // Check if tabs needs to be displayed
+            if (scope.mode === "tabset" && config.filter && angular.isArray(value)) {
+              var filters = gnConfigService.parseFilters(config.filter);
 
-              // TODO Review: this directive is only for onlines
-              if (type !== "onlines") return;
-
-              config.relations = scope.md.link || {};
-              config.relationFound = config.relations.length > 0;
-
-              var value = config.relations;
-
-              // Check if tabs needs to be displayed
-              if (scope.mode === "tabset" && config.filter && angular.isArray(value)) {
-                var filters = gnConfigService.parseFilters(config.filter);
-
-                config.relations = [];
-                for (var j = 0; j < value.length; j++) {
-                  gnConfigService.testFilters(filters, value[j]) &&
-                    config.relations.push(value[j]);
-                }
-                config.relationFound = config.relations.length > 0;
-              } else {
-                config.relations = value;
+              config.relations = [];
+              for (var j = 0; j < value.length; j++) {
+                gnConfigService.testFilters(filters, value[j]) &&
+                  config.relations.push(value[j]);
               }
-
-              scope.relatedConfigUI.push(config);
+              config.relationFound = config.relations.length > 0;
+            } else {
+              config.relations = value;
             }
+
+            scope.relatedConfigUI.push(config);
           });
         }
       };
@@ -330,7 +317,6 @@
   ]);
 
   module.directive("gnRelatedDistribution", [
-    "gnRelatedService",
     "gnGlobalSettings",
     "gnSearchSettings",
     "gnRelatedResources",
@@ -339,7 +325,6 @@
     "gnUrlUtils",
     "$injector",
     function (
-      gnRelatedService,
       gnGlobalSettings,
       gnSearchSettings,
       gnRelatedResources,
@@ -359,7 +344,6 @@
         scope: {
           md: "=gnRelatedDistribution",
           template: "@",
-          types: "@",
           title: "@",
           altTitle: "@",
           list: "@",
@@ -369,41 +353,16 @@
           // data-filter="protocol:OGC:.*|ESRI:.*"
           // data-filter="-protocol:OGC:.*"
           filter: "@",
-          container: "@",
           user: "=",
           hasResults: "=?",
           layout: "@",
-          // Only apply to card layout
-          size: "@",
           editable: "="
         },
-        require: "?^gnRelatedObserver",
-        link: function (scope, element, attrs, controller) {
-          var promise;
-          var elem = element[0];
+        link: function (scope, element, attrs) {
           scope.lang = scope.lang || scope.$parent.lang;
           if ($injector.has("gnOnlinesrc")) {
             scope.onlinesrcService = $injector.get("gnOnlinesrc");
           }
-          element.on("$destroy", function () {
-            // Unregister the directive in the observer if it is defined
-            if (controller) {
-              controller.unregisterGnRelated(elem);
-            }
-          });
-
-          if (controller) {
-            // Register the directive in the observer
-            controller.registerGnRelated(elem);
-          }
-
-          scope.sizeConfig = {};
-          scope.showAllItems = function (type) {
-            scope.sizeConfig[type] =
-              scope.sizeConfig[type] === scope.size
-                ? scope.relations[type].length
-                : scope.size;
-          };
 
           scope.convertLinkToEdit = function (link) {
             var convertedLink = {
@@ -427,94 +386,55 @@
             return convertedLink;
           };
 
-          scope.loadRelations = function (relation) {
-            var relationCount = 0;
+          scope.loadDistributions = function (distribution) {
+            var distributionCount = 0;
             scope.relationFound = false;
-            angular.forEach(relation, function (value, idx) {
+            angular.forEach(distribution, function (value) {
               if (!value) {
                 return;
               }
 
-              if (idx !== "onlines") return;
-
               // init object if required
-              scope.relations = scope.relations || {};
+              scope.distributions = scope.distributions || [];
               scope.hasResults = true;
 
-              if (!scope.relations[idx]) {
-                scope.relations[idx] = [];
-                scope.sizeConfig[idx] = scope.size;
+              if (!scope.distributions) {
+                scope.distributions = [];
               }
-              if (scope.filter && angular.isArray(value)) {
+              if (scope.filter) {
                 var filters = gnConfigService.parseFilters(scope.filter);
 
-                scope.relations[idx] = [];
-                for (var i = 0; i < value.length; i++) {
-                  gnConfigService.testFilters(filters, value[i]) &&
-                    scope.relations[idx].push(value[i]);
+                if (gnConfigService.testFilters(filters, value)) {
+                  scope.distributions.push(value);
                 }
               } else {
-                scope.relations[idx] = value;
+                scope.distributions = value;
               }
 
               // For draft version append "approved=false" to url
               if (scope.md.draft === "y") {
-                for (var i = 0; i < scope.relations[idx].length; i++) {
+                for (var i = 0; i < scope.distributions.length; i++) {
                   if (
-                    scope.relations[idx][i].url.match(
+                    scope.distributions[i].url.match(
                       ".*/api/records/" + scope.md.uuid + "/attachments/.*"
                     ) != null
                   ) {
-                    scope.relations[idx][i].url = gnUrlUtils.remove(
-                      scope.relations[idx][i].url,
+                    scope.distributions[i].url = gnUrlUtils.remove(
+                      scope.distributions[i].url,
                       ["approved"],
                       true
                     );
-                    scope.relations[idx][i].url = gnUrlUtils.append(
-                      scope.relations[idx][i].url,
+                    scope.distributions[i].url = gnUrlUtils.append(
+                      scope.distributions[i].url,
                       "approved=false"
                     );
                   }
                 }
               }
 
-              relationCount += scope.relations[idx].length;
+              distributionCount += scope.distributions.length;
             });
-            scope.relationFound = relationCount > 0;
-          };
-
-          scope.updateRelations = function () {
-            scope.relations = null;
-            if (scope.id) {
-              scope.relationFound = false;
-              if (controller) {
-                controller.startGnRelatedRequest(elem);
-              }
-              (promise = gnRelatedService.get(
-                scope.id,
-                scope.types,
-                scope.md.draft !== "y"
-              )).then(
-                function (data) {
-                  scope.loadRelations(data);
-                  if (angular.isDefined(scope.container) && scope.relations == null) {
-                    $(scope.container).hide();
-                  }
-                  if (controller) {
-                    controller.finishRequest(elem, scope.relationFound);
-                  }
-                },
-                function () {
-                  if (controller) {
-                    controller.finishRequest(elem, false);
-                  }
-                }
-              );
-            }
-          };
-
-          scope.getTitle = function (link) {
-            return link.title["#text"] || link.title;
+            scope.distributionFound = distributionCount > 0;
           };
 
           scope.getOrderBy = function (link) {
@@ -531,25 +451,9 @@
 
           scope.config = gnRelatedResources;
 
-          scope.$watchCollection("md", function (n, o) {
-            if ((n && n !== o) || angular.isUndefined(scope.id)) {
-              if (promise && angular.isFunction(promise.abort)) {
-                promise.abort();
-              }
-              if (scope.md != null) {
-                if (scope.md.related || scope.md.link) {
-                  var relations = {};
-                  scope.types.split("|").map(function (t) {
-                    relations[t] = t === "onlines" ? scope.md.link : scope.md.related[t];
-                  });
-                  scope.loadRelations(relations);
-                } else {
-                  scope.id = scope.md.id;
-                  scope.updateRelations();
-                }
-              }
-            }
-          });
+          if (scope.md != null && scope.md.link) {
+            scope.loadDistributions(scope.md.link);
+          }
         }
       };
     }
