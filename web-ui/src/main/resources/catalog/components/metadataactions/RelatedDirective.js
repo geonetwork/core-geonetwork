@@ -364,11 +364,26 @@
             scope.onlinesrcService = $injector.get("gnOnlinesrc");
           }
 
+          /**
+           * The type is use to find the config to use for this
+           * type of link. See link-utility.xsl.
+           */
+          function getType(fn) {
+            if (fn === "legend") {
+              return fn;
+            } else if (fn === "featureCatalogue") {
+              return "fcats";
+            } else if (fn === "dataQualityReport") {
+              return "dq-report";
+            }
+            return "onlinesrc";
+          }
+
           scope.convertLinkToEdit = function (link) {
             var convertedLink = {
               id: link.url,
               url: { eng: link.url },
-              type: "onlinesrc",
+              type: getType(link.function),
               title: { eng: link.name },
               protocol: link.protocol,
               description: { eng: link.description },

@@ -595,7 +595,7 @@
         return {
           restrict: "A",
           templateUrl:
-            "../../catalog/components/edit/onlinesrc/" + "partials/addOnlinesrc.html",
+            "../../catalog/components/edit/onlinesrc/partials/addOnlinesrc.html",
           link: {
             pre: function preLink(scope) {
               scope.searchObj = {
