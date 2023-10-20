@@ -90,8 +90,9 @@ public class OidcUser2GeonetworkUser {
         simpleUser.updateUser(user); // copy attributes from the IDToken to the GN user
 
         Map<Profile, List<String>> profileGroups = oidcRoleProcessor.getProfileGroups(attributes);
-        user.setProfile(oidcRoleProcessor.getProfile(attributes));
-
+        if (newUserFlag || oidcConfiguration.isUpdateProfile()) {
+            user.setProfile(oidcRoleProcessor.getProfile(attributes));
+        }
 
         //Apply changes to database is required.
         if (withDbUpdate) {
@@ -138,7 +139,9 @@ public class OidcUser2GeonetworkUser {
         simpleUser.updateUser(user); // copy attributes from the IDToken to the GN user
 
         Map<Profile, List<String>> profileGroups = oidcRoleProcessor.getProfileGroups(idToken);
-        user.setProfile(oidcRoleProcessor.getProfile(idToken));
+        if (newUserFlag || oidcConfiguration.isUpdateProfile()) {
+            user.setProfile(oidcRoleProcessor.getProfile(idToken));
+        }
 
 
         //Apply changes to database is required.
