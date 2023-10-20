@@ -170,7 +170,6 @@
             };
 
             scope.loadMetadataResources = function () {
-              console.log(scope.layout, "load");
               return gnfilestoreService
                 .get(scope.uuid, scope.filter)
                 .then(function (response) {
