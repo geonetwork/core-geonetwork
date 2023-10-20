@@ -22,7 +22,7 @@
     "addLinks": "Add links",
     "addOnlinesrc": "Add online resource",
     "updateOnlinesrc": "Update link",
-    "addOnlinesrcTitle": "Link an online resource",
+    "addOnlinesrcTitle": "New link",
     "addThumbnail": "Add a thumbnail",
     "addThumbnailTitle": "Add an overview to the current metadata",
     "allChangesCanceled": "All changes cancelled.",
@@ -432,7 +432,7 @@
     "wmsSelectedLayers": "Selected layers",
     "wmsSelectedLayersNone": "No layers selected",
     "remoteAssociatedMetadataTitlePlaceholder": "Remote associated metadata title",
-    "distributionPanel": "Distribution panel",
+    "distributionPanel": "Distributions",
     "onlineDiscoverWMSTitle": "Link to a WMS service",
     "onlineDiscoverArcGISTitle": "Link to an ESRI service"
 }

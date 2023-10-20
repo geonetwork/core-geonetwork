@@ -621,12 +621,6 @@
         <directive data-gn-overview-manager=""
                    data-file-types=".png,.gif,.jpeg,.jpg"/>
 
-        <directive data-gn-file-uploader=""
-                   data-type="onlines"/>
-
-        <directive data-gn-onlinesrc-list=""
-                   data-types="sibling|associated|source|dataset|service|fcats"/>
-
         <directive data-gn-distribution-resources-panel="gnCurrentEdit.metadata"
                    data-mode="viewConfig.distributionConfig.layout || ''"
                    data-editable="true"
@@ -637,6 +631,9 @@
                                          { filter: 'protocol:.*DOWNLOAD.*|DB:.*|FILE:.*', title: 'download', editActions: ['addOnlinesrc']},
                                          { filter:'-protocol:OGC:.*|ESRI:.*|atom.*|.*DOWNLOAD.*|DB:.*|FILE:.* AND -function:legend|featureCatalogue|dataQualityReport', title: 'links', editActions: ['addOnlinesrc']}]"
         />
+
+        <directive data-gn-onlinesrc-list=""
+                   data-types="sibling|associated|source|dataset|service|fcats"/>
 
         <directive gn-geo-publisher=""
                    data-ng-if="gnCurrentEdit.geoPublisherConfig"
@@ -710,6 +707,7 @@
           class="gn-label-above-input gn-indent-bluescale">
       <sidePanel>
         <directive data-gn-need-help="creating-metadata"/>
+
         <directive data-gn-validation-report=""/>
         <directive data-gn-onlinesrc-list=""
                    data-types="sibling|associated|source|dataset|service|fcats"/>
