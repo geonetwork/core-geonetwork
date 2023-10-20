@@ -624,12 +624,31 @@
         <directive data-gn-distribution-resources-panel="gnCurrentEdit.metadata"
                    data-mode="viewConfig.distributionConfig.layout || ''"
                    data-editable="true"
-                   data-related-config="[{ filter: 'protocol:OGC:.*|ESRI:.*|atom.*', title: 'API', editActions: ['addOnlinesrc', 'onlineDiscoverWMS', 'onlineDiscoverArcGIS']},
-                                         { filter: 'function:legend', title: 'mapLegend', editActions: ['onlineUseLegendLYR', 'onlineUseStyleSLD', 'onlineUseStyleQML'] },
-                                         { filter: 'protocol:.*DOWNLOAD.*|DB:.*|FILE:.*', title: 'download', editActions: ['onlineDownload', 'onlineDownloadWFS', 'onlineDownloadWCS', 'addOnlinesrc']},
-                                         { filter:'-protocol:OGC:.*|ESRI:.*|atom.*|.*DOWNLOAD.*|DB:.*|FILE:.* AND -function:legend|featureCatalogue|dataQualityReport', title: 'links', editActions: ['addOnlinesrc']},
-                                         { filter: 'function:dataQualityReport', title: 'quality', editActions: ['onlineUseDQReport', 'onlineUseDQTOR', 'onlineUseDQProdReport']},
-                                         { filter: 'function:featureCatalogue', title: 'featureCatalog', editActions: ['onlineUseFcats']}]"
+                   data-related-config="[{
+                                             title: 'API',
+                                             filter: 'protocol:OGC:WMS|OGC:WMTS|ESRI:.*|atom.*|REST|OGC API Maps|OGC API Records',
+                                             editActions: ['addOnlinesrc', 'onlineDiscoverWMS', 'onlineDiscoverArcGIS']
+                                           }, {
+                                              title: 'download',
+                                              filter: 'protocol:OGC:WFS|OGC:WCS|.*DOWNLOAD.*|DB:.*|FILE:.*|OGC API Features|OGC API Coverages',
+                                              editActions: ['onlineDownload', 'onlineDownloadWFS', 'onlineDownloadWCS', 'addOnlinesrc']
+                                           }, {
+                                             title: 'mapLegend',
+                                             filter: 'function:legend',
+                                             editActions: ['onlineUseLegendLYR', 'onlineUseStyleSLD', 'onlineUseStyleQML']
+                                           }, {
+                                              title: 'links',
+                                              filter:'-protocol:OGC.*|REST|ESRI:.*|atom.*|.*DOWNLOAD.*|DB:.*|FILE:.* AND -function:legend|featureCatalogue|dataQualityReport',
+                                              editActions: ['addOnlinesrc']
+                                           }, {
+                                              title: 'quality',
+                                              filter: 'function:dataQualityReport',
+                                              editActions: ['onlineUseDQReport', 'onlineUseDQTOR', 'onlineUseDQProdReport']
+                                           }, {
+                                              title: 'featureCatalog',
+                                              filter: 'function:featureCatalogue',
+                                              editActions: ['onlineUseFcats']
+                                           }]"
         />
 
         <directive data-gn-onlinesrc-list=""

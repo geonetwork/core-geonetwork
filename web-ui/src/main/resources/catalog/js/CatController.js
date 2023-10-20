@@ -871,11 +871,11 @@
               layout: "",
               sections: [
                 {
-                  filter: "protocol:OGC:.*|ESRI:.*|atom.*",
+                  filter: "protocol:OGC:WMS|OGC:WMTS|ESRI:.*|atom.*|REST|OGC API Maps|OGC API Records",
                   title: "API"
                 },
                 {
-                  filter: "protocol:.*DOWNLOAD.*|DB:.*|FILE:.*",
+                  filter: "protocol:OGC:WFS|OGC:WCS|.*DOWNLOAD.*|DB:.*|FILE:.*|OGC API Features|OGC API Coverages",
                   title: "download"
                 },
                 { filter: "function:legend", title: "mapLegend" },
@@ -889,7 +889,7 @@
                 },
                 {
                   filter:
-                    "-protocol:OGC:.*|ESRI:.*|atom.*|.*DOWNLOAD.*|DB:.*|FILE:.* AND -function:legend|featureCatalogue|dataQualityReport",
+                    "-protocol:OGC.*|REST|ESRI:.*|atom.*|.*DOWNLOAD.*|DB:.*|FILE:.* AND -function:legend|featureCatalogue|dataQualityReport",
                   title: "links"
                 }
               ]

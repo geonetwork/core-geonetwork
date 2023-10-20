@@ -416,5 +416,7 @@
   "associationType": "Association type",
   "initiativeType": "Initiative type",
   "associatedTo": "Associated ",
-  "overviewDescription": "Overview description"
+  "overviewDescription": "Overview description",
+  "overviewUrl": "Overview URL",
+  "restApiUrl": "REST API URL"
 }
