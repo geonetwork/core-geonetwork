@@ -120,9 +120,11 @@
               <xsl:if test="*/gfc:cardinality">
                 ,"cardinality": "<xsl:value-of select="concat(*/gfc:cardinality//gco:lower/*/text(), '..', */gfc:cardinality//gco:upper/*/text())"/>"
               </xsl:if>
-              <xsl:if test="*/gfc:listedValue">
+              <xsl:variable name="codeList"
+                            select="*/gfc:listedValue[normalize-space(*) != '']"/>
+              <xsl:if test="$codeList">
                 ,"values": [
-                <xsl:for-each select="*/gfc:listedValue">{
+                <xsl:for-each select="$codeList">{
                   "label": "<xsl:value-of select="gn-fn-index:json-escape(*/gfc:label/*/text())"/>",
                   "code": "<xsl:value-of select="gn-fn-index:json-escape(*/gfc:code/*/text())"/>",
                   "definition": "<xsl:value-of select="gn-fn-index:json-escape(*/gfc:definition/*/text())"/>"}
