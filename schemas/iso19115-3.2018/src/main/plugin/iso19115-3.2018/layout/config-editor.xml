@@ -625,11 +625,11 @@
                    data-mode="viewConfig.distributionConfig.layout || ''"
                    data-editable="true"
                    data-related-config="[{ filter: 'protocol:OGC:.*|ESRI:.*|atom.*', title: 'API', editActions: ['addOnlinesrc', 'onlineDiscoverWMS', 'onlineDiscoverArcGIS']},
-                                         { filter: 'function:legend', title: 'mapLegend', editActions: ['addOnlinesrc'] },
-                                         { filter: 'function:featureCatalogue', title: 'featureCatalog', editActions: ['addOnlinesrc'] },
-                                         { filter: 'function:dataQualityReport', title: 'quality', editActions: ['addOnlinesrc'] },
-                                         { filter: 'protocol:.*DOWNLOAD.*|DB:.*|FILE:.*', title: 'download', editActions: ['addOnlinesrc']},
-                                         { filter:'-protocol:OGC:.*|ESRI:.*|atom.*|.*DOWNLOAD.*|DB:.*|FILE:.* AND -function:legend|featureCatalogue|dataQualityReport', title: 'links', editActions: ['addOnlinesrc']}]"
+                                         { filter: 'function:legend', title: 'mapLegend', editActions: ['onlineUseLegendLYR', 'onlineUseStyleSLD', 'onlineUseStyleQML'] },
+                                         { filter: 'protocol:.*DOWNLOAD.*|DB:.*|FILE:.*', title: 'download', editActions: ['onlineDownload', 'onlineDownloadWFS', 'onlineDownloadWCS', 'addOnlinesrc']},
+                                         { filter:'-protocol:OGC:.*|ESRI:.*|atom.*|.*DOWNLOAD.*|DB:.*|FILE:.* AND -function:legend|featureCatalogue|dataQualityReport', title: 'links', editActions: ['addOnlinesrc']},
+                                         { filter: 'function:dataQualityReport', title: 'quality', editActions: ['onlineUseDQReport', 'onlineUseDQTOR', 'onlineUseDQProdReport']},
+                                         { filter: 'function:featureCatalogue', title: 'featureCatalog', editActions: ['onlineUseFcats']}]"
         />
 
         <directive data-gn-onlinesrc-list=""
@@ -710,7 +710,7 @@
 
         <directive data-gn-validation-report=""/>
         <directive data-gn-onlinesrc-list=""
-                   data-types="sibling|associated|source|dataset|service|fcats"/>
+                   data-types="onlines|sibling|associated|source|dataset|service|fcats"/>
         <directive gn-geo-publisher=""
                    data-ng-if="gnCurrentEdit.geoPublisherConfig"
                    data-config="{{gnCurrentEdit.geoPublisherConfig}}"
