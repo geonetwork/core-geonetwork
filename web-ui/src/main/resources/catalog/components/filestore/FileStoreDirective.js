@@ -202,7 +202,21 @@
               gnfilestoreService.delete(r).then(scope.loadMetadataResources);
             };
 
-            scope.$on("gnFileStoreUploadDone", scope.loadMetadataResources);
+            scope.$on("gnFileStoreUploadDone", function (evt, data) {
+              if (data) {
+                // Select the provided resource by the url value.
+                scope.loadMetadataResources().then(function () {
+                  for (var i = 0; i < scope.metadataResources.length; i++) {
+                    if (scope.metadataResources[i].url === data) {
+                      scope.setResource(scope.metadataResources[i]);
+                      break;
+                    }
+                  }
+                });
+              } else {
+                scope.loadMetadataResources();
+              }
+            });
 
             scope.$watch("filter", function (newValue, oldValue) {
               if (angular.isDefined(scope.uuid) && newValue != oldValue) {

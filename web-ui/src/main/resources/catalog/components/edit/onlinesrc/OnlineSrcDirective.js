@@ -748,8 +748,8 @@
                       }
                     }
                   )
-                  .then(function () {
-                    $rootScope.$broadcast("gnFileStoreUploadDone");
+                  .then(function (response) {
+                    $rootScope.$broadcast("gnFileStoreUploadDone", response.data.url);
                   });
               };
 
