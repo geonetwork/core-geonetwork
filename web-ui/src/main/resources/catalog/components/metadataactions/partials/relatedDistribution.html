@@ -171,6 +171,25 @@
     >
       {{::r.locDescription | striptags}}
     </p>
+
+    <div
+      data-ng-if="canPublishDoiForResource(md, convertLinkToEdit(r))"
+      data-gn-doi-wizard="md.uuid"
+      data-gn-doi-url="r.locUrl"
+      data-xs-mode="true"
+    ></div>
+
+    <div
+      data-ng-if="r.protocol !== null
+                  && r.protocol.match('OGC:WMS') !== null"
+      data-gn-wfs-filter-facets=""
+      data-manager-only="true"
+      data-wfs-url="{{::r.locUrl}}"
+      data-feature-type-name="{{::r.name}}"
+      data-md="md"
+      data-boot-mode="index"
+    ></div>
+
     <div data-ng-switch on="mainType">
       <div data-ng-switch-when="WFS">
         <div

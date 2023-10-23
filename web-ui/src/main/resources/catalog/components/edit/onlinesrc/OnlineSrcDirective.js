@@ -403,13 +403,15 @@
       "gnConfigService",
       "$filter",
       "gnConfig",
+      "gnDoiService",
       function (
         gnOnlinesrc,
         gnCurrentEdit,
         gnRelatedResources,
         gnConfigService,
         $filter,
-        gnConfig
+        gnConfig,
+        gnDoiService
       ) {
         return {
           restrict: "A",
@@ -431,11 +433,10 @@
             scope.isMdWorkflowEnableForMetadata =
               gnConfig["metadata.workflow.enable"] &&
               scope.gnCurrentEdit.metadata.draft === "y";
-            scope.isDoiApplicableForMetadata =
-              gnConfig["system.publication.doi.doienabled"] &&
-              scope.gnCurrentEdit.metadata.isTemplate === "n" &&
-              scope.gnCurrentEdit.metadata.isPublished() &&
-              JSON.parse(scope.gnCurrentEdit.metadata.isHarvested) === false;
+            scope.isDoiApplicableForMetadata = gnDoiService.isDoiApplicableForMetadata(
+              scope.gnCurrentEdit.metadata
+            );
+            scope.canPublishDoiForResource = gnDoiService.canPublishDoiForResource;
 
             /**
              * Calls service 'relations.get' to load
@@ -457,24 +458,6 @@
               return angular.isUndefined(scope.types)
                 ? true
                 : category.match(scope.types) !== null;
-            };
-
-            /**
-             * Doi can be published for a resource if:
-             *   - Doi publication is enabled.
-             *   - The resource matches doi.org url
-             *   - The workflow is not enabled for the metadata and
-             *     the metadata is published.
-             *
-             */
-            scope.canPublishDoiForResource = function (resource) {
-              var doiKey = gnConfig["system.publication.doi.doikey"];
-              return (
-                scope.isDoiApplicableForMetadata &&
-                resource.lUrl !== null &&
-                resource.lUrl.match("doi.org/" + doiKey) !== null &&
-                !scope.isMdWorkflowEnableForMetadata
-              );
             };
 
             /**
@@ -634,7 +617,7 @@
                 }
               };
 
-              scope.filterTypeChoices = function(type) {
+              scope.filterTypeChoices = function (type) {
                 if (!scope.linkTypeGroupFilter) {
                   return true;
                 }
@@ -900,7 +883,8 @@
                 // it's not the default addOnlinesrc value, can't be edited
                 scope.isEditableLinkType =
                   !scope.isEditing &&
-                  (!angular.isDefined(linkType) || linkType.indexOf("addOnlinesrc") === 0);
+                  (!angular.isDefined(linkType) ||
+                    linkType.indexOf("addOnlinesrc") === 0);
 
                 // Flag used when editing an online resource to prevent the watcher to update the online
                 // resource description when loading the dialog.

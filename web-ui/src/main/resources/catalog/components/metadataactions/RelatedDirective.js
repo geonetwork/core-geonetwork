@@ -323,6 +323,7 @@
     "gnExternalViewer",
     "gnConfigService",
     "gnUrlUtils",
+    "gnDoiService",
     "$injector",
     function (
       gnGlobalSettings,
@@ -331,6 +332,7 @@
       gnExternalViewer,
       gnConfigService,
       gnUrlUtils,
+      gnDoiService,
       $injector
     ) {
       return {
@@ -359,6 +361,8 @@
           editable: "="
         },
         link: function (scope, element, attrs) {
+          scope.canPublishDoiForResource = gnDoiService.canPublishDoiForResource;
+
           scope.lang = scope.lang || scope.$parent.lang;
           if ($injector.has("gnOnlinesrc")) {
             scope.onlinesrcService = $injector.get("gnOnlinesrc");
