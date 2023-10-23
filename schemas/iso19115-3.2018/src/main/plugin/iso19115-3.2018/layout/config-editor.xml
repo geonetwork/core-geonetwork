@@ -627,23 +627,23 @@
                    data-related-config="[{
                                              title: 'API',
                                              filter: 'protocol:OGC:WMS|OGC:WMTS|ESRI:.*|atom.*|REST|OGC API Maps|OGC API Records',
-                                             editActions: ['addOnlinesrc', 'onlineDiscoverWMS', 'onlineDiscoverArcGIS']
+                                             editActions: ['addOnlinesrc#API']
                                            }, {
                                               title: 'download',
                                               filter: 'protocol:OGC:WFS|OGC:WCS|.*DOWNLOAD.*|DB:.*|FILE:.*|OGC API Features|OGC API Coverages',
-                                              editActions: ['onlineDownload', 'onlineDownloadWFS', 'onlineDownloadWCS', 'addOnlinesrc']
+                                              editActions: ['addOnlinesrc#onlineDownload|localNetwork']
                                            }, {
                                              title: 'mapLegend',
                                              filter: 'function:legend',
-                                             editActions: ['onlineUseLegendLYR', 'onlineUseStyleSLD', 'onlineUseStyleQML']
+                                             editActions: ['addOnlinesrc#onlineUseLegend']
                                            }, {
                                               title: 'links',
                                               filter:'-protocol:OGC.*|REST|ESRI:.*|atom.*|.*DOWNLOAD.*|DB:.*|FILE:.* AND -function:legend|featureCatalogue|dataQualityReport',
-                                              editActions: ['addOnlinesrc']
+                                              editActions: ['addOnlinesrc#links']
                                            }, {
                                               title: 'quality',
                                               filter: 'function:dataQualityReport',
-                                              editActions: ['onlineUseDQReport', 'onlineUseDQTOR', 'onlineUseDQProdReport']
+                                              editActions: ['addOnlinesrc#quality']
                                            }, {
                                               title: 'featureCatalog',
                                               filter: 'function:featureCatalogue',

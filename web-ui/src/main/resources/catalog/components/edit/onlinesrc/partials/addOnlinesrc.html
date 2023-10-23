@@ -36,7 +36,7 @@
             </label>
             <div class="col-sm-10">
               <select
-                data-ng-options="option as (option.label | translate) group by (option.group  | translate) for option in config.types"
+                data-ng-options="option as (option.label | translate) group by (option.group  | translate) for option in (config.types | filter:filterTypeChoices)"
                 data-ng-disabled="!isEditableLinkType"
                 data-ng-model="params.linkType"
               />

@@ -618,7 +618,7 @@
 
               scope.config = null;
               scope.linkType = null;
-
+              scope.linkTypeGroupFilter = null;
               scope.loaded = false;
               scope.layers = null;
               scope.capabilitiesLayers = null;
@@ -632,6 +632,13 @@
                 params: {
                   sortBy: "resourceTitleObject.default.sort"
                 }
+              };
+
+              scope.filterTypeChoices = function(type) {
+                if (!scope.linkTypeGroupFilter) {
+                  return true;
+                }
+                return type.group.match(new RegExp(scope.linkTypeGroupFilter)) != null;
               };
 
               // This object is used to share value between this
@@ -893,7 +900,7 @@
                 // it's not the default addOnlinesrc value, can't be edited
                 scope.isEditableLinkType =
                   !scope.isEditing &&
-                  (!angular.isDefined(linkType) || linkType === "addOnlinesrc");
+                  (!angular.isDefined(linkType) || linkType.indexOf("addOnlinesrc") === 0);
 
                 // Flag used when editing an online resource to prevent the watcher to update the online
                 // resource description when loading the dialog.
@@ -913,7 +920,14 @@
                         return t;
                       }
                     }
-                    return scope.config.types[0];
+                    return scope.config.types.filter(scope.filterTypeChoices)[0];
+                  }
+
+                  // LinkType may describe an additional group filter
+                  if (linkType.indexOf("#")) {
+                    var linkTypeConfig = linkType.split("#");
+                    linkType = linkTypeConfig[0];
+                    scope.linkTypeGroupFilter = linkTypeConfig[1];
                   }
 
                   var typeConfig = linkToEdit
