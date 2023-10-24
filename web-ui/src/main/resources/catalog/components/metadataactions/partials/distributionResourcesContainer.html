@@ -1,18 +1,20 @@
 <div data-ng-if="editable">
   <div data-ng-repeat="config in relatedConfig track by $index">
-    <h2 data-ng-if="config.title.indexOf('<') === -1">{{::config.title | translate}}</h2>
-    <div
-      data-ng-if="config.title.indexOf('<') === 0"
-      data-ng-bind-html="config.title"
-    ></div>
-
-    <div data-ng-repeat="action in config.editActions">
-      <a href="" data-ng-click="onlinesrcService.onOpenPopup('onlinesrc', action)">
-        <i class="fa fa-fw fa-plus"></i>
-        <span data-translate="">{{ action | translate}}</span>
-      </a>
+    <div class="flex-row">
+      <div class="flex-grow">
+        <h2 data-ng-if="config.title.indexOf('<') === -1">{{::config.title | translate}}</h2>
+        <div
+          data-ng-if="config.title.indexOf('<') === 0"
+          data-ng-bind-html="config.title"
+        ></div>
+      </div>
+      <div class="gn-margin-bottom" data-ng-repeat="action in config.editActions">
+        <a href="" class="btn btn-default btn-xs" data-ng-click="onlinesrcService.onOpenPopup('onlinesrc', action)">
+          <i class="fa fa-fw fa-plus"></i>
+          <span data-translate="">{{ action | translate}}</span>
+        </a>
+      </div>
     </div>
-
     <div
       data-gn-related-distribution="md"
       data-user="user"

@@ -157,10 +157,37 @@
     data-ng-repeat="r in distributions | orderBy:getOrderBy"
     data-ng-if="editable"
   >
-    <!-- Always display title if available -->
-    <h3>
-      <a data-ng-href="{{::r.locUrl}}" target="_blank"> {{::r.locTitle || r.locUrl}} </a>
-    </h3>
+    <div class="flex-row">
+      <!-- Always display title if available -->
+      <h3 class="flex-grow">
+        <a data-ng-href="{{::r.locUrl}}" target="_blank"> {{::r.locTitle || r.locUrl}} </a>
+      </h3>
+      <!-- Edit & Remove -->
+
+      <div class="text-no-wrap">
+        <a
+          href=""
+          class="onlinesrc-remove gn-margin-right-sm"
+          title="{{'edit' | translate}}"
+          aria-label="{{'edit' | translate}}"
+          data-ng-click="onlinesrcService.onOpenPopup('onlinesrc', convertLinkToEdit(r))"
+        >
+          <i class="fa fa-pencil"></i>
+        </a>
+
+        <a
+          href=""
+          class="onlinesrc-remove"
+          title="{{'remove' | translate}} {{r.title | gnLocalized: lang}}"
+          aria-label="{{'remove' | translate}} {{r.title | gnLocalized: lang}}"
+          data-gn-confirm-click="{{'removeOnlinesrcConfirm' | translate:{url: r.lUrl} }}"
+          data-gn-click-and-spin="onlinesrcService.removeOnlinesrc(convertLinkToEdit(r))"
+        >
+          <i class="fa fa-times text-danger"></i>
+        </a>
+      </div>
+    </div>
+
     <!-- Display description if available -->
     <p
       data-ng-if="::r.locDescription.length > 0
@@ -238,42 +265,15 @@
       </div>
     </div>
 
-    <div class="col-xs-12 col-sm-3">
-      <div class="row">
-        <div class="col-md-8 gn-nopadding-left gn-nopadding-right">
-          <a
-            href=""
-            class="onlinesrc-remove"
-            title="{{'edit' | translate}}"
-            aria-label="{{'edit' | translate}}"
-            data-ng-click="onlinesrcService.onOpenPopup('onlinesrc', convertLinkToEdit(r))"
-          >
-            <i class="fa fa-pencil"></i>
-          </a>
-
-          <a
-            href=""
-            class="onlinesrc-remove"
-            title="{{'remove' | translate}} {{r.title | gnLocalized: lang}}"
-            aria-label="{{'remove' | translate}} {{r.title | gnLocalized: lang}}"
-            data-gn-confirm-click="{{'removeOnlinesrcConfirm' | translate:{url: r.lUrl} }}"
-            data-gn-click-and-spin="onlinesrcService.removeOnlinesrc(convertLinkToEdit(r))"
-          >
-            <i class="fa fa-times text-danger"></i>
-          </a>
-        </div>
-
-        <button
-          type="button"
-          class="btn btn-default btn-sm btn-block gn-btn-addtoexternal text-wrap"
-          data-ng-if="externalViewerActionEnabled
+    <button
+      type="button"
+      class="btn btn-default btn-sm btn-block gn-btn-addtoexternal text-wrap"
+      data-ng-if="externalViewerActionEnabled
                         && (mainType === 'WMS' || mainType === 'WMSSERVICE')"
-          data-ng-click="externalViewerAction(mainType, r, md)"
-          data-translate=""
-        >
-          viewInExternalViewer
-        </button>
-      </div>
-    </div>
+      data-ng-click="externalViewerAction(mainType, r, md)"
+      data-translate=""
+    >
+      viewInExternalViewer
+    </button>
   </div>
 </div>
