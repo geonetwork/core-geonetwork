@@ -176,6 +176,19 @@
       background-color: lighten(@gray-base, 85%);
     }
   }
+  .gn-card-series, .gn-card-dataset, .gn-card-nonGeographicDataset, .gn-card-service, .gn-card-application {
+    .gn-related-list {
+      &.list-group {
+        padding: 0;
+        margin-bottom: 10px;
+        .list-group-item {
+          background: none;
+          border: 0;
+          padding: 0;
+        }
+      }
+    }
+  }
   .gn-series {
     .nav-pills {
       li {
