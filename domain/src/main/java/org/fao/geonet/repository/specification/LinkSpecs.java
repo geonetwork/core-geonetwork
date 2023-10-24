@@ -33,7 +33,6 @@ import org.fao.geonet.domain.Metadata_;
 import org.fao.geonet.domain.OperationAllowed;
 import org.fao.geonet.domain.OperationAllowedId_;
 import org.fao.geonet.domain.OperationAllowed_;
-import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.domain.ReservedOperation;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -85,12 +84,18 @@ public class LinkSpecs {
                             cb.literal(String.format("%%%s%%", associatedRecord))));
                 }
 
-                if (editingGroupIds != null && editingGroupIds.length > 0) {
-                    Join<Link, MetadataLink> metadataJoin = root.join(Link_.records, JoinType.INNER);
+                Join<Link, MetadataLink> metadataJoin = root.join(Link_.records, JoinType.INNER);
+                Subquery<Integer> subquery = query.subquery(Integer.class);
+                final Root<OperationAllowed> opAllowRoot = subquery.from(OperationAllowed.class);
+                final Root<Metadata> metadataRoot = subquery.from(Metadata.class);
 
-                    Subquery<Integer> subquery = query.subquery(Integer.class);
-                    final Root<OperationAllowed> opAllowRoot = subquery.from(OperationAllowed.class);
-                    final Root<Metadata> metadataRoot = subquery.from(Metadata.class);
+                boolean editinGroupQuery = editingGroupIds != null && editingGroupIds.length > 0;
+                boolean groupPublishedQuery = groupPublishedIds != null && groupPublishedIds.length > 0;
+                boolean groupOwnerQuery = groupOwnerIds != null && groupOwnerIds.length > 0;
+
+                List<Predicate> subQueryPredicates = new ArrayList<>();
+
+                if (editinGroupQuery) {
                     final Predicate groupOwnerPredicate =
                         metadataRoot.get(Metadata_.sourceInfo).get(MetadataSourceInfo_.groupOwner).in(editingGroupIds);
                     final Predicate metadataOperations = cb.equal(metadataRoot.get(Metadata_.id), opAllowRoot.get(OperationAllowed_.id).get(OperationAllowedId_.metadataId));
@@ -99,52 +104,41 @@ public class LinkSpecs {
                         cb.equal(
                             opAllowRoot.get(OperationAllowed_.id).get(OperationAllowedId_.operationId),
                             cb.literal(ReservedOperation.editing.getId()));
-                    subquery.where(
-                            cb.or(
-                                cb.and(metadataOperations, groupOwnerPredicate),
-                                cb.and(editableGroups, operationTypeEdit)));
 
-                    Path<Integer> opAllowedMetadataId = opAllowRoot.get(OperationAllowed_.id).get(OperationAllowedId_.metadataId);
-                    subquery.select(opAllowedMetadataId);
-
-                    predicates.add(metadataJoin.get(MetadataLink_.metadataId).in(subquery));
-                    query.distinct(true);
+                    subQueryPredicates.add(cb.or(
+                        cb.and(metadataOperations, groupOwnerPredicate),
+                        cb.and(editableGroups, operationTypeEdit)));
                 }
 
-                if (groupPublishedIds != null && groupPublishedIds.length > 0) {
-                    Join<Link, MetadataLink> metadataJoin = root.join(Link_.records, JoinType.INNER);
-
-                    Subquery<Integer> subquery = query.subquery(Integer.class);
-                    Root<OperationAllowed> opAllowRoot = subquery.from(OperationAllowed.class);
+                if (groupPublishedQuery) {
                     Predicate publishedToIndicatedGroup =
                         opAllowRoot.get(OperationAllowed_.id).get(OperationAllowedId_.groupId).in(groupPublishedIds);
                     Predicate operationTypeView = cb.equal(
                         opAllowRoot.get(OperationAllowed_.id).get(OperationAllowedId_.operationId),
                         cb.literal(ReservedOperation.view.getId()));
-                    subquery.where(
-                        cb.and(publishedToIndicatedGroup, operationTypeView));
+
+                    subQueryPredicates.add(cb.and(publishedToIndicatedGroup, operationTypeView));
+                }
+
+                if (groupOwnerQuery) {
+                    final Predicate groupOwnerPredicate =
+                        metadataRoot.get(Metadata_.sourceInfo).get(MetadataSourceInfo_.groupOwner).in(groupOwnerIds);
+
+                    subQueryPredicates.add(groupOwnerPredicate);
+                }
+
+
+                if (subQueryPredicates.size() > 0) {
+                    subquery.where(subQueryPredicates.toArray(new Predicate[]{}));
 
                     Path<Integer> opAllowedMetadataId = opAllowRoot.get(OperationAllowed_.id).get(OperationAllowedId_.metadataId);
                     subquery.select(opAllowedMetadataId);
 
                     predicates.add(metadataJoin.get(MetadataLink_.metadataId).in(subquery));
-                    query.distinct(true);
                 }
 
-                if (groupOwnerIds != null && groupOwnerIds.length > 0) {
-                    Join<Link, MetadataLink> metadataJoin = root.join(Link_.records, JoinType.INNER);
-                    Subquery<Integer> subquery = query.subquery(Integer.class);
-                    final Root<Metadata> metadataRoot = subquery.from(Metadata.class);
-                    final Predicate groupOwnerPredicate =
-                        metadataRoot.get(Metadata_.sourceInfo).get(MetadataSourceInfo_.groupOwner).in(groupOwnerIds);
-                    subquery.where(groupOwnerPredicate);
+                query.distinct(true);
 
-                    Path<Integer> metadataId = metadataRoot.get(Metadata_.id);
-                    subquery.select(metadataId);
-
-                    predicates.add(metadataJoin.get(MetadataLink_.metadataId).in(subquery));
-                    query.distinct(true);
-                }
                 return cb.and(predicates.toArray(new Predicate[]{}));
             }
         };
