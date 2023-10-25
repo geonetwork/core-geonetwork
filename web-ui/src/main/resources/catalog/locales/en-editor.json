@@ -434,5 +434,7 @@
     "remoteAssociatedMetadataTitlePlaceholder": "Remote associated metadata title",
     "distributionPanel": "Distributions",
     "onlineDiscoverWMSTitle": "Link to a WMS service",
-    "onlineDiscoverArcGISTitle": "Link to an ESRI service"
+    "onlineDiscoverArcGISTitle": "Link to an ESRI service",
+    "suggest-add-info-from-wms": "Update with view service info (bbox, crs, overview)",
+    "wmsLayerName": "Layer name"
 }
