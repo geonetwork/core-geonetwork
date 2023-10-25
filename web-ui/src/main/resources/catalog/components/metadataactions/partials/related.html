@@ -176,8 +176,8 @@
       {{type.replace('siblings', '') | translate}}
     </h3>
 
-    <ul class="gn-related-list">
-      <li data-ng-repeat="md in items | orderBy:getOrderBy">
+    <ul class="gn-related-list list-group">
+      <li class="list-group-item" data-ng-repeat="md in items | orderBy:getOrderBy">
         <a
           data-ng-hide="md.remoteUrl"
           href=""
