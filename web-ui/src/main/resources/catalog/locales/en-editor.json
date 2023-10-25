@@ -436,5 +436,16 @@
     "onlineDiscoverWMSTitle": "Link to a WMS service",
     "onlineDiscoverArcGISTitle": "Link to an ESRI service",
     "suggest-add-info-from-wms": "Update with view service info (bbox, crs, overview)",
-    "wmsLayerName": "Layer name"
+    "suggest-create-featurecatalogue-from-wfs": "Add or replace data model",
+    "wmsLayerName": "Layer name",
+    "addOnlinesrc#API": "Add API",
+    "addOnlinesrc#API-help": "eg. view service, REST API",
+    "addOnlinesrc#onlineDownload|localNetwork": "Add download",
+    "addOnlinesrc#onlineDownload|localNetwork-help": "eg. file, download service, local network links",
+    "addOnlinesrc#onlineUseLegend": "Add portrayal",
+    "addOnlinesrc#onlineUseLegend-help": "eg. LYR, QML, SLD files",
+    "addOnlinesrc#links": "Add links",
+    "addOnlinesrc#links-help": "eg. web links",
+    "addOnlinesrc#quality": "Add quality info",
+    "addOnlinesrc#quality-help": "eg. specification, reports"
 }

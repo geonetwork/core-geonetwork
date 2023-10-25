@@ -221,13 +221,19 @@
     ></div>
 
     <span
+      data-ng-if="r.protocol === 'OGC:WMS'"
       data-gn-suggest-button="add-info-from-wms"
       data-name="suggest-add-info-from-wms"
       data-target="{{'link#' + r.protocol + '#' + r.locUrl + '#' + r.name}}"
     ></span>
+    <span
+      data-ng-if="r.protocol === 'OGC:WFS' || r.protocol === 'ESRI:REST'"
+      data-gn-suggest-button="create-featurecatalogue-from-wfs"
+      data-name="suggest-create-featurecatalogue-from-wfs"
+      data-target="{{'link#' + r.protocol + '#' + r.locUrl + '#' + r.name}}"
+    ></span>
 
     <div data-ng-switch on="mainType">
-
       <div data-ng-switch-when="DB">
         <p class="text-muted">
           <span
