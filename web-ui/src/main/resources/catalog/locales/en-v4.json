@@ -414,5 +414,6 @@
   "lastCreatedRecords": "Last created records",
   "associationType": "Association type",
   "initiativeType": "Initiative type",
-  "associatedTo": "Associated "
+  "associatedTo": "Associated ",
+  "filterHelp": "Please click on one of the buttons below to activate the filter"
 }
