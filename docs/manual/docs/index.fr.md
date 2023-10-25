@@ -7,7 +7,7 @@ hide:
 
 Bienvenue à GeoNetwork. Cette documentation est organisée en guides spécifiques destinés à différents publics.
 
-<div class="grid cards" markdown>
+<div class="gn-grid cards" markdown>
 
 :fontawesome-solid-signs-post: [Vue d'ensemble](overview/index.md)
 
