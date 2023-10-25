@@ -908,7 +908,7 @@
                   }
 
                   // LinkType may describe an additional group filter
-                  if (linkType.indexOf("#")) {
+                  if (linkType && linkType.indexOf("#")) {
                     var linkTypeConfig = linkType.split("#");
                     linkType = linkTypeConfig[0];
                     scope.linkTypeGroupFilter = linkTypeConfig[1];
