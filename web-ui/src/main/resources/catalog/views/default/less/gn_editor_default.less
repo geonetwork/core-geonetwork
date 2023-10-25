@@ -98,6 +98,7 @@
     // tabs above editor
     .nav {
       min-height: 42px;
+      margin-bottom: @gn-spacing;
     }
     .nav .open > a,
     .nav .open > a:hover,
@@ -421,31 +422,33 @@
         }
       }
     }
-    .onlinesrc-remove {
-      &:hover {
-        text-decoration: none;
-      }
-    }
-    .list-group-item {
-      padding: @gn-spacing;
-    }
-    #gn-editor-distribution-panel {
-      h2 {
-        font-size: 16px;
-      }
-      h3 {
-        display: inline-block;
-        font-size: 15px;
-        margin: @gn-spacing 0;
-      }
-      .list-group-item {
-        margin-top: -1px;
-      }
-      .alert {
-        margin-bottom: @gn-spacing-sm;
-      }
+  }
+  // for both sidebar and main
+  .onlinesrc-remove {
+    &:hover {
+      text-decoration: none;
     }
   }
+  .list-group-item {
+    padding: @gn-spacing;
+  }
+  #gn-editor-distribution-panel {
+    h2 {
+      font-size: 16px;
+    }
+    h3 {
+      display: inline-block;
+      font-size: 15px;
+      margin: @gn-spacing 0;
+    }
+    .list-group-item {
+      margin-top: -1px;
+    }
+    .alert {
+      margin-bottom: @gn-spacing-sm;
+    }
+  }
+
 }
 // map for Editor and Batch Editor
 .gn-drawmap-panel {

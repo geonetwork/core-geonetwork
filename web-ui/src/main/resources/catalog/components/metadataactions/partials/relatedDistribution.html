@@ -160,7 +160,10 @@
     <div class="flex-row">
       <!-- Always display title if available -->
       <h3 class="flex-grow">
-        <a data-ng-href="{{::r.locUrl}}" target="_blank"> {{::r.locTitle || r.locUrl}} </a>
+        <a data-ng-href="{{::r.locUrl}}" target="_blank">
+          <i class="fa fa-fw {{icon}}"></i>
+          {{::r.locTitle || r.locUrl}}
+        </a>
       </h3>
       <!-- Edit & Remove -->
 
