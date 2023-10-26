@@ -50,6 +50,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -140,10 +141,10 @@ public class FormatterApiTest extends AbstractServiceIntegrationTest {
             String urlParams = testParameter[1];
             String schema = testParameter[2];
             String checkfile = testParameter[3];
+            String url = "/srv/api/records/"
+                + testDataUuidBySchema.get(schema)
+                + "/formatters/" + formatter + urlParams;
             try {
-                String url = "/srv/api/records/"
-                    + testDataUuidBySchema.get(schema)
-                    + "/formatters/" + formatter + urlParams;
                 MvcResult result = mockMvc.perform(get(url)
                         .session(mockHttpSession)
                         .accept(MediaType.ALL_VALUE))
@@ -164,7 +165,7 @@ public class FormatterApiTest extends AbstractServiceIntegrationTest {
                         .replaceAll("\\r\\n?", "\n")
                 );
             } catch (Exception e) {
-                e.printStackTrace();
+                fail(url);
             }
         }
     }
