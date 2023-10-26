@@ -869,6 +869,7 @@
               gnOnlinesrc.register("onlinesrc", function (linkToEditOrType) {
                 var linkToEdit = undefined,
                   linkType = undefined;
+
                 if (angular.isDefined(linkToEditOrType)) {
                   if (angular.isObject(linkToEditOrType)) {
                     linkToEdit = linkToEditOrType;

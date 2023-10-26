@@ -383,14 +383,25 @@
             return "onlinesrc";
           }
 
+          function convertLangProperties(object) {
+            if (!angular.isObject(object)) {
+              return;
+            }
+            var newObject = {};
+            Object.keys(object).forEach(function (key) {
+              newObject[key.replace(/^lang/, "")] = object[key];
+            });
+            return newObject;
+          }
+
           scope.convertLinkToEdit = function (link) {
             var convertedLink = {
               id: link.url,
-              url: { eng: link.url },
+              url: convertLangProperties(link.urlObject),
               type: getType(link.function),
-              title: { eng: link.name },
+              title: convertLangProperties(link.nameObject),
               protocol: link.protocol,
-              description: { eng: link.description },
+              description: convertLangProperties(link.descriptionObject),
               function: link["function"],
               mimeType: link.mimeType,
               applicationProfile: link.applicationProfile,
@@ -401,7 +412,6 @@
                 : "",
               locUrl: link.urlObject["default"]
             };
-
             return convertedLink;
           };
 

@@ -1106,7 +1106,9 @@
                                               else if (starts-with(gmd:protocol/gco:CharacterString, 'WWW:DOWNLOAD:'))
                                               then gn-fn-index:json-escape(replace(gmd:protocol/gco:CharacterString, 'WWW:DOWNLOAD:', ''))
                                               else ''"/>",
-            "urlObject":{"default": "<xsl:value-of select="gn-fn-index:json-escape(gmd:linkage/gmd:URL)"/>"},
+            "urlObject":{
+              "default": "<xsl:value-of select="gn-fn-index:json-escape(gmd:linkage/gmd:URL)"/>",
+              "lang<xsl:value-of select="$mainLanguage"/>": "<xsl:value-of select="gn-fn-index:json-escape(gmd:linkage/gmd:URL)"/>"},
             <xsl:if test="normalize-space(gmd:name) != ''">
               "nameObject": <xsl:value-of select="gn-fn-index:add-multilingual-field(
                                 'name', gmd:name, $allLanguages, true())"/>,
