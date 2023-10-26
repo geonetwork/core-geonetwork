@@ -152,7 +152,8 @@
   <div
     data-ng-init="mainType = config.getType(r, 'onlines');
                      badge = config.getBadgeLabel(mainType, r);
-                     icon = config.getClassIcon(mainType);"
+                     icon = config.getClassIcon(mainType);
+                     linkForEdit = convertLinkToEdit(r);"
     class="row list-group-item gn-related-item gn-related-onlines gn-relation-type-{{mainType}}"
     data-ng-repeat="r in distributions | orderBy:getOrderBy"
     data-ng-if="editable"
@@ -173,7 +174,7 @@
           class="onlinesrc-remove gn-margin-right-sm"
           title="{{'edit' | translate}}"
           aria-label="{{'edit' | translate}}"
-          data-ng-click="onlinesrcService.onOpenPopup('onlinesrc', convertLinkToEdit(r))"
+          data-ng-click="onlinesrcService.onOpenPopup('onlinesrc', linkForEdit)"
         >
           <i class="fa fa-pencil"></i>
         </a>
@@ -184,7 +185,7 @@
           title="{{'remove' | translate}} {{r.title | gnLocalized: lang}}"
           aria-label="{{'remove' | translate}} {{r.title | gnLocalized: lang}}"
           data-gn-confirm-click="{{'removeOnlinesrcConfirm' | translate:{url: r.lUrl} }}"
-          data-gn-click-and-spin="onlinesrcService.removeOnlinesrc(convertLinkToEdit(r))"
+          data-gn-click-and-spin="onlinesrcService.removeOnlinesrc(linkForEdit)"
         >
           <i class="fa fa-times text-danger"></i>
         </a>
@@ -203,7 +204,7 @@
     </p>
 
     <div
-      data-ng-if="canPublishDoiForResource(md, convertLinkToEdit(r))"
+      data-ng-if="canPublishDoiForResource(md, linkForEdit)"
       data-gn-doi-wizard="md.uuid"
       data-gn-doi-url="r.locUrl"
       data-xs-mode="true"
