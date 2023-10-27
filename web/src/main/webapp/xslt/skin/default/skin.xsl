@@ -14,6 +14,9 @@
                 version="2.0"
                 exclude-result-prefixes="#all">
 
+  <xsl:param name="output" as="xs:string" select="'not-pdf'"/>
+
+
   <xsl:function name="geonet:updateUrlPlaceholder" as="xs:string">
     <xsl:param name="url" as="xs:string"/>
     <xsl:param name="node" as="xs:string"/>
@@ -73,12 +76,21 @@
                   <li>
                     <a href="{$appUrl}">
                       <xsl:if test="not($isLogoInHeader)">
-                        <img class="gn-logo"
-                             alt="{$i18n/siteLogo}"
-                             src="{/root/gui/nodeUrl}../images/logos/{$env//system/site/siteId}.png"/>
-                      </xsl:if>
-                      <xsl:if test="$isShowGNName">
-                        <xsl:value-of select="$env//system/site/name"/>
+                        <xsl:choose>
+                          <xsl:when test="$output = 'pdf' and $env//metadata/pdfReport/headerLogoFileName != ''">
+                            <img class="gn-logo"
+                                 alt="{$i18n/siteLogo}"
+                                 src="{/root/gui/nodeUrl}../images/harvesting/{$env//metadata/pdfReport/headerLogoFileName}"/>
+                          </xsl:when>
+                          <xsl:otherwise>
+                            <img class="gn-logo"
+                                 alt="{$i18n/siteLogo}"
+                                 src="{/root/gui/nodeUrl}../images/logos/{$env//system/site/siteId}.png"/>
+                            <xsl:if test="$isShowGNName">
+                              <xsl:value-of select="$env//system/site/name"/>
+                            </xsl:if>
+                          </xsl:otherwise>
+                        </xsl:choose>
                       </xsl:if>
                     </a>
                   </li>
