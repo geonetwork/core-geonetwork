@@ -5,7 +5,7 @@ This section documents the steps followed by the development team to do a new re
 Once the release branch has been thoroughly tested and is stable a release can be made.
 
 The following script can be used on Linux and Mac. For this a running build environment is needed
-with the following utilities: sed, xmlstarlet and sftp.
+with the following utilities: ***sed***, ***xmlstarlet*** and ***sftp***.
 
 
 1.  Prepare the release
@@ -13,9 +13,11 @@ with the following utilities: sed, xmlstarlet and sftp.
     ``` shell
     # Setup properties
     frombranch=origin/main
-    versionbranch=4.2.x
-    version=4.2.3
+    series=4.2
+    versionbranch=$series.x
+    version=$series.3
     minorversion=0
+    release=stable
     newversion=$version-$minorversion
     currentversion=4.2.3-SNAPSHOT
     previousversion=4.2.2
@@ -41,15 +43,51 @@ with the following utilities: sed, xmlstarlet and sftp.
     ./update-version.sh $currentversion $newversion
 
     # Generate list of changes
-    cat <<EOF > docs/changes$newversion.txt
+    cat <<EOF > docs/changes/changes$newversion.txt
     ================================================================================
     ===
     === GeoNetwork $version: List of changes
     ===
     ================================================================================
     EOF
-    git log --pretty='format:- %s' $previousversion... >> docs/changes$newversion.txt
+    git log --pretty='format:- %s' $previousversion... >> docs/changes/changes$newversion.txt
     ```
+
+3.  Create a new documentation page: `docs/manual/docs/overview/change-log/`
+
+    ``` shell
+    cat <<EOF > docs/changes/changes$newversion.txt
+    # Version $version
+    
+    GeoNetwork $version is a minor release.
+
+    ## Migration notes
+    
+    ### API changes
+    
+    ### Installation changes
+    
+    ### Index changes
+    
+    ## List of changes
+
+    Major changes:
+    
+    * 
+    
+    and more \... see [$version issues](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+milestone%3A$version+is%3Aclosed) and [pull requests](https://github.com/geonetwork/core-geonetwork/pulls?page=3&q=is%3Apr+milestone%3A$version+is%3Aclosed) for full details.
+    EOF
+    ```
+    
+    Update above markdown file. 
+
+    Update links and navigation:
+    
+    * ``docs/manual/mkdocs.yml``
+    * ``docs/manual/docs/overview/change-log/index.md``
+    * ``docs/manual/docs/overview/change-log/latest.md``
+    * ``docs/manual/docs/overview/change-log/stable.md``
+    * ``docs/manual/docs/overview/change-log/archive.md``
 
 2.  Commit & tag the new version
 
@@ -77,6 +115,10 @@ with the following utilities: sed, xmlstarlet and sftp.
 
     # Deploy to osgeo repository (requires credentials in ~/.m2/settings.xml)
     mvn deploy
+    
+    # Deploy docs for (series=4.4)
+    cd docs/mannual
+    mike deploy --push $series
     ```
 
 4.  Test
@@ -93,6 +135,25 @@ with the following utilities: sed, xmlstarlet and sftp.
     ``` shell
     # Set version number to SNAPSHOT
     ./update-version.sh $newversion $nextversion
+
+    # Add SQL migration step for the next version
+    mkdir web/src/main/webapp/WEB-INF/classes/setup/sql/migrate/v424
+    cat <<EOF > web/src/main/webapp/WEB-INF/classes/setup/sql/migrate/v424/migrate-default.sql
+    UPDATE Settings SET value='4.2.4' WHERE name='system/platform/version';
+    UPDATE Settings SET value='SNAPSHOT' WHERE name='system/platform/subVersion';
+    EOF
+    vi web/src/main/webResources/WEB-INF/config-db/database_migration.xml
+    ```
+
+    In `WEB-INF/config-db/database_migration.xml` add an entry for the new version in the 2 steps:
+
+    ``` xml
+    <entry key="3.12.2">
+      <list>
+        <value>WEB-INF/classes/setup/sql/migrate/v3122/migrate-</value>
+      </list>
+    </entry>
+    ```
 
     ``` shell
     git add .
@@ -139,8 +200,6 @@ with the following utilities: sed, xmlstarlet and sftp.
     bye
     ```
 
-8.  Update or add the changelog in the documentation <https://github.com/geonetwork/doc> .
-
 9.  Close the milestone on github <https://github.com/geonetwork/core-geonetwork/milestones?state=closed> with link to sourceforge download.
 
     Publish the release on github <https://github.com/geonetwork/core-geonetwork/releases> .
@@ -164,6 +223,14 @@ with the following utilities: sed, xmlstarlet and sftp.
     git checkout master
     ./update-version.sh $currentversion $nextMajorVersion
     ```
+    
+    Update documentation to reflect series change of `latest`, `stable`, `maintenance` and `archive`:
+    
+    * ``docs/manual/mkdocs.yml`` navigation changes as branches change role
+    * ``docs/manual/docs/overview/change-log/index.md``
+    * ``docs/manual/docs/overview/change-log/latest.md``
+    * ``docs/manual/docs/overview/change-log/stable.md``
+    * ``docs/manual/docs/overview/change-log/archive.md``
 
     Commit the new version
 
