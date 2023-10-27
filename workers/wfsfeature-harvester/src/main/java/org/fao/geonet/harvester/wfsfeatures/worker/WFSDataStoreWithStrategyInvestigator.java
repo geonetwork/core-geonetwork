@@ -45,11 +45,10 @@ import java.util.Map;
  */
 public class WFSDataStoreWithStrategyInvestigator extends WFSDataStoreFactory {
 
-    private static Logger LOGGER =  LoggerFactory.getLogger(WFSHarvesterRouteBuilder.LOGGER_NAME);
     private String describeFeatureTypeUrl;
 
-    public void init (String url, String typeName) throws Exception {
-        this.describeFeatureTypeUrl = new OwsUtils().getDescribeFeatureTypeUrl(url, typeName, "1.1.0");
+    public void init (String url, String typeName, String version) throws Exception {
+        this.describeFeatureTypeUrl = new OwsUtils().getDescribeFeatureTypeUrl(url, typeName, version);
     }
 
     @Override
@@ -66,7 +65,7 @@ public class WFSDataStoreWithStrategyInvestigator extends WFSDataStoreFactory {
             }
         }
 
-        final URL capabilitiesURL = (URL) URL.lookUp(params);
+        final URL capabilitiesURL = URL.lookUp(params);
 
         final HTTPClient http = getHttpClient(params);
         http.setTryGzip(config.isTryGZIP());
