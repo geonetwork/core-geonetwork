@@ -115,7 +115,7 @@ public class BatchEditsServiceTest extends AbstractServiceIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .session(this.mockHttpSession)
                 .accept(MediaType.parseMediaType("application/json")))
-                .andExpect(jsonPath("$.description", is("At least one edit must be defined.")))
+                .andExpect(jsonPath("$.message", is("At least one edit must be defined.")))
                 .andExpect(status().is(400));
 
     }
