@@ -1,11 +1,10 @@
 <div
   id="gn-addonlinesrc-add-alert"
-  class="alert alert-warning"
+  class="alert alert-danger gn-padding-top-sm gn-padding-bottom-sm gn-margin-top"
   data-ng-show="!isUrlEmpty() && gnAddLink.$valid && !isUrlOk"
 >
   <span data-translate="">areYouSureToAddALinkWithError</span>
   <a
-    class="btn btn-link"
     target="_blank"
     data-ng-href="{{params.url || params.url[ctrl.urlCurLang]}}"
     data-ng-show="gnAddLink.$valid && !isUrlOk"

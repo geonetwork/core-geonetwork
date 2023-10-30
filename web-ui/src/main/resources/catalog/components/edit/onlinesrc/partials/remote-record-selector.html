@@ -1,10 +1,10 @@
 <div data-ng-if="allowRemoteRecordLink">
   <form class="form-horizontal">
     <div class="form-group">
-      <label for="gnRemoteRecordUrl" class="control-label col-sm-2" data-translate=""
+      <label for="gnRemoteRecordUrl" class="col-sm-12" data-translate=""
         >orUseRemoteRecordUrl</label
       >
-      <div class="col-sm-10">
+      <div class="col-sm-12">
         <div class="input-group">
           <input
             class="form-control"
@@ -21,6 +21,29 @@
             <i class="fa fa-fw fa-times text-danger"></i>
           </span>
         </div>
+
+
+        <div
+          id="gn-addonlinesrc-add-alert"
+          class="alert alert-danger gn-padding-top-sm gn-padding-bottom-sm gn-margin-top"
+          data-ng-show="!isRemoteRecordUrlOk"
+        >
+          <span data-translate="">remoteRecordUrlReturnedError</span>
+          <a target="_blank" data-ng-href="remoteRecord.remoteUrl">
+            {{remoteRecord.remoteUrl}}
+          </a>
+        </div>
+        <div
+          id="gn-addonlinesrc-add-alert"
+          class="alert alert-danger gn-padding-top-sm gn-padding-bottom-sm gn-margin-top"
+          data-ng-show="remoteRecord.remoteUrl != '' && isRemoteRecordUrlOk && !isRemoteRecordPropertiesExtracted"
+        >
+          <span data-translate="">remoteRecordPropertiesError</span>
+          <a target="_blank" data-ng-href="remoteRecord.remoteUrl">
+            {{remoteRecord.remoteUrl}}
+          </a>
+        </div>
+
         <span class="help-block" data-ng-if="isTypingRemoteUrl" data-translate=""
           >remoteRecordUrl-help</span
         >
@@ -28,7 +51,7 @@
     </div>
   </form>
 
-  <div class="col-md-offset-2 list-group" data-ng-if="remoteRecord.uuid">
+  <ul class="list-group" data-ng-if="remoteRecord.uuid">
     <li
       class="list-group-item"
       data-ng-click="updateSelection();triggerSearch();"
@@ -42,26 +65,6 @@
       />
       ({{remoteRecord.uuid}})
     </li>
-  </div>
+  </ul>
 
-  <div
-    id="gn-addonlinesrc-add-alert"
-    class="alert alert-warning"
-    data-ng-show="!isRemoteRecordUrlOk"
-  >
-    <span data-translate="">remoteRecordUrlReturnedError</span>
-    <a class="btn btn-link" target="_blank" data-ng-href="remoteRecord.remoteUrl">
-      {{remoteRecord.remoteUrl}}
-    </a>
-  </div>
-  <div
-    id="gn-addonlinesrc-add-alert"
-    class="alert alert-warning"
-    data-ng-show="remoteRecord.remoteUrl != '' && isRemoteRecordUrlOk && !isRemoteRecordPropertiesExtracted"
-  >
-    <span data-translate="">remoteRecordPropertiesError</span>
-    <a class="btn btn-link" target="_blank" data-ng-href="remoteRecord.remoteUrl">
-      {{remoteRecord.remoteUrl}}
-    </a>
-  </div>
 </div>
