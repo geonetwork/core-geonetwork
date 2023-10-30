@@ -162,8 +162,8 @@
       <!-- Always display title if available -->
       <h3 class="flex-grow">
         <a data-ng-href="{{::r.locUrl}}" target="_blank">
-          <i class="fa fa-fw {{icon}}"></i>
-          {{::r.locTitle || r.locUrl}}
+          <span data-gn-link-icon="r" class="gn-margin-right-sm"></span>
+          <span class="gn-break-all">{{::r.locTitle || r.locUrl}}</span>
         </a>
       </h3>
       <!-- Edit & Remove -->

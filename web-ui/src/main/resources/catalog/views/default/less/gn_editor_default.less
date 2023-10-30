@@ -440,12 +440,26 @@
       display: inline-block;
       font-size: 15px;
       margin: @gn-spacing 0;
+      a {
+        display: flex;
+      }
     }
     .list-group-item {
       margin-top: -1px;
     }
     .alert {
       margin-bottom: @gn-spacing-sm;
+    }
+    [data-gn-link-icon] {
+      display: inline-block;
+      color: #333;
+      strong {
+        display: flex;
+        .label {
+          display: inline-block;
+        }
+      }
+
     }
   }
 
