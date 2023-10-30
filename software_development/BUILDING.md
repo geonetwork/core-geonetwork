@@ -1,6 +1,6 @@
 # Building
 
-See [Installing from source code](https://geonetwork-opensource.org/manuals/4.0.x/en/install-guide/installing-from-source-code.html) (Installation Guide)
+See [Installing from source code](https://docs.geonetwork-opensource.org/latest/install-guide/installing-from-source-code/) (Installation Guide)
 
 Build GeoNetwork
 ----------------
@@ -101,7 +101,6 @@ GeoNetwork requires an Elasticsearch instance as an index.
    ```
 
 3. For alternatives see [es/readme](../es/README.md).
-
 
 Run Kibana
 ----------

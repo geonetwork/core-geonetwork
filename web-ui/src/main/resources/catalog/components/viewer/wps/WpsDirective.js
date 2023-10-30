@@ -231,7 +231,7 @@
                   scope.wfsLink.name
                 );
 
-                // use filter values in ElasticSearch object state
+                // use filter values in Elasticsearch object state
                 // to overload input
                 if (esObject) {
                   // this will hold wfs filter values

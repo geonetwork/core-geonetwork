@@ -44,13 +44,13 @@
     "removeField": "이 필드 제거",
     "addXpath-help": "XPath를 이용하는 레코드 갱신은 변경에 대한 세심한 정의가 필요합니다. 변경은 다음에 의해 정의됩니다:",
     "addXpathTitle": "선택적 제목",
-    "addXpathXpath": "a mandatory <a href='http://xmlfr.org/w3c/TR/xpath/'>XPath</a> to point to the element(s) to update. XPath may contain a filter expression.",
+    "addXpathXpath": "a mandatory <a href='https://www.w3.org/TR/1999/REC-xpath-19991116/'>XPath</a> to point to the element(s) to update. XPath may contain a filter expression.",
     "addXpathInsertMode": "갱신 유형",
     "xpath": "XPath",
     "xpathValue": "텍스트 또는 XML 값",
     "gn_create": "요소 생성",
-    "gn_add": "요소나 값(첫번째 부모와 일치하는) 추가 또는 생성하기",
-    "gn_replace": "요소나 값(첫번째 부모와 일치하는)  대체하기",
+    "gn_add": "Add the element or value (in all matching parents) or create it",
+    "gn_replace": "Replace the element or value (in all matching parents)",
     "gn_delete": "일치하는 모든 요소 제거하기",
     "addXpathValue": "a value, which could be an XML snippet if the mode is not 'delete'",
     "chooseASet": "1. 레코드 집합 선택",
@@ -428,5 +428,6 @@
     "confirmCancelEdit": "Do you want to cancel all changes and close the editor?",
     "allowEditGroupMembers": "Allow group editors to edit",
     "wmsSelectedLayers": "Selected layers",
-    "wmsSelectedLayersNone": "No layers selected"
+    "wmsSelectedLayersNone": "No layers selected",
+    "remoteAssociatedMetadataTitlePlaceholder": "Remote associated metadata title"
 }

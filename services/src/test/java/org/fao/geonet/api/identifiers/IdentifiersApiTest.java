@@ -155,7 +155,7 @@ public class IdentifiersApiTest  extends AbstractServiceIntegrationTest {
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(400))
-            .andExpect(jsonPath("$.description", is("A metadata identifier template with id '" + metadataIdentifierTemplateToAdd.getId() + "' already exist.")));
+            .andExpect(jsonPath("$.message", is("A metadata identifier template with id '" + metadataIdentifierTemplateToAdd.getId() + "' already exist.")));
     }
 
 

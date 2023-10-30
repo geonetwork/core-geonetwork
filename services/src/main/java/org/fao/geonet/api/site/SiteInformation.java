@@ -28,6 +28,7 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.commons.lang.StringUtils;
+import org.elasticsearch.ElasticsearchException;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.EsSearchManager;
@@ -65,7 +66,7 @@ public class SiteInformation {
             }
             try {
                 loadIndexInfo(context);
-            } catch (IOException e) {
+            } catch (IOException | ElasticsearchException e) {
                 Log.error(Geonet.GEONETWORK, e.getMessage(), e);
             }
             loadEnvInfo();

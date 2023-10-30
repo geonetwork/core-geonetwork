@@ -1310,6 +1310,8 @@
           gnSearchSettings.mapProtocols = {
             layers: [
               "OGC:WMS",
+              "OGC:3DTILES",
+              "OGC:COG",
               "OGC:WMTS",
               "OGC:WMS-1.1.1-http-get-map",
               "OGC:WMS-1.3.0-http-get-map",

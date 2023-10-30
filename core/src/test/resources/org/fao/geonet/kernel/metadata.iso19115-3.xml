@@ -1,0 +1,1555 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mdb:MD_Metadata xmlns:mdb="http://standards.iso.org/iso/19115/-3/mdb/2.0"
+                 xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/2.0"
+                 xmlns:gcx="http://standards.iso.org/iso/19115/-3/gcx/1.0"
+                 xmlns:gex="http://standards.iso.org/iso/19115/-3/gex/1.0"
+                 xmlns:lan="http://standards.iso.org/iso/19115/-3/lan/1.0"
+                 xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0"
+                 xmlns:mco="http://standards.iso.org/iso/19115/-3/mco/1.0"
+                 xmlns:mpc="http://standards.iso.org/iso/19115/-3/mpc/1.0"
+                 xmlns:mrc="http://standards.iso.org/iso/19115/-3/mrc/2.0"
+                 xmlns:mrd="http://standards.iso.org/iso/19115/-3/mrd/1.0"
+                 xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0"
+                 xmlns:mrl="http://standards.iso.org/iso/19115/-3/mrl/2.0"
+                 xmlns:mrs="http://standards.iso.org/iso/19115/-3/mrs/1.0"
+                 xmlns:mdq="http://standards.iso.org/iso/19157/-2/mdq/1.0"
+                 xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0" xmlns:gml="http://www.opengis.net/gml/3.2"
+                 xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xsi:schemaLocation="http://standards.iso.org/iso/19115/-3/mdb/2.0 https://schemas.isotc211.org/19115/-3/mdb/2.0/mdb.xsd">
+  <mdb:metadataIdentifier>
+    <mcc:MD_Identifier>
+      <mcc:code>
+        <gco:CharacterString>{uuid}</gco:CharacterString>
+      </mcc:code>
+      <mcc:codeSpace>
+        <gco:CharacterString>urn:uuid</gco:CharacterString>
+      </mcc:codeSpace>
+    </mcc:MD_Identifier>
+  </mdb:metadataIdentifier>
+  <mdb:defaultLocale>
+    <lan:PT_Locale id="FR">
+      <lan:language>
+        <lan:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="fre"/>
+      </lan:language>
+      <lan:characterEncoding>
+        <lan:MD_CharacterSetCode
+          codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_CharacterSetCode"
+          codeListValue="utf8"/>
+      </lan:characterEncoding>
+    </lan:PT_Locale>
+  </mdb:defaultLocale>
+  <mdb:metadataScope>
+    <mdb:MD_MetadataScope>
+      <mdb:resourceScope>
+        <mcc:MD_ScopeCode
+          codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_ScopeCode"
+          codeListValue="dataset"/>
+      </mdb:resourceScope>
+    </mdb:MD_MetadataScope>
+  </mdb:metadataScope>
+  <mdb:contact>
+    <cit:CI_Responsibility>
+      <cit:role>
+        <cit:CI_RoleCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_RoleCode"
+                         codeListValue="pointOfContact"/>
+      </cit:role>
+      <cit:party>
+        <cit:CI_Organisation>
+          <cit:name>
+            <gco:CharacterString>Production géomatique et traitement de données (SPW - Secrétariat général - SPW Digital
+              - Département Données transversales - Production géomatique et traitement de données)
+            </gco:CharacterString>
+          </cit:name>
+          <cit:contactInfo>
+            <cit:CI_Contact>
+              <cit:address>
+                <cit:CI_Address>
+                  <cit:electronicMailAddress>
+                    <gco:CharacterString>geometrologie@spw.wallonie.be</gco:CharacterString>
+                  </cit:electronicMailAddress>
+                </cit:CI_Address>
+              </cit:address>
+            </cit:CI_Contact>
+          </cit:contactInfo>
+        </cit:CI_Organisation>
+      </cit:party>
+    </cit:CI_Responsibility>
+  </mdb:contact>
+  <mdb:dateInfo>
+    <cit:CI_Date>
+      <cit:date>
+        <gco:DateTime>2023-07-04T07:51:35.236Z</gco:DateTime>
+      </cit:date>
+      <cit:dateType>
+        <cit:CI_DateTypeCode
+          codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_DateTypeCode"
+          codeListValue="revision"/>
+      </cit:dateType>
+    </cit:CI_Date>
+  </mdb:dateInfo>
+  <mdb:dateInfo>
+    <cit:CI_Date>
+      <cit:date>
+        <gco:DateTime>2019-01-10T12:00:00</gco:DateTime>
+      </cit:date>
+      <cit:dateType>
+        <cit:CI_DateTypeCode
+          codeList="https://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_DateTypeCode"
+          codeListValue="creation"/>
+      </cit:dateType>
+    </cit:CI_Date>
+  </mdb:dateInfo>
+  <mdb:metadataStandard>
+    <cit:CI_Citation>
+      <cit:title>
+        <gco:CharacterString>ISO 19115</gco:CharacterString>
+      </cit:title>
+      <cit:edition>
+        <gco:CharacterString>2003/Cor 1:2006</gco:CharacterString>
+      </cit:edition>
+    </cit:CI_Citation>
+  </mdb:metadataStandard>
+  <mdb:metadataLinkage>
+    <cit:CI_OnlineResource>
+      <cit:linkage>
+        <gco:CharacterString>
+          https://metawal.wallonie.be/geonetwork/srv/api/records/fafb9fc7-4e32-4a40-8163-c64966cb573c
+        </gco:CharacterString>
+      </cit:linkage>
+      <cit:function>
+        <cit:CI_OnLineFunctionCode
+          codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_OnLineFunctionCode"
+          codeListValue="completeMetadata"/>
+      </cit:function>
+    </cit:CI_OnlineResource>
+  </mdb:metadataLinkage>
+  <mdb:referenceSystemInfo>
+    <mrs:MD_ReferenceSystem>
+      <mrs:referenceSystemIdentifier>
+        <mcc:MD_Identifier>
+          <mcc:code>
+            <gcx:Anchor xlink:href="http://www.opengis.net/def/crs/EPSG/0/3812">EPSG:3812</gcx:Anchor>
+          </mcc:code>
+          <mcc:description>
+            <gco:CharacterString>ETRS89 / Belgian Lambert 2008 (EPSG:3812)</gco:CharacterString>
+          </mcc:description>
+        </mcc:MD_Identifier>
+      </mrs:referenceSystemIdentifier>
+      <mrs:referenceSystemType>
+        <mrs:MD_ReferenceSystemTypeCode
+          codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_ReferenceSystemTypeCode"
+          codeListValue="projected"/>
+      </mrs:referenceSystemType>
+    </mrs:MD_ReferenceSystem>
+  </mdb:referenceSystemInfo>
+  <mdb:identificationInfo>
+    <mri:MD_DataIdentification>
+      <mri:citation>
+        <cit:CI_Citation>
+          <cit:title>
+            <gco:CharacterString>Utilisation du Sol en Wallonie - WALOUS 2018</gco:CharacterString>
+          </cit:title>
+          <cit:alternateTitle>
+            <gco:CharacterString>WALOUS_UTS__2018</gco:CharacterString>
+          </cit:alternateTitle>
+          <cit:date>
+            <cit:CI_Date>
+              <cit:date>
+                <gco:Date>2020-09-28</gco:Date>
+              </cit:date>
+              <cit:dateType>
+                <cit:CI_DateTypeCode
+                  codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_DateTypeCode"
+                  codeListValue="creation"/>
+              </cit:dateType>
+            </cit:CI_Date>
+          </cit:date>
+          <cit:date>
+            <cit:CI_Date>
+              <cit:date>
+                <gco:Date>2020-10-30</gco:Date>
+              </cit:date>
+              <cit:dateType>
+                <cit:CI_DateTypeCode
+                  codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_DateTypeCode"
+                  codeListValue="publication"/>
+              </cit:dateType>
+            </cit:CI_Date>
+          </cit:date>
+          <cit:identifier>
+            <mcc:MD_Identifier>
+              <mcc:code>
+                <gco:CharacterString>fafb9fc7-4e32-4a40-8163-c64966cb573c</gco:CharacterString>
+              </mcc:code>
+              <mcc:codeSpace>
+                <gco:CharacterString>http://geodata.wallonie.be/id/</gco:CharacterString>
+              </mcc:codeSpace>
+            </mcc:MD_Identifier>
+          </cit:identifier>
+          <cit:identifier>
+            <mcc:MD_Identifier>
+              <mcc:code>
+                <gco:CharacterString>WALOUS__WAL_UTS__2018</gco:CharacterString>
+              </mcc:code>
+              <mcc:codeSpace>
+                <gco:CharacterString>BE.SPW.INFRASIG.CARTON</gco:CharacterString>
+              </mcc:codeSpace>
+            </mcc:MD_Identifier>
+          </cit:identifier>
+        </cit:CI_Citation>
+      </mri:citation>
+      <mri:abstract>
+        <gco:CharacterString>Cette couche de données reprend la cartographie de l’utilisation du sol de l’ensemble du
+          territoire wallon pour l’année 2018 (WAL_UTS__2018).
+
+          La cartographie de l’utilisation du sol de l’ensemble du territoire wallon pour l’année 2018 (WAL_UTS__2018)
+          est complémentaire de la cartographie de l'occupation du sol (WAL_OCS__2018) produite conjointement dans le
+          cadre de la subvention de recherche WALlonie Occupation et Utilisation du Sol (WALOUS).
+
+          L’utilisation du sol représentée dans la donnée WAL_UTS__2018 se définit comme le « Territoire caractérisé
+          selon sa dimension fonctionnelle ou son objet socioéconomique actuel (par exemple, résidentiel, industriel,
+          commercial, agricole, forestier, récréatif) » (directive européenne INSPIRE 2007/2/CE).
+          La donnée WAL_UTS__2018 fournit donc une information sur l’usage des sols par parcelle cadastrale et pour les
+          espaces non-cadastrés.
+          Prochainement, cette information sera consolidée par géométrie métier (voir ressources associées).
+
+          Les spécifications techniques de la donnée WAL_UTS__2018 résultent d’une procédure d’analyse des besoins et de
+          co-constructions avec un panel d’acteurs wallons.
+          Une vingtaine de géodonnées sont intégrées pour la construction de la donnée WAL_UTS__2018 . La géométrie de
+          représentation est définie par le croisement entre :
+          - Le plan parcellaire cadastral (v. 01/01/2019, © SPF-Finance) ;
+          - Le squelette vectoriel construit par intégration des données du réseau routier et délinéation du bâti du
+          PICC 2018 (© SPW) et des cours d’eau navigables et des chemins de fer de l’IGN TOP10vGIS (© IGN) ;
+          - La Carte d’Occupation des Sols de Wallonie (WAL_OCS__2018) produite dans le cadre de la subvention de
+          recherche WALOUS ;
+          - La matrice cadastrale définissant la nature déclarée pour chaque parcelle cadastrale (v. 01/01/2019, ©
+          SPF-Finance) ;
+          - Le Registre national des Personnes Physiques 2018 géocodé au point adresse (RNPP, Source : Statbel
+          (Direction générale statistique – Statistics Belgium)) ;
+          - Le répertoire d’entreprises DBRIS 2018 géolocalisées à la parcelle cadastrale (Source : Statbel (Direction
+          générale statistique – Statistics Belgium)) ;
+          - Le parcellaire agricole anonyme 2018 (© SPW) ;
+          - L’inventaire des sites à réaménager de droit 2018 (© SPW) ;
+          - Le parcellaire forestier public 2018 (© SPW) ;
+          - L’inventaire des recyparcs (© SPW) ;
+          - La base de données « conservation de la nature » (© SPW) ;
+          - Le Réseau Natura 2000 en vigueur 2018 (© SPW) ;
+          - Le Plan de Secteur 2018 (© SPW) ;
+          - La carte des écoles de Wallonie 2019 (© ISSeP/SPW) ;
+          - L’inventaire géolocalisé des établissements pour ainés 2018 (© SPW) ;
+          - Les sites SEVESO 2018 (© SPW) ;
+          - L’inventaire des campings 2018 (© SPW) ;
+          - L’inventaire consolidé des éoliennes 2020 (© ISSeP/SPW) ;
+          - L’inventaire ponctuel (centroïde) des carrières actives 2010 (inventaire POTY) (© SPW) ;
+          - L’IGN Top-10vGIS 2017-2020 (© IGN) ;
+          - Les plantations de sapins de noël 2015 (© SPW) ;
+          - Le Projet Informatique de Cartographie Continue (v5.2019, © SPW).
+
+          Au sein d’une approche automatisée par base de données spatiales (PostgreSQL, PostGIS, Python, Jupyter
+          Notebook), l’ensemble des données d’entrée (bases de données alphanumériques, polygones et raster) sont
+          traduites dans les différentes légendes.
+          Par parcelle cadastrale (unité de cartographie), ces données ainsi que l’occupation du sol sont synthétisées
+          par une série d’indicateurs statistiques (présence/absence, nombre d’éléments, proportions, mode,
+          recouvrement). Ces indicateurs alimentent les règles de classification qui attribuent plusieurs codes :
+          • L’ensemble des classes rencontrées (avec critères de superficie et de recouvrement) dans cette parcelle
+          cadastrale : reprise dans l’attribut « all_hilucs » ;
+          • Une classe reprenant un code unique identifiant la principale utilisation par nos règles : représentée par «
+          walousmaj », générée dans une volonté de représentation. Walousmaj est donc une représentation simplifiée et
+          n'est dès lors pas le reflet de l'ensemble des utilisations pouvant être rencontrées dans cette parcelle
+          cadastrale. L’attribut « walousmaj » présente l’utilisation du sol principale selon un amendement de la
+          légende INSPIRE résultant de la procédure de co-construction avec les utilisateurs wallons ; Elle se décline
+          en 3 niveaux de détails;
+          • La classification compatible INSPIRE selon les scénarios 1 et 2 (attributs « hilucsLandUse » - légende «
+          Hierarchical Land Use Classification System (HILUCS) ».) : la parcelle cadastrale est caractérisée par une ou
+          plusieurs utilisations du sol listées de manière non ordonnée et non-proportionnée.
+
+          Etant issue du croisement automatisé d'une vingtaine de géodonnées, la qualité de la donnée WAL_UTS est
+          dépendante de la qualité (géométrique, complétude, …) des géodonnées utilisées au sein de cette approche
+          automatisée.
+          De plus, ce croisement est régi par un ensemble de règles (voir rapport disponible sur le Géoportail). L'ordre
+          d'application de ces règles a un impact sur la classe considérée comme "principale utilisation" (représentée
+          par la symbologie du webservice). Pour une utilisation complète de la donnée WAL_UTS, il est conseillé de se
+          rapporter au champ "all_HILUCS"
+
+          Néanmoins, la donnée WAL_UTS__2018 a été consolidée via une procédure de contrôle à laquelle un groupe
+          d’experts wallons a participé. WAL_UTS__2018 a été enfin validée au moyen d’un set de validation de 1200
+          parcelles par un expert. Sur base de cette validation, l’exactitude de la carte est de 83% au niveau 1 de la
+          légende INSPIRE HILUCS. Ces deux procédures ont permis de renforcer l’analyse critique des résultats et
+          contribuer à l’élaboration de recommandations d’usage et de mise à jour.
+
+          L’information sur l’utilisation du sol est fournie, pour les deux types de représentation spatiale, dans le
+          système de projection Lambert Belge 2008 (EPSG : 3812 – Pour usage en LB72, voir information sur la grille
+          NTV2 - http://geoportail.wallonie.be/home/ressources/outils/Lambert-belge-2008-LB08.html).
+
+          La mise en œuvre de la donnée WAL_UTS__2018 s’inscrit dans le cadre du projet WALOUS (2017-2020) subventionné
+          par la Région wallonne et réalisé par un consortium de deux universités (UCLouvain, ULB) et d’un centre de
+          recherche public de type UAP (ISSeP). De ce fait, la source à mentionner lors de l'utilisation de cette donnée
+          est "SPW - UCLouvain/ULB/ISSeP".
+        </gco:CharacterString>
+      </mri:abstract>
+      <mri:pointOfContact>
+        <cit:CI_Responsibility>
+          <cit:role>
+            <cit:CI_RoleCode
+              codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_RoleCode"
+              codeListValue="pointOfContact"/>
+          </cit:role>
+          <cit:party>
+            <cit:CI_Organisation>
+              <cit:name>
+                <gco:CharacterString>Production géomatique et traitement de données (SPW - Secrétariat général - SPW
+                  Digital - Département Données transversales - Production géomatique et traitement de données)
+                </gco:CharacterString>
+              </cit:name>
+              <cit:contactInfo>
+                <cit:CI_Contact>
+                  <cit:address>
+                    <cit:CI_Address>
+                      <cit:electronicMailAddress>
+                        <gco:CharacterString>geometrologie@spw.wallonie.be</gco:CharacterString>
+                      </cit:electronicMailAddress>
+                    </cit:CI_Address>
+                  </cit:address>
+                </cit:CI_Contact>
+              </cit:contactInfo>
+            </cit:CI_Organisation>
+          </cit:party>
+        </cit:CI_Responsibility>
+      </mri:pointOfContact>
+      <mri:pointOfContact>
+        <cit:CI_Responsibility>
+          <cit:role>
+            <cit:CI_RoleCode
+              codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_RoleCode"
+              codeListValue="owner"/>
+          </cit:role>
+          <cit:party>
+            <cit:CI_Organisation>
+              <cit:name>
+                <gco:CharacterString>Service public de Wallonie (SPW)</gco:CharacterString>
+              </cit:name>
+              <cit:contactInfo>
+                <cit:CI_Contact>
+                  <cit:address>
+                    <cit:CI_Address>
+                      <cit:electronicMailAddress>
+                        <gco:CharacterString>helpdesk.carto@spw.wallonie.be</gco:CharacterString>
+                      </cit:electronicMailAddress>
+                    </cit:CI_Address>
+                  </cit:address>
+                  <cit:onlineResource>
+                    <cit:CI_OnlineResource>
+                      <cit:linkage>
+                        <gco:CharacterString>https://geoportail.wallonie.be</gco:CharacterString>
+                      </cit:linkage>
+                      <cit:protocol>
+                        <gco:CharacterString>WWW:LINK</gco:CharacterString>
+                      </cit:protocol>
+                      <cit:name>
+                        <gco:CharacterString>Géoportail de la Wallonie</gco:CharacterString>
+                      </cit:name>
+                      <cit:description>
+                        <gco:CharacterString>Géoportail de la Wallonie</gco:CharacterString>
+                      </cit:description>
+                      <cit:function>
+                        <cit:CI_OnLineFunctionCode
+                          codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_OnLineFunctionCode"
+                          codeListValue="information"/>
+                      </cit:function>
+                    </cit:CI_OnlineResource>
+                  </cit:onlineResource>
+                </cit:CI_Contact>
+              </cit:contactInfo>
+            </cit:CI_Organisation>
+          </cit:party>
+        </cit:CI_Responsibility>
+      </mri:pointOfContact>
+      <mri:pointOfContact>
+        <cit:CI_Responsibility>
+          <cit:role>
+            <cit:CI_RoleCode
+              codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_RoleCode"
+              codeListValue="owner"/>
+          </cit:role>
+          <cit:party>
+            <cit:CI_Organisation>
+              <cit:name>
+                <gco:CharacterString>Université Libre de Bruxelles (ULB)</gco:CharacterString>
+              </cit:name>
+              <cit:contactInfo>
+                <cit:CI_Contact>
+                  <cit:address>
+                    <cit:CI_Address>
+                      <cit:electronicMailAddress>
+                        <gco:CharacterString>ewolff@ulb.ac.be</gco:CharacterString>
+                      </cit:electronicMailAddress>
+                    </cit:CI_Address>
+                  </cit:address>
+                </cit:CI_Contact>
+              </cit:contactInfo>
+            </cit:CI_Organisation>
+          </cit:party>
+        </cit:CI_Responsibility>
+      </mri:pointOfContact>
+      <mri:pointOfContact>
+        <cit:CI_Responsibility>
+          <cit:role>
+            <cit:CI_RoleCode
+              codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_RoleCode"
+              codeListValue="owner"/>
+          </cit:role>
+          <cit:party>
+            <cit:CI_Organisation>
+              <cit:name>
+                <gco:CharacterString>Université catholique de Louvain (UCL)</gco:CharacterString>
+              </cit:name>
+              <cit:contactInfo>
+                <cit:CI_Contact>
+                  <cit:address>
+                    <cit:CI_Address>
+                      <cit:electronicMailAddress>
+                        <gco:CharacterString>pierre.Defouny@uclouvain.be</gco:CharacterString>
+                      </cit:electronicMailAddress>
+                    </cit:CI_Address>
+                  </cit:address>
+                </cit:CI_Contact>
+              </cit:contactInfo>
+            </cit:CI_Organisation>
+          </cit:party>
+        </cit:CI_Responsibility>
+      </mri:pointOfContact>
+      <mri:pointOfContact>
+        <cit:CI_Responsibility>
+          <cit:role>
+            <cit:CI_RoleCode
+              codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_RoleCode"
+              codeListValue="owner"/>
+          </cit:role>
+          <cit:party>
+            <cit:CI_Organisation>
+              <cit:name>
+                <gco:CharacterString>Institut Scientifique de Service Public (ISSeP)</gco:CharacterString>
+              </cit:name>
+              <cit:contactInfo>
+                <cit:CI_Contact>
+                  <cit:address>
+                    <cit:CI_Address>
+                      <cit:electronicMailAddress>
+                        <gco:CharacterString>ctg@issep.be</gco:CharacterString>
+                      </cit:electronicMailAddress>
+                    </cit:CI_Address>
+                  </cit:address>
+                </cit:CI_Contact>
+              </cit:contactInfo>
+            </cit:CI_Organisation>
+          </cit:party>
+        </cit:CI_Responsibility>
+      </mri:pointOfContact>
+      <mri:pointOfContact>
+        <cit:CI_Responsibility>
+          <cit:role>
+            <cit:CI_RoleCode
+              codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_RoleCode"
+              codeListValue="processor"/>
+          </cit:role>
+          <cit:party>
+            <cit:CI_Organisation>
+              <cit:name>
+                <gco:CharacterString>Université Libre de Bruxelles (ULB)</gco:CharacterString>
+              </cit:name>
+              <cit:contactInfo>
+                <cit:CI_Contact>
+                  <cit:address>
+                    <cit:CI_Address>
+                      <cit:electronicMailAddress>
+                        <gco:CharacterString>ewolff@ulb.ac.be</gco:CharacterString>
+                      </cit:electronicMailAddress>
+                    </cit:CI_Address>
+                  </cit:address>
+                </cit:CI_Contact>
+              </cit:contactInfo>
+              <cit:individual>
+                <cit:CI_Individual>
+                  <cit:name>
+                    <gco:CharacterString>Taïs Grippa</gco:CharacterString>
+                  </cit:name>
+                </cit:CI_Individual>
+              </cit:individual>
+              <cit:individual>
+                <cit:CI_Individual>
+                  <cit:name>
+                    <gco:CharacterString>Moritz Lennert</gco:CharacterString>
+                  </cit:name>
+                </cit:CI_Individual>
+              </cit:individual>
+              <cit:individual>
+                <cit:CI_Individual>
+                  <cit:name>
+                    <gco:CharacterString>Augustin Martinet</gco:CharacterString>
+                  </cit:name>
+                </cit:CI_Individual>
+              </cit:individual>
+              <cit:individual>
+                <cit:CI_Individual>
+                  <cit:name>
+                    <gco:CharacterString>Sabine Vanhuysse</gco:CharacterString>
+                  </cit:name>
+                </cit:CI_Individual>
+              </cit:individual>
+              <cit:individual>
+                <cit:CI_Individual>
+                  <cit:name>
+                    <gco:CharacterString>Eléonore Wolff</gco:CharacterString>
+                  </cit:name>
+                </cit:CI_Individual>
+              </cit:individual>
+            </cit:CI_Organisation>
+          </cit:party>
+        </cit:CI_Responsibility>
+      </mri:pointOfContact>
+      <mri:pointOfContact>
+        <cit:CI_Responsibility>
+          <cit:role>
+            <cit:CI_RoleCode
+              codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_RoleCode"
+              codeListValue="processor"/>
+          </cit:role>
+          <cit:party>
+            <cit:CI_Organisation>
+              <cit:name>
+                <gco:CharacterString>Université catholique de Louvain (UCL)</gco:CharacterString>
+              </cit:name>
+              <cit:contactInfo>
+                <cit:CI_Contact>
+                  <cit:address>
+                    <cit:CI_Address>
+                      <cit:electronicMailAddress>
+                        <gco:CharacterString>pierre.Defouny@uclouvain.be</gco:CharacterString>
+                      </cit:electronicMailAddress>
+                    </cit:CI_Address>
+                  </cit:address>
+                </cit:CI_Contact>
+              </cit:contactInfo>
+              <cit:individual>
+                <cit:CI_Individual>
+                  <cit:name>
+                    <gco:CharacterString>Céline Bassine</gco:CharacterString>
+                  </cit:name>
+                </cit:CI_Individual>
+              </cit:individual>
+              <cit:individual>
+                <cit:CI_Individual>
+                  <cit:name>
+                    <gco:CharacterString>Céline Champagne</gco:CharacterString>
+                  </cit:name>
+                </cit:CI_Individual>
+              </cit:individual>
+              <cit:individual>
+                <cit:CI_Individual>
+                  <cit:name>
+                    <gco:CharacterString>Pierre Defourny</gco:CharacterString>
+                  </cit:name>
+                </cit:CI_Individual>
+              </cit:individual>
+              <cit:individual>
+                <cit:CI_Individual>
+                  <cit:name>
+                    <gco:CharacterString>Julien Radoux</gco:CharacterString>
+                  </cit:name>
+                </cit:CI_Individual>
+              </cit:individual>
+            </cit:CI_Organisation>
+          </cit:party>
+        </cit:CI_Responsibility>
+      </mri:pointOfContact>
+      <mri:pointOfContact>
+        <cit:CI_Responsibility>
+          <cit:role>
+            <cit:CI_RoleCode
+              codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_RoleCode"
+              codeListValue="processor"/>
+          </cit:role>
+          <cit:party>
+            <cit:CI_Organisation>
+              <cit:name>
+                <gco:CharacterString>Institut Scientifique de Service Public (ISSeP)</gco:CharacterString>
+              </cit:name>
+              <cit:contactInfo>
+                <cit:CI_Contact>
+                  <cit:address>
+                    <cit:CI_Address>
+                      <cit:electronicMailAddress>
+                        <gco:CharacterString>ctg@issep.be</gco:CharacterString>
+                      </cit:electronicMailAddress>
+                    </cit:CI_Address>
+                  </cit:address>
+                </cit:CI_Contact>
+              </cit:contactInfo>
+              <cit:individual>
+                <cit:CI_Individual>
+                  <cit:name>
+                    <gco:CharacterString>Benjamin Beaumont</gco:CharacterString>
+                  </cit:name>
+                </cit:CI_Individual>
+              </cit:individual>
+              <cit:individual>
+                <cit:CI_Individual>
+                  <cit:name>
+                    <gco:CharacterString>Eric Hallot</gco:CharacterString>
+                  </cit:name>
+                </cit:CI_Individual>
+              </cit:individual>
+              <cit:individual>
+                <cit:CI_Individual>
+                  <cit:name>
+                    <gco:CharacterString>Gérard Swinnen</gco:CharacterString>
+                  </cit:name>
+                </cit:CI_Individual>
+              </cit:individual>
+              <cit:individual>
+                <cit:CI_Individual>
+                  <cit:name>
+                    <gco:CharacterString>Laura Van de Vyvere</gco:CharacterString>
+                  </cit:name>
+                </cit:CI_Individual>
+              </cit:individual>
+            </cit:CI_Organisation>
+          </cit:party>
+        </cit:CI_Responsibility>
+      </mri:pointOfContact>
+      <mri:pointOfContact>
+        <cit:CI_Responsibility>
+          <cit:role>
+            <cit:CI_RoleCode
+              codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_RoleCode"
+              codeListValue="custodian"/>
+          </cit:role>
+          <cit:party>
+            <cit:CI_Organisation>
+              <cit:name>
+                <gco:CharacterString>Production géomatique et traitement de données (SPW - Secrétariat général - SPW
+                  Digital - Département Données transversales - Production géomatique et traitement de données)
+                </gco:CharacterString>
+              </cit:name>
+              <cit:contactInfo>
+                <cit:CI_Contact>
+                  <cit:address>
+                    <cit:CI_Address>
+                      <cit:electronicMailAddress>
+                        <gco:CharacterString>geometrologie@spw.wallonie.be</gco:CharacterString>
+                      </cit:electronicMailAddress>
+                    </cit:CI_Address>
+                  </cit:address>
+                </cit:CI_Contact>
+              </cit:contactInfo>
+            </cit:CI_Organisation>
+          </cit:party>
+        </cit:CI_Responsibility>
+      </mri:pointOfContact>
+      <mri:spatialRepresentationType>
+        <mcc:MD_SpatialRepresentationTypeCode
+          codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_SpatialRepresentationTypeCode"
+          codeListValue="vector"/>
+      </mri:spatialRepresentationType>
+      <mri:spatialResolution>
+        <mri:MD_Resolution>
+          <mri:distance>
+            <gco:Distance uom="m">1</gco:Distance>
+          </mri:distance>
+        </mri:MD_Resolution>
+      </mri:spatialResolution>
+      <mri:topicCategory>
+        <mri:MD_TopicCategoryCode>imageryBaseMapsEarthCover</mri:MD_TopicCategoryCode>
+      </mri:topicCategory>
+      <mri:extent>
+        <gex:EX_Extent>
+          <gex:description>
+            <gco:CharacterString>Région wallonne</gco:CharacterString>
+          </gex:description>
+          <gex:geographicElement>
+            <gex:EX_GeographicBoundingBox>
+              <gex:westBoundLongitude>
+                <gco:Decimal>2.75</gco:Decimal>
+              </gex:westBoundLongitude>
+              <gex:eastBoundLongitude>
+                <gco:Decimal>6.50</gco:Decimal>
+              </gex:eastBoundLongitude>
+              <gex:southBoundLatitude>
+                <gco:Decimal>49.45</gco:Decimal>
+              </gex:southBoundLatitude>
+              <gex:northBoundLatitude>
+                <gco:Decimal>50.85</gco:Decimal>
+              </gex:northBoundLatitude>
+            </gex:EX_GeographicBoundingBox>
+          </gex:geographicElement>
+        </gex:EX_Extent>
+      </mri:extent>
+      <mri:extent>
+        <gex:EX_Extent>
+          <gex:temporalElement>
+            <gex:EX_TemporalExtent>
+              <gex:extent>
+                <gml:TimePeriod gml:id="ettempcosw15">
+                  <gml:beginPosition>2018-01-01</gml:beginPosition>
+                  <gml:endPosition>2018-12-31</gml:endPosition>
+                </gml:TimePeriod>
+              </gex:extent>
+            </gex:EX_TemporalExtent>
+          </gex:temporalElement>
+        </gex:EX_Extent>
+      </mri:extent>
+      <mri:graphicOverview>
+        <mcc:MD_BrowseGraphic>
+          <mcc:fileName>
+            <gco:CharacterString>
+              https://metawal.wallonie.be/geonetwork/srv/api/records/fafb9fc7-4e32-4a40-8163-c64966cb573c/attachments/WAL_UTS__2018_niv1.png
+            </gco:CharacterString>
+          </mcc:fileName>
+          <mcc:fileDescription>
+            <gco:CharacterString>WAL_UTS__2018_niv1.png</gco:CharacterString>
+          </mcc:fileDescription>
+        </mcc:MD_BrowseGraphic>
+      </mri:graphicOverview>
+      <mri:graphicOverview>
+        <mcc:MD_BrowseGraphic>
+          <mcc:fileName>
+            <gco:CharacterString>
+              https://metawal.wallonie.be/geonetwork/srv/api/records/fafb9fc7-4e32-4a40-8163-c64966cb573c/attachments/WAL_UTS__2018.png
+            </gco:CharacterString>
+          </mcc:fileName>
+          <mcc:fileDescription>
+            <gco:CharacterString>WAL_UTS__2018.png</gco:CharacterString>
+          </mcc:fileDescription>
+        </mcc:MD_BrowseGraphic>
+      </mri:graphicOverview>
+      <mri:graphicOverview>
+        <mcc:MD_BrowseGraphic>
+          <mcc:fileName>
+            <gco:CharacterString>
+              https://metawal.wallonie.be/geonetwork/srv/api/records/fafb9fc7-4e32-4a40-8163-c64966cb573c/attachments/WAL_UTS__2018_niv3.png
+            </gco:CharacterString>
+          </mcc:fileName>
+          <mcc:fileDescription>
+            <gco:CharacterString>WAL_UTS__2018_niv3.png</gco:CharacterString>
+          </mcc:fileDescription>
+        </mcc:MD_BrowseGraphic>
+      </mri:graphicOverview>
+      <mri:descriptiveKeywords>
+        <mri:MD_Keywords>
+          <mri:keyword>
+            <gcx:Anchor
+              xlink:href="https://metawal.wallonie.be/thesaurus/theme-geoportail-wallon#ThemesGeoportailWallon/50">
+              Données de base
+            </gcx:Anchor>
+          </mri:keyword>
+          <mri:keyword>
+            <gcx:Anchor
+              xlink:href="https://metawal.wallonie.be/thesaurus/theme-geoportail-wallon#ThemesGeoportailWallon/10">
+              Nature et environnement
+            </gcx:Anchor>
+          </mri:keyword>
+          <mri:keyword>
+            <gcx:Anchor
+              xlink:href="https://metawal.wallonie.be/thesaurus/theme-geoportail-wallon#ThemesGeoportailWallon/20">
+              Aménagement du territoire
+            </gcx:Anchor>
+          </mri:keyword>
+          <mri:keyword>
+            <gcx:Anchor
+              xlink:href="https://metawal.wallonie.be/thesaurus/theme-geoportail-wallon#SubThemesGeoportailWallon/1030">
+              Sol et sous-sol
+            </gcx:Anchor>
+          </mri:keyword>
+          <mri:type>
+            <mri:MD_KeywordTypeCode
+              codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_KeywordTypeCode"
+              codeListValue="theme"/>
+          </mri:type>
+          <mri:thesaurusName>
+            <cit:CI_Citation>
+              <cit:title>
+                <gcx:Anchor xlink:href="https://metawal.wallonie.be/thesaurus/theme-geoportail-wallon">Thèmes du
+                  géoportail wallon
+                </gcx:Anchor>
+              </cit:title>
+              <cit:date>
+                <cit:CI_Date>
+                  <cit:date>
+                    <gco:Date>2014-01-01</gco:Date>
+                  </cit:date>
+                  <cit:dateType>
+                    <cit:CI_DateTypeCode
+                      codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_DateTypeCode"
+                      codeListValue="publication"/>
+                  </cit:dateType>
+                </cit:CI_Date>
+              </cit:date>
+              <cit:date>
+                <cit:CI_Date>
+                  <cit:date>
+                    <gco:Date>2014-06-26</gco:Date>
+                  </cit:date>
+                  <cit:dateType>
+                    <cit:CI_DateTypeCode
+                      codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_DateTypeCode"
+                      codeListValue="publication"/>
+                  </cit:dateType>
+                </cit:CI_Date>
+              </cit:date>
+              <cit:identifier>
+                <mcc:MD_Identifier>
+                  <mcc:code>
+                    <gcx:Anchor
+                      xlink:href="https://metawal.wallonie.be/geonetwork/srv/api/registries/vocabularies/external.theme.Themes_geoportail_wallon_hierarchy">
+                      geonetwork.thesaurus.external.theme.Themes_geoportail_wallon_hierarchy
+                    </gcx:Anchor>
+                  </mcc:code>
+                </mcc:MD_Identifier>
+              </cit:identifier>
+            </cit:CI_Citation>
+          </mri:thesaurusName>
+        </mri:MD_Keywords>
+      </mri:descriptiveKeywords>
+      <mri:descriptiveKeywords>
+        <mri:MD_Keywords>
+          <mri:keyword>
+            <gco:CharacterString>WalOnMap</gco:CharacterString>
+          </mri:keyword>
+          <mri:keyword>
+            <gco:CharacterString>BDInfraSIG</gco:CharacterString>
+          </mri:keyword>
+          <mri:keyword>
+            <gco:CharacterString>Reporting INSPIRENO</gco:CharacterString>
+          </mri:keyword>
+          <mri:keyword>
+            <gco:CharacterString>Open Data</gco:CharacterString>
+          </mri:keyword>
+          <mri:keyword>
+            <gco:CharacterString>PanierTelechargementGeoportail</gco:CharacterString>
+          </mri:keyword>
+          <mri:type>
+            <mri:MD_KeywordTypeCode
+              codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_KeywordTypeCode"
+              codeListValue="theme"/>
+          </mri:type>
+          <mri:thesaurusName>
+            <cit:CI_Citation>
+              <cit:title>
+                <gcx:Anchor xlink:href="https://metawal.wallonie.be/thesaurus/infrasig">Mots-clés InfraSIG</gcx:Anchor>
+              </cit:title>
+              <cit:date>
+                <cit:CI_Date>
+                  <cit:date>
+                    <gco:Date>2022-10-03</gco:Date>
+                  </cit:date>
+                  <cit:dateType>
+                    <cit:CI_DateTypeCode
+                      codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_DateTypeCode"
+                      codeListValue="publication"/>
+                  </cit:dateType>
+                </cit:CI_Date>
+              </cit:date>
+              <cit:date>
+                <cit:CI_Date>
+                  <cit:date>
+                    <gco:Date>2022-10-03</gco:Date>
+                  </cit:date>
+                  <cit:dateType>
+                    <cit:CI_DateTypeCode
+                      codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_DateTypeCode"
+                      codeListValue="publication"/>
+                  </cit:dateType>
+                </cit:CI_Date>
+              </cit:date>
+              <cit:identifier>
+                <mcc:MD_Identifier>
+                  <mcc:code>
+                    <gcx:Anchor
+                      xlink:href="https://metawal.wallonie.be/geonetwork/srv/api/registries/vocabularies/external.theme.infraSIG">
+                      geonetwork.thesaurus.external.theme.infraSIG
+                    </gcx:Anchor>
+                  </mcc:code>
+                </mcc:MD_Identifier>
+              </cit:identifier>
+            </cit:CI_Citation>
+          </mri:thesaurusName>
+        </mri:MD_Keywords>
+      </mri:descriptiveKeywords>
+      <mri:descriptiveKeywords>
+        <mri:MD_Keywords>
+          <mri:keyword>
+            <gco:CharacterString>Régional</gco:CharacterString>
+          </mri:keyword>
+          <mri:type>
+            <mri:MD_KeywordTypeCode
+              codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_KeywordTypeCode"
+              codeListValue="theme"/>
+          </mri:type>
+          <mri:thesaurusName>
+            <cit:CI_Citation>
+              <cit:title>
+                <gcx:Anchor xlink:href="http://inspire.ec.europa.eu/metadata-codelist/SpatialScope">Champ géographique
+                </gcx:Anchor>
+              </cit:title>
+              <cit:date>
+                <cit:CI_Date>
+                  <cit:date>
+                    <gco:Date>2019-01-01</gco:Date>
+                  </cit:date>
+                  <cit:dateType>
+                    <cit:CI_DateTypeCode
+                      codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_DateTypeCode"
+                      codeListValue="publication"/>
+                  </cit:dateType>
+                </cit:CI_Date>
+              </cit:date>
+              <cit:date>
+                <cit:CI_Date>
+                  <cit:date>
+                    <gco:Date>2019-05-22</gco:Date>
+                  </cit:date>
+                  <cit:dateType>
+                    <cit:CI_DateTypeCode
+                      codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_DateTypeCode"
+                      codeListValue="publication"/>
+                  </cit:dateType>
+                </cit:CI_Date>
+              </cit:date>
+              <cit:identifier>
+                <mcc:MD_Identifier>
+                  <mcc:code>
+                    <gcx:Anchor
+                      xlink:href="https://metawal.wallonie.be/geonetwork/srv/api/registries/vocabularies/external.theme.httpinspireeceuropaeumetadatacodelistSpatialScope-SpatialScope">
+                      geonetwork.thesaurus.external.theme.httpinspireeceuropaeumetadatacodelistSpatialScope-SpatialScope
+                    </gcx:Anchor>
+                  </mcc:code>
+                </mcc:MD_Identifier>
+              </cit:identifier>
+            </cit:CI_Citation>
+          </mri:thesaurusName>
+        </mri:MD_Keywords>
+      </mri:descriptiveKeywords>
+      <mri:descriptiveKeywords>
+        <mri:MD_Keywords>
+          <mri:keyword>
+            <gco:CharacterString>Utilisation du sol</gco:CharacterString>
+          </mri:keyword>
+          <mri:keyword>
+            <gco:CharacterString>Usage du sol</gco:CharacterString>
+          </mri:keyword>
+          <mri:keyword>
+            <gco:CharacterString>WALOUS</gco:CharacterString>
+          </mri:keyword>
+          <mri:keyword>
+            <gco:CharacterString>Télédétection</gco:CharacterString>
+          </mri:keyword>
+          <mri:keyword>
+            <gco:CharacterString>Aménagement du territoire</gco:CharacterString>
+          </mri:keyword>
+          <mri:keyword>
+            <gco:CharacterString>UTS</gco:CharacterString>
+          </mri:keyword>
+          <mri:keyword>
+            <gco:CharacterString>COSW</gco:CharacterString>
+          </mri:keyword>
+        </mri:MD_Keywords>
+      </mri:descriptiveKeywords>
+      <mri:resourceConstraints>
+        <mco:MD_LegalConstraints>
+          <mco:accessConstraints>
+            <mco:MD_RestrictionCode
+              codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_RestrictionCode"
+              codeListValue="otherRestrictions"/>
+          </mco:accessConstraints>
+          <mco:otherConstraints>
+            <gcx:Anchor
+              xlink:href="http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/noLimitations">No
+              limitations to public access
+            </gcx:Anchor>
+          </mco:otherConstraints>
+        </mco:MD_LegalConstraints>
+      </mri:resourceConstraints>
+      <mri:resourceConstraints>
+        <mco:MD_LegalConstraints>
+          <mco:useLimitation>
+            <gco:CharacterString>Conditions d'accès et d'utilisation spécifiques</gco:CharacterString>
+          </mco:useLimitation>
+          <mco:useConstraints>
+            <mco:MD_RestrictionCode
+              codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_RestrictionCode"
+              codeListValue="otherRestrictions"/>
+          </mco:useConstraints>
+          <mco:otherConstraints>
+            <gcx:Anchor xlink:href="https://geoportail.wallonie.be/files/documents/ConditionsSPW/DataSPW-CGU.pdf">Les
+              conditions générales d'utilisation s'appliquent.
+            </gcx:Anchor>
+          </mco:otherConstraints>
+          <mco:otherConstraints>
+            <gcx:Anchor xlink:href="https://geoportail.wallonie.be/files/documents/ConditionsSPW/DataSPW-CGA.pdf">Les
+              conditions générales d'accès s’appliquent.
+            </gcx:Anchor>
+          </mco:otherConstraints>
+          <mco:otherConstraints>
+            <gcx:Anchor xlink:href="https://geoportail.wallonie.be/files/documents/ConditionsSPW/DataSPW-CPU-TypeC.pdf">
+              Les conditions générales d'utilisation s'appliquent et sont étendues par les conditions particulières de
+              type C
+            </gcx:Anchor>
+          </mco:otherConstraints>
+        </mco:MD_LegalConstraints>
+      </mri:resourceConstraints>
+      <mri:associatedResource>
+        <mri:MD_AssociatedResource>
+          <mri:associationType>
+            <mri:DS_AssociationTypeCode
+              codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#DS_AssociationTypeCode"
+              codeListValue="crossReference"/>
+          </mri:associationType>
+          <mri:initiativeType>
+            <mri:DS_InitiativeTypeCode
+              codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#DS_InitiativeTypeCode"
+              codeListValue="collection"/>
+          </mri:initiativeType>
+          <mri:metadataReference uuidref="a0ad23a1-1845-4bd5-8c2f-0f62d3f1ec75"/>
+        </mri:MD_AssociatedResource>
+      </mri:associatedResource>
+      <mri:associatedResource>
+        <mri:MD_AssociatedResource>
+          <mri:associationType>
+            <mri:DS_AssociationTypeCode
+              codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#DS_AssociationTypeCode"
+              codeListValue="partOfSeamlessDatabase"/>
+          </mri:associationType>
+          <mri:initiativeType>
+            <mri:DS_InitiativeTypeCode
+              codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#DS_InitiativeTypeCode"
+              codeListValue="collection"/>
+          </mri:initiativeType>
+          <mri:metadataReference uuidref="1c11ae54-f755-4d6c-95be-2e90c5c4fa70"
+                                 xlink:href="https://metawal.wallonie.be/geonetwork/srv/api/records/1c11ae54-f755-4d6c-95be-2e90c5c4fa70"/>
+        </mri:MD_AssociatedResource>
+      </mri:associatedResource>
+      <mri:defaultLocale>
+        <lan:PT_Locale>
+          <lan:language>
+            <lan:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="fre"/>
+          </lan:language>
+          <lan:characterEncoding>
+            <lan:MD_CharacterSetCode
+              codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_CharacterSetCode"
+              codeListValue="utf8"/>
+          </lan:characterEncoding>
+        </lan:PT_Locale>
+      </mri:defaultLocale>
+    </mri:MD_DataIdentification>
+  </mdb:identificationInfo>
+  <mdb:contentInfo>
+    <mrc:MD_FeatureCatalogueDescription>
+      <mrc:featureCatalogueCitation>
+        <cit:CI_Citation>
+          <cit:title>
+            <gco:CharacterString>Modèle de la donnée Utilisation du Sol en Wallonie - WALOUS 2018</gco:CharacterString>
+          </cit:title>
+          <cit:onlineResource>
+            <cit:CI_OnlineResource>
+              <cit:linkage>
+                <gco:CharacterString>
+                  https://metawal.wallonie.be/geonetwork/srv/api/records/fafb9fc7-4e32-4a40-8163-c64966cb573c/attachments/MODELE%20WALOUS_WAL_UTS.vsd.pdf
+                </gco:CharacterString>
+              </cit:linkage>
+              <cit:name>
+                <gco:CharacterString>Modèle de la donnée Utilisation du Sol en Wallonie - WALOUS 2018
+                </gco:CharacterString>
+              </cit:name>
+              <cit:description>
+                <gco:CharacterString>Structure de la couche WALOUS 2018 - Utilisation du sol [WAL_UTS__2018]
+                </gco:CharacterString>
+              </cit:description>
+            </cit:CI_OnlineResource>
+          </cit:onlineResource>
+        </cit:CI_Citation>
+      </mrc:featureCatalogueCitation>
+    </mrc:MD_FeatureCatalogueDescription>
+  </mdb:contentInfo>
+  <mdb:distributionInfo>
+    <mrd:MD_Distribution>
+      <mrd:distributionFormat>
+        <mrd:MD_Format>
+          <mrd:formatSpecificationCitation>
+            <cit:CI_Citation>
+              <cit:title>
+                <gcx:Anchor xlink:href="http://inspire.ec.europa.eu/media-types/application/x-filegdb">ESRI File
+                  Geodatabase (.fgdb)
+                </gcx:Anchor>
+              </cit:title>
+            </cit:CI_Citation>
+          </mrd:formatSpecificationCitation>
+        </mrd:MD_Format>
+      </mrd:distributionFormat>
+      <mrd:distributionFormat>
+        <mrd:MD_Format>
+          <mrd:formatSpecificationCitation>
+            <cit:CI_Citation>
+              <cit:title>
+                <gcx:Anchor xlink:href="https://www.iana.org/assignments/media-types/application/geopackage+sqlite3">OGC
+                  GeoPackage (.gpkg)
+                </gcx:Anchor>
+              </cit:title>
+            </cit:CI_Citation>
+          </mrd:formatSpecificationCitation>
+        </mrd:MD_Format>
+      </mrd:distributionFormat>
+      <mrd:distributor>
+        <mrd:MD_Distributor>
+          <mrd:distributorContact>
+            <cit:CI_Responsibility>
+              <cit:role>
+                <cit:CI_RoleCode
+                  codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_RoleCode"
+                  codeListValue="distributor"/>
+              </cit:role>
+              <cit:party>
+                <cit:CI_Organisation>
+                  <cit:name>
+                    <gco:CharacterString>Service public de Wallonie (SPW)</gco:CharacterString>
+                  </cit:name>
+                  <cit:contactInfo>
+                    <cit:CI_Contact>
+                      <cit:address>
+                        <cit:CI_Address>
+                          <cit:electronicMailAddress>
+                            <gco:CharacterString>helpdesk.carto@spw.wallonie.be</gco:CharacterString>
+                          </cit:electronicMailAddress>
+                        </cit:CI_Address>
+                      </cit:address>
+                    </cit:CI_Contact>
+                  </cit:contactInfo>
+                </cit:CI_Organisation>
+              </cit:party>
+            </cit:CI_Responsibility>
+          </mrd:distributorContact>
+          <mrd:distributionOrderProcess>
+            <mrd:MD_StandardOrderProcess>
+              <mrd:orderingInstructions>
+                <gco:CharacterString>Les instructions pour obtenir une copie physique d’une donnée sont détaillées sur
+                  https://geoportail.wallonie.be/telecharger.
+
+                  Sources à mentionner : SPW - UCLouvain/ULB/ISSeP.
+                </gco:CharacterString>
+              </mrd:orderingInstructions>
+            </mrd:MD_StandardOrderProcess>
+          </mrd:distributionOrderProcess>
+        </mrd:MD_Distributor>
+      </mrd:distributor>
+      <mrd:transferOptions>
+        <mrd:MD_DigitalTransferOptions>
+          <mrd:onLine>
+            <cit:CI_OnlineResource>
+              <cit:linkage>
+                <gco:CharacterString>
+                  https://geoportail.wallonie.be/walonmap/#ADU=https://geoservices.wallonie.be/arcgis/rest/services/SOL_SOUS_SOL/WALOUS_UTILISATION_SOL/MapServer
+                </gco:CharacterString>
+              </cit:linkage>
+              <cit:protocol>
+                <gco:CharacterString>WWW:LINK</gco:CharacterString>
+              </cit:protocol>
+              <cit:name>
+                <gco:CharacterString>Application WalOnMap - Toute la Wallonie à la carte</gco:CharacterString>
+              </cit:name>
+              <cit:description>
+                <gco:CharacterString>Application cartographique du Geoportail (WalOnMap) qui permet de découvrir les
+                  données géographiques de la Wallonie.
+                </gco:CharacterString>
+              </cit:description>
+              <cit:function>
+                <cit:CI_OnLineFunctionCode
+                  codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_OnLineFunctionCode"
+                  codeListValue="information"/>
+              </cit:function>
+            </cit:CI_OnlineResource>
+          </mrd:onLine>
+          <mrd:onLine>
+            <cit:CI_OnlineResource>
+              <cit:linkage>
+                <gco:CharacterString>
+                  https://geoservices.wallonie.be/arcgis/rest/services/SOL_SOUS_SOL/WALOUS_UTILISATION_SOL/MapServer
+                </gco:CharacterString>
+              </cit:linkage>
+              <cit:protocol>
+                <gco:CharacterString>ESRI:REST</gco:CharacterString>
+              </cit:protocol>
+              <cit:name>
+                <gco:CharacterString>Service de visualisation ESRI-REST</gco:CharacterString>
+              </cit:name>
+              <cit:description>
+                <gco:CharacterString>Adresse de connexion au service de visualisation ESRI-REST de la couche de données
+                  "Utilisation du Sol en Wallonie - WALOUS 2018"
+                </gco:CharacterString>
+              </cit:description>
+              <cit:function>
+                <cit:CI_OnLineFunctionCode
+                  codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_OnLineFunctionCode"
+                  codeListValue="browsing"/>
+              </cit:function>
+            </cit:CI_OnlineResource>
+          </mrd:onLine>
+          <mrd:onLine>
+            <cit:CI_OnlineResource>
+              <cit:linkage>
+                <gco:CharacterString>
+                  https://geoservices.wallonie.be/arcgis/services/SOL_SOUS_SOL/WALOUS_UTILISATION_SOL/MapServer/WMSServer?request=GetCapabilities&amp;service=WMS
+                </gco:CharacterString>
+              </cit:linkage>
+              <cit:protocol>
+                <gco:CharacterString>OGC:WMS</gco:CharacterString>
+              </cit:protocol>
+              <cit:name>
+                <gco:CharacterString>Service de visualisation WMS</gco:CharacterString>
+              </cit:name>
+              <cit:description>
+                <gco:CharacterString>Adresse de connexion au service de visualisation WMS de la couche de données
+                  "Utilisation du Sol en Wallonie - WALOUS 2018"
+                </gco:CharacterString>
+              </cit:description>
+              <cit:function>
+                <cit:CI_OnLineFunctionCode
+                  codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_OnLineFunctionCode"
+                  codeListValue="browsing"/>
+              </cit:function>
+            </cit:CI_OnlineResource>
+          </mrd:onLine>
+          <mrd:onLine>
+            <cit:CI_OnlineResource>
+              <cit:linkage>
+                <gco:CharacterString>
+                  https://metawal.wallonie.be/geonetwork/srv/api/records/fafb9fc7-4e32-4a40-8163-c64966cb573c/attachments/Symbologie_WALOUS_UTS_2018.pdf
+                </gco:CharacterString>
+              </cit:linkage>
+              <cit:protocol>
+                <gco:CharacterString>WWW:LINK</gco:CharacterString>
+              </cit:protocol>
+              <cit:applicationProfile>
+                <gco:CharacterString>application/pdf</gco:CharacterString>
+              </cit:applicationProfile>
+              <cit:name>
+                <gco:CharacterString>Document reprenant la symbologie utilisée dans WALOUS_UTS_2018
+                </gco:CharacterString>
+              </cit:name>
+              <cit:function>
+                <cit:CI_OnLineFunctionCode
+                  codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_OnLineFunctionCode"
+                  codeListValue="information"/>
+              </cit:function>
+            </cit:CI_OnlineResource>
+          </mrd:onLine>
+          <mrd:onLine>
+            <cit:CI_OnlineResource>
+              <cit:linkage>
+                <gco:CharacterString>
+                  https://metawal.wallonie.be/geonetwork/srv/api/records/fafb9fc7-4e32-4a40-8163-c64966cb573c/attachments/Table_symbologie_WALOUS_UTS.xlsx
+                </gco:CharacterString>
+              </cit:linkage>
+              <cit:protocol>
+                <gco:CharacterString>WWW:LINK</gco:CharacterString>
+              </cit:protocol>
+              <cit:applicationProfile>
+                <gco:CharacterString>application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+                </gco:CharacterString>
+              </cit:applicationProfile>
+              <cit:name>
+                <gco:CharacterString>Table_symbologie_WALOUS_UTS.xlsx</gco:CharacterString>
+              </cit:name>
+              <cit:function>
+                <cit:CI_OnLineFunctionCode
+                  codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_OnLineFunctionCode"
+                  codeListValue="information"/>
+              </cit:function>
+            </cit:CI_OnlineResource>
+          </mrd:onLine>
+          <mrd:onLine>
+            <cit:CI_OnlineResource>
+              <cit:linkage>
+                <gco:CharacterString>
+                  https://metawal.wallonie.be/geonetwork/srv/api/records/fafb9fc7-4e32-4a40-8163-c64966cb573c/attachments/Description_legende_WALOUS_UTS_2018.pdf
+                </gco:CharacterString>
+              </cit:linkage>
+              <cit:protocol>
+                <gco:CharacterString>WWW:LINK</gco:CharacterString>
+              </cit:protocol>
+              <cit:applicationProfile>
+                <gco:CharacterString>application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+                </gco:CharacterString>
+              </cit:applicationProfile>
+              <cit:name>
+                <gco:CharacterString>Description_legende_WALOUS_UTS_2018.pdf</gco:CharacterString>
+              </cit:name>
+              <cit:function>
+                <cit:CI_OnLineFunctionCode
+                  codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_OnLineFunctionCode"
+                  codeListValue="information"/>
+              </cit:function>
+            </cit:CI_OnlineResource>
+          </mrd:onLine>
+          <mrd:onLine>
+            <cit:CI_OnlineResource>
+              <cit:linkage>
+                <gco:CharacterString>http://geoportail.wallonie.be/walous</gco:CharacterString>
+              </cit:linkage>
+              <cit:protocol>
+                <gco:CharacterString>WWW:LINK</gco:CharacterString>
+              </cit:protocol>
+              <cit:name>
+                <gco:CharacterString>Walous sur le Géoportail</gco:CharacterString>
+              </cit:name>
+              <cit:description>
+                <gco:CharacterString>Page du Géoportail présentant WALOUS</gco:CharacterString>
+              </cit:description>
+              <cit:function>
+                <cit:CI_OnLineFunctionCode
+                  codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_OnLineFunctionCode"
+                  codeListValue="information"/>
+              </cit:function>
+            </cit:CI_OnlineResource>
+          </mrd:onLine>
+          <mrd:onLine>
+            <cit:CI_OnlineResource>
+              <cit:linkage>
+                <gco:CharacterString>https://storymaps.arcgis.com/stories/11231ee7e2004d5aad12496a85a5fc15
+                </gco:CharacterString>
+              </cit:linkage>
+              <cit:protocol>
+                <gco:CharacterString>WWW:LINK</gco:CharacterString>
+              </cit:protocol>
+              <cit:name>
+                <gco:CharacterString>Story Map de présentation de WALOUS</gco:CharacterString>
+              </cit:name>
+              <cit:description>
+                <gco:CharacterString>Story map présentant WALOUS</gco:CharacterString>
+              </cit:description>
+              <cit:function>
+                <cit:CI_OnLineFunctionCode
+                  codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_OnLineFunctionCode"
+                  codeListValue="information"/>
+              </cit:function>
+            </cit:CI_OnlineResource>
+          </mrd:onLine>
+          <mrd:onLine>
+            <cit:CI_OnlineResource>
+              <cit:linkage>
+                <gco:CharacterString>
+                  https://metawal.wallonie.be/geonetwork/srv/api/records/fafb9fc7-4e32-4a40-8163-c64966cb573c/attachments/Correspondance_COSW2007_Walousmaj2018.xlsx
+                </gco:CharacterString>
+              </cit:linkage>
+              <cit:protocol>
+                <gco:CharacterString>WWW:DOWNLOAD-1.0-http--download</gco:CharacterString>
+              </cit:protocol>
+              <cit:name>
+                <gco:CharacterString>Correspondance COSW2007 Walousmaj2018</gco:CharacterString>
+              </cit:name>
+              <cit:description>
+                <gco:CharacterString>Tableau de correspondance entre les classes de WALOUS 2018 et celles de la
+                  COSW2007
+                </gco:CharacterString>
+              </cit:description>
+              <cit:function>
+                <cit:CI_OnLineFunctionCode
+                  codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_OnLineFunctionCode"
+                  codeListValue="information"/>
+              </cit:function>
+            </cit:CI_OnlineResource>
+          </mrd:onLine>
+        </mrd:MD_DigitalTransferOptions>
+      </mrd:transferOptions>
+    </mrd:MD_Distribution>
+  </mdb:distributionInfo>
+  <mdb:dataQualityInfo>
+    <mdq:DQ_DataQuality>
+      <mdq:scope>
+        <mcc:MD_Scope>
+          <mcc:level>
+            <mcc:MD_ScopeCode codeListValue="dataset"
+                              codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_ScopeCode"/>
+          </mcc:level>
+        </mcc:MD_Scope>
+      </mdq:scope>
+      <mdq:report>
+        <mdq:DQ_DomainConsistency>
+          <mdq:result>
+            <mdq:DQ_ConformanceResult>
+              <mdq:specification xlink:href="http://inspire.ec.europa.eu/id/citation/ir/reg-1089-2010">
+                <cit:CI_Citation>
+                  <cit:title>
+                    <gcx:Anchor xlink:href="http://data.europa.eu/eli/reg/2010/1089">RÈGLEMENT (UE) N o 1089/2010 DE LA
+                      COMMISSION du 23 novembre 2010 portant modalités d'application de la directive 2007/2/CE du
+                      Parlement européen et du Conseil en ce qui concerne l'interopérabilité des séries et des services
+                      de données géographiques
+                    </gcx:Anchor>
+                  </cit:title>
+                  <cit:date>
+                    <cit:CI_Date>
+                      <cit:date>
+                        <gco:Date>2010-12-08</gco:Date>
+                      </cit:date>
+                      <cit:dateType>
+                        <cit:CI_DateTypeCode
+                          codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_DateTypeCode"
+                          codeListValue="publication"/>
+                      </cit:dateType>
+                    </cit:CI_Date>
+                  </cit:date>
+                </cit:CI_Citation>
+              </mdq:specification>
+              <mdq:explanation>
+                <gco:CharacterString>Voir la spécification référencée</gco:CharacterString>
+              </mdq:explanation>
+              <mdq:pass>
+                <gco:Boolean>true</gco:Boolean>
+              </mdq:pass>
+            </mdq:DQ_ConformanceResult>
+          </mdq:result>
+        </mdq:DQ_DomainConsistency>
+      </mdq:report>
+    </mdq:DQ_DataQuality>
+  </mdb:dataQualityInfo>
+  <mdb:resourceLineage>
+    <mrl:LI_Lineage>
+      <mrl:statement>
+        <gco:CharacterString>Les étapes principales de production de la donnée WAL_UTS__2018 sont les suivantes :
+          - Acquisition des données d’entrée et prétraitements ;
+          - Calculs de statistiques zonales par parcelles cadastrales ;
+          - Classification sur bases de règles SQL automatisées ;
+          - Contrôle de qualité ;
+          - Publication.
+        </gco:CharacterString>
+      </mrl:statement>
+      <mrl:scope>
+        <mcc:MD_Scope>
+          <mcc:level>
+            <mcc:MD_ScopeCode
+              codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_ScopeCode"
+              codeListValue="dataset"/>
+          </mcc:level>
+        </mcc:MD_Scope>
+      </mrl:scope>
+    </mrl:LI_Lineage>
+  </mdb:resourceLineage>
+  <mdb:portrayalCatalogueInfo>
+    <mpc:MD_PortrayalCatalogueReference>
+      <mpc:portrayalCatalogueCitation>
+        <cit:CI_Citation>
+          <cit:title>
+            <gco:CharacterString>Légende du webservice</gco:CharacterString>
+          </cit:title>
+          <cit:onlineResource>
+            <cit:CI_OnlineResource>
+              <cit:linkage>
+                <gco:CharacterString>
+                  https://geoservices.wallonie.be/arcgis/rest/services/SOL_SOUS_SOL/WALOUS_UTILISATION_SOL/MapServer/legend
+                </gco:CharacterString>
+              </cit:linkage>
+            </cit:CI_OnlineResource>
+          </cit:onlineResource>
+        </cit:CI_Citation>
+      </mpc:portrayalCatalogueCitation>
+    </mpc:MD_PortrayalCatalogueReference>
+  </mdb:portrayalCatalogueInfo>
+  <mdb:portrayalCatalogueInfo>
+    <mpc:MD_PortrayalCatalogueReference>
+      <mpc:portrayalCatalogueCitation>
+        <cit:CI_Citation>
+          <cit:title>
+            <gco:CharacterString>Légende pour QGIS</gco:CharacterString>
+          </cit:title>
+          <cit:onlineResource>
+            <cit:CI_OnlineResource>
+              <cit:linkage>
+                <gco:CharacterString>
+                  https://metawal.wallonie.be/geonetwork/srv/api/records/fafb9fc7-4e32-4a40-8163-c64966cb573c/attachments/WALOUS_UTS.qml
+                </gco:CharacterString>
+              </cit:linkage>
+            </cit:CI_OnlineResource>
+          </cit:onlineResource>
+        </cit:CI_Citation>
+      </mpc:portrayalCatalogueCitation>
+    </mpc:MD_PortrayalCatalogueReference>
+  </mdb:portrayalCatalogueInfo>
+  <mdb:portrayalCatalogueInfo>
+    <mpc:MD_PortrayalCatalogueReference>
+      <mpc:portrayalCatalogueCitation>
+        <cit:CI_Citation>
+          <cit:title>
+            <gco:CharacterString>Légende pour AcrGIS - Niveau 1</gco:CharacterString>
+          </cit:title>
+          <cit:onlineResource>
+            <cit:CI_OnlineResource>
+              <cit:linkage>
+                <gco:CharacterString>
+                  https://metawal.wallonie.be/geonetwork/srv/api/records/fafb9fc7-4e32-4a40-8163-c64966cb573c/attachments/Utilisation%20majoritaire%20-%20Niveau%201.lyr
+                </gco:CharacterString>
+              </cit:linkage>
+            </cit:CI_OnlineResource>
+          </cit:onlineResource>
+        </cit:CI_Citation>
+      </mpc:portrayalCatalogueCitation>
+    </mpc:MD_PortrayalCatalogueReference>
+  </mdb:portrayalCatalogueInfo>
+  <mdb:portrayalCatalogueInfo>
+    <mpc:MD_PortrayalCatalogueReference>
+      <mpc:portrayalCatalogueCitation>
+        <cit:CI_Citation>
+          <cit:title>
+            <gco:CharacterString>Légende pour AcrGIS - Niveau 2</gco:CharacterString>
+          </cit:title>
+          <cit:onlineResource>
+            <cit:CI_OnlineResource>
+              <cit:linkage>
+                <gco:CharacterString>
+                  https://metawal.wallonie.be/geonetwork/srv/api/records/fafb9fc7-4e32-4a40-8163-c64966cb573c/attachments/Utilisation%20majoritaire%20-%20Niveau%202.lyr
+                </gco:CharacterString>
+              </cit:linkage>
+            </cit:CI_OnlineResource>
+          </cit:onlineResource>
+        </cit:CI_Citation>
+      </mpc:portrayalCatalogueCitation>
+    </mpc:MD_PortrayalCatalogueReference>
+  </mdb:portrayalCatalogueInfo>
+  <mdb:portrayalCatalogueInfo>
+    <mpc:MD_PortrayalCatalogueReference>
+      <mpc:portrayalCatalogueCitation>
+        <cit:CI_Citation>
+          <cit:title>
+            <gco:CharacterString>Légende pour AcrGIS - Niveau 3</gco:CharacterString>
+          </cit:title>
+          <cit:onlineResource>
+            <cit:CI_OnlineResource>
+              <cit:linkage>
+                <gco:CharacterString>
+                  https://metawal.wallonie.be/geonetwork/srv/api/records/fafb9fc7-4e32-4a40-8163-c64966cb573c/attachments/Utilisation%20majoritaire%20-%20Niveau%203.lyr
+                </gco:CharacterString>
+              </cit:linkage>
+            </cit:CI_OnlineResource>
+          </cit:onlineResource>
+        </cit:CI_Citation>
+      </mpc:portrayalCatalogueCitation>
+    </mpc:MD_PortrayalCatalogueReference>
+  </mdb:portrayalCatalogueInfo>
+  <mdb:portrayalCatalogueInfo>
+    <mpc:MD_PortrayalCatalogueReference>
+      <mpc:portrayalCatalogueCitation>
+        <cit:CI_Citation>
+          <cit:title>
+            <gco:CharacterString>Légende pour AcrGIS - Niveau 3 enrichi</gco:CharacterString>
+          </cit:title>
+          <cit:onlineResource>
+            <cit:CI_OnlineResource>
+              <cit:linkage>
+                <gco:CharacterString>
+                  https://metawal.wallonie.be/geonetwork/srv/api/records/fafb9fc7-4e32-4a40-8163-c64966cb573c/attachments/Utilisation%20majoritaire%20-%20Niveau%203%20WALOUSMAJ.lyr
+                </gco:CharacterString>
+              </cit:linkage>
+            </cit:CI_OnlineResource>
+          </cit:onlineResource>
+        </cit:CI_Citation>
+      </mpc:portrayalCatalogueCitation>
+    </mpc:MD_PortrayalCatalogueReference>
+  </mdb:portrayalCatalogueInfo>
+</mdb:MD_Metadata>

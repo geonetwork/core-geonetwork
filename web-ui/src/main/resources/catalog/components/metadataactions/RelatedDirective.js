@@ -320,13 +320,15 @@
     "gnRelatedResources",
     "gnExternalViewer",
     "gnConfigService",
+    "gnUrlUtils",
     function (
       gnRelatedService,
       gnGlobalSettings,
       gnSearchSettings,
       gnRelatedResources,
       gnExternalViewer,
-      gnConfigService
+      gnConfigService,
+      gnUrlUtils
     ) {
       return {
         restrict: "A",
@@ -417,7 +419,15 @@
                       ".*/api/records/" + scope.md.uuid + "/attachments/.*"
                     ) != null
                   ) {
-                    scope.relations[idx][i].url += "?approved=false";
+                    scope.relations[idx][i].url = gnUrlUtils.remove(
+                      scope.relations[idx][i].url,
+                      ["approved"],
+                      true
+                    );
+                    scope.relations[idx][i].url = gnUrlUtils.append(
+                      scope.relations[idx][i].url,
+                      "approved=false"
+                    );
                   }
                 }
               }

@@ -157,6 +157,7 @@
     "keywordFilter": "Filtrovat dle klíčového slova",
     "keywords": "Klíčová slova",
     "recordOwner": "Vlastník záznamu",
+    "groupRecordOwner": "Group record owner",
     "map": "Mapa",
     "makeYourMap": "Mapa",
     "metadataPOCs": "Kontakt na metadata",
@@ -378,6 +379,7 @@
     "layerNotAvailableInMapProj": "Služba neposkytuje vrstvu v zobrazení mapy '{{proj}}'. Vrstva bude přidána na mapu, ale nemusí být zobrazena správně.",
     "layerCRSNotFound": "Vrstva neposkytuje informace o souřadnicovém referenčním systému. To může souviset s verzí WMS nižší než 1.3.0.",
     "layerTileLoadError": "Při načítání dlaždice došlo k chybě <a href='{{url}}' target='_blank'>'{{url | limitTo: 30}} ...'</a> pro vrstvu '{{layer}}'.",
+    "layerProtocolNotSupported": "The following protocol is not supported yet in the map viewer: {{type}}",
     "getCapFailure": "Požadavek na WMS getCapabilities se nezdařil",
     "standards": "Standard metadat",
     "documentStandard": "Metadatový standard",
@@ -398,6 +400,7 @@
     "featureAttributeTable": "Tabulka atributů",
     "attributeName": "Název",
     "attributeDefinition": "Definice",
+    "attributeCardinality": "Kardinalita:",
     "attributeValues": "Seznam hodnot",
     "attributeType": "Typ",
     "attributeCode": "Kód",
@@ -506,7 +509,7 @@
     "indexingTaskFinished": "Indexování bylo dokončeno a zpracováno {{total}} záznamů",
     "indexingTaskFinishedWithErrors": "Indexování dokončeno, {{total}} záznamů zpracováno s {{errors}} chybami ",
     "indexingTaskCanceled": "Indexování zrušeno",
-    "inspireValidationTaskUndefined": "Neznámá úloha validace INSPIRE (abnormální stav)",
+    "inspireValidationTaskUndefined": "Neznámý úkol ověření INSPIRE (abnormální stav)",
     "inspireValidationTaskRunning": "INSPIRE validace {{total}} záznamů ...",
     "inspireValidationTaskFinished": "Validace INSPIRE byla dokončena, {{total}} záznamů zpracováno",
     "inspireValidationTaskFinishedWithErrors": "Ověření INSPIRE bylo dokončeno, {{total}} záznamů zpracováno s {{errors}} chybami",
@@ -574,5 +577,5 @@
     "reviewerNotAllowedPublish": "Prohlížející nemá oprávnění publikovat metadata",
     "reviewerNotAllowedUnpublish": "Prohlížející nemůže zrušit publikování metadat",
     "reviewerNotAllowedPublishUnpublish": "Prohlížející nemá oprávnění publikovat/zrušit publikování metadat",
-    "missingTitle": "Missing title"
+    "missingTitle": "Chybí název"
 }

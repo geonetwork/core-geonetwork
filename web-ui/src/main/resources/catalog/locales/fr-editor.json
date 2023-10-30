@@ -44,13 +44,13 @@
     "removeField": "Supprimer ce champ",
     "addXpath-help": "La mise à jour des enregistrements à l'aide de XPath nécessite une définition précise des modifications. Un changement est défini par :",
     "addXpathTitle": "un titre (optionel)",
-    "addXpathXpath": "un <a href='http://xmlfr.org/w3c/TR/xpath/'>XPath</a> est obligatoire pour pointer vers le(s) élément(s) à mettre à jour. XPath ne peut pas contenir de filtre.",
+    "addXpathXpath": "un <a href='http://xmlfr.org/w3c/TR/xpath/'>XPath</a> est obligatoire pour pointer vers le(s) élément(s) à mettre à jour. XPath peut contenir un filtre.",
     "addXpathInsertMode": "un type de mise à jour",
     "xpath": "XPath",
     "xpathValue": "Texte ou XML",
     "gn_create": "Créer l'élément",
-    "gn_add": "Ajoute l'élément ou la valeur (dans le premier élément parent correspondant) ou crée l'élément",
-    "gn_replace": "Remplace l'élément ou la valeur (dans le premier élément parent correspondant)",
+    "gn_add": "Ajoute l'élément ou la valeur (dans l'élément parent correspondant) ou crée l'élément",
+    "gn_replace": "Remplace l'élément ou la valeur (dans l'élément parent correspondant)",
     "gn_delete": "Supprime tous les éléments correspondants",
     "addXpathValue": "une valeur qui peut être un fragment d'XML (si le mode n'est pas suppression)",
     "chooseASet": "1. Choisir les fiches à modifier",
@@ -428,5 +428,6 @@
     "confirmCancelEdit": "Voulez-vous annuler tous les changements et fermer l'éditeur ?",
     "allowEditGroupMembers": "Autoriser l'édition par les membres du groupe.",
     "wmsSelectedLayers": "Couches sélectionnées",
-    "wmsSelectedLayersNone": "Aucune couche sélectionnée"
+    "wmsSelectedLayersNone": "Aucune couche sélectionnée",
+    "remoteAssociatedMetadataTitlePlaceholder": "Titre de la fiche distante associée"
 }

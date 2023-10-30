@@ -38,6 +38,7 @@ import org.apache.http.nio.conn.SchemeIOSessionStrategy;
 import org.apache.http.nio.conn.ssl.SSLIOSessionStrategy;
 import org.apache.http.ssl.SSLContextBuilder;
 import org.apache.lucene.search.TotalHits;
+import org.elasticsearch.ElasticsearchException;
 import org.elasticsearch.ElasticsearchStatusException;
 import org.elasticsearch.action.admin.cluster.health.ClusterHealthRequest;
 import org.elasticsearch.action.admin.cluster.health.ClusterHealthResponse;
@@ -504,7 +505,7 @@ public class EsRestClient implements InitializingBean {
 //        return getClient().ping(RequestOptions.DEFAULT);
     }
 
-    public String getServerVersion() throws IOException {
+    public String getServerVersion() throws IOException, ElasticsearchException {
         MainResponse.Version version = client.info(RequestOptions.DEFAULT).getVersion();
 
         return version.getNumber();

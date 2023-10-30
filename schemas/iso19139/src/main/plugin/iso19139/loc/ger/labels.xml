@@ -2583,6 +2583,8 @@
       <option value="OGC API - Features">OGC API - Features</option>
       <option value="OGC API - Maps">OGC API - Maps</option>
       <option value="OGC API - Records">OGC API - Records</option>
+      <option value="OGC:3DTILES">OGC-3DTiles Dataset</option>
+      <option value="OGC:COG">OGC-Cloud Optimized GeoTIFF</option>
       <option value="OGC:WMS-http-get-map">OGC-WMS Web Map Service</option>
       <option value="OGC:WFS-http-get-capabilities">OGC-WFS Web Feature Service</option>
       <option value="OGC:WCS-http-get-capabilities">OGC-WCS Web Coverage Service</option>

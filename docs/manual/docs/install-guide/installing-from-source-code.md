@@ -20,8 +20,8 @@ If you need a more powerful container, we recommend [Apache Tomcat](http://tomca
 
 We recommend the following stable releases of Tomcat:
 
--   Apache Tomcat 8.5
 -   Apache Tomcat 9.0
+-   Apache Tomcat 8.5
 
 ### Database
 
@@ -159,7 +159,7 @@ Please refer to the [Maven documentation](http://www.sonatype.com/books/mvnref-b
 
 ### Run embedded Jetty server
 
-Maven comes with built-in support for Jetty via a [plug-in](http://docs.codehaus.org/display/JETTY/Maven+Jetty+Plugin).
+Maven comes with built-in support for Jetty via a [plug-in](https://eclipse.dev/jetty/documentation/jetty-9/index.html#maven-and-jetty).
 
 To run GeoNetwork with the embedded Jetty server you have to change directory to the root of the **web** module, and then execute the following Maven command:
 
@@ -167,10 +167,10 @@ To run GeoNetwork with the embedded Jetty server you have to change directory to
 mvn jetty:run -Penv-dev
 ```
 
-After a while, GeoNetwork should be accessible at: <http://localhost:8080/geonetwork>
+After some moments of startup and initialization, GeoNetwork is available at: <http://localhost:8080/geonetwork>
 
-For changes related to the user interface in the ``web-ui`` module or the metadata schemas in the `as` module, these can be deployed in Jetty executing the following Maven command in the **web** module:
+For changes related to the user interface in the ``web-ui`` module or the metadata schemas in the `schemeas` module, these can be deployed in Jetty executing the following Maven command in the **web** module:
 
 ``` shell
-mvn process-resources
+mvn process-resources -DschemasCopy=true
 ```
