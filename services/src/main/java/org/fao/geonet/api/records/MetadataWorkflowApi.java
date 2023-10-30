@@ -60,6 +60,7 @@ import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.*;
 import org.fao.geonet.util.MetadataPublicationMailNotifier;
+import org.fao.geonet.util.UserUtil;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
@@ -71,6 +72,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -148,6 +150,9 @@ public class MetadataWorkflowApi {
 
     @Autowired
     MetadataPublicationMailNotifier metadataPublicationMailNotifier;
+
+    @Autowired
+    RoleHierarchy roleHierarchy;
 
     // The restore function currently supports these states
     static final Integer[] supportedRestoreStatuses = {
@@ -692,6 +697,7 @@ public class MetadataWorkflowApi {
         Integer size,
         HttpServletRequest request) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
+        checkUserProfileToViewMetadataHistory(context.getUserSession());
 
         Profile profile = context.getUserSession().getProfile();
         if (profile != Profile.Administrator) {
@@ -1309,5 +1315,24 @@ public class MetadataWorkflowApi {
         List<MetadataStatus> listOfStatusChange = new ArrayList<>(1);
         listOfStatusChange.add(metadataStatusValue);
         sa.onStatusChange(listOfStatusChange);
+    }
+
+
+    /**
+     * Checks if the user profile is allowed to view metadata history status.
+     *
+     * @param userSession
+     */
+    private void checkUserProfileToViewMetadataHistory(UserSession userSession) {
+        if (userSession.getProfile() != Profile.Administrator) {
+            String allowedUserProfileToImportMetadata =
+                org.apache.commons.lang.StringUtils.defaultIfBlank(settingManager.getValue(Settings.METADATA_HISTORY_ACCESS_LEVEL), Profile.Editor.toString());
+
+            // Is the user profile is higher than the profile allowed to import metadata?
+            if (!UserUtil.hasHierarchyRole(allowedUserProfileToImportMetadata, this.roleHierarchy)) {
+                throw new NotAllowedException("The user has no permissions to batch edit metadata.");
+            }
+        }
+
     }
 }

@@ -139,6 +139,7 @@ public class Settings {
     public static final String METADATA_IMPORT_RESTRICT = "metadata/import/restrict";
     public static final String METADATA_IMPORT_USERPROFILE = "metadata/import/userprofile";
     public static final String METADATA_BATCH_EDITING_ACCESS_LEVEL = "metadata/batchediting/accesslevel";
+    public static final String METADATA_HISTORY_ACCESS_LEVEL = "metadata/history/accesslevel";
     public static final String METADATA_PUBLISHED_DELETE_USERPROFILE = "metadata/delete/profilePublishedMetadata";
     public static final String METADATA_PUBLISH_USERPROFILE = "metadata/publication/profilePublishMetadata";
     public static final String METADATA_UNPUBLISH_USERPROFILE = "metadata/publication/profileUnpublishMetadata";
