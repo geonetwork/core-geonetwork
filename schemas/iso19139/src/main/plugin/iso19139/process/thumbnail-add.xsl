@@ -50,9 +50,9 @@
     resourceHash is hash value of the object to be removed which will ensure the correct value is removed. It will override the usage of updateKey
     resourceIdx is the index location of the object to be removed - can be used when duplicate entries exists to ensure the correct one is removed.
 -->
-  <xsl:param name="updateKey"/>
-  <xsl:param name="resourceHash"/>
-  <xsl:param name="resourceIdx"/>
+  <xsl:param name="updateKey" select="''"/>
+  <xsl:param name="resourceHash" select="''"/>
+  <xsl:param name="resourceIdx" select="''"/>
 
   <xsl:variable name="update_flag">
     <xsl:value-of select="boolean($updateKey != '' or $resourceHash != '' or $resourceIdx != '')"/>
@@ -70,25 +70,26 @@
   <xsl:template
     priority="2"
     match="*[$update_flag = true() and gmd:graphicOverview]">
-    <xsl:for-each select="gmd:graphicOverview">
-      <xsl:choose>
-        <xsl:when test="($resourceIdx = '' or position() = xs:integer($resourceIdx))
-                    and ($resourceHash != '' or normalize-space($updateKey) = concat(
-                         */gmd:fileName/gco:CharacterString,
-                         */gmd:fileName/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale = '#DE'],
-                         */gmd:fileDescription/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale = '#DE'],
-                         */gmd:fileDescription/gco:CharacterString))
-                   and ($resourceHash = '' or util:md5Hex(exslt:node-set(.)) = $resourceHash)">
-          <xsl:call-template name="fill"/>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:apply-templates select="."/>
-        </xsl:otherwise>
-      </xsl:choose>
-    </xsl:for-each>
+    <xsl:copy>
+      <xsl:apply-templates select="@*|node() except gmd:graphicOverview" />
 
-    <xsl:apply-templates select="* except gmd:graphicOverview" />
-
+      <xsl:for-each select="gmd:graphicOverview">
+        <xsl:choose>
+          <xsl:when test="($resourceIdx = '' or position() = xs:integer($resourceIdx))
+                      and ($resourceHash != '' or ($updateKey != '' and normalize-space($updateKey) = concat(
+                           */gmd:fileName/gco:CharacterString,
+                           */gmd:fileName/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale = '#DE'],
+                           */gmd:fileDescription/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale = '#DE'],
+                           */gmd:fileDescription/gco:CharacterString)))
+                     and ($resourceHash = '' or util:md5Hex(exslt:node-set(.)) = $resourceHash)">
+            <xsl:call-template name="fill"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:apply-templates select="."/>
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:for-each>
+    </xsl:copy>
   </xsl:template>
 
   <!-- TMP TO REMOVE when gco:characterString is added in multilingual elements

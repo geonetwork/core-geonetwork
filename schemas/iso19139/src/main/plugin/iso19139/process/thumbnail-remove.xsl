@@ -41,28 +41,29 @@
         thumbnail-from-url-remove?thumbnail_url=http://geonetwork.org/thumbnails/image.png
     -->
 
-  <xsl:param name="resourceHash"/>
-  <xsl:param name="resourceIdx"/>
-  <xsl:param name="thumbnail_url"/>
+  <xsl:param name="thumbnail_url" select="''"/>
+  <xsl:param name="resourceHash" select="''"/>
+  <xsl:param name="resourceIdx" select="''"/>
 
   <!-- Remove the thumbnail define in thumbnail_url parameter -->
   <xsl:template
-    priority="2"
+    priority="4"
     match="*[gmd:graphicOverview]">
-    <xsl:for-each select="gmd:graphicOverview">
-      <xsl:choose>
-        <xsl:when test="($resourceIdx = '' or position() = xs:integer($resourceIdx))
-                    and ($resourceHash != '' or normalize-space(gmd:MD_BrowseGraphic/gmd:fileName/gco:CharacterString) = normalize-space($thumbnail_url))
-                    and ($resourceHash = '' or util:md5Hex(exslt:node-set(.)) = $resourceHash)">
-          <!-- Remove the thumbnail -->
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:apply-templates select="."/>
-        </xsl:otherwise>
-      </xsl:choose>
-    </xsl:for-each>
-
-    <xsl:apply-templates select="* except gmd:graphicOverview" />
+    <xsl:copy>
+      <xsl:apply-templates select="@*|node() except gmd:graphicOverview" />
+      <xsl:for-each select="gmd:graphicOverview">
+        <xsl:choose>
+          <xsl:when test="($resourceIdx = '' or position() = xs:integer($resourceIdx))
+                      and ($resourceHash != '' or ($thumbnail_url != '' and normalize-space(gmd:MD_BrowseGraphic/gmd:fileName/gco:CharacterString) = normalize-space($thumbnail_url)))
+                      and ($resourceHash = '' or util:md5Hex(exslt:node-set(.)) = $resourceHash)">
+            <!-- Remove the thumbnail -->
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:apply-templates select="."/>
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:for-each>
+    </xsl:copy>
   </xsl:template>
 
   <!-- Do a copy of every node and attribute -->

@@ -44,34 +44,35 @@ Stylesheet used to remove a reference to a online resource.
         onlinesrc-remove?url=http://geonetwork.org/resource.txt&name=test
     -->
 
-  <xsl:param name="resourceHash"/>
-  <xsl:param name="resourceIdx"/>
-  <xsl:param name="url"/>
-  <xsl:param name="name"/>
+  <xsl:param name="resourceHash" select="''"/>
+  <xsl:param name="resourceIdx" select="''"/>
+  <xsl:param name="url" select="''"/>
+  <xsl:param name="name" select="''"/>
 
   <!-- Remove the gmd:onLine define in url parameter  -->
   <xsl:template
     priority="2"
     match="*[gmd:onLine]">
-    <xsl:for-each select="gmd:onLine">
-      <xsl:choose>
+    <xsl:copy>
+      <xsl:apply-templates select="@*|node() except gmd:onLine" />
 
-        <xsl:when test="gmd:CI_OnlineResource[gmd:linkage/gmd:URL!='']
-                  and ($resourceIdx = '' or position() = xs:integer($resourceIdx))
-                  and ($resourceHash != '' or (normalize-space(gmd:CI_OnlineResource/gmd:linkage/gmd:URL) = $url and normalize-space(gmd:CI_OnlineResource/gmd:name/gco:CharacterString) = normalize-space($name)
-                                            or normalize-space(gmd:CI_OnlineResource/gmd:linkage/gmd:URL) = $url and count(gmd:CI_OnlineResource/gmd:name/gmd:PT_FreeText/gmd:textGroup[gmd:LocalisedCharacterString = $name]) > 0
-                                            or normalize-space(gmd:CI_OnlineResource/gmd:linkage/gmd:URL) = $url and normalize-space(gmd:CI_OnlineResource/gmd:protocol/*) = 'WWW:DOWNLOAD-1.0-http--download')
-                      )
-                  and ($resourceHash = '' or util:md5Hex(exslt:node-set(.)) = $resourceHash)">
-          <!-- Remove the thumbnail -->
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:apply-templates select="."/>
-        </xsl:otherwise>
-      </xsl:choose>
-    </xsl:for-each>
-
-    <xsl:apply-templates select="* except gmd:onLine" />
+      <xsl:for-each select="gmd:onLine">
+        <xsl:choose>
+          <xsl:when test="gmd:CI_OnlineResource[gmd:linkage/gmd:URL!='']
+                    and ($resourceIdx = '' or position() = xs:integer($resourceIdx))
+                    and ($resourceHash != '' or ($url != null and (normalize-space(gmd:CI_OnlineResource/gmd:linkage/gmd:URL) = $url and normalize-space(gmd:CI_OnlineResource/gmd:name/gco:CharacterString) = normalize-space($name)
+                                                                or normalize-space(gmd:CI_OnlineResource/gmd:linkage/gmd:URL) = $url and count(gmd:CI_OnlineResource/gmd:name/gmd:PT_FreeText/gmd:textGroup[gmd:LocalisedCharacterString = $name]) > 0
+                                                                or normalize-space(gmd:CI_OnlineResource/gmd:linkage/gmd:URL) = $url and normalize-space(gmd:CI_OnlineResource/gmd:protocol/*) = 'WWW:DOWNLOAD-1.0-http--download'))
+                        )
+                    and ($resourceHash = '' or util:md5Hex(exslt:node-set(.)) = $resourceHash)">
+            <!-- Remove the thumbnail -->
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:apply-templates select="."/>
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:for-each>
+    </xsl:copy>
   </xsl:template>
 
   <!-- Do a copy of every node and attribute -->
