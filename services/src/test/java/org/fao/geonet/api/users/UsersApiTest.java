@@ -363,7 +363,7 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
                         System.err.println(invalidName + " has been accepted as user name and it shouldn't");
                     }
                 })
-                .andExpect(jsonPath("$.description", is("username may only contain alphanumeric "
+                .andExpect(jsonPath("$.message", is("username may only contain alphanumeric "
                     + "characters or single hyphens, single at signs or single dots. Cannot begin or end with a "
                     + "hyphen, at sign or dot.")))
                 .andExpect(status().is(400));
@@ -608,7 +608,7 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
                     }
                 })
                 .andExpect(status().is(400))
-                .andExpect(jsonPath("$.description", is("username may only contain alphanumeric "
+                .andExpect(jsonPath("$.message", is("username may only contain alphanumeric "
                     + "characters or single hyphens, single at signs or single dots. Cannot begin or end with a "
                     + "hyphen, at sign or dot.")));
         }

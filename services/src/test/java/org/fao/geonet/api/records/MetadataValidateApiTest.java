@@ -135,7 +135,7 @@ public class MetadataValidateApiTest extends AbstractServiceIntegrationTest {
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().is4xxClientError())
                 .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
-                .andExpect(jsonPath("$.message").value("SecurityException"));
+                .andExpect(jsonPath("$.message").value("User anonymous can't edit record with UUID " + subTemplate.getUuid()));
 
         List<MetadataValidation> validations = metadataValidationRepository.findAllById_MetadataId(subTemplate.getId());
         assertEquals(0, validations.size());
