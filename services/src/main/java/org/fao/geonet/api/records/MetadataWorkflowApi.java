@@ -1328,7 +1328,7 @@ public class MetadataWorkflowApi {
             String allowedUserProfileToImportMetadata =
                 org.apache.commons.lang.StringUtils.defaultIfBlank(settingManager.getValue(Settings.METADATA_HISTORY_ACCESS_LEVEL), Profile.Editor.toString());
 
-            // Is the user profile is higher than the profile allowed?
+            // Is the user profile higher than the profile allowed?
             if (!UserUtil.hasHierarchyRole(allowedUserProfileToImportMetadata, this.roleHierarchy)) {
                 throw new NotAllowedException("The user has no permissions to view metadata history.");
             }
