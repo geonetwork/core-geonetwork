@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Food and Agriculture Organization of the
+ * Copyright (C) 2023 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -76,6 +76,12 @@ public class OidcUser2GeonetworkUser {
         if (!StringUtils.hasText(simpleUser.getUsername()))
             return null;
 
+        if (!oidcConfiguration.isUpdateProfile()) {
+            // SimpleOidcUser.updateUser assigns the user profile to the OpenId user profile, unless
+            // SimpleOidcUser.profile is empty. Force the empty value, to avoid the assignment.
+            simpleUser.setProfile("");
+        }
+
         User user;
         boolean newUserFlag = false;
         try {
@@ -124,6 +130,12 @@ public class OidcUser2GeonetworkUser {
         SimpleOidcUser simpleUser = simpleOidcUserFactory.create(idToken, attributes);
         if (!StringUtils.hasText(simpleUser.getUsername()))
             return null;
+
+        if (!oidcConfiguration.isUpdateProfile()) {
+            // SimpleOidcUser.updateUser assigns the user profile to the OpenId user profile, unless
+            // SimpleOidcUser.profile is empty. Force the empty value, to avoid the assignment.
+            simpleUser.setProfile("");
+        }
 
         User user;
         boolean newUserFlag = false;
