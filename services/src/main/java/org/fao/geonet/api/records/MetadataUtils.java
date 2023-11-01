@@ -317,9 +317,7 @@ public class MetadataUtils {
                         });
                     }
 
-                    // TODO: ES 8 Check conversion class
                     JsonNode source = mapper.convertValue(e.source(), JsonNode.class);
-                    //JsonNode source = mapper.read(e.getSourceAsString());
                     ObjectNode doc = mapper.createObjectNode();
                     doc.set("_source", source);
                     EsHTTPProxy.addUserInfo(doc, context);

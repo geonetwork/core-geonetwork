@@ -487,9 +487,6 @@ public class EsSearchManager implements ISearchManager {
             List<String> errorDocumentIds = new ArrayList<>();
             // Add information in index that some items were not properly indexed
             bulkItemResponses.items().forEach(e -> {
-                // TODO: ES 8, check e.status values
-                //if (e.status() != OK
-                //    && e.status() != CREATED) {
                 if (e.error() != null) {
                     errorDocumentIds.add(e.id());
                     ObjectMapper mapper = new ObjectMapper();
