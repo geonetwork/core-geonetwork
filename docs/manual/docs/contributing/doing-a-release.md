@@ -8,22 +8,22 @@ The following script can be used on Linux and Mac. For this a running build envi
 with the following utilities: ***sed***, ***xmlstarlet*** and ***sftp***.
 
 
-1.  Prepare the release
+1.  Prepare the release (examples prepairs version 4.4.1 as latest release):
 
     ``` shell
     # Setup properties
     from=origin
     frombranch=origin/main
-    series=4.2
+    series=4.4
     versionbranch=$series.x
-    version=4.2.3
+    version=4.4.1
     minorversion=0
-    release=stable
+    release=latest
     newversion=$version-$minorversion
-    currentversion=4.2.3-SNAPSHOT
-    previousversion=4.2.2
-    nextversion=4.2.4-SNAPSHOT
-    nextMajorVersion=4.4.0-SNAPSHOT
+    currentversion=4.4.1-SNAPSHOT
+    previousversion=4.4.0
+    nextversion=4.4.2-SNAPSHOT
+    nextMajorVersion=4.6.0-SNAPSHOT
 
 
     # Get the branch
