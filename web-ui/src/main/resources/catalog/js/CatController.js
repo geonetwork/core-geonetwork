@@ -1847,7 +1847,6 @@
                 profile !== ''
                   ? 'is' + profile[0].toUpperCase() + profile.substring(1) + 'OrMore'
                   : '';
-            console.log("User profile to view history: "+profile);
             return angular.isFunction(this[fnName]) ? this[fnName]() : false;
           },
           canDeletePublishedMetadata: function () {
