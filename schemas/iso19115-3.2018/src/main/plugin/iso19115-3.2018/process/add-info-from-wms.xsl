@@ -97,7 +97,7 @@
   <!-- Load the capabilities document if one oneline resource contains a protocol set to WMS
   -->
   <xsl:variable name="onlineNodes"
-                select="//cit:CI_OnlineResource[contains(cit:protocol/gco:CharacterString, 'OGC:WMS') and normalize-space(cit:linkage/*/text()) = $wmsServiceUrl]"/>
+                select="//cit:CI_OnlineResource[contains(cit:protocol/gco:CharacterString, 'OGC:WMS') and normalize-space(cit:linkage/*[1]/text()) = $wmsServiceUrl]"/>
   <xsl:variable name="capabilitiesDoc">
     <xsl:if test="$onlineNodes">
       <xsl:copy-of select="geonet:get-wms-capabilities($wmsServiceUrl, '1.1.1')"/>
