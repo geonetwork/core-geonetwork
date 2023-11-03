@@ -700,7 +700,7 @@ public class MetadataWorkflowApi {
         checkUserProfileToViewMetadataHistory(context.getUserSession());
 
         Profile profile = context.getUserSession().getProfile();
-        if (profile != Profile.Administrator) {
+        if (profile != Profile.Administrator && profile != Profile.RegisteredUser) {
             if (CollectionUtils.isEmpty(recordIdentifier) &&
                 CollectionUtils.isEmpty(uuid)) {
                 throw new NotAllowedException(
