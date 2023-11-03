@@ -207,9 +207,10 @@
           md: "=gnDistributionResourcesPanel",
           mode: "=",
           relatedConfig: "=",
-          editable: "="
+          editorConfig: "@"
         },
-        link: function (scope, element, attrs) {}
+        link: function (scope, element, attrs) {
+        }
       };
     }
   ]);
@@ -278,12 +279,13 @@
           md: "=gnDistributionResourcesContainer",
           mode: "=",
           relatedConfig: "=",
-          editable: "="
+          editorConfig: "="
         },
         link: function (scope, element, attrs, controller) {
           scope.lang = scope.lang || scope.$parent.lang;
           scope.relations = {};
           scope.relatedConfigUI = [];
+          scope.editable = angular.isDefined(scope.editorConfig);
           scope.config = gnRelatedResources;
           if ($injector.has("gnOnlinesrc")) {
             scope.onlinesrcService = $injector.get("gnOnlinesrc");
@@ -358,14 +360,17 @@
           user: "=",
           hasResults: "=?",
           layout: "@",
-          editable: "="
+          editorConfig: "="
         },
         link: function (scope, element, attrs) {
           scope.canPublishDoiForResource = gnDoiService.canPublishDoiForResource;
-
+          scope.editable = angular.isDefined(scope.editorConfig);
           scope.lang = scope.lang || scope.$parent.lang;
+
           if ($injector.has("gnOnlinesrc")) {
             scope.onlinesrcService = $injector.get("gnOnlinesrc");
+            gnCurrentEdit = $injector.get("gnCurrentEdit");
+            gnCurrentEdit.associatedPanelConfigId = scope.editorConfig;
           }
 
           /**
