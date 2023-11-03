@@ -640,7 +640,6 @@ public class MetadataWorkflowApi {
     @io.swagger.v3.oas.annotations.Operation(summary = "Search status", description = "")
     @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET, path = "/status/search")
     @ResponseStatus(value = HttpStatus.OK)
-    @PreAuthorize("hasAuthority('Editor')")
     @ResponseBody
     public List<MetadataStatusResponse> getWorkflowStatusByType(
         @Parameter(description = "One or more types to retrieve (ie. worflow, event, task). Default is all.",
