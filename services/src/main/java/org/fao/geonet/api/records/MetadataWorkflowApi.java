@@ -640,6 +640,7 @@ public class MetadataWorkflowApi {
     @io.swagger.v3.oas.annotations.Operation(summary = "Search status", description = "")
     @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET, path = "/status/search")
     @ResponseStatus(value = HttpStatus.OK)
+    @PreAuthorize("hasAuthority('RegisteredUser')")
     @ResponseBody
     public List<MetadataStatusResponse> getWorkflowStatusByType(
         @Parameter(description = "One or more types to retrieve (ie. worflow, event, task). Default is all.",
@@ -699,7 +700,10 @@ public class MetadataWorkflowApi {
         checkUserProfileToViewMetadataHistory(context.getUserSession());
 
         Profile profile = context.getUserSession().getProfile();
-        if (profile != Profile.Administrator && profile != Profile.RegisteredUser) {
+        String allowedProfileLevel = org.apache.commons.lang.StringUtils.defaultIfBlank(settingManager.getValue(Settings.METADATA_HISTORY_ACCESS_LEVEL), Profile.Editor.toString());
+        Profile allowedAccessLevelProfile = Profile.valueOf(allowedProfileLevel);
+
+        if (profile != Profile.Administrator) {
             if (CollectionUtils.isEmpty(recordIdentifier) &&
                 CollectionUtils.isEmpty(uuid)) {
                 throw new NotAllowedException(
@@ -709,7 +713,12 @@ public class MetadataWorkflowApi {
             if (!CollectionUtils.isEmpty(recordIdentifier)) {
                 for (Integer recordId : recordIdentifier) {
                     try {
-                        ApiUtils.canEditRecord(String.valueOf(recordId), request);
+                        if (allowedAccessLevelProfile == Profile.RegisteredUser) {
+                            ApiUtils.canViewRecord(String.valueOf(recordId), request);
+                        } else {
+                            ApiUtils.canEditRecord(String.valueOf(recordId), request);
+                        }
+
                     } catch (SecurityException e) {
                         throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT);
                     }
@@ -718,7 +727,12 @@ public class MetadataWorkflowApi {
             if (!CollectionUtils.isEmpty(uuid)) {
                 for (String recordId : uuid) {
                     try {
-                        ApiUtils.canEditRecord(recordId, request);
+                        if (allowedAccessLevelProfile == Profile.RegisteredUser) {
+                            ApiUtils.canViewRecord(recordId, request);
+                        } else {
+                            ApiUtils.canEditRecord(recordId, request);
+                        }
+
                     } catch (SecurityException e) {
                         throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT);
                     }
