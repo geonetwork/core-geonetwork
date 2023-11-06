@@ -526,7 +526,7 @@
 
         <directive data-gn-distribution-resources-panel="gnCurrentEdit.metadata"
                    data-mode="viewConfig.distributionConfig.layout || ''"
-                   data-editable="true"
+                   data-editor-config="default"
                    data-related-config="[{
                                            title: 'API',
                                            filter: 'protocol:OGC:.*|ESRI:.*|atom.*',
@@ -3210,7 +3210,7 @@
 
         <directive data-gn-distribution-resources-panel="gnCurrentEdit.metadata"
                    data-mode="viewConfig.distributionConfig.layout || ''"
-                   data-editable="true"
+                   data-editor-config="default"
                    data-related-config="[{
                                            title: 'API',
                                            filter: 'protocol:OGC:.*|ESRI:.*|atom.*',
@@ -3346,7 +3346,7 @@
 
         <directive data-gn-distribution-resources-panel="gnCurrentEdit.metadata"
                    data-mode="viewConfig.distributionConfig.layout || ''"
-                   data-editable="true"
+                   data-editor-config="default"
                    data-related-config="[{
                                            title: 'API',
                                            filter: 'protocol:OGC:.*|ESRI:.*|atom.*',
@@ -3447,7 +3447,7 @@
 
         <directive data-gn-distribution-resources-panel="gnCurrentEdit.metadata"
                    data-mode="viewConfig.distributionConfig.layout || ''"
-                   data-editable="true"
+                   data-editor-config="default"
                    data-related-config="[{
                                            title: 'API',
                                            filter: 'protocol:OGC:.*|ESRI:.*|atom.*',

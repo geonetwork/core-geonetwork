@@ -60,7 +60,7 @@
 
         <directive data-gn-distribution-resources-panel="gnCurrentEdit.metadata"
                    data-mode="viewConfig.distributionConfig.layout || ''"
-                   data-editable="true"
+                   data-editor-config="default"
                    data-related-config="[{
                                           title: 'links',
                                           filter: 'protocol:.*',
@@ -87,7 +87,7 @@
 
         <directive data-gn-distribution-resources-panel="gnCurrentEdit.metadata"
                    data-mode="viewConfig.distributionConfig.layout || ''"
-                   data-editable="true"
+                   data-editor-config="default"
                    data-related-config="[{
                                           title: 'links',
                                           filter: 'protocol:.*',
@@ -111,7 +111,7 @@
 
         <directive data-gn-distribution-resources-panel="gnCurrentEdit.metadata"
                    data-mode="viewConfig.distributionConfig.layout || ''"
-                   data-editable="true"
+                   data-editor-config="default"
                    data-related-config="[{
                                           title: 'links',
                                           filter: 'protocol:.*',
