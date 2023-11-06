@@ -646,7 +646,8 @@ public class EsHTTPProxy {
                     addRelatedTypes(doc, relatedTypes, context);
                 }
 
-                if (doc.has("_source")) {
+                if (doc.has("_source") &&
+                    doc.get("_source").has("documentStandard")) {
                     ObjectNode sourceNode = (ObjectNode) doc.get("_source");
 
                     String metadataSchema = doc.get("_source").get("documentStandard").asText();
