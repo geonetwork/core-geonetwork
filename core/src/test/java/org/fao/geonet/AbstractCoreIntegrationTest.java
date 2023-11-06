@@ -308,8 +308,7 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
         return session;
     }
 
-
-    private static Element getSample(String resource) throws IOException, JDOMException {
+    private Element getSample(String resource) throws IOException, JDOMException {
         final URL resourceUrl = AbstractCoreIntegrationTest.class.getResource(resource);
         return Xml.loadStream(resourceUrl.openStream());
     }

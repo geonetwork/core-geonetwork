@@ -80,9 +80,7 @@ public class FormatterApiIntegrationTest extends AbstractServiceIntegrationTest 
         schema = metadata.getDataInfo().getSchemaId();
     }
 
-    // TODOES
     @Test
-    @Ignore
     public void testExec() throws Exception {
         final FormatterAdminApi.FormatterDataResponse formatters =
             listService.listFormatters(null, null, schema, false, false);
@@ -118,7 +116,6 @@ public class FormatterApiIntegrationTest extends AbstractServiceIntegrationTest 
         }
     }
 
-    @Ignore
     @Test
     public void testExecXslt() throws Exception {
         final ServletContext context = _applicationContext.getBean(ServletContext.class);
