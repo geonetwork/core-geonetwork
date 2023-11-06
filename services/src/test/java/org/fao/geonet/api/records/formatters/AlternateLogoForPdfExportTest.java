@@ -2,21 +2,10 @@ package org.fao.geonet.api.records.formatters;
 
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.domain.AbstractMetadata;
-import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.Setting;
-import org.fao.geonet.kernel.SchemaManager;
-import org.fao.geonet.kernel.UpdateDatestamp;
-import org.fao.geonet.kernel.datamanager.IMetadataManager;
-import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.SettingRepository;
-import org.fao.geonet.repository.SourceRepository;
-import org.fao.geonet.schema.iso19115_3_2018.ISO19115_3_2018SchemaPlugin;
-import org.fao.geonet.schema.iso19139.ISO19139SchemaPlugin;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
-import org.fao.geonet.utils.Xml;
-import org.jdom.Element;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -46,12 +35,6 @@ public class AlternateLogoForPdfExportTest extends AbstractServiceIntegrationTes
     @Autowired
     private WebApplicationContext wac;
     @Autowired
-    private SchemaManager schemaManager;
-    @Autowired
-    private IMetadataManager metadataManager;
-    @Autowired
-    private SourceRepository sourceRepository;
-    @Autowired
     private SettingManager settingManager;
     @Autowired
     SettingRepository settingRepository;
@@ -68,46 +51,14 @@ public class AlternateLogoForPdfExportTest extends AbstractServiceIntegrationTes
 
     @Before
     public void createTestData() throws Exception {
-        this.context = createServiceContext();
+        context = createServiceContext();
         loginAsAdmin(context);
-        loadFile(getSampleISO19139MetadataXml());
+        metadata = injectMetadataInDbDoNotRefreshHeader(getSampleISO19139MetadataXml(), context);
     }
 
     @Before
     public void initWriterSpy() {
         Mockito.reset(responseWriterSpy);
-    }
-
-    private void loadFile(Element sampleMetadataXml) throws Exception {
-        String uuid = UUID.randomUUID().toString();
-        String schema = schemaManager.autodetectSchema(sampleMetadataXml);
-        Xml.selectElement(sampleMetadataXml,
-                "iso19139".equals(schema)
-                    ? "gmd:fileIdentifier/gco:CharacterString"
-                    : "mdb:metadataIdentifier/*/mcc:code/*",
-                "iso19139".equals(schema)
-                    ? ISO19139SchemaPlugin.allNamespaces.asList()
-                    : ISO19115_3_2018SchemaPlugin.allNamespaces.asList())
-            .setText(uuid);
-
-        String source = sourceRepository.findAll().get(0).getUuid();
-        final Metadata metadata = new Metadata();
-        metadata
-            .setDataAndFixCR(sampleMetadataXml)
-            .setUuid(uuid);
-        metadata.getDataInfo()
-            .setRoot(sampleMetadataXml.getQualifiedName())
-            .setSchemaId(schema)
-            .setType(MetadataType.METADATA)
-            .setPopularity(1000);
-        metadata.getSourceInfo()
-            .setOwner(1)
-            .setSourceId(source);
-        metadata.getHarvestInfo()
-            .setHarvested(false);
-
-        this.metadata = metadataManager.insertMetadata(context, metadata, sampleMetadataXml, IndexingMode.none, false, UpdateDatestamp.NO,
-            false, false);
     }
 
     @Test
