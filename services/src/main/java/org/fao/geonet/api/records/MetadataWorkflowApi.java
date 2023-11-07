@@ -697,7 +697,6 @@ public class MetadataWorkflowApi {
         Integer size,
         HttpServletRequest request) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
-        checkUserProfileToViewMetadataHistory(context.getUserSession());
 
         Profile profile = context.getUserSession().getProfile();
         String allowedProfileLevel = org.apache.commons.lang.StringUtils.defaultIfBlank(settingManager.getValue(Settings.METADATA_HISTORY_ACCESS_LEVEL), Profile.Editor.toString());
@@ -1330,22 +1329,4 @@ public class MetadataWorkflowApi {
         sa.onStatusChange(listOfStatusChange);
     }
 
-
-    /**
-     * Checks if the user profile is allowed to view metadata history status.
-     *
-     * @param userSession
-     */
-    private void checkUserProfileToViewMetadataHistory(UserSession userSession) {
-        if (userSession.getProfile() != Profile.Administrator) {
-            String allowedUserProfileToImportMetadata =
-                org.apache.commons.lang.StringUtils.defaultIfBlank(settingManager.getValue(Settings.METADATA_HISTORY_ACCESS_LEVEL), Profile.Editor.toString());
-
-            // Is the user profile higher than the profile allowed?
-            if (!UserUtil.hasHierarchyRole(allowedUserProfileToImportMetadata, this.roleHierarchy)) {
-                throw new NotAllowedException("The user has no permissions to view metadata history.");
-            }
-        }
-
-    }
 }
