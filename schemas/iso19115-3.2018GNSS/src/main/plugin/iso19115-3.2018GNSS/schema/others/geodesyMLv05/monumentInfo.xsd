@@ -1,0 +1,252 @@
+<?xml  version='1.0' encoding='utf-8' ?>
+<xs:schema targetNamespace="urn:xml-gov-au:icsm:egeodesy:0.5" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:geo="urn:xml-gov-au:icsm:egeodesy:0.5" elementFormDefault="qualified" version="0.5">
+	<xs:import namespace="http://www.isotc211.org/2005/gco" schemaLocation="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/gco/gco.xsd"/>
+	<xs:annotation>
+		<xs:documentation>Derived from SOPAC IGS Site Log XML Schema 2011</xs:documentation>
+	</xs:annotation>
+	<xs:include schemaLocation="./commonTypes.xsd"/>
+	<xs:simpleType name="bedrockConditionsType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="FRESH"/>
+			<xs:enumeration value="Fresh"/>
+			<xs:enumeration value="JOINTED"/>
+			<xs:enumeration value="Jointed"/>
+			<xs:enumeration value="FRACTURED"/>
+			<xs:enumeration value="Fractured"/>
+			<xs:enumeration value="WEATHERED"/>
+			<xs:enumeration value="Weathered"/>
+			<xs:enumeration value="N/A"/>
+			<xs:enumeration value=""/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="bedrockTypeOfType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="IGNEOUS"/>
+			<xs:enumeration value="Igneous"/>
+			<xs:enumeration value="Metaigneous"/>
+			<xs:enumeration value="METAMORPHIC"/>
+			<xs:enumeration value="Metamorphic"/>
+			<xs:enumeration value="GRANITE"/>
+			<xs:enumeration value="Granite"/>
+			<xs:enumeration value="SEDIMENTARY"/>
+			<xs:enumeration value="Sedimentary"/>
+			<xs:enumeration value="CONGLOMERATE"/>
+			<xs:enumeration value="Conglomerate"/>
+			<xs:enumeration value="N/A"/>
+			<xs:enumeration value=""/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="faultZonesNearbyType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Yes"/>
+			<xs:enumeration value="No"/>
+			<xs:enumeration value="Name_of_Zone"/>
+			<xs:enumeration value=""/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="fractureSpacingTypeOfType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="1-10cm"/>
+			<xs:enumeration value="11-50cm"/>
+			<xs:enumeration value="51-200cm"/>
+			<xs:enumeration value="over 200cm"/>
+			<xs:enumeration value="N/A"/>
+			<xs:enumeration value=""/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="geologicCharacteristicType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="BEDROCK"/>
+			<xs:enumeration value="Bedrock"/>
+			<xs:enumeration value="CLAY"/>
+			<xs:enumeration value="Clay"/>
+			<xs:enumeration value="GRAVEL"/>
+			<xs:enumeration value="Gravel"/>
+			<xs:enumeration value="SAND"/>
+			<xs:enumeration value="Sand"/>
+			<xs:enumeration value="SEDIMENTS"/>
+			<xs:enumeration value="Sediments"/>
+			<xs:enumeration value="CONGLOMERATE"/>
+			<xs:enumeration value="Conglomerate"/>
+			<xs:enumeration value=""/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="monumentDescriptionTypeOfType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="pillar"/>
+			<xs:enumeration value="brass plate"/>
+			<xs:enumeration value="steel mast"/>
+			<xs:enumeration value="shallow rod/braced antenna mount"/>
+			<xs:enumeration value="removeable tripod / concrete pad"/>
+			<xs:enumeration value="Wyatt/Agnew drilled-braced"/>
+			<xs:enumeration value="Wyatt/Agnew driven braced"/>
+			<xs:enumeration value="rock-pin/metal-tripod"/>
+			<xs:enumeration value="rock-pin"/>
+			<xs:enumeration value="glued-rod"/>
+			<xs:enumeration value="wall"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="tectonicPlateTypeOfTypes">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="African"/>
+			<xs:enumeration value="African Indian/Australia"/>
+			<xs:enumeration value="African Eurasian"/>
+			<xs:enumeration value="Antarctic"/>
+			<xs:enumeration value="Arabian"/>
+			<xs:enumeration value="Caribbean"/>
+			<xs:enumeration value="Cocos"/>
+			<xs:enumeration value="Eurasian"/>
+			<xs:enumeration value="Indian/Australian"/>
+			<xs:enumeration value="Nazca"/>
+			<xs:enumeration value="North America"/>
+			<xs:enumeration value="North America Pacific"/>
+			<xs:enumeration value="Pacific"/>
+			<xs:enumeration value="Phillipine"/>
+			<xs:enumeration value="South American"/>
+			<xs:enumeration value="South American African"/>
+			<xs:enumeration value="Juan De Fuca"/>
+			<xs:enumeration value="Scotia"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="cartesianPosition" type="geo:cartesianPosition"/>
+	<xs:complexType name="cartesianPosition">
+		<xs:sequence>
+			<xs:element ref="gml:Point" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="FormInformation" type="geo:FormInformation"/>
+	<xs:complexType name="FormInformation">
+		<xs:complexContent>
+			<xs:extension base="gml:AbstractGMLType">
+				<xs:sequence>
+					<xs:element name="datePrepared" type="gml:TimePositionType" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="preparedBy" type="xs:string" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="reportType" type="xs:string" minOccurs="1" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="FormInformationPropertyType" type="geo:FormInformationPropertyType"/>
+	<xs:complexType name="FormInformationPropertyType">
+		<xs:sequence>
+			<xs:element ref="geo:FormInformation" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="geodeticPosition" type="geo:geodeticPosition"/>
+	<xs:complexType name="geodeticPosition">
+		<xs:sequence>
+			<xs:element ref="gml:Point" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="MoreInformation" type="geo:MoreInformation"/>
+	<xs:complexType name="MoreInformation">
+		<xs:complexContent>
+			<xs:extension base="gml:AbstractGMLType">
+				<xs:sequence>
+					<xs:element name="antennaGraphicsWithDimensions" type="xs:string" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="dataCenter" type="xs:string" minOccurs="1" maxOccurs="unbounded"/>
+					<xs:element name="DOI" type="gml:CodeType" minOccurs="1" maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation>Data Digital Object Identifier</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="horizonMask" type="xs:string" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="insertTextGraphicFromAntenna" type="xs:string" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="monumentDescription" type="xs:string" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="notes" type="xs:string" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="siteDiagram" type="xs:string" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="siteMap" type="xs:string" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="sitePictures" type="xs:string" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="urlForMoreInformation" type="xs:string" minOccurs="1" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="MoreInformationPropertyType" type="geo:MoreInformationPropertyType"/>
+	<xs:complexType name="MoreInformationPropertyType">
+		<xs:sequence>
+			<xs:element ref="geo:MoreInformation" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="SiteIdentification" type="geo:SiteIdentification"/>
+	<xs:complexType name="SiteIdentification">
+		<xs:complexContent>
+			<xs:extension base="gml:AbstractGMLType">
+				<xs:sequence>
+					<xs:element name="bedrockCondition" type="xs:string" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="bedrockType" type="xs:string" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="cdpNumber" type="xs:string" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="dateInstalled" type="gml:TimePositionType" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="distance-Activity" type="xs:string" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="faultZonesNearby" type="gml:CodeType" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="foundationDepth" type="xs:double" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="fourCharacterID" type="xs:string" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="fractureSpacing" type="xs:string" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="geologicCharacteristic" type="gml:CodeType" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="heightOfTheMonument" type="xs:double" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="iersDOMESNumber" type="xs:string" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="markerDescription" type="xs:string" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="monumentDescription" type="gml:CodeType" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="monumentFoundation" type="xs:string" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="monumentInscription" type="xs:string" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="monumentNumber" minOccurs="0" maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation>Number of monuments at the site</xs:documentation>
+						</xs:annotation>
+						<xs:simpleType>
+							<xs:restriction base="xs:integer">
+								<xs:totalDigits value="1"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element name="notes" type="xs:string" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="receiverNumber" minOccurs="0" maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation>Number of receivers at the site</xs:documentation>
+						</xs:annotation>
+						<xs:simpleType>
+							<xs:restriction base="xs:integer">
+								<xs:totalDigits value="1"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element name="siteName" type="xs:string" minOccurs="1" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="SiteIdentificationPropertyType" type="geo:SiteIdentificationPropertyType"/>
+	<xs:complexType name="SiteIdentificationPropertyType">
+		<xs:sequence>
+			<xs:element ref="geo:SiteIdentification" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="SiteLocation" type="geo:SiteLocation"/>
+	<xs:complexType name="SiteLocation">
+		<xs:complexContent>
+			<xs:extension base="gml:AbstractGMLType">
+				<xs:sequence>
+					<xs:element name="approximatePositionITRF" minOccurs="1" maxOccurs="1">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="cartesianPosition" type="geo:cartesianPosition" minOccurs="0" maxOccurs="1"/>
+								<xs:element name="geodeticPosition" type="geo:geodeticPosition" minOccurs="0" maxOccurs="1"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="city" type="xs:string" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="countryCodeISO" type="geo:countryCodeType" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="notes" type="xs:string" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="state" type="xs:string" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="tectonicPlate" type="gml:CodeType" minOccurs="1" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="SiteLocationPropertyType" type="geo:SiteLocationPropertyType"/>
+	<xs:complexType name="SiteLocationPropertyType">
+		<xs:sequence>
+			<xs:element ref="geo:SiteLocation" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

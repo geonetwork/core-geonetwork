@@ -1,0 +1,443 @@
+<?xml  version='1.0' encoding='utf-8' ?>
+<xs:schema targetNamespace="urn:xml-gov-au:icsm:egeodesy:0.5"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:gco="http://www.isotc211.org/2005/gco"
+           xmlns:gml="http://www.opengis.net/gml/3.2"
+           xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/1.0"
+           xmlns:geo="urn:xml-gov-au:icsm:egeodesy:0.5"
+           xmlns:sopac="http://sopac.ucsd.edu/ns/geodesy/doc/igsSiteLog/2004" elementFormDefault="qualified"
+           version="0.5">
+  <xs:include schemaLocation="./document.xsd"/>
+  <xs:include schemaLocation="./lineage.xsd"/>
+  <xs:include schemaLocation="./quality.xsd"/>
+  <xs:include schemaLocation="./commonTypes.xsd"/>
+  <xs:element name="AbstractPosition">
+    <xs:annotation>
+      <xs:documentation>&#xD;
+        A Position element contains information about a 1d, 2d, or 3d position for a node. In general a different
+        position record is used for each datum and source. For example if a 3d adjustment was the source a single 3d
+        position record (e.g. lat, lon, ellipsoid ht) could be used. If there was an AHD height determined this would be
+        a separate 1d position record.&#xD;
+      </xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="Status" type="geo:FeatureStatusType"/>
+  <xs:element name="StatusInstance" type="geo:FeatureStatusInstanceType"/>
+  <xs:element name="AbstractMonumentType" type="geo:AbstractMonumentType"/>
+  <xs:complexType name="AbstractMonumentType" abstract="true">
+    <xs:annotation>
+      <xs:documentation>Contains information about the physical monument.</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="gml:AbstractFeatureType">
+        <xs:sequence>
+          <xs:element name="installedBy" type="cit:CI_Responsibility_PropertyType" minOccurs="0"
+                      maxOccurs="unbounded"/>
+          <xs:element name="installedDate" type="gml:TimePositionType" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="type" type="gml:CodeWithAuthorityType" minOccurs="1" maxOccurs="1">
+            <xs:annotation>
+              <xs:documentation>Monument Type Code e.g. STEEL PILLAR</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:group ref="geo:RemarksGroup" minOccurs="1" maxOccurs="1"/>
+          <xs:element ref="geo:Status" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="AbstractSiteLog" type="geo:AbstractSiteLog"/>
+  <xs:complexType name="AbstractSiteLog">
+    <xs:complexContent>
+      <xs:extension base="gml:AbstractFeatureType">
+        <xs:sequence>
+          <xs:element name="atSite" type="geo:SitePropertyType" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="DirectVelocityType" type="geo:DirectVelocityType"/>
+  <xs:complexType name="DirectVelocityType">
+    <xs:annotation>
+      <xs:documentation>Direct velocity instances hold the parametric velocity values for a moving object within some
+        coordinate reference system (CRS).
+      </xs:documentation>
+    </xs:annotation>
+    <xs:simpleContent>
+      <xs:extension base="gml:doubleList">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:element name="FeatureStatusInstanceType" type="geo:FeatureStatusInstanceType"/>
+  <xs:complexType name="FeatureStatusInstanceType">
+    <xs:sequence>
+      <xs:element ref="gml:validTime" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="statusCode" type="gml:CodeWithAuthorityType" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Current status of position as sourced from the codeSpace.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:group ref="geo:RemarksGroup" minOccurs="1" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="FeatureStatusType" type="geo:FeatureStatusType"/>
+  <xs:complexType name="FeatureStatusType">
+    <xs:annotation>
+      <xs:documentation>This status type Authoritative can be assigned at most once per Position / CRS / Epoch
+        combination.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="history" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="geo:StatusInstance" minOccurs="1" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="currentStatus" type="geo:FeatureStatusInstanceType" minOccurs="1" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Monument" type="geo:Monument"/>
+  <xs:complexType name="Monument">
+    <xs:annotation>
+      <xs:documentation>Contains physical and geological information about the Monument. The meta-data and geological
+        elements are derived from the SOPAC Site Log schema element mi:siteIdentification.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="geo:AbstractMonumentType">
+        <xs:sequence>
+          <xs:element name="bedrockCondition" type="gml:CodeWithAuthorityType" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="bedrockType" type="gml:CodeWithAuthorityType" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="distanceActivity" type="gml:CodeWithAuthorityType" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="faultZonesNearby" type="gml:CodeWithAuthorityType" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="foundation" type="gml:CodeWithAuthorityType" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="foundationDepth" type="geo:SingleValueType" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="fractureSpacing" type="gml:CodeWithAuthorityType" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="geologicCharacteristic" type="gml:CodeWithAuthorityType" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="height" type="geo:SingleValueType" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="inscription" type="xs:string" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="markerDescription" type="xs:string" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="monumentDescription" type="gml:CodeWithAuthorityType" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MonumentPropertyType" type="geo:MonumentPropertyType"/>
+  <xs:complexType name="MonumentPropertyType">
+    <xs:sequence minOccurs="0">
+      <xs:element ref="geo:Monument" minOccurs="1" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Node" type="geo:Node"/>
+  <xs:complexType name="Node">
+    <xs:annotation>
+      <xs:documentation>A node is an abstract entity used to identify the aggregation of measurement and position
+        associations to a site for the purpose of coordinate estimation. The resultant position estimations that are
+        assigned to a node express the position of the site reference point according to the authorities that
+        instantiated the node and performed the estimation for a valid time.&#xD;
+        To represent a "current node" whereby the begin position for the valid time is known but the end position is not
+        known, it is conventional to use the following example structure:&#xD;
+      </xs:documentation>
+    </xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="gml:AbstractFeatureType">
+        <xs:sequence>
+          <xs:element name="aggregationType" type="gml:CodeWithAuthorityType" minOccurs="1" maxOccurs="1">
+            <xs:annotation>
+              <xs:documentation>The aggregation type specifically identifies the business rules that were used to
+                determine the type of movement permissible at this Node for the valid time period.
+              </xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element ref="gml:validTime" minOccurs="1" maxOccurs="1"/>
+          <xs:group ref="geo:RemarksGroup" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="atSite" type="geo:SitePropertyType" minOccurs="1" maxOccurs="unbounded">
+            <xs:annotation>
+              <xs:documentation>A Schematron validation must be written to enforce the convention where a geodetic node
+                can have only one atSite, but a cadastral node may have several.
+              </xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element ref="geo:Status" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="NodePropertyType" type="geo:NodePropertyType"/>
+  <xs:complexType name="NodePropertyType">
+    <xs:sequence minOccurs="0">
+      <xs:element ref="geo:Node" minOccurs="1" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Position" type="geo:Position"/>
+  <xs:complexType name="Position">
+    <xs:annotation>
+      <xs:documentation>Contains information about a 1d, 2d, or 3d position for a node. In general a different position
+        record is used for each datum and source. For example if a 3d adjustment was the source a single 3d position
+        record (e.g. lat, lon, ellipsoid ht) could be used. If there was an AHD height determined this would be a
+        separate 1d position record.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="gml:AbstractFeatureType">
+        <xs:sequence>
+          <xs:element name="atNode" type="geo:NodePropertyType" minOccurs="1" maxOccurs="1"/>
+          <xs:group ref="geo:PositionTimeSliceProperties" minOccurs="1" maxOccurs="1"/>
+          <xs:element ref="geo:Status" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+        <xs:attributeGroup ref="geo:RequiredSRSReferenceGroup"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="PositionPairCovariance" type="geo:PositionPairCovariance"/>
+  <xs:complexType name="PositionPairCovariance">
+    <xs:annotation>
+      <xs:documentation>Contains position to position covariance information.</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="gml:AbstractFeatureType">
+        <xs:sequence>
+          <xs:group ref="geo:PositionLineageWithQualityProperties" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="toPosition" type="geo:PositionPropertyType" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="atPosition" type="geo:PositionPropertyType" minOccurs="1" maxOccurs="1"/>
+          <xs:element ref="geo:Status" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+        <xs:attributeGroup ref="geo:RequiredSRSReferenceGroup"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="PositionPropertyType" type="geo:PositionPropertyType"/>
+  <xs:complexType name="PositionPropertyType">
+    <xs:annotation>
+      <xs:documentation>The choice between referencing a geo:Position or a geo:PositionTimeSeries with a TimeSlice
+        reference.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:choice>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element ref="geo:Position" minOccurs="1" maxOccurs="1"/>
+      </xs:sequence>
+      <xs:sequence minOccurs="1" maxOccurs="1">
+        <xs:element name="TimeSlice" type="gml:ReferenceType" minOccurs="1" maxOccurs="1"/>
+        <xs:element ref="geo:PositionTimeSeries" minOccurs="0" maxOccurs="1"/>
+      </xs:sequence>
+    </xs:choice>
+  </xs:complexType>
+  <xs:element name="PositionTimeSeries" type="geo:PositionTimeSeries"/>
+  <xs:complexType name="PositionTimeSeries">
+    <xs:annotation>
+      <xs:documentation>Contains information about a 1d, 2d, or 3d position for a node. In general a different position
+        record is used for each datum and source. For example if a 3d adjustment was the source a single 3d position
+        record (e.g. lat, lon, ellipsoid ht) could be used. If there was an AHD height determined this would be a
+        separate 1d position record.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="geo:DynamicFeature">
+        <xs:sequence>
+          <xs:element name="history" minOccurs="1" maxOccurs="1">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element ref="geo:PositionTimeSlice" minOccurs="1" maxOccurs="unbounded"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="source" type="geo:AbstractPositionSourcePropertyType" minOccurs="0" maxOccurs="1">
+            <xs:annotation>
+              <xs:documentation>Estimation (adjustment) that defined position. As of GeodesyML 0.2 this can include any
+                operation type. Retained (not deprecated) because this element can specify the default source for all
+                elements in the history element
+              </xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="atNode" type="geo:NodePropertyType" minOccurs="1" maxOccurs="1"/>
+          <xs:group ref="geo:RemarksGroup" minOccurs="1" maxOccurs="1"/>
+          <xs:element ref="geo:Status" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+        <xs:attributeGroup ref="geo:RequiredSRSReferenceGroup"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="PositionTimeSlice" type="geo:PositionTimeSlice"/>
+  <xs:complexType name="PositionTimeSlice">
+    <xs:annotation>
+      <xs:documentation>A geo:AbstractTimeSliceType wrapper for coordinates that allows it to be used in a
+        geo:Position/geo:History trace.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="gml:AbstractGeometricPrimitiveType">
+        <xs:sequence>
+          <xs:group ref="geo:PositionTimeSliceProperties" minOccurs="1" maxOccurs="1"/>
+          <xs:element ref="geo:Status" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="RelativeOffsetType" type="geo:RelativeOffsetType"/>
+  <xs:complexType name="RelativeOffsetType">
+    <xs:annotation>
+      <xs:documentation>An offset of a supplementary mark to a Site. The type field would refer to the measurement type
+        (usually bearing or distance) and the value is one or more doubles.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="geo:Value">
+        <xs:sequence/>
+        <xs:attribute name="srsDimension" use="optional" type="xs:positiveInteger"/>
+        <xs:attribute name="srsName" use="optional" type="xs:anyURI"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="Site" type="geo:Site"/>
+  <xs:complexType name="Site">
+    <xs:annotation>
+      <xs:documentation>A Site is the umbrella element containing all physical information about a particular observing
+        system site. All setups, nodes and observation quality elements reference a site. Conversely, measurements and
+        positions do not reference a physical site but rather they reference the node abstraction. There can be more
+        than one node that references the one site, but each node must have a unique authority. E.g. Yarragadee CORS can
+        have a Reg13 node (or site certificate) and a national adjustment node. Both reference the same site and thus
+        simultaneously reference the same setup and observation quality, but the estimated coordinates and velocities
+        with associated quality can be different and this is dependent on the business rules of the authority.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="geo:AbstractMonumentType">
+        <xs:sequence>
+          <xs:element name="Monument" type="geo:MonumentPropertyType" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="SupplementaryMark" type="geo:SupplementaryMarkPropertyType" minOccurs="0"
+                      maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="SiteCertificate" type="geo:SiteCertificate"/>
+  <xs:complexType name="SiteCertificate">
+    <xs:annotation>
+      <xs:documentation>A Site Certificate is a specialisation of geo:Node used for specially certified coordinate
+        products. An example of this is the Regulation 13 certificate for GNSS CORS issued by Geoscience Australia.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="geo:Node">
+        <xs:sequence>
+          <xs:element name="AntennaOffset" type="geo:SingleValueType" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="CORSName" type="xs:string" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="FourCharID" minOccurs="1" maxOccurs="1">
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:length value="4"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:element>
+          <xs:element name="GNSSAntenna" type="geo:InstrumentPropertyType" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="GNSSReceiver" type="geo:InstrumentPropertyType" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="LocalIDNumber" type="xs:string" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="Location" type="xs:string" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="MarkDescription" type="xs:string" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="Photo" type="geo:DocumentPropertyType" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="SitePropertyType" type="geo:SitePropertyType"/>
+  <xs:complexType name="SitePropertyType">
+    <xs:sequence minOccurs="0">
+      <xs:element ref="geo:Site" minOccurs="1" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="siteVisit" type="geo:siteVisit"/>
+  <xs:complexType name="siteVisit">
+    <xs:annotation>
+      <xs:documentation>Contains information about the Site Visit at the site.</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="gml:AbstractFeatureType">
+        <xs:sequence>
+          <xs:element name="condition" type="gml:CodeType" minOccurs="1" maxOccurs="1">
+            <xs:annotation>
+              <xs:documentation>Condition of Site found during visit.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="visitBy" type="cit:CI_Responsibility_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="visitDate" type="gml:TimePositionType" minOccurs="1" maxOccurs="1"/>
+          <xs:group ref="geo:RemarksGroup" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="atSite" type="geo:SitePropertyType" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="SupplementaryMark" type="geo:SupplementaryMark"/>
+  <xs:complexType name="SupplementaryMark">
+    <xs:annotation>
+      <xs:documentation>Contains information about supplementary Sites at a node. For example recovery marks, beacons,
+        etc. These are typically Sites that do not have a unique identifier within the authority.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="geo:Monument">
+        <xs:sequence>
+          <xs:element name="relativeOffset" type="geo:RelativeOffsetType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="SupplementaryMarkPropertyType" type="geo:SupplementaryMarkPropertyType"/>
+  <xs:complexType name="SupplementaryMarkPropertyType">
+    <xs:sequence minOccurs="0">
+      <xs:element ref="geo:SupplementaryMark" minOccurs="1" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:group name="PositionLineageWithQualityProperties">
+    <xs:sequence>
+      <xs:element ref="geo:AbstractQuality" minOccurs="1" maxOccurs="unbounded"/>
+      <xs:element ref="geo:RemarksGroup" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="source" type="geo:AbstractPositionSourcePropertyType" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Position estimation event that was used to generate the parameters for this position. In the
+            case of a geo:PositionTimeSliceType, this element overrides the source specified in the
+            geo:PositionTimeSeriesType complex type.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+  <xs:group name="PositionTimeSliceProperties">
+    <xs:element name="hasVelocity">
+      <xs:complexType>
+        <xs:sequence>
+          <xs:element name="velocity" type="geo:DirectVelocityType" minOccurs="1" maxOccurs="1"/>
+          <xs:group ref="geo:PositionLineageWithQualityProperties" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+      </xs:complexType>
+    </xs:element>
+    <xs:annotation>
+      <xs:documentation>&#xD;
+        This properties group is shared by geo:PositionType and geo:PositionTimeSliceType.&#xD;
+        &#xD;
+        A coordinate reprojection should be only permissible under the following constraints:&#xD;
+        &#xD;
+        1) A new status is generated and added to the position element stating that the coordinates are re-projected or
+        transformed.&#xD;
+        2) Along with the above, the source element must be present and contain (a) an xlink to the original position
+        and (b) a reference to the projection/transformation method.&#xD;
+        3) If the quality element is present in the original coordinate instance then it must be transformed using the
+        same parameters but using the transformation method appropriate to the quality type (PU, VCV etc)&#xD;
+        4) If a hasVelocity element is present in the original coordinate instance then velocity and associated quality
+        must be transformed using the same parameters but using the transformation method appropriate to velocity.&#xD;
+        &#xD;
+        If the above three conditions cannot be met by the WFS, the position element should not be transformed. Perhaps
+        an error or notice should be issued (or appended to the position) stating that the reprojection was unsuccessful
+        due to limitations of the WFS implementation.&#xD;
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="coordinates" type="gml:DirectPositionType" minOccurs="1" maxOccurs="1"/>
+      <xs:element ref="geo:TimeSliceProperties" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="hasVelocity" type="geo:hasVelocity" minOccurs="0" maxOccurs="1"/>
+      <xs:group ref="geo:PositionLineageWithQualityProperties" minOccurs="1" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:group>
+</xs:schema>

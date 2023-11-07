@@ -1,0 +1,115 @@
+<?xml  version='1.0' encoding='utf-8' ?>
+<xs:schema targetNamespace="urn:xml-gov-au:icsm:egeodesy:0.5"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:gml="http://www.opengis.net/gml/3.2"
+           xmlns:geo="urn:xml-gov-au:icsm:egeodesy:0.5"
+           xmlns:gmd="http://www.isotc211.org/2005/gmd" elementFormDefault="qualified" version="0.5">
+	<xs:annotation>
+		<xs:documentation>Derived from SOPAC IGS Site Log XML Schema 2011 (http://sopac.ucsd.edu/ns/geodesy/doc/igsSiteLog/dataStreams/2011/dataStreams.xsd)</xs:documentation>
+	</xs:annotation>
+	<xs:include schemaLocation="contact.xsd"/>
+	<xs:simpleType name="dataFormatType">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="RTCM_2"/>
+			<xs:enumeration value="RTCM_2.2"/>
+			<xs:enumeration value="RTCM_2.3"/>
+			<xs:enumeration value="RTCM_3.0"/>
+			<xs:enumeration value="RTCM_3.1"/>
+			<xs:enumeration value="RYO"/>
+			<xs:enumeration value="RYO_1.0"/>
+			<xs:enumeration value="RYO_2.0"/>
+			<xs:enumeration value="CMR"/>
+			<xs:enumeration value="CMR+"/>
+			<xs:enumeration value="RAW"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ipAddressType">
+		<xs:union memberTypes="ipv4AddressType ipv6AddressType"/>
+	</xs:simpleType>
+	<xs:simpleType name="ipv4AddressType">
+		<xs:annotation>
+			<xs:documentation>&#xD;
+      An IP Version 4 address.&#xD;
+    </xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:pattern value="\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ipv6AddressType">
+		<xs:annotation>
+			<xs:documentation>&#xD;
+      An IP Version 6 address.&#xD;
+    </xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:pattern value="([A-Fa-f0-9]{1,4}:){7}[A-Fa-f0-9]{1,4}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="baseDataStreamType" type="geo:baseDataStreamType"/>
+	<xs:complexType name="baseDataStreamType">
+		<xs:sequence>
+			<xs:element name="dataFormat" type="gml:CodeType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="port" type="xs:positiveInteger" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="sampInterval" type="xs:double" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="startDate" type="xs:date" minOccurs="0" maxOccurs="1"/>
+			<xs:choice minOccurs="1" maxOccurs="1">
+				<xs:element name="hostname" type="xs:string" minOccurs="1" maxOccurs="1"/>
+				<xs:element name="ipAddress" type="geo:ipAddressType" minOccurs="1" maxOccurs="1"/>
+			</xs:choice>
+			<xs:element name="ntripMounts" type="geo:ntripMountsType" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="dataStream" type="geo:dataStream"/>
+	<xs:complexType name="dataStream">
+		<xs:sequence>
+			<xs:element name="notes" type="xs:string" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="publishedStream" type="geo:publishedStreamType" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="siteStream" type="geo:siteStreamType" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="dataStreamPropertyType" type="geo:dataStreamPropertyType"/>
+	<xs:complexType name="dataStreamPropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="geo:dataStream" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="ntripMountsType" type="geo:ntripMountsType"/>
+	<xs:complexType name="ntripMountsType">
+		<xs:sequence>
+			<xs:element name="ntripMount" type="geo:ntripMountType" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="ntripMountType" type="geo:ntripMountType"/>
+	<xs:complexType name="ntripMountType">
+		<xs:sequence>
+			<xs:element name="allowConnections" type="xs:boolean" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="bitrate" type="xs:double" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="carrierPhase" type="xs:token" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="countryCode" type="xs:token" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="encryption" type="xs:boolean" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="feesApply" type="xs:boolean" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="mountPoint" type="xs:token" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="navSystem" type="xs:token" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="network" type="xs:token" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="nmea" type="xs:string" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="requireAuthentication" type="xs:boolean" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="solution" type="xs:string" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="sourceID" type="xs:string" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="publishedStreamType" type="geo:publishedStreamType"/>
+	<xs:complexType name="publishedStreamType">
+		<xs:sequence>
+			<xs:element name="agency" type="geo:agencyPropertyType" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="dataStream" type="geo:baseDataStreamType" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="siteStreamType" type="geo:siteStreamType"/>
+	<xs:complexType name="siteStreamType">
+		<xs:sequence>
+			<xs:element name="agency" type="geo:agencyPropertyType" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="dataStream" type="geo:baseDataStreamType" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

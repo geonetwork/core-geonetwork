@@ -112,6 +112,24 @@
                              select="gn:*[@name = 'referenceSystemType']"/>
 
         <xsl:apply-templates mode="mode-iso19115-3.2018GNSS"
+                             select="mrs:crs"/>
+
+        <xsl:apply-templates mode="mode-iso19115-3.2018GNSS"
+                             select="gn:*[@name = 'crs']"/>
+
+        <xsl:apply-templates mode="mode-iso19115-3.2018GNSS"
+                             select="mrs:coordinateEpoch"/>
+
+        <xsl:apply-templates mode="mode-iso19115-3.2018GNSS"
+                             select="gn:*[@name = 'coordinateEpoch']"/>
+
+        <xsl:apply-templates mode="mode-iso19115-3.2018GNSS"
+                             select="mrs:CRS"/>
+
+        <xsl:apply-templates mode="mode-iso19115-3.2018GNSS"
+                             select="gn:*[@name = 'CRS']"/>
+
+        <xsl:apply-templates mode="mode-iso19115-3.2018GNSS"
                              select="mrs:referenceSystemIdentifier"/>
 
         <xsl:apply-templates mode="mode-iso19115-3.2018GNSS"

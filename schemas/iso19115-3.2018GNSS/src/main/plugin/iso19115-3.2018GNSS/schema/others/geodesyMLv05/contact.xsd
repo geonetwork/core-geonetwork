@@ -1,0 +1,21 @@
+<?xml  version='1.0' encoding='utf-8' ?>
+<xs:schema targetNamespace="urn:xml-gov-au:icsm:egeodesy:0.5"
+           xmlns:mco="http://standards.iso.org/iso/19115/-3/mco/1.0"
+           xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/1.0"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:gml="http://www.opengis.net/gml/3.2"
+           xmlns:geo="urn:xml-gov-au:icsm:egeodesy:0.5" elementFormDefault="qualified" version="0.5">
+	<xs:import namespace="http://www.opengis.net/gml/3.2" schemaLocation="../ISO19136/gml.xsd"/>
+  <xs:include schemaLocation="./commonTypes.xsd"/>
+	<xs:element name="agencyPropertyType" type="geo:agencyPropertyType"/>
+	<xs:complexType name="agencyPropertyType">
+		<xs:complexContent>
+			<xs:extension base="gml:AbstractGMLType">
+				<xs:sequence>
+					<xs:element ref="mco:MD_SecurityConstraints" minOccurs="0" maxOccurs="1"/>
+					<xs:element ref="cit:CI_Responsibility" minOccurs="1" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+</xs:schema>

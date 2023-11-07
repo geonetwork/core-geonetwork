@@ -115,7 +115,7 @@
                 <xsl:copy-of select="cit:linkage"/>
               </xsl:when>
               <xsl:otherwise>
-                <xsl:apply-templates mode="get-iso19115-3.2018-localized-string"
+                <xsl:apply-templates mode="get-iso19115-3.2018GNSS-localized-string"
                                      select="cit:linkage"/>
               </xsl:otherwise>
             </xsl:choose>
@@ -128,7 +128,7 @@
                 <xsl:copy-of select="$name"/>
               </xsl:when>
               <xsl:otherwise>
-                <xsl:apply-templates mode="get-iso19115-3.2018-localized-string"
+                <xsl:apply-templates mode="get-iso19115-3.2018GNSS-localized-string"
                                      select="$name"/>
               </xsl:otherwise>
             </xsl:choose>
@@ -143,7 +143,7 @@
                 <xsl:copy-of select="$desc"/>
               </xsl:when>
               <xsl:otherwise>
-                <xsl:apply-templates mode="get-iso19115-3.2018-localized-string"
+                <xsl:apply-templates mode="get-iso19115-3.2018GNSS-localized-string"
                                      select="$desc"/>
               </xsl:otherwise>
             </xsl:choose>

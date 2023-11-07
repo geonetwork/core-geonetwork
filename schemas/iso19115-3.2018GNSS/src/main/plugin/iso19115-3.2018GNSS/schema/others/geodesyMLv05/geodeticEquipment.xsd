@@ -1,0 +1,316 @@
+<?xml  version='1.0' encoding='utf-8' ?>
+<xs:schema targetNamespace="urn:xml-gov-au:icsm:egeodesy:0.5"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:geo="urn:xml-gov-au:icsm:egeodesy:0.5"
+           xmlns:gmd="http://www.isotc211.org/2005/gmd" elementFormDefault="qualified" version="0.5">
+	<xs:annotation>
+		<xs:documentation>Derived from SOPAC IGS Site Log XML Schema 2011</xs:documentation>
+	</xs:annotation>
+	<xs:include schemaLocation="./commonTypes.xsd"/>
+	<xs:element name="geodeticEquipmentItem" type="geo:baseGeodeticEquipmentType">
+		<xs:annotation>
+			<xs:documentation>&#xD;
+         Provides a base non-instantiable element type whose&#xD;
+         structure is a derived complex type.  This element&#xD;
+         can then be referenced as a substitutionGroup for&#xD;
+         equipment cataloges and such.&#xD;
+            </xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="AbstractGNSSAntennaType" type="geo:AbstractGNSSAntennaType"/>
+	<xs:complexType name="AbstractGNSSAntennaType" abstract="true">
+		<xs:annotation>
+			<xs:documentation>&#xD;
+        Instantiable, non-substituble, global complex type&#xD;
+        representing a GNSS Antenna uniquely-identified&#xD;
+        by a serial number and IGS model code.&#xD;
+&#xD;
+        GeodesyML 0.2: removed block="#all" attribute.&#xD;
+            </xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="geo:baseGeodeticEquipmentType">
+				<xs:sequence>
+					<xs:element name="igsModelCode" type="geo:igsAntennaModelCodeType" minOccurs="0" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="AbstractGNSSReceiverType" type="geo:AbstractGNSSReceiverType"/>
+	<xs:complexType name="AbstractGNSSReceiverType" abstract="true">
+		<xs:annotation>
+			<xs:documentation>&#xD;
+                Instantiable, non-substituble, global complex type&#xD;
+                representing a GNSS Receiver uniquely-identified&#xD;
+                by a serial number and IGS model code.&#xD;
+&#xD;
+                GeodesyML 0.2 changes: removed  block="#all"&#xD;
+            </xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="geo:baseGeodeticEquipmentType">
+				<xs:sequence>
+					<xs:element name="igsModelCode" type="geo:igsReceiverModelCodeType" minOccurs="0" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="baseGeodeticEquipmentType" type="geo:baseGeodeticEquipmentType"/>
+	<xs:complexType name="baseGeodeticEquipmentType" abstract="true">
+		<xs:annotation>
+			<xs:documentation>&#xD;
+         Base Geodetic Equipment class.  Serves as a platform&#xD;
+         for the construction of other, more specific, types&#xD;
+         of equipment related to the field of geodesy.  More&#xD;
+         specifically, this class is designed for equipment&#xD;
+         that can be uniquely-identified.  In other words,&#xD;
+         actual physical objects used in geodetic practices.&#xD;
+&#xD;
+         GeodesyML 0.2 change: Extend geo:InstrumentType and removed attr  final="restriction"&#xD;
+            </xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="geo:Instrument">
+				<xs:sequence>
+					<xs:element name="manufacturerDescription" type="xs:string" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="manufacturerModel" type="xs:string" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="manufacturerName" type="xs:string" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="manufacturerPartNumber" type="xs:string" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="manufacturerSerialNumber" type="xs:string" minOccurs="1" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="geodeticEquipmentItemPropertyType" type="geo:geodeticEquipmentItemPropertyType"/>
+	<xs:complexType name="geodeticEquipmentItemPropertyType">
+		<xs:sequence>
+			<xs:group ref="geo:ChangeTracking" minOccurs="1" maxOccurs="1"/>
+			<xs:sequence minOccurs="1" maxOccurs="1">
+				<xs:element ref="geo:geodeticEquipmentItem" minOccurs="1" maxOccurs="1"/>
+			</xs:sequence>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="gnssAntennaConfigType" type="geo:gnssAntennaConfigType"/>
+	<xs:complexType name="gnssAntennaConfigType">
+		<xs:annotation>
+			<xs:documentation>&#xD;
+        Instantiable, non-substituble, global complex type&#xD;
+        representing the settings (transient properties)&#xD;
+        of a gnss antenna.&#xD;
+            </xs:documentation>
+		</xs:annotation>
+		<xs:choice minOccurs="0" maxOccurs="2">
+			<xs:element name="antennaCableLengthMeters" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>&#xD;
+            Refers to the length (in meters) of the cable&#xD;
+            used to connect the antenna to other gnss equipment&#xD;
+            (typically a gnss receiver or set of receivers).&#xD;
+                    </xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:fractionDigits value="3"/>
+						<xs:totalDigits value="6"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="antennaCableType" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>&#xD;
+            Refers to the type of cable&#xD;
+            used to connect the antenna to other gnss equipment&#xD;
+            (typically a gnss receiver or set of receivers).&#xD;
+                    </xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:choice>
+	</xs:complexType>
+	<xs:element name="gnssAntennaHeightMeasurementType" type="geo:gnssAntennaHeightMeasurementType"/>
+	<xs:complexType name="gnssAntennaHeightMeasurementType">
+		<xs:annotation>
+			<xs:documentation>&#xD;
+        Instantiable, non-substituble, global complex type&#xD;
+        representing the measurement of a distance between&#xD;
+        a specified location on a gnss antenna and another&#xD;
+        location of choice.&#xD;
+            </xs:documentation>
+		</xs:annotation>
+		<xs:choice maxOccurs="5">
+			<xs:element name="dateAndTimeUTC" type="gml:TimePositionType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="gml:unitOfMeasure" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="referencePoint" type="gml:CodeWithAuthorityType" minOccurs="0" maxOccurs="unbounded" default="BPA"/>
+			<xs:element name="type" type="gml:CodeWithAuthorityType" minOccurs="0" maxOccurs="unbounded" default="vertical"/>
+			<xs:element name="value" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>&#xD;
+            Refers to the distance (+|-) between the geodetic&#xD;
+            reference point of the associated monument, and a&#xD;
+            chosen reference point on the antenna.&#xD;
+                    </xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:fractionDigits value="4"/>
+						<xs:totalDigits value="6"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:choice>
+	</xs:complexType>
+	<xs:element name="gnssRadomeConfigType" type="geo:gnssRadomeConfigType"/>
+	<xs:complexType name="gnssRadomeConfigType">
+		<xs:annotation>
+			<xs:documentation>&#xD;
+        Instantiable, non-substituble, global complex type&#xD;
+        representing the settings (transient properties)&#xD;
+        of a gnss radome.&#xD;
+            </xs:documentation>
+		</xs:annotation>
+		<xs:choice minOccurs="0">
+			<xs:element name="radomeFastenerType" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>&#xD;
+            Refers to the type of fasteners used to secure a radome&#xD;
+            in place.  This is pretty much a bogus data field&#xD;
+            intended for future compatibility purposes.&#xD;
+          </xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:choice>
+	</xs:complexType>
+	<xs:element name="GnssRadomeType" type="geo:GnssRadomeType"/>
+	<xs:complexType name="GnssRadomeType">
+		<xs:annotation>
+			<xs:documentation>&#xD;
+        Instantiable, non-substituble, global complex type&#xD;
+        representing a GNSS Radome uniquely-identified&#xD;
+        by a serial number and IGS model code.&#xD;
+            </xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="geo:baseGeodeticEquipmentType">
+				<xs:sequence>
+					<xs:element name="igsModelCode" type="geo:igsRadomeModelCode" minOccurs="0" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="gnssReceiverConfigType" type="geo:gnssReceiverConfigType"/>
+	<xs:complexType name="gnssReceiverConfigType">
+		<xs:annotation>
+			<xs:documentation>&#xD;
+                Instantiable, non-substituble, global complex type&#xD;
+                representing the settings (transient properties)&#xD;
+                of a gnss receiver.&#xD;
+            </xs:documentation>
+		</xs:annotation>
+		<xs:choice minOccurs="0" maxOccurs="6">
+			<xs:element name="elevationCutoff" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>&#xD;
+                        Refers to the elevation mask (or cutoff)&#xD;
+                        used on a gnss receiver.&#xD;
+                    </xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="firmwareVersion" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>&#xD;
+                        Refers to the manufacturer-&#xD;
+                        designated version of the firmware installed&#xD;
+                        on a gnss receiver.&#xD;
+                    </xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="nativeBaudRateInBPS" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>&#xD;
+                        Refers to the sampling interval with which&#xD;
+                        observations are made with respect to the observed&#xD;
+                        constellation(s) of satellite(s).&#xD;
+                    </xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:fractionDigits value="0"/>
+						<xs:totalDigits value="6"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="sampleIntervalInSeconds" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>&#xD;
+                        Refers to the sampling interval with which&#xD;
+                        observations are made with respect to the observed&#xD;
+                        constellation(s) of satellite(s).&#xD;
+                    </xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:fractionDigits value="1"/>
+						<xs:totalDigits value="4"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="satelliteSystem" type="gml:CodeListType" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>&#xD;
+                        Refers to a satellite&#xD;
+                        constellation being observed by a gnss receiver.&#xD;
+                    </xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="temperatureStabilization" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>&#xD;
+                        Refers to the temperature stabilization&#xD;
+                        on a gnss receiver.&#xD;
+                    </xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:choice>
+	</xs:complexType>
+	<xs:element name="igsAntennaModelCodeType" type="geo:igsAntennaModelCodeType"/>
+	<xs:complexType name="igsAntennaModelCodeType">
+		<xs:annotation>
+			<xs:documentation>&#xD;
+        Non-instantiable, non-substituable, non-extendable or&#xD;
+        restrictable global simple type representing a valid&#xD;
+        IGS antenna model code.&#xD;
+            </xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="gco:CodeListValue_Type">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="igsRadomeModelCode" type="geo:igsRadomeModelCode"/>
+	<xs:complexType name="igsRadomeModelCode">
+		<xs:annotation>
+			<xs:documentation>&#xD;
+        Non-instantiable, non-substituable, non-extendable or&#xD;
+        restrictable global simple type representing a valid&#xD;
+        IGS radome model code.&#xD;
+            </xs:documentation>
+		</xs:annotation>
+		<xs:sequence/>
+	</xs:complexType>
+	<xs:element name="igsReceiverModelCodeType" type="geo:igsReceiverModelCodeType"/>
+	<xs:complexType name="igsReceiverModelCodeType">
+		<xs:annotation>
+			<xs:documentation>&#xD;
+                Non-instantiable, non-substituable, non-extendable or&#xD;
+                restrictable global simple type representing a valid&#xD;
+                IGS receiver model code.  With a codeList attribute&#xD;
+                to set the allowed types.&#xD;
+            </xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="gco:CodeListValue_Type">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+</xs:schema>

@@ -934,6 +934,73 @@
     <label>Usability element</label>
     <description></description>
   </element>
+  <!-- Test GNSS additional quality elements -->
+  <element name="mdq:DQ_GNSS_Authentication" id="117.2">
+    <label>Authentication quality</label>
+    <description>A technique to verify the receiving signal or navigation message expressed as a probability of false alarm, and probability of detection
+    </description>
+  </element>
+  <element name="mdq:DQ_GNSS_Availability" id="117.1">
+    <label>Availabiltiy of signal</label>
+    <description>The percentage of time that a specified level of accuracy, integrity, and continuity is available and usable within a specified area (in scenarios -- U = urban; C = canopy; I = indoors)    </description>
+  </element>
+  <element name="mdq:DQ_GNSS_Continuity" id="117.3">
+    <label>Continuity of signal</label>
+    <description>The probability that a specified level of accuracy will be maintained throughout a given operation or experiment, assuming that the specification is met at initialization    </description>
+  </element>
+  <element name="mdq:DQ_GNSS_DownTime" id="117.4">
+    <label>Downtime measure</label>
+    <description>Signal outage probability
+    </description>
+  </element>
+  <element name="mdq:DQ_GNSS_GNSSSensitivity" id="117.5">
+    <label>GNSS Sensitivity</label>
+    <description>The minimum signal strength at the antenna, as detectable by the receiver
+    </description>
+  </element>
+  <element name="mdq:DQ_GNSS_Integrity" id="117.6">
+    <label>GNSS Integrity</label>
+    <description>The extent to which the information supplied by the navigation system can be trusted or to the ability of the navigation system to detect and to provide timely warning to the user about when the specified accuracy should not be trusted
+  </description>
+  </element>
+  <element name="mdq:DQ_GNSS_Latency" id="117.7">
+    <label>GNSS Latency</label>
+    <description>The average latency of the GNSS device
+    </description>
+  </element>
+  <element name="mdq:DQ_GNSS_PositionFixRate" id="117.8">
+    <label>GNSS Position fix rate</label>
+    <description>The rate at which the position terminal outputs PVT (position, velocity and time) data
+    </description>
+  </element>
+  <element name="mdq:DQ_GNSS_Reliability" id="117.9">
+    <label>GNSS Reliability</label>
+    <description>The ability of the system to detect blunders in the measurements and to estimate the effects of undetected blunders on the position solution
+  </description>
+  </element>
+  <element name="mdq:DQ_GNSS_TimeToAlert" id="118.1">
+    <label>GNSS Time to alert</label>
+    <description>Abbreviation : TTA&#xD;
+      A maximum time allowed when a system that was previously declared safe for use can no longer assure that it meets all its integrity requirements for a given operation
+  </description>
+  </element>
+  <element name="mdq:DQ_GNSS_TimeToFirstFix" id="118.2">
+    <label>GNSS time to first fix</label>
+    <description>Abbreviation : TTFF&#xD;
+      A receiver's performance covering the time between activation and output of a position within the required accuracy bounds.
+  </description>
+  </element>
+  <element name="mdq:DQ_GNSS_HorizontalAccuracy" id="118.3">
+    <label>GNSS Horizontal accuracy</label>
+    <description>Horizontal Accuracy
+    </description>
+  </element>
+  <element name="mdq:DQ_GNSS_VerticalAccuracy" id="118.4">
+    <label>GNSS Vertical accuracy</label>
+    <description>Vertical Accuracy
+    </description>
+  </element>
+  <!-- end test -->
   <element name="mdq:DQ_Confidence">
     <label>Metaquality / Confidence</label>
     <description>Trustworthiness of a data quality result.</description>
@@ -1563,12 +1630,12 @@
     </description>
   </element>
   <element name="mdq:DQ_CompletenessCommission" id="109.0">
-    <label>Completeness commission</label>
+    <label>Completeness! commission</label>
     <description>Excess data present in the dataset, as described by the scope
     </description>
   </element>
   <element name="mdq:DQ_CompletenessOmission" id="110.0">
-    <label>Completeness omission</label>
+    <label>Completeness! omission</label>
     <description>Data absent from the dataset, as described by the scope
     </description>
   </element>
@@ -2539,6 +2606,11 @@
       documented?
     </_condition>
     <help><![CDATA[<a target="docs" href="https://openwork-nz.github.io/ANZLIC-Metadata-Tool-help/Spatial-Metadata#description">Help</a>]]></help>
+    <helper>
+      <option value="global">Global</option>
+      <option value="regional">Regional</option>
+      <option value="local">Local</option>
+    </helper>
   </element>
   <element name="cit:description" id="410.0" context="cit:CI_OnlineResource">
     <label>Description</label>

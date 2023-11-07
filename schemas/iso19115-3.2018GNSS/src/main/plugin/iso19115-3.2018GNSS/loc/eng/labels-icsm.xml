@@ -1548,8 +1548,15 @@
     </description>
     <_condition>Use obligation/condition from referencing object</_condition>
   </element>
-  <element name="mdq:DQ_AbsoluteExternalPositionalAccuracy" id="117.0">
+  <!-- Test GNSS additional quality elements -->
+  <element name="mdq:GNSS_Authentication" id="117.0">
     <label>Absolute external positional accuracy</label>
+    <description>A technique to verify the receiving signal or navigation message expressed as a probability of false alarm, and probability of detection
+  </description>
+  </element>
+  <!-- end test -->
+  <element name="mdq:DQ_AbsoluteExternalPositionalAccuracy" id="117.0">
+    <label>Absolute external position accuracy</label>
     <description>Closeness of reported coordinate values to values accepted as
       or being
       true
@@ -2539,6 +2546,11 @@
       documented?
     </_condition>
     <help><![CDATA[<a target="docs" href="https://openwork-nz.github.io/ANZLIC-Metadata-Tool-help/Spatial-Metadata#description">Help</a>]]></help>
+    <helper>
+      <option value="global">Global</option>
+      <option value="regional">Regional</option>
+      <option value="local">Local</option>
+    </helper>
   </element>
   <element name="cit:description" id="410.0" context="cit:CI_OnlineResource">
     <label>Description</label>

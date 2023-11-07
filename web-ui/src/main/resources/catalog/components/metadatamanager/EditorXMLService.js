@@ -49,9 +49,11 @@
         "</gmd:referenceSystemInfo>",
       "iso19115-3":
         "<mrs:referenceSystemIdentifier " +
+        "xmlns:cit='http://standards.iso.org/iso/19115/-3/cit/2.0' " +
         "xmlns:mrs='http://standards.iso.org/iso/19115/-3/mrs/1.0' " +
         "xmlns:mcc='http://standards.iso.org/iso/19115/-3/mcc/1.0' " +
         "xmlns:gcx='http://standards.iso.org/iso/19115/-3/gcx/1.0' " +
+        "xmlns:gmx='http://standards.iso.org/iso/19115/-3/gmx' " +
         "xmlns:gco='http://standards.iso.org/iso/19115/-3/gco/1.0' " +
         "xmlns:xlink='http://www.w3.org/1999/xlink'>" +
         "<mcc:MD_Identifier>" +

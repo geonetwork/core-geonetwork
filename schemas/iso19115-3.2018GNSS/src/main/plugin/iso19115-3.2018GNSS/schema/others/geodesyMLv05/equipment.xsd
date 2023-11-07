@@ -1,0 +1,341 @@
+<?xml  version='1.0' encoding='utf-8' ?>
+<xs:schema targetNamespace="urn:xml-gov-au:icsm:egeodesy:0.5"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:gml="http://www.opengis.net/gml/3.2"
+           xmlns:geo="urn:xml-gov-au:icsm:egeodesy:0.5"
+           xmlns:gmd="http://www.isotc211.org/2005/gmd" elementFormDefault="qualified" version="0.5">
+  <xs:include schemaLocation="../ISO19136/gmlBase.xsd"/>
+	<xs:annotation>
+		<xs:documentation>Derived from SOPAC IGS Site Log XML Schema 2011</xs:documentation>
+	</xs:annotation>
+	<xs:include schemaLocation="./commonTypes.xsd"/>
+	<xs:element name="antennaReferencePoint"/>
+	<xs:simpleType name="antennaReferencePointType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="BPA"/>
+			<xs:enumeration value="BCR"/>
+			<xs:enumeration value="BGP"/>
+			<xs:enumeration value="TPA"/>
+			<xs:enumeration value="TCR"/>
+			<xs:enumeration value="TGR"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="instrumentationTypeOfType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Absolute Gravimeter"/>
+			<xs:enumeration value="Circumzenithal VUGTK"/>
+			<xs:enumeration value="DORIS"/>
+			<xs:enumeration value="DORIS/SLR"/>
+			<xs:enumeration value="DORIS/SLR/VLBI"/>
+			<xs:enumeration value="Earth Tide Gravimeter"/>
+			<xs:enumeration value="GLONASS receiver"/>
+			<xs:enumeration value="WLRS"/>
+			<xs:enumeration value="PRARE"/>
+			<xs:enumeration value="DORIS/SLR/VLBI"/>
+			<xs:enumeration value="Earth Tide Gravimeter"/>
+			<xs:enumeration value="GLONASS receiver"/>
+			<xs:enumeration value="WLRS"/>
+			<xs:enumeration value="PRARE"/>
+			<xs:enumeration value="Radio Telescope"/>
+			<xs:enumeration value="SATREF"/>
+			<xs:enumeration value="Siesmometer"/>
+			<xs:enumeration value="SLP"/>
+			<xs:enumeration value="Satellite Laser Ranging"/>
+			<xs:enumeration value="SLR/VLBI"/>
+			<xs:enumeration value="Very Large Baseline Interferometry"/>
+			<xs:enumeration value="Superconducting Gravimeter"/>
+			<xs:enumeration value="Transportable Integrated Geodetic Observatory"/>
+			<xs:enumeration value="Tidal Gravimeter"/>
+			<xs:enumeration value="Very Broad Band Seismograph"/>
+			<xs:enumeration value="Campaign Mode GPS"/>
+			<xs:enumeration value="Continuously Operating GPS"/>
+			<xs:enumeration value="Transit"/>
+			<xs:enumeration value="Not Available/unknown"/>
+			<xs:enumeration value=""/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="satelliteSystemTypeOfType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="n/a"/>
+			<xs:enumeration value="GPS"/>
+			<xs:enumeration value="GLONASS"/>
+			<xs:enumeration value="GPS+GLONASS"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="standardTypeOfType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="none"/>
+			<xs:enumeration value="H-MASER"/>
+			<xs:enumeration value="CESIUM"/>
+			<xs:enumeration value="QUARTZ"/>
+			<xs:enumeration value="INTERNAL"/>
+			<xs:enumeration value="RUBIDIUM"/>
+			<xs:enumeration value=""/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="statusType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="n/a"/>
+			<xs:enumeration value="ACTIVE"/>
+			<xs:enumeration value="MOBILE"/>
+			<xs:enumeration value="PERMANENT"/>
+			<xs:enumeration value="REMOVED"/>
+			<xs:enumeration value=""/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="BaseSensorEquipmentType" type="geo:BaseSensorEquipmentType"/>
+	<xs:complexType name="BaseSensorEquipmentType">
+		<xs:complexContent>
+			<xs:extension base="geo:SensorWithCodeType">
+				<xs:sequence>
+					<xs:element name="calibrationDate" type="gml:TimePositionType" minOccurs="1" maxOccurs="1"/>
+					<xs:element ref="gml:validTime" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="heightDiffToAntenna" type="xs:double" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="manufacturer" type="xs:string" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="serialNumber" type="xs:string" minOccurs="1" maxOccurs="1"/>
+					<xs:group ref="geo:RemarksGroup" minOccurs="1" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="CollocationInformation" type="geo:CollocationInformation"/>
+	<xs:complexType name="CollocationInformation">
+		<xs:sequence>
+			<xs:element ref="gml:validTime" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="instrumentationType" type="gml:CodeType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="status" type="gml:CodeType" minOccurs="1" maxOccurs="1"/>
+			<xs:group ref="geo:RemarksGroup" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="collocationInformationPropertyType" type="geo:collocationInformationPropertyType"/>
+	<xs:complexType name="collocationInformationPropertyType">
+		<xs:sequence>
+			<xs:group ref="geo:ChangeTracking" minOccurs="1" maxOccurs="1"/>
+			<xs:sequence minOccurs="1" maxOccurs="1">
+				<xs:element ref="geo:CollocationInformation" minOccurs="1" maxOccurs="1"/>
+			</xs:sequence>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="differentialComponentsGNSSMarkerToTiedMonumentITRS" type="geo:differentialComponentsGNSSMarkerToTiedMonumentITRS" nillable="true"/>
+	<xs:complexType name="differentialComponentsGNSSMarkerToTiedMonumentITRS">
+		<xs:sequence>
+			<xs:element name="dx" type="xs:double" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="dy" type="xs:double" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="dz" type="xs:double" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="FrequencyStandard" type="geo:FrequencyStandard"/>
+	<xs:complexType name="FrequencyStandard">
+		<xs:sequence>
+			<xs:element ref="gml:validTime" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="inputFrequency" type="xs:double" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="standardType" type="gml:CodeType" minOccurs="1" maxOccurs="1"/>
+			<xs:group ref="geo:RemarksGroup" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="frequencyStandardPropertyType" type="geo:frequencyStandardPropertyType"/>
+	<xs:complexType name="frequencyStandardPropertyType">
+		<xs:sequence>
+			<xs:group ref="geo:ChangeTracking" minOccurs="1" maxOccurs="1"/>
+			<xs:sequence minOccurs="1" maxOccurs="1">
+				<xs:element ref="geo:FrequencyStandard" minOccurs="1" maxOccurs="1"/>
+				<xs:group ref="geo:RemarksGroup" minOccurs="1" maxOccurs="1"/>
+			</xs:sequence>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="GnssAntenna" type="geo:GnssAntenna"/>
+	<xs:complexType name="GnssAntenna">
+		<xs:sequence>
+			<xs:element name="GnssAntenna.alignmentFromTrueNorth" type="xs:double" minOccurs="1" maxOccurs="1" nillable="true"/>
+			<xs:element name="GnssAntenna.antennaCableLength" type="xs:double" minOccurs="1" maxOccurs="1" nillable="true"/>
+			<xs:element name="GnssAntenna.antennaCableType" type="xs:string" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="GnssAntenna.antennaRadomeType" type="xs:string" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="GnssAntenna.antennaReferencePoint" type="gml:CodeType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="GnssAntenna.dateInstalled" type="gml:TimePositionType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="GnssAntenna.dateRemoved" type="gml:TimePositionType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="GnssAntenna.radomeSerialNumber" type="xs:string" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="gnssAntennaPropertyType" type="geo:gnssAntennaPropertyType"/>
+	<xs:complexType name="gnssAntennaPropertyType">
+		<xs:sequence>
+			<xs:group ref="geo:ChangeTracking" minOccurs="1" maxOccurs="1"/>
+			<xs:sequence minOccurs="1" maxOccurs="1">
+				<xs:element ref="geo:GnssAntenna" minOccurs="1" maxOccurs="1"/>
+			</xs:sequence>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="gnssRadomePropertyType" type="geo:gnssRadomePropertyType"/>
+	<xs:complexType name="gnssRadomePropertyType">
+		<xs:sequence>
+			<xs:group ref="geo:ChangeTracking" minOccurs="1" maxOccurs="1"/>
+			<xs:sequence minOccurs="1" maxOccurs="1">
+				<xs:element name="GnssRadome" minOccurs="1" maxOccurs="1"/>
+			</xs:sequence>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="GnssReceiver" type="geo:GnssReceiver"/>
+	<xs:complexType name="GnssReceiver">
+		<xs:sequence>
+			<xs:element name="dateInstalled" type="gml:TimePositionType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="dateRemoved" type="gml:TimePositionType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="elevationCutoffSetting" type="xs:double" minOccurs="1" maxOccurs="1" nillable="true"/>
+			<xs:element name="firmwareVersion" type="xs:string" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="satelliteSystem" type="gml:CodeType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="temperatureStabilization" type="xs:double" minOccurs="1" maxOccurs="1" nillable="true"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="gnssReceiverPropertyType" type="geo:gnssReceiverPropertyType"/>
+	<xs:complexType name="gnssReceiverPropertyType">
+		<xs:sequence>
+			<xs:group ref="geo:ChangeTracking" minOccurs="1" maxOccurs="1"/>
+			<xs:sequence minOccurs="1" maxOccurs="1">
+				<xs:element ref="geo:GnssReceiver" minOccurs="1" maxOccurs="1"/>
+			</xs:sequence>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="HumiditySensor" type="geo:HumiditySensor"/>
+	<xs:complexType name="HumiditySensor">
+		<xs:complexContent>
+			<xs:extension base="geo:BaseSensorEquipmentType">
+				<xs:sequence>
+					<xs:element name="accuracy-percentRelativeHumidity" type="xs:double" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="aspiration" type="xs:string" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="dataSamplingInterval" type="xs:double" minOccurs="1" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="humiditySensorPropertyType" type="geo:humiditySensorPropertyType"/>
+	<xs:complexType name="humiditySensorPropertyType">
+		<xs:sequence>
+			<xs:group ref="geo:ChangeTracking" minOccurs="1" maxOccurs="1"/>
+			<xs:sequence minOccurs="1" maxOccurs="1">
+				<xs:element ref="geo:HumiditySensor" minOccurs="1" maxOccurs="1"/>
+			</xs:sequence>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="OtherInstrumentation" type="geo:OtherInstrumentation"/>
+	<xs:complexType name="OtherInstrumentation">
+		<xs:complexContent>
+			<xs:extension base="geo:Instrument">
+				<xs:sequence>
+					<xs:element ref="gml:validTime" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="instrumentation" type="xs:string" minOccurs="1" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="otherInstrumentationPropertyType" type="geo:otherInstrumentationPropertyType"/>
+	<xs:complexType name="otherInstrumentationPropertyType">
+		<xs:sequence>
+			<xs:group ref="geo:ChangeTracking" minOccurs="1" maxOccurs="1"/>
+			<xs:sequence minOccurs="1" maxOccurs="1">
+				<xs:element ref="geo:OtherInstrumentation" minOccurs="1" maxOccurs="1"/>
+			</xs:sequence>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="PressureSensor" type="geo:PressureSensor"/>
+	<xs:complexType name="PressureSensor">
+		<xs:complexContent>
+			<xs:extension base="geo:BaseSensorEquipmentType">
+				<xs:sequence>
+					<xs:element name="accuracy-hPa" type="xs:double" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="dataSamplingInterval" type="xs:double" minOccurs="1" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="pressureSensorPropertyType" type="geo:pressureSensorPropertyType"/>
+	<xs:complexType name="pressureSensorPropertyType">
+		<xs:sequence>
+			<xs:group ref="geo:ChangeTracking" minOccurs="1" maxOccurs="1"/>
+			<xs:sequence minOccurs="1" maxOccurs="1">
+				<xs:element ref="geo:PressureSensor" minOccurs="1" maxOccurs="1"/>
+			</xs:sequence>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="SensorWithCodeType" type="geo:SensorWithCodeType"/>
+	<xs:complexType name="SensorWithCodeType">
+		<xs:sequence>
+			<xs:sequence minOccurs="1" maxOccurs="1">
+				<xs:element ref="gml:StandardObjectProperties" minOccurs="1" maxOccurs="1"/>
+			</xs:sequence>
+			<xs:sequence minOccurs="1" maxOccurs="1">
+				<xs:element name="type" type="gml:CodeType" minOccurs="1" maxOccurs="1"/>
+			</xs:sequence>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="SurveyedLocalTie" type="geo:SurveyedLocalTie"/>
+	<xs:complexType name="SurveyedLocalTie">
+		<xs:sequence>
+			<xs:element name="dateMeasured" type="gml:TimePositionType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="differentialComponentsGNSSMarkerToTiedMonumentITRS" type="xs:string" minOccurs="1" maxOccurs="1" nillable="true"/>
+			<xs:element name="localSiteTiesAccuracy" type="xs:double" minOccurs="1" maxOccurs="1" nillable="true"/>
+			<xs:element name="surveyMethod" type="xs:string" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="tiedMarkerCDPNumber" type="xs:string" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="tiedMarkerDOMESNumber" type="xs:string" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="tiedMarkerName" type="xs:string" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="tiedMarkerUsage" type="xs:string" minOccurs="1" maxOccurs="1"/>
+			<xs:group ref="geo:RemarksGroup" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="surveyedLocalTiePropertyType" type="geo:surveyedLocalTiePropertyType"/>
+	<xs:complexType name="surveyedLocalTiePropertyType">
+		<xs:sequence>
+			<xs:group ref="geo:ChangeTracking" minOccurs="1" maxOccurs="1"/>
+			<xs:choice minOccurs="1" maxOccurs="1">
+				<xs:element ref="geo:SurveyedLocalTie" minOccurs="1" maxOccurs="1"/>
+				<xs:element ref="geo:TieMeasurement" minOccurs="1" maxOccurs="1"/>
+			</xs:choice>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="TemperatureSensor" type="geo:TemperatureSensor"/>
+	<xs:complexType name="TemperatureSensor">
+		<xs:complexContent>
+			<xs:extension base="geo:BaseSensorEquipmentType">
+				<xs:sequence>
+					<xs:element name="accuracy-degreesCelcius" type="xs:double" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="aspiration" type="xs:string" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="dataSamplingInterval" type="xs:double" minOccurs="1" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="temperatureSensorPropertyType" type="geo:temperatureSensorPropertyType"/>
+	<xs:complexType name="temperatureSensorPropertyType">
+		<xs:sequence>
+			<xs:group ref="geo:ChangeTracking" minOccurs="1" maxOccurs="1"/>
+			<xs:sequence minOccurs="1" maxOccurs="1">
+				<xs:element ref="geo:TemperatureSensor" minOccurs="1" maxOccurs="1"/>
+			</xs:sequence>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="TieMeasurement" type="geo:TieMeasurement"/>
+	<xs:complexType name="TieMeasurement">
+		<xs:sequence>
+			<xs:element name="Tie" type="xs:string" minOccurs="1" maxOccurs="unbounded"/>
+			<xs:element name="tiePairQuality" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="geo:RequiredSRSReferenceGroup"/>
+	</xs:complexType>
+	<xs:element name="WaterVaporSensor" type="geo:WaterVaporSensor"/>
+	<xs:complexType name="WaterVaporSensor">
+		<xs:complexContent>
+			<xs:extension base="geo:BaseSensorEquipmentType">
+				<xs:sequence>
+					<xs:element name="distanceToAntenna" type="xs:double" minOccurs="1" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="waterVaporSensorPropertyType" type="geo:waterVaporSensorPropertyType"/>
+	<xs:complexType name="waterVaporSensorPropertyType">
+		<xs:sequence>
+			<xs:group ref="geo:ChangeTracking" minOccurs="1" maxOccurs="1"/>
+			<xs:sequence minOccurs="1" maxOccurs="1">
+				<xs:element ref="geo:WaterVaporSensor" minOccurs="1" maxOccurs="1"/>
+			</xs:sequence>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

@@ -1,0 +1,142 @@
+<?xml  version='1.0' encoding='utf-8' ?>
+<xs:schema targetNamespace="urn:xml-gov-au:icsm:egeodesy:0.5"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:gco="http://www.isotc211.org/2005/gco"
+           xmlns:gml="http://www.opengis.net/gml/3.2"
+           xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/1.0"
+           xmlns:geo="urn:xml-gov-au:icsm:egeodesy:0.5" elementFormDefault="qualified" version="0.5">
+	<xs:include schemaLocation="./project.xsd"/>
+	<xs:include schemaLocation="./quality.xsd"/>
+	<xs:include schemaLocation="./commonTypes.xsd"/>
+	<xs:element name="AbstractObservationQuality" type="geo:AbstractObservationQuality"/>
+	<xs:complexType name="AbstractObservationQuality" abstract="true">
+		<xs:complexContent>
+			<xs:extension base="geo:DynamicFeature">
+				<xs:sequence>
+					<xs:element name="atSite" type="xs:string" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="source" type="xs:string" minOccurs="0" maxOccurs="1"/>
+					<xs:group ref="geo:RemarksGroup" minOccurs="1" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="GNSSObservationQuality" type="geo:GNSSObservationQuality"/>
+	<xs:complexType name="GNSSObservationQuality">
+		<xs:complexContent>
+			<xs:extension base="geo:AbstractObservationQuality">
+				<xs:sequence>
+					<xs:element name="history" minOccurs="0" maxOccurs="1">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element ref="geo:GNSSObservationQualityInstance" minOccurs="1" maxOccurs="unbounded"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="GNSSObservationQualityInstance" type="geo:GNSSObservationQualityInstance"/>
+	<xs:complexType name="GNSSObservationQualityInstance">
+		<xs:annotation>
+			<xs:documentation>A set of Site quality metrics computed daily to evaluate a Site's fitness or level of suitability in downstream GNSS analysis.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="geo:AbstractTimeSlice">
+				<xs:sequence>
+					<xs:element name="averageMultipathL1" type="geo:Value" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="AverageMutlipathL2" type="geo:Value" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="CompleteObservations" type="xs:integer" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="DeletedObservations" type="xs:integer" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="EpochPercent" type="xs:double" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="FirstObservedEpoch" type="gml:TimePositionType" minOccurs="1" maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation>The function of this element and the next may overlap with the ValidTime TimePeriod element inherited by this complexType from AbstractTimeSliceType.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="LastObservedEpoch" type="gml:TimePositionType" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="MaskedObservations" type="xs:integer" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="Means1" type="geo:Value" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="MeanS1" type="geo:Value" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="ObservatinosMissingP2orC2" type="xs:integer" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="ObservationRate" type="geo:Value" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="ObservationSlipRatio" type="geo:Value" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="ObservationsMissingL1" type="xs:integer" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="ObservationsMissingL2" type="xs:integer" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="ObservationsMissingP1orC1" type="xs:integer" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="ObservedEpochs" type="xs:integer" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="PossibleEpochs" type="xs:integer" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="PossibleObservations" type="xs:integer" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="ReceiverTrackingCapability" type="xs:integer" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="source" type="gco:CharacterString" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="TotalSatellites" type="xs:integer" minOccurs="1" maxOccurs="1"/>
+					<xs:group ref="geo:RemarksGroup" minOccurs="1" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="ObservationQualityPropertyType" type="geo:ObservationQualityPropertyType"/>
+	<xs:complexType name="ObservationQualityPropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="geo:AbstractObservationQuality" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="Sensor" type="geo:Sensor"/>
+	<xs:complexType name="Sensor">
+		<xs:complexContent>
+			<xs:extension base="gml:AbstractGMLType">
+				<xs:sequence>
+					<xs:element name="type" type="gml:CodeType" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="SensorPropertyType" type="geo:SensorPropertyType"/>
+	<xs:complexType name="SensorPropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="geo:Sensor" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="Setup" type="geo:Setup"/>
+	<xs:complexType name="Setup">
+		<xs:complexContent>
+			<xs:extension base="geo:DynamicFeature">
+				<xs:sequence>
+					<xs:element name="atSite" type="xs:string" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="history" minOccurs="0" maxOccurs="1">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element ref="geo:SetupInstance" minOccurs="1" maxOccurs="unbounded"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:group ref="geo:RemarksGroup" minOccurs="1" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="SetupInstance" type="geo:SetupInstance"/>
+	<xs:complexType name="SetupInstance">
+		<xs:annotation>
+			<xs:documentation>A geo:AbstractTimeSliceType extension to contain the value object for a setup instance. The date of setup is defined as the gml:validTime element inherited from geo:AbstractTimeSliceType.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="geo:AbstractTimeSlice">
+				<xs:sequence>
+					<xs:element name="fromProject" type="geo:ProjectPropertyType" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="observedBy" type="cit:CI_Responsibility_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="setupHeight" type="geo:Value" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="usesInstrument" type="geo:InstrumentPropertyType" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:group ref="geo:RemarksGroup" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="usesSensor" type="geo:SensorPropertyType" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="SetupPropertyType" type="geo:SetupPropertyType"/>
+	<xs:complexType name="SetupPropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="geo:Setup" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

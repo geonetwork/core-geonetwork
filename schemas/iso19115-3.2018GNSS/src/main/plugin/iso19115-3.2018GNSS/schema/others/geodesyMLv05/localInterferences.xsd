@@ -1,0 +1,107 @@
+<?xml  version='1.0' encoding='utf-8' ?>
+<xs:schema targetNamespace="urn:xml-gov-au:icsm:egeodesy:0.5"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:gml="http://www.opengis.net/gml/3.2"
+           xmlns:gco="http://www.isotc211.org/2005/gco"
+           xmlns:geo="urn:xml-gov-au:icsm:egeodesy:0.5"
+           xmlns:gmd="http://www.isotc211.org/2005/gmd" elementFormDefault="qualified" version="0.5">
+	<xs:import namespace="http://www.isotc211.org/2005/gco" schemaLocation="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/gco/gco.xsd"/>
+	<xs:annotation>
+		<xs:documentation>Derived from SOPAC IGS Site Log XML Schema 2011</xs:documentation>
+	</xs:annotation>
+	<xs:include schemaLocation="./commonTypes.xsd"/>
+	<xs:simpleType name="baseLocalInterferenceType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="TV"/>
+			<xs:enumeration value="CELL PHONE"/>
+			<xs:enumeration value="ANTENNA"/>
+			<xs:enumeration value="RADAR"/>
+			<xs:enumeration value="METAL ROOF"/>
+			<xs:enumeration value="DOME"/>
+			<xs:enumeration value="VLBI ANTENNA"/>
+			<xs:enumeration value="TREES"/>
+			<xs:enumeration value="BUILDINGS"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="basePossibleProblemSourceType" type="geo:basePossibleProblemSourceType"/>
+	<xs:complexType name="basePossibleProblemSourceType">
+		<xs:complexContent>
+			<xs:extension base="gml:AbstractFeatureType">
+				<xs:sequence>
+					<xs:element ref="gml:validTime" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="notes" type="xs:string" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="possibleProblemSource" type="xs:string" minOccurs="1" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="LocalEpisodicEffect" type="geo:LocalEpisodicEffect"/>
+	<xs:complexType name="LocalEpisodicEffect">
+		<xs:sequence>
+			<xs:element name="event" type="xs:string" minOccurs="1" maxOccurs="1"/>
+			<xs:element ref="gml:validTime" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="localEpisodicEffectPropertyType" type="geo:localEpisodicEffectPropertyType"/>
+	<xs:complexType name="localEpisodicEffectPropertyType">
+		<xs:sequence>
+			<xs:group ref="geo:ChangeTracking" minOccurs="1" maxOccurs="1"/>
+			<xs:sequence minOccurs="1" maxOccurs="1">
+				<xs:element ref="geo:LocalEpisodicEffect" minOccurs="1" maxOccurs="1"/>
+			</xs:sequence>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="MultipathSource" type="geo:MultipathSource"/>
+	<xs:complexType name="MultipathSource">
+		<xs:complexContent>
+			<xs:extension base="geo:basePossibleProblemSourceType">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="multipathSourcePropertyType" type="geo:multipathSourcePropertyType"/>
+	<xs:complexType name="multipathSourcePropertyType">
+		<xs:sequence>
+			<xs:group ref="geo:ChangeTracking" minOccurs="1" maxOccurs="1"/>
+			<xs:sequence minOccurs="1" maxOccurs="1">
+				<xs:element ref="geo:MultipathSource" minOccurs="1" maxOccurs="1"/>
+			</xs:sequence>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="RadioInterference" type="geo:RadioInterference"/>
+	<xs:complexType name="RadioInterference">
+		<xs:complexContent>
+			<xs:extension base="geo:basePossibleProblemSourceType">
+				<xs:sequence>
+					<xs:element name="observedDegradation" type="xs:string" minOccurs="1" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="radioInterferencePropertyType" type="geo:radioInterferencePropertyType"/>
+	<xs:complexType name="radioInterferencePropertyType">
+		<xs:sequence>
+			<xs:group ref="geo:ChangeTracking" minOccurs="1" maxOccurs="1"/>
+			<xs:sequence minOccurs="1" maxOccurs="1">
+				<xs:element ref="geo:RadioInterference" minOccurs="1" maxOccurs="1"/>
+			</xs:sequence>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="SignalObstruction" type="geo:SignalObstruction"/>
+	<xs:complexType name="SignalObstruction">
+		<xs:complexContent>
+			<xs:extension base="geo:basePossibleProblemSourceType">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="signalObstructionPropertyType" type="geo:signalObstructionPropertyType"/>
+	<xs:complexType name="signalObstructionPropertyType">
+		<xs:sequence>
+			<xs:group ref="geo:ChangeTracking" minOccurs="1" maxOccurs="1"/>
+			<xs:sequence minOccurs="1" maxOccurs="1">
+				<xs:element ref="geo:SignalObstruction" minOccurs="1" maxOccurs="1"/>
+			</xs:sequence>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

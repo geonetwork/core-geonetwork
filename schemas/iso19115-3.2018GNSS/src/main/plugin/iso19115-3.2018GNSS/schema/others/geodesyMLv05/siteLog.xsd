@@ -1,0 +1,52 @@
+<?xml  version='1.0' encoding='utf-8' ?>
+<xs:schema targetNamespace="urn:xml-gov-au:icsm:egeodesy:0.5" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:geo="urn:xml-gov-au:icsm:egeodesy:0.5" elementFormDefault="qualified" version="0.5">
+	<xs:annotation>
+		<xs:documentation>Derived from SOPAC IGS Site Log XML Schema 2011 (http://sopac.ucsd.edu/ns/geodesy/doc/igsSiteLog/2011/igsSiteLog.xsd)</xs:documentation>
+	</xs:annotation>
+	<xs:include schemaLocation="./contact.xsd"/>
+	<xs:include schemaLocation="./localInterferences.xsd"/>
+	<xs:include schemaLocation="./monumentInfo.xsd"/>
+	<xs:include schemaLocation="./dataStreams.xsd"/>
+	<xs:include schemaLocation="./equipment.xsd"/>
+	<xs:include schemaLocation="./observationSystem.xsd"/>
+	<xs:include schemaLocation="./commonTypes.xsd"/>
+	<xs:element name="siteLog" type="geo:siteLog"/>
+	<xs:complexType name="siteLog">
+		<xs:annotation>
+			<xs:documentation>&#xD;
+                This derived complexType combines all relevant site metadata schemas to build a complete igs site log schema.&#xD;
+            </xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="geo:AbstractSiteLog">
+				<xs:sequence>
+					<xs:element name="collocationInformation" type="geo:collocationInformationPropertyType" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="dataStream" type="geo:dataStreamPropertyType" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="formInformation" type="geo:FormInformationPropertyType" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="frequencyStandard" type="geo:frequencyStandardPropertyType" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="gnssAntenna" type="geo:gnssAntennaPropertyType" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="gnssReceiver" type="geo:gnssReceiverPropertyType" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="humiditySensor" type="geo:humiditySensorPropertyType" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="localEpisodicEffect" type="geo:localEpisodicEffectPropertyType" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="moreInformation" type="geo:MoreInformationPropertyType" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="multipathSource" type="geo:multipathSourcePropertyType" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="otherInstrumentation" type="geo:otherInstrumentationPropertyType" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="pressureSensor" type="geo:pressureSensorPropertyType" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="radioInterference" type="geo:radioInterferencePropertyType" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="signalObstruction" type="geo:signalObstructionPropertyType" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="siteContact" type="geo:agencyPropertyType" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="siteDataCenter" type="geo:agencyPropertyType" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="siteDataSource" type="geo:agencyPropertyType" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="siteIdentification" type="geo:SiteIdentificationPropertyType" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="siteLocation" type="geo:SiteLocationPropertyType" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="siteMetadataCustodian" type="geo:agencyPropertyType" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="siteOwner" type="geo:agencyPropertyType" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="surveyedLocalTie" type="geo:surveyedLocalTiePropertyType" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="temperatureSensor" type="geo:temperatureSensorPropertyType" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="waterVaporSensor" type="geo:waterVaporSensorPropertyType" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:group ref="geo:RemarksGroup" minOccurs="1" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+</xs:schema>

@@ -188,7 +188,7 @@
                       as="xs:string"
                       select="if ($thesaurusConfig/@transformations != '')
                               then $thesaurusConfig/@transformations
-                              else 'to-iso19115-3.2018GNSS-keyword,to-iso19115-3.2018-keyword-with-anchor,to-iso19115-3.2018-keyword-as-xlink'"/>
+                              else 'to-iso19115-3.2018GNSS-keyword,to-iso19115-3.2018GNSS-keyword-with-anchor,to-iso19115-3.2018GNSS-keyword-as-xlink'"/>
 
         <!-- Get current transformation mode based on XML fragement analysis -->
         <xsl:variable name="transformation"

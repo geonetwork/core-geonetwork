@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0" 
-  xmlns:gex="http://standards.iso.org/iso/19115/-3/gex/1.0" xmlns:gmw="http://standards.iso.org/iso/19115/-3/gmw/1.0" 
-  xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0" 
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
+  xmlns:gex="http://standards.iso.org/iso/19115/-3/gex/1.0" xmlns:gmw="http://standards.iso.org/iso/19115/-3/gmw/1.0"
+  xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0"
   elementFormDefault="qualified" targetNamespace="http://standards.iso.org/iso/19115/-3/gex/1.0" version="1.0">
   <!-- deprecated namespaces:
   xmlns:gts="http://www.isotc211.org/2005/gts"
@@ -51,7 +51,7 @@
               <documentation>sets of points defining the bounding polygon or any other GM_Object geometry (point, line or polygon)</documentation>
             </annotation>
           </element>
-          <element maxOccurs="unbounded" minOccurs="0" name="geographicElement" type="gex:AbstractEX_GeographicExtent_PropertyType"/>
+          <element maxOccurs="unbounded" minOccurs="1" name="geographicElement" type="gex:AbstractEX_GeographicExtent_PropertyType"/>
           <element maxOccurs="unbounded" minOccurs="0" name="temporalElement" type="gex:EX_TemporalExtent_PropertyType"/>
           <element maxOccurs="unbounded" minOccurs="0" name="verticalElement" type="gex:EX_VerticalExtent_PropertyType"/>
         </sequence>
@@ -110,6 +110,7 @@
       <documentation>description of the geographic area using identifiers</documentation>
     </annotation>
   </element>
+  <!-- TODO change EX_GeographicDescription_Type to codelistType for GNSS -->
   <complexType name="EX_GeographicDescription_Type">
     <complexContent>
       <extension base="gex:AbstractEX_GeographicExtent_Type">

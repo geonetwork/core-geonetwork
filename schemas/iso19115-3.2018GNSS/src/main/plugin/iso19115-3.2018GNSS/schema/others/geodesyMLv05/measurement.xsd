@@ -1,0 +1,419 @@
+<?xml  version='1.0' encoding='utf-8' ?>
+<xs:schema targetNamespace="urn:xml-gov-au:icsm:egeodesy:0.5" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:geo="urn:xml-gov-au:icsm:egeodesy:0.5" elementFormDefault="qualified" version="0.5">
+	<xs:include schemaLocation="./fieldMeasurement.xsd"/>
+	<xs:include schemaLocation="./lineage.xsd"/>
+	<xs:include schemaLocation="./project.xsd"/>
+	<xs:include schemaLocation="./quality.xsd"/>
+	<xs:include schemaLocation="./commonTypes.xsd"/>
+	<xs:element name="AbstractMeasurement"/>
+	<xs:simpleType name="double">
+		<xs:restriction base="xs:double"/>
+	</xs:simpleType>
+	<xs:element name="AbstractMeasurementPropertyType" type="geo:AbstractMeasurementPropertyType"/>
+	<xs:complexType name="AbstractMeasurementPropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="geo:AbstractMeasurement" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="AbstractMeasurementType" type="geo:AbstractMeasurementType"/>
+	<xs:complexType name="AbstractMeasurementType">
+		<xs:complexContent>
+			<xs:extension base="gml:AbstractFeatureType">
+				<xs:sequence>
+					<xs:element name="aprioriScalar" type="geo:Value" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element ref="gml:validTime" minOccurs="0" maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation>WFS Temporal Query compatible time element that defines the time instant or time period at which the raw measurement was observed in the field.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="fromProject" type="geo:ProjectPropertyType" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="source" type="geo:AbstractMeasurementSourcePropertyType" minOccurs="0" maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation>A reference to the source of the measurement. An example is a static GNSS baseline reduction from a pair of RINEX files via baseline processing software. Another example is atmospheric correction of a raw EDM measurement. Optional.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:group ref="geo:RemarksGroup" minOccurs="1" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="AstronomicAzimuth" type="geo:AstronomicAzimuth"/>
+	<xs:complexType name="AstronomicAzimuth">
+		<xs:complexContent>
+			<xs:extension base="geo:AbstractMeasurementType">
+				<xs:sequence>
+					<xs:element name="azimuth" type="geo:MeasurementLineType" minOccurs="1" maxOccurs="1"/>
+				</xs:sequence>
+				<xs:attributeGroup ref="geo:RequiredSRSReferenceGroup"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="AstronomicLatitude" type="geo:AstronomicLatitude"/>
+	<xs:complexType name="AstronomicLatitude">
+		<xs:complexContent>
+			<xs:extension base="geo:AbstractMeasurementType">
+				<xs:sequence>
+					<xs:element name="latitude" type="geo:MeasurementPointType" minOccurs="1" maxOccurs="1"/>
+				</xs:sequence>
+				<xs:attributeGroup ref="geo:RequiredSRSReferenceGroup"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="AstronomicLongitude" type="geo:AstronomicLongitude"/>
+	<xs:complexType name="AstronomicLongitude">
+		<xs:complexContent>
+			<xs:extension base="geo:AbstractMeasurementType">
+				<xs:sequence>
+					<xs:element name="longitude" type="geo:MeasurementPointType" minOccurs="1" maxOccurs="1"/>
+				</xs:sequence>
+				<xs:attributeGroup ref="geo:RequiredSRSReferenceGroup"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="DInSARWrapped" type="geo:DInSARWrapped"/>
+	<xs:complexType name="DInSARWrapped">
+		<xs:complexContent>
+			<xs:extension base="geo:AbstractMeasurementType">
+				<xs:sequence>
+					<xs:element name="captureSystem" type="gml:CodeType" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="centre" type="geo:Value" minOccurs="1" maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation>Geodetic coordinate lat/lon</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element ref="gml:RectifiedGridCoverage" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="heading" type="gml:CodeType" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="imageFormat" type="gml:CodeType" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="lookAngle" type="geo:Value" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="mFrame" type="xs:decimal" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="perpendicularBaseline" type="geo:Value" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="polarity" type="gml:CodeType" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="sFrame" type="xs:decimal" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="temporalBaseline" type="xs:decimal" minOccurs="1" maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation>Decimal days</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="track" type="xs:integer" minOccurs="1" maxOccurs="1"/>
+				</xs:sequence>
+				<xs:attributeGroup ref="geo:RequiredSRSReferenceGroup"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="DirectionSet" type="geo:DirectionSet"/>
+	<xs:complexType name="DirectionSet">
+		<xs:complexContent>
+			<xs:extension base="geo:AbstractMeasurementType">
+				<xs:sequence>
+					<xs:element name="directionPairQuality" type="geo:MeasurementLineCovarianceType" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="direction" type="geo:MeasurementLineType" minOccurs="1" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="EllipsoidArcDistance" type="geo:EllipsoidArcDistance"/>
+	<xs:complexType name="EllipsoidArcDistance">
+		<xs:annotation>
+			<xs:documentation>Ellipsoid Arc Distances store the same data structure as Ellipsoid Chord Distances and differ only in implementation, thus it is safe to use an alias.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="geo:EllipsoidChordDistance">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="EllipsoidChordDistance" type="geo:EllipsoidChordDistance"/>
+	<xs:complexType name="EllipsoidChordDistance">
+		<xs:complexContent>
+			<xs:extension base="geo:AbstractMeasurementType">
+				<xs:sequence>
+					<xs:element name="distance" type="geo:MeasurementLineType" minOccurs="1" maxOccurs="1"/>
+				</xs:sequence>
+				<xs:attributeGroup ref="geo:RequiredSRSReferenceGroup"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="EllipsoidHeight" type="geo:EllipsoidHeight"/>
+	<xs:complexType name="EllipsoidHeight">
+		<xs:complexContent>
+			<xs:extension base="geo:AbstractMeasurementType">
+				<xs:sequence>
+					<xs:element name="ellipsoidHeight" type="geo:MeasurementPointType" minOccurs="1" maxOccurs="1"/>
+				</xs:sequence>
+				<xs:attributeGroup ref="geo:RequiredSRSReferenceGroup"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="GeodeticAzimuth" type="geo:GeodeticAzimuth"/>
+	<xs:complexType name="GeodeticAzimuth">
+		<xs:complexContent>
+			<xs:extension base="geo:AbstractMeasurementType">
+				<xs:sequence>
+					<xs:element name="azimuth" type="geo:MeasurementLineType" minOccurs="1" maxOccurs="1"/>
+				</xs:sequence>
+				<xs:attributeGroup ref="geo:RequiredSRSReferenceGroup"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="GeodeticLatitude" type="geo:GeodeticLatitude"/>
+	<xs:complexType name="GeodeticLatitude">
+		<xs:complexContent>
+			<xs:extension base="geo:AstronomicLatitude">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="GeodeticLongitude" type="geo:GeodeticLongitude"/>
+	<xs:complexType name="GeodeticLongitude">
+		<xs:complexContent>
+			<xs:extension base="geo:AstronomicLongitude">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="GNSSBaseline" type="geo:GNSSBaseline"/>
+	<xs:complexType name="GNSSBaseline">
+		<xs:complexContent>
+			<xs:extension base="geo:AbstractMeasurementType">
+				<xs:sequence>
+					<xs:element name="vector" type="geo:MeasurementLineType" minOccurs="1" maxOccurs="1"/>
+				</xs:sequence>
+				<xs:attributeGroup ref="geo:RequiredSRSReferenceGroup"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="GNSSBaselineCluster" type="geo:GNSSBaselineCluster"/>
+	<xs:complexType name="GNSSBaselineCluster">
+		<xs:complexContent>
+			<xs:extension base="geo:AbstractMeasurementType">
+				<xs:sequence>
+					<xs:element name="baselinePairQuality" type="geo:MeasurementLineCovarianceType" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="Baseline" type="geo:MeasurementLineType" minOccurs="1" maxOccurs="unbounded"/>
+				</xs:sequence>
+				<xs:attributeGroup ref="geo:RequiredSRSReferenceGroup"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="GNSSPointCluster" type="geo:GNSSPointCluster"/>
+	<xs:complexType name="GNSSPointCluster">
+		<xs:complexContent>
+			<xs:extension base="geo:AbstractMeasurementType">
+				<xs:sequence>
+					<xs:element name="pointPairQuality" type="geo:MeasurementPointCovarianceType" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="point" type="geo:MeasurementPointType" minOccurs="1" maxOccurs="unbounded"/>
+				</xs:sequence>
+				<xs:attributeGroup ref="geo:RequiredSRSReferenceGroup"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="HeightDifference" type="geo:HeightDifference"/>
+	<xs:complexType name="HeightDifference">
+		<xs:complexContent>
+			<xs:extension base="geo:AbstractMeasurementType">
+				<xs:sequence>
+					<xs:element name="heightDifference" type="geo:MeasurementLineType" minOccurs="1" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="HorizontalAngle" type="geo:HorizontalAngle"/>
+	<xs:complexType name="HorizontalAngle">
+		<xs:complexContent>
+			<xs:extension base="geo:AbstractMeasurementType">
+				<xs:sequence>
+					<xs:element name="angle" type="geo:MeasurementLineType" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="base" type="geo:MeasurementPointType" minOccurs="1" maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation>The base is a reference to the node at which the angle was measured (the instrument setup). The base/value element is ignored and by convention should be blank.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="MeanSeaLevelArcDistance" type="geo:MeanSeaLevelArcDistance"/>
+	<xs:complexType name="MeanSeaLevelArcDistance">
+		<xs:complexContent>
+			<xs:extension base="geo:AbstractMeasurementType">
+				<xs:sequence>
+					<xs:element name="arcDistance" type="geo:MeasurementLineType" minOccurs="1" maxOccurs="1"/>
+				</xs:sequence>
+				<xs:attributeGroup ref="geo:RequiredSRSReferenceGroup"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="Measurement" type="geo:Measurement"/>
+	<xs:complexType name="Measurement">
+		<xs:complexContent>
+			<xs:extension base="geo:AbstractMeasurementType">
+				<xs:sequence>
+					<xs:element name="type" type="gml:CodeType" minOccurs="1" maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation>Type of measurement. Typical examples (from the DynaNet manual) are:&#xD;
+                                Measurement types&#xD;
+                                A Horizontal angles (uncorrelated)&#xD;
+                                B Geodetic azimuth (or bearing)&#xD;
+                                C Ellipsoid chord distance&#xD;
+                                D Direction set&#xD;
+                                E Ellipsoid arc distance &#xD;
+                                G Single GNSS baseline&#xD;
+                                H Orthometric height&#xD;
+                                I Astronomic latitude&#xD;
+                                J Astronomic longitude&#xD;
+                                K Astronomic (Laplace) azimuth&#xD;
+                                L Orthometric height difference&#xD;
+                                M Mean sea level (MSL) arc distance &#xD;
+                                P Geodetic latitude&#xD;
+                                Q Geodetic longitude&#xD;
+                                R Ellipsoid height&#xD;
+                                S Slope (direct) distance&#xD;
+                                V Zenith distance&#xD;
+                                X GNSS baseline cluster (full correlations)&#xD;
+                                Y GNSS point cluster (full correlations)&#xD;
+                                Z Vertical angle&#xD;
+                            </xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="linePairQuality" type="geo:MeasurementLineCovarianceType" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="MeasurementLine" type="geo:MeasurementLineType" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="pointPairQuality" type="geo:MeasurementPointCovarianceType" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="MeasurementPoint" type="geo:MeasurementPointType" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="MeasurementLineCovarianceType" type="geo:MeasurementLineCovarianceType"/>
+	<xs:complexType name="MeasurementLineCovarianceType">
+		<xs:annotation>
+			<xs:documentation>Covariances between measurementLines.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="gml:AbstractGMLType">
+				<xs:sequence>
+					<xs:element name="atLine" type="gml:ReferenceType" minOccurs="1" maxOccurs="1"/>
+					<xs:element ref="geo:AbstractQuality" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="toLine" type="gml:ReferenceType" minOccurs="1" maxOccurs="1"/>
+					<xs:group ref="geo:RemarksGroup" minOccurs="1" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="MeasurementLineType" type="geo:MeasurementLineType"/>
+	<xs:complexType name="MeasurementLineType">
+		<xs:complexContent>
+			<xs:extension base="gml:AbstractGMLType">
+				<xs:sequence>
+					<xs:element name="atHeight" type="gml:MeasureType" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="atNode" type="xs:string" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="atSetup" type="geo:SetupPropertyType" minOccurs="0" maxOccurs="1"/>
+					<xs:element ref="geo:AbstractQuality" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="toHeight" type="gml:MeasureType" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="toNode" type="xs:string" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="toSetup" type="geo:SetupPropertyType" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="value" minOccurs="1" maxOccurs="1">
+						<xs:complexType>
+							<xs:simpleContent>
+								<xs:extension base="gml:doubleList">
+									<xs:sequence/>
+									<xs:attribute name="uomLabels" use="optional" type="gml:NCNameList"/>
+								</xs:extension>
+							</xs:simpleContent>
+						</xs:complexType>
+					</xs:element>
+					<xs:group ref="geo:RemarksGroup" minOccurs="1" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="MeasurementPointCovarianceType" type="geo:MeasurementPointCovarianceType"/>
+	<xs:complexType name="MeasurementPointCovarianceType">
+		<xs:annotation>
+			<xs:documentation>Covariances between measurementLines.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="gml:AbstractGMLType">
+				<xs:sequence>
+					<xs:element name="atPoint" type="gml:ReferenceType" minOccurs="1" maxOccurs="1"/>
+					<xs:element ref="geo:AbstractQuality" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="toPoint" type="gml:ReferenceType" minOccurs="1" maxOccurs="1"/>
+					<xs:group ref="geo:RemarksGroup" minOccurs="1" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="MeasurementPointType" type="geo:MeasurementPointType"/>
+	<xs:complexType name="MeasurementPointType">
+		<xs:complexContent>
+			<xs:extension base="gml:AbstractGMLType">
+				<xs:sequence>
+					<xs:element name="atHeight" type="gml:MeasureType" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="atNode" type="xs:string" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="atSetup" type="geo:SetupPropertyType" minOccurs="1" maxOccurs="1"/>
+					<xs:element ref="geo:AbstractQuality" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="value" type="geo:double" minOccurs="1" maxOccurs="1">
+						<!--<xs:complexType>
+							<xs:simpleContent>
+								<xs:extension base="geo:double">
+									<xs:attribute name="uomLabel" use="optional" type="xs:NCName"/>
+								</xs:extension>
+							</xs:simpleContent>
+						</xs:complexType>-->
+					</xs:element>
+					<xs:group ref="geo:RemarksGroup" minOccurs="1" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="OrthometricHeight" type="geo:OrthometricHeight"/>
+	<xs:complexType name="OrthometricHeight">
+		<xs:complexContent>
+			<xs:extension base="geo:AbstractMeasurementType">
+				<xs:sequence>
+					<xs:element name="orthometricHeight" type="geo:MeasurementPointType" minOccurs="1" maxOccurs="1"/>
+				</xs:sequence>
+				<xs:attributeGroup ref="geo:RequiredSRSReferenceGroup"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="OrthometricHeightDifference" type="geo:OrthometricHeightDifference"/>
+	<xs:complexType name="OrthometricHeightDifference">
+		<xs:complexContent>
+			<xs:extension base="geo:AbstractMeasurementType">
+				<xs:sequence>
+					<xs:element name="heightDifference" type="geo:MeasurementLineType" minOccurs="1" maxOccurs="1"/>
+				</xs:sequence>
+				<xs:attributeGroup ref="geo:RequiredSRSReferenceGroup"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="SlopeDistance" type="geo:SlopeDistance"/>
+	<xs:complexType name="SlopeDistance">
+		<xs:complexContent>
+			<xs:extension base="geo:AbstractMeasurementType">
+				<xs:sequence>
+					<xs:element name="slopeDistance" type="geo:MeasurementLineType" minOccurs="1" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="VerticalAngle" type="geo:VerticalAngle"/>
+	<xs:complexType name="VerticalAngle">
+		<xs:complexContent>
+			<xs:extension base="geo:AbstractMeasurementType">
+				<xs:sequence>
+					<xs:element name="verticalAngle" type="geo:MeasurementLineType" minOccurs="1" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="ZenithDistance" type="geo:ZenithDistance"/>
+	<xs:complexType name="ZenithDistance">
+		<xs:complexContent>
+			<xs:extension base="geo:AbstractMeasurementType">
+				<xs:sequence>
+					<xs:element name="zenithDistance" type="geo:MeasurementLineType" minOccurs="1" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+</xs:schema>

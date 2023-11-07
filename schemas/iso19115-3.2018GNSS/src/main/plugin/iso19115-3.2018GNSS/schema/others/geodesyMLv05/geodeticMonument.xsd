@@ -1,0 +1,90 @@
+<?xml  version='1.0' encoding='utf-8' ?>
+<xs:schema targetNamespace="urn:xml-gov-au:icsm:egeodesy:0.5" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:geo="urn:xml-gov-au:icsm:egeodesy:0.5" xmlns:gmd="http://www.isotc211.org/2005/gmd" elementFormDefault="qualified" version="0.5">
+	<xs:import namespace="http://www.isotc211.org/2005/gco" schemaLocation="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/gco/gco.xsd"/>
+	<xs:element name="geodeticMonument" type="geo:baseGeodeticMonumentType"/>
+	<xs:simpleType name="geodeticMonumentFoundationTypeOfType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="roof"/>
+			<xs:enumeration value="concrete block"/>
+			<xs:enumeration value="steel rods"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="geodeticMonumentTypeOfType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="pillar"/>
+			<xs:enumeration value="brass plate"/>
+			<xs:enumeration value="steel mast"/>
+			<xs:enumeration value="shallow rod / braced antenna mount"/>
+			<xs:enumeration value="removeable tripod / concrete pad"/>
+			<xs:enumeration value="Wyatt/Agnew drilled-braced"/>
+			<xs:enumeration value="Wyatt/Agnew driven braced"/>
+			<xs:enumeration value="rock-pin/metal-tripod"/>
+			<xs:enumeration value="rock-pin"/>
+			<xs:enumeration value="glued-rod"/>
+			<xs:enumeration value="wall"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="baseGeodeticMonumentType" type="geo:baseGeodeticMonumentType"/>
+	<xs:complexType name="baseGeodeticMonumentType">
+		<xs:annotation>
+			<xs:documentation>&#xD;
+         Base geodetic monument class.  Can be extended..&#xD;
+         Cannot be substituted and is instantiable.&#xD;
+            </xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="gml:AbstractFeatureType">
+				<xs:sequence>
+					<xs:element name="cdpNumber" type="xs:string" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="characterIdentifier" minOccurs="1" maxOccurs="1">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:length value="4"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element name="commonName" type="xs:string" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="country" type="xs:string" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="geodeticPosition" type="xs:string" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="geologicCharacteristics" type="xs:string" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="iersDomesNumber" type="xs:string" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="inscription" type="xs:string" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="monumentFoundation" type="gml:CodeType" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="monumentFoundationDepth" minOccurs="0" maxOccurs="1">
+						<xs:simpleType>
+							<xs:restriction base="xs:decimal">
+								<xs:fractionDigits value="4"/>
+								<xs:totalDigits value="6"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element name="monumentHeight" minOccurs="0" maxOccurs="1">
+						<xs:simpleType>
+							<xs:restriction base="xs:decimal">
+								<xs:fractionDigits value="4"/>
+								<xs:totalDigits value="6"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element name="nearestCity" type="xs:string" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="ngsPID" minOccurs="0" maxOccurs="1">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:length value="6"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element name="territory" type="xs:string" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="type" type="gml:CodeType" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="verbalLocation" type="xs:string" minOccurs="0" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="geodeticMonumentPropertyType" type="geo:geodeticMonumentPropertyType"/>
+	<xs:complexType name="geodeticMonumentPropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="geo:geodeticMonument" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

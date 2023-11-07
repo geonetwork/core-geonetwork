@@ -36052,6 +36052,7 @@ http://www.sandre.eaufrance.fr/?urn=urn:sandre:ensembledonnees:BDCarthage:FXX:::
           <geonet:choose name="mdq:DQ_DomainConsistency" />
           <geonet:choose name="mdq:DQ_FormatConsistency" />
           <geonet:choose name="mdq:DQ_TopologicalConsistency" />
+          <geonet:choose name="mdq:DQ_GNSS_Authentication" />
           <geonet:choose name="mdq:DQ_Metaquality" />
           <geonet:choose name="mdq:DQ_Confidence" />
           <geonet:choose name="mdq:DQ_Homogeneity" />

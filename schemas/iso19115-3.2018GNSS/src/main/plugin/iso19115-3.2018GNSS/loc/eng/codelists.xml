@@ -1545,6 +1545,16 @@
 
   <codelist name="mcc:MD_ScopeCode">
     <entry>
+      <code>dataStream</code>
+      <label>GNSS Data Stream</label>
+      <description>GNSS data provided as a data stream</description>
+    </entry>
+    <entry>
+      <code>siteLog</code>
+      <label>GNSS Site Log</label>
+      <description>GNSS data provided as a Site Log</description>
+    </entry>
+    <entry>
       <code>attribute</code>
       <label>Attribute</label>
       <description>Information applies to the attribute class</description>
@@ -2938,4 +2948,60 @@
       <label>Unknown</label>
     </entry>
   </codelist>
+
+  <!-- GNSS Codelist - BC 2-11-23 -->
+  <codelist name="srv:LevelCode">
+    <entry>
+      <code>high</code>
+      <label>High</label>
+      <description></description>
+    </entry>
+    <entry>
+      <code>low</code>
+      <label>Low</label>
+      <description></description>
+    </entry>
+    <entry>
+      <code>medium</code>
+      <label>Medium</label>
+      <description></description>
+    </entry>
+  </codelist>
+
+  <codelist name="srv:RBNDetails">
+    <entry>
+      <code>environmentalConditionsLevel</code>
+      <label>Environmental Conditions Level</label>
+      <description></description>
+    </entry>
+    <entry>
+      <code>interferenceLevel</code>
+      <label>Interference Level</label>
+      <description></description>
+    </entry>
+    <entry>
+      <code>spoofingLevel</code>
+      <label>Spoofing Level</label>
+      <description></description>
+    </entry>
+  </codelist>
+
+  <codelist name="srv:StateCode">
+    <entry>
+      <code>continuous</code>
+      <label>Continuous</label>
+      <description></description>
+    </entry>
+    <entry>
+      <code>onFixStateChange</code>
+      <label>On Fix State Change</label>
+      <description></description>
+    </entry>
+    <entry>
+      <code>onRequest</code>
+      <label>On Request</label>
+      <description></description>
+    </entry>
+  </codelist>
+  <!-- end GNSS Codelist -->
 </codelists>

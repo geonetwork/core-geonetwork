@@ -149,7 +149,7 @@
    * Feature type description for ESRI:REST
    https://geoservices.wallonie.be/arcgis/rest/services/INDUSTRIES_SERVICES/ESRS/MapServer/0?f=json
    -->
-  <xsl:function name="geonet:make-iso19115-3.2018-featurecatalogue-from-wfs" as="node()?">
+  <xsl:function name="geonet:make-iso19115-3.2018GNSS-featurecatalogue-from-wfs" as="node()?">
     <xsl:param name="featureCatWfsUrl" as="xs:string"/>
 
     <xsl:variable name="isEsri"

@@ -33,7 +33,7 @@
 
 
   <!-- The following templates usually delegates all to iso19139. -->
-  <xsl:template name="evaluate-iso19115-3.2018GNSSGNSS">
+  <xsl:template name="evaluate-iso19115-3.2018GNSS">
     <xsl:param name="base" as="node()"/>
     <xsl:param name="in"/>
     <!-- <xsl:message>in xml <xsl:copy-of select="$base"></xsl:copy-of></xsl:message>

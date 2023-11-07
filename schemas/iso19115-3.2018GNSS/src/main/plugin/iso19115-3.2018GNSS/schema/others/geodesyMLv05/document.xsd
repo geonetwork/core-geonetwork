@@ -1,0 +1,56 @@
+<?xml  version='1.0' encoding='utf-8' ?>
+<xs:schema targetNamespace="urn:xml-gov-au:icsm:egeodesy:0.5"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/1.0"
+           xmlns:gml="http://www.opengis.net/gml/3.2"
+           xmlns:geo="urn:xml-gov-au:icsm:egeodesy:0.5" elementFormDefault="qualified" version="0.5">
+	<xs:simpleType name="EncodingType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="none"/>
+			<xs:enumeration value="base64"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="Document" type="geo:Document"/>
+	<xs:complexType name="Document">
+		<xs:complexContent>
+			<xs:extension base="gml:AbstractFeatureType">
+				<xs:sequence>
+					<xs:element name="body" minOccurs="0" maxOccurs="1">
+						<xs:complexType>
+							<xs:choice>
+								<xs:element name="content" type="geo:content" minOccurs="1" maxOccurs="1"/>
+								<xs:element name="fileReference" type="gml:ReferenceType" minOccurs="1" maxOccurs="1"/>
+								<xs:any namespace="##other" minOccurs="1" maxOccurs="1"/>
+								<xs:element name="content">
+									<xs:complexType>
+										<xs:simpleContent>
+											<xs:extension base="xs:string">
+												<xs:attribute name="encoding" use="optional" type="geo:EncodingType"/>
+											</xs:extension>
+										</xs:simpleContent>
+									</xs:complexType>
+								</xs:element>
+							</xs:choice>
+							<xs:attribute name="format" use="optional" type="xs:string"/>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="createdDate" type="gml:TimePositionType" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="custodian" type="cit:CI_Responsibility_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="receivedDate" type="gml:TimePositionType" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="remarks" type="xs:string" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="type" type="gml:CodeType" minOccurs="1" maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation>Type of document.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="DocumentPropertyType" type="geo:DocumentPropertyType"/>
+	<xs:complexType name="DocumentPropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="geo:Document" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

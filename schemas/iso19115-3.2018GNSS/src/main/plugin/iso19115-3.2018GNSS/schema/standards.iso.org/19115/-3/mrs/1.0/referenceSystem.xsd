@@ -1,5 +1,15 @@
-<?xml version="1.0" encoding="UTF-8"?><schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0" xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0" xmlns:mrs="http://standards.iso.org/iso/19115/-3/mrs/1.0" elementFormDefault="qualified" targetNamespace="http://standards.iso.org/iso/19115/-3/mrs/1.0" version="1.0">
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+        xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
+        xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0"
+        xmlns:mrs="http://standards.iso.org/iso/19115/-3/mrs/1.0"
+        xmlns:rbc="https://schemas.isotc211.org/19111/-/rbc/3.1"
+        xmlns:gml="http://www.opengis.net/gml/3.2"
+        elementFormDefault="qualified"
+        targetNamespace="http://standards.iso.org/iso/19115/-3/mrs/1.0" version="1.0">
   <include schemaLocation="mrs.xsd"/>
+  <include schemaLocation="../../../../19111/-/rbc/3.1.0/rbc.xsd"/>
+  <import namespace="http://www.opengis.net/gml/3.2" schemaLocation="../../../../../others/ISO19136/gml.xsd"/>
   <import namespace="http://standards.iso.org/iso/19115/-3/gco/1.0" schemaLocation="../../../../19115/-3/gco/1.0/gco.xsd"/>
   <import namespace="http://standards.iso.org/iso/19115/-3/mcc/1.0" schemaLocation="../../../../19115/-3/mcc/1.0/mcc.xsd"/>
   <!--XML Schema document created by ShapeChange - http://shapechange.net/-->
@@ -12,9 +22,21 @@
     <complexContent>
       <extension base="mcc:Abstract_ReferenceSystem_Type">
         <sequence>
-          <element minOccurs="0" name="referenceSystemIdentifier" type="mcc:MD_Identifier_PropertyType">
+          <element minOccurs="1" name="referenceSystemIdentifier" type="mcc:MD_Identifier_PropertyType">
             <annotation>
               <documentation>identifier and codespace for reference systeme.g. EPSG::4326</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="crs" type="gml:CRSPropertyType" id="ISO19115-1.180.1_ISO19111.CRS">
+            <annotation>
+              <documentation>full description of the coordinate reference system to which a coordinate set is referenced</documentation>
+              <documentation>Condition: At least one of referenceSystemIdentifier or crs is required</documentation>
+            </annotation>
+          </element>
+          <element name="coordinateEpoch" type="rbc:RS_DataEpoch_PropertyType">
+            <annotation>
+              <documentation>epoch at which a coordinate set to a dynamic CRS is valid</documentation>
+              <documentation>Condition: Reqired if the CRS is dynamic, otherwise should not be given</documentation>
             </annotation>
           </element>
           <element minOccurs="0" name="referenceSystemType" type="mrs:MD_ReferenceSystemTypeCode_PropertyType">
@@ -43,5 +65,21 @@
       <element ref="mrs:MD_ReferenceSystemTypeCode"/>
     </sequence>
     <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="coordinateEpoch" substitutionGroup="gco:AbstractObject" type="rbc:RS_DataEpoch_Type">
+    <annotation>
+      <documentation>time attribute of a coordinate set that is referenced to a dynamic CRS</documentation>
+    </annotation>
+  </element>
+  <complexType name="RS_DataEpoch_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <element minOccurs="0" maxOccurs="1" name="coordinateEpoch" type="gco:Measure_PropertyType">
+            <annotation><documentation>data at which coordinates are referenced to a dynamic coordinate reference system, expresssed as a decimal year in the Georgian calandar</documentation></annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
   </complexType>
 </schema>

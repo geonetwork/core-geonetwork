@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema
+  xmlns="http://www.w3.org/2001/XMLSchema"
+  xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
+  xmlns:mcc="https://schemas.isotc211.org/19115/-1/mcc/1.3"
+  xmlns:rbc="https://schemas.isotc211.org/19111/-/rbc/3.1"
+  elementFormDefault="qualified"
+  targetNamespace="https://schemas.isotc211.org/19111/-/rbc/3.1"
+  version="3.1.0"
+>
+  <include schemaLocation="../../../../19111/-/rbc/3.1.0/rbc.xsd"/>
+  <import namespace="https://schemas.isotc211.org/19103/-/gco/1.2" schemaLocation="../../../../19115/-3/gco/1.0/gco.xsd"/>
+  <import namespace="https://schemas.isotc211.org/19115/-1/mcc/1.3" schemaLocation="../../../../19115/-3/mcc/1.0/mcc.xsd"/>
+  <!--XML Schema document created by ShapeChange - http://shapechange.net/-->
+  <!-- ___________________________ -->
+  <element name="RS_CRS" substitutionGroup="gco:AbstractObject" type="rbc:RS_CRS_Type">
+    <annotation>
+      <documentation>information about the reference system</documentation>
+      <documentation>This is a placeholder for a much more conplex structure</documentation>
+    </annotation>
+  </element>
+  <complexType name="RS_CRS_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <element minOccurs="1" maxOccurs="unbounded" name="definition" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>Add a definition for each component of ISO 19111:2019 that is required</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="RS_CRS_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="rbc:RS_CRS"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <!-- ___________________________ -->
+  <!-- ___________________________ -->
+  <element name="RS_CoordinateOperation" substitutionGroup="gco:AbstractObject" type="rbc:RS_CoordinateOperation_Type">
+    <annotation>
+      <documentation>information about the reference system</documentation>
+    </annotation>
+  </element>
+  <complexType name="RS_CoordinateOperation_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <element minOccurs="0" maxOccurs="1" name="sourceCRS" type="rbc:RS_CRS_PropertyType">
+          </element>
+          <element minOccurs="0" maxOccurs="1" name="targetCRS" type="rbc:RS_CRS_PropertyType">
+          </element>
+          <element minOccurs="0" maxOccurs="1" name="sourceCoordinateEpoch" type="rbc:RS_DataEpoch_PropertyType">
+          </element>
+          <element minOccurs="0" maxOccurs="1" name="targetCoordinateEpoch" type="rbc:RS_DataEpoch_PropertyType">
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="RS_CoordinateOperation_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="rbc:RS_CoordinateOperation"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <!-- ___________________________ -->
+  <element name="RS_DataEpoch" substitutionGroup="gco:AbstractObject" type="rbc:RS_DataEpoch_Type">
+    <annotation>
+      <documentation>time attribute of a coordinate set that is referenced to a dynamic CRS</documentation>
+    </annotation>
+  </element>
+  <complexType name="RS_DataEpoch_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <element minOccurs="0" maxOccurs="1" name="coordinateEpoch" type="gco:Measure_PropertyType">
+            <annotation><documentation>data at which coordinates are referenced yo a dynamic coordinate reference system, expresssed as a decimal year in the Georgian calandar</documentation></annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="RS_DataEpoch_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="rbc:RS_DataEpoch"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <!-- ___________________________ -->
+  <element name="RS_EngineeringCRS" substitutionGroup="gco:AbstractObject" type="rbc:RS_EngineeringCRS_Type">
+    <annotation>
+      <documentation>information about the reference system</documentation>
+      <documentation>This is a placeholder for a much more conplex structure</documentation>
+    </annotation>
+  </element>
+  <complexType name="RS_EngineeringCRS_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <element minOccurs="0" maxOccurs="1" name="datum" type="rbc:RS_EngineeringDatum_PropertyType">
+            <annotation>
+              <documentation></documentation>
+            </annotation>
+          </element>
+          <element minOccurs="1" maxOccurs="unbounded" name="definition" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>Add a definition for each component of ISO 19111:2019 that is required</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="RS_EngineeringCRS_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="rbc:RS_EngineeringCRS"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <!-- ___________________________ -->
+  <!-- ___________________________ -->
+  <element name="RS_EngineeringDatum" type="rbc:RS_EngineeringDatum_Type">
+    <annotation>
+      <documentation>information about the reference system</documentation>
+      <documentation>This is a placeholder for a much more conplex structure</documentation>
+    </annotation>
+  </element>
+  <complexType name="RS_EngineeringDatum_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <element minOccurs="0" maxOccurs="unbounded" name="referenceSystem" type="rbc:RS_EngineeringCRS_PropertyType">
+            <annotation>
+              <documentation>Add a definition for each component of ISO 19111:2019 that is required</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="1" maxOccurs="unbounded" name="definition" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>Add a definition for each component of ISO 19111:2019 that is required</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="RS_EngineeringDatum_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="rbc:RS_EngineeringDatum"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <!-- ___________________________ -->
+  <!-- ___________________________ -->
+  <element name="RS_CartesianCRS" type="rbc:RS_CartesianCRS_Type">
+    <annotation>
+      <documentation>information about the reference system</documentation>
+      <documentation>This is a placeholder for a much more complex structure</documentation>
+    </annotation>
+  </element>
+  <complexType name="RS_CartesianCRS_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <element minOccurs="0" maxOccurs="unbounded" name="referenceSystem" type="rbc:RS_EngineeringCRS_PropertyType">
+            <annotation>
+              <documentation>Add a definition for each component of ISO 19111:2019 that is required</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="1" maxOccurs="unbounded" name="definition" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>Add a definition for each component of ISO 19111:2019 that is required</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="RS_CartesianCRS_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="rbc:RS_CartesianCRS"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <!-- ___________________________ -->
+</schema>

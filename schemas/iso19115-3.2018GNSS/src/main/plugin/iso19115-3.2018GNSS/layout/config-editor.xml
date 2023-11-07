@@ -32,7 +32,7 @@
     <for name="cit:issueIdentification" use="textarea"/>
     <for name="cit:description" use="textarea"/>
     <for name="mcc:fileDescription" use="textarea"/>
-    <for name="gex:description" use="textarea"/>
+    <!--<for name="gex:description" use="textarea"/>-->
     <for name="mrc:description" use="textarea"/>
     <for name="mrd:mediumNote" use="textarea"/>
     <for name="lan:description" use="textarea"/>
@@ -82,6 +82,8 @@
 
     <for name="gco:Date" use="data-gn-date-picker"/>
     <for name="gco:DateTime" use="data-gn-date-picker"/>
+    <for name="gml:beginDate" use="data-gn-date-picker"/>
+    <for name="gml:endDate" use="data-gn-date-picker"/>
 
     <for name="gml:duration" use="data-gn-field-duration-div"/>
     <for name="gco:TM_PeriodDuration" use="data-gn-field-duration-div"/>
@@ -110,26 +112,19 @@
                     &lt;cit:party&gt;
                       &lt;cit:CI_Organisation&gt;
                         &lt;cit:name&gt;
-                          &lt;gco:CharacterString&gt;&lt;/gco:CharacterString&gt;
+                          &lt;gco:CharacterString&gt;Org Name&lt;/gco:CharacterString&gt;
                         &lt;/cit:name&gt;
                         &lt;cit:contactInfo&gt;
                           &lt;cit:CI_Contact&gt;
                             &lt;cit:address&gt;
                               &lt;cit:CI_Address&gt;
                                 &lt;cit:electronicMailAddress&gt;
-                                  &lt;gco:CharacterString&gt;&lt;/gco:CharacterString&gt;
+                                  &lt;gco:CharacterString&gt;email@addre.ss&lt;/gco:CharacterString&gt;
                                 &lt;/cit:electronicMailAddress&gt;
                               &lt;/cit:CI_Address&gt;
                             &lt;/cit:address&gt;
                           &lt;/cit:CI_Contact&gt;
                         &lt;/cit:contactInfo&gt;
-                        &lt;cit:individual&gt;
-                          &lt;cit:CI_Individual&gt;
-                            &lt;cit:name&gt;
-                              &lt;gco:CharacterString&gt;&lt;/gco:CharacterString&gt;
-                            &lt;/cit:name&gt;
-                          &lt;/cit:CI_Individual&gt;
-                        &lt;/cit:individual&gt;
                       &lt;/cit:CI_Organisation&gt;
                     &lt;/cit:party&gt;
                   &lt;/cit:CI_Responsibility&gt;"
@@ -163,26 +158,19 @@
                     &lt;cit:party&gt;
                       &lt;cit:CI_Organisation&gt;
                         &lt;cit:name&gt;
-                          &lt;gco:CharacterString&gt;&lt;/gco:CharacterString&gt;
+                          &lt;gco:CharacterString&gt;Org Name&lt;/gco:CharacterString&gt;
                         &lt;/cit:name&gt;
                         &lt;cit:contactInfo&gt;
                           &lt;cit:CI_Contact&gt;
                             &lt;cit:address&gt;
                               &lt;cit:CI_Address&gt;
                                 &lt;cit:electronicMailAddress&gt;
-                                  &lt;gco:CharacterString&gt;&lt;/gco:CharacterString&gt;
+                                  &lt;gco:CharacterString&gt;email@addre.ss&lt;/gco:CharacterString&gt;
                                 &lt;/cit:electronicMailAddress&gt;
                               &lt;/cit:CI_Address&gt;
                             &lt;/cit:address&gt;
                           &lt;/cit:CI_Contact&gt;
                         &lt;/cit:contactInfo&gt;
-                        &lt;cit:individual&gt;
-                          &lt;cit:CI_Individual&gt;
-                            &lt;cit:name&gt;
-                              &lt;gco:CharacterString&gt;&lt;/gco:CharacterString&gt;
-                            &lt;/cit:name&gt;
-                          &lt;/cit:CI_Individual&gt;
-                        &lt;/cit:individual&gt;
                       &lt;/cit:CI_Organisation&gt;
                     &lt;/cit:party&gt;
                   &lt;/cit:CI_Responsibility&gt;"
@@ -205,26 +193,19 @@
                     &lt;cit:party&gt;
                       &lt;cit:CI_Organisation&gt;
                         &lt;cit:name&gt;
-                          &lt;gco:CharacterString&gt;&lt;/gco:CharacterString&gt;
+                          &lt;gco:CharacterString&gt;Org Name&lt;/gco:CharacterString&gt;
                         &lt;/cit:name&gt;
                         &lt;cit:contactInfo&gt;
                           &lt;cit:CI_Contact&gt;
                             &lt;cit:address&gt;
                               &lt;cit:CI_Address&gt;
                                 &lt;cit:electronicMailAddress&gt;
-                                  &lt;gco:CharacterString&gt;&lt;/gco:CharacterString&gt;
+                                  &lt;gco:CharacterString&gt;email@addre.ss&lt;/gco:CharacterString&gt;
                                 &lt;/cit:electronicMailAddress&gt;
                               &lt;/cit:CI_Address&gt;
                             &lt;/cit:address&gt;
                           &lt;/cit:CI_Contact&gt;
                         &lt;/cit:contactInfo&gt;
-                        &lt;cit:individual&gt;
-                          &lt;cit:CI_Individual&gt;
-                            &lt;cit:name&gt;
-                              &lt;gco:CharacterString&gt;&lt;/gco:CharacterString&gt;
-                            &lt;/cit:name&gt;
-                          &lt;/cit:CI_Individual&gt;
-                        &lt;/cit:individual&gt;
                       &lt;/cit:CI_Organisation&gt;
                     &lt;/cit:party&gt;
                   &lt;/cit:CI_Responsibility&gt;"
@@ -247,26 +228,19 @@
                     &lt;cit:party&gt;
                       &lt;cit:CI_Organisation&gt;
                         &lt;cit:name&gt;
-                          &lt;gco:CharacterString&gt;&lt;/gco:CharacterString&gt;
+                          &lt;gco:CharacterString&gt;Org Name&lt;/gco:CharacterString&gt;
                         &lt;/cit:name&gt;
                         &lt;cit:contactInfo&gt;
                           &lt;cit:CI_Contact&gt;
                             &lt;cit:address&gt;
                               &lt;cit:CI_Address&gt;
                                 &lt;cit:electronicMailAddress&gt;
-                                  &lt;gco:CharacterString&gt;&lt;/gco:CharacterString&gt;
+                                  &lt;gco:CharacterString&gt;email@addre.ss&lt;/gco:CharacterString&gt;
                                 &lt;/cit:electronicMailAddress&gt;
                               &lt;/cit:CI_Address&gt;
                             &lt;/cit:address&gt;
                           &lt;/cit:CI_Contact&gt;
                         &lt;/cit:contactInfo&gt;
-                        &lt;cit:individual&gt;
-                          &lt;cit:CI_Individual&gt;
-                            &lt;cit:name&gt;
-                              &lt;gco:CharacterString&gt;&lt;/gco:CharacterString&gt;
-                            &lt;/cit:name&gt;
-                          &lt;/cit:CI_Individual&gt;
-                        &lt;/cit:individual&gt;
                       &lt;/cit:CI_Organisation&gt;
                     &lt;/cit:party&gt;
                   &lt;/cit:CI_Responsibility&gt;"
@@ -289,26 +263,19 @@
                     &lt;cit:party&gt;
                       &lt;cit:CI_Organisation&gt;
                         &lt;cit:name&gt;
-                          &lt;gco:CharacterString&gt;&lt;/gco:CharacterString&gt;
+                          &lt;gco:CharacterString&gt;Org Name&lt;/gco:CharacterString&gt;
                         &lt;/cit:name&gt;
                         &lt;cit:contactInfo&gt;
                           &lt;cit:CI_Contact&gt;
                             &lt;cit:address&gt;
                               &lt;cit:CI_Address&gt;
                                 &lt;cit:electronicMailAddress&gt;
-                                  &lt;gco:CharacterString&gt;&lt;/gco:CharacterString&gt;
+                                  &lt;gco:CharacterString&gt;email@addre.ss&lt;/gco:CharacterString&gt;
                                 &lt;/cit:electronicMailAddress&gt;
                               &lt;/cit:CI_Address&gt;
                             &lt;/cit:address&gt;
                           &lt;/cit:CI_Contact&gt;
                         &lt;/cit:contactInfo&gt;
-                        &lt;cit:individual&gt;
-                          &lt;cit:CI_Individual&gt;
-                            &lt;cit:name&gt;
-                              &lt;gco:CharacterString&gt;&lt;/gco:CharacterString&gt;
-                            &lt;/cit:name&gt;
-                          &lt;/cit:CI_Individual&gt;
-                        &lt;/cit:individual&gt;
                       &lt;/cit:CI_Organisation&gt;
                     &lt;/cit:party&gt;
                   &lt;/cit:CI_Responsibility&gt;"
@@ -320,7 +287,16 @@
               data-variables="cit:role/cit:CI_RoleCode/@codeListValue~{role}"/>
     </for>
 
-    <for name="mdb:referenceSystemInfo" addDirective="data-gn-directory-entry-selector">
+    <!--<for name="mdb:referenceSystemInfo" addDirective="data-gn-directory-entry-selector">
+      <directiveAttributes
+        data-template-add-action="true"
+        data-search-action="true"
+        data-template-type="CRS"
+        data-filter='{"root": "mrs:MD_ReferenceSystem"}'
+        data-insert-modes=""/>
+    </for>-->
+
+    <for name="gex:verticalCRSId" addDirective="data-gn-directory-entry-selector">
       <directiveAttributes
         data-template-add-action="true"
         data-search-action="true"
@@ -328,7 +304,6 @@
         data-filter='{"root": "mrs:MD_ReferenceSystem"}'
         data-insert-modes=""/>
     </for>
-
 
     <for name="mri:extent" addDirective="data-gn-directory-entry-selector">
       <directiveAttributes
@@ -695,19 +670,23 @@
 
     <table for="cit:CI_OnlineResource">
       <header>
-        <col label="cit:linkage" />
-        <col label="cit:protocol" />
-        <col label="cit:function" />
-        <col />
+        <col label="cit:name"/>
+        <col label="cit:linkage"/>
+        <col label="cit:protocol"/>
+        <col label="cit:function"/>
+        <col label="cit:description"/>
+        <col/>
       </header>
       <row>
-        <col xpath="cit:linkage" />
-        <col xpath="cit:protocol" />
-        <col xpath="cit:function" />
-        <col del=".." />
+        <col xpath="cit:name"/>
+        <col xpath="cit:linkage"/>
+        <col xpath="cit:protocol"/>
+        <col xpath="cit:function"/>
+        <col xpath="cit:description"/>
+        <col del=".."/>
       </row>
     </table>
-    <table for="gml:TimePeriod">
+    <!--<table for="gml:TimePeriod">
       <header>
         <col label="cit:linkage" />
         <col label="cit:protocol" />
@@ -720,7 +699,7 @@
         <col xpath="cit:function" />
         <col del=".." />
       </row>
-    </table>
+    </table>-->
   </tableFields>
 
 
@@ -808,7 +787,7 @@
       </thesaurusList>
     </view>
 
-    <view name="icsm" class="gn-label-above-input" displayTooltips="true" hideTimeInCalendar="true" >
+    <view name="icsm" class="gn-label-above-input" displayTooltips="true" hideTimeInCalendar="true" default="true">
       <sidePanel>
         <directive data-gn-onlinesrc-list="" data-config-id="icsm" data-menu="false" />
         <directive gn-geo-publisher=""
@@ -887,22 +866,20 @@
       </tab>
 
       <tab id="qualityLineageIcsm" mode="flat">
-        <section xpath="/mdb:MD_Metadata/mdb:resourceLineage" or="resourceLineage"
-                 in="/mdb:MD_Metadata">
-          <field xpath="/mdb:MD_Metadata/mdb:resourceLineage/mrl:LI_Lineage/mrl:statement" or="statement"
-            in="/mdb:MD_Metadata/mdb:resourceLineage/mrl:LI_Lineage"/>
+        <section xpath="/mdb:MD_Metadata/mdb:resourceLineage" >
+          <field xpath="/mdb:MD_Metadata/mdb:resourceLineage/mrl:LI_Lineage/mrl:statement"/>
           <field xpath="/mdb:MD_Metadata/mdb:resourceLineage/mrl:LI_Lineage/mrl:source/mrl:LI_Source/mrl:description"
                  or="description" in="/mdb:MD_Metadata/mdb:resourceLineage/mrl:LI_Lineage/mrl:source/mrl:LI_Source"/>
         </section>
         <!--<section xpath="/mdb:MD_Metadata/mdb:identificationInfo/*/mri:credit" or="credit"
                  in="/mdb:MD_Metadatamdb:identificationInfo/*"/>-->
-        <!--<section xpath="/mdb:MD_Metadata/mdb:dataQualityInfo" or="dataQualityInfo"
-                 in="/mdb:MD_Metadata"/>-->
+        <section xpath="/mdb:MD_Metadata/mdb:dataQualityInfo" or="dataQualityInfo"
+                 in="/mdb:MD_Metadata"/>
       </tab>
       <tab id="descriptiveKeywordsIcsm">
-        <section name="keywordsIcsm">
+        <section name="mri:descriptiveKeywords">
           <field xpath="/mdb:MD_Metadata/mdb:identificationInfo/*/mri:descriptiveKeywords"
-                 or="descriptiveKeywords" in="/mdb:MD_Metadata/mdb:identificationInfo/*" del="."/>
+                 or="descriptiveKeywords" in="/mdb:MD_Metadata/mdb:identificationInfo/*" del=".."/>
         </section>
       </tab>
       <tab id="spatialInfoIcsm" mode="flat" displayIfRecord="count(mdb:MD_Metadata/mdb:metadataScope/mdb:MD_MetadataScope/mdb:resourceScope[*/@codeListValue ='attributeType']) = 0 ">
@@ -912,47 +889,32 @@
           <field xpath="/mdb:MD_Metadata/mdb:identificationInfo/*/mri:extent/gex:EX_Extent/gex:geographicElement/gex:EX_GeographicBoundingBox" or="geographicElement"
                    in="/mdb:MD_Metadata/mdb:identificationInfo/*/mri:extent/gex:EX_Extent" />
           <field xpath="/mdb:MD_Metadata/mdb:identificationInfo/*/mri:extent/gex:EX_Extent/gex:verticalElement" or="verticalElement"
-                 in="/mdb:MD_Metadata/mdb:identificationInfo/*/mri:extent/gex:EX_Extent"/>
-          <field name="temporalElement" templateModeOnly="true"
-                 xpath="/mdb:MD_Metadata/mdb:identificationInfo/*/mri:extent/gex:EX_Extent/gex:temporalElement">
-            <template>
-              <values>
-                <!-- -Need a * for gml:TimePeriodTypeCHOICE_ELEMENT2 added by editor enumerated tree
-                      but this will make the XSLT formatter fails. Using // to access the element in both case. -->
-                <key label="beginPosition"
-                     xpath="gex:EX_TemporalExtent/gex:extent/gml:TimePeriod//gml:beginPosition"
-                     use="gn-date-picker"
-                     tooltip="gex:temporalElement/gex:EX_TemporalExtent">
-                  <directiveAttributes
-                    data-tag-name="gml:beginPosition"/>
-                  <!--data-indeterminate-position="eval#gex:EX_TemporalExtent/gex:extent/gml:TimePeriod/*/gml:beginPosition/@indeterminatePosition"/-->
+                 in="/mdb:MD_Metadata/mdb:identificationInfo/*/mri:extent/gex:EX_Extent" del=".." />
+          <section name="gex:EX_TemporalExtent" >
+            <field name="Temporal extents"
+                   xpath="/mdb:MD_Metadata/mdb:identificationInfo/*/mri:extent/gex:EX_Extent/gex:temporalElement"
+                   del=".."/>
+              <action type="add"
+                      btnLabel="Add Temporal Extent"
+                      or="temporalElement"
+                      in="/mdb:MD_Metadata/mdb:identificationInfo/*/mri:extent/gex:EX_Extent">
+              <template>
+                <snippet>
+                  <gex:temporalElement>
+                    <gex:EX_TemporalExtent>
+                      <gex:extent>
+                        <gml:TimePeriod gml:id="d33429e406a1051934">
+                          <gml:beginPosition/>
+                          <gml:endPosition/>
+                        </gml:TimePeriod>
+                      </gex:extent>
+                    </gex:EX_TemporalExtent>
+                  </gex:temporalElement>
+                </snippet>
+              </template>
 
-                </key>
-                <key label="endPosition"
-                     xpath="gex:EX_TemporalExtent/gex:extent/gml:TimePeriod//gml:endPosition"
-                     use="gn-date-picker"
-                     tooltip="gex:extent|gex:EX_TemporalExtent">
-                  <directiveAttributes
-                    data-tag-name="gml:endPosition"/>
-                  <!--data-indeterminate-position="eval#gex:EX_TemporalExtent/gex:extent/gml:TimePeriod/*/gml:endPosition/@indeterminatePosition"/-->
-
-
-                </key>
-              </values>
-              <snippet>
-                <gex:temporalElement>
-                  <gex:EX_TemporalExtent>
-                    <gex:extent>
-                      <gml:TimePeriod>
-                        {{beginPosition}}
-                        {{endPosition}}
-                      </gml:TimePeriod>
-                    </gex:extent>
-                  </gex:EX_TemporalExtent>
-                </gex:temporalElement>
-              </snippet>
-            </template>
-          </field>
+              </action>>
+          </section>
         </section>
         <section name="resolutionIcsm">
           <field xpath="/mdb:MD_Metadata/mdb:identificationInfo/*/mri:spatialResolution/mri:MD_Resolution" />
@@ -971,9 +933,48 @@
                  in="/mdb:MD_Metadata" />
       </tab>
 
-      <tab id="distributionICSM" mode="flat">
-        <section xpath="/mdb:MD_Metadata/mdb:distributionInfo" or="distributionInfo"
-                 in="/mdb:MD_Metadata" />
+      <tab id="distributionICSM" mode="flat" displayIfRecord="count(mdb:MD_Metadata/mdb:identificationInfo/srv:SV_ServiceIdentification) = 0">
+        <section name="Distributions">
+          <field xpath="/mdb:MD_Metadata/mdb:distributionInfo"
+                 del=".."/>
+          <action type="add"
+                  btnLabel="Add Distribution"
+                  or="distributionInfo"
+                  in="/mdb:MD_Metadata">
+            <template>
+              <snippet>
+                <mdb:distributionInfo>
+                <mrd:MD_Distribution>
+                <mrd:transferOptions>
+                <mrd:MD_DigitalTransferOptions>
+                <mrd:onLine>
+                  <cit:CI_OnlineResource>
+                    <cit:linkage>
+                      <gco:CharacterString>Distro URL</gco:CharacterString>
+                    </cit:linkage>
+                    <cit:protocol>
+                      <gco:CharacterString/>
+                    </cit:protocol>
+                    <cit:name>
+                      <gco:CharacterString>Name of resource</gco:CharacterString>
+                    </cit:name>
+                    <cit:description>
+                      <gco:CharacterString/>
+                    </cit:description>
+                    <cit:function>
+                      <cit:CI_OnLineFunctionCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_OnLineFunctionCode"
+                                                 codeListValue="download"/>
+                    </cit:function>
+                  </cit:CI_OnlineResource>
+                </mrd:onLine>
+                </mrd:MD_DigitalTransferOptions>
+                </mrd:transferOptions>
+                </mrd:MD_Distribution>
+                </mdb:distributionInfo>
+              </snippet>
+            </template>
+          </action>
+        </section>
       </tab>
 
       <!--<tab id="metadataIcsm" mode="flat">
@@ -1018,7 +1019,8 @@
         <for name="srv:scopedName"/>
         <for name="srv:resourceReference"/>
         <for name="srv:SV_OperationMetadata"/>
-
+        <for name="gex:verticalCRSId"/>
+        <for name="mdq:report"/>
         <for name="mri:descriptiveKeywords"/>
         <for name="gex:geographicElement" />
         <for name="gex:description" />
@@ -1026,6 +1028,7 @@
         <for name="gml:TimePeriod" />
         <for name="gex:verticalElement" />
         <for name="mcc:code" />
+        <for name="mrs:coordinateEpoch" />
         <for name="mrs:referenceSystemType" />
         <for name="mcc:description" />
         <!--<for name="mcc:codeSpace" />-->

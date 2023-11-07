@@ -10,11 +10,11 @@ Information Metadata documented in ISO/TS 19115-3, based on the implementation p
 This gcoBase.xsd schema provides:
 		1. tools to handle specific objects like "code lists" and "record";
 		2. Some XML types that do not follow the general encoding rules specified in ISO19139.
-		*** SMR 2014-12-22.  Refactor gco, gts, gsr, gss to separate gml dependencies.  
-		All element or attribute types in this schema are either types defined by this schema, or are datatypes defined by 
+		*** SMR 2014-12-22.  Refactor gco, gts, gsr, gss to separate gml dependencies.
+		All element or attribute types in this schema are either types defined by this schema, or are datatypes defined by
 		the XML schema namespace (http://www.w3.org/2001/XMLSchema)
 		To remove the dependency between gml and the base datatypes in ISO19115-3:
-			1. The nilReason attribute is defined here instead of extending the gml type. 
+			1. The nilReason attribute is defined here instead of extending the gml type.
 			2. The definition of MeasureType is copied here from gml 3.2 basic Types. The only
 			difference this will introduce in instance documents is that the uom attribute on a measure value
 			(or one of its substitutions) will be gco:uom, not gml:uom.
@@ -46,7 +46,7 @@ This gcoBase.xsd schema provides:
 
 	<xs:simpleType name="NilReasonType">
 		<xs:annotation>
-			<xs:documentation>copied from gml32:NilReasonType. This Type defines a content model that allows recording of an 
+			<xs:documentation>copied from gml32:NilReasonType. This Type defines a content model that allows recording of an
 				explanation for a void value or other exception.
 				gml:NilReasonType is a union of the following enumerated values:
 				-	inapplicable- there is no value
@@ -394,7 +394,7 @@ This gcoBase.xsd schema provides:
 	</xs:simpleType>
 	<xs:simpleType name="UomSymbol">
 		<xs:annotation>
-			<xs:documentation>This type specifies a character string of length at least one, and restricted such that it must not contain any of the following characters: ":" (colon), " " (space), (newline), (carriage return), (tab). This allows values corresponding to familiar abbreviations, such as "kg", "m/s", etc. 
+			<xs:documentation>This type specifies a character string of length at least one, and restricted such that it must not contain any of the following characters: ":" (colon), " " (space), (newline), (carriage return), (tab). This allows values corresponding to familiar abbreviations, such as "kg", "m/s", etc.
 				It is recommended that the symbol be an identifier for a unit of measure as specified in the "Unified Code of Units of Measure" (UCUM) (http://aurora.regenstrief.org/UCUM). This provides a set of symbols and a grammar for constructing identifiers for units of measure that are unique, and may be easily entered with a keyboard supporting the limited character set known as 7-bit ASCII. ISO 2955 formerly provided a specification with this scope, but was withdrawn in 2001. UCUM largely follows ISO 2955 with modifications to remove ambiguities and other problems.</xs:documentation>
 		</xs:annotation>
 		<xs:restriction base="xs:string">
@@ -403,9 +403,9 @@ This gcoBase.xsd schema provides:
 	</xs:simpleType>
 	<xs:simpleType name="UomURI">
 		<xs:annotation>
-			<xs:documentation>This type specifies a URI, restricted such that it must start with one of the following sequences: "#", "./", "../", or a string of characters followed by a ":". These patterns ensure that the most common URI forms are supported, including absolute and relative URIs and URIs that are simple fragment identifiers, but prohibits certain forms of relative URI that could be mistaken for unit of measure symbol . 
+			<xs:documentation>This type specifies a URI, restricted such that it must start with one of the following sequences: "#", "./", "../", or a string of characters followed by a ":". These patterns ensure that the most common URI forms are supported, including absolute and relative URIs and URIs that are simple fragment identifiers, but prohibits certain forms of relative URI that could be mistaken for unit of measure symbol .
 				NOTE	It is possible to re-write such a relative URI to conform to the restriction (e.g. "./m/s").
-				In an instance document, on elements of type gml:MeasureType the mandatory uom attribute shall carry a value corresponding to either 
+				In an instance document, on elements of type gml:MeasureType the mandatory uom attribute shall carry a value corresponding to either
 				-	a conventional unit of measure symbol,
 				-	a link to a definition of a unit of measure that does not have a conventional symbol, or when it is desired to indicate a precise or variant definition.</xs:documentation>
 		</xs:annotation>
@@ -413,8 +413,8 @@ This gcoBase.xsd schema provides:
 			<xs:pattern value="([a-zA-Z][a-zA-Z0-9\-\+\.]*:|\.\./|\./|#).*"/>
 		</xs:restriction>
 	</xs:simpleType>
-	
-	
+
+
 	<!-- ============ UomIdentifier Property =================== -->
 	<!-- implementing interface defined in ISO19103:2015 -->
 	<xs:complexType name="UomIdentifier_PropertyType">
@@ -441,7 +441,7 @@ This gcoBase.xsd schema provides:
 	<xs:element name="Length" type="gco:MeasureType" substitutionGroup="gco:Measure"/>
 	<!-- ........................................................................ -->
 	<xs:complexType name="Length_PropertyType">
-		<!-- not used in schema 19115-3; 
+		<!-- not used in schema 19115-3;
 			Distance, in substitution group for length, is used (see below) -->
 		<xs:sequence minOccurs="0">
 			<xs:element ref="gco:Length"/>
@@ -471,6 +471,17 @@ This gcoBase.xsd schema provides:
 		<xs:attribute ref="gco:nilReason"/>
 	</xs:complexType>
 	<!-- ........................................................................ -->
+  <xs:element name="TimeMeasure" type="gco:MeasureType" substitutionGroup="gco:Measure"/>
+  <!--
+   ........................................................................
+  -->
+  <xs:complexType name="TimeMeasure_PropertyType">
+    <!--  used in identification.xsd mri:angularDistance -->
+    <xs:sequence minOccurs="0">
+      <xs:element ref="gco:TimeMeasure"/>
+    </xs:sequence>
+    <xs:attribute ref="gco:nilReason"/>
+  </xs:complexType>
 
 	<!-- =========================================================================== -->
 	<!-- ........................................................................ -->

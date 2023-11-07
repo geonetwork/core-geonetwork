@@ -1,0 +1,146 @@
+<?xml  version='1.0' encoding='utf-8' ?>
+<xs:schema targetNamespace="urn:xml-gov-au:icsm:egeodesy:0.5" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:geo="urn:xml-gov-au:icsm:egeodesy:0.5" elementFormDefault="qualified" version="0.5">
+	<xs:include schemaLocation="./quality.xsd"/>
+	<xs:include schemaLocation="./observationSystem.xsd"/>
+	<xs:include schemaLocation="./lineage.xsd"/>
+	<xs:include schemaLocation="./commonTypes.xsd"/>
+	<xs:element name="DeformationGridTransformation" type="geo:DeformationGridTransformation"/>
+	<xs:complexType name="DeformationGridTransformation">
+		<xs:complexContent>
+			<xs:restriction base="geo:GridTransformation">
+				<xs:sequence>
+					<xs:sequence minOccurs="1" maxOccurs="1">
+						<xs:element ref="gml:metaDataProperty" minOccurs="0" maxOccurs="unbounded"/>
+						<xs:element ref="gml:description" minOccurs="0" maxOccurs="1"/>
+						<xs:element ref="gml:descriptionReference" minOccurs="0" maxOccurs="1"/>
+						<xs:element ref="gml:identifier" minOccurs="1" maxOccurs="1"/>
+						<xs:element ref="gml:name" minOccurs="0" maxOccurs="unbounded"/>
+						<xs:element ref="gml:remarks" minOccurs="0" maxOccurs="1"/>
+						<xs:element ref="gml:domainOfValidity" minOccurs="0" maxOccurs="1"/>
+						<xs:element ref="gml:scope" minOccurs="1" maxOccurs="unbounded"/>
+						<xs:element ref="gml:operationVersion" minOccurs="1" maxOccurs="1"/>
+						<xs:element ref="gml:coordinateOperationAccuracy" minOccurs="0" maxOccurs="unbounded"/>
+						<xs:element ref="gml:sourceCRS" minOccurs="1" maxOccurs="1"/>
+						<xs:element ref="gml:targetCRS" minOccurs="1" maxOccurs="1"/>
+					</xs:sequence>
+					<xs:sequence minOccurs="1" maxOccurs="1">
+						<xs:element ref="gml:parameterValue" minOccurs="0" maxOccurs="unbounded"/>
+						<xs:element name="source" type="geo:AbstractDefinitionSourcePropertyType" minOccurs="0" maxOccurs="unbounded">
+							<xs:annotation>
+								<xs:documentation>An unbounded list of references to the source of each parameter.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="sourceEpoch" type="gml:TimePositionType" minOccurs="1" maxOccurs="1"/>
+						<xs:element name="targetEpoch" type="gml:TimePositionType" minOccurs="1" maxOccurs="1"/>
+						<xs:element name="usesMethod" type="gml:OperationMethodType" minOccurs="1" maxOccurs="1"/>
+					</xs:sequence>
+					<xs:sequence minOccurs="1" maxOccurs="1">
+						<xs:element ref="gml:RectifiedGridCoverage" minOccurs="1" maxOccurs="1"/>
+					</xs:sequence>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="DynamicTransformation" type="geo:DynamicTransformation"/>
+	<xs:complexType name="DynamicTransformation">
+		<xs:complexContent>
+			<xs:extension base="gml:AbstractGeneralTransformationType">
+				<xs:sequence>
+					<xs:element ref="gml:parameterValue" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="source" type="geo:AbstractDefinitionSourcePropertyType" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>An unbounded list of references to the source of each parameter.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="sourceEpoch" type="gml:TimePositionType" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="targetEpoch" type="gml:TimePositionType" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>The absence of a targetEpoch element implies that this transformation has time-dependent parameters. This is the standard configuration of a 14-parameter transformation whereby the latter 7 parameters are coefficients to a time parameter. A residual velocity map would also implicitly have time-dependent parameters. An example of a dynamic transformation that requires a targetEpoch is a 7-parameter transformation (implying no time-dependent parameters) between two dynamic frames, e.g. ITRF2014 to ITRF2008 at epochs 2014-01-01 and 2008-01-01 respectively.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="usesMethod" type="gml:OperationMethodType" minOccurs="1" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="GridTransformation" type="geo:GridTransformation"/>
+	<xs:complexType name="GridTransformation">
+		<xs:complexContent>
+			<xs:extension base="geo:DynamicTransformation">
+				<xs:sequence>
+					<xs:element ref="gml:RectifiedGridCoverage" minOccurs="1" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="InterpolatedDynamicValue" type="geo:InterpolatedDynamicValue"/>
+	<xs:complexType name="InterpolatedDynamicValue">
+		<xs:complexContent>
+			<xs:extension base="geo:DynamicFeature">
+				<xs:sequence>
+					<xs:element ref="geo:Status" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="history" minOccurs="1" maxOccurs="1">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element ref="geo:InterpolatedSingleValue" minOccurs="1" maxOccurs="unbounded"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="source" type="geo:InterpolatedValueSourcePropertyType" minOccurs="0" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="InterpolatedSingleValue" type="geo:InterpolatedSingleValue"/>
+	<xs:complexType name="InterpolatedSingleValue">
+		<xs:complexContent>
+			<xs:extension base="geo:AbstractTimeSlice">
+				<xs:sequence>
+					<xs:element ref="geo:Status" minOccurs="0" maxOccurs="1"/>
+					<xs:element ref="geo:Value" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="source" type="geo:InterpolatedValueSourcePropertyType" minOccurs="0" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="TerrestrialReferenceFrame" type="geo:TerrestrialReferenceFrame"/>
+	<xs:complexType name="TerrestrialReferenceFrame">
+		<xs:complexContent>
+			<xs:restriction base="gml:GeodeticDatumType">
+				<xs:sequence>
+					<xs:sequence minOccurs="1" maxOccurs="1">
+						<xs:element ref="gml:metaDataProperty" minOccurs="0" maxOccurs="unbounded"/>
+						<xs:element ref="gml:description" minOccurs="0" maxOccurs="1"/>
+						<xs:element ref="gml:descriptionReference" minOccurs="0" maxOccurs="1"/>
+						<xs:element ref="gml:identifier" minOccurs="1" maxOccurs="1"/>
+						<xs:element ref="gml:name" minOccurs="0" maxOccurs="unbounded"/>
+					</xs:sequence>
+					<xs:sequence minOccurs="1" maxOccurs="1">
+						<xs:element ref="gml:remarks" minOccurs="0" maxOccurs="1"/>
+					</xs:sequence>
+					<xs:sequence minOccurs="1" maxOccurs="1">
+						<xs:element ref="gml:realizationEpoch" minOccurs="1" maxOccurs="1">
+							<xs:annotation>
+								<xs:documentation>The realisation epoch is equivalent to the reference epoch for the reference frame. A dynamic terrestrial reference frame must contain a reference epoch.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element ref="gml:domainOfValidity" minOccurs="0" maxOccurs="1"/>
+						<xs:element ref="gml:scope" minOccurs="1" maxOccurs="unbounded"/>
+						<xs:element ref="gml:anchorDefinition" minOccurs="0" maxOccurs="1"/>
+					</xs:sequence>
+					<xs:sequence minOccurs="1" maxOccurs="1">
+						<xs:element ref="gml:primeMeridian" minOccurs="1" maxOccurs="1"/>
+						<xs:element ref="gml:ellipsoid" minOccurs="1" maxOccurs="1"/>
+					</xs:sequence>
+				</xs:sequence>
+				<xs:attribute name="ext_ref_13" use="required"/>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="TerrestrialReferenceFramePropertyType" type="geo:TerrestrialReferenceFramePropertyType"/>
+	<xs:complexType name="TerrestrialReferenceFramePropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="geo:TerrestrialReferenceFrame" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

@@ -1,0 +1,36 @@
+<?xml  version='1.0' encoding='utf-8' ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:element name="LevelCode" type="LevelCode"/>
+	<xs:complexType name="LevelCode">
+		<xs:sequence>
+			<xs:element name="high" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="low" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="medium" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="PurposeCode" type="PurposeCode"/>
+	<xs:complexType name="PurposeCode">
+		<xs:sequence>
+			<xs:element name="dataStream" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="other" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="service" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="siteLog" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="RBNDetails" type="RBNDetails"/>
+	<xs:complexType name="RBNDetails">
+		<xs:sequence>
+			<xs:element name="environmentalConditionsLevel" type="LevelCode" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="interferenceLevel" type="LevelCode" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="spoofingLevel" type="LevelCode" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="StateCode" type="StateCode"/>
+	<xs:complexType name="StateCode">
+		<xs:sequence>
+			<xs:element name="continuous" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="onFixStateChange" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="onRequest" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

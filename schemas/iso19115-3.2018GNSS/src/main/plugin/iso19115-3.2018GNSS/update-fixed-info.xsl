@@ -74,7 +74,7 @@
     <xsl:copy copy-namespaces="no">
       <xsl:apply-templates select="@*"/>
 
-      <xsl:call-template name="add-iso19115-3.2018GNSSGNSS-namespaces"/>
+      <xsl:call-template name="add-iso19115-3.2018GNSS-namespaces"/>
 
       <xsl:for-each select="mdb:metadataIdentifier">
         <xsl:copy>

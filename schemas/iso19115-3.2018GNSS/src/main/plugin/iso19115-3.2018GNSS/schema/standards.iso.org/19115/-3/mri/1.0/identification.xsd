@@ -1,14 +1,19 @@
-<?xml version="1.0" encoding="UTF-8"?><schema xmlns="http://www.w3.org/2001/XMLSchema" 
-  xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0" 
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+  xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
   xmlns:gmw="http://standards.iso.org/iso/19115/-3/gmw/1.0"
-  xmlns:lan="http://standards.iso.org/iso/19115/-3/lan/1.0" 
-  xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0" 
+  xmlns:lan="http://standards.iso.org/iso/19115/-3/lan/1.0"
+  xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0"
+  xmlns:geo="urn:xml-gov-au:icsm:egeodesy:0.5"
   xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0" elementFormDefault="qualified" targetNamespace="http://standards.iso.org/iso/19115/-3/mri/1.0" version="1.0">
 <!--  <include schemaLocation="mri.xsd"/>-->
+  <include schemaLocation="../../../../../extensions/GNSSDataTypes.XSD"/>
+  <include schemaLocation="../../../../../others/geodesyMLv05/dataStreams.xsd"/>
   <import namespace="http://standards.iso.org/iso/19115/-3/gco/1.0" schemaLocation="../../../../19115/-3/gco/1.0/gco.xsd"/>
   <import namespace="http://standards.iso.org/iso/19115/-3/gmw/1.0" schemaLocation="../../../../19115/-3/gmw/1.0/gmw.xsd"/>
   <import namespace="http://standards.iso.org/iso/19115/-3/lan/1.0" schemaLocation="../../../../19115/-3/lan/1.0/lan.xsd"/>
   <import namespace="http://standards.iso.org/iso/19115/-3/mcc/1.0" schemaLocation="../../../../19115/-3/mcc/1.0/mcc.xsd"/>
+  <import namespace="urn:xml-gov-au:icsm:egeodesy:0.5" schemaLocation="../../../../../others/geodesyMLv05/geodesyML.xsd"/>
   <!--XML Schema document created by ShapeChange - http://shapechange.net/-->
   <element name="DS_AssociationTypeCode" substitutionGroup="gco:CharacterString" type="gco:CodeListValue_Type">
     <annotation>
@@ -26,6 +31,13 @@
       <documentation>type of aggregation activity in which resources are related</documentation>
     </annotation>
   </element>
+  <complexType name="DS_InitiativeTypeCode_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mri:DS_InitiativeTypeCode"/>
+    </sequence>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="siteLog" type="geo:AbstractSiteLog"/>
   <complexType name="DS_InitiativeTypeCode_PropertyType">
     <sequence minOccurs="0">
       <element ref="mri:DS_InitiativeTypeCode"/>
@@ -83,6 +95,8 @@
         <sequence>
           <element minOccurs="0" name="defaultLocale" type="lan:PT_Locale_PropertyType"/>
           <element maxOccurs="unbounded" minOccurs="0" name="otherLocale" type="lan:PT_Locale_PropertyType"/>
+          <!--<element maxOccurs="unbounded" minOccurs="0" name="geo:siteLog" type="geo:AbstractSiteLog"/>
+          <element maxOccurs="unbounded" minOccurs="0" name="geo:dataStream" type="geo:dataStream"/>-->
           <element minOccurs="0" name="environmentDescription" type="gco:CharacterString_PropertyType">
             <annotation>
               <documentation>description of the resource in the producer's processing environment, including items such as the software, the computer operating system, file name, and the dataset size</documentation>
@@ -123,7 +137,7 @@
               <documentation>brief narrative summary of the content of the resource(s)</documentation>
             </annotation>
           </element>
-          <element minOccurs="0" name="purpose" type="gco:CharacterString_PropertyType">
+          <element name="purpose" type="gco:CharacterString_PropertyType" minOccurs="1" maxOccurs="1">
             <annotation>
               <documentation>summary of the intentions with which the resource(s) was developed</documentation>
             </annotation>
@@ -138,7 +152,7 @@
               <documentation>status of the resource(s)</documentation>
             </annotation>
           </element>
-          <element maxOccurs="unbounded" minOccurs="0" name="pointOfContact" type="mcc:Abstract_Responsibility_PropertyType">
+          <element maxOccurs="unbounded" minOccurs="1" name="pointOfContact" type="mcc:Abstract_Responsibility_PropertyType">
             <annotation>
               <documentation>identification of, and means of communication with, person(s) and organisation(s) associated with the resource(s)</documentation>
             </annotation>

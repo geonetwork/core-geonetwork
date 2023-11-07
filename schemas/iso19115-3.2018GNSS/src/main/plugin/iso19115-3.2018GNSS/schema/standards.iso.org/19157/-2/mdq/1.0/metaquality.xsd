@@ -1,7 +1,13 @@
-<?xml version="1.0" encoding="UTF-8"?><schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0" xmlns:mdq="http://standards.iso.org/iso/19157/-2/mdq/1.0" elementFormDefault="qualified" targetNamespace="http://standards.iso.org/iso/19157/-2/mdq/1.0" version="1.0">
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+        xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
+        xmlns:mdq="http://standards.iso.org/iso/19157/-2/mdq/1.0"
+        elementFormDefault="qualified"
+        targetNamespace="http://standards.iso.org/iso/19157/-2/mdq/1.0" version="1.0">
   <include schemaLocation="mdq.xsd"/>
   <import namespace="http://standards.iso.org/iso/19115/-3/gco/1.0" schemaLocation="../../../../19115/-3/gco/1.0/gco.xsd"/>
   <!--XML Schema document created by ShapeChange - http://shapechange.net/-->
+
   <element name="DQ_Confidence" substitutionGroup="mdq:AbstractDQ_Metaquality" type="mdq:DQ_Confidence_Type">
     <annotation>
       <documentation>trustworthiness of a data quality result</documentation>

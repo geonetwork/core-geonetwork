@@ -1,0 +1,447 @@
+<?xml  version='1.0' encoding='utf-8' ?>
+<xs:schema targetNamespace="urn:xml-gov-au:icsm:egeodesy:0.5"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:gml="http://www.opengis.net/gml/3.2"
+           xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/1.0"
+           xmlns:om="http://www.opengis.net/om/2.0"
+           xmlns:geo="urn:xml-gov-au:icsm:egeodesy:0.5" elementFormDefault="qualified" version="0.5">
+		<xs:include schemaLocation="./quality.xsd"/>
+	<xs:include schemaLocation="./commonTypes.xsd"/>
+	<xs:element name="AbstractOperand"/>
+	<xs:element name="AbstractResult"/>
+	<xs:element name="adjustmentValue" type="geo:Value">
+		<xs:annotation>
+			<xs:documentation>Used for returning information about the adjustment.</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="operand" type="geo:AnyOperandType"/>
+	<xs:element name="ReductionMethod" type="xs:string"/>
+	<xs:element name="result" type="geo:AnyResultType"/>
+	<xs:simpleType name="NodeConstraintEnumeration">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Free"/>
+			<xs:enumeration value="Constrained"/>
+			<xs:enumeration value="Constrained Vertical"/>
+			<xs:enumeration value="Constrained Horizontal"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="PositionDimensionEnumeration">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="1"/>
+			<xs:enumeration value="2"/>
+			<xs:enumeration value="3"/>
+			<xs:enumeration value="4"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="AbstractDefinitionEstimator" type="geo:AbstractDefinitionEstimator"/>
+	<xs:complexType name="AbstractDefinitionEstimator">
+		<xs:annotation>
+			<xs:documentation>Version 0.2.2: Mirrors the hierarchy of gml:AbstractMeasurementOperation for the purpose of the definition of estimators. Extends AbstractMeasurementOperation.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="geo:AbstractDefinitionOperation">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="AbstractDefinitionOperation" type="geo:AbstractDefinitionOperation"/>
+	<xs:complexType name="AbstractDefinitionOperation">
+		<xs:annotation>
+			<xs:documentation>Version 0.2.2: Mirrors the hierarchy of gml:AbstractCoordinateOperation for the purpose of the definition of estimators.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="gml:IdentifiedObjectType">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="AbstractDefinitionSource" type="geo:AbstractDefinitionSource"/>
+	<xs:complexType name="AbstractDefinitionSource" abstract="true">
+		<xs:annotation>
+			<xs:documentation>Encapsulates a reference to the operation definition used to produce resultant parameters that are gazetted in the gml:IdentifiedObject.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="geo:AbstractSource">
+				<xs:sequence>
+					<xs:element ref="geo:AbstractDefinitionOperation" minOccurs="1" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="AbstractDefinitionSourcePropertyType" type="geo:AbstractDefinitionSourcePropertyType"/>
+	<xs:complexType name="AbstractDefinitionSourcePropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="geo:AbstractDefinitionSource" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="AbstractMeasurementEstimator" type="geo:AbstractMeasurementEstimator"/>
+	<xs:complexType name="AbstractMeasurementEstimator">
+		<xs:annotation>
+			<xs:documentation>Version 0.2.2: Mirrors the hierarchy of gml:AbstractMeasurementOperation for the purpose of the definition of estimators. Extends AbstractMeasurementOperation.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="geo:AbstractMeasurementOperation">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="AbstractMeasurementOperation" type="geo:AbstractMeasurementOperation"/>
+	<xs:complexType name="AbstractMeasurementOperation">
+		<xs:annotation>
+			<xs:documentation>Version 0.2.2: Mirrors the hierarchy of gml:AbstractCoordinateOperation for the purpose of the definition of estimators.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="gml:IdentifiedObjectType">
+				<xs:sequence>
+					<xs:element name="procedure" type="om:OM_ProcessPropertyType" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element ref="geo:ReductionMethod" minOccurs="0" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="AbstractMeasurementSource" type="geo:AbstractMeasurementSource"/>
+	<xs:complexType name="AbstractMeasurementSource" abstract="true">
+		<xs:annotation>
+			<xs:documentation>Encapsulates measurement operation and the operands/results that define the operation event.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="geo:AbstractSource">
+				<xs:sequence>
+					<xs:element name="operation" type="geo:MeasurementOperationPropertyType" minOccurs="1" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="AbstractMeasurementSourcePropertyType" type="geo:AbstractMeasurementSourcePropertyType"/>
+	<xs:complexType name="AbstractMeasurementSourcePropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="geo:AbstractMeasurementSource" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="AbstractPositionEstimator" type="geo:AbstractPositionEstimator"/>
+	<xs:complexType name="AbstractPositionEstimator">
+		<xs:complexContent>
+			<xs:restriction base="gml:AbstractCoordinateOperationType">
+				<xs:sequence>
+					<xs:sequence minOccurs="1" maxOccurs="1">
+						<xs:element ref="gml:metaDataProperty" minOccurs="0" maxOccurs="unbounded"/>
+						<xs:element ref="gml:description" minOccurs="0" maxOccurs="1"/>
+						<xs:element ref="gml:descriptionReference" minOccurs="0" maxOccurs="1"/>
+						<xs:element ref="gml:identifier" minOccurs="1" maxOccurs="1"/>
+						<xs:element ref="gml:name" minOccurs="0" maxOccurs="unbounded"/>
+					</xs:sequence>
+					<xs:sequence minOccurs="1" maxOccurs="1">
+						<xs:element ref="gml:remarks" minOccurs="0" maxOccurs="1"/>
+					</xs:sequence>
+					<xs:sequence minOccurs="1" maxOccurs="1">
+						<xs:element ref="gml:operationVersion" minOccurs="0" maxOccurs="1"/>
+						<xs:element ref="gml:coordinateOperationAccuracy" minOccurs="0" maxOccurs="unbounded"/>
+						<xs:element ref="gml:domainOfValidity" minOccurs="0" maxOccurs="1"/>
+						<xs:element ref="gml:scope" minOccurs="1" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="AbstractPositionSource" type="geo:AbstractPositionSource"/>
+	<xs:complexType name="AbstractPositionSource" abstract="true">
+		<xs:annotation>
+			<xs:documentation>Encapsulates</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="geo:AbstractSource">
+				<xs:sequence>
+					<xs:element name="operation" type="gml:CoordinateOperationPropertyType" minOccurs="1" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="AbstractPositionSourcePropertyType" type="geo:AbstractPositionSourcePropertyType"/>
+	<xs:complexType name="AbstractPositionSourcePropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="geo:AbstractPositionSource" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="AbstractSource" type="geo:AbstractSource"/>
+	<xs:complexType name="AbstractSource" abstract="true">
+		<xs:annotation>
+			<xs:documentation>Encapsulates operands and results related to the event of running an operation. It is intended that this complex type is extended to include a reference to the particular operation type to be recorded.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="gml:AbstractFeatureType">
+				<xs:sequence>
+					<xs:element ref="gml:validTime" minOccurs="1" maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation>The valid time range or instant for this encapsulation.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="operands" minOccurs="0" maxOccurs="1">
+						<xs:complexType>
+							<xs:sequence maxOccurs="unbounded">
+								<xs:element ref="geo:AbstractOperand" minOccurs="1" maxOccurs="1"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="results" minOccurs="0" maxOccurs="1">
+						<xs:complexType>
+							<xs:sequence maxOccurs="unbounded">
+								<xs:element ref="geo:AbstractResult" minOccurs="1" maxOccurs="1"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="runBy" type="cit:CI_Responsibility_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="runDate" type="gml:TimePositionType" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>Date and time this operation was run.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:group ref="geo:RemarksGroup" minOccurs="1" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="AbstractSourcePropertyType" type="geo:AbstractSourcePropertyType"/>
+	<xs:complexType name="AbstractSourcePropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="geo:AbstractSource" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="adjustedMeasurement" type="geo:adjustedMeasurement"/>
+	<xs:complexType name="adjustedMeasurement">
+		<xs:sequence>
+			<xs:element name="adjustmentValue" type="geo:Value" minOccurs="1" maxOccurs="unbounded"/>
+			<xs:choice minOccurs="1" maxOccurs="1">
+				<xs:element name="atLine" type="gml:ReferenceType" minOccurs="1" maxOccurs="1"/>
+				<xs:element name="atPoint" type="gml:ReferenceType" minOccurs="1" maxOccurs="1"/>
+			</xs:choice>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="adjustedPosition" type="geo:adjustedPosition"/>
+	<xs:complexType name="adjustedPosition">
+		<xs:sequence>
+			<xs:element name="usesPosition" type="xs:string" minOccurs="1" maxOccurs="1"/>
+			<xs:group ref="geo:RemarksGroup" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="adjustedPositionQuality" type="geo:adjustedPositionQuality"/>
+	<xs:complexType name="adjustedPositionQuality">
+		<xs:sequence>
+			<xs:element name="atPosition" type="gml:ReferenceType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="toPosition" type="gml:ReferenceType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="value" type="geo:Value" minOccurs="1" maxOccurs="1"/>
+			<xs:group ref="geo:RemarksGroup" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="adjustmentMeasurement" type="geo:adjustmentMeasurement"/>
+	<xs:complexType name="adjustmentMeasurement">
+		<xs:sequence>
+			<xs:element name="aprioriScalar" type="geo:Value" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="usesMeasurement" type="xs:string" minOccurs="1" maxOccurs="1"/>
+			<xs:group ref="geo:RemarksGroup" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+		<xs:attribute name="include" use="optional" default="true" type="xs:boolean"/>
+	</xs:complexType>
+	<xs:element name="adjustmentPosition" type="geo:adjustmentPosition"/>
+	<xs:complexType name="adjustmentPosition">
+		<xs:annotation>
+			<xs:documentation>A reference to the Position record and a description of parameters to constrain.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element ref="geo:AbstractQuality" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>This quality element acts as a datum constraint and is typically a VCV or PU constraint of this position to the datum of the estimation/adjustment. This element would be used in conjunction with the constraint attribute set to "Constrained".</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="usesPosition" type="xs:string" minOccurs="1" maxOccurs="1"/>
+			<xs:group ref="geo:RemarksGroup" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+		<xs:attribute name="constraint" use="optional" type="geo:NodeConstraintEnumeration"/>
+	</xs:complexType>
+	<xs:element name="AnyOperandType" type="geo:AnyOperandType"/>
+	<xs:complexType name="AnyOperandType">
+		<xs:sequence>
+			<xs:element name="type" type="gml:CodeType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="value" type="xs:anyType" minOccurs="0" maxOccurs="1"/>
+			<xs:group ref="geo:RemarksGroup" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="AnyResultType" type="geo:AnyResultType"/>
+	<xs:complexType name="AnyResultType">
+		<xs:sequence>
+			<xs:element name="type" type="gml:CodeType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="value" type="xs:anyType" minOccurs="0" maxOccurs="1"/>
+			<xs:group ref="geo:RemarksGroup" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="DefinitionOperationPropertyType" type="geo:DefinitionOperationPropertyType"/>
+	<xs:complexType name="DefinitionOperationPropertyType">
+		<xs:annotation>
+			<xs:documentation>geo:DefinitionOperationPropertyType is a property type for association roles to a Definition operation, either referencing or containing the definition of that Definition operation.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence minOccurs="0">
+			<xs:element ref="geo:AbstractDefinitionOperation" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="GNSSBaselineReduction" type="geo:GNSSBaselineReduction"/>
+	<xs:complexType name="GNSSBaselineReduction">
+		<xs:annotation>
+			<xs:documentation>A GNSS baseline reduction source encapsulates the baseline reductuin operation with operand and result properties and configuration values.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="geo:AbstractMeasurementSource">
+				<xs:sequence>
+					<xs:element name="configureValue" type="geo:Value" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="status" type="gml:CodeType" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="version" type="xs:string" minOccurs="0" maxOccurs="1"/>
+					<xs:group ref="geo:RemarksGroup" minOccurs="1" maxOccurs="1"/>
+				</xs:sequence>
+				<xs:attributeGroup ref="geo:RequiredSRSReferenceGroup"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="InterpolatedValueSource" type="geo:InterpolatedValueSource"/>
+	<xs:complexType name="InterpolatedValueSource" abstract="true">
+		<xs:annotation>
+			<xs:documentation>Encapsulates the definition used to compute the interpolation, the gridded data operand and a result reference.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="geo:AbstractSource">
+				<xs:sequence>
+					<xs:element name="definition" type="gml:DictionaryEntryType" minOccurs="1" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="InterpolatedValueSourcePropertyType" type="geo:InterpolatedValueSourcePropertyType"/>
+	<xs:complexType name="InterpolatedValueSourcePropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="geo:InterpolatedValueSource" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="MeasurementOperationPropertyType" type="geo:MeasurementOperationPropertyType"/>
+	<xs:complexType name="MeasurementOperationPropertyType">
+		<xs:annotation>
+			<xs:documentation>geo:MeasurementOperationPropertyType is a property type for association roles to a measurement operation, either referencing or containing the definition of that measurement operation.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence minOccurs="0">
+			<xs:element ref="geo:AbstractMeasurementOperation" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="ObservationQualitySource" type="geo:ObservationQualitySource"/>
+	<xs:complexType name="ObservationQualitySource" abstract="true">
+		<xs:annotation>
+			<xs:documentation>Encapsulates the definition used to compute the interpolation, the gridded data operand and a result reference.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="geo:AbstractSource">
+				<xs:sequence>
+					<xs:element name="definition" type="gml:DictionaryEntryType" minOccurs="1" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="ObservationQualitySourcePropertyType" type="geo:ObservationQualitySourcePropertyType"/>
+	<xs:complexType name="ObservationQualitySourcePropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="geo:ObservationQualitySource" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="PositionEstimatorProcess" type="geo:PositionEstimatorProcess"/>
+	<xs:complexType name="PositionEstimatorProcess">
+		<xs:complexContent>
+			<xs:extension base="geo:AbstractPositionEstimator">
+				<xs:sequence>
+					<xs:element name="processStep" minOccurs="1" maxOccurs="unbounded">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="description" type="xs:string" minOccurs="1" maxOccurs="1"/>
+								<xs:element name="processReference" type="gml:ReferenceType" minOccurs="0" maxOccurs="unbounded"/>
+								<xs:element name="processValue" type="geo:Value" minOccurs="0" maxOccurs="unbounded"/>
+								<xs:group ref="geo:RemarksGroup" minOccurs="1" maxOccurs="1"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+				<xs:attribute name="dimension" use="optional" type="geo:PositionDimensionEnumeration"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="PositionSource" type="geo:PositionSource"/>
+	<xs:complexType name="PositionSource">
+		<xs:annotation>
+			<xs:documentation>A position source encapsulates any position estimation operation with source and destination references to operands, resultant parameters and configuration options.&#xD;
+                To encapsulate a geodetic adjustment, the least squares estimation operation would be the referenced along with operand positions and measurements.&#xD;
+            </xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="geo:AbstractPositionSource">
+				<xs:sequence>
+					<xs:element name="configureValue" type="geo:Value" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>In a geodetic adjustment a typical configureValue codeSpace would be the confidence interval for the t-test or f-test, or the computed degrees of freedom, number of measurements or positions, or estimator type.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="epoch" type="gml:TimePositionType" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="EstimationType" type="gml:CodeType" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>For clarity and identification purposes, some vendors may choose to denote the type of position estimation using a code supplied by a third party dictionary. A typical entry might be one of an enumeration of "Geodetic Adjustment", "National Adjustment" and "Campaign Adjustment" or could refer to a SINEX solution produced by Bernese "Daily Bernese SINEX" or "Weekly Bernese SINEX". This type is flexible enough to refer to both the business purpose for the estimation as well as infer the technique used in the estimation process.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element ref="Status" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="version" type="xs:string" minOccurs="0" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="ReferenceFrameSource" type="geo:ReferenceFrameSource"/>
+	<xs:complexType name="ReferenceFrameSource">
+		<xs:annotation>
+			<xs:documentation>A Reference Frame Source encapsulates the inversion operation with position operands and a 14 parameter transform as a result.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="geo:AbstractDefinitionSource">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="Transformation" type="geo:Transformation"/>
+	<xs:complexType name="Transformation">
+		<xs:annotation>
+			<xs:documentation>A Transformation encapsulates the coordinate operation with source and destination references to operand and result data.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="geo:AbstractPositionSource">
+				<xs:sequence>
+					<xs:element name="epoch" type="gml:TimePositionType" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="status" type="gml:CodeType" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="version" type="xs:string" minOccurs="0" maxOccurs="1"/>
+					<xs:group ref="geo:RemarksGroup" minOccurs="1" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="transformationMeasurement" type="geo:transformationMeasurement"/>
+	<xs:complexType name="transformationMeasurement">
+		<xs:sequence>
+			<xs:element ref="AbstractMeasurement" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="transformationPosition" type="geo:transformationPosition"/>
+	<xs:complexType name="transformationPosition">
+		<xs:sequence>
+			<xs:element ref="Position" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="transformedMeasurement" type="geo:transformedMeasurement"/>
+	<xs:complexType name="transformedMeasurement">
+		<xs:sequence>
+			<xs:element ref="AbstractMeasurement" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="transformedPosition" type="geo:transformedPosition"/>
+	<xs:complexType name="transformedPosition">
+		<xs:sequence>
+			<xs:element ref="Position" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

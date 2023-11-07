@@ -1,0 +1,98 @@
+<?xml  version='1.0' encoding='utf-8' ?>
+<xs:schema targetNamespace="urn:xml-gov-au:icsm:egeodesy:0.5"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:gco="http://www.isotc211.org/2005/gco"
+           xmlns:gml="http://www.opengis.net/gml/3.2"
+           xmlns:geo="urn:xml-gov-au:icsm:egeodesy:0.5" elementFormDefault="qualified" version="0.5">
+	<xs:import namespace="http://www.isotc211.org/2005/gco" schemaLocation="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/gco/gco.xsd"/>
+	<xs:element name="AbstractTimeSlice" type="geo:AbstractTimeSlice"/>
+	<xs:complexType name="AbstractTimeSlice" abstract="true">
+		<xs:complexContent>
+			<xs:extension base="gml:AbstractFeatureType">
+				<xs:sequence>
+					<xs:group ref="geo:TimeSliceProperties" minOccurs="1" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="countryCodeType" type="geo:countryCodeType"/>
+	<xs:complexType name="countryCodeType">
+		<xs:annotation>
+			<xs:documentation>&#xD;
+                Three-letter country code (ISO ISO 3166-1 alpha-3, https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3)&#xD;
+            </xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="gco:CodeListValue_Type">
+				<xs:sequence/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="DynamicFeature" type="geo:DynamicFeature"/>
+	<xs:complexType name="DynamicFeature">
+		<xs:sequence>
+			<xs:sequence minOccurs="1" maxOccurs="1">
+				<xs:element ref="gml:StandardObjectProperties" minOccurs="1" maxOccurs="1"/>
+			</xs:sequence>
+			<xs:sequence minOccurs="1" maxOccurs="1">
+				<xs:element ref="gml:boundedBy" minOccurs="0" maxOccurs="1"/>
+				<xs:element ref="gml:location" minOccurs="0" maxOccurs="1"/>
+			</xs:sequence>
+			<xs:sequence minOccurs="1" maxOccurs="1">
+				<xs:element ref="gml:validTime" minOccurs="0" maxOccurs="1"/>
+				<xs:element ref="gml:dataSource" minOccurs="0" maxOccurs="1"/>
+				<xs:element ref="gml:dataSourceReference" minOccurs="0" maxOccurs="1"/>
+			</xs:sequence>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="Instrument" type="geo:Instrument"/>
+	<xs:complexType name="Instrument">
+		<xs:complexContent>
+			<xs:extension base="gml:AbstractGMLType">
+				<xs:sequence>
+					<xs:element name="type" type="gml:CodeType" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:group ref="geo:RemarksGroup" minOccurs="1" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="InstrumentPropertyType" type="geo:InstrumentPropertyType"/>
+	<xs:complexType name="InstrumentPropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="geo:Instrument" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:group name="ChangeTracking">
+		<xs:annotation>
+			<xs:documentation>A convenience group to log changes made to each meta-data block.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence/>
+	</xs:group>
+	<xs:group name="RemarksGroup">
+		<xs:annotation>
+			<xs:documentation>A convenience group. This allows an application schema developer to include remarks and associated documents in a standard fashion.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="associatedDocument" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+      <!-- Change 'xs:anyType' xs:string' as GN would not display 'anyType' BD 30-10-23-->
+			<xs:element name="extension" type="xs:string" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="notes" type="xs:string" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:group>
+	<xs:group name="TimeSliceProperties">
+		<xs:sequence>
+			<xs:element ref="gml:validTime" minOccurs="1" maxOccurs="1"/>
+			<xs:element ref="gml:dataSource" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:group>
+	<xs:attributeGroup name="RequiredSRSReferenceGroup">
+		<xs:annotation>
+			<xs:documentation>The attribute group SRSReferenceGroup is a required reference to the CRS used by this geometry, with optional additional information to simplify the processing of the coordinates when a more complete definition of the CRS is not needed.&#xD;
+                In general the attribute srsName points to a CRS instance of gml:AbstractCoordinateReferenceSystem. For well-known references it is not required that the CRS description exists at the location the URI points to. &#xD;
+                If no srsName attribute is given, the CRS shall be specified as part of the larger context this geometry element is part of.</xs:documentation>
+		</xs:annotation>
+		<xs:attribute name="ext_ref8" use="optional"/>
+		<xs:attribute name="srsDimension" use="optional" type="xs:positiveInteger"/>
+		<xs:attribute name="srsName" use="required" type="xs:anyURI"/>
+	</xs:attributeGroup>
+</xs:schema>

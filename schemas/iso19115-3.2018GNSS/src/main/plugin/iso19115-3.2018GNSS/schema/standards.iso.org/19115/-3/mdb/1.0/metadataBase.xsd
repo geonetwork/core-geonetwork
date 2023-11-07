@@ -4,6 +4,7 @@
   <import namespace="http://standards.iso.org/iso/19157/-2/dqc/1.0" schemaLocation="../../../../19157/-2/dqc/1.0/dqc.xsd"/>
   <import namespace="http://standards.iso.org/iso/19115/-3/lan/1.0" schemaLocation="../../../../19115/-3/lan/1.0/lan.xsd"/>
   <import namespace="http://standards.iso.org/iso/19115/-3/mcc/1.0" schemaLocation="../../../../19115/-3/mcc/1.0/mcc.xsd"/>
+  <import namespace="urn:xml-gov-au:icsm:egeodesy:0.5" schemaLocation="../../../../../others/geodesyMLv05/geodesyML.xsd"/>
   <!--XML Schema document created by ShapeChange - http://shapechange.net/-->
   <element name="MD_Metadata" substitutionGroup="mcc:Abstract_Metadata" type="mdb:MD_Metadata_Type">
     <annotation>
@@ -66,6 +67,7 @@
           <element maxOccurs="unbounded" minOccurs="0" name="applicationSchemaInfo" type="mcc:Abstract_ApplicationSchemaInformation_PropertyType"/>
           <element minOccurs="0" name="metadataMaintenance" type="mcc:Abstract_MaintenanceInformation_PropertyType"/>
           <element maxOccurs="unbounded" minOccurs="0" name="acquisitionInformation" type="mcc:Abstract_AcquisitionInformation_PropertyType"/>
+          <element maxOccurs="unbounded" minOccurs="0" name="siteLog" type="geo:AbstractSiteLog"/>
         </sequence>
       </extension>
     </complexContent>

@@ -1,12 +1,93 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0" xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0" 
-  xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0" xmlns:srv="http://standards.iso.org/iso/19115/-3/srv/2.1" elementFormDefault="qualified" 
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0" xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0"
+  xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0" xmlns:srv="http://standards.iso.org/iso/19115/-3/srv/2.1" elementFormDefault="qualified"
   targetNamespace="http://standards.iso.org/iso/19115/-3/srv/2.1" version="2.0">
   <include schemaLocation="srv.xsd"/>
   <import namespace="http://standards.iso.org/iso/19115/-3/gco/1.0" schemaLocation="../../../../19115/-3/gco/1.0/gco.xsd"/>
   <import namespace="http://standards.iso.org/iso/19115/-3/mcc/1.0" schemaLocation="../../../../19115/-3/mcc/1.0/mcc.xsd"/>
   <import namespace="http://standards.iso.org/iso/19115/-3/mri/1.0" schemaLocation="../../../../19115/-3/mri/1.0/mri.xsd"/>
   <!--XML Schema document created by ShapeChange - http://shapechange.net/-->
+  <!-- GNSS additional SRV elements - BC 2/11/23 -->
+  <element name="StateCode" substitutionGroup="gco:CharacterString" type="gco:CodeListValue_Type">
+    <annotation>
+      <documentation>The type of update operation of the TTFF message (continuous, change of fix state, or on request)</documentation>
+    </annotation>
+  </element>
+  <complexType name="GNSS_FixUpdateType_PropertyTypw">
+    <sequence>
+      <element ref="srv:StateCode"/>
+    </sequence>
+  </complexType>
+  <element name="GNSS_PowerConsumption" type="srv:GNSS_PowerConsumption_PropertyType">
+    <annotation>
+      <documentation>The amount of power a device uses to provide a position</documentation>
+    </annotation>
+  </element>
+  <complexType name="GNSS_PowerConsumption_PropertyType">
+    <sequence>
+      <element name="consumptionAmount" type="gco:Real_PropertyType" minOccurs="0" maxOccurs="1"/>
+    </sequence>
+  </complexType>
+  <element name="GNSS_Robustness" substitutionGroup="gco:AbstractObject" type="srv:GNSS_Robustness_Type">
+    <annotation>
+      <documentation>The ability of the GNSS system to withstand signal interference (e.g. jamming and spoofing) </documentation>
+    </annotation>
+  </element>
+  <complexType name="GNSS_Robustness_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <element minOccurs="0" name="RBNDetails" type="srv:RBNDetails_PropertyType"/>
+          <element minOccurs="0" name="LevelCode" type="srv:LevelCode_PropertyType"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <element name="RBNDetails_type" substitutionGroup="gco:CharacterString" type="gco:CodeListValue_Type">
+  </element>
+  <complexType name="RBNDetails_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="srv:RBNDetails_type"/>
+    </sequence>
+  </complexType>
+  <element name="LevelCode_type" substitutionGroup="gco:CharacterString" type="gco:CodeListValue_Type">
+  </element>
+  <complexType name="LevelCode_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="srv:LevelCode_type"/>
+    </sequence>
+  </complexType>
+  <complexType name="GNSS_Robustness_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="srv:GNSS_Robustness"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+
+  <!--<element name="RBNDetails_Type" substitutionGroup="gco:CharacterString" type="gco:CodeListValue_Type">
+    <annotation>
+      <documentation></documentation>
+    </annotation>
+  </element>
+  <element name="LevelCode_Type" substitutionGroup="gco:CharacterString" type="gco:CodeListValue_Type">
+    <annotation>
+      <documentation></documentation>
+    </annotation>
+  </element>-->
+  <element name="GNSS_SafetyIntegrityLevel" type="srv:GNSS_SafetyIntegrityLevel_PropertyType">
+    <annotation>
+      <documentation>Abbreviation : SIL.&#xD;
+        &#xD;
+        Indication derived from the different tolerable hazard rates, taking into consideration the specified environment. For Hazard Rates of &lt; 10^-9 failures/hour, a 'SIL 4' process will be applicable</documentation>
+    </annotation>
+  </element>
+  <complexType name="GNSS_SafetyIntegrityLevel_PropertyType">
+    <sequence>
+      <element name="level" type="gco:Real_PropertyType" minOccurs="0" maxOccurs="1"/>
+    </sequence>
+  </complexType>
+  <!-- end BC add GNSS -->
   <element name="DCPList" substitutionGroup="gco:CharacterString" type="gco:CodeListValue_Type">
     <annotation>
       <documentation>class of information to which the referencing entity applies</documentation>
@@ -264,6 +345,12 @@
           <element maxOccurs="unbounded" minOccurs="0" name="containsOperations" type="srv:SV_OperationMetadata_PropertyType"/>
           <element maxOccurs="unbounded" minOccurs="0" name="operatesOn" type="mri:MD_DataIdentification_PropertyType"/>
           <element maxOccurs="unbounded" minOccurs="0" name="containsChain" type="srv:SV_OperationChainMetadata_PropertyType"/>
+          <!-- GNSS additional SRV elements - BC 2/1/23 -->
+          <element maxOccurs="1" minOccurs="0" name="fixUpdateType" type="srv:GNSS_FixUpdateType_PropertyTypw"/>
+          <element maxOccurs="1" minOccurs="0" name="powerConsumption" type="srv:GNSS_PowerConsumption_PropertyType"/>
+          <element maxOccurs="1" minOccurs="0" name="robustness" type="srv:GNSS_Robustness_PropertyType"/>
+          <element maxOccurs="1" minOccurs="0" name="safetyIntegrityLevel" type="srv:GNSS_SafetyIntegrityLevel_PropertyType"/>
+          <!-- End GNSS additional SRV elements -->
         </sequence>
       </extension>
     </complexContent>
@@ -275,4 +362,6 @@
     <attributeGroup ref="gco:ObjectReference"/>
     <attribute ref="gco:nilReason"/>
   </complexType>
+
+
 </schema>

@@ -1,0 +1,136 @@
+<?xml  version='1.0' encoding='utf-8' ?>
+<xs:schema targetNamespace="urn:xml-gov-au:icsm:egeodesy:0.5" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:geo="urn:xml-gov-au:icsm:egeodesy:0.5" xmlns:sopac="http://sopac.ucsd.edu/ns/geodesy/doc/igsSiteLog/2004" elementFormDefault="qualified" version="0.5">
+	<xs:import namespace="http://www.isotc211.org/2005/gco" schemaLocation="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/gco/gco.xsd"/>
+	<xs:element name="AbstractQuality">
+		<xs:annotation>
+			<xs:documentation>Abstract group for quality values.</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="DescriptiveQuality"/>
+	<xs:element name="NumericQualityList" type="geo:Value">
+		<xs:annotation>
+			<xs:documentation>A numeric list value for quality. This is often the type used to describe a VCV matrix or some other arbitrary list of values. To specify a VCV matrix of 2x2 or 3x3 dimension it is better to use VCV2D and VCV3D respectively.</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="NumericSingleQuality" type="geo:SingleValueType">
+		<xs:annotation>
+			<xs:documentation>A numeric value for quality. This is often the type used to describe Positional Uncertainty, Relative Uncertainty and Survey Uncertainty.</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="VCV2D" type="geo:VCV2x2Type">
+		<xs:annotation>
+			<xs:documentation>Upper triangle of a symmetric 2x2 VCV matrix defined as a list of three doubles.</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="VCV3D" type="geo:VCV3x3Type">
+		<xs:annotation>
+			<xs:documentation>Upper triangle of a symmetric 3x3 VCV matrix defined as a list of six doubles.</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="ConfidenceTypeEnumeration">
+		<xs:restriction base="gco:CharacterString">
+			<xs:enumeration value="1 sigma"/>
+			<xs:enumeration value="2 sigma"/>
+			<xs:enumeration value="3 sigma"/>
+			<xs:enumeration value="39.4%"/>
+			<xs:enumeration value="86.5%"/>
+			<xs:enumeration value="95%"/>
+			<xs:enumeration value="98.9%"/>
+			<xs:enumeration value="unknown"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="DescriptiveQualityType">
+		<xs:restriction base="gco:CharacterString">
+			<xs:enumeration value="Unknown">
+				<xs:annotation>
+					<xs:documentation>Unknown is used when the parameter values are provided without a source and without an estimate of quality.</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="Approximate">
+				<xs:annotation>
+					<xs:documentation>Approximate is used to describe parameters that have been manually or systematically guessed for the purpose of providing operands for a parameter estimation.</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<!--<xs:simpleType name="double">
+		<xs:restriction base="xs:double"/>
+	</xs:simpleType>-->
+	<xs:simpleType name="string">
+		<xs:restriction base="gco:CharacterString"/>
+	</xs:simpleType>
+	<xs:simpleType name="ValueTypes3">
+		<xs:union memberTypes="gco:CharacterString gml:doubleList3"/>
+	</xs:simpleType>
+	<xs:simpleType name="ValueTypes6">
+		<xs:union memberTypes="gco:CharacterString gml:doubleList6"/>
+	</xs:simpleType>
+	<xs:simpleType name="ValueTypeUnion">
+		<xs:union memberTypes="gco:CharacterString gml:doubleList"/>
+	</xs:simpleType>
+	<xs:element name="SingleValueType" type="geo:SingleValueType"/>
+	<xs:complexType name="SingleValueType">
+		<xs:annotation>
+			<xs:documentation>Format of a single value is as per the dictionary identified by the codeSpace attribute. e.g. "sp1v20_positional-uncertainty"</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="geo:double">
+				<xs:attribute name="codeSpace" use="optional" type="xs:anyURI"/>
+				<xs:attribute name="uomLabels" use="optional" type="gml:NCNameList"/>
+				<xs:attribute name="confidence" use="optional" type="geo:ConfidenceTypeEnumeration"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:element name="Value" type="geo:Value"/>
+	<xs:complexType name="Value">
+		<xs:annotation>
+			<xs:documentation>Format of values is as per the dictionary identified by the codeSpace attribute. e.g. "sp1v20_positional-uncertainty"</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="geo:ValueTypeUnion">
+				<xs:attribute name="axisLabels" use="optional" type="gml:NCNameList"/>
+				<xs:attribute name="codeSpace" use="required" type="xs:anyURI"/>
+				<xs:attribute name="uomLabels" use="optional" type="gml:NCNameList"/>
+				<xs:attribute name="confidence" use="optional" type="geo:ConfidenceTypeEnumeration"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:element name="VCV2x2Type" type="geo:VCV2x2Type"/>
+	<xs:complexType name="VCV2x2Type">
+		<xs:annotation>
+			<xs:documentation>A type for 2x2 VCV described as a list of double values.</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="geo:ValueTypes3">
+				<xs:attribute name="axisLabels" use="optional" type="gml:NCNameList"/>
+				<xs:attribute name="codeSpace" use="required" type="xs:anyURI"/>
+				<xs:attribute name="srsName" use="optional" type="xs:anyURI">
+					<xs:annotation>
+						<xs:documentation>Often the reference frame and coordinate system of the quality matrix matches that of the coordinates, but sometimes these figures can be provided in a difference coordinate system. For example, coordinates could be in geocentric cartesian coordinates, but the quality could be in topocentric (ENU) cartesian coordinates which thurs requires rotation and translation before propagating variance.</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="uomLabels" use="optional" type="gml:NCNameList"/>
+				<xs:attribute name="confidence" use="optional" type="geo:ConfidenceTypeEnumeration"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:element name="VCV3x3Type" type="geo:VCV3x3Type"/>
+	<xs:complexType name="VCV3x3Type">
+		<xs:annotation>
+			<xs:documentation>A type for 3x3 VCV described as a list of double values.</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="geo:ValueTypes6">
+				<xs:attribute name="axisLabels" use="optional" type="gml:NCNameList"/>
+				<xs:attribute name="codeSpace" use="required" type="xs:anyURI"/>
+				<xs:attribute name="srsName" use="optional" type="xs:anyURI">
+					<xs:annotation>
+						<xs:documentation>Often the reference frame and coordinate system of the quality matrix matches that of the coordinates, but sometimes these figures can be provided in a difference coordinate system. For example, coordinates could be in geocentric cartesian coordinates, but the quality could be in topocentric (ENU) cartesian coordinates which thurs requires rotation and translation before propagating variance.</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="uomLabels" use="optional" type="gml:NCNameList"/>
+				<xs:attribute name="confidence" use="optional" type="geo:ConfidenceTypeEnumeration"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+</xs:schema>

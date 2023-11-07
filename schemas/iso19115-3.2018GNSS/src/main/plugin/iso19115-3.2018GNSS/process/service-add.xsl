@@ -13,7 +13,7 @@ by adding a reference to the distribution section.
                 xmlns:lan="http://standards.iso.org/iso/19115/-3/lan/1.0"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                xmlns:gn-fn-iso19115-3.2018GNSS="http://geonetwork-opensource.org/xsl/functions/profiles/iso19115-3"
+                xmlns:gn-fn-iso19115-3.2018GNSS="http://geonetwork-opensource.org/xsl/functions/profiles/iso19115-3.2018GNSS"
                 xmlns:gn="http://www.fao.org/geonetwork"
                 exclude-result-prefixes="#all">
   <xsl:import href="dataset-add.xsl"/>
