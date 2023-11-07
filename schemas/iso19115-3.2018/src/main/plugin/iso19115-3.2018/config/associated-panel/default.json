@@ -450,6 +450,38 @@
         }
       },
       {
+        "group": "onlineDownload",
+        "label": "onlineDownloadOGCFeatures",
+        "copyLabel": "desc",
+        "icon": "fa gn-icon-onlinesrc",
+        "sources": {
+          "metadataStore": {
+            "label": "searchAservice",
+            "params": {
+              "serviceType": ["OGC API - Features"]
+            }
+          }
+        },
+        "process": "onlinesrc-add",
+        "fields": {
+          "url": {
+            "isMultilingual": false
+          },
+          "protocol": {
+            "value": "OGC API - Features",
+            "hidden": true,
+            "isMultilingual": false
+          },
+          "name": {},
+          "desc": {},
+          "function": {
+            "value": "download",
+            "hidden": true,
+            "isMultilingual": false
+          }
+        }
+      },
+      {
         "group": "localNetwork",
         "label": "localNetworkVectorFile",
         "copyLabel": "name",

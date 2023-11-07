@@ -229,6 +229,7 @@
     "onlineDownloadINSPIRE": "Download de serviço INSPIRE",
     "onlineDownloadINSPIREATOM": "Download from ATOM feed",
     "onlineDownloadWCS": "Download de serviço WCS",
+	"onlineDownloadOGCAPIFeatures": "OGC API Features Service",
     "onlineUse": "Use o recurso",
     "onlineUseFcats": "Recurso Modelo de Dados",
     "onlineUseFcats-help": "Modelo de dados (ou catálogo de feições) pode ser descrito diretamente no registo de metadados usando a guia conteúdo ou através da criação de um link para um documento (ex. pdf) a partir daqui.",

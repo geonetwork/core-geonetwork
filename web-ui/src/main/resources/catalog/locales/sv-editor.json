@@ -229,6 +229,7 @@
     "onlineDownloadINSPIRE": "Download service INSPIRE",
     "onlineDownloadINSPIREATOM": "Ladda ned från ATOM-flöde",
     "onlineDownloadWCS": "Download service WCS",
+	"onlineDownloadOGCAPIFeatures": "OGC API Features Service",
     "onlineUse": "Use the resource",
     "onlineUseFcats": "Resource data model",
     "onlineUseFcats-help": "Datamodellen (eller funktionskatalogen) kan beskrivas direkt i metadataposten med hjälp av innehållsfliken eller genom att skapa en länk till ett dokument (t.ex. pdf) härifrån.",

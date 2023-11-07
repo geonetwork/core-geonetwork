@@ -229,6 +229,7 @@
     "onlineDownloadINSPIRE": "Service de téléchargement INSPIRE",
     "onlineDownloadINSPIREATOM": "Télécharger depuis un flux ATOM",
     "onlineDownloadWCS": "Service de téléchargement WCS",
+    "onlineDownloadOGCAPIFeatures": "Service OGC API Features",
     "onlineUse": "Utiliser la ressource",
     "onlineUseFcats": "Modèle de données",
     "onlineUseFcats-help": "Le modèle de donnée (ou catalogue d'attributs) peut être décrit directement dans la fiche dans l'onglet 'contenu' ou bien en associant ici un document (eg. pdf).",

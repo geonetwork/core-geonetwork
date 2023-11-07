@@ -229,6 +229,7 @@
     "onlineDownloadINSPIRE": "INSPIRE 서비스 다운로드",
     "onlineDownloadINSPIREATOM": "Download from ATOM feed",
     "onlineDownloadWCS": "WCS 서비스 다운로드",
+	"onlineDownloadOGCAPIFeatures": "OGC API Features Service",
     "onlineUse": "자원 사용",
     "onlineUseFcats": "자원 데이터 모델",
     "onlineUseFcats-help": "데이터 모델(또는 피처 카탈로그)은 컨텐츠 탭을 사용하거나 여기에 문서(예. pdf) 연결을 생성하여 메타데이터 레코드에서 직접적으로 표현할수 있습니다. ",

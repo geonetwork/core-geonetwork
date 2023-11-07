@@ -229,6 +229,7 @@
     "onlineDownloadINSPIRE": "Stáhnout službu INSPIRE",
     "onlineDownloadINSPIREATOM": "Stáhnout z kanálu ATOM",
     "onlineDownloadWCS": "Stáhnout službu WCS",
+	"onlineDownloadOGCAPIFeatures": "OGC API Features Service",
     "onlineUse": "Použít zdroj",
     "onlineUseFcats": "Model datových zdrojů",
     "onlineUseFcats-help": "Datový model (nebo katalog funkcí) lze přímo popsat v záznamu o metadatech pomocí karty obsahu nebo vytvořit odkaz na dokument (např. Pdf).",

@@ -5080,6 +5080,7 @@ la non-évaluation</b>, dans le cadre de métadonnées INSPIRE]]></help>
             <help>Protocole de connexion utilisé, par exemple FTP.</help>
             <condition />
             <helper sort="true">
+              <option value="OGC API - Features">OGC API - Features</option>
               <option value="OGC:CSW">OGC-CSW Catalogue Service for the Web</option>
               <option value="OGC:KML">OGC-KML Keyhole Markup Language</option>
               <option value="OGC:GML">OGC-GML Geography Markup Language</option>
@@ -12137,6 +12138,7 @@ la non-évaluation</b>, dans le cadre de métadonnées INSPIRE]]></help>
             <help>Protocole de connexion utilisé, par exemple FTP.</help>
             <condition />
             <helper>
+              <option value="OGC API - Features">OGC API - Features</option>
               <option value="OGC:CSW">OGC-CSW Catalogue Service for the Web</option>
               <option value="OGC:KML">OGC-KML Keyhole Markup Language</option>
               <option value="OGC:GML">OGC-GML Geography Markup Language</option>

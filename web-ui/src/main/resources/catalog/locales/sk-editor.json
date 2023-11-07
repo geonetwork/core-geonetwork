@@ -229,6 +229,7 @@
     "onlineDownloadINSPIRE": "Stiahni službu INSPIRE",
     "onlineDownloadINSPIREATOM": "Download from ATOM feed",
     "onlineDownloadWCS": "Stiahni službu WCS",
+	"onlineDownloadOGCAPIFeatures": "OGC API Features Service",
     "onlineUse": "Použi zdroj",
     "onlineUseFcats": "Zdrojový údajový model",
     "onlineUseFcats-help": "Údajový model (alebo katalóg objektov) môže byť popísaný priamo v metaúdajovom zázname použitím obsahovej záložky alebo vytvorením linku v dokumente (napr. pdf).",

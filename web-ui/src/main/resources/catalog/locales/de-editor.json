@@ -229,6 +229,7 @@
     "onlineDownloadINSPIRE": "INSPIRE Download-Dienst",
     "onlineDownloadINSPIREATOM": "Download aus ATOM-Feed",
     "onlineDownloadWCS": "Lade WCS-Dienst herunter",
+	"onlineDownloadOGCAPIFeatures": "OGC API Features Service",
     "onlineUse": "Verwende die Ressource",
     "onlineUseFcats": "Datenmodell der Ressource",
     "onlineUseFcats-help": "Datenmodell (oder Objektkatalog) kann direkt im Metadatensatz im Tab Inhalt beschrieben werden oder hier durch die Verlinkung mit einem Dokument (z.B. PDF). ",

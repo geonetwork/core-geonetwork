@@ -229,6 +229,7 @@
     "onlineDownloadINSPIRE": "INSPIRE-latauspalvelu",
     "onlineDownloadINSPIREATOM": "Download from ATOM feed",
     "onlineDownloadWCS": "WCS-latauspalvelu",
+	"onlineDownloadOGCAPIFeatures": "OGC API Features Service",
     "onlineUse": "Käytä resurssia",
     "onlineUseFcats": "Resurssin tietomalli",
     "onlineUseFcats-help": "Tietomalli (tai kohdeluettelo) voidaan kuvailla metatietodokumentin sisältö-osiota ta luomalla tässä linkki dokumenttiin (esim. pdf)",

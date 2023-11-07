@@ -229,6 +229,7 @@
     "onlineDownloadINSPIRE": "Download Service INSPIRE",
     "onlineDownloadINSPIREATOM": "Download uit ATOM feed",
     "onlineDownloadWCS": "Download Service WCS (Web Coverage Service)",
+	"onlineDownloadOGCAPIFeatures": "OGC API Features Service",
     "onlineUse": "Gebruik de bron",
     "onlineUseFcats": "Data model van de bron",
     "onlineUseFcats-help": "Data model (feature catalog) kan direct in de metadata beschreven worden in het \"inhoud\" tabblad of in een apart document (bv pdf) dat gekoppeld wordt",

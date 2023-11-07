@@ -229,6 +229,7 @@
     "onlineDownloadINSPIRE": "下载服务INSPIRE",
     "onlineDownloadINSPIREATOM": "Download from ATOM feed",
     "onlineDownloadWCS": "下载服务WCS",
+	"onlineDownloadOGCAPIFeatures": "OGC API Features Service",
     "onlineUse": "使用资源",
     "onlineUseFcats": "资源数据模型",
     "onlineUseFcats-help": "数据模型（或要素目录）可以使用内容选项卡直接在元数据记录中描述，也可以从此处创建一个文档链接（例如pdf）。",

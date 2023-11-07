@@ -229,6 +229,7 @@
     "onlineDownloadINSPIRE": "Hlaða niður þjónustu INSPIRE",
     "onlineDownloadINSPIREATOM": "Download from ATOM feed",
     "onlineDownloadWCS": "Hlaða niður þjónustu WCS",
+	"onlineDownloadOGCAPIFeatures": "OGC API Features Service",
     "onlineUse": "Nota gögnin",
     "onlineUseFcats": "Gagnamódel tilfanga",
     "onlineUseFcats-help": "Gagnamódeli (eða fitjuskrá) gæti verið lýst beint í lýsigagnafærslunni með því að nota flipann með innihaldinu eða með því að búa til tengil héðan á skjalið (t.d. pdf).",

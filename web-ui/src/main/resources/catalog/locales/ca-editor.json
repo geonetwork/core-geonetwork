@@ -229,6 +229,7 @@
     "onlineDownloadINSPIRE": "Servei de descàrrega INSPIRE",
     "onlineDownloadINSPIREATOM": "Download from ATOM feed",
     "onlineDownloadWCS": "Servei de descàrrega WCS",
+	"onlineDownloadOGCAPIFeatures": "OGC API Features Service",
     "onlineUse": "Utilitza el recurs",
     "onlineUseFcats": "Model de dades del recurs",
     "onlineUseFcats-help": "El model de dades (o catàleg d'objectes geogràfics) podria descriure's directament al registre de metadades utilitzant la pestanya de contingut, o bé creant un enllaç a un document (per exemple un pdf) des d'aquí.",
