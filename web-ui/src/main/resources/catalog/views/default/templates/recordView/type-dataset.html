@@ -71,6 +71,7 @@
     />
   </div>
   <!-- /.col-md-8 gn-record -->
+
   <div
     class="gn-md-side"
     data-ng-class="[].concat(mdView.current.record.related.datasets, mdView.current.record.related.services).length > 3 ? 'col-md-12' : 'col-md-4'"
@@ -89,6 +90,14 @@
         </ul>
       </div>
     </div>
+
+    <div
+      class="gn-contact-col-1"
+      data-ng-if="mdView.current.record.contactForDistribution"
+      data-gn-metadata-contacts="mdView.current.record.contactForDistribution"
+      data-gn-mode="default"
+      data-layout="icon"
+    />
 
     <div
       data-ng-if="mdView.current.record.related.uuids"
