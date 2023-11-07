@@ -438,7 +438,9 @@ public class EsHTTPProxy {
         // Build filter node
         String esFilter = buildQueryFilter(context,
             "",
-            esQuery.toString().contains("\"draft\":"));
+            esQuery.toString().contains("\"draft\":")
+                || esQuery.toString().contains("+draft:")
+                || esQuery.toString().contains("-draft:"));
         JsonNode nodeFilter = objectMapper.readTree(esFilter);
 
         JsonNode queryNode = esQuery.get("query");

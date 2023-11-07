@@ -37,17 +37,21 @@
           metadata: "="
         },
         link: function (scope) {
+          if (!scope.metadata) {
+            return;
+          }
+          scope.type = scope.metadata.draft === "e" ? "y" : "e";
           var query = {
             _source: {
               include: ["id", "uuid", "draft", "isTemplate", "valid"]
             },
-            size: 10,
+            size: 1,
             query: {
               bool: {
                 must: [
                   { terms: { uuid: [scope.metadata.uuid] } },
                   { terms: { isTemplate: ["y", "n"] } },
-                  { terms: { draft: ["y"] } }
+                  { terms: { draft: [scope.type] } }
                 ]
               }
             }
@@ -55,12 +59,15 @@
 
           $http.post("../api/search/records/_search", query).then(function (r) {
             r.data.hits.hits.forEach(function (r) {
-              scope.draft = new Metadata(r);
+              scope.record = new Metadata(r);
+              scope.recordIsDraft = scope.record.draft === "y";
+              scope.label = scope.recordIsDraft ? "seeDraft" : "seeNoDraft";
+              scope.title = scope.recordIsDraft ? "draft" : "approvedRecord";
             });
           });
         },
         templateUrl:
-          "../../catalog/components/utility/" + "partials/draftvalidationwidget.html"
+          "../../catalog/components/utility/partials/draftvalidationwidget.html"
       };
     }
   ]);
