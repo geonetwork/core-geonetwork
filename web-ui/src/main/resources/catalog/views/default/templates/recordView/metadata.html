@@ -10,8 +10,8 @@
 </div>
 
 <div
-  data-ng-init="mdLanguages = [mdView.current.record.mainLanguage].concat(mdView.current.record.otherLanguage || [])"
-  data-aang-if="mdLanguages.length > 0"
+  data-ng-init="mdLanguages = mdView.current.record.getMetadataLanguages()"
+  data-ng-show="mdLanguages.length > 0"
   class="gn-margin-bottom flex-row"
 >
   <span class="badge badge-rounded" title="{{'language' | translate}}">
@@ -20,7 +20,7 @@
   <div>
     <h3 data-translate="">metadataLanguage</h3>
     <ul class="gn-comma-list">
-      <li data-ng-repeat="l in mdLanguages | unique">{{l | translate}}</li>
+      <li data-ng-repeat="l in mdLanguages">{{l | translate}}</li>
     </ul>
   </div>
 </div>
