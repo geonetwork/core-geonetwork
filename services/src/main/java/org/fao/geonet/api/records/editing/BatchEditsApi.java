@@ -37,6 +37,7 @@ import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
+import org.fao.geonet.api.UserProfileUtil;
 import org.fao.geonet.api.exception.NotAllowedException;
 import org.fao.geonet.api.processing.report.IProcessingReport;
 import org.fao.geonet.api.processing.report.SimpleMetadataProcessingReport;
@@ -191,7 +192,7 @@ public class BatchEditsApi implements ApplicationContextAware {
 
 
         ServiceContext serviceContext = ApiUtils.createServiceContext(request);
-        checkUserProfileToBatchEditMetadata(serviceContext.getUserSession());
+        UserProfileUtil.checkUserProfileLevel(serviceContext.getUserSession(), settingManager, roleHierarchy, Settings.METADATA_BATCH_EDITING_ACCESS_LEVEL, Profile.Editor, "batch edit metadata");
         final Set<String> setOfUuidsToEdit;
         if (uuids == null) {
             SelectionManager selectionManager =
