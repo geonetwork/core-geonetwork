@@ -893,10 +893,8 @@
         data-gn-field-highlight="">
         <label class="col-sm-2 control-label"
                data-gn-field-tooltip="{$schema}|{$qualifiedName}|{$parentName}|">
-          <xsl:if test="normalize-space($label) != ''">
-            <xsl:value-of select="$label"/>
-          </xsl:if>
-          &#160;
+          <xsl:value-of select="if (normalize-space($label) != '')
+                                then $label else '&#160;'"/>
         </label>
         <div class="col-sm-9">
 
