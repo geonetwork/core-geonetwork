@@ -453,7 +453,10 @@ table.gn-resultview {
     .gn-card {
       min-width: 150px;
       width: calc(~"(100% / 4) - 20px");
-      @media (max-width: @screen-sm-min) {
+      @media (max-width: 1440px) {
+        width: calc(~"(100% / 3) - 20px");
+      }
+      @media (max-width: @screen-lg-min) {
         width: calc(~"(100% / 2) - 20px");
       }
       @media (max-width: @screen-xs) {
