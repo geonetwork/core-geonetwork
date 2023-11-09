@@ -40,7 +40,6 @@ import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
-import org.fao.geonet.api.UserProfileUtil;
 import org.fao.geonet.api.exception.NotAllowedException;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.api.processing.report.SimpleMetadataProcessingReport;
@@ -85,6 +84,7 @@ import org.fao.geonet.repository.MetadataDraftRepository;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
+import org.fao.geonet.util.UserUtil;
 import org.fao.geonet.utils.FilePathChecker;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
@@ -234,7 +234,7 @@ public class MetadataInsertDeleteApi {
 
         UserSession userSession = ApiUtils.getUserSession(request.getSession());
         if (accessMan.isVisibleToAll(String.valueOf(metadata.getId())) ) {
-            UserProfileUtil.checkUserProfileLevel(userSession, settingManager, roleHierarchy, Settings.METADATA_PUBLISHED_DELETE_USERPROFILE, Profile.Editor, "delete published metadata");
+            UserUtil.checkUserProfileLevel(userSession, settingManager, roleHierarchy, Settings.METADATA_PUBLISHED_DELETE_USERPROFILE, Profile.Editor, "delete published metadata");
         }
 
         store.delResources(context, metadata.getUuid(), approved);
@@ -281,7 +281,7 @@ public class MetadataInsertDeleteApi {
 
                 if (accessMan.isVisibleToAll(String.valueOf(metadata.getId())) ) {
                     try {
-                        UserProfileUtil.checkUserProfileLevel(userSession, settingManager, roleHierarchy, Settings.METADATA_PUBLISHED_DELETE_USERPROFILE, Profile.Editor, "delete published metadata");
+                        UserUtil.checkUserProfileLevel(userSession, settingManager, roleHierarchy, Settings.METADATA_PUBLISHED_DELETE_USERPROFILE, Profile.Editor, "delete published metadata");
                     } catch (NotAllowedException ex) {
                         report.addMetadataInfos(metadata, ex.getMessage());
                         continue;
@@ -351,7 +351,7 @@ public class MetadataInsertDeleteApi {
         SimpleMetadataProcessingReport report = new SimpleMetadataProcessingReport();
 
         UserSession userSession = ApiUtils.getUserSession(request.getSession());
-        UserProfileUtil.checkUserProfileLevel(userSession, settingManager, roleHierarchy, Settings.METADATA_IMPORT_USERPROFILE, Profile.Editor, "import metadata");
+        UserUtil.checkUserProfileLevel(userSession, settingManager, roleHierarchy, Settings.METADATA_IMPORT_USERPROFILE, Profile.Editor, "import metadata");
 
 
         boolean isMdWorkflowEnable = settingManager.getValueAsBool(Settings.METADATA_WORKFLOW_ENABLE);
@@ -628,7 +628,7 @@ public class MetadataInsertDeleteApi {
         if (file != null) {
             ServiceContext context = ApiUtils.createServiceContext(request);
 
-            UserProfileUtil.checkUserProfileLevel(context.getUserSession(), settingManager, roleHierarchy, Settings.METADATA_IMPORT_USERPROFILE, Profile.Editor, "import metadata");
+            UserUtil.checkUserProfileLevel(context.getUserSession(), settingManager, roleHierarchy, Settings.METADATA_IMPORT_USERPROFILE, Profile.Editor, "import metadata");
 
             for (MultipartFile f : file) {
                 if (MEFLib.isValidArchiveExtensionForMEF(f.getOriginalFilename())) {

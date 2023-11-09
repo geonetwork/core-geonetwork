@@ -35,7 +35,6 @@ import jeeves.services.ReadWriteController;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
-import org.fao.geonet.api.UserProfileUtil;
 import org.fao.geonet.api.processing.report.MetadataReplacementProcessingReport;
 import org.fao.geonet.api.processing.report.XsltMetadataProcessingReport;
 import org.fao.geonet.domain.AbstractMetadata;
@@ -47,6 +46,7 @@ import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
+import org.fao.geonet.util.UserUtil;
 import org.fao.geonet.utils.Diff;
 import org.fao.geonet.utils.DiffType;
 import org.fao.geonet.utils.Log;
@@ -186,7 +186,7 @@ public class DatabaseProcessApi {
 
         try {
             ServiceContext serviceContext = ApiUtils.createServiceContext(request);
-            UserProfileUtil.checkUserProfileLevel(serviceContext.getUserSession(), settingManager, roleHierarchy, Settings.METADATA_BATCH_EDITING_ACCESS_LEVEL, Profile.Editor, "batch edit metadata");
+            UserUtil.checkUserProfileLevel(serviceContext.getUserSession(), settingManager, roleHierarchy, Settings.METADATA_BATCH_EDITING_ACCESS_LEVEL, Profile.Editor, "batch edit metadata");
 
             Set<String> records = ApiUtils.getUuidsParameterOrSelection(uuids, bucket, session);
 
@@ -321,7 +321,7 @@ public class DatabaseProcessApi {
 
         try {
             ServiceContext serviceContext = ApiUtils.createServiceContext(request);
-            UserProfileUtil.checkUserProfileLevel(serviceContext.getUserSession(), settingManager, roleHierarchy, Settings.METADATA_BATCH_EDITING_ACCESS_LEVEL, Profile.Editor, "batch edit metadata");
+            UserUtil.checkUserProfileLevel(serviceContext.getUserSession(), settingManager, roleHierarchy, Settings.METADATA_BATCH_EDITING_ACCESS_LEVEL, Profile.Editor, "batch edit metadata");
             Set<String> records = ApiUtils.getUuidsParameterOrSelection(uuids, bucket, session);
             UserSession userSession = ApiUtils.getUserSession(httpSession);
 

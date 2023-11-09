@@ -31,7 +31,6 @@ import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
-import org.fao.geonet.api.UserProfileUtil;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.api.exception.WebApplicationException;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
@@ -43,6 +42,7 @@ import org.fao.geonet.kernel.schema.editorconfig.Editor;
 import org.fao.geonet.kernel.schema.labels.Codelists;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
+import org.fao.geonet.util.UserUtil;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.json.JSONObject;
@@ -163,7 +163,7 @@ public class StandardsApi implements ApplicationContextAware {
     ) throws Exception {
 
         ServiceContext serviceContext = ApiUtils.createServiceContext(request);
-        UserProfileUtil.checkUserProfileLevel(serviceContext.getUserSession(), settingManager, roleHierarchy, Settings.METADATA_BATCH_EDITING_ACCESS_LEVEL, Profile.Editor, "batch edit metadata");
+        UserUtil.checkUserProfileLevel(serviceContext.getUserSession(), settingManager, roleHierarchy, Settings.METADATA_BATCH_EDITING_ACCESS_LEVEL, Profile.Editor, "batch edit metadata");
 
         List<String> listOfRequestedSchema = schema == null ? new ArrayList<String>() : Arrays.asList(schema);
         Set<String> listOfSchemas = schemaManager.getSchemas();
