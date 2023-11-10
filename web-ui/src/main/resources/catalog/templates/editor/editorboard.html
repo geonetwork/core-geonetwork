@@ -208,7 +208,7 @@
               href="#/batchedit"
               class="btn btn-default btn-block gn-margin-bottom"
               title="{{'batchEditing' | translate}}"
-              ng-if="user.isEditorOrMore()"
+              ng-if="user.canBatchEditMetadata()"
             >
               <i class="fa fa-fw fa-pencil" /><span
                 class="hidden-xs hidden-sm hidden-md"
