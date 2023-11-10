@@ -70,7 +70,7 @@ public class UserUtil {
      * @param defaultProfile default configuration profile is no configuration found
      * @param errorText error text to the exception
      */
-    public static void checkUserProfileLevel (UserSession userSession, SettingManager settingManager, RoleHierarchy roleHierarchy, String settingConfigPath, Profile defaultProfile, String errorText) {
+    public static void checkUserProfileLevel(UserSession userSession, SettingManager settingManager, RoleHierarchy roleHierarchy, String settingConfigPath, Profile defaultProfile, String errorText) {
         if (userSession.getProfile() != Profile.Administrator) {
             String allowedUserProfileFromConfiguration =
                 StringUtils.defaultIfBlank(settingManager.getValue(settingConfigPath), defaultProfile.toString());
