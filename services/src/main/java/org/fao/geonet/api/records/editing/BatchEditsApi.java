@@ -157,8 +157,8 @@ public class BatchEditsApi implements ApplicationContextAware {
 
 
       try (ServiceContext serviceContext = ApiUtils.createServiceContext(request)) {
-          checkUserProfileToBatchEditMetadata(serviceContext.getUserSession());
-          final Set<String> setOfUuidsToEdit;
+        UserUtil.checkUserProfileLevel(serviceContext.getUserSession(), settingManager, roleHierarchy, Settings.METADATA_BATCH_EDITING_ACCESS_LEVEL, Profile.Editor, "batch edit metadata");
+        final Set<String> setOfUuidsToEdit;
         if (uuids == null) {
             SelectionManager selectionManager =
                 SelectionManager.getManager(serviceContext.getUserSession());

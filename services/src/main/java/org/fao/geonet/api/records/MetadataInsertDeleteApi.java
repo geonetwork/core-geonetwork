@@ -126,7 +126,16 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.ResourceBundle;
+import java.util.Set;
+import java.util.UUID;
 
 import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_OPS;
 import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_TAG;
@@ -235,7 +244,7 @@ public class MetadataInsertDeleteApi {
 
         UserSession userSession = ApiUtils.getUserSession(request.getSession());
         if (accessMan.isVisibleToAll(String.valueOf(metadata.getId())) ) {
-            checkUserProfileToDeletePublishedMetadata(userSession);
+            UserUtil.checkUserProfileLevel(userSession, settingManager, roleHierarchy, Settings.METADATA_PUBLISHED_DELETE_USERPROFILE, Profile.Editor, "delete published metadata");
         }
 
         store.delResources(context, metadata.getUuid(), approved);
@@ -287,7 +296,7 @@ public class MetadataInsertDeleteApi {
 
                 if (accessMan.isVisibleToAll(String.valueOf(metadata.getId())) ) {
                     try {
-                        checkUserProfileToDeletePublishedMetadata(userSession);
+                        UserUtil.checkUserProfileLevel(userSession, settingManager, roleHierarchy, Settings.METADATA_PUBLISHED_DELETE_USERPROFILE, Profile.Editor, "delete published metadata");
                     } catch (NotAllowedException ex) {
                         report.addMetadataInfos(metadata, "The user has no permissions to delete published metadata.");
                         continue;
@@ -359,7 +368,7 @@ public class MetadataInsertDeleteApi {
         SimpleMetadataProcessingReport report = new SimpleMetadataProcessingReport();
 
         UserSession userSession = ApiUtils.getUserSession(request.getSession());
-        checkUserProfileToImportMetadata(userSession);
+        UserUtil.checkUserProfileLevel(userSession, settingManager, roleHierarchy, Settings.METADATA_IMPORT_USERPROFILE, Profile.Editor, "import metadata");
 
         if (xml != null) {
             Element element = null;
@@ -618,7 +627,7 @@ public class MetadataInsertDeleteApi {
         SimpleMetadataProcessingReport report = new SimpleMetadataProcessingReport();
         if (file != null) {
           try (ServiceContext context = ApiUtils.createServiceContext(request)) {
-            checkUserProfileToImportMetadata(context.getUserSession());
+            UserUtil.checkUserProfileLevel(context.getUserSession(), settingManager, roleHierarchy, Settings.METADATA_IMPORT_USERPROFILE, Profile.Editor, "import metadata");
 
             for (MultipartFile f : file) {
                 if (MEFLib.isValidArchiveExtensionForMEF(f.getOriginalFilename())) {
@@ -1011,39 +1020,4 @@ public class MetadataInsertDeleteApi {
       }
     }
 
-    /**
-     * Checks if the user profile is allowed to import metadata.
-     *
-     * @param userSession
-     */
-    private void checkUserProfileToImportMetadata(UserSession userSession) {
-        if (userSession.getProfile() != Profile.Administrator) {
-            String allowedUserProfileToImportMetadata =
-                StringUtils.defaultIfBlank(settingManager.getValue(Settings.METADATA_IMPORT_USERPROFILE), Profile.Editor.toString());
-
-            // Is the user profile is higher than the profile allowed to import metadata?
-            if (!UserUtil.hasHierarchyRole(allowedUserProfileToImportMetadata, this.roleHierarchy)) {
-                throw new NotAllowedException("The user has no permissions to import metadata.");
-            }
-        }
-
-    }
-
-    /**
-     * Checks if the user profile is allowed to import metadata.
-     *
-     * @param userSession
-     */
-    private void checkUserProfileToDeletePublishedMetadata(UserSession userSession) {
-        if (userSession.getProfile() != Profile.Administrator) {
-            String allowedUserProfileToImportMetadata =
-                StringUtils.defaultIfBlank(settingManager.getValue(Settings.METADATA_PUBLISHED_DELETE_USERPROFILE), Profile.Editor.toString());
-
-            // Is the user profile is higher than the profile allowed to import metadata?
-            if (!UserUtil.hasHierarchyRole(allowedUserProfileToImportMetadata, this.roleHierarchy)) {
-                throw new NotAllowedException("The user has no permissions to delete published metadata.");
-            }
-        }
-
-    }
 }

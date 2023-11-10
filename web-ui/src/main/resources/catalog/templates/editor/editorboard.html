@@ -64,7 +64,7 @@
                   <i class="fa fa-fw fa-bookmark"/><span class="hidden-xs hidden-sm hidden-md btn-truncate-lg" data-translate="">directoryManager</span>
                 </a>
                 <a href="#/batchedit" class="btn btn-default btn-truncate" title="{{'batchEditing' | translate}}"
-                  ng-if="user.isEditorOrMore()">
+                  ng-if="user.canBatchEditMetadata()">
                   <i class="fa fa-fw fa-pencil"/><span class="hidden-xs hidden-sm hidden-md" data-translate="">batchEditing</span>
                 </a>
                 <a href="#/accessManager" class="btn btn-default" title="{{'accessManager' | translate}}"
