@@ -221,6 +221,7 @@
     "groupNameMaxlength": "Group name can not exceed 255 characters!",
     "categoryNameMaxlength": "Category name can not exceed 255 characters!",
     "portalNameMaxlength": "Portal name can not exceed 255 characters!",
+    "portalIdMaxlength": "Portal identifier can not exceed 255 characters!",
     "groupDescriptionMaxlength": "Group description can not exceed 255 characters!",
     "groupEmailMaxlength": "Group email can not exceed 128 characters!",
     "pol": "Polski",

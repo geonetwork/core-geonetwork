@@ -74,7 +74,7 @@
             type="button"
             class="btn btn-primary pull-right"
             data-ng-hide="!user.isUserAdminOrMore()"
-            data-ng-disabled="!gnGroupEdit.$valid && !gnGroupEdit.dirty"
+            data-ng-disabled="!gnGroupEdit.$valid || !gnGroupEdit.$dirty"
             data-ng-click="saveGroup('#gn-group-edit', '#group-logo-upload')"
             id="gn-btn-group-save"
           >

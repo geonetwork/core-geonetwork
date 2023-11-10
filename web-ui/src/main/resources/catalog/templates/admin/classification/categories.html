@@ -74,7 +74,7 @@
             <button
               type="button"
               class="btn btn-primary pull-right"
-              data-ng-disabled="!gnCategoryFrom.$valid && !gnCategoryFrom.$dirty"
+              data-ng-disabled="!gnCategoryFrom.$valid || !gnCategoryFrom.$dirty"
               data-ng-click="saveCategory()"
             >
               <span class="fa fa-save"></span> {{"saveCategory"|translate}}

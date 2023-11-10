@@ -74,7 +74,7 @@
     <div data-gn-need-help="portal-configuration"></div>
   </div>
 
-  <div class="col-lg-8" data-ng-if="source">
+  <div class="col-lg-8" data-ng-hide="!source">
     <div class="panel panel-default">
       <div class="panel-heading">
         {{source.name}} ({{('source-' + source.type) | translate}})
@@ -82,7 +82,7 @@
           <button
             type="button"
             class="btn btn-primary pull-right"
-            data-ng-disabled="source.type === 'subportal' && !gnSourceForm.$valid && !gnSourceForm.dirty"
+            data-ng-disabled="source.type === 'subportal' && (!gnSourceForm.$valid || !gnSourceForm.$dirty)"
             data-ng-click="updateSource()"
           >
             <i class="fa fa-floppy-o"></i>&nbsp;
@@ -123,6 +123,15 @@
                 data-ng-model="source.uuid"
               />
               <p class="help-block" data-translate="">sourceUuid-help</p>
+
+              <p class="help-block">
+                <span
+                  class="error"
+                  data-ng-show="gnSourceForm.sourceId.$error.maxlength"
+                  data-translate=""
+                  >portalIdMaxlength</span
+                >
+              </p>
 
               <p
                 class="alert alert-info"
