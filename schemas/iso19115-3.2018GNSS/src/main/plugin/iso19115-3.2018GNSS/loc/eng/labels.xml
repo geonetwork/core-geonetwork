@@ -2607,9 +2607,9 @@
     </_condition>
     <help><![CDATA[<a target="docs" href="https://openwork-nz.github.io/ANZLIC-Metadata-Tool-help/Spatial-Metadata#description">Help</a>]]></help>
     <helper>
-      <option value="global">Global</option>
-      <option value="regional">Regional</option>
-      <option value="local">Local</option>
+      <option value="Global">Global</option>
+      <option value="Regional">Regional</option>
+      <option value="Local">Local</option>
     </helper>
   </element>
   <element name="cit:description" id="410.0" context="cit:CI_OnlineResource">
@@ -5950,4 +5950,35 @@
     <label>Scope</label>
     <description>The specific data to which the acquisition information applies</description>
   </element>
+  <!-- GNSS profile elements - BC 14-11-23 -->
+  <element name="srv:safetyIntegrityLevel">
+    <label>GNSS Safety Integrity Level</label>
+    <description>Abbreviation : SIL.&#xD;
+      &#xD;
+      Indication derived from the different tolerable hazard rates, taking into consideration the specified environment. For Hazard Rates of &lt; 10^-9 failures/hour, a 'SIL 4' process will be applicable
+    </description>
+  </element>
+  <element name="srv:powerConsumption">
+    <label>GNSS Power Consumption</label>
+    <description>The amount of power a device uses to provide a position</description>
+  </element>
+  <element name="srv:consumptionAmount">
+    <label>Consumption amount (Ma)</label>
+    <description>The amount of power (Ma) a device uses to provide a position. The power consumption technology will vary depending on the available signals and data. For example, GNSS chips will use more power when scanning to identify signals (cold start) than when computing position. Typical values are in the order of tens of mW (for smartphone chipsets).</description>
+  </element>
+  <element name="srv:fixUpdateType">
+    <label>GNSS Fix Update Type</label>
+    <description>The type of update operation of the TTFF message (continuous, change of fix state, or on request)</description>
+  </element>
+  <element name="srv:robustness">
+    <label>GNSS Robustness</label>
+    <description>The ability of the GNSS system to withstand signal interference (e.g. jamming and spoofing)</description>
+  </element>
+  <element name="srv:RBNDetails">
+    <label>GNSS RBN Details</label>
+  </element>
+  <element name="srv:LevelCode">
+    <label>GNSS Level Code</label>
+  </element>
+  <!-- end GNSS profile elements -->
 </labels>

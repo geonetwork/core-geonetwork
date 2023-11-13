@@ -55,7 +55,7 @@
             </annotation>
           </element>
           <element maxOccurs="unbounded" minOccurs="0" name="spatialRepresentationInfo" type="mcc:Abstract_SpatialRepresentation_PropertyType"/>
-          <element maxOccurs="unbounded" minOccurs="0" name="referenceSystemInfo" type="mcc:Abstract_ReferenceSystem_PropertyType"/>
+          <element maxOccurs="unbounded" minOccurs="1" name="referenceSystemInfo" type="mcc:Abstract_ReferenceSystem_PropertyType"/>
           <element maxOccurs="unbounded" minOccurs="0" name="metadataExtensionInfo" type="mcc:Abstract_MetadataExtension_PropertyType"/>
           <element maxOccurs="unbounded" name="identificationInfo" type="mcc:Abstract_ResourceDescription_PropertyType"/>
           <element maxOccurs="unbounded" minOccurs="0" name="contentInfo" type="mcc:Abstract_ContentInformation_PropertyType"/>

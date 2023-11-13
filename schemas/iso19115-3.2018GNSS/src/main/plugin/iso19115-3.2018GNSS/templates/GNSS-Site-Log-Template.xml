@@ -23,7 +23,7 @@
   <mdb:metadataScope>
     <mdb:MD_MetadataScope>
       <mdb:resourceScope>
-        <mcc:MD_ScopeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_ScopeCode" codeListValue="dataset" />
+        <mcc:MD_ScopeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_ScopeCode" codeListValue="siteLog" />
       </mdb:resourceScope>
       <mdb:name gco:nilReason="missing">
         <gco:CharacterString />

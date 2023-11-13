@@ -33,7 +33,7 @@
       <documentation>The ability of the GNSS system to withstand signal interference (e.g. jamming and spoofing) </documentation>
     </annotation>
   </element>
-  <complexType name="GNSS_Robustness_Type">
+  <complexType name="GNSS_Robustness_PropertyType">
     <complexContent>
       <extension base="gco:AbstractObject_Type">
         <sequence>
@@ -57,13 +57,13 @@
       <element ref="srv:LevelCode_type"/>
     </sequence>
   </complexType>
-  <complexType name="GNSS_Robustness_PropertyType">
+  <!--<complexType name="GNSS_Robustness_Type">
     <sequence minOccurs="0">
       <element ref="srv:GNSS_Robustness"/>
     </sequence>
     <attributeGroup ref="gco:ObjectReference"/>
     <attribute ref="gco:nilReason"/>
-  </complexType>
+  </complexType>-->
 
   <!--<element name="RBNDetails_Type" substitutionGroup="gco:CharacterString" type="gco:CodeListValue_Type">
     <annotation>
@@ -348,7 +348,7 @@
           <!-- GNSS additional SRV elements - BC 2/1/23 -->
           <element maxOccurs="1" minOccurs="0" name="fixUpdateType" type="srv:GNSS_FixUpdateType_PropertyTypw"/>
           <element maxOccurs="1" minOccurs="0" name="powerConsumption" type="srv:GNSS_PowerConsumption_PropertyType"/>
-          <element maxOccurs="1" minOccurs="0" name="robustness" type="srv:GNSS_Robustness_PropertyType"/>
+          <element maxOccurs="unbounded" minOccurs="0" name="robustness" type="srv:GNSS_Robustness_PropertyType"/>
           <element maxOccurs="1" minOccurs="0" name="safetyIntegrityLevel" type="srv:GNSS_SafetyIntegrityLevel_PropertyType"/>
           <!-- End GNSS additional SRV elements -->
         </sequence>

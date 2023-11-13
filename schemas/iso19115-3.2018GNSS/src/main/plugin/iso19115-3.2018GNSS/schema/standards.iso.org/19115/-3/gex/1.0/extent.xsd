@@ -45,11 +45,21 @@
   <complexType name="EX_Extent_Type">
     <complexContent>
       <extension base="mcc:Abstract_Extent_Type">
+        <annotation>
+          <documentation>sets of points defining the bounding polygon or any other GM_Object geometry (point, line or polygon)</documentation>
+        </annotation>
         <sequence>
-          <element minOccurs="0" name="description" type="gco:CharacterString_PropertyType">
+          <element minOccurs="0" maxOccurs="1" name="description">
             <annotation>
-              <documentation>sets of points defining the bounding polygon or any other GM_Object geometry (point, line or polygon)</documentation>
+              <documentation>This element expresses GNSS coverage</documentation>
             </annotation>
+            <simpleType>
+              <restriction base="gco:CharacterString_PropertyType">
+                <enumeration value="Global"/>
+                <enumeration value="Regional"/>
+                <enumeration value="Local"/>
+              </restriction>
+            </simpleType>
           </element>
           <element maxOccurs="unbounded" minOccurs="1" name="geographicElement" type="gex:AbstractEX_GeographicExtent_PropertyType"/>
           <element maxOccurs="unbounded" minOccurs="0" name="temporalElement" type="gex:EX_TemporalExtent_PropertyType"/>

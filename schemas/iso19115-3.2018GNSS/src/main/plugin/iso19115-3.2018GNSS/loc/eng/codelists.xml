@@ -2950,7 +2950,7 @@
   </codelist>
 
   <!-- GNSS Codelist - BC 2-11-23 -->
-  <codelist name="srv:LevelCode">
+  <codelist name="srv:LevelCode_type">
     <entry>
       <code>high</code>
       <label>High</label>
@@ -2968,7 +2968,7 @@
     </entry>
   </codelist>
 
-  <codelist name="srv:RBNDetails">
+  <codelist name="srv:RBNDetails_type">
     <entry>
       <code>environmentalConditionsLevel</code>
       <label>Environmental Conditions Level</label>
