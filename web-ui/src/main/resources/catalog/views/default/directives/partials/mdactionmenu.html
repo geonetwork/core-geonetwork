@@ -33,13 +33,9 @@
         data-ng-repeat="pubOption in publicationOptions"
         role="menuitem"
         data-ng-if="user.canEditRecord(md) && (user.isAdmin() || user.isReviewerForGroup(md.groupOwner)) && md.draft != 'y' && md.mdStatus != 3"
-        data-ng-class="
-          (md.isPublished(pubOption) || (allowPublishInvalidMd() === true) ||
-          (!md.isPublished(pubOption) && (allowPublishInvalidMd() === false) &&
-          (!md.hasValidation() || (md.hasValidation() && md.isValid())))) ? '' : 'disabled'"
-        title="{{(!md.isPublished(pubOption) ? (md.isValid() ? 'mdvalid' :
-          (!md.hasValidation() ? 'mdnovalidation':
-          (allowPublishInvalidMd() === false ? 'mdinvalidcantpublish' : 'mdinvalid'))) : '') | translate }}">
+        data-ng-class="getPublicationOptionClass(md, user, isMdWorkflowEnable, pubOption)"
+        title="{{getPublicationOptionTitle(md, user, isMdWorkflowEnable, pubOption) | translate}}"
+      >
         <a href="" data-ng-click="mdService.publish(md, undefined, undefined, getCatScope(), pubOption)">
           <span class="fa fa-fw"
                 data-ng-class="md.isPublished(pubOption) ? 'fa-lock' : 'fa-unlock'"></span>&nbsp;
