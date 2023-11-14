@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:gco="https://schemas.isotc211.org/19103/-/gco/1.2" 
+	xmlns:cit="https://schemas.isotc211.org/19115/-1/cit/1.3" 
+	xmlns:mcc="https://schemas.isotc211.org/19115/-1/mcc/1.3" 
+	xmlns:mrc="https://schemas.isotc211.org/19115/-1/mrc/1.3" 
+	xmlns:mrd="https://schemas.isotc211.org/19115/-1/mrd/1.3" 
+	xmlns:mdq="https://schemas.isotc211.org/19157/-1/mdq/1.0" 
+	targetNamespace="https://schemas.isotc211.org/19157/-1/mdq/1.0" 
+	elementFormDefault="qualified" 
+	version="1.0.0"
+	>
+	<xs:import namespace="https://schemas.isotc211.org/19103/-/gco/1.2" schemaLocation="https://schemas.isotc211.org/19103/-/gco/1.2.0/gco.xsd"/>
+	<xs:import namespace="https://schemas.isotc211.org/19115/-1/cit/1.3" schemaLocation="https://schemas.isotc211.org/19115/-1/cit/1.3.0/cit.xsd"/>
+	<xs:import namespace="https://schemas.isotc211.org/19115/-1/mcc/1.3" schemaLocation="https://schemas.isotc211.org/19115/-1/mcc/1.3.0/mcc.xsd"/>
+	<xs:import namespace="https://schemas.isotc211.org/19115/-1/mrc/1.3" schemaLocation="https://schemas.isotc211.org/19115/-1/mrc/1.3.0/mrc.xsd"/>
+	<xs:import namespace="https://schemas.isotc211.org/19115/-1/mrd/1.3" schemaLocation="https://schemas.isotc211.org/19115/-1/mrd/1.3.0/mrd.xsd"/>
+	<!-- =========================================================================== -->
+	<xs:complexType name="Abstract_QualityResult_PropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="mdq:Abstract_QualityResult"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- ........................................................................ -->	
+	<xs:element name="Abstract_QualityResult" type="mdq:Abstract_QualityResult_Type" abstract="true" id="ISO19157-1.1.054"/>
+	<!-- ........................................................................ -->	
+	<xs:complexType name="Abstract_QualityResult_Type">
+		<xs:annotation>
+			<xs:documentation>generalization of more specific result classes</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="resultScope" type="mcc:MD_Scope_PropertyType" minOccurs="0" maxOccurs="1" id="ISO19157-1.1.055_ISO19115-1.1.430">
+				<xs:annotation>
+					<xs:documentation>scope of the result</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="dateTime" type="gco:DateTime_PropertyType" minOccurs="0" maxOccurs="1" id="ISO19157-1.1.056_ISO19103.1.DateTime">
+				<xs:annotation>
+					<xs:documentation>date when the result was generated </xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- =========================================================================== -->
+	<xs:complexType name="QuantitativeResult_PropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="mdq:QuantitativeResult"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- ........................................................................ -->	
+	<xs:element name="QuantitativeResult" substitutionGroup="mdq:Abstract_QualityResult" type="mdq:QuantitativeResult" id="ISO19157-1.1.057"/>
+	<!-- ........................................................................ -->	
+	<xs:complexType name="QuantitativeResult">
+		<xs:annotation>
+			<xs:documentation>the values or information about the value(s) (or set of values) obtained from applying a data quality measure</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="mdq:Abstract_QualityResult_Type">
+				<xs:sequence>
+					<xs:element name="value" type="gco:Record_PropertyType" minOccurs="1" maxOccurs="unbounded" id="ISO19157-1.1.058_ISO19103.1.Record">
+						<xs:annotation>
+							<xs:documentation>quantitative value or values, content determined by the evaluation procedure used, accordingly with the value type and valueStructure defined for the measure</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="valueUnit" type="gco:UomIdentifier_PropertyType" minOccurs="0" maxOccurs="1" id="ISO19157-1.1.059_ISO19103.1.UomIdentifier">
+						<xs:annotation>
+							<xs:documentation>value unit for reporting a data quality result</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="valueRecordType" type="gco:RecordType_PropertyType" minOccurs="0" maxOccurs="1" id="ISO19159-1.1.060_ISO19103.1.RecordType">
+						<xs:annotation>
+							<xs:documentation>value type for reporting a data quality result, depends of the implementation</xs:documentation>
+						</xs:annotation>
+					</xs:element>					
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- =========================================================================== -->
+	<xs:complexType name="ConformanceResult_PropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="mdq:ConformanceResult"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- ........................................................................ -->	
+	<xs:element name="ConformanceResult" substitutionGroup="mdq:Abstract_QualityResult" type="mdq:ConformanceResult_Type" id="ISO19157-1.1.061"/>
+	<!-- ........................................................................ -->	
+	<xs:complexType name="ConformanceResult_Type">
+		<xs:annotation>
+			<xs:documentation>information about the outcome of evaluating the obtained value (or set of values) against a specified acceptable conformance quality level </xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="mdq:Abstract_QualityResult_Type">
+				<xs:sequence>
+					<xs:element name="specification" type="cit:CI_Citation_PropertyType" minOccurs="1" maxOccurs="1" id="ISO19157-1.1.062_ISO19115-1.1.361">
+						<xs:annotation>
+							<xs:documentation>citation of data product specification or user requirement against which data is being evaluated</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="explanation" type="gco:CharacterString_PropertyType" minOccurs="0" maxOccurs="1" id="ISO19157-1.1.063_ISO19103.1.CharacterString">
+						<xs:annotation>
+							<xs:documentation>explanation of the meaning of conformance for this result</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="pass" type="gco:Boolean_PropertyType" minOccurs="1" maxOccurs="1" id="ISO19157-1.1.064_ISO19103.1.Boolean">
+						<xs:annotation>
+							<xs:documentation>indication of the conformance result where 0 = fail and 1 = pass</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- =========================================================================== -->
+	<xs:complexType name="DescriptiveResult_PropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="mdq:DescriptiveResult"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- ........................................................................ -->	
+	<xs:element name="DescriptiveResult" substitutionGroup="mdq:Abstract_QualityResult" type="mdq:DescriptiveResult_Type" id="ISO19157-1.1.065"/>
+	<!-- ........................................................................ -->	
+	<xs:complexType name="DescriptiveResult_Type">
+		<xs:annotation>
+			<xs:documentation>data quality descriptive result</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="mdq:Abstract_QualityResult_Type">
+				<xs:sequence>
+					<xs:element name="statement" type="gco:CharacterString_PropertyType" minOccurs="1" maxOccurs="1" id="ISO19157-1.1.066_ISO19103.1.CharacterString">
+						<xs:annotation>
+							<xs:documentation>textual expression of the descriptive result</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- =========================================================================== -->
+	<xs:complexType name="CoverageResult_PropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="mdq:CoverageResult"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<!-- ........................................................................ -->	
+	<xs:element name="CoverageResult" substitutionGroup="mdq:Abstract_QualityResult" type="mdq:CoverageResult_Type" id="ISO19157-1.1.067"/>
+	<!-- ........................................................................ -->	
+	<xs:complexType name="CoverageResult_Type">
+		<xs:annotation>
+			<xs:documentation>result of a data quality measure organising the measured values as a coverage</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="mdq:Abstract_QualityResult_Type">
+				<xs:sequence>
+					<xs:element name="spatialRepresentationType" type="mcc:MD_SpatialRepresentationTypeCode_PropertyType" minOccurs="1" maxOccurs="1" id="ISO19157-1.1.068_ISO19115-1.1.MD_SpatialRepresentationTypeCode">
+						<xs:annotation>
+							<xs:documentation>Description: method used to spatially represent the coverage result
+shortName: spaRepType</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="resultSpatialRepresentation" type="mcc:Abstract_SpatialRepresentation_PropertyType" minOccurs="1" maxOccurs="1" id="ISO19157-1.1.069_ISO19115-1.1.147"/>
+					<xs:element name="resultContent" type="mrc:MD_RangeDimension_PropertyType" minOccurs="0" maxOccurs="1" id="ISO19157-1.1.070_ISO19115-1.1.210"/>
+					<xs:element name="resultFormat" type="mrd:MD_Format_PropertyType" minOccurs="0" maxOccurs="1" id="ISO19157-1.1.071_ISO19115-1.1.254"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- =========================================================================== -->
+</xs:schema>

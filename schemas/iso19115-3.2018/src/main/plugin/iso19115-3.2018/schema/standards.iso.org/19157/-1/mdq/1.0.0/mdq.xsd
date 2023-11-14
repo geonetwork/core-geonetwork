@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:gco="https://schemas.isotc211.org/19103/-/gco/1.2" 
+	xmlns:mdq="https://schemas.isotc211.org/19157/-1/mdq/1.0" 
+	targetNamespace="https://schemas.isotc211.org/19157/-1/mdq/1.0" 
+	elementFormDefault="qualified" 
+	version="1.0.0"
+	>
+	<xs:include schemaLocation="../../mdq/1.0.0/metaquality.xsd"/>
+	<xs:include schemaLocation="../../mdq/1.0.0/dataQuality.xsd"/>
+	<xs:include schemaLocation="../../mdq/1.0.0/dataQualityResult.xsd"/>
+	<xs:include schemaLocation="../../mdq/1.0.0/dataQualityEvaluation.xsd"/>
+	<!-- =========================================================================== -->
+</xs:schema>

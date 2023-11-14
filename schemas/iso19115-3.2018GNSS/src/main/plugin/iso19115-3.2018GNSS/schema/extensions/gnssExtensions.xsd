@@ -18,7 +18,7 @@
     <complexContent>
       <extension base="mcc:Abstract_ReferenceSystem_Type">
         <sequence>
-          <element minOccurs="1" name="crs" type="gml:CRSPropertyType" id="ISO19115-1.180.1_ISO19111.CRS">
+          <element minOccurs="0" name="crs" type="gml:CRSPropertyType" id="ISO19115-1.180.1_ISO19111.CRS">
             <annotation>
               <documentation>full description of the coordinate reference system to which a coordinate set is referenced</documentation>
               <documentation>Condition: At least one of referenceSystemIdentifier or crs is required</documentation>

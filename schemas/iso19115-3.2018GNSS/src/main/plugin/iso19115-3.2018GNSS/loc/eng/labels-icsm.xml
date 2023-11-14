@@ -934,73 +934,6 @@
     <label>Usability element</label>
     <description></description>
   </element>
-  <!-- Test GNSS additional quality elements -->
-  <element name="mdq:DQ_Authentication" id="117.2">
-    <label>GNSS Authentication quality</label>
-    <description>A technique to verify the receiving signal or navigation message expressed as a probability of false alarm, and probability of detection
-    </description>
-  </element>
-  <element name="mdq:DQ_Availability" id="117.1">
-    <label>GNSS Availabiltiy of signal</label>
-    <description>The percentage of time that a specified level of accuracy, integrity, and continuity is available and usable within a specified area (in scenarios -- U = urban; C = canopy; I = indoors)    </description>
-  </element>
-  <element name="mdq:DQ_Continuity" id="117.3">
-    <label>GNSS Continuity of signal</label>
-    <description>The probability that a specified level of accuracy will be maintained throughout a given operation or experiment, assuming that the specification is met at initialization    </description>
-  </element>
-  <element name="mdq:DQ_DownTime" id="117.4">
-    <label>GNSS Downtime measure</label>
-    <description>Signal outage probability
-    </description>
-  </element>
-  <element name="mdq:DQ_GNSSSensitivity" id="117.5">
-    <label>GNSS Sensitivity</label>
-    <description>The minimum signal strength at the antenna, as detectable by the receiver
-    </description>
-  </element>
-  <element name="mdq:DQ_Integrity" id="117.6">
-    <label>GNSS Integrity</label>
-    <description>The extent to which the information supplied by the navigation system can be trusted or to the ability of the navigation system to detect and to provide timely warning to the user about when the specified accuracy should not be trusted
-  </description>
-  </element>
-  <element name="mdq:DQ_Latency" id="117.7">
-    <label>GNSS Latency</label>
-    <description>The average latency of the GNSS device
-    </description>
-  </element>
-  <element name="mdq:DQ_PositionFixRate" id="117.8">
-    <label>GNSS Position fix rate</label>
-    <description>The rate at which the position terminal outputs PVT (position, velocity and time) data
-    </description>
-  </element>
-  <element name="mdq:DQ_Reliability" id="117.9">
-    <label>GNSS Reliability</label>
-    <description>The ability of the system to detect blunders in the measurements and to estimate the effects of undetected blunders on the position solution
-  </description>
-  </element>
-  <element name="mdq:DQ_TimeToAlert" id="118.1">
-    <label>GNSS Time to alert</label>
-    <description>Abbreviation : TTA&#xD;
-      A maximum time allowed when a system that was previously declared safe for use can no longer assure that it meets all its integrity requirements for a given operation
-  </description>
-  </element>
-  <element name="mdq:DQ_TimeToFirstFix" id="118.2">
-    <label>GNSS time to first fix</label>
-    <description>Abbreviation : TTFF&#xD;
-      A receiver's performance covering the time between activation and output of a position within the required accuracy bounds.
-  </description>
-  </element>
-  <element name="mdq:DQ_HorizontalAccuracy" id="118.3">
-    <label>GNSS Horizontal accuracy</label>
-    <description>Horizontal Accuracy
-    </description>
-  </element>
-  <element name="mdq:DQ_VerticalAccuracy" id="118.4">
-    <label>GNSS Vertical accuracy</label>
-    <description>Vertical Accuracy
-    </description>
-  </element>
-  <!-- end test -->
   <element name="mdq:DQ_Confidence">
     <label>Metaquality / Confidence</label>
     <description>Trustworthiness of a data quality result.</description>
@@ -1615,8 +1548,15 @@
     </description>
     <_condition>Use obligation/condition from referencing object</_condition>
   </element>
-  <element name="mdq:DQ_AbsoluteExternalPositionalAccuracy" id="117.0">
+  <!-- Test GNSS additional quality elements -->
+  <element name="mdq:GNSS_Authentication" id="117.0">
     <label>Absolute external positional accuracy</label>
+    <description>A technique to verify the receiving signal or navigation message expressed as a probability of false alarm, and probability of detection
+  </description>
+  </element>
+  <!-- end test -->
+  <element name="mdq:DQ_AbsoluteExternalPositionalAccuracy" id="117.0">
+    <label>Absolute external position accuracy</label>
     <description>Closeness of reported coordinate values to values accepted as
       or being
       true
@@ -1630,12 +1570,12 @@
     </description>
   </element>
   <element name="mdq:DQ_CompletenessCommission" id="109.0">
-    <label>Completeness! commission</label>
+    <label>Completeness commission</label>
     <description>Excess data present in the dataset, as described by the scope
     </description>
   </element>
   <element name="mdq:DQ_CompletenessOmission" id="110.0">
-    <label>Completeness! omission</label>
+    <label>Completeness omission</label>
     <description>Data absent from the dataset, as described by the scope
     </description>
   </element>
@@ -2599,12 +2539,17 @@
   </element>
   <element name="gex:description" id="335.0" context="gex:EX_Extent">
     <label>Description</label>
-    <description>This element expresses GNSS coverage
+    <description>Spatial and temporal extent for the referring object
     </description>
+    <_condition>Conditional / geographicElement and temporalElement and
+      verticalElement not
+      documented?
+    </_condition>
+    <help><![CDATA[<a target="docs" href="https://openwork-nz.github.io/ANZLIC-Metadata-Tool-help/Spatial-Metadata#description">Help</a>]]></help>
     <helper>
-      <option value="Global">Global</option>
-      <option value="Regional">Regional</option>
-      <option value="Local">Local</option>
+      <option value="global">Global</option>
+      <option value="regional">Regional</option>
+      <option value="local">Local</option>
     </helper>
   </element>
   <element name="cit:description" id="410.0" context="cit:CI_OnlineResource">
@@ -2971,7 +2916,7 @@
     </description>
     <help><![CDATA[<a target="docs" href="https://openwork-nz.github.io/ANZLIC-Metadata-Tool-help/Service-Metadata#connect-point">Help</a>]]></help>
   </element>
-  <element name="gex:geographicElement" id="336.0" context="gex:EX_Extent">
+  <element name="gex:geographicElement" id="336.0">
     <label>Geographic extent</label>
     <description>Provides geographic component of the extent of the referring
       object
@@ -4297,23 +4242,6 @@
     <description>Name of the data transfer format(s)</description>
     <help>File or link format name</help>
     <helper>
-      <option value="ArcGIS GP Server">ArcGIS GP Server</option>
-      <option value="ArcGIS Image Server">ArcGIS Image Server</option>
-      <option value="ArcGIS Map Server">ArcGIS Map Server</option>
-      <option value="ArcIMS Service">ArcIMS Service</option>
-      <option value="Catalogue Service for the Web">CSW</option>
-      <option value="OGC Web Map Service">WMS</option>
-      <option value="Sensor Observation Service">Sensor Observation Service</option>
-      <option value="Web Coverage Service">WCS</option>
-      <option value="Web Feature Service">WFS</option>
-      <option value="Web Map Tile Service">WMTS</option>
-      <option value="Web Processing Service">WPS</option>
-      <option value="OPeNDAP root URL">OPeNDAP root URL</option>
-      <option value="REST service">REST service</option>
-      <option value="SPARQL service">SPARQL service</option>
-      <option value="Download">Download</option>
-      <option value="HTML information">HTML information</option>
-
       <option value="Text">Text</option>
       <option value="XLS">XLS</option>
       <option value="ESRI Shapefile">ESRI Shapefile</option>
@@ -5945,59 +5873,4 @@
     <label>Scope</label>
     <description>The specific data to which the acquisition information applies</description>
   </element>
-  <!-- GNSS profile elements - BC 14-11-23 -->
-  <element name="srv:safetyIntegrityLevel">
-    <label>GNSS Safety Integrity Level (SIL)</label>
-    <description>Abbreviation : SIL.&#xD;
-      &#xD;
-      Indication derived from the different tolerable hazard rates, taking into consideration the specified environment. For Hazard Rates of &lt; 10^-9 failures/hour, a 'SIL 4' process will be applicable
-    </description>
-  </element>
-  <element name="srv:level">
-    <label>SIL level</label>
-  </element>
-  <element name="srv:powerConsumption">
-    <label>GNSS Power Consumption</label>
-    <description>The amount of power a device uses to provide a position</description>
-  </element>
-  <element name="srv:consumptionAmount">
-    <label>Consumption amount (Ma)</label>
-    <description>The amount of power (Ma) a device uses to provide a position. The power consumption technology will vary depending on the available signals and data. For example, GNSS chips will use more power when scanning to identify signals (cold start) than when computing position. Typical values are in the order of tens of mW (for smartphone chipsets).</description>
-  </element>
-  <element name="srv:fixUpdateType">
-    <label>GNSS Fix Update Type</label>
-    <description>The type of update operation of the TTFF message (continuous, change of fix state, or on request)</description>
-  </element>
-  <element name="srv:robustness">
-    <label>GNSS Robustness</label>
-    <description>The ability of the GNSS system to withstand signal interference (e.g. jamming and spoofing)</description>
-  </element>
-  <element name="srv:RBNDetails">
-    <label>GNSS RBN Details</label>
-  </element>
-  <element name="srv:LevelCode">
-    <label>GNSS Level Code</label>
-  </element>
-  <!-- GNSS crs elements -->
-  <element name="mrs:coordinateEpoch" id="186.0">
-    <label>Coordinate Epoch</label>
-    <description>Date at which coordinates are referenced in a dynamic coordinate reference system, expresssed as a decimal year in the Georgian calandar</description>
-    <help>Decimal year value signifying the date for which the coordinates were valid</help>
-  </element>
-  <element name="rbc:coordinateEpoch" id="186.0">
-    <label>Coordinate Epoch</label>
-    <description>Date at which coordinates are referenced in a dynamic coordinate reference system, expresssed as a decimal year in the Georgian calandar</description>
-    <help>Decimal year value signifying the date for which the coordinates were valid</help>
-  </element>
-  <element name="rbc:RS_DataEpoch" id="186.0">
-    <label>Data Epoch</label>
-    <description>Epoch date for which the referencing coordinates are valid, expresssed as a decimal year in the Georgian calandar</description>
-    <help>Decimal year value signifying the date for which the coordinates were valid</help>
-  </element>
-  <element name="mrs:crs" id="186.0">
-    <label>CRS-complete</label>
-    <description>Full description of the coordinate reference system to which a coordinate set is referenced</description>
-    <help>Condition: At least one of referenceSystemIdentifier or crs is required</help>
-  </element>
-  <!-- end GNSS profile elements -->
 </labels>

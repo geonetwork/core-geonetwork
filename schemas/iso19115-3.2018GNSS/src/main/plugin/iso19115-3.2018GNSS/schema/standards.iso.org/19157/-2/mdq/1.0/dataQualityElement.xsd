@@ -1,241 +1,246 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:dqc="http://standards.iso.org/iso/19157/-2/dqc/1.0" xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0" xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0" xmlns:mdq="http://standards.iso.org/iso/19157/-2/mdq/1.0" elementFormDefault="qualified" targetNamespace="http://standards.iso.org/iso/19157/-2/mdq/1.0" version="1.0">
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+        xmlns:dqc="http://standards.iso.org/iso/19157/-2/dqc/1.0"
+        xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
+        xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0"
+        xmlns:mdq="http://standards.iso.org/iso/19157/-2/mdq/1.0"
+        elementFormDefault="qualified" targetNamespace="http://standards.iso.org/iso/19157/-2/mdq/1.0" version="1.0">
   <include schemaLocation="mdq.xsd"/>
   <import namespace="http://standards.iso.org/iso/19115/-3/gco/1.0" schemaLocation="../../../../19115/-3/gco/1.0/gco.xsd"/>
   <import namespace="http://standards.iso.org/iso/19157/-2/dqc/1.0" schemaLocation="../../../../19157/-2/dqc/1.0/dqc.xsd"/>
   <import namespace="http://standards.iso.org/iso/19115/-3/mcc/1.0" schemaLocation="../../../../19115/-3/mcc/1.0/mcc.xsd"/>
   <!--XML Schema document created by ShapeChange - http://shapechange.net/-->
-  <!-- Test inclusion of GNSS DQ elements -->
-  <element name="DQ_GNSS_Authentication" substitutionGroup="mdq:AbstractDQ_Element" type="mdq:DQ_GNSS_AuthenticationQualityType"/>
+  <!-- Inclusion of GNSS DQ elements - BC Nov 23 -->
+  <element name="DQ_Authentication" substitutionGroup="mdq:AbstractDQ_Element" type="mdq:DQ_AuthenticationQualityType"/>
   <annotation>
     <documentation>A technique to verify the receiving signal or navigation message expressed as a probability of false alarm, and probability of detection</documentation>
   </annotation>
-  <complexType name="DQ_GNSS_AuthenticationQualityType">
+  <complexType name="DQ_AuthenticationQualityType">
     <complexContent>
       <extension base="mdq:AbstractDQ_Element_Type">
         <sequence/>
       </extension>
     </complexContent>
   </complexType>
-  <complexType name="DQ_GNSS_AuthenticationPropertyType">
+  <complexType name="DQ_AuthenticationPropertyType">
     <sequence minOccurs="0">
-      <element ref="mdq:DQ_GNSS_Authentication"/>
+      <element ref="mdq:DQ_Authentication"/>
     </sequence>
     <attributeGroup ref="gco:ObjectReference"/>
     <attribute ref="gco:nilReason"/>
   </complexType>
-  <element name="DQ_GNSS_Availability" substitutionGroup="mdq:AbstractDQ_Element" type="mdq:DQ_GNSS_AvailabilityQualityType"/>
+  <element name="DQ_Availability" substitutionGroup="mdq:AbstractDQ_Element" type="mdq:DQ_AvailabilityQualityType"/>
   <annotation>
     <documentation>The percentage of time that a specified level of accuracy, integrity, and continuity is available and usable within a specified area (in scenarios -- U = urban; C = canopy; I = indoors)</documentation>
   </annotation>
-  <complexType name="DQ_GNSS_AvailabilityQualityType">
+  <complexType name="DQ_AvailabilityQualityType">
     <complexContent>
       <extension base="mdq:AbstractDQ_Element_Type">
         <sequence/>
       </extension>
     </complexContent>
   </complexType>
-  <complexType name="DQ_GNSS_AvailabilityPropertyType">
+  <complexType name="DQ_AvailabilityPropertyType">
     <sequence minOccurs="0">
-      <element ref="mdq:DQ_GNSS_Availability"/>
+      <element ref="mdq:DQ_Availability"/>
     </sequence>
     <attributeGroup ref="gco:ObjectReference"/>
     <attribute ref="gco:nilReason"/>
   </complexType>
-  <element name="DQ_GNSS_Continuity" substitutionGroup="mdq:AbstractDQ_Element" type="mdq:DQ_GNSS_ContinuityQualityType"/>
+  <element name="DQ_Continuity" substitutionGroup="mdq:AbstractDQ_Element" type="mdq:DQ_ContinuityQualityType"/>
   <annotation>
     <documentation>the probability that a specified level of accuracy will be maintained throughout a given operation or experiment, assuming that the specification is met at initialization</documentation>
   </annotation>
-  <complexType name="DQ_GNSS_ContinuityQualityType">
+  <complexType name="DQ_ContinuityQualityType">
     <complexContent>
       <extension base="mdq:AbstractDQ_Element_Type">
         <sequence/>
       </extension>
     </complexContent>
   </complexType>
-  <complexType name="DQ_GNSS_ContinuityPropertyType">
+  <complexType name="DQ_ContinuityPropertyType">
     <sequence minOccurs="0">
-      <element ref="mdq:DQ_GNSS_Continuity"/>
+      <element ref="mdq:DQ_Continuity"/>
     </sequence>
     <attributeGroup ref="gco:ObjectReference"/>
     <attribute ref="gco:nilReason"/>
   </complexType>
-  <element name="DQ_GNSS_DownTime" substitutionGroup="mdq:AbstractDQ_Element" type="mdq:DQ_GNSS_DownTimeQualityType"/>
+  <element name="DQ_DownTime" substitutionGroup="mdq:AbstractDQ_Element" type="mdq:DQ_DownTimeQualityType"/>
   <annotation>
     <documentation>Signal outage</documentation>
   </annotation>
-  <complexType name="DQ_GNSS_DownTimeQualityType">
+  <complexType name="DQ_DownTimeQualityType">
     <complexContent>
       <extension base="mdq:AbstractDQ_Element_Type">
         <sequence/>
       </extension>
     </complexContent>
   </complexType>
-  <complexType name="DQ_GNSS_DownTimePropertyType">
+  <complexType name="DQ_DownTimePropertyType">
     <sequence minOccurs="0">
-      <element ref="mdq:DQ_GNSS_DownTime"/>
+      <element ref="mdq:DQ_DownTime"/>
     </sequence>
     <attributeGroup ref="gco:ObjectReference"/>
     <attribute ref="gco:nilReason"/>
   </complexType>
-  <element name="DQ_GNSS_GNSSSensitivity" substitutionGroup="mdq:AbstractDQ_Element" type="mdq:DQ_GNSS_GNSSSensitivityQualityType"/>
+  <element name="DQ_GNSSSensitivity" substitutionGroup="mdq:AbstractDQ_Element" type="mdq:DQ_GNSSSensitivityQualityType"/>
   <annotation>
     <documentation>The minimum signal strength at the antenna, as detectable by the receiver</documentation>
   </annotation>
-  <complexType name="DQ_GNSS_GNSSSensitivityQualityType">
+  <complexType name="DQ_GNSSSensitivityQualityType">
     <complexContent>
       <extension base="mdq:AbstractDQ_Element_Type">
         <sequence/>
       </extension>
     </complexContent>
   </complexType>
-  <complexType name="DQ_GNSS_GNSSSensitivityPropertyType">
+  <complexType name="DQ_GNSSSensitivityPropertyType">
     <sequence minOccurs="0">
-      <element ref="mdq:DQ_GNSS_GNSSSensitivity"/>
+      <element ref="mdq:DQ_GNSSSensitivity"/>
     </sequence>
     <attributeGroup ref="gco:ObjectReference"/>
     <attribute ref="gco:nilReason"/>
   </complexType>
-  <element name="DQ_GNSS_Integrity" substitutionGroup="mdq:AbstractDQ_Element" type="mdq:DQ_GNSS_IntegrityQualityType"/>
+  <element name="DQ_Integrity" substitutionGroup="mdq:AbstractDQ_Element" type="mdq:DQ_IntegrityQualityType"/>
   <annotation>
     <documentation>The extent to which the information supplied by the navigation system can be trusted or to the ability of the navigation system to detect and to provide timely warning to the user about when the specified accuracy should not be trusted</documentation>
   </annotation>
-  <complexType name="DQ_GNSS_IntegrityQualityType">
+  <complexType name="DQ_IntegrityQualityType">
     <complexContent>
       <extension base="mdq:AbstractDQ_Element_Type">
         <sequence/>
       </extension>
     </complexContent>
   </complexType>
-  <complexType name="DQ_GNSS_IntegrityPropertyType">
+  <complexType name="DQ_IntegrityPropertyType">
     <sequence minOccurs="0">
-      <element ref="mdq:DQ_GNSS_Integrity"/>
+      <element ref="mdq:DQ_Integrity"/>
     </sequence>
     <attributeGroup ref="gco:ObjectReference"/>
     <attribute ref="gco:nilReason"/>
   </complexType>
-  <element name="DQ_GNSS_Latency" substitutionGroup="mdq:AbstractDQ_Element" type="mdq:DQ_GNSS_LatencyQualityType"/>
-  <complexType name="DQ_GNSS_LatencyQualityType">
+  <element name="DQ_Latency" substitutionGroup="mdq:AbstractDQ_Element" type="mdq:DQ_LatencyQualityType"/>
+  <complexType name="DQ_LatencyQualityType">
     <complexContent>
       <extension base="mdq:AbstractDQ_Element_Type">
         <sequence/>
       </extension>
     </complexContent>
   </complexType>
-  <complexType name="DQ_GNSS_LatencyPropertyType">
+  <complexType name="DQ_LatencyPropertyType">
     <sequence minOccurs="0">
-      <element ref="mdq:DQ_GNSS_Latency"/>
+      <element ref="mdq:DQ_Latency"/>
     </sequence>
     <attributeGroup ref="gco:ObjectReference"/>
     <attribute ref="gco:nilReason"/>
   </complexType>
-  <element name="DQ_GNSS_PositionFixRate" substitutionGroup="mdq:AbstractDQ_Element" type="mdq:DQ_GNSS_PositionFixRateQualityType"/>
+  <element name="DQ_PositionFixRate" substitutionGroup="mdq:AbstractDQ_Element" type="mdq:DQ_PositionFixRateQualityType"/>
   <annotation>
     <documentation>The rate at which the position terminal outputs PVT (position, velocity and time) data</documentation>
   </annotation>
-  <complexType name="DQ_GNSS_PositionFixRateQualityType">
+  <complexType name="DQ_PositionFixRateQualityType">
     <complexContent>
       <extension base="mdq:AbstractDQ_Element_Type">
         <sequence/>
       </extension>
     </complexContent>
   </complexType>
-  <complexType name="DQ_GNSS_PositionFixRatePropertyType">
+  <complexType name="DQ_PositionFixRatePropertyType">
     <sequence minOccurs="0">
-      <element ref="mdq:DQ_GNSS_PositionFixRate"/>
+      <element ref="mdq:DQ_PositionFixRate"/>
     </sequence>
     <attributeGroup ref="gco:ObjectReference"/>
     <attribute ref="gco:nilReason"/>
   </complexType>
-  <element name="DQ_GNSS_Reliability" substitutionGroup="mdq:AbstractDQ_Element" type="mdq:DQ_GNSS_ReliabilityQualityType"/>
+  <element name="DQ_Reliability" substitutionGroup="mdq:AbstractDQ_Element" type="mdq:DQ_ReliabilityQualityType"/>
   <annotation>
     <documentation>The ability of the system to detect blunders in the measurements and to estimate the effects of undetected blunders on the position solution</documentation>
   </annotation>
-  <complexType name="DQ_GNSS_ReliabilityQualityType">
+  <complexType name="DQ_ReliabilityQualityType">
     <complexContent>
       <extension base="mdq:AbstractDQ_Element_Type">
         <sequence/>
       </extension>
     </complexContent>
   </complexType>
-  <complexType name="DQ_GNSS_ReliabilityPropertyType">
+  <complexType name="DQ_ReliabilityPropertyType">
     <sequence minOccurs="0">
-      <element ref="mdq:DQ_GNSS_Reliability"/>
+      <element ref="mdq:DQ_Reliability"/>
     </sequence>
     <attributeGroup ref="gco:ObjectReference"/>
     <attribute ref="gco:nilReason"/>
   </complexType>
-  <element name="DQ_GNSS_TimeToAlert" substitutionGroup="mdq:AbstractDQ_Element" type="mdq:DQ_GNSS_TimeToAlertQualityType"/>
+  <element name="DQ_TimeToAlert" substitutionGroup="mdq:AbstractDQ_Element" type="mdq:DQ_TimeToAlertQualityType"/>
   <annotation>
     <documentation>Abbreviation : TTA&#xD;
       A maximum time allowed when a system that was previously declared safe for use can no longer assure that it meets all its integrity requirements for a given operation</documentation>
   </annotation>
-  <complexType name="DQ_GNSS_TimeToAlertQualityType">
+  <complexType name="DQ_TimeToAlertQualityType">
     <complexContent>
       <extension base="mdq:AbstractDQ_Element_Type">
         <sequence/>
       </extension>
     </complexContent>
   </complexType>
-  <complexType name="DQ_GNSS_TimeToAlertPropertyType">
+  <complexType name="DQ_TimeToAlertPropertyType">
     <sequence minOccurs="0">
-      <element ref="mdq:DQ_GNSS_TimeToAlert"/>
+      <element ref="mdq:DQ_TimeToAlert"/>
     </sequence>
     <attributeGroup ref="gco:ObjectReference"/>
     <attribute ref="gco:nilReason"/>
   </complexType>
-  <element name="DQ_GNSS_TimeToFirstFix" substitutionGroup="mdq:AbstractDQ_Element" type="mdq:DQ_GNSS_TimeToFirstFixQualityType"/>
+  <element name="DQ_TimeToFirstFix" substitutionGroup="mdq:AbstractDQ_Element" type="mdq:DQ_TimeToFirstFixQualityType"/>
   <annotation>
     <documentation>Abbreviation : TTFF&#xD;
       A receiver's performance covering the time between activation and output of a position within the required accuracy bounds.</documentation>
   </annotation>
-  <complexType name="DQ_GNSS_TimeToFirstFixQualityType">
+  <complexType name="DQ_TimeToFirstFixQualityType">
     <complexContent>
       <extension base="mdq:AbstractDQ_Element_Type">
         <sequence/>
       </extension>
     </complexContent>
   </complexType>
-  <complexType name="DQ_GNSS_TimeToFirstFixPropertyType">
+  <complexType name="DQ_TimeToFirstFixPropertyType">
     <sequence minOccurs="0">
-      <element ref="mdq:DQ_GNSS_TimeToFirstFix"/>
+      <element ref="mdq:DQ_TimeToFirstFix"/>
     </sequence>
     <attributeGroup ref="gco:ObjectReference"/>
     <attribute ref="gco:nilReason"/>
   </complexType>
 
-  <element name="DQ_GNSS_HorizontalAccuracy" substitutionGroup="mdq:AbstractDQ_PositionalAccuracy" type="mdq:DQ_GNSS_HorizontalAccuracyQualityType"/>
+  <element name="DQ_HorizontalAccuracy" substitutionGroup="mdq:AbstractDQ_PositionalAccuracy" type="mdq:DQ_HorizontalAccuracyQualityType"/>
   <annotation>
     <documentation>Horizontal Accuracy</documentation>
   </annotation>
-  <complexType name="DQ_GNSS_HorizontalAccuracyQualityType">
+  <complexType name="DQ_HorizontalAccuracyQualityType">
     <complexContent>
       <extension base="mdq:AbstractDQ_PositionalAccuracy_Type">
         <sequence/>
       </extension>
     </complexContent>
   </complexType>
-  <complexType name="DQ_GNSS_HorizontalAccuracyPropertyType">
+  <complexType name="DQ_HorizontalAccuracyPropertyType">
     <sequence minOccurs="0">
-      <element ref="mdq:DQ_GNSS_HorizontalAccuracy"/>
+      <element ref="mdq:DQ_HorizontalAccuracy"/>
     </sequence>
     <attributeGroup ref="gco:ObjectReference"/>
     <attribute ref="gco:nilReason"/>
   </complexType>
-  <element name="DQ_GNSS_VerticalAccuracy" substitutionGroup="mdq:AbstractDQ_PositionalAccuracy" type="mdq:DQ_GNSS_VerticalAccuracyQualityType"/>
+  <element name="DQ_VerticalAccuracy" substitutionGroup="mdq:AbstractDQ_PositionalAccuracy" type="mdq:DQ_VerticalAccuracyQualityType"/>
   <annotation>
     <documentation>Vertical Accuracy</documentation>
   </annotation>
-  <complexType name="DQ_GNSS_VerticalAccuracyQualityType">
+  <complexType name="DQ_VerticalAccuracyQualityType">
     <complexContent>
       <extension base="mdq:AbstractDQ_PositionalAccuracy_Type">
         <sequence/>
       </extension>
     </complexContent>
   </complexType>
-  <complexType name="DQ_GNSS_VerticalAccuracyPropertyType">
+  <complexType name="DQ_VerticalAccuracyPropertyType">
     <sequence minOccurs="0">
-      <element ref="mdq:DQ_GNSS_VerticalAccuracy"/>
+      <element ref="mdq:DQ_VerticalAccuracy"/>
     </sequence>
     <attributeGroup ref="gco:ObjectReference"/>
     <attribute ref="gco:nilReason"/>

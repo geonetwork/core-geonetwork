@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:dqc="https://schemas.isotc211.org/19157/-1/dqc/1.0" 
+	targetNamespace="https://schemas.isotc211.org/19157/-1/dqc/1.0" 
+	elementFormDefault="qualified" 
+	version="1.0.0"
+	>
+	<!-- =========================================================================== -->
+	<xs:complexType name="AbstractDataQuality_PropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="dqc:AbstractDataQuality"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="AbstractDataQuality" type="dqc:AbstractDataQuality_Type" abstract="true"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="AbstractDataQuality_Type">
+			<xs:sequence/>
+	</xs:complexType>
+	<!-- =========================================================================== -->
+	<xs:complexType name="AbstractQualityElement_PropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="dqc:AbstractQualityElement"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ........................................................................ -->
+	<xs:element name="AbstractQualityElement" type="dqc:AbstractQualityElement_Type" abstract="true"/>
+	<!-- ........................................................................ -->
+	<xs:complexType name="AbstractQualityElement_Type">
+		<xs:sequence/>
+	</xs:complexType>
+	<!-- =========================================================================== -->
+</xs:schema>

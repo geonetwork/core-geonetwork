@@ -873,6 +873,8 @@
         </section>
         <!--<section xpath="/mdb:MD_Metadata/mdb:identificationInfo/*/mri:credit" or="credit"
                  in="/mdb:MD_Metadatamdb:identificationInfo/*"/>-->
+      </tab>
+      <tab id="qualityIcsm">
         <section xpath="/mdb:MD_Metadata/mdb:dataQualityInfo" or="dataQualityInfo"
                  in="/mdb:MD_Metadata"/>
       </tab>

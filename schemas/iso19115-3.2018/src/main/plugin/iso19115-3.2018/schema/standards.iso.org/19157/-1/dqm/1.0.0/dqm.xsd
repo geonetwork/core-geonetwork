@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:gco="https://schemas.isotc211.org/19103/-/gco/1.2" 
+	xmlns:dqm="https://schemas.isotc211.org/19157/-1/dqm/1.0" 
+	targetNamespace="https://schemas.isotc211.org/19157/-1/dqm/1.0" 
+	elementFormDefault="qualified" 
+	version="1.0.0"
+	>
+	<xs:include schemaLocation="../../dqm/1.0.0/dataQualityMeasure.xsd"/>
+	<!-- =========================================================================== -->
+</xs:schema>

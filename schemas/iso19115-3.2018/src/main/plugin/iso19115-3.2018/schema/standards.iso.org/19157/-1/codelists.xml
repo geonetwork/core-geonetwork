@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cat:CT_CodelistCatalogue xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="https://schemas.isotc211.org/19139/-/cat/1.2 https://schemas.isotc211.org/19139/-/cat/1.2.0/cat.xsd
+    https://schemas.isotc211.org/19103/-/gco/1.2 https://schemas.isotc211.org/19103/-/gco/1.2.0/gco.xsd
+    http://www.opengis.net/gml/3.2 http://schemas.opengis.net/gml/3.2.1/gml.xsd"
+    xmlns:cat="https://schemas.isotc211.org/19139/-/cat/1.2"
+    xmlns:gco="https://schemas.isotc211.org/19103/-/gco/1.2"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:lan="https://schemas.isotc211.org/19115/-1/lan/1.3"
+    xmlns:gml="http://www.opengis.net/gml/3.2">
+    <!--=====Catalogue description=====-->
+    <cat:name><gco:CharacterString>Codelists from the ISO / TC211 Standards</gco:CharacterString></cat:name>
+    <cat:scope><gco:CharacterString>Codelists related to ISO / TC211 Standards</gco:CharacterString></cat:scope>
+    <cat:fieldOfApplication><gco:CharacterString>ISO TC211 Standards</gco:CharacterString></cat:fieldOfApplication>
+    <cat:versionNumber><gco:CharacterString>1.1</gco:CharacterString></cat:versionNumber>
+    <cat:versionDate><gco:Date>2021-03-05</gco:Date></cat:versionDate>
+    <cat:locale>
+        <lan:PT_Locale>
+            <lan:language>
+                <lan:LanguageCode
+                    codeList="https://standards.iso.org/19115/-1/1/clause#B.3.11"
+                    codeListValue="eng">eng</lan:LanguageCode>
+            </lan:language>
+            <lan:characterEncoding>
+                <lan:MD_CharacterSetCode
+                    codeList="https://standards.iso.org/19115/-1/1/clause#B.3.14"
+                    codeListValue="UTF-8">UTF-8</lan:MD_CharacterSetCode>
+            </lan:characterEncoding>
+        </lan:PT_Locale>
+    </cat:locale>
+    <!--===== Sub-Catalogue description ISO 19157 group of ISO / TC211 metadata Standards=====-->
+    <cat:subCatalogue xlink:title="Codelists for ISO 19157-1">
+        <cat:CT_CodelistCatalogue id="ISO19157-1">
+            <!--=====Catalogue description=====-->
+            <cat:name><gco:CharacterString>Codelists from the ISO 19157 group of ISO / TC211 Standards</gco:CharacterString></cat:name>
+            <cat:scope><gco:CharacterString>Codelists related to ISO 19157 group of ISO / TC211 Metadata Standards</gco:CharacterString>
+            </cat:scope>
+            <cat:fieldOfApplication><gco:CharacterString>ISO TC211 Metadata Standards</gco:CharacterString>
+            </cat:fieldOfApplication>
+            <cat:versionNumber><gco:CharacterString>1.1</gco:CharacterString>
+            </cat:versionNumber>
+            <cat:versionDate>
+                <gco:Date>2021-11-26</gco:Date>
+            </cat:versionDate>
+            <cat:locale><lan:PT_Locale>
+                <lan:language><lan:LanguageCode
+                    codeList="https://standards.iso.org/19115/-1/1/clause#B.3.11"
+                    codeListValue="eng">eng</lan:LanguageCode></lan:language>
+                <lan:characterEncoding><lan:MD_CharacterSetCode
+                    codeList="https://standards.iso.org/19115/-1/1/clause#B.3.14"
+                    codeListValue="UTF-8">UTF-8</lan:MD_CharacterSetCode></lan:characterEncoding>
+            </lan:PT_Locale></cat:locale>
+            <!--=====Sub-Sub-Catalogue description Metadata for Data Quality namespace=====-->
+            <cat:subCatalogue xlink:title="Codelists from the Metadata for Data Quality (mdq) Namespace">
+                <cat:CT_CodelistCatalogue id="ISO19157-1.1.mdq">
+                    <cat:name><gco:CharacterString>Codelists from the Metadata for Data Quality (mdq) Namespace</gco:CharacterString></cat:name>
+                    <cat:scope><gco:CharacterString>Codelists related to Metadata for Data Quality (mdq) Namespace</gco:CharacterString>
+                    </cat:scope>
+                    <cat:fieldOfApplication><gco:CharacterString>ISO TC211 Metadata Standards</gco:CharacterString>
+                    </cat:fieldOfApplication>
+                    <cat:versionNumber><gco:CharacterString>1.1</gco:CharacterString>
+                    </cat:versionNumber>
+                    <cat:versionDate>
+                        <gco:Date>2021-11-26</gco:Date>
+                    </cat:versionDate>
+                    <cat:locale><lan:PT_Locale>
+                        <lan:language><lan:LanguageCode
+                            codeList="https://standards.iso.org/19115/-1/1/clause#B.3.11"
+                            codeListValue="eng">eng</lan:LanguageCode></lan:language>
+                        <lan:characterEncoding><lan:MD_CharacterSetCode
+                            codeList="https://standards.iso.org/19115/-1/1/clause#B.3.14"
+                            codeListValue="UTF-8">UTF-8</lan:MD_CharacterSetCode></lan:characterEncoding>
+                    </lan:PT_Locale></cat:locale>
+                    <cat:codelistItem xlink:title="Code list items for Value Structure from the Metadata for Data Quality (mdq) Namespace">
+                        <cat:CT_Codelist id="ISO19157-1.1.mdq.EvaluationMethodTypeCode">
+                            <cat:identifier><gco:ScopedName codeSpace="https://standards.iso.org/19157/-1/1/clause#C.3.2">EvaluationMethodTypeCode</gco:ScopedName></cat:identifier>
+                            <cat:name><gco:ScopedName codeSpace="https://standards.iso.org/19157/-1/1/clause#C.3.2">EvaluationMethodTypeCode</gco:ScopedName></cat:name>
+                            <cat:definition><gco:CharacterString>type of method for evaluating an identified data quality measure</gco:CharacterString></cat:definition>
+                            <cat:description><gco:CharacterString>type of method for evaluating an identified data quality measure</gco:CharacterString></cat:description>
+                            <cat:codeEntry xlink:href="https://schemas.isotc211.org/Resources/codelists.xml#ISO19157-1.1.dqm.EvaluationMethodTypeCode_directExternal">
+                                <cat:CT_CodelistValue id="ISO19157-1.1.mdq.EvaluationMethodTypeCode_directExternal">
+                                    <cat:identifier><gco:ScopedName codeSpace="https://standards.iso.org/19157/-1/1/clause#C.3.2">directExternal</gco:ScopedName></cat:identifier>
+                                    <cat:name><gco:ScopedName codeSpace="https://standards.iso.org/19157/-1/1/clause#C.3.2">directExternal</gco:ScopedName></cat:name>
+                                    <cat:definition><gco:CharacterString>method of evaluating the quality of a dataset based on inspection of items within the dataset, where reference data external to the dataset being evaluated is required</gco:CharacterString></cat:definition>
+                                    <cat:description><gco:CharacterString>method of evaluating the quality of a dataset based on inspection of items within the dataset, where reference data external to the dataset being evaluated is required</gco:CharacterString></cat:description>
+                                </cat:CT_CodelistValue>
+                            </cat:codeEntry>
+                            <cat:codeEntry xlink:href="https://schemas.isotc211.org/Resources/codelists.xml#ISO19157-1.1.dqm.EvaluationMethodTypeCode_directInternal">
+                                <cat:CT_CodelistValue id="ISO19157-1.1.mdq.EvaluationMethodTypeCode_directInternal">
+                                    <cat:identifier><gco:ScopedName codeSpace="https://standards.iso.org/19157/-1/1/clause#C.3.2">directInternal</gco:ScopedName></cat:identifier>
+                                    <cat:name><gco:ScopedName codeSpace="https://standards.iso.org/19157/-1/1/clause#C.3.2">directInternal</gco:ScopedName></cat:name>
+                                    <cat:definition><gco:CharacterString>method of evaluating the quality of a dataset based on inspection of items within the dataset, where reference data external to the dataset being evaluated is required</gco:CharacterString></cat:definition>
+                                    <cat:description><gco:CharacterString>method of evaluating the quality of a dataset based on inspection of items within the dataset, where reference data external to the dataset being evaluated is required</gco:CharacterString></cat:description>
+                                </cat:CT_CodelistValue>
+                            </cat:codeEntry>
+                            <cat:codeEntry xlink:href="https://schemas.isotc211.org/Resources/codelists.xml#ISO19157-1.1.dqm.EvaluationMethodTypeCode_indirect">
+                                <cat:CT_CodelistValue id="ISO19157-1.1.mdq.EvaluationMethodTypeCode_indirect">
+                                    <cat:identifier><gco:ScopedName codeSpace="https://standards.iso.org/19157/-1/1/clause#C.3.2">indirect</gco:ScopedName></cat:identifier>
+                                    <cat:name><gco:ScopedName codeSpace="https://standards.iso.org/19157/-1/1/clause#C.3.2">indirect</gco:ScopedName></cat:name>
+                                    <cat:definition><gco:CharacterString>method of evaluating the quality of a dataset based on external knowledge</gco:CharacterString></cat:definition>
+                                    <cat:description><gco:CharacterString>method of evaluating the quality of a dataset based on external knowledge</gco:CharacterString></cat:description>
+                                </cat:CT_CodelistValue>
+                            </cat:codeEntry>
+                        </cat:CT_Codelist>
+                    </cat:codelistItem>
+                </cat:CT_CodelistCatalogue>
+            </cat:subCatalogue>
+            <!--=====End Sub-Sub-Catalogue description Metadata for Data Quality namespace=====-->
+            <!--=====Sub-Sub-Catalogue description Data Quality Measures namespace=====-->
+            <cat:subCatalogue xlink:title="Codelists from the Data Quality Measures (dqm) Namespace">
+                <cat:CT_CodelistCatalogue id="ISO19157-1.1.dqm">
+                    <cat:name><gco:CharacterString>Codelists from the Data Quality Measures (dqm) Namespace</gco:CharacterString></cat:name>
+                    <cat:scope><gco:CharacterString>Codelists related to Data Quality Measures (dqm) Namespace</gco:CharacterString>
+                    </cat:scope>
+                    <cat:fieldOfApplication><gco:CharacterString>ISO TC211 Metadata Standards</gco:CharacterString>
+                    </cat:fieldOfApplication>
+                    <cat:versionNumber><gco:CharacterString>1.1</gco:CharacterString>
+                    </cat:versionNumber>
+                    <cat:versionDate>
+                        <gco:Date>2021-11-26</gco:Date>
+                    </cat:versionDate>
+                    <cat:locale><lan:PT_Locale>
+                        <lan:language><lan:LanguageCode
+                            codeList="https://standards.iso.org/19115/-1/1/clause#B.3.11"
+                            codeListValue="eng">eng</lan:LanguageCode></lan:language>
+                        <lan:characterEncoding><lan:MD_CharacterSetCode
+                            codeList="https://standards.iso.org/19115/-1/1/clause#B.3.14"
+                            codeListValue="UTF-8">UTF-8</lan:MD_CharacterSetCode></lan:characterEncoding>
+                    </lan:PT_Locale></cat:locale>
+                    <cat:codelistItem xlink:title="Code list items for Value Structure from the Data Quality Measures (dqm) Namespace">
+                        <cat:CT_Codelist id="ISO19157-1.1.dqm.ValueStructure">
+                            <cat:identifier><gco:ScopedName codeSpace="https://standards.iso.org/19157/-1/1/clause#C.3.3">ValueStructure</gco:ScopedName></cat:identifier>
+                            <cat:name><gco:ScopedName codeSpace="https://standards.iso.org/19157/-1/1/clause#C.3.3">ValueStructure</gco:ScopedName></cat:name>
+                            <cat:definition><gco:CharacterString>Structure of the data quality parameter</gco:CharacterString></cat:definition>
+                            <cat:description><gco:CharacterString>Structure of the data quality parameter</gco:CharacterString></cat:description>
+                            <cat:codeEntry xlink:href="https://schemas.isotc211.org/Resources/codelists.xml#ISO19157-1.1.dqm.ValueStructure_bag">
+                                <cat:CT_CodelistValue id="ISO19157-1.1.dqm.ValueStructure_bag">
+                                    <cat:identifier><gco:ScopedName codeSpace="https://standards.iso.org/19157/-1/1/clause#C.3.3">bag</gco:ScopedName></cat:identifier>
+                                    <cat:name><gco:ScopedName codeSpace="https://standards.iso.org/19157/-1/1/clause#C.3.3">bag</gco:ScopedName></cat:name>
+                                    <cat:definition><gco:CharacterString>finite, unordered collection of related items (objects or values) that may be repeated (ISO 19107:2003)</gco:CharacterString></cat:definition>
+                                    <cat:description><gco:CharacterString>finite, unordered collection of related items (objects or values) that may be repeated (ISO 19107:2003)</gco:CharacterString></cat:description>
+                                </cat:CT_CodelistValue>
+                            </cat:codeEntry>
+                            <cat:codeEntry xlink:href="https://schemas.isotc211.org/Resources/codelists.xml#ISO19157-1.1.dqm.ValueStructure_coverage">
+                                <cat:CT_CodelistValue id="ISO19157-1.1.dqm.ValueStructure_coverage">
+                                    <cat:identifier><gco:ScopedName codeSpace="https://standards.iso.org/19157/-1/1/clause#C.3.3">coverage</gco:ScopedName></cat:identifier>
+                                    <cat:name><gco:ScopedName codeSpace="https://standards.iso.org/19157/-1/1/clause#C.3.3">coverage</gco:ScopedName></cat:name>
+                                    <cat:definition><gco:CharacterString>feature that acts as a function to return values from its range for any direct position within its spatial, temporal or spatiotemporal domain (ISO 19123:2005)</gco:CharacterString></cat:definition>
+                                    <cat:description><gco:CharacterString>feature that acts as a function to return values from its range for any direct position within its spatial, temporal or spatiotemporal domain (ISO 19123:2005)</gco:CharacterString></cat:description>
+                                </cat:CT_CodelistValue>
+                            </cat:codeEntry>
+                            <cat:codeEntry xlink:href="https://schemas.isotc211.org/Resources/codelists.xml#ISO19157-1.1.dqm.ValueStructure_matrix">
+                                <cat:CT_CodelistValue id="ISO19157-1.1.dqm.ValueStructure_matrix">
+                                    <cat:identifier><gco:ScopedName codeSpace="https://standards.iso.org/19157/-1/1/clause#C.3.3">matrix</gco:ScopedName></cat:identifier>
+                                    <cat:name><gco:ScopedName codeSpace="https://standards.iso.org/19157/-1/1/clause#C.3.3">matrix</gco:ScopedName></cat:name>
+                                    <cat:definition><gco:CharacterString>rectangular array of numbers (ISO/TS 19129:2009)</gco:CharacterString></cat:definition>
+                                    <cat:description><gco:CharacterString>rectangular array of numbers (ISO/TS 19129:2009)</gco:CharacterString></cat:description>
+                                </cat:CT_CodelistValue>
+                            </cat:codeEntry>
+                            <cat:codeEntry xlink:href="https://schemas.isotc211.org/Resources/codelists.xml#ISO19157-1.1.dqm.ValueStructure_sequence">
+                                <cat:CT_CodelistValue id="ISO19157-1.1.dqm.ValueStructure_sequence">
+                                    <cat:identifier><gco:ScopedName codeSpace="https://standards.iso.org/19157/-1/1/clause#C.3.3">sequence</gco:ScopedName></cat:identifier>
+                                    <cat:name><gco:ScopedName codeSpace="https://standards.iso.org/19157/-1/1/clause#C.3.3">sequence</gco:ScopedName></cat:name>
+                                    <cat:definition><gco:CharacterString>finite, ordered collection of related items (objects or values) that may be repeated (ISO 19107:2003)</gco:CharacterString></cat:definition>
+                                    <cat:description><gco:CharacterString>finite, ordered collection of related items (objects or values) that may be repeated (ISO 19107:2003)</gco:CharacterString></cat:description>
+                                </cat:CT_CodelistValue>
+                            </cat:codeEntry>
+                            <cat:codeEntry xlink:href="https://schemas.isotc211.org/Resources/codelists.xml#ISO19157-1.1.dqm.ValueStructure_set">
+                                <cat:CT_CodelistValue id="ISO19157-1.1.dqm.ValueStructure_set">
+                                    <cat:identifier><gco:ScopedName codeSpace="https://standards.iso.org/19157/-1/1/clause#C.3.3">set</gco:ScopedName></cat:identifier>
+                                    <cat:name><gco:ScopedName codeSpace="https://standards.iso.org/19157/-1/1/clause#C.3.3">set</gco:ScopedName></cat:name>
+                                    <cat:definition><gco:CharacterString>unordered collection of related items (objects or values) with no repetition (ISO 19107:2003)</gco:CharacterString></cat:definition>
+                                    <cat:description><gco:CharacterString>unordered collection of related items (objects or values) with no repetition (ISO 19107:2003)</gco:CharacterString></cat:description>
+                                </cat:CT_CodelistValue>
+                            </cat:codeEntry>
+                            <cat:codeEntry xlink:href="https://schemas.isotc211.org/Resources/codelists.xml#ISO19157-1.1.dqm.ValueStructure_table">
+                                <cat:CT_CodelistValue id="ISO19157-1.1.dqm.ValueStructure_table">
+                                    <cat:identifier><gco:ScopedName codeSpace="https://standards.iso.org/19157/-1/1/clause#C.3.3">table</gco:ScopedName></cat:identifier>
+                                    <cat:name><gco:ScopedName codeSpace="https://standards.iso.org/19157/-1/1/clause#C.3.3">table</gco:ScopedName></cat:name>
+                                    <cat:definition><gco:CharacterString>an arrangement of data in which each item may be identified by means of arguments or keys (ISO/IEC 2382-4:1999)</gco:CharacterString></cat:definition>
+                                    <cat:description><gco:CharacterString>an arrangement of data in which each item may be identified by means of arguments or keys (ISO/IEC 2382-4:1999)</gco:CharacterString></cat:description>
+                                </cat:CT_CodelistValue>
+                            </cat:codeEntry>
+                        </cat:CT_Codelist>
+                    </cat:codelistItem>
+                </cat:CT_CodelistCatalogue>
+            </cat:subCatalogue>
+            <!--=====End Sub-Sub-Catalogue description Data Quality Measures namespace=====-->
+            <cat:codelistItem gco:nilReason="inapplicable"/>
+        </cat:CT_CodelistCatalogue>
+    </cat:subCatalogue>
+    <!--=====End Sub-Catalogue description ISO 19157 group of ISO / TC211 metadata Standards=====-->                     
+    <cat:codelistItem gco:nilReason="inapplicable"/>
+</cat:CT_CodelistCatalogue>
