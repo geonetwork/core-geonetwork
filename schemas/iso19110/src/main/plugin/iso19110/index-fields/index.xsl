@@ -118,7 +118,12 @@
               "link": "<xsl:value-of select="*/gfc:code/*/@xlink:href"/>",
               "type": "<xsl:value-of select="*/gfc:valueType/gco:TypeName/gco:aName/*/text()"/>"
               <xsl:if test="*/gfc:cardinality">
-                ,"cardinality": "<xsl:value-of select="concat(*/gfc:cardinality//gco:lower/*/text(), '..', */gfc:cardinality//gco:upper/*/text())"/>"
+                <xsl:variable name="cardinalityValue">
+                  <xsl:for-each select="*/gfc:cardinality/*/gco:range">
+                    <xsl:value-of select="concat(*/gco:lower/*/text(), '..', */gco:upper/*/text())"/><xsl:if test="position() != last()">,</xsl:if>
+                  </xsl:for-each>
+                </xsl:variable>
+                ,"cardinality": "<xsl:value-of select="$cardinalityValue"/>"
               </xsl:if>
               <xsl:variable name="codeList"
                             select="*/gfc:listedValue[normalize-space(*) != '']"/>
