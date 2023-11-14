@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema xmlns="http://www.w3.org/2001/XMLSchema" 
-  xmlns:dqc="http://standards.iso.org/iso/19157/-2/dqc/1.0" 
-  xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0" 
-  xmlns:gmw="http://standards.iso.org/iso/19115/-3/gmw/1.0" 
-  xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0" 
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+  xmlns:dqc="https://schemas.isotc211.org/19157/-1/dqc/1.0"
+  xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
+  xmlns:gmw="http://standards.iso.org/iso/19115/-3/gmw/1.0"
+  xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0"
   xmlns:msr="http://standards.iso.org/iso/19115/-3/msr/1.0" elementFormDefault="qualified" targetNamespace="http://standards.iso.org/iso/19115/-3/msr/1.0" version="1.0">
   <annotation>
     <documentation>Name: SpatialRepresentation
@@ -12,7 +12,7 @@ Position: 3</documentation>
 <!--  <include schemaLocation="msr.xsd"/>-->
   <import namespace="http://standards.iso.org/iso/19115/-3/gco/1.0" schemaLocation="../../../../19115/-3/gco/1.0/gco.xsd"/>
   <import namespace="http://standards.iso.org/iso/19115/-3/gmw/1.0" schemaLocation="../../../../19115/-3/gmw/1.0/gmw.xsd"/>
-  <import namespace="http://standards.iso.org/iso/19157/-2/dqc/1.0" schemaLocation="../../../../19157/-2/dqc/1.0/dqc.xsd"/>
+  <import namespace="https://standards.iso.org/iso/19157/-1/dqc/1.0" schemaLocation="../../../../19157/-1/dqc/1.0.0/dqc.xsd"/>
   <import namespace="http://standards.iso.org/iso/19115/-3/mcc/1.0" schemaLocation="../../../../19115/-3/mcc/1.0/mcc.xsd"/>
   <!--XML Schema document created by ShapeChange - http://shapechange.net/-->
   <element name="MI_GCP" substitutionGroup="gco:AbstractObject" type="msr:MI_GCP_Type"/>

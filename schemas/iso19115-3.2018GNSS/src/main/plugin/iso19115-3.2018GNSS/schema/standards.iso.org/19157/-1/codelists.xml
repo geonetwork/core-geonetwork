@@ -6,8 +6,9 @@
     xmlns:cat="https://schemas.isotc211.org/19139/-/cat/1.2"
     xmlns:gco="https://schemas.isotc211.org/19103/-/gco/1.2"
     xmlns:xlink="http://www.w3.org/1999/xlink"
-    xmlns:lan="https://schemas.isotc211.org/19115/-1/lan/1.3"
+    xmlns:lan="https://schemas.isotc211.org/19115/-1/lan/1.3.0"
     xmlns:gml="http://www.opengis.net/gml/3.2">
+
     <!--=====Catalogue description=====-->
     <cat:name><gco:CharacterString>Codelists from the ISO / TC211 Standards</gco:CharacterString></cat:name>
     <cat:scope><gco:CharacterString>Codelists related to ISO / TC211 Standards</gco:CharacterString></cat:scope>
@@ -189,6 +190,6 @@
             <cat:codelistItem gco:nilReason="inapplicable"/>
         </cat:CT_CodelistCatalogue>
     </cat:subCatalogue>
-    <!--=====End Sub-Catalogue description ISO 19157 group of ISO / TC211 metadata Standards=====-->                     
+    <!--=====End Sub-Catalogue description ISO 19157 group of ISO / TC211 metadata Standards=====-->
     <cat:codelistItem gco:nilReason="inapplicable"/>
 </cat:CT_CodelistCatalogue>

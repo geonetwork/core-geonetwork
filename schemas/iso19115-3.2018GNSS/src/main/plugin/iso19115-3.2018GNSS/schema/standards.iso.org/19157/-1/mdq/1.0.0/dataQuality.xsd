@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	xmlns:gco="https://schemas.isotc211.org/19103/-/gco/1.2" 
-	xmlns:cit="https://schemas.isotc211.org/19115/-1/cit/1.3" 
-	xmlns:mcc="https://schemas.isotc211.org/19115/-1/mcc/1.3" 
-	xmlns:mda="https://schemas.isotc211.org/19115/-1/mda/1.3" 
-	xmlns:mdq="https://schemas.isotc211.org/19157/-1/mdq/1.0" 
-	xmlns:dqc="https://schemas.isotc211.org/19157/-1/dqc/1.0" 
-	targetNamespace="https://schemas.isotc211.org/19157/-1/mdq/1.0" 
-	elementFormDefault="qualified" 
+	xmlns:gco="https://schemas.isotc211.org/19103/-/gco/1.2"
+	xmlns:cit="https://schemas.isotc211.org/19115/-1/cit/1.3"
+	xmlns:mcc="https://schemas.isotc211.org/19115/-1/mcc/1.3"
+	xmlns:mda="https://schemas.isotc211.org/19115/-1/mda/1.3"
+	xmlns:mdq="https://schemas.isotc211.org/19157/-1/mdq/1.0"
+	xmlns:dqc="https://schemas.isotc211.org/19157/-1/dqc/1.0"
+	targetNamespace="https://schemas.isotc211.org/19157/-1/mdq/1.0"
+	elementFormDefault="qualified"
 	version="1.0.0"
 	>
 	<xs:import namespace="https://schemas.isotc211.org/19103/-/gco/1.2" schemaLocation="https://schemas.isotc211.org/19103/-/gco/1.2.0/gco.xsd"/>
@@ -356,6 +356,15 @@
 		<xs:attributeGroup ref="gco:ObjectReference"/>
 		<xs:attribute ref="gco:nilReason"/>
 	</xs:complexType>
+
+  <!-- ........................................................................ -->
+  <xs:element name="Abstract_ThematicAccuracy" substitutionGroup="mdq:AbstractDQ_Element" type="mdq:Abstract_ThematicQuality_Type" abstract="true" />
+  <!-- ........................................................................ -->
+  <element abstract="true" name="Abstract_ThematicAccuracy" substitutionGroup="mdq:AbstractDQ_Element" type="mdq:Abstract_ThematicAccuracy_Type">
+    <annotation>
+      <documentation>accuracy of quantitative attributes and the correctness of non-quantitative attributes and of the classifications of features and their relationships</documentation>
+    </annotation>
+  </element>
 	<!-- ........................................................................ -->
 	<xs:element name="ThematicClassificationCorrectness" substitutionGroup="mdq:Abstract_ThematicAccuracy" type="mdq:ThematicClassificationCorrectness_Type" id="ISO19157-1.1.023"/>
 	<!-- ........................................................................ -->
@@ -566,5 +575,241 @@
 			<xs:element name="onlineResource" type="mda:AbstractDS_Resource_PropertyType" minOccurs="0" maxOccurs="unbounded" id="ISO19157-1.1.077_ISO19115-1.1.001"/>
 		</xs:sequence>
 	</xs:complexType>
+  <!-- Inclusion of GNSS DQ elements - BC Nov 23 -->
+  <xs:element name="DQ_Authentication" substitutionGroup="mdq:Abstract_QualityElement" type="mdq:DQ_AuthenticationQualityType"/>
+  <xs:annotation>
+    <xs:documentation>A technique to verify the receiving signal or navigation message expressed as a probability of false alarm, and probability of detection</xs:documentation>
+  </xs:annotation>
+  <xs:complexType name="DQ_AuthenticationQualityType">
+    <xs:complexContent>
+      <xs:extension base="mdq:Abstract_QualityElement_Type">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="DQ_AuthenticationPropertyType">
+    <xs:sequence minOccurs="0">
+      <xs:element ref="mdq:DQ_Authentication"/>
+    </xs:sequence>
+    <xs:attributeGroup ref="gco:ObjectReference"/>
+    <xs:attribute ref="gco:nilReason"/>
+  </xs:complexType>
+  <xs:element name="DQ_Availability" substitutionGroup="mdq:Abstract_QualityElement" type="mdq:DQ_AvailabilityQualityType"/>
+  <xs:annotation>
+    <xs:documentation>The percentage of time that a specified level of accuracy, integrity, and continuity is available and usable within a specified area (in scenarios -- U = urban; C = canopy; I = indoors)</xs:documentation>
+  </xs:annotation>
+  <xs:complexType name="DQ_AvailabilityQualityType">
+    <xs:complexContent>
+      <xs:extension base="mdq:Abstract_QualityElement_Type">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="DQ_AvailabilityPropertyType">
+    <xs:sequence minOccurs="0">
+      <xs:element ref="mdq:DQ_Availability"/>
+    </xs:sequence>
+    <xs:attributeGroup ref="gco:ObjectReference"/>
+    <xs:attribute ref="gco:nilReason"/>
+  </xs:complexType>
+  <xs:element name="DQ_Continuity" substitutionGroup="mdq:Abstract_QualityElement" type="mdq:DQ_ContinuityQualityType"/>
+  <xs:annotation>
+    <xs:documentation>the probability that a specified level of accuracy will be maintained throughout a given operation or experiment, assuming that the specification is met at initialization</xs:documentation>
+  </xs:annotation>
+  <xs:complexType name="DQ_ContinuityQualityType">
+    <xs:complexContent>
+      <xs:extension base="mdq:Abstract_QualityElement_Type">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="DQ_ContinuityPropertyType">
+    <xs:sequence minOccurs="0">
+      <xs:element ref="mdq:DQ_Continuity"/>
+    </xs:sequence>
+    <xs:attributeGroup ref="gco:ObjectReference"/>
+    <xs:attribute ref="gco:nilReason"/>
+  </xs:complexType>
+  <xs:element name="DQ_DownTime" substitutionGroup="mdq:Abstract_QualityElement" type="mdq:DQ_DownTimeQualityType"/>
+  <xs:annotation>
+    <xs:documentation>Signal outage</xs:documentation>
+  </xs:annotation>
+  <xs:complexType name="DQ_DownTimeQualityType">
+    <xs:complexContent>
+      <xs:extension base="mdq:Abstract_QualityElement_Type">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="DQ_DownTimePropertyType">
+    <xs:sequence minOccurs="0">
+      <xs:element ref="mdq:DQ_DownTime"/>
+    </xs:sequence>
+    <xs:attributeGroup ref="gco:ObjectReference"/>
+    <xs:attribute ref="gco:nilReason"/>
+  </xs:complexType>
+  <xs:element name="DQ_GNSSSensitivity" substitutionGroup="mdq:Abstract_QualityElement" type="mdq:DQ_GNSSSensitivityQualityType"/>
+  <xs:annotation>
+    <xs:documentation>The minimum signal strength at the antenna, as detectable by the receiver</xs:documentation>
+  </xs:annotation>
+  <xs:complexType name="DQ_GNSSSensitivityQualityType">
+    <xs:complexContent>
+      <xs:extension base="mdq:Abstract_QualityElement_Type">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="DQ_GNSSSensitivityPropertyType">
+    <xs:sequence minOccurs="0">
+      <xs:element ref="mdq:DQ_GNSSSensitivity"/>
+    </xs:sequence>
+    <xs:attributeGroup ref="gco:ObjectReference"/>
+    <xs:attribute ref="gco:nilReason"/>
+  </xs:complexType>
+  <xs:element name="DQ_Integrity" substitutionGroup="mdq:Abstract_QualityElement" type="mdq:DQ_IntegrityQualityType"/>
+  <xs:annotation>
+    <xs:documentation>The extent to which the information supplied by the navigation system can be trusted or to the ability of the navigation system to detect and to provide timely warning to the user about when the specified accuracy should not be trusted</xs:documentation>
+  </xs:annotation>
+  <xs:complexType name="DQ_IntegrityQualityType">
+    <xs:complexContent>
+      <xs:extension base="mdq:Abstract_QualityElement_Type">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="DQ_IntegrityPropertyType">
+    <xs:sequence minOccurs="0">
+      <xs:element ref="mdq:DQ_Integrity"/>
+    </xs:sequence>
+    <xs:attributeGroup ref="gco:ObjectReference"/>
+    <xs:attribute ref="gco:nilReason"/>
+  </xs:complexType>
+  <xs:element name="DQ_Latency" substitutionGroup="mdq:Abstract_QualityElement" type="mdq:DQ_LatencyQualityType"/>
+  <xs:complexType name="DQ_LatencyQualityType">
+    <xs:complexContent>
+      <xs:extension base="mdq:Abstract_QualityElement_Type">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="DQ_LatencyPropertyType">
+    <xs:sequence minOccurs="0">
+      <xs:element ref="mdq:DQ_Latency"/>
+    </xs:sequence>
+    <xs:attributeGroup ref="gco:ObjectReference"/>
+    <xs:attribute ref="gco:nilReason"/>
+  </xs:complexType>
+  <xs:element name="DQ_PositionFixRate" substitutionGroup="mdq:Abstract_QualityElement" type="mdq:DQ_PositionFixRateQualityType"/>
+  <xs:annotation>
+    <xs:documentation>The rate at which the position terminal outputs PVT (position, velocity and time) data</xs:documentation>
+  </xs:annotation>
+  <xs:complexType name="DQ_PositionFixRateQualityType">
+    <xs:complexContent>
+      <xs:extension base="mdq:Abstract_QualityElement_Type">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="DQ_PositionFixRatePropertyType">
+    <xs:sequence minOccurs="0">
+      <xs:element ref="mdq:DQ_PositionFixRate"/>
+    </xs:sequence>
+    <xs:attributeGroup ref="gco:ObjectReference"/>
+    <xs:attribute ref="gco:nilReason"/>
+  </xs:complexType>
+  <xs:element name="DQ_Reliability" substitutionGroup="mdq:Abstract_QualityElement" type="mdq:DQ_ReliabilityQualityType"/>
+  <xs:annotation>
+    <xs:documentation>The ability of the system to detect blunders in the measurements and to estimate the effects of undetected blunders on the position solution</xs:documentation>
+  </xs:annotation>
+  <xs:complexType name="DQ_ReliabilityQualityType">
+    <xs:complexContent>
+      <xs:extension base="mdq:Abstract_QualityElement_Type">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="DQ_ReliabilityPropertyType">
+    <xs:sequence minOccurs="0">
+      <xs:element ref="mdq:DQ_Reliability"/>
+    </xs:sequence>
+    <xs:attributeGroup ref="gco:ObjectReference"/>
+    <xs:attribute ref="gco:nilReason"/>
+  </xs:complexType>
+  <xs:element name="DQ_TimeToAlert" substitutionGroup="mdq:Abstract_QualityElement" type="mdq:DQ_TimeToAlertQualityType"/>
+  <xs:annotation>
+    <xs:documentation>Abbreviation : TTA&#xD;
+      A maximum time allowed when a system that was previously declared safe for use can no longer assure that it meets all its integrity requirements for a given operation</xs:documentation>
+  </xs:annotation>
+  <xs:complexType name="DQ_TimeToAlertQualityType">
+    <xs:complexContent>
+      <xs:extension base="mdq:Abstract_QualityElement_Type">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="DQ_TimeToAlertPropertyType">
+    <xs:sequence minOccurs="0">
+      <xs:element ref="mdq:DQ_TimeToAlert"/>
+    </xs:sequence>
+    <xs:attributeGroup ref="gco:ObjectReference"/>
+    <xs:attribute ref="gco:nilReason"/>
+  </xs:complexType>
+  <xs:element name="DQ_TimeToFirstFix" substitutionGroup="mdq:Abstract_QualityElement" type="mdq:DQ_TimeToFirstFixQualityType"/>
+  <xs:annotation>
+    <xs:documentation>Abbreviation : TTFF&#xD;
+      A receiver's performance covering the time between activation and output of a position within the required accuracy bounds.</xs:documentation>
+  </xs:annotation>
+  <xs:complexType name="DQ_TimeToFirstFixQualityType">
+    <xs:complexContent>
+      <xs:extension base="mdq:Abstract_QualityElement_Type">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="DQ_TimeToFirstFixPropertyType">
+    <xs:sequence minOccurs="0">
+      <xs:element ref="mdq:DQ_TimeToFirstFix"/>
+    </xs:sequence>
+    <xs:attributeGroup ref="gco:ObjectReference"/>
+    <xs:attribute ref="gco:nilReason"/>
+  </xs:complexType>
+
+  <xs:element name="DQ_HorizontalAccuracy" substitutionGroup="mdq:Abstract_PositionalAccuracy" type="mdq:DQ_HorizontalAccuracyQualityType"/>
+  <xs:annotation>
+    <xs:documentation>Horizontal Accuracy</xs:documentation>
+  </xs:annotation>
+  <xs:complexType name="DQ_HorizontalAccuracyQualityType">
+    <xs:complexContent>
+      <xs:extension base="mdq:Abstract_PositionalAccuracy_Type">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="DQ_HorizontalAccuracyPropertyType">
+    <xs:sequence minOccurs="0">
+      <xs:element ref="mdq:DQ_HorizontalAccuracy"/>
+    </xs:sequence>
+    <xs:attributeGroup ref="gco:ObjectReference"/>
+    <xs:attribute ref="gco:nilReason"/>
+  </xs:complexType>
+  <xs:element name="DQ_VerticalAccuracy" substitutionGroup="mdq:Abstract_PositionalAccuracy" type="mdq:DQ_VerticalAccuracyQualityType"/>
+  <xs:annotation>
+    <xs:documentation>Vertical Accuracy</xs:documentation>
+  </xs:annotation>
+  <xs:complexType name="DQ_VerticalAccuracyQualityType">
+    <xs:complexContent>
+      <xs:extension base="mdq:Abstract_PositionalAccuracy_Type">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="DQ_VerticalAccuracyPropertyType">
+    <xs:sequence minOccurs="0">
+      <xs:element ref="mdq:DQ_VerticalAccuracy"/>
+    </xs:sequence>
+    <xs:attributeGroup ref="gco:ObjectReference"/>
+    <xs:attribute ref="gco:nilReason"/>
+  </xs:complexType>
+  <!-- End Test -->
 	<!-- =========================================================================== -->
 </xs:schema>
