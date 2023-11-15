@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2007 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2023 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -58,9 +58,9 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 import static org.fao.geonet.kernel.search.EsFilterBuilder.buildPermissionsFilter;
 import static org.fao.geonet.kernel.search.EsSearchManager.FIELDLIST_CORE;
@@ -114,9 +114,9 @@ public class AtomSearch {
             description = "fileIdentifier",
             required = false)
         @RequestParam(defaultValue = "")
-            String fileIdentifier,
+        String fileIdentifier,
         @Parameter(hidden = true)
-            HttpServletRequest request) throws Exception {
+        HttpServletRequest request) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
 
         boolean inspireEnable = sm.getValueAsBool(Settings.SYSTEM_INSPIRE_ENABLE);
@@ -126,7 +126,9 @@ public class AtomSearch {
             throw new Exception("Inspire is disabled");
         }
 
-        List<String> datasetIdentifiers = new ArrayList<>();
+        List<String> datasetIdentifiers;
+
+        String datasetIdentifiersFilter = "";
 
         // If fileIdentifier is provided search only in the related datasets
         if (StringUtils.isNotEmpty(fileIdentifier)) {
@@ -142,9 +144,11 @@ public class AtomSearch {
             // Retrieve the datasets related to the service metadata
             datasetIdentifiers = InspireAtomUtil.extractRelatedDatasetsIdentifiers(schema, md, dm);
 
-            // Add query filter / TODO Migrate ?
-            //            String values = Joiner.on(" or ").join(datasetIdentifiers);
-            //            params.addContent(new Element("identifier").setText(values));
+            String datasets = datasetIdentifiers.stream().collect(Collectors.joining("\",\"", "\"", "\""));
+
+            datasetIdentifiersFilter = String.format(", {\"terms\": {\n" +
+                "      \"resourceIdentifier.code\": [%s]\n" +
+                "    }}", datasets);
         }
 
         String privilegesFilter = buildPermissionsFilter(context);
@@ -161,11 +165,11 @@ public class AtomSearch {
             "          \"query_string\": {" +
             "            \"query\": \"%s\"" +
             "        }" +
-            "      }]" +
+            "      }%s]" +
             "    }" +
             "}";
         ObjectMapper objectMapper = new ObjectMapper();
-        JsonNode esJsonQuery = objectMapper.readTree(String.format(jsonQuery, privilegesFilter));
+        JsonNode esJsonQuery = objectMapper.readTree(String.format(jsonQuery, privilegesFilter, datasetIdentifiersFilter));
 
         final SearchResponse result = searchMan.query(
             esJsonQuery,
@@ -208,9 +212,9 @@ public class AtomSearch {
             description = "fileIdentifier",
             required = false)
         @RequestParam(defaultValue = "")
-            String fileIdentifier,
+        String fileIdentifier,
         @Parameter(hidden = true)
-            HttpServletRequest request) throws Exception {
+        HttpServletRequest request) throws Exception {
         Element feeds = feeds(fileIdentifier, request);
 
         Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
