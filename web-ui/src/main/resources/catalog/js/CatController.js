@@ -333,7 +333,7 @@ goog.require('gn_alert');
       requireProxy: [],
       gnCfg: angular.copy(defaultConfig),
       gnUrl: '',
-      docUrl: 'https://geonetwork-opensource.org/manuals/3.12.x/',
+      docUrl: 'https://docs.geonetwork-opensource.org/3.12/',
       //docUrl: '../../doc/',
       modelOptions: {
         updateOn: 'default blur',

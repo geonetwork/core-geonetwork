@@ -55,7 +55,7 @@
         link: function(scope, element, attrs) {
           scope.iconOnly = attrs.iconOnly === 'true';
           var helpBaseUrl = gnGlobalSettings.docUrl ||
-              'https://geonetwork-opensource.org/manuals/3.12.x/';
+              'https://docs.geonetwork-opensource.org/3.12/';
 
           var testAndOpen = function(url) {
             var defer = $q.defer();
@@ -75,8 +75,15 @@
           scope.showHelp = function() {
             var page = attrs.gnNeedHelp;
             var helpPageUrl = helpBaseUrl + gnGlobalSettings.lang + '/' + page;
+
+            if (gnGlobalSettings.lang !== "en") {
+              helpPageUrl = helpBaseUrl + gnGlobalSettings.lang + '/' + page;
+            } else {
+              helpPageUrl = helpBaseUrl + page;
+            }
+
             testAndOpen(helpPageUrl).then(function() {}, function() {
-              testAndOpen( helpBaseUrl + 'en/' + page)
+              testAndOpen( helpBaseUrl + page)
             });
             return true;
           };
