@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2022 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2023 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -32,13 +32,16 @@ import org.apache.commons.io.FilenameUtils;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
+import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.api.tools.i18n.TranslationPackBuilder;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.guiapi.search.XsltResponseWriter;
+import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.repository.LanguageRepository;
 import org.fao.geonet.repository.SortUtils;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.resources.Resources;
+import org.fao.geonet.util.XslUtil;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -54,6 +57,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 
@@ -76,6 +80,9 @@ public class SourcesApi {
 
     @Autowired
     private TranslationPackBuilder translationPackBuilder;
+
+    @Autowired
+    LanguageUtils languageUtils;
 
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Get all sources",
@@ -120,17 +127,23 @@ public class SourcesApi {
     @ResponseBody
     public void getSubPortals(
         @Parameter(hidden = true)
+        HttpServletRequest request,
+        @Parameter(hidden = true)
         HttpServletResponse response
     ) throws Exception {
+        Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
+        String language = IsoLanguagesMapper.iso639_2T_to_iso639_2B(locale.getISO3Language());
+        String language2code = XslUtil.twoCharLangCode(language, "eng").toLowerCase();
+
         final List<Source> sources = sourceRepository.findAll(SortUtils.createSort(Source_.name));
         Element sourcesList = new Element("sources");
         sources.stream().map(GeonetEntity::asXml).forEach(sourcesList::addContent);
         response.setContentType(MediaType.TEXT_HTML_VALUE);
         setHeaderVaryOnAccept(response);
         response.getWriter().write(
-            new XsltResponseWriter(null, "portal")
-                .withJson("catalog/locales/en-core.json")
-                .withJson("catalog/locales/en-search.json")
+            new XsltResponseWriter(null, "portal", language)
+                .withJson(String.format("catalog/locales/%s-core.json", language2code))
+                .withJson(String.format("catalog/locales/%s-search.json", language2code))
                 .withXml(sourcesList)
                 .withParam("cssClass", "gn-portal")
                 .withXsl("xslt/ui-search/portal-list.xsl")

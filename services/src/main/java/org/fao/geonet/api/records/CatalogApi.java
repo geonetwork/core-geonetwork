@@ -463,12 +463,12 @@ public class CatalogApi {
 
         Locale locale = languageUtils.parseAcceptLanguage(httpRequest.getLocales());
         String language = IsoLanguagesMapper.iso639_2T_to_iso639_2B(locale.getISO3Language());
-        language = XslUtil.twoCharLangCode(language, "eng").toLowerCase();
+        String language2code = XslUtil.twoCharLangCode(language, "eng").toLowerCase();
 
-        new XsltResponseWriter("env", "search")
-            .withJson(String.format("catalog/locales/%s-v4.json", language))
-            .withJson(String.format("catalog/locales/%s-core.json", language))
-            .withJson(String.format("catalog/locales/%s-search.json", language))
+        new XsltResponseWriter("env", "search", language)
+            .withJson(String.format("catalog/locales/%s-v4.json", language2code))
+            .withJson(String.format("catalog/locales/%s-core.json", language2code))
+            .withJson(String.format("catalog/locales/%s-search.json", language2code))
             .withXml(response)
             .withParams(params)
             .withXsl("xslt/services/pdf/portal-present-fop.xsl")
@@ -574,7 +574,7 @@ public class CatalogApi {
                 }
             });
 
-            Element r = new XsltResponseWriter(null, "search")
+            Element r = new XsltResponseWriter(null, "search", context.getLanguage())
                 .withParams(allRequestParams.entrySet().stream()
                     .collect(Collectors.toMap(
                         Entry::getKey,

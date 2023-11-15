@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2023 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -30,9 +30,12 @@ import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.NotImplementedException;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.ApiUtils;
+import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.kernel.search.EsSearchManager;
+import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -41,6 +44,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Locale;
 import java.util.Map;
 
 @RequestMapping(value = {
@@ -51,6 +55,9 @@ import java.util.Map;
 @Controller("search")
 public class SearchApi {
     public static final String APPLICATION_RDF_XML = "application/rdf+xml";
+
+    @Autowired
+    LanguageUtils languageUtils;
 
     @Operation(
         summary = "Get statistics about a field",
@@ -101,8 +108,11 @@ public class SearchApi {
         } else if (isJson) {
             response.getWriter().write(Xml.getJSON(results));
         } else {
+            Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
+            String language = IsoLanguagesMapper.iso639_2T_to_iso639_2B(locale.getISO3Language());
+
             response.getWriter().write(
-                new XsltResponseWriter(null, "search")
+                new XsltResponseWriter(null, "search", language)
                     .withJson("catalog/locales/en-core.json")
                     .withJson("catalog/locales/en-search.json")
                     .withXml(results)
