@@ -23,15 +23,9 @@
 
 package org.fao.geonet.api.processing.report;
 
-import org.opengis.annotation.XmlElement;
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 
-/**
- * Created by francois on 20/05/16.
- */
-@XmlElement(value = "metadata")
 @XmlAccessorType(XmlAccessType.PUBLIC_MEMBER)
 class InfoReport extends Report {
     public InfoReport(String message) {

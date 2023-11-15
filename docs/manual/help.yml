@@ -1,32 +1,34 @@
+# Project information
 site_name: Catalogue Help
 site_dir: target/help
 docs_dir: docs/help
+
+# Copyright
+copyright: Copyright &copy; 2001 - 2023 FAO-UN and others
+
 extra_css:
-  - stylesheets/extra.css
+  - assets/stylesheets/extra.css
+
 theme:
   name: material
   language: en
   custom_dir: overrides
-  logo: assets/geonetwork-logo.svg
-  favicon: assets/geonetwork-logo.png
+  logo: assets/images/geonetwork-logo.svg
+  favicon: assets/images/geonetwork-logo.png
   palette:
-
     # Palette toggle for light mode
     - media: "(prefers-color-scheme: light)"
       scheme: default
-      primary: blue grey
-
+      primary: blue
       toggle:
         icon: material/weather-night
         name: Switch to dark mode
-
     # Palette toggle for dark mode
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
       toggle:
         icon: material/weather-sunny
         name: Switch to light mode
-
   features:
     - content.code.annotate
     - content.tabs.link
@@ -87,8 +89,13 @@ markdown_extensions:
   - tables
 
 extra:
+  homepage: https://geonetwork-opensource.org/
   social:
-    - icon: fontawesome/solid/arrow-up-right-from-square
+    - icon: fontawesome/brands/github
+      link: https://github.com/geonetwork
+    - icon: fontawesome/brands/docker
+      link: https://hub.docker.com/_/geonetwork
+    - icon: geonetwork/logo_bw
       link: https://geonetwork-opensource.org/
       name: GeoNetwork Website
 

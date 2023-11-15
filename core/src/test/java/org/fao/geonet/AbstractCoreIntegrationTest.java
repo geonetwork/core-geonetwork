@@ -294,9 +294,21 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
     }
 
 
+    private static Element getSample(String resource) throws IOException, JDOMException {
+        final URL resourceUrl = AbstractCoreIntegrationTest.class.getResource(resource);
+        return Xml.loadStream(resourceUrl.openStream());
+    }
+
     public Element getSampleMetadataXml() throws IOException, JDOMException {
-        final URL resource = AbstractCoreIntegrationTest.class.getResource("kernel/valid-metadata.iso19139.xml");
-        return Xml.loadStream(resource.openStream());
+        return getSample("kernel/valid-metadata.iso19139.xml");
+    }
+
+    public Element getSampleISO19139MetadataXml() throws IOException, JDOMException {
+        return getSample("kernel/metadata.iso19139.xml");
+    }
+
+    public Element getSampleISO19115MetadataXml() throws IOException, JDOMException {
+        return getSample("kernel/metadata.iso19115-3.xml");
     }
 
     /**

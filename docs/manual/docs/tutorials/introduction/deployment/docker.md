@@ -10,9 +10,9 @@ Open a command-line panel verify that docker engine is running:
 $ docker --version
 ```
 
-Clone or download as a zip file the repository <https://github.com/geonetwork/docker-geonetwork>. The relevant folder in that repository is the latest 4.0.x.
+Clone or download as a zip file the repository <https://github.com/geonetwork/docker-geonetwork>. The relevant folder in that repository is the latest 4.2.x.
 
-Navigate with command-line to that folder (e.g. ``cd \~docker-geonetwork4.0.5``). The folder has a file ``docker-compose.yml`` which defines the orchestration. The orchestration will download and deploy the following
+Navigate with command-line to that folder (e.g. ``cd \~docker-geonetwork\4.2.6``). The folder has a file ``docker-compose.yml`` which defines the orchestration. The orchestration will download and deploy the following
 
 -   nginx; manages routing within the orchestration
 -   postgis; used for database persistence

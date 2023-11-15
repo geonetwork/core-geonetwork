@@ -28,7 +28,7 @@ import org.locationtech.jts.geom.Geometry;
 import jeeves.server.context.ServiceContext;
 
 import org.jdom.Element;
-import org.opengis.referencing.crs.CoordinateReferenceSystem;
+import org.geotools.api.referencing.crs.CoordinateReferenceSystem;
 
 import java.lang.ref.WeakReference;
 import java.util.Collection;
