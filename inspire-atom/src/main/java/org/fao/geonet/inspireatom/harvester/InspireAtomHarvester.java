@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2010 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2023 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -49,6 +49,10 @@ import org.jdom.Element;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.util.*;
+
+import static java.util.Comparator.comparing;
+import static java.util.stream.Collectors.collectingAndThen;
+import static java.util.stream.Collectors.toCollection;
 
 
 /**
@@ -261,7 +265,12 @@ public class InspireAtomHarvester {
             }
         }
 
-        return datasetsInformation;
+        // Remove duplicates by dataset identifier, that could be obtained from datasets referenced by different service feeds
+        List<DatasetFeedInfo> uniqueDatasetsInformation = datasetsInformation.stream()
+            .collect(collectingAndThen(toCollection(() -> new TreeSet<>(comparing(DatasetFeedInfo::getIdentifier))),
+                ArrayList::new));
+
+        return uniqueDatasetsInformation;
     }
 
 
