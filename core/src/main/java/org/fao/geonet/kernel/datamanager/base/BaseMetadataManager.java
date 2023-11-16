@@ -621,13 +621,14 @@ public class BaseMetadataManager implements IMetadataManager {
 
         // Check if the schema is allowed by settings
         String mdImportSetting = settingManager.getValue(Settings.METADATA_IMPORT_RESTRICT);
-        if (mdImportSetting != null && !mdImportSetting.equals("")) {
-            if (!newMetadata.getHarvestInfo().isHarvested() && !Arrays.asList(mdImportSetting.split(",")).contains(schema)) {
-                throw new IllegalArgumentException("The system setting '" + Settings.METADATA_IMPORT_RESTRICT
-                    + "' doesn't allow to import " + schema
-                    + " metadata records (they can still be harvested). "
-                    + "Apply an import stylesheet to convert file to one of the allowed schemas: " + mdImportSetting);
-            }
+        if (!StringUtils.isEmpty(mdImportSetting) &&
+            !newMetadata.getHarvestInfo().isHarvested() &&
+            !Arrays.asList(mdImportSetting.trim().split("\\s*,\\s*")).contains(schema)) {
+            throw new IllegalArgumentException("The system setting '" + Settings.METADATA_IMPORT_RESTRICT
+                + "' doesn't allow to import '" + schema
+                + "' metadata records (they can still be harvested). "
+                + "Apply an import stylesheet to convert file to one of the allowed schemas: "
+                + mdImportSetting + ".");
         }
 
         // --- force namespace prefix for iso19139 metadata
