@@ -70,7 +70,7 @@ public abstract class GenericMetadataEventListener {
      */
     public final void storeContentHistoryEvent(AbstractHistoryEvent event) {
 
-        if(settingManager.getValueAsBool(Settings.SYSTEM_METADATA_HISTORY_ENABLED)) {
+        if(settingManager.getValueAsBool(Settings.METADATA_HISTORY_ENABLED)) {
 
             Integer metadataid = Math.toIntExact(event.getMdId());
 
