@@ -7,7 +7,7 @@ function showUsage
   echo -e "Usage: ./`basename $0 $1` schema_name git_schema_repository git_schema_branch"
   echo
   echo -e "Example:"
-  echo -e "\t./`basename $0 $1` iso19139.ca.HNAP https://github.com/metadata101/iso19139.ca.HNAP 3.11.x"
+  echo -e "\t./`basename $0 $1` iso19139.ca.HNAP https://github.com/metadata101/iso19139.ca.HNAP 3.12.x"
   echo
 }
 
@@ -38,7 +38,7 @@ fi
 # Add submodule
 if [ ! -d "schemas/${schema}" ]; then
   echo "Adding schema from ${gitRepository}, branch  ${gitBranch} to schemas/${schema}"
-  git submodule add -b ${gitBranch} ${gitRepository} schemas/${schema}
+  git submodule add -f -b ${gitBranch} ${gitRepository} schemas/${schema}
 fi
 
 
@@ -145,7 +145,7 @@ then
   line=$(grep -n '</dependencies>' services/pom.xml | cut -d: -f1)
   finalLine=$(($line - 1))
 
-  projectGroupId='org.geonetwork-opensource.schemas'
+  projectGroupId='${project.groupId}'
   gnSchemasVersion='${project.version}'
 
   echo "Adding schema ${schema} resources to service/pom.xml"
