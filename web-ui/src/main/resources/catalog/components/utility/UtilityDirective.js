@@ -482,6 +482,8 @@
           var addGeonames = !attrs["disableGeonames"];
           scope.regionTypes = [];
 
+          scope.lang = attrs["lang"];
+
           function setDefault() {
             var defaultThesaurus = attrs["default"];
             for (var t in scope.regionTypes) {
@@ -736,6 +738,8 @@
               }
             });
           }
+          scope.lang = attrs["lang"];
+
           scope.$watch("regionType", function (val) {
             if (scope.regionType) {
               if (scope.regionType.id == "geonames") {
