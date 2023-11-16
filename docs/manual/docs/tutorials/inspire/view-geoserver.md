@@ -22,7 +22,7 @@ Create layers as described in [layer management](https://docs.geoserver.org/late
 
 ## GeoNetwork
 
-When deploying Geonetwork, make sure the GEMET thesauri are loaded and activate the INSPIRE editor as described in [inspire documentation](../../../users/administrator-guide/configuring-the-catalog/inspire-configuration.md).
+When deploying Geonetwork, make sure the GEMET thesauri are loaded and activate the INSPIRE editor as described in [inspire documentation](../../administrator-guide/configuring-the-catalog/inspire-configuration.md).
 
 In Admin --> Settings activate the INSPIRE extension.
 
