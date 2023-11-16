@@ -6,7 +6,7 @@ GeoNetwork uses a database to persist aspects such as metadata records, privileg
 
 ## H2 database
 
-By default, a [H2](http://www.h2database.com/html/main.html) database is configured and created when the application first starts. The H2 database named `gn.h2.db` is created:
+By default, a [H2](https://www.h2database.com/html/main.html) database is configured and created when the application first starts. The H2 database named `gn.h2.db` is created:
 
 -   In the **`jetty`** folder of the GeoNetwork application folder when using the [ZIP distribution](installing-from-zip.md).
 -   In the **`bin`** folder of Tomcat when deploying the [WAR](installing-from-war-file.md) on Tomcat (started using `startup.sh`).
