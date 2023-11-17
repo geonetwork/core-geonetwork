@@ -1847,8 +1847,8 @@
                 profile !== ""
                   ? "is" + profile[0].toUpperCase() + profile.substring(1) + "OrMore"
                   : "";
-            if (profile ==="RegisteredUser") {
-                return true;
+            if (profile === "RegisteredUser") {
+              return true;
             }
             return angular.isFunction(this[fnName]) ? this[fnName]() : false;
           },

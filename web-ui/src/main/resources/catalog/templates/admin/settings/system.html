@@ -259,7 +259,10 @@
                         class="form-control"
                         name="{{s.name}}"
                       >
-                        <option value="RegisteredUser" ng-selected="'RegisteredUser' == s.value">
+                        <option
+                          value="RegisteredUser"
+                          ng-selected="'RegisteredUser' == s.value"
+                        >
                           {{'RegisteredUser' | translate}}
                         </option>
                         <option value="Editor" ng-selected="'Editor' == s.value">
