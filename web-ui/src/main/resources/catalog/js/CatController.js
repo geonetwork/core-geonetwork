@@ -938,6 +938,7 @@
             createPageTpl: "../../catalog/templates/editor/new-metadata-horizontal.html",
             editorIndentType: "",
             allowRemoteRecordLink: true,
+            workflowSearchRecordTypes: ["n", "e"],
             facetConfig: {
               resourceType: {
                 terms: {
