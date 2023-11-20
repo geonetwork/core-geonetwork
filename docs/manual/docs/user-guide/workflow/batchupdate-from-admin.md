@@ -64,7 +64,7 @@ Sample configuration:
 
 In the configuration, the `element` define the target element in the metadata record. It starts with the schema identifier and then define a path to the element. This is a regular expression and could use `.*` for matching all elements wherever in the document. To match a more specific element, user can defined complete path like `iso19139\\.contact\\.individualName` to match only the metadata contact individual name.
 
-The `searchval` is also a [regular expression](http://www.regular-expressions.info/tutorial.html). It could be simple text or more advanced expression. For example with catching groups, searching for `(.*)` and replacing by `Mr $1` will replace `John` by `Mr John`.
+The `searchval` is also a [regular expression](https://www.regular-expressions.info/tutorial.html). It could be simple text or more advanced expression. For example with catching groups, searching for `(.*)` and replacing by `Mr $1` will replace `John` by `Mr John`.
 
 The last parameter is the vacuum mode defining what to do with empty elements:
 
