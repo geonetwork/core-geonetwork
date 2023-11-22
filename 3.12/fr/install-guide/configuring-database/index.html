@@ -19,8 +19,8 @@
         <link rel="next" href="../customizing-data-directory/">
       
       
-      <link rel="icon" href="../../../assets/geonetwork-logo.png">
-      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.4.5">
+      <link rel="icon" href="../../../assets/images/geonetwork-logo.png">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.4.10">
     
     
       
@@ -28,7 +28,7 @@
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.6a10b989.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.fad675c6.min.css">
       
         
         <link rel="stylesheet" href="../../../assets/stylesheets/palette.356b1318.min.css">
@@ -50,7 +50,7 @@
       
     
     
-      <link rel="stylesheet" href="../../../stylesheets/extra.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/extra.css">
     
     <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
@@ -101,7 +101,7 @@
   <nav class="md-header__inner md-grid" aria-label="En-tête">
     <a href="https://geonetwork-opensource.org/" title="GeoNetwork Opensource (FR)" class="md-header__button md-logo" aria-label="GeoNetwork Opensource (FR)" data-md-component="logo">
       
-  <img src="../../../assets/geonetwork-logo.svg" alt="logo">
+  <img src="../../../assets/images/geonetwork-logo.svg" alt="logo">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -446,7 +446,7 @@
   <label class="md-nav__title" for="__drawer">
     <a href="https://geonetwork-opensource.org/" title="GeoNetwork Opensource (FR)" class="md-nav__button md-logo" aria-label="GeoNetwork Opensource (FR)" data-md-component="logo">
       
-  <img src="../../../assets/geonetwork-logo.svg" alt="logo">
+  <img src="../../../assets/images/geonetwork-logo.svg" alt="logo">
 
     </a>
     GeoNetwork Opensource (FR)
@@ -1813,49 +1813,63 @@
       
         <li class="md-nav__item">
   <a href="#introduction" class="md-nav__link">
-    Introduction
+    <span class="md-ellipsis">
+      Introduction
+    </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
   <a href="#h2-database" class="md-nav__link">
-    H2 database
+    <span class="md-ellipsis">
+      H2 database
+    </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
   <a href="#configuring-a-database-via-config-files" class="md-nav__link">
-    Configuring a database via config files
+    <span class="md-ellipsis">
+      Configuring a database via config files
+    </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
   <a href="#configuring-a-database-via-jndi" class="md-nav__link">
-    Configuring a database via JNDI
+    <span class="md-ellipsis">
+      Configuring a database via JNDI
+    </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
   <a href="#configuring-a-database-via-environment" class="md-nav__link">
-    Configuring a database via environment
+    <span class="md-ellipsis">
+      Configuring a database via environment
+    </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
   <a href="#logging" class="md-nav__link">
-    Logging
+    <span class="md-ellipsis">
+      Logging
+    </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
   <a href="#summary" class="md-nav__link">
-    Summary
+    <span class="md-ellipsis">
+      Summary
+    </span>
   </a>
   
 </li>
@@ -2992,49 +3006,63 @@
       
         <li class="md-nav__item">
   <a href="#introduction" class="md-nav__link">
-    Introduction
+    <span class="md-ellipsis">
+      Introduction
+    </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
   <a href="#h2-database" class="md-nav__link">
-    H2 database
+    <span class="md-ellipsis">
+      H2 database
+    </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
   <a href="#configuring-a-database-via-config-files" class="md-nav__link">
-    Configuring a database via config files
+    <span class="md-ellipsis">
+      Configuring a database via config files
+    </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
   <a href="#configuring-a-database-via-jndi" class="md-nav__link">
-    Configuring a database via JNDI
+    <span class="md-ellipsis">
+      Configuring a database via JNDI
+    </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
   <a href="#configuring-a-database-via-environment" class="md-nav__link">
-    Configuring a database via environment
+    <span class="md-ellipsis">
+      Configuring a database via environment
+    </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
   <a href="#logging" class="md-nav__link">
-    Logging
+    <span class="md-ellipsis">
+      Logging
+    </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
   <a href="#summary" class="md-nav__link">
-    Summary
+    <span class="md-ellipsis">
+      Summary
+    </span>
   </a>
   
 </li>
@@ -3074,7 +3102,7 @@
 <h2 id="introduction">Introduction</h2>
 <p>GeoNetwork uses a database to persist aspects such as metadata records, privileges and configurations. The database default structure is created by the application on initial startup. Subsequent releases of GeoNetwork will update the database structure automatically. For this reason the database user initially needs create privileges on the database. A number of database dialects are supported; <strong><em>H2</em></strong>,<strong><em>PostgreSQL</em></strong>,<strong><em>PostGIS</em></strong>,<strong><em>Oracle</em></strong>,<strong><em>SQL Server</em></strong>. This section describes various options to configure the database connection.</p>
 <h2 id="h2-database">H2 database</h2>
-<p>By default, a <a href="http://www.h2database.com/html/main.html">H2</a> database is configured and created when the application first starts. The H2 database named <code>gn.h2.db</code> is created:</p>
+<p>By default, a <a href="https://www.h2database.com/html/main.html">H2</a> database is configured and created when the application first starts. The H2 database named <code>gn.h2.db</code> is created:</p>
 <ul>
 <li>In the <strong><code>jetty</code></strong> folder of the GeoNetwork application folder when using the <a href="../installing-from-zip/">ZIP distribution</a>.</li>
 <li>In the <strong><code>bin</code></strong> folder of Tomcat when deploying the <a href="../installing-from-war-file/">WAR</a> on Tomcat (started using <code>startup.sh</code>).</li>
@@ -3322,7 +3350,7 @@
     <script id="__config" type="application/json">{"base": "../../..", "features": ["content.action.view", "content.action.edit", "content.code.copy", "content.tabs.link", "navigation.tabs", "navigation.tracking", "navigation.prune", "navigation.indexes", "toc.follow", "navigation.top", "navigation.footer", "announce.dismiss"], "search": "../../../assets/javascripts/workers/search.f886a092.min.js", "translations": {"clipboard.copied": "Copi\u00e9 dans le presse-papier", "clipboard.copy": "Copier dans le presse-papier", "search.result.more.one": "1 de plus sur cette page", "search.result.more.other": "# de plus sur cette page", "search.result.none": "Aucun document trouv\u00e9", "search.result.one": "1 document trouv\u00e9", "search.result.other": "# documents trouv\u00e9s", "search.result.placeholder": "Taper pour d\u00e9marrer la recherche", "search.result.term.missing": "Non trouv\u00e9", "select.version": "S\u00e9lectionner la version"}, "version": {"default": "stable", "provider": "mike"}}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.aecac24b.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.6c14ae12.min.js"></script>
       
     
   </body>
