@@ -19,7 +19,7 @@
   "results.layout.selectOne": "Results layout",
   "results.records.hits.found": "{hits, plural, =0{No documents match the specified search.} one{} other{{hits} records found.}}",
   "results.records.hits.empty.help.html": "Suggestions: <ul class='list-disc list-inside'><li>Try other words</li><li>Specify fewer words</li></ul>",
-  "results.sortBy.dateStamp": "Last updates",
+  "results.sortBy.dateStamp": "Most recent",
   "results.sortBy.popularity": "Popularity",
   "results.sortBy.relevancy": "Relevancy",
   "search.field.any.placeholder": "Search datasets, services and maps ...",
