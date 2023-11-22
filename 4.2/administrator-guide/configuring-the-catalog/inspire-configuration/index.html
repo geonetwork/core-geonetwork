@@ -19,8 +19,8 @@
         <link rel="next" href="../map-server-configuration/">
       
       
-      <link rel="icon" href="../../../assets/geonetwork-logo.png">
-      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.4.5">
+      <link rel="icon" href="../../../assets/images/geonetwork-logo.png">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.4.10">
     
     
       
@@ -28,7 +28,7 @@
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.6a10b989.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.fad675c6.min.css">
       
         
         <link rel="stylesheet" href="../../../assets/stylesheets/palette.356b1318.min.css">
@@ -50,7 +50,7 @@
       
     
     
-      <link rel="stylesheet" href="../../../stylesheets/extra.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/extra.css">
     
     <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
@@ -101,7 +101,7 @@
   <nav class="md-header__inner md-grid" aria-label="Header">
     <a href="https://geonetwork-opensource.org/" title="GeoNetwork Opensource (EN)" class="md-header__button md-logo" aria-label="GeoNetwork Opensource (EN)" data-md-component="logo">
       
-  <img src="../../../assets/geonetwork-logo.svg" alt="logo">
+  <img src="../../../assets/images/geonetwork-logo.svg" alt="logo">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -446,7 +446,7 @@
   <label class="md-nav__title" for="__drawer">
     <a href="https://geonetwork-opensource.org/" title="GeoNetwork Opensource (EN)" class="md-nav__button md-logo" aria-label="GeoNetwork Opensource (EN)" data-md-component="logo">
       
-  <img src="../../../assets/geonetwork-logo.svg" alt="logo">
+  <img src="../../../assets/images/geonetwork-logo.svg" alt="logo">
 
     </a>
     GeoNetwork Opensource (EN)
@@ -1773,21 +1773,27 @@
       
         <li class="md-nav__item">
   <a href="#enabling-inspire" class="md-nav__link">
-    Enabling INSPIRE
+    <span class="md-ellipsis">
+      Enabling INSPIRE
+    </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
   <a href="#loading-inspire-codelists" class="md-nav__link">
-    Loading INSPIRE codelists
+    <span class="md-ellipsis">
+      Loading INSPIRE codelists
+    </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
   <a href="#inspire-validation" class="md-nav__link">
-    INSPIRE validation
+    <span class="md-ellipsis">
+      INSPIRE validation
+    </span>
   </a>
   
     <nav class="md-nav" aria-label="INSPIRE validation">
@@ -1795,7 +1801,9 @@
         
           <li class="md-nav__item">
   <a href="#configure-validation-test-suites" class="md-nav__link">
-    Configure validation test suites
+    <span class="md-ellipsis">
+      Configure validation test suites
+    </span>
   </a>
   
 </li>
@@ -1807,14 +1815,18 @@
       
         <li class="md-nav__item">
   <a href="#inspire-access-point" class="md-nav__link">
-    INSPIRE access point
+    <span class="md-ellipsis">
+      INSPIRE access point
+    </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
   <a href="#inspire-reference-documents" class="md-nav__link">
-    INSPIRE reference documents
+    <span class="md-ellipsis">
+      INSPIRE reference documents
+    </span>
   </a>
   
 </li>
@@ -3166,21 +3178,27 @@
       
         <li class="md-nav__item">
   <a href="#enabling-inspire" class="md-nav__link">
-    Enabling INSPIRE
+    <span class="md-ellipsis">
+      Enabling INSPIRE
+    </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
   <a href="#loading-inspire-codelists" class="md-nav__link">
-    Loading INSPIRE codelists
+    <span class="md-ellipsis">
+      Loading INSPIRE codelists
+    </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
   <a href="#inspire-validation" class="md-nav__link">
-    INSPIRE validation
+    <span class="md-ellipsis">
+      INSPIRE validation
+    </span>
   </a>
   
     <nav class="md-nav" aria-label="INSPIRE validation">
@@ -3188,7 +3206,9 @@
         
           <li class="md-nav__item">
   <a href="#configure-validation-test-suites" class="md-nav__link">
-    Configure validation test suites
+    <span class="md-ellipsis">
+      Configure validation test suites
+    </span>
   </a>
   
 </li>
@@ -3200,14 +3220,18 @@
       
         <li class="md-nav__item">
   <a href="#inspire-access-point" class="md-nav__link">
-    INSPIRE access point
+    <span class="md-ellipsis">
+      INSPIRE access point
+    </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
   <a href="#inspire-reference-documents" class="md-nav__link">
-    INSPIRE reference documents
+    <span class="md-ellipsis">
+      INSPIRE reference documents
+    </span>
   </a>
   
 </li>
@@ -3255,7 +3279,7 @@
 </ul>
 <p>To configure the discovery service, a dedicated service metadata record MUST be created in order to provide a complete GetCapabilities document (<a href="../csw-configuration/#csw-configuration_inspire">CSW Configuration for INSPIRE</a>).</p>
 <h2 id="loading-inspire-codelists">Loading INSPIRE codelists</h2>
-<p>To describe INSPIRE datasets and series, it is recommended to load relevant codelists from the <a href="http://inspire.ec.europa.eu/registry/">INSPIRE Registry</a>, the following codelists are relevant in the scope of metadata guidelines v2.0:</p>
+<p>To describe INSPIRE datasets and series, it is recommended to load relevant codelists from the <a href="https://inspire.ec.europa.eu/registry/">INSPIRE Registry</a>, the following codelists are relevant in the scope of metadata guidelines v2.0:</p>
 <ul>
 <li><a href="https://inspire.ec.europa.eu/theme">INSPIRE Theme</a></li>
 <li><a href="https://inspire.ec.europa.eu/applicationschema">Application schema</a></li>
@@ -3282,7 +3306,7 @@
 <p><img alt="image" src="../img/inspire-keyword-encoding-type.png" /></p>
 <p>Via the schema plugin form configuration it is an option to configure a thesaurus to be used for a specific <code>or</code> element. The thesaures concepts are used to populate an auto complete text field for that element.</p>
 <h2 id="inspire-validation">INSPIRE validation</h2>
-<p>INSPIRE validation of metadata records is available at <a href="https://inspire.ec.europa.eu/validator/about/">the INSPIRE Validator</a>. It is using <a href="https://github.com/etf-validator/etf-webapp">ETF which is an open source testing framework for spatial data and services</a>. GeoNetwork is able to <code>te</code> any record using a service provided by an instance of ETF. To configure remote validation, go to <code>Admin console</code> &rarr; <code>Settings</code> and set the URL of the validator. The url of the main INSPIRE validator is <code>http://inspire.ec.europa.eu/validator/</code>.</p>
+<p>INSPIRE validation of metadata records is available at <a href="https://inspire.ec.europa.eu/validator/about/">the INSPIRE Validator</a>. It is using <a href="https://github.com/etf-validator/etf-webapp">ETF which is an open source testing framework for spatial data and services</a>. GeoNetwork is able to <code>te</code> any record using a service provided by an instance of ETF. To configure remote validation, go to <code>Admin console</code> &rarr; <code>Settings</code> and set the URL of the validator. The url of the main INSPIRE validator is <code>https://inspire.ec.europa.eu/validator/</code>.</p>
 <p><img alt="image" src="../img/inspire-configuration.png" /></p>
 <p>Once enabled, the editor will show the remote validation option in the menu:</p>
 <p><img alt="image" src="../img/inspire-validation-menu.png" /></p>
@@ -3536,7 +3560,7 @@
     <script id="__config" type="application/json">{"base": "../../..", "features": ["content.action.view", "content.action.edit", "content.code.copy", "content.tabs.link", "navigation.tabs", "navigation.tracking", "navigation.prune", "navigation.indexes", "toc.follow", "navigation.top", "navigation.footer", "announce.dismiss"], "search": "../../../assets/javascripts/workers/search.f886a092.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"default": "stable", "provider": "mike"}}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.aecac24b.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.6c14ae12.min.js"></script>
       
     
   </body>
