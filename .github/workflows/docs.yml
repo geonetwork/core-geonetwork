@@ -38,4 +38,4 @@ jobs:
         if: ${{ github.event_name != 'pull_request' }}
         working-directory: docs/manual
         run: |
-          mike deploy --push --title "4.4 Latest" ---alias-type=copy --update-aliases 4.4 latest
+          mike deploy --push --title "4.4 Latest" --alias-type=copy --update-aliases 4.4 latest
