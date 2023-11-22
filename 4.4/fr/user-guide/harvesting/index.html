@@ -19,8 +19,8 @@
         <link rel="next" href="harvesting-csw/">
       
       
-      <link rel="icon" href="../../../assets/geonetwork-logo.png">
-      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.4.6">
+      <link rel="icon" href="../../../assets/images/geonetwork-logo.png">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.4.10">
     
     
       
@@ -28,7 +28,7 @@
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.35e1ed30.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.fad675c6.min.css">
       
         
         <link rel="stylesheet" href="../../../assets/stylesheets/palette.356b1318.min.css">
@@ -50,7 +50,7 @@
       
     
     
-      <link rel="stylesheet" href="../../../stylesheets/extra.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/extra.css">
     
     <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
@@ -101,7 +101,7 @@
   <nav class="md-header__inner md-grid" aria-label="En-tête">
     <a href="https://geonetwork-opensource.org/" title="GeoNetwork Opensource (FR)" class="md-header__button md-logo" aria-label="GeoNetwork Opensource (FR)" data-md-component="logo">
       
-  <img src="../../../assets/geonetwork-logo.svg" alt="logo">
+  <img src="../../../assets/images/geonetwork-logo.svg" alt="logo">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -446,7 +446,7 @@
   <label class="md-nav__title" for="__drawer">
     <a href="https://geonetwork-opensource.org/" title="GeoNetwork Opensource (FR)" class="md-nav__button md-logo" aria-label="GeoNetwork Opensource (FR)" data-md-component="logo">
       
-  <img src="../../../assets/geonetwork-logo.svg" alt="logo">
+  <img src="../../../assets/images/geonetwork-logo.svg" alt="logo">
 
     </a>
     GeoNetwork Opensource (FR)
@@ -2952,70 +2952,90 @@
       
         <li class="md-nav__item">
   <a href="#mechanism-overview" class="md-nav__link">
-    Mechanism overview
+    <span class="md-ellipsis">
+      Mechanism overview
+    </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
   <a href="#harvesting-life-cycle" class="md-nav__link">
-    Harvesting life cycle
+    <span class="md-ellipsis">
+      Harvesting life cycle
+    </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
   <a href="#multiple-harvesting-and-hierarchies" class="md-nav__link">
-    Multiple harvesting and hierarchies
+    <span class="md-ellipsis">
+      Multiple harvesting and hierarchies
+    </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
   <a href="#harvesting_fragments" class="md-nav__link">
-    Harvesting Fragments of Metadata to support re-use
+    <span class="md-ellipsis">
+      Harvesting Fragments of Metadata to support re-use
+    </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
   <a href="#https-support" class="md-nav__link">
-    HTTPS support
+    <span class="md-ellipsis">
+      HTTPS support
+    </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
   <a href="#the-main-page" class="md-nav__link">
-    The main page
+    <span class="md-ellipsis">
+      The main page
+    </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
   <a href="#admin_harvesting_status" class="md-nav__link">
-    Harvesting Status and Error Icons
+    <span class="md-ellipsis">
+      Harvesting Status and Error Icons
+    </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
   <a href="#harvesting-result-tips" class="md-nav__link">
-    Harvesting result tips
+    <span class="md-ellipsis">
+      Harvesting result tips
+    </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
   <a href="#adding-new-harvesters" class="md-nav__link">
-    Adding new harvesters
+    <span class="md-ellipsis">
+      Adding new harvesters
+    </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
   <a href="#harvest_history" class="md-nav__link">
-    Harvest History
+    <span class="md-ellipsis">
+      Harvest History
+    </span>
   </a>
   
 </li>
@@ -3133,7 +3153,7 @@
 </span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>Caused by: sun.security.provider.certpath.SunCertPathBuilderException:
 </span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>   unable to find valid certification path to requested target
 </span></code></pre></div>
-<p>The server certificate for the GeoNetwork server being harvested needs to be added to the JVM keystore with <a href="http://docs.oracle.com/javase/6/docs/technotes/tools/solaris/keytool.html">keytool</a> in order to be trusted.</p>
+<p>The server certificate for the GeoNetwork server being harvested needs to be added to the JVM keystore with <a href="https://docs.oracle.com/en/java/javase/11/tools/keytool.html">keytool</a> in order to be trusted.</p>
 <p>An alternative way to add the certificate is to use a script like:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1">## JAVA SSL Certificate import script</span>
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1">## Based on original MacOs script by LouiSe@louise.hu : http://louise.hu</span>
@@ -3152,7 +3172,7 @@
 </span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="c1"># Comment previous line and uncomment next one for MacOs</span>
 </span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c1">#sudo cp jssecacerts /Library/Java/Home/lib/security/</span>
 </span></code></pre></div>
-<p>To use the script, the Java compiler must be installed and the file <a href="http://code.google.com/p/java-use-examples/source/browse/trunk/src/com/aw/ad/util/InstallCert.java">InstallCert.java</a>, must be downloaded and placed in the same directory as the script.</p>
+<p>To use the script, the Java compiler must be installed and the file <a href="https://github.com/escline/InstallCert">InstallCert.java</a>, must be downloaded and placed in the same directory as the script.</p>
 <p>The script will add the certificate to the JVM keystore, if you run it as follows::</p>
 <div class="language-text highlight"><pre><span></span><code>$ ./ssl_key_import.sh https_server_name 443
 </code></pre></div>
@@ -3395,7 +3415,7 @@
     <script id="__config" type="application/json">{"base": "../../..", "features": ["content.action.view", "content.action.edit", "content.code.copy", "content.tabs.link", "navigation.tabs", "navigation.tracking", "navigation.prune", "navigation.indexes", "toc.follow", "navigation.top", "navigation.footer", "announce.dismiss"], "search": "../../../assets/javascripts/workers/search.f886a092.min.js", "translations": {"clipboard.copied": "Copi\u00e9 dans le presse-papier", "clipboard.copy": "Copier dans le presse-papier", "search.result.more.one": "1 de plus sur cette page", "search.result.more.other": "# de plus sur cette page", "search.result.none": "Aucun document trouv\u00e9", "search.result.one": "1 document trouv\u00e9", "search.result.other": "# documents trouv\u00e9s", "search.result.placeholder": "Taper pour d\u00e9marrer la recherche", "search.result.term.missing": "Non trouv\u00e9", "select.version": "S\u00e9lectionner la version"}, "version": {"default": "stable", "provider": "mike"}}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.aecac24b.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.6c14ae12.min.js"></script>
       
     
   </body>
