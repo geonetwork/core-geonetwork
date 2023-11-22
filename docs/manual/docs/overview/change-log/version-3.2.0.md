@@ -14,7 +14,7 @@
 -   Editor / XML view provides code editing with syntax highlighting and more, \...
 -   Directories can be populated from catalog content
 -   Metadata import improved (import by URL, import multiple files at once, better error reports)
--   GeoServer updated to [version 2.9.0](http://geoserver.org/)
+-   GeoServer updated to [version 2.9.0](https://geoserver.org/)
 -   Added schema.org tags for better indexing by search engine
 
 ## Removed features

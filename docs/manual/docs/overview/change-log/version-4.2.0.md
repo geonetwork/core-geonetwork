@@ -9,7 +9,7 @@ Due to H2 database major update, when migrating from a previous version drop the
 -   JS/CSS cache database in \$DATA_DIR/wro4j-cache.mv.db
 -   Formatter cache database in \$DATA_DIR/data/resources/htmlcache/formatter-cache/info-store.mv.db
 
-If using H2 as the main database consider migrating to an external database (see [Configuring the database](../../install-guide/configuring-database.md)) or read [H2 migration guide](http://www.h2database.com/html/migration-to-v2.html) and migrate the database to version 2 format.
+If using H2 as the main database consider migrating to an external database (see [Configuring the database](../../install-guide/configuring-database.md)) or read [H2 migration guide](https://www.h2database.com/html/migration-to-v2.html) and migrate the database to version 2 format.
 
 Then start the application.
 

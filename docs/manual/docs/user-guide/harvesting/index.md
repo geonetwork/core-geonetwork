@@ -105,7 +105,7 @@ Caused by: sun.security.provider.certpath.SunCertPathBuilderException:
    unable to find valid certification path to requested target
 ```
 
-The server certificate for the GeoNetwork server being harvested needs to be added to the JVM keystore with [keytool](http://docs.oracle.com/javase/6/docs/technotes/tools/solaris/keytool.html) in order to be trusted.
+The server certificate for the GeoNetwork server being harvested needs to be added to the JVM keystore with [keytool](https://docs.oracle.com/en/java/javase/11/tools/keytool.html) in order to be trusted.
 
 An alternative way to add the certificate is to use a script like:
 
@@ -128,7 +128,7 @@ sudo cp jssecacerts $JAVA_HOME/jre/lib/security/jssecacerts
 #sudo cp jssecacerts /Library/Java/Home/lib/security/
 ```
 
-To use the script, the Java compiler must be installed and the file [InstallCert.java](http://code.google.com/p/java-use-examples/source/browse/trunk/src/com/aw/ad/util/InstallCert.java), must be downloaded and placed in the same directory as the script.
+To use the script, the Java compiler must be installed and the file [InstallCert.java](https://github.com/escline/InstallCert), must be downloaded and placed in the same directory as the script.
 
 The script will add the certificate to the JVM keystore, if you run it as follows::
 

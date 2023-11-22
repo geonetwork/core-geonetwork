@@ -96,7 +96,7 @@ In order to define which groups the user is member of and which profile is the u
 ``` text
 ldapUserContextMapper.mapping[privilege]=groups,sample
 # If not set, the default profile is RegisteredUser
-# Valid profiles are http://geonetwork-opensource.org/manuals/trunk/eng/developer/apidocs/geonetwork/org/fao/geonet/constants/Geonet.Profile.html
+# Valid profiles are ADMINISTRATOR, USER_ADMIN, REVIEWER, EDITOR, REGISTERED_USER, GUEST
 ldapUserContextMapper.mapping[profile]=privileges,RegisteredUser
 ```
 

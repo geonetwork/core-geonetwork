@@ -1,10 +1,10 @@
 # Setting up INSPIRE view service with GeoNetwork and Mapserver {#tuto-view-mapserver}
 
-This tutorial shows how one can set up a combination of [MapServer](http://mapserver.org) and GeoNetwork to provide view services following [technical guidelines for view services](http://inspire.ec.europa.eu/documents/Network_Services/TechnicalGuidance_ViewServices_v3.1.pdf).
+This tutorial shows how one can set up a combination of [MapServer](https://mapserver.org) and GeoNetwork to provide view services following [technical guidelines for view services](https://inspire.ec.europa.eu/documents/Network_Services/TechnicalGuidance_ViewServices_v3.1.pdf).
 
 ## MapServer
 
-How to set up an INSPIRE view service in Mapserver is documented in [mapserver documentation](http://www.mapserver.org/ogc/inspire.html). In this tutorial we use the reference service metadata approach:
+How to set up an INSPIRE view service in Mapserver is documented in [mapserver documentation](https://www.mapserver.org/ogc/inspire.html). In this tutorial we use the reference service metadata approach:
 
 ``` text
 WEB
@@ -64,7 +64,7 @@ END
 
 ## Validate the implementation
 
-If you are running the above setup online, you can use the [pilot JRC INSPIRE validator](http://inspire-geoportal.ec.europa.eu/validator2/). If the above setup is running locally, you can use [Esdin Test Framework](https://github.com/Geonovum/etf-test-projects-inspire) to validate the INSPIRE setup.
+If you are running the above setup online, you can use the [pilot JRC INSPIRE validator](https://inspire-geoportal.ec.europa.eu/validator2/). If the above setup is running locally, you can use [Esdin Test Framework](https://github.com/Geonovum/etf-test-projects-inspire) to validate the INSPIRE setup.
 
 ![image](img/image_6.png)
 
