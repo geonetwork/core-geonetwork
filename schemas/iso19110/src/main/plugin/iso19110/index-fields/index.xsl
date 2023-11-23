@@ -120,7 +120,7 @@
               <xsl:if test="*/gfc:cardinality">
                 <xsl:variable name="cardinalityValue">
                   <xsl:for-each select="*/gfc:cardinality/*/gco:range">
-                    <xsl:value-of select="concat(*/gco:lower/*/text(), '..', */gco:upper/*/text())"/><xsl:if test="position() != last()">,</xsl:if>
+                    <xsl:value-of select="concat(*/gco:lower/*/text(), '..', */gco:upper/*/text())"/><xsl:if test="position() != last()">, </xsl:if>
                   </xsl:for-each>
                 </xsl:variable>
                 ,"cardinality": "<xsl:value-of select="$cardinalityValue"/>"
