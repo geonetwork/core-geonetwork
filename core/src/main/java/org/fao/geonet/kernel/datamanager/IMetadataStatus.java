@@ -73,7 +73,7 @@ public interface IMetadataStatus {
      *
      * @return the saved status entity object
      */
-    MetadataStatus setStatusExt(MetadataStatus status) throws Exception;
+    MetadataStatus setStatusExt(MetadataStatus status, boolean updateIndex) throws Exception;
 
     /**
      * Set status of metadata id and reindex metadata id afterwards.
