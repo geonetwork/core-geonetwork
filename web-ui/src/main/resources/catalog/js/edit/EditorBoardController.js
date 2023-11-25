@@ -126,7 +126,7 @@
           },
           function (reason) {
             $rootScope.$broadcast("StatusUpdated", {
-              title: reason.data.description, //returned error JSON obj
+              title: reason.data.message || reason.data.description, //returned error JSON obj
               timeout: 0,
               type: "danger"
             });
