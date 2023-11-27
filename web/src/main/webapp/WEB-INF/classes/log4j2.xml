@@ -41,6 +41,7 @@
     <Logger name="geonetwork.backup" level="error"/>
     <Logger name="geonetwork.camel-harvester" level="error"/>
     <Logger name="geonetwork.cors" level="error"/>
+    <Logger name="geonetwork.tasks" level="error"/>
     <Logger name="geonetwork.csw" level="error"/>
     <Logger name="geonetwork.csw.search" level="error"/>
     <Logger name="geonetwork.data.directory" level="error"/>
