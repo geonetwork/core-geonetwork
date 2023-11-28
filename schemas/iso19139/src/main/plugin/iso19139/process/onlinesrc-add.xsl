@@ -31,7 +31,7 @@ Insert is made in first transferOptions found.
                 xmlns:gmx="http://www.isotc211.org/2005/gmx"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
-                xmlns:util="java:org.fao.geonet.util.XslUtil"
+                xmlns:digestUtils="java:org.apache.commons.codec.digest.DigestUtils"
                 xmlns:exslt="http://exslt.org/common"
                 version="2.0">
 
@@ -161,7 +161,7 @@ Insert is made in first transferOptions found.
                           gmd:CI_OnlineResource/gmd:linkage/gmd:URL,
                           gmd:CI_OnlineResource/gmd:protocol/*,
                           gmd:CI_OnlineResource/gmd:name/gco:CharacterString)))
-                     and ($resourceHash = '' or util:md5Hex(exslt:node-set(.)) = $resourceHash)">
+                     and ($resourceHash = '' or digestUtils:md5Hex(exslt:node-set(.)) = $resourceHash)">
              <xsl:call-template name="createOnlineSrc"/>
           </xsl:when>
           <xsl:otherwise>
