@@ -10,7 +10,7 @@ File identifier is automatically set by the catalogue. The metadata last update 
 
 ## Languages
 
-The metadata language is mandatory. This information usually does not change in records part of the same catalogue. So it is recommended to properly set the value in the template used. The language code is a 3 letter code from the list of [official languages of the European Union](http://ec.europa.eu/languages/policy/linguistic-diversity/official-languages-eu_en.htm). A record can be multilingual (see [Multilingual editing](multilingual-editing.md)).
+The metadata language is mandatory. This information usually does not change in records part of the same catalogue. So it is recommended to properly set the value in the template used. The language code is a 3 letter code from the list of [official languages of the European Union](https://ec.europa.eu/languages/policy/linguistic-diversity/official-languages-eu_en.htm). A record can be multilingual (see [Multilingual editing](multilingual-editing.md)).
 
 The resource language is also mandatory and follow the same rule. The catalogue provides a list of languages to easily choose the language code.
 
@@ -133,7 +133,7 @@ and can also be a more detailed description of the temporal coverage of the data
 
 ## Resource constraints
 
-Resource constraints should be set from the [Limitation on public access](http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess) codelist:
+Resource constraints should be set from the [Limitation on public access](https://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess) codelist:
 
 ![image](img/inspire-resource-constraint.png)
 
@@ -265,7 +265,7 @@ Editors must set:
 
 ## Validating
 
-During editing, user can trigger validation using the [commonly agreed validator](http://inspire.ec.europa.eu/validator/). The catalogue will send the record the validator and display a link to the report once done:
+During editing, user can trigger validation using the [commonly agreed validator](https://inspire.ec.europa.eu/validator/). The catalogue will send the record the validator and display a link to the report once done:
 
 ![image](img/inspire-validation-pass.png)
 

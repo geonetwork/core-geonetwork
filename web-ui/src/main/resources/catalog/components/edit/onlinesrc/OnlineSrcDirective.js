@@ -1697,7 +1697,7 @@
                   } else {
                     // Any records which are not services
                     // ie. dataset, series, ...
-                    searchParams["-type"] = "service";
+                    searchParams["-resourceType"] = "service";
                   }
                   scope.$broadcast("resetSearch", searchParams);
                   scope.layers = [];
