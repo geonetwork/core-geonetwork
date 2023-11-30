@@ -682,4 +682,16 @@
                           else $fieldName"/>
   </xsl:function>
 
+  <xsl:function name="gn-fn-index:json-escape" as="xs:string?">
+    <!-- This functions is deprecated. Please update your code to use util:escapeForJson function -->
+    
+      <xsl:param name="v" as="xs:string?"/>
+      <xsl:choose>
+        <xsl:when test="normalize-space($v) = ''"></xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="util:escapeForJson($v)"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:function>
+
 </xsl:stylesheet>
