@@ -1431,8 +1431,8 @@
       </xsl:if>
       "role":"<xsl:value-of select="$role"/>",
       "email":"<xsl:value-of select="gn-fn-index:json-escape($email)"/>",
-      "website":"<xsl:value-of select="$website"/>",
-      "logo":"<xsl:value-of select="$logo"/>",
+      "website":"<xsl:value-of select="gn-fn-index:json-escape($website)"/>",
+      "logo":"<xsl:value-of select="gn-fn-index:json-escape($logo)"/>",
       "individual":"<xsl:value-of select="gn-fn-index:json-escape($individualName)"/>",
       "position":"<xsl:value-of select="gn-fn-index:json-escape($positionName)"/>",
       "phone":"<xsl:value-of select="gn-fn-index:json-escape($phone)"/>",
