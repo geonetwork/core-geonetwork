@@ -687,10 +687,10 @@
     
       <xsl:param name="v" as="xs:string?" />
       <xsl:choose>
-      <xsl:when test="normalize-space($v) = ''"></xsl:when>
-      <xsl:otherwise>
-        <xsl:value-of select="util:escapeForJson($v)" />
-      </xsl:otherwise>
+        <xsl:when test="normalize-space($v) = ''"></xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="util:escapeForJson($v)" />
+        </xsl:otherwise>
     </xsl:choose>
   </xsl:function>
 
