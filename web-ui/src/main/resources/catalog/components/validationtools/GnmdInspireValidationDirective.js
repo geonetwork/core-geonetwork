@@ -143,7 +143,7 @@
                     });
                   } else {
                     gnAlertService.addAlert({
-                      msg: error.data.description,
+                      msg: error.data.message || error.data.description,
                       type: "danger"
                     });
                   }
