@@ -118,9 +118,21 @@
                 $scope.hasTemplates = data.count != '0';
 
                 var types = [];
+                // facet type
+                var foundDefaultType= false;
+                var defaultTypeFacet;
+                for (var i = 0; i < data.facet.types.length; i++) {
+                  var type = data.facet.types[i] || unknownType;
+                  types.push(type);
+
+                  if (defaultType == type['@name']) {
+                    foundDefaultType=true;
+                    defaultTypeFacet=type;
+                  }
+                }
                 // TODO: A faster option, could be to rely on facet type
                 // But it may not be available
-                for (var i = 0; i < data.metadata.length; i++) {
+                /*for (var i = 0; i < data.metadata.length; i++) {
                   var type = data.metadata[i].type || unknownType;
                   if (type instanceof Array) {
                     for (var j = 0; j < type.length; j++) {
@@ -133,19 +145,25 @@
                       $.inArray(type, types) === -1) {
                     types.push(type);
                   }
-                }
+                }*/
                 types.sort();
                 $scope.mdTypes = types;
 
                 // Select the default one or the first one
-                if (defaultType &&
+                if (foundDefaultType) {
+                  $scope.getTemplateNamesByType(defaultTypeFacet);
+                } else {
+                  var firstType = $scope.mdTypes[0];
+                  $scope.getTemplateNamesByType(firstType);
+                }
+                /*if (defaultType &&
                     $.inArray(defaultType, $scope.mdTypes) > -1) {
                   $scope.getTemplateNamesByType(defaultType);
                 } else if ($scope.mdTypes[0]) {
                   $scope.getTemplateNamesByType($scope.mdTypes[0]);
                 } else {
                   // No templates available ?
-                }
+                }*/
               });
         }
       };
@@ -161,10 +179,10 @@
           md.title = md.title || md.defaultTitle;
           var mdType = md.type || unknownType;
           if (mdType instanceof Array) {
-            if (mdType.indexOf(type) >= 0) {
+            if (mdType.indexOf(type['@name']) >= 0) {
               tpls.push(md);
             }
-          } else if (mdType == type) {
+          } else if (mdType == type['@name']) {
             tpls.push(md);
           }
         }
@@ -180,7 +198,8 @@
         tpls.sort(compare);
 
         $scope.tpls = tpls;
-        $scope.activeType = type;
+        $scope.activeType = type['@name'];
+        $scope.activeTypeLabel = type['@label'];
         $scope.setActiveTpl($scope.tpls[0]);
         return false;
       };
