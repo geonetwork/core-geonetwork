@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2007 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2023 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -30,9 +30,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.search.SearchHit;
 import org.fao.geonet.api.ApiUtils;
+import org.fao.geonet.api.exception.FeatureNotEnabledException;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.InspireAtomFeed;
@@ -58,9 +60,9 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 import static org.fao.geonet.kernel.search.EsFilterBuilder.buildPermissionsFilter;
 import static org.fao.geonet.kernel.search.EsSearchManager.FIELDLIST_CORE;
@@ -108,25 +110,26 @@ public class AtomSearch {
         @ApiResponse(responseCode = "204", description = "Not authenticated.")
     })
     @ResponseStatus(OK)
-    @ResponseBody
     public Element feeds(
         @Parameter(
             description = "fileIdentifier",
             required = false)
         @RequestParam(defaultValue = "")
-            String fileIdentifier,
+        String fileIdentifier,
         @Parameter(hidden = true)
-            HttpServletRequest request) throws Exception {
+        HttpServletRequest request) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
 
         boolean inspireEnable = sm.getValueAsBool(Settings.SYSTEM_INSPIRE_ENABLE);
 
         if (!inspireEnable) {
             Log.info(Geonet.ATOM, "Inspire is disabled");
-            throw new Exception("Inspire is disabled");
+            throw new FeatureNotEnabledException("Inspire is disabled");
         }
 
-        List<String> datasetIdentifiers = new ArrayList<>();
+        List<String> datasetIdentifiers;
+
+        String datasetIdentifiersFilter = "";
 
         // If fileIdentifier is provided search only in the related datasets
         if (StringUtils.isNotEmpty(fileIdentifier)) {
@@ -142,9 +145,12 @@ public class AtomSearch {
             // Retrieve the datasets related to the service metadata
             datasetIdentifiers = InspireAtomUtil.extractRelatedDatasetsIdentifiers(schema, md, dm);
 
-            // Add query filter / TODO Migrate ?
-            //            String values = Joiner.on(" or ").join(datasetIdentifiers);
-            //            params.addContent(new Element("identifier").setText(values));
+            String datasets = datasetIdentifiers.stream().map(StringEscapeUtils::escapeJson)
+                .collect(Collectors.joining("\",\"", "\"", "\""));
+
+            datasetIdentifiersFilter = String.format(", {\"terms\": {\n" +
+                "      \"resourceIdentifier.code\": [%s]\n" +
+                "    }}", datasets);
         }
 
         String privilegesFilter = buildPermissionsFilter(context);
@@ -161,11 +167,11 @@ public class AtomSearch {
             "          \"query_string\": {" +
             "            \"query\": \"%s\"" +
             "        }" +
-            "      }]" +
+            "      }%s]" +
             "    }" +
             "}";
         ObjectMapper objectMapper = new ObjectMapper();
-        JsonNode esJsonQuery = objectMapper.readTree(String.format(jsonQuery, privilegesFilter));
+        JsonNode esJsonQuery = objectMapper.readTree(String.format(jsonQuery, privilegesFilter, datasetIdentifiersFilter));
 
         final SearchResponse result = searchMan.query(
             esJsonQuery,
@@ -202,19 +208,18 @@ public class AtomSearch {
         @ApiResponse(responseCode = "204", description = "Not authenticated.")
     })
     @ResponseStatus(OK)
-    @ResponseBody
     public String feedsAsHtml(
         @Parameter(
             description = "fileIdentifier",
             required = false)
         @RequestParam(defaultValue = "")
-            String fileIdentifier,
+        String fileIdentifier,
         @Parameter(hidden = true)
-            HttpServletRequest request) throws Exception {
+        HttpServletRequest request) throws Exception {
         Element feeds = feeds(fileIdentifier, request);
 
         Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
-        String language = isoLanguagesMapper.iso639_2T_to_iso639_2B(locale.getISO3Language());
+        String language = IsoLanguagesMapper.iso639_2T_to_iso639_2B(locale.getISO3Language());
         language = XslUtil.twoCharLangCode(language, "eng").toLowerCase();
 
         return new XsltResponseWriter(null, "atom-feeds")
