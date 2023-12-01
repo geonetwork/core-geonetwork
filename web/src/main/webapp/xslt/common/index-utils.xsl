@@ -683,7 +683,11 @@
   </xsl:function>
 
   <xsl:function name="gn-fn-index:json-escape" as="xs:string?">
-    <!-- This functions is deprecated. Please update your code to use util:escapeForJson function -->
+    <!-- This function is deprecated. Please update your code to define the following namespace:
+            xmlns:util="java:org.fao.geonet.util.XslUtil"
+            
+            and use util:escapeForJson function 
+    -->
     
       <xsl:param name="v" as="xs:string?" />
       <xsl:choose>
