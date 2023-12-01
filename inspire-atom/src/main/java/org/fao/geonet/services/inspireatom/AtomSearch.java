@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2007 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2023 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -215,11 +215,11 @@ public class AtomSearch {
 
         Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
         String language = isoLanguagesMapper.iso639_2T_to_iso639_2B(locale.getISO3Language());
-        language = XslUtil.twoCharLangCode(language, "eng").toLowerCase();
+        String language2Code = XslUtil.twoCharLangCode(language, "eng").toLowerCase();
 
-        return new XsltResponseWriter(null, "atom-feeds")
+        return new XsltResponseWriter(null, "atom-feeds", language)
             .withXml(feeds)
-            .withJson(String.format("catalog/locales/%s-v4.json", language))
+            .withJson(String.format("catalog/locales/%s-v4.json", language2Code))
             .withXsl("xslt/services/inspire-atom/search-results.xsl")
             .asHtml();
     }

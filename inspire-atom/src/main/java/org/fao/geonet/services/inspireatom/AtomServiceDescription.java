@@ -82,7 +82,6 @@ public class AtomServiceDescription {
     @Autowired
     InspireAtomFeedRepository inspireAtomFeedRepository;
 
-
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Describe service",
         description = "")
@@ -194,7 +193,7 @@ public class AtomServiceDescription {
             .addContent(new Element("url").setText(feedUrl))
             .addContent(datasetsEl);
 
-        return new XsltResponseWriter(null, "opensearch")
+        return new XsltResponseWriter(null, "opensearch", context.getLanguage())
             .withXml(response)
             .withXsl("xslt/services/inspire-atom/opensearch.xsl")
             .asElement();

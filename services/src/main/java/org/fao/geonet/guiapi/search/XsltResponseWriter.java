@@ -59,7 +59,7 @@ public class XsltResponseWriter {
     Path xsl;
     Map<String, Object> xslParams = new HashMap<>();
 
-    public XsltResponseWriter(String envTagName, String serviceName) {
+    public XsltResponseWriter(String envTagName, String serviceName, String language) {
         SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
         String url = settingManager.getBaseURL();
         Element gui = new Element("gui");
@@ -70,8 +70,7 @@ public class XsltResponseWriter {
         gui.addContent(new Element("baseUrl").setText(settingManager.getBaseURL()));
         gui.addContent(new Element("serverUrl").setText(settingManager.getServerURL()));
         gui.addContent(new Element("nodeId").setText(settingManager.getNodeId()));
-        // TODO: set language based on header
-        gui.addContent(new Element("language").setText("eng"));
+        gui.addContent(new Element("language").setText(language));
 
 
         Element settings = settingManager.getAllAsXML(true);

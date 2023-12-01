@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2010 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2023 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -143,7 +143,7 @@ public class AtomDescribe {
                 ? processDatasetFeed(spatial_dataset_identifier_code, spatial_dataset_identifier_namespace, context)
                 : processServiceFeed(fileIdentifier, context);
 
-        return new XsltResponseWriter(null, "atom-describe")
+        return new XsltResponseWriter(null, "atom-describe", context.getLanguage())
             .withXml(response)
             .withXsl("xslt/services/inspire-atom/describe.xsl")
             .asElement();
