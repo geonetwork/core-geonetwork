@@ -30,9 +30,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.search.SearchHit;
 import org.fao.geonet.api.ApiUtils;
+import org.fao.geonet.api.exception.FeatureNotEnabledException;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.InspireAtomFeed;
@@ -108,7 +110,6 @@ public class AtomSearch {
         @ApiResponse(responseCode = "204", description = "Not authenticated.")
     })
     @ResponseStatus(OK)
-    @ResponseBody
     public Element feeds(
         @Parameter(
             description = "fileIdentifier",
@@ -123,7 +124,7 @@ public class AtomSearch {
 
         if (!inspireEnable) {
             Log.info(Geonet.ATOM, "Inspire is disabled");
-            throw new Exception("Inspire is disabled");
+            throw new FeatureNotEnabledException("Inspire is disabled");
         }
 
         List<String> datasetIdentifiers;
@@ -144,7 +145,8 @@ public class AtomSearch {
             // Retrieve the datasets related to the service metadata
             datasetIdentifiers = InspireAtomUtil.extractRelatedDatasetsIdentifiers(schema, md, dm);
 
-            String datasets = datasetIdentifiers.stream().collect(Collectors.joining("\",\"", "\"", "\""));
+            String datasets = datasetIdentifiers.stream().map(StringEscapeUtils::escapeJson)
+                .collect(Collectors.joining("\",\"", "\"", "\""));
 
             datasetIdentifiersFilter = String.format(", {\"terms\": {\n" +
                 "      \"resourceIdentifier.code\": [%s]\n" +
@@ -206,7 +208,6 @@ public class AtomSearch {
         @ApiResponse(responseCode = "204", description = "Not authenticated.")
     })
     @ResponseStatus(OK)
-    @ResponseBody
     public String feedsAsHtml(
         @Parameter(
             description = "fileIdentifier",
@@ -218,7 +219,7 @@ public class AtomSearch {
         Element feeds = feeds(fileIdentifier, request);
 
         Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
-        String language = isoLanguagesMapper.iso639_2T_to_iso639_2B(locale.getISO3Language());
+        String language = IsoLanguagesMapper.iso639_2T_to_iso639_2B(locale.getISO3Language());
         language = XslUtil.twoCharLangCode(language, "eng").toLowerCase();
 
         return new XsltResponseWriter(null, "atom-feeds")
