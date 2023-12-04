@@ -101,6 +101,12 @@
     });
   };
 
+  FacetsController.prototype.loadLessTerms = function (facet) {
+    this.searchCtrl.loadLessTerms(facet).then(function (terms) {
+      angular.copy(terms, facet);
+    });
+  };
+
   FacetsController.prototype.filterTerms = function (facet) {
     if (facet.meta && facet.meta.filterByTranslation) {
       var match = [];
