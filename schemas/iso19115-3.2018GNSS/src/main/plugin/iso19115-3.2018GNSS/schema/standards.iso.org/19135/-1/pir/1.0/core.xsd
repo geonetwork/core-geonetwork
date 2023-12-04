@@ -1,0 +1,349 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:pir="https://schemas.isotc211.org/19135/-1/pir/1.0"
+	xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
+	xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/2.0" 
+	elementFormDefault="qualified"
+	targetNamespace="https://schemas.isotc211.org/19135/-1/pir/1.0" version="1.0">
+	<xs:include schemaLocation="../../../../19135/-1/pir/1.0/extended.xsd"/>
+	<xs:include schemaLocation="../../../../19135/-1/pir/1.0/hierarchy.xsd"/>
+	<xs:import namespace="http://standards.iso.org/iso/19115/-3/cit/2.0" schemaLocation="https://schemas.isotc211.org/19115/-3/cit/2.0/cit.xsd"/>
+	<xs:import namespace="http://standards.iso.org/iso/19115/-3/gco/1.0" schemaLocation="https://schemas.isotc211.org/19115/-3/gco/1.0/gco.xsd"/>
+	<!-- _____________________________________ -->
+	<xs:complexType name="ItemClass_PropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="pir:ItemClass"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<xs:element name="ItemClass" type="pir:ItemClass_Type" id="ISO19135-1.7.4.2"/>
+	<xs:complexType name="ItemClass_Type">
+		<xs:annotation>
+			<xs:documentation>The class "ItemClass" is a description of a class of
+				geographic information items specified in a technical standard.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="gco:AbstractObject_Type">
+
+				<xs:sequence>
+					<xs:element name="identifier" type="gco:CharacterString_PropertyType" minOccurs="1"
+						maxOccurs="1" id="ISO19135-1.7.4.2.1_ISO19103.CharacterString">
+						<xs:annotation>
+							<xs:documentation>The attribute "identifier"is represented as a
+								CharacterString containing a compact and human-readable designator
+								that is used to denote a class of item. The identifier that
+								designates an item class held in a register that conforms to this
+								International Standard shall uniquely denote the item class within
+								the context of the register.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="register" type="pir:Register_PropertyType" minOccurs="1" maxOccurs="unbounded" id="ISO19135-1.7.4.2.2_ISO19135-1.7.2.2">
+						<xs:annotation>
+							<xs:documentation>The role “register” connects an instance of an item class to a register.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="describedItem" type="pir:RegisterItem_PropertyType" minOccurs="1" maxOccurs="unbounded" id="ISO19135-1.7.4.2.3_ISO19135-1.7.5.2">
+						<xs:annotation>
+							<xs:documentation>The role “describedItem” connects an item class to one or more register items.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- _____________________________________ -->
+	<xs:complexType name="RE_ItemStatus_PropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="pir:RE_ItemStatus"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<xs:element name="RE_ItemStatus" type="pir:RE_ItemStatus_Type"/>
+	<xs:simpleType name="RE_ItemStatus_Type">
+		<xs:annotation>
+			<xs:documentation>The class RE_ItemStatus is an .LT. .LT. Enumeration .GT. .GT. that
+				specifies the status of a register item.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="submitted">
+				<xs:annotation>
+					<xs:documentation>The item has been entered into the register, but the control
+						body has not accepted the proposal to add it.</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="valid">
+				<xs:annotation>
+					<xs:documentation>The item has been accepted, is recommended for use, and has
+						not been superseded or retired.</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="superseded">
+				<xs:annotation>
+					<xs:documentation>The item has been superseded by another item and is no longer
+						recommended for use.</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="retired">
+				<xs:annotation>
+					<xs:documentation>A decision has been made that the item is no longer
+						recommended for use. It has not been superseded by another
+						item.</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="invalid">
+				<xs:annotation>
+					<xs:documentation>A decision has been made that a previously valid register item
+						contains a substantial error and is invalid, and will normally have been
+						replaced by a corrected item.</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- _____________________________________ -->
+	<xs:complexType name="Register_PropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="pir:Register"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<xs:element name="Register" type="pir:Register_Type"/>
+	<xs:complexType name="Register_Type">
+		<xs:annotation>
+			<xs:documentation>The class Register specifies information about the register
+				itself.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="gco:AbstractObject_Type">
+				<xs:sequence>
+					<xs:element name="identifier" type="gco:CharacterString_PropertyType" minOccurs="1"
+						maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation>The attribute "identifier" represents a designator that
+								is used to uniquely denote that register within the set of registers
+								maintained by the register owner. In the case of a hierarchical
+								register, the "identifier" of a subregister shall uniquely identify
+								that subregister within the scope of all registers established by
+								the owner of the principal register. It shall be represented as a
+								CharacterString containing a compact and human-readable designator.
+								EXAMPLE: 'ISO/TC 211 Register of Feature Data Dictionaries and
+								Feature Catalogues' might be the identifier of the principal
+								register of a hierarchical register. 'DGIWG FACC Data Dictionary'
+								and 'IHO S-57 Object Dictionary' might be the identifiers of
+								subregisters within the hierarchy.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="version" type="pir:RE_Version_PropertyType" minOccurs="0" maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation>The conditional attribute "version" is represented as an
+								instance of class RE_Version that specifies a unique state in the
+								life of the register. </xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="dateOfLastChange" type="gco:Date_PropertyType" minOccurs="0" maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation>The conditional attribute "dateOfLastChange" is
+								represented as an instance of the class .LT. Date .GT. [ISO 19103]
+								and specifies the (full precision) date of the most recent change to
+								the status of an item in the register was made.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="containedItemClass" type="pir:ItemClass_PropertyType" minOccurs="1"
+						maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>The role "containedItemClass" describes that the
+								"ItemClass" for the association "ContentDescription" contains the
+								item classes in the register.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="manages" type="pir:RegisterStakeholder_PropertyType" minOccurs="1"
+						maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation>The role name "manager" identifies the
+								RegisterStakeholder as the manager of the register.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="owner" type="pir:RegisterStakeholder_PropertyType" minOccurs="1" maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation>The role name owner describes that the
+								RegisterStakeholder for the association The role name "owner"
+								identifies the RegisterStakeholder as the owner of the
+								register.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="submitter" type="pir:RegisterStakeholder_PropertyType" minOccurs="1"
+						maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>The role name "submitter" identifies the
+								RegisterStakeholder as the submitting organization to the
+								register.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="containedItem" type="pir:RegisterItem_PropertyType" minOccurs="1"
+						maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>The role 'containedItem' connects an instance of the
+								class Register to one or more instances of
+								RegisterItem.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- _____________________________________ -->
+	<xs:complexType name="RegisterItem_PropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="pir:RegisterItem"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<xs:element name="RegisterItem" type="pir:RegisterItem_Type"/>
+	<xs:complexType name="RegisterItem_Type">
+		<xs:annotation>
+			<xs:documentation>The class "RegisterItem" specifies elements of information to
+				be recorded for each item held in a register. The technical standard that
+				specified an item class may specify additional elements to be
+				recorded.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="gco:AbstractObject_Type">
+				<xs:sequence>
+					<xs:element name="itemIdentifier" type="gco:CharacterString_PropertyType" minOccurs="1"
+						maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation>The attribute "itemIdentifier" is represented as a
+								Character that is used to uniquely denote that item within an item
+								class and is intended for information processing. Once a value has
+								been assigned, it shall not be reused. The class/identifier union
+								shall be unique within the register. NOTE When a register contains
+								items from different item classes, each item will be uniquely
+								identifiable by the item identifier alone.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="status" type="pir:RE_ItemStatus_PropertyType" minOccurs="1" maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation>The attribute "status" is represented as an instance of
+								RE_ItemStatus that identifies the registration status of the
+								RegisterItem.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="dateTimeAddition" type="gco:DateTime_PropertyType" minOccurs="1" maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation>The attribute "dateTimeAddition" specifies the date on
+								which the item was added</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="dateTimeSupersession" type="gco:DateTime_PropertyType" minOccurs="0"
+						maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation>The attribute "dateTimeSupersession" specifies the date
+								and time on which an item has been superseeded. </xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="dateTimeRetirement" type="gco:DateTime_PropertyType" minOccurs="0"
+						maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation>The attribute "dateTimeRetirement" specifies the date and
+								time on which an item has been retired. </xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="dateTimeInvalidation" type="gco:DateTime_PropertyType" minOccurs="0"
+						maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation>The attribute "dateTimeInvalidation" specifies the date
+								and time on which an item has been invalidated. </xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="itemClass" type="pir:ItemClass_PropertyType" minOccurs="1" maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation>The role "itemClass" connects an instance of a
+								"RegisterItem" to an "ItemClass"</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="register" type="pir:Register_PropertyType" minOccurs="1"
+						maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>The role register connects an instance of a register item class to a register.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="predecessor" type="pir:RegisterItem_PropertyType" minOccurs="0"
+						maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>The role “predecessor” describes a previous concept of the “RegisterItem”.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="successor" type="pir:RegisterItem_PropertyType" minOccurs="0"
+						maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>The role "sucessor" describes a later concept of the
+								"RegisterItem"</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- _____________________________________ -->
+	<xs:complexType name="RegisterStakeholder_PropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="pir:RegisterStakeholder"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<xs:element name="RegisterStakeholder" type="pir:RegisterStakeholder_Type"/>
+	<xs:complexType name="RegisterStakeholder_Type">
+		<xs:annotation>
+			<xs:documentation>The class RegisterStakeholder specifies information about the
+				register stakeholder, which is either a manager, owner or submitter. A
+				stakeholder can serve one or more roles. NOTE This International Standard
+				does not require that a register stakeholder name be unique, since an
+				stakeholder will, in general, have had a name before undertaking a role in
+				connection with a register.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="gco:AbstractObject_Type">
+
+				<xs:sequence>
+					<xs:element name="name" type="gco:CharacterString_PropertyType" minOccurs="1" maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation>The attribute name shall be represented as a
+								CharacterString containing a compact and human-readable designator
+								that is used to denote the stakeholder of that register. EXAMPLE
+								'ISO/TC 211,' 'Digital Geographic Information Working Group,' and
+								'International Hydrographic Bureau'.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="manager" type="pir:Register_PropertyType" minOccurs="1" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>The role “manages” identifies the register stakeholder as the manager of the register.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="owns" type="pir:Register_PropertyType" minOccurs="1" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>The role name “owns” identifies the register stakeholder as the owner of the register.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="submits" type="pir:Register_PropertyType" minOccurs="1" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>The role name “submits” identifies the register stakeholder as the submitter of information
+								to the register.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="contact" type="cit:CI_Responsibility_PropertyType" minOccurs="1" maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation>The role name “contact” identifies the responsible party information for the register
+								stakeholder.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- _____________________________________ -->
+</xs:schema>

@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	xmlns:gco="https://schemas.isotc211.org/19103/-/gco/1.2"
-	xmlns:cit="https://schemas.isotc211.org/19115/-1/cit/1.3"
-	xmlns:mcc="https://schemas.isotc211.org/19115/-1/mcc/1.3"
-	xmlns:mda="https://schemas.isotc211.org/19115/-1/mda/1.3"
-	xmlns:mdq="https://schemas.isotc211.org/19157/-1/mdq/1.0"
-	xmlns:dqc="https://schemas.isotc211.org/19157/-1/dqc/1.0"
-	targetNamespace="https://schemas.isotc211.org/19157/-1/mdq/1.0"
-	elementFormDefault="qualified"
-	version="1.0.0"
-	>
-	<xs:import namespace="https://schemas.isotc211.org/19103/-/gco/1.2" schemaLocation="https://schemas.isotc211.org/19103/-/gco/1.2.0/gco.xsd"/>
-	<xs:import namespace="https://schemas.isotc211.org/19115/-1/cit/1.3" schemaLocation="https://schemas.isotc211.org/19115/-1/cit/1.3.0/cit.xsd"/>
-	<xs:import namespace="https://schemas.isotc211.org/19115/-1/mcc/1.3" schemaLocation="https://schemas.isotc211.org/19115/-1/mcc/1.3.0/mcc.xsd"/>
-	<xs:import namespace="https://schemas.isotc211.org/19115/-1/mda/1.3" schemaLocation="https://schemas.isotc211.org/19115/-1/mda/1.3.0/mda.xsd"/>
-	<xs:import namespace="https://schemas.isotc211.org/19157/-1/dqc/1.0" schemaLocation="../../dqc/1.0.0/dqc.xsd"/>
-	<xs:include schemaLocation="../../mdq/1.0.0/dataQualityResult.xsd"/>
-	<xs:include schemaLocation="../../mdq/1.0.0/dataQualityEvaluation.xsd"/>
+           xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
+           xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/1.0"
+           xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0"
+           xmlns:mda="http://standards.iso.org/iso/19115/-3/mda/1.0"
+           xmlns:mdq="https://schemas.isotc211.org/19157/-1/mdq/1.0"
+           xmlns:dqc="https://schemas.isotc211.org/19157/-1/dqc/1.0"
+           targetNamespace="https://schemas.isotc211.org/19157/-1/mdq/1.0"
+           elementFormDefault="qualified"
+           version="1.0.0"
+>
+  <xs:import namespace="http://standards.iso.org/iso/19115/-3/gco/1.0" schemaLocation="../../../../19115/-3/gco/1.0/gco.xsd"/>
+  <xs:import namespace="http://standards.iso.org/iso/19115/-3/cit/1.0" schemaLocation="../../../../19115/-3/cit/1.0/cit.xsd"/>
+  <xs:import namespace="http://standards.iso.org/iso/19115/-3/mcc/1.0" schemaLocation="../../../../19115/-3/mcc/1.0/mcc.xsd"/>
+  <xs:import namespace="http://standards.iso.org/iso/19115/-3/mda/1.0" schemaLocation="../../../../19115/-3/mda/1.0/mda.xsd"/>
+  <xs:import namespace="https://schemas.isotc211.org/19157/-1/dqc/1.0" schemaLocation="../../dqc/1.0.0/dqc.xsd"/>
+  <xs:include schemaLocation="../../mdq/1.0.0/dataQualityResult.xsd"/>
+  <xs:include schemaLocation="../../mdq/1.0.0/dataQualityEvaluation.xsd"/>
 	<!-- =========================================================================== -->
 	<xs:complexType name="DataQuality_PropertyType">
 		<xs:sequence minOccurs="0">

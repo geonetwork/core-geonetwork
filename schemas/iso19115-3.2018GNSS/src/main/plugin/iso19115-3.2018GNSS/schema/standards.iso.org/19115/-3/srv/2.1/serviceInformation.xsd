@@ -57,7 +57,7 @@
       <element ref="srv:LevelCode_type"/>
     </sequence>
   </complexType>
-  <!--<complexType name="GNSS_Robustness_Type">
+  <complexType name="GNSS_Robustness_Type">
     <sequence minOccurs="0">
       <element ref="srv:GNSS_Robustness"/>
     </sequence>

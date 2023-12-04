@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:pir="https://schemas.isotc211.org/19135/-1/pir/1.1"
+	xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
+	xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/1.0"
+	elementFormDefault="qualified"
+	targetNamespace="https://schemas.isotc211.org/19135/-1/pir/1.1"
+	version="1.1.0">
+	<xs:include schemaLocation="../../../../19135/-1/pir/1.1.0/core.xsd"/>
+	<xs:include schemaLocation="../../../../19135/-1/pir/1.1.0/extended.xsd"/>
+	<xs:include schemaLocation="../../../../19135/-1/pir/1.1.0/hierarchy.xsd"/>
+	<xs:import namespace="http://standards.iso.org/iso/19115/-3/cit/1.0" schemaLocation="../../../../19115/-3/cit/1.0/cit.xsd"/>
+	<xs:import namespace="http://standards.iso.org/iso/19115/-3/gco/1.0" schemaLocation="../../../../19115/-3/gco/1.0/gco.xsd"/>
+</xs:schema>

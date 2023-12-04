@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"	
+	xmlns:pir="https://schemas.isotc211.org/19135/-1/pir/1.0"
+	xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
+	xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/2.0" 
+	elementFormDefault="qualified"
+	targetNamespace="https://schemas.isotc211.org/19135/-1/pir/1.0" version="1.0">
+	<xs:include schemaLocation="../../../../19135/-1/pir/1.0/core.xsd"/>
+	<xs:include schemaLocation="../../../../19135/-1/pir/1.0/extended.xsd"/>
+	<xs:import namespace="http://standards.iso.org/iso/19115/-3/cit/2.0" schemaLocation="https://schemas.isotc211.org/19115/-3/cit/2.0/cit.xsd"/>
+	<xs:import namespace="http://standards.iso.org/iso/19115/-3/gco/1.0" schemaLocation="https://schemas.isotc211.org/19115/-3/gco/1.0/gco.xsd"/>
+	<!-- _____________________________________ -->
+	<xs:complexType name="SubregisterDescription_PropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="pir:SubregisterDescription"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<xs:element name="SubregisterDescription" substitutionGroup="pir:RegisterItem" type="pir:SubregisterDescription_Type" id="ISO19135-1.8.4.2"/>
+	<xs:complexType name="SubregisterDescription_Type">
+		<xs:annotation>
+			<xs:documentation>"SubregisterDescription" is a subclass of "RegisterItem" that
+				shall be used in the principal register of a hierarchical register to describe
+				each of the affiliated subregisters. Their semantics are unchanged, but a few
+				are subject to additional constraints or conditions specified. NOTE Because a
+				subregister is a type of register, it contains an instance of "Register" that
+				describes itself. "SubregisterDescription" carries similar information about the
+				subregister, but it is contained within the principal
+				register.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+					<xs:extension base="pir:RegisterItem_Type">
+						<xs:sequence>
+							<xs:element name="subregisterManager" type="pir:RegisterStakeholder_PropertyType" minOccurs="1"
+								maxOccurs="1" id="ISO19135-1.8.4.2.1_ISO19135-1.7.3.2">
+								<xs:annotation>
+									<xs:documentation>The role "subregisterManager" identifies the
+										register stakeholder as the manager of the
+										subregister.</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="containedItemClass" type="pir:ItemClass_PropertyType"
+								minOccurs="1" maxOccurs="unbounded"  id="ISO19135-1.8.4.2.2_ISO19135-1.7.4.2">
+								<xs:annotation>
+									<xs:documentation>The role "containedItemClass" describes that the
+										"ItemClass" for the association
+										"SubregisterContentDescription" contains the item classes in
+										the subregister.</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+						</xs:sequence>
+					</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- _____________________________________ -->
+</xs:schema>

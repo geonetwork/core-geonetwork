@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	xmlns:gco="https://schemas.isotc211.org/19103/-/gco/1.2" 
-	xmlns:cit="https://schemas.isotc211.org/19115/-1/cit/1.3" 
-	xmlns:mcc="https://schemas.isotc211.org/19115/-1/mcc/1.3" 
-	xmlns:pir="https://schemas.isotc211.org/19135/-1/pir/1.1" 
-	xmlns:dqm="https://schemas.isotc211.org/19157/-1/dqm/1.0" 
-	targetNamespace="https://schemas.isotc211.org/19157/-1/dqm/1.0" 
-	elementFormDefault="qualified" 
+	xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
+	xmlns:cit="https://schemas.isotc211.org/19115/-1/cit/1.3"
+	xmlns:mcc="https://schemas.isotc211.org/19115/-1/mcc/1.3"
+	xmlns:pir="https://schemas.isotc211.org/19135/-1/pir/1.1"
+	xmlns:dqm="https://schemas.isotc211.org/19157/-1/dqm/1.0"
+	targetNamespace="https://schemas.isotc211.org/19157/-1/dqm/1.0"
+	elementFormDefault="qualified"
 	version="1.0.0"
 	>
-	<xs:import namespace="https://schemas.isotc211.org/19103/-/gco/1.2" schemaLocation="https://schemas.isotc211.org/19103/-/gco/1.2.0/gco.xsd"/>
-	<xs:import namespace="https://schemas.isotc211.org/19115/-1/cit/1.3" schemaLocation="https://schemas.isotc211.org/19115/-1/cit/1.3.0/cit.xsd"/>
-	<xs:import namespace="https://schemas.isotc211.org/19115/-1/mcc/1.3" schemaLocation="https://schemas.isotc211.org/19115/-1/mcc/1.3.0/mcc.xsd"/>
-	<xs:import namespace="https://schemas.isotc211.org/19135/-1/pir/1.1" schemaLocation="https://schemas.isotc211.org/19135/-1/pir/1.1.0/pir.xsd"/>
+	<xs:import namespace="https://schemas.isotc211.org/19103/-/gco/1.2" schemaLocation="../../../../19115/-3/gco/1.0/gco.xsd"/>
+	<xs:import namespace="https://schemas.isotc211.org/19115/-1/cit/1.3" schemaLocation="../../../../19115/-3/cit/1.0/cit.xsd"/>
+	<xs:import namespace="https://schemas.isotc211.org/19115/-1/mcc/1.3" schemaLocation="../../../../19115/-3/mcc/1.0/mcc.xsd"/>
+	<xs:import namespace="https://schemas.isotc211.org/19135/-1/pir/1.1" schemaLocation="../../../../19135/-1/pir/1.1.0/pir.xsd"/>
 	<!-- =========================================================================== -->
 	<xs:complexType name="QualityMeasure_PropertyType">
 		<xs:sequence minOccurs="0">
@@ -21,9 +21,9 @@
 		<xs:attributeGroup ref="gco:ObjectReference"/>
 		<xs:attribute ref="gco:nilReason"/>
 	</xs:complexType>
-	<!-- ........................................................................ -->	
+	<!-- ........................................................................ -->
 	<xs:element name="QualityMeasure" substitutionGroup="pir:RegisterItem" type="dqm:QualityMeasure_Type" id="ISO19157-1.1.078"/>
-	<!-- ........................................................................ -->	
+	<!-- ........................................................................ -->
 	<xs:complexType name="QualityMeasure_Type">
 		<xs:annotation>
 			<xs:documentation>Data quality measure</xs:documentation>
@@ -103,9 +103,9 @@
 		<xs:attributeGroup ref="gco:ObjectReference"/>
 		<xs:attribute ref="gco:nilReason"/>
 	</xs:complexType>
-	<!-- ........................................................................ -->	
+	<!-- ........................................................................ -->
 	<xs:element name="BasicMeasure" substitutionGroup="pir:RegisterItem" type="dqm:BasicMeasure_Type" id="ISO19157-1.1.091"/>
-	<!-- ........................................................................ -->	
+	<!-- ........................................................................ -->
 	<xs:complexType name="BasicMeasure_Type">
 		<xs:annotation>
 			<xs:documentation>data quality basic measure</xs:documentation>
@@ -145,9 +145,9 @@
 		<xs:attributeGroup ref="gco:ObjectReference"/>
 		<xs:attribute ref="gco:nilReason"/>
 	</xs:complexType>
-	<!-- ........................................................................ -->	
+	<!-- ........................................................................ -->
 	<xs:element name="MeasureParameter" type="dqm:MeasureParameter_Type" id="ISO19157-1.1.096"/>
-	<!-- ........................................................................ -->	
+	<!-- ........................................................................ -->
 	<xs:complexType name="MeasureParameter_Type">
 		<xs:annotation>
 			<xs:documentation>data quality parameter</xs:documentation>
@@ -192,9 +192,9 @@
 		<xs:attributeGroup ref="gco:ObjectReference"/>
 		<xs:attribute ref="gco:nilReason"/>
 	</xs:complexType>
-	<!-- ........................................................................ -->	
+	<!-- ........................................................................ -->
 	<xs:element name="MeasureDescription" type="dqm:MeasureDescription_Type" id="ISO19157-1.1.102"/>
-	<!-- ........................................................................ -->	
+	<!-- ........................................................................ -->
 	<xs:complexType name="MeasureDescription_Type">
 		<xs:annotation>
 			<xs:documentation>data quality measure description</xs:documentation>
@@ -225,9 +225,9 @@
 		<xs:attributeGroup ref="gco:ObjectReference"/>
 		<xs:attribute ref="gco:nilReason"/>
 	</xs:complexType>
-	<!-- ........................................................................ -->	
+	<!-- ........................................................................ -->
 	<xs:element name="SourceReference" type="dqm:SourceReference_Type" id="ISO19157-1.1.106"/>
-	<!-- ........................................................................ -->	
+	<!-- ........................................................................ -->
 	<xs:complexType name="SourceReference_Type">
 		<xs:annotation>
 			<xs:documentation>reference to the source of the data quality measure</xs:documentation>
@@ -248,9 +248,9 @@
 		<xs:attributeGroup ref="gco:ObjectReference"/>
 		<xs:attribute ref="gco:nilReason"/>
 	</xs:complexType>
-	<!-- ........................................................................ -->	
+	<!-- ........................................................................ -->
 	<xs:element name="FormulaType" type="dqm:FormulaType_Type" id="ISO19157-1.1.108"/>
-	<!-- ........................................................................ -->	
+	<!-- ........................................................................ -->
 	<xs:complexType name="FormulaType_Type">
 		<xs:annotation>
 			<xs:documentation>description of the formula</xs:documentation>
@@ -287,9 +287,9 @@
 		<xs:attributeGroup ref="gco:ObjectReference"/>
 		<xs:attribute ref="gco:nilReason"/>
 	</xs:complexType>
-	<!-- ........................................................................ -->	
+	<!-- ........................................................................ -->
 	<xs:element name="ValueStructure" substitutionGroup="gco:CharacterString" type="gco:CodeListValue_Type" id="ISO19157-1.1.Table.C.14"/>
-	<!-- ........................................................................ -->	
+	<!-- ........................................................................ -->
 	<xs:complexType name="ValueStructure">
 		<xs:annotation>
 			<xs:documentation>Structure of the data quality parameter.</xs:documentation>
@@ -335,9 +335,9 @@
 		<xs:attributeGroup ref="gco:ObjectReference"/>
 		<xs:attribute ref="gco:nilReason"/>
 	</xs:complexType>
-	<!-- ........................................................................ -->	
+	<!-- ........................................................................ -->
 	<xs:element name="FormulaLanguage" substitutionGroup="gco:CharacterString" type="gco:CodeListValue_Type" id="ISO19157-1.1.Table.C.15"/>
-	<!-- ........................................................................ -->	
+	<!-- ........................................................................ -->
 	<xs:complexType name="FormulaLanguage">
 		<xs:annotation>
 			<xs:documentation>the coding language of the formula</xs:documentation>

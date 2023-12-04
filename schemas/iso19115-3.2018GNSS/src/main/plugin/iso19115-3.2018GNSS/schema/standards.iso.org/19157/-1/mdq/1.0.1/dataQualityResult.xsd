@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	xmlns:gco="https://schemas.isotc211.org/19103/-/gco/1.2" 
-	xmlns:cit="https://schemas.isotc211.org/19115/-1/cit/1.3" 
-	xmlns:mcc="https://schemas.isotc211.org/19115/-1/mcc/1.3" 
-	xmlns:mrc="https://schemas.isotc211.org/19115/-1/mrc/1.3" 
-	xmlns:mrd="https://schemas.isotc211.org/19115/-1/mrd/1.3" 
-	xmlns:mdq="https://schemas.isotc211.org/19157/-1/mdq/1.0" 
-	targetNamespace="https://schemas.isotc211.org/19157/-1/mdq/1.0" 
-	elementFormDefault="qualified" 
+	xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
+	xmlns:cit="https://schemas.isotc211.org/19115/-1/cit/1.3"
+	xmlns:mcc="https://schemas.isotc211.org/19115/-1/mcc/1.3"
+	xmlns:mrc="https://schemas.isotc211.org/19115/-1/mrc/1.3"
+	xmlns:mrd="https://schemas.isotc211.org/19115/-1/mrd/1.3"
+	xmlns:mdq="https://schemas.isotc211.org/19157/-1/mdq/1.0"
+	targetNamespace="https://schemas.isotc211.org/19157/-1/mdq/1.0"
+	elementFormDefault="qualified"
 	version="1.0.0"
 	>
-	<xs:import namespace="https://schemas.isotc211.org/19103/-/gco/1.2" schemaLocation="https://schemas.isotc211.org/19103/-/gco/1.2.0/gco.xsd"/>
-	<xs:import namespace="https://schemas.isotc211.org/19115/-1/cit/1.3" schemaLocation="https://schemas.isotc211.org/19115/-1/cit/1.3.0/cit.xsd"/>
-	<xs:import namespace="https://schemas.isotc211.org/19115/-1/mcc/1.3" schemaLocation="https://schemas.isotc211.org/19115/-1/mcc/1.3.0/mcc.xsd"/>
-	<xs:import namespace="https://schemas.isotc211.org/19115/-1/mrc/1.3" schemaLocation="https://schemas.isotc211.org/19115/-1/mrc/1.3.0/mrc.xsd"/>
-	<xs:import namespace="https://schemas.isotc211.org/19115/-1/mrd/1.3" schemaLocation="https://schemas.isotc211.org/19115/-1/mrd/1.3.0/mrd.xsd"/>
+	<xs:import namespace="https://schemas.isotc211.org/19103/-/gco/1.2" schemaLocation="../../../../19115/-3/gco/1.0/gco.xsd"/>
+	<xs:import namespace="https://schemas.isotc211.org/19115/-1/cit/1.3" schemaLocation="../../../../19115/-3/cit/1.0/cit.xsd"/>
+	<xs:import namespace="https://schemas.isotc211.org/19115/-1/mcc/1.3" schemaLocation="../../../../19115/-3/mcc/1.0/mcc.xsd"/>
+	<xs:import namespace="https://schemas.isotc211.org/19115/-1/mrc/1.3" schemaLocation="../../../../19115/-3/mrc/1.0/mrc.xsd"/>
+	<xs:import namespace="https://schemas.isotc211.org/19115/-1/mrd/1.3" schemaLocation="../../../../19115/-3/mrd/1.0/mrd.xsd"/>
 	<!-- =========================================================================== -->
 	<xs:complexType name="Abstract_QualityResult_PropertyType">
 		<xs:sequence minOccurs="0">
@@ -23,9 +23,9 @@
 		<xs:attributeGroup ref="gco:ObjectReference"/>
 		<xs:attribute ref="gco:nilReason"/>
 	</xs:complexType>
-	<!-- ........................................................................ -->	
+	<!-- ........................................................................ -->
 	<xs:element name="Abstract_QualityResult" type="mdq:Abstract_QualityResult_Type" abstract="true" id="ISO19157-1.1.054"/>
-	<!-- ........................................................................ -->	
+	<!-- ........................................................................ -->
 	<xs:complexType name="Abstract_QualityResult_Type">
 		<xs:annotation>
 			<xs:documentation>generalization of more specific result classes</xs:documentation>
@@ -51,9 +51,9 @@
 		<xs:attributeGroup ref="gco:ObjectReference"/>
 		<xs:attribute ref="gco:nilReason"/>
 	</xs:complexType>
-	<!-- ........................................................................ -->	
+	<!-- ........................................................................ -->
 	<xs:element name="QuantitativeResult" substitutionGroup="mdq:Abstract_QualityResult" type="mdq:QuantitativeResult" id="ISO19157-1.1.057"/>
-	<!-- ........................................................................ -->	
+	<!-- ........................................................................ -->
 	<xs:complexType name="QuantitativeResult">
 		<xs:annotation>
 			<xs:documentation>the values or information about the value(s) (or set of values) obtained from applying a data quality measure</xs:documentation>
@@ -75,7 +75,7 @@
 						<xs:annotation>
 							<xs:documentation>value type for reporting a data quality result, depends of the implementation</xs:documentation>
 						</xs:annotation>
-					</xs:element>					
+					</xs:element>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -88,9 +88,9 @@
 		<xs:attributeGroup ref="gco:ObjectReference"/>
 		<xs:attribute ref="gco:nilReason"/>
 	</xs:complexType>
-	<!-- ........................................................................ -->	
+	<!-- ........................................................................ -->
 	<xs:element name="ConformanceResult" substitutionGroup="mdq:Abstract_QualityResult" type="mdq:ConformanceResult_Type" id="ISO19157-1.1.061"/>
-	<!-- ........................................................................ -->	
+	<!-- ........................................................................ -->
 	<xs:complexType name="ConformanceResult_Type">
 		<xs:annotation>
 			<xs:documentation>information about the outcome of evaluating the obtained value (or set of values) against a specified acceptable conformance quality level </xs:documentation>
@@ -125,9 +125,9 @@
 		<xs:attributeGroup ref="gco:ObjectReference"/>
 		<xs:attribute ref="gco:nilReason"/>
 	</xs:complexType>
-	<!-- ........................................................................ -->	
+	<!-- ........................................................................ -->
 	<xs:element name="DescriptiveResult" substitutionGroup="mdq:Abstract_QualityResult" type="mdq:DescriptiveResult_Type" id="ISO19157-1.1.065"/>
-	<!-- ........................................................................ -->	
+	<!-- ........................................................................ -->
 	<xs:complexType name="DescriptiveResult_Type">
 		<xs:annotation>
 			<xs:documentation>data quality descriptive result</xs:documentation>
@@ -152,9 +152,9 @@
 		<xs:attributeGroup ref="gco:ObjectReference"/>
 		<xs:attribute ref="gco:nilReason"/>
 	</xs:complexType>
-	<!-- ........................................................................ -->	
+	<!-- ........................................................................ -->
 	<xs:element name="CoverageResult" substitutionGroup="mdq:Abstract_QualityResult" type="mdq:CoverageResult_Type" id="ISO19157-1.1.067"/>
-	<!-- ........................................................................ -->	
+	<!-- ........................................................................ -->
 	<xs:complexType name="CoverageResult_Type">
 		<xs:annotation>
 			<xs:documentation>result of a data quality measure organising the measured values as a coverage</xs:documentation>

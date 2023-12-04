@@ -1,0 +1,1074 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:pir="https://schemas.isotc211.org/19135/-1/pir/1.0"
+	xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
+	xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/2.0" elementFormDefault="qualified"
+	targetNamespace="https://schemas.isotc211.org/19135/-1/pir/1.0" version="1.0">
+	<xs:include schemaLocation="../../../../19135/-1/pir/1.0/core.xsd"/>
+	<xs:include schemaLocation="../../../../19135/-1/pir/1.0/hierarchy.xsd"/>
+	<xs:import namespace="http://standards.iso.org/iso/19115/-3/cit/2.0" schemaLocation="https://schemas.isotc211.org/19115/-3/cit/2.0/cit.xsd"/>
+	<xs:import namespace="http://standards.iso.org/iso/19115/-3/gco/1.0" schemaLocation="https://schemas.isotc211.org/19115/-3/gco/1.0/gco.xsd"/>
+	<xs:complexType name="RE_AdditionInformation_PropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="pir:RE_AdditionInformation"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<xs:element name="RE_AdditionInformation" substitutionGroup="pir:RE_ProposalManagementInformation" type="pir:RE_AdditionInformation_Type"/>
+	<xs:complexType name="RE_AdditionInformation_Type">
+		<xs:annotation>
+			<xs:documentation>The subclass RE_AdditionInformation contains management information
+				about a proposal to add an item to a register.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="pir:RE_ProposalManagementInformation_Type">
+				<xs:sequence>
+					<xs:element name="item" type="pir:RE_RegisterItem_PropertyType"
+						minOccurs="1" maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation>The role “item” identifies that the information in the class RE_AdditionInformation is
+								related to a register item.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+
+		</xs:complexContent>
+
+	</xs:complexType>
+	<xs:complexType name="RE_AlternativeExpression_PropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="pir:RE_AlternativeExpression"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<xs:element name="RE_AlternativeExpression" type="pir:RE_AlternativeExpression_Type"/>
+	<xs:complexType name="RE_AlternativeExpression_Type">
+		<xs:annotation>
+			<xs:documentation>The class RE_AlternativeExpression is a data type used to provide
+				information about a register item in an alternative language. Subclasses of
+				RE_AlternativeExpression may be specified in order to add additional attributes
+				appropriate for particular item classes. EXAMPLE A specification for a metadata
+				element register could identify a subclass of RE_AlternativeExpression that would
+				include the data dictionary fields specified in ISO 19115-1(obligation/condition,
+				data type, and domain) as additional attributes.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="gco:AbstractObject_Type">
+				<xs:sequence>
+					<xs:element name="name" type="gco:CharacterString_PropertyType" minOccurs="1"
+						maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation>The attribute "name" is represented as a
+								CharacterString whose content meets the requirements of
+								RE_RegisterItem.name except that the applicable locale is that
+								specified in RE_AlternativeExpression.locale.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="definition" type="gco:CharacterString_PropertyType"
+						minOccurs="0" maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation>The attribute "definition" is represented as a
+								CharacterString whose content meets the requirements of
+								RE_RegisterItem.definition except that the applicable locale is that
+								specified in RE_AlternativeExpression.locale.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="description" type="gco:CharacterString_PropertyType"
+						minOccurs="0" maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation>The attribute description is represented as a
+								CharacterString whose content meets the requirements of
+								RE_RegisterItem.description except that the applicable locale is
+								that specified in
+								RE_AlternativeExpression.locale.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="fieldOfApplication" type="gco:CharacterString_PropertyType"
+						minOccurs="0" maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation>The attribute fieldOfApplication is represented as a
+								set of instances of RE_FieldOfApplication whose content meets the
+								requirements of RE_RegisterItem.fieldOfApplication except that the
+								applicable locale is that specified in
+								RE_AlternativeExpression.locale</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="locale" type="pir:RE_Locale_PropertyType" minOccurs="1"
+						maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation>The role "locale" identifies the class RE_Locale for
+								further information about the language used for the alternative
+								expression.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="RE_AlternativeName_PropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="pir:RE_AlternativeName"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<xs:element name="RE_AlternativeName" type="pir:RE_AlternativeName_Type"/>
+	<xs:complexType name="RE_AlternativeName_Type">
+		<xs:complexContent>
+			<xs:annotation>
+				<xs:documentation>The class RE_AlternativeName is a data type used to provide the
+					name of an item class in an alternative language.</xs:documentation>
+			</xs:annotation>
+			<xs:extension base="gco:AbstractObject_Type">
+				<xs:sequence>
+					<xs:element name="name" type="gco:CharacterString_PropertyType" minOccurs="1"
+						maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation>The attribute “name” is represented as a
+								CharacterString that contains the name of an item class in an
+								alternative language.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="locale" type="pir:RE_Locale_PropertyType" minOccurs="1"
+						maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation>The role "locale" identifies the class RE_Locale for
+								further information about the name used in
+								RE_AlternativeName</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="RE_AmendmentInformation_PropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="pir:RE_AmendmentInformation"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<xs:element name="RE_AmendmentInformation" substitutionGroup="pir:RE_ProposalManagementInformation" type="pir:RE_AmendmentInformation_Type"/>
+	<xs:complexType name="RE_AmendmentInformation_Type">
+		<xs:annotation>
+			<xs:documentation>The subclass RE_AmendmentInformation contains management information
+				about a proposal to amend an item in a register. </xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="pir:RE_ProposalManagementInformation_Type">
+				<xs:sequence>
+					<xs:element name="amendmentType" type="pir:RE_AmendmentType_PropertyType"
+						minOccurs="1" maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation>The attribute "amendmentType" is represented as an
+								instance of RE_AmendmentType that identifies the type of amendment
+								proposed.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="item" type="pir:RE_RegisterItem_PropertyType"
+						minOccurs="1" maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation>The role “item” identifies that the information in the class RE_AmendmentInformation is
+								related to a register item.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="RE_AmendmentType_PropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="pir:RE_AmendmentType"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<xs:element name="RE_AmendmentType" type="pir:RE_AmendmentType_Type"/>
+	<xs:simpleType name="RE_AmendmentType_Type">
+		<xs:annotation>
+			<xs:documentation>RE_AmendmentType is an .LT. .LT. Enumeration .GT. .GT. that provides
+				values for describing the kind of change requested by a proposal to amend a register
+				item.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="supersession">
+				<xs:annotation>
+					<xs:documentation>The proposal requests that an item be
+						superseded.</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="retirement">
+				<xs:annotation>
+					<xs:documentation>The proposal requests that an item be
+						retired.</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="RE_ClarificationInformation_PropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="pir:RE_ClarificationInformation"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<xs:element name="RE_ClarificationInformation" substitutionGroup="pir:RE_ProposalManagementInformation" type="pir:RE_ClarificationInformation_Type"/>
+	<xs:complexType name="RE_ClarificationInformation_Type">
+		<xs:annotation>
+			<xs:documentation>The subclass RE_ClarificationInformation contains management
+				information about a proposal to clarify an item in a register.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="pir:RE_ProposalManagementInformation_Type">
+				<xs:sequence>
+					<xs:element name="proposedChange" type="gco:CharacterString_PropertyType"
+						minOccurs="1" maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation>The attribute "proposedChange" is represented as a
+								CharacterString containing a description of the clarification that
+								identifies the elements of the register item that are changed and
+								the prior and subsequent values of each. EXAMPLE The definition of
+								this item was changed to correct a typographical error. The
+								misspelled word 'phenomnon' was changed to
+								'phenomenon'.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="item" type="pir:RE_RegisterItem_PropertyType"
+						minOccurs="1" maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation>The role “item” identifies that the information in the class RE_ClarificationInformation is
+								related to a register item.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="RE_DecisionStatus_PropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="pir:RE_DecisionStatus"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<xs:element name="RE_DecisionStatus" type="pir:RE_DecisionStatus_Type"/>
+	<xs:simpleType name="RE_DecisionStatus_Type">
+		<xs:annotation>
+			<xs:documentation>RE_DecisionStatus is an .LT. .LT. Enumeration .GT. .GT. that specifies
+				the status of a decision regarding a proposal to add or modify a register
+				item.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="pending">
+				<xs:annotation>
+					<xs:documentation>No decision has been made.</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="tentative">
+				<xs:annotation>
+					<xs:documentation>A decision has been made, but it is still subject to
+						appeal.</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="final">
+				<xs:annotation>
+					<xs:documentation>A decision has been made and the time limit for appeal has run
+						out or an appeal has been resolved.</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="RE_Disposition_PropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="pir:RE_Disposition"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<xs:element name="RE_Disposition" type="pir:RE_Disposition_Type"/>
+	<xs:simpleType name="RE_Disposition_Type">
+		<xs:annotation>
+			<xs:documentation>RE_Disposition is an .LT. .LT. Enumeration .GT. .GT. that provides
+				values for describing the disposition of a proposal to add or modify a register
+				item.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="withdrawn">
+				<xs:annotation>
+					<xs:documentation>The submitting organization has withdrawn the
+						proposal.</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="accepted">
+				<xs:annotation>
+					<xs:documentation>The control body decided to accept the
+						proposal.</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="notAccepted">
+				<xs:annotation>
+					<xs:documentation>The control body decided not to accept the
+						proposal.</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="RE_FieldOfApplication_PropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="pir:RE_FieldOfApplication"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<xs:element name="RE_FieldOfApplication" type="pir:RE_FieldOfApplication_Type"/>
+	<xs:complexType name="RE_FieldOfApplication_Type">
+		<xs:annotation>
+			<xs:documentation>RE_FieldOfApplication is a data type used to provide information about
+				a use for a register item. </xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="gco:AbstractObject_Type">
+				<xs:sequence>
+					<xs:element name="name" type="gco:CharacterString_PropertyType" minOccurs="1"
+						maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation>The attribute "name" is represented as a
+								CharacterString used to identify the field of application. EXAMPLE
+								'Agricultural Production', 'Marine Navigation'.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="description" type="gco:CharacterString_PropertyType"
+						minOccurs="0" maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation>The attribute description provides as a
+								CharacterString a description of the field of application. EXAMPLE
+								'Pertaining to the science, art, and business of cultivating soil,
+								producing crops, and raising livestock.' 'Pertaining to the science
+								or art of conducting ships or vessels from one place to another at
+								sea.'</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="RE_ItemClass_PropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="pir:RE_ItemClass"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<xs:element name="RE_ItemClass" substitutionGroup="pir:ItemClass" type="pir:RE_ItemClass_Type"/>
+	<xs:complexType name="RE_ItemClass_Type">
+		<xs:annotation>
+			<xs:documentation>RE_ItemClass is a description of a class of geographic information
+				items specified in a technical standard. </xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="pir:ItemClass_Type">
+				<xs:sequence>
+					<xs:element name="name" type="gco:CharacterString_PropertyType" minOccurs="1"
+						maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation>The attribute "name" is represented as a
+								CharacterString containing a compact and human-readable designator
+								that is used to denote a class of item. The "name" that designates
+								an item class held in a register that conforms to this International
+								Standard shall: a) uniquely denote the item class within the context
+								of the register; and b) be based on the item class designation used
+								in the applicable technical standard.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="alternativeName" type="gco:CharacterString_PropertyType"
+						minOccurs="1" maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation>The attribute "alternativeNames" contains a set of
+								instances of RE_AlternativeName, each of which is a translation of
+								the "name" of the RE_ItemClass into a language other than the
+								"operatingLanguage" of the RE_Register.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="technicalStandard" type="cit:CI_Citation_PropertyType"
+						minOccurs="1" maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation>The role “technicalStandard” shall be represented as
+								an instance of CI_Citation [ISO 19115-1] that specifies the
+								technical standard (and the specific portion thereof) to which items
+								in the item class shall conform.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="RE_Locale_PropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="pir:RE_Locale"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<xs:element name="RE_Locale" type="pir:RE_Locale_Type"/>
+	<xs:complexType name="RE_Locale_Type">
+		<xs:annotation>
+			<xs:documentation>The class "RE_Locale" provides information about languages used in a
+				register.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="gco:AbstractObject_Type">
+				<xs:sequence>
+					<xs:element name="name" type="gco:CharacterString_PropertyType" minOccurs="1"
+						maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation>The attribute "name" is represented as a
+								CharacterString that describes the locale. EXAMPLE
+								'Welsh'</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="country" type="gco:CharacterString_PropertyType" minOccurs="1"
+						maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation>The attribute country is represented as a
+								CharacterString that holds a 3-character numerical country code as
+								specified in ISO 3166-1. NOTE The list of codes is available from
+								the URL ftp.ics.uci.edu/pub/ietf/http/related/iso3166.txt or the ISO
+								3166 Maintenance Agency at URL
+								http://www.iso.ch/iso/en/prods-services/iso3166ma/index.html.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="language" type="gco:CharacterString_PropertyType"
+						minOccurs="1" maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation>The attribute "language" takes as its value a
+								3-character language code as specified in ISO 639-2.
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="characterEncoding" type="gco:CharacterString_PropertyType"
+						minOccurs="1" maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation>The attribute "characterEncoding" is represented as an
+								instance of MD_CharacterSetCode that specifies the name of the
+								character coding standard used.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="expression" type="pir:RE_AlternativeExpression_PropertyType"
+						minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>The role “expression” identifies the class
+								RE_AlternativeExpression for language information as specified in
+								RE_Locale.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="citation" type="cit:CI_Citation_PropertyType" minOccurs="0"
+						maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>The role “citation” is represented as an instance of
+								CI_Citation [ISO 19115-1] that provides more information about the
+								locale. EXAMPLE 2 An instance of CI_Citation could provide
+								information about a specific dialect of the language identified for
+								the locale or about some other culturally significant aspect of
+								information presentation, such as a specific method of formatting
+								numbers.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="RE_Version_PropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="pir:RE_Version"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<xs:element name="RE_Version" type="pir:RE_Version_Type"/>
+	<xs:complexType name="RE_Version_Type">
+		<xs:annotation>
+			<xs:documentation>A dataType that uniquely defines a version.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="gco:AbstractObject_Type">
+				<xs:sequence>
+					<xs:element name="versionNumber" type="gco:CharacterString_PropertyType"
+						minOccurs="1" maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation>The attribute "versionNumber" is represented as a
+								constrained CharacterString that denotes the version. The
+								CharacterString shall be of the form .LT. first positive integer
+								.GT. .LT. dot .GT. .LT. second positive integer .GT. .LT. letter
+								characters .GT. ('#.#a'), where: - .LT. first positive integer .GT.
+								(one or more digits) shall specify the major version designation; -
+								.LT. dot .GT. ('.') shall delimit the .LT. first positive integer
+								.GT. from the .LT. second positive integer .GT. when there is a .LT.
+								second positive integer .GT. ; - .LT. second positive integer .GT.
+								(one or more digits) shall optionally specify the minor sub-version
+								designation; and .LT. letters .GT. (one or more characters) shall
+								optionally specify the minor subversion designation. EXAMPLE
+								'2.1a'.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="versionDate" type="gco:Date_PropertyType" minOccurs="1"
+						maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation>The attribute "versionDate" is represented as an
+								instance of the class .LT. Date .GT. [ISO 19103] that specifies the
+								date (which may be of reduced precision) of the version. EXAMPLE
+								2002-10-21.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="RE_ProposalManagementInformation_PropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="pir:RE_ProposalManagementInformation"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<xs:element name="RE_ProposalManagementInformation" type="pir:RE_ProposalManagementInformation_Type"/>
+	<xs:complexType name="RE_ProposalManagementInformation_Type" abstract="true">
+		<xs:annotation>
+			<xs:documentation>The class RE_ProposalManagementInformation specifies elements of
+				management information to be recorded for each proposal to add or modify a register
+				item.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="gco:AbstractObject_Type">
+				<xs:sequence>
+					<xs:element name="dateProposed" type="gco:Date_PropertyType" minOccurs="1"
+						maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation>The attribute "dateProposed" is represented as an
+								instance of the class .LT. Date .GT. [ISO 19103] and specify the
+								(full precision) date on which the item was entered into the
+								register. EXAMPLE 2002-11-27.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="justification" type="gco:CharacterString_PropertyType"
+						minOccurs="1" maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation>The attribute "justification" is represented as a
+								CharacterString that explains why the proposed change should be
+								implemented.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="status" type="pir:RE_DecisionStatus_PropertyType"
+						minOccurs="1" maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation>The attribute "status" is represented as an instance
+								of RE_DecisionStatus that identifies the standing of the proposed
+								change within the approval process. </xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="disposition" type="pir:RE_Disposition_PropertyType"
+						minOccurs="0" maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation>The conditional attribute "disposition" is represented
+								as an instance of RE_Disposition that identifies the disposition of
+								the proposal. </xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="dateDisposed" type="gco:Date_PropertyType" minOccurs="0"
+						maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation>The conditional attribute "dateDisposed" is
+								represented as an instance of the class .LT. Date .GT. [ISO 19103]
+								and specify the (full precision) date on which the disposition of
+								the proposal was determined. </xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="controlBodyDecisionEvent" type="gco:CharacterString_PropertyType" minOccurs="0" maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation>The attribute "controlBodyDecisionEvent" is
+								represented as a CharacterString that identifies a meeting or other
+								event associated with the control body's decision concerning the
+								proposed change.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="controlBodyNotes" type="gco:CharacterString_PropertyType"
+						minOccurs="0" maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation>The attribute "controlBodyNotes" is represented as a
+								CharacterString containing notes relevant to the control body's
+								decision concerning the proposal. Individual entries within the
+								notes should be dated. </xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="registerManagerNotes" type="gco:CharacterString_PropertyType"
+						minOccurs="0" maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation>The attribute "registerManagerNotes" is represented as
+								a CharacterString containing notes relevant to the register
+								manager's handling of the proposal. Individual entries within the
+								notes should be dated. </xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="sponsor" type="pir:RegisterStakeholder_PropertyType"
+						minOccurs="1" maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation>The role “sponsor” identifies the class
+								RE_RegisterStakeholder to be submitting proposal management
+								information to the registry.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="RE_Reference_PropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="pir:RE_Reference"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<xs:element name="RE_Reference" type="pir:RE_Reference_Type"/>
+	<xs:complexType name="RE_Reference_Type">
+		<xs:annotation>
+			<xs:documentation>The class RE_Reference specifies information about the source and/or
+				lineage of a specific RE_RegisterItem derived from an external document or register.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="gco:AbstractObject_Type">
+				<xs:sequence>
+					<xs:element name="itemIdentifierAtSource" type="gco:CharacterString_PropertyType" minOccurs="1" maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation>The attribute "itemIdentifierAtSource" is represented
+								as a CharacterString that provides the value of the item identifier
+								in the source document or register from which the specification of
+								the RE_RegisterItem is derived.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="similarity" type="pir:RE_SimilarityToSource_PropertyType"
+						minOccurs="1" maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation>The attribute "similarity" uses a value from the
+								CodeList RE_SimilarityToSource that specifies the type of change
+								that has been made to the item specification relative to the item
+								specification in the external source.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="referenceText" type="gco:CharacterString_PropertyType"
+						minOccurs="0" maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation>The optional attribute "referenceText" is represented
+								as a CharacterString that may be used to provide a copy of
+								documentation about the item from the RE_ReferenceSource. NOTE This
+								attribute is intended for use in cases where the RE_ReferenceSource
+								may not be readily accessible to users of the
+								register.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="notes" type="gco:CharacterString_PropertyType" minOccurs="0"
+						maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation>The optional attribute "notes" is represented as a
+								CharacterString that may be used to provide additional information
+								about the derivation of the specification of a register item from an
+								external source.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="sourceCitation" type="pir:RE_ReferenceSource_PropertyType"
+						minOccurs="1" maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation>The role "sourceCitation" identifies that the
+								information in the RE_ReferenceSource is the citation for the
+								RE_Reference. </xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="item" type="pir:RE_RegisterItem_PropertyType" minOccurs="0"
+						maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>The role “item” identifies the information in
+								RE_Reference for the register item.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="specifiedItem" type="pir:RE_RegisterItem_PropertyType"
+						minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>The role “specifiedItem” describes that the
+								RE_Reference for the association “source” is the reference source
+								for specification of the register item.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="RE_ReferenceSource_PropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="pir:RE_ReferenceSource"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<xs:element name="RE_ReferenceSource" type="pir:RE_ReferenceSource_Type"/>
+	<xs:complexType name="RE_ReferenceSource_Type">
+		<xs:annotation>
+			<xs:documentation>The class RE_ReferenceSource specifies information about the source of
+				RE_RegisterItem specifications taken from an external document or
+				register.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="gco:AbstractObject_Type">
+				<xs:sequence>
+					<xs:element name="itemReference" type="pir:RE_Reference_PropertyType" minOccurs="1" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>The role “itemReference” describes that the information in the RE_ReferenceSource is the
+								citation for one or more RE_References”.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="citation" type="cit:CI_Citation_PropertyType" minOccurs="1" maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation>information object containing information that directs a reader’s or user’s attention from
+								one resource (4.17) to another, Source ISO 19115-1.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="register" type="pir:RE_Register_PropertyType" minOccurs="1" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>The role “register” describes that the register for the association Reference is the reference
+								for one or more items in the register.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="RE_Register_PropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="pir:RE_Register"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<xs:element name="RE_Register" substitutionGroup="pir:Register" type="pir:RE_Register_Type"/>
+	<xs:complexType name="RE_Register_Type">
+		<xs:annotation>
+			<xs:documentation>The class "RE_Register" specifies information about the register
+				itself. It is a subtype of the Register class in the core
+				profile.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="pir:Register_Type">
+				<xs:sequence>
+					<xs:element name="name" type="gco:CharacterString_PropertyType" minOccurs="1"
+						maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation>The attribute "name" is be represented as a
+								CharacterString containing a compact and human-readable designator
+								that is used to uniquely denote that register within the set of
+								registers maintained by the register owner. In the case of a
+								hierarchical register, the "name" of a subregister shall uniquely
+								identify that subregister within the scope EXAMPLE 'ISO/TC 211
+								Register of Feature Data Dictionaries and Feature Catalogues' might
+								be the name of the principal register of of all registers
+								established by the owner of the principal register. a hierarchical
+								register. 'DGIWG FACC Data Dictionary' and 'IHO S-57 Object
+								Dictionary' might be the names of subregisters within the
+								hierarchy.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="contentSummary" type="gco:CharacterString_PropertyType"
+						minOccurs="1" maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation>The attribute "contentSummary" is be represented as a
+								CharacterString containing a general statement of the purpose for
+								which items in the register are made available to potential users.
+								It should also specify any limits to the scope of the register and
+								identify the types of applications for which the items are intended.
+								NOTE The scope of a register could be limited by theme, by region,
+								by language or other criteria. EXAMPLE The scope of a terminology
+								register could be limited to Spanish terms used to describe
+								landforms in Latin America. </xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="uniformResourceIdentifier" type="gco:CharacterString_PropertyType" minOccurs="1" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>The attribute "uniformResourceIdentifier" takes as its
+								value a set of URI's, each referencing information about online
+								resources associated with the register. EXAMPLE
+								'http://www.digest.org/Navigate2.htm' and
+								'http://www.epa.gov/opppmsd1/PPISdata/index.html' are sample values
+								corresponding value of the attribute OnLineResource.linkage
+								specifies a resource providing access to the complete content of the
+								register. EXAMPLE 'http://www.digest.org/Navigate2.htm' and
+								'http://www.epa.gov/opppmsd1/PPISdata/index.html' are sample values
+								of OnLineResource.linkage.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="operatingLanguage" type="pir:RE_Locale_PropertyType"
+						minOccurs="1" maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation>The attribute "operatingLanguage" is represented as an
+								instance of class RE_Locale that is used to specify language,
+								country information and character encoding for the proper
+								interpretation of the content of character strings in the register.
+								The values of all character strings in the register shall be in
+								accordance with the value of "operatingLanguage", unless otherwise
+								stated.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="alternativeLanguages" type="gco:CharacterString_PropertyType"
+						minOccurs="0" maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation>The attribute "alternativeLanguages" supports cultural
+								and linguistic adaptability, individual items in a register may
+								provide elements of information in additional languages other than
+								the operating language of the register. The attribute
+								alternativeLanguages shall be represented as a set of instances of
+								RE_Locale, each specifying an additional unique locale used by items
+								in the register. Every member of the set shall be used by at least
+								one item in the register. The locale of every alternativeExpression
+								used by any item in the register shall be included in this set of
+								RE_Locales. This attribute provides a summary of alternative locales
+								used by items in a register. Register owners shall specify and
+								publish their policy as to whether all or only some of the items in
+								a register shall have alternative expressions.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="citation" type="pir:RE_ReferenceSource_PropertyType"
+						minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>The role “citation” identifies reference source for
+								one or more items in the RE_Register.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="RE_RegisterItem_PropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="pir:RE_RegisterItem"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<xs:element name="RE_RegisterItem" substitutionGroup="pir:RegisterItem" type="pir:RE_RegisterItem_Type"/>
+	<xs:complexType name="RE_RegisterItem_Type">
+		<xs:annotation>
+			<xs:documentation>The class "RE_RegisterItem" specifies elements of information to be
+				recorded for each item held in a register.. The technical standard that specified an
+				item class may specify additional elements to be recorded.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="pir:RegisterItem_Type">
+				<xs:sequence>
+					<xs:element name="name" type="gco:CharacterString_PropertyType" minOccurs="1"
+						maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation>The attribute "name" is represented as a
+								CharacterString containing a compact and human-readable designator
+								that is used to denote a register concept. Each "name" shall: -
+								denote an item concept in the scope of an item class; and - be a
+								succinct expression of the item concept it denotes. EXAMPLE 'Lift'
+								and 'buoy shape'. The "name" shall be unique within a register
+								according to the following rules: - Multiple items of the same item
+								class may use the same value for "name" but only one such item may
+								have a status of 'valid'. - Items in different item classes may use
+								the same value for name. The "name" may be used to support searches
+								for items of interest to a human user of the
+								register.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="definition" type="gco:CharacterString_PropertyType"
+						minOccurs="1" maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation>The attribute "definition" shall be represented as a
+								CharacterString containing the definition of the concept embodied by
+								that item and expressed in the operating language of the register.
+								The "definition" shall be a precise statement of the nature,
+								properties, scope or essential qualities of the concept as realized
+								by the item. If a definition is taken from an external source,
+								RE_Reference shall be used to provide information about that source
+								together with the unique identifier of the item in the external
+								source where available. EXAMPLE 'Equipment consisting of a platform,
+								which is often enclosed, that is raised and lower ed in a vertical
+								shaft to transport humans, equipment or materials; a lift or (U.S.)
+								elevator' and 'The shape of a buoy'.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="alternativeExpressions" type="gco:CharacterString_PropertyType" minOccurs="0" maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation>The attribute "alternativeExpressions" represents as a
+								set of instances of RE_AlternativeExpression, each specifying an
+								alternative name and optionally additional information in a locale
+								different from that of the register. No two instances of
+								RE_AlternativeExpression within the set shall have the same value
+								for locale. </xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="dateAccepted" type="gco:Date_PropertyType" minOccurs="0"
+						maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation>The conditional attribute "dateAccepted" specifies the
+								date on which a proposal to add the item to the register was
+								accepted. DateAccepted =
+								self.additionInformation.dateDisposed</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="dateAmended" type="gco:Date_PropertyType" minOccurs="0"
+						maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation>The conditional attribute "dateAmended" specifies the
+								date on which a proposal to supersede or retire the item was
+								accepted. DataAmended =
+								self.amendmentInformation.dateDisposed</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="description" type="gco:CharacterString_PropertyType"
+						minOccurs="0" maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation>The attribute "description" is represented as a
+								CharacterString containing a description of the concept embodied by
+								that item and expressed in the operating language of the register.
+								The "description" contains a statement of the nature, properties,
+								scope, or non-essential qualities of the concept that are realized
+								by the item but are not specified by the "definition" element.
+								EXAMPLE 1 'A lift may be moved through a system of overhead cables,
+								lateral traction or under-floor hydraulics.' EXAMPLE 2 'Buoy shape
+								is generally based on the portion visible above the water
+								line.'</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="fieldOfApplication" type="gco:CharacterString_PropertyType"
+						minOccurs="0" maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation>The attribute "fieldOfApplication" is represented as a
+								set of instances of RE_FieldOfApplication, each of which shall
+								describe a kind of use of the item. The fieldOfApplication may be
+								used as the basis for creating metadata for submission to search
+								engines. EXAMPLES 'Agricultural Production' and 'Marine
+								Navigation'.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="additionInformation" type="pir:RE_AdditionInformation_PropertyType" minOccurs="1"
+						maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>The role "additionInformation" identifies the class
+								RE_AdditionInformation for addtional information about the
+								registerItem.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="amendmentInformation" type="pir:RE_AmendmentInformation_PropertyType" minOccurs="0"
+						maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>The role "amendmentInformation" identifies that
+								amendment information to the register item may be available in the
+								RE_AmendmentInformation class.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="clarificationInformation" type="pir:RE_ClarificationInformation_PropertyType" minOccurs="0"
+						maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>The role "clarificationInformation " identifies the
+								class RE_ClarificationInformation for clarifying information about
+								the registerItem.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="specificationLineage" type="pir:RE_Reference_PropertyType"
+						minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>The role "specificationLineage" identifies the
+								information in RE_Reference as lineage information for the register
+								item. </xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="specificationSource" type="pir:RE_Reference_PropertyType"
+						minOccurs="0" maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation>The role "specificationSource" identifies the
+								reference infromation as the specification source for the register
+								item. </xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="RE_RegisterStakeholder_PropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="pir:RE_RegisterStakeholder"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<xs:element name="RE_RegisterStakeholder" type="pir:RE_RegisterStakeholder_Type"/>
+	<xs:complexType name="RE_RegisterStakeholder_Type">
+		<xs:complexContent>
+			<xs:extension base="pir:RegisterStakeholder_Type">
+				<xs:sequence>
+					<xs:element name="proposalInformation" type="pir:RE_ProposalManagementInformation_PropertyType" minOccurs="1"
+						maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>The role "proposalnformation" identifies that the
+								stakeholder in the function of a proposer has proposed proposal
+								managment information to the registry.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="RE_SimilarityToSource_PropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="pir:RE_SimilarityToSource"/>
+		</xs:sequence>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<xs:element name="RE_SimilarityToSource" substitutionGroup="gco:CharacterString" type="gco:CodeListValue_Type">
+		<xs:annotation>
+			<xs:documentation>RE_SimilarityToSource is a .LT. .LT. CodeList .GT. .GT. that
+				identifies the type of change that has been made to an item specification
+				relative to an item specification in an external source.</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="RE_SubregisterDescription_PropertyType">
+		<xs:sequence minOccurs="0">
+			<xs:element ref="pir:RE_SubregisterDescription"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gco:ObjectReference"/>
+		<xs:attribute ref="gco:nilReason"/>
+	</xs:complexType>
+	<xs:element name="RE_SubregisterDescription" substitutionGroup="pir:SubregisterDescription" type="pir:RE_SubregisterDescription_Type"/>
+	<xs:complexType name="RE_SubregisterDescription_Type">
+		<xs:annotation>
+			<xs:documentation>RE_SubregisterDescription is a subclass of SubregisterDescription that
+				is used in the principal register of a hierarchical register to describe additional
+				information for each of the affiliated subregisters. </xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="pir:SubregisterDescription_Type">
+				<xs:sequence>
+					<xs:element name="uniformResourceIdentifier" type="gco:CharacterString_PropertyType" minOccurs="1" maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation>The attribute "uniformResourceIdentifier" takes as its
+								value a set of URI's, each referencing information about online
+								resources associated with the register.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="operatingLanguage" type="pir:RE_Locale_PropertyType"
+						minOccurs="1" maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation>The attribute "operatingLanguage" is represented as an
+								instance of class RE_Locale that is used to specify language,
+								country information and character encoding for the proper
+								interpretation of the content of character strings in the
+								subregister.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+</xs:schema>

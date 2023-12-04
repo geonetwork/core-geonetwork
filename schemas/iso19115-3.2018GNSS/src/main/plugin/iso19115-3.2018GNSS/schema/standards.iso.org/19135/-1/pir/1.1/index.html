@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+      <title>DRAFT Procedures for item registration Pt 2</title>
+      <style>
+						h1 { font-family: Arial; color: DarkBlue; font-size: 14pt; font-weight:bold; }
+						body { font-family: Arial; color: black; font-size: 10pt;}
+						td { font-family: Arial; color: black; font-size: 10pt;}
+						table, th, td {border: 1px solid black; padding: 2px; border-spacing: 1px;}
+						.paraSmall {font-size: 0.7em; font-style: italic;}
+						.metagroup { font-family: Arial; color: #0099FF; font-size: 10pt; font-weight:bold; }
+					</style>
+   </head>
+   <body>
+      <h1>DRAFT Geographic Information - Procedures for item registration - Part 2: XML implementation Amendment 1</h1>
+      <label>Processes for item registration - class diagram</label><br/>
+      <img width="750" title="Processes for item registration classes" alt="image of Processes for item registration - class diagram" src="19135-1ItemRegistrationClassesWeb.png">
+      <h2>Description</h2>
+      <p>PIR is an XML Schema implementation derived from ISO ISO 19135-1, Geographic Information - Procedures for item registration - Part 1: Fundamentals (2015), 
+         as described in ISO 19135-2 Amendment 1 2021</p>
+     <!-- <h2>Sample XML files for PIR </h2><a href="https://isotc211.org/19135/-1/pir/1.1.0/mrl.xml">pir.xml</a> -->
+      <h2>XML Namespace for PIR</h2>
+      <p>The namespace URI for PIR 1.1 is derived from ISO 19135-2 Amendment 1<b>https://schemas.isotc211.org/19135/-1/pir/1.1.0</b>.</p>
+      <h2>XML Schema for PIR 1.1</h2>
+      <p>
+         <b><a href="https://schemas.isotc211.org/19135/-1/pir/1.1.0/pir.xsd">pir.xsd in ISO 19135-1</a></b> is the XML Schema document to be referenced by XML documents containing XML elements
+         in the PIR 1.1 namespace or by XML Schema documents importing the PIR 1.1 namespace.
+      </p>
+      <h2>Related XML Schema for PIR 1.1</h2>
+      <p>
+         <b><a href="https://schemas.isotc211.org/19135/-1/pir/1.1.0/core.xsd">core.xsd</a></b> implements the UML conceptual schema defined in ISO 19135-1. 
+         It was created using the encoding rules defined in ISO 19118, ISO 19139, and the implementation approach described in ISO 19115-2. 
+         core.xsd contains the following classes  (enumerations are bold italic):
+      </p> 
+      <ul>
+         <li>Register</li>
+         <li>ItemClass</li>
+         <li>Registration</li>
+         <li>RegistrationStakeholder</li>
+         <li>RE_version</li>
+         <li><strong><em>RE_ItemStatus</em></strong></li>
+      </ul>
+      <p>
+         <b><a href="https://schemas.isotc211.org/19135/-1/pir/1.1.0/extended.xsd">extended.xsd</a></b> implements the UML conceptual schema defined in ISO 19135-1. 
+         It was created using the encoding rules defined in ISO 19118, ISO 19139, and the implementation approach described in ISO 19115-2. 
+         core.xsd contains the following classes (enumerations are bold italic, codeLists are bold):
+      </p>
+      <ul>
+         <li>RE_AlternativeExpresion</li>
+         <li>RE_AlternativeName</li>
+         <li>RE_AmendedInformation</li>
+         <li>RE_Register</li>
+         <li>RE_RegisterItem</li>
+         <li>RE_ItemClass</li>
+         <li>RE_ClarificationInformation</li>
+         <li>RE_ProposalManagementInformation</li>
+         <li>RE_Reference</li>
+         <li>RE_ReferenceSource</li>
+         <li>RE_RegisterStakeholder</li>
+         <li>RE_SubregisterDescription</li>
+         <li>RE_FieldOfApplication</li>
+         <li>RE_Locale</li>
+         <li><strong><em>RE_AmenedmentType</em></strong></li>
+         <li><strong><em>RE_DecisionStatus</em></strong></li>
+         <li><strong><em>RE_Disposition</em></strong></li>
+         <li><strong>RE_SimilarityToSource</strong></li>
+      </ul>
+
+      <p>
+         <b><a href="https://schemas.isotc211.org/19135/-1/pir/1.1.0/hierarchy.xsd">hierarchy.xsd</a></b> implements the UML conceptual schema defined in ISO 19135-1. 
+         It was created using the encoding rules defined in ISO 19118, ISO 19139, and the implementation approach described in ISO 19115-2. 
+         core.xsd contains the following classes: 
+      </p>
+      <ul>
+         <li>SubregisterDescription</li>
+      </ul>
+      
+      <h2>Related XML Namespaces for PIR</h2> The PIR namespace imports these other namespaces: 
+      <table>
+         <thead>
+            <tr>
+            <th>Name</th>
+            <th>Standard Prefix</th>
+            <th>Namespace Location</th>
+            <th>Schema Location</th>
+            </tr>
+         </thead>
+         <tr>
+            <td>Geographic COmmon</td>
+            <td>gco</td>
+            <td><a href="https://schemas.isotc211.org/19103/-/gco/1.2">https://schemas.isotc211.org/19103/-/gco/1.2</a></td>
+            <td>https://schemas.isotc211.org/19103/-/gco/1.2.0/gco.xsd</td>
+  <!-- 
+            <td><a href="https://schemas.isotc211.org/19115/-3/gco/1.0">https://schemas.isotc211.org/19115/-3/gco/1.0</a></td>
+            <td>https://schemas.isotc211.org/19115/-3/gco/1.0/gco.xsd</td>
+ -->
+         </tr>
+         <tr>
+            <td>CITataion</td>
+            <td>cit</td>
+            <td><a href="https://schemas.isotc211.org/19115/-1/cit/1.3">https://schemas.isotc211.org/19115/-1/cit/1.3</a></td>
+            <td>https://schemas.isotc211.org/19115/-1/cit/1.3.0/cit.xsd</td>
+  <!-- 
+            <td><a href="https://schemas.isotc211.org/19115/-3/cit/2.0">https://schemas.isotc211.org/19115/-3/cit/2.0</a></td>
+            <td>https://schemas.isotc211.org/19115/-3/cit/2.0/cit.xsd</td>
+-->
+         </tr>
+      </table>
+      <h2>Working Versions</h2> When revisions to these schema become necessary, they will be managed in the <a href="https://github.com/ISO-TC211/XML">ISO TC211 Git Repository</a>. 
+      <hr>
+      <p class="paraSmall">&#169; ISO. Written by-hand Version: 2021-02-04</p>
+      
+   </body>
+</html>

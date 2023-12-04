@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"	
-	xmlns:gco="https://schemas.isotc211.org/19103/-/gco/1.2" 
-	xmlns:mcc="https://schemas.isotc211.org/19115/-1/mcc/1.3" 
-	xmlns:mdq="https://schemas.isotc211.org/19157/-1/mdq/1.0" 
-	xmlns:dqc="https://schemas.isotc211.org/19157/-1/dqc/1.0" 
-	targetNamespace="https://schemas.isotc211.org/19157/-1/mdq/1.0" 
-	elementFormDefault="qualified" 
-	version="1.0.0"
-	>
-	<xs:import namespace="https://schemas.isotc211.org/19103/-/gco/1.2" schemaLocation="https://schemas.isotc211.org/19103/-/gco/1.2.0/gco.xsd"/>
-	<xs:import namespace="https://schemas.isotc211.org/19115/-1/mcc/1.3" schemaLocation="https://schemas.isotc211.org/19115/-1/mcc/1.3.0/mcc.xsd"/>
-	
-	<xs:include schemaLocation="../../mdq/1.0.0/dataQuality.xsd" />
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
+           xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0"
+           xmlns:mdq="https://schemas.isotc211.org/19157/-1/mdq/1.0"
+           xmlns:dqc="https://schemas.isotc211.org/19157/-1/dqc/1.0"
+           targetNamespace="https://schemas.isotc211.org/19157/-1/mdq/1.0"
+           elementFormDefault="qualified"
+           version="1.0.0"
+>
+  <xs:import namespace="http://standards.iso.org/iso/19115/-3/gco/1.0" schemaLocation="../../../../19115/-3/gco/1.0/gco.xsd"/>
+  <xs:import namespace="http://standards.iso.org/iso/19115/-3/mcc/1.0" schemaLocation="../../../../19115/-3/mcc/1.0/mcc.xsd"/>
+
+  <xs:include schemaLocation="../../mdq/1.0.0/dataQuality.xsd" />
 	<!-- =========================================================================== -->
 	<xs:complexType name="Abstract_Metaquality_PropertyType">
 		<xs:sequence minOccurs="0">
