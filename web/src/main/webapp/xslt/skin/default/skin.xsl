@@ -14,6 +14,8 @@
                 version="2.0"
                 exclude-result-prefixes="#all">
 
+  <xsl:param name="output" select="''" />
+
   <xsl:function name="geonet:updateUrlPlaceholder" as="xs:string">
     <xsl:param name="url" as="xs:string"/>
     <xsl:param name="node" as="xs:string"/>
@@ -89,7 +91,7 @@
                             select="if (util:getUiConfigurationJsonProperty(/root/request/ui, 'mods.search.enabled') = 'false')
                                     then false()
                                     else true()"/>
-              <xsl:if test="$isSearchEnabled">
+              <xsl:if test="$isSearchEnabled and $output != 'pdf'">
                 <xsl:variable name="searchUrl"
                               select="if(util:getUiConfigurationJsonProperty(/root/request/ui, 'mods.search.appUrl'))
                                     then geonet:updateUrlPlaceholder(util:getUiConfigurationJsonProperty(/root/request/ui, 'mods.search.appUrl'), /root/gui/nodeId, $lang)
@@ -106,7 +108,7 @@
                             select="if (util:getUiConfigurationJsonProperty(/root/request/ui, 'mods.map.enabled') = 'false')
                                     then false()
                                     else true()"/>
-              <xsl:if test="$isMapEnabled">
+              <xsl:if test="$isMapEnabled and $output != 'pdf'">
                 <xsl:variable name="mapUrl"
                               select="if(util:getUiConfigurationJsonProperty(/root/request/ui, 'mods.map.appUrl'))
                                     then geonet:updateUrlPlaceholder(util:getUiConfigurationJsonProperty(/root/request/ui, 'mods.map.appUrl'), /root/gui/nodeId, $lang)
@@ -186,7 +188,7 @@
                   select="if (util:getUiConfigurationJsonProperty(/root/request/ui, 'mods.footer.enabled') = 'false')
                         then false()
                         else true()"/>
-    <xsl:if test="$isFooterEnabled">
+    <xsl:if test="$isFooterEnabled and $output != 'pdf'">
       <div class="navbar navbar-default gn-bottom-bar" role="navigation">
         <ul class="nav navbar-nav">
           <li class="gn-footer-text">
