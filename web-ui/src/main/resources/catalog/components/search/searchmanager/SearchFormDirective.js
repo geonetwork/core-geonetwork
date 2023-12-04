@@ -544,6 +544,28 @@
       );
     };
 
+    this.loadLessTerms = function (facet, moreItemsNumber) {
+      var request = gnESService.generateEsRequest(
+        $scope.finalParams,
+        $scope.searchObj.state,
+        $scope.searchObj.configId,
+        $scope.searchObj.filters
+      );
+
+      var itemsToRequest = facet.items.length - (moreItemsNumber || 20);
+      if (itemsToRequest <= 0) {
+        itemsToRequest = gnESFacet.getDefaultSize();
+      }
+      return gnESClient.getTermsParamsWithNewSizeOrFilter(
+        request.query,
+        facet.key,
+        facet.config,
+        itemsToRequest,
+        facet.include || undefined,
+        facet.exclude || undefined
+      );
+    };
+
     this.filterTerms = function (facet) {
       var request = gnESService.generateEsRequest(
         $scope.finalParams,
