@@ -214,12 +214,12 @@
                 filters: {
                   errors: {
                     query_string: {
-                      query: "-indexingErrorMsg:/Warning.*/"
+                      query: "-indexingErrorMsg.type:warning"
                     }
                   },
                   warning: {
                     query_string: {
-                      query: "+indexingErrorMsg:/Warning.*/"
+                      query: "+indexingErrorMsg.type:warning"
                     }
                   }
                 }
