@@ -546,7 +546,7 @@
     "categoriesUpdated": "Kategorien aktualisiert.",
     "warnPublishDraft": "Wenn Sie Datensätze mit aktiviertem Workflow veröffentlichen, ändert sich der Status in  'genehmigt'. Sind Sie sicher, dass Sie fortfahren möchten?",
     "cancelWorkingCopy": "Arbeitskopie abbrechen",
-    "deleteWorkingCopyRecordConfirm": "Möchten Sie die Arbeitskopie '{{title}}' wirklich entfernen?",
+    "deleteWorkingCopyRecordConfirm": "Möchten Sie die Arbeitskopie '{{resourceTitle}}' wirklich entfernen?",
     "workingCopy": "Arbeitskopie",
     "onTheWeb": "Weiterführende Online-Informationen",
     "pdfReportTocTitle": "Inhalte",

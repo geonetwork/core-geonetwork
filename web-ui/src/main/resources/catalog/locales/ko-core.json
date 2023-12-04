@@ -546,7 +546,7 @@
     "categoriesUpdated": "카테고리를 갱신하였습니다.",
     "warnPublishDraft": "When publishing records with workflow enabled, the status will change to 'Approve'. Are you sure you want to continue?",
     "cancelWorkingCopy": "Cancel working copy",
-    "deleteWorkingCopyRecordConfirm": "Do you really want to remove the working copy '{{title}}'?",
+    "deleteWorkingCopyRecordConfirm": "Do you really want to remove the working copy '{{resourceTitle}}'?",
     "workingCopy": "Working copy",
     "onTheWeb": "More online information",
     "pdfReportTocTitle": "Contents",

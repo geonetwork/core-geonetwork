@@ -210,7 +210,7 @@
           function (data) {
             gnAlertService.addAlert({
               msg: $translate.instant("metadataRemoved", {
-                title: { title: md.resourceTitle }
+                title: md.resourceTitle
               }),
               type: "success"
             });
