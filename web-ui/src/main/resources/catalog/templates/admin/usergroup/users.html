@@ -92,7 +92,7 @@
           <button
             type="button"
             class="btn btn-primary pull-right"
-            data-ng-disabled="!gnUserEdit.$valid && !gnUserEdit.dirty"
+            data-ng-disabled="!gnUserEdit.$valid || !gnUserEdit.$dirty"
             data-ng-click="saveUser('#gn-user-edit')"
             id="gn-btn-user-save"
           >
