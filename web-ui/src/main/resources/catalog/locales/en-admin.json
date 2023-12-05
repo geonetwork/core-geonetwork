@@ -1395,6 +1395,8 @@
     "metadata/pdfReport/tocPage": "Add table of contents (TOC) page",
     "metadata/pdfReport/pdfName": "Report file name",
     "metadata/pdfReport/pdfName-help": "Report file name. The following template fields are allowed to be used: {year}, {month}, {day}, {date} and {datetime}. Template fields are replaced with the related date values. {date} uses 'yyyyMMdd' format and {datetime} uses 'yyyyMMddHHmmss' format.",
+    "metadata/pdfReport/headerLogoFileName": "Top banner file name",
+    "metadata/pdfReport/headerLogoFileName-help": "When a file is given, the pdf will be generated using this image as its top banner instead of its default one. Please add this image using the add new logo feature.",
     "metadata/csvReport": "Metadata selection - csv export",
     "metadata/csvReport/csvName": "CSV export file name",
     "metadata/csvReport/csvName-help": "Export metadata in CSV format file name. The following template fields are allowed to be used: {year}, {month}, {day}, {date} and {datetime}. Template fields are replaced with the related date values. {date} uses 'yyyyMMdd' format and {datetime} uses 'yyyyMMddHHmmss' format.",

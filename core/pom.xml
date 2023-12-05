@@ -495,6 +495,12 @@
       <artifactId>gn-schema-iso19139</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>org.geonetwork-opensource.schemas</groupId>
+      <artifactId>gn-schema-iso19115-3.2018</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
     <dependency> <!-- dummy API for ARC SDE stuff -->
       <groupId>${project.groupId}</groupId>
       <artifactId>gn-dummy-api</artifactId>
