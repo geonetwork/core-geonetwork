@@ -647,10 +647,10 @@ public class EsHTTPProxy {
                 }
 
                 if (doc.has("_source") &&
-                    doc.get("_source").has("documentStandard")) {
+                    doc.get("_source").has(Geonet.IndexFieldNames.SCHEMA)) {
                     ObjectNode sourceNode = (ObjectNode) doc.get("_source");
 
-                    String metadataSchema = doc.get("_source").get("documentStandard").asText();
+                    String metadataSchema = doc.get("_source").get(Geonet.IndexFieldNames.SCHEMA).asText();
                     MetadataSchema mds = schemaManager.getSchema(metadataSchema);
 
                     // Apply metadata schema filters to remove non-allowed fields
