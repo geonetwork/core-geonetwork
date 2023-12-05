@@ -32,7 +32,8 @@
     "gn_dbtranslation",
     "gn_multiselect",
     "gn_mdtypewidget",
-    "blueimp.fileupload"
+    "blueimp.fileupload",
+    "ngMessages"
   ]);
 
   /**
