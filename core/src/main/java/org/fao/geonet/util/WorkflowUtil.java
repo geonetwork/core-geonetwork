@@ -33,6 +33,9 @@ import java.util.regex.Pattern;
 
 public class WorkflowUtil {
 
+    /**
+     * Avoid creation of new instances of this utility class making its constructor private.
+     */
     private WorkflowUtil() {
 
     }
@@ -41,13 +44,16 @@ public class WorkflowUtil {
      * Checks if the workflow is enabled and a group has the workflow enabled.
      *
      * @param groupName Group name
-     * @return
+     * @return {@code true} if the workflow is enabled and it has been enabled for all groups or the group name matches
+     * the regular expression in {@link Settings#METADATA_WORKFLOW_DRAFT_WHEN_IN_GROUP}. False otherwise.
      */
     public static boolean isGroupWithEnabledWorkflow(String groupName) {
         SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
 
         boolean isWorkflowEnabled = settingManager.getValueAsBool(Settings.METADATA_WORKFLOW_ENABLE);
-        if (!isWorkflowEnabled) return false;
+        if (!isWorkflowEnabled) {
+            return false;
+        }
 
         String groupMatchingRegex = settingManager.getValue(Settings.METADATA_WORKFLOW_DRAFT_WHEN_IN_GROUP);
 

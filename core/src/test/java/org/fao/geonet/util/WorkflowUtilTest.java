@@ -29,7 +29,7 @@ import org.fao.geonet.kernel.setting.Settings;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 public class WorkflowUtilTest extends AbstractCoreIntegrationTest {
     @Autowired
@@ -38,30 +38,47 @@ public class WorkflowUtilTest extends AbstractCoreIntegrationTest {
     @Test
     public void testWorkflowDisabled() {
         settingManager.setValue(Settings.METADATA_WORKFLOW_ENABLE, false);
-        assertEquals(false, WorkflowUtil.isGroupWithEnabledWorkflow("sample"));
+        assertFalse(WorkflowUtil.isGroupWithEnabledWorkflow("sample"));
+    }
+
+    @Test
+    public void testWorkflowDisabledAndEnabledAllGroups() {
+        settingManager.setValue(Settings.METADATA_WORKFLOW_ENABLE, false);
+        settingManager.setValue(Settings.METADATA_WORKFLOW_DRAFT_WHEN_IN_GROUP, ".*");
+        assertFalse(WorkflowUtil.isGroupWithEnabledWorkflow("sample"));
+    }
+
+    @Test
+    public void testWorkflowDisabledAndEnabledInGroupList() {
+        settingManager.setValue(Settings.METADATA_WORKFLOW_ENABLE, false);
+        settingManager.setValue(Settings.METADATA_WORKFLOW_DRAFT_WHEN_IN_GROUP, "sample|test");
+        assertFalse(WorkflowUtil.isGroupWithEnabledWorkflow("sample"));
+
+        settingManager.setValue(Settings.METADATA_WORKFLOW_DRAFT_WHEN_IN_GROUP, "sam*|test");
+        assertFalse(WorkflowUtil.isGroupWithEnabledWorkflow("sample"));
     }
 
     @Test
     public void testWorkflowEnabledAllGroups() {
         settingManager.setValue(Settings.METADATA_WORKFLOW_ENABLE, true);
         settingManager.setValue(Settings.METADATA_WORKFLOW_DRAFT_WHEN_IN_GROUP, ".*");
-        assertEquals(true, WorkflowUtil.isGroupWithEnabledWorkflow("sample"));
+        assertTrue(WorkflowUtil.isGroupWithEnabledWorkflow("sample"));
     }
 
     @Test
     public void testWorkflowEnabledInGroupList() {
         settingManager.setValue(Settings.METADATA_WORKFLOW_ENABLE, true);
         settingManager.setValue(Settings.METADATA_WORKFLOW_DRAFT_WHEN_IN_GROUP, "sample|test");
-        assertEquals(true, WorkflowUtil.isGroupWithEnabledWorkflow("sample"));
+        assertTrue(WorkflowUtil.isGroupWithEnabledWorkflow("sample"));
 
         settingManager.setValue(Settings.METADATA_WORKFLOW_DRAFT_WHEN_IN_GROUP, "sam*|test");
-        assertEquals(true, WorkflowUtil.isGroupWithEnabledWorkflow("sample"));
+        assertTrue(WorkflowUtil.isGroupWithEnabledWorkflow("sample"));
     }
 
     @Test
     public void testWorkflowEnabledNotInGroupList() {
         settingManager.setValue(Settings.METADATA_WORKFLOW_ENABLE, true);
         settingManager.setValue(Settings.METADATA_WORKFLOW_DRAFT_WHEN_IN_GROUP, "test");
-        assertEquals(false, WorkflowUtil.isGroupWithEnabledWorkflow("sample"));
+        assertFalse(WorkflowUtil.isGroupWithEnabledWorkflow("sample"));
     }
 }
