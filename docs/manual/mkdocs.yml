@@ -12,17 +12,16 @@ edit_uri: edit/main/docs/manual/docs
 # Copyright
 copyright: Copyright &copy; 2001 - 2023 FAO-UN and others
 
-
 extra_css:
-  - stylesheets/extra.css
+  - assets/stylesheets/extra.css
 
 # Configuration
 theme:
   name: material
   language: en
   custom_dir: overrides
-  logo: assets/geonetwork-logo.svg
-  favicon: assets/geonetwork-logo.png
+  logo: assets/images/geonetwork-logo.svg
+  favicon: assets/images/geonetwork-logo.png
   icon:
     repo: fontawesome/brands/github
   palette:
@@ -78,14 +77,13 @@ plugins:
   - exclude:
       glob:
         - annexes/gallery/bin/README.md
-  - mike:
-      canonical_version: latest
 
 # Customizations
 extra:
   version:
     provider: mike
     default: stable
+  homepage: https://geonetwork-opensource.org/
   social:
     - icon: fontawesome/brands/github
       link: https://github.com/geonetwork
@@ -128,7 +126,7 @@ markdown_extensions:
 
 # Page tree
 nav:
-  - index.md
+  - 'GeoNetwork': index.md
   - 'Overview':
     - overview/index.md
     - overview/about.md
@@ -138,9 +136,13 @@ nav:
     - overview/authors.md
     - 'Changelog':
       - overview/change-log/index.md
-      - 'Stable':
-        - overview/change-log/stable.md
+      - 'Latest':
+        - overview/change-log/latest/index.md
+        - overview/change-log/version-4.4.1.md
         - overview/change-log/version-4.4.0.md
+      - 'Stable':
+        - overview/change-log/stable/index.md
+        - overview/change-log/version-4.2.7.md
         - overview/change-log/version-4.2.6.md
         - overview/change-log/version-4.2.5.md
         - overview/change-log/version-4.2.4.md
@@ -149,7 +151,7 @@ nav:
         - overview/change-log/version-4.2.1.md
         - overview/change-log/version-4.2.0.md
       - 'Maintenance':
-        - overview/change-log/maintenance.md
+        - overview/change-log/maintenance/index.md
         - overview/change-log/version-3.12.11.md
         - overview/change-log/version-3.12.10.md
         - overview/change-log/version-3.12.9.md
@@ -163,7 +165,7 @@ nav:
         - overview/change-log/version-3.12.1.md
         - overview/change-log/version-3.12.0.md
       - 'Archive':
-        - overview/change-log/archive.md
+        - overview/change-log/archive/index.md
         - overview/change-log/version-4.0.6.md
         - overview/change-log/version-4.0.5.md
         - overview/change-log/version-4.0.4.md

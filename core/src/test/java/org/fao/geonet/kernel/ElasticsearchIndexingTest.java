@@ -17,7 +17,7 @@ import java.net.URL;
 import java.util.Objects;
 import static org.junit.Assert.*;
 
-public class ElasticSearchIndexingTest extends AbstractIntegrationTestWithMockedSingletons {
+public class ElasticsearchIndexingTest extends AbstractIntegrationTestWithMockedSingletons {
 
     @Autowired
     private EsSearchManager searchManager;

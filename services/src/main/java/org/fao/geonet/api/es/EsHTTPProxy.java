@@ -91,7 +91,7 @@ import java.util.zip.GZIPOutputStream;
     "/{portal}/api"
 })
 @Tag(name = "search",
-    description = "Proxy for ElasticSearch catalog search operations")
+    description = "Proxy for Elasticsearch catalog search operations")
 @Controller
 public class EsHTTPProxy {
     public static final String[] _validContentTypes = {
@@ -794,7 +794,7 @@ public class EsHTTPProxy {
 
 
     /**
-     * Process the metadata schema filters to filter out from the ElasticSearch response
+     * Process the metadata schema filters to filter out from the Elasticsearch response
      * the elements defined in the metadata schema filters.
      *
      * It uses a jsonpath to filter the elements, typically is configured with the following jsonpath, to
@@ -803,7 +803,7 @@ public class EsHTTPProxy {
      *  $.*[?(@.nilReason == 'withheld')]
      *
      * The metadata index process, has to define this attribute. Any element that requires to be filtered, should be
-     * defined as an object in ElasticSearch.
+     * defined as an object in Elasticsearch.
      *
      * Example for contacts:
      *

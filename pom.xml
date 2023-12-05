@@ -29,7 +29,7 @@
   <groupId>org.geonetwork-opensource</groupId>
   <artifactId>geonetwork</artifactId>
   <packaging>pom</packaging>
-  <version>4.4.1-SNAPSHOT</version>
+  <version>4.4.2-SNAPSHOT</version>
   <name>GeoNetwork opensource</name>
   <description>GeoNetwork opensource is a standards based, Free and
     Open Source catalog application to manage spatially referenced
@@ -661,7 +661,7 @@
       <!-- GeoTools and spatial search stuff -->
       <dependency>
         <groupId>org.geotools</groupId>
-        <artifactId>gt-opengis</artifactId>
+        <artifactId>gt-api</artifactId>
         <version>${geotools.version}</version>
       </dependency>
       <dependency>
@@ -852,7 +852,7 @@
       <dependency>
         <groupId>org.mapfish.print</groupId>
         <artifactId>print-lib</artifactId>
-        <version>2.2.0</version>
+        <version>2.3.0</version>
         <exclusions>
           <exclusion>
             <groupId>log4j</groupId>
@@ -1521,7 +1521,7 @@
     <jetty.port>8080</jetty.port>
     <jetty.stop.port>8090</jetty.stop.port>
 
-    <es.version>7.15.1</es.version>
+    <es.version>7.17.15</es.version>
     <es.platform>linux-x86_64</es.platform>
     <es.installer.extension>tar.gz</es.installer.extension>
     <es.protocol>http</es.protocol>
@@ -1579,19 +1579,19 @@
      request the list of hosts (but JPA cache db queries). -->
     <cors.allowedHosts>*</cors.allowedHosts>
 
-    <jetty.version>9.4.52.v20230823</jetty.version>
+    <jetty.version>9.4.53.v20231009</jetty.version>
     <jetty.file>jetty-distribution-${jetty.version}</jetty.file>
     <jetty.download>https://repo1.maven.org/maven2/org/eclipse/jetty/jetty-distribution/${jetty.version}/${jetty.file}.tar.gz</jetty.download>
 
     <!-- NOTE: When updating GeoTools, check which version
     of Postgres is used and update pg.version if needed. -->
-    <geotools.version>28.2</geotools.version>
-    <jts.version>1.18.2</jts.version>
-    <pg.version>42.3.3</pg.version>
+    <geotools.version>30.0</geotools.version>
+    <jts.version>1.19.0</jts.version>
+    <pg.version>42.6.0</pg.version>
 
-    <spring.version>5.3.27</spring.version>
-    <spring.security.version>5.8.3</spring.security.version>
-    <spring.jpa.version>2.7.12</spring.jpa.version>
+    <spring.version>5.3.31</spring.version>
+    <spring.security.version>5.8.8</spring.security.version>
+    <spring.jpa.version>2.7.18</spring.jpa.version>
     <springboot.version>2.7.0</springboot.version>
     <springdoc.version>1.5.13</springdoc.version>
     <hibernate.version>5.6.15.Final</hibernate.version>
@@ -1604,13 +1604,13 @@
     <wro.debug>true</wro.debug>
     <fop.version>2.7</fop.version>
     <xmlunit.version>2.1.1</xmlunit.version>
-    <jackson.version>2.15.2</jackson.version>
+    <jackson.version>2.15.3</jackson.version>
     <flying-saucer>9.1.22</flying-saucer>
     <camel.version>2.25.1</camel.version>
     <log4j2.version>2.17.2</log4j2.version>
     <slf4j.version>1.8.0-beta2</slf4j.version>
     <xbean.version>4.22</xbean.version>
-    <jolokia.version>1.6.0</jolokia.version>
+    <jolokia.version>1.7.2</jolokia.version>
     <httpcomponents.version>4.5.14</httpcomponents.version>
     <jasypt.version>1.9.3</jasypt.version>
     <jupiter.version>5.9.1</jupiter.version>

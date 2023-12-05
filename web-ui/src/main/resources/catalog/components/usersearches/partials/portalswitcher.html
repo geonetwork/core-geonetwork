@@ -39,7 +39,7 @@
     <li
       class="gn-menuitem-xs"
       role="menuitem"
-      data-ng-repeat="p in portals | filter: {listableInHeaderSelector: true} |orderBy:'name'"
+      data-ng-repeat="p in portals | filter: {listableInHeaderSelector: true} |orderBy:sortByLabel"
     >
       <a href="../../{{p.uuid}}/{{lang}}/catalog.search">
         <img

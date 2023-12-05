@@ -1632,6 +1632,29 @@
           }
         }
       },
+      "measure": {
+        "type": "nested",
+        "properties": {
+          "name": {
+            "type": "keyword"
+          },
+          "description": {
+            "type": "text"
+          },
+          "date": {
+            "type": "date"
+          },
+          "value": {
+            "type": "keyword"
+          },
+          "unit": {
+            "type": "keyword"
+          },
+          "type": {
+            "type": "keyword"
+          }
+        }
+      },
       "processSteps": {
         "type": "nested",
         "properties": {
@@ -1778,7 +1801,8 @@
             "type": "keyword"
           },
           "title": {
-            "type": "keyword"
+            "type": "keyword",
+            "copy_to": "any.common"
           },
           "origin": {
             "type": "keyword"

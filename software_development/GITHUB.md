@@ -33,4 +33,4 @@ To checkout a branch from upstream::
 GeoNetwork uses feature branches for development, and a pull-request workflow for review:
 
 * [Contributing](../CONTRIBUTING.md).
-* [Making a pull request](https://geonetwork-opensource.org/manuals/trunk/en/contributing/making-a-pull-request.html).
+* [Making a pull request](https://docs.geonetwork-opensource.org/latest/contributing/making-a-pull-request/).

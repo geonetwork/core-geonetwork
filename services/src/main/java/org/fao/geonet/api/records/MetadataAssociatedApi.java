@@ -52,11 +52,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static org.fao.geonet.api.ApiParams.*;
-import static org.fao.geonet.api.records.attachments.AbstractStore.getAndCheckMetadataId;
 
 @RequestMapping(value = {
     "/{portal}/api/records"

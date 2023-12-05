@@ -44,13 +44,13 @@
     "removeField": "删除该字段",
     "addXpath-help": "使用XPath更新记录需要仔细定义更改。更改定义如下：",
     "addXpathTitle": "可选标题",
-    "addXpathXpath": "a mandatory <a href='http://xmlfr.org/w3c/TR/xpath/'>XPath</a> to point to the element(s) to update. XPath may contain a filter expression.",
+    "addXpathXpath": "a mandatory <a href='https://www.w3.org/TR/1999/REC-xpath-19991116/'>XPath</a> to point to the element(s) to update. XPath may contain a filter expression.",
     "addXpathInsertMode": "一个更新类型",
     "xpath": "XPath",
     "xpathValue": "文本或XML值",
     "gn_create": "创建元素",
-    "gn_add": "添加元素或值（在第一匹配的父），或创建它",
-    "gn_replace": "替换元素或值（在第一匹配的父）",
+    "gn_add": "Add the element or value (in all matching parents) or create it",
+    "gn_replace": "Replace the element or value (in all matching parents)",
     "gn_delete": "删除所有匹配的元素",
     "addXpathValue": "a value, which could be an XML snippet if the mode is not 'delete'",
     "chooseASet": "1.选择一组记录",
@@ -428,5 +428,6 @@
     "confirmCancelEdit": "Do you want to cancel all changes and close the editor?",
     "allowEditGroupMembers": "Allow group editors to edit",
     "wmsSelectedLayers": "Selected layers",
-    "wmsSelectedLayersNone": "No layers selected"
+    "wmsSelectedLayersNone": "No layers selected",
+    "remoteAssociatedMetadataTitlePlaceholder": "Remote associated metadata title"
 }

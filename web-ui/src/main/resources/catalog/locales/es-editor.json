@@ -44,13 +44,13 @@
     "removeField": "Eliminar este campo",
     "addXpath-help": "Actualizar entradas usando una XPath necesita una definición cuidadosa. Un cambio se define por:",
     "addXpathTitle": "título opcional",
-    "addXpathXpath": "un <a href='http://xmlfr.org/w3c/TR/xpath/'>XPath</a> obligatorio para señalar los elementos a actualizar. XPath puede contener una expresión de filtro.",
+    "addXpathXpath": "a mandatory <a href='https://www.w3.org/TR/1999/REC-xpath-19991116/'>XPath</a> to point to the element(s) to update. XPath may contain a filter expression.",
     "addXpathInsertMode": "un tipo de actualización",
     "xpath": "XPath",
     "xpathValue": "Texto o valor XML",
     "gn_create": "Crear el elemento",
-    "gn_add": "Agregue el elemento o valor (en el primer padre coincidente) o créelo",
-    "gn_replace": "Sustituya el elemento o valor (en el primer padre coincidente)",
+    "gn_add": "Add the element or value (in all matching parents) or create it",
+    "gn_replace": "Replace the element or value (in all matching parents)",
     "gn_delete": "Eliminar todos los elementos coincidentes",
     "addXpathValue": "un valor, que podría ser un fragmento XML si el modo no es 'delete'",
     "chooseASet": "1. Elegir un conjunto de registros",
@@ -428,5 +428,6 @@
     "confirmCancelEdit": "Do you want to cancel all changes and close the editor?",
     "allowEditGroupMembers": "Allow group editors to edit",
     "wmsSelectedLayers": "Selected layers",
-    "wmsSelectedLayersNone": "No layers selected"
+    "wmsSelectedLayersNone": "No layers selected",
+    "remoteAssociatedMetadataTitlePlaceholder": "Remote associated metadata title"
 }
