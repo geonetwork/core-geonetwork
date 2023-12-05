@@ -7,26 +7,26 @@
   <sch:ns prefix="gco" uri="http://standards.iso.org/iso/19115/-3/gco/1.0"/>
   <!--
     ISO 19157-2 base requirements for data quality metadata instance documents
-    
+
     See ISO19157:2013 page 18, Figure 11 Data quality measures
   -->
-  <!-- 
+  <!--
     Rule: DQM_Measure
     Ref: {elementName shall be a TypeName of a data quality element}
     -->
   <sch:diagnostics>
     <sch:diagnostic id="rule.dqm.measurename-failure-en" xml:lang="en">The DQM_Measure.elementName
       shall be a TypeName of a data quality element.</sch:diagnostic>
-    
+
     <sch:diagnostic id="rule.dqm.measurename-success-en" xml:lang="en">elementName is
         "<sch:value-of select="normalize-space($elementName)"/>". </sch:diagnostic>
   </sch:diagnostics>
-  
+
   <sch:pattern id="rule.dqm.measurename">
     <sch:title xml:lang="en">DQM_Measure.elementName shall be a TypeName of a data quality element</sch:title>
-    
+
     <sch:rule context="//dqm:DQM_Measure">
-      
+
       <sch:let name="elementName" value="dqm:elementName/gco:TypeName/gco:aName/gco:CharacterString"/>
 
       <sch:assert test="(index-of(

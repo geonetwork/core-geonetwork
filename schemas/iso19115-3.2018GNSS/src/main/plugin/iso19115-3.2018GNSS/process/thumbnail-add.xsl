@@ -133,7 +133,7 @@
           <xsl:if test="$thumbnail_desc!=''">
             <mcc:fileDescription>
               <xsl:copy-of
-                      select="gn-fn-iso19115-3.2018GNSS::fillTextElement($thumbnail_desc, $mainLang, $useOnlyPTFreeText)"/>
+                      select="gn-fn-iso19115-3.2018GNSS:fillTextElement($thumbnail_desc, $mainLang, $useOnlyPTFreeText)"/>
             </mcc:fileDescription>
           </xsl:if>
           <xsl:if test="$thumbnail_type!=''">

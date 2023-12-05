@@ -883,8 +883,9 @@ public class SchemaLoader {
 
     private void buildGlobalAttrib(ElementInfo ei) {
         AttributeEntry at = new AttributeEntry(ei);
-        if (hmAttribs.containsKey(at.name))
-            throw new IllegalArgumentException("Namespace collision for : " + at.name);
+
+        if (hmAttribs.containsKey(at.name)&&!at.name.equals("xml:lang"))
+            throw new IllegalArgumentException("Namespace collision for : " + at.name + ", " + ei.file.toString());
 
         hmAttribs.put(at.name, at);
         hmAllAttrs.put(at.name, at);
