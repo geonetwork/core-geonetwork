@@ -343,8 +343,8 @@
                   "string": "indexingErrorMsg-invalidDateFormat",
                   "type": "warning",
                   "values": {
-                  "dateType": "<xsl:value-of select="$dateType"/>",
-                  "date": "<xsl:value-of select="$date"/>"
+                  "dateType": "<xsl:value-of select="gn-fn-index:json-escape($dateType)"/>",
+                  "date": "<xsl:value-of select="gn-fn-index:json-escape($date)"/>"
                   }
                   }
                 </indexingErrorMsg>
