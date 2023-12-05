@@ -1474,6 +1474,7 @@
     "fieldRequired": "The value is required",
     "fieldTooLong": "The value is too long",
     "fieldTooShort": "The value is too short",
-    "fieldEmailNotValid": "A valid email address is required"
+    "fieldEmailNotValid": "A valid email address is required",
+    "formConfirmExit": "The form has changes, if you exit the changes will be lost. Do you want to exit on the page?"
 }
 

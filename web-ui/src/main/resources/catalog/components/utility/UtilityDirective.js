@@ -2745,18 +2745,15 @@
   module.directive("confirmOnExit", function () {
     return {
       link: function ($scope, elem, attrs) {
+        var message = attrs["confirmMessage"];
         window.onbeforeunload = function () {
           if ($scope[attrs["name"]].$dirty) {
-            return "The form has changes, if you exit the changes will be lost. Do you want to exit on the page?";
+            return message;
           }
         };
         $scope.$on("$locationChangeStart", function (event, next, current) {
           if ($scope[attrs["name"]].$dirty) {
-            if (
-              !confirm(
-                "The form has changes, if you exit the changes will be lost. Do you want to exit on the page?"
-              )
-            ) {
+            if (!confirm(message)) {
               event.preventDefault();
             }
           }
