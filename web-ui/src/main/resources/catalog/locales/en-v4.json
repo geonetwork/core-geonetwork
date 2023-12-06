@@ -293,6 +293,8 @@
   "pageContent": "Page content",
   "pageContentFile": "Page content file",
   "pageLabel": "Page label",
+  "pageIcon": "Page icon",
+  "pageIcon-help": "Optionally, define a <a target='_blank' href='https://fontawesome.com/v4/icons/'>font-awesome icon</a>. Example: 'fa-wrench'.",
   "pageSection": "Page section",
   "pageApiLink": "Page API link",
   "uiRestorePrevious": "Restore last saved",
