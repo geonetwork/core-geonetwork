@@ -9,6 +9,16 @@
                 xmlns:dct="http://purl.org/dc/terms/"
                 exclude-result-prefixes="#all">
 
+  <!-- TODO: move to eu-geodcat-ap -->
+  <xsl:variable name="inspireBaseUri" select="'http://inspire.ec.europa.eu/'"/>
+  <xsl:variable name="inspireCodelistUri" select="concat($inspireBaseUri,'metadata-codelist/')"/>
+  <xsl:variable name="inspireSpatialDataServiceCategoryCodelistUri" select="concat($inspireCodelistUri,'SpatialDataServiceCategory/')"/>
+  <xsl:variable name="inspireDegreeOfConformityCodelistUri" select="concat($inspireCodelistUri,'DegreeOfConformity/')"/>
+  <xsl:variable name="inspireResourceTypeCodelistUri" select="concat($inspireCodelistUri,'ResourceType/')"/>
+  <xsl:variable name="inspireResponsiblePartyRoleCodelistUri" select="concat($inspireCodelistUri,'ResponsiblePartyRole/')"/>
+  <xsl:variable name="inspireSpatialDataServiceTypeCodelistUri" select="concat($inspireCodelistUri,'SpatialDataServiceType/')"/>
+  <xsl:variable name="inspireTopicCategoryCodelistUri" select="concat($inspireCodelistUri,'TopicCategory/')"/>
+
   <xsl:variable name="inspireResourceTypeVocabularyToIso"
                 as="node()*">
     <entry key="series">series</entry>
@@ -16,4 +26,5 @@
     <entry key="dataset">nonGeographicDataset</entry>
     <entry key="service">service</entry>
   </xsl:variable>
+
 </xsl:stylesheet>

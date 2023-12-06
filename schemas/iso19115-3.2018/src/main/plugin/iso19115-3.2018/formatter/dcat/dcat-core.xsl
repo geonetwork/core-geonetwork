@@ -23,13 +23,28 @@
                 xmlns:gcx="http://standards.iso.org/iso/19115/-3/gcx/1.0"
                 xmlns:gex="http://standards.iso.org/iso/19115/-3/gex/1.0"
                 xmlns:gml="http://www.opengis.net/gml/3.2"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
                 xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+                xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+                xmlns:owl="http://www.w3.org/2002/07/owl#"
                 xmlns:dct="http://purl.org/dc/terms/"
                 exclude-result-prefixes="#all">
 
   <xsl:import href="dcat-commons.xsl"/>
   <xsl:import href="dcat-variables.xsl"/>
   <xsl:import href="dcat-utils.xsl"/>
+  <xsl:import href="dcat-core-catalog.xsl"/>
+  <xsl:import href="dcat-core-contact.xsl"/>
+  <xsl:import href="dcat-core-keywords.xsl"/>
+  <xsl:import href="dcat-core-access-and-use.xsl"/>
+  <xsl:import href="dcat-core-distribution.xsl"/>
+
+
+  <xsl:template mode="iso19115-3-to-dcat-validation"
+                match="mdb:MD_Metadata">
+    <!-- Nothing to validate in DCAT core. -->
+  </xsl:template>
+
 
   <xsl:template mode="iso19115-3-to-dcat"
                 match="mdb:MD_Metadata">
@@ -42,49 +57,216 @@
           <rdf:type rdf:resource="http://www.w3.org/ns/dcat#CatalogRecord"/>
 
           <xsl:apply-templates mode="iso19115-3-to-dcat"
-                               select="mdb:metadataIdentifier/*/mcc:code"/>
+                               select="mdb:metadataIdentifier
+                                      |mdb:identificationInfo/*/mri:citation/*/cit:title
+                                      |mdb:identificationInfo/*/mri:abstract
+                                      |mdb:dateInfo/*[cit:dateType/*/@codeListValue = 'creation']/cit:date
+                                      |mdb:dateInfo/*[cit:dateType/*/@codeListValue = 'revision']/cit:date
+                                      |mdb:metadataStandard"/>
         </rdf:Description>
       </foaf:isPrimaryTopicOf>
 
       <xsl:apply-templates mode="iso19115-3-to-dcat"
-                           select="mdb:identificationInfo/*/mri:citation/*/cit:title"/>
+                           select="mdb:identificationInfo/*/mri:citation/*/cit:title
+                                  |mdb:identificationInfo/*/mri:abstract
+                                  |mdb:identificationInfo/*/mri:citation/*/cit:identifier
+                                  |mdb:identificationInfo/*/mri:citation/*/cit:date/*[cit:dateType/*/@codeListValue = $isoDateTypeToDcatCommonNames/text()]/cit:date
+                                  |mdb:identificationInfo/*/mri:citation/*/cit:edition
+                                  |mdb:identificationInfo/*/mri:defaultLocale
+                                  |mdb:identificationInfo/*/mri:otherLocale
+                                  |mdb:identificationInfo/*/mri:resourceConstraints/*[mco:useConstraints]/(mco:otherConstraints|mco:useLimitation)
+                                  |mdb:identificationInfo/*/mri:resourceConstraints/*[mco:accessConstraints]/mco:otherConstraints
+                                  |mdb:identificationInfo/*/mri:descriptiveKeywords
+                                  |mdb:identificationInfo/*/mri:pointOfContact[*/cit:role/*/@codeListValue = $isoContactRoleToDcatCommonNames/text()]
+                                  |mdb:dataQualityInfo/*/mdq:report/*/mdq:result[mdq:DQ_ConformanceResult and mdq:DQ_ConformanceResult/mdq:pass/*/text() = 'true']
+                          "/>
     </rdf:Description>
   </xsl:template>
 
 
   <xsl:template mode="iso19115-3-to-dcat"
-                match="mdb:metadataIdentifier/*/mcc:code">
-    <dct:identifier rdf:datatype="http://www.w3.org/2001/XMLSchema#string">
-      <xsl:value-of select="gco:CharacterString/text()"/>
-    </dct:identifier>
+                match="mdb:identificationInfo/*/mri:citation/*/cit:title
+                      |mdb:identificationInfo/*/mri:citation/*/cit:edition
+                      |mdb:identificationInfo/*/mri:abstract
+                      |mdb:identificationInfo/*/mri:descriptiveKeywords/*/mri:keyword
+                      |mdb:metadataStandard/*/cit:title
+                      |mdb:metadataStandard/*/cit:edition">
+    <xsl:variable name="xpath"
+                  as="xs:string"
+                  select="string-join(current()/ancestor-or-self::*[name() != 'root']/name(), '/')"/>
+    <xsl:variable name="dcatElementName"
+                  as="node()?"
+                  select="$isoToDcatCommonNames[. = $xpath]"/>
+
+    <xsl:choose>
+      <xsl:when test="$dcatElementName and $dcatElementName/@isMultilingual = 'false'">
+        <xsl:call-template name="rdf-not-localised">
+          <xsl:with-param name="nodeName" select="$dcatElementName/@key"/>
+        </xsl:call-template>
+      </xsl:when>
+      <xsl:when test="$dcatElementName">
+        <xsl:call-template name="rdf-localised">
+          <xsl:with-param name="nodeName" select="$dcatElementName/@key"/>
+        </xsl:call-template>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:message>WARNING: Unmatched XPath <xsl:value-of select="$xpath"/>. Check dcat-variables.xsl and add the element to isoToDcatCommonNames.</xsl:message>
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 
 
   <xsl:template mode="iso19115-3-to-dcat"
-                match="mdb:identificationInfo/*/mri:citation/*/cit:title">
-    <xsl:call-template name="rdf-localised">
-      <xsl:with-param name="nodeName" select="'dct:title'"/>
-    </xsl:call-template>
+                match="mdb:dateInfo/*/cit:date
+                      |cit:CI_Citation/cit:date/*/cit:date">
+    <xsl:variable name="dateType"
+                  as="xs:string"
+                  select="../cit:dateType/*/@codeListValue"/>
+    <xsl:variable name="dcatElementName"
+                  as="xs:string?"
+                  select="$isoDateTypeToDcatCommonNames[. = $dateType]/@key"/>
+
+    <xsl:choose>
+      <xsl:when test="string($dcatElementName)">
+        <xsl:call-template name="rdf-date">
+          <xsl:with-param name="nodeName" select="$dcatElementName"/>
+        </xsl:call-template>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:message>WARNING: Unmatched date type <xsl:value-of select="$dateType"/>. If needed, add this type in dcat-variables.xsl and add the element to map to in isoDateTypeToDcatCommonNames.</xsl:message>
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 
-  <!--<xsl:template mode="iso19115-3-to-dcat"
-                match="mdb:MD_Metadata[not(mdb:metadataIdentifier)]">
-    <xsl:call-template name="create-node-with-info">
-      <xsl:with-param name="message"
-                      select="'Metadata record does not contains metadata identifier.'"/>
-    </xsl:call-template>
-  </xsl:template>-->
 
+  <!--
+  RDF Property:	dcterms:identifier
+  Definition:	A unique identifier of the resource being described or cataloged.
+  Range:	rdfs:Literal
+  Usage note:	The identifier might be used as part of the IRI of the resource, but still having it represented explicitly is useful.
+  Usage note:	The identifier is a text string which is assigned to the resource to provide an unambiguous reference within a particular context.
+  -->
+  <xsl:template mode="iso19115-3-to-dcat"
+                match="mdb:metadataIdentifier
+                      |cit:identifier">
+    <xsl:variable name="code"
+                  select="*/mcc:code/*/text()"/>
+    <xsl:variable name="codeSpace"
+                  select="*/mcc:codeSpace/*/text()"/>
+    <xsl:variable name="codeWithPrefix"
+                  select="if (string($codeSpace))
+                          then concat($codeSpace,
+                                      (if (ends-with($codeSpace, '/')) then '' else '/'),
+                                      $code)
+                          else $code"/>
+    <xsl:variable name="codeType"
+                  select="if (matches($codeWithPrefix, '^https?://|urn:'))
+                          then 'anyURI' else 'string'"/>
+    <dct:identifier rdf:datatype="http://www.w3.org/2001/XMLSchema#{$codeType}">
+      <xsl:value-of select="$codeWithPrefix"/>
+    </dct:identifier>
+  </xsl:template>
+
+
+  <!--
+  RDF Property:	dcterms:conformsTo
+  Definition:	An established standard to which the described resource conforms.
+  Range:	dcterms:Standard (A basis for comparison; a reference point against which other things can be evaluated.)
+  Usage note:	This property SHOULD be used to indicate the model, schema, ontology, view or profile that the catalog record metadata conforms to.
+  -->
+  <xsl:template mode="iso19115-3-to-dcat"
+                match="mdb:metadataStandard">
+    <dct:conformsTo rdf:parseType="Resource">
+      <rdf:type rdf:resource="http://purl.org/dc/terms/Standard"/>
+      <xsl:apply-templates mode="iso19115-3-to-dcat"
+                           select="*/cit:title"/>
+      <xsl:apply-templates mode="iso19115-3-to-dcat"
+                           select="*/cit:edition"/>
+    </dct:conformsTo>
+  </xsl:template>
+
+
+  <!--
+  Definition:	A language of the resource. This refers to the natural language used for textual metadata (i.e., titles, descriptions, etc.) of a cataloged resource (i.e., dataset or service) or the textual values of a dataset distribution
+
+  Range:
+  dcterms:LinguisticSystem
+  Resources defined by the Library of Congress (ISO 639-1, ISO 639-2) SHOULD be used.
+
+  If a ISO 639-1 (two-letter) code is defined for language, then its corresponding IRI SHOULD be used; if no ISO 639-1 code is defined, then IRI corresponding to the ISO 639-2 (three-letter) code SHOULD be used.
+
+  Usage note:	Repeat this property if the resource is available in multiple languages.
+  -->
+  <xsl:template mode="iso19115-3-to-dcat"
+                match="mri:defaultLocale
+                      |mri:otherLocale">
+    <dct:language>
+      <!-- TO CHECK: In DCAT, maybe we should use another base URI? -->
+      <dct:LinguisticSystem rdf:about="{concat($europaPublicationLanguage, upper-case(*/lan:language/*/@codeListValue))}"/>
+    </dct:language>
+  </xsl:template>
+
+  <!--
+  RDF Property:	dcterms:conformsTo
+  Definition:	An established standard to which the described resource conforms.
+  Range: dcterms:Standard ("A basis for comparison; a reference point against which other things can be evaluated." [DCTERMS])
+  Usage note:	This property SHOULD be used to indicate the model, schema, ontology, view or profile that the cataloged resource content conforms to.
+  -->
+  <xsl:template mode="iso19115-3-to-dcat"
+                match="mdb:dataQualityInfo/*/mdq:report/*/mdq:result[mdq:DQ_ConformanceResult and mdq:DQ_ConformanceResult/mdq:pass/*/text() = 'true']">
+    <dct:conformsTo>
+      <dct:Standard>
+        <xsl:choose>
+          <xsl:when test="*/mdq:specification/*/cit:title/gcx:Anchor/@xlink:href">
+            <xsl:attribute name="rdf:about" select="*/mdq:specification/*/cit:title/gcx:Anchor/@xlink:href"/>
+          </xsl:when>
+          <xsl:when test="*/mdq:specification/@xlink:href">
+            <xsl:attribute name="rdf:about" select="*/mdq:specification/@xlink:href"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:attribute name="rdf:parseType" select="'Resource'"/>
+            <rdf:type rdf:resource="dct:Standard"/>
+            <xsl:for-each select="*/mdq:specification/*">
+              <xsl:for-each select="cit:title">
+                <xsl:call-template name="rdf-localised">
+                  <xsl:with-param name="nodeName" select="'rdfs:label'"/>
+                </xsl:call-template>
+              </xsl:for-each>
+              <xsl:apply-templates mode="iso19115-3-to-dcat"
+                                   select="cit:date/*[cit:dateType/*/@codeListValue = $isoDateTypeToDcatCommonNames/text()]/cit:date"/>
+            </xsl:for-each>
+          </xsl:otherwise>
+        </xsl:choose>
+      </dct:Standard>
+    </dct:conformsTo>
+  </xsl:template>
+
+
+  <!--
+  Definition:	The nature or genre of the resource.
+  Sub-property of:	dc:type
+  Range:	rdfs:Class
+  Usage note:	The value SHOULD be taken from a well governed and broadly recognised controlled vocabulary, such as:
+  DCMI Type vocabulary [DCTERMS]
+  [ISO-19115-1] scope codes
+  Datacite resource types [DataCite]
+  PARSE.Insight content-types used by re3data.org [RE3DATA-SCHEMA] (see item 15 contentType)
+  MARC intellectual resource types
+  Some members of these controlled vocabularies are not strictly suitable for datasets or data services (e.g., DCMI Type Event, PhysicalObject; [ISO-19115-1] CollectionHardware, CollectionSession, Initiative, Sample, Repository), but might be used in the context of other kinds of catalogs defined in DCAT profiles or applications.
+  -->
   <xsl:template name="iso19115-3-to-dcat-metadataScope"
                 mode="iso19115-3-to-dcat"
                 match="mdb:metadataScope/*/mdb:resourceScope/*/@codeListValue">
     <xsl:variable name="dcmiType"
-                  select="$dcmiTypeVocabularyToIso[. = current()]"
+                  select="$dcmiTypeVocabularyToIso[. = current()]/@key"
+                  as="xs:string?"/>
+    <xsl:variable name="dcatType"
+                  select="$dcatResourceTypeToIso[. = current()]/@key"
                   as="xs:string?"/>
 
     <xsl:choose>
-      <xsl:when test="$dcmiType">
-        <rdf:type rdf:resource="http://purl.org/dc/dcmitype/{$dcmiType}"/>
+      <xsl:when test="$dcatType">
+        <rdf:type rdf:resource="http://www.w3.org/ns/dcat#{$dcatType}"/>
       </xsl:when>
       <xsl:otherwise>
         <xsl:call-template name="create-node-with-info">
@@ -97,6 +279,15 @@
         </xsl:call-template>
       </xsl:otherwise>
     </xsl:choose>
+
+    <xsl:if test="$dcmiType">
+      <dct:type rdf:resource="http://purl.org/dc/dcmitype/{$dcmiType}"/>
+    </xsl:if>
+    <xsl:if test="current() != ''">
+      <dct:type rdf:resource="https://standards.iso.org/iso/19115/resources/Codelists/gml/MD_ScopeCode.xml#{current()}"/>
+    </xsl:if>
+    <!-- TODO: Add mapping to Datacite https://schema.datacite.org/meta/kernel-4.1/include/datacite-resourceType-v4.1.xsd ?-->
+
   </xsl:template>
 
 </xsl:stylesheet>

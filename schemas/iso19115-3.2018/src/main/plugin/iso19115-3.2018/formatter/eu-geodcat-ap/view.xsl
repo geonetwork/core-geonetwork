@@ -12,9 +12,13 @@
 
   <xsl:import href="eu-geodcat-ap-core.xsl"/>
 
-  <xsl:template match="/root"
-                priority="2">
+  <xsl:template match="/root">
     <rdf:RDF>
+      <xsl:call-template name="create-namespaces"/>
+      <xsl:if test="$isValidating">
+        <xsl:apply-templates mode="iso19115-3-to-dcat-validation"
+                             select="mdb:MD_Metadata"/>
+      </xsl:if>
       <xsl:apply-templates mode="iso19115-3-to-dcat"
                            select="mdb:MD_Metadata"/>
     </rdf:RDF>

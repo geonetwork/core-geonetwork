@@ -6,12 +6,17 @@
                 xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
                 xmlns:dct="http://purl.org/dc/terms/"
                 exclude-result-prefixes="#all">
-  <!-- https://www.w3.org/TR/vocab-dcat/ -->
+  <!-- https://www.w3.org/TR/vocab-dcat-3/ -->
 
   <xsl:import href="dcat-core.xsl"/>
 
   <xsl:template match="/root">
     <rdf:RDF>
+      <xsl:call-template name="create-namespaces"/>
+      <xsl:if test="$isValidating">
+        <xsl:apply-templates mode="iso19115-3-to-dcat-validation"
+                             select="mdb:MD_Metadata"/>
+      </xsl:if>
       <xsl:apply-templates mode="iso19115-3-to-dcat"
                            select="mdb:MD_Metadata"/>
     </rdf:RDF>

@@ -15,8 +15,8 @@
                 match="mdb:metadataScope/*/mdb:resourceScope/*/@codeListValue">
     <xsl:call-template name="iso19115-3-to-dcat-metadataScope"/>
 
-    <xsl:for-each select="$inspireResourceTypeVocabularyToIso[. = current()]">
-      <dct:type rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/ResourceType/{current()}"/>
+    <xsl:for-each select="$inspireResourceTypeVocabularyToIso[. = current()]/@key">
+      <dct:type rdf:resource="{concat($inspireResourceTypeCodelistUri, current())}"/>
     </xsl:for-each>
   </xsl:template>
 </xsl:stylesheet>
