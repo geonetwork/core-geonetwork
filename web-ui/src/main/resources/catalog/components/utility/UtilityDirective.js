@@ -2725,4 +2725,40 @@
       }
     };
   });
+
+  module.directive("equalWith", function () {
+    return {
+      require: "ngModel",
+      scope: { equalWith: "&" },
+      link: function (scope, elem, attrs, ngModelCtrl) {
+        ngModelCtrl.$validators.equalWith = function (modelValue) {
+          return modelValue === scope.equalWith();
+        };
+
+        scope.$watch(scope.equalWith, function (value) {
+          ngModelCtrl.$validate();
+        });
+      }
+    };
+  });
+
+  module.directive("confirmOnExit", function () {
+    return {
+      link: function ($scope, elem, attrs) {
+        var message = attrs["confirmMessage"];
+        window.onbeforeunload = function () {
+          if ($scope[attrs["name"]].$dirty) {
+            return message;
+          }
+        };
+        $scope.$on("$locationChangeStart", function (event, next, current) {
+          if ($scope[attrs["name"]].$dirty) {
+            if (!confirm(message)) {
+              event.preventDefault();
+            }
+          }
+        });
+      }
+    };
+  });
 })();

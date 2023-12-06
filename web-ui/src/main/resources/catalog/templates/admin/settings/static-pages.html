@@ -62,7 +62,7 @@
             <button
               type="button"
               class="btn btn-primary"
-              data-ng-disabled="!gnStaticPageEdit.$valid && !gnStaticPageEdit.dirty"
+              data-ng-disabled="!gnStaticPageEdit.$valid || !gnStaticPageEdit.$dirty"
               data-gn-click-and-spin="saveStaticPage('#gn-static-page-edit')"
             >
               <i class="fa fa-save"></i>&nbsp;

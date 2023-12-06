@@ -546,7 +546,7 @@
     "categoriesUpdated": "Uppdatareade kategorier.",
     "warnPublishDraft": "När du publicerar poster med arbetsflöde aktiverat kommer status att ändras till 'Godkänn'. Är du säker på att du vill fortsätta?",
     "cancelWorkingCopy": "Avbryt arbetskopian",
-    "deleteWorkingCopyRecordConfirm": "Vill du verkligen ta bort arbetskopian '{{title}}'?",
+    "deleteWorkingCopyRecordConfirm": "Vill du verkligen ta bort arbetskopian '{{resourceTitle}}'?",
     "workingCopy": "Arbetskopia",
     "onTheWeb": "Mer information online",
     "pdfReportTocTitle": "Innehåll",
