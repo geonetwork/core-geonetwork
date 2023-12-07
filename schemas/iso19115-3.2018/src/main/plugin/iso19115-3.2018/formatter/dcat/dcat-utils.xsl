@@ -12,6 +12,7 @@
                 xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
                 xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
                 xmlns:owl="http://www.w3.org/2002/07/owl#"
+                xmlns:adms="http://www.w3.org/ns/adms#"
                 exclude-result-prefixes="#all">
 
   <xsl:template name="create-node-with-info">

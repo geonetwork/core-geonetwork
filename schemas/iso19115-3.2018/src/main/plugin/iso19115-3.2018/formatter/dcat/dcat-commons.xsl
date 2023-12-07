@@ -24,5 +24,8 @@
     <xsl:namespace name="vcard" select="'http://www.w3.org/2006/vcard/ns#'"/>
     <xsl:namespace name="prov" select="'http://www.w3.org/ns/prov#'"/>
     <xsl:namespace name="org" select="'http://www.w3.org/ns/org#'"/>
+    <xsl:namespace name="pav" select="'http://purl.org/pav/'"/>
+    <xsl:namespace name="adms" select="'http://www.w3.org/ns/adms#'"/>
+    <xsl:namespace name="skos" select="'http://www.w3.org/2004/02/skos/core#'"/>
   </xsl:template>
 </xsl:stylesheet>

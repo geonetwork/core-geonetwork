@@ -26,18 +26,23 @@
                 xmlns:xlink="http://www.w3.org/1999/xlink"
                 xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
                 xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+                xmlns:skos="http://www.w3.org/2004/02/skos/core#"
                 xmlns:owl="http://www.w3.org/2002/07/owl#"
+                xmlns:adms="http://www.w3.org/ns/adms#"
                 xmlns:dct="http://purl.org/dc/terms/"
                 exclude-result-prefixes="#all">
 
   <xsl:import href="dcat-commons.xsl"/>
   <xsl:import href="dcat-variables.xsl"/>
   <xsl:import href="dcat-utils.xsl"/>
+
   <xsl:import href="dcat-core-catalog.xsl"/>
   <xsl:import href="dcat-core-contact.xsl"/>
   <xsl:import href="dcat-core-keywords.xsl"/>
   <xsl:import href="dcat-core-access-and-use.xsl"/>
   <xsl:import href="dcat-core-distribution.xsl"/>
+  <xsl:import href="dcat-core-associated.xsl"/>
+  <xsl:import href="dcat-core-lineage.xsl"/>
 
 
   <xsl:template mode="iso19115-3-to-dcat-validation"
@@ -76,9 +81,12 @@
                                   |mdb:identificationInfo/*/mri:otherLocale
                                   |mdb:identificationInfo/*/mri:resourceConstraints/*[mco:useConstraints]/(mco:otherConstraints|mco:useLimitation)
                                   |mdb:identificationInfo/*/mri:resourceConstraints/*[mco:accessConstraints]/mco:otherConstraints
+                                  |mdb:identificationInfo/*/mri:status
                                   |mdb:identificationInfo/*/mri:descriptiveKeywords
                                   |mdb:identificationInfo/*/mri:pointOfContact
+                                  |mdb:identificationInfo/*/mri:associatedResource
                                   |mdb:dataQualityInfo/*/mdq:report/*/mdq:result[mdq:DQ_ConformanceResult and mdq:DQ_ConformanceResult/mdq:pass/*/text() = 'true']
+                                  |mdb:resourceLineage/*/mrl:statement
                                   |mdb:metadataLinkage
                           "/>
     </rdf:Description>
@@ -91,7 +99,8 @@
                       |mdb:identificationInfo/*/mri:abstract
                       |mdb:identificationInfo/*/mri:descriptiveKeywords/*/mri:keyword
                       |mdb:metadataStandard/*/cit:title
-                      |mdb:metadataStandard/*/cit:edition">
+                      |mdb:metadataStandard/*/cit:edition
+                      |mdb:resourceLineage/*/mrl:statement">
     <xsl:variable name="xpath"
                   as="xs:string"
                   select="string-join(current()/ancestor-or-self::*[name() != 'root']/name(), '/')"/>
@@ -288,7 +297,6 @@
       <dct:type rdf:resource="{concat($isoCodeListBaseUri, current())}"/>
     </xsl:if>
     <!-- TODO: Add mapping to Datacite https://schema.datacite.org/meta/kernel-4.1/include/datacite-resourceType-v4.1.xsd ?-->
-
   </xsl:template>
 
 </xsl:stylesheet>

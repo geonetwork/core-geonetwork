@@ -22,6 +22,7 @@
     <entry key="dcat:keyword">mdb:MD_Metadata/mdb:identificationInfo/mri:MD_DataIdentification/mri:descriptiveKeywords/mri:MD_Keywords/mri:keyword</entry>
     <entry key="dct:description">mdb:MD_Metadata/mdb:identificationInfo/mri:MD_DataIdentification/mri:abstract</entry>
     <entry key="owl:versionInfo">mdb:MD_Metadata/mdb:metadataStandard/cit:CI_Citation/cit:edition</entry>
+    <entry key="adms:versionNotes">mdb:MD_Metadata/mdb:resourceLineage/mrl:LI_Lineage/mrl:statement</entry>
   </xsl:variable>
 
   <xsl:variable name="isoDateTypeToDcatCommonNames"
@@ -39,7 +40,6 @@
     <entry key="dct:rightsHolder" as="foaf">owner</entry> <!-- TODO: Check if dcat or only in profile -->
     <!-- Others are prov:qualifiedAttribution -->
   </xsl:variable>
-
 
   <!-- DCAT resource type from ISO hierarchy level -->
   <xsl:variable name="dcatResourceTypeToIso"
