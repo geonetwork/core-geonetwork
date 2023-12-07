@@ -34,6 +34,7 @@ import org.fao.geonet.exceptions.ILocalizedException;
 import org.fao.geonet.exceptions.ServiceNotAllowedEx;
 import org.fao.geonet.exceptions.UserNotFoundEx;
 import org.fao.geonet.exceptions.XSDValidationErrorEx;
+import org.fao.geonet.inspire.validator.InspireValidatorException;
 import org.fao.geonet.utils.Log;
 import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -164,6 +165,7 @@ public class GlobalExceptionController {
     @ExceptionHandler({
         HttpMessageNotReadableException.class,
         Exception.class,
+        InspireValidatorException.class,
         RuntimeException.class
     })
     public ApiError runtimeExceptionHandler(final Exception exception, final HttpServletRequest request) {
