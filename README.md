@@ -19,11 +19,11 @@
 
 User documentation is managed in the [geonetwork/doc](https://github.com/geonetwork/doc) repository covering all releases of GeoNetwork.
 
-The `docs` folder includes [geonetwork/doc](https://github.com/geonetwork/doc) as a git submodule. This documentation is compiled into html pages during a release for publishing on the [geonetwork-opensource.org](http://geonetwork-opensource.org) website.
+The `docs` folder includes [geonetwork/doc](https://github.com/geonetwork/doc) as a git submodule. This documentation is compiled into html pages during a release for publishing on the [geonetwork-opensource.org](https://www.geonetwork-opensource.org) website.
 
 Developer documentation located in README.md files in the code-base:
 
 * General documentation for the project as a whole is in this README.md
-* [Software Development Documentation](/software_development/) provides instructions for setting up a development environment, building Geonetwork, compiling user documentation, and making a releases
+* [Software Development Documentation](/software_development/) provides instructions for setting up a development environment, building GeoNetwork, compiling user documentation, and making a releases
 * Module specific documentation can be found in each module (assuming there is module specific documentation required)
 

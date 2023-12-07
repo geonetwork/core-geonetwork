@@ -63,11 +63,11 @@ plugins:
           name: English
           build: true
           default: true
-          site_name: 'GeoNetwork Opensource (EN)'
+          site_name: 'GeoNetwork opensource (EN)'
         - locale: fr
           name: Français
           build: !ENV [FRENCH,true]
-          site_name: 'GeoNetwork Opensource (FR)'
+          site_name: 'GeoNetwork opensource (FR)'
           site_description: Catalogue GeoNetwork pour répertorier, rechercher et examiner les enregistrements.
           nav_translations:
             Home: Home
