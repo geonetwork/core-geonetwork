@@ -77,8 +77,9 @@
                                   |mdb:identificationInfo/*/mri:resourceConstraints/*[mco:useConstraints]/(mco:otherConstraints|mco:useLimitation)
                                   |mdb:identificationInfo/*/mri:resourceConstraints/*[mco:accessConstraints]/mco:otherConstraints
                                   |mdb:identificationInfo/*/mri:descriptiveKeywords
-                                  |mdb:identificationInfo/*/mri:pointOfContact[*/cit:role/*/@codeListValue = $isoContactRoleToDcatCommonNames/text()]
+                                  |mdb:identificationInfo/*/mri:pointOfContact
                                   |mdb:dataQualityInfo/*/mdq:report/*/mdq:result[mdq:DQ_ConformanceResult and mdq:DQ_ConformanceResult/mdq:pass/*/text() = 'true']
+                                  |mdb:metadataLinkage
                           "/>
     </rdf:Description>
   </xsl:template>
@@ -284,7 +285,7 @@
       <dct:type rdf:resource="http://purl.org/dc/dcmitype/{$dcmiType}"/>
     </xsl:if>
     <xsl:if test="current() != ''">
-      <dct:type rdf:resource="https://standards.iso.org/iso/19115/resources/Codelists/gml/MD_ScopeCode.xml#{current()}"/>
+      <dct:type rdf:resource="{concat($isoCodeListBaseUri, current())}"/>
     </xsl:if>
     <!-- TODO: Add mapping to Datacite https://schema.datacite.org/meta/kernel-4.1/include/datacite-resourceType-v4.1.xsd ?-->
 

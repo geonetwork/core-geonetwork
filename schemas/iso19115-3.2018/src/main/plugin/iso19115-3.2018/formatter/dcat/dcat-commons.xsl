@@ -22,5 +22,7 @@
     <xsl:namespace name="dcat" select="'http://www.w3.org/ns/dcat#'"/>
     <xsl:namespace name="foaf" select="'http://xmlns.com/foaf/0.1/'"/>
     <xsl:namespace name="vcard" select="'http://www.w3.org/2006/vcard/ns#'"/>
+    <xsl:namespace name="prov" select="'http://www.w3.org/ns/prov#'"/>
+    <xsl:namespace name="org" select="'http://www.w3.org/ns/org#'"/>
   </xsl:template>
 </xsl:stylesheet>

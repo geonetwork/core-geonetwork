@@ -28,6 +28,33 @@
                 xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
                 xmlns:owl="http://www.w3.org/2002/07/owl#"
                 xmlns:dct="http://purl.org/dc/terms/"
+                xmlns:dcat="http://www.w3.org/ns/dcat#"
+                xmlns:foaf="http://xmlns.com/foaf/0.1/"
+                xmlns:vcard="http://www.w3.org/2006/vcard/ns#"
                 exclude-result-prefixes="#all">
 
+  <!--
+  RDF Property:	dcat:landingPage
+  Definition:	A Web page that can be navigated to in a Web browser to gain access to the catalog, a dataset, its distributions and/or additional information.
+  Sub-property of:	foaf:page
+  Range:	foaf:Document
+  Usage note:	If the distribution(s) are accessible only through a landing page (i.e., direct download URLs are not known), then the landing page link SHOULD be duplicated as dcat:accessURL on a distribution. (see 5.7 Dataset available only behind some Web page)
+  -->
+  <xsl:template mode="iso19115-3-to-dcat"
+                match="mdb:metadataLinkage">
+    <dcat:landingPage>
+      <foaf:Document rdf:about="{*/cit:linkage/*/text()}">
+        <xsl:for-each select="*/cit:name">
+          <xsl:call-template name="rdf-localised">
+            <xsl:with-param name="nodeName" select="'dct:title'"/>
+          </xsl:call-template>
+        </xsl:for-each>
+        <xsl:for-each select="*/cit:description">
+          <xsl:call-template name="rdf-localised">
+            <xsl:with-param name="nodeName" select="'dct:description'"/>
+          </xsl:call-template>
+        </xsl:for-each>
+      </foaf:Document>
+    </dcat:landingPage>
+  </xsl:template>
 </xsl:stylesheet>

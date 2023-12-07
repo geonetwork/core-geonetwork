@@ -11,6 +11,7 @@
   <xsl:variable name="europaPublicationFileType" select="concat($europaPublicationBaseUri,'file-type/')"/>
   <xsl:variable name="europaPublicationLanguage" select="concat($europaPublicationBaseUri,'language/')"/>
 
+  <xsl:variable name="isoCodeListBaseUri" select="'http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#'"/>
 
   <!-- Mapping ISO element path to corresponding DCAT names -->
   <xsl:variable name="isoToDcatCommonNames"
