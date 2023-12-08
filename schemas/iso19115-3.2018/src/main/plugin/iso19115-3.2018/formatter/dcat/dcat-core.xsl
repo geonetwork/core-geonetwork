@@ -37,6 +37,7 @@
   <xsl:import href="dcat-utils.xsl"/>
 
   <xsl:import href="dcat-core-catalog.xsl"/>
+  <xsl:import href="dcat-core-dataset.xsl"/>
   <xsl:import href="dcat-core-contact.xsl"/>
   <xsl:import href="dcat-core-keywords.xsl"/>
   <xsl:import href="dcat-core-access-and-use.xsl"/>
@@ -71,6 +72,7 @@
         </rdf:Description>
       </foaf:isPrimaryTopicOf>
 
+      <!-- Resource -->
       <xsl:apply-templates mode="iso19115-3-to-dcat"
                            select="mdb:identificationInfo/*/mri:citation/*/cit:title
                                   |mdb:identificationInfo/*/mri:abstract
@@ -88,6 +90,13 @@
                                   |mdb:dataQualityInfo/*/mdq:report/*/mdq:result[mdq:DQ_ConformanceResult and mdq:DQ_ConformanceResult/mdq:pass/*/text() = 'true']
                                   |mdb:resourceLineage/*/mrl:statement
                                   |mdb:metadataLinkage
+                          "/>
+
+      <!-- Dataset -->
+      <xsl:apply-templates mode="iso19115-3-to-dcat"
+                           select="mdb:identificationInfo/*/mri:spatialResolution/*/mri:distance
+                                  |mdb:identificationInfo/*/mri:temporalResolution/*
+                                  |mdb:identificationInfo/*/mri:extent/*/gex:temporalElement/*/gex:extent
                           "/>
     </rdf:Description>
   </xsl:template>

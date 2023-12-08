@@ -89,4 +89,11 @@
   TODO: Probably not? as everything is set in dcterms:license or dcterms:accessRights.
   -->
 
+  <!--
+  RDF Property:	odrl:hasPolicy
+  Definition:	An ODRL conformant policy expressing the rights associated with the resource.
+  Range:	odrl:Policy
+  Usage note:	Information about rights expressed as an ODRL policy [ODRL-MODEL] using the ODRL vocabulary [ODRL-VOCAB] MAY be provided for the resource. See also guidance at 9. License and rights statements.
+  https://www.w3.org/TR/odrl-model/00Model.png
+  -->
 </xsl:stylesheet>
