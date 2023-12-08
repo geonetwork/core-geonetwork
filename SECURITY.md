@@ -2,20 +2,20 @@
 
 The GeoNetwork community takes the security of the software and all services based on the software product seriously. On this page you can find the versions for which the community provides security patches. 
 
-If you believe you have found a security vulnerability in the software or an implementation of the software, please report it to geonetwork@osgeo.org as described below. Do not publish the vulnerability in any public forums (such as twitter, email list or issue tracker).
+If you believe you have found a security vulnerability in the software or an implementation of the software, please report it to geonetwork@osgeo.org as described below. Do not publish the vulnerability in any public forums (such as Twitter/X, email list or issue tracker).
 
 ## Supported Versions
 
 Each GeoNetwork release is supported with bug fixes for a limited period, with patch releases made approximately every three to six  months. 
 
-- We recommend to update to latest incremental release as soon as possible to address security vulnarabilities.
+- We recommend to update to latest incremental release as soon as possible to address security vulnerabilities.
 - Some overlap is provided when major versions are announced with both a current version and a maintenance version being made available to provide time for organizations to upgrade.
 
-| Version | Supported          | Comment                 |
-|---------| ------------------ |------------------------ |
-| 4.4.x   | :white_check_mark: | Current version         |
-| 4.2.x   | :white_check_mark: | Maintenance version     |
-| 3.12.x  | :white_check_mark: | Maintenance version     |
+| Version | Supported          | Comment             |
+|---------|--------------------|---------------------|
+| 4.4.x   | :white_check_mark: | Latest version      |
+| 4.2.x   | :white_check_mark: | Stable version      |
+| 3.12.x  | :white_check_mark: | Maintenance version |
 
 If your organisation is making use of a GeoNetwork version that is no longer in use by the community all is not lost. You can volunteer on the developer list to make additional releases, or engage with one of our [Commercial Support](https://www.osgeo.org/service-providers/?p=geonetwork) providers. 
 

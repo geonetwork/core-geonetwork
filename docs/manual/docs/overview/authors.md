@@ -8,14 +8,13 @@ In brief the committee votes on proposals on the geonetwork-dev mailinglist. Pro
 
 ### Members of the Project Steering Committee
 
--   Emanuele Tajariol
 -   Florent Gravin
 -   Francois Prunayre
 -   Jeroen Ticheler - Chair
+-   Jo Cook
 -   Jose Garcia
 -   Paul van Genuchten
 -   Simon Pigot
--   Jo Cook
 
 ### Former members of the PSC
 
@@ -23,6 +22,7 @@ In brief the committee votes on proposals on the geonetwork-dev mailinglist. Pro
 -   Archie Warnock
 -   Patrizia Monteduro
 -   Jesse Eichar
+-   Emanuele Tajariol
 
 ## Committers
 

@@ -31,7 +31,7 @@ The map viewer has a number of features to explore the data:
 * Location search including searching for your current position.
 
   ![Map viewer](img/map.png)
-  *Mapviewer*
+  *Map viewer*
 
 ## Add layers
 
