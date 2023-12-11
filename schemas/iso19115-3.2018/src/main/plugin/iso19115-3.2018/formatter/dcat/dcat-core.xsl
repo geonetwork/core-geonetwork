@@ -38,6 +38,7 @@
   <xsl:import href="dcat-utils.xsl"/>
 
   <xsl:import href="dcat-core-catalog.xsl"/>
+  <xsl:import href="dcat-core-dataservice.xsl"/>
   <xsl:import href="dcat-core-dataset.xsl"/>
   <xsl:import href="dcat-core-contact.xsl"/>
   <xsl:import href="dcat-core-keywords.xsl"/>
@@ -100,7 +101,7 @@
                                   |mdb:metadataLinkage
                           "/>
 
-      <!-- Dataset
+      <!-- Dataset, DatasetSeries
        Unsupported:
        * prov:wasGeneratedBy (Could be associated resource of type project?)
        -->
@@ -112,7 +113,13 @@
                                   |mdb:identificationInfo/*/mri:extent/*/gex:geographicElement/gex:EX_GeographicDescription
                                   |mdb:identificationInfo/*/mri:extent/*/gex:temporalElement/*/gex:extent
                                   |mdb:distributionInfo//mrd:onLine
-                          "/>
+                           "/>
+
+      <!-- DataService -->
+      <xsl:apply-templates mode="iso19115-3-to-dcat"
+                           select="mdb:identificationInfo/*/srv:containsOperations/*/srv:connectPoint/*/cit:linkage
+                                  |mdb:identificationInfo/*/srv:operatesOn
+                           "/>
     </rdf:Description>
   </xsl:template>
 
