@@ -163,7 +163,7 @@
     "exportPDF": "Eksport (PDF)",
     "exportMEF": "Eksport (ZIP)",
     "welcomeText": "Her finder du data, tjenester og kort og meget mere.",
-    "searchOver": "Søg i <strong>{{poster}}</strong>, data sæt, tjenester og kort, ... ",
+    "searchOver": "Søg i <strong>{{records}}</strong>, data sæt, tjenester og kort, ... ",
     "browseBy": "Gennemse efter",
     "browseTopics": "Gennemse emner",
     "browseTypes": "Gennemse ressourcer",
