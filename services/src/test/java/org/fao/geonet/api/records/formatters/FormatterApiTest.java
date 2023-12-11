@@ -23,8 +23,14 @@
 package org.fao.geonet.api.records.formatters;
 
 import jeeves.server.context.ServiceContext;
+import org.apache.commons.io.IOUtils;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.riot.Lang;
+import org.apache.jena.riot.RDFDataMgr;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,12 +42,16 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.context.WebApplicationContext;
+import org.xmlunit.builder.DiffBuilder;
+import org.xmlunit.builder.Input;
+import org.xmlunit.diff.DefaultNodeMatcher;
+import org.xmlunit.diff.Diff;
+import org.xmlunit.diff.ElementSelectors;
 
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -55,17 +65,21 @@ public class FormatterApiTest extends AbstractServiceIntegrationTest {
 
     public static Collection<String[]> data() throws Exception {
         ArrayList<String[]> data = new ArrayList<>();
-        data.add(new String[]{"citation", "?format=?", "iso19139", "formats.txt"});
-        data.add(new String[]{"citation", "?format=ris", "iso19139", "ris.txt"});
-        data.add(new String[]{"citation", "?format=bibtex", "iso19139", "bibtex.txt"});
-        data.add(new String[]{"citation", "?format=text", "iso19139", "text.txt"});
-        data.add(new String[]{"citation", "?format=html", "iso19139", "html.html"});
-        data.add(new String[]{"citation", "?format=?", "iso19115-3.2018", "formats.txt"});
-        data.add(new String[]{"citation", "?format=ris", "iso19115-3.2018", "ris.txt"});
-        data.add(new String[]{"citation", "?format=bibtex", "iso19115-3.2018", "bibtex.txt"});
-        data.add(new String[]{"citation", "?format=text", "iso19115-3.2018", "text.txt"});
-        data.add(new String[]{"citation", "?format=html", "iso19115-3.2018", "html.html"});
-        data.add(new String[]{"citation", "?format=text&authorRoles=processor&publisherRoles=owner,custodian", "iso19115-3.2018", "text-custom-role.txt"});
+        data.add(new String[]{"iso19139", "citation", "?format=?", "iso19139", "formats.txt"});
+        data.add(new String[]{"iso19139", "citation", "?format=ris", "iso19139", "ris.txt"});
+        data.add(new String[]{"iso19139", "citation", "?format=bibtex", "iso19139", "bibtex.txt"});
+        data.add(new String[]{"iso19139", "citation", "?format=text", "iso19139", "text.txt"});
+        data.add(new String[]{"iso19139", "citation", "?format=html", "iso19139", "html.html"});
+        data.add(new String[]{"iso19139", "citation", "?format=?", "iso19115-3.2018", "formats.txt"});
+        data.add(new String[]{"iso19115-3.2018", "citation", "?format=ris", "iso19115-3.2018", "ris.txt"});
+        data.add(new String[]{"iso19115-3.2018", "citation", "?format=bibtex", "iso19115-3.2018", "bibtex.txt"});
+        data.add(new String[]{"iso19115-3.2018", "citation", "?format=text", "iso19115-3.2018", "text.txt"});
+        data.add(new String[]{"iso19115-3.2018", "citation", "?format=html", "iso19115-3.2018", "html.html"});
+        data.add(new String[]{"iso19115-3.2018", "citation", "?format=text&authorRoles=processor&publisherRoles=owner,custodian", "iso19115-3.2018", "text-custom-role.txt"});
+
+        data.add(new String[]{"iso19115-3.2018-dcat-dataset.xml", "dcat", "", "iso19115-3.2018", "dataset-core.rdf"});
+        data.add(new String[]{"iso19115-3.2018-dcat-service.xml", "dcat", "", "iso19115-3.2018", "service-core.rdf"});
+
         return data;
     }
 
@@ -81,12 +95,13 @@ public class FormatterApiTest extends AbstractServiceIntegrationTest {
         MockHttpSession mockHttpSession = loginAsAdmin();
 
         for (String[] testParameter : data()) {
-            String formatter = testParameter[0];
-            String urlParams = testParameter[1];
-            String schema = testParameter[2];
-            String checkfile = testParameter[3];
+            String testFile = testParameter[0];
+            String formatter = testParameter[1];
+            String urlParams = testParameter[2];
+            String schema = testParameter[3];
+            String checkfile = testParameter[4];
             String url = "/srv/api/records/"
-                + testDataUuidBySchema.get(schema)
+                + testDataUuidBySchema.get(testFile)
                 + "/formatters/" + formatter + urlParams;
             try {
                 MvcResult result = mockMvc.perform(get(url)
@@ -95,19 +110,49 @@ public class FormatterApiTest extends AbstractServiceIntegrationTest {
                     .andExpect(status().isOk())
                     .andReturn();
 
-                assertEquals(
-                    url,
-                    StreamUtils.copyToString(
+                String expected = StreamUtils.copyToString(
                         FormatterApiTest.class.getResourceAsStream(
                             String.format("%s-%s-%s",
                                 schema, formatter, checkfile)
                         ),
                         StandardCharsets.UTF_8)
-                        .trim()
-                        .replace("{uuid}", testDataUuidBySchema.get(schema)),
-                    result.getResponse().getContentAsString()
-                        .replaceAll("\\r\\n?", "\n")
-                );
+                    .trim()
+                    .replace("{uuid}", testDataUuidBySchema.get(testFile));
+
+                String actual = result.getResponse().getContentAsString();
+
+                boolean isRdf = checkfile.endsWith(".rdf");
+                boolean isXml = checkfile.endsWith(".xml");
+
+                if (isXml || isRdf) {
+                    Diff diff = DiffBuilder
+                        .compare(Input.fromString(actual))
+                        .withTest(Input.fromString(expected))
+                        .withNodeMatcher(new DefaultNodeMatcher(ElementSelectors.byName))
+                        .normalizeWhitespace()
+                        .checkForSimilar()
+                        .build();
+                    assertFalse(
+                        String.format("%s. Checked with %s. Differences: %s", url, checkfile, diff.toString()),
+                        diff.hasDifferences());
+
+                    if (isRdf) {
+                        try {
+                            Model model = ModelFactory.createMemModelMaker().createDefaultModel();
+                            RDFDataMgr.read(model,
+                                IOUtils.toInputStream(actual, StandardCharsets.UTF_8),
+                                Lang.RDFXML);
+                        } catch (Exception rdfException) {
+                            fail(String.format("RDF model error. %s. Checked with: %s", rdfException.getMessage(), actual));
+                        }
+                    }
+                } else {
+                    assertEquals(
+                        url,
+                        expected,
+                        actual.replaceAll("\\r\\n?", "\n")
+                    );
+                }
             } catch (Exception e) {
                 fail(url);
             }
@@ -116,12 +161,26 @@ public class FormatterApiTest extends AbstractServiceIntegrationTest {
 
     private void createTestData() throws Exception {
         loginAsAdmin(context);
-        loadFile(getSampleISO19139MetadataXml());
-        loadFile(getSampleISO19115MetadataXml());
+
+        Set<String> testFiles = new HashSet<>();
+        for (String[] testParameter : data()) {
+            testFiles.add(testParameter[0]);
+        }
+        for (String file : testFiles) {
+            if (file.equals("iso19139")) {
+                loadFile("iso19139", getSampleISO19139MetadataXml());
+            } else if (file.equals("iso19115-3.2018")) {
+                loadFile("iso19115-3.2018", getSampleISO19115MetadataXml());
+            } else {
+                loadFile(file,
+                    Xml.loadStream(
+                        FormatterApiTest.class.getResourceAsStream(file)));
+            }
+        }
     }
 
-    private void loadFile(Element sampleMetadataXml) throws Exception {
+    private void loadFile(String key, Element sampleMetadataXml) throws Exception {
         AbstractMetadata metadata = injectMetadataInDbDoNotRefreshHeader(sampleMetadataXml, context);
-        testDataUuidBySchema.put(metadata.getDataInfo().getSchemaId(), metadata.getUuid());
+        testDataUuidBySchema.put(key, metadata.getUuid());
     }
 }
