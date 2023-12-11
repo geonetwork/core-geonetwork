@@ -95,5 +95,7 @@
   Range:	odrl:Policy
   Usage note:	Information about rights expressed as an ODRL policy [ODRL-MODEL] using the ODRL vocabulary [ODRL-VOCAB] MAY be provided for the resource. See also guidance at 9. License and rights statements.
   https://www.w3.org/TR/odrl-model/00Model.png
+
+  TODO
   -->
 </xsl:stylesheet>

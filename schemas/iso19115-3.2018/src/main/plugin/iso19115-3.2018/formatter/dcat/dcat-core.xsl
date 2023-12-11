@@ -10,13 +10,14 @@
                 xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0"
                 xmlns:mrc="http://standards.iso.org/iso/19115/-3/mrc/2.0"
                 xmlns:mco="http://standards.iso.org/iso/19115/-3/mco/1.0"
+                xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0"
                 xmlns:mdb="http://standards.iso.org/iso/19115/-3/mdb/2.0"
                 xmlns:reg="http://standards.iso.org/iso/19115/-3/reg/1.0"
-                xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0"
                 xmlns:mrs="http://standards.iso.org/iso/19115/-3/mrs/1.0"
                 xmlns:mrl="http://standards.iso.org/iso/19115/-3/mrl/2.0"
                 xmlns:mex="http://standards.iso.org/iso/19115/-3/mex/1.0"
                 xmlns:msr="http://standards.iso.org/iso/19115/-3/msr/2.0"
+                xmlns:mmi="http://standards.iso.org/iso/19115/-3/mmi/1.0"
                 xmlns:mrd="http://standards.iso.org/iso/19115/-3/mrd/1.0"
                 xmlns:mdq="http://standards.iso.org/iso/19157/-2/mdq/1.0"
                 xmlns:srv="http://standards.iso.org/iso/19115/-3/srv/2.1"
@@ -72,7 +73,14 @@
         </rdf:Description>
       </foaf:isPrimaryTopicOf>
 
-      <!-- Resource -->
+      <!-- Resource
+       Unsupported:
+       * dcat:first|previous(sameAs replaces, previousVersion?)|next|last|hasVersion (using the Associated API, navigate to series and sort by date?)
+       * dct:isReferencedBy (using the Associated API)
+       * dcat:hasCurrentVersion  (using the Associated API)
+       * dct:rights
+       * odrl:hasPolicy
+       -->
       <xsl:apply-templates mode="iso19115-3-to-dcat"
                            select="mdb:identificationInfo/*/mri:citation/*/cit:title
                                   |mdb:identificationInfo/*/mri:abstract
@@ -92,11 +100,18 @@
                                   |mdb:metadataLinkage
                           "/>
 
-      <!-- Dataset -->
+      <!-- Dataset
+       Unsupported:
+       * prov:wasGeneratedBy (Could be associated resource of type project?)
+       -->
       <xsl:apply-templates mode="iso19115-3-to-dcat"
-                           select="mdb:identificationInfo/*/mri:spatialResolution/*/mri:distance
+                           select="mdb:identificationInfo/*/mri:resourceMaintenance/*/mmi:maintenanceAndUpdateFrequency
+                                  |mdb:identificationInfo/*/mri:spatialResolution/*/mri:distance
                                   |mdb:identificationInfo/*/mri:temporalResolution/*
+                                  |mdb:identificationInfo/*/mri:extent/*/gex:geographicElement/gex:EX_GeographicBoundingBox
+                                  |mdb:identificationInfo/*/mri:extent/*/gex:geographicElement/gex:EX_GeographicDescription
                                   |mdb:identificationInfo/*/mri:extent/*/gex:temporalElement/*/gex:extent
+                                  |mdb:distributionInfo//mrd:onLine
                           "/>
     </rdf:Description>
   </xsl:template>
@@ -109,7 +124,10 @@
                       |mdb:identificationInfo/*/mri:descriptiveKeywords/*/mri:keyword
                       |mdb:metadataStandard/*/cit:title
                       |mdb:metadataStandard/*/cit:edition
-                      |mdb:resourceLineage/*/mrl:statement">
+                      |mdb:resourceLineage/*/mrl:statement
+                      |mrd:onLine/*/cit:name
+                      |mrd:onLine/*/cit:description
+                      ">
     <xsl:variable name="xpath"
                   as="xs:string"
                   select="string-join(current()/ancestor-or-self::*[name() != 'root']/name(), '/')"/>
@@ -137,9 +155,10 @@
 
   <xsl:template mode="iso19115-3-to-dcat"
                 match="mdb:dateInfo/*/cit:date
-                      |cit:CI_Citation/cit:date/*/cit:date">
-    <xsl:variable name="dateType"
-                  as="xs:string"
+                      |cit:CI_Citation/cit:date/*/cit:date
+                      |mrd:distributionOrderProcess/*/mrd:plannedAvailableDateTime">
+    <xsl:param name="dateType"
+                  as="xs:string?"
                   select="../cit:dateType/*/@codeListValue"/>
     <xsl:variable name="dcatElementName"
                   as="xs:string?"

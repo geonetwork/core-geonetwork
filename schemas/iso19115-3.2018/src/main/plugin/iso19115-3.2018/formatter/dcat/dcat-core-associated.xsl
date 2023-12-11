@@ -16,6 +16,9 @@
   <xsl:variable name="isoAssociatedTypesToDcatCommonNames"
                 as="node()*">
     <entry associationType="crossReference" initiativeType="collection">dct:isPartOf</entry>
+    <entry associationType="partOfSeamlessDatabase">dct:isPartOf</entry>
+    <entry associationType="series">dct:isPartOf</entry>
+    <!-- TO DISCUSS: Should we use dcat:inSeries instead of isPartOf -->
     <entry associationType="crossReference">dct:references</entry>
     <entry associationType="isComposedOf">dct:hasPart</entry>
     <!-- <entry associationType="revisionOf">dct:isVersionOf</entry>-->

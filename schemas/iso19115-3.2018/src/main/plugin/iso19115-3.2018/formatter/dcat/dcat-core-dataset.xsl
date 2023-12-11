@@ -4,11 +4,19 @@
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0"
                 xmlns:gex="http://standards.iso.org/iso/19115/-3/gex/1.0"
+                xmlns:mmi="http://standards.iso.org/iso/19115/-3/mmi/1.0"
+                xmlns:mdb="http://standards.iso.org/iso/19115/-3/mdb/2.0"
+                xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0"
+                xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
                 xmlns:gml="http://www.opengis.net/gml/3.2"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
                 xmlns:dcat="http://www.w3.org/ns/dcat#"
                 xmlns:dct="http://purl.org/dc/terms/"
+                xmlns:skos="http://www.w3.org/2004/02/skos/core#"
                 xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
                 exclude-result-prefixes="#all">
+
+  <xsl:import href="dcat-variables.xsl"/>
 
   <xsl:variable name="unitConversionFactorForMeter"
                 as="node()*">
@@ -90,6 +98,45 @@
   </xsl:template>
 
 
+
+  <!--
+  RDF Property:	dcterms:accrualPeriodicity
+  Definition:	The frequency at which a dataset is published.
+  Range:	dcterms:Frequency (A rate at which something recurs)
+  Usage note:	The value of dcterms:accrualPeriodicity gives the rate at which the dataset-as-a-whole is updated. This may be complemented by dcat:temporalResolution to give the time between collected data points in a time series.
+  -->
+  <xsl:variable name="isoFrequencyToDublinCore"
+                as="node()*">
+    <entry key="continual">CONT</entry>
+    <entry key="daily">DAILY</entry>
+    <entry key="weekly">WEEKLY</entry>
+    <entry key="fortnightly">BIWEEKLY</entry>
+    <entry key="monthly">MONTHLY</entry>
+    <entry key="quarterly">QUARTERLY</entry>
+    <entry key="biannually">ANNUAL_2</entry>
+    <entry key="annually">ANNUAL</entry>
+    <entry key="irregular">IRREG</entry>
+    <entry key="unknown">UNKNOWN</entry>
+    <!--
+    <entry key="asNeeded"></entry>
+    <entry key="notPlanned"></entry>
+    -->
+  </xsl:variable>
+
+  <xsl:template mode="iso19115-3-to-dcat"
+                match="mdb:identificationInfo/*/mri:resourceMaintenance/*/mmi:maintenanceAndUpdateFrequency">
+    <xsl:variable name="dcFrequency"
+                  as="xs:string?"
+                  select="$isoFrequencyToDublinCore[@key = current()/*/@codeListValue]"/>
+
+    <dct:accrualPeriodicity>
+      <dct:Frequency rdf:about="{if($dcFrequency)
+                                 then concat($europaPublicationBaseUri, 'frequency/', $dcFrequency)
+                                 else concat($isoCodeListBaseUri, */@codeListValue)}"/>
+    </dct:accrualPeriodicity>
+  </xsl:template>
+
+
   <!--
   RDF Property:	dcat:temporalResolution
   Definition:	Minimum time period resolvable in the dataset.
@@ -127,5 +174,83 @@
       </dct:PeriodOfTime>
     </dct:temporal>
   </xsl:template>
+
+
+  <!--
+  RDF Property:	dcterms:spatial
+  Definition:	The geographical area covered by the dataset.
+  Range:	dcterms:Location (A spatial region or named place)
+  Usage note:	The spatial coverage of a dataset may be encoded as an instance of dcterms:Location,
+  or may be indicated using an IRI reference (link) to a resource describing a location. It is recommended that links are to entries in a well maintained gazetteer such as Geonames.
+  -->
+  <xsl:template mode="iso19115-3-to-dcat"
+                match="mri:extent/*/gex:geographicElement/gex:EX_GeographicBoundingBox">
+    <xsl:variable name="north" select="gex:northBoundLatitude/gco:Decimal"/>
+    <xsl:variable name="east"  select="gex:eastBoundLongitude/gco:Decimal"/>
+    <xsl:variable name="south" select="gex:southBoundLatitude/gco:Decimal"/>
+    <xsl:variable name="west"  select="gex:westBoundLongitude/gco:Decimal"/>
+
+    <xsl:variable name="geojson"
+                  as="xs:string"
+                  select="concat('{&quot;type&quot;:&quot;Polygon&quot;,&quot;coordinates&quot;:[[[',
+                                   $west, ',', $north, '],[',
+                                   $east, ',', $north, '],[',
+                                   $east, ',', $south, '],[',
+                                   $west, ',', $south, '],[',
+                                   $west, ',', $north, ']]]}')"/>
+
+    <dct:spatial rdf:parseType="Resource">
+      <rdf:type rdf:resource="http://purl.org/dc/terms/Location"/>
+      <dcat:bbox rdf:datatype="http://www.opengis.net/ont/geosparql#geoJSONLiteral"><xsl:value-of select="$geojson"/></dcat:bbox>
+    </dct:spatial>
+  </xsl:template>
+
+
+  <xsl:template mode="iso19115-3-to-dcat"
+                match="mri:extent/*/gex:geographicElement/gex:EX_GeographicDescription">
+    <xsl:variable name="uri"
+                  as="xs:string?"
+                  select="gex:geographicIdentifier/*/mcc:code/*/@xlink:href"/>
+    <xsl:variable name="name"
+                  as="xs:string?"
+                  select="gex:geographicIdentifier/*/mcc:code/*/text()"/>
+    <xsl:choose>
+      <xsl:when test="string($uri)">
+        <dct:spatial>
+          <dct:Location rdf:about="{$uri}"/>
+        </dct:spatial>
+      </xsl:when>
+      <xsl:otherwise>
+        <dct:spatial rdf:parseType="Resource">
+          <rdf:type rdf:resource="http://purl.org/dc/terms/Location"/>
+          <skos:prefLabel xml:lang="TODO">
+            <xsl:value-of select="$name"/>
+          </skos:prefLabel>
+        </dct:spatial>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+
+  <!--
+  RDF Property:	prov:wasGeneratedBy
+  Definition:	An activity that generated, or provides the business context for, the creation of the dataset.
+  Domain:	prov:Entity
+  Range:	prov:Activity An activity is something that occurs over a period of time and acts upon or with entities; it may include consuming, processing, transforming, modifying, relocating, using, or generating entities.
+  Usage note:	The activity associated with generation of a dataset will typically be an initiative, project, mission, survey, on-going activity ("business as usual") etc. Multiple prov:wasGeneratedBy properties can be used to indicate the dataset production context at various levels of granularity.
+  Usage note:	Use prov:qualifiedGeneration to attach additional details about the relationship between the dataset and the activity, e.g., the exact time that the dataset was produced during the lifetime of a project
+
+  TODO
+  -->
+
+  <!--
+  RDF Property:	dcat:inSeries
+  Definition:	A dataset series of which the dataset is part.
+  Range:	dcat:DatasetSeries
+  Sub-property of:	dcterms:isPartOf
+
+  See dcat-core-associated.xsl
+  -->
+
 
 </xsl:stylesheet>

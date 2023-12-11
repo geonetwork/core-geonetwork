@@ -54,7 +54,7 @@
 
     <xsl:element name="{$nodeName}">
       <xsl:attribute name="rdf:datatype"
-                     select="'http://www.w3.org/2001/XMLSchema#date'"/>
+                     select="concat('http://www.w3.org/2001/XMLSchema#date', (if (contains(*/text(), 'T')) then 'Time' else ''))"/>
       <xsl:value-of select="*/text()"/>
     </xsl:element>
   </xsl:template>
