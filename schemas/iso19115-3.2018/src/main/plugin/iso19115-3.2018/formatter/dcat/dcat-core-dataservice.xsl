@@ -5,6 +5,7 @@
                 xmlns:xlink="http://www.w3.org/1999/xlink"
                 xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/2.0"
                 xmlns:srv="http://standards.iso.org/iso/19115/-3/srv/2.1"
+                xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
                 xmlns:dcat="http://www.w3.org/ns/dcat#"
                 xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
                 exclude-result-prefixes="#all">
@@ -20,8 +21,9 @@
   -->
   <xsl:template mode="iso19115-3-to-dcat"
                 match="srv:containsOperations/*/srv:connectPoint/*[cit:protocol/*/text() != $endpointDescriptionProtocols]/cit:linkage">
-    <dcat:endpointURL rdf:resource="{*/text()}"/>
+    <dcat:endpointURL rdf:resource="{normalize-space(gco:CharacterString/text())}"/>
   </xsl:template>
+
 
   <!--
   RDF Property:	dcat:endpointDescription
@@ -33,7 +35,7 @@
   -->
   <xsl:template mode="iso19115-3-to-dcat"
                 match="srv:containsOperations/*/srv:connectPoint/*[cit:protocol/*/text() = $endpointDescriptionProtocols]/cit:linkage">
-    <dcat:endpointDescription rdf:resource="{*/text()}"/>
+    <dcat:endpointDescription rdf:resource="{normalize-space(gco:CharacterString/text())}"/>
   </xsl:template>
 
   <!--

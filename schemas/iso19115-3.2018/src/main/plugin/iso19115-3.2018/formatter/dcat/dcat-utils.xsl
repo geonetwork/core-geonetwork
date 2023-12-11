@@ -4,6 +4,7 @@
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0"
                 xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
+                xmlns:lan="http://standards.iso.org/iso/19115/-3/lan/1.0"
                 xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/2.0"
                 xmlns:dct="http://purl.org/dc/terms/"
                 xmlns:dcat="http://www.w3.org/ns/dcat#"
@@ -28,11 +29,31 @@
     <xsl:param name="nodeName"
                as="xs:string"/>
 
-    <!-- TODO lan:*-->
     <xsl:element name="{$nodeName}">
-      <xsl:attribute name="xml:lang" select="''"/>
+      <xsl:attribute name="xml:lang" select="$languages[@default]/@iso3code"/>
       <xsl:value-of select="*/text()"/>
     </xsl:element>
+
+    <xsl:variable name="hasDefaultLanguageCharacterString"
+                  select="count(gco:CharacterString) > 0"/>
+
+    <xsl:for-each select="lan:PT_FreeText/*/lan:LocalisedCharacterString">
+      <xsl:variable name="translationLanguage"
+                    select="@locale"/>
+
+      <xsl:choose>
+        <xsl:when test="$hasDefaultLanguageCharacterString
+                        and $translationLanguage = $languages[@default]/concat('#', @id)">
+          <!-- Ignored default language which may be repeated in translations. -->
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:element name="{$nodeName}">
+            <xsl:attribute name="xml:lang" select="$languages[concat('#', @id) = $translationLanguage]/@iso3code"/>
+            <xsl:value-of select="text()"/>
+          </xsl:element>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:for-each>
   </xsl:template>
 
 

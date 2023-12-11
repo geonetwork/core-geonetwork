@@ -48,6 +48,19 @@
   <xsl:import href="dcat-core-lineage.xsl"/>
 
 
+  <xsl:variable name="languages"
+                as="node()*">
+    <xsl:variable name="defaultLanguage"
+                  select="/root/mdb:MD_Metadata/mdb:defaultLocale/*"/>
+    <xsl:for-each select="$defaultLanguage">
+      <language id="{@id}" iso3code="{lan:language/*/@codeListValue}" default=""/>
+    </xsl:for-each>
+    <xsl:for-each select="/root/mdb:MD_Metadata/mdb:otherLocale/*[@id != $defaultLanguage/@id]">
+      <language id="{@id}" iso3code="{lan:language/*/@codeListValue}"/>
+    </xsl:for-each>
+  </xsl:variable>
+
+
   <xsl:template mode="iso19115-3-to-dcat-validation"
                 match="mdb:MD_Metadata">
     <!-- Nothing to validate in DCAT core. -->
