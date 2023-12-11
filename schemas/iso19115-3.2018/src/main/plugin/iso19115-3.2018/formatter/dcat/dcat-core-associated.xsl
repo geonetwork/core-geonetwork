@@ -103,15 +103,15 @@
     <xsl:element name="{$elementType}">
       <xsl:choose>
         <xsl:when test="*/mri:metadataReference/@xlink:href">
-          <xsl:attribute name="rdf:about" select="*/mri:metadataReference/@xlink:href"/>
+          <xsl:attribute name="rdf:resource" select="*/mri:metadataReference/@xlink:href"/>
         </xsl:when>
         <xsl:when test="*/mri:metadataReference/@uuidref">
           <!-- TODO: Here we need a URI? -->
-          <xsl:attribute name="rdf:about" select="*/mri:metadataReference/@uuidref"/>
+          <xsl:attribute name="rdf:resource" select="*/mri:metadataReference/@uuidref"/>
         </xsl:when>
         <xsl:otherwise>
           <!-- TODO: Here we need a URI? -->
-          <xsl:attribute name="rdf:about" select="*/mri:aggregateDataSetIdentifier/*/mri:code/*/text()"/>
+          <xsl:attribute name="rdf:resource" select="*/mri:aggregateDataSetIdentifier/*/mri:code/*/text()"/>
         </xsl:otherwise>
       </xsl:choose>
     </xsl:element>

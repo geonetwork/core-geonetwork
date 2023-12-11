@@ -199,9 +199,11 @@
                                    $west, ',', $south, '],[',
                                    $west, ',', $north, ']]]}')"/>
 
-    <dct:spatial rdf:parseType="Resource">
-      <rdf:type rdf:resource="http://purl.org/dc/terms/Location"/>
-      <dcat:bbox rdf:datatype="http://www.opengis.net/ont/geosparql#geoJSONLiteral"><xsl:value-of select="$geojson"/></dcat:bbox>
+    <dct:spatial>
+      <rdf:Description>
+        <rdf:type rdf:resource="http://purl.org/dc/terms/Location"/>
+        <dcat:bbox rdf:datatype="http://www.opengis.net/ont/geosparql#geoJSONLiteral"><xsl:value-of select="$geojson"/></dcat:bbox>
+      </rdf:Description>
     </dct:spatial>
   </xsl:template>
 
@@ -221,11 +223,13 @@
         </dct:spatial>
       </xsl:when>
       <xsl:otherwise>
-        <dct:spatial rdf:parseType="Resource">
-          <rdf:type rdf:resource="http://purl.org/dc/terms/Location"/>
-          <skos:prefLabel xml:lang="TODO">
-            <xsl:value-of select="$name"/>
-          </skos:prefLabel>
+        <dct:spatial>
+          <rdf:Description>
+            <rdf:type rdf:resource="http://purl.org/dc/terms/Location"/>
+            <skos:prefLabel xml:lang="TODO">
+              <xsl:value-of select="$name"/>
+            </skos:prefLabel>
+          </rdf:Description>
         </dct:spatial>
       </xsl:otherwise>
     </xsl:choose>

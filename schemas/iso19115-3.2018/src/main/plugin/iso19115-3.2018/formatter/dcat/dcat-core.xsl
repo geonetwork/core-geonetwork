@@ -234,12 +234,14 @@
   -->
   <xsl:template mode="iso19115-3-to-dcat"
                 match="mdb:metadataStandard">
-    <dct:conformsTo rdf:parseType="Resource">
-      <rdf:type rdf:resource="http://purl.org/dc/terms/Standard"/>
-      <xsl:apply-templates mode="iso19115-3-to-dcat"
-                           select="*/cit:title"/>
-      <xsl:apply-templates mode="iso19115-3-to-dcat"
-                           select="*/cit:edition"/>
+    <dct:conformsTo>
+      <dct:Standard>
+        <rdf:type rdf:resource="http://purl.org/dc/terms/Standard"/>
+        <xsl:apply-templates mode="iso19115-3-to-dcat"
+                             select="*/cit:title"/>
+        <xsl:apply-templates mode="iso19115-3-to-dcat"
+                             select="*/cit:edition"/>
+      </dct:Standard>
     </dct:conformsTo>
   </xsl:template>
 
@@ -282,8 +284,7 @@
             <xsl:attribute name="rdf:about" select="*/mdq:specification/@xlink:href"/>
           </xsl:when>
           <xsl:otherwise>
-            <xsl:attribute name="rdf:parseType" select="'Resource'"/>
-            <rdf:type rdf:resource="dct:Standard"/>
+            <rdf:type rdf:resource="http://purl.org/dc/terms/Standard"/>
             <xsl:for-each select="*/mdq:specification/*">
               <xsl:for-each select="cit:title">
                 <xsl:call-template name="rdf-localised">
