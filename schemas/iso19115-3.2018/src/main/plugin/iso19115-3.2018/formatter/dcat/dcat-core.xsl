@@ -39,6 +39,7 @@
 
   <xsl:import href="dcat-core-catalog.xsl"/>
   <xsl:import href="dcat-core-catalogrecord.xsl"/>
+  <xsl:import href="dcat-core-resource.xsl"/>
   <xsl:import href="dcat-core-dataservice.xsl"/>
   <xsl:import href="dcat-core-dataset.xsl"/>
   <xsl:import href="dcat-core-contact.xsl"/>
@@ -78,32 +79,8 @@
       <xsl:apply-templates mode="iso19115-3-to-dcat-catalog-record"
                            select="."/>
 
-      <!-- Resource
-       Unsupported:
-       * dcat:first|previous(sameAs replaces, previousVersion?)|next|last|hasVersion (using the Associated API, navigate to series and sort by date?)
-       * dct:isReferencedBy (using the Associated API)
-       * dcat:hasCurrentVersion  (using the Associated API)
-       * dct:rights
-       * odrl:hasPolicy
-       -->
-      <xsl:apply-templates mode="iso19115-3-to-dcat"
-                           select="mdb:identificationInfo/*/mri:citation/*/cit:title
-                                  |mdb:identificationInfo/*/mri:abstract
-                                  |mdb:identificationInfo/*/mri:citation/*/cit:identifier
-                                  |mdb:identificationInfo/*/mri:citation/*/cit:date/*[cit:dateType/*/@codeListValue = $isoDateTypeToDcatCommonNames/text()]/cit:date
-                                  |mdb:identificationInfo/*/mri:citation/*/cit:edition
-                                  |mdb:identificationInfo/*/mri:defaultLocale
-                                  |mdb:identificationInfo/*/mri:otherLocale
-                                  |mdb:identificationInfo/*/mri:resourceConstraints/*[mco:useConstraints]/(mco:otherConstraints|mco:useLimitation)
-                                  |mdb:identificationInfo/*/mri:resourceConstraints/*[mco:accessConstraints]/mco:otherConstraints
-                                  |mdb:identificationInfo/*/mri:status
-                                  |mdb:identificationInfo/*/mri:descriptiveKeywords
-                                  |mdb:identificationInfo/*/mri:pointOfContact
-                                  |mdb:identificationInfo/*/mri:associatedResource
-                                  |mdb:dataQualityInfo/*/mdq:report/*/mdq:result[mdq:DQ_ConformanceResult and mdq:DQ_ConformanceResult/mdq:pass/*/text() = 'true']
-                                  |mdb:resourceLineage/*/mrl:statement
-                                  |mdb:metadataLinkage
-                          "/>
+      <xsl:apply-templates mode="iso19115-3-to-dcat-resource"
+                           select="."/>
 
       <!-- Dataset, DatasetSeries
        Unsupported:

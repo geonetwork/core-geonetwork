@@ -18,14 +18,6 @@
   <xsl:template mode="iso19115-3-to-dcat"
                 match="mri:descriptiveKeywords">
     <xsl:for-each select="*/mri:keyword[*/text() != '']">
-      <!-- TODO: Dispatch between theme and keyword
-        In SEMICeu the choice is made if "In case the concept's URI is NOT provided", then keyword else theme
-       <dcat:theme xmlns:dcat="http://www.w3.org/ns/dcat#">
-        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-        <skos:prefLabel xmlns:skos="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">BDInfraSIGNO</skos:prefLabel>
-        <skos:inScheme xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:resource="https://metawal.wallonie.be/thesaurus/infrasig"/>
-      </dcat:theme>
-       -->
       <xsl:apply-templates mode="iso19115-3-to-dcat"
                            select="."/>
     </xsl:for-each>

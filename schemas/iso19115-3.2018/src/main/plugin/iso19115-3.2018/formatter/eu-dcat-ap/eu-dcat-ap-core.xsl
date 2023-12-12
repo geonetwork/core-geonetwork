@@ -12,15 +12,16 @@
                 exclude-result-prefixes="#all">
 
   <xsl:import href="../dcat/dcat-core.xsl"/>
+  <xsl:import href="eu-dcat-ap-core-dataset.xsl"/>
 
   <!--
   Catalogue Record
-  [o]	title	Literal	0..*	A name given to the Catalogue Record.	This property can be repeated for parallel language versions of the name.	Link
-  [o]	description	Literal	0..*	A free-text account of the record. This property can be repeated for parallel language versions of the description.		Link
-  [o]	listing date	Temporal Literal	0..1	The date on which the description of the Dataset was included in the Catalogue.		Link
-  [o]	modification date	Temporal Literal	1	The most recent date on which the Catalogue entry was changed or modified.		Link
-  [o]	application profile	Standard	0..1	An Application Profile that the Dataset's metadata conforms to.		Link
-  [o]	primary topic	Catalogued Resource	1	A link to the Dataset, Data service or Catalog described in the record.	A catalogue record will refer to one entity in a catalogue. This can be either a Dataset or a Data Service. To ensure an unambigous reading of the cardinality the range is set to Catalogued Resource. However it is not the intend with this range to require the explicit use of the class Catalogued Record. As abstract class, an subclass should be used.	Link
+  [o]	title	Literal	0..*	A name given to the Catalogue Record.	This property can be repeated for parallel language versions of the name.
+  [o]	description	Literal	0..*	A free-text account of the record. This property can be repeated for parallel language versions of the description.
+  [o]	listing date	Temporal Literal	0..1	The date on which the description of the Dataset was included in the Catalogue.
+  [o]	modification date	Temporal Literal	1	The most recent date on which the Catalogue entry was changed or modified.
+  [o]	application profile	Standard	0..1	An Application Profile that the Dataset's metadata conforms to.
+  [o]	primary topic	Catalogued Resource	1	A link to the Dataset, Data service or Catalog described in the record.	A catalogue record will refer to one entity in a catalogue. This can be either a Dataset or a Data Service. To ensure an unambigous reading of the cardinality the range is set to Catalogued Resource. However it is not the intend with this range to require the explicit use of the class Catalogued Record. As abstract class, an subclass should be used.
   -->
   <xsl:template mode="iso19115-3-to-dcat-catalog-record"
                 match="mdb:MD_Metadata">
@@ -57,9 +58,11 @@
     </xsl:call-template>
   </xsl:template>
 
+  <!--
+   https://github.com/SEMICeu/DCAT-AP/issues/16
+   -->
   <xsl:template mode="iso19115-3-to-eu-dcat-ap"
                 match="mdb:MD_Metadata/mdb:metadataLinkage">
-    <dct:source rdf:about="{*/cit:linkage/*/text()}"/>
+    <dct:source rdf:resource="{*/cit:linkage/*/text()}"/>
   </xsl:template>
-
 </xsl:stylesheet>
