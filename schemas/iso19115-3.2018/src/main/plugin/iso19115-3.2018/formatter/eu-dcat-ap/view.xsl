@@ -8,13 +8,21 @@
                 xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
                 xmlns:dct="http://purl.org/dc/terms/"
                 exclude-result-prefixes="#all">
-  <!-- https://joinup.ec.europa.eu/collection/semic-support-centre/solution/dcat-application-profile-data-portals-europe/release/300 -->
+
+  <xsl:import href="eu-dcat-ap-core.xsl"/>
+
+  <!--
+  https://joinup.ec.europa.eu/collection/semic-support-centre/solution/dcat-application-profile-data-portals-europe/release/300
+  https://semiceu.github.io/DCAT-AP/releases/3.0.0/
+  -->
 
   <xsl:template match="/root"
                 priority="2">
     <rdf:RDF>
+      <xsl:call-template name="create-namespaces"/>
       <xsl:apply-templates mode="iso19115-3-to-dcat"
                            select="mdb:MD_Metadata"/>
     </rdf:RDF>
   </xsl:template>
+
 </xsl:stylesheet>

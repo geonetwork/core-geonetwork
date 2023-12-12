@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsl:stylesheet version="2.0"
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                xmlns:mdb="http://standards.iso.org/iso/19115/-3/mdb/2.0"
+                xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0"
+                xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
+                xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0"
+                xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/2.0"
+                xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+                xmlns:dct="http://purl.org/dc/terms/"
+                exclude-result-prefixes="#all">
+
+  <xsl:import href="../dcat/dcat-core.xsl"/>
+
+  <!--
+  Catalogue Record
+  [o]	title	Literal	0..*	A name given to the Catalogue Record.	This property can be repeated for parallel language versions of the name.	Link
+  [o]	description	Literal	0..*	A free-text account of the record. This property can be repeated for parallel language versions of the description.		Link
+  [o]	listing date	Temporal Literal	0..1	The date on which the description of the Dataset was included in the Catalogue.		Link
+  [o]	modification date	Temporal Literal	1	The most recent date on which the Catalogue entry was changed or modified.		Link
+  [o]	application profile	Standard	0..1	An Application Profile that the Dataset's metadata conforms to.		Link
+  [o]	primary topic	Catalogued Resource	1	A link to the Dataset, Data service or Catalog described in the record.	A catalogue record will refer to one entity in a catalogue. This can be either a Dataset or a Data Service. To ensure an unambigous reading of the cardinality the range is set to Catalogued Resource. However it is not the intend with this range to require the explicit use of the class Catalogued Record. As abstract class, an subclass should be used.	Link
+  -->
+  <xsl:template mode="iso19115-3-to-dcat-catalog-record"
+                match="mdb:MD_Metadata">
+    <xsl:variable name="properties" as="node()*">
+      <xsl:apply-templates mode="iso19115-3-to-dcat"
+                           select="mdb:metadataIdentifier
+                                      |mdb:identificationInfo/*/mri:citation/*/cit:title
+                                      |mdb:identificationInfo/*/mri:abstract
+                                      |mdb:dateInfo/*[cit:dateType/*/@codeListValue = 'creation']/cit:date
+                                      |mdb:dateInfo/*[cit:dateType/*/@codeListValue = 'revision']/cit:date
+                                      |mdb:metadataStandard"/>
+      <!--
+      [o]	language	Linguistic system	0..*	A language used in the textual metadata describing titles, descriptions, etc. of the Dataset.	This property can be repeated if the metadata is provided in multiple languages.
+      -->
+      <xsl:apply-templates mode="iso19115-3-to-dcat"
+                           select="mdb:defaultLocale
+                                  |mdb:otherLocale"/>
+      <!--
+      [o]	change type	Concept	0..1	The status of the catalogue record in the context of editorial flow of the dataset and data service descriptions.
+
+      Not supported. Could be Draft status.
+      -->
+
+      <!--
+      [o]	source metadata	Catalogue Record	0..1	The original metadata that was used in creating metadata for the Dataset.
+      In GeoDCAT-AP, this MAY refer to an INSPIRE / [ISO-19115] record that was transformed into the current Geo/DCAT-AP one.
+      -->
+      <xsl:apply-templates mode="iso19115-3-to-eu-dcat-ap"
+                           select="mdb:metadataLinkage[*/cit:linkage/*/text() != '']"/>
+    </xsl:variable>
+
+    <xsl:call-template name="rdf-build-catalogue-record">
+      <xsl:with-param name="properties" select="$properties"/>
+    </xsl:call-template>
+  </xsl:template>
+
+  <xsl:template mode="iso19115-3-to-eu-dcat-ap"
+                match="mdb:MD_Metadata/mdb:metadataLinkage">
+    <dct:source rdf:about="{*/cit:linkage/*/text()}"/>
+  </xsl:template>
+
+</xsl:stylesheet>

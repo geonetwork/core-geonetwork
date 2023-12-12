@@ -38,6 +38,7 @@
   <xsl:import href="dcat-utils.xsl"/>
 
   <xsl:import href="dcat-core-catalog.xsl"/>
+  <xsl:import href="dcat-core-catalogrecord.xsl"/>
   <xsl:import href="dcat-core-dataservice.xsl"/>
   <xsl:import href="dcat-core-dataset.xsl"/>
   <xsl:import href="dcat-core-contact.xsl"/>
@@ -67,25 +68,15 @@
   </xsl:template>
 
 
+  <!-- Create resource -->
   <xsl:template mode="iso19115-3-to-dcat"
                 match="mdb:MD_Metadata">
     <rdf:Description>
       <xsl:apply-templates mode="iso19115-3-to-dcat"
                            select="mdb:metadataScope/*/mdb:resourceScope/*/@codeListValue"/>
 
-      <foaf:isPrimaryTopicOf xmlns:foaf="http://xmlns.com/foaf/0.1/">
-        <rdf:Description>
-          <rdf:type rdf:resource="http://www.w3.org/ns/dcat#CatalogRecord"/>
-
-          <xsl:apply-templates mode="iso19115-3-to-dcat"
-                               select="mdb:metadataIdentifier
-                                      |mdb:identificationInfo/*/mri:citation/*/cit:title
-                                      |mdb:identificationInfo/*/mri:abstract
-                                      |mdb:dateInfo/*[cit:dateType/*/@codeListValue = 'creation']/cit:date
-                                      |mdb:dateInfo/*[cit:dateType/*/@codeListValue = 'revision']/cit:date
-                                      |mdb:metadataStandard"/>
-        </rdf:Description>
-      </foaf:isPrimaryTopicOf>
+      <xsl:apply-templates mode="iso19115-3-to-dcat-catalog-record"
+                           select="."/>
 
       <!-- Resource
        Unsupported:
@@ -259,7 +250,9 @@
   -->
   <xsl:template mode="iso19115-3-to-dcat"
                 match="mri:defaultLocale
-                      |mri:otherLocale">
+                      |mri:otherLocale
+                      |mdb:defaultLocale
+                      |mdb:otherLocale">
     <dct:language>
       <!-- TO CHECK: In DCAT, maybe we should use another base URI? -->
       <dct:LinguisticSystem rdf:about="{concat($europaPublicationLanguage, upper-case(*/lan:language/*/@codeListValue))}"/>

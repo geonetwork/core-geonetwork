@@ -210,29 +210,30 @@
 
   <xsl:template mode="iso19115-3-to-dcat"
                 match="mri:extent/*/gex:geographicElement/gex:EX_GeographicDescription">
-    <xsl:variable name="uri"
-                  as="xs:string?"
-                  select="gex:geographicIdentifier/*/mcc:code/*/@xlink:href"/>
-    <xsl:variable name="name"
-                  as="xs:string?"
-                  select="gex:geographicIdentifier/*/mcc:code/*/text()"/>
-    <xsl:choose>
-      <xsl:when test="string($uri)">
-        <dct:spatial>
-          <dct:Location rdf:about="{$uri}"/>
-        </dct:spatial>
-      </xsl:when>
-      <xsl:otherwise>
-        <dct:spatial>
-          <rdf:Description>
-            <rdf:type rdf:resource="http://purl.org/dc/terms/Location"/>
-            <skos:prefLabel xml:lang="TODO">
-              <xsl:value-of select="$name"/>
-            </skos:prefLabel>
-          </rdf:Description>
-        </dct:spatial>
-      </xsl:otherwise>
-    </xsl:choose>
+    <xsl:for-each select="gex:geographicIdentifier/*">
+      <xsl:variable name="uri"
+                    as="xs:string?"
+                    select="mcc:code/*/@xlink:href"/>
+      <xsl:choose>
+        <xsl:when test="string($uri)">
+          <dct:spatial>
+            <dct:Location rdf:about="{$uri}"/>
+          </dct:spatial>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:for-each select="mcc:code">
+            <dct:spatial>
+              <rdf:Description>
+                <rdf:type rdf:resource="http://purl.org/dc/terms/Location"/>
+                <xsl:call-template name="rdf-localised">
+                  <xsl:with-param name="nodeName" select="'skos:prefLabel'"/>
+                </xsl:call-template>
+              </rdf:Description>
+            </dct:spatial>
+          </xsl:for-each>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:for-each>
   </xsl:template>
 
 
