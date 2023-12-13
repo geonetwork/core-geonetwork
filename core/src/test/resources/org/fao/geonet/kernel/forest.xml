@@ -1,19 +1,28 @@
-<gmd:MD_Metadata xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.geocat.ch/2008/che https://www.geocat.ch/geonetwork/xml/schemas/iso19139.che/schema/che/che.xsd">
-  <gmd:fileIdentifier xmlns:che="http://www.geocat.ch/2008/che" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:gml="http://www.opengis.net/gml/3.2">
+<?xml version="1.0" ?>
+<gmd:MD_Metadata xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xmlns:gmd="http://www.isotc211.org/2005/gmd"
+                 xmlns:gco="http://www.isotc211.org/2005/gco"
+                 xmlns:gml="http://www.opengis.net/gml"
+                 xsi:schemaLocation="http://www.isotc211.org/2005/gmd https://www.isotc211.org/2005/gmd/gmd.xsd
+                 http://www.opengis.net/gml https://www.opengis.net/gml/gml.xsd">
+  <gmd:fileIdentifier>
     <gco:CharacterString>837750fd-5790-4263-ad6d-cd94c43cfe5b</gco:CharacterString>
   </gmd:fileIdentifier>
-  <gmd:language xmlns:che="http://www.geocat.ch/2008/che" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:gml="http://www.opengis.net/gml/3.2">
-    <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="eng" />
+  <gmd:language>
+    <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="eng"/>
   </gmd:language>
-  <gmd:characterSet xmlns:che="http://www.geocat.ch/2008/che" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:gml="http://www.opengis.net/gml/3.2">
-    <gmd:MD_CharacterSetCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_CharacterSetCode" codeListValue="utf8" />
+  <gmd:characterSet>
+    <gmd:MD_CharacterSetCode
+      codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_CharacterSetCode"
+      codeListValue="utf8"/>
   </gmd:characterSet>
-  <gmd:hierarchyLevel xmlns:che="http://www.geocat.ch/2008/che" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:gml="http://www.opengis.net/gml/3.2">
-    <gmd:MD_ScopeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode" codeListValue="dataset" />
+  <gmd:hierarchyLevel>
+    <gmd:MD_ScopeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode"
+                      codeListValue="dataset"/>
   </gmd:hierarchyLevel>
-  <gmd:contact xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns:che="http://www.geocat.ch/2008/che" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmx="http://www.isotc211.org/2005/gmx">
+  <gmd:contact>
     <gmd:CI_ResponsibleParty>
-      <gmd:organisationName xmlns:gts="http://www.isotc211.org/2005/gts" xmlns:srv="http://www.isotc211.org/2005/srv" xsi:type="gmd:PT_FreeText_PropertyType">
+      <gmd:organisationName xsi:type="gmd:PT_FreeText_PropertyType">
         <gco:CharacterString>Atlas of Switzerland</gco:CharacterString>
         <gmd:PT_FreeText>
           <gmd:textGroup>
@@ -30,7 +39,7 @@
           </gmd:textGroup>
         </gmd:PT_FreeText>
       </gmd:organisationName>
-      <gmd:contactInfo xmlns:gts="http://www.isotc211.org/2005/gts" xmlns:srv="http://www.isotc211.org/2005/srv">
+      <gmd:contactInfo>
         <gmd:CI_Contact>
           <gmd:phone>
             <gmd:CI_Telephone>
@@ -84,61 +93,67 @@
           </gmd:hoursOfService>
         </gmd:CI_Contact>
       </gmd:contactInfo>
-      <gmd:role xmlns:gts="http://www.isotc211.org/2005/gts" xmlns:srv="http://www.isotc211.org/2005/srv">
-        <gmd:CI_RoleCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_RoleCode" codeListValue="pointOfContact" />
+      <gmd:role>
+        <gmd:CI_RoleCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_RoleCode"
+                         codeListValue="pointOfContact"/>
       </gmd:role>
     </gmd:CI_ResponsibleParty>
   </gmd:contact>
-  <gmd:dateStamp xmlns:che="http://www.geocat.ch/2008/che" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:gml="http://www.opengis.net/gml/3.2">
-    <gco:Date xmlns:gml="http://www.opengis.net/gml" xmlns:gts="http://www.isotc211.org/2005/gts" xmlns:srv="http://www.isotc211.org/2005/srv">2023-01-19</gco:Date>
+  <gmd:dateStamp>
+    <gco:Date>2023-01-19</gco:Date>
   </gmd:dateStamp>
   <gmd:metadataStandardName>
-    <gco:CharacterString xmlns:gco="http://www.isotc211.org/2005/gco">ISO 19115/19119</gco:CharacterString>
+    <gco:CharacterString>ISO 19115/19119</gco:CharacterString>
   </gmd:metadataStandardName>
-  <gmd:metadataStandardVersion>
-    <gco:CharacterString xmlns:gco="http://www.isotc211.org/2005/gco" />
-  </gmd:metadataStandardVersion>
-  <gmd:locale xmlns:che="http://www.geocat.ch/2008/che" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:gml="http://www.opengis.net/gml/3.2">
+  <gmd:locale>
     <gmd:PT_Locale id="DE">
       <gmd:languageCode>
-        <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="ger" />
+        <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="ger"/>
       </gmd:languageCode>
       <gmd:characterEncoding>
-        <gmd:MD_CharacterSetCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_CharacterSetCode" codeListValue="utf8" />
+        <gmd:MD_CharacterSetCode
+          codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_CharacterSetCode"
+          codeListValue="utf8"/>
       </gmd:characterEncoding>
     </gmd:PT_Locale>
   </gmd:locale>
-  <gmd:locale xmlns:che="http://www.geocat.ch/2008/che" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:gml="http://www.opengis.net/gml/3.2">
+  <gmd:locale>
     <gmd:PT_Locale id="FR">
       <gmd:languageCode>
-        <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="fre" />
+        <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="fre"/>
       </gmd:languageCode>
       <gmd:characterEncoding>
-        <gmd:MD_CharacterSetCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_CharacterSetCode" codeListValue="utf8" />
+        <gmd:MD_CharacterSetCode
+          codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_CharacterSetCode"
+          codeListValue="utf8"/>
       </gmd:characterEncoding>
     </gmd:PT_Locale>
   </gmd:locale>
-  <gmd:locale xmlns:che="http://www.geocat.ch/2008/che" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:gml="http://www.opengis.net/gml/3.2">
+  <gmd:locale>
     <gmd:PT_Locale id="IT">
       <gmd:languageCode>
-        <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="ita" />
+        <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="ita"/>
       </gmd:languageCode>
       <gmd:characterEncoding>
-        <gmd:MD_CharacterSetCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_CharacterSetCode" codeListValue="utf8" />
+        <gmd:MD_CharacterSetCode
+          codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_CharacterSetCode"
+          codeListValue="utf8"/>
       </gmd:characterEncoding>
     </gmd:PT_Locale>
   </gmd:locale>
-  <gmd:locale xmlns:che="http://www.geocat.ch/2008/che" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:gml="http://www.opengis.net/gml/3.2">
+  <gmd:locale>
     <gmd:PT_Locale id="EN">
       <gmd:languageCode>
-        <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="eng" />
+        <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="eng"/>
       </gmd:languageCode>
       <gmd:characterEncoding>
-        <gmd:MD_CharacterSetCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_CharacterSetCode" codeListValue="utf8" />
+        <gmd:MD_CharacterSetCode
+          codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_CharacterSetCode"
+          codeListValue="utf8"/>
       </gmd:characterEncoding>
     </gmd:PT_Locale>
   </gmd:locale>
-  <gmd:referenceSystemInfo xmlns:che="http://www.geocat.ch/2008/che" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:gml="http://www.opengis.net/gml/3.2">
+  <gmd:referenceSystemInfo>
     <gmd:MD_ReferenceSystem>
       <gmd:referenceSystemIdentifier>
         <gmd:RS_Identifier>
@@ -152,9 +167,9 @@
       </gmd:referenceSystemIdentifier>
     </gmd:MD_ReferenceSystem>
   </gmd:referenceSystemInfo>
-  <gmd:identificationInfo xmlns:che="http://www.geocat.ch/2008/che" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:gml="http://www.opengis.net/gml/3.2">
+  <gmd:identificationInfo>
     <gmd:MD_DataIdentification>
-      <gmd:citation xmlns:gts="http://www.isotc211.org/2005/gts" xmlns:srv="http://www.isotc211.org/2005/srv">
+      <gmd:citation>
         <gmd:CI_Citation>
           <gmd:title xsi:type="gmd:PT_FreeText_PropertyType">
             <gco:CharacterString>Forest</gco:CharacterString>
@@ -196,7 +211,9 @@
                 <gco:Date>2014-11-17</gco:Date>
               </gmd:date>
               <gmd:dateType>
-                <gmd:CI_DateTypeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_DateTypeCode" codeListValue="creation" />
+                <gmd:CI_DateTypeCode
+                  codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_DateTypeCode"
+                  codeListValue="creation"/>
               </gmd:dateType>
             </gmd:CI_Date>
           </gmd:date>
@@ -206,7 +223,9 @@
                 <gco:Date>2016-06-03</gco:Date>
               </gmd:date>
               <gmd:dateType>
-                <gmd:CI_DateTypeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication" />
+                <gmd:CI_DateTypeCode
+                  codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_DateTypeCode"
+                  codeListValue="publication"/>
               </gmd:dateType>
             </gmd:CI_Date>
           </gmd:date>
@@ -216,7 +235,9 @@
                 <gco:Date>2020-09-25</gco:Date>
               </gmd:date>
               <gmd:dateType>
-                <gmd:CI_DateTypeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_DateTypeCode" codeListValue="revision" />
+                <gmd:CI_DateTypeCode
+                  codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_DateTypeCode"
+                  codeListValue="revision"/>
               </gmd:dateType>
             </gmd:CI_Date>
           </gmd:date>
@@ -231,31 +252,43 @@
             </gmd:RS_Identifier>
           </gmd:identifier>
           <gmd:presentationForm>
-            <gmd:CI_PresentationFormCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_PresentationFormCode" codeListValue="mapDigital" />
+            <gmd:CI_PresentationFormCode
+              codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_PresentationFormCode"
+              codeListValue="mapDigital"/>
           </gmd:presentationForm>
         </gmd:CI_Citation>
       </gmd:citation>
-      <gmd:abstract xmlns:gts="http://www.isotc211.org/2005/gts" xmlns:srv="http://www.isotc211.org/2005/srv" xsi:type="gmd:PT_FreeText_PropertyType">
-        <gco:CharacterString>Forest. Map type: Choropleths. Spatial extent: Switzerland. Time: 2010</gco:CharacterString>
+      <gmd:abstract xsi:type="gmd:PT_FreeText_PropertyType">
+        <gco:CharacterString>Forest. Map type: Choropleths. Spatial extent: Switzerland. Time: 2010
+        </gco:CharacterString>
         <gmd:PT_FreeText>
           <gmd:textGroup>
-            <gmd:LocalisedCharacterString locale="#DE">Wald. Kartentyp: Choroplethen. Räumliche Ausdehnung: Schweiz. Zeit: 2010</gmd:LocalisedCharacterString>
+            <gmd:LocalisedCharacterString locale="#DE">Wald. Kartentyp: Choroplethen. Räumliche Ausdehnung: Schweiz.
+              Zeit: 2010
+            </gmd:LocalisedCharacterString>
           </gmd:textGroup>
           <gmd:textGroup>
-            <gmd:LocalisedCharacterString locale="#FR">Forêt. Type de carte: Choroplètes. Étendue spatiale: Suisse. Unité temporelle: 2010</gmd:LocalisedCharacterString>
+            <gmd:LocalisedCharacterString locale="#FR">Forêt. Type de carte: Choroplètes. Étendue spatiale: Suisse.
+              Unité temporelle: 2010
+            </gmd:LocalisedCharacterString>
           </gmd:textGroup>
           <gmd:textGroup>
-            <gmd:LocalisedCharacterString locale="#IT">Bosco. Tipo di carta: Coropletiche. Estensione spaziale: Svizzera. Unità temporale: 2010</gmd:LocalisedCharacterString>
+            <gmd:LocalisedCharacterString locale="#IT">Bosco. Tipo di carta: Coropletiche. Estensione spaziale:
+              Svizzera. Unità temporale: 2010
+            </gmd:LocalisedCharacterString>
           </gmd:textGroup>
           <gmd:textGroup>
-            <gmd:LocalisedCharacterString locale="#EN">Forest. Map type: Choropleths. Spatial extent: Switzerland. Time: 2010</gmd:LocalisedCharacterString>
+            <gmd:LocalisedCharacterString locale="#EN">Forest. Map type: Choropleths. Spatial extent: Switzerland. Time:
+              2010
+            </gmd:LocalisedCharacterString>
           </gmd:textGroup>
         </gmd:PT_FreeText>
       </gmd:abstract>
-      <gmd:status xmlns:gts="http://www.isotc211.org/2005/gts" xmlns:srv="http://www.isotc211.org/2005/srv">
-        <gmd:MD_ProgressCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ProgressCode" codeListValue="completed" />
+      <gmd:status>
+        <gmd:MD_ProgressCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ProgressCode"
+                             codeListValue="completed"/>
       </gmd:status>
-      <gmd:pointOfContact xmlns:gts="http://www.isotc211.org/2005/gts" xmlns:srv="http://www.isotc211.org/2005/srv">
+      <gmd:pointOfContact>
         <gmd:CI_ResponsibleParty>
           <gmd:organisationName xsi:type="gmd:PT_FreeText_PropertyType">
             <gco:CharacterString>Atlas of Switzerland</gco:CharacterString>
@@ -329,11 +362,12 @@
             </gmd:CI_Contact>
           </gmd:contactInfo>
           <gmd:role>
-            <gmd:CI_RoleCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_RoleCode" codeListValue="pointOfContact" />
+            <gmd:CI_RoleCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_RoleCode"
+                             codeListValue="pointOfContact"/>
           </gmd:role>
         </gmd:CI_ResponsibleParty>
       </gmd:pointOfContact>
-      <gmd:pointOfContact xmlns:gts="http://www.isotc211.org/2005/gts" xmlns:srv="http://www.isotc211.org/2005/srv">
+      <gmd:pointOfContact>
         <gmd:CI_ResponsibleParty>
           <gmd:organisationName xsi:type="gmd:PT_FreeText_PropertyType">
             <gco:CharacterString>Swiss Federal Office of Topography</gco:CharacterString>
@@ -348,7 +382,8 @@
                 <gmd:LocalisedCharacterString locale="#IT">Ufficio federale di topografia</gmd:LocalisedCharacterString>
               </gmd:textGroup>
               <gmd:textGroup>
-                <gmd:LocalisedCharacterString locale="#EN">Swiss Federal Office of Topography</gmd:LocalisedCharacterString>
+                <gmd:LocalisedCharacterString locale="#EN">Swiss Federal Office of Topography
+                </gmd:LocalisedCharacterString>
               </gmd:textGroup>
             </gmd:PT_FreeText>
           </gmd:organisationName>
@@ -394,18 +429,21 @@
             </gmd:CI_Contact>
           </gmd:contactInfo>
           <gmd:role>
-            <gmd:CI_RoleCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_RoleCode" codeListValue="owner" />
+            <gmd:CI_RoleCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_RoleCode"
+                             codeListValue="owner"/>
           </gmd:role>
         </gmd:CI_ResponsibleParty>
       </gmd:pointOfContact>
-      <gmd:resourceMaintenance xmlns:gts="http://www.isotc211.org/2005/gts" xmlns:srv="http://www.isotc211.org/2005/srv">
+      <gmd:resourceMaintenance>
         <gmd:MD_MaintenanceInformation>
           <gmd:maintenanceAndUpdateFrequency>
-            <gmd:MD_MaintenanceFrequencyCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_MaintenanceFrequencyCode" codeListValue="irregular" />
+            <gmd:MD_MaintenanceFrequencyCode
+              codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_MaintenanceFrequencyCode"
+              codeListValue="irregular"/>
           </gmd:maintenanceAndUpdateFrequency>
         </gmd:MD_MaintenanceInformation>
       </gmd:resourceMaintenance>
-      <gmd:descriptiveKeywords xmlns:gts="http://www.isotc211.org/2005/gts" xmlns:srv="http://www.isotc211.org/2005/srv">
+      <gmd:descriptiveKeywords>
         <gmd:MD_Keywords>
           <gmd:keyword xsi:type="gmd:PT_FreeText_PropertyType">
             <gco:CharacterString>Basemaps</gco:CharacterString>
@@ -442,7 +480,9 @@
             </gmd:PT_FreeText>
           </gmd:keyword>
           <gmd:type>
-            <gmd:MD_KeywordTypeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_KeywordTypeCode" codeListValue="theme" />
+            <gmd:MD_KeywordTypeCode
+              codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_KeywordTypeCode"
+              codeListValue="theme"/>
           </gmd:type>
           <gmd:thesaurusName>
             <gmd:CI_Citation>
@@ -450,16 +490,20 @@
                 <gco:CharacterString>Atlas of Switzerland - Categories</gco:CharacterString>
                 <gmd:PT_FreeText>
                   <gmd:textGroup>
-                    <gmd:LocalisedCharacterString locale="#DE">Atlas der Schweiz - Kategorien</gmd:LocalisedCharacterString>
+                    <gmd:LocalisedCharacterString locale="#DE">Atlas der Schweiz - Kategorien
+                    </gmd:LocalisedCharacterString>
                   </gmd:textGroup>
                   <gmd:textGroup>
-                    <gmd:LocalisedCharacterString locale="#FR">Atlas de la Suisse - Catégories</gmd:LocalisedCharacterString>
+                    <gmd:LocalisedCharacterString locale="#FR">Atlas de la Suisse - Catégories
+                    </gmd:LocalisedCharacterString>
                   </gmd:textGroup>
                   <gmd:textGroup>
-                    <gmd:LocalisedCharacterString locale="#IT">Atlante della Svizzera - Categorie</gmd:LocalisedCharacterString>
+                    <gmd:LocalisedCharacterString locale="#IT">Atlante della Svizzera - Categorie
+                    </gmd:LocalisedCharacterString>
                   </gmd:textGroup>
                   <gmd:textGroup>
-                    <gmd:LocalisedCharacterString locale="#EN">Atlas of Switzerland - Categories</gmd:LocalisedCharacterString>
+                    <gmd:LocalisedCharacterString locale="#EN">Atlas of Switzerland - Categories
+                    </gmd:LocalisedCharacterString>
                   </gmd:textGroup>
                 </gmd:PT_FreeText>
               </gmd:title>
@@ -469,7 +513,9 @@
                     <gco:Date>2016-04-01</gco:Date>
                   </gmd:date>
                   <gmd:dateType>
-                    <gmd:CI_DateTypeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication" />
+                    <gmd:CI_DateTypeCode
+                      codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_DateTypeCode"
+                      codeListValue="publication"/>
                   </gmd:dateType>
                 </gmd:CI_Date>
               </gmd:date>
@@ -477,7 +523,7 @@
           </gmd:thesaurusName>
         </gmd:MD_Keywords>
       </gmd:descriptiveKeywords>
-      <gmd:descriptiveKeywords xmlns:gts="http://www.isotc211.org/2005/gts" xmlns:srv="http://www.isotc211.org/2005/srv">
+      <gmd:descriptiveKeywords>
         <gmd:MD_Keywords>
           <gmd:keyword xsi:type="gmd:PT_FreeText_PropertyType">
             <gco:CharacterString>Land cover</gco:CharacterString>
@@ -497,7 +543,9 @@
             </gmd:PT_FreeText>
           </gmd:keyword>
           <gmd:type>
-            <gmd:MD_KeywordTypeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_KeywordTypeCode" codeListValue="theme" />
+            <gmd:MD_KeywordTypeCode
+              codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_KeywordTypeCode"
+              codeListValue="theme"/>
           </gmd:type>
           <gmd:thesaurusName>
             <gmd:CI_Citation>
@@ -505,16 +553,20 @@
                 <gco:CharacterString>GEMET - INSPIRE themes, version 1.0</gco:CharacterString>
                 <gmd:PT_FreeText>
                   <gmd:textGroup>
-                    <gmd:LocalisedCharacterString locale="#DE">GEMET - INSPIRE themes, version 1.0</gmd:LocalisedCharacterString>
+                    <gmd:LocalisedCharacterString locale="#DE">GEMET - INSPIRE themes, version 1.0
+                    </gmd:LocalisedCharacterString>
                   </gmd:textGroup>
                   <gmd:textGroup>
-                    <gmd:LocalisedCharacterString locale="#FR">GEMET - INSPIRE themes, version 1.0</gmd:LocalisedCharacterString>
+                    <gmd:LocalisedCharacterString locale="#FR">GEMET - INSPIRE themes, version 1.0
+                    </gmd:LocalisedCharacterString>
                   </gmd:textGroup>
                   <gmd:textGroup>
-                    <gmd:LocalisedCharacterString locale="#IT">GEMET - INSPIRE themes, version 1.0</gmd:LocalisedCharacterString>
+                    <gmd:LocalisedCharacterString locale="#IT">GEMET - INSPIRE themes, version 1.0
+                    </gmd:LocalisedCharacterString>
                   </gmd:textGroup>
                   <gmd:textGroup>
-                    <gmd:LocalisedCharacterString locale="#EN">GEMET - INSPIRE themes, version 1.0</gmd:LocalisedCharacterString>
+                    <gmd:LocalisedCharacterString locale="#EN">GEMET - INSPIRE themes, version 1.0
+                    </gmd:LocalisedCharacterString>
                   </gmd:textGroup>
                 </gmd:PT_FreeText>
               </gmd:title>
@@ -524,7 +576,9 @@
                     <gco:Date>2008-06-01</gco:Date>
                   </gmd:date>
                   <gmd:dateType>
-                    <gmd:CI_DateTypeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication" />
+                    <gmd:CI_DateTypeCode
+                      codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_DateTypeCode"
+                      codeListValue="publication"/>
                   </gmd:dateType>
                 </gmd:CI_Date>
               </gmd:date>
@@ -532,19 +586,22 @@
           </gmd:thesaurusName>
         </gmd:MD_Keywords>
       </gmd:descriptiveKeywords>
-      <gmd:resourceConstraints xmlns:gts="http://www.isotc211.org/2005/gts" xmlns:srv="http://www.isotc211.org/2005/srv">
+      <gmd:resourceConstraints>
         <gmd:MD_Constraints>
           <gmd:useLimitation xsi:type="gmd:PT_FreeText_PropertyType">
             <gco:CharacterString>See end-user license agreement</gco:CharacterString>
             <gmd:PT_FreeText>
               <gmd:textGroup>
-                <gmd:LocalisedCharacterString locale="#DE">Siehe Endbenutzer-Lizenzvertrag</gmd:LocalisedCharacterString>
+                <gmd:LocalisedCharacterString locale="#DE">Siehe Endbenutzer-Lizenzvertrag
+                </gmd:LocalisedCharacterString>
               </gmd:textGroup>
               <gmd:textGroup>
-                <gmd:LocalisedCharacterString locale="#FR">Voir conditions générales d'utilisation</gmd:LocalisedCharacterString>
+                <gmd:LocalisedCharacterString locale="#FR">Voir conditions générales d'utilisation
+                </gmd:LocalisedCharacterString>
               </gmd:textGroup>
               <gmd:textGroup>
-                <gmd:LocalisedCharacterString locale="#IT">Vedi accordo di licenza con l'utente finale</gmd:LocalisedCharacterString>
+                <gmd:LocalisedCharacterString locale="#IT">Vedi accordo di licenza con l'utente finale
+                </gmd:LocalisedCharacterString>
               </gmd:textGroup>
               <gmd:textGroup>
                 <gmd:LocalisedCharacterString locale="#EN">See end-user license agreement</gmd:LocalisedCharacterString>
@@ -553,27 +610,31 @@
           </gmd:useLimitation>
         </gmd:MD_Constraints>
       </gmd:resourceConstraints>
-      <gmd:resourceConstraints xmlns:gts="http://www.isotc211.org/2005/gts" xmlns:srv="http://www.isotc211.org/2005/srv">
+      <gmd:resourceConstraints>
         <gmd:MD_LegalConstraints>
           <gmd:accessConstraints>
-            <gmd:MD_RestrictionCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_RestrictionCode" codeListValue="otherRestrictions" />
+            <gmd:MD_RestrictionCode
+              codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_RestrictionCode"
+              codeListValue="otherRestrictions"/>
           </gmd:accessConstraints>
-          <gmd:otherConstraints xmlns:xlink="http://www.w3.org/1999/xlink">
-            <gmx:Anchor xlink:href="http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/noLimitations">There are no limitations on public access to spatial data sets and services.</gmx:Anchor>
+          <gmd:otherConstraints>
+            <gco:CharacterString>There are no limitations on public access to spatial data sets and services.</gco:CharacterString>
           </gmd:otherConstraints>
         </gmd:MD_LegalConstraints>
       </gmd:resourceConstraints>
-      <gmd:resourceConstraints xmlns:gts="http://www.isotc211.org/2005/gts" xmlns:srv="http://www.isotc211.org/2005/srv">
+      <gmd:resourceConstraints>
         <gmd:MD_LegalConstraints>
           <gmd:useConstraints>
-            <gmd:MD_RestrictionCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_RestrictionCode" codeListValue="otherRestrictions" />
+            <gmd:MD_RestrictionCode
+              codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_RestrictionCode"
+              codeListValue="otherRestrictions"/>
           </gmd:useConstraints>
-          <gmd:otherConstraints xmlns:xlink="http://www.w3.org/1999/xlink">
-            <gmx:Anchor xlink:href="http://inspire.ec.europa.eu/metadata-codelist/ConditionsApplyingToAccessAndUse/conditionsUnknown">The conditions applying to access and use are unknown.</gmx:Anchor>
+          <gmd:otherConstraints>
+            <gco:CharacterString>The conditions applying to access and use are unknown.</gco:CharacterString>
           </gmd:otherConstraints>
         </gmd:MD_LegalConstraints>
       </gmd:resourceConstraints>
-      <gmd:aggregationInfo xmlns:gts="http://www.isotc211.org/2005/gts" xmlns:srv="http://www.isotc211.org/2005/srv">
+      <gmd:aggregationInfo>
         <gmd:MD_AggregateInformation>
           <gmd:aggregateDataSetIdentifier>
             <gmd:MD_Identifier>
@@ -583,14 +644,17 @@
             </gmd:MD_Identifier>
           </gmd:aggregateDataSetIdentifier>
           <gmd:associationType>
-            <gmd:DS_AssociationTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#DS_AssociationTypeCode" codeListValue="largerWorkCitation" />
+            <gmd:DS_AssociationTypeCode
+              codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#DS_AssociationTypeCode"
+              codeListValue="largerWorkCitation"/>
           </gmd:associationType>
         </gmd:MD_AggregateInformation>
       </gmd:aggregationInfo>
-      <gmd:spatialRepresentationType xmlns:gts="http://www.isotc211.org/2005/gts" xmlns:srv="http://www.isotc211.org/2005/srv">
-        <gmd:MD_SpatialRepresentationTypeCode codeListValue="vector" codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_SpatialRepresentationTypeCode" />
+      <gmd:spatialRepresentationType>
+        <gmd:MD_SpatialRepresentationTypeCode codeListValue="vector"
+                                              codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_SpatialRepresentationTypeCode"/>
       </gmd:spatialRepresentationType>
-      <gmd:spatialResolution xmlns:gts="http://www.isotc211.org/2005/gts" xmlns:srv="http://www.isotc211.org/2005/srv">
+      <gmd:spatialResolution>
         <gmd:MD_Resolution>
           <gmd:equivalentScale>
             <gmd:MD_RepresentativeFraction>
@@ -601,28 +665,30 @@
           </gmd:equivalentScale>
         </gmd:MD_Resolution>
       </gmd:spatialResolution>
-      <gmd:language xmlns:gts="http://www.isotc211.org/2005/gts" xmlns:srv="http://www.isotc211.org/2005/srv">
-        <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="eng" />
+      <gmd:language>
+        <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="eng"/>
       </gmd:language>
-      <gmd:language xmlns:gts="http://www.isotc211.org/2005/gts" xmlns:srv="http://www.isotc211.org/2005/srv">
-        <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="ger" />
+      <gmd:language>
+        <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="ger"/>
       </gmd:language>
-      <gmd:language xmlns:gts="http://www.isotc211.org/2005/gts" xmlns:srv="http://www.isotc211.org/2005/srv">
-        <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="fre" />
+      <gmd:language>
+        <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="fre"/>
       </gmd:language>
-      <gmd:language xmlns:gts="http://www.isotc211.org/2005/gts" xmlns:srv="http://www.isotc211.org/2005/srv">
-        <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="ita" />
+      <gmd:language>
+        <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="ita"/>
       </gmd:language>
-      <gmd:characterSet xmlns:gts="http://www.isotc211.org/2005/gts" xmlns:srv="http://www.isotc211.org/2005/srv">
-        <gmd:MD_CharacterSetCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_CharacterSetCode" codeListValue="utf8" />
+      <gmd:characterSet>
+        <gmd:MD_CharacterSetCode
+          codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_CharacterSetCode"
+          codeListValue="utf8"/>
       </gmd:characterSet>
-      <gmd:topicCategory xmlns:gts="http://www.isotc211.org/2005/gts" xmlns:srv="http://www.isotc211.org/2005/srv">
+      <gmd:topicCategory>
         <gmd:MD_TopicCategoryCode>imageryBaseMapsEarthCover</gmd:MD_TopicCategoryCode>
       </gmd:topicCategory>
-      <gmd:topicCategory xmlns:gts="http://www.isotc211.org/2005/gts" xmlns:srv="http://www.isotc211.org/2005/srv">
-        <gmd:MD_TopicCategoryCode>imageryBaseMapsEarthCover_EarthCover</gmd:MD_TopicCategoryCode>
+      <gmd:topicCategory>
+        <gmd:MD_TopicCategoryCode>imageryBaseMapsEarthCover</gmd:MD_TopicCategoryCode>
       </gmd:topicCategory>
-      <gmd:extent xmlns:gts="http://www.isotc211.org/2005/gts" xmlns:srv="http://www.isotc211.org/2005/srv">
+      <gmd:extent>
         <gmd:EX_Extent>
           <gmd:description xsi:type="gmd:PT_FreeText_PropertyType">
             <gco:CharacterString>Switzerland</gco:CharacterString>
@@ -660,7 +726,7 @@
           <gmd:temporalElement>
             <gmd:EX_TemporalExtent>
               <gmd:extent>
-                <gml:TimePeriod gml:id="timePeriod1">
+                <gml:TimePeriod id="timePeriod1">
                   <gml:beginPosition>2010-01-01T00:00:00</gml:beginPosition>
                   <gml:endPosition>2010-12-31T23:59:59</gml:endPosition>
                 </gml:TimePeriod>
@@ -671,7 +737,7 @@
       </gmd:extent>
     </gmd:MD_DataIdentification>
   </gmd:identificationInfo>
-  <gmd:distributionInfo xmlns:che="http://www.geocat.ch/2008/che" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:gml="http://www.opengis.net/gml/3.2">
+  <gmd:distributionInfo>
     <gmd:MD_Distribution>
       <gmd:distributionFormat>
         <gmd:MD_Format>
@@ -679,13 +745,16 @@
             <gco:CharacterString>Digital map in a web atlas</gco:CharacterString>
             <gmd:PT_FreeText>
               <gmd:textGroup>
-                <gmd:LocalisedCharacterString locale="#DE">Digitale Karte in einem Web-Atlas</gmd:LocalisedCharacterString>
+                <gmd:LocalisedCharacterString locale="#DE">Digitale Karte in einem Web-Atlas
+                </gmd:LocalisedCharacterString>
               </gmd:textGroup>
               <gmd:textGroup>
-                <gmd:LocalisedCharacterString locale="#FR">Carte digitale dans un atlas web</gmd:LocalisedCharacterString>
+                <gmd:LocalisedCharacterString locale="#FR">Carte digitale dans un atlas web
+                </gmd:LocalisedCharacterString>
               </gmd:textGroup>
               <gmd:textGroup>
-                <gmd:LocalisedCharacterString locale="#IT">Mappa digitale in un web atlante</gmd:LocalisedCharacterString>
+                <gmd:LocalisedCharacterString locale="#IT">Mappa digitale in un web atlante
+                </gmd:LocalisedCharacterString>
               </gmd:textGroup>
               <gmd:textGroup>
                 <gmd:LocalisedCharacterString locale="#EN">Digital map in a web atlas</gmd:LocalisedCharacterString>
@@ -713,12 +782,13 @@
       </gmd:transferOptions>
     </gmd:MD_Distribution>
   </gmd:distributionInfo>
-  <gmd:dataQualityInfo xmlns:che="http://www.geocat.ch/2008/che" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:gml="http://www.opengis.net/gml/3.2">
+  <gmd:dataQualityInfo>
     <gmd:DQ_DataQuality>
       <gmd:scope>
         <gmd:DQ_Scope>
           <gmd:level>
-            <gmd:MD_ScopeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode" codeListValue="dataset" />
+            <gmd:MD_ScopeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode"
+                              codeListValue="dataset"/>
           </gmd:level>
         </gmd:DQ_Scope>
       </gmd:scope>
@@ -740,34 +810,39 @@
                 <gmd:CI_Citation>
                   <gmd:title xsi:type="gmd:PT_FreeText_PropertyType">
                     <gco:CharacterString>COMMISSION REGULATION (EU) No 1089/2010 of 23 November 2010
-                                            implementing Directive 2007/2/EC of the European Parliament and of the
-                                            Council as regards interoperability of spatial data sets and services</gco:CharacterString>
+                      implementing Directive 2007/2/EC of the European Parliament and of the
+                      Council as regards interoperability of spatial data sets and services
+                    </gco:CharacterString>
                     <gmd:PT_FreeText>
                       <gmd:textGroup>
                         <gmd:LocalisedCharacterString locale="#DE">VERORDNUNG (EG) Nr. 1089/2010
-                                                    DER KOMMISSION vom 23. November 2010 zur Durchführung der Richtlinie
-                                                    2007/2/EG des Europäischen Parlaments und des Rates hinsichtlich der
-                                                    Interoperabilität von Geodatensätzen und -diensten</gmd:LocalisedCharacterString>
+                          DER KOMMISSION vom 23. November 2010 zur Durchführung der Richtlinie
+                          2007/2/EG des Europäischen Parlaments und des Rates hinsichtlich der
+                          Interoperabilität von Geodatensätzen und -diensten
+                        </gmd:LocalisedCharacterString>
                       </gmd:textGroup>
                       <gmd:textGroup>
                         <gmd:LocalisedCharacterString locale="#FR">RÈGLEMENT (UE) No 1089/2010
-                                                    DE LA COMMISSION du 23 novembre 2010 portant modalités d'application
-                                                    de la directive 2007/2/CE du Parlement européen et du Conseil en ce
-                                                    qui concerne l'interopérabilité des séries et des services de
-                                                    données géographiques</gmd:LocalisedCharacterString>
+                          DE LA COMMISSION du 23 novembre 2010 portant modalités d'application
+                          de la directive 2007/2/CE du Parlement européen et du Conseil en ce
+                          qui concerne l'interopérabilité des séries et des services de
+                          données géographiques
+                        </gmd:LocalisedCharacterString>
                       </gmd:textGroup>
                       <gmd:textGroup>
                         <gmd:LocalisedCharacterString locale="#IT">REGOLAMENTO (UE) N. 1089/2010
-                                                    DELLA COMMISSIONE del 23 novembre 2010 recante attuazione della
-                                                    direttiva 2007/2/CE del Parlamento europeo e del Consiglio per
-                                                    quanto riguarda l'interoperabilità dei set di dati territoriali e
-                                                    dei servizi di dati territoriali</gmd:LocalisedCharacterString>
+                          DELLA COMMISSIONE del 23 novembre 2010 recante attuazione della
+                          direttiva 2007/2/CE del Parlamento europeo e del Consiglio per
+                          quanto riguarda l'interoperabilità dei set di dati territoriali e
+                          dei servizi di dati territoriali
+                        </gmd:LocalisedCharacterString>
                       </gmd:textGroup>
                       <gmd:textGroup>
                         <gmd:LocalisedCharacterString locale="#EN">COMMISSION REGULATION (EU) No
-                                                    1089/2010 of 23 November 2010 implementing Directive 2007/2/EC of
-                                                    the European Parliament and of the Council as regards
-                                                    interoperability of spatial data sets and services</gmd:LocalisedCharacterString>
+                          1089/2010 of 23 November 2010 implementing Directive 2007/2/EC of
+                          the European Parliament and of the Council as regards
+                          interoperability of spatial data sets and services
+                        </gmd:LocalisedCharacterString>
                       </gmd:textGroup>
                     </gmd:PT_FreeText>
                   </gmd:title>
@@ -777,7 +852,9 @@
                         <gco:Date>2010-12-08</gco:Date>
                       </gmd:date>
                       <gmd:dateType>
-                        <gmd:CI_DateTypeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication" />
+                        <gmd:CI_DateTypeCode
+                          codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_DateTypeCode"
+                          codeListValue="publication"/>
                       </gmd:dateType>
                     </gmd:CI_Date>
                   </gmd:date>
@@ -787,16 +864,20 @@
                 <gco:CharacterString>See the referenced specification</gco:CharacterString>
                 <gmd:PT_FreeText>
                   <gmd:textGroup>
-                    <gmd:LocalisedCharacterString locale="#DE">Siehe referenzierte Spezifikation</gmd:LocalisedCharacterString>
+                    <gmd:LocalisedCharacterString locale="#DE">Siehe referenzierte Spezifikation
+                    </gmd:LocalisedCharacterString>
                   </gmd:textGroup>
                   <gmd:textGroup>
-                    <gmd:LocalisedCharacterString locale="#FR">Voir la spécification référencée</gmd:LocalisedCharacterString>
+                    <gmd:LocalisedCharacterString locale="#FR">Voir la spécification référencée
+                    </gmd:LocalisedCharacterString>
                   </gmd:textGroup>
                   <gmd:textGroup>
-                    <gmd:LocalisedCharacterString locale="#IT">Vedi la specifica riferimento</gmd:LocalisedCharacterString>
+                    <gmd:LocalisedCharacterString locale="#IT">Vedi la specifica riferimento
+                    </gmd:LocalisedCharacterString>
                   </gmd:textGroup>
                   <gmd:textGroup>
-                    <gmd:LocalisedCharacterString locale="#EN">See the referenced specification</gmd:LocalisedCharacterString>
+                    <gmd:LocalisedCharacterString locale="#EN">See the referenced specification
+                    </gmd:LocalisedCharacterString>
                   </gmd:textGroup>
                 </gmd:PT_FreeText>
               </gmd:explanation>
@@ -810,23 +891,29 @@
       <gmd:lineage>
         <gmd:LI_Lineage>
           <gmd:statement xsi:type="gmd:PT_FreeText_PropertyType">
-            <gco:CharacterString>Source data: Swiss Federal Office of Topography. Data processing: Atlas of Switzerland</gco:CharacterString>
+            <gco:CharacterString>Source data: Swiss Federal Office of Topography. Data processing: Atlas of
+              Switzerland
+            </gco:CharacterString>
             <gmd:PT_FreeText>
               <gmd:textGroup>
                 <gmd:LocalisedCharacterString locale="#DE">Ursprungsdaten: Bundesamt für Landestopografie.
-                                    Datenverarbeitung: Atlas der Schweiz</gmd:LocalisedCharacterString>
+                  Datenverarbeitung: Atlas der Schweiz
+                </gmd:LocalisedCharacterString>
               </gmd:textGroup>
               <gmd:textGroup>
                 <gmd:LocalisedCharacterString locale="#FR">Données originales: Office fédéral de topographie.
-                                    Traitement de données: Atlas de la Suisse</gmd:LocalisedCharacterString>
+                  Traitement de données: Atlas de la Suisse
+                </gmd:LocalisedCharacterString>
               </gmd:textGroup>
               <gmd:textGroup>
                 <gmd:LocalisedCharacterString locale="#IT">Dati di origine: Ufficio federale di topografia.
-                                    Trattamento dei dati: Atlante della Svizzera</gmd:LocalisedCharacterString>
+                  Trattamento dei dati: Atlante della Svizzera
+                </gmd:LocalisedCharacterString>
               </gmd:textGroup>
               <gmd:textGroup>
                 <gmd:LocalisedCharacterString locale="#EN">Source data: Swiss Federal Office of Topography. Data
-                                    processing: Atlas of Switzerland</gmd:LocalisedCharacterString>
+                  processing: Atlas of Switzerland
+                </gmd:LocalisedCharacterString>
               </gmd:textGroup>
             </gmd:PT_FreeText>
           </gmd:statement>

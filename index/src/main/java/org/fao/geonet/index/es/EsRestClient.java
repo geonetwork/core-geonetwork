@@ -24,6 +24,7 @@
 package org.fao.geonet.index.es;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpHost;
@@ -509,5 +510,10 @@ public class EsRestClient implements InitializingBean {
         MainResponse.Version version = client.info(RequestOptions.DEFAULT).getVersion();
 
         return version.getNumber();
+    }
+
+    public JsonNode getIndexStats(String index) throws IOException {
+        Response response = client.getLowLevelClient().performRequest(new Request("GET", String.format("%s/_stats", index)));
+        return new ObjectMapper().readTree(response.getEntity().getContent());
     }
 }
