@@ -43,7 +43,7 @@ public class ElasticsearchIndexingTest extends AbstractIntegrationTestWithMocked
     @Test
     public void complexDatesAreIndexedCheck() throws Exception {
         // GIVEN
-        AbstractMetadata dbInsertedSimpleDataMetadata = loadMetadataWithTemporalExtentUsingSimpleDates();
+        AbstractMetadata dbInsertedSimpleDataMetadata = loadMetadataWithName("kernel/forest.xml");
         validateIndexedExpectedData(dbInsertedSimpleDataMetadata, "forest", 1);
         validateIndexedExpectedData(dbInsertedSimpleDataMetadata, "holocene", 0);
         URL dateResource = AbstractCoreIntegrationTest.class.getResource("kernel/holocene.xml");
@@ -64,17 +64,21 @@ public class ElasticsearchIndexingTest extends AbstractIntegrationTestWithMocked
         checkElasticsearchIndexStatus(0);
     }
 
+    @Test
+    public  void ensureResourceEditionIsNotInferredAsDate() throws Exception {
+        AbstractMetadata dbInsertedSimpleDataMetadata = loadMetadataWithName("kernel/forest.xml");
+    }
+
     private void checkElasticsearchIndexStatus(int expectedIndexationCount) throws IOException {
         EsRestClient esRestClient = searchManager.getClient();
         String defaultIndex = searchManager.getDefaultIndex();
         IndicesStatsResponse indexStats = esRestClient.getIndexStats(defaultIndex);
-        // https://www.elastic.co/guide/en/elasticsearch/reference/7.17/cluster-nodes-stats.html
         long count = indexStats.all().primaries().indexing().indexTotal();
         assertEquals("Incorrect number of indexing operations requested on index " + defaultIndex, expectedIndexationCount, count);
     }
 
-    private AbstractMetadata loadMetadataWithTemporalExtentUsingSimpleDates() throws Exception {
-        URL dateResource = AbstractCoreIntegrationTest.class.getResource("kernel/forest.xml");
+    private AbstractMetadata loadMetadataWithName(String name) throws Exception {
+        URL dateResource = AbstractCoreIntegrationTest.class.getResource(name);
         Element dateElement = Xml.loadStream(Objects.requireNonNull(dateResource).openStream());
         return insertTemplateResourceInDb(serviceContext, dateElement);
     }
