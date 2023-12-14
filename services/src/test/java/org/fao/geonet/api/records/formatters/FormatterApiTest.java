@@ -136,6 +136,7 @@ public class FormatterApiTest extends AbstractServiceIntegrationTest {
                         .withTest(Input.fromString(expected))
                         .withNodeMatcher(new DefaultNodeMatcher(ElementSelectors.byName))
                         .normalizeWhitespace()
+                        .ignoreComments()
                         .checkForSimilar()
                         .build();
                     assertFalse(

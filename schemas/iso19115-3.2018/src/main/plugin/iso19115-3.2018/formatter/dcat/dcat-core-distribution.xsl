@@ -177,6 +177,9 @@
             If the distribution(s) are accessible only through a landing page (i.e., direct download URLs are not known), then the landing page URL associated with the dcat:Dataset SHOULD be duplicated as access URL on a distribution (see 5.7 Dataset available only behind some Web page).
             -->
             <!-- TODO: Can be multilingual -->
+            <!--
+            Message: ClassConstraint[rdfs:Resource]: Expected class :rdfs:Resource for
+            -->
             <dcat:accessURL rdf:resource="{$url}"/>
 
             <!--
@@ -209,8 +212,9 @@
             Usage note:	The size in bytes can be approximated (as a non-negative integer) when the precise size is not known.
             Usage note:	While it is recommended that the size be given as an integer, alternative literals such as '1.5 MB' are sometimes used.
             -->
-            <xsl:for-each select="ancestor::mrd:MD_DigitalTransferOptions/mrd:transferSize/*/text()">
-              <dcat:byteSize><xsl:value-of select="concat(., ' MB')"/></dcat:byteSize>
+            <xsl:for-each select="ancestor::mrd:MD_DigitalTransferOptions/mrd:transferSize/*/text()[. castable as xs:double]">
+              <!-- Not valid for eu-dcat-ap <dcat:byteSize><xsl:value-of select="concat(., ' MB')"/></dcat:byteSize>-->
+              <dcat:byteSize><xsl:value-of select="format-number(. * 1048576, '#')"/></dcat:byteSize>
             </xsl:for-each>
 
 

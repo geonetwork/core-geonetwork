@@ -7,6 +7,7 @@
                 xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
                 xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0"
                 xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/2.0"
+                xmlns:mco="http://standards.iso.org/iso/19115/-3/mco/1.0"
                 xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
                 xmlns:dct="http://purl.org/dc/terms/"
                 exclude-result-prefixes="#all">
@@ -64,5 +65,31 @@
   <xsl:template mode="iso19115-3-to-eu-dcat-ap"
                 match="mdb:MD_Metadata/mdb:metadataLinkage">
     <dct:source rdf:resource="{*/cit:linkage/*/text()}"/>
+  </xsl:template>
+
+  <!--
+  In ISO, license may be described in more than one elements (and could also define license per various scopes).
+  EU DCAT-AP restrict it to one.
+  TODO: Discuss
+
+  Path=<http://purl.org/dc/terms/license>
+    Message: maxCount[1]: Invalid cardinality: expected max 1: Got count = 4
+
+   Options:
+   * combine all licenses condition in one
+   * keep only first.
+   * Use dct:license for the first useLimitation and then dct:rights?
+  -->
+  <xsl:template mode="iso19115-3-to-dcat"
+                match="mdb:identificationInfo/*/mri:resourceConstraints/*[mco:useConstraints]/mco:otherConstraints
+                      |mdb:identificationInfo/*/mri:resourceConstraints/*[mco:useConstraints]/mco:useLimitation"
+                priority="2">
+    <xsl:variable name="allLicenseStatements"
+                  select="ancestor::mri:resourceConstraints/*[mco:useConstraints]/(mco:otherConstraints|mco:useLimitation)"/>
+
+    <!-- Keep first constraints statement / Ignore others -->
+    <xsl:if test="current()/generate-id() = $allLicenseStatements[1]/generate-id()">
+      <xsl:call-template name="iso19115-3-to-dcat-license"/>
+    </xsl:if>
   </xsl:template>
 </xsl:stylesheet>
