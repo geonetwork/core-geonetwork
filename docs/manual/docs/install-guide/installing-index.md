@@ -4,7 +4,7 @@ The GeoNetwork search engine is built on top of Elasticsearch. The platform is u
 
 ## Manual installation
 
-Download Elasticsearch from <https://www.elastic.co/downloads/elasticsearch> and unzip the file.
+Download Elasticsearch 7.x (at least `7.9.2`) from <https://www.elastic.co/downloads/elasticsearch> and unzip the file.
 
 ``` shell
 wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.9.2.tar.gz
@@ -20,7 +20,7 @@ elasticsearch-7.9.2/bin/elasticsearch
 Stop Elasticsearch using
 
 ``` shell
-elasticsearch-7.6.2/bin/elasticsearch stop
+elasticsearch-7.9.2/bin/elasticsearch stop
 ```
 
 GeoNetwork will start even if Elasticsearch index is down. A warning will be displayed. Once the Elasticsearch index is up, indices are created if they do not exist.
@@ -60,7 +60,7 @@ Access Elasticsearch admin page from <http://localhost:9200/>.
 
 ## Configure connection
 
-Update Elasticsearch connection details in `` `WEB-INF/config.properties ```` and restart the application (see :code:\`web/src/main/webResources/WEB-INF/config.properties``):
+Update Elasticsearch connection details in ```WEB-INF/config.properties``` and restart the application:
 
 ``` shell
 es.protocol=http
