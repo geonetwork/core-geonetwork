@@ -25,7 +25,7 @@ Thank you for contributing to GeoNetwork:
   
 * Rebase / Squash and merge: No merge commits with current branch, use Rebase or Squash and merge!
   
-* API Change: Please identify any API change or behavior changes in commit messages.
+* API Change: Please identify any API change or behavior changes in commit messages. Also make sure that a [process for deprecation](PROCESS_FOR_DEPRECATION.md) of a feature is carefully dealt with.
 
 * Review: Review is required by another person, or more than one! Don't be shy asking for help or reviewing.
 
