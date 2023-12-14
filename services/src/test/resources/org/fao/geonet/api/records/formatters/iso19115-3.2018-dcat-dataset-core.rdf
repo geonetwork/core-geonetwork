@@ -230,26 +230,28 @@
       <dct:RightsStatement
         rdf:about="http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/noLimitations"/>
     </dct:accessRights>
-    <dct:accessRights>
+    <dct:rights>
       <dct:RightsStatement>
         <rdfs:label xml:lang="fre">No limitations to public access</rdfs:label>
       </dct:RightsStatement>
-    </dct:accessRights>
-    <dct:license>
-      <dct:LicenseDocument>
-        <rdfs:label xml:lang="fre">Conditions d'accès et d'utilisation spécifiques</rdfs:label>
-      </dct:LicenseDocument>
-    </dct:license>
-    <dct:license>
-      <dct:LicenseDocument rdf:about="https://geoportail.wallonie.be/files/documents/ConditionsSPW/DataSPW-CGU.pdf"/>
-    </dct:license>
-    <dct:license>
-      <dct:LicenseDocument rdf:about="https://geoportail.wallonie.be/files/documents/ConditionsSPW/DataSPW-CGA.pdf"/>
-    </dct:license>
+    </dct:rights>
     <dct:license>
       <dct:LicenseDocument
-        rdf:about="https://geoportail.wallonie.be/files/documents/ConditionsSPW/DataSPW-CPU-TypeA.pdf"/>
+        rdf:about="https://geoportail.wallonie.be/files/documents/ConditionsSPW/DataSPW-CGU.pdf"/>
     </dct:license>
+    <dct:rights>
+      <dct:RightsStatement
+        rdf:about="https://geoportail.wallonie.be/files/documents/ConditionsSPW/DataSPW-CGA.pdf"/>
+    </dct:rights>
+    <dct:rights>
+      <dct:RightsStatement
+        rdf:about="https://geoportail.wallonie.be/files/documents/ConditionsSPW/DataSPW-CPU-TypeA.pdf"/>
+    </dct:rights>
+    <dct:rights>
+      <dct:RightsStatement>
+        <rdfs:label xml:lang="fre">Conditions d'accès et d'utilisation spécifiques</rdfs:label>
+      </dct:RightsStatement>
+    </dct:rights>
     <dct:isPartOf rdf:resource="be875ddb-ffd9-4c23-a013-53063a366b5b"/>
     <dct:references rdf:resource="ffc45d44-1cc2-4924-bb8c-214096eb9058"/>
     <dct:hasPart rdf:resource="201ee90c-1971-4bdc-855e-9c9bcbc2c647"/>
@@ -321,31 +323,31 @@
           <dct:MediaType rdf:about="https://publications.europa.eu/resource/authority/file-type/ZIP"/>
         </dcat:compressFormat>
         <dct:license>
-          <dct:LicenseDocument>
-            <rdfs:label xml:lang="fre">Conditions d'accès et d'utilisation spécifiques</rdfs:label>
-          </dct:LicenseDocument>
-        </dct:license>
-        <dct:license>
           <dct:LicenseDocument
             rdf:about="https://geoportail.wallonie.be/files/documents/ConditionsSPW/DataSPW-CGU.pdf"/>
         </dct:license>
-        <dct:license>
-          <dct:LicenseDocument
+        <dct:rights>
+          <dct:RightsStatement
             rdf:about="https://geoportail.wallonie.be/files/documents/ConditionsSPW/DataSPW-CGA.pdf"/>
-        </dct:license>
-        <dct:license>
-          <dct:LicenseDocument
+        </dct:rights>
+        <dct:rights>
+          <dct:RightsStatement
             rdf:about="https://geoportail.wallonie.be/files/documents/ConditionsSPW/DataSPW-CPU-TypeA.pdf"/>
-        </dct:license>
+        </dct:rights>
+        <dct:rights>
+          <dct:RightsStatement>
+            <rdfs:label xml:lang="fre">Conditions d'accès et d'utilisation spécifiques</rdfs:label>
+          </dct:RightsStatement>
+        </dct:rights>
         <dct:accessRights>
           <dct:RightsStatement
             rdf:about="http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/noLimitations"/>
         </dct:accessRights>
-        <dct:accessRights>
+        <dct:rights>
           <dct:RightsStatement>
             <rdfs:label xml:lang="fre">No limitations to public access</rdfs:label>
           </dct:RightsStatement>
-        </dct:accessRights>
+        </dct:rights>
         <dcat:spatialResolutionInMeters rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.01
         </dcat:spatialResolutionInMeters>
         <dcat:spatialResolutionInMeters rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">30
@@ -386,31 +388,31 @@
           </rdf:Description>
         </dcat:accessService>
         <dct:license>
-          <dct:LicenseDocument>
-            <rdfs:label xml:lang="fre">Conditions d'accès et d'utilisation spécifiques</rdfs:label>
-          </dct:LicenseDocument>
-        </dct:license>
-        <dct:license>
           <dct:LicenseDocument
             rdf:about="https://geoportail.wallonie.be/files/documents/ConditionsSPW/DataSPW-CGU.pdf"/>
         </dct:license>
-        <dct:license>
-          <dct:LicenseDocument
+        <dct:rights>
+          <dct:RightsStatement
             rdf:about="https://geoportail.wallonie.be/files/documents/ConditionsSPW/DataSPW-CGA.pdf"/>
-        </dct:license>
-        <dct:license>
-          <dct:LicenseDocument
+        </dct:rights>
+        <dct:rights>
+          <dct:RightsStatement
             rdf:about="https://geoportail.wallonie.be/files/documents/ConditionsSPW/DataSPW-CPU-TypeA.pdf"/>
-        </dct:license>
+        </dct:rights>
+        <dct:rights>
+          <dct:RightsStatement>
+            <rdfs:label xml:lang="fre">Conditions d'accès et d'utilisation spécifiques</rdfs:label>
+          </dct:RightsStatement>
+        </dct:rights>
         <dct:accessRights>
           <dct:RightsStatement
             rdf:about="http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/noLimitations"/>
         </dct:accessRights>
-        <dct:accessRights>
+        <dct:rights>
           <dct:RightsStatement>
             <rdfs:label xml:lang="fre">No limitations to public access</rdfs:label>
           </dct:RightsStatement>
-        </dct:accessRights>
+        </dct:rights>
         <dcat:spatialResolutionInMeters rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.01
         </dcat:spatialResolutionInMeters>
         <dcat:spatialResolutionInMeters rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">30
@@ -452,32 +454,33 @@
               rdf:resource="https://geoportail.wallonie.be/walonmap/#ADU=https://geoservices.wallonie.be/arcgis/rest/services/AMENAGEMENT_TERRITOIRE/PDS/MapServer"/>
           </rdf:Description>
         </dcat:accessService>
-        <dct:license>
-          <dct:LicenseDocument>
-            <rdfs:label xml:lang="fre">Conditions d'accès et d'utilisation spécifiques</rdfs:label>
-          </dct:LicenseDocument>
-        </dct:license>
+
         <dct:license>
           <dct:LicenseDocument
             rdf:about="https://geoportail.wallonie.be/files/documents/ConditionsSPW/DataSPW-CGU.pdf"/>
         </dct:license>
-        <dct:license>
-          <dct:LicenseDocument
+        <dct:rights>
+          <dct:RightsStatement
             rdf:about="https://geoportail.wallonie.be/files/documents/ConditionsSPW/DataSPW-CGA.pdf"/>
-        </dct:license>
-        <dct:license>
-          <dct:LicenseDocument
+        </dct:rights>
+        <dct:rights>
+          <dct:RightsStatement
             rdf:about="https://geoportail.wallonie.be/files/documents/ConditionsSPW/DataSPW-CPU-TypeA.pdf"/>
-        </dct:license>
+        </dct:rights>
+        <dct:rights>
+          <dct:RightsStatement>
+            <rdfs:label xml:lang="fre">Conditions d'accès et d'utilisation spécifiques</rdfs:label>
+          </dct:RightsStatement>
+        </dct:rights>
         <dct:accessRights>
           <dct:RightsStatement
             rdf:about="http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/noLimitations"/>
         </dct:accessRights>
-        <dct:accessRights>
+        <dct:rights>
           <dct:RightsStatement>
             <rdfs:label xml:lang="fre">No limitations to public access</rdfs:label>
           </dct:RightsStatement>
-        </dct:accessRights>
+        </dct:rights>
         <dcat:spatialResolutionInMeters rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.01
         </dcat:spatialResolutionInMeters>
         <dcat:spatialResolutionInMeters rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">30
@@ -519,32 +522,33 @@
               rdf:resource="https://geoservices.wallonie.be/arcgis/rest/services/AMENAGEMENT_TERRITOIRE/PDS/MapServer"/>
           </rdf:Description>
         </dcat:accessService>
-        <dct:license>
-          <dct:LicenseDocument>
-            <rdfs:label xml:lang="fre">Conditions d'accès et d'utilisation spécifiques</rdfs:label>
-          </dct:LicenseDocument>
-        </dct:license>
+
         <dct:license>
           <dct:LicenseDocument
             rdf:about="https://geoportail.wallonie.be/files/documents/ConditionsSPW/DataSPW-CGU.pdf"/>
         </dct:license>
-        <dct:license>
-          <dct:LicenseDocument
+        <dct:rights>
+          <dct:RightsStatement
             rdf:about="https://geoportail.wallonie.be/files/documents/ConditionsSPW/DataSPW-CGA.pdf"/>
-        </dct:license>
-        <dct:license>
-          <dct:LicenseDocument
+        </dct:rights>
+        <dct:rights>
+          <dct:RightsStatement
             rdf:about="https://geoportail.wallonie.be/files/documents/ConditionsSPW/DataSPW-CPU-TypeA.pdf"/>
-        </dct:license>
+        </dct:rights>
+        <dct:rights>
+          <dct:RightsStatement>
+            <rdfs:label xml:lang="fre">Conditions d'accès et d'utilisation spécifiques</rdfs:label>
+          </dct:RightsStatement>
+        </dct:rights>
         <dct:accessRights>
           <dct:RightsStatement
             rdf:about="http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/noLimitations"/>
         </dct:accessRights>
-        <dct:accessRights>
+        <dct:rights>
           <dct:RightsStatement>
             <rdfs:label xml:lang="fre">No limitations to public access</rdfs:label>
           </dct:RightsStatement>
-        </dct:accessRights>
+        </dct:rights>
         <dcat:spatialResolutionInMeters rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.01
         </dcat:spatialResolutionInMeters>
         <dcat:spatialResolutionInMeters rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">30
@@ -590,31 +594,31 @@
           </rdf:Description>
         </dcat:accessService>
         <dct:license>
-          <dct:LicenseDocument>
-            <rdfs:label xml:lang="fre">Conditions d'accès et d'utilisation spécifiques</rdfs:label>
-          </dct:LicenseDocument>
-        </dct:license>
-        <dct:license>
           <dct:LicenseDocument
             rdf:about="https://geoportail.wallonie.be/files/documents/ConditionsSPW/DataSPW-CGU.pdf"/>
         </dct:license>
-        <dct:license>
-          <dct:LicenseDocument
+        <dct:rights>
+          <dct:RightsStatement
             rdf:about="https://geoportail.wallonie.be/files/documents/ConditionsSPW/DataSPW-CGA.pdf"/>
-        </dct:license>
-        <dct:license>
-          <dct:LicenseDocument
+        </dct:rights>
+        <dct:rights>
+          <dct:RightsStatement
             rdf:about="https://geoportail.wallonie.be/files/documents/ConditionsSPW/DataSPW-CPU-TypeA.pdf"/>
-        </dct:license>
+        </dct:rights>
+        <dct:rights>
+          <dct:RightsStatement>
+            <rdfs:label xml:lang="fre">Conditions d'accès et d'utilisation spécifiques</rdfs:label>
+          </dct:RightsStatement>
+        </dct:rights>
         <dct:accessRights>
           <dct:RightsStatement
             rdf:about="http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/noLimitations"/>
         </dct:accessRights>
-        <dct:accessRights>
+        <dct:rights>
           <dct:RightsStatement>
             <rdfs:label xml:lang="fre">No limitations to public access</rdfs:label>
           </dct:RightsStatement>
-        </dct:accessRights>
+        </dct:rights>
         <dcat:spatialResolutionInMeters rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.01
         </dcat:spatialResolutionInMeters>
         <dcat:spatialResolutionInMeters rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">30

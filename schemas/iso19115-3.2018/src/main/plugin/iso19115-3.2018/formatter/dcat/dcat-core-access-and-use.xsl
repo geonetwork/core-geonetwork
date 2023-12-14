@@ -34,61 +34,91 @@
   RDF Property:	dcterms:accessRights
   Definition:	Information about who can access the resource or an indication of its security status.
   Range: dcterms:RightsStatement
-  -->
-  <xsl:template mode="iso19115-3-to-dcat"
-                match="mdb:identificationInfo/*/mri:resourceConstraints/*[mco:accessConstraints]/mco:otherConstraints">
-    <dct:accessRights>
-      <dct:RightsStatement>
-        <xsl:choose>
-          <xsl:when test="gcx:Anchor/@xlink:href">
-            <xsl:attribute name="rdf:about" select="gcx:Anchor/@xlink:href"/>
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:call-template name="rdf-localised">
-              <xsl:with-param name="nodeName" select="'rdfs:label'"/>
-            </xsl:call-template>
-          </xsl:otherwise>
-        </xsl:choose>
-      </dct:RightsStatement>
-    </dct:accessRights>
-  </xsl:template>
+  = First constraints of mdb:identificationInfo/*/mri:resourceConstraints/*[mco:accessConstraints] (then dct:rights)
 
-
-  <!--
   RDF Property:	dcterms:license
   Definition:	A legal document under which the resource is made available.
   Range:	dcterms:LicenseDocument
   Usage note:	Information about licenses and rights MAY be provided for the Resource. See also guidance at 9. License and rights statements.
-  -->
-  <xsl:template mode="iso19115-3-to-dcat"
-                name="iso19115-3-to-dcat-license"
-                match="mdb:identificationInfo/*/mri:resourceConstraints/*[mco:useConstraints]/mco:otherConstraints
-                      |mdb:identificationInfo/*/mri:resourceConstraints/*[mco:useConstraints]/mco:useLimitation">
-    <dct:license>
-      <dct:LicenseDocument>
-        <xsl:choose>
-          <xsl:when test="gcx:Anchor/@xlink:href">
-            <xsl:attribute name="rdf:about" select="gcx:Anchor/@xlink:href"/>
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:call-template name="rdf-localised">
-              <xsl:with-param name="nodeName" select="'rdfs:label'"/>
-            </xsl:call-template>
-          </xsl:otherwise>
-        </xsl:choose>
-      </dct:LicenseDocument>
-    </dct:license>
-  </xsl:template>
+  = First useLimitation or constraints of mdb:identificationInfo/*/mri:resourceConstraints/*[mco:useConstraints] (then dct:rights)
 
-
-  <!--
   RDF Property:	dcterms:rights
   Definition:	A statement that concerns all rights not addressed with dcterms:license or dcterms:accessRights, such as copyright statements.
   Range:	dcterms:RightsStatement
   Usage note:	Information about licenses and rights MAY be provided for the Resource. See also guidance at 9. License and rights statements.
-
-  TODO: Probably not? as everything is set in dcterms:license or dcterms:accessRights.
   -->
+  <xsl:template mode="iso19115-3-to-dcat"
+                match="mdb:identificationInfo/*/mri:resourceConstraints/*[mco:accessConstraints]">
+    <xsl:if test="count(../preceding-sibling::mri:resourceConstraints/*[mco:accessConstraints]) = 0">
+      <xsl:for-each select="../../mri:resourceConstraints/*[mco:accessConstraints]/mco:otherConstraints">
+        <xsl:element name="{if (position() = 1) then 'dct:accessRights' else 'dct:rights'}">
+          <dct:RightsStatement>
+            <xsl:choose>
+              <xsl:when test="gcx:Anchor/@xlink:href">
+                <xsl:attribute name="rdf:about" select="gcx:Anchor/@xlink:href"/>
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:call-template name="rdf-localised">
+                  <xsl:with-param name="nodeName" select="'rdfs:label'"/>
+                </xsl:call-template>
+              </xsl:otherwise>
+            </xsl:choose>
+          </dct:RightsStatement>
+        </xsl:element>
+      </xsl:for-each>
+    </xsl:if>
+  </xsl:template>
+
+
+  <xsl:template mode="iso19115-3-to-dcat"
+                name="iso19115-3-to-dcat-license"
+                match="mdb:identificationInfo/*/mri:resourceConstraints/*[mco:useConstraints]">
+    <xsl:if test="count(../preceding-sibling::mri:resourceConstraints/*[mco:useConstraints]) = 0">
+      <xsl:variable name="useConstraints"
+                    as="node()*">
+        <xsl:copy-of select="../../mri:resourceConstraints/*[mco:useConstraints]/mco:otherConstraints"/>
+        <xsl:copy-of select="../../mri:resourceConstraints/*[mco:useConstraints]/mco:useLimitation"/>
+      </xsl:variable>
+      <xsl:for-each select="$useConstraints">
+        <xsl:choose>
+          <xsl:when test="position() = 1">
+            <dct:license>
+              <dct:LicenseDocument>
+                <xsl:choose>
+                  <xsl:when test="gcx:Anchor/@xlink:href">
+                    <xsl:attribute name="rdf:about" select="gcx:Anchor/@xlink:href"/>
+                  </xsl:when>
+                  <xsl:otherwise>
+                    <xsl:call-template name="rdf-localised">
+                      <xsl:with-param name="nodeName" select="'rdfs:label'"/>
+                    </xsl:call-template>
+                  </xsl:otherwise>
+                </xsl:choose>
+              </dct:LicenseDocument>
+            </dct:license>
+          </xsl:when>
+          <xsl:otherwise>
+            <dct:rights>
+              <dct:RightsStatement>
+                <xsl:choose>
+                  <xsl:when test="gcx:Anchor/@xlink:href">
+                    <xsl:attribute name="rdf:about" select="gcx:Anchor/@xlink:href"/>
+                  </xsl:when>
+                  <xsl:otherwise>
+                    <xsl:call-template name="rdf-localised">
+                      <xsl:with-param name="nodeName" select="'rdfs:label'"/>
+                    </xsl:call-template>
+                  </xsl:otherwise>
+                </xsl:choose>
+              </dct:RightsStatement>
+            </dct:rights>
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:for-each>
+    </xsl:if>
+  </xsl:template>
+
+
 
   <!--
   RDF Property:	odrl:hasPolicy

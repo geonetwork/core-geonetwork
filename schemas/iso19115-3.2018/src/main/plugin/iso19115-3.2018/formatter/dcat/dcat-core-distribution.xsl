@@ -309,8 +309,7 @@
               See also guidance at 9. License and rights statements.
               -->
               <xsl:apply-templates mode="iso19115-3-to-dcat"
-                                   select="ancestor::mdb:MD_Metadata/mdb:identificationInfo/*/mri:resourceConstraints/*[mco:useConstraints]/mco:otherConstraints
-                                          |ancestor::mdb:MD_Metadata/mdb:identificationInfo/*/mri:resourceConstraints/*[mco:useConstraints]/mco:useLimitation"/>
+                                   select="ancestor::mdb:MD_Metadata/mdb:identificationInfo/*/mri:resourceConstraints/*[mco:useConstraints]"/>
 
               <!--
               RDF Property:	dcterms:accessRights
@@ -319,7 +318,7 @@
               Usage note:	Information about licenses and rights MAY be provided for the Distribution. See also guidance at 9. License and rights statements.
               -->
               <xsl:apply-templates mode="iso19115-3-to-dcat"
-                                   select="ancestor::mdb:MD_Metadata/mdb:identificationInfo/*/mri:resourceConstraints/*[mco:accessConstraints]/mco:otherConstraints"/>
+                                   select="ancestor::mdb:MD_Metadata/mdb:identificationInfo/*/mri:resourceConstraints/*[mco:accessConstraints]"/>
 
               <!--
               RDF Property:	dcterms:rights
@@ -330,7 +329,7 @@
 
               Information about licenses and rights SHOULD be provided on the level of Distribution. Information about licenses and rights MAY be provided for a Dataset in addition to but not instead of the information provided for the Distributions of that Dataset. Providing license or rights information for a Dataset that is different from information provided for a Distribution of that Dataset SHOULD be avoided as this can create legal conflicts. See also guidance at 9. License and rights statements.
 
-              Not supported
+              See dcterms:license and dcterms:accessRights
               -->
 
               <!--

@@ -30,8 +30,8 @@
                                   |mdb:identificationInfo/*/mri:citation/*/cit:edition
                                   |mdb:identificationInfo/*/mri:defaultLocale
                                   |mdb:identificationInfo/*/mri:otherLocale
-                                  |mdb:identificationInfo/*/mri:resourceConstraints/*[mco:useConstraints]/(mco:otherConstraints|mco:useLimitation)
-                                  |mdb:identificationInfo/*/mri:resourceConstraints/*[mco:accessConstraints]/mco:otherConstraints
+                                  |mdb:identificationInfo/*/mri:resourceConstraints/*[mco:useConstraints]
+                                  |mdb:identificationInfo/*/mri:resourceConstraints/*[mco:accessConstraints]
                                   |mdb:identificationInfo/*/mri:status
                                   |mdb:identificationInfo/*/mri:descriptiveKeywords
                                   |mdb:identificationInfo/*/mri:pointOfContact
