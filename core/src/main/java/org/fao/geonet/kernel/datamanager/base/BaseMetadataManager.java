@@ -903,6 +903,7 @@ public class BaseMetadataManager implements IMetadataManager {
         // add owner name
         User user = userRepository.findOne(owner);
         if (user != null) {
+            addElement(info, Edit.Info.Elem.OWNERID, user.getId());
             String ownerName = user.getName();
             addElement(info, Edit.Info.Elem.OWNERNAME, ownerName);
         }
