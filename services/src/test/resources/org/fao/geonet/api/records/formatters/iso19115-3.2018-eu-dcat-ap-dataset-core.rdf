@@ -369,9 +369,6 @@
     <dct:accrualPeriodicity>
       <dct:Frequency rdf:about="http://publications.europa.eu/resource/authority/frequency/MONTHLY"/>
     </dct:accrualPeriodicity>
-    <dct:accrualPeriodicity>
-      <dct:Frequency rdf:about="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#asNeeded"/>
-    </dct:accrualPeriodicity>
     <dcat:distribution>
       <dcat:Distribution>
         <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2023-12-08T00:00:00</dct:issued>
@@ -381,9 +378,6 @@
           <dct:MediaType>
             <rdfs:label>ESRI Shapefile (.shp)</rdfs:label>
           </dct:MediaType>
-        </dct:format>
-        <dct:format>
-          <dct:MediaType rdf:about="https://publications.europa.eu/resource/authority/file-type/GPKG"/>
         </dct:format>
         <dcat:compressFormat>
           <dct:MediaType rdf:about="https://publications.europa.eu/resource/authority/file-type/ZIP"/>

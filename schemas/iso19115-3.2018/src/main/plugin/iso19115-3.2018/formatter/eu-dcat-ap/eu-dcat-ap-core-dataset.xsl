@@ -9,6 +9,7 @@
                 xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0"
                 xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/2.0"
                 xmlns:gcx="http://standards.iso.org/iso/19115/-3/gcx/1.0"
+                xmlns:mmi="http://standards.iso.org/iso/19115/-3/mmi/1.0"
                 xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
                 xmlns:skos="http://www.w3.org/2004/02/skos/core#"
                 xmlns:dcat="http://www.w3.org/ns/dcat#"
@@ -217,4 +218,12 @@
       <dcat:theme rdf:resource="{.}"/>
     </xsl:for-each>
   </xsl:template>
+
+  <!--
+   sh:resultMessage              "maxCount[1]: Invalid cardinality: expected max 1: Got count = 2" ;
+   sh:resultPath                 dc:accrualPeriodicity ;
+  -->
+  <xsl:template mode="iso19115-3-to-dcat"
+                match="mdb:identificationInfo/*/mri:resourceMaintenance/*/mmi:maintenanceAndUpdateFrequency[position() > 1]"/>
+
 </xsl:stylesheet>

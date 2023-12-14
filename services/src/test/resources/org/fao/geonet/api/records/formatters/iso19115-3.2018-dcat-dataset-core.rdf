@@ -317,9 +317,6 @@
             <rdfs:label>ESRI Shapefile (.shp)</rdfs:label>
           </dct:MediaType>
         </dct:format>
-        <dct:format>
-          <dct:MediaType rdf:about="https://publications.europa.eu/resource/authority/file-type/GPKG"/>
-        </dct:format>
         <dcat:compressFormat>
           <dct:MediaType rdf:about="https://publications.europa.eu/resource/authority/file-type/ZIP"/>
         </dcat:compressFormat>

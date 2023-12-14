@@ -265,6 +265,11 @@
             Range:	dcterms:MediaType
             Usage note:	This property to be used when the files in the distribution are packaged, e.g., in a TAR file, a ZIP file, a Frictionless Data Package or a Bagit file. The format SHOULD be expressed using a media type as defined by IANA [IANA-MEDIA-TYPES], if available.
             See also:	6.8.18 Property: compression format.
+
+            Rule:
+            * Use mimetype if any
+            * Use WWW:DOWNLOAD:(.*=format) if any
+            * fallback to ancestor::mrd:MD_DigitalTransferOptions/mrd:distributionFormat/*/mrd:formatSpecificationCitation
             -->
             <xsl:choose>
               <xsl:when test="$mimeType">
@@ -273,29 +278,22 @@
                 </xsl:call-template>
               </xsl:when>
               <xsl:otherwise>
-                <xsl:if test="starts-with($protocol, 'WWW:DOWNLOAD:')">
-                  <xsl:call-template name="rdf-format-as-mediatype">
-                    <xsl:with-param name="format" select="substring-after($protocol, 'WWW:DOWNLOAD:')"/>
-                  </xsl:call-template>
-                </xsl:if>
+                <xsl:choose>
+                  <xsl:when test="starts-with($protocol, 'WWW:DOWNLOAD:')">
+                    <xsl:call-template name="rdf-format-as-mediatype">
+                      <xsl:with-param name="format" select="substring-after($protocol, 'WWW:DOWNLOAD:')"/>
+                    </xsl:call-template>
+                  </xsl:when>
+                  <xsl:otherwise>
+                    <xsl:apply-templates mode="iso19115-3-to-dcat-distribution"
+                                         select="ancestor::mrd:MD_DigitalTransferOptions/mrd:distributionFormat/*/mrd:formatSpecificationCitation"/>
+                  </xsl:otherwise>
+                </xsl:choose>
               </xsl:otherwise>
             </xsl:choose>
 
-            <xsl:for-each select="ancestor::mrd:MD_DigitalTransferOptions/mrd:distributionFormat/*">
-              <xsl:for-each select="mrd:formatSpecificationCitation/*/cit:title/*/text()">
-                <xsl:call-template name="rdf-format-as-mediatype">
-                  <xsl:with-param name="format" select="."/>
-                </xsl:call-template>
-              </xsl:for-each>
-              <xsl:for-each select="mrd:fileDecompressionTechnique/*/text()">
-                <xsl:call-template name="rdf-format-as-mediatype">
-                  <xsl:with-param name="elementName" select="'dcat:compressFormat'"/>
-                  <xsl:with-param name="format" select="."/>
-                </xsl:call-template>
-              </xsl:for-each>
-            </xsl:for-each>
-
-
+            <xsl:apply-templates mode="iso19115-3-to-dcat-distribution"
+                                 select="ancestor::mrd:MD_DigitalTransferOptions/mrd:distributionFormat/*/mrd:fileDecompressionTechnique"/>
 
 
             <xsl:if test="$isCopyingDatasetInfoToDistribution">
@@ -369,6 +367,24 @@
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
+
+
+  <xsl:template mode="iso19115-3-to-dcat-distribution"
+                match="mrd:distributionFormat/*/mrd:formatSpecificationCitation">
+    <xsl:call-template name="rdf-format-as-mediatype">
+      <xsl:with-param name="format" select="*/cit:title/*/text()"/>
+    </xsl:call-template>
+  </xsl:template>
+
+
+  <xsl:template mode="iso19115-3-to-dcat-distribution"
+                match="mrd:distributionFormat/*/mrd:fileDecompressionTechnique">
+    <xsl:call-template name="rdf-format-as-mediatype">
+      <xsl:with-param name="elementName" select="'dcat:compressFormat'"/>
+      <xsl:with-param name="format" select="*/text()"/>
+    </xsl:call-template>
+  </xsl:template>
+
 
   <xsl:template name="rdf-format-as-mediatype">
     <xsl:param name="elementName" as="xs:string" select="'dct:format'"/>
