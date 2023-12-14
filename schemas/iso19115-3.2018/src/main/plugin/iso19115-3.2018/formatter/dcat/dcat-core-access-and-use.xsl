@@ -61,6 +61,7 @@
   Usage note:	Information about licenses and rights MAY be provided for the Resource. See also guidance at 9. License and rights statements.
   -->
   <xsl:template mode="iso19115-3-to-dcat"
+                name="iso19115-3-to-dcat-license"
                 match="mdb:identificationInfo/*/mri:resourceConstraints/*[mco:useConstraints]/mco:otherConstraints
                       |mdb:identificationInfo/*/mri:resourceConstraints/*[mco:useConstraints]/mco:useLimitation">
     <dct:license>

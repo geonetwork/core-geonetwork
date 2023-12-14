@@ -3,6 +3,8 @@
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 exclude-result-prefixes="#all">
+  <xsl:param name="expandSkosConcept" select="'true'"/>
+  <xsl:param name="isExpandSkosConcept" select="xs:boolean($expandSkosConcept)"/>
 
   <xsl:variable name="europaPublicationBaseUri" select="'http://publications.europa.eu/resource/authority/'"/>
   <xsl:variable name="europaPublicationCorporateBody" select="concat($europaPublicationBaseUri,'corporate-body/')"/>

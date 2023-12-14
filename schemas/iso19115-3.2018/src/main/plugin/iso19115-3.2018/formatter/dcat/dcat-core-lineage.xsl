@@ -5,6 +5,7 @@
                 xmlns:adms="http://www.w3.org/ns/adms#"
                 xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
                 xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                xmlns:tr="java:org.fao.geonet.api.records.formatters.SchemaLocalizations"
                 exclude-result-prefixes="#all">
 
   <!--
@@ -18,7 +19,21 @@
   <xsl:template mode="iso19115-3-to-dcat"
                 match="mri:status">
     <adms:status>
-      <skos:Concept rdf:about="{concat($isoCodeListBaseUri, */@codeListValue)}"/>
+      <skos:Concept rdf:about="{concat($isoCodeListBaseUri, */@codeListValue)}">
+        <xsl:if test="$isExpandSkosConcept">
+          <xsl:variable name="codelistKey"
+                        select="*/@codeListValue"/>
+          <xsl:variable name="parentName"
+                        select="local-name(*)"/>
+
+          <xsl:for-each select="$languages/@iso3code">
+            <xsl:variable name="codelistTranslation"
+                          select="tr:codelist-value-label(tr:create('iso19115-3.2018', current()), $parentName, $codelistKey)"/>
+
+            <skos:prefLabel xml:lang="{current()}"><xsl:value-of select="$codelistTranslation"/></skos:prefLabel>
+          </xsl:for-each>
+        </xsl:if>
+      </skos:Concept>
     </adms:status>
   </xsl:template>
 

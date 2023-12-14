@@ -131,7 +131,9 @@
       création a été décidée par le Gouvernement wallon le 19 septembre 2005.
     </dct:description>
     <adms:status>
-      <skos:Concept rdf:about="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#onGoing"/>
+      <skos:Concept rdf:about="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#onGoing">
+        <skos:prefLabel xml:lang="fre">Mis à jour continue</skos:prefLabel>
+      </skos:Concept>
     </adms:status>
     <dct:creator>
       <rdf:Description>
@@ -269,6 +271,10 @@
         <rdfs:label xml:lang="fre">Conditions d'accès et d'utilisation spécifiques</rdfs:label>
       </dct:LicenseDocument>
     </dct:license>
+    <!--
+    Path=<http://purl.org/dc/terms/license>
+    Message: maxCount[1]: Invalid cardinality: expected max 1: Got count = 4
+
     <dct:license>
       <dct:LicenseDocument rdf:about="https://geoportail.wallonie.be/files/documents/ConditionsSPW/DataSPW-CGU.pdf"/>
     </dct:license>
@@ -278,7 +284,7 @@
     <dct:license>
       <dct:LicenseDocument
         rdf:about="https://geoportail.wallonie.be/files/documents/ConditionsSPW/DataSPW-CPU-TypeA.pdf"/>
-    </dct:license>
+    </dct:license>-->
     <dct:isPartOf rdf:resource="be875ddb-ffd9-4c23-a013-53063a366b5b"/>
     <dct:references rdf:resource="ffc45d44-1cc2-4924-bb8c-214096eb9058"/>
     <dct:hasPart rdf:resource="201ee90c-1971-4bdc-855e-9c9bcbc2c647"/>
@@ -387,6 +393,10 @@
             <rdfs:label xml:lang="fre">Conditions d'accès et d'utilisation spécifiques</rdfs:label>
           </dct:LicenseDocument>
         </dct:license>
+        <!--
+        Path=<http://purl.org/dc/terms/license>
+        Message: maxCount[1]: Invalid cardinality: expected max 1: Got count = 4
+
         <dct:license>
           <dct:LicenseDocument
             rdf:about="https://geoportail.wallonie.be/files/documents/ConditionsSPW/DataSPW-CGU.pdf"/>
@@ -398,7 +408,7 @@
         <dct:license>
           <dct:LicenseDocument
             rdf:about="https://geoportail.wallonie.be/files/documents/ConditionsSPW/DataSPW-CPU-TypeA.pdf"/>
-        </dct:license>
+        </dct:license>-->
         <dct:accessRights>
           <dct:RightsStatement
             rdf:about="http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/noLimitations"/>
@@ -452,287 +462,302 @@
             <rdfs:label xml:lang="fre">Conditions d'accès et d'utilisation spécifiques</rdfs:label>
           </dct:LicenseDocument>
         </dct:license>
-        <dct:license>
-          <dct:LicenseDocument
-            rdf:about="https://geoportail.wallonie.be/files/documents/ConditionsSPW/DataSPW-CGU.pdf"/>
-        </dct:license>
-        <dct:license>
-          <dct:LicenseDocument
-            rdf:about="https://geoportail.wallonie.be/files/documents/ConditionsSPW/DataSPW-CGA.pdf"/>
-        </dct:license>
-        <dct:license>
-          <dct:LicenseDocument
-            rdf:about="https://geoportail.wallonie.be/files/documents/ConditionsSPW/DataSPW-CPU-TypeA.pdf"/>
-        </dct:license>
-        <dct:accessRights>
-          <dct:RightsStatement
-            rdf:about="http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/noLimitations"/>
-        </dct:accessRights>
-        <dct:accessRights>
-          <dct:RightsStatement>
-            <rdfs:label xml:lang="fre">No limitations to public access</rdfs:label>
-          </dct:RightsStatement>
-        </dct:accessRights>
-        <dcat:spatialResolutionInMeters rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.01
-        </dcat:spatialResolutionInMeters>
-        <dcat:spatialResolutionInMeters rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">30
-        </dcat:spatialResolutionInMeters>
-        <dcat:spatialResolutionInMeters rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.3048
-        </dcat:spatialResolutionInMeters>
-        <dcat:temporalResolution rdf:datatype="http://www.w3.org/2001/XMLSchema#duration">P0Y2M0DT0H0M0S
-        </dcat:temporalResolution>
-        <dct:conformsTo>
-          <dct:Standard rdf:about="http://data.europa.eu/eli/reg/2010/1089"/>
-        </dct:conformsTo>
-        <dct:conformsTo>
-          <dct:Standard rdf:about="https://inspire.ec.europa.eu/id/document/tg/tn"/>
-        </dct:conformsTo>
-        <dct:conformsTo>
-          <dct:Standard>
-            <rdf:type rdf:resource="http://purl.org/dc/terms/Standard"/>
-            <rdfs:label xml:lang="fre">INSPIRE Data Specification on Transport Networks – Technical Guidelines, version
-              3.2
-            </rdfs:label>
-            <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2014-04-17</dct:issued>
-          </dct:Standard>
-        </dct:conformsTo>
-      </dcat:Distribution>
-    </dcat:distribution>
-    <dcat:distribution>
-      <dcat:Distribution>
-        <dct:title xml:lang="fre">Application WalOnMap - Toute la Wallonie à la carte</dct:title>
-        <dct:description xml:lang="fre">Application cartographique du Geoportail (WalOnMap) qui permet de découvrir les
-          données géographiques de la Wallonie.
-        </dct:description>
-        <dcat:accessURL
-          rdf:resource="https://geoportail.wallonie.be/walonmap/#ADU=https://geoservices.wallonie.be/arcgis/rest/services/AMENAGEMENT_TERRITOIRE/PDS/MapServer"/>
-        <dcat:accessService>
-          <rdf:Description>
-            <rdf:type rdf:resource="http://www.w3.org/ns/dcat#DataService"/>
-            <dct:title xml:lang="fre">Application WalOnMap - Toute la Wallonie à la carte</dct:title>
-            <dcat:endpointURL
-              rdf:resource="https://geoportail.wallonie.be/walonmap/#ADU=https://geoservices.wallonie.be/arcgis/rest/services/AMENAGEMENT_TERRITOIRE/PDS/MapServer"/>
-          </rdf:Description>
-        </dcat:accessService>
-        <dct:license>
-          <dct:LicenseDocument>
-            <rdfs:label xml:lang="fre">Conditions d'accès et d'utilisation spécifiques</rdfs:label>
-          </dct:LicenseDocument>
-        </dct:license>
-        <dct:license>
-          <dct:LicenseDocument
-            rdf:about="https://geoportail.wallonie.be/files/documents/ConditionsSPW/DataSPW-CGU.pdf"/>
-        </dct:license>
-        <dct:license>
-          <dct:LicenseDocument
-            rdf:about="https://geoportail.wallonie.be/files/documents/ConditionsSPW/DataSPW-CGA.pdf"/>
-        </dct:license>
-        <dct:license>
-          <dct:LicenseDocument
-            rdf:about="https://geoportail.wallonie.be/files/documents/ConditionsSPW/DataSPW-CPU-TypeA.pdf"/>
-        </dct:license>
-        <dct:accessRights>
-          <dct:RightsStatement
-            rdf:about="http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/noLimitations"/>
-        </dct:accessRights>
-        <dct:accessRights>
-          <dct:RightsStatement>
-            <rdfs:label xml:lang="fre">No limitations to public access</rdfs:label>
-          </dct:RightsStatement>
-        </dct:accessRights>
-        <dcat:spatialResolutionInMeters rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.01
-        </dcat:spatialResolutionInMeters>
-        <dcat:spatialResolutionInMeters rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">30
-        </dcat:spatialResolutionInMeters>
-        <dcat:spatialResolutionInMeters rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.3048
-        </dcat:spatialResolutionInMeters>
-        <dcat:temporalResolution rdf:datatype="http://www.w3.org/2001/XMLSchema#duration">P0Y2M0DT0H0M0S
-        </dcat:temporalResolution>
-        <dct:conformsTo>
-          <dct:Standard rdf:about="http://data.europa.eu/eli/reg/2010/1089"/>
-        </dct:conformsTo>
-        <dct:conformsTo>
-          <dct:Standard rdf:about="https://inspire.ec.europa.eu/id/document/tg/tn"/>
-        </dct:conformsTo>
-        <dct:conformsTo>
-          <dct:Standard>
-            <rdf:type rdf:resource="http://purl.org/dc/terms/Standard"/>
-            <rdfs:label xml:lang="fre">INSPIRE Data Specification on Transport Networks – Technical Guidelines, version
-              3.2
-            </rdfs:label>
-            <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2014-04-17</dct:issued>
-          </dct:Standard>
-        </dct:conformsTo>
-      </dcat:Distribution>
-    </dcat:distribution>
-    <dcat:distribution>
-      <dcat:Distribution>
-        <dct:title xml:lang="fre">Service de visualisation ESRI-REST</dct:title>
-        <dct:description xml:lang="fre">Ce service ESRI-REST permet de visualiser la série de couches de données "Plan
-          de
-          secteur"
-        </dct:description>
-        <dcat:accessURL
-          rdf:resource="https://geoservices.wallonie.be/arcgis/rest/services/AMENAGEMENT_TERRITOIRE/PDS/MapServer"/>
-        <dcat:accessService>
-          <rdf:Description>
-            <rdf:type rdf:resource="http://www.w3.org/ns/dcat#DataService"/>
-            <dct:title xml:lang="fre">Service de visualisation ESRI-REST</dct:title>
-            <dcat:endpointURL
-              rdf:resource="https://geoservices.wallonie.be/arcgis/rest/services/AMENAGEMENT_TERRITOIRE/PDS/MapServer"/>
-          </rdf:Description>
-        </dcat:accessService>
-        <dct:license>
-          <dct:LicenseDocument>
-            <rdfs:label xml:lang="fre">Conditions d'accès et d'utilisation spécifiques</rdfs:label>
-          </dct:LicenseDocument>
-        </dct:license>
-        <dct:license>
-          <dct:LicenseDocument
-            rdf:about="https://geoportail.wallonie.be/files/documents/ConditionsSPW/DataSPW-CGU.pdf"/>
-        </dct:license>
-        <dct:license>
-          <dct:LicenseDocument
-            rdf:about="https://geoportail.wallonie.be/files/documents/ConditionsSPW/DataSPW-CGA.pdf"/>
-        </dct:license>
-        <dct:license>
-          <dct:LicenseDocument
-            rdf:about="https://geoportail.wallonie.be/files/documents/ConditionsSPW/DataSPW-CPU-TypeA.pdf"/>
-        </dct:license>
-        <dct:accessRights>
-          <dct:RightsStatement
-            rdf:about="http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/noLimitations"/>
-        </dct:accessRights>
-        <dct:accessRights>
-          <dct:RightsStatement>
-            <rdfs:label xml:lang="fre">No limitations to public access</rdfs:label>
-          </dct:RightsStatement>
-        </dct:accessRights>
-        <dcat:spatialResolutionInMeters rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.01
-        </dcat:spatialResolutionInMeters>
-        <dcat:spatialResolutionInMeters rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">30
-        </dcat:spatialResolutionInMeters>
-        <dcat:spatialResolutionInMeters rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.3048
-        </dcat:spatialResolutionInMeters>
-        <dcat:temporalResolution rdf:datatype="http://www.w3.org/2001/XMLSchema#duration">P0Y2M0DT0H0M0S
-        </dcat:temporalResolution>
-        <dct:conformsTo>
-          <dct:Standard rdf:about="http://data.europa.eu/eli/reg/2010/1089"/>
-        </dct:conformsTo>
-        <dct:conformsTo>
-          <dct:Standard rdf:about="https://inspire.ec.europa.eu/id/document/tg/tn"/>
-        </dct:conformsTo>
-        <dct:conformsTo>
-          <dct:Standard>
-            <rdf:type rdf:resource="http://purl.org/dc/terms/Standard"/>
-            <rdfs:label xml:lang="fre">INSPIRE Data Specification on Transport Networks – Technical Guidelines, version
-              3.2
-            </rdfs:label>
-            <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2014-04-17</dct:issued>
-          </dct:Standard>
-        </dct:conformsTo>
-      </dcat:Distribution>
-    </dcat:distribution>
-    <dcat:distribution>
-      <dcat:Distribution>
-        <dct:title xml:lang="fre">Service de visualisation WMS</dct:title>
-        <dct:description xml:lang="fre">Ce service WMS permet de visualiser la série de couches de données "Plan de
-          secteur"
-        </dct:description>
-        <dcat:accessURL
-          rdf:resource="https://geoservices.wallonie.be/arcgis/services/AMENAGEMENT_TERRITOIRE/PDS/MapServer/WMSServer?request=GetCapabilities&amp;service=WMS"/>
-        <dcat:accessService>
-          <rdf:Description>
-            <rdf:type rdf:resource="http://www.w3.org/ns/dcat#DataService"/>
-            <dct:title xml:lang="fre">Service de visualisation WMS</dct:title>
-            <dcat:endpointURL
-              rdf:resource="https://geoservices.wallonie.be/arcgis/services/AMENAGEMENT_TERRITOIRE/PDS/MapServer/WMSServer?request=GetCapabilities&amp;service=WMS"/>
-            <dct:conformsTo>
-              <dct:Standard rdf:about="http://www.opengeospatial.org/standards/wms"/>
-            </dct:conformsTo>
-          </rdf:Description>
-        </dcat:accessService>
-        <dct:license>
-          <dct:LicenseDocument>
-            <rdfs:label xml:lang="fre">Conditions d'accès et d'utilisation spécifiques</rdfs:label>
-          </dct:LicenseDocument>
-        </dct:license>
-        <dct:license>
-          <dct:LicenseDocument
-            rdf:about="https://geoportail.wallonie.be/files/documents/ConditionsSPW/DataSPW-CGU.pdf"/>
-        </dct:license>
-        <dct:license>
-          <dct:LicenseDocument
-            rdf:about="https://geoportail.wallonie.be/files/documents/ConditionsSPW/DataSPW-CGA.pdf"/>
-        </dct:license>
-        <dct:license>
-          <dct:LicenseDocument
-            rdf:about="https://geoportail.wallonie.be/files/documents/ConditionsSPW/DataSPW-CPU-TypeA.pdf"/>
-        </dct:license>
-        <dct:accessRights>
-          <dct:RightsStatement
-            rdf:about="http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/noLimitations"/>
-        </dct:accessRights>
-        <dct:accessRights>
-          <dct:RightsStatement>
-            <rdfs:label xml:lang="fre">No limitations to public access</rdfs:label>
-          </dct:RightsStatement>
-        </dct:accessRights>
-        <dcat:spatialResolutionInMeters rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.01
-        </dcat:spatialResolutionInMeters>
-        <dcat:spatialResolutionInMeters rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">30
-        </dcat:spatialResolutionInMeters>
-        <dcat:spatialResolutionInMeters rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.3048
-        </dcat:spatialResolutionInMeters>
-        <dcat:temporalResolution rdf:datatype="http://www.w3.org/2001/XMLSchema#duration">P0Y2M0DT0H0M0S
-        </dcat:temporalResolution>
-        <dct:conformsTo>
-          <dct:Standard rdf:about="http://data.europa.eu/eli/reg/2010/1089"/>
-        </dct:conformsTo>
-        <dct:conformsTo>
-          <dct:Standard rdf:about="https://inspire.ec.europa.eu/id/document/tg/tn"/>
-        </dct:conformsTo>
-        <dct:conformsTo>
-          <dct:Standard>
-            <rdf:type rdf:resource="http://purl.org/dc/terms/Standard"/>
-            <rdfs:label xml:lang="fre">INSPIRE Data Specification on Transport Networks – Technical Guidelines, version
-              3.2
-            </rdfs:label>
-            <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2014-04-17</dct:issued>
-          </dct:Standard>
-        </dct:conformsTo>
-      </dcat:Distribution>
-    </dcat:distribution>
-    <foaf:page>
-      <foaf:Document rdf:about="http://spw.wallonie.be/dgo4/site_thema/index.php?thema=modif_ps">
-        <dct:title xml:lang="fre">Base de données du Plan de secteur</dct:title>
-        <dct:description xml:lang="fre">Site permettant la recherche de Plans de secteur et des modifications dans la
-          base
-          de données
-        </dct:description>
-      </foaf:Document>
-    </foaf:page>
-    <foaf:page>
-      <foaf:Document rdf:about="https://lampspw.wallonie.be/dgo4/site_thema/index.php/synthese">
-        <dct:title xml:lang="fre">Inventaire des données géographiques de la DGO4</dct:title>
-        <dct:description xml:lang="fre">Inventaire des données géographiques produites ou exploitées à la DGO4.
-        </dct:description>
-      </foaf:Document>
-    </foaf:page>
-    <foaf:page>
-      <foaf:Document rdf:about="http://spw.wallonie.be/dgo4/site_amenagement/site/directions/dar">
-        <dct:title xml:lang="fre">La Direction de l'Aménagement Régional</dct:title>
-        <dct:description xml:lang="fre">Site de la Direction de l'Aménagement Régional (DAR)</dct:description>
-      </foaf:Document>
-    </foaf:page>
-    <foaf:page>
-      <foaf:Document
-        rdf:about="http://geoservices.wallonie.be/geotraitement/spwdatadownload/get/7fe2f305-1302-4297-b67e-792f55acd834/PDS_SHAPE_31370.zip">
-        <dct:title xml:lang="fre">Plan de Secteur au format SHP</dct:title>
-        <dct:description xml:lang="fre">Dossier compressé contenant le jeu de données du Plan de Secteur au format
-          shapefile en coordonnées Lambert 72
-        </dct:description>
-      </foaf:Document>
-    </foaf:page>
-  </rdf:Description>
+        <!--
+       Path=<http://purl.org/dc/terms/license>
+       Message: maxCount[1]: Invalid cardinality: expected max 1: Got count = 4
+      <dct:license>
+         <dct:LicenseDocument
+           rdf:about="https://geoportail.wallonie.be/files/documents/ConditionsSPW/DataSPW-CGU.pdf"/>
+       </dct:license>
+       <dct:license>
+         <dct:LicenseDocument
+           rdf:about="https://geoportail.wallonie.be/files/documents/ConditionsSPW/DataSPW-CGA.pdf"/>
+       </dct:license>
+       <dct:license>
+         <dct:LicenseDocument
+           rdf:about="https://geoportail.wallonie.be/files/documents/ConditionsSPW/DataSPW-CPU-TypeA.pdf"/>
+       </dct:license>
+       -->
+       <dct:accessRights>
+         <dct:RightsStatement
+           rdf:about="http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/noLimitations"/>
+       </dct:accessRights>
+       <dct:accessRights>
+         <dct:RightsStatement>
+           <rdfs:label xml:lang="fre">No limitations to public access</rdfs:label>
+         </dct:RightsStatement>
+       </dct:accessRights>
+       <dcat:spatialResolutionInMeters rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.01
+       </dcat:spatialResolutionInMeters>
+       <dcat:spatialResolutionInMeters rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">30
+       </dcat:spatialResolutionInMeters>
+       <dcat:spatialResolutionInMeters rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.3048
+       </dcat:spatialResolutionInMeters>
+       <dcat:temporalResolution rdf:datatype="http://www.w3.org/2001/XMLSchema#duration">P0Y2M0DT0H0M0S
+       </dcat:temporalResolution>
+       <dct:conformsTo>
+         <dct:Standard rdf:about="http://data.europa.eu/eli/reg/2010/1089"/>
+       </dct:conformsTo>
+       <dct:conformsTo>
+         <dct:Standard rdf:about="https://inspire.ec.europa.eu/id/document/tg/tn"/>
+       </dct:conformsTo>
+       <dct:conformsTo>
+         <dct:Standard>
+           <rdf:type rdf:resource="http://purl.org/dc/terms/Standard"/>
+           <rdfs:label xml:lang="fre">INSPIRE Data Specification on Transport Networks – Technical Guidelines, version
+             3.2
+           </rdfs:label>
+           <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2014-04-17</dct:issued>
+         </dct:Standard>
+       </dct:conformsTo>
+     </dcat:Distribution>
+   </dcat:distribution>
+   <dcat:distribution>
+     <dcat:Distribution>
+       <dct:title xml:lang="fre">Application WalOnMap - Toute la Wallonie à la carte</dct:title>
+       <dct:description xml:lang="fre">Application cartographique du Geoportail (WalOnMap) qui permet de découvrir les
+         données géographiques de la Wallonie.
+       </dct:description>
+       <dcat:accessURL
+         rdf:resource="https://geoportail.wallonie.be/walonmap/#ADU=https://geoservices.wallonie.be/arcgis/rest/services/AMENAGEMENT_TERRITOIRE/PDS/MapServer"/>
+       <dcat:accessService>
+         <rdf:Description>
+           <rdf:type rdf:resource="http://www.w3.org/ns/dcat#DataService"/>
+           <dct:title xml:lang="fre">Application WalOnMap - Toute la Wallonie à la carte</dct:title>
+           <dcat:endpointURL
+             rdf:resource="https://geoportail.wallonie.be/walonmap/#ADU=https://geoservices.wallonie.be/arcgis/rest/services/AMENAGEMENT_TERRITOIRE/PDS/MapServer"/>
+         </rdf:Description>
+       </dcat:accessService>
+       <dct:license>
+         <dct:LicenseDocument>
+           <rdfs:label xml:lang="fre">Conditions d'accès et d'utilisation spécifiques</rdfs:label>
+         </dct:LicenseDocument>
+       </dct:license>
+       <!--
+        Path=<http://purl.org/dc/terms/license>
+        Message: maxCount[1]: Invalid cardinality: expected max 1: Got count = 4
+       <dct:license>
+         <dct:LicenseDocument
+           rdf:about="https://geoportail.wallonie.be/files/documents/ConditionsSPW/DataSPW-CGU.pdf"/>
+       </dct:license>
+       <dct:license>
+         <dct:LicenseDocument
+           rdf:about="https://geoportail.wallonie.be/files/documents/ConditionsSPW/DataSPW-CGA.pdf"/>
+       </dct:license>
+       <dct:license>
+         <dct:LicenseDocument
+           rdf:about="https://geoportail.wallonie.be/files/documents/ConditionsSPW/DataSPW-CPU-TypeA.pdf"/>
+       </dct:license>
+       -->
+       <dct:accessRights>
+         <dct:RightsStatement
+           rdf:about="http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/noLimitations"/>
+       </dct:accessRights>
+       <dct:accessRights>
+         <dct:RightsStatement>
+           <rdfs:label xml:lang="fre">No limitations to public access</rdfs:label>
+         </dct:RightsStatement>
+       </dct:accessRights>
+       <dcat:spatialResolutionInMeters rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.01
+       </dcat:spatialResolutionInMeters>
+       <dcat:spatialResolutionInMeters rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">30
+       </dcat:spatialResolutionInMeters>
+       <dcat:spatialResolutionInMeters rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.3048
+       </dcat:spatialResolutionInMeters>
+       <dcat:temporalResolution rdf:datatype="http://www.w3.org/2001/XMLSchema#duration">P0Y2M0DT0H0M0S
+       </dcat:temporalResolution>
+       <dct:conformsTo>
+         <dct:Standard rdf:about="http://data.europa.eu/eli/reg/2010/1089"/>
+       </dct:conformsTo>
+       <dct:conformsTo>
+         <dct:Standard rdf:about="https://inspire.ec.europa.eu/id/document/tg/tn"/>
+       </dct:conformsTo>
+       <dct:conformsTo>
+         <dct:Standard>
+           <rdf:type rdf:resource="http://purl.org/dc/terms/Standard"/>
+           <rdfs:label xml:lang="fre">INSPIRE Data Specification on Transport Networks – Technical Guidelines, version
+             3.2
+           </rdfs:label>
+           <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2014-04-17</dct:issued>
+         </dct:Standard>
+       </dct:conformsTo>
+     </dcat:Distribution>
+   </dcat:distribution>
+   <dcat:distribution>
+     <dcat:Distribution>
+       <dct:title xml:lang="fre">Service de visualisation ESRI-REST</dct:title>
+       <dct:description xml:lang="fre">Ce service ESRI-REST permet de visualiser la série de couches de données "Plan
+         de
+         secteur"
+       </dct:description>
+       <dcat:accessURL
+         rdf:resource="https://geoservices.wallonie.be/arcgis/rest/services/AMENAGEMENT_TERRITOIRE/PDS/MapServer"/>
+       <dcat:accessService>
+         <rdf:Description>
+           <rdf:type rdf:resource="http://www.w3.org/ns/dcat#DataService"/>
+           <dct:title xml:lang="fre">Service de visualisation ESRI-REST</dct:title>
+           <dcat:endpointURL
+             rdf:resource="https://geoservices.wallonie.be/arcgis/rest/services/AMENAGEMENT_TERRITOIRE/PDS/MapServer"/>
+         </rdf:Description>
+       </dcat:accessService>
+       <dct:license>
+         <dct:LicenseDocument>
+           <rdfs:label xml:lang="fre">Conditions d'accès et d'utilisation spécifiques</rdfs:label>
+         </dct:LicenseDocument>
+       </dct:license>
+       <!--
+       Path=<http://purl.org/dc/terms/license>
+       Message: maxCount[1]: Invalid cardinality: expected max 1: Got count = 4
+      <dct:license>
+        <dct:LicenseDocument
+          rdf:about="https://geoportail.wallonie.be/files/documents/ConditionsSPW/DataSPW-CGU.pdf"/>
+      </dct:license>
+      <dct:license>
+        <dct:LicenseDocument
+          rdf:about="https://geoportail.wallonie.be/files/documents/ConditionsSPW/DataSPW-CGA.pdf"/>
+      </dct:license>
+      <dct:license>
+        <dct:LicenseDocument
+          rdf:about="https://geoportail.wallonie.be/files/documents/ConditionsSPW/DataSPW-CPU-TypeA.pdf"/>
+      </dct:license>
+      -->
+      <dct:accessRights>
+        <dct:RightsStatement
+          rdf:about="http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/noLimitations"/>
+      </dct:accessRights>
+      <dct:accessRights>
+        <dct:RightsStatement>
+          <rdfs:label xml:lang="fre">No limitations to public access</rdfs:label>
+        </dct:RightsStatement>
+      </dct:accessRights>
+      <dcat:spatialResolutionInMeters rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.01
+      </dcat:spatialResolutionInMeters>
+      <dcat:spatialResolutionInMeters rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">30
+      </dcat:spatialResolutionInMeters>
+      <dcat:spatialResolutionInMeters rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.3048
+      </dcat:spatialResolutionInMeters>
+      <dcat:temporalResolution rdf:datatype="http://www.w3.org/2001/XMLSchema#duration">P0Y2M0DT0H0M0S
+      </dcat:temporalResolution>
+      <dct:conformsTo>
+        <dct:Standard rdf:about="http://data.europa.eu/eli/reg/2010/1089"/>
+      </dct:conformsTo>
+      <dct:conformsTo>
+        <dct:Standard rdf:about="https://inspire.ec.europa.eu/id/document/tg/tn"/>
+      </dct:conformsTo>
+      <dct:conformsTo>
+        <dct:Standard>
+          <rdf:type rdf:resource="http://purl.org/dc/terms/Standard"/>
+          <rdfs:label xml:lang="fre">INSPIRE Data Specification on Transport Networks – Technical Guidelines, version
+            3.2
+          </rdfs:label>
+          <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2014-04-17</dct:issued>
+        </dct:Standard>
+      </dct:conformsTo>
+    </dcat:Distribution>
+  </dcat:distribution>
+  <dcat:distribution>
+    <dcat:Distribution>
+      <dct:title xml:lang="fre">Service de visualisation WMS</dct:title>
+      <dct:description xml:lang="fre">Ce service WMS permet de visualiser la série de couches de données "Plan de
+        secteur"
+      </dct:description>
+      <dcat:accessURL
+        rdf:resource="https://geoservices.wallonie.be/arcgis/services/AMENAGEMENT_TERRITOIRE/PDS/MapServer/WMSServer?request=GetCapabilities&amp;service=WMS"/>
+      <dcat:accessService>
+        <rdf:Description>
+          <rdf:type rdf:resource="http://www.w3.org/ns/dcat#DataService"/>
+          <dct:title xml:lang="fre">Service de visualisation WMS</dct:title>
+          <dcat:endpointURL
+            rdf:resource="https://geoservices.wallonie.be/arcgis/services/AMENAGEMENT_TERRITOIRE/PDS/MapServer/WMSServer?request=GetCapabilities&amp;service=WMS"/>
+          <dct:conformsTo>
+            <dct:Standard rdf:about="http://www.opengeospatial.org/standards/wms"/>
+          </dct:conformsTo>
+        </rdf:Description>
+      </dcat:accessService>
+      <dct:license>
+        <dct:LicenseDocument>
+          <rdfs:label xml:lang="fre">Conditions d'accès et d'utilisation spécifiques</rdfs:label>
+        </dct:LicenseDocument>
+      </dct:license>
+      <!--
+       Path=<http://purl.org/dc/terms/license>
+       Message: maxCount[1]: Invalid cardinality: expected max 1: Got count = 4
+     <dct:license>
+       <dct:LicenseDocument
+         rdf:about="https://geoportail.wallonie.be/files/documents/ConditionsSPW/DataSPW-CGU.pdf"/>
+     </dct:license>
+     <dct:license>
+       <dct:LicenseDocument
+         rdf:about="https://geoportail.wallonie.be/files/documents/ConditionsSPW/DataSPW-CGA.pdf"/>
+     </dct:license>
+     <dct:license>
+       <dct:LicenseDocument
+         rdf:about="https://geoportail.wallonie.be/files/documents/ConditionsSPW/DataSPW-CPU-TypeA.pdf"/>
+     </dct:license>-->
+     <dct:accessRights>
+       <dct:RightsStatement
+         rdf:about="http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/noLimitations"/>
+     </dct:accessRights>
+     <dct:accessRights>
+       <dct:RightsStatement>
+         <rdfs:label xml:lang="fre">No limitations to public access</rdfs:label>
+       </dct:RightsStatement>
+     </dct:accessRights>
+     <dcat:spatialResolutionInMeters rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.01
+     </dcat:spatialResolutionInMeters>
+     <dcat:spatialResolutionInMeters rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">30
+     </dcat:spatialResolutionInMeters>
+     <dcat:spatialResolutionInMeters rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.3048
+     </dcat:spatialResolutionInMeters>
+     <dcat:temporalResolution rdf:datatype="http://www.w3.org/2001/XMLSchema#duration">P0Y2M0DT0H0M0S
+     </dcat:temporalResolution>
+     <dct:conformsTo>
+       <dct:Standard rdf:about="http://data.europa.eu/eli/reg/2010/1089"/>
+     </dct:conformsTo>
+     <dct:conformsTo>
+       <dct:Standard rdf:about="https://inspire.ec.europa.eu/id/document/tg/tn"/>
+     </dct:conformsTo>
+     <dct:conformsTo>
+       <dct:Standard>
+         <rdf:type rdf:resource="http://purl.org/dc/terms/Standard"/>
+         <rdfs:label xml:lang="fre">INSPIRE Data Specification on Transport Networks – Technical Guidelines, version
+           3.2
+         </rdfs:label>
+         <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2014-04-17</dct:issued>
+       </dct:Standard>
+     </dct:conformsTo>
+   </dcat:Distribution>
+ </dcat:distribution>
+ <foaf:page>
+   <foaf:Document rdf:about="http://spw.wallonie.be/dgo4/site_thema/index.php?thema=modif_ps">
+     <dct:title xml:lang="fre">Base de données du Plan de secteur</dct:title>
+     <dct:description xml:lang="fre">Site permettant la recherche de Plans de secteur et des modifications dans la
+       base
+       de données
+     </dct:description>
+   </foaf:Document>
+ </foaf:page>
+ <foaf:page>
+   <foaf:Document rdf:about="https://lampspw.wallonie.be/dgo4/site_thema/index.php/synthese">
+     <dct:title xml:lang="fre">Inventaire des données géographiques de la DGO4</dct:title>
+     <dct:description xml:lang="fre">Inventaire des données géographiques produites ou exploitées à la DGO4.
+     </dct:description>
+   </foaf:Document>
+ </foaf:page>
+ <foaf:page>
+   <foaf:Document rdf:about="http://spw.wallonie.be/dgo4/site_amenagement/site/directions/dar">
+     <dct:title xml:lang="fre">La Direction de l'Aménagement Régional</dct:title>
+     <dct:description xml:lang="fre">Site de la Direction de l'Aménagement Régional (DAR)</dct:description>
+   </foaf:Document>
+ </foaf:page>
+ <foaf:page>
+   <foaf:Document
+     rdf:about="http://geoservices.wallonie.be/geotraitement/spwdatadownload/get/7fe2f305-1302-4297-b67e-792f55acd834/PDS_SHAPE_31370.zip">
+     <dct:title xml:lang="fre">Plan de Secteur au format SHP</dct:title>
+     <dct:description xml:lang="fre">Dossier compressé contenant le jeu de données du Plan de Secteur au format
+       shapefile en coordonnées Lambert 72
+     </dct:description>
+   </foaf:Document>
+ </foaf:page>
+</rdf:Description>
 </rdf:RDF>
