@@ -24,10 +24,15 @@ package org.fao.geonet.api.records.formatters;
 
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.io.IOUtils;
+import org.apache.jena.graph.Graph;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
+import org.apache.jena.shacl.ShaclValidator;
+import org.apache.jena.shacl.Shapes;
+import org.apache.jena.shacl.ValidationReport;
+import org.apache.jena.shacl.lib.ShLib;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.fao.geonet.utils.Xml;
@@ -147,6 +152,41 @@ public class FormatterApiTest extends AbstractServiceIntegrationTest {
                             fail(String.format("RDF model error. %s. Checked with: %s", rdfException.getMessage(), actual));
                         }
                     }
+
+                    if("eu-dcat-ap".equalsIgnoreCase(formatter)){
+                        //Test against SHACL rules
+                        //Load SHACL Shapes (rules) for DCAT-AP 3.0
+                        String SHAPES = FormatterApiTest.class.getResource("dcat-ap-3-SHACL.ttl").getFile();
+                        if(SHAPES.startsWith("/")){ SHAPES.replaceFirst("/","");}
+
+                        //Load document to validate.
+                        String DATA = FormatterApiTest.class.getResource(
+                            String.format("%s-%s-%s",
+                                schema, formatter, checkfile)
+                        ).getFile();
+                        if(DATA.startsWith("/")){ DATA.replaceFirst("/","");}
+
+                        //Load RDF Graph from files.
+                        Graph shapesGraph = RDFDataMgr.loadGraph(SHAPES);
+                        Graph dataGraph = RDFDataMgr.loadGraph(DATA);
+
+                        //Parse shapes from SHACL document.
+                        Shapes shapes = Shapes.parse(shapesGraph);
+
+                        //Validate document against SHACL rules.
+                        ValidationReport report = ShaclValidator.get().validate(shapes, dataGraph);
+
+                        //If document is not valid.
+                        if(report.conforms() == false){
+                            //Print validation report and fail.
+                            ShLib.printReport(report);
+                            System.out.println();
+                            RDFDataMgr.write(System.out, report.getModel(), Lang.TTL);
+                            fail("Invalid DCAT-AP document. See report in the test console output.");
+                        }
+
+                    }
+
                 } else {
                     assertEquals(
                         url,
