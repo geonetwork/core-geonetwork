@@ -8,6 +8,10 @@
   <xsl:param name="isExpandSkosConcept"
              select="xs:boolean($expandSkosConcept)"/>
 
+  <xsl:variable name="isPreservingIsoType"
+                as="xs:boolean"
+                select="true()"/>
+
   <xsl:variable name="isPreservingAllResourceConstraints"
                 as="xs:boolean"
                 select="true()"/>

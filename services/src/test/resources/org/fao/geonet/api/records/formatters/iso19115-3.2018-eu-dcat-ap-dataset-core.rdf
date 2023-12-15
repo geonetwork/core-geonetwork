@@ -7,7 +7,6 @@
   <rdf:Description>
     <rdf:type rdf:resource="http://www.w3.org/ns/dcat#Dataset"/>
     <dct:type rdf:resource="http://purl.org/dc/dcmitype/Dataset"/>
-    <dct:type rdf:resource="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#dataset"/>
     <foaf:isPrimaryTopicOf>
       <rdf:Description>
         <rdf:type rdf:resource="http://www.w3.org/ns/dcat#CatalogRecord"/>

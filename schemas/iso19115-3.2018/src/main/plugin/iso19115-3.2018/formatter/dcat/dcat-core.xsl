@@ -320,7 +320,7 @@
     <xsl:if test="$dcmiType">
       <dct:type rdf:resource="http://purl.org/dc/dcmitype/{$dcmiType}"/>
     </xsl:if>
-    <xsl:if test="current() != ''">
+    <xsl:if test="$isPreservingIsoType and current() != ''">
       <dct:type rdf:resource="{concat($isoCodeListBaseUri, current())}"/>
     </xsl:if>
     <!-- TODO: Add mapping to Datacite https://schema.datacite.org/meta/kernel-4.1/include/datacite-resourceType-v4.1.xsd ?-->
