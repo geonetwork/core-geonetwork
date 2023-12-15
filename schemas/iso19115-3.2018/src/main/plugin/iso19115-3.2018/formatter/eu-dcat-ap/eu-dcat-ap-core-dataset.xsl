@@ -245,4 +245,10 @@
   <xsl:template mode="iso19115-3-to-dcat"
                 match="mdb:identificationInfo/*/mri:resourceMaintenance/*/mmi:maintenanceAndUpdateFrequency[position() > 1]"/>
 
+  <!--
+    Path=<http://www.w3.org/ns/dcat#spatialResolutionInMeters>
+    Message: maxCount[1]: Invalid cardinality: expected max 1: Got count = 3
+  -->
+  <xsl:template mode="iso19115-3-to-dcat"
+                match="mdb:identificationInfo/*/mri:spatialResolution[count(preceding-sibling::mri:spatialResolution[*/mri:distance]) > 0]/*/mri:distance" priority="2"/>
 </xsl:stylesheet>

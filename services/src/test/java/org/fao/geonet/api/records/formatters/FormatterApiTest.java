@@ -158,36 +158,9 @@ public class FormatterApiTest extends AbstractServiceIntegrationTest {
                     if("eu-dcat-ap".equalsIgnoreCase(formatter)){
                         String[] shaclValidation = {"dcat-ap-2.1.1-base-SHACL.ttl", "dcat-ap-3-SHACL.ttl"};
                         for(String shaclShapes : shaclValidation) {
-                            String SHAPES = FormatterApiTest.class.getResource(shaclShapes).getFile();
-                            if(SHAPES.startsWith("/")){ SHAPES.replaceFirst("/","");}
-
-                            //Load document to validate.
-                            String DATA = FormatterApiTest.class.getResource(
-                                String.format("%s-%s-%s",
-                                    schema, formatter, checkfile)
-                            ).getFile();
-                            if(DATA.startsWith("/")){
-                                DATA.replaceFirst("/","");
-                            }
-
-                            Graph shapesGraph = RDFDataMgr.loadGraph(SHAPES);
-                            Graph dataGraph = RDFDataMgr.loadGraph(DATA);
-
-                            Shapes shapes = Shapes.parse(shapesGraph);
-
-                            ValidationReport report = ShaclValidator.get().validate(shapes, dataGraph);
-
-                            if(report.conforms() == false){
-                                ShLib.printReport(report);
-                                System.out.println();
-                                RDFDataMgr.write(System.out, report.getModel(), Lang.TTL);
-                                fail(String.format("%s. Checked with %s. Invalid DCAT-AP document. See report in the test console output.",
-                                    url, checkfile));
-                            }
-
+                            applyShaclValidation(formatter, schema, checkfile, url, shaclShapes);
                         }
                     }
-
                 } else {
                     assertEquals(
                         url,
@@ -198,6 +171,35 @@ public class FormatterApiTest extends AbstractServiceIntegrationTest {
             } catch (Exception e) {
                 fail(url);
             }
+        }
+    }
+
+    private static void applyShaclValidation(String formatter, String schema, String checkfile, String url, String shaclShapes) {
+        String SHAPES = FormatterApiTest.class.getResource(shaclShapes).getFile();
+        if(SHAPES.startsWith("/")){ SHAPES.replaceFirst("/","");}
+
+        //Load document to validate.
+        String DATA = FormatterApiTest.class.getResource(
+            String.format("%s-%s-%s",
+                schema, formatter, checkfile)
+        ).getFile();
+        if(DATA.startsWith("/")){
+            DATA.replaceFirst("/","");
+        }
+
+        Graph shapesGraph = RDFDataMgr.loadGraph(SHAPES);
+        Graph dataGraph = RDFDataMgr.loadGraph(DATA);
+
+        Shapes shapes = Shapes.parse(shapesGraph);
+
+        ValidationReport report = ShaclValidator.get().validate(shapes, dataGraph);
+
+        if(report.conforms() == false){
+            ShLib.printReport(report);
+            System.out.println();
+            RDFDataMgr.write(System.out, report.getModel(), Lang.TTL);
+            fail(String.format("%s. Checked with %s [%s]. Invalid DCAT-AP document. See report in the test console output.",
+                url, checkfile, shaclShapes));
         }
     }
 

@@ -399,10 +399,6 @@
     </dcat:theme>
     <dcat:spatialResolutionInMeters rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.01
     </dcat:spatialResolutionInMeters>
-    <dcat:spatialResolutionInMeters rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">30
-    </dcat:spatialResolutionInMeters>
-    <dcat:spatialResolutionInMeters rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.3048
-    </dcat:spatialResolutionInMeters>
     <dcat:temporalResolution rdf:datatype="http://www.w3.org/2001/XMLSchema#duration">P0Y2M0DT0H0M0S
     </dcat:temporalResolution>
     <dct:accrualPeriodicity>
@@ -412,7 +408,7 @@
       <dcat:Distribution>
         <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2023-12-08T00:00:00</dct:issued>
         <dcat:accessURL rdf:resource="https://data.monde.org/secteur.shp"/>
-        <dcat:byteSize>10485760</dcat:byteSize>
+        <dcat:byteSize rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">10485760</dcat:byteSize>
         <dct:format>
           <dct:MediaType>
             <rdfs:label>ESRI Shapefile (.shp)</rdfs:label>
@@ -430,10 +426,6 @@
             rdf:about="http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/noLimitations"/>
         </dct:accessRights>
         <dcat:spatialResolutionInMeters rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.01
-        </dcat:spatialResolutionInMeters>
-        <dcat:spatialResolutionInMeters rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">30
-        </dcat:spatialResolutionInMeters>
-        <dcat:spatialResolutionInMeters rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.3048
         </dcat:spatialResolutionInMeters>
         <dcat:temporalResolution rdf:datatype="http://www.w3.org/2001/XMLSchema#duration">P0Y2M0DT0H0M0S
         </dcat:temporalResolution>
@@ -477,10 +469,6 @@
             rdf:about="http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/noLimitations"/>
         </dct:accessRights>
         <dcat:spatialResolutionInMeters rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.01
-        </dcat:spatialResolutionInMeters>
-        <dcat:spatialResolutionInMeters rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">30
-        </dcat:spatialResolutionInMeters>
-        <dcat:spatialResolutionInMeters rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.3048
         </dcat:spatialResolutionInMeters>
         <dcat:temporalResolution rdf:datatype="http://www.w3.org/2001/XMLSchema#duration">P0Y2M0DT0H0M0S
         </dcat:temporalResolution>
@@ -527,10 +515,6 @@
         </dct:accessRights>
         <dcat:spatialResolutionInMeters rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.01
         </dcat:spatialResolutionInMeters>
-        <dcat:spatialResolutionInMeters rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">30
-        </dcat:spatialResolutionInMeters>
-        <dcat:spatialResolutionInMeters rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.3048
-        </dcat:spatialResolutionInMeters>
         <dcat:temporalResolution rdf:datatype="http://www.w3.org/2001/XMLSchema#duration">P0Y2M0DT0H0M0S
         </dcat:temporalResolution>
         <dct:conformsTo>
@@ -576,10 +560,6 @@
             rdf:about="http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/noLimitations"/>
         </dct:accessRights>
         <dcat:spatialResolutionInMeters rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.01
-        </dcat:spatialResolutionInMeters>
-        <dcat:spatialResolutionInMeters rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">30
-        </dcat:spatialResolutionInMeters>
-        <dcat:spatialResolutionInMeters rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.3048
         </dcat:spatialResolutionInMeters>
         <dcat:temporalResolution rdf:datatype="http://www.w3.org/2001/XMLSchema#duration">P0Y2M0DT0H0M0S
         </dcat:temporalResolution>
@@ -628,10 +608,6 @@
             rdf:about="http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/noLimitations"/>
         </dct:accessRights>
         <dcat:spatialResolutionInMeters rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.01
-        </dcat:spatialResolutionInMeters>
-        <dcat:spatialResolutionInMeters rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">30
-        </dcat:spatialResolutionInMeters>
-        <dcat:spatialResolutionInMeters rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.3048
         </dcat:spatialResolutionInMeters>
         <dcat:temporalResolution rdf:datatype="http://www.w3.org/2001/XMLSchema#duration">P0Y2M0DT0H0M0S
         </dcat:temporalResolution>
