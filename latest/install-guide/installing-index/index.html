@@ -20,7 +20,7 @@
       
       
       <link rel="icon" href="../../assets/images/geonetwork-logo.png">
-      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.1">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.2">
     
     
       
@@ -28,7 +28,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.45e1311d.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.50c56a3b.min.css">
       
         
         <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
@@ -1590,8 +1590,6 @@
         
       
         
-      
-        
           
         
       
@@ -2003,57 +2001,6 @@
             
           </ul>
         </nav>
-      
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    
-    
-      
-        
-          
-        
-      
-        
-      
-        
-      
-        
-      
-    
-    
-    
-    
-      
-      
-    
-    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
-      
-        
-  
-  
-    <a href="../../maintainer-guide/statistics/" class="md-nav__link">
-      
-  
-  <span class="md-ellipsis">
-    Setting up search/content statistics
-  </span>
-  
-
-      
-        <span class="md-nav__icon md-icon"></span>
-      
-    </a>
-  
-
       
     </li>
   
@@ -3137,7 +3084,7 @@
 <h1 id="installing-index">Installing search platform</h1>
 <p>The GeoNetwork search engine is built on top of Elasticsearch. The platform is used to index records and also to analyze WFS data (See <a href="../../user-guide/analyzing/data/">Analyze and visualize data</a> ), an <a href="https://www.elastic.co/products/elasticsearch">Elasticsearch</a> instance must be installed next to the catalog.</p>
 <h2 id="manual-installation">Manual installation</h2>
-<p>Download Elasticsearch from <a href="https://www.elastic.co/downloads/elasticsearch">https://www.elastic.co/downloads/elasticsearch</a> and unzip the file.</p>
+<p>Download Elasticsearch 7.x (at least <code>7.9.2</code>) from <a href="https://www.elastic.co/downloads/elasticsearch">https://www.elastic.co/downloads/elasticsearch</a> and unzip the file.</p>
 <div class="language-shell highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>wget<span class="w"> </span>https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.9.2.tar.gz
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>tar<span class="w"> </span>xvfz<span class="w"> </span>elasticsearch-7.9.2.tar.gz
 </span></code></pre></div>
@@ -3145,7 +3092,7 @@
 <div class="language-shell highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>elasticsearch-7.9.2/bin/elasticsearch
 </span></code></pre></div>
 <p>Stop Elasticsearch using</p>
-<div class="language-shell highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>elasticsearch-7.6.2/bin/elasticsearch<span class="w"> </span>stop
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>elasticsearch-7.9.2/bin/elasticsearch<span class="w"> </span>stop
 </span></code></pre></div>
 <p>GeoNetwork will start even if Elasticsearch index is down. A warning will be displayed. Once the Elasticsearch index is up, indices are created if they do not exist.</p>
 <p>(Optional) Then create the default index (the application will create them automatically once the index is up and running and if no indices are found):</p>
@@ -3170,7 +3117,7 @@
 <h2 id="check-installation">Check installation</h2>
 <p>Access Elasticsearch admin page from <a href="http://localhost:9200/">http://localhost:9200/</a>.</p>
 <h2 id="configure-connection">Configure connection</h2>
-<p>Update Elasticsearch connection details in <code>`WEB-INF/config.properties ```` and restart the application (see :code:\`web/src/main/webResources/WEB-INF/config.properties</code>):</p>
+<p>Update Elasticsearch connection details in <code>WEB-INF/config.properties</code> and restart the application:</p>
 <div class="language-shell highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>es.protocol<span class="o">=</span>http
 </span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>es.port<span class="o">=</span><span class="m">9200</span>
 </span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>es.host<span class="o">=</span>localhost
