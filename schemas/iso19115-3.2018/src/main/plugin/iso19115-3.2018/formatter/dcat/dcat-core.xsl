@@ -25,6 +25,7 @@
                 xmlns:gex="http://standards.iso.org/iso/19115/-3/gex/1.0"
                 xmlns:gml="http://www.opengis.net/gml/3.2"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
+                xmlns:util="java:org.fao.geonet.util.XslUtil"
                 xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
                 xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
                 xmlns:skos="http://www.w3.org/2004/02/skos/core#"
@@ -55,10 +56,15 @@
     <xsl:variable name="defaultLanguage"
                   select="/root/mdb:MD_Metadata/mdb:defaultLocale/*"/>
     <xsl:for-each select="$defaultLanguage">
-      <language id="{@id}" iso3code="{lan:language/*/@codeListValue}" default=""/>
+      <language id="{@id}"
+                iso3code="{lan:language/*/@codeListValue}"
+                iso2code="{util:twoCharLangCode(lan:language/*/@codeListValue)}"
+                default=""/>
     </xsl:for-each>
     <xsl:for-each select="/root/mdb:MD_Metadata/mdb:otherLocale/*[@id != $defaultLanguage/@id]">
-      <language id="{@id}" iso3code="{lan:language/*/@codeListValue}"/>
+      <language id="{@id}"
+                iso3code="{lan:language/*/@codeListValue}"
+                iso2code="{util:twoCharLangCode(lan:language/*/@codeListValue)}"/>
     </xsl:for-each>
   </xsl:variable>
 

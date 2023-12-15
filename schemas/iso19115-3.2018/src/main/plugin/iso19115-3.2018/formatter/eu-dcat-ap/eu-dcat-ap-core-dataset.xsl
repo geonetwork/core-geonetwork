@@ -17,6 +17,10 @@
                 xmlns:dct="http://purl.org/dc/terms/"
                 exclude-result-prefixes="#all">
 
+
+  <xsl:variable name="euDataTheme"
+                select="document('vocabularies/data-theme-skos.rdf')"/>
+
   <!--
   Theme mapping
   https://joinup.ec.europa.eu/collection/semantic-interoperability-community-semic/solution/dcat-application-profile-implementation-guidelines/discussion/di1-tools-dcat-ap
@@ -215,7 +219,22 @@
                               */text() = $values/*/text()
                               or */text() = $values/*/@xlink:href]/@key)"/>
     <xsl:for-each select="$theme">
-      <dcat:theme rdf:resource="{.}"/>
+      <dcat:theme>
+        <xsl:choose>
+          <xsl:when test="$isExpandSkosConcept">
+            <xsl:variable name="themeDescription"
+                          select="$euDataTheme//skos:Concept[@rdf:about = current()]"/>
+            <skos:Concept>
+              <xsl:copy-of select="$themeDescription/@rdf:about"/>
+              <xsl:copy-of select="$themeDescription/skos:prefLabel[@xml:lang = $languages/@iso2code]"
+                           copy-namespaces="no"/>
+            </skos:Concept>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:attribute name="rdf:resource" select="current()"/>
+          </xsl:otherwise>
+        </xsl:choose>
+      </dcat:theme>
     </xsl:for-each>
   </xsl:template>
 

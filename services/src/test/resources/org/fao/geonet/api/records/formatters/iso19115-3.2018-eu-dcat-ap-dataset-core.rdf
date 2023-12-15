@@ -348,14 +348,46 @@
         <adms:schemaAgency>BE.SPW.INFRASIG.CARTON</adms:schemaAgency>
       </rdf:Description>
     </adms:identifier>
-    <dcat:theme rdf:resource="http://publications.europa.eu/resource/authority/data-theme/AGRI"/>
-    <dcat:theme rdf:resource="http://publications.europa.eu/resource/authority/data-theme/ECON"/>
-    <dcat:theme rdf:resource="http://publications.europa.eu/resource/authority/data-theme/ENER"/>
-    <dcat:theme rdf:resource="http://publications.europa.eu/resource/authority/data-theme/ENVI"/>
-    <dcat:theme rdf:resource="http://publications.europa.eu/resource/authority/data-theme/HEAL"/>
-    <dcat:theme rdf:resource="http://publications.europa.eu/resource/authority/data-theme/REGI"/>
-    <dcat:theme rdf:resource="http://publications.europa.eu/resource/authority/data-theme/SOCI"/>
-    <dcat:theme rdf:resource="http://publications.europa.eu/resource/authority/data-theme/TECH"/>
+    <dcat:theme>
+      <skos:Concept rdf:about="http://publications.europa.eu/resource/authority/data-theme/AGRI">
+        <skos:prefLabel xml:lang="fr">Agriculture, pêche, sylviculture et alimentation</skos:prefLabel>
+      </skos:Concept>
+    </dcat:theme>
+    <dcat:theme>
+      <skos:Concept rdf:about="http://publications.europa.eu/resource/authority/data-theme/ECON">
+        <skos:prefLabel xml:lang="fr">Économie et finances</skos:prefLabel>
+      </skos:Concept>
+    </dcat:theme>
+    <dcat:theme>
+      <skos:Concept rdf:about="http://publications.europa.eu/resource/authority/data-theme/ENER">
+        <skos:prefLabel xml:lang="fr">Énergie</skos:prefLabel>
+      </skos:Concept>
+    </dcat:theme>
+    <dcat:theme>
+      <skos:Concept rdf:about="http://publications.europa.eu/resource/authority/data-theme/ENVI">
+        <skos:prefLabel xml:lang="fr">Environnement</skos:prefLabel>
+      </skos:Concept>
+    </dcat:theme>
+    <dcat:theme>
+      <skos:Concept rdf:about="http://publications.europa.eu/resource/authority/data-theme/HEAL">
+        <skos:prefLabel xml:lang="fr">Santé</skos:prefLabel>
+      </skos:Concept>
+    </dcat:theme>
+    <dcat:theme>
+      <skos:Concept rdf:about="http://publications.europa.eu/resource/authority/data-theme/REGI">
+        <skos:prefLabel xml:lang="fr">Régions et villes</skos:prefLabel>
+      </skos:Concept>
+    </dcat:theme>
+    <dcat:theme>
+      <skos:Concept rdf:about="http://publications.europa.eu/resource/authority/data-theme/SOCI">
+        <skos:prefLabel xml:lang="fr">Population et société</skos:prefLabel>
+      </skos:Concept>
+    </dcat:theme>
+    <dcat:theme>
+      <skos:Concept rdf:about="http://publications.europa.eu/resource/authority/data-theme/TECH">
+        <skos:prefLabel xml:lang="fr">Science et technologie</skos:prefLabel>
+      </skos:Concept>
+    </dcat:theme>
     <dcat:spatialResolutionInMeters rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.01
     </dcat:spatialResolutionInMeters>
     <dcat:spatialResolutionInMeters rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">30

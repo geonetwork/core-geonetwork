@@ -150,7 +150,8 @@ public class FormatterApiTest extends AbstractServiceIntegrationTest {
                                 IOUtils.toInputStream(actual, StandardCharsets.UTF_8),
                                 Lang.RDFXML);
                         } catch (Exception rdfException) {
-                            fail(String.format("RDF model error. %s. Checked with: %s", rdfException.getMessage(), actual));
+                            fail(String.format("%s. Checked with %s. RDF model error. %s. Checked with: %s",
+                                url, checkfile, rdfException.getMessage(), actual));
                         }
                     }
 
@@ -183,7 +184,8 @@ public class FormatterApiTest extends AbstractServiceIntegrationTest {
                             ShLib.printReport(report);
                             System.out.println();
                             RDFDataMgr.write(System.out, report.getModel(), Lang.TTL);
-                            fail("Invalid DCAT-AP document. See report in the test console output.");
+                            fail(String.format("%s. Checked with %s. Invalid DCAT-AP document. See report in the test console output.",
+                                url, checkfile));
                         }
 
                     }
