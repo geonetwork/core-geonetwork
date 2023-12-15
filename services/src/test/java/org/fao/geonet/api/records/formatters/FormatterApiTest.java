@@ -156,38 +156,36 @@ public class FormatterApiTest extends AbstractServiceIntegrationTest {
                     }
 
                     if("eu-dcat-ap".equalsIgnoreCase(formatter)){
-                        //Test against SHACL rules
-                        //Load SHACL Shapes (rules) for DCAT-AP 3.0
-                        String SHAPES = FormatterApiTest.class.getResource("dcat-ap-3-SHACL.ttl").getFile();
-                        if(SHAPES.startsWith("/")){ SHAPES.replaceFirst("/","");}
+                        String[] shaclValidation = {"dcat-ap-2.1.1-base-SHACL.ttl", "dcat-ap-3-SHACL.ttl"};
+                        for(String shaclShapes : shaclValidation) {
+                            String SHAPES = FormatterApiTest.class.getResource(shaclShapes).getFile();
+                            if(SHAPES.startsWith("/")){ SHAPES.replaceFirst("/","");}
 
-                        //Load document to validate.
-                        String DATA = FormatterApiTest.class.getResource(
-                            String.format("%s-%s-%s",
-                                schema, formatter, checkfile)
-                        ).getFile();
-                        if(DATA.startsWith("/")){ DATA.replaceFirst("/","");}
+                            //Load document to validate.
+                            String DATA = FormatterApiTest.class.getResource(
+                                String.format("%s-%s-%s",
+                                    schema, formatter, checkfile)
+                            ).getFile();
+                            if(DATA.startsWith("/")){
+                                DATA.replaceFirst("/","");
+                            }
 
-                        //Load RDF Graph from files.
-                        Graph shapesGraph = RDFDataMgr.loadGraph(SHAPES);
-                        Graph dataGraph = RDFDataMgr.loadGraph(DATA);
+                            Graph shapesGraph = RDFDataMgr.loadGraph(SHAPES);
+                            Graph dataGraph = RDFDataMgr.loadGraph(DATA);
 
-                        //Parse shapes from SHACL document.
-                        Shapes shapes = Shapes.parse(shapesGraph);
+                            Shapes shapes = Shapes.parse(shapesGraph);
 
-                        //Validate document against SHACL rules.
-                        ValidationReport report = ShaclValidator.get().validate(shapes, dataGraph);
+                            ValidationReport report = ShaclValidator.get().validate(shapes, dataGraph);
 
-                        //If document is not valid.
-                        if(report.conforms() == false){
-                            //Print validation report and fail.
-                            ShLib.printReport(report);
-                            System.out.println();
-                            RDFDataMgr.write(System.out, report.getModel(), Lang.TTL);
-                            fail(String.format("%s. Checked with %s. Invalid DCAT-AP document. See report in the test console output.",
-                                url, checkfile));
+                            if(report.conforms() == false){
+                                ShLib.printReport(report);
+                                System.out.println();
+                                RDFDataMgr.write(System.out, report.getModel(), Lang.TTL);
+                                fail(String.format("%s. Checked with %s. Invalid DCAT-AP document. See report in the test console output.",
+                                    url, checkfile));
+                            }
+
                         }
-
                     }
 
                 } else {

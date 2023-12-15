@@ -80,7 +80,7 @@
   <!-- Create resource -->
   <xsl:template mode="iso19115-3-to-dcat"
                 match="mdb:MD_Metadata">
-    <rdf:Description>
+    <rdf:Description rdf:about="{$recordUri}">
       <xsl:apply-templates mode="iso19115-3-to-dcat"
                            select="mdb:metadataScope/*/mdb:resourceScope/*/@codeListValue"/>
 
