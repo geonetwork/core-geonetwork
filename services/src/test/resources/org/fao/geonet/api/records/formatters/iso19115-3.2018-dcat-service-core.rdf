@@ -55,6 +55,7 @@
           - Accéder aux séries de couches de données géographiques relatives au thème "Sites protégés" et aux sites de
           désignation par site protégé.
         </dct:description>
+        <foaf:primaryTopic rdf:resource="https://metawal.wallonie.be/geonetwork/srv/api/records/3dbe0017-a71f-4923-9b44-fdb5afef5778"/>
       </rdf:Description>
     </foaf:isPrimaryTopicOf>
     <dcat:landingPage>

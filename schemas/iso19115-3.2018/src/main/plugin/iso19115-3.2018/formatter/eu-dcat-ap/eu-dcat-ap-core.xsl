@@ -15,6 +15,9 @@
   <xsl:import href="../dcat/dcat-core.xsl"/>
   <xsl:import href="eu-dcat-ap-core-dataset.xsl"/>
 
+  <xsl:variable name="isPreservingAllResourceConstraints"
+                as="xs:boolean"
+                select="false()"/>
   <!--
   Catalogue Record
   [o]	title	Literal	0..*	A name given to the Catalogue Record.	This property can be repeated for parallel language versions of the name.

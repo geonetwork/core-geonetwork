@@ -51,20 +51,22 @@
                 match="mdb:identificationInfo/*/mri:resourceConstraints/*[mco:accessConstraints]">
     <xsl:if test="count(../preceding-sibling::mri:resourceConstraints/*[mco:accessConstraints]) = 0">
       <xsl:for-each select="../../mri:resourceConstraints/*[mco:accessConstraints]/mco:otherConstraints">
-        <xsl:element name="{if (position() = 1) then 'dct:accessRights' else 'dct:rights'}">
-          <dct:RightsStatement>
-            <xsl:choose>
-              <xsl:when test="gcx:Anchor/@xlink:href">
-                <xsl:attribute name="rdf:about" select="gcx:Anchor/@xlink:href"/>
-              </xsl:when>
-              <xsl:otherwise>
-                <xsl:call-template name="rdf-localised">
-                  <xsl:with-param name="nodeName" select="'rdfs:label'"/>
-                </xsl:call-template>
-              </xsl:otherwise>
-            </xsl:choose>
-          </dct:RightsStatement>
-        </xsl:element>
+        <xsl:if test="position() = 1 or ($isPreservingAllResourceConstraints and position() > 1)">
+          <xsl:element name="{if (position() = 1) then 'dct:accessRights' else 'dct:rights'}">
+            <dct:RightsStatement>
+              <xsl:choose>
+                <xsl:when test="gcx:Anchor/@xlink:href">
+                  <xsl:attribute name="rdf:about" select="gcx:Anchor/@xlink:href"/>
+                </xsl:when>
+                <xsl:otherwise>
+                  <xsl:call-template name="rdf-localised">
+                    <xsl:with-param name="nodeName" select="'rdfs:label'"/>
+                  </xsl:call-template>
+                </xsl:otherwise>
+              </xsl:choose>
+            </dct:RightsStatement>
+          </xsl:element>
+        </xsl:if>
       </xsl:for-each>
     </xsl:if>
   </xsl:template>
@@ -98,20 +100,22 @@
             </dct:license>
           </xsl:when>
           <xsl:otherwise>
-            <dct:rights>
-              <dct:RightsStatement>
-                <xsl:choose>
-                  <xsl:when test="gcx:Anchor/@xlink:href">
-                    <xsl:attribute name="rdf:about" select="gcx:Anchor/@xlink:href"/>
-                  </xsl:when>
-                  <xsl:otherwise>
-                    <xsl:call-template name="rdf-localised">
-                      <xsl:with-param name="nodeName" select="'rdfs:label'"/>
-                    </xsl:call-template>
-                  </xsl:otherwise>
-                </xsl:choose>
-              </dct:RightsStatement>
-            </dct:rights>
+            <xsl:if test="$isPreservingAllResourceConstraints">
+              <dct:rights>
+                <dct:RightsStatement>
+                  <xsl:choose>
+                    <xsl:when test="gcx:Anchor/@xlink:href">
+                      <xsl:attribute name="rdf:about" select="gcx:Anchor/@xlink:href"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                      <xsl:call-template name="rdf-localised">
+                        <xsl:with-param name="nodeName" select="'rdfs:label'"/>
+                      </xsl:call-template>
+                    </xsl:otherwise>
+                  </xsl:choose>
+                </dct:RightsStatement>
+              </dct:rights>
+            </xsl:if>
           </xsl:otherwise>
         </xsl:choose>
       </xsl:for-each>

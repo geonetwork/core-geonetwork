@@ -50,6 +50,8 @@
   <xsl:import href="dcat-core-associated.xsl"/>
   <xsl:import href="dcat-core-lineage.xsl"/>
 
+  <xsl:variable name="recordUri"
+                select="/root/mdb:MD_Metadata/mdb:metadataLinkage/*/cit:linkage/*/text()"/>
 
   <xsl:variable name="languages"
                 as="node()*">

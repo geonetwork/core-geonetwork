@@ -35,6 +35,7 @@
       <rdf:Description>
         <rdf:type rdf:resource="http://www.w3.org/ns/dcat#CatalogRecord"/>
         <xsl:copy-of select="$properties"/>
+        <foaf:primaryTopic rdf:resource="{$recordUri}"/>
       </rdf:Description>
     </foaf:isPrimaryTopicOf>
   </xsl:template>
