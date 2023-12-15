@@ -27,12 +27,12 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.fao.geonet.harvester.wfsfeatures.model.WFSHarvesterParameter;
-import org.geotools.data.DataStoreFinder;
+import org.geotools.api.data.DataStoreFinder;
 import org.geotools.data.wfs.WFSDataStore;
 import org.geotools.data.wfs.WFSDataStoreFactory;
 import org.geotools.data.wfs.impl.WFSDataAccessFactory;
-import org.opengis.feature.simple.SimpleFeatureType;
-import org.opengis.feature.type.AttributeDescriptor;
+import org.geotools.api.feature.simple.SimpleFeatureType;
+import org.geotools.api.feature.type.AttributeDescriptor;
 
 import java.io.IOException;
 import java.io.Serializable;

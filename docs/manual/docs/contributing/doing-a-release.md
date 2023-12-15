@@ -4,6 +4,10 @@ This section documents the steps followed by the development team to do a new re
 
 Once the release branch has been thoroughly tested and is stable a release can be made.
 
+The following script can be used on Linux and Mac. For this a running build environment is needed
+with the following utilities: sed, xmlstarlet and sftp.
+
+
 1.  Prepare the release
 
     ``` shell
@@ -90,25 +94,6 @@ Once the release branch has been thoroughly tested and is stable a release can b
     # Set version number to SNAPSHOT
     ./update-version.sh $newversion $nextversion
 
-    # Add SQL migration step for the next version
-    mkdir web/src/main/webapp/WEB-INF/classes/setup/sql/migrate/v424
-    cat <<EOF > web/src/main/webapp/WEB-INF/classes/setup/sql/migrate/v424/migrate-default.sql
-    UPDATE Settings SET value='4.2.4' WHERE name='system/platform/version';
-    UPDATE Settings SET value='SNAPSHOT' WHERE name='system/platform/subVersion';
-    EOF
-    vi web/src/main/webResources/WEB-INF/config-db/database_migration.xml
-    ```
-
-    In `WEB-INF/config-db/database_migration.xml` add an entry for the new version in the 2 steps:
-
-    ``` xml
-    <entry key="3.12.2">
-      <list>
-        <value>WEB-INF/classes/setup/sql/migrate/v3122/migrate-</value>
-      </list>
-    </entry>
-    ```
-
     ``` shell
     git add .
     git commit -m "Update version to $nextversion"
@@ -178,25 +163,6 @@ Once the release branch has been thoroughly tested and is stable a release can b
     # Create it if it does not exist yet
     git checkout master
     ./update-version.sh $currentversion $nextMajorVersion
-    ```
-
-    In the following folder `web/src/main/webapp/WEB-INF/classes/setup/sql/migrate` create `v370` folder.
-
-    In this folder create a `migrate-default.sql` with the following content:
-
-    ``` sql
-    UPDATE Settings SET value='3.7.0' WHERE name='system/platform/version';
-    UPDATE Settings SET value='SNAPSHOT' WHERE name='system/platform/subVersion';
-    ```
-
-    In `web/src/main/webResources/WEB-INF/config-db/database_migration.xml` add the following for the migration to call the migration script:
-
-    ``` xml
-    <entry key="3.7.0">
-      <list>
-        <value>WEB-INF/classes/setup/sql/migrate/v370/migrate-</value>
-      </list>
-    </entry>
     ```
 
     Commit the new version

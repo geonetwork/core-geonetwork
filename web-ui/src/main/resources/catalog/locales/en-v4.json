@@ -394,6 +394,7 @@
   "measureName": "Measure",
   "measureDescription": "Description",
   "measureValue": "Value",
+  "measureDate": "Date",
   "switchPortals": "Switch to another Portal",
   "dataPreview":  "Discover data",
   "tableOfContents": "Table of Contents",
@@ -418,5 +419,6 @@
   "associatedTo": "Associated ",
   "overviewDescription": "Overview description",
   "overviewUrl": "Overview URL",
-  "restApiUrl": "REST API URL"
+  "restApiUrl": "REST API URL",
+  "filterHelp": "Please click on one of the buttons below to activate the filter"
 }

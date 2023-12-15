@@ -762,6 +762,12 @@
         getUuid: function () {
           return this.uuid;
         },
+        getMetadataLanguages: function () {
+          if (!this.mainLanguage) {
+            return [];
+          }
+          return [this.mainLanguage].concat(this.otherLanguage).unique();
+        },
         isPublished: function (pubOption) {
           if (pubOption) {
             return this.isPublishedToGroup(pubOption.publicationGroup);

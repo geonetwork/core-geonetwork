@@ -1,12 +1,12 @@
-# Geonetwork Manual and Help
+# GeoNetwork Manual and Help
 
-Documentation for GeoNetwork opensource is available via https://geonetwork-opensource.org.
+Documentation for GeoNetwork opensource is available via https://docs.geonetwork-opensource.org.
 
-This documentation is written under the creative commons license [Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0)](LICENSE.md).
+This documentation is written under the Creative Commons license [Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0)](LICENSE).
 
 Reference:
 
-* [Documentation Writing Guide](docs/devel/docs/docs.md)
+* [Documentation Writing Guide](docs/devel/docs/index.md)
 
 ## Communication
 
@@ -14,9 +14,9 @@ The [project issue tracker](https://github.com/geonetwork/core-geonetwork/issues
 
 ## Material for MkDocs
 
-Documentation is [mkdocs-material](https://squidfunk.github.io/mkdocs-material/) which is a Markdown documentation framework written on top of [MkDocs](https://www.mkdocs.org/).
+Documentation is [MkDocs-material](https://squidfunk.github.io/mkdocs-material/) which is a Markdown documentation framework written on top of [MkDocs](https://www.mkdocs.org/).
 
-If you are using python3:
+If you are using Python3:
 
 1. Install using ``pip3`` and build:
 
@@ -45,7 +45,7 @@ If you are using python3:
 
 ### VirtualEnv
 
-If you use a python virtual environment:
+If you use a Python virtual environment:
 
 1. Activate virtual environment:
 
@@ -65,9 +65,9 @@ If you use a python virtual environment:
 
 ### Docker
 
-If you are not familiar with python the mkdocs-material website has instructions for docker:
+If you are not familiar with Python the MkDocs-material website has instructions for Docker:
 
-1. Run mkdocs in Docker environment:
+1. Run MkDocs in Docker environment:
 
    ```
    docker pull squidfunk/mkdocs-material
@@ -90,7 +90,7 @@ If you are not familiar with python the mkdocs-material website has instructions
 
 3. Both ``install`` and ``deploy`` are skipped (so ``mvn clean install`` is fine).
 
-4. Use default profile to only build the default english docs:
+4. Use default profile to only build the default English docs:
 
    ```
    mvn install -Pdefault

@@ -21,7 +21,7 @@ import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.opengis.filter.Filter;
+import org.geotools.api.filter.Filter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

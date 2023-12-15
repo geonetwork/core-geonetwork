@@ -31,7 +31,7 @@ import org.fao.geonet.util.GMLParsers;
 import org.geotools.xsd.Parser;
 import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.geom.GeometryFactory;
-import org.opengis.referencing.crs.CoordinateReferenceSystem;
+import org.geotools.api.referencing.crs.CoordinateReferenceSystem;
 
 import java.util.Collection;
 import java.util.Collections;

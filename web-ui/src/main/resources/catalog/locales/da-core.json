@@ -546,7 +546,7 @@
     "categoriesUpdated": "Kategorier opdateret.",
     "warnPublishDraft": "Når du udgiver poster med workflow aktiveret, ændres status til 'Godkend'. Er du sikker på, at du vil fortsætte?",
     "cancelWorkingCopy": "Annuller arbejdskopi",
-    "deleteWorkingCopyRecordConfirm": "Vil du virkelig fjerne arbejdskopien '{{title}}'?",
+    "deleteWorkingCopyRecordConfirm": "Vil du virkelig fjerne arbejdskopien '{{resourceTitle}}'?",
     "workingCopy": "Arbejdskopi",
     "onTheWeb": "Mere online information",
     "pdfReportTocTitle": "Indhold",

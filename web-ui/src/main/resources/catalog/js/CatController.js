@@ -1221,7 +1221,7 @@
         requireProxy: [],
         gnCfg: angular.copy(defaultConfig),
         gnUrl: "",
-        docUrl: "https://geonetwork-opensource.org/manuals/4.0.x/{lang}",
+        docUrl: "https://docs.geonetwork-opensource.org/latest/{lang}",
         //docUrl: '../../doc/',
         modelOptions: {
           updateOn: "default blur",

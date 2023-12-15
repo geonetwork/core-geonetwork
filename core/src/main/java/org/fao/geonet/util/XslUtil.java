@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2020 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2023 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -39,6 +39,7 @@ import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
@@ -96,8 +97,8 @@ import org.locationtech.jts.geom.*;
 import org.locationtech.jts.io.WKTReader;
 import org.locationtech.jts.operation.valid.IsValidOp;
 import org.locationtech.jts.precision.GeometryPrecisionReducer;
-import org.opengis.referencing.crs.CoordinateReferenceSystem;
-import org.opengis.referencing.operation.MathTransform;
+import org.geotools.api.referencing.crs.CoordinateReferenceSystem;
+import org.geotools.api.referencing.operation.MathTransform;
 import org.owasp.esapi.errors.EncodingException;
 import org.owasp.esapi.reference.DefaultEncoder;
 import org.springframework.beans.factory.BeanCreationException;
@@ -469,7 +470,7 @@ public final class XslUtil {
         return ApplicationContextHolder.get().getBean(org.fao.geonet.NodeInfo.class).getId();
     }
 
-    
+
     public static String getNodeLogo(String key) {
         Optional<Source> source = getSource(key);
         return source.isPresent() ? source.get().getLogo() : "";
@@ -1705,5 +1706,9 @@ public final class XslUtil {
             }
         });
         return listOfLinks;
+    }
+
+    public static String escapeForJson(String value) {
+        return StringEscapeUtils.escapeJson(value);
     }
 }

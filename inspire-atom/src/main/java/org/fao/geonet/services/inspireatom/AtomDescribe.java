@@ -50,6 +50,7 @@ import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -136,6 +137,16 @@ public class AtomDescribe {
         if (!inspireEnable) {
             Log.info(Geonet.ATOM, "Inspire is disabled");
             throw new Exception("Inspire is disabled");
+        }
+
+        if (StringUtils.isEmpty(fileIdentifier)) {
+            if (StringUtils.isEmpty(spatial_dataset_identifier_code)) {
+                throw new MissingServletRequestParameterException("spatial_dataset_identifier_code", "String");
+            }
+
+            if (StringUtils.isEmpty(spatial_dataset_identifier_namespace)) {
+                throw new MissingServletRequestParameterException("spatial_dataset_identifier_namespace", "String");
+            }
         }
 
         Element response =

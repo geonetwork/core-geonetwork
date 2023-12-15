@@ -815,7 +815,7 @@ public class EsHTTPProxy {
      *      <xsl:element name="contact{$fieldSuffix}">
      *        <xsl:attribute name="type" select="'object'"/>{
      *        ...
-     *        "address":"<xsl:value-of select="gn-fn-index:json-escape($address)"/>"
+     *        "address":"<xsl:value-of select="util:escapeForJson($address)"/>"
      *        <xsl:if test="$hasWithheld">
      *         ,"nilReason": "withheld"
      *        </xsl:if>

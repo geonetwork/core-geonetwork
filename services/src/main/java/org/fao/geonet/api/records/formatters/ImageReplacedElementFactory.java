@@ -216,8 +216,8 @@ public class ImageReplacedElementFactory implements ReplacedElementFactory {
     }
 
     private boolean isSupportedImageFormat(String imgUrl) {
-        String ext = Files.getFileExtension(imgUrl.replaceAll("\\?.*", ""));
-        return ext.trim().isEmpty() || getSupportedExts().contains(ext);
+        String trimmedExt = Files.getFileExtension(imgUrl.replaceAll("\\?.*", "")).trim();
+        return trimmedExt.isEmpty() || getSupportedExts().contains(trimmedExt);
     }
 
     private ReplacedElement loadImage(LayoutContext layoutContext, BlockBox box, UserAgentCallback userAgentCallback,

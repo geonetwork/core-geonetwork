@@ -23,31 +23,17 @@
 
 package org.fao.geonet.api.records.formatters;
 
-import com.google.common.collect.Lists;
 import jeeves.config.springutil.JeevesDelegatingFilterProxy;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.MockRequestFactoryGeonet;
 import org.fao.geonet.SystemInfo;
-import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.domain.MetadataType;
-import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
-import org.fao.geonet.kernel.SchemaManager;
-import org.fao.geonet.kernel.UpdateDatestamp;
-import org.fao.geonet.kernel.search.IndexingMode;
-import org.fao.geonet.languages.IsoLanguagesMapper;
-import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.repository.SourceRepository;
-import org.fao.geonet.schema.iso19139.ISO19139Namespaces;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.fao.geonet.utils.IO;
-import org.fao.geonet.utils.MockXmlRequest;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
-import org.jdom.Namespace;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -62,12 +48,8 @@ import javax.servlet.ServletContext;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Arrays;
-import java.util.UUID;
 
 import static org.fao.geonet.api.records.formatters.FormatterWidth._100;
-import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GCO;
-import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GMD;
 import static org.junit.Assert.*;
 
 @ContextConfiguration(inheritLocations = true, locations = "classpath:formatter-test-context.xml")
@@ -82,52 +64,23 @@ public class FormatterApiIntegrationTest extends AbstractServiceIntegrationTest 
     @Autowired
     private GeonetworkDataDirectory dataDirectory;
     @Autowired
-    private SchemaManager schemaManager;
-    @Autowired
     private FormatterApi formatService;
     @Autowired
     private FormatterAdminApi listService;
-    @Autowired
-    private IsoLanguagesMapper mapper;
-    @Autowired
-    private SourceRepository sourceRepository;
-    @Autowired
-    private DataManager dataManager;
-    @Autowired
-    private MetadataRepository metadataRepository;
     private ServiceContext serviceContext;
     private int id;
     private String schema;
-    private String uuid;
 
     @Before
     public void setUp() throws Exception {
-        this.serviceContext = createServiceContext();
+        serviceContext = createServiceContext();
         loginAsAdmin(serviceContext);
-
-        final Element sampleMetadataXml = getSampleMetadataXml();
-        this.uuid = UUID.randomUUID().toString();
-        Xml.selectElement(sampleMetadataXml, "gmd:fileIdentifier/gco:CharacterString", Arrays.asList(GMD, GCO)).setText(this.uuid);
-
-        String source = sourceRepository.findAll().get(0).getUuid();
-        this.schema = schemaManager.autodetectSchema(sampleMetadataXml);
-        final Metadata metadata = new Metadata();
-        metadata.setDataAndFixCR(sampleMetadataXml).setUuid(uuid);
-        metadata.getDataInfo().setRoot(sampleMetadataXml.getQualifiedName()).setSchemaId(this.schema).setType(MetadataType.METADATA);
-        metadata.getSourceInfo().setOwner(1).setSourceId(source);
-        metadata.getHarvestInfo().setHarvested(false);
-
-        this.id = dataManager.insertMetadata(serviceContext, metadata, sampleMetadataXml, IndexingMode.none, false, UpdateDatestamp.NO,
-            false, false).getId();
-
-        dataManager.indexMetadata(Lists.newArrayList("" + this.id));
-
+        AbstractMetadata metadata = injectMetadataInDbDoNotRefreshHeader(getSampleMetadataXml(), serviceContext);
+        id = metadata.getId();
+        schema = metadata.getDataInfo().getSchemaId();
     }
 
-
-    // TODOES
     @Test
-    @Ignore
     public void testExec() throws Exception {
         final FormatterAdminApi.FormatterDataResponse formatters =
             listService.listFormatters(null, null, schema, false, false);
@@ -163,7 +116,6 @@ public class FormatterApiIntegrationTest extends AbstractServiceIntegrationTest 
         }
     }
 
-    @Ignore
     @Test
     public void testExecXslt() throws Exception {
         final ServletContext context = _applicationContext.getBean(ServletContext.class);
@@ -192,5 +144,4 @@ public class FormatterApiIntegrationTest extends AbstractServiceIntegrationTest 
         assertEqualsText("fromFunction", view, "*//p");
         assertEqualsText("Title", view, "*//div[@class='tr']");
     }
-
 }

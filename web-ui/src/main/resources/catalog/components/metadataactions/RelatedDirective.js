@@ -882,7 +882,8 @@
 
   module.directive("gnRecordsFilters", [
     "$rootScope",
-    function ($rootScope) {
+    "gnGlobalSettings",
+    function ($rootScope, gnGlobalSettings) {
       return {
         restrict: "A",
         templateUrl: function (elem, attrs) {
@@ -902,6 +903,8 @@
           scope.showTypes = !angular.isDefined(scope.type);
           scope.type = scope.type || "blocks";
           scope.criteria = { p: {} };
+          scope.relatedFacetConfig =
+            gnGlobalSettings.gnCfg.mods.recordview.relatedFacetConfig;
 
           function removeEmptyFilters(filters, agg) {
             var cleanFilterPos = [];
@@ -926,7 +929,7 @@
           }
 
           // Remove the filters without values
-          scope.filtersToProcess = scope.filters || Object.keys(scope.agg);
+          scope.filtersToProcess = scope.filters || Object.keys(scope.relatedFacetConfig);
           scope.agg && removeEmptyFilters(scope.filtersToProcess, scope.agg);
 
           reset();

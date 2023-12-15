@@ -1,6 +1,6 @@
 # Deleting a record
 
-User must have editing privileges to be able to remove a record. This topic describes the various ways to delete a record.
+The user must have editing privileges to be able to remove a record. This topic describes the various ways to delete a record.
 
 There are different ways to remove a record:
 
