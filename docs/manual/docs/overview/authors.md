@@ -42,6 +42,8 @@ Committers list is available [here for the core team](https://github.com/orgs/ge
 -   Paul van Genuchten
 -   Antonio Cerciello
 -   Michel Gabriel
+-   Jody Garnett
+-   David Blasby
 
 ## Contributors
 
