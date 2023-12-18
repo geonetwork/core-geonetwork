@@ -277,7 +277,7 @@
           select="gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource">
           <xsl:if test="gmd:linkage">
             <dc:URI>
-              <xsl:if test="gmd:protocol/gco:CharacterString">
+              <xsl:if test="gmd:protocol">
                 <xsl:attribute name="protocol">
                    <xsl:value-of select="gmd:protocol/gco:CharacterString" />
                 </xsl:attribute>
