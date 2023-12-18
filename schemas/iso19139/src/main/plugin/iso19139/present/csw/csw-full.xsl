@@ -279,12 +279,7 @@
             <dc:URI>
               <xsl:if test="gmd:protocol">
                 <xsl:attribute name="protocol">
-                   <xsl:value-of select="gmd:protocol/gco:CharacterString" />
-                </xsl:attribute>
-              </xsl:if>
-              <xsl:if test="gmd:protocol/gmx:Anchor">
-                <xsl:attribute name="protocol">
-                   <xsl:value-of select="gmd:protocol/gmx:Anchor" />
+                  <xsl:value-of select="gmd:protocol/(gco:CharacterString|gmx:Anchor)" />
                 </xsl:attribute>
               </xsl:if>
               <xsl:if test="gmd:name">
