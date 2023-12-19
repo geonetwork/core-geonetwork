@@ -76,11 +76,11 @@
       <suggestion process="create-featurecatalogue-from-wfs"
                   id="{concat($id, '-', position())}"
                   category="contentinfo"
-                  target="link#{$protocol}#{$url}#{$featureType}">
-        <name><xsl:value-of select="geonet:i18n($add-featureCat-loc, 'a', $guiLang)"/><xsl:value-of select="concat($url, '#', $featureType)"/></name>
+                  target="link#{$protocol}#{$url[1]}#{$featureType[1]}">
+        <name><xsl:value-of select="geonet:i18n($add-featureCat-loc, 'a', $guiLang)"/><xsl:value-of select="concat($url[1], '#', $featureType[1])"/></name>
         <operational>true</operational>
-        <params>{"featureCatWfsUrl":{"type":"text", "defaultValue":"<xsl:value-of select="$url"/>"},
-          "featureCatWfsFeatureType":{"type":"text", "defaultValue":"<xsl:value-of select="$featureType"/>"},
+        <params>{"featureCatWfsUrl":{"type":"text", "defaultValue":"<xsl:value-of select="$url[1]"/>"},
+          "featureCatWfsFeatureType":{"type":"text", "defaultValue":"<xsl:value-of select="$featureType[1]"/>"},
           "featureCatReplace":{"type":"boolean", "defaultValue":"<xsl:value-of select="$featureCatReplace"/>"}}</params>
       </suggestion>
     </xsl:for-each>
@@ -111,7 +111,6 @@
                 mdb:defaultLocale|
                 mdb:parentMetadata|
                 mdb:metadataScope|
-                mdb:contact|
                 mdb:dateInfo|
                 mdb:metadataStandard|
                 mdb:metadataProfile|
