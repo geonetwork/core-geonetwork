@@ -804,7 +804,7 @@ public class SchemaLoader {
                 throw new IllegalArgumentException("Substitution link collision" +
                     " for " + ee.name +
                     " link to " + existingSubstitionGroup +
-                    ". Already bound to " + ee.substGroup);
+                    ". Already bound to " + ee.substGroup + ", " + ei.file.toString());
             } else {
                 hmSubsLink.put(ee.name, ee.substGroup);
             }
@@ -816,7 +816,7 @@ public class SchemaLoader {
                 throw new IllegalArgumentException("Namespace collision" +
                     " for " + ee.name +
                     " type " + existingType +
-                    ". Already bound to " + ee.type);
+                    ". Already bound to " + ee.type + ", " + ei.file.toString());
             } else {
                 hmAbsElems.put(ee.name, ee.type);
             }
@@ -827,21 +827,21 @@ public class SchemaLoader {
             ee.complexType.name = type;
             ee.type = type;
             if (hmElements.containsKey(ee.name))
-                throw new IllegalArgumentException("Namespace collision for : " + ee.name);
+                throw new IllegalArgumentException("Namespace collision for : " + ee.name + ", " + ei.file.toString());
 
             hmElements.put(ee.name, type);
             hmTypes.put(type, ee.complexType);
 
         } else if (ee.simpleType != null) {
             if (hmElements.containsKey(ee.name))
-                throw new IllegalArgumentException("Namespace collision for : " + ee.name);
+                throw new IllegalArgumentException("Namespace collision for : " + ee.name + ", " + ei.file.toString());
             ee.type = "string";
             hmElements.put(ee.name, ee.type);
             hmElemRestr.put(ee.name, ee.simpleType.alEnum);
 
         } else {
             if (ee.type == null && ee.substGroup == null) {
-                Log.warning(Geonet.SCHEMA_MANAGER, "WARNING: " + ee.name + " is a global element without a type - assuming a string");
+                Log.warning(Geonet.SCHEMA_MANAGER, "WARNING: " + ee.name + " is a global element without a type - assuming a string" + ", " + ei.file.toString());
                 ee.type = "string";
             }
             hmElements.put(ee.name, ee.type);
@@ -861,7 +861,7 @@ public class SchemaLoader {
         if (existingType != null && !ct.name.equals(existingType.name)) {
             throw new IllegalArgumentException("Namespace collision" +
                 " for complex type " + ct.name +
-                " type " + existingType.name + "already defined.");
+                " type " + existingType.name + "already defined." + ", " + ei.file.toString());
         }
         hmTypes.put(ct.name, ct);
     }
@@ -871,7 +871,7 @@ public class SchemaLoader {
     private void buildSimpleType(ElementInfo ei) {
         SimpleTypeEntry st = new SimpleTypeEntry(ei);
         if (hmTypeRestr.containsKey(st.name))
-            throw new IllegalArgumentException("Namespace collision for : " + st.name);
+            throw new IllegalArgumentException("Namespace collision for : " + st.name + ", " + ei.file.toString());
 
         hmTypeRestr.put(st.name, st.alEnum);
 

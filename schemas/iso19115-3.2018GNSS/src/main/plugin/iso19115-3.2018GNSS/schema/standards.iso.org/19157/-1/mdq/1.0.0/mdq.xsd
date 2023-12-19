@@ -1,14 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
-	xmlns:mdq="https://schemas.isotc211.org/19157/-1/mdq/1.0"
-	targetNamespace="https://schemas.isotc211.org/19157/-1/mdq/1.0"
-	elementFormDefault="qualified"
-	version="1.0.0"
-	>
-	<xs:include schemaLocation="../../mdq/1.0.0/metaquality.xsd"/>
-	<xs:include schemaLocation="../../mdq/1.0.0/dataQuality.xsd"/>
-	<xs:include schemaLocation="../../mdq/1.0.0/dataQualityResult.xsd"/>
-	<xs:include schemaLocation="../../mdq/1.0.0/dataQualityEvaluation.xsd"/>
-	<!-- =========================================================================== -->
+           xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
+           xmlns:mdq="https://schemas.isotc211.org/19157/-1/mdq/1.0"
+           targetNamespace="https://schemas.isotc211.org/19157/-1/mdq/1.0"
+           elementFormDefault="qualified"
+           version="1.0.0"
+>
+  <!--<xs:include schemaLocation="../../mdq/1.0.0/metaquality.xsd"/>
+  <xs:include schemaLocation="../../mdq/1.0.0/dataQuality.xsd"/>
+  <xs:include schemaLocation="../../mdq/1.0.0/dataQualityResult.xsd"/>
+  <xs:include schemaLocation="../../mdq/1.0.0/dataQualityEvaluation.xsd"/>-->
+
+  <xs:include schemaLocation="dataQualityEvaluation.xsd"/>
+  <xs:include schemaLocation="dataQuality.xsd"/>
+  <xs:include schemaLocation="dataQualityResult.xsd"/>
+  <xs:include schemaLocation="metaquality.xsd"/>
+  <xs:import namespace="https://schemas.isotc211.org/19157/-1/dqc/1.0" schemaLocation="../../../../19157/-1/dqc/1.0.0/dqc.xsd"/>
+  <xs:import namespace="http://standards.iso.org/iso/19115/-3/gcx/1.0" schemaLocation="../../../../19115/-3/gcx/1.0/gcx.xsd"/>
+  <xs:import namespace="http://standards.iso.org/iso/19115/-3/mcc/1.0" schemaLocation="../../../../19115/-3/mcc/1.0/mcc.xsd"/>
+  <!-- =========================================================================== -->
 </xs:schema>

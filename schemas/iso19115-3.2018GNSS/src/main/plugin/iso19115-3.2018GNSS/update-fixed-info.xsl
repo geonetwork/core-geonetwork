@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
   xmlns:gml="http://www.opengis.net/gml/3.2"
-  xmlns:srv="http://standards.iso.org/iso/19115/-3/srv/2.1"
+  xmlns:srv="http://standards.iso.org/iso/19115/-3/srv/2.0"
   xmlns:gcx="http://standards.iso.org/iso/19115/-3/gcx/1.0"
   xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
   xmlns:mdb="http://standards.iso.org/iso/19115/-3/mdb/2.0"
@@ -12,9 +12,9 @@
   xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/2.0"
   xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0"
   xmlns:mrd="http://standards.iso.org/iso/19115/-3/mrd/1.0"
-  xmlns:dqm="http://standards.iso.org/iso/19157/-2/dqm/1.0"
-  xmlns:dqc="http://standards.iso.org/iso/19157/-2/dqc/1.0"
-  xmlns:mdq="http://standards.iso.org/iso/19157/-2/mdq/1.0"
+  xmlns:dqm="https://schemas.isotc211.org/19157/-1/dqm/1.0"
+  xmlns:dqc="https://schemas.isotc211.org/19157/-1/dqc/1.0"
+  xmlns:mdq="https://schemas.isotc211.org/19157/-1/mdq/1.0"
   xmlns:gfc="http://standards.iso.org/iso/19110/gfc/1.1"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns:gn-fn-iso19115-3.2018GNSS="http://geonetwork-opensource.org/xsl/functions/profiles/iso19115-3.2018GNSS"
@@ -451,11 +451,11 @@
     </xsl:copy>
   </xsl:template>
 
-  <xsl:template match="mdb:dataQualityInfo/mdq:DQ_DataQuality/mdq:scope/*/mcc:level/*/@codeListValue[. = '']">
+  <!--<xsl:template match="mdb:dataQualityInfo/mdq:DQ_DataQuality/mdq:scope/*/mcc:level/*/@codeListValue[. = '']">
     <xsl:attribute name="codeListValue">
       <xsl:value-of select="/root/*/mdb:metadataScope/*/mdb:resourceScope/*/@codeListValue"/>
     </xsl:attribute>
-  </xsl:template>
+  </xsl:template>-->
 
 
   <!-- For XLinked subtemplates, the lang parameter MUST be in the same order as in the record.

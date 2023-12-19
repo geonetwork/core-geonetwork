@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dqm:DQM_MeasureCatalogue xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/1.0"
+   xmlns:cat="http://standards.iso.org/iso/19115/-3/cat/1.0"
+   xmlns:dqm="https://schemas.isotc211.org/19157/-1/dqm/1.0"
+   xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
+   xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0"
+   xmlns:pre="http://standards.iso.org/iso/19135/-2/pre/1.0"
+   xmlns:lan="http://standards.iso.org/iso/19115/-3/lan/1.0"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="https://schemas.isotc211.org/19157/-1/dqm/1.0 dqm.xsd">
+   <cat:name>
+      <gco:CharacterString>Data Quality Measure Catalog</gco:CharacterString>
+   </cat:name>
+   <cat:scope>
+      <gco:CharacterString>Data quality measures</gco:CharacterString>
+   </cat:scope>
+   <cat:fieldOfApplication>
+      <gco:CharacterString>Data quality measure descriptions</gco:CharacterString>
+   </cat:fieldOfApplication>
+   <cat:versionNumber>
+      <gco:CharacterString>2015-04-04</gco:CharacterString>
+   </cat:versionNumber>
+   <cat:versionDate>
+      <gco:Date>2015-04-04</gco:Date>
+   </cat:versionDate>
+   <dqm:definitionSource>
+      <dqm:DQM_SourceReference>
+         <dqm:citation>
+            <cit:CI_Citation id="ISO19157">
+               <cit:title>
+                  <gco:CharacterString>ISO 19157: Geographic Information - Data quality</gco:CharacterString>
+               </cit:title>
+               <cit:alternateTitle>
+                  <gco:CharacterString>ISO-19157:2013</gco:CharacterString>
+               </cit:alternateTitle>
+               <cit:onlineResource>
+                  <cit:CI_OnlineResource>
+                     <cit:linkage>
+                        <gco:CharacterString> http://www.iso.org/iso/home/store/catalogue_tc/catalogue_detail.htm?csnumber=32575</gco:CharacterString>
+                     </cit:linkage>
+                     <cit:name>
+                        <gco:CharacterString>ISO 19157: Geographic Information - Data quality</gco:CharacterString>
+                     </cit:name>
+                     <cit:description>
+                        <gco:CharacterString>The ISO/TC 211 specification of ISO 19157 - an international standard for describing data quality information.</gco:CharacterString>
+                     </cit:description>
+                     <cit:function>
+                        <cit:CI_OnLineFunctionCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_OnLineFunctionCode" codeListValue="download">download</cit:CI_OnLineFunctionCode>
+                     </cit:function>
+                  </cit:CI_OnlineResource>
+               </cit:onlineResource>
+            </cit:CI_Citation>
+         </dqm:citation>
+      </dqm:DQM_SourceReference>
+   </dqm:definitionSource>
+   <dqm:qualityMeasure>
+      <dqm:DQM_Measure>
+         <dqm:measureIdentifier>
+            <mcc:MD_Identifier>
+               <mcc:authority xlink:href="ISO19157"/>
+               <mcc:code>
+                  <gco:CharacterString>excessItem</gco:CharacterString>
+               </mcc:code>
+               <mcc:codeSpace>
+                  <gco:CharacterString>ISO 19157</gco:CharacterString>
+               </mcc:codeSpace>
+               <mcc:version>
+                  <gco:CharacterString>1</gco:CharacterString>
+               </mcc:version>
+               <mcc:description gco:nilReason="missing"/>
+            </mcc:MD_Identifier>
+         </dqm:measureIdentifier>
+         <dqm:name>
+            <gco:CharacterString>excess item</gco:CharacterString>
+         </dqm:name>
+         <dqm:alias gco:nilReason="unknown"/>
+         <dqm:elementName>
+            <gco:TypeName>
+               <gco:aName>
+                  <gco:CharacterString>commission</gco:CharacterString>
+               </gco:aName>
+            </gco:TypeName>
+         </dqm:elementName>
+         <dqm:definition>
+            <gco:CharacterString>indication that an item is incorrectly present in the data</gco:CharacterString>
+         </dqm:definition>
+         <dqm:description>
+            <dqm:DQM_Description>
+               <dqm:textDescription>
+                  <gco:CharacterString>CharacterString11</gco:CharacterString>
+               </dqm:textDescription>
+               <dqm:extendedDescription>
+                  <mcc:MD_BrowseGraphic>
+                     <mcc:fileName>
+                        <gco:CharacterString>CharacterString12</gco:CharacterString>
+                     </mcc:fileName>
+                  </mcc:MD_BrowseGraphic>
+               </dqm:extendedDescription>
+            </dqm:DQM_Description>
+         </dqm:description>
+         <dqm:valueType>
+            <gco:TypeName>
+               <gco:aName>
+                  <gco:CharacterString>Boolean</gco:CharacterString>
+               </gco:aName>
+            </gco:TypeName>
+         </dqm:valueType>
+         <dqm:valueStructure gco:nilReason="inapplicable"/>
+         <dqm:example>
+            <dqm:DQM_Description>
+               <dqm:textDescription>
+                  <gco:CharacterString>True (In a dataset, more items are classified as houses than in the universe of discourse)</gco:CharacterString>
+               </dqm:textDescription>
+            </dqm:DQM_Description>
+         </dqm:example>
+         <dqm:sourceReference>
+            <dqm:DQM_SourceReference>
+               <dqm:citation xlink:href="#ISO19157"/>
+            </dqm:DQM_SourceReference>
+         </dqm:sourceReference>
+         <dqm:basicMeasure>
+            <dqm:DQM_BasicMeasure id="errorIndicator">
+               <dqm:name>
+                  <gco:CharacterString>Error indicator</gco:CharacterString>
+               </dqm:name>
+               <dqm:definition>
+                  <gco:CharacterString>Indicator that an item is in error</gco:CharacterString>
+               </dqm:definition>
+               <dqm:example>
+                  <dqm:DQM_Description>
+                     <dqm:textDescription>
+                        <gco:CharacterString>False</gco:CharacterString>
+                     </dqm:textDescription>
+                     <dqm:extendedDescription gco:nilReason="unknown"/>
+                  </dqm:DQM_Description>
+               </dqm:example>
+               <dqm:valueType>
+                  <gco:TypeName>
+                     <gco:aName>
+                        <gco:CharacterString>Boolean</gco:CharacterString>
+                     </gco:aName>
+                  </gco:TypeName>
+               </dqm:valueType>
+            </dqm:DQM_BasicMeasure>
+         </dqm:basicMeasure>
+         <dqm:parameter>
+            <dqm:DQM_Parameter id="sampleParameter">
+               <dqm:name>
+                  <gco:CharacterString>sampleParameterName</gco:CharacterString>
+               </dqm:name>
+               <dqm:definition>
+                  <gco:CharacterString>sampleParameterDefinition</gco:CharacterString>
+               </dqm:definition>
+               <dqm:description>
+                  <dqm:DQM_Description>
+                     <dqm:textDescription>
+                        <gco:CharacterString>sampleParameterDescription</gco:CharacterString>
+                     </dqm:textDescription>
+                     <dqm:extendedDescription>
+                        <mcc:MD_BrowseGraphic>
+                           <mcc:fileName>
+                              <gco:CharacterString>sampleParameterBrowseGraphicFileName</gco:CharacterString>
+                           </mcc:fileName>
+                        </mcc:MD_BrowseGraphic>
+                     </dqm:extendedDescription>
+                  </dqm:DQM_Description>
+               </dqm:description>
+               <dqm:valueType>
+                  <gco:TypeName>
+                     <gco:aName>
+                        <gco:CharacterString>sampleParameterTypeName</gco:CharacterString>
+                     </gco:aName>
+                  </gco:TypeName>
+               </dqm:valueType>
+               <dqm:valueStructure>
+                  <dqm:DQM_ValueStructure codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#DQM_ValueStructure" codeListValue="bag">bag</dqm:DQM_ValueStructure>
+               </dqm:valueStructure>
+            </dqm:DQM_Parameter>
+         </dqm:parameter>
+      </dqm:DQM_Measure>
+   </dqm:qualityMeasure>
+</dqm:DQM_MeasureCatalogue>

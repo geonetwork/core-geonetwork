@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding="UTF-8"?><schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:dqc="https://schemas.isotc211.org/19157/-1/dqc/1.0" xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0" xmlns:lan="http://standards.iso.org/iso/19115/-3/lan/1.0" xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0" xmlns:mdb="http://standards.iso.org/iso/19115/-3/mdb/1.0" elementFormDefault="qualified" targetNamespace="http://standards.iso.org/iso/19115/-3/mdb/1.0" version="1.0">
+<?xml version="1.0" encoding="UTF-8"?><schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:dqc="https://schemas.isotc211.org/19157/-1/dqc/1.0" xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0" xmlns:geo="urn:xml-gov-au:icsm:egeodesy:0.5" xmlns:lan="http://standards.iso.org/iso/19115/-3/lan/1.0" xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0" xmlns:mdb="http://standards.iso.org/iso/19115/-3/mdb/1.0" elementFormDefault="qualified" targetNamespace="http://standards.iso.org/iso/19115/-3/mdb/1.0" version="1.0">
   <include schemaLocation="mdb.xsd"/>
   <import namespace="http://standards.iso.org/iso/19115/-3/gco/1.0" schemaLocation="../../../../19115/-3/gco/1.0/gco.xsd"/>
-  <import namespace="https://standards.iso.org/iso/19157/-1/dqc/1.0" schemaLocation="../../../../19157/-1/dqc/1.0.0/dqc.xsd"/>
+  <import namespace="https://schemas.isotc211.org/19157/-1/dqc/1.0" schemaLocation="../../../../19157/-1/dqc/1.0.0/dqc.xsd"/>
   <import namespace="http://standards.iso.org/iso/19115/-3/lan/1.0" schemaLocation="../../../../19115/-3/lan/1.0/lan.xsd"/>
   <import namespace="http://standards.iso.org/iso/19115/-3/mcc/1.0" schemaLocation="../../../../19115/-3/mcc/1.0/mcc.xsd"/>
   <import namespace="urn:xml-gov-au:icsm:egeodesy:0.5" schemaLocation="../../../../../others/geodesyMLv05/geodesyML.xsd"/>

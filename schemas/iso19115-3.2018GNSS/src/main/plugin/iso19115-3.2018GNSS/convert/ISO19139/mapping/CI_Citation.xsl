@@ -16,7 +16,7 @@
                 xmlns:gcx="http://standards.iso.org/iso/19115/-3/gcx/1.0"
                 xmlns:gex="http://standards.iso.org/iso/19115/-3/gex/1.0"
                 xmlns:lan="http://standards.iso.org/iso/19115/-3/lan/1.0"
-                xmlns:srv="http://standards.iso.org/iso/19115/-3/srv/2.1"
+                xmlns:srv="http://standards.iso.org/iso/19115/-3/srv/2.0"
                 xmlns:mac="http://standards.iso.org/iso/19115/-3/mac/2.0"
                 xmlns:mas="http://standards.iso.org/iso/19115/-3/mas/1.0"
                 xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0"
@@ -58,8 +58,8 @@
     <xsl:template match="gmd:CI_Citation" mode="from19139to19115-3.2018">
         <xsl:element name="cit:CI_Citation">
             <xsl:apply-templates mode="from19139to19115-3.2018"/>
-            <!-- Special attention is required for CI_ResponsibleParties that are included in the 
-                CI_Citation only for a URL. These are currently identified as those 
+            <!-- Special attention is required for CI_ResponsibleParties that are included in the
+                CI_Citation only for a URL. These are currently identified as those
                 with no name elements (individualName, organisationName, or positionName)
             -->
             <xsl:for-each

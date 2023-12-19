@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema targetNamespace="http://www.opengis.net/gml/3.2" elementFormDefault="qualified" xml:lang="en" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/2.0" xmlns:dqm="http://standards.iso.org/iso/19157/-2/dqm/1.0" xmlns="http://www.w3.org/2001/XMLSchema" version="3.2.1.2">
+<schema targetNamespace="http://www.opengis.net/gml/3.2" elementFormDefault="qualified" xml:lang="en" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/2.0" xmlns:dqm="https://schemas.isotc211.org/19157/-1/dqm/1.0" xmlns="http://www.w3.org/2001/XMLSchema" version="3.2.1.2">
 	<annotation>
 		<appinfo source="urn:x-ogc:specification:gml:schema-xsd:coordinateOperations:3.2.1">coordinateOperations.xsd</appinfo>
 		<documentation>See ISO/DIS 19136 13.6.
@@ -21,8 +21,8 @@ To obtain additional rights of use, visit http://www.opengeospatial.org/legal/ .
 	<include schemaLocation="measures.xsd"/>
   	<import namespace="http://standards.iso.org/iso/19115/-3/cit/2.0"
           schemaLocation="../../standards.iso.org/19115/-3/cit/1.0/cit.xsd"/>
-	<import namespace="http://standards.iso.org/iso/19157/-2/dqm/1.0"
-          schemaLocation="../../standards.iso.org/19157/-2/dqm/1.0/dqm.xsd"/>
+	<import namespace="https://schemas.isotc211.org/19157/-1/dqm/1.0"
+          schemaLocation="../../standards.iso.org/19157/-1/dqm/1.0.0/dqm.xsd"/>
 	<element name="AbstractCoordinateOperation" type="gml:AbstractCoordinateOperationType" abstract="true" substitutionGroup="gml:Definition">
 		<annotation>
 			<documentation>gml:AbstractCoordinateOperation is a mathematical operation on coordinates that transforms or converts coordinates to another coordinate reference system. Many but not all coordinate operations (from CRS A to CRS B) also uniquely define the inverse operation (from CRS B to CRS A). In some cases, the operation method algorithm for the inverse operation is the same as for the forward algorithm, but the signs of some operation parameter values shall be reversed. In other cases, different algorithms are required for the forward and inverse operations, but the same operation parameter values are used. If (some) entirely different parameter values are needed, a different coordinate operation shall be defined.

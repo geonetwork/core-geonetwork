@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+      <title>Metadata Data Quality (MDQ) Version 1.1.0</title>
+      <style>
+						h1 { font-family: Arial; color: DarkBlue; font-size: 14pt; font-weight:bold; }
+						body { font-family: Arial; color: black; font-size: 10pt;}
+						td { font-family: Arial; color: black; font-size: 10pt;}
+						table, th, td {border: 1px solid black; padding: 2px; border-spacing: 1px;}
+						.paraSmall {font-size: 0.7em; font-style: italic;}
+						.metagroup { font-family: Arial; color: #0099FF; font-size: 10pt; font-weight:bold; }
+					</style>
+   </head>
+   
+
+   <body>
+      <h1>Metadata for Data Quality (MDQ) Version 1.2.0</h1>
+      <img title="Overview of classes in the mdq namespace" alt="Overview UML diagram of classes from Metadata for Data Quality (MDQ) in the mdq namespace" width="750" src="./mdqOverviewClass.png"/>
+      <h2>Description</h2>
+      <p>Metadata for Data Quality (MDQ) is an XML Schema implementation of abstract classes for ISO 19157, Geographic Information - Data Quality.  
+         It includes elements for defining geometry and functions for coverages. 
+         The XML schema was encoded using the encoding rules defined in ISO 19118, ISO 19139.
+      </p>
+      <h2>XML Namespace for Metadata for Data Quality (MDQ) Version: 1.2</h2>
+      <p>The namespace URI for Data Quality [abstract classes] (MDQ) Version 1.2.0 is <b>https://schemas.isotc211.org/19157/-/mdq/1.2</b>.
+      </p>
+      <h2>XML Schema for Metadata for Data Quality (MDQ) Version 1.2.0</h2>
+      <p>
+         <b><a href="../../../../19157/-/mdq/1.2.0/mdq.xsd">mdq.xsd</a></b> is the XML Schema document to be referenced by XML documents containing XML elements
+         in the mdq namespace or by XML Schema documents importing the mdq 1.2 namespace. 
+         This XML schema includes (indirectly) all the implemented concepts of the mdq namespace, but it does not contain the declaration of any types.
+      </p>
+        <h2>Related XML Schema for mdq 1.2</h2>
+      <p>
+         <b><a href="../../../../19157/-/mdq/1.2.0/dataQualityElement.xsd">https://schemas.isotc211.org/19157/-/mdq/1.2.0/dataQualityElement.xsd</a></b> implements the UML conceptual schema defined in ISO 19157, Geographic Information - Data Quality. 
+         It was created using the encoding rules defined in ISO 19118, ISO 19139.
+         <img title="Classes in the data quality elements schema of mdq namespace" alt="UML diagram of classes in the data quality elements schema from Metadata for Data Quality (MDQ) in the mdq namespace" width="750" src="./mdqElementsClass.png"/>
+      </p>
+      <a href="https://schemas.isotc211.org/19157/-/mdq/1.2.0/dataQualityElement.xsd">https://schemas.isotc211.org/19157/-/mdq/1.2.0/dataQualityElement.xsd</a> contains the folowing classes:
+      <ul>
+         <li>DQ_AbsoluteExternalPositionalAccuracy</li>
+         <li>DQ_AccuracyOfATimeMeasurement</li>
+         <li>AbstractDQ_Completeness</li>
+         <li>DQ_CompletenessCommission</li>
+         <li>DQ_CompletenessOmission</li>
+         <li>DQ_ConceptualConsistency</li>
+         <li>DQ_DataInspection</li>
+         <li>DQ_DataQuality</li>
+         <li>DQ_DomainConsistency</li>
+         <li>AbstractDQ_Element</li>
+         <li>DQ_FormatConsistency</li>
+         <li>DQ_GriddedDataPositionalAccuracy</li>
+         <li>AbstractDQ_LogicalConsistency</li>
+         <li>DQ_MeasureReference</li>
+         <li>DQ_NonQuantitativeAttributeCorrectness</li>
+         <li>AbstractDQ_PositionalAccuracy</li>
+         <li>DQ_QuantitativeAttributeAccuracy</li>
+         <li>DQ_RelativeInternalPositionalAccuracy</li>
+         <li>DQ_StandaloneQualityReportInformation</li>
+         <li>DQ_TemporalConsistency</li>
+         <li>AbstractDQ_TemporalQuality</li>
+         <li>DQ_TemporalValidity</li>
+         <li>AbstractDQ_ThematicAccuracy</li>
+         <li>DQ_ThematicClassificationCorrectness</li>
+         <li>DQ_TopologicalConsistency</li>
+         <li>DQ_UsabilityElement</li>
+      </ul>
+      <p>
+         <b><a href="../../../../19157/-/mdq/1.2.0/dataQualityResult.xsd">https://schemas.isotc211.org/19157/-/mdq/1.2.0/dataQualityResult.xsd</a></b> implements the UML conceptual schema defined in ISO 19157, Geographic Information - Data Quality. 
+         It was created using the encoding rules defined in ISO 19118, ISO 19139.
+         <img title="Classes in the data quality results schema of mdq namespace" alt="UML diagram of classes in the data quality results schema from Metadata for Data Quality (MDQ) in the mdq namespace" width="750" src="./mdqResultsClass.png"/>
+      </p>
+      <a href="https://schemas.isotc211.org/19157/-/mdq/1.2.0/dataQualityResult.xsd">https://schemas.isotc211.org/19157/-/mdq/1.2.0/dataQualityResult.xsd</a> contains the folowing classes:
+      <ul>
+         <li>DQ_ConformanceResult</li>
+         <li>DQ_DescriptiveResult</li>
+         <li>DQ_QuantitativeResult</li>
+         <li>AbstractDQ_Result</li>
+      </ul>
+      <p>
+         <b><a href="../../../../19157/-/mdq/1.2.0/dataQualityEvaluation.xsd">https://schemas.isotc211.org/19157/-/mdq/1.2.0/dataQualityEvaluation.xsd</a></b> implements the UML conceptual schema defined in ISO 19157, Geographic Information - Data Quality. 
+         It was created using the encoding rules defined in ISO 19118, ISO 19139.
+         <img title="Classes in the data quality evaluation schema of mdq namespace" alt="UML diagram of classes in the data quality evaluation schema from Metadata for Data Quality (MDQ) in the mdq namespace" width="750" src="./mdqEvaluationClass.png"/>
+      </p>
+      <a href="https://schemas.isotc211.org/19157/-/mdq/1.2.0/dataQualityEvaluation.xsd">https://schemas.isotc211.org/19157/-/mdq/1.2.0/dataQualityEvaluation.xsd</a> contains the folowing classes:
+      <ul>
+         <li>DQ_AggregationDerivation</li>
+         <li>AbstractDQ_DataEvaluation</li>
+         <li>DQ_EvaluationMethod</li>
+         <li>DQ_EvaluationMethodTypeCode</li>
+         <li>DQ_FullInspection</li>
+         <li>DQ_IndirectEvaluation</li>
+         <li>DQ_SampleBasedInspection</li>
+      </ul>
+       <p>
+         <b><a href="../../../../19157/-/mdq/1.2.0/metaquality.xsd">https://schemas.isotc211.org/19157/-/mdq/1.2.0/metaquality.xsd</a></b> implements the UML conceptual schema defined in ISO 19157, Geographic Information - Data Quality. 
+         It was created using the encoding rules defined in ISO 19118, ISO 19139.
+          <img title="Classes in the data quality metaquality schema of mdq namespace" alt="UML diagram of classes in the data quality metaquality schema from Metadata for Data Quality (MDQ) in the mdq namespace" width="750" src="./mdqMetaqualityClass.png"/>
+       </p>
+      <a href="https://schemas.isotc211.org/19157/-/mdq/1.2.0/metaquality.xsd">https://schemas.isotc211.org/19157/-/mdq/1.2.0/metaquality.xsd</a> contains the folowing classes:
+      <ul>
+         <li>DQ_Confidence</li>
+         <li>DQ_Homogeneity</li>
+         <li>AbstractDQ_Metaquality</li>
+         <li>DQ_Representativity</li>
+      </ul>      
+      <p>
+         <b><a href="../../../../19157/-/mdq/1.2.0/dataQualityImagery.xsd">https://schemas.isotc211.org/19157/-/mdq/1.2.0/dataQualityImagery.xsd</a></b> implements the UML conceptual schema defined in ISO 19157, Geographic Information - Data Quality Amendment 1: Describing data quality using coverages. 
+         It was created using the encoding rules defined in ISO 19118, ISO 19139.
+         <img title="Classes in the data quality information - imagery schema of mdq namespace" alt="UML diagram of classes in the data quality information - imagery schema from Metadata for Data Quality (MDQ) in the mdq namespace" width="750" src="./mdqInfoImageryClass.png"/>
+      </p>
+      <a href="https://schemas.isotc211.org/19157/-/mdq/1.2.0/dataQualityImagery.xsd">https://schemas.isotc211.org/19157/-/mdq/1.2.0/dataQualityImagery.xsd</a> contains the folowing classes:
+      <ul>
+         <li>QE_CoverageResult</li>
+         <li>QualityResultFile</li>
+      </ul>
+      <h2>Related XML Namespaces for ISO 19157 MDQ 1.2</h2> 
+      The MDQ 1.2.0 imports these other namespaces: 
+         <table>
+         <tr>
+            <th>Name</th>
+            <th>Standard Prefix</th>
+            <th>Namespace Location</th>
+            <th>Schema Location</th>
+         </tr>
+           <tr>
+              <td>Data Quality Common</td>
+              <td>dqc</td>
+              <td><a href="https://schemas.isotc211.org/19157/-/dqc/1.2">https://schemas.isotc211.org/19157/-/dqc/1.2</a></td>
+              <td>../../../../19157/-/dqc/1.2.0/dqc.xsd</td>
+           </tr>
+           <tr>
+            <td>Geographic Common Objects</td>
+            <td>gco</td>
+            <td><a href="https://schemas.isotc211.org/19103/-/gco/1.2.0">https://schemas.isotc211.org/19103/-/gco/1.2</a></td>
+            <td>../../../../19103/-/gco/1.2.0/gco.xsd</td>
+         </tr>
+          <tr>
+             <td>Geographic Common objects eXtended</td>
+             <td>gcx</td>
+             <td><a href="https://schemas.isotc211.org/19103/-/gcx/1.2.0">https://schemas.isotc211.org/19103/-/gcx/1.2</a></td>
+             <td>../../../../19103/-/gcx/1.2.0/gcx.xsd</td>
+          </tr>
+          <tr>
+            <td>CITataion and responsibility</td>
+            <td>cit</td>
+            <td><a href="https://schemas.isotc211.org/19115/-1/cit/1.3">https://schemas.isotc211.org/19115/-1/cit/1.3</a></td>
+            <td>../../../../19115/-1/cit/1.3.0/cit.xsd</td>
+         </tr>
+         <tr>
+            <td>Metadata Common Classes</td>
+            <td>mcc</td>
+            <td><a href="https://schemas.isotc211.org/19115/-1/mcc/1.3">https://schemas.isotc211.org/19115/-1/mcc/1.3</a></td>
+            <td>../../../../19115/-1/mcc/1.3.0/mcc.xsd</td>
+         </tr>
+          <tr>
+             <td>Metadata Resource Distribution</td>
+             <td>mrd</td>
+             <td><a href="https://schemas.isotc211.org/19115/-1/mrd/1.3">https://schemas.isotc211.org/19115/-1/mrd/1.3</a></td>
+             <td>../../../../19115/-1/mrd/1.3.0/mrd.xsd</td>
+          </tr>
+          <tr>
+             <td>Metadata for Spatial Representation</td>
+             <td>msr</td>
+             <td><a href="https://schemas.isotc211.org/19115/-1/msr/1.3">https://schemas.isotc211.org/19115/-1/msr/1.3</a></td>
+             <td>../../../../19115/-1/msr/1.3.0/msr.xsd</td>
+          </tr>
+          <tr>
+             <td>Metadata Resource Content</td>
+             <td>mrc</td>
+             <td><a href="https://schemas.isotc211.org/19115/-1/mrc/1.3">https://schemas.isotc211.org/19115/-1/mrc/1.3</a></td>
+             <td>../../../../19115/-1/mrc/1.3.0/mrc.xsd</td>
+          </tr>
+          <tr>
+             <td>Gegraphic Markup Language</td>
+             <td>gml</td>
+             <td><a href="http://schemas.opengis.net/gml/3.2">http://schemas.opengis.net/gml/3.2</a></td>
+             <td>http://schemas.opengis.net/gml/3.2.1/gml.xsd</td>
+          </tr>
+           <tr>
+              <td>Gegraphic Markup language Wrapper</td>
+              <td>gml</td>
+              <td><a href="https://schemas.isotc211.org/19136/-/gmw/1.1">https://schemas.isotc211.org/19136/-/gmw/1.1</a></td>
+              <td>https://schemas.isotc211.org/19136/-/gmw/1.1.0/gmw.xsd</td>
+           </tr>
+        </table>
+      <h2>Working Versions</h2> When revisions to these schema become necessary, they will be managed in the <a href="https://github.com/ISO-TC211/XML">ISO TC211 Git Repository</a>. 
+      <hr>
+      <p class="paraSmall">&#169; ISO. Written by hands Version: 2010-02-26/p>
+   </body>
+</html>

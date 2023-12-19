@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+   This codelist catalogue was originally developed by Steve Richard and
+   updated to be consistent with the cat namespace by Ted Habermann 2015-04-17
+ -->
+<cat:CT_CodelistCatalogue xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://standards.iso.org/iso/19115/-3/cat/1.0 ../../../../19115/-3/cat/1.0/cat.xsd"
+ xmlns:cat="http://standards.iso.org/iso/19115/-3/cat/1.0"
+ xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+ xmlns:lan="http://standards.iso.org/iso/19115/-3/lan/1.0"
+    xmlns:gml="http://www.opengis.net/gml/3.2">
+   <!--=====Catalogue description=====-->
+   <cat:name>
+      <gco:CharacterString>Codelists from the metadata for Data Quality Measures (dqm) Namespace</gco:CharacterString>
+   </cat:name>
+   <cat:scope>
+      <gco:CharacterString>Codelists from the metadata for Data Quality Measures (dqm) Namespace</gco:CharacterString>
+   </cat:scope>
+   <cat:fieldOfApplication>
+      <gco:CharacterString>ISO TC211 Metadata Standards</gco:CharacterString>
+   </cat:fieldOfApplication>
+   <cat:versionNumber>
+      <gco:CharacterString>1.0</gco:CharacterString>
+   </cat:versionNumber>
+   <cat:versionDate>
+      <gco:Date>2015-04-18</gco:Date>
+   </cat:versionDate>
+   <cat:locale>
+      <lan:PT_Locale>
+         <lan:language>
+            <lan:LanguageCode codeList="https://schemas.isotc211.org/19115/-3/lan/1.0/codelists.xml#LanguageCode" codeListValue="eng">eng</lan:LanguageCode>
+         </lan:language>
+         <lan:characterEncoding>
+            <lan:MD_CharacterSetCode codeList="https://schemas.isotc211.org/19115/-3/lan/1.0/codelists.xml#MD_CharacterSetCode" codeListValue="UTF-8">UTF-8</lan:MD_CharacterSetCode>
+         </lan:characterEncoding>
+      </lan:PT_Locale>
+   </cat:locale>
+   <!--============================= Codelists =======================================-->
+   <!-- DQM_ValueStructure -->
+   <cat:codelistItem>
+      <cat:CT_Codelist id="DQM_ValueStructure">
+         <cat:identifier>
+            <gco:ScopedName codeSpace="https://schemas.isotc211.org/19157/-2/dqm/1.0">DQM_ValueStructure</gco:ScopedName>
+         </cat:identifier>
+         <cat:name>
+            <gco:ScopedName codeSpace="https://schemas.isotc211.org/19157/-2/dqm/1.0">DQM_ValueStructure</gco:ScopedName>
+         </cat:name>
+         <cat:definition>
+            <gco:CharacterString>structure for reporting a complex data quality result</gco:CharacterString>
+         </cat:definition>
+         <cat:description>
+            <gco:CharacterString>structure for reporting a complex data quality result</gco:CharacterString>
+         </cat:description>
+         <cat:codeEntry>
+            <cat:CT_CodelistValue id="DQM_ValueStructure_bag">
+               <cat:identifier>
+                  <gco:ScopedName codeSpace="https://schemas.isotc211.org/19157/-2/dqm/1.0">bag</gco:ScopedName>
+               </cat:identifier>
+               <cat:definition>
+                  <gco:CharacterString>finite, unordered collection of related items (objects or values) that may be repeated (ISO 19107:2003)</gco:CharacterString>
+               </cat:definition>
+            </cat:CT_CodelistValue>
+         </cat:codeEntry>
+         <cat:codeEntry>
+            <cat:CT_CodelistValue id="DQM_ValueStructure_set">
+               <cat:identifier>
+                  <gco:ScopedName codeSpace="https://schemas.isotc211.org/19157/-2/dqm/1.0">set</gco:ScopedName>
+               </cat:identifier>
+               <cat:definition>
+                  <gco:CharacterString>unordered collection of related items (objects or values) with no repetition (ISO 19107:2003)</gco:CharacterString>
+               </cat:definition>
+            </cat:CT_CodelistValue>
+         </cat:codeEntry>
+         <cat:codeEntry>
+            <cat:CT_CodelistValue id="DQM_ValueStructure_sequence">
+               <cat:identifier>
+                  <gco:ScopedName codeSpace="https://schemas.isotc211.org/19157/-2/dqm/1.0">sequence</gco:ScopedName>
+               </cat:identifier>
+               <cat:definition>
+                  <gco:CharacterString>finite, ordered collection of related items (objects or values) that may be repeated (ISO 19107:2003)</gco:CharacterString>
+               </cat:definition>
+            </cat:CT_CodelistValue>
+         </cat:codeEntry>
+         <cat:codeEntry>
+            <cat:CT_CodelistValue id="DQM_ValueStructure_table">
+               <cat:identifier>
+                  <gco:ScopedName codeSpace="https://schemas.isotc211.org/19157/-2/dqm/1.0">table</gco:ScopedName>
+               </cat:identifier>
+               <cat:definition>
+                  <gco:CharacterString>an arrangement of data in which each item may be identified by means of arguments or keys (ISO/IEC 2382-4:1999)</gco:CharacterString>
+               </cat:definition>
+            </cat:CT_CodelistValue>
+         </cat:codeEntry>
+         <cat:codeEntry>
+            <cat:CT_CodelistValue id="DQM_ValueStructure_matrix">
+               <cat:identifier>
+                  <gco:ScopedName codeSpace="https://schemas.isotc211.org/19157/-2/dqm/1.0">matrix</gco:ScopedName>
+               </cat:identifier>
+               <cat:definition>
+                  <gco:CharacterString>rectangular array of numbers (ISO/TS 19129:2009)</gco:CharacterString>
+               </cat:definition>
+            </cat:CT_CodelistValue>
+         </cat:codeEntry>
+         <cat:codeEntry>
+            <cat:CT_CodelistValue id="DQM_ValueStructure_coverage">
+               <cat:identifier>
+                  <gco:ScopedName codeSpace="https://schemas.isotc211.org/19157/-2/dqm/1.0">coverage</gco:ScopedName>
+               </cat:identifier>
+               <cat:definition>
+                  <gco:CharacterString>feature that acts as a function to return values from its range for any direct position within its spatial, temporal or spatiotemporal domain (ISO 19123:2005)</gco:CharacterString>
+               </cat:definition>
+            </cat:CT_CodelistValue>
+         </cat:codeEntry>
+      </cat:CT_Codelist>
+   </cat:codelistItem>
+   <!--=== EOF ===-->
+</cat:CT_CodelistCatalogue>

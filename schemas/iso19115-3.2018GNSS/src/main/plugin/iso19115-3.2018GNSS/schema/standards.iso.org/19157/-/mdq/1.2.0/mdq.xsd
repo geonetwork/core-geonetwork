@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema
+  xmlns="http://www.w3.org/2001/XMLSchema"
+  xmlns:dqc="https://schemas.isotc211.org/19157/-/dqc/1.2"
+  xmlns:gcx="https://schemas.isotc211.org/19103/-/gcx/1.2"
+  xmlns:mcc="https://schemas.isotc211.org/19115/-1/mcc/1.3"
+  xmlns:mdq="https://schemas.isotc211.org/19157/-/mdq/1.2"
+  xmlns:mri="https://schemas.isotc211.org/19115/-1/mri/1.3"
+    elementFormDefault="qualified"
+  targetNamespace="https://schemas.isotc211.org/19157/-/mdq/1.2"
+    version="1.2.0"
+  >
+  <include schemaLocation="dataQualityElement.xsd"/>
+  <include schemaLocation="dataQualityEvaluation.xsd"/>
+  <include schemaLocation="dataQualityImagery.xsd"/>
+  <include schemaLocation="dataQualityResult.xsd"/>
+  <include schemaLocation="metaquality.xsd"/>
+  <import namespace="https://schemas.isotc211.org/19157/-/dqc/1.2" schemaLocation="../../../../19157/-/dqc/1.2.0/dqc.xsd"/>
+  <import namespace="https://schemas.isotc211.org/19103/-/gcx/1.2" schemaLocation="../../../../19103/-/gcx/1.2.0/gcx.xsd"/>
+  <import namespace="https://schemas.isotc211.org/19115/-1/mcc/1.3" schemaLocation="../../../../19115/-1/mcc/1.3.0/mcc.xsd"/>
+  <!--XML Schema document created by ShapeChange - http://shapechange.net/-->
+</schema>

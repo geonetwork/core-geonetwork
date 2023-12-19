@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <sch:schema xmlns:sch="http://purl.oclc.org/dsdl/schematron" queryBinding="xslt2">
-  <sch:ns prefix="dqm" uri="http://standards.iso.org/iso/19157/-2/dqm/1.0"/>
+  <sch:ns prefix="dqm" uri="https://schemas.isotc211.org/19157/-1/dqm/1.0"/>
   <sch:ns prefix="cat" uri="http://standards.iso.org/iso/19115/-3/cat/1.0"/>
   <sch:ns prefix="cit" uri="http://standards.iso.org/iso/19115/-3/cit/1.0"/>
   <sch:ns prefix="mcc" uri="http://standards.iso.org/iso/19115/-3/mcc/1.0"/>
@@ -37,7 +37,7 @@
         'DQ_ThematicAccuracy','DQ_ThematicClassificationCorrectness','DQ_NonQuantitativeAttributeCorrectness','DQ_QuantitativeAttributeAccuracy',
         'DQ_TemporalQuality','DQ_AccuracyOfATimeMeasurement','DQ_TemporalConsistency','DQ_TemporalValidity'),$elementName) > 0)"
         diagnostics="rule.dqm.measurename-failure-en"/>
-      
+
       <sch:report test="(index-of(
         ('DQ_Completeness','DQ_CompletenessCommission','DQ_CompletenessOmmission',
         'DQ_LogicalConsistency','DQ_DomainConsistency','DQ_FormatConsistency','DQ_TopologicalConsistency',
@@ -48,33 +48,33 @@
         diagnostics="rule.dqm.measurename-success-en"/>
     </sch:rule>
   </sch:pattern>
-  
-  <!-- 
+
+  <!--
     Rule: DQM_Measure | DQM_BasicMeasure | DQM_Parameter
     Ref: {valueType shall be one of the data types defined in ISO/TS 19103}
     -->
   <sch:diagnostics>
     <sch:diagnostic id="rule.dqm.valuetype-failure-en" xml:lang="en">The valueType
       shall be one of the data types defined in ISO/TS 19103.</sch:diagnostic>
-    
+
     <sch:diagnostic id="rule.dqm.valuetype-success-en" xml:lang="en">valueType is
       "<sch:value-of select="normalize-space($valueType)"/>". </sch:diagnostic>
   </sch:diagnostics>
-  
+
   <sch:pattern id="rule.dqm.valutype">
     <sch:title xml:lang="en">DQM_Measure.valueType shall be one of the data types defined in ISO/TS 19103</sch:title>
-    
+
     <sch:rule context="//dqm:DQM_Measure | //dqm:DQM_BasicMeasure | dqm:DQM_Parameter">
-      
+
       <sch:let name="valueType" value="dqm:valueType/gco:TypeName/gco:aName/gco:CharacterString"/>
-      
+
       <sch:assert test="(index-of(
         ('Date','Time','DateTime','Number','Decimal','Integer','Real','Vector','CharacterString','Boolean','Set','Bag'),$valueType) > 0)"
         diagnostics="rule.dqm.valuetype-failure-en"/>
-      
+
       <sch:report test="(index-of(
         ('Date','Time','DateTime','Number','Decimal','Integer','Real','Vector','CharacterString','Boolean','Set','Bag'),$valueType) > 0)"
         diagnostics="rule.dqm.valuetype-success-en"/>
     </sch:rule>
-  </sch:pattern>  
+  </sch:pattern>
 </sch:schema>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Dictionary xmlns="http://www.opengis.net/gml/3.2" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" gml:id="DQ_EvaluationMethodTypeCode" xsi:schemaLocation="http://www.opengis.net/gml/3.2 http://schemas.opengis.net/gml/3.2.1/gml.xsd">
+  <description>type of method for evaluating an identified data quality measure</description>
+  <identifier codeSpace="https://schemas.isotc211.org/19157/-2/mdq/1.0">DQ_EvaluationMethodTypeCode</identifier>
+  <dictionaryEntry>
+    <Definition gml:id="_11861_17788">
+      <description>method of evaluating the quality of a dataset based on inspection of items within the dataset, where all data required is internal to the dataset being evaluated</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19157/-2/mdq/1.0">directInternal</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_11861_17789">
+      <description>method of evaluating the quality of a dataset based on inspection of items within the dataset, where reference data external to the dataset being evaluated is required</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19157/-2/mdq/1.0">directExternal</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_11861_17790">
+      <description>method of evaluating the quality of a dataset based on external knowledge</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19157/-2/mdq/1.0">indirect</identifier>
+    </Definition>
+  </dictionaryEntry>
+</Dictionary>

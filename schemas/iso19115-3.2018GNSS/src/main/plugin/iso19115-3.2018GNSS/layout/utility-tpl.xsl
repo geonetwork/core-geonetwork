@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-  xmlns:srv="http://standards.iso.org/iso/19115/-3/srv/2.1"
+  xmlns:srv="http://standards.iso.org/iso/19115/-3/srv/2.0"
   xmlns:mds="http://standards.iso.org/iso/19115/-3/mds/2.0"
   xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0"
   xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0"
@@ -14,7 +14,7 @@
   xmlns:mrc="http://standards.iso.org/iso/19115/-3/mrc/2.0"
   xmlns:cat="http://standards.iso.org/iso/19115/-3/cat/1.0"
   xmlns:gex="http://standards.iso.org/iso/19115/-3/gex/1.0"
-  xmlns:dqm="http://standards.iso.org/iso/19157/-2/dqm/1.0"
+  xmlns:dqm="https://schemas.isotc211.org/19157/-1/dqm/1.0"
   xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/2.0"
   xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
   xmlns:gfc="http://standards.iso.org/iso/19110/gfc/1.1"

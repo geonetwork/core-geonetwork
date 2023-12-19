@@ -13,7 +13,7 @@ Position: 3</documentation>
 <!--  <include schemaLocation="msr.xsd"/>-->
   <import namespace="http://standards.iso.org/iso/19115/-3/gco/1.0" schemaLocation="../../../../19115/-3/gco/1.0/gco.xsd"/>
   <import namespace="http://standards.iso.org/iso/19115/-3/gmw/1.0" schemaLocation="../../../../19115/-3/gmw/1.0/gmw.xsd"/>
-  <import namespace="https://standards.iso.org/iso/19157/-1/dqc/1.0" schemaLocation="../../../../19157/-1/dqc/1.0.0/dqc.xsd"/>
+  <import namespace="https://schemas.isotc211.org/19157/-1/dqc/1.0" schemaLocation="../../../../19157/-1/dqc/1.0.0/dqc.xsd"/>
   <import namespace="http://standards.iso.org/iso/19115/-3/mcc/1.0" schemaLocation="../../../../19115/-3/mcc/1.0/mcc.xsd"/>
   <!--XML Schema document created by ShapeChange - http://shapechange.net/-->
   <element name="MI_GCP" substitutionGroup="gco:AbstractObject" type="msr:MI_GCP_Type"/>

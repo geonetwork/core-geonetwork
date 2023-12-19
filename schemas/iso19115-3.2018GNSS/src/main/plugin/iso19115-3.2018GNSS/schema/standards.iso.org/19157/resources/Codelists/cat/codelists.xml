@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CT_CodelistCatalogue xmlns="http://standards.iso.org/iso/19115/-3/cat/1.0"
+    xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
+    xmlns:gml="http://www.opengis.net/gml/3.2"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:gml32="http://www.opengis.net/gml/3.2"
+    xmlns:cat="http://standards.iso.org/iso/19115/-3/cat/1.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://standards.iso.org/iso/19115/-3/cat/1.0 http://standards.iso.org/iso/19115/-3/cat/1.0/cat.xsd                       
+   http://standards.iso.org/iso/19115/-3/gco/1.0 http://standards.iso.org/iso/19115/-3/gco/1.0/gco.xsd                       
+   http://www.opengis.net/gml/3.2 http://schemas.opengis.net/gml/3.2.1/gml.xsd                       
+   http://www.w3.org/1999/xlink http://www.w3.org/1999/xlink.xsd">
+   <!--
+      This codelist catalog was created during 2017-09 by Ted Habermann following the approach used in
+      ISO 19115-3.
+    -->
+   <name>
+      <gco:CharacterString>19157-2 Codelists</gco:CharacterString>
+   </name>
+   <scope>
+      <gco:CharacterString>Codelists for description of data quality metadata datasets compliant with ISO/TC 211 19115-1.</gco:CharacterString>
+   </scope>
+   <fieldOfApplication>
+      <gco:CharacterString>ISO 19157-2 data quality metadata</gco:CharacterString>
+   </fieldOfApplication>
+   <versionNumber>
+      <gco:CharacterString>1.0</gco:CharacterString>
+   </versionNumber>
+   <versionDate>
+      <gco:Date>2017-09-10</gco:Date>
+   </versionDate>
+   <!-- DQM_ValueStructure -->
+   <cat:codelistItem>
+      <cat:CT_Codelist id="DQM_ValueStructure">
+         <cat:identifier>
+            <gco:ScopedName codeSpace="https://schemas.isotc211.org/19157/-2/dqm/1.0">DQM_ValueStructure</gco:ScopedName>
+         </cat:identifier>
+         <cat:name>
+            <gco:ScopedName codeSpace="https://schemas.isotc211.org/19157/-2/dqm/1.0">DQM_ValueStructure</gco:ScopedName>
+         </cat:name>
+         <cat:definition>
+            <gco:CharacterString>structure for reporting a complex data quality result</gco:CharacterString>
+         </cat:definition>
+         <cat:description>
+            <gco:CharacterString>structure for reporting a complex data quality result</gco:CharacterString>
+         </cat:description>
+         <cat:codeEntry>
+            <cat:CT_CodelistValue id="DQM_ValueStructure_bag">
+               <cat:identifier>
+                  <gco:ScopedName codeSpace="https://schemas.isotc211.org/19157/-2/dqm/1.0">bag</gco:ScopedName>
+               </cat:identifier>
+               <cat:name>
+                  <gco:ScopedName codeSpace="https://schemas.isotc211.org/19157/-2/dqm/1.0">bag</gco:ScopedName>
+               </cat:name>
+               <cat:definition>
+                  <gco:CharacterString>finite, unordered collection of related items (objects or values) that may be repeated (ISO 19107:2003)</gco:CharacterString>
+               </cat:definition>
+               <cat:description>
+                  <gco:CharacterString>finite, unordered collection of related items (objects or values) that may be repeated (ISO 19107:2003)</gco:CharacterString>
+               </cat:description>
+            </cat:CT_CodelistValue>
+         </cat:codeEntry>
+         <cat:codeEntry>
+            <cat:CT_CodelistValue id="DQM_ValueStructure_set">
+               <cat:identifier>
+                  <gco:ScopedName codeSpace="https://schemas.isotc211.org/19157/-2/dqm/1.0">set</gco:ScopedName>
+               </cat:identifier>
+               <cat:name>
+                  <gco:ScopedName codeSpace="https://schemas.isotc211.org/19157/-2/dqm/1.0">set</gco:ScopedName>
+               </cat:name>
+               <cat:definition>
+                  <gco:CharacterString>unordered collection of related items (objects or values) with no repetition (ISO 19107:2003)</gco:CharacterString>
+               </cat:definition>
+               <cat:description>
+                  <gco:CharacterString>unordered collection of related items (objects or values) with no repetition (ISO 19107:2003)</gco:CharacterString>
+               </cat:description>
+            </cat:CT_CodelistValue>
+         </cat:codeEntry>
+         <cat:codeEntry>
+            <cat:CT_CodelistValue id="DQM_ValueStructure_sequence">
+               <cat:identifier>
+                  <gco:ScopedName codeSpace="https://schemas.isotc211.org/19157/-2/dqm/1.0">sequence</gco:ScopedName>
+               </cat:identifier>
+               <cat:name>
+                  <gco:ScopedName codeSpace="https://schemas.isotc211.org/19157/-2/dqm/1.0">sequence</gco:ScopedName>
+               </cat:name>
+               <cat:definition>
+                  <gco:CharacterString>finite, ordered collection of related items (objects or values) that may be repeated (ISO 19107:2003)</gco:CharacterString>
+               </cat:definition>
+               <cat:description>
+                  <gco:CharacterString>finite, ordered collection of related items (objects or values) that may be repeated (ISO 19107:2003)</gco:CharacterString>
+               </cat:description>
+            </cat:CT_CodelistValue>
+         </cat:codeEntry>
+         <cat:codeEntry>
+            <cat:CT_CodelistValue id="DQM_ValueStructure_table">
+               <cat:identifier>
+                  <gco:ScopedName codeSpace="https://schemas.isotc211.org/19157/-2/dqm/1.0">table</gco:ScopedName>
+               </cat:identifier>
+               <cat:name>
+                  <gco:ScopedName codeSpace="https://schemas.isotc211.org/19157/-2/dqm/1.0">table</gco:ScopedName>
+               </cat:name>
+               <cat:definition>
+                  <gco:CharacterString>an arrangement of data in which each item may be identified by means of arguments or keys (ISO/IEC 2382-4:1999)</gco:CharacterString>
+               </cat:definition>
+               <cat:description>
+                  <gco:CharacterString>an arrangement of data in which each item may be identified by means of arguments or keys (ISO/IEC 2382-4:1999)</gco:CharacterString>
+               </cat:description>
+            </cat:CT_CodelistValue>
+         </cat:codeEntry>
+         <cat:codeEntry>
+            <cat:CT_CodelistValue id="DQM_ValueStructure_matrix">
+               <cat:identifier>
+                  <gco:ScopedName codeSpace="https://schemas.isotc211.org/19157/-2/dqm/1.0">matrix</gco:ScopedName>
+               </cat:identifier>
+               <cat:name>
+                  <gco:ScopedName codeSpace="https://schemas.isotc211.org/19157/-2/dqm/1.0">matrix</gco:ScopedName>
+               </cat:name>
+               <cat:definition>
+                  <gco:CharacterString>rectangular array of numbers (ISO/TS 19129:2009)</gco:CharacterString>
+               </cat:definition>
+               <cat:description>
+                  <gco:CharacterString>rectangular array of numbers (ISO/TS 19129:2009)</gco:CharacterString>
+               </cat:description>
+            </cat:CT_CodelistValue>
+         </cat:codeEntry>
+         <cat:codeEntry>
+            <cat:CT_CodelistValue id="DQM_ValueStructure_coverage">
+               <cat:identifier>
+                  <gco:ScopedName codeSpace="https://schemas.isotc211.org/19157/-2/dqm/1.0">coverage</gco:ScopedName>
+               </cat:identifier>
+               <cat:name>
+                  <gco:ScopedName codeSpace="https://schemas.isotc211.org/19157/-2/dqm/1.0">coverage</gco:ScopedName>
+               </cat:name>
+               <cat:definition>
+                  <gco:CharacterString>feature that acts as a function to return values from its range for any direct position within its spatial, temporal or spatiotemporal domain (ISO 19123:2005)</gco:CharacterString>
+               </cat:definition>
+               <cat:description>
+                  <gco:CharacterString>feature that acts as a function to return values from its range for any direct position within its spatial, temporal or spatiotemporal domain (ISO 19123:2005)</gco:CharacterString>
+               </cat:description>
+            </cat:CT_CodelistValue>
+         </cat:codeEntry>
+      </cat:CT_Codelist>
+   </cat:codelistItem>
+   <!-- DQ_EvaluationMethodTypeCode  -->
+   <cat:codelistItem>
+      <cat:CT_Codelist id="DQ_EvaluationMethodTypeCode">
+         <cat:identifier>
+            <gco:ScopedName codeSpace="https://schemas.isotc211.org/19157/-2/mdq/1.0">DQ_EvaluationMethodTypeCode</gco:ScopedName>
+         </cat:identifier>
+         <cat:name>
+            <gco:ScopedName codeSpace="https://schemas.isotc211.org/19157/-2/mdq/1.0">DQ_EvaluationMethodTypeCode</gco:ScopedName>
+         </cat:name>
+         <cat:definition>
+            <gco:CharacterString>description of the evaluation method and procedure applied</gco:CharacterString>
+         </cat:definition>
+         <cat:description>
+            <gco:CharacterString>description of the evaluation method and procedure applied</gco:CharacterString>
+         </cat:description>
+         <cat:codeEntry>
+            <cat:CT_CodelistValue id="DQ_EvaluationMethodTypeCode_directInternal">
+               <cat:identifier>
+                  <gco:ScopedName codeSpace="https://schemas.isotc211.org/19157/-2/mdq/1.0">directInternal</gco:ScopedName>
+               </cat:identifier>
+               <cat:name>
+                  <gco:ScopedName codeSpace="https://schemas.isotc211.org/19157/-2/mdq/1.0">directInternal</gco:ScopedName>
+               </cat:name>
+               <cat:definition>
+                  <gco:CharacterString>method of evaluating the quality of a dataset based on inspection of items within the dataset, where all data required is internal to the dataset being evaluated</gco:CharacterString>
+               </cat:definition>
+               <cat:description>
+                  <gco:CharacterString>method of evaluating the quality of a dataset based on inspection of items within the dataset, where all data required is internal to the dataset being evaluated</gco:CharacterString>
+               </cat:description>
+            </cat:CT_CodelistValue>
+         </cat:codeEntry>
+         <cat:codeEntry>
+            <cat:CT_CodelistValue id="DQ_EvaluationMethodTypeCode_directExternal">
+               <cat:identifier>
+                  <gco:ScopedName codeSpace="https://schemas.isotc211.org/19157/-2/mdq/1.0">directExternal</gco:ScopedName>
+               </cat:identifier>
+               <cat:name>
+                  <gco:ScopedName codeSpace="https://schemas.isotc211.org/19157/-2/mdq/1.0">directExternal</gco:ScopedName>
+               </cat:name>
+               <cat:definition>
+                  <gco:CharacterString>method of evaluating the quality of a dataset based on inspection of items within the dataset, where reference data external to the dataset being evaluated is required</gco:CharacterString>
+               </cat:definition>
+               <cat:description>
+                  <gco:CharacterString>method of evaluating the quality of a dataset based on inspection of items within the dataset, where reference data external to the dataset being evaluated is required</gco:CharacterString>
+               </cat:description>
+            </cat:CT_CodelistValue>
+         </cat:codeEntry>
+         <cat:codeEntry>
+            <cat:CT_CodelistValue id="DQ_EvaluationMethodTypeCode_indirect">
+               <cat:identifier>
+                  <gco:ScopedName codeSpace="https://schemas.isotc211.org/19157/-2/mdq/1.0">indirect</gco:ScopedName>
+               </cat:identifier>
+               <cat:name>
+                  <gco:ScopedName codeSpace="https://schemas.isotc211.org/19157/-2/mdq/1.0">indirect</gco:ScopedName>
+               </cat:name>
+               <cat:definition>
+                  <gco:CharacterString>method of evaluating the quality of a dataset based on external knowledge</gco:CharacterString>
+               </cat:definition>
+               <cat:description>
+                  <gco:CharacterString>method of evaluating the quality of a dataset based on external knowledge</gco:CharacterString>
+               </cat:description>
+            </cat:CT_CodelistValue>
+         </cat:codeEntry>
+      </cat:CT_Codelist>
+   </cat:codelistItem>
+</CT_CodelistCatalogue>

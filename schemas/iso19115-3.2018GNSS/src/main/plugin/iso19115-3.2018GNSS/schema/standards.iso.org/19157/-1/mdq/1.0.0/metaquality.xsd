@@ -8,99 +8,100 @@
            elementFormDefault="qualified"
            version="1.0.0"
 >
+
   <xs:import namespace="http://standards.iso.org/iso/19115/-3/gco/1.0" schemaLocation="../../../../19115/-3/gco/1.0/gco.xsd"/>
   <xs:import namespace="http://standards.iso.org/iso/19115/-3/mcc/1.0" schemaLocation="../../../../19115/-3/mcc/1.0/mcc.xsd"/>
 
   <xs:include schemaLocation="../../mdq/1.0.0/dataQuality.xsd" />
-	<!-- =========================================================================== -->
-	<xs:complexType name="Abstract_Metaquality_PropertyType">
-		<xs:sequence minOccurs="0">
-			<xs:element ref="mdq:Abstract_Metaquality"/>
-		</xs:sequence>
-		<xs:attributeGroup ref="gco:ObjectReference"/>
-		<xs:attribute ref="gco:nilReason"/>
-	</xs:complexType>
-	<!-- ........................................................................ -->
-	<xs:element name="Abstract_Metaquality" substitutionGroup="mdq:Abstract_QualityElement" type="mdq:Abstract_Metaquality_Type"  abstract="true" id="ISO19157-1.1.029"/>
-	<!-- ........................................................................ -->
-	<xs:complexType name="Abstract_Metaquality_Type">
-		<xs:annotation>
-			<xs:documentation>information about the reliability of data quality results</xs:documentation>
-		</xs:annotation>
-		<xs:complexContent>
-			<xs:extension base="mdq:Abstract_QualityElement_Type">
-				<xs:sequence>
-					<xs:element name="relatedQualityElement" type="mdq:Abstract_QualityElement_PropertyType" minOccurs="1" maxOccurs="1" id="ISO19157-1.1.030_ISO19157-1.1.005">
-						<xs:annotation>
-							<xs:documentation>the quality element where the metaquality information applies </xs:documentation>
-						</xs:annotation>
-					</xs:element>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	<!-- =========================================================================== -->
-	<xs:complexType name="Confidence_PropertyType">
-		<xs:sequence minOccurs="0">
-			<xs:element ref="mdq:Confidence"/>
-		</xs:sequence>
-		<xs:attributeGroup ref="gco:ObjectReference"/>
-		<xs:attribute ref="gco:nilReason"/>
-	</xs:complexType>
-	<!-- ........................................................................ -->
-	<xs:element name="Confidence" substitutionGroup="mdq:Abstract_Metaquality" type="mdq:Confidence_Type" id="ISO19157-1.1.031"/>
-	<!-- ........................................................................ -->
-	<xs:complexType name="Confidence_Type">
-		<xs:annotation>
-			<xs:documentation>trustworthiness of a data quality result</xs:documentation>
-		</xs:annotation>
-		<xs:complexContent>
-			<xs:extension base="mdq:Abstract_Metaquality_Type">
-				<xs:sequence/>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	<!-- =========================================================================== -->
-	<xs:complexType name="Representativity_PropertyType">
-		<xs:sequence minOccurs="0">
-			<xs:element ref="mdq:Representativity"/>
-		</xs:sequence>
-		<xs:attributeGroup ref="gco:ObjectReference"/>
-		<xs:attribute ref="gco:nilReason"/>
-	</xs:complexType>
-	<!-- ........................................................................ -->
-	<xs:element name="Representativity" substitutionGroup="mdq:Abstract_Metaquality" type="mdq:Representativity_Type" id="ISO19157-1.1.032"/>
-	<!-- ........................................................................ -->
-	<xs:complexType name="Representativity_Type">
-		<xs:annotation>
-			<xs:documentation>degree to which the sample used has produced a result which is representative of the data within the data quality scope</xs:documentation>
-		</xs:annotation>
-		<xs:complexContent>
-			<xs:extension base="mdq:Abstract_Metaquality_Type">
-				<xs:sequence/>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	<!-- =========================================================================== -->
-	<xs:complexType name="Homogeneity_PropertyType">
-		<xs:sequence minOccurs="0">
-			<xs:element ref="mdq:Homogeneity"/>
-		</xs:sequence>
-		<xs:attributeGroup ref="gco:ObjectReference"/>
-		<xs:attribute ref="gco:nilReason"/>
-	</xs:complexType>
-	<!-- ........................................................................ -->
-	<xs:element name="Homogeneity" substitutionGroup="mdq:Abstract_Metaquality" type="mdq:Homogeneity_Type" id="ISO19157-1.1.033"/>
-	<!-- ........................................................................ -->
-	<xs:complexType name="Homogeneity_Type">
-		<xs:annotation>
-			<xs:documentation>expected or tested uniformity of the results obtained for a data quality evaluation</xs:documentation>
-		</xs:annotation>
-		<xs:complexContent>
-			<xs:extension base="mdq:Abstract_Metaquality_Type">
-				<xs:sequence/>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	<!-- =========================================================================== -->
+  <!-- =========================================================================== -->
+  <xs:complexType name="Abstract_Metaquality_PropertyType">
+    <xs:sequence minOccurs="0">
+      <xs:element ref="mdq:Abstract_Metaquality"/>
+    </xs:sequence>
+    <xs:attributeGroup ref="gco:ObjectReference"/>
+    <xs:attribute ref="gco:nilReason"/>
+  </xs:complexType>
+  <!-- ........................................................................ -->
+  <xs:element name="Abstract_Metaquality" substitutionGroup="mdq:Abstract_QualityElement" type="mdq:Abstract_Metaquality_Type"  abstract="true" id="ISO19157-1.1.029"/>
+  <!-- ........................................................................ -->
+  <xs:complexType name="Abstract_Metaquality_Type">
+    <xs:annotation>
+      <xs:documentation>information about the reliability of data quality results</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="mdq:Abstract_QualityElement_Type">
+        <xs:sequence>
+          <xs:element name="relatedQualityElement" type="mdq:Abstract_QualityElement_PropertyType" minOccurs="1" maxOccurs="1" id="ISO19157-1.1.030_ISO19157-1.1.005">
+            <xs:annotation>
+              <xs:documentation>the quality element where the metaquality information applies </xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <!-- =========================================================================== -->
+  <xs:complexType name="Confidence_PropertyType">
+    <xs:sequence minOccurs="0">
+      <xs:element ref="mdq:Confidence"/>
+    </xs:sequence>
+    <xs:attributeGroup ref="gco:ObjectReference"/>
+    <xs:attribute ref="gco:nilReason"/>
+  </xs:complexType>
+  <!-- ........................................................................ -->
+  <xs:element name="Confidence" substitutionGroup="mdq:Abstract_Metaquality" type="mdq:Confidence_Type" id="ISO19157-1.1.031"/>
+  <!-- ........................................................................ -->
+  <xs:complexType name="Confidence_Type">
+    <xs:annotation>
+      <xs:documentation>trustworthiness of a data quality result</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="mdq:Abstract_Metaquality_Type">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <!-- =========================================================================== -->
+  <xs:complexType name="Representativity_PropertyType">
+    <xs:sequence minOccurs="0">
+      <xs:element ref="mdq:Representativity"/>
+    </xs:sequence>
+    <xs:attributeGroup ref="gco:ObjectReference"/>
+    <xs:attribute ref="gco:nilReason"/>
+  </xs:complexType>
+  <!-- ........................................................................ -->
+  <xs:element name="Representativity" substitutionGroup="mdq:Abstract_Metaquality" type="mdq:Representativity_Type" id="ISO19157-1.1.032"/>
+  <!-- ........................................................................ -->
+  <xs:complexType name="Representativity_Type">
+    <xs:annotation>
+      <xs:documentation>degree to which the sample used has produced a result which is representative of the data within the data quality scope</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="mdq:Abstract_Metaquality_Type">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <!-- =========================================================================== -->
+  <xs:complexType name="Homogeneity_PropertyType">
+    <xs:sequence minOccurs="0">
+      <xs:element ref="mdq:Homogeneity"/>
+    </xs:sequence>
+    <xs:attributeGroup ref="gco:ObjectReference"/>
+    <xs:attribute ref="gco:nilReason"/>
+  </xs:complexType>
+  <!-- ........................................................................ -->
+  <xs:element name="Homogeneity" substitutionGroup="mdq:Abstract_Metaquality" type="mdq:Homogeneity_Type" id="ISO19157-1.1.033"/>
+  <!-- ........................................................................ -->
+  <xs:complexType name="Homogeneity_Type">
+    <xs:annotation>
+      <xs:documentation>expected or tested uniformity of the results obtained for a data quality evaluation</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="mdq:Abstract_Metaquality_Type">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <!-- =========================================================================== -->
 </xs:schema>

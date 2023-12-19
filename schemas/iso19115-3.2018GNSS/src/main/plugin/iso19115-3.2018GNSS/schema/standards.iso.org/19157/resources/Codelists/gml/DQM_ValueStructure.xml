@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Dictionary xmlns="http://www.opengis.net/gml/3.2" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" gml:id="DQ_EvaluationMethodTypeCode" xsi:schemaLocation="http://www.opengis.net/gml/3.2 http://schemas.opengis.net/gml/3.2.1/gml.xsd">
+  <description>structure for reporting a complex data quality result</description>
+  <identifier codeSpace="https://schemas.isotc211.org/19157/-2/mdq/1.0">DQM_ValueStructure</identifier>
+  <dictionaryEntry>
+    <Definition gml:id="DQM_ValueStructure_bag">
+      <description>finite, unordered collection of related items (objects or values) that may be repeated (ISO 19107:2003)</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19157/-2/mdq/1.0">bag</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="DQM_ValueStructure_set">
+      <description>unordered collection of related items (objects or values) with no repetition (ISO 19107:2003)</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19157/-2/mdq/1.0">set</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="DQM_ValueStructure_sequence">
+      <description>finite, ordered collection of related items (objects or values) that may be repeated (ISO 19107:2003)</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19157/-2/mdq/1.0">sequence</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="DQM_ValueStructure_table">
+      <description>an arrangement of data in which each item may be identified by means of arguments or keys (ISO/IEC 2382-4:1999)</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19157/-2/mdq/1.0">table</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="DQM_ValueStructure_matrix">
+      <description>rectangular array of numbers (ISO/TS 19129:2009)</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19157/-2/mdq/1.0">matrix</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="DQM_ValueStructure_coverage">
+      <description>feature that acts as a function to return values from its range for any direct position within its spatial, temporal or spatiotemporal domain (ISO 19123:2005)</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19157/-2/mdq/1.0">coverage</identifier>
+    </Definition>
+  </dictionaryEntry>
+</Dictionary>

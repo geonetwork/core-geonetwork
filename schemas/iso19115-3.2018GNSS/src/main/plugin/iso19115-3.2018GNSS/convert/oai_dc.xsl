@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<xsl:stylesheet version="2.0" 
-		xmlns:xsl="http://www.w3.org/1999/XSL/Transform"  
+<xsl:stylesheet version="2.0"
+		xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 		xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
-		xmlns:srv="http://standards.iso.org/iso/19115/-3/srv/2.1"
+		xmlns:srv="http://standards.iso.org/iso/19115/-3/srv/2.0"
 		xmlns:mds="http://standards.iso.org/iso/19115/-3/mds/2.0"
 		xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0"
 		xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0"
@@ -14,16 +14,16 @@
 		xmlns:lan="http://standards.iso.org/iso/19115/-3/lan/1.0"
 		xmlns:gcx="http://standards.iso.org/iso/19115/-3/gcx/1.0"
 		xmlns:gex="http://standards.iso.org/iso/19115/-3/gex/1.0"
-		xmlns:dqm="http://standards.iso.org/iso/19157/-2/dqm/1.0"
+		xmlns:dqm="https://schemas.isotc211.org/19157/-1/dqm/1.0"
 		xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/2.0"
 	exclude-result-prefixes="#all">
 
 	<!-- ============================================================================================ -->
 
 	<xsl:output indent="yes"/>
-	
+
 	<!-- ============================================================================================ -->
-	
+
 	<xsl:template match="mds:MD_Metadata">
 		<oai_dc:dc xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/"
 						xmlns:dc   ="http://purl.org/dc/elements/1.1/"
@@ -35,12 +35,12 @@
 			</xsl:for-each>
 
 			<dc:date><xsl:value-of select="/root/env/changeDate"/></dc:date>
-			
+
 			<!-- DataIdentification - - - - - - - - - - - - - - - - - - - - - -->
 
 			<xsl:for-each select="mds:identificationInfo/mri:MD_DataIdentification">
 
-				<xsl:for-each select="mri:citation/cit:CI_Citation">	
+				<xsl:for-each select="mri:citation/cit:CI_Citation">
 					<xsl:for-each select="cit:title/gco:CharacterString">
 						<dc:title><xsl:value-of select="."/></dc:title>
 					</xsl:for-each>
@@ -90,7 +90,7 @@
 
 				<!-- bounding box -->
 
-				<xsl:for-each select="mri:extent/gex:EX_Extent/gex:geographicElement/gex:EX_GeographicBoundingBox">	
+				<xsl:for-each select="mri:extent/gex:EX_Extent/gex:geographicElement/gex:EX_GeographicBoundingBox">
 					<dc:coverage>
 						<xsl:value-of select="concat('North ', gex:northBoundLatitude/gco:Decimal, ', ')"/>
 						<xsl:value-of select="concat('South ', gex:southBoundLatitude/gco:Decimal, ', ')"/>
@@ -122,7 +122,7 @@
 	<xsl:template match="*">
 		<xsl:apply-templates select="*"/>
 	</xsl:template>
-	
+
 	<!-- ============================================================================================ -->
 
 </xsl:stylesheet>

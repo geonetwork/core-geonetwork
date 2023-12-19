@@ -33,7 +33,7 @@
               <documentation>Condition: At least one of referenceSystemIdentifier or crs is required</documentation>
             </annotation>
           </element>
-          <element name="coordinateEpoch" type="mrs:RS_DataEpoch_PropertyType">
+          <element name="coordinateEpoch" type="rbc:RS_DataEpoch_PropertyType">
             <annotation>
               <documentation>epoch at which a coordinate set to a dynamic CRS is valid</documentation>
               <documentation>Condition: Reqired if the CRS is dynamic, otherwise should not be given</documentation>

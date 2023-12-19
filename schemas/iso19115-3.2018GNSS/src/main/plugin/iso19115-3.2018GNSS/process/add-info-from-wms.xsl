@@ -25,7 +25,7 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:geonet="http://www.fao.org/geonetwork"
                 xmlns:mda="http://standards.iso.org/iso/19115/-3/mda/1.0"
-                xmlns:srv="http://standards.iso.org/iso/19115/-3/srv/2.1"
+                xmlns:srv="http://standards.iso.org/iso/19115/-3/srv/2.0"
                 xmlns:gcx="http://standards.iso.org/iso/19115/-3/gcx/1.0"
                 xmlns:mds="http://standards.iso.org/iso/19115/-3/mds/2.0"
                 xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"

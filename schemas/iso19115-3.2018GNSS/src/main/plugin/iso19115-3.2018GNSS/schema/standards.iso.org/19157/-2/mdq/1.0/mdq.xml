@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="../../../../19115/-3/mds/1.0/mds.xsd" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<mdb:MD_Metadata xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://standards.iso.org/iso/19115/-3/mdb/1.0 ../../../../19115/-3/mds/1.0/mds.xsd"
+ xmlns:mdq="http://standards.iso.org/iso/19157/-2/mdq/1.0"
+ xmlns:mdb="http://standards.iso.org/iso/19115/-3/mdb/1.0"
+ xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
+ xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0"
+ xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0"
+ xmlns:lan="http://standards.iso.org/iso/19115/-3/lan/1.0"
+ xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/1.0">
+   <!--
+   This is a sample metadata record for the minimal metadata conformance class.
+   It contains required elements from the mdb, mcc (cit, gco), lan, and mri
+   namespaces and sample data quality metadata with concepts from ISO 19157:2013
+   -->
+   <mdb:contact>
+      <cit:CI_Responsibility>
+         <cit:role>
+            <cit:CI_RoleCode codeList="codeListLocation#CI_RoleCode" codeListValue="pointOfContact">pointOfContact</cit:CI_RoleCode>
+         </cit:role>
+         <cit:party>
+            <cit:CI_Organisation>
+               <cit:name>
+                  <gco:CharacterString>Organisation Name</gco:CharacterString>
+               </cit:name>
+            </cit:CI_Organisation>
+         </cit:party>
+      </cit:CI_Responsibility>
+   </mdb:contact>
+   <mdb:dateInfo>
+      <cit:CI_Date>
+         <cit:date>
+            <gco:DateTime>2015-04-03T16:00:00</gco:DateTime>
+         </cit:date>
+         <cit:dateType>
+            <cit:CI_DateTypeCode codeList="codeListLocation#CI_DateTypeCode" codeListValue="creation">creation</cit:CI_DateTypeCode>
+         </cit:dateType>
+      </cit:CI_Date>
+   </mdb:dateInfo>
+   <mdb:identificationInfo>
+      <mri:MD_DataIdentification>
+         <mri:citation>
+            <cit:CI_Citation>
+               <cit:title>
+                  <gco:CharacterString>Sample Metadata for Minimal Conformance Class</gco:CharacterString>
+               </cit:title>
+            </cit:CI_Citation>
+         </mri:citation>
+         <mri:abstract>
+            <gco:CharacterString>This sample record has all required elements for minimal ISO 19115:2013 metadata</gco:CharacterString>
+         </mri:abstract>
+      </mri:MD_DataIdentification>
+   </mdb:identificationInfo>
+   <mdb:dataQualityInfo>
+      <mdq:DQ_DataQuality>
+         <mdq:scope>
+            <mcc:MD_Scope>
+               <!-- This is a quality report for metadata -->
+               <mcc:level>
+                  <mcc:MD_ScopeCode codeList="codeListLocation#CI_RoleCode" codeListValue="metadata">metadata</mcc:MD_ScopeCode>
+               </mcc:level>
+               <mcc:levelDescription>
+                  <mcc:MD_ScopeDescription>
+                     <mcc:other>
+                        <gco:CharacterString>Data Quality Metadata</gco:CharacterString>
+                     </mcc:other>
+                  </mcc:MD_ScopeDescription>
+               </mcc:levelDescription>
+            </mcc:MD_Scope>
+         </mdq:scope>
+         <mdq:standaloneQualityReport>
+            <mdq:DQ_StandaloneQualityReportInformation>
+               <mdq:reportReference>
+                  <cit:CI_Citation>
+                     <cit:title>
+                        <gco:CharacterString>A report on the validation of a metadata record</gco:CharacterString>
+                     </cit:title>
+                  </cit:CI_Citation>
+               </mdq:reportReference>
+               <mdq:abstract>
+                  <gco:CharacterString>The metadata were tested for validity</gco:CharacterString>
+               </mdq:abstract>
+            </mdq:DQ_StandaloneQualityReportInformation>
+         </mdq:standaloneQualityReport>
+         <mdq:report>
+            <mdq:DQ_ConceptualConsistency>
+               <mdq:measure>
+                  <mdq:DQ_MeasureReference>
+                     <mdq:measureIdentification>
+                        <mcc:MD_Identifier>
+                           <mcc:code>
+                              <gco:CharacterString>https://schemas.isotc211.org/19157/-2/mdq/1.0/conf/data-quality-xml/schema-valid</gco:CharacterString>
+                           </mcc:code>
+                        </mcc:MD_Identifier>
+                     </mdq:measureIdentification>
+                     <mdq:measureDescription>
+                        <gco:CharacterString>Use ISO 19157-2 to verify that instances of XML elements from the namespace https://schemas.isotc211.org/19157/-2/mdq/1.0 are well-formed and valid. </gco:CharacterString>
+                     </mdq:measureDescription>
+                  </mdq:DQ_MeasureReference>
+               </mdq:measure>
+               <mdq:result>
+                  <mdq:DQ_ConformanceResult>
+                     <mdq:specification>
+                        <cit:CI_Citation>
+                           <cit:title>
+                              <gco:CharacterString>Geographic Information - Data Quality</gco:CharacterString>
+                           </cit:title>
+                           <cit:alternateTitle>
+                              <gco:CharacterString>ISO 19157:2013</gco:CharacterString>
+                           </cit:alternateTitle>
+                           <cit:onlineResource>
+                              <cit:CI_OnlineResource>
+                                 <cit:linkage>
+                                    <gco:CharacterString>http://www.iso.org/iso/home/store/catalogue_tc/catalogue_detail.htm?csnumber=32575</gco:CharacterString>
+                                 </cit:linkage>
+                              </cit:CI_OnlineResource>
+                           </cit:onlineResource>
+                        </cit:CI_Citation>
+                     </mdq:specification>
+                     <mdq:pass>
+                        <gco:Boolean>true</gco:Boolean>
+                     </mdq:pass>
+                  </mdq:DQ_ConformanceResult>
+               </mdq:result>
+            </mdq:DQ_ConceptualConsistency>
+         </mdq:report>
+      </mdq:DQ_DataQuality>
+   </mdb:dataQualityInfo>
+</mdb:MD_Metadata>

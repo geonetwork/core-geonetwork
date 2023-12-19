@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dqm:DQM_MeasureCatalogue xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/1.0"
+   xmlns:cat="http://standards.iso.org/iso/19115/-3/cat/1.0"
+   xmlns:dqm="https://schemas.isotc211.org/19157/-1/dqm/1.0"
+   xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
+   xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0"
+   xmlns:pre="http://standards.iso.org/iso/19135/-2/pre/1.0"
+   xmlns:lan="http://standards.iso.org/iso/19115/-3/lan/1.0"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="https://schemas.isotc211.org/19157/-1/dqm/1.0 dqm.xsd">
+   <cat:name gco:nilReason="inapplicable"/>
+   <cat:scope gco:nilReason="inapplicable"/>
+   <cat:fieldOfApplication gco:nilReason="inapplicable"/>
+   <cat:versionNumber gco:nilReason="inapplicable"/>
+   <cat:versionDate gco:nilReason="inapplicable"/>
+   <dqm:qualityMeasure>
+      <dqm:DQM_Measure>
+         <dqm:measureIdentifier gco:nilReason="inapplicable"/>
+         <dqm:name gco:nilReason="inapplicable"/>
+         <dqm:elementName>
+            <gco:TypeName>
+               <gco:aName>
+                  <gco:CharacterString>incorrectTypeName</gco:CharacterString>
+               </gco:aName>
+            </gco:TypeName>
+         </dqm:elementName>
+         <dqm:definition gco:nilReason="inapplicable"/>
+         <dqm:description gco:nilReason="inapplicable"/>
+         <dqm:valueType>
+            <gco:TypeName>
+               <gco:aName>
+                  <gco:CharacterString>incorrectValueType</gco:CharacterString>
+               </gco:aName>
+            </gco:TypeName>
+         </dqm:valueType>
+         <dqm:valueStructure gco:nilReason="inapplicable"/>
+         <dqm:example gco:nilReason="inapplicable"/>
+         <dqm:sourceReference gco:nilReason="inapplicable"/>
+         <dqm:basicMeasure>
+            <dqm:DQM_BasicMeasure id="errorIndicator">
+               <dqm:name>
+                  <gco:CharacterString>Error indicator</gco:CharacterString>
+               </dqm:name>
+               <dqm:definition gco:nilReason="inapplicable"/>
+               <dqm:example gco:nilReason="inapplicable"/>
+               <dqm:valueType>
+                  <gco:TypeName>
+                     <gco:aName>
+                        <gco:CharacterString>incorrectValueType</gco:CharacterString>
+                     </gco:aName>
+                  </gco:TypeName>
+               </dqm:valueType>
+            </dqm:DQM_BasicMeasure>
+         </dqm:basicMeasure>
+         <dqm:parameter>
+            <dqm:DQM_Parameter id="sampleParameter">
+               <dqm:name gco:nilReason="inapplicable"/>
+               <dqm:definition gco:nilReason="inapplicable"/>
+               <dqm:description gco:nilReason="inapplicable"/>
+               <dqm:valueType>
+                  <gco:TypeName>
+                     <gco:aName>
+                        <gco:CharacterString>incorrectValueType</gco:CharacterString>
+                     </gco:aName>
+                  </gco:TypeName>
+               </dqm:valueType>
+               <dqm:valueStructure>
+                  <dqm:DQM_ValueStructure codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#DQM_ValueStructure" codeListValue="bag">bag</dqm:DQM_ValueStructure>
+               </dqm:valueStructure>
+            </dqm:DQM_Parameter>
+         </dqm:parameter>
+      </dqm:DQM_Measure>
+   </dqm:qualityMeasure>
+</dqm:DQM_MeasureCatalogue>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+      <title>Data Quality Concepts (DQC) Version 1.1.0</title>
+      <style>
+						h1 { font-family: Arial; color: DarkBlue; font-size: 14pt; font-weight:bold; }
+						body { font-family: Arial; color: black; font-size: 10pt;}
+						td { font-family: Arial; color: black; font-size: 10pt;}
+						table, th, td {border: 1px solid black; padding: 2px; border-spacing: 1px;}
+						.paraSmall {font-size: 0.7em; font-style: italic;}
+						.metagroup { font-family: Arial; color: #0099FF; font-size: 10pt; font-weight:bold; }
+					</style>
+   </head>
+   
+
+   <body>
+      <h1>Data Quality Concepts (DQC) Version 1.2.0</h1>
+      <!-- <img title="Classes in the dqc namespace" alt="UML diagram of packages from Data Quality Concepts (DQC) in the dqc namespace" width="750" src="./dqcBasePackage.png"/> -->
+      <h2>Description</h2>
+      <p>Data Quality Concepts (DQC) is an XML Schema implementation of abstract classes for ISO 19157, Geographic Information - Data Quality.  
+         It includes elements for defining geometry and functions for coverages. 
+         The XML schema was encoded using the encoding rules defined in ISO 19118, ISO 19139.
+      </p>
+      <h2>XML Namespace for Data Quality Concepts (DQC) Version: 1.2</h2>
+      <p>The namespace URI for Data Quality [abstract classes] (DQC) Version 1.2.0 is <b>https://schemas.isotc211.org/19157/-/dqc/1.2</b>.
+      </p>
+      <h2>XML Schema for Data Quality Concepts (DQC) Version 1.2.0</h2>
+      <p>
+         <b><a href="../../../../19157/-/dqc/1.2.0/dqc.xsd">dqc.xsd</a></b> is the XML Schema document to be referenced by XML documents containing XML elements
+         in the dqc namespace or by XML Schema documents importing the dqc 1.2 namespace. 
+         This XML schema includes (indirectly) all the implemented concepts of the dqc namespace, but it does not contain the declaration of any types.
+      </p>
+        <h2>Related XML Schema for dqc 1.2</h2>
+      <p>
+         <b><a href="../../../../19157/-/dqc/1.2.0/abstract.xsd">https://schemas.isotc211.org/19157/-/dqc/1.2.0/abstract.xsd</a></b> implements the UML conceptual schema defined in ISO 19157, Geographic Information - Data Quality. 
+         It was created using the encoding rules defined in ISO 19118, ISO 19139.
+      </p>
+      <a href="https://schemas.isotc211.org/19157/-/dqc/1.2.0/abstract.xsd">https://schemas.isotc211.org/19157/-/dqc/1.2.0/abstract.xsd</a> contains the folowing classes:
+      <ul>
+         <li>Abstract_DataQuality</li>
+         <li>Abstract_QualityElement</li>
+      </ul>
+       <h2>Related XML Namespaces for ISO 19157 DQC 1.2</h2> 
+      The DQC 1.2.0 imports these other namespaces: 
+      <table>
+         <tr>
+            <th>Name</th>
+            <th>Standard Prefix</th>
+            <th>Namespace Location</th>
+            <th>Schema Location</th>
+         </tr>
+         <tr>
+            <td>Geographic Common Objects</td>
+            <td>gco</td>
+            <td><a href="https://schemas.isotc211.org/19103/-/gco/1.2.0">https://schemas.isotc211.org/19103/-/gco/1.2</a></td>
+            <td>../../../../19103/-/gco/1.2.0/gco.xsd</td>
+         </tr>
+       </table>
+      <h2>Working Versions</h2> When revisions to these schema become necessary, they will be managed in the <a href="https://github.com/ISO-TC211/XML">ISO TC211 Git Repository</a>. 
+      <hr>
+      <p class="paraSmall">&#169; ISO. Written by hands Version: 2010-02-26/p>
+   </body>
+</html>
