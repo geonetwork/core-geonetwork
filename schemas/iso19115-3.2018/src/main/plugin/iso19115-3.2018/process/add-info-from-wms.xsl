@@ -211,41 +211,42 @@
       <xsl:choose>
         <xsl:when test="$setExtentMode">
           <xsl:for-each select="mri:extent">
+            <xsl:variable name="nonBboxElements"
+                          as="node()*"
+                          select="*/gex:description
+                                  |*/gex:temporalElement
+                                  |*/gex:verticalElement
+                                  |*/gex:geographicElement[not(gex:EX_GeographicBoundingBox)]"/>
 
             <xsl:choose>
-              <xsl:when
-                test="*/gex:temporalElement
-                      or */gex:verticalElement
-                      or */gex:geographicElement[gex:EX_BoundingPolygon]">
-                <xsl:copy>
-                  <xsl:copy-of select="*"/>
-                </xsl:copy>
+              <xsl:when test="$setAndReplaceExtentMode and count($nonBboxElements) > 0">
+                <mri:extent>
+                  <gex:EX_Extent>
+                    <xsl:copy-of select="$nonBboxElements"/>
+                  </gex:EX_Extent>
+                </mri:extent>
               </xsl:when>
               <xsl:when test="$setAndReplaceExtentMode"/>
               <xsl:otherwise>
-                <xsl:copy>
-                  <xsl:copy-of select="*"/>
-                </xsl:copy>
+                <xsl:copy-of select="."/>
               </xsl:otherwise>
             </xsl:choose>
+          </xsl:for-each>
+
+          <!-- New extent position is after existing ones. -->
+          <xsl:for-each
+            select="//mrd:onLine/*[
+                    contains(cit:protocol/gco:CharacterString, 'OGC:WMS')
+                    and cit:linkage/gco:CharacterString = $wmsServiceUrl]">
+            <xsl:call-template name="add-extent-for-wms">
+              <xsl:with-param name="srv" select="$srv"/>
+            </xsl:call-template>
           </xsl:for-each>
         </xsl:when>
         <xsl:otherwise>
           <xsl:copy-of select="mri:extent"/>
         </xsl:otherwise>
       </xsl:choose>
-
-      <!-- New extent position is after existing ones. -->
-      <xsl:if test="$setExtentMode">
-        <xsl:for-each
-          select="//mrd:onLine/*[
-                    contains(cit:protocol/gco:CharacterString, 'OGC:WMS')
-                    and cit:linkage/gco:CharacterString = $wmsServiceUrl]">
-          <xsl:call-template name="add-extent-for-wms">
-            <xsl:with-param name="srv" select="$srv"/>
-          </xsl:call-template>
-        </xsl:for-each>
-      </xsl:if>
 
       <xsl:apply-templates select="mri:additionalDocumentation"/>
       <xsl:apply-templates select="mri:processingLevel"/>
@@ -424,8 +425,20 @@
         </mri:extent>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:apply-templates select="$capabilitiesDoc//Layer[Name=$wmsLayerName]"
-                             mode="create-bbox-for-wms"/>
+
+        <xsl:variable name="layer"
+                      select="$capabilitiesDoc//Layer[Name=$wmsLayerName]"/>
+        <xsl:variable name="isExtentNotSet"
+                      select="$setAndReplaceExtentMode or count(ancestor::mdb:MD_Metadata/mdb:identificationInfo/*/mri:extent/*/gex:geographicElement/gex:EX_GeographicBoundingBox[
+                            gex:westBoundLongitude/gco:Decimal = $layer/LatLonBoundingBox/@minx
+                            and gex:eastBoundLongitude/gco:Decimal = $layer/LatLonBoundingBox/@maxx
+                            and gex:southBoundLatitude/gco:Decimal = $layer/LatLonBoundingBox/@miny
+                            and gex:northBoundLatitude/gco:Decimal = $layer/LatLonBoundingBox/@maxy
+                  ]) = 0"/>
+        <xsl:if test="$isExtentNotSet">
+          <xsl:apply-templates select="$layer"
+                               mode="create-bbox-for-wms"/>
+        </xsl:if>
       </xsl:otherwise>
     </xsl:choose>
 
