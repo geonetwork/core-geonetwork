@@ -348,21 +348,19 @@ USA.
 			<sch:report test="gmd:aggregateDataSetName or gmd:aggregateDataSetIdentifier"
 				>$loc/strings/report.M23</sch:report>
 
-
-
-      <sch:let name="mdRefRef" value="gmd:aggregateDataSetIdentifier/*/gmd:code/*"/>
+      <sch:let name="mdRefRef" value="gmd:aggregateDataSetIdentifier/*/gmd:code/gco:CharacterString"/>
       <sch:let name="association" value="gmd:associationType/*/@codeListValue"/>
       <sch:let name="initiative" value="gmd:initiativeType/*/@codeListValue"/>
 
+
       <sch:let name="hasNoDuplicate"
                value="count(../../*/gmd:MD_AggregateInformation[
-                                      gmd:aggregateDataSetIdentifier/*/gmd:code/* = $mdRefRef
+                                      gmd:aggregateDataSetIdentifier/*/gmd:code/gco:CharacterString = $mdRefRef
                                       and concat(
                                         gmd:associationType/*/@codeListValue,
                                         gmd:initiativeType/*/@codeListValue) =
                                         concat($association, $initiative)]) = 1"/>
       <sch:assert test="$hasNoDuplicate">$loc/strings/report.M23-dup</sch:assert>
-
     </sch:rule>
   </sch:pattern>
 
