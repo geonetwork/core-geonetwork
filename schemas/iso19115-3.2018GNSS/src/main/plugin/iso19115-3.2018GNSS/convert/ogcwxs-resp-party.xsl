@@ -39,7 +39,7 @@
                 xmlns:mco="http://standards.iso.org/iso/19115/-3/mco/1.0"
                 xmlns:mdb="http://standards.iso.org/iso/19115/-3/mdb/2.0"
                 xmlns:mmi="http://standards.iso.org/iso/19115/-3/mmi/1.0"
-                xmlns:mdq="http://standards.iso.org/iso/19157/-2/mdq/1.0"
+                xmlns:mdq="https://schemas.isotc211.org/19157/-1/mdq/1.0"
                 xmlns:srv="http://standards.iso.org/iso/19115/-3/srv/2.0"
                 xmlns:mrd="http://standards.iso.org/iso/19115/-3/mrd/1.0"
                 xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0"

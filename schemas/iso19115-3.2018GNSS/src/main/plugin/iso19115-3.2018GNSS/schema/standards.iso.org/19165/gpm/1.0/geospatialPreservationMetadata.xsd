@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- edited with XMLSpy v2008 sp1 (http://www.altova.com) by Joan Maso (CREAF) -->
-<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gpm="http://standards.iso.org/iso/19165/gpm/1.0" xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/1.0" xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0" xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0" xmlns:mco="http://standards.iso.org/iso/19115/-3/mco/1.0" xmlns:mdb="http://standards.iso.org/iso/19115/-3/mdb/1.0" xmlns:mdq="http://standards.iso.org/iso/19157/-2/mdq/1.0"
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gpm="http://standards.iso.org/iso/19165/gpm/1.0" xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/1.0" xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0" xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0" xmlns:mco="http://standards.iso.org/iso/19115/-3/mco/1.0" xmlns:mdb="http://standards.iso.org/iso/19115/-3/mdb/1.0" xmlns:mdq="https://schemas.isotc211.org/19157/-1/mdq/1.0"
 	xmlns:mrd="http://standards.iso.org/iso/19115/-3/mrd/1.0" xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0" xmlns:mrl="http://standards.iso.org/iso/19115/-3/mrl/1.0" xmlns:srv="http://standards.iso.org/iso/19115/-3/srv/2.0" xmlns:gml="http://www.opengis.net/gml/3.2" targetNamespace="http://standards.iso.org/iso/19165/gpm/1.0" elementFormDefault="qualified" version="1.1">
 	<import namespace="http://standards.iso.org/iso/19115/-3/cit/1.0" schemaLocation="http://standards.iso.org/iso/19115/-3/cit/1.0/cit.xsd"/>
 	<import namespace="http://standards.iso.org/iso/19115/-3/gco/1.0" schemaLocation="http://standards.iso.org/iso/19115/-3/gco/1.0/gco.xsd"/>
@@ -8,7 +8,7 @@
 	<import namespace="http://standards.iso.org/iso/19115/-3/mcc/1.0" schemaLocation="http://standards.iso.org/iso/19115/-3/mcc/1.0/mcc.xsd"/>
 	<import namespace="http://standards.iso.org/iso/19115/-3/mco/1.0" schemaLocation="http://standards.iso.org/iso/19115/-3/mco/1.0/mco.xsd"/>
 	<import namespace="http://standards.iso.org/iso/19115/-3/mdb/1.0" schemaLocation="http://standards.iso.org/iso/19115/-3/mdb/1.0/mdb.xsd"/>
-	<import namespace="http://standards.iso.org/iso/19157/-2/mdq/1.0" schemaLocation="http://standards.iso.org/iso/19157/-2/mdq/1.0/mdq.xsd"/>
+	<import namespace="https://schemas.isotc211.org/19157/-1/mdq/1.0" schemaLocation="https://schemas.isotc211.org/19157/-1/mdq/1.0/mdq.xsd"/>
 	<import namespace="http://standards.iso.org/iso/19115/-3/mpc/1.0" schemaLocation="http://standards.iso.org/iso/19115/-3/mpc/1.0/mpc.xsd"/>
 	<import namespace="http://standards.iso.org/iso/19115/-3/mrc/1.0" schemaLocation="http://standards.iso.org/iso/19115/-3/mrc/1.0/mrc.xsd"/>
 	<import namespace="http://standards.iso.org/iso/19115/-3/mrd/1.0" schemaLocation="http://standards.iso.org/iso/19115/-3/mrd/1.0/mrd.xsd"/>

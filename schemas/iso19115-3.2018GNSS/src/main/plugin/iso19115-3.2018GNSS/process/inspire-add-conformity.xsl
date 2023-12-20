@@ -7,7 +7,7 @@
                 xmlns:lan="http://standards.iso.org/iso/19115/-3/lan/1.0"
                 xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/2.0"
                 xmlns:mdb="http://standards.iso.org/iso/19115/-3/mdb/2.0"
-                xmlns:mdq="http://standards.iso.org/iso/19157/-2/mdq/1.0"
+                xmlns:mdq="https://schemas.isotc211.org/19157/-1/mdq/1.0"
                 xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0"
                 xmlns:skos="http://www.w3.org/2004/02/skos/core#"
                 xmlns:util="java:org.fao.geonet.util.XslUtil"

@@ -624,7 +624,7 @@
 
 
   <!-- Remove empty DQ elements, empty transfer options. -->
-  <xsl:template match="mdb:dataQualityInfo[count(*) = 0]"/>
+  <!--<xsl:template match="mdb:dataQualityInfo[count(*) = 0]"/>-->
   <xsl:template match="mrd:transferOptions[mrd:MD_DigitalTransferOptions/count(*) = 0]"/>
 
   <!-- copy everything else as is -->
