@@ -6,7 +6,7 @@ Ask in a comment if you have troubles with any of them. -->
 
 # Checklist
 
-- [ ] I have read the [contribution guidelines](https://github.com/geonetwork/core-geonetwork/blob/main/CONTRIBUTING.md
+- [ ] I have read the [contribution guidelines](https://github.com/geonetwork/core-geonetwork/blob/main/CONTRIBUTING.md)
 - [ ] *Pull request* provided for `main` branch, backports managed with label
 - [ ] *Good housekeeping* of code, cleaning up comments, tests, and documentation
 - [ ] *Clean commit history* broken into understandable chucks, avoiding big commits with hundreds of files, cautious of reformatting and whitespace changes
