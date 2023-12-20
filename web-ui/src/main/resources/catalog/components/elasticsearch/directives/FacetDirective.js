@@ -453,8 +453,9 @@
   ]);
 
   module.directive("esFacetCards", [
+    "gnFacetSorter",
     "gnLangs",
-    function (gnLangs) {
+    function (gnFacetSorter, gnLangs) {
       return {
         restrict: "A",
         scope: {
@@ -471,6 +472,7 @@
         },
         link: function (scope, element, attrs) {
           scope.iso2lang = gnLangs.getIso2Lang(gnLangs.getCurrent());
+          scope.facetSorter = gnFacetSorter.sortByTranslation;
 
           function init() {
             scope.missingValue =
