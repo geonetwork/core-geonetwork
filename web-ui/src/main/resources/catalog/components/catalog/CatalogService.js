@@ -761,6 +761,18 @@
         getUuid: function () {
           return this.uuid;
         },
+        getMetadataLanguages: function () {
+          if (!this.mainLanguage) {
+            return [];
+          }
+          return [this.mainLanguage]
+            .concat(this.otherLanguage)
+            .unique()
+            .filter(function (l) {
+              // do not allow null values
+              return !!l;
+            });
+        },
         isPublished: function (pubOption) {
           if (pubOption) {
             return this.isPublishedToGroup(pubOption.publicationGroup);
