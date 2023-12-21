@@ -52,6 +52,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.groupingBy;
+import static org.fao.geonet.api.ApiParams.API_CLASS_TOOLS_OPS;
+import static org.fao.geonet.api.ApiParams.API_CLASS_TOOLS_TAG;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
@@ -61,7 +63,8 @@ import static org.springframework.http.HttpStatus.OK;
 @RequestMapping(value = {
     "/{portal}/api/i18n"
 })
-@Tag(name = "tools")
+@Tag(name = API_CLASS_TOOLS_TAG,
+    description = API_CLASS_TOOLS_OPS)
 @RestController
 public class TranslationApi {
 

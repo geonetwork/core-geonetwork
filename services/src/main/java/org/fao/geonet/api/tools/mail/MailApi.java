@@ -45,6 +45,9 @@ package org.fao.geonet.api.tools.mail;
 //===	Rome - Italy. email: geonetwork@osgeo.org
 //==============================================================================
 
+import static org.fao.geonet.api.ApiParams.API_CLASS_TOOLS_OPS;
+import static org.fao.geonet.api.ApiParams.API_CLASS_TOOLS_TAG;
+
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
@@ -73,8 +76,8 @@ import java.util.ResourceBundle;
 @RequestMapping(value = {
     "/{portal}/api/tools/mail"
 })
-@Tag(name = "tools",
-    description = "Utility operations")
+@Tag(name = API_CLASS_TOOLS_TAG,
+    description = API_CLASS_TOOLS_OPS)
 @Controller("mail")
 public class MailApi {
 

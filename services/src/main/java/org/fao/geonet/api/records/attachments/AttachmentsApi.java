@@ -25,6 +25,9 @@
 
 package org.fao.geonet.api.records.attachments;
 
+import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_OPS;
+import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_TAG;
+
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -80,7 +83,8 @@ import java.util.List;
 @EnableWebMvc
 @Service
 @RequestMapping(value = {"/{portal}/api/records/{metadataUuid}/attachments"})
-@Tag(name = "records", description = "Metadata record operations")
+@Tag(name = API_CLASS_RECORD_TAG,
+    description = API_CLASS_RECORD_OPS)
 public class AttachmentsApi {
     public static final Integer MIN_IMAGE_SIZE = 1;
     public static final Integer MAX_IMAGE_SIZE = 2048;
