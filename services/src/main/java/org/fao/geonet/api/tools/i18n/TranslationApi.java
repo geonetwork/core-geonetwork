@@ -288,7 +288,7 @@ public class TranslationApi {
                     "  \"translationKey2\": \"Translated Key Two\",\n" +
                     "  \"translationKey3\": \"Translated Key Two\"\n" +
                     "}")
-        }, schema = @Schema(type = "{ < * >: string }"))
+        }, schema = @Schema(type = "object", implementation = java.util.HashMap.class))
     )
     @ResponseBody
     public Map<String, String> getDbTranslations(
