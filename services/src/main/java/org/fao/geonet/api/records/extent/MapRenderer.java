@@ -75,6 +75,21 @@ public class MapRenderer {
     }
 
     /**
+     * Returns a bounding box geometry.
+     *
+     * @param geom                  Bounding box geometry.
+     * @param srs                   Bounding box geometry srs.
+     * @param useGeodesicExtents    false: returns the bounding box geometry as a rectangle (using min / max bounds).
+     *                              true: returns the bounding box geometry.
+     * @return bounding box geometry.
+     */
+    public static Geometry getGeometryExtent(Geometry geom, String srs, boolean useGeodesicExtents) {
+        boolean isGlobalSrs = srs.equals("EPSG:4326") || srs.equals("EPSG:3857");
+
+        return (!isGlobalSrs && !useGeodesicExtents ?  geom.getEnvelope() : geom);
+    }
+
+    /**
      * Check if a geometry is in the domain of validity of a projection and if not return the
      * intersection of the geometry with the coordinate system domain of validity.
      */
@@ -117,7 +132,7 @@ public class MapRenderer {
         Map<String, String> regionGetMapBackgroundLayers = appContext.getBean("regionGetMapBackgroundLayers", Map.class);
         SortedSet<ExpandFactor> regionGetMapExpandFactors = appContext.getBean("regionGetMapExpandFactors", SortedSet.class);
         SettingManager settingManager = appContext.getBean(SettingManager.class);
-        boolean isGlobalSrs = srs.equals("EPSG:4326") || srs.equals("EPSG:3857");
+
         boolean useGeodesicExtents = settingManager.getValueAsBool(Settings.REGION_GETMAP_GEODESIC_EXTENTS, false);
 
         Geometry geom = null;
@@ -199,7 +214,7 @@ public class MapRenderer {
             Color geomStrokeColor = getColor(strokeColor, new Color(0, 0, 0, 255));
             AffineTransform worldToScreenTransform = worldToScreenTransform(bboxOfImage, imageDimensions);
             for (int i = 0; i < geom.getNumGeometries(); i++) {
-                Geometry geomExtent = (!isGlobalSrs && !useGeodesicExtents ?  geom.getGeometryN(i).getEnvelope() : geom.getGeometryN(i));
+                Geometry geomExtent = MapRenderer.getGeometryExtent(geom.getGeometryN(i), srs, useGeodesicExtents);
                 // draw each included geometry separately to ensure they are filled correctly
                 Shape shape = worldToScreenTransform.createTransformedShape(shapeWriter.toShape(geomExtent));
                 graphics.setColor(geomFillColor);
