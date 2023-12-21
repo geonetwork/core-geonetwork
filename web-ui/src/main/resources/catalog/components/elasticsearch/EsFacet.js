@@ -232,16 +232,16 @@
             },
             indexingErrorMsg: {
               terms: {
-                field: "indexingErrorMsg",
+                field: "indexingErrorMsg.type",
                 size: 10,
-                exclude: "Warning.*"
+                exclude: "warning"
               }
             },
             indexingWarningMsg: {
               terms: {
-                field: "indexingErrorMsg",
+                field: "indexingErrorMsg.type",
                 size: 10,
-                include: "Warning.*"
+                include: "warning"
               },
               meta: {
                 displayFilter: false,
