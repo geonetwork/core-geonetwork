@@ -1994,6 +1994,7 @@
         "properties": {
           "string": {
             "type": "keyword"
+            "type": "text"
           },
           "type": {
             "type": "keyword"
