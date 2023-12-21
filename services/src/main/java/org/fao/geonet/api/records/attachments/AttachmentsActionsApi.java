@@ -50,13 +50,15 @@ import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import java.nio.file.Path;
 
+import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_OPS;
+import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_TAG;
 import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUID;
 
 @EnableWebMvc
 @Controller
 @Service
-@Tag(name = "records",
-    description = "Metadata record operations")
+@Tag(name = API_CLASS_RECORD_TAG,
+    description = API_CLASS_RECORD_OPS)
 public class AttachmentsActionsApi {
     private final ApplicationContext appContext = ApplicationContextHolder.get();
     @Autowired

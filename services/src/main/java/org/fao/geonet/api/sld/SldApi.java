@@ -1,5 +1,8 @@
 package org.fao.geonet.api.sld;
 
+import static org.fao.geonet.api.ApiParams.API_CLASS_TOOLS_OPS;
+import static org.fao.geonet.api.ApiParams.API_CLASS_TOOLS_TAG;
+
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.transaction.TransactionManager;
@@ -47,8 +50,8 @@ import java.util.Optional;
 @RequestMapping(value = {
     "/{portal}/api/tools/ogc"
 })
-@Tag(name = "tools",
-    description = "Utility operations")
+@Tag(name = API_CLASS_TOOLS_TAG,
+    description = API_CLASS_TOOLS_OPS)
 public class SldApi {
 
     public static final String LOGGER = Geonet.GEONETWORK + ".api.sld";
