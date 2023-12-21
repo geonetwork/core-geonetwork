@@ -184,6 +184,18 @@
           };
         }
       };
+
+      this.sortByQuantity = function (agg, bucket) {
+        return function (facet) {
+          return facet.count;
+        };
+      };
+
+      this.sortByQuantityDesc = function (agg, bucket) {
+        return function (facet) {
+          return -1 * facet.count;
+        };
+      };
     }
   ]);
 
@@ -472,7 +484,6 @@
         },
         link: function (scope, element, attrs) {
           scope.iso2lang = gnLangs.getIso2Lang(gnLangs.getCurrent());
-          scope.facetSorter = gnFacetSorter.sortByTranslation;
 
           function init() {
             scope.missingValue =
@@ -487,6 +498,14 @@
           }
 
           init();
+
+          scope.getFacetSorter = function (facet) {
+            if (facet.meta && facet.meta.orderByTranslation) {
+              return gnFacetSorter.sortByTranslation;
+            } else {
+              return gnFacetSorter.sortByQuantityDesc;
+            }
+          };
 
           scope.$watch("key", function (n, o) {
             if (n && n !== o) {
