@@ -132,7 +132,10 @@ public class MetadataApi {
     }
 
     @io.swagger.v3.oas.annotations.Operation(summary = "Get a metadata record",
-        description = "Depending on the accept header the appropriate formatter is used. " +
+        description = "Accept header should indicate which is the appropriate format " +
+            "to return. It could be text/html, application/xml, application/zip, ..." +
+            "If no appropriate Accept header found, the XML format is returned." +
+            "Depending on the accept header the appropriate formatter is used. " +
             "When requesting a ZIP, a MEF version 2 file is returned. " +
             "When requesting HTML, the default formatter is used.")
     @RequestMapping(value = "/{metadataUuid:.+}",
@@ -161,16 +164,6 @@ public class MetadataApi {
             required = true)
         @PathVariable
         String metadataUuid,
-        @Parameter(description = "Accept header should indicate which is the appropriate format " +
-            "to return. It could be text/html, application/xml, application/zip, ..." +
-            "If no appropriate Accept header found, the XML format is returned.",
-            required = true)
-        @RequestHeader(
-            value = HttpHeaders.ACCEPT,
-            defaultValue = MediaType.APPLICATION_XML_VALUE,
-            required = false
-        )
-        String acceptHeader,
         HttpServletResponse response,
         HttpServletRequest request
     )
@@ -181,6 +174,8 @@ public class MetadataApi {
             Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
             throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
         }
+
+        String acceptHeader = StringUtils.isBlank(request.getHeader(HttpHeaders.ACCEPT))?MediaType.APPLICATION_XML_VALUE:request.getHeader(HttpHeaders.ACCEPT);
         List<String> accept = Arrays.asList(acceptHeader.split(","));
 
         String defaultFormatter = "xsl-view";
@@ -281,11 +276,6 @@ public class MetadataApi {
             required = false)
         @RequestParam(required = false, defaultValue = "true")
         boolean approved,
-        @RequestHeader(
-            value = HttpHeaders.ACCEPT,
-            defaultValue = MediaType.APPLICATION_XML_VALUE
-        )
-        String acceptHeader,
         HttpServletResponse response,
         HttpServletRequest request
     )
@@ -352,6 +342,7 @@ public class MetadataApi {
             }
         }
 
+        String acceptHeader = StringUtils.isBlank(request.getHeader(HttpHeaders.ACCEPT))?MediaType.APPLICATION_XML_VALUE:request.getHeader(HttpHeaders.ACCEPT);
         boolean isJson = acceptHeader.contains(MediaType.APPLICATION_JSON_VALUE);
 
         String mode = (attachment) ? "attachment" : "inline";
@@ -426,11 +417,6 @@ public class MetadataApi {
             required = false)
         @RequestParam(required = false, defaultValue = "true")
         boolean approved,
-        @RequestHeader(
-            value = HttpHeaders.ACCEPT,
-            defaultValue = "application/x-gn-mef-2-zip"
-        )
-        String acceptHeader,
         HttpServletResponse response,
         HttpServletRequest request
     )
@@ -445,6 +431,7 @@ public class MetadataApi {
         Path stylePath = dataDirectory.getWebappDir().resolve(Geonet.Path.SCHEMAS);
         Path file = null;
         ServiceContext serviceContext = ApiUtils.createServiceContext(request);
+        String acceptHeader = StringUtils.isBlank(request.getHeader(HttpHeaders.ACCEPT))?"application/x-gn-mef-2-zip":request.getHeader(HttpHeaders.ACCEPT);
         MEFLib.Version version = MEFLib.Version.find(acceptHeader);
         try {
             if (version == MEFLib.Version.V1) {
