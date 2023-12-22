@@ -21,9 +21,7 @@
 package org.fao.geonet.api;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import io.swagger.v3.core.util.Json;
 import io.swagger.v3.core.util.PathUtils;
-import io.swagger.v3.core.util.Yaml;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.models.OpenAPI;
 import org.springdoc.api.AbstractOpenApiResource;
@@ -33,12 +31,9 @@ import org.springdoc.core.customizers.OperationCustomizer;
 import org.springdoc.webmvc.core.RouterFunctionProvider;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.ModelAndView;
@@ -48,7 +43,6 @@ import org.springframework.web.servlet.mvc.method.RequestMappingInfoHandlerMappi
 
 import javax.servlet.http.HttpServletRequest;
 
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 import static org.springdoc.core.Constants.*;
