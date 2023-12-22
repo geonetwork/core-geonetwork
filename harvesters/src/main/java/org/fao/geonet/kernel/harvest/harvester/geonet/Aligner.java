@@ -918,16 +918,11 @@ public class Aligner extends BaseAligner<GeonetParams> {
             resourceHolder = null;
         }
 
-        if (resourceHolder == null) {
-            saveFile = true;
+        if ((resourceHolder != null) && (resourceHolder.getMetadata() != null)) {
+            ISODate locIsoDate = new ISODate(resourceHolder.getMetadata().getLastModification().getTime(), false);
+            saveFile = (remIsoDate.timeDifferenceInSeconds(locIsoDate) > 0);
         } else {
-            final MetadataResource description = resourceHolder.getMetadata();
-            if (description == null) {
-                saveFile = true;
-            } else {
-                ISODate locIsoDate = new ISODate(description.getLastModification().getTime(), false);
-                saveFile = (remIsoDate.timeDifferenceInSeconds(locIsoDate) > 0);
-            }
+            saveFile = true;
         }
 
         if (saveFile) {
