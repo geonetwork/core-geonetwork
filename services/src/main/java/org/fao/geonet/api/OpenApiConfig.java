@@ -52,9 +52,6 @@ import static org.fao.geonet.kernel.setting.Settings.SYSTEM_PLATFORM_VERSION;
 @OpenAPIDefinition
 public class OpenApiConfig {
 
-    /**
-     * Using static value so that should the bean be called twice, it will reuse the same object.
-     */
     private static OpenAPI openAPI = null;
 
     private static SettingManager settingManager = null;
@@ -65,8 +62,25 @@ public class OpenApiConfig {
     }
 
     @Bean
-    public OpenAPI OpenApiConfig(SettingManager settingManager) {
-        this.settingManager = settingManager;
+    public OpenAPI openApi(final SettingManager settingManager) {
+        return OpenApiConfig.setupOpenApiConfig(settingManager);
+    }
+
+    /**
+     * Setup OpenAPI configuration.
+     *
+     * Using static function so that should the bean be called twice (which it does), it will reuse the same static objects.
+     * During first call, the settingManager may not be properly setup (i.e. initial install) and will return null values for version and host information.
+     * Subsequent calls will update the related OpenAPI information with the settingManager values.
+     *
+     * It is also static so that when we update the object on second call, it will also update the object returned from the first call as they will be
+     * pointing to the same object.
+     *
+     * @param settingManager containing host and version information required.
+     * @return OpenAPI object.
+     */
+    private static OpenAPI setupOpenApiConfig(final SettingManager settingManager) {
+        OpenApiConfig.settingManager = settingManager;
         if (openAPI == null) {
             openAPI = new OpenAPI().info(new Info()
                     .description("This is the description of the GeoNetwork OpenAPI. Use this API to manage your catalog.")
@@ -99,7 +113,7 @@ public class OpenApiConfig {
     /**
      * Update openAPI object with version related information.
      */
-    private void setVersionRelatedInfo() {
+    private static void setVersionRelatedInfo() {
 
         String version = settingManager.getValue(SYSTEM_PLATFORM_VERSION);
 
@@ -113,7 +127,7 @@ public class OpenApiConfig {
      * Update openAPI object with host related information.
      */
     public static void setHostRelatedInfo() {
-        if (settingManager==null || openAPI == null) {
+        if (settingManager == null || openAPI == null) {
             return;
         }
 
