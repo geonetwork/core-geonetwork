@@ -658,8 +658,8 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
     }
 
     private void addThumbnails(ServiceContext context) throws Exception {
-        Path mdPublicDataDir = Lib.resource.getDir(context, Params.Access.PUBLIC, id);
-        Path mdPrivateDataDir = Lib.resource.getDir(context, Params.Access.PRIVATE, id);
+        Path mdPublicDataDir = Lib.resource.getDir(Params.Access.PUBLIC, id);
+        Path mdPrivateDataDir = Lib.resource.getDir(Params.Access.PRIVATE, id);
         final Path smallImage = mdPublicDataDir.resolve("small.gif");
         final Path largeImage = mdPublicDataDir.resolve("large.gif");
         createImage("gif", smallImage);

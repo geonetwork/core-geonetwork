@@ -53,8 +53,8 @@ public class ResourceLib {
      * @param id     The metadata identifier
      * @return The data directory
      */
-    public Path getDir(ServiceContext context, String access, int id) {
-        Path mdDir = getMetadataDir(context.getBean(GeonetworkDataDirectory.class), id);
+    public Path getDir(String access, int id) {
+        Path mdDir = getMetadataDir(ApplicationContextHolder.get().getBean(GeonetworkDataDirectory.class), id);
         String subDir = (access != null && access.equals(Params.Access.PUBLIC)) ? Params.Access.PUBLIC
             : Params.Access.PRIVATE;
         return mdDir.resolve(subDir);

@@ -108,7 +108,7 @@ public class FilesystemStore extends AbstractStore {
         int metadataId = canDownload(context, metadataUuid, visibility, approved);
         checkResourceId(resourceId);
 
-        final Path resourceFile = Lib.resource.getDir(context, visibility.toString(), metadataId).
+        final Path resourceFile = Lib.resource.getDir(visibility.toString(), metadataId).
                 resolve(getFilename(metadataUuid, resourceId));
 
         if (Files.exists(resourceFile)) {
