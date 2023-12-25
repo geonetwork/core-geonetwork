@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2007 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2023 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -31,7 +31,6 @@ import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.utils.Log;
 import org.jdom.Element;
 
-import java.util.Iterator;
 
 //=============================================================================
 
@@ -126,11 +125,6 @@ class Search {
         }
 
         return queryBody;
-    }
-
-    private void add(Element req, String name, String value) {
-        if (value.length() != 0)
-            req.addContent(new Element(name).setText(value));
     }
 
     public void setRange(int from, int to) {

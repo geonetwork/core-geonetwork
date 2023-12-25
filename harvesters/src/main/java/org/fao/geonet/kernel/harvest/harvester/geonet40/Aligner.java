@@ -35,10 +35,10 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.domain.userfeedback.RatingsSetting;
 import org.fao.geonet.exceptions.NoSchemaMatchesException;
+import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.UpdateDatestamp;
-import org.fao.geonet.kernel.datamanager.IMetadataManager;
-import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.kernel.datamanager.*;
 import org.fao.geonet.kernel.harvest.BaseAligner;
 import org.fao.geonet.kernel.harvest.harvester.*;
 import org.fao.geonet.kernel.mef.*;
@@ -69,6 +69,10 @@ public class Aligner extends BaseAligner<GeonetParams> {
     private ServiceContext context;
     private DataManager dataMan;
     private IMetadataManager metadataManager;
+    private IMetadataIndexer metadataIndexer;
+    private IMetadataOperations metadataOperations;
+    private IMetadataUtils metadataUtils;
+    private IMetadataSchemaUtils metadataSchemaUtils;
     private HarvestResult result;
     private CategoryMapper localCateg;
     private GroupMapper localGroups;
@@ -79,7 +83,7 @@ public class Aligner extends BaseAligner<GeonetParams> {
     private MetadataRepository metadataRepository;
     private Map<String, Map<String, String>> hmRemoteGroups = new HashMap<>();
     private SettingManager settingManager;
-
+    private AccessManager accessManager;
     private GeoNetworkApiClient geoNetworkApiClient;
 
     public Aligner(AtomicBoolean cancelMonitor, Logger log, ServiceContext context,
@@ -90,10 +94,14 @@ public class Aligner extends BaseAligner<GeonetParams> {
         this.params = params;
 
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        dataMan = gc.getBean(DataManager.class);
+        metadataIndexer = gc.getBean(IMetadataIndexer.class);
         metadataManager = gc.getBean(IMetadataManager.class);
+        metadataOperations = gc.getBean(IMetadataOperations.class);
+        metadataUtils = gc.getBean(IMetadataUtils.class);
+        metadataSchemaUtils = gc.getBean(IMetadataSchemaUtils.class);
         metadataRepository = gc.getBean(MetadataRepository.class);
         settingManager = gc.getBean(SettingManager.class);
+        accessManager = gc.getBean(AccessManager.class);
         geoNetworkApiClient = gc.getBean(GeoNetworkApiClient.class);
 
         result = new HarvestResult();
@@ -174,16 +182,15 @@ public class Aligner extends BaseAligner<GeonetParams> {
                 // Mef full format provides ISO19139 records in both the profile
                 // and ISO19139 so we could be able to import them as far as
                 // ISO19139 schema is installed by default.
-                if (!dataMan.existsSchema(ri.schema) && !ri.schema.startsWith("iso19139.")) {
+                if (!metadataSchemaUtils.existsSchema(ri.schema) && !ri.schema.startsWith("iso19139.")) {
                     if (log.isDebugEnabled())
                         log.debug("  - Metadata skipped due to unknown schema. uuid:" + ri.uuid
                             + ", schema:" + ri.schema);
                     result.unknownSchema++;
                 } else {
-                    String id = dataMan.getMetadataId(ri.uuid);
+                    String id = metadataUtils.getMetadataId(ri.uuid);
 
                     // look up value of localrating/enable
-                    SettingManager settingManager = context.getBean(SettingManager.class);
                     String localRating = settingManager.getValue(Settings.SYSTEM_LOCALRATING_ENABLE);
 
                     if (id == null) {
@@ -241,7 +248,7 @@ public class Aligner extends BaseAligner<GeonetParams> {
             }
         }
 
-        dataMan.forceIndexChanges();
+        metadataIndexer.forceIndexChanges();
 
         log.info("End of alignment for : " + params.getName());
 
@@ -275,7 +282,7 @@ public class Aligner extends BaseAligner<GeonetParams> {
                 try {
                     Path parent = file.getParent();
                     Path parent2 = parent.getParent();
-                    String metadataSchema = dataMan.autodetectSchema(metadata, null);
+                    String metadataSchema = metadataSchemaUtils.autodetectSchema(metadata, null);
                     // If local node doesn't know metadata
                     // schema try to load next xml file.
                     if (metadataSchema == null) {
@@ -343,11 +350,21 @@ public class Aligner extends BaseAligner<GeonetParams> {
         final Element[] md = {null};
 
         //--- import metadata from MEF file
+        String username;
+        String password;
+
+        if (params.isUseAccount()) {
+            username = params.getUsername();
+            password = params.getPassword();
+        } else {
+            username = "";
+            password = "";
+        }
 
         Path mefFile = null;
 
         try {
-            mefFile = geoNetworkApiClient.retrieveMEF( params.host + "/" + params.getNode(), ri.uuid);
+            mefFile = geoNetworkApiClient.retrieveMEF( params.host + "/" + params.getNode(), ri.uuid, username, password);
             String fileType = "mef";
             MEFLib.Version version = MEFLib.getMEFVersion(mefFile);
             if (version != null && version.equals(MEFLib.Version.V2)) {
@@ -377,7 +394,7 @@ public class Aligner extends BaseAligner<GeonetParams> {
                 public void handleInfo(Element info, int index) throws Exception {
 
                     final Element metadata = md[index];
-                    String schema = dataMan.autodetectSchema(metadata, null);
+                    String schema = metadataSchemaUtils.autodetectSchema(metadata, null);
                     if (info != null && info.getContentSize() != 0) {
                         Element general = info.getChild("general");
                         if (general != null && general.getContentSize() != 0) {
@@ -403,7 +420,6 @@ public class Aligner extends BaseAligner<GeonetParams> {
                     if (log.isDebugEnabled())
                         log.debug("    - Adding remote " + visibility + " file with name: " + file);
                     final Store store = context.getBean("resourceStore", Store.class);
-                    final IMetadataUtils metadataUtils = context.getBean(IMetadataUtils.class);
                     final String metadataUuid = metadataUtils.getMetadataUuid(id[index]);
                     store.putResource(context, metadataUuid, file, is, new ISODate(changeDate).toDate(), visibility, true);
                 }
@@ -469,7 +485,7 @@ public class Aligner extends BaseAligner<GeonetParams> {
         }
 
         if (!params.xslfilter.equals("")) {
-            md = HarvesterUtil.processMetadata(dataMan.getSchema(schema),
+            md = HarvesterUtil.processMetadata(metadataSchemaUtils.getSchema(schema),
                 md, processName, processParams);
         }
 
@@ -527,7 +543,7 @@ public class Aligner extends BaseAligner<GeonetParams> {
         }
         context.getBean(IMetadataManager.class).save(metadata);
 
-        dataMan.indexMetadata(id, Math.random() < 0.01);
+        metadataIndexer.indexMetadata(id, true, IndexingMode.full);
         result.addedMetadata++;
 
         return id;
@@ -602,12 +618,12 @@ public class Aligner extends BaseAligner<GeonetParams> {
 
     private void addOperations(String id, String groupId, Set<String> oper) throws Exception {
         for (String opName : oper) {
-            int opId = dataMan.getAccessManager().getPrivilegeId(opName);
+            int opId = accessManager.getPrivilegeId(opName);
 
             //--- allow only: view, download, dynamic, featured
             if (opId == 0 || opId == 1 || opId == 5 || opId == 6) {
                 if (log.isDebugEnabled()) log.debug("       --> " + opName);
-                dataMan.setOperation(context, id, groupId, opId + "");
+                metadataOperations.setOperation(context, id, groupId, opId + "");
             } else {
                 if (log.isDebugEnabled()) log.debug("       --> " + opName + " (skipped)");
             }
@@ -660,7 +676,18 @@ public class Aligner extends BaseAligner<GeonetParams> {
                 Path mefFile = null;
 
                 try {
-                    mefFile = geoNetworkApiClient.retrieveMEF(params.host + "/" + params.getNode(), ri.uuid);
+                    String username;
+                    String password;
+
+                    if (params.isUseAccount()) {
+                        username = params.getUsername();
+                        password = params.getPassword();
+                    } else {
+                        username = "";
+                        password = "";
+                    }
+
+                    mefFile = geoNetworkApiClient.retrieveMEF(params.host + "/" + params.getNode(), ri.uuid, username, password);
 
                     String fileType = "mef";
                     MEFLib.Version version = MEFLib.getMEFVersion(mefFile);
@@ -742,7 +769,6 @@ public class Aligner extends BaseAligner<GeonetParams> {
             return;
         }
 
-        final IMetadataManager metadataManager = context.getBean(IMetadataManager.class);
         Metadata metadata;
         if (!force && !ri.isMoreRecentThan(date)) {
             if (log.isDebugEnabled())
@@ -761,7 +787,7 @@ public class Aligner extends BaseAligner<GeonetParams> {
             }
 
             if (!params.xslfilter.equals("")) {
-                md = HarvesterUtil.processMetadata(dataMan.getSchema(ri.schema),
+                md = HarvesterUtil.processMetadata(metadataSchemaUtils.getSchema(ri.schema),
                     md, processName, processParams);
             }
             // update metadata
@@ -819,7 +845,7 @@ public class Aligner extends BaseAligner<GeonetParams> {
 
         metadataManager.save(metadata);
 
-        dataMan.indexMetadata(id, Math.random() < 0.01);
+        metadataIndexer.indexMetadata(id, true, IndexingMode.full);
     }
 
     private void handleFile(String id, String file, MetadataResourceVisibility visibility, String changeDate,
@@ -829,7 +855,6 @@ public class Aligner extends BaseAligner<GeonetParams> {
                 log.debug("  - No file found in info.xml. Cannot update file:" + file);
         } else {
             final Store store = context.getBean("resourceStore", Store.class);
-            final IMetadataUtils metadataUtils = context.getBean(IMetadataUtils.class);
             final String metadataUuid = metadataUtils.getMetadataUuid(id);
             removeOldFile(store, metadataUuid, files, visibility);
             saveFile(store, metadataUuid, file, visibility, changeDate, is);

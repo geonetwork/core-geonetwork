@@ -56,14 +56,15 @@ public class GeonetParams extends AbstractParams {
 
     private Boolean useChangeDateForUpdate;
 
-    private ArrayList<Search> alSearches = new ArrayList<Search>();
+    private ArrayList<Search> alSearches = new ArrayList<>();
 
-    private ArrayList<Group> alCopyPolicy = new ArrayList<Group>();
+    private ArrayList<Group> alCopyPolicy = new ArrayList<>();
 
     public GeonetParams(DataManager dm) {
         super(dm);
     }
 
+    @Override
     public void create(Element node) throws BadInputEx {
         super.create(node);
 
@@ -80,11 +81,11 @@ public class GeonetParams extends AbstractParams {
         mefFormatFull = Util.getParam(site, "mefFormatFull", false);
         xslfilter = Util.getParam(site, "xslfilter", "");
 
-        //checkPort(port);
         addSearches(searches);
         addCopyPolicy(policy);
     }
 
+    @Override
     public void update(Element node) throws BadInputEx {
         super.update(node);
 
@@ -98,8 +99,6 @@ public class GeonetParams extends AbstractParams {
         createRemoteCategory = Util.getParam(site, "createRemoteCategory", createRemoteCategory);
         mefFormatFull = Util.getParam(site, "mefFormatFull", mefFormatFull);
         xslfilter = Util.getParam(site, "xslfilter", "");
-
-        //checkPort(port);
 
         //--- if some search queries are given, we drop the previous ones and
         //--- set these new ones

@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2007 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2023 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -81,8 +81,15 @@ class Harvester implements IHarvester<HarvestResult> {
         geoNetworkApiClient = context.getBean(GeoNetworkApiClient.class);
 
         //--- login
+        String username;
+        String password;
+
         if (params.isUseAccount()) {
-            // TODO: Implement
+            username = params.getUsername();
+            password = params.getPassword();
+        } else {
+            username = "";
+            password = "";
         }
 
         //--- retrieve info on categories and groups
@@ -90,9 +97,9 @@ class Harvester implements IHarvester<HarvestResult> {
         log.info("Retrieving information from : " + params.host);
 
         String serverUrl = getServerUrl();
-        Map<String, Source> sources = geoNetworkApiClient.retrieveSources(serverUrl);
+        Map<String, Source> sources = geoNetworkApiClient.retrieveSources(serverUrl, username, password);
 
-        List<org.fao.geonet.domain.Group> groupList = geoNetworkApiClient.retrieveGroups(serverUrl);
+        List<org.fao.geonet.domain.Group> groupList = geoNetworkApiClient.retrieveGroups(serverUrl, username, password);
 
         //--- perform all searches
 
@@ -202,8 +209,19 @@ class Harvester implements IHarvester<HarvestResult> {
 
     private SearchResponse doSearch(Search s) throws OperationAbortedEx {
         try {
+            String username;
+            String password;
+
+            if (params.isUseAccount()) {
+                username = params.getUsername();
+                password = params.getPassword();
+            } else {
+                username = "";
+                password = "";
+            }
+
             String queryBody = s.createElasticsearchQuery();
-            return geoNetworkApiClient.query(getServerUrl(), queryBody);
+            return geoNetworkApiClient.query(getServerUrl(), queryBody, username, password);
         } catch (Exception ex) {
             Log.error(LOGGER_NAME, ex.getMessage(), ex);
             HarvestError harvestError = new HarvestError(context, ex);
