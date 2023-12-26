@@ -58,7 +58,6 @@ import org.elasticsearch.xcontent.NamedXContentRegistry;
 import org.elasticsearch.xcontent.ParseField;
 import org.elasticsearch.xcontent.XContentParser;
 import org.elasticsearch.xcontent.json.JsonXContent;
-import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.Source;
 import org.fao.geonet.exceptions.BadParameterEx;
@@ -215,7 +214,7 @@ public class GeoNetworkApiClient {
             .collect(Collectors.toList());
     }
 
-    private SearchResponse getSearchResponseFromJson(String jsonResponse) throws IOException {
+    SearchResponse getSearchResponseFromJson(String jsonResponse) throws IOException {
         NamedXContentRegistry registry = new NamedXContentRegistry(getDefaultNamedXContents());
         XContentParser parser = JsonXContent.jsonXContent.createParser(registry, null, jsonResponse);
         return SearchResponse.fromXContent(parser);
