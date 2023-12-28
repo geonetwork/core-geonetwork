@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2023 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -36,9 +36,7 @@ import java.util.Map;
 import java.util.TimeZone;
 
 public class ResumptionTokenCache extends Thread {
-
-
-    public final static int CACHE_EXPUNGE_DELAY = 10 * 1000; // 10 seconds
+    public static final int CACHE_EXPUNGE_DELAY = 10 * 1000; // 10 seconds
 
     private Map<String, GeonetworkResumptionToken> map;
     private static Object stopper = new Object();
@@ -93,6 +91,7 @@ public class ResumptionTokenCache extends Thread {
         return settingMan.getValueAsInt("system/oai/cachesize");
     }
 
+    @Override
     public void run() {
         synchronized (stopper) {
             while (running && !isInterrupted()) {
@@ -113,8 +112,8 @@ public class ResumptionTokenCache extends Thread {
 
         Date now = getUTCTime();
 
-        for (Map.Entry entry : map.entrySet()) {
-            if (((GeonetworkResumptionToken) entry.getValue()).getExpirDate().toDate().getTime() / 1000 < (now.getTime() / 1000)) {
+        for (Map.Entry<String, GeonetworkResumptionToken> entry : map.entrySet()) {
+            if (entry.getValue().getExpirDate().toDate().getTime() / 1000 < (now.getTime() / 1000)) {
                 map.remove(entry.getKey());
                 if (Log.isDebugEnabled(Geonet.OAI_HARVESTER))
                     Log.debug(Geonet.OAI_HARVESTER, "OAI cache ::expunge removing:" + entry.getKey());
@@ -131,11 +130,11 @@ public class ResumptionTokenCache extends Thread {
         long oldest = Long.MAX_VALUE;
         Object oldkey = "";
 
-        for (Map.Entry entry : map.entrySet()) {
+        for (Map.Entry<String, GeonetworkResumptionToken> entry : map.entrySet()) {
 
-            if (((GeonetworkResumptionToken) entry.getValue()).getExpirDate().getSeconds() < oldest) {
+            if (entry.getValue().getExpirDate().getSeconds() < oldest) {
                 oldkey = entry.getKey();
-                oldest = ((GeonetworkResumptionToken) entry.getValue()).getExpirDate().getSeconds();
+                oldest = entry.getValue().getExpirDate().getSeconds();
             }
         }
 
