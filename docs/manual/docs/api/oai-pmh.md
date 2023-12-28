@@ -1,15 +1,6 @@
 # Open Archive Initiative (OAI) {#oai-pmh}
 
-!!! warning
-
-    Unavailable since version 4.0.0.
-    
-    There is some interest migrating OAI-PMH to Elasticsearch engine used by GeoNetwork 4.
-    Interested parties are encouraged to contact the project team for direction on this topic.
-
-The Open Archives Initiative Protocol for Metadata Harvesting (OAI-PMH) standard exposes the metadata records in your catalog in an XML format defined by version 2.0 of the OAI-PMH protocol.
-
-Reference:
+The OAI-PMH end point exposes the metadata records in your catalog in XML format using the version 2.0 of the OAI-PMH protocol.
 
 * [Open Archives Initiative Protocol for Metadata Harvesting (OAI-PMH)](https://www.openarchives.org/OAI/openarchivesprotocol.html)
 
