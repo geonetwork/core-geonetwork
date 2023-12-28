@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2007 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2023 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -65,7 +65,7 @@ public class OaiPmhDispatcher {
     //--- Constructor
     //---
     //---------------------------------------------------------------------------
-    private HashMap<String, OaiPmhService> hmServices = new HashMap<String, OaiPmhService>();
+    private HashMap<String, OaiPmhService> hmServices = new HashMap<>();
 
     //---------------------------------------------------------------------------
 
