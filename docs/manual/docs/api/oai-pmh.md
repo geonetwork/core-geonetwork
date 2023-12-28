@@ -4,7 +4,7 @@ The OAI-PMH end point exposes the metadata records in your catalog in XML format
 
 ## Configuration
 
-The following URL is the standard end point for the catalog (substitute your GeoNetwork URL): <http://localhost:8080/geonetwork/srv/eng/oaipmh>?
+The following URL is the standard end point for the catalog (substitute your GeoNetwork URL): <http://localhost:8080/geonetwork/srv/api/oaipmh>?
 
 ## Requests
 
