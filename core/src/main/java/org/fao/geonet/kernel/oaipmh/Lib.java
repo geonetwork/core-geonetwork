@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2007 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2023 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -23,29 +23,41 @@
 
 package org.fao.geonet.kernel.oaipmh;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jeeves.constants.Jeeves;
-import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 
+import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.search.SearchHit;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.search.EsSearchManager;
+import org.fao.geonet.schema.iso19139.ISO19139SchemaPlugin;
 import org.fao.geonet.utils.Xml;
 import org.fao.oaipmh.exceptions.OaiPmhException;
 import org.jdom.Element;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
+
+import static org.fao.geonet.kernel.search.EsSearchManager.FIELDLIST_CORE;
 
 //=============================================================================
 
 public class Lib {
     public static final String SESSION_OBJECT = "oai-list-records-result";
 
+    private Lib() {
+
+    }
     //---------------------------------------------------------------------------
     //---
     //--- API methods
     //---
     //---------------------------------------------------------------------------
-    private static ServiceConfig dummyConfig = new ServiceConfig();
 
     //--------------------------------------------------------------------------
 
@@ -91,38 +103,20 @@ public class Lib {
     //---------------------------------------------------------------------------
 
     public static List<Integer> search(ServiceContext context, Element params) throws Exception {
-        throw new UnsupportedOperationException("ES search does not support OAI yet");
+        EsSearchManager searchMan = context.getBean(EsSearchManager.class);
 
-//        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-//        SearchManager sm = gc.getBean(SearchManager.class);
-//
-//        try (MetaSearcher searcher = sm.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE)) {
-//
-//            if (context.isDebugEnabled())
-//                context.debug("Searching with params:\n" + Xml.getString(params));
-//
-//            searcher.search(context, params, dummyConfig);
-//
-//            params.addContent(new Element("fast").setText("true"));
-//            params.addContent(new Element("from").setText("1"));
-//            params.addContent(new Element("to").setText(searcher.getSize() + ""));
-//
-//            context.info("Records found : " + searcher.getSize());
-//
-//            Element records = searcher.present(context, params, dummyConfig);
-//
-//            records.getChild("summary").detach();
-//
-//            List<Integer> result = new ArrayList<Integer>();
-//
-//            for (Object o : records.getChildren()) {
-//                Element rec = (Element) o;
-//                Element info = rec.getChild("info", Edit.NAMESPACE);
-//
-//                result.add(Integer.parseInt(info.getChildText("id")));
-//            }
-//            return result;
-//        }
+        JsonNode esJsonQuery = createSearchQuery(params);
+        final SearchResponse queryResult = searchMan.query(
+            esJsonQuery,
+            FIELDLIST_CORE,
+            0, 1000);
+
+        List<Integer> result = new ArrayList<>();
+
+        for (SearchHit hit : queryResult.getHits()) {
+            result.add(Integer.parseInt(hit.getSourceAsMap().get(Geonet.IndexFieldNames.ID).toString()));
+        }
+        return result;
     }
 
     //---------------------------------------------------------------------------
@@ -151,6 +145,69 @@ public class Lib {
         }
 
         return error;
+    }
+
+    static JsonNode createSearchQuery(Element params) throws JsonProcessingException {
+        final String PARAM_SET = "category";
+        final String PARAM_FROM = "extFrom";
+        final String PARAM_UNTIL = "extTo";
+        final String PARAM_METADATAPREFIX = "_schema";
+
+        String jsonQuery = "{" +
+            "    \"bool\": {" +
+            "      \"must\": [" +
+            "        {" +
+            "          \"terms\": {" +
+            "            \"isTemplate\": [\"n\"]" +
+            "          }" +
+            "        }, " +
+            "        {" +
+            "          \"term\": {" +
+            "            \"documentStandard\": {" +
+            "              \"value\": \"%s\"" +
+            "            }" +
+            "          }" +
+            "        }%s%s" +
+            "      ]" +
+            "    }" +
+            "}";
+
+        String categoryQuery = "";
+        if (params.getChild(PARAM_SET) != null) {
+            categoryQuery = String.format("        ,{" +
+                "          \"term\": {" +
+                "            \"cat\": {" +
+                "              \"value\": \"%s\"" +
+                "            }" +
+                "          }" +
+                "        }", params.getChild(PARAM_SET).getValue());
+        }
+
+        String temporalExtentQuery = "";
+        if ((params.getChild(PARAM_FROM) != null) ||
+            (params.getChild("extTo") != null)) {
+
+            String fromQuery = "";
+            if (params.getChild(PARAM_FROM) != null) {
+                fromQuery = String.format("                \"gte\": \"%s\",", params.getChild(PARAM_FROM).getValue());
+            }
+
+            String untilQuery = "";
+            if (params.getChild(PARAM_UNTIL) != null) {
+                untilQuery = String.format("                \"lte\": \"%s\",", params.getChild(PARAM_UNTIL).getValue()) ;
+            }
+
+            temporalExtentQuery = String.format("  ,{\"range\": {\"resourceTemporalDateRange\": {" +
+                "                %s" +
+                "                %s" +
+                "                \"relation\": \"intersects\"" +
+                "            }}}", fromQuery, untilQuery);
+        }
+
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        String schema = (params.getChild(PARAM_METADATAPREFIX) != null) ? params.getChild(PARAM_METADATAPREFIX).getValue() : ISO19139SchemaPlugin.IDENTIFIER;
+        return objectMapper.readTree(String.format(jsonQuery, schema, categoryQuery, temporalExtentQuery));
     }
 }
 
