@@ -279,17 +279,7 @@ public class TranslationApi {
         produces = {
             MediaType.APPLICATION_JSON_VALUE
         })
-    @ApiResponse(
-        responseCode = "200",
-        content = @Content(mediaType = "application/json", examples = {
-            @ExampleObject(value =
-                "{" +
-                    "  \"translationKey1\": \"Translated Key One\",\n" +
-                    "  \"translationKey2\": \"Translated Key Two\",\n" +
-                    "  \"translationKey3\": \"Translated Key Two\"\n" +
-                    "}")
-        }, schema = @Schema(type = "object", implementation = java.util.HashMap.class))
-    )
+    @ResponseStatus(OK)
     @ResponseBody
     public Map<String, String> getDbTranslations(
         ServletRequest request
