@@ -106,10 +106,19 @@ public class Lib {
         EsSearchManager searchMan = context.getBean(EsSearchManager.class);
 
         JsonNode esJsonQuery = createSearchQuery(params);
-        final SearchResponse queryResult = searchMan.query(
+
+        // Get results count
+        SearchResponse queryResult = searchMan.query(
             esJsonQuery,
             FIELDLIST_CORE,
-            0, 1000);
+            0, 1);
+
+        long total = queryResult.getHits().getTotalHits().value;
+
+        queryResult = searchMan.query(
+            esJsonQuery,
+            FIELDLIST_CORE,
+            0, (int) total);
 
         List<Integer> result = new ArrayList<>();
 
