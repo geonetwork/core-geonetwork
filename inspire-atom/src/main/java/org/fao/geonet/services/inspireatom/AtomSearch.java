@@ -200,7 +200,7 @@ public class AtomSearch {
         summary = "Get ATOM feeds",
         description = "")
     @GetMapping(
-        value = "/feeds",
+        value = "/feedsAsHtml",
         produces = MediaType.TEXT_HTML_VALUE
     )
     @ApiResponses(value = {
