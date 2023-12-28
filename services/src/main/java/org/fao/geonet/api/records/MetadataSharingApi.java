@@ -357,7 +357,7 @@ public class MetadataSharingApi {
     @ResponseStatus(HttpStatus.CREATED)
     public
     @ResponseBody
-    MetadataProcessingReport publish(
+    MetadataProcessingReport publishMultipleRecords(
         @Parameter(description = ApiParams.API_PARAM_RECORD_UUIDS_OR_SELECTION,
             required = false)
         @RequestParam(required = false) String[] uuids,
@@ -393,7 +393,7 @@ public class MetadataSharingApi {
     @ResponseStatus(HttpStatus.CREATED)
     public
     @ResponseBody
-    MetadataProcessingReport unpublish(
+    MetadataProcessingReport unpublishMultipleRecords(
         @Parameter(description = ApiParams.API_PARAM_RECORD_UUIDS_OR_SELECTION,
             required = false)
         @RequestParam(required = false) String[] uuids,
@@ -429,7 +429,7 @@ public class MetadataSharingApi {
     @ResponseStatus(HttpStatus.CREATED)
     public
     @ResponseBody
-    MetadataProcessingReport share(
+    MetadataProcessingReport shares(
         @Parameter(description = ApiParams.API_PARAM_RECORD_UUIDS_OR_SELECTION,
             required = false)
         @RequestParam(required = false) String[] uuids,

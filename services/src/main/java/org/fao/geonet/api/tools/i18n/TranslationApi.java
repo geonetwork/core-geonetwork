@@ -313,7 +313,7 @@ public class TranslationApi {
             MediaType.APPLICATION_JSON_VALUE
         })
     @ResponseBody
-    public Map<String, List<String>> getTranslationsPackage() {
+    public Map<String, List<String>> getTranslationsPackages() {
         return translationPackBuilder.getPackages();
     }
 

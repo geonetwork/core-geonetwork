@@ -106,7 +106,7 @@ public class MetadataApi {
 
     private ApplicationContext context;
 
-    public static RelatedResponse getAssociatedResources(
+    public static RelatedResponse getRelatedResources(
         String language, ServiceContext context,
         AbstractMetadata md, RelatedItemType[] type, int start, int rows) throws Exception {
         // TODO PERF: ByPass XSL processing and create response directly
@@ -471,7 +471,7 @@ public class MetadataApi {
                 if (withRelated) {
                     // Adding children in MEF file
 
-                    RelatedResponse related = getAssociatedResources(
+                    RelatedResponse related = getRelatedResources(
                         metadataUuid, null, approved, 0, 100, request);
                     uuidsToExport.addAll(getUuidsOfAssociatedRecords(related.getParent()));
                     uuidsToExport.addAll(getUuidsOfAssociatedRecords(related.getChildren()));
@@ -609,7 +609,7 @@ public class MetadataApi {
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)
     })
     @ResponseBody
-    public RelatedResponse getAssociatedResources(
+    public RelatedResponse getRelatedResources(
         @Parameter(
             description = API_PARAM_RECORD_UUID,
             required = true)
@@ -644,7 +644,7 @@ public class MetadataApi {
         String language = languageUtils.getIso3langCode(request.getLocales());
         final ServiceContext serviceContext = ApiUtils.createServiceContext(request);
 
-        return getAssociatedResources(language, serviceContext, md, type, start, rows);
+        return getRelatedResources(language, serviceContext, md, type, start, rows);
     }
 
     @io.swagger.v3.oas.annotations.Operation(
@@ -680,7 +680,7 @@ public class MetadataApi {
         Map<String, String[]> decodeMap = new HashMap<>();
 
         try {
-            RelatedResponse related = getAssociatedResources(
+            RelatedResponse related = getRelatedResources(
                 metadataUuid, type, approved, 0, 100, request);
 
             if (isIncludedAttributeTable(related.getFcats())) {
