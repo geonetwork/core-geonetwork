@@ -4,8 +4,4 @@ The OAI-PMH end point exposes the metadata records in your catalog in XML format
 
 * [Open Archives Initiative Protocol for Metadata Harvesting (OAI-PMH)](https://www.openarchives.org/OAI/openarchivesprotocol.html)
 
-## Upgrading from GeoNetwork 3.0 Guidance
-
-The OAI-PMH API is no longer available.
-
-Recommend migrating to use of [Catalog Service for the Web (CSW)](csw.md) API which provides XML document access.
+The following URL is the standard end point for the catalog (substitute your GeoNetwork URL): <http://localhost:8080/geonetwork/srv/api/oaipmh>?
