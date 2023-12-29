@@ -111,6 +111,7 @@ public class SourcesApi {
         summary = "Get portal list",
         description = "List all subportal available.")
     @RequestMapping(
+        value = "/subportal",
         produces = MediaType.TEXT_HTML_VALUE,
         method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
