@@ -52,7 +52,6 @@ import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.specification.LinkSpecs;
 import org.jdom.JDOMException;
 import org.json.JSONException;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.Page;
@@ -146,9 +145,9 @@ public class LinksApi {
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("isAuthenticated()")
     public Page<Link> getRecordLinks(
-        @Parameter(description = "Filter, e.g. \"{url: 'png', lastState: 'ko', records: 'e421', groupId: 12}\", lastState being 'ok'/'ko'/'unknown'", required = false)
+        @Parameter(description = "Filter, e.g. \"{url: 'png', lastState: 'ko', records: 'e421'}\", lastState being 'ok'/'ko'/'unknown'", required = false)
         @RequestParam(required = false)
-            JSONObject filter,
+            LinkFilter filter,
         @Parameter(description = "Optional, filter links to records published in that group.", required = false)
         @RequestParam(required = false)
             Integer[] groupIdFilter,
@@ -187,9 +186,9 @@ public class LinksApi {
         produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("isAuthenticated()")
     public Page<Link> getRecordLinksPost(
-        @Parameter(description = "Filter, e.g. \"{url: 'png', lastState: 'ko', records: 'e421', groupId: 12}\", lastState being 'ok'/'ko'/'unknown'", required = false)
+        @Parameter(description = "Filter, e.g. \"{url: 'png', lastState: 'ko', records: 'e421'}\", lastState being 'ok'/'ko'/'unknown'", required = false)
         @RequestParam(required = false)
-        JSONObject filter,
+        LinkFilter filter,
         @Parameter(description = "Optional, filter links to records published in that group.", required = false)
         @RequestParam(required = false)
         Integer[] groupIdFilter,
@@ -207,7 +206,7 @@ public class LinksApi {
         return getLinks(filter, groupIdFilter, groupOwnerIdFilter, pageRequest, userSession);
     }
     private Page<Link> getLinks(
-        JSONObject filter,
+        LinkFilter filter,
         Integer[] groupIdFilter,
         Integer[] groupOwnerIdFilter,
         Pageable pageRequest,
@@ -228,22 +227,22 @@ public class LinksApi {
             Integer stateToMatch = null;
             String url = null;
             List<String> associatedRecords = null;
-            if (filter.has("lastState")) {
+            if (filter.getLastState() != null) {
                 stateToMatch = 0;
-                if (filter.getString("lastState").equalsIgnoreCase("ok")) {
+                if (filter.getLastState().equalsIgnoreCase("ok")) {
                     stateToMatch = 1;
-                } else if (filter.getString("lastState").equalsIgnoreCase("ko")) {
+                } else if (filter.getLastState().equalsIgnoreCase("ko")) {
                     stateToMatch = -1;
                 }
             }
 
-            if (filter.has("url")) {
-                url = filter.getString("url");
+            if (filter.getUrl() != null) {
+                url = filter.getUrl();
             }
 
-            if (filter.has("records")) {
+            if (filter.getRecords() != null) {
                 associatedRecords = Arrays.stream(
-                    filter.getString("records").split(" ")
+                    filter.getRecords().split(" ")
                 ).collect(Collectors.toList());
             }
 
@@ -277,9 +276,9 @@ public class LinksApi {
     @PreAuthorize("isAuthenticated()")
     @ResponseBody
     public void getRecordLinksAsCsv(
-        @Parameter(description = "Filter, e.g. \"{url: 'png', lastState: 'ko', records: 'e421', groupId: 12}\", lastState being 'ok'/'ko'/'unknown'", required = false)
+        @Parameter(description = "Filter, e.g. \"{url: 'png', lastState: 'ko', records: 'e421'}\", lastState being 'ok'/'ko'/'unknown'", required = false)
         @RequestParam(required = false)
-            JSONObject filter,
+        LinkFilter filter,
         @Parameter(description = "Optional, filter links to records published in that group.", required = false)
         @RequestParam(required = false)
             Integer[] groupIdFilter,
@@ -444,5 +443,35 @@ public class LinksApi {
         }
         mAnalyseProcesses.addFirst(mAnalyseProcess);
         return mAnalyseProcess;
+    }
+
+    private static class LinkFilter {
+        private String url;
+        private String lastState;
+        private String records;
+
+        public String getUrl() {
+            return url;
+        }
+
+        public void setUrl(String url) {
+            this.url = url;
+        }
+
+        public String getLastState() {
+            return lastState;
+        }
+
+        public void setLastState(String lastState) {
+            this.lastState = lastState;
+        }
+
+        public String getRecords() {
+            return records;
+        }
+
+        public void setRecords(String records) {
+            this.records = records;
+        }
     }
 }
