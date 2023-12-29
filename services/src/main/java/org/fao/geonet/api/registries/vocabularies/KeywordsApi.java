@@ -327,10 +327,7 @@ public class KeywordsApi {
     )
     @RequestMapping(
         path = "/keyword",
-        method = {
-            RequestMethod.GET,
-            RequestMethod.POST
-        },
+        method = RequestMethod.GET,
         produces = {
             MediaType.APPLICATION_XML_VALUE,
             MediaType.APPLICATION_JSON_VALUE
