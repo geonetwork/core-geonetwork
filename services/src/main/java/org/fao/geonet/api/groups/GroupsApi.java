@@ -296,7 +296,7 @@ public class GroupsApi {
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.PUT
     )
-    @ResponseStatus(value = HttpStatus.OK)
+    @ResponseStatus(value = HttpStatus.CREATED)
     @PreAuthorize("hasAuthority('UserAdmin')")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "201", description = "Group created."),
