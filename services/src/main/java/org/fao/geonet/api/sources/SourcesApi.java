@@ -272,7 +272,7 @@ public class SourcesApi {
     @PreAuthorize("hasAuthority('Administrator')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "201", description = "Source deleted."),
+        @ApiResponse(responseCode = "204", description = "Source deleted."),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_ADMIN)
     })
     @ResponseBody
