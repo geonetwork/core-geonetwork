@@ -85,17 +85,17 @@ class Search {
 
         String freeTextFilter = "";
         if (StringUtils.isNotEmpty(freeText)) {
-            freeTextFilter = String.format(",{\"term\": {\"any.default\": \"%s\"}}", freeText);
+            freeTextFilter = String.format(",{\"query_string\": {\"query\": \"(any.\\\\*:(%s) OR any.common:(%s))\", \"default_operator\": \"AND\"}}", freeText, freeText);
         }
 
         String titleFilter = "";
         if (StringUtils.isNotEmpty(title)) {
-            titleFilter = String.format(",{\"term\": {\"resourceTitleObject.default\": \"%s\"}}", title);
+            titleFilter = String.format(",{\"query_string\": {\"query\": \"(resourceTitleObject.\\\\*:(%s))\", \"default_operator\": \"AND\"}}", title);
         }
 
         String abstractFilter = "";
         if (StringUtils.isNotEmpty(abstrac)) {
-            abstractFilter = String.format(",{\"term\": {\"resourceAbstractObject.default\": \"%s\"}}", abstrac);
+            abstractFilter = String.format(",{\"query_string\": {\"query\": \"(resourceAbstractObject.\\\\*:(%s))\", \"default_operator\": \"AND\"}}", abstrac);
         }
 
         String keywordFilter = "";
