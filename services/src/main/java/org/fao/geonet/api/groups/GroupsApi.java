@@ -357,6 +357,7 @@ public class GroupsApi {
         method = RequestMethod.GET)
     @ResponseStatus(value = HttpStatus.OK)
     @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Group information for the group id supplied."),
         @ApiResponse(responseCode = "404", description = ApiParams.API_RESPONSE_RESOURCE_NOT_FOUND)
     })
     @ResponseBody

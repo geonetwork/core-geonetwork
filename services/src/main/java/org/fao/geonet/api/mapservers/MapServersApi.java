@@ -109,6 +109,7 @@ public class MapServersApi {
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasAuthority('Editor')")
     @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "List of all mapservers."),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_EDITOR)
     })
     List<AnonymousMapserver> getMapservers() throws Exception {
