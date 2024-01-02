@@ -11,7 +11,8 @@
                 exclude-result-prefixes="#all">
 
   <!-- TODO: either we only use the associated records in the current record
-             either we get all associated records using the API? -->
+             either we get all associated records using the API?
+             we may also have limitation depending on user privileges.-->
 
   <xsl:variable name="isoAssociatedTypesToDcatCommonNames"
                 as="node()*">
@@ -101,19 +102,7 @@
                           else 'dct:relation'"/>
 
     <xsl:element name="{$elementType}">
-      <xsl:choose>
-        <xsl:when test="*/mri:metadataReference/@xlink:href">
-          <xsl:attribute name="rdf:resource" select="*/mri:metadataReference/@xlink:href"/>
-        </xsl:when>
-        <xsl:when test="*/mri:metadataReference/@uuidref">
-          <!-- TODO: Here we need a not relative URI? -->
-          <xsl:attribute name="rdf:resource" select="*/mri:metadataReference/@uuidref"/>
-        </xsl:when>
-        <xsl:otherwise>
-          <!-- TODO: Here we need a not relative URI? -->
-          <xsl:attribute name="rdf:resource" select="*/mri:aggregateDataSetIdentifier/*/mri:code/*/text()"/>
-        </xsl:otherwise>
-      </xsl:choose>
+      <xsl:apply-templates mode="rdf-metadata-ref" select="*/mri:metadataReference|*/mri:aggregateDataSetIdentifier"/>
     </xsl:element>
   </xsl:template>
 </xsl:stylesheet>

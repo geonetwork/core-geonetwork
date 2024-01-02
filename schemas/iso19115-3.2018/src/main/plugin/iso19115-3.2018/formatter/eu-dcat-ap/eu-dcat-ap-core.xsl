@@ -22,6 +22,13 @@
   <xsl:variable name="isPreservingIsoType"
                 as="xs:boolean"
                 select="false()"/>
+
+
+  <xsl:template name="create-namespaces-eu-dcat-ap">
+    <xsl:call-template name="create-namespaces"/>
+    <xsl:namespace name="dcatap" select="'http://data.europa.eu/r5r/'"/>
+  </xsl:template>
+
   <!--
   Catalogue Record
   [o]	title	Literal	0..*	A name given to the Catalogue Record.	This property can be repeated for parallel language versions of the name.

@@ -19,4 +19,11 @@
       <dct:type rdf:resource="{concat($inspireResourceTypeCodelistUri, current())}"/>
     </xsl:for-each>
   </xsl:template>
+
+
+  <!-- TODO: CatalogRecord / Optional properties: https://semiceu.github.io/GeoDCAT-AP/releases/#optional-properties-for-catalogue-record -->
+
+  <!-- TODO: Dataset / ReferenceSystem -->
+
+
 </xsl:stylesheet>

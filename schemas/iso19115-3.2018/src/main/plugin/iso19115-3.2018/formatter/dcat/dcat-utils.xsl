@@ -6,6 +6,7 @@
                 xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
                 xmlns:lan="http://standards.iso.org/iso/19115/-3/lan/1.0"
                 xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/2.0"
+                xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0"
                 xmlns:dct="http://purl.org/dc/terms/"
                 xmlns:dcat="http://www.w3.org/ns/dcat#"
                 xmlns:foaf="http://xmlns.com/foaf/0.1/"
@@ -14,6 +15,7 @@
                 xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
                 xmlns:owl="http://www.w3.org/2002/07/owl#"
                 xmlns:adms="http://www.w3.org/ns/adms#"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
                 exclude-result-prefixes="#all">
 
   <xsl:template name="create-node-with-info">
@@ -78,6 +80,22 @@
                      select="concat('http://www.w3.org/2001/XMLSchema#date', (if (contains(*/text(), 'T')) then 'Time' else ''))"/>
       <xsl:value-of select="*/text()"/>
     </xsl:element>
+  </xsl:template>
+
+  <xsl:template mode="rdf-metadata-ref" match="*">
+    <xsl:choose>
+      <xsl:when test="@xlink:href">
+        <xsl:attribute name="rdf:resource" select="@xlink:href"/>
+      </xsl:when>
+      <xsl:when test="@uuidref">
+        <!-- TODO: Here we need a not relative URI? -->
+        <xsl:attribute name="rdf:resource" select="@uuidref"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <!-- TODO: Here we need a not relative URI? -->
+        <xsl:attribute name="rdf:resource" select="*/mri:code/*/text()"/>
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 
 </xsl:stylesheet>
