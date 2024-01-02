@@ -39,7 +39,7 @@ import static org.junit.Assert.assertNotNull;
 
 /**
  * Test some of the rules in the schematron-rules-iso.sch files in the iso19139 schema plugin.
- *
+ * <p>
  * Created by Jesse on 3/25/14.
  */
 public class SchematronRulesIsoTest extends AbstractSchematronTest {
@@ -174,16 +174,16 @@ public class SchematronRulesIsoTest extends AbstractSchematronTest {
 
         // adding duplicate uuid+initiativeType+associationType combinations should fail
         Element bad = addDatasetIdentifier(mdDataIdentification, "uuid-1", null, "largerWorkCitation", null);
-        assertEquals(errorsStart+2, countFailures(Xml.transform(testMetadata, getSchematronXsl(), params)));
+        assertEquals(errorsStart + 2, countFailures(Xml.transform(testMetadata, getSchematronXsl(), params)));
         bad.detach();
         bad = addDatasetIdentifier(mdDataIdentification, "uuid-3", null, "crossReference", "campaign");
-        assertEquals(errorsStart+2, countFailures(Xml.transform(testMetadata, getSchematronXsl(), params)));
+        assertEquals(errorsStart + 2, countFailures(Xml.transform(testMetadata, getSchematronXsl(), params)));
         bad.detach();
         bad = addDatasetIdentifier(mdDataIdentification, "uuid-1", "href-1", "largerWorkCitation", null);
-        assertEquals(errorsStart+2, countFailures(Xml.transform(testMetadata, getSchematronXsl(), params)));
+        assertEquals(errorsStart + 2, countFailures(Xml.transform(testMetadata, getSchematronXsl(), params)));
         bad.detach();
         bad = addDatasetIdentifier(mdDataIdentification, "uuid-4", "href-4", "crossReference", "collection");
-        assertEquals(errorsStart+2, countFailures(Xml.transform(testMetadata, getSchematronXsl(), params)));
+        assertEquals(errorsStart + 2, countFailures(Xml.transform(testMetadata, getSchematronXsl(), params)));
         bad.detach();
     }
 
@@ -206,7 +206,7 @@ public class SchematronRulesIsoTest extends AbstractSchematronTest {
         adsi.addContent(mdIdentifier);
         mdIdentifier.addContent(code);
 
-        if(initiativeType!=null) {
+        if (initiativeType != null) {
             Element it = new Element("initiativeType", GMD);
             Element dsIt = new Element("DS_InitiativeTypeCode", GMD);
             dsIt.setAttribute("codeListValue", initiativeType);
@@ -215,7 +215,7 @@ public class SchematronRulesIsoTest extends AbstractSchematronTest {
             mdAi.addContent(it);
         }
 
-        if(href!=null) {
+        if (href != null) {
             Element anchor = new Element("Anchor", GMX);
             anchor.setAttribute("href", href, XLINK);
             anchor.setText(uuid);
