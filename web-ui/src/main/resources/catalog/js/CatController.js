@@ -653,7 +653,8 @@
                   "../../catalog/components/" +
                   "search/resultsview/partials/viewtemplates/grid.html",
                 tooltip: "Grid",
-                icon: "fa-th"
+                icon: "fa-th",
+                related: []
               },
               {
                 tplUrl:
@@ -669,6 +670,7 @@
                   "search/resultsview/partials/viewtemplates/table.html",
                 tooltip: "Table",
                 icon: "fa-table",
+                related: [],
                 source: {
                   exclude: ["resourceAbstract*", "Org*", "contact*"]
                 }
