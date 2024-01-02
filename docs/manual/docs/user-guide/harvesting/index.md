@@ -6,7 +6,9 @@ Harvesting is the process of ingesting metadata from remote sources and storing 
 
 The following sources can be harvested:
 
--   [GeoNetwork 2.0 Harvester](harvesting-geonetwork.md)
+-   [GeoNetwork 4.x Harvester](harvesting-geonetwork-4x.md)
+-   [GeoNetwork 2.1-3.x Harvester](harvesting-geonetwork-3x.md)
+-   [GeoNetwork 2.0 Harvester](harvesting-geonetwork-20.md)
 -   [Harvesting CSW services](harvesting-csw.md)
 -   [Harvesting OGC Services](harvesting-ogcwxs.md)
 -   [Simple URL harvesting (opendata)](harvesting-simpleurl.md)
