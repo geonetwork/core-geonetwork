@@ -40,15 +40,12 @@
   [o]	primary topic	Catalogued Resource	1	A link to the Dataset, Data service or Catalog described in the record.	A catalogue record will refer to one entity in a catalogue. This can be either a Dataset or a Data Service. To ensure an unambigous reading of the cardinality the range is set to Catalogued Resource. However it is not the intend with this range to require the explicit use of the class Catalogued Record. As abstract class, an subclass should be used.
   -->
   <xsl:template mode="iso19115-3-to-dcat-catalog-record"
+                name="iso19115-3-to-eu-dcat-ap-catalog-record"
                 match="mdb:MD_Metadata">
+    <xsl:param name="additionalProperties"
+               as="node()*"/>
+
     <xsl:variable name="properties" as="node()*">
-      <xsl:apply-templates mode="iso19115-3-to-dcat"
-                           select="mdb:metadataIdentifier
-                                      |mdb:identificationInfo/*/mri:citation/*/cit:title
-                                      |mdb:identificationInfo/*/mri:abstract
-                                      |mdb:dateInfo/*[cit:dateType/*/@codeListValue = 'creation']/cit:date
-                                      |mdb:dateInfo/*[cit:dateType/*/@codeListValue = 'revision']/cit:date
-                                      |mdb:metadataStandard"/>
       <!--
       [o]	language	Linguistic system	0..*	A language used in the textual metadata describing titles, descriptions, etc. of the Dataset.	This property can be repeated if the metadata is provided in multiple languages.
       -->
@@ -67,10 +64,12 @@
       -->
       <xsl:apply-templates mode="iso19115-3-to-eu-dcat-ap"
                            select="mdb:metadataLinkage[*/cit:linkage/*/text() != '']"/>
+
+      <xsl:copy-of select="$additionalProperties"/>
     </xsl:variable>
 
-    <xsl:call-template name="rdf-build-catalogue-record">
-      <xsl:with-param name="properties" select="$properties"/>
+    <xsl:call-template name="iso19115-3-to-dcat-catalog-record">
+      <xsl:with-param name="additionalProperties" select="$properties"/>
     </xsl:call-template>
   </xsl:template>
 

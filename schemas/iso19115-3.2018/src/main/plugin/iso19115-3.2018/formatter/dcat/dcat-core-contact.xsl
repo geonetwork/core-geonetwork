@@ -7,6 +7,7 @@
                 xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0"
                 xmlns:prov="http://www.w3.org/ns/prov#"
                 xmlns:dcat="http://www.w3.org/ns/dcat#"
+                xmlns:geodcatap="http://data.europa.eu/930/"
                 xmlns:dct="http://purl.org/dc/terms/"
                 xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
                 xmlns:foaf="http://xmlns.com/foaf/0.1/"
@@ -29,7 +30,8 @@
   Usage note:	Resources of type foaf:Agent are recommended as values for this property.
   -->
   <xsl:template mode="iso19115-3-to-dcat"
-                match="mdb:identificationInfo/*/mri:pointOfContact">
+                name="iso19115-3-to-dcat-agent"
+                match="*[cit:CI_Responsibility]">
     <xsl:variable name="role"
                   as="xs:string?"
                   select="*/cit:role/*/@codeListValue"/>

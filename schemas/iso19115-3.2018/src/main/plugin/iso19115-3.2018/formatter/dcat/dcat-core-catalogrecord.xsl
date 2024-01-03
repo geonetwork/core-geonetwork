@@ -10,7 +10,10 @@
 
   <!-- Create CatalogueRecord -->
   <xsl:template mode="iso19115-3-to-dcat-catalog-record"
+                name="iso19115-3-to-dcat-catalog-record"
                 match="mdb:MD_Metadata">
+    <xsl:param name="additionalProperties"
+               as="node()*"/>
     <xsl:variable name="properties" as="node()*">
       <xsl:apply-templates mode="iso19115-3-to-dcat"
                            select="mdb:metadataIdentifier
@@ -19,6 +22,7 @@
                                       |mdb:dateInfo/*[cit:dateType/*/@codeListValue = 'creation']/cit:date
                                       |mdb:dateInfo/*[cit:dateType/*/@codeListValue = 'revision']/cit:date
                                       |mdb:metadataStandard"/>
+      <xsl:copy-of select="$additionalProperties"/>
     </xsl:variable>
 
     <xsl:call-template name="rdf-build-catalogue-record">
