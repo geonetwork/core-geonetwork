@@ -1,14 +1,24 @@
-<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
-         xmlns:owl="http://www.w3.org/2002/07/owl#" xmlns:dct="http://purl.org/dc/terms/"
-         xmlns:dcat="http://www.w3.org/ns/dcat#" xmlns:foaf="http://xmlns.com/foaf/0.1/"
-         xmlns:vcard="http://www.w3.org/2006/vcard/ns#" xmlns:prov="http://www.w3.org/ns/prov#"
-         xmlns:org="http://www.w3.org/ns/org#" xmlns:pav="http://purl.org/pav/" xmlns:adms="http://www.w3.org/ns/adms#"
-         xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:dcatap="http://data.europa.eu/r5r/"
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+         xmlns:owl="http://www.w3.org/2002/07/owl#"
+         xmlns:dct="http://purl.org/dc/terms/"
+         xmlns:dcat="http://www.w3.org/ns/dcat#"
+         xmlns:foaf="http://xmlns.com/foaf/0.1/"
+         xmlns:vcard="http://www.w3.org/2006/vcard/ns#"
+         xmlns:prov="http://www.w3.org/ns/prov#"
+         xmlns:org="http://www.w3.org/ns/org#"
+         xmlns:pav="http://purl.org/pav/"
+         xmlns:adms="http://www.w3.org/ns/adms#"
+         xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+         xmlns:dcatap="http://data.europa.eu/r5r/"
+         xmlns:geodcatap="http://data.europa.eu/930/"
+         xmlns:cnt="http://www.w3.org/2011/content#"
          xmlns:eli="http://data.europa.eu/eli/ontology">
   <rdf:Description
     rdf:about="https://metawal.wallonie.be/geonetwork/srv/api/records/7fe2f305-1302-4297-b67e-792f55acd834">
     <rdf:type rdf:resource="http://www.w3.org/ns/dcat#Dataset"/>
     <dct:type rdf:resource="http://purl.org/dc/dcmitype/Dataset"/>
+    <dct:type rdf:resource="http://inspire.ec.europa.eu/metadata-codelist/ResourceType/dataset"/>
     <foaf:isPrimaryTopicOf>
       <rdf:Description>
         <rdf:type rdf:resource="http://www.w3.org/ns/dcat#CatalogRecord"/>
@@ -72,6 +82,17 @@
         </dct:language>
         <dct:source
           rdf:resource="https://metawal.wallonie.be/geonetwork/srv/api/records/7fe2f305-1302-4297-b67e-792f55acd834"/>
+        <cnt:characterEncoding rdf:datatype="http://www.w3.org/2001/XMLSchema#string">UTF-8</cnt:characterEncoding>
+        <dct:contactPoint>
+          <rdf:Description>
+            <rdf:type rdf:resource="http://www.w3.org/2006/vcard/ns#Organization"/>
+            <vcard:fn xml:lang="fre">Direction de la gestion des informations territoriales (SPW - Territoire, Logement,
+              Patrimoine, Énergie - Département de l'Aménagement du territoire et de l'Urbanisme - Direction de la
+              gestion des informations territoriales)
+            </vcard:fn>
+            <vcard:hasEmail rdf:resource="mailto:donnees.dgo4@spw.wallonie.be"/>
+          </rdf:Description>
+        </dct:contactPoint>
         <foaf:primaryTopic
           rdf:resource="https://metawal.wallonie.be/geonetwork/srv/api/records/7fe2f305-1302-4297-b67e-792f55acd834"/>
       </rdf:Description>
@@ -167,29 +188,15 @@
         <vcard:hasEmail rdf:resource="mailto:helpdesk.carto@spw.wallonie.be"/>
       </rdf:Description>
     </dct:contactPoint>
-    <prov:qualifiedAttribution>
-      <prov:Attribution>
-        <prov:agent>
+    <geodcatap:custodian>
           <rdf:Description>
-            <rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Person"/>
-            <rdf:type rdf:resource="http://www.w3.org/ns/prov#Agent"/>
-            <foaf:name>Thierry Berthet</foaf:name>
-            <org:memberOf>
-              <foaf:Organization>
-                <foaf:name xml:lang="fre">Direction du Développement territorial (SPW - Territoire, Logement,
-                  Patrimoine, Énergie - Département de l'Aménagement du territoire et de l'Urbanisme - Direction du
-                  Développement territorial)
-                </foaf:name>
-              </foaf:Organization>
-            </org:memberOf>
-            <foaf:mbox rdf:resource="mailto:developpement.territorial@spw.wallonie.be"/>
+        <rdf:type rdf:resource="http://www.w3.org/2006/vcard/ns#Organization"/>
+        <vcard:fn xml:lang="fre">Direction du Développement territorial (SPW - Territoire, Logement, Patrimoine, Énergie
+          - Département de l'Aménagement du territoire et de l'Urbanisme - Direction du Développement territorial)
+        </vcard:fn>
+        <vcard:hasEmail rdf:resource="mailto:developpement.territorial@spw.wallonie.be"/>
           </rdf:Description>
-        </prov:agent>
-        <dcat:hadRole>
-          <dcat:Role rdf:about="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#custodian"/>
-        </dcat:hadRole>
-      </prov:Attribution>
-    </prov:qualifiedAttribution>
+    </geodcatap:custodian>
     <dct:rightsHolder>
       <rdf:Description>
         <rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Organization"/>
@@ -260,17 +267,14 @@
     <dcat:keyword xml:lang="fre">Répartition des espèces</dcat:keyword>
     <dcat:keyword xml:lang="fre">Ressources minérales</dcat:keyword>
     <dcat:keyword xml:lang="fre">Santé et sécurité des personnes</dcat:keyword>
-    <dcatap:hvdCategory>
-      <skos:Concept rdf:about="http://data.europa.eu/bna/c_b79e35eb">
-        <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">Mobilité</prefLabel>
-      </skos:Concept>
-    </dcatap:hvdCategory>
+    <dcat:keyword xml:lang="fre">Mobilité</dcat:keyword>
     <dct:accessRights>
       <dct:RightsStatement
         rdf:about="http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/noLimitations"/>
     </dct:accessRights>
     <dct:license>
-      <dct:LicenseDocument rdf:about="https://geoportail.wallonie.be/files/documents/ConditionsSPW/DataSPW-CGU.pdf"/>
+      <dct:LicenseDocument
+        rdf:about="https://geoportail.wallonie.be/files/documents/ConditionsSPW/DataSPW-CGU.pdf"/>
     </dct:license>
     <dct:isPartOf
       rdf:resource="https://metawal.wallonie.be/geonetwork/srv/api/records/be875ddb-ffd9-4c23-a013-53063a366b5b"/>
@@ -327,7 +331,60 @@
       d'affectation des sols à valeur indicative
       - une nouvelle zone non destinée à l'urbanisation : zone d'extraction (ZE).
     </adms:versionNotes>
-    <dcatap:applicableLegislation rdf:resource="http://data.europa.eu/eli/reg_impl/2023/138/oj"/>
+    <adms:identifier>
+      <rdf:Description>
+        <rdf:type rdf:resource="http://www.w3.org/ns/adms#Identifier"/>
+        <skos:notation>7fe2f305-1302-4297-b67e-792f55acd834</skos:notation>
+        <adms:schemaAgency>http://geodata.wallonie.be/id/</adms:schemaAgency>
+      </rdf:Description>
+    </adms:identifier>
+    <adms:identifier>
+      <rdf:Description>
+        <rdf:type rdf:resource="http://www.w3.org/ns/adms#Identifier"/>
+        <skos:notation>DGATLPE__PDS</skos:notation>
+        <adms:schemaAgency>BE.SPW.INFRASIG.CARTON</adms:schemaAgency>
+      </rdf:Description>
+    </adms:identifier>
+    <dcat:theme>
+      <skos:Concept rdf:about="http://publications.europa.eu/resource/authority/data-theme/AGRI">
+        <skos:prefLabel xml:lang="fr">Agriculture, pêche, sylviculture et alimentation</skos:prefLabel>
+      </skos:Concept>
+    </dcat:theme>
+    <dcat:theme>
+      <skos:Concept rdf:about="http://publications.europa.eu/resource/authority/data-theme/ECON">
+        <skos:prefLabel xml:lang="fr">Économie et finances</skos:prefLabel>
+      </skos:Concept>
+    </dcat:theme>
+    <dcat:theme>
+      <skos:Concept rdf:about="http://publications.europa.eu/resource/authority/data-theme/ENER">
+        <skos:prefLabel xml:lang="fr">Énergie</skos:prefLabel>
+      </skos:Concept>
+    </dcat:theme>
+    <dcat:theme>
+      <skos:Concept rdf:about="http://publications.europa.eu/resource/authority/data-theme/ENVI">
+        <skos:prefLabel xml:lang="fr">Environnement</skos:prefLabel>
+      </skos:Concept>
+    </dcat:theme>
+    <dcat:theme>
+      <skos:Concept rdf:about="http://publications.europa.eu/resource/authority/data-theme/HEAL">
+        <skos:prefLabel xml:lang="fr">Santé</skos:prefLabel>
+      </skos:Concept>
+    </dcat:theme>
+    <dcat:theme>
+      <skos:Concept rdf:about="http://publications.europa.eu/resource/authority/data-theme/REGI">
+        <skos:prefLabel xml:lang="fr">Régions et villes</skos:prefLabel>
+      </skos:Concept>
+    </dcat:theme>
+    <dcat:theme>
+      <skos:Concept rdf:about="http://publications.europa.eu/resource/authority/data-theme/SOCI">
+        <skos:prefLabel xml:lang="fr">Population et société</skos:prefLabel>
+      </skos:Concept>
+    </dcat:theme>
+    <dcat:theme>
+      <skos:Concept rdf:about="http://publications.europa.eu/resource/authority/data-theme/TECH">
+        <skos:prefLabel xml:lang="fr">Science et technologie</skos:prefLabel>
+      </skos:Concept>
+    </dcat:theme>
     <dcat:spatialResolutionInMeters rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.01
     </dcat:spatialResolutionInMeters>
     <dcat:temporalResolution rdf:datatype="http://www.w3.org/2001/XMLSchema#duration">P0Y2M0DT0H0M0S
@@ -398,7 +455,6 @@
             <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2014-04-17</dct:issued>
           </dct:Standard>
         </dct:conformsTo>
-        <dcatap:applicableLegislation rdf:resource="http://data.europa.eu/eli/reg_impl/2023/138/oj"/>
       </dcat:Distribution>
     </dcat:distribution>
     <dcat:distribution>
@@ -442,7 +498,6 @@
             <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2014-04-17</dct:issued>
           </dct:Standard>
         </dct:conformsTo>
-        <dcatap:applicableLegislation rdf:resource="http://data.europa.eu/eli/reg_impl/2023/138/oj"/>
       </dcat:Distribution>
     </dcat:distribution>
     <dcat:distribution>
@@ -488,7 +543,6 @@
             <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2014-04-17</dct:issued>
           </dct:Standard>
         </dct:conformsTo>
-        <dcatap:applicableLegislation rdf:resource="http://data.europa.eu/eli/reg_impl/2023/138/oj"/>
       </dcat:Distribution>
     </dcat:distribution>
     <dcat:distribution>
@@ -535,7 +589,6 @@
             <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2014-04-17</dct:issued>
           </dct:Standard>
         </dct:conformsTo>
-        <dcatap:applicableLegislation rdf:resource="http://data.europa.eu/eli/reg_impl/2023/138/oj"/>
       </dcat:Distribution>
     </dcat:distribution>
     <dcat:distribution>
@@ -584,7 +637,6 @@
             <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2014-04-17</dct:issued>
           </dct:Standard>
         </dct:conformsTo>
-        <dcatap:applicableLegislation rdf:resource="http://data.europa.eu/eli/reg_impl/2023/138/oj"/>
       </dcat:Distribution>
     </dcat:distribution>
     <foaf:page>

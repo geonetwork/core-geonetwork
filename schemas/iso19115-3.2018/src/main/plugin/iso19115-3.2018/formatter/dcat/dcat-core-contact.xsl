@@ -91,7 +91,14 @@
       <xsl:for-each select="cit:contactInfo/*/cit:address/*/cit:electronicMailAddress">
         <vcard:hasEmail rdf:resource="mailto:{*/text()}"/>
       </xsl:for-each>
-      <!-- TODO: map other properties -->
+      <!-- TODO: map other properties
+      vcard:hasAddress [ a vcard:Address ;
+          vcard:country-name "Denmark" ;
+          vcard:locality "Copenhagen" ;
+          vcard:postal-code "1050" ;
+          vcard:region "K" ;
+          vcard:street-address "Kongens Nytorv 6" ] ;
+      -->
     </rdf:Description>
   </xsl:template>
 

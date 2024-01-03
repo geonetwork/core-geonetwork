@@ -402,6 +402,29 @@
     </dcat:spatialResolutionInMeters>
     <dcat:temporalResolution rdf:datatype="http://www.w3.org/2001/XMLSchema#duration">P0Y2M0DT0H0M0S
     </dcat:temporalResolution>
+    <dct:spatial>
+      <rdf:Description>
+        <rdf:type rdf:resource="http://purl.org/dc/terms/Location"/>
+        <dcat:bbox rdf:datatype="http://www.opengis.net/ont/geosparql#geoJSONLiteral">
+          {"type":"Polygon","coordinates":[[[2.75,50.85],[6.50,50.85],[6.50,49.45],[2.75,49.45],[2.75,50.85]]]}
+        </dcat:bbox>
+      </rdf:Description>
+    </dct:spatial>
+    <dct:spatial>
+      <dct:Location rdf:about="https://en.wikipedia.org/wiki/Wallonia"/>
+    </dct:spatial>
+    <dct:spatial>
+      <rdf:Description>
+        <rdf:type rdf:resource="http://purl.org/dc/terms/Location"/>
+        <skos:prefLabel xml:lang="fre">Région wallonne</skos:prefLabel>
+      </rdf:Description>
+    </dct:spatial>
+    <dct:temporal>
+      <dct:PeriodOfTime>
+        <dcat:startDate rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2023-12-06</dcat:startDate>
+        <dcat:endDate rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2023-12-08</dcat:endDate>
+      </dct:PeriodOfTime>
+    </dct:temporal>
     <dct:accrualPeriodicity>
       <dct:Frequency rdf:about="http://publications.europa.eu/resource/authority/frequency/MONTHLY"/>
     </dct:accrualPeriodicity>

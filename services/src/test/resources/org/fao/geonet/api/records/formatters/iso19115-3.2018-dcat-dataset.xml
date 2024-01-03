@@ -28,7 +28,7 @@
                  xmlns:mmi="http://standards.iso.org/iso/19115/-3/mmi/1.0"
                  xmlns:mdq="http://standards.iso.org/iso/19157/-2/mdq/1.0"
                  xsi:schemaLocation="http://standards.iso.org/iso/19115/-3/mdb/2.0 https://schemas.isotc211.org/19115/-3/mdb/2.0/mdb.xsd">
-  <mdb:metadataIdentifier xmlns:gex="http://standards.iso.org/iso/19115/-3/gex/1e.0">
+  <mdb:metadataIdentifier>
     <mcc:MD_Identifier>
       <mcc:code>
         <gco:CharacterString>7fe2f305-1302-4297-b67e-792f55acd834</gco:CharacterString>
@@ -38,7 +38,7 @@
       </mcc:codeSpace>
     </mcc:MD_Identifier>
   </mdb:metadataIdentifier>
-  <mdb:defaultLocale xmlns:gex="http://standards.iso.org/iso/19115/-3/gex/1e.0">
+  <mdb:defaultLocale>
     <lan:PT_Locale id="FR">
       <lan:language>
         <lan:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="fre"/>
@@ -49,7 +49,7 @@
       </lan:characterEncoding>
     </lan:PT_Locale>
   </mdb:defaultLocale>
-  <mdb:metadataScope xmlns:gex="http://standards.iso.org/iso/19115/-3/gex/1e.0">
+  <mdb:metadataScope>
     <mdb:MD_MetadataScope>
       <mdb:resourceScope>
         <mcc:MD_ScopeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_ScopeCode"
@@ -60,7 +60,7 @@
       </mdb:name>
     </mdb:MD_MetadataScope>
   </mdb:metadataScope>
-  <mdb:contact xmlns:gex="http://standards.iso.org/iso/19115/-3/gex/1e.0">
+  <mdb:contact>
     <cit:CI_Responsibility>
       <cit:role>
         <cit:CI_RoleCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_RoleCode"
@@ -97,7 +97,7 @@
       </cit:dateType>
     </cit:CI_Date>
   </mdb:dateInfo>
-  <mdb:dateInfo xmlns:gex="http://standards.iso.org/iso/19115/-3/gex/1e.0">
+  <mdb:dateInfo>
     <cit:CI_Date>
       <cit:date>
         <gco:DateTime>2019-04-02T12:33:24</gco:DateTime>
@@ -108,7 +108,7 @@
       </cit:dateType>
     </cit:CI_Date>
   </mdb:dateInfo>
-  <mdb:metadataStandard xmlns:gex="http://standards.iso.org/iso/19115/-3/gex/1e.0">
+  <mdb:metadataStandard>
     <cit:CI_Citation>
       <cit:title>
         <gco:CharacterString>ISO 19115</gco:CharacterString>
@@ -118,7 +118,7 @@
       </cit:edition>
     </cit:CI_Citation>
   </mdb:metadataStandard>
-  <mdb:metadataLinkage xmlns:gex="http://standards.iso.org/iso/19115/-3/gex/1e.0">
+  <mdb:metadataLinkage>
     <cit:CI_OnlineResource>
       <cit:linkage>
         <gco:CharacterString>https://metawal.wallonie.be/geonetwork/srv/api/records/7fe2f305-1302-4297-b67e-792f55acd834</gco:CharacterString>
@@ -135,7 +135,7 @@
       </cit:function>
     </cit:CI_OnlineResource>
   </mdb:metadataLinkage>
-  <mdb:referenceSystemInfo xmlns:gex="http://standards.iso.org/iso/19115/-3/gex/1e.0">
+  <mdb:referenceSystemInfo>
     <mrs:MD_ReferenceSystem>
       <mrs:referenceSystemIdentifier>
         <mcc:MD_Identifier>
@@ -153,7 +153,7 @@
       </mrs:referenceSystemType>
     </mrs:MD_ReferenceSystem>
   </mdb:referenceSystemInfo>
-  <mdb:identificationInfo xmlns:gex="http://standards.iso.org/iso/19115/-3/gex/1e.0">
+  <mdb:identificationInfo>
     <mri:MD_DataIdentification>
       <mri:citation>
         <cit:CI_Citation>
@@ -1104,7 +1104,7 @@
       </mri:otherLocale>
     </mri:MD_DataIdentification>
   </mdb:identificationInfo>
-  <mdb:distributionInfo xmlns:gex="http://standards.iso.org/iso/19115/-3/gex/1e.0">
+  <mdb:distributionInfo>
     <mrd:MD_Distribution>
       <mrd:distributionFormat>
         <mrd:MD_Format>
@@ -1413,7 +1413,7 @@
       </mrd:transferOptions>
     </mrd:MD_Distribution>
   </mdb:distributionInfo>
-  <mdb:dataQualityInfo xmlns:gex="http://standards.iso.org/iso/19115/-3/gex/1e.0">
+  <mdb:dataQualityInfo>
     <mdq:DQ_DataQuality>
       <mdq:scope>
         <mcc:MD_Scope>
@@ -1560,7 +1560,7 @@
       </mdq:report>
     </mdq:DQ_DataQuality>
   </mdb:dataQualityInfo>
-  <mdb:resourceLineage xmlns:gex="http://standards.iso.org/iso/19115/-3/gex/1e.0">
+  <mdb:resourceLineage>
     <mrl:LI_Lineage>
       <mrl:statement>
         <gco:CharacterString>La version numérique vectorielle du plan de secteur se base sur la version papier originale
@@ -1595,7 +1595,7 @@
       </mrl:scope>
     </mrl:LI_Lineage>
   </mdb:resourceLineage>
-  <mdb:portrayalCatalogueInfo xmlns:gex="http://standards.iso.org/iso/19115/-3/gex/1e.0">
+  <mdb:portrayalCatalogueInfo>
     <mpc:MD_PortrayalCatalogueReference>
       <mpc:portrayalCatalogueCitation>
         <cit:CI_Citation>

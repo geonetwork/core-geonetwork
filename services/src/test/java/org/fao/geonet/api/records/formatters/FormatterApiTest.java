@@ -84,6 +84,7 @@ public class FormatterApiTest extends AbstractServiceIntegrationTest {
 
         data.add(new String[]{"iso19115-3.2018-dcat-dataset.xml", "dcat", "", "iso19115-3.2018", "dataset-core.rdf"});
         data.add(new String[]{"iso19115-3.2018-dcat-dataset.xml", "eu-dcat-ap", "", "iso19115-3.2018", "dataset-core.rdf"});
+        data.add(new String[]{"iso19115-3.2018-dcat-dataset.xml", "eu-geodcat-ap", "", "iso19115-3.2018", "dataset-core.rdf"});
         data.add(new String[]{"iso19115-3.2018-dcat-dataset.xml", "eu-dcat-ap-hvd", "", "iso19115-3.2018", "dataset-core.rdf"});
         data.add(new String[]{"iso19115-3.2018-dcat-service.xml", "dcat", "", "iso19115-3.2018", "service-core.rdf"});
 
@@ -157,9 +158,11 @@ public class FormatterApiTest extends AbstractServiceIntegrationTest {
                         String[] shaclValidation = {};
                         if("eu-dcat-ap".equalsIgnoreCase(formatter)){
                             shaclValidation = new String[]{"dcat-ap-2.1.1-base-SHACL.ttl"};
-// TODO                       shaclValidation = new String[]{"dcat-ap-2.1.1-base-SHACL.ttl", "dcat-ap-3-SHACL.ttl"};
+                            // TODO: Failure with v3 shaclValidation = new String[]{"dcat-ap-2.1.1-base-SHACL.ttl", "dcat-ap-3-SHACL.ttl"};
                         } else  if("eu-dcat-ap-hvd".equalsIgnoreCase(formatter)){
                             shaclValidation = new String[]{"dcat-ap-hvd-2.2.0-SHACL.ttl"};
+                        } else  if("eu-geodcat-ap".equalsIgnoreCase(formatter)){
+                            shaclValidation = new String[]{"geodcat-ap-2.0.1-SHACL.ttl"};
                         }
                         for(String shaclShapes : shaclValidation) {
                             applyShaclValidation(formatter, schema, checkfile, url, shaclShapes);
