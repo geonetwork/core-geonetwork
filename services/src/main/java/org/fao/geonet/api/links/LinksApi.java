@@ -25,6 +25,8 @@ package org.fao.geonet.api.links;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import com.google.gson.Gson;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -63,6 +65,7 @@ import org.springframework.jmx.export.MBeanExporter;
 import org.springframework.jmx.export.naming.SelfNaming;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
@@ -71,6 +74,8 @@ import javax.management.MalformedObjectNameException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import java.beans.PropertyEditorSupport;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayDeque;
@@ -443,6 +448,22 @@ public class LinksApi {
         }
         mAnalyseProcesses.addFirst(mAnalyseProcess);
         return mAnalyseProcess;
+    }
+
+    @InitBinder
+    public void initBinder(WebDataBinder dataBinder) {
+        dataBinder.registerCustomEditor(LinkFilter.class, new PropertyEditorSupport() {
+            Object value;
+            @Override
+            public Object getValue() {
+                return value;
+            }
+
+            @Override
+            public void setAsText(String text) throws IllegalArgumentException {
+                value = new Gson().fromJson(text, LinkFilter.class);
+            }
+        });
     }
 
     private static class LinkFilter {
