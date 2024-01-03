@@ -258,6 +258,7 @@
     <dcat:keyword xml:lang="fre">Répartition des espèces</dcat:keyword>
     <dcat:keyword xml:lang="fre">Ressources minérales</dcat:keyword>
     <dcat:keyword xml:lang="fre">Santé et sécurité des personnes</dcat:keyword>
+    <dcat:keyword xml:lang="fre">Mobilité</dcat:keyword>
     <dct:accessRights>
       <dct:RightsStatement
         rdf:about="http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/noLimitations"/>

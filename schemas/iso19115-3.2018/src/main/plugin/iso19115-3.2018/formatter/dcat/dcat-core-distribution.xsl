@@ -101,7 +101,11 @@
   Range:	dcat:Distribution
   -->
   <xsl:template mode="iso19115-3-to-dcat"
+                name="iso19115-3-to-dcat-distribution"
                 match="mdb:distributionInfo//mrd:onLine">
+    <xsl:param name="additionalProperties"
+               as="node()*"/>
+
     <xsl:variable name="url"
                   select="*/cit:linkage/gco:CharacterString/text()"/>
 
@@ -361,6 +365,8 @@
               <xsl:apply-templates mode="iso19115-3-to-dcat"
                                    select="ancestor::mdb:MD_Metadata/mdb:dataQualityInfo/*/mdq:report/*/mdq:result[mdq:DQ_ConformanceResult and mdq:DQ_ConformanceResult/mdq:pass/*/text() = 'true']"/>
             </xsl:if>
+
+            <xsl:copy-of select="$additionalProperties"/>
           </dcat:Distribution>
         </dcat:distribution>
       </xsl:otherwise>

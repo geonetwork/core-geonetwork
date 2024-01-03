@@ -5,9 +5,12 @@
                 xmlns:mdb="http://standards.iso.org/iso/19115/-3/mdb/2.0"
                 xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0"
                 xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/2.0"
+                xmlns:mco="http://standards.iso.org/iso/19115/-3/mco/1.0"
+                xmlns:mrd="http://standards.iso.org/iso/19115/-3/mrd/1.0"
                 xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
                 xmlns:skos="http://www.w3.org/2004/02/skos/core#"
                 xmlns:dcatap="http://data.europa.eu/r5r/"
+                xmlns:eli="http://data.europa.eu/eli/ontology"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
                 xmlns:dct="http://purl.org/dc/terms/"
                 exclude-result-prefixes="#all">
@@ -20,19 +23,24 @@
                 select="document('vocabularies/high-value-dataset-category.rdf')"/>
 
 
+  <xsl:template mode="iso19115-3-to-dcat-resource"
+                match="mdb:MD_Metadata">
+    <xsl:call-template name="iso19115-3-to-dcat-resource"/>
+
+    <xsl:apply-templates mode="iso19115-3-to-dcat"
+                         select="mdb:identificationInfo/*/mri:resourceConstraints/mco:MD_LegalConstraints/mco:reference"/>
+  </xsl:template>
+
+
   <!--
   Dataset
 
-  applicable legislation	Legal Resource	1..*	The legislation that mandates the creation or management of the Dataset.	For HVD the value must include the ELI http://data.europa.eu/eli/reg_impl/2023/138/oj.
-  As multiple legislations may apply to the resource the maximum cardinality is not limited.		P
   conforms to	Standard	0..*	An implementing rule or other specification.	The provided information should enable to the verification whether the detailed information requirements by the HVD is satisfied. For more usage suggestions see section on specific data requirements.	Link	A
   contact point	Kind	0..*	Contact information that can be used for sending comments about the Dataset.		Link	A
   dataset distribution	Distribution	1..*	An available Distribution for the Dataset.	The HVD IR is a quality improvement of existing datasets. The intention is that HVD datasets are publicly and open accessible. Therefore a Distribution is expected to be present. (Article 3.1)	Link	A
 
   DataService
 
-  applicable legislation	Legal Resource	1..*	The legislation that mandates the creation or management of the Data Service.	For HVD the value MUST include the ELI http://data.europa.eu/eli/reg_impl/2023/138/oj.
-  As multiple legislations may apply to the resource the maximum cardinality is not limited.		P
   contact point	Kind	1..*	Contact information that can be used for sending comments about the Data Service.	Article 3.4 requires the designation of a point of contact for an API.	Link	P
   documentation	Document	1..*	A page that provides additional information about the Data Service.	Quality of service covers a broad spectrum of aspects. The HVD regulation does not list any mandatory topic. Therefore quality of service information is considered part of the generic documentation of a Data Service.		P
   endpoint description	Resource	0..*	A description of the services available via the end-points, including their operations, parameters etc.	The property gives specific details of the actual endpoint instances, while dct:conformsTo is used to indicate the general standard or specification that the endpoints implement.
@@ -72,5 +80,38 @@
         </dcatap:hvdCategory>
       </xsl:if>
     </xsl:for-each>
+  </xsl:template>
+
+
+  <!--
+  applicable legislation	Legal Resource	1..*	The legislation that mandates the creation or management of the Data Service.	For HVD the value MUST include the ELI http://data.europa.eu/eli/reg_impl/2023/138/oj.
+  As multiple legislations may apply to the resource the maximum cardinality is not limited.		P
+  -->
+  <xsl:template mode="iso19115-3-to-dcat"
+                match="mri:resourceConstraints/mco:MD_LegalConstraints/mco:reference">
+    <xsl:variable name="href"
+                  select="*/cit:title/*/@xlink:href"/>
+    <xsl:if test="$href">
+      <dcatap:applicableLegislation rdf:resource="{$href}">
+        <!--<eli:LegalResource>
+          <xsl:for-each select="*/cit:title">
+            <xsl:call-template name="rdf-localised">
+              <xsl:with-param name="nodeName" select="'dct:title'"/>
+            </xsl:call-template>
+          </xsl:for-each>
+        </eli:LegalResource>-->
+      </dcatap:applicableLegislation>
+    </xsl:if>
+  </xsl:template>
+
+
+  <xsl:template mode="iso19115-3-to-dcat"
+                match="mdb:distributionInfo//mrd:onLine">
+    <xsl:call-template name="iso19115-3-to-dcat-distribution">
+      <xsl:with-param name="additionalProperties">
+        <xsl:apply-templates mode="iso19115-3-to-dcat"
+                             select="ancestor::mdb:MD_Metadata/mdb:identificationInfo/*/mri:resourceConstraints/mco:MD_LegalConstraints/mco:reference"/>
+      </xsl:with-param>
+    </xsl:call-template>
   </xsl:template>
 </xsl:stylesheet>

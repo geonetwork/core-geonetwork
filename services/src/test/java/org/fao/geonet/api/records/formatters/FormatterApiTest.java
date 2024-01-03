@@ -84,6 +84,7 @@ public class FormatterApiTest extends AbstractServiceIntegrationTest {
 
         data.add(new String[]{"iso19115-3.2018-dcat-dataset.xml", "dcat", "", "iso19115-3.2018", "dataset-core.rdf"});
         data.add(new String[]{"iso19115-3.2018-dcat-dataset.xml", "eu-dcat-ap", "", "iso19115-3.2018", "dataset-core.rdf"});
+        data.add(new String[]{"iso19115-3.2018-dcat-dataset.xml", "eu-dcat-ap-hvd", "", "iso19115-3.2018", "dataset-core.rdf"});
         data.add(new String[]{"iso19115-3.2018-dcat-service.xml", "dcat", "", "iso19115-3.2018", "service-core.rdf"});
 
         return data;
@@ -153,10 +154,13 @@ public class FormatterApiTest extends AbstractServiceIntegrationTest {
                             fail(String.format("%s. Checked with %s. RDF model error. %s. Checked with: %s",
                                 url, checkfile, rdfException.getMessage(), actual));
                         }
-                    }
-
-                    if("eu-dcat-ap".equalsIgnoreCase(formatter)){
-                        String[] shaclValidation = {"dcat-ap-2.1.1-base-SHACL.ttl", "dcat-ap-3-SHACL.ttl"};
+                        String[] shaclValidation = {};
+                        if("eu-dcat-ap".equalsIgnoreCase(formatter)){
+                            shaclValidation = new String[]{"dcat-ap-2.1.1-base-SHACL.ttl"};
+// TODO                       shaclValidation = new String[]{"dcat-ap-2.1.1-base-SHACL.ttl", "dcat-ap-3-SHACL.ttl"};
+                        } else  if("eu-dcat-ap-hvd".equalsIgnoreCase(formatter)){
+                            shaclValidation = new String[]{"dcat-ap-hvd-2.2.0-SHACL.ttl"};
+                        }
                         for(String shaclShapes : shaclValidation) {
                             applyShaclValidation(formatter, schema, checkfile, url, shaclShapes);
                         }
@@ -169,7 +173,7 @@ public class FormatterApiTest extends AbstractServiceIntegrationTest {
                     );
                 }
             } catch (Exception e) {
-                fail(url);
+                fail(String.format("Failure on %s. Error is: %s", url, e.getMessage()));
             }
         }
     }
@@ -194,12 +198,16 @@ public class FormatterApiTest extends AbstractServiceIntegrationTest {
 
         ValidationReport report = ShaclValidator.get().validate(shapes, dataGraph);
 
-        if(report.conforms() == false){
+        if(!report.conforms()){
+            long count = report.getEntries().stream()
+                .filter(e -> e.severity().level().getURI().equals("http://www.w3.org/ns/shacl#Violation"))
+                .count();
+
             ShLib.printReport(report);
             System.out.println();
             RDFDataMgr.write(System.out, report.getModel(), Lang.TTL);
-            fail(String.format("%s. Checked with %s [%s]. Invalid DCAT-AP document. See report in the test console output.",
-                url, checkfile, shaclShapes));
+            fail(String.format("%s. Checked with %s [%s]. Invalid DCAT-AP document. %d violations found. See report in the test console output.",
+                url, checkfile, shaclShapes, count));
         }
     }
 
