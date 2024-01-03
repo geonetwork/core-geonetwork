@@ -389,9 +389,9 @@ public class MetadataTagApi {
         produces = {
             MediaType.APPLICATION_JSON_VALUE
         })
-    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    @ResponseStatus(value = HttpStatus.OK)
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "204", description = "Tag Deleted."),
+        @ApiResponse(responseCode = "200", description = "Report about removed records."),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_EDITOR)
     })
     @PreAuthorize("hasAuthority('Editor')")
