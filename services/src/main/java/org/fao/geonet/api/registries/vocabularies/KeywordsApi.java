@@ -379,134 +379,7 @@ public class KeywordsApi {
         @Parameter(hidden = true)
         HttpServletRequest request
         ) throws Exception {
-        final String SEPARATOR = ",";
-        ServiceContext context = ApiUtils.createServiceContext(request);
-        boolean isJson = MediaType.APPLICATION_JSON_VALUE.equals(accept);
-
-        // Search thesaurus by name (as facet key only contains the name of the thesaurus)
-        Thesaurus thesaurus = thesaurusManager.getThesaurusByName(sThesaurusName);
-        if (thesaurus == null) {
-            String finalSThesaurusName = sThesaurusName;
-            Optional<Thesaurus> thesaurusEntry = thesaurusManager.getThesauriMap().values().stream().filter(t -> t.getKey().endsWith(finalSThesaurusName)).findFirst();
-            if (!thesaurusEntry.isPresent()) {
-                throw new IllegalArgumentException(String.format(
-                    "Thesaurus '%s' not found.", sThesaurusName));
-            } else {
-                sThesaurusName = thesaurusEntry.get().getKey();
-            }
-        }
-
-
-        if (langs == null) {
-            langs = context.getLanguage().split(",");
-        }
-        String[] iso3langCodes = Arrays.copyOf(langs, langs.length);
-        for (int i = 0; i < langs.length; i++) {
-            if (StringUtils.isNotEmpty(langs[i])) {
-                langs[i] = mapper.iso639_2_to_iso639_1(langs[i], langs[i].substring(0,2));  //default: fra -> fr
-            }
-        }
-
-        Element descKeys;
-        Map<String, String> jsonResponse = new HashMap<>();
-
-        uri = URLDecoder.decode(uri, "UTF-8");
-
-        if (uri == null) {
-            descKeys = new Element("descKeys");
-        } else {
-            KeywordsSearcher searcher = new KeywordsSearcher(context, thesaurusManager);
-
-            KeywordBean kb;
-            String[] url;
-            if (!uri.contains(SEPARATOR)) {
-                url = new String[]{uri};
-            }
-            else {
-                url = uri.split(SEPARATOR);
-            }
-            List<KeywordBean> kbList = new ArrayList<>();
-            for (String currentUri : url) {
-                kb = searcher.searchById(currentUri, sThesaurusName, iso3langCodes);
-                if (kb == null) {
-                    kb = searcher.searchById(currentUri, sThesaurusName, langs);
-                }
-                if (kb == null) {
-                    kb = searcher.searchById(ApiUtils.fixURIFragment(currentUri), sThesaurusName, iso3langCodes);
-                }
-                if (kb == null) {
-                    kb = searcher.searchById(ApiUtils.fixURIFragment(currentUri), sThesaurusName, langs);
-                }
-                if (kb != null) {
-                    kbList.add(kb);
-                }
-            }
-            descKeys = new Element("descKeys");
-            for (KeywordBean keywordBean : kbList) {
-                if (isJson) {
-                    jsonResponse.put(
-                        keywordBean.getUriCode(),
-                        // Requested lang or the first non empty value
-                        keywordBean.getDefaultValue()
-                    );
-                } else {
-                    KeywordsSearcher.toRawElement(descKeys, keywordBean);
-                }
-            }
-        }
-
-       Element langConversion = null;
-        if ( (langMapJson != null) && (!langMapJson.isEmpty()) ){
-            JSONObject obj = JSONObject.fromObject(langMapJson);
-            langConversion = new Element("languageConversions");
-            for(Object entry : obj.entrySet()) {
-                String key = ((Map.Entry) entry).getKey().toString();
-                String value = ((Map.Entry) entry).getValue().toString();
-                Element conv = new Element("conversion");
-                conv.setAttribute("from",key.toString());
-                conv.setAttribute("to",value.toString().replace("#",""));
-                langConversion.addContent(conv);
-            }
-
-        }
-
-
-        if (isJson) {
-            return jsonResponse;
-        } else {
-            Path convertXsl = dataDirectory.getWebappDir().resolve("xslt/services/thesaurus/convert.xsl");
-
-            Element gui = new Element("gui");
-            Element nodeUrl = new Element("nodeUrl").setText(settingManager.getNodeURL());
-            Element nodeId = new Element("nodeId").setText(context.getNodeId());
-            Element thesaurusEl = new Element("thesaurus");
-            final Element root = new Element("root");
-
-            gui.addContent(thesaurusEl);
-            thesaurusEl.addContent(thesaurusManager.buildResultfromThTable(context));
-
-            Element requestParams = new Element("request");
-            for (Map.Entry<String, String> e : allRequestParams.entrySet()) {
-                if (e.getKey().equals("lang")) {
-                    requestParams.addContent(new Element(e.getKey())
-                        .setText(String.join(",", iso3langCodes)));
-                } else {
-                    requestParams.addContent(new Element(e.getKey()).setText(e.getValue()));
-                }
-            }
-            if (langConversion != null) {
-                requestParams.addContent(langConversion);
-            }
-
-            root.addContent(requestParams);
-            root.addContent(descKeys);
-            root.addContent(gui);
-            root.addContent(nodeUrl);
-            root.addContent(nodeId);
-            final Element transform = Xml.transform(root, convertXsl);
-
-            return transform;
-        }
+        return getKeyword(uri,sThesaurusName,langs, keywordOnly, transformation,langMapJson,allRequestParams, accept, request);
     }
 
     /**
@@ -585,7 +458,161 @@ public class KeywordsApi {
         @Parameter(hidden = true)
         HttpServletRequest request
     ) throws Exception {
-        return getKeywordByIds(uri,sThesaurusName,langs, keywordOnly, transformation,langMapJson,allRequestParams, accept, request);
+        return getKeyword(uri,sThesaurusName,langs, keywordOnly, transformation,langMapJson,allRequestParams, accept, request);
+    }
+
+    /**
+     * Gets the keyword by id.
+     *
+     * @param uri              the uri
+     * @param sThesaurusName   the s thesaurus name
+     * @param langs            the langs
+     * @param keywordOnly      the keyword only
+     * @param transformation   the transformation
+     * @param allRequestParams the all request params
+     * @param request          the request
+     * @return the keyword by id
+     * @throws Exception the exception
+     */
+    private Object getKeyword(
+        String uri,
+        String sThesaurusName,
+        String[] langs,
+        boolean keywordOnly,
+        String transformation,
+        String  langMapJson,
+        Map<String, String> allRequestParams,
+        String accept,
+        HttpServletRequest request
+    ) throws Exception {
+        final String SEPARATOR = ",";
+        ServiceContext context = ApiUtils.createServiceContext(request);
+        boolean isJson = MediaType.APPLICATION_JSON_VALUE.equals(accept);
+
+        // Search thesaurus by name (as facet key only contains the name of the thesaurus)
+        Thesaurus thesaurus = thesaurusManager.getThesaurusByName(sThesaurusName);
+        if (thesaurus == null) {
+            String finalSThesaurusName = sThesaurusName;
+            Optional<Thesaurus> thesaurusEntry = thesaurusManager.getThesauriMap().values().stream().filter(t -> t.getKey().endsWith(finalSThesaurusName)).findFirst();
+            if (!thesaurusEntry.isPresent()) {
+                throw new IllegalArgumentException(String.format(
+                    "Thesaurus '%s' not found.", sThesaurusName));
+            } else {
+                sThesaurusName = thesaurusEntry.get().getKey();
+            }
+        }
+
+
+        if (langs == null) {
+            langs = context.getLanguage().split(",");
+        }
+        String[] iso3langCodes = Arrays.copyOf(langs, langs.length);
+        for (int i = 0; i < langs.length; i++) {
+            if (StringUtils.isNotEmpty(langs[i])) {
+                langs[i] = mapper.iso639_2_to_iso639_1(langs[i], langs[i].substring(0,2));  //default: fra -> fr
+            }
+        }
+
+        Element descKeys;
+        Map<String, String> jsonResponse = new HashMap<>();
+
+        uri = URLDecoder.decode(uri, "UTF-8");
+
+        if (uri == null) {
+            descKeys = new Element("descKeys");
+        } else {
+            KeywordsSearcher searcher = new KeywordsSearcher(context, thesaurusManager);
+
+            KeywordBean kb;
+            String[] url;
+            if (!uri.contains(SEPARATOR)) {
+                url = new String[]{uri};
+            }
+            else {
+                url = uri.split(SEPARATOR);
+            }
+            List<KeywordBean> kbList = new ArrayList<>();
+            for (String currentUri : url) {
+                kb = searcher.searchById(currentUri, sThesaurusName, iso3langCodes);
+                if (kb == null) {
+                    kb = searcher.searchById(currentUri, sThesaurusName, langs);
+                }
+                if (kb == null) {
+                    kb = searcher.searchById(ApiUtils.fixURIFragment(currentUri), sThesaurusName, iso3langCodes);
+                }
+                if (kb == null) {
+                    kb = searcher.searchById(ApiUtils.fixURIFragment(currentUri), sThesaurusName, langs);
+                }
+                if (kb != null) {
+                    kbList.add(kb);
+                }
+            }
+            descKeys = new Element("descKeys");
+            for (KeywordBean keywordBean : kbList) {
+                if (isJson) {
+                    jsonResponse.put(
+                        keywordBean.getUriCode(),
+                        // Requested lang or the first non empty value
+                        keywordBean.getDefaultValue()
+                    );
+                } else {
+                    KeywordsSearcher.toRawElement(descKeys, keywordBean);
+                }
+            }
+        }
+
+        Element langConversion = null;
+        if ( (langMapJson != null) && (!langMapJson.isEmpty()) ){
+            JSONObject obj = JSONObject.fromObject(langMapJson);
+            langConversion = new Element("languageConversions");
+            for(Object entry : obj.entrySet()) {
+                String key = ((Map.Entry) entry).getKey().toString();
+                String value = ((Map.Entry) entry).getValue().toString();
+                Element conv = new Element("conversion");
+                conv.setAttribute("from",key.toString());
+                conv.setAttribute("to",value.toString().replace("#",""));
+                langConversion.addContent(conv);
+            }
+
+        }
+
+
+        if (isJson) {
+            return jsonResponse;
+        } else {
+            Path convertXsl = dataDirectory.getWebappDir().resolve("xslt/services/thesaurus/convert.xsl");
+
+            Element gui = new Element("gui");
+            Element nodeUrl = new Element("nodeUrl").setText(settingManager.getNodeURL());
+            Element nodeId = new Element("nodeId").setText(context.getNodeId());
+            Element thesaurusEl = new Element("thesaurus");
+            final Element root = new Element("root");
+
+            gui.addContent(thesaurusEl);
+            thesaurusEl.addContent(thesaurusManager.buildResultfromThTable(context));
+
+            Element requestParams = new Element("request");
+            for (Map.Entry<String, String> e : allRequestParams.entrySet()) {
+                if (e.getKey().equals("lang")) {
+                    requestParams.addContent(new Element(e.getKey())
+                        .setText(String.join(",", iso3langCodes)));
+                } else {
+                    requestParams.addContent(new Element(e.getKey()).setText(e.getValue()));
+                }
+            }
+            if (langConversion != null) {
+                requestParams.addContent(langConversion);
+            }
+
+            root.addContent(requestParams);
+            root.addContent(descKeys);
+            root.addContent(gui);
+            root.addContent(nodeUrl);
+            root.addContent(nodeId);
+            final Element transform = Xml.transform(root, convertXsl);
+
+            return transform;
+        }
     }
 
     /**
