@@ -30,6 +30,8 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 /**
  * Defines a publication configuration.
  *
@@ -45,9 +47,11 @@ public class PublicationOption {
     private ReservedGroup publicationGroup;
 
     // List of operations to activate in the group to publish/unpublish.
-    List<ReservedOperation> publicationOperations;
+    @Schema(enumAsRef = true)
+    private List<ReservedOperation> publicationOperations;
 
     // Additional group(s)/operations(s) to publish/unpublish when the publication is selected.
+    @Schema(enumAsRef = true)
     private EnumMap<ReservedGroup, List<ReservedOperation>> additionalPublications = new EnumMap<>(ReservedGroup.class);
 
     PublicationOption(String name, ReservedGroup publicationGroup, List<ReservedOperation> publicationOperations) {
