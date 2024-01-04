@@ -98,7 +98,7 @@
     <xsl:variable name="stylesheetVersion" select="'0.1'"/>
 
 
-    <xsl:template match="/">
+    <xsl:template match="/" name="to-iso19115-3">
         <!--
         root element (MD_Metadata or MI_Metadata)
         -->
