@@ -327,7 +327,7 @@ public class KeywordsApi {
     )
     @RequestMapping(
         path = "/keyword",
-        method = RequestMethod.POST,
+        method = RequestMethod.GET,
         produces = {
             MediaType.APPLICATION_XML_VALUE,
             MediaType.APPLICATION_JSON_VALUE
@@ -337,7 +337,7 @@ public class KeywordsApi {
     })
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
-    public Object getKeywordByIds(
+    public Object getKeywordById(
         @Parameter(
             description = "Keyword identifier or list of keyword identifiers comma separated.",
             required = true)
@@ -396,17 +396,17 @@ public class KeywordsApi {
      * @throws Exception the exception
      */
     @io.swagger.v3.oas.annotations.Operation(
-        summary = "Get keyword by id",
+        summary = "Get keyword by ids",
         description = "Retrieve XML representation of keyword(s) from same thesaurus" +
             "using different transformations. " +
             "'to-iso19139-keyword' is the default and return an ISO19139 snippet." +
             "'to-iso19139-keyword-as-xlink' return an XLinked element. Custom transformation " +
             "can be create on a per schema basis." +
-        "Use POST method if you want to support larger parameters list"
+            "This can be used instead of the GET method for cases where you need to submit large parameters list"
     )
     @RequestMapping(
-        path = "/keywordById",
-        method = RequestMethod.GET,
+        path = "/keyword",
+        method = RequestMethod.POST,
         produces = {
             MediaType.APPLICATION_XML_VALUE,
             MediaType.APPLICATION_JSON_VALUE
@@ -416,40 +416,40 @@ public class KeywordsApi {
     })
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
-    public Object getKeywordById(
+    public Object getKeywordByIds(
         @Parameter(
             description = "Keyword identifier or list of keyword identifiers comma separated.",
             required = true)
         @RequestParam(name = "id")
-        String uri,
+            String uri,
         @Parameter(
             description = "Thesaurus to look info for the keyword(s).",
             required = true)
         @RequestParam(name = "thesaurus")
-        String sThesaurusName,
+            String sThesaurusName,
         @Parameter(
             description = "Languages.",
             required = false)
         @RequestParam(name = "lang", required = false)
-        String[] langs,
+            String[] langs,
         @Parameter(
             description = "Only print the keyword, no thesaurus information.",
             required = false)
         @RequestParam(required = false, defaultValue = "false")
-        boolean keywordOnly,
+            boolean keywordOnly,
         @Parameter(
             description = "XSL template to use (ISO19139 keyword by default, see convert.xsl).",
             required = false)
         @RequestParam(required = false)
-        String transformation,
+            String transformation,
         @Parameter(
             description = "langMap, that converts the values in the 'lang' parameter to how they will be actually represented in the record. {'fre':'fra'} or {'fre':'fr'}.  Missing/empty means to convert to iso 2 letter.",
             required = false)
         @RequestParam (name = "langMap", required = false)
-        String  langMapJson,
+            String  langMapJson,
         @Parameter(hidden = true)
         @RequestParam
-        Map<String, String> allRequestParams,
+            Map<String, String> allRequestParams,
         @RequestHeader(
             value = "Accept",
             defaultValue = MediaType.APPLICATION_XML_VALUE
@@ -457,7 +457,7 @@ public class KeywordsApi {
         String accept,
         @Parameter(hidden = true)
         HttpServletRequest request
-    ) throws Exception {
+        ) throws Exception {
         return getKeyword(uri,sThesaurusName,langs, keywordOnly, transformation,langMapJson,allRequestParams, accept, request);
     }
 
