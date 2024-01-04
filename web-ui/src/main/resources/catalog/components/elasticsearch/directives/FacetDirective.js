@@ -499,14 +499,7 @@
 
           init();
 
-          scope.getFacetSorter = function (facet) {
-            if (facet.meta && facet.meta.orderByTranslation) {
-              return gnFacetSorter.sortByTranslation;
-            } else {
-              return gnFacetSorter.sortByQuantityDesc;
-            }
-          };
-
+          scope.facetSorter = gnFacetSorter.sortByTranslation;
           scope.$watch("key", function (n, o) {
             if (n && n !== o) {
               init();
