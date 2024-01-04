@@ -38,6 +38,7 @@ import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -53,6 +54,7 @@ import org.xmlunit.diff.DefaultNodeMatcher;
 import org.xmlunit.diff.Diff;
 import org.xmlunit.diff.ElementSelectors;
 
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
@@ -181,6 +183,34 @@ public class FormatterApiTest extends AbstractServiceIntegrationTest {
         }
     }
 
+
+    @Test
+    @Ignore
+    public void quickTestToValidateRdfModelAndShaclRules() throws IOException {
+        String formatter = "eu-dcat-ap";
+        String schema = "iso19115-3.2018";
+        String checkfile = "dataset-core.rdf";
+        String file = String.format("%s-%s-%s", schema, formatter, checkfile);
+        String expected = StreamUtils.copyToString(
+            FormatterApiTest.class.getResourceAsStream(file),
+            StandardCharsets.UTF_8);
+        try {
+            Model model = ModelFactory.createMemModelMaker().createDefaultModel();
+            RDFDataMgr.read(model,
+                IOUtils.toInputStream(expected, StandardCharsets.UTF_8),
+                Lang.RDFXML);
+        } catch (Exception rdfException) {
+            fail(String.format("%s. RDF model error. %s.",
+                file, rdfException.getMessage()));
+        }
+        String[] shaclValidation = new String[]{"dcat-ap-2.1.1-base-SHACL.ttl"};
+//        String[] shaclValidation = new String[]{"dcat-ap-3-SHACL.ttl"};
+//        String[] shaclValidation = new String[]{"dcat-ap-hvd-2.2.0-SHACL.ttl"};
+//        String[] shaclValidation = new String[]{"geodcat-ap-2.0.1-SHACL.ttl"};
+        for(String shaclShapes : shaclValidation) {
+            applyShaclValidation(formatter, schema, checkfile, "", shaclShapes);
+        }
+    }
     private static void applyShaclValidation(String formatter, String schema, String checkfile, String url, String shaclShapes) {
         String SHAPES = FormatterApiTest.class.getResource(shaclShapes).getFile();
         if(SHAPES.startsWith("/")){ SHAPES.replaceFirst("/","");}

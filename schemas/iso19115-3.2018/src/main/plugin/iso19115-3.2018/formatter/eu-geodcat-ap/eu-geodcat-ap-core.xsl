@@ -41,9 +41,13 @@
 
     <xsl:variable name="properties" as="node()*">
       <xsl:apply-templates mode="iso19115-3-to-dcat"
-                           select="mdb:contact
-                                  |mdb:defaultLocale/*/lan:characterEncoding/*/@codeListValue"/>
+                           select="mdb:contact"/>
+
       <xsl:copy-of select="$additionalProperties"/>
+
+      <dct:conformsTo>
+        <dct:Standard rdf:about="http://data.europa.eu/930/"/>
+      </dct:conformsTo>
     </xsl:variable>
     <xsl:call-template name="iso19115-3-to-eu-dcat-ap-catalog-record">
       <xsl:with-param name="additionalProperties" select="$properties"/>

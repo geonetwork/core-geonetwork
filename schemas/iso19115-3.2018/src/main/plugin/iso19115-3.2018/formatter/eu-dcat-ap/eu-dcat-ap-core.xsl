@@ -8,6 +8,7 @@
                 xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0"
                 xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/2.0"
                 xmlns:mco="http://standards.iso.org/iso/19115/-3/mco/1.0"
+                xmlns:lan="http://standards.iso.org/iso/19115/-3/lan/1.0"
                 xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
                 xmlns:dct="http://purl.org/dc/terms/"
                 exclude-result-prefixes="#all">
@@ -66,6 +67,10 @@
                            select="mdb:metadataLinkage[*/cit:linkage/*/text() != '']"/>
 
       <xsl:copy-of select="$additionalProperties"/>
+
+      <dct:conformsTo>
+        <dct:Standard rdf:about="http://data.europa.eu/r5r/"/>
+      </dct:conformsTo>
     </xsl:variable>
 
     <xsl:call-template name="iso19115-3-to-dcat-catalog-record">
@@ -78,8 +83,22 @@
    -->
   <xsl:template mode="iso19115-3-to-eu-dcat-ap"
                 match="mdb:MD_Metadata/mdb:metadataLinkage">
-    <dct:source rdf:resource="{*/cit:linkage/*/text()}"/>
+    <dct:source>
+      <rdf:Description rdf:about="{*/cit:linkage/*/text()}">
+        <rdf:type rdf:resource="http://www.w3.org/ns/dcat#CatalogRecord"/>
+        <xsl:apply-templates mode="iso19115-3-to-dcat"
+                             select="ancestor::mdb:MD_Metadata/mdb:metadataStandard
+                                    |mdb:dateInfo/*[cit:dateType/*/@codeListValue = 'creation']/cit:date
+                                    |mdb:dateInfo/*[cit:dateType/*/@codeListValue = 'revision']/cit:date
+                                    |ancestor::mdb:MD_Metadata/mdb:defaultLocale/*/lan:characterEncoding/*/@codeListValue"/>
+      </rdf:Description>
+    </dct:source>
   </xsl:template>
+
+  <!-- GeoDCAT-AP Optional properties (ignored in DCAT-AP)
+  -->
+  <xsl:template mode="iso19115-3-to-dcat"
+                match="mdb:MD_Metadata/mdb:defaultLocale/*/lan:characterEncoding/*/@codeListValue"/>
 
   <!--
   In ISO, license may be described in more than one elements (and could also define license per various scopes).

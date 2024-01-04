@@ -17,13 +17,6 @@
         <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2023-12-08T12:26:19.337626Z
         </dct:modified>
         <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2019-04-02T12:33:24</dct:issued>
-        <dct:conformsTo>
-          <dct:Standard>
-            <rdf:type rdf:resource="http://purl.org/dc/terms/Standard"/>
-            <dct:title xml:lang="fre">ISO 19115</dct:title>
-            <owl:versionInfo xml:lang="fre">2003/Cor 1:2006</owl:versionInfo>
-          </dct:Standard>
-        </dct:conformsTo>
         <dct:title xml:lang="fre">Plan de secteur en vigueur (version coordonnée vectorielle)</dct:title>
         <dct:description xml:lang="fre">Le plan de secteur est un outil réglementaire d'aménagement du territoire et
           d'urbanisme régional wallon constitué de plusieurs couches de données spatiales. Le plan de secteur organise

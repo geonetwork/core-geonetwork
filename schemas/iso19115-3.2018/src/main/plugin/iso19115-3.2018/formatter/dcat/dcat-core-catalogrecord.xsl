@@ -6,6 +6,7 @@
                 xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0"
                 xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
                 xmlns:foaf="http://xmlns.com/foaf/0.1/"
+                xmlns:dct="http://purl.org/dc/terms/"
                 exclude-result-prefixes="#all">
 
   <!-- Create CatalogueRecord -->
@@ -17,11 +18,10 @@
     <xsl:variable name="properties" as="node()*">
       <xsl:apply-templates mode="iso19115-3-to-dcat"
                            select="mdb:metadataIdentifier
-                                      |mdb:identificationInfo/*/mri:citation/*/cit:title
-                                      |mdb:identificationInfo/*/mri:abstract
-                                      |mdb:dateInfo/*[cit:dateType/*/@codeListValue = 'creation']/cit:date
-                                      |mdb:dateInfo/*[cit:dateType/*/@codeListValue = 'revision']/cit:date
-                                      |mdb:metadataStandard"/>
+                                  |mdb:identificationInfo/*/mri:citation/*/cit:title
+                                  |mdb:identificationInfo/*/mri:abstract
+                                  |mdb:dateInfo/*[cit:dateType/*/@codeListValue = 'creation']/cit:date
+                                  |mdb:dateInfo/*[cit:dateType/*/@codeListValue = 'revision']/cit:date"/>
       <xsl:copy-of select="$additionalProperties"/>
     </xsl:variable>
 
