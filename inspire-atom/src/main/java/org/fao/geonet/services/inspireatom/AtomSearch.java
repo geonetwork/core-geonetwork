@@ -56,10 +56,13 @@ import org.fao.geonet.utils.Xml;
 import org.jdom.Content;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
@@ -103,14 +106,17 @@ public class AtomSearch {
         description = "")
     @GetMapping(
         value = "/feeds",
-        produces = MediaType.APPLICATION_XML_VALUE
+        produces = {
+            MediaType.APPLICATION_XML_VALUE,
+            MediaType.TEXT_HTML_VALUE
+        }
     )
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Get a list of feeds."),
         @ApiResponse(responseCode = "204", description = "Not authenticated.")
     })
     @ResponseStatus(OK)
-    public Element feeds(
+    public Object feeds(
         @Parameter(
             description = "fileIdentifier",
             required = false)
@@ -118,6 +124,20 @@ public class AtomSearch {
         String fileIdentifier,
         @Parameter(hidden = true)
         HttpServletRequest request) throws Exception {
+
+        String acceptHeader = StringUtils.isBlank(request.getHeader(HttpHeaders.ACCEPT))?MediaType.APPLICATION_XML_VALUE:request.getHeader(HttpHeaders.ACCEPT);
+        List<String> accept = Arrays.asList(acceptHeader.split(","));
+
+        if (accept.contains(MediaType.TEXT_HTML_VALUE)) {
+            return feedsAsHtml(fileIdentifier, request);
+        } else{
+            return feedsAsXml(fileIdentifier, request);
+        }
+    }
+    private Element feedsAsXml(
+        String fileIdentifier,
+        HttpServletRequest request) throws Exception {
+
         ServiceContext context = ApiUtils.createServiceContext(request);
 
         boolean inspireEnable = sm.getValueAsBool(Settings.SYSTEM_INSPIRE_ENABLE);
@@ -196,27 +216,10 @@ public class AtomSearch {
     }
 
 
-    @io.swagger.v3.oas.annotations.Operation(
-        summary = "Get ATOM feeds",
-        description = "")
-    @GetMapping(
-        value = "/feedsAsHtml",
-        produces = MediaType.TEXT_HTML_VALUE
-    )
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Get a list of feeds."),
-        @ApiResponse(responseCode = "204", description = "Not authenticated.")
-    })
-    @ResponseStatus(OK)
-    public String feedsAsHtml(
-        @Parameter(
-            description = "fileIdentifier",
-            required = false)
-        @RequestParam(defaultValue = "")
+    private String feedsAsHtml(
         String fileIdentifier,
-        @Parameter(hidden = true)
         HttpServletRequest request) throws Exception {
-        Element feeds = feeds(fileIdentifier, request);
+        Element feeds = feedsAsXml(fileIdentifier, request);
 
         Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
         String language = IsoLanguagesMapper.iso639_2T_to_iso639_2B(locale.getISO3Language());
