@@ -1034,6 +1034,8 @@
     "region/getmap/background": "Background map, URL or Named Layer ID",
     "region/getmap/mapproj": "Map projection",
     "region/getmap/summaryWidth": "Summary width",
+    "region/getmap/useGeodesicExtents": "Display geodesic extents",
+    "region/getmap/useGeodesicExtents-help": "By default, the displayed metadata extents are planar (i.e. rectangular). If you enable this option, the metadata extents will become geodesic. If the map uses a projected coordinate system, this may lead to non-rectangular extents (e.g. trapezoid).",
     "region/getmap/width": "Width",
     "metadata/editor": "Metadata editor configuration",
     "metadata/editor/schemaConfig": "Standard configuration",
