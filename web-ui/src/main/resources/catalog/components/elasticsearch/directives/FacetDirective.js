@@ -184,18 +184,6 @@
           };
         }
       };
-
-      this.sortByQuantity = function (agg, bucket) {
-        return function (facet) {
-          return facet.count;
-        };
-      };
-
-      this.sortByQuantityDesc = function (agg, bucket) {
-        return function (facet) {
-          return -1 * facet.count;
-        };
-      };
     }
   ]);
 
