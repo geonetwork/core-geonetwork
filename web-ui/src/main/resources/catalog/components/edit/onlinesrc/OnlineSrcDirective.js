@@ -1968,7 +1968,7 @@
                  * Register a method on popup open to reset
                  * the search form and trigger a search.
                  */
-                gnOnlinesrc.register(scope.mode, function () {
+                gnOnlinesrc.register(scope.mode, function (config) {
                   if (config && !angular.isObject(config)) {
                     config = angular.fromJson(config);
                   }

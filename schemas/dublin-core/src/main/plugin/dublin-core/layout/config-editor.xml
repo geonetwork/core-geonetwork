@@ -55,7 +55,8 @@
         <directive data-gn-need-help="creating-metadata"/>
         <directive data-gn-validation-report=""/>
         <directive data-gn-onlinesrc-list=""
-                   data-types="onlinesrc|thumbnail|parent"/>
+                   data-types="onlinesrc|thumbnail"/>
+        <directive data-gn-associated-resources-panel="gnCurrentEdit.metadata" />
       </sidePanel>
       <tab id="default" default="true" mode="flat">
         <section xpath="/simpledc"/>
@@ -69,7 +70,8 @@
         <directive data-gn-need-help="creating-metadata"/>
         <directive data-gn-validation-report=""/>
         <directive data-gn-onlinesrc-list=""
-                   data-types="onlinesrc|thumbnail|parent"/>
+                   data-types="onlinesrc|thumbnail"/>
+        <directive data-gn-associated-resources-panel="gnCurrentEdit.metadata" />
       </sidePanel>
       <tab id="advanced" default="true">
         <section xpath="/simpledc"/>

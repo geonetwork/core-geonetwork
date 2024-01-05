@@ -1,3 +1,8 @@
 {
-  "config": {}
+  "config": {
+    "associatedResourcesTypes": [ {
+      "type": "hasfeaturecats",
+      "allowToAddRelation": false
+    }]
+  }
 }

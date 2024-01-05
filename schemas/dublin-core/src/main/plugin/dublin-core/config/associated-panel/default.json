@@ -12,6 +12,22 @@
       "fields": {
         "url": {}
       }
+    }],
+    "associatedResourcesTypes": [{
+      "type": "parent",
+      "label": "linkToParent",
+      "config": {
+        "sources": {
+          "metadataStore": {
+            "label": "searchAservice",
+            "params": {
+              "resourceType": ["platform"],
+              "isTemplate": "n"
+            }
+          },
+          "remoteurl": {"multiple": true}
+        }
+      }
     }]
   }
 }

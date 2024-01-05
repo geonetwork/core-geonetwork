@@ -435,5 +435,6 @@
     "associated-dataset": "Source datasets",
     "associated-fcats": "Feature catalog",
     "associated-siblings": "Other resources",
+    "associated-hasfeaturecats": "Using this feature catalog",
     "associatedResourcesPanel": "Associated resources"
 }

@@ -68,8 +68,7 @@
     <view name="default" default="true">
       <sidePanel>
         <directive data-gn-need-help="creating-metadata"/>
-        <directive data-gn-onlinesrc-list=""
-                   data-types="hasfeaturecats"/>
+        <directive data-gn-associated-resources-panel="gnCurrentEdit.metadata" />
         <directive data-gn-validation-report=""/>
         <directive data-gn-suggestion-list=""/>
       </sidePanel>

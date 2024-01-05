@@ -1115,7 +1115,7 @@
 
                 scope.md.related[config.type] = scope.relations[config.type] || [];
                 // TODO: Review filter by siblings properties, Metadata instances doesn't have this information
-                if (config.config.fields) {
+                if (config.config && config.config.fields) {
                   var filterObject = { properties: {} };
 
                   for (var item in config.config.fields) {
@@ -1126,7 +1126,10 @@
                 }
 
                 config.relationFound = config.relations.length > 0;
-
+                // By default, allow to add relations unless explicitly disallowed in the configuration.
+                config.allowToAddRelation = angular.isDefined(config.allowToAddRelation)
+                  ? config.allowToAddRelation
+                  : true;
                 scope.relatedConfigUI.push(config);
               });
             });
