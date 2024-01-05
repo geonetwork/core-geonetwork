@@ -411,6 +411,14 @@
       <param-name>securityMode</param-name>
       <param-value>${proxy.securityMode}</param-value>
     </init-param>
+    <init-param>
+      <param-name>excludeHosts</param-name>
+      <param-value>${proxy.excludeHosts}</param-value>
+    </init-param>
+    <init-param>
+      <param-name>allowPorts</param-name>
+      <param-value>${proxy.allowPorts}</param-value>
+    </init-param>
   </servlet>
   <servlet-mapping>
     <servlet-name>HttpProxy</servlet-name>

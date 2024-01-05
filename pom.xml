@@ -1486,6 +1486,12 @@
        * allow only host registered in metadata link table
     -->
     <proxy.securityMode>DB_LINK_CHECK</proxy.securityMode>
+    <!-- Hosts to exclude from http proxy access: typically localhost, intranet resources -->
+    <proxy.excludeHosts>^(localhost|127\..*|0\..*|255\.255\.255\.255|.*\.local|.*\.localhost|0:0:0:0:0:0:1|::1)$</proxy.excludeHosts>
+
+    <!-- Additional ports (separated by | char) allowed to be access through the http proxy. 80 and 443 are always allowed -->
+    <proxy.allowPorts></proxy.allowPorts>
+    <!--<proxy.allowPorts>8443|8080</proxy.allowPorts>-->
 
     <!-- Jetty plugin port configuration -->
     <jetty.port>8080</jetty.port>
