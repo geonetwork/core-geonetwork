@@ -416,7 +416,13 @@
         }
       };
 
-      this.generateEsRequest = function (p, searchState, searchConfigId, filters) {
+      this.generateEsRequest = function (
+        p,
+        searchState,
+        searchConfigId,
+        filters,
+        templateSource
+      ) {
         var params = {};
         var luceneQueryString = gnEsLuceneQueryParser.facetsToLuceneQuery(
           searchState.filters
@@ -482,7 +488,7 @@
         //   "max_concurrent_group_searches": 4
         // };
         gnESFacet.addFacets(params, searchConfigId, searchState.languageConfig);
-        gnESFacet.addSourceConfiguration(params, searchConfigId);
+        gnESFacet.addSourceConfiguration(params, searchConfigId, templateSource);
 
         return params;
       };
