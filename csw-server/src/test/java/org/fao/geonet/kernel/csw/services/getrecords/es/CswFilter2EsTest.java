@@ -158,6 +158,86 @@ class CswFilter2EsTest {
     }
 
     @Test
+    void testPropertyIsEqualToSpecialChars() throws IOException {
+        final String input =
+            "<Filter xmlns=\"http://www.opengis.net/ogc\">\n" //
+                + "    <PropertyIsEqualTo>\n" //
+                + "          <PropertyName>OnlineResourceType</PropertyName>\n" //
+                + "          <Literal>OGC:WMS</Literal>\n" //
+                + "    </PropertyIsEqualTo>\n" //
+                + "      </Filter>" //
+                + "";
+
+        // EXPECTED:
+        final ObjectNode expected = EsJsonHelper.boolbdr(). //
+            must(array(queryStringPart("OnlineResourceType", "OGC\\:WMS"))). //
+            filter(queryStringPart()). //
+            bld();
+
+        assertFilterEquals(expected, input);
+    }
+
+    @Test
+    void testPropertyIsLike() throws IOException {
+
+        final String input =
+            "<Filter xmlns=\"http://www.opengis.net/ogc\">\n" //
+                + "    <PropertyIsLike wildCard=\"%\" singleChar=\"_\" escapeChar=\"\\\">\n" //
+                + "          <PropertyName>AnyText</PropertyName>\n" //
+                + "          <Literal>s\\_rvice\\%</Literal>\n" //
+                + "    </PropertyIsLike>\n" //
+                + "      </Filter>" //
+                + "";
+
+        // EXPECTED:
+        final ObjectNode expected = EsJsonHelper.boolbdr(). //
+            must(array(queryStringPart("AnyText", "s?rvice*"))). //
+            filter(queryStringPart()). //
+            bld();
+
+        assertFilterEquals(expected, input);
+    }
+
+    @Test
+    void testPropertyIsLikeSpecialChars() throws IOException {
+
+        final String input =
+            "<Filter xmlns=\"http://www.opengis.net/ogc\">\n" //
+                + "    <PropertyIsLike wildCard=\"%\" singleChar=\"_\" escapeChar=\"\\\">\n" //
+                + "          <PropertyName>AnyText</PropertyName>\n" //
+                + "          <Literal>\"service\"</Literal>\n" //
+                + "    </PropertyIsLike>\n" //
+                + "      </Filter>" //
+                + "";
+
+        // EXPECTED:
+        final ObjectNode expected = EsJsonHelper.boolbdr(). //
+            must(array(queryStringPart("AnyText", "\\\"service\\\""))). //
+            filter(queryStringPart()). //
+            bld();
+
+        assertFilterEquals(expected, input);
+
+
+        final String input2 =
+            "<Filter xmlns=\"http://www.opengis.net/ogc\">\n" //
+                + "    <PropertyIsLike wildCard=\"%\" singleChar=\"_\" escapeChar=\"\\\">\n" //
+                + "          <PropertyName>AnyText</PropertyName>\n" //
+                + "          <Literal>OGC:WMS\\%</Literal>\n" //
+                + "    </PropertyIsLike>\n" //
+                + "      </Filter>" //
+                + "";
+
+        // EXPECTED:
+        final ObjectNode expected2 = EsJsonHelper.boolbdr(). //
+            must(array(queryStringPart("AnyText", "OGC\\:WMS*"))). //
+            filter(queryStringPart()). //
+            bld();
+
+        assertFilterEquals(expected2, input2);
+    }
+
+    @Test
     void testLogicalAnd() throws IOException {
 
         // INPUT:

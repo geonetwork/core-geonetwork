@@ -181,7 +181,7 @@ public class CswFilter2Es extends AbstractFilterVisitor {
     }
 
     protected static String convertLikePattern(PropertyIsLike filter) {
-        String result = StringEscapeUtils.escapeJson(filter.getLiteral());
+        String result = filter.getLiteral();
         if (!filter.getWildCard().equals("*")) {
             final String wildcardRe =
                 StringUtils.isNotEmpty(filter.getEscape())
@@ -196,6 +196,8 @@ public class CswFilter2Es extends AbstractFilterVisitor {
                     : filter.getSingleChar();
             result = result.replaceAll(singleCharRe, "?");
         }
+
+        result = StringEscapeUtils.escapeJson(escapeLikeLiteral(result));
         return result;
     }
 
