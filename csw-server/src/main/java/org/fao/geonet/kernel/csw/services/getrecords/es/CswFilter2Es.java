@@ -337,7 +337,7 @@ public class CswFilter2Es extends AbstractFilterVisitor {
         String dataPropertyValue = stack.pop();
         String dataPropertyName = stack.pop();
 
-        final String filterEqualTo = String.format(TEMPLATE_MATCH, dataPropertyName, StringEscapeUtils.escapeJson(dataPropertyValue));
+        final String filterEqualTo = String.format(TEMPLATE_MATCH, dataPropertyName, StringEscapeUtils.escapeJson(escapeLiteral(dataPropertyValue)));
         stack.push(filterEqualTo);
 
         return this;
@@ -355,7 +355,7 @@ public class CswFilter2Es extends AbstractFilterVisitor {
         String dataPropertyValue = stack.pop();
         String dataPropertyName = stack.pop();
 
-        filterPropertyIsNot = String.format(filterPropertyIsNot, dataPropertyName, StringEscapeUtils.escapeJson(dataPropertyValue));
+        filterPropertyIsNot = String.format(filterPropertyIsNot, dataPropertyName, StringEscapeUtils.escapeJson(escapeLiteral(dataPropertyValue)));
         stack.push(filterPropertyIsNot);
 
         return this;
