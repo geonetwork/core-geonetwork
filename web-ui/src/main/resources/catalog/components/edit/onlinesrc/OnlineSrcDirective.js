@@ -1683,7 +1683,15 @@
                 scope.onlineSrcLink = "";
                 scope.addOnlineSrcInDataset = true;
 
-                gnOnlinesrc.register(scope.mode, function () {
+                gnOnlinesrc.register(scope.mode, function (config) {
+                  if (config && !angular.isObject(config)) {
+                    config = angular.fromJson(config);
+                  }
+
+                  scope.config = {
+                    sources: config && config.sources
+                  };
+
                   $(scope.popupid).modal("show");
 
                   // parameters of the online resource form
@@ -1944,6 +1952,7 @@
                  * @returns {boolean}
                  */
                 scope.canEnableLinkButton = function (selectRecords) {
+                  if (selectRecords == undefined) return false;
                   if (selectRecords.length < 1) return false;
 
                   // Check if the metadata titles are defined
@@ -1960,6 +1969,14 @@
                  * the search form and trigger a search.
                  */
                 gnOnlinesrc.register(scope.mode, function () {
+                  if (config && !angular.isObject(config)) {
+                    config = angular.fromJson(config);
+                  }
+
+                  scope.config = {
+                    sources: config && config.sources
+                  };
+
                   $(scope.popupid).modal("show");
                   var searchParams = {};
                   if (scope.mode === "fcats") {
@@ -2064,20 +2081,49 @@
                  * Register a method on popup open to reset
                  * the search form and trigger a search.
                  */
-                gnOnlinesrc.register("sibling", function (config) {
+                // TODO: Remove this register, added for compatibility with data-gn-onlinesrc-list
+                gnOnlinesrc.register("siblings", function (config) {
                   if (config && !angular.isObject(config)) {
                     config = angular.fromJson(config);
                   }
 
                   scope.config = {
                     associationTypeForced: angular.isDefined(
-                      config && config.associationType
+                      config && config.fields && config.fields.associationType
                     ),
-                    associationType: (config && config.associationType) || null,
+                    associationType:
+                      (config && config.fields && config.fields.associationType) || null,
                     initiativeTypeForced: angular.isDefined(
-                      config && config.initiativeType
+                      config && config.fields && config.fields.initiativeType
                     ),
-                    initiativeType: (config && config.initiativeType) || null
+                    initiativeType:
+                      (config && config.fields && config.fields.initiativeType) || null,
+                    sources: config && config.sources
+                  };
+
+                  $(scope.popupid).modal("show");
+
+                  scope.$broadcast("resetSearch");
+                  scope.selection = [];
+                });
+
+                gnOnlinesrc.register("siblings", function (config) {
+                  if (config && !angular.isObject(config)) {
+                    config = angular.fromJson(config);
+                  }
+
+                  scope.config = {
+                    associationTypeForced: angular.isDefined(
+                      config && config.fields && config.fields.associationType
+                    ),
+                    associationType:
+                      (config && config.fields && config.fields.associationType) || null,
+                    initiativeTypeForced: angular.isDefined(
+                      config && config.fields && config.fields.initiativeType
+                    ),
+                    initiativeType:
+                      (config && config.fields && config.fields.initiativeType) || null,
+                    sources: config && config.sources
                   };
 
                   $(scope.popupid).modal("show");
@@ -2216,6 +2262,87 @@
                   return gnOnlinesrc.linkToSibling(params, scope.popupid);
                 };
               }
+            };
+          }
+        };
+      }
+    ])
+
+    /**
+     * @ngdoc directive
+     * @name gn_onlinesrc.directive:gnDoiSearchPanel
+     * @restrict A
+     * @requires gnOnlinesrc
+     *
+     * @description
+     * The `gnDoiSearchPanel` directive provides a form to search and link DOI resources
+     * to the current metadata.
+     */
+    .directive("gnDoiSearchPanel", [
+      "gnDoiSearchService",
+      function (gnDoiSearchService) {
+        return {
+          restrict: "A",
+          replace: true,
+          scope: {
+            doiUrl: "=?",
+            doiPrefix: "=?",
+            doiQueryPattern: "=?",
+            addToSelectionCb: "&?"
+          },
+          templateUrl:
+            "../../catalog/components/edit/onlinesrc/" + "partials/doisearchpanel.html",
+          link: function (scope, element, attrs) {
+            scope.addToSelection = angular.isFunction(scope.addToSelectionCb)
+              ? function (md) {
+                  scope.addToSelectionCb({ record: md });
+                }
+              : undefined;
+
+            scope.queryValue = "";
+            scope.isSearching = false;
+
+            scope.clearSearch = function () {
+              scope.queryValue = "";
+              scope.results = [];
+            };
+
+            scope.search = function () {
+              var searchQuery =
+                scope.queryValue !== ""
+                  ? scope.doiQueryPattern.replace("{query}", scope.queryValue)
+                  : "";
+              scope.isSearching = true;
+              gnDoiSearchService.search(scope.doiUrl, scope.doiPrefix, searchQuery).then(
+                function (response) {
+                  scope.isSearching = false;
+                  var results = [];
+
+                  angular.forEach(response.data.data, function (r) {
+                    results.push({
+                      uuid: r.id,
+                      remoteUrl: r.attributes.url,
+                      resourceTitle:
+                        r.attributes.titles.length > 0
+                          ? r.attributes.titles[0].title
+                          : r.url,
+                      title:
+                        r.attributes.titles.length > 0
+                          ? r.attributes.titles[0].title
+                          : r.url,
+                      description:
+                        r.attributes.descriptions.length > 0
+                          ? r.attributes.descriptions[0].descriptions
+                          : ""
+                    });
+                  });
+
+                  scope.results = results;
+                },
+                function (response) {
+                  scope.isSearching = false;
+                }
+              );
             };
           }
         };

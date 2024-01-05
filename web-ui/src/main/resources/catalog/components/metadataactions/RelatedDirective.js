@@ -977,4 +977,164 @@
       };
     }
   ]);
+
+  /**
+   * Directive to display a panel in the metadata editor with a header and a list of associated resources.
+   *
+   */
+  module.directive("gnAssociatedResourcesPanel", [
+    "gnCurrentEdit",
+    "gnSchemaManagerService",
+    function (gnCurrentEdit, gnSchemaManagerService) {
+      return {
+        restrict: "A",
+        templateUrl: function (elem, attrs) {
+          return (
+            attrs.template ||
+            "../../catalog/components/metadataactions/partials/associatedResourcesPanel.html"
+          );
+        },
+        scope: {
+          md: "=gnAssociatedResourcesPanel",
+          mode: "="
+        },
+        link: function (scope, element, attrs) {
+          gnSchemaManagerService
+            .getEditorAssociationPanelConfig(
+              gnCurrentEdit.schema,
+              gnCurrentEdit.associatedPanelConfigId
+            )
+            .then(function (r) {
+              scope.relatedConfig = r.config.associatedResourcesTypes;
+            });
+        }
+      };
+    }
+  ]);
+
+  /**
+   * Displays a panel with different types of associations defined in the schema configuration and available in the metadata object 'md'.
+   *
+   */
+  module.directive("gnAssociatedResourcesContainer", [
+    "gnRelatedResources",
+    "gnConfigService",
+    "gnOnlinesrc",
+    "gnCurrentEdit",
+    "$injector",
+    "$filter",
+    function (
+      gnRelatedResources,
+      gnConfigService,
+      gnOnlinesrc,
+      gnCurrentEdit,
+      $injector,
+      $filter
+    ) {
+      return {
+        restrict: "A",
+        templateUrl: function (elem, attrs) {
+          return (
+            attrs.template ||
+            "../../catalog/components/metadataactions/partials/associatedResourcesContainer.html"
+          );
+        },
+        scope: {
+          md: "=gnAssociatedResourcesContainer",
+          mode: "=",
+          relatedConfig: "="
+        },
+        link: function (scope, element, attrs, controller) {
+          scope.lang = scope.lang || scope.$parent.lang;
+          scope.relations = [];
+          scope.relatedConfigUI = [];
+          scope.relatedResourcesConfig = gnRelatedResources;
+          if ($injector.has("gnOnlinesrc")) {
+            scope.onlinesrcService = $injector.get("gnOnlinesrc");
+          }
+
+          scope.getClass = function (type) {
+            if (type === "dataset") {
+              return "fa fa-sitemap fa-rotate-180";
+            } else if (type === "service") {
+              return "fa fa-fw fa-cloud";
+            } else if (type === "parent") {
+              return "fa gn-icon-series";
+            } else if (type === "fcats") {
+              return "fa fa-table";
+            } else if (type === "siblings") {
+              return "fa fa-sign-out";
+            }
+
+            return "";
+          };
+          scope.canRemoveLink = function (record, type) {
+            if (record.origin === "remote") {
+              return true;
+            } else {
+              return (
+                type === "datasets" ||
+                type === "services" ||
+                type === "parent" ||
+                type === "sources" ||
+                type === "fcats" ||
+                type === "siblings"
+              );
+            }
+          };
+
+          scope.remove = function (record, type) {
+            if (type === "datasets") {
+              scope.onlinesrcService.removeDataset(record);
+            } else if (type === "services") {
+              scope.onlinesrcService.removeService(record);
+            } else if (type === "parent") {
+              scope.onlinesrcService.removeMdLink("parent", record);
+            } else if (type === "sources") {
+              scope.onlinesrcService.onlinesrcService.removeMdLink("source", record);
+            } else if (type === "fcats") {
+              scope.onlinesrcService.removeFeatureCatalog(record);
+            } else if (type === "siblings") {
+              scope.onlinesrcService.removeSibling(record);
+            }
+          };
+
+          var loadRelations = function () {
+            gnOnlinesrc.getAllResources().then(function (data) {
+              var res = gnOnlinesrc.formatResources(
+                data,
+                scope.lang,
+                gnCurrentEdit.mdLanguage
+              );
+              scope.relations = res.relations;
+
+              scope.md.related = {};
+
+              scope.relatedConfig.forEach(function (config) {
+                config.relations = scope.relations[config.type] || [];
+
+                scope.md.related[config.type] = scope.relations[config.type] || [];
+                // TODO: Review filter by siblings properties, Metadata instances doesn't have this information
+                if (config.config.fields) {
+                  var filterObject = { properties: {} };
+
+                  for (var item in config.config.fields) {
+                    filterObject.properties[item] = config.config.fields[item];
+                  }
+
+                  config.relations = $filter("filter")(config.relations, filterObject);
+                }
+
+                config.relationFound = config.relations.length > 0;
+
+                scope.relatedConfigUI.push(config);
+              });
+            });
+          };
+
+          loadRelations();
+        }
+      };
+    }
+  ]);
 })();

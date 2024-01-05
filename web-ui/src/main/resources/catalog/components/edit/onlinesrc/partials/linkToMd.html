@@ -2,8 +2,11 @@
   <form class="form-horizontal" role="form" data-ng-search-form="">
     <input type="hidden" name="_csrf" value="{{csrf}}" />
     <div class="onlinesrc-container">
-      <div class="form-group">
-        <div class="col-sm-12">
+      <div class="form-group" data-ng-if="::config.sources['metadataStore']">
+        <label class="col-sm-2 control-label">
+          <span data-translate="">chooseACatalogRecord</span>
+        </label>
+        <div class="col-sm-10">
           <div class="input-group gn-margin-bottom">
             <span class="input-group-addon"><i class="fa fa-search" /></span>
             <input
@@ -18,16 +21,33 @@
               autofocus=""
             />
           </div>
-          <div data-gn-remote-record-selector=""></div>
+
+          <div
+            data-gn-search-form-results=""
+            data-gn-search-form-results-mode="title"
+            data-gn-search-form-results-selection-mode="local simple"
+            data-search-results="searchResults"
+            data-select-records="selectRecords"
+            data-pagination-info="paginationInfo"
+          ></div>
         </div>
       </div>
+
       <div
-        data-gn-search-form-results=""
-        data-gn-search-form-results-mode="title"
-        data-gn-search-form-results-selection-mode="local simple"
-        data-search-results="searchResults"
-        data-select-records="selectRecords"
-        data-pagination-info="paginationInfo"
+        class="form-group gn-nomargin-bottom"
+        data-gn-doi-search-panel=""
+        data-association-type="::config.associationType"
+        data-initiative-type="::config.initiativeType"
+        data-doi-url="::config.sources['doiapi'].url"
+        data-doi-prefix="::config.sources['doiapi'].params.prefix"
+        data-doi-query-pattern="::config.sources['doiapi'].params.query"
+        data-add-to-selection-cb="addToSelection(record, config.associationType, config.initiativeType)"
+        data-ng-if="::config.sources['doiapi']"
+      ></div>
+
+      <div
+        data-gn-remote-record-selector=""
+        data-ng-if="::config.sources['remoteurl']"
       ></div>
     </div>
     <div class="">

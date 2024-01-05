@@ -625,7 +625,9 @@
                    data-type="onlines"/>
 
         <directive data-gn-onlinesrc-list=""
-                   data-types="onlinesrc|sibling|associated|source|dataset|service|fcats"/>
+                   data-types="onlinesrc"/>
+
+        <directive data-gn-associated-resources-panel="gnCurrentEdit.metadata" />
 
         <directive gn-geo-publisher=""
                    data-ng-if="gnCurrentEdit.geoPublisherConfig"
@@ -701,7 +703,9 @@
         <directive data-gn-need-help="creating-metadata"/>
         <directive data-gn-validation-report=""/>
         <directive data-gn-onlinesrc-list=""
-                   data-types="onlinesrc|sibling|associated|source|dataset|service|fcats"/>
+                   data-types="onlinesrc"/>
+
+        <directive data-gn-associated-resources-panel="gnCurrentEdit.metadata" />
         <directive gn-geo-publisher=""
                    data-ng-if="gnCurrentEdit.geoPublisherConfig"
                    data-config="{{gnCurrentEdit.geoPublisherConfig}}"
@@ -802,7 +806,9 @@
         <directive data-gn-need-help="creating-metadata"/>
         <directive data-gn-validation-report=""/>
         <directive data-gn-onlinesrc-list=""
-                   data-types="onlinesrc|sibling|associated|source|dataset|service|fcats"/>
+                   data-types="onlinesrc"/>
+
+        <directive data-gn-associated-resources-panel="gnCurrentEdit.metadata" />
         <directive gn-geo-publisher=""
                    data-ng-if="gnCurrentEdit.geoPublisherConfig"
                    data-config="{{gnCurrentEdit.geoPublisherConfig}}"

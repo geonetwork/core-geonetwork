@@ -32,7 +32,10 @@
           ></div>
         </div>
       </div>
-      <div class="form-group gn-nomargin-bottom">
+      <div
+        class="form-group gn-nomargin-bottom"
+        data-ng-if="::config.sources['metadataStore']"
+      >
         <label class="col-sm-2 control-label">
           <span data-translate="">chooseACatalogRecord</span>
         </label>
@@ -73,7 +76,23 @@
           <div data-gn-pagination="paginationInfo" />
         </div>
       </div>
-      <div data-gn-remote-record-selector=""></div>
+
+      <div
+        class="form-group gn-nomargin-bottom"
+        data-gn-doi-search-panel=""
+        data-association-type="::config.associationType"
+        data-initiative-type="::config.initiativeType"
+        data-doi-url="::config.sources['doiapi'].url"
+        data-doi-prefix="::config.sources['doiapi'].params.prefix"
+        data-doi-query-pattern="::config.sources['doiapi'].params.query"
+        data-add-to-selection-cb="addToSelection(record, config.associationType, config.initiativeType)"
+        data-ng-if="::config.sources['doiapi']"
+      ></div>
+
+      <div
+        data-gn-remote-record-selector=""
+        data-ng-if="::config.sources['remoteurl']"
+      ></div>
       <div data-ng-if="selection.length > 0" class="form-group">
         <label class="col-sm-2 control-label">
           <span data-translate="">siblingListToAdd</span>

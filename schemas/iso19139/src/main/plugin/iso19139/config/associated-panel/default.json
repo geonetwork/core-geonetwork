@@ -52,6 +52,83 @@
     "multilingualFields": ["name", "desc"],
     "wmsResources": {
       "addLayerNamesMode": "resourcename"
+    },
+    "associatedResourcesTypes": [{
+      "type": "parent",
+      "label": "linkToParent",
+      "config": {
+        "sources": {
+          "metadataStore": {
+            "label": "searchAservice",
+            "params": {
+              "resourceType": ["platform"],
+              "isTemplate": "n"
+            }
+          },
+          "remoteurl": {"multiple": true}
+        }
+      }
+    }, {
+        "type": "service",
+        "label": "linkToService",
+        "config": {
+          "sources": {
+            "metadataStore": {
+              "label": "searchAservice",
+              "params": {
+                "resourceType": ["platform"],
+                "isTemplate": "n"
+              }
+            },
+            "remoteurl": {"multiple": true}
+          }
+        }
+    }, {
+      "type": "dataset",
+      "label": "linkToDataset",
+      "config": {
+        "sources": {
+          "metadataStore": {
+            "label": "searchAservice",
+            "params": {
+              "resourceType": ["platform"],
+              "isTemplate": "n"
+            }
+          },
+          "remoteurl": {"multiple": true}
+        }
+      }
+    }, {
+      "type": "fcats",
+      "label": "linkToFeatureCatalog",
+      "config": {
+        "sources": {
+          "metadataStore": {
+            "label": "searchAservice",
+            "params": {
+              "resourceType": ["platform"],
+              "isTemplate": "n"
+            }
+          },
+          "remoteurl": {"multiple": true}
+        }
+      }
+    }, {
+      "type": "siblings",
+      "label": "linkToSibling",
+      "config": {
+        "sources": {
+          "metadataStore": {
+            "label": "searchAservice",
+            "params": {
+              "resourceType": ["platform"],
+              "isTemplate": "n"
+            }
+          },
+          "remoteurl": {"multiple": true}
+        }
+      }
     }
+    ]
   }
 }

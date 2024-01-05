@@ -429,5 +429,11 @@
     "allowEditGroupMembers": "Allow group editors to edit",
     "wmsSelectedLayers": "Selected layers",
     "wmsSelectedLayersNone": "No layers selected",
-    "remoteAssociatedMetadataTitlePlaceholder": "Remote associated metadata title"
+    "remoteAssociatedMetadataTitlePlaceholder": "Remote associated metadata title",
+    "associated-parent": "Parent Metadata",
+    "associated-service": "Service",
+    "associated-dataset": "Source datasets",
+    "associated-fcats": "Feature catalog",
+    "associated-siblings": "Other resources",
+    "associatedResourcesPanel": "Associated resources"
 }

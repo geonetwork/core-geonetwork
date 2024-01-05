@@ -903,4 +903,18 @@
       };
     }
   ]);
+
+  /**
+   * Service to query a DOI service and return the results.
+   */
+  module.service("gnDoiSearchService", [
+    "$http",
+    function ($http) {
+      return {
+        search: function (url, prefix, query) {
+          return $http.get(url + "?prefix=" + prefix + "&query=" + query);
+        }
+      };
+    }
+  ]);
 })();
