@@ -655,23 +655,30 @@
                   "../../catalog/components/" +
                   "search/resultsview/partials/viewtemplates/grid.html",
                 tooltip: "Grid",
-                icon: "fa-th"
+                icon: "fa-th",
+                related: []
               },
               {
                 tplUrl:
                   "../../catalog/components/" +
                   "search/resultsview/partials/viewtemplates/list.html",
                 tooltip: "List",
-                icon: "fa-bars"
+                icon: "fa-bars",
+                related: ["parent", "children", "services", "datasets"]
               },
               {
                 tplUrl:
                   "../../catalog/components/" +
                   "search/resultsview/partials/viewtemplates/table.html",
                 tooltip: "Table",
-                icon: "fa-table"
+                icon: "fa-table",
+                related: [],
+                source: {
+                  exclude: ["resourceAbstract*", "Org*", "contact*"]
+                }
               }
             ],
+            // Optional. If not set, the first resultViewTpls is used.
             resultTemplate:
               "../../catalog/components/" +
               "search/resultsview/partials/viewtemplates/grid.html",
@@ -727,6 +734,7 @@
                 class: "fa-file-code-o"
               }*/
             ],
+            // Deprecated (use configuration on resultViewTpls)
             grid: {
               related: ["parent", "children", "services", "datasets"]
             },
@@ -1417,6 +1425,19 @@
         },
         getProxyUrl: function () {
           return this.proxyUrl;
+        },
+        getDefaultResultTemplate: function () {
+          if (this.gnCfg.mods.search.resultTemplate) {
+            for (var i = 0; i < this.gnCfg.mods.search.resultViewTpls.length; i++) {
+              if (
+                this.gnCfg.mods.search.resultViewTpls[i].tplUrl ==
+                this.gnCfg.mods.search.resultTemplate
+              ) {
+                return this.gnCfg.mods.search.resultViewTpls[i];
+              }
+            }
+          }
+          return this.gnCfg.mods.search.resultViewTpls[0];
         },
         // Removes the proxy path and decodes the layer url,
         // so the layer can be printed with MapFish.
