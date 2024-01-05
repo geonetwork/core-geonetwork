@@ -1475,6 +1475,8 @@
     "es.version": "Elasticsearch version",
     "es.index": "Index name",
     "systemPropertiesProxyConfiguration": "Using http proxy settings in system properties.",
+    "app.version": "Application version",
+    "app.subVersion": "Application minor version",
     "fieldRequired": "The value is required",
     "fieldTooLong": "The value is too long",
     "fieldTooShort": "The value is too short",
