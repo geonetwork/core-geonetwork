@@ -3,10 +3,15 @@
     <meta charset="UTF-8" />
     <title>GeoNetwork as web component / Tests</title>
   </head>
-  <body style="background-color: lightgrey; padding: 20px">
+  <body style="background-color: lightgrey; padding: 20px; font-family: monospace;">
     <h1>Webcomponent with shadow DOM</h1>
 
-    <gn-app url="http://localhost:8080/geonetwork" portal="srv"></gn-app>
+    <gn-app url="http://localhost:8080/geonetwork" portal="srv"
+            config='{"mods": {
+                  "home": {"enabled": false},
+                  "footer": {"enabled": false},
+                  "header": {"enabled": false}
+                  }}'></gn-app>
 
     <script src="webcomponents.js"></script>
   </body>

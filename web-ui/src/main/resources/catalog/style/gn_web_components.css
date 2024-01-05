@@ -1,0 +1,50 @@
+@font-face {
+  font-family: 'INSPIRE-themes';
+  src: url('inspire/INSPIRE-themes.eot?9d9vnf');
+  src: url('inspire/INSPIRE-themes.eot?#iefix9d9vnf') format('embedded-opentype'), url('inspire/INSPIRE-themes.ttf?9d9vnf') format('truetype'), url('inspire/INSPIRE-themes.woff?9d9vnf') format('woff'), url('inspire/INSPIRE-themes.svg?9d9vnf#INSPIRE-themes') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "geonetwork";
+  src: url("gn.ttf") format("truetype");
+}
+
+:root, :host {
+  --fa-style-family-classic: 'Font Awesome 6 Free';
+  --fa-font-regular: normal 400 1em/1 'Font Awesome 6 Free';
+}
+
+@font-face {
+  font-family: 'Font Awesome 6 Free';
+  font-display: block;
+  font-weight: 400;
+  src: url("../lib/style/font-awesome/webfonts/fa-regular-400.woff2") format("woff2"), url("../lib/style/font-awesome/webfonts/fa-regular-400.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: 'Font Awesome 6 Free';
+  font-display: block;
+  font-weight: 900;
+  src: url("../lib/style/font-awesome/webfonts/fa-solid-900.woff2") format("woff2"), url("../lib/style/font-awesome/webfonts/fa-solid-900.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: 'Font Awesome 6 Brands';
+  font-display: block;
+  font-weight: 400;
+  src: url("../lib/style/font-awesome/webfonts/fa-brands-400.woff2") format("woff2"), url("../lib/style/font-awesome/webfonts/fa-brands-400.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: 'Font Awesome 6 Free';
+  font-display: block;
+  font-weight: 400;
+  src: url("../lib/style/font-awesome/webfonts/fa-v4compatibility.woff2") format("woff2"), url("../lib/style/font-awesome/webfonts/fa-v4compatibility.ttf") format("truetype");
+}
+
+.far,
+.fa-regular {
+  font-weight: 400;
+}

@@ -23,20 +23,11 @@ customElements.define(
 
     connectedCallback() {
       this.load();
-
-      var style = document.createElement("style");
-      style.setAttribute("type", "text/css");
-      var css =
-        "\n" +
-        "@font-face {\n" +
-        "  font-family: 'FontAwesome';\n" +
-        "  src: url('../lib/style/font-awesome/fonts/fontawesome-webfont.eot?v=4.4.0');\n" +
-        "  src: url('../lib/style/font-awesome/fonts/fontawesome-webfont.eot?#iefix&v=4.4.0') format('embedded-opentype'), url('../lib/style/font-awesome/fonts/fontawesome-webfont.woff2?v=4.4.0') format('woff2'), url('../lib/style/font-awesome/fonts/fontawesome-webfont.woff?v=4.4.0') format('woff'), url('../lib/style/font-awesome/fonts/fontawesome-webfont.ttf?v=4.4.0') format('truetype'), url('../lib/style/font-awesome/fonts/fontawesome-webfont.svg?v=4.4.0#fontawesomeregular') format('svg');\n" +
-        "  font-weight: normal;\n" +
-        "  font-style: normal;\n" +
-        "}";
-      style.textContent = css;
-      document.head.appendChild(style);
+      var baseUrl = this.getAttribute("url") || DEFAULT_BASEURL;
+      var link = document.createElement("link");
+      link.setAttribute("rel", "stylesheet");
+      link.setAttribute("href", baseUrl + "/catalog/style/gn_web_components.css");
+      document.head.appendChild(link);
     }
 
     getTemplate(document, baseUrl, portal, uiConfig) {
@@ -52,10 +43,12 @@ customElements.define(
       div.setAttribute("class", "gn-full");
       app.appendChild(div);
 
-      var css = document.createElement("link");
-      css.setAttribute("href", baseUrl + "/static/gn_search_default.css");
-      css.setAttribute("rel", "stylesheet");
-      app.appendChild(css);
+      ["gn_search_default.css", "gn_inspire.css"].forEach(function (src) {
+        var css = document.createElement("link");
+        css.setAttribute("href", baseUrl + "/static/" + src);
+        css.setAttribute("rel", "stylesheet");
+        app.appendChild(css);
+      });
 
       ["/static/lib.js"].forEach(function (src) {
         var script = document.createElement("script");
@@ -67,6 +60,7 @@ customElements.define(
       var script = document.createElement("script");
       script.setAttribute("type", "text/javascript");
 
+      var gnUrl = baseUrl + "/" + portal + "/";
       script.textContent =
         "" +
         "var gnShadowRoot = document.getElementsByTagName('gn-app')[0].shadowRoot;\n" +
@@ -78,10 +72,8 @@ customElements.define(
         "    cfgModule.config(['gnViewerSettings', 'gnSearchSettings', 'gnGlobalSettings',\n" +
         "      function (gnViewerSettings, gnSearchSettings, gnGlobalSettings) {\n" +
         "        gnGlobalSettings.init(config, '" +
-        baseUrl +
-        "/" +
-        portal +
-        "/', gnViewerSettings, gnSearchSettings);\n" +
+        gnUrl + "', '" + gnUrl +
+        "', gnViewerSettings, gnSearchSettings);\n" +
         "      }]);" +
         "angular.bootstrap(gnShadowRoot, ['gn_search_default']);" +
         "};" +
