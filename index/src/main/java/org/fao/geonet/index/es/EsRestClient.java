@@ -305,7 +305,7 @@ public class EsRestClient implements InitializingBean {
         final Query.Builder query = new Query.Builder();
 
         WrapperQuery.Builder wrapperQueryBuilder = new WrapperQuery.Builder();
-        wrapperQueryBuilder.query(String.valueOf(jsonQuery));
+        wrapperQueryBuilder.query(Base64.getEncoder().encodeToString(String.valueOf(jsonQuery).getBytes()));
         query.wrapper(wrapperQueryBuilder.build());
 
         return query(index, query, postFilterBuilder, includedFields, scriptedFields, from, size, sort);
