@@ -294,7 +294,7 @@ public class MetadataUtils {
             Set<String> remoteRecords = relatedTypeDetails.getRemoteRecords();
 
             List<AssociatedRecord> records = new ArrayList<>();
-            if (result.hits().hits().size() > 0) {
+            if (!result.hits().hits().isEmpty()) {
                 for (Hit e : (List<Hit>) result.hits().hits()) {
                     allCatalogueUuids.add(e.id());
                     AssociatedRecord associatedRecord = new AssociatedRecord();
@@ -308,12 +308,12 @@ public class MetadataUtils {
                             JsonData dc = (JsonData) e.fields().get(f);
 
                             // TODO: ES 8
-                            /*if (dc != null) {
+                            if (dc != null) {
                                 if (associatedRecord.getProperties() == null) {
                                     associatedRecord.setProperties(new HashMap<>());
                                 }
-                                associatedRecord.getProperties().put(dc.getName(), dc.getValue());
-                            }*/
+                                associatedRecord.getProperties().put(f, dc.toJson().asJsonArray().get(0).toString().replaceAll("^\"|\"$", ""));
+                            }
                         });
                     }
 
@@ -383,7 +383,7 @@ public class MetadataUtils {
                     start, size);
 
                 Set<String> allPortalUuids = new HashSet<>();
-                if (recordsInPortal.hits().hits().size() > 0) {
+                if (!recordsInPortal.hits().hits().isEmpty()) {
                     for (Hit e : (List<Hit>) recordsInPortal.hits().hits()) {
                         allPortalUuids.add(e.id());
                     }
@@ -663,7 +663,7 @@ public class MetadataUtils {
             fromValue, (toValue - fromValue));
 
         Element typeResponse = new Element(type.equals("brothersAndSisters") ? "siblings" : type);
-        if (result.hits().hits().size() > 0) {
+        if (!result.hits().hits().isEmpty()) {
             // Build the old search service response format
             Element response = new Element("response");
 
@@ -724,7 +724,7 @@ public class MetadataUtils {
         int size = Integer.parseInt(si.getSelectionMaxRecords());
 
         final SearchResponse result = searchMan.query(query, null, from, size);
-        if (result.hits().hits().size() > 0) {
+        if (!result.hits().hits().isEmpty()) {
             final List<Hit> elements = result.hits().hits();
             ObjectMapper objectMapper = new ObjectMapper();
             elements.forEach(e -> uuids.add((String) objectMapper.convertValue(e.source(), Map.class).get(Geonet.IndexFieldNames.UUID)));
