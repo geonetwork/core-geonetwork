@@ -23,6 +23,7 @@
 
 package org.fao.geonet.kernel.search;
 
+import co.elastic.clients.elasticsearch._types.ElasticsearchException;
 import com.google.common.collect.Multimap;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.domain.ISODate;
@@ -93,4 +94,6 @@ public interface ISearchManager {
     long getNumDocs() throws Exception;
 
     Element makeField(String fieldName, String fieldValue);
+
+    boolean isIndexWritable(String indexName) throws IOException, ElasticsearchException;
 }

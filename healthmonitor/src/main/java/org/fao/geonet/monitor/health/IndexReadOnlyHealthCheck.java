@@ -23,14 +23,15 @@
 
 package org.fao.geonet.monitor.health;
 
-import co.elastic.clients.elasticsearch.indices.GetIndicesSettingsRequest;
-import co.elastic.clients.elasticsearch.indices.GetIndicesSettingsResponse;
+import co.elastic.clients.elasticsearch._types.ElasticsearchException;
 import com.yammer.metrics.core.HealthCheck;
 import jeeves.monitor.HealthCheckFactory;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.springframework.context.ApplicationContext;
+
+import java.io.IOException;
 
 /**
  * Checks to ensure that the Elasticsearch index is not in readonly mode.
@@ -50,29 +51,21 @@ public class IndexReadOnlyHealthCheck implements HealthCheckFactory {
             protected Result check() {
                 try {
                     ApplicationContext applicationContext = ApplicationContextHolder.get();
-                    EsSearchManager searchMan = applicationContext.getBean(EsSearchManager.class);
-                    String indexBlockRead = "index.blocks.read_only_allow_delete";
+                    EsSearchManager esSearchManager = applicationContext.getBean(EsSearchManager.class);
 
-                    GetIndicesSettingsRequest request = GetIndicesSettingsRequest.of(
-                        b -> b.index(searchMan.getDefaultIndex())
-                            .name(indexBlockRead)
-                    );
-
-                    GetIndicesSettingsResponse settings = searchMan.getClient().getClient()
-                        .indices().getSettings(request);
-
-                    Boolean isReadOnly = "true".equals(settings.get(indexBlockRead).toString());
+                    String indexName = esSearchManager.getDefaultIndex();
+                    boolean isReadOnly = esSearchManager.isIndexWritable(indexName);
 
                     if (!isReadOnly) {
                         return Result.healthy(String.format(
-                            "Index is writable.",
-                            searchMan.getDefaultIndex()
+                            "Index '%s' is writable.",
+                            indexName
                         ));
                     } else {
                         return Result.unhealthy(
                             "Index is in Readonly mode. Check disk usage and/or indexing server logs.");
                     }
-                } catch (Throwable e) {
+                } catch (IOException | ElasticsearchException e) {
                     return Result.unhealthy(e);
                 }
             }

@@ -169,10 +169,10 @@ public class EsSearchManager implements ISearchManager {
     }
 
     @Autowired
-    public EsRestClient client;
+    private EsRestClient client;
 
     @Autowired
-    OverviewIndexFieldUpdater overviewFieldUpdater;
+    private OverviewIndexFieldUpdater overviewFieldUpdater;
 
     private int commitInterval = 200;
 
@@ -1009,5 +1009,21 @@ public class EsSearchManager implements ISearchManager {
 
     public boolean isIndexing() {
         return listOfDocumentsToIndex.size() > 0;
+    }
+
+    public boolean isIndexWritable(String indexName) throws IOException, ElasticsearchException {
+        String indexBlockRead = "index.blocks.read_only_allow_delete";
+
+        GetIndicesSettingsRequest request = GetIndicesSettingsRequest.of(
+            b -> b.index(indexName)
+                .name(indexBlockRead)
+        );
+
+        GetIndicesSettingsResponse settings = this.client.getClient()
+            .indices().getSettings(request);
+
+        IndexState indexState = settings.get(indexBlockRead);
+
+        return (indexState != null) && "true".equals(indexState.toString());
     }
 }
