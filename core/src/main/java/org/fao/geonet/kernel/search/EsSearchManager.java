@@ -42,15 +42,14 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Multimap;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.index.es.EsRestClient;
-import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SelectionManager;
+import org.fao.geonet.kernel.datamanager.IMetadataIndexer;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.search.index.OverviewIndexFieldUpdater;
 import org.fao.geonet.kernel.setting.SettingInfo;
@@ -190,7 +189,7 @@ public class EsSearchManager implements ISearchManager {
         if (!Files.exists(xsltForIndexing)) {
             throw new RuntimeException(String.format(
                 "XSLT for schema indexing does not exist. Create file '%s'.",
-                xsltForIndexing.toString()));
+                xsltForIndexing));
         }
         return xsltForIndexing;
     }
@@ -237,9 +236,8 @@ public class EsSearchManager implements ISearchManager {
         if (indexList != null) {
             indexList.keySet().forEach(e -> {
                 try {
-                    if (indices.isPresent() ?
-                        indices.get().contains(e) :
-                        true) {
+                    if (!indices.isPresent() ||
+                        indices.get().contains(e)) {
                         createIndex(e, indexList.get(e), dropIndexFirst);
                     }
                 } catch (IOException ex) {
@@ -296,9 +294,9 @@ public class EsSearchManager implements ISearchManager {
                         CreateIndexResponse createIndexResponse = client.getClient().indices().create(createIndexRequest);
 
                         if (createIndexResponse.acknowledged()) {
-                            LOGGER.debug("Index '{}' created", new Object[]{indexName});
+                            LOGGER.debug("Index '{}' created", indexName);
                         } else {
-                            final String message = String.format("Index '%s' was not created. Error is: %s", indexName, createIndexResponse.toString());
+                            final String message = String.format("Index '%s' was not created. Error is: %s", indexName, createIndexResponse);
                             LOGGER.error(message);
                             throw new IllegalStateException(message);
                         }
@@ -354,7 +352,7 @@ public class EsSearchManager implements ISearchManager {
                 .index(defaultIndex)
                 .action(action -> action
                     .scriptedUpsert(true)
-                    .upsert(ImmutableMap.of())
+                    .upsert(Map.of())
                     .script(script -> script
                         .inline(inlineScript -> inlineScript
                             .lang("painless")
@@ -395,9 +393,9 @@ public class EsSearchManager implements ISearchManager {
             .update(updateRequest, ObjectNode.class)
             .whenComplete((response, exception) -> {
                 if (exception != null) {
-                    LOGGER.error("Failed to index", exception);
+                    LOGGER.error("Failed to index {}", exception);
                 } else {
-                    LOGGER.info("Updated fields for document " + id);
+                    LOGGER.info("Updated fields for document {}",  id);
                 }
             });
     }
@@ -464,7 +462,7 @@ public class EsSearchManager implements ISearchManager {
     private void sendDocumentsToIndex() {
         Map<String, String> documents = new HashMap<>(listOfDocumentsToIndex);
         listOfDocumentsToIndex.clear();
-        if (documents.size() > 0) {
+        if (!documents.isEmpty()) {
             try {
                 final BulkResponse bulkItemResponses = client
                     .bulkRequest(defaultIndex, documents);
@@ -528,7 +526,7 @@ public class EsSearchManager implements ISearchManager {
                 }
             });
 
-            if (listErrorOfDocumentsToIndex.size() > 0) {
+            if (!listErrorOfDocumentsToIndex.isEmpty()) {
                 BulkResponse response = client.bulkRequest(defaultIndex, listErrorOfDocumentsToIndex);
                 if (response.errors()) {
                     LOGGER.error("Failed to save error documents {}.",
@@ -638,13 +636,13 @@ public class EsSearchManager implements ISearchManager {
         for (Element currentField : fields) {
             String name = currentField.getName();
 
-            // JSON object may be generated in the XSL processing.
-            // In such case an object type attribute is set.
-            boolean isObject = "object".equals(currentField.getAttributeValue("type"));
-
             if (elementNames.contains(name)) {
                 continue;
             }
+
+            // JSON object may be generated in the XSL processing.
+            // In such case an object type attribute is set.
+            boolean isObject = "object".equals(currentField.getAttributeValue("type"));
 
             // Register list of already processed names
             elementNames.add(name);
@@ -656,7 +654,15 @@ public class EsSearchManager implements ISearchManager {
                 || arrayFields.contains(propertyName)
                 || propertyName.endsWith("DateForResource")
                 || propertyName.startsWith("cl_");
-            if (isArray) {
+
+            if (name.equals("geom")) {
+                try {
+                    doc.set("geom", mapper.readTree(nodeElements.get(0).getTextNormalize()));
+                } catch (IOException e) {
+                    LOGGER.error("Parsing invalid geometry for JSON node {}. Error is: {}",
+                        nodeElements.get(0).getTextNormalize(), e.getMessage());
+                }
+            } else if (isArray) {
                 ArrayNode arrayNode = doc.putArray(propertyName);
                 for (Element node : nodeElements) {
                     if (isObject) {
@@ -676,20 +682,7 @@ public class EsSearchManager implements ISearchManager {
                     }
 
                 }
-                continue;
-            }
-
-            if (name.equals("geom")) {
-                try {
-                    doc.set("geom", mapper.readTree(nodeElements.get(0).getTextNormalize()));
-                } catch (IOException e) {
-                    LOGGER.error("Parsing invalid geometry for JSON node {}. Error is: {}",
-                            nodeElements.get(0).getTextNormalize(), e.getMessage());
-                }
-                continue;
-            }
-
-            if (isObject) {
+            } else if (isObject) {
                 try {
                     doc.set(propertyName,
                         mapper.readTree(
@@ -732,7 +725,7 @@ public class EsSearchManager implements ISearchManager {
     @Override
     public boolean rebuildIndex(ServiceContext context, boolean xlinks,
                                 boolean reset, String bucket) throws Exception {
-        DataManager dataMan = context.getBean(DataManager.class);
+        IMetadataIndexer metadataIndexer = context.getBean(IMetadataIndexer.class);
         IMetadataUtils metadataRepository = context.getBean(IMetadataUtils.class);
 
         if (reset) {
@@ -763,7 +756,7 @@ public class EsSearchManager implements ISearchManager {
                 }
             }
             for (String id : listOfIdsToIndex) {
-                dataMan.indexMetadata(id + "", false);
+                metadataIndexer.indexMetadata(id, false, IndexingMode.full);
             }
         } else {
             final Specification<Metadata> metadataSpec =
@@ -773,7 +766,7 @@ public class EsSearchManager implements ISearchManager {
                 Specification.where(metadataSpec)
             );
             for (Integer id : metadataIds) {
-                dataMan.indexMetadata(id + "", false);
+                metadataIndexer.indexMetadata(id + "", false, IndexingMode.full);
             }
         }
         sendDocumentsToIndex();
@@ -872,8 +865,7 @@ public class EsSearchManager implements ISearchManager {
                 docs.put(h.id(), (String) objectMapper.convertValue(h.source(), Map.class).get(Geonet.IndexFieldNames.DATABASE_CHANGE_DATE));
             });
         } catch (Exception e) {
-            LOGGER.error("Error while collecting all documents: {}", e.getMessage());
-            e.printStackTrace();
+            LOGGER.error("Error while collecting all documents: {}", e.getMessage(), e);
             throw e;
         }
         return docs;
@@ -952,7 +944,7 @@ public class EsSearchManager implements ISearchManager {
 
     @Override
     public void delete(List<Integer> metadataIds) throws Exception {
-        metadataIds.stream().forEach(metadataId -> {
+        metadataIds.forEach(metadataId -> {
             try {
                 this.delete(String.format("+id:%d", metadataId));
             } catch (Exception e) {
