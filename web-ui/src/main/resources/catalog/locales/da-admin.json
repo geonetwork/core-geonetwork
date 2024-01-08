@@ -828,8 +828,6 @@
     "metadata/vcs/enable": "Aktiver VCS",
     "metadata/vcs/enable-help": "Når VCS er aktiveret, benyttes Subversion (SVN) til at arkivere ændringer i metadata. Denne funktion er på nuværende tidspunkt stadig eksperimentel. Den er også funktionsdygtig gennem Network File System (NFS)-filsystemet. Når denne funktion aktiveres, skal applikationen genstartes. ",
     "system/threadedindexing": "Indeksering",
-    "system/index/indexingTimeRecordLink": "Indeks for instans-links ved tidspunktet af indeksering",
-    "system/index/indexingTimeRecordLink-help": "(Eksperimentel tjeneste) Når denne tilstand benyttes, tager de tilknyttede instanser ikke hensyn til kontoens bruger-privilegier. Instansens private titel kan være tilgængelig for andre brugere. Denne tilstand anbefales derfor, hvis alle instanser er offentligt tilgængelige, da det er hurtigere end at anvende GetRelated API'et. Indtil videre er det nødvendigt at udløse en reindeksering manuelt, når alle instanser allerede er blevet indekseret én gang.",
     "system/threadedindexing/maxthreads": "Antal indekseringstråde",
     "system/userSelfRegistration": "Bruger selvregistrering",
     "system/userSelfRegistration/enable": "Aktivér selvregistrering",

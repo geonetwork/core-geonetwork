@@ -828,8 +828,6 @@
     "metadata/vcs/enable": "Activeer VCS",
     "metadata/vcs/enable-help": "Eenmaal ingeschakeld, gebruikt VCS SVN om wijzigingen in metadata vast te leggen. Deze functie is experimenteel. Het is ook niet operationeel op een NFS-bestandssysteem. Eenmaal ingeschakeld, moet de applicatie opnieuw worden opgestart.",
     "system/threadedindexing": "Indexing",
-    "system/index/indexingTimeRecordLink": "Recordlinks indexeren tijdens het indexeren",
-    "system/index/indexingTimeRecordLink-help": "(experimenteel) Bij gebruik van deze modus houden gekoppelde records geen rekening met gebruikersrechten. De titel van een privérecord kan aan gebruikers worden getoond. Deze modus wordt aanbevolen als alle records openbaar zijn, omdat dit veel sneller is dan het gebruik van de GetRelated API. Voor nu is het nodig om handmatig opnieuw indexeren te activeren zodra alle records een keer zijn geïndexeerd.",
     "system/threadedindexing/maxthreads": "Aantal threads voor indexering",
     "system/userSelfRegistration": "Zelfregistratie gebruiker",
     "system/userSelfRegistration/enable": "Zelfregistratie aanzetten",

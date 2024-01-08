@@ -828,8 +828,6 @@
     "metadata/vcs/enable": "Aktivera VCS",
     "metadata/vcs/enable-help": "Vid aktivering använder VCS SVN-verktyget för att spåra metadataändringar. Den här funktionen är experimentell. Den fungerar inte heller på NFS-filsystem. Efter aktivering behöver applikationen omstartas.",
     "system/threadedindexing": "Indexerar",
-    "system/index/indexingTimeRecordLink": "Indexera postlänkar vid indexeringen",
-    "system/index/indexingTimeRecordLink-help": "(experimentell) När du använder detta läge tar inte associerade poster hänsyn till användarbehörigheter. En privat posttitel kan exponeras för användare. Det här läget rekommenderas om alla poster är offentliga eftersom det är mycket snabbare än att använda GetRelated API. För närvarande kommer en manuellt utlöst omindexering att krävas när alla poster har indexerats en gång.",
     "system/threadedindexing/maxthreads": "Antal indexerade trådar",
     "system/userSelfRegistration": "Självregistrering för användare",
     "system/userSelfRegistration/enable": "Aktivera självregistrering",

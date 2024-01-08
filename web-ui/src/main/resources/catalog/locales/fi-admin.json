@@ -828,8 +828,6 @@
     "metadata/vcs/enable": "Enable VCS",
     "metadata/vcs/enable-help": "Once enabled, VCS is using SVN to record metadata changes. This feature is experimental. It is also not operational on NFS filesystem. Once enabled, the application needs a restart.",
     "system/threadedindexing": "Indeksointi",
-    "system/index/indexingTimeRecordLink": "Index record links at indexing time",
-    "system/index/indexingTimeRecordLink-help": "(experimental) When using this mode, associated records does not take into account user privileges. Private record title may be exposed to users. This mode is recommended if all records are public as it is much faster than using the GetRelated API. For now, it will require to manually trigger reindex once all records are indexed once.",
     "system/threadedindexing/maxthreads": "Indeksointisäikeiden lukumäärä",
     "system/userSelfRegistration": "Käyttäjien itserekisteröinti",
     "system/userSelfRegistration/enable": "Salli itserekisteröinti",

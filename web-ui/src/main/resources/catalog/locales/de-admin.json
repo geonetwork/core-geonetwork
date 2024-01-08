@@ -828,8 +828,6 @@
     "metadata/vcs/enable": "VCS aktivieren",
     "metadata/vcs/enable-help": "Nach der Aktivierung verwendet VCS SVN, um Metadatenänderungen aufzuzeichnen. Diese Funktion ist experimentell. Es ist auch auf dem NFS-Dateisystem nicht betriebsbereit. Nach der Aktivierung muss die Anwendung neu gestartet werden.",
     "system/threadedindexing": "Indexierung",
-    "system/index/indexingTimeRecordLink": "Index record links at indexing time",
-    "system/index/indexingTimeRecordLink-help": "(experimental) When using this mode, associated records does not take into account user privileges. Private record title may be exposed to users. This mode is recommended if all records are public as it is much faster than using the GetRelated API. For now, it will require to manually trigger reindex once all records are indexed once.",
     "system/threadedindexing/maxthreads": "Anzahl an indexierten Prozessen",
     "system/userSelfRegistration": "Nutzer Selbst-Registrierung",
     "system/userSelfRegistration/enable": "Selbst-Registrierung aktivieren",

@@ -828,8 +828,6 @@
     "metadata/vcs/enable": "Habilitar VCS",
     "metadata/vcs/enable-help": "Un cop habilitat, l'VCS utilitza SVN per a guardar traça dels canvis als registres de metadades. Aquesta funció és experimental. No és operativa en sistemes de fitxers NFS. Després d'habilitar-se, l'aplicació ha de ser reiniciada.",
     "system/threadedindexing": "Indexació",
-    "system/index/indexingTimeRecordLink": "Index record links at indexing time",
-    "system/index/indexingTimeRecordLink-help": "(experimental) When using this mode, associated records does not take into account user privileges. Private record title may be exposed to users. This mode is recommended if all records are public as it is much faster than using the GetRelated API. For now, it will require to manually trigger reindex once all records are indexed once.",
     "system/threadedindexing/maxthreads": "Nombre de fils d'indexació",
     "system/userSelfRegistration": "Usuari autoregistre",
     "system/userSelfRegistration/enable": "Habilitar autoregistre",

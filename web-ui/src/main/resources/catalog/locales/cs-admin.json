@@ -828,8 +828,6 @@
     "metadata/vcs/enable": "Povolit VCS",
     "metadata/vcs/enable-help": "Po povolení VCS používá SVN k zaznamenávání změn metadat. Tato funkce je experimentální. Není také funkční v souborovém systému NFS. Po povolení aplikace potřebuje restart.",
     "system/threadedindexing": "Indexování",
-    "system/index/indexingTimeRecordLink": "Odkazy na indexové záznamy v době indexace",
-    "system/index/indexingTimeRecordLink-help": "(experimentální) Při použití tohoto režimu se u přidružených záznamů neberou v úvahu uživatelská oprávnění. Soukromý název záznamu může být vystaven uživatelům. Tento režim se doporučuje, pokud jsou všechny záznamy veřejné, protože je mnohem rychlejší než použití rozhraní API GetRelated. Prozatím bude vyžadovat ruční spuštění reindexace, jakmile budou všechny záznamy jednou zaindexovány.",
     "system/threadedindexing/maxthreads": "Počet řetězců k indexování",
     "system/userSelfRegistration": "Samostatná registrace uživatele",
     "system/userSelfRegistration/enable": "Aktivovat samostatnou registraci",
