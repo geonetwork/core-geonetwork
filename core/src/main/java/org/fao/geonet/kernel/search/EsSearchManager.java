@@ -817,26 +817,6 @@ public class EsSearchManager implements ISearchManager {
         client.deleteByQuery(defaultIndex, "*:*");
     }
 
-//    public void iterateQuery(SolrQuery params, final Consumer<SolrDocument> callback) throws IOException, SolrServerException {
-//        final MutableLong pos = new MutableLong(0);
-//        final MutableLong last = new MutableLong(1);
-//        while (pos.longValue() < last.longValue()) {
-//            params.setStart(pos.intValue());
-//            client.queryAndStreamResponse(params, new StreamingResponseCallback() {
-//                @Override
-//                public void streamSolrDocument(SolrDocument doc) {
-//                    pos.add(1);
-//                    callback.accept(doc);
-//                }
-//
-//                @Override
-//                public void streamDocListInfo(long numFound, long start, Float maxScore) {
-//                    last.setValue(numFound);
-//                }
-//            });
-//        }
-//    }
-
     static ImmutableSet<String> docsChangeIncludedFields;
 
     static {
@@ -890,40 +870,6 @@ public class EsSearchManager implements ISearchManager {
             return null;
         }
     }
-
-//    public SolrDocument getDocFieldValue(String query, String... field) throws IOException, SolrServerException {
-//        final SolrQuery params = new SolrQuery(query);
-//        params.setFilterQueries(DOC_TYPE + ":metadata");
-//        params.setFields(field);
-//        QueryResponse response = client.query(params);
-//        final SolrDocumentList results = response.getResults();
-//        if (results.size() == 0) {
-//            return null;
-//        } else {
-//            return results.get(0);
-//        }
-//    }
-//
-//    public SolrDocumentList getDocsFieldValue(String query, String... field) throws IOException, SolrServerException {
-//        final SolrQuery params = new SolrQuery(query);
-//        params.setFilterQueries(DOC_TYPE + ":metadata");
-//        params.setFields(field);
-//        QueryResponse response = client.query(params);
-//        return response.getResults();
-//    }
-//
-//    public List<String> getDocsUuids(String query, Integer rows) throws IOException, SolrServerException {
-//        final SolrQuery solrQuery = new SolrQuery(query == null ? "*:*" : query);
-//        solrQuery.setFilterQueries(DOC_TYPE + ":metadata");
-//        solrQuery.setFields(IndexFields.UUID);
-//        if (rows != null) {
-//            solrQuery.setRows(rows);
-//        }
-//        final List<String> result = new ArrayList<>();
-//        iterateQuery(solrQuery, doc ->
-//            result.add(doc.getFieldValue(IndexFields.UUID).toString()));
-//        return result;
-//    }
 
     @Override
     public Set<Integer> getDocsWithXLinks() throws Exception {
