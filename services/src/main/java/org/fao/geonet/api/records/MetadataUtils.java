@@ -306,8 +306,7 @@ public class MetadataUtils {
                     if (!e.fields().isEmpty()) {
                         FIELDLIST_RELATED_SCRIPTED.keySet().forEach(f -> {
                             JsonData dc = (JsonData) e.fields().get(f);
-
-                            // TODO: ES 8
+                            
                             if (dc != null) {
                                 if (associatedRecord.getProperties() == null) {
                                     associatedRecord.setProperties(new HashMap<>());
