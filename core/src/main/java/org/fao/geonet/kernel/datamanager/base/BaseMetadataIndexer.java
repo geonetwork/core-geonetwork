@@ -350,9 +350,9 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
                 List<Attribute> xlinks = Processor.getXLinks(md);
                 if (xlinks.size() > 0) {
                     fields.put(Geonet.IndexFieldNames.HASXLINKS, true);
-                    StringBuilder sb = new StringBuilder();
                     for (Attribute xlink : xlinks) {
                         fields.put(Geonet.IndexFieldNames.XLINK, xlink.getValue());
+                        fields.put(Geonet.IndexFieldNames.XLINK, xlink.getValue().replaceAll("local://srv/api/registries/entries/(.*)\\?.*", "$1"));
                     }
                     Processor.detachXLink(md, getServiceContext());
                 } else {
