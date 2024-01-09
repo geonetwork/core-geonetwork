@@ -250,7 +250,7 @@ public class AttachmentsApi {
     // @PreAuthorize("permitAll")
     @RequestMapping(value = "/{resourceId:.+}", method = RequestMethod.GET)
     @ResponseStatus(value = HttpStatus.OK)
-    @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "Record attachment."),
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Record attachment."),
         @ApiResponse(responseCode = "403", description = "Operation not allowed. "
             + "User needs to be able to download the resource.")})
     public void getResource(

@@ -253,7 +253,7 @@ public class MetadataInsertDeleteApi {
             MediaType.APPLICATION_JSON_VALUE
         }
     )
-    @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Report about deleted records."),
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Report about deleted records."),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_EDITOR)})
     @PreAuthorize("hasAuthority('Editor')")
     @ResponseStatus(HttpStatus.OK)
