@@ -162,7 +162,7 @@ public class MetadataProcessApi {
         RequestMethod.POST,}, produces = MediaType.APPLICATION_XML_VALUE)
     @PreAuthorize("hasAuthority('Editor')")
     @ResponseStatus(HttpStatus.OK)
-    @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Record processed and saved."),
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Record processed and saved."),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)})
     public @ResponseBody
     ResponseEntity processRecord(
