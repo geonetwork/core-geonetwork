@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2011 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2023 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -24,11 +24,9 @@
 package org.fao.geonet.kernel.datamanager;
 
 import java.io.IOException;
-import java.util.Calendar;
 import java.util.List;
 
 import org.fao.geonet.domain.AbstractMetadata;
-import org.fao.geonet.kernel.search.ISearchManager;
 import org.fao.geonet.kernel.search.IndexingMode;
 import org.jdom.Element;
 import org.springframework.data.jpa.domain.Specification;

@@ -36,7 +36,6 @@ import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.xlink.Processor;
 import org.apache.commons.lang3.StringUtils;
-import org.elasticsearch.client.RequestOptions;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.NodeInfo;
@@ -90,7 +89,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.imageio.ImageIO;
-import javax.servlet.ServletRegistration;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.awt.image.BufferedImage;
