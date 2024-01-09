@@ -44,6 +44,7 @@ public class PublicationOption {
     private String name;
 
     // Group to publish
+    @Schema(enumAsRef = true)
     private ReservedGroup publicationGroup;
 
     // List of operations to activate in the group to publish/unpublish.
