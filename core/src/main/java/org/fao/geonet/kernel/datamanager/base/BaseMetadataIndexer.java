@@ -200,31 +200,6 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
         return metadataToDelete.size();
     }
 
-    @Override
-    /**
-     * Search for all records having XLinks (ie. indexed with _hasxlinks flag),
-     * clear the cache and reindex all records found.
-     */
-    public synchronized void rebuildIndexXLinkedMetadata(final ServiceContext context) throws Exception {
-
-        // get all metadata with XLinks
-        Set<Integer> toIndex = searchManager.getDocsWithXLinks();
-
-        if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
-            Log.debug(Geonet.DATA_MANAGER, "Will index " + toIndex.size() + " records with XLinks");
-        if (toIndex.size() > 0) {
-            // clean XLink Cache so that cache and index remain in sync
-            Processor.clearCache();
-
-            ArrayList<String> stringIds = new ArrayList<String>();
-            for (Integer id : toIndex) {
-                stringIds.add(id.toString());
-            }
-            // execute indexing operation
-            batchIndexInThreadPool(context, stringIds);
-        }
-    }
-
     /**
      * Reindex all records in current selection.
      */

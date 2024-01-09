@@ -100,7 +100,6 @@
     "chooseRecordsToUpdate": "Selecteer bestanden om te verwerken",
     "chooseSourceEditor": "Selecteer Editor om bestanden van over te zetten",
     "chooseThesaurus": "Kies of sleep bestanden hierheen",
-    "clearXLinkCache": "Verwijder XLink cache",
     "clearJsCache": "JS & CSS cache legen",
     "jsCacheCleared": "JS cache is geleegd. Komende pagina's zullen langzaam laden",
     "clearJsCacheHelp": "Deze optie is voor ontwikkelaars. Indien javascripts gewijzigd worden. Er zijn 2 opties: In de data directory de wro4j database verwijderen en herstarten, of deze knop gebruiken. Kijk ook naar <a href='../../static/wroAPI/model'>WRO4J model</a>.",

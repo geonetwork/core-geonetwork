@@ -100,7 +100,6 @@
     "chooseRecordsToUpdate": "Vælg poster der skal processeres",
     "chooseSourceEditor": "Vælg editor for at overføre poster fra",
     "chooseThesaurus": "Vælg eller slip filer her",
-    "clearXLinkCache": "Ryd XLink cache",
     "clearJsCache": "Ryd JS & CSS cache",
     "jsCacheCleared": "JS-cache ryddet. Næste sideindlæsning vil udløse cache opbygning.",
     "clearJsCacheHelp": "Denne mulighed er lavet til udviklere. Ved ændringer i Javascript, CSS eller Less-filer er der 2 muligheder: Fjern wro4j-cache-databasen i data mappen og genstart applikationen, eller, prøv at genindlæse modellen og cachen ved at klikke på denne knap. Cachen bliver tømt og genskabt på næste sideindlæsning. Se <a href='../../static/wroAPI/model'> WRO4J modellen </a>.",

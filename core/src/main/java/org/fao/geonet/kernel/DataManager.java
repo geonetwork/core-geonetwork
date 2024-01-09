@@ -144,11 +144,6 @@ public class DataManager {
     }
 
     @Deprecated
-    public synchronized void rebuildIndexXLinkedMetadata(final ServiceContext context) throws Exception {
-        metadataIndexer.rebuildIndexXLinkedMetadata(context);
-    }
-
-    @Deprecated
     public synchronized void rebuildIndexForSelection(final ServiceContext context, String bucket, boolean clearXlink) throws Exception {
         metadataIndexer.rebuildIndexForSelection(context, bucket, clearXlink);
     }

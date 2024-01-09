@@ -100,7 +100,6 @@
     "chooseRecordsToUpdate": "Valitse käsiteltävät tietueet",
     "chooseSourceEditor": "Valitse käyttäjä, jolta tietueet siirretään",
     "chooseThesaurus": "Valitse tai pudota tiedostot tähän",
-    "clearXLinkCache": "Tyhjennä XLink-välimuisti",
     "clearJsCache": "Tyhjennä JS & CSS välimuisti",
     "jsCacheCleared": "JS välimuisti tyhjennetty. Välimuisti rakentuu uudelleen seuraavan sivulatauksen yhteydessä.",
     "clearJsCacheHelp": "This option is made for developers. When making changes to Javascript, CSS or Less files, 2 options: remove wro4j-cache database in the data directory and restart the application or try to simply reload the model and the cache clicking this button. The cache will be flushed and recreated on next page load. Check the <a href='../../static/wroAPI/model'>WRO4J model</a>.",

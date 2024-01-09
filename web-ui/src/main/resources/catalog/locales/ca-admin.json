@@ -100,7 +100,6 @@
     "chooseRecordsToUpdate": "Selecciona entrades a processar",
     "chooseSourceEditor": "Selecciona l'editor des del qual es transferiran les entrades",
     "chooseThesaurus": "Escull o solta fitxers aquí",
-    "clearXLinkCache": "Netejar la memòria cau XLink",
     "clearJsCache": "Netejar la caché JS & CSS",
     "jsCacheCleared": "Caché JS esborrada. La següent càrrega d'una pàgina reconstruirà la caché",
     "clearJsCacheHelp": "Aquesta opció és per a desenvolupadors. Quan es fan canvis al Javascript, CSS o fitxers Less, hi ha 2 opcions: esborrar la base de dades wro4j-cache del directori de dades i reiniciar l'aplicació o simplement recarregar el model i la caché amb aquest botó. La caché s'esborrarà i es crearà a la següent càrrega de pàgina. Comprova el <a href='../../static/wroAPI/model'>model WRO4J</a>.",

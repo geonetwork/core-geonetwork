@@ -34,6 +34,7 @@ import jeeves.config.springutil.ServerBeanPropertyUpdater;
 import jeeves.server.JeevesProxyInfo;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+import jeeves.xlink.Processor;
 import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.client.RequestOptions;
 import org.fao.geonet.ApplicationContextHolder;
@@ -587,10 +588,6 @@ public class SiteApi {
             required = false)
         @RequestParam(required = false, defaultValue = "false")
             boolean asynchronous,
-        @Parameter(description = "Records having only XLinks",
-            required = false)
-        @RequestParam(required = false, defaultValue = "false")
-            boolean havingXlinkOnly,
         @Parameter(description = "Index. By default only remove record index.",
             required = false)
         @RequestParam(required = false, defaultValue = "records")
@@ -618,11 +615,14 @@ public class SiteApi {
             searchMan.init(true, Optional.of(Arrays.asList(indices)));
         }
 
+        // clean XLink Cache so that cache and index remain in sync
+        Processor.clearCache();
+
         if (StringUtils.isEmpty(bucket)) {
             BaseMetadataManager metadataManager = ApplicationContextHolder.get().getBean(BaseMetadataManager.class);
             metadataManager.synchronizeDbWithIndex(context, false, asynchronous);
         } else {
-            searchMan.rebuildIndex(context, havingXlinkOnly, false, bucket);
+            searchMan.rebuildIndex(context, false, bucket);
         }
 
         return new HttpEntity<>(HttpStatus.CREATED);

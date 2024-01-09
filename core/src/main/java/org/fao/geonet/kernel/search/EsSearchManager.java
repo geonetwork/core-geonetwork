@@ -723,7 +723,7 @@ public class EsSearchManager implements ISearchManager {
     }
 
     @Override
-    public boolean rebuildIndex(ServiceContext context, boolean xlinks,
+    public boolean rebuildIndex(ServiceContext context,
                                 boolean reset, String bucket) throws Exception {
         IMetadataIndexer metadataIndexer = context.getBean(IMetadataIndexer.class);
         IMetadataUtils metadataRepository = context.getBean(IMetadataUtils.class);
@@ -869,18 +869,6 @@ public class EsSearchManager implements ISearchManager {
         } else {
             return null;
         }
-    }
-
-    @Override
-    public Set<Integer> getDocsWithXLinks() throws Exception {
-//        final SolrQuery params = new SolrQuery("*:*");
-//        params.setFilterQueries(DOC_TYPE + ":metadata");
-//        params.setFilterQueries(Geonet.IndexFieldNames.HASXLINKS + ":1");
-//        params.setFields(ID);
-//        Set<Integer> result = new HashSet<>();
-//        iterateQuery(params,
-//            doc -> result.add(convertInteger(doc.getFieldValue(ID))));
-        return Collections.emptySet();
     }
 
     @Override

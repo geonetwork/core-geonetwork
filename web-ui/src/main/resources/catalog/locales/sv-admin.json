@@ -100,7 +100,6 @@
     "chooseRecordsToUpdate": "Välj poster att bearbeta",
     "chooseSourceEditor": "Välj publicerare att hämta poster från",
     "chooseThesaurus": "Bläddra för att välja filer eller dra och släpp dem här",
-    "clearXLinkCache": "Rensa XLink-cache",
     "clearJsCache": "Rensa JS- och CSS-cachen",
     "jsCacheCleared": "Cachen för JS har rensats. Vid nästa sidhämtning startar uppbyggnaden av cachen igen.",
     "clearJsCacheHelp": "Detta val är för utvecklare. När du gör ändringar till Javascript, CSS eller Less files så har du två val: ta bort wro4j-cache databasen i datakatalogen och starta om applikationen eller försök med att ladda om modellen och cachen genom att klicka på denna knapp. Cachen kommer att rensas och byggas upp igen när du laddar en ny sida.  Kontrollera <a href='../../static/wroAPI/model'>WRO4J modellen</a>.",

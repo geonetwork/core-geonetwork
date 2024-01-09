@@ -66,20 +66,15 @@ public interface ISearchManager {
      * Rebuilds the Lucene index. If xlink or from selection parameters are defined, reindex a
      * subset of record. Otherwise reindex all records.
      *
-     * @param xlinks        Search all docs with XLinks, clear the XLinks cache and index all
-     *                      records found.
      * @param bucket Reindex all records from selection bucket.
      */
     boolean rebuildIndex(ServiceContext context,
-                         boolean xlinks,
                          boolean reset,
                          String bucket) throws Exception;
 
     Map<String, String> getDocsChangeDate() throws Exception;
 
     ISODate getDocChangeDate(String mdId) throws Exception;
-
-    Set<Integer> getDocsWithXLinks() throws Exception;
 
     /**
      * deletes a document.

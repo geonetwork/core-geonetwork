@@ -100,7 +100,6 @@
     "chooseRecordsToUpdate": "Vybrat záznamy do procesu",
     "chooseSourceEditor": "Vybrat editor k přenosu záznamů z",
     "chooseThesaurus": "Zde vybrat či vložit soubory",
-    "clearXLinkCache": "Vymazat vyrovnávací paměť XLink",
     "clearJsCache": "Vymazat JS & CSS mezipaměť",
     "jsCacheCleared": "JS vyrovnávací paměť byla vyčištěna. Načtení další stránky způsobí vytvoření mezipaměti.",
     "clearJsCacheHelp": "Tato možnost je určena vývojářům. Při provádění změn v systémech Javascript, CSS nebo Less files, jsou dvě možnosti: odeberte databázi wro4j-cache v datovém adresáři a restartujte aplikaci nebo zkuste jednoduše znovu načíst model a mezipaměť kliknutím na toto tlačítko. Cache bude vyprázdněna a obnovena na další načtení stránky. Zkontrolujte <a href='../../static/wroAPI/model'>model WRO4J</a>.",

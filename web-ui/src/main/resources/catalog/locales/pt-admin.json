@@ -100,7 +100,6 @@
     "chooseRecordsToUpdate": "Selecione registros para processar",
     "chooseSourceEditor": "Escolha um editor para transferir registros de",
     "chooseThesaurus": "Escolha ou arraste arquivos aqui",
-    "clearXLinkCache": "Limpar XLink cache",
     "clearJsCache": "Apagar cache de JS & CSS",
     "jsCacheCleared": "Cache de JS apagado. Avance para próxima página para reconstruí-los.",
     "clearJsCacheHelp": "Esta opção é feita para desenvolvedores. Ao fazer alterações em Javascript, CSS ou arquivos LESS siga os 2 passos seguintes: primeiro remova o banco de dados wro4j-cache no diretório de dado em seguida reinicie o aplicativo ou tente simplesmente recarregar o modelo e o cache clicando neste botão. O cache será liberado e recriado na próxima página carregar. Verifique a <a href='../../static/wroAPI/model'> WRO4J modelo </a>.",

@@ -66,11 +66,6 @@ public interface IMetadataIndexer {
     int batchDeleteMetadataAndUpdateIndex(Specification<? extends AbstractMetadata> specification) throws Exception;
 
     /**
-     * Search for all records having XLinks (ie. indexed with _hasxlinks flag), clear the cache and reindex all records found.
-     */
-    void rebuildIndexXLinkedMetadata(ServiceContext context) throws Exception;
-
-    /**
      * Reindex all records in current selection.
      */
     void rebuildIndexForSelection(ServiceContext context, String bucket, boolean clearXlink) throws Exception;

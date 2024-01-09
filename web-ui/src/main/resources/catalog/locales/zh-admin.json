@@ -100,7 +100,6 @@
     "chooseRecordsToUpdate": "选择要处理的记录",
     "chooseSourceEditor": "选择编辑器来传输记录",
     "chooseThesaurus": "在这里选择或删除文件",
-    "clearXLinkCache": "清除XLink缓存",
     "clearJsCache": "清除JS&CSS缓存",
     "jsCacheCleared": "JS缓存清除。下一页加载将触发缓存构建。",
     "clearJsCacheHelp": "此选项适用于开发人员。当更改Javascript，CSS或Less文件时，2个选项：删除数据目录中的wro4j-cache数据库，重新启动应用程序，或者点击此按钮尝试简单地重新加载模型并缓存。缓存将在下一页加载时被刷新并重新创建。检查<a href='../../static/wroAPI/model'> WRO4J模型</a>。",

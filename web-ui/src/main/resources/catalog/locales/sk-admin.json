@@ -100,7 +100,6 @@
     "chooseRecordsToUpdate": "Vybrať záznamy do procesu",
     "chooseSourceEditor": "Vybrať editor k pronosu záznamov z",
     "chooseThesaurus": "Tu vybrať či vložiť súbory",
-    "clearXLinkCache": "Vymazať vyrovnávaciu pamäť XLink",
     "clearJsCache": "Vyčisti JS & CSS cache",
     "jsCacheCleared": "JS cache vyčistený. Ďalšie načítanie stránky vyvolá vytvorenie cache.",
     "clearJsCacheHelp": "Toto nastavenie je pre developerov. Pri úprave JS, CSS, Less súborov sú dve možnosti: vymazať wro4j-cache databázu v data directory a reštart aplikácie alebo jednoducho načítajte znova model a cache kliknutím na toto tlačidlo. Cache bude obnovený pri ďalšom načítaní stránky. Skontrolujte <a href='../../static/wroAPI/model'>WRO4J model</a>.",

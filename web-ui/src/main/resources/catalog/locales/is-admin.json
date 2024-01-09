@@ -100,7 +100,6 @@
     "chooseRecordsToUpdate": "Velja skrár til að vinna",
     "chooseSourceEditor": "Velja klippara til að yfirfæra skrár úr ",
     "chooseThesaurus": "Velja eða draga skrár hingað",
-    "clearXLinkCache": "Hreinsa XLink skyndiminni",
     "clearJsCache": "Hreinsa JS & CSS cache",
     "jsCacheCleared": "JS skyndiminni hreinsað. Næsta síða sem verður hlaðið mun byggja nýtt skyndiminni.",
     "clearJsCacheHelp": "Þessi valkostur er fyrir forritara. Þegar gera á breytingar á Javascript, CSS eða Less skrám eru 2 leiðir: fjarlægið wro4j-cache gagnagrunn í gagnaskránni og endurræsið forritið eða reynið einfaldlega að endurhlaða módeliðog skyndiminnið með því að smella á hnappinn. Skyndiminnið verður skolað og endurskapað næst þegar síðu verður hlaðið. Skoða <a href='../../static/wroAPI/model'>WRO4J módel</a>.",
