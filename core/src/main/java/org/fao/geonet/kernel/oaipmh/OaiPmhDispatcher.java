@@ -113,7 +113,7 @@ public class OaiPmhDispatcher {
         SettingInfo si = context.getBean(SettingInfo.class);
 
         try {
-            url = si.getSiteUrl() + context.getBaseUrl() + "/" + Jeeves.Prefix.SERVICE + "/en/" + context.getService();
+            url = si.getSiteUrl() + context.getBaseUrl() + "/" + Jeeves.Prefix.SERVICE + "/" + context.getService();
             params = OaiPmhFactory.extractParams(request);
 
             AbstractRequest req = OaiPmhFactory.parse(context.getApplicationContext(), params);

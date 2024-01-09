@@ -39,7 +39,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Locale;
 
 @RequestMapping(value = {
     "/{portal}/api/oaipmh"
@@ -74,8 +73,9 @@ public class OaiPmhApi {
         @RequestParam(required = false) final String resumptionToken,
         final HttpServletRequest request
     ) {
-        Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
-        ServiceContext serviceContext = ApiUtils.createServiceContext(request, locale.getISO3Country());
+        ServiceContext serviceContext = ApiUtils.createServiceContext(request);
+        // Set the service name, used in OaiPmhDispatcher to build the oaiphm endpoint URL
+        serviceContext.setService("api/oaipmh");
 
         Element params = new Element("params");
         if (StringUtils.isNotEmpty(verb)) {
