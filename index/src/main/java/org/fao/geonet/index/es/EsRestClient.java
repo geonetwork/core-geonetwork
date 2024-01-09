@@ -352,7 +352,7 @@ public class EsRestClient implements InitializingBean {
             return client.search(searchRequest, ObjectNode.class);
 
         } catch (ElasticsearchException esException) {
-            Log.error("geonetwork.indes", String.format(
+            Log.error("geonetwork.index", String.format(
                 "Error during querying index. %s", esException.error().toString()));
             throw esException;
         }
