@@ -27,10 +27,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.server.context.ServiceContext;
-import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.api.ApiUtils;
-import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.kernel.oaipmh.OaiPmhDispatcher;
+import org.fao.geonet.kernel.oaipmh.OaiPmhParams;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -49,9 +48,6 @@ import javax.servlet.http.HttpServletRequest;
 public class OaiPmhApi {
 
     @Autowired
-    private LanguageUtils languageUtils;
-
-    @Autowired
     private OaiPmhDispatcher oaiPmhDispatcher;
 
     @io.swagger.v3.oas.annotations.Operation(
@@ -65,44 +61,15 @@ public class OaiPmhApi {
     })
     @ResponseBody
     public Element dispatch(
-        @RequestParam(required = false) final String verb,
-        @RequestParam(required = false) final String metadataPrefix,
-        @RequestParam(required = false) final String set,
-        @RequestParam(required = false) final String from,
-        @RequestParam(required = false) final String until,
-        @RequestParam(required = false) final String resumptionToken,
+        final OaiPmhParams oaiPmhParams,
         final HttpServletRequest request
     ) {
         ServiceContext serviceContext = ApiUtils.createServiceContext(request);
         // Set the service name, used in OaiPmhDispatcher to build the oaiphm endpoint URL
         serviceContext.setService("api/oaipmh");
 
-        Element params = new Element("params");
-        if (StringUtils.isNotEmpty(verb)) {
-            params.addContent(new Element("verb").setText(verb));
-        }
 
-        if (StringUtils.isNotEmpty(metadataPrefix)) {
-            params.addContent(new Element("metadataPrefix").setText(metadataPrefix));
-        }
-
-        if (StringUtils.isNotEmpty(set)) {
-            params.addContent(new Element("set").setText(set));
-        }
-
-        if (StringUtils.isNotEmpty(from)) {
-            params.addContent(new Element("from").setText(from));
-        }
-
-        if (StringUtils.isNotEmpty(until)) {
-            params.addContent(new Element("until").setText(until));
-        }
-
-        if (StringUtils.isNotEmpty(resumptionToken)) {
-            params.addContent(new Element("resumptionToken").setText(resumptionToken));
-        }
-
-        return oaiPmhDispatcher.dispatch(params, serviceContext);
+        return oaiPmhDispatcher.dispatch(oaiPmhParams, serviceContext);
     }
 
 }

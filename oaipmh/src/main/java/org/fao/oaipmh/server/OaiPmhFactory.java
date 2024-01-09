@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2007 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2023 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -28,46 +28,33 @@ import java.util.Map;
 
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
-import org.fao.geonet.utils.XmlRequest;
+import org.fao.oaipmh.OaiPmh;
 import org.fao.oaipmh.exceptions.BadArgumentException;
 import org.fao.oaipmh.exceptions.BadVerbException;
 import org.fao.oaipmh.requests.*;
-import org.jdom.Element;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 
 //=============================================================================
 
 public class OaiPmhFactory {
+    /**
+     * Private constructor to avoid instantiate the class.
+     */
+    private OaiPmhFactory() {
+
+    }
+
     //---------------------------------------------------------------------------
     //---
     //--- API methods
     //---
     //---------------------------------------------------------------------------
 
-    public static Map<String, String> extractParams(Element request) throws BadArgumentException {
-        Map<String, String> params = new HashMap<String, String>();
-
-        for (Object o : request.getChildren()) {
-            Element elem = (Element) o;
-            String name = elem.getName();
-            String value = elem.getText();
-
-            if (params.containsKey(name))
-                throw new BadArgumentException("Parameter repeated : " + name);
-
-            params.put(name, value);
-        }
-
-        return params;
-    }
-
-    //---------------------------------------------------------------------------
-
     public static AbstractRequest parse(ConfigurableApplicationContext applicationContext, Map<String, String> params) throws BadVerbException, BadArgumentException {
         //--- duplicate parameters because the below procedure will consume them
 
-        Map<String, String> params2 = new HashMap<String, String>();
+        Map<String, String> params2 = new HashMap<>();
 
 
         for (Map.Entry<String, String> param : params.entrySet()) {
@@ -161,7 +148,7 @@ public class OaiPmhFactory {
     //---------------------------------------------------------------------------
 
     private static void checkConsumption(Map<String, String> params) throws BadArgumentException {
-        if (params.keySet().size() == 0)
+        if (params.keySet().isEmpty())
             return;
 
         String extraParam = params.keySet().iterator().next();
@@ -188,8 +175,8 @@ public class OaiPmhFactory {
         throws BadArgumentException {
         GetRecordRequest req = new GetRecordRequest(applicationContext.getBean(GeonetHttpRequestFactory.class));
 
-        req.setIdentifier(consumeMan(params, "identifier"));
-        req.setMetadataPrefix(consumeMan(params, "metadataPrefix"));
+        req.setIdentifier(consumeMan(params, OaiPmh.ParamNames.IDENTIFIER));
+        req.setMetadataPrefix(consumeMan(params, OaiPmh.ParamNames.METADATA_PREFIX));
 
         checkConsumption(params);
 
@@ -203,14 +190,14 @@ public class OaiPmhFactory {
 
         ListIdentifiersRequest req = new ListIdentifiersRequest(applicationContext.getBean(GeonetHttpRequestFactory.class));
 
-        if (params.containsKey("resumptionToken"))
-            req.setResumptionToken(consumeMan(params, "resumptionToken"));
+        if (params.containsKey(OaiPmh.ParamNames.RESUMPTION_TOKEN))
+            req.setResumptionToken(consumeMan(params, OaiPmh.ParamNames.RESUMPTION_TOKEN));
         else {
-            req.setMetadataPrefix(consumeMan(params, "metadataPrefix"));
-            req.setSet(consumeOpt(params, "set"));
+            req.setMetadataPrefix(consumeMan(params, OaiPmh.ParamNames.METADATA_PREFIX));
+            req.setSet(consumeOpt(params, OaiPmh.ParamNames.SET));
 
-            req.setFrom(consumeDate(params, "from"));
-            req.setUntil(consumeDate(params, "until"));
+            req.setFrom(consumeDate(params, OaiPmh.ParamNames.FROM));
+            req.setUntil(consumeDate(params, OaiPmh.ParamNames.UNTIL));
         }
 
         checkConsumption(params);
@@ -225,7 +212,7 @@ public class OaiPmhFactory {
 
         ListMetadataFormatsRequest req = new ListMetadataFormatsRequest(applicationContext.getBean(GeonetHttpRequestFactory.class));
 
-        req.setIdentifier(consumeOpt(params, "identifier"));
+        req.setIdentifier(consumeOpt(params, OaiPmh.ParamNames.IDENTIFIER));
         checkConsumption(params);
 
         return req;
@@ -238,14 +225,14 @@ public class OaiPmhFactory {
 
         ListRecordsRequest req = new ListRecordsRequest(applicationContext.getBean(GeonetHttpRequestFactory.class));
 
-        if (params.containsKey("resumptionToken"))
-            req.setResumptionToken(consumeMan(params, "resumptionToken"));
+        if (params.containsKey(OaiPmh.ParamNames.RESUMPTION_TOKEN))
+            req.setResumptionToken(consumeMan(params, OaiPmh.ParamNames.RESUMPTION_TOKEN));
         else {
-            req.setMetadataPrefix(consumeMan(params, "metadataPrefix"));
-            req.setSet(consumeOpt(params, "set"));
+            req.setMetadataPrefix(consumeMan(params, OaiPmh.ParamNames.METADATA_PREFIX));
+            req.setSet(consumeOpt(params, OaiPmh.ParamNames.SET));
 
-            req.setFrom(consumeDate(params, "from"));
-            req.setUntil(consumeDate(params, "until"));
+            req.setFrom(consumeDate(params, OaiPmh.ParamNames.FROM));
+            req.setUntil(consumeDate(params, OaiPmh.ParamNames.UNTIL));
         }
 
         checkConsumption(params);
@@ -260,8 +247,8 @@ public class OaiPmhFactory {
 
         ListSetsRequest req = new ListSetsRequest(applicationContext.getBean(GeonetHttpRequestFactory.class));
 
-        if (params.containsKey("resumptionToken"))
-            req.setResumptionToken(consumeMan(params, "resumptionToken"));
+        if (params.containsKey(OaiPmh.ParamNames.RESUMPTION_TOKEN))
+            req.setResumptionToken(consumeMan(params, OaiPmh.ParamNames.RESUMPTION_TOKEN));
 
         checkConsumption(params);
 
