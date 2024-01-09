@@ -899,22 +899,12 @@ public class EsSearchManager implements ISearchManager {
         });
     }
 
-    @Override
-    public long getNumDocs() throws Exception {
-        return getNumDocs("");
-    }
-
     public long getNumDocs(String query) throws Exception {
         if (StringUtils.isBlank(query)) {
             query = "*:*";
         }
-
-        int from = 0;
-        SettingInfo si = ApplicationContextHolder.get().getBean(SettingInfo.class);
-        int size = Integer.parseInt(si.getSelectionMaxRecords());
-
-        final SearchResponse response = client.query(defaultIndex, query, null, docsChangeIncludedFields, from, size);
-        return response.hits().hits().size();
+        return client.query(defaultIndex, query, null, new HashSet<>(), 0, 0)
+            .hits().total().value();
     }
 
     public EsRestClient getClient() {

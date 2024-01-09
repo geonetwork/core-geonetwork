@@ -91,9 +91,5 @@ public interface ISearchManager {
      */
     void delete(List<Integer> metadataIds) throws Exception;
 
-    long getNumDocs() throws Exception;
-
-    Element makeField(String fieldName, String fieldValue);
-
     boolean isIndexWritable(String indexName) throws IOException, ElasticsearchException;
 }

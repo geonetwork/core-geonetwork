@@ -398,8 +398,6 @@ public class DirectoryUtils {
      * @return The record identifier
      */
     private static String search(ServiceContext context, Map<String, String> searchParameters) {
-        ServiceConfig _config = new ServiceConfig();
-
         EsSearchManager searchMan = context.getBean(EsSearchManager.class);
 
         StringBuilder query = new StringBuilder("+isTemplate:s");
