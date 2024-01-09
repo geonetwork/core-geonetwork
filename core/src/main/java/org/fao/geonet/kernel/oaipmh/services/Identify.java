@@ -55,7 +55,7 @@ public class Identify implements OaiPmhService {
         IdentifyResponse res = new IdentifyResponse();
         SettingInfo si = context.getBean(SettingInfo.class);
 
-        String baseUrl = si.getSiteUrl() + context.getBaseUrl() + "/" + Jeeves.Prefix.SERVICE + "/en/" + context.getService();
+        String baseUrl = si.getSiteUrl() + context.getBaseUrl() + "/" + Jeeves.Prefix.SERVICE + "/" + context.getService();
 
         res.setRepositoryName(si.getSiteName());
         res.setBaseUrl(baseUrl);
