@@ -61,6 +61,10 @@ import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
+import java.util.stream.Collectors;
 
 /**
  * This is a class extending the real proxy to make sure we can tweak specifics like removing the CSRF token on requests
@@ -76,6 +80,10 @@ public class URITemplateProxyServlet extends org.mitre.dsmiley.httpproxy.URITemp
     private static final String P_IS_SECURED = "isSecured";
 
     private static final String TARGET_URI_NAME = "targetUri";
+
+    private static final String P_EXCLUDE_HOSTS = "excludeHosts";
+
+    private static final String P_ALLOW_PORTS = "allowPorts";
 
     /*
      * These are the "hop-by-hop" headers that should not be copied.
@@ -103,6 +111,12 @@ public class URITemplateProxyServlet extends org.mitre.dsmiley.httpproxy.URITemp
     MetadataLinkRepository metadataLinkRepository;
     private String username;
     private String password;
+
+    // Regular expression pattern with the hosts to prevent access through the proxy
+    private Pattern excludeHostsPattern;
+
+    // Allowed ports allowed to access through the proxy
+    private Set<Integer> allowPorts = new HashSet<>(Arrays.asList(80, 443));
 
     /**
      * Init some properties from the servlet's init parameters. They try to be resolved the same way other GeoNetwork
@@ -166,6 +180,29 @@ public class URITemplateProxyServlet extends org.mitre.dsmiley.httpproxy.URITemp
             isSecured = Boolean.parseBoolean(doIsSecured);
         }
 
+        String excludeHosts = getConfigValue(P_EXCLUDE_HOSTS);
+        if (StringUtils.isBlank(excludeHosts)) {
+            excludeHosts = getConfigParam(P_EXCLUDE_HOSTS);
+        }
+
+        if (StringUtils.isNotBlank(excludeHosts)) {
+            try {
+                this.excludeHostsPattern = Pattern.compile(excludeHosts);
+            } catch (PatternSyntaxException ex) {
+                throw new ServletException(P_EXCLUDE_HOSTS + " doesn't contain a valid regular expression");
+            }
+        }
+
+        String additionalAllowPorts = getConfigValue(P_ALLOW_PORTS);
+        if (StringUtils.isBlank(additionalAllowPorts)) {
+            additionalAllowPorts = getConfigParam(P_EXCLUDE_HOSTS);
+        }
+
+        if (StringUtils.isNotBlank(additionalAllowPorts)) {
+            Set<Integer> validPorts = Arrays.stream(additionalAllowPorts.split("\\|"))
+                .filter(StringUtils::isNumeric).map(Integer::valueOf).collect(Collectors.toSet());
+            this.allowPorts.addAll(validPorts);
+        }
     }
 
     private String getConfigValue(String suffix) {
@@ -346,6 +383,16 @@ public class URITemplateProxyServlet extends org.mitre.dsmiley.httpproxy.URITemp
     protected void service(HttpServletRequest servletRequest, HttpServletResponse servletResponse)
         throws ServletException, IOException {
 
+        // Check that the url host or port is not forbidden to access by the proxy
+        if (!isUrlAllowed(servletRequest)) {
+            String message = String.format(
+                "The proxy does not allow to access '%s' .",
+                servletRequest.getParameter("url")
+            );
+            servletResponse.sendError(HttpServletResponse.SC_FORBIDDEN, message);
+            return;
+        }
+
         switch (securityMode) {
             case NONE:
                 super.service(servletRequest, servletResponse);
@@ -403,6 +450,37 @@ public class URITemplateProxyServlet extends org.mitre.dsmiley.httpproxy.URITemp
                 break;
         }
     }
+
+    private boolean isUrlAllowed(HttpServletRequest servletRequest) {
+        String url = servletRequest.getParameter("url");
+        if (StringUtils.isBlank(url)) {
+            return true;
+        }
+
+        try {
+            URI uri = new URI(url);
+
+            if (this.excludeHostsPattern != null) {
+                Matcher matcher = this.excludeHostsPattern.matcher(uri.getHost());
+
+                if (matcher.matches()) {
+                    return false;
+                }
+            }
+
+            int port = uri.getPort();
+
+            // Default port for the protocol has value -1
+            return (port == -1) || this.allowPorts.contains(port);
+        } catch (URISyntaxException e) {
+            throw new IllegalArgumentException(String.format(
+                "'%s' is invalid. Error is: '%s'",
+                url,
+                e.getMessage()
+            ));
+        }
+    }
+
 
     private enum SECURITY_MODE {
         NONE,

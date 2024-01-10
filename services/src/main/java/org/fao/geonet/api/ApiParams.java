@@ -33,6 +33,10 @@ public class ApiParams {
     public static final String API_CLASS_CATALOG_TAG = "site";
     public static final String API_CLASS_REGISTRIES_OPS = "Registries related operations";
     public static final String API_CLASS_REGISTRIES_TAG = "registries";
+    public static final String API_CLASS_TOOLS_TAG = "tools";
+    public static final String API_CLASS_TOOLS_OPS = "Utility operations";
+    public static final String API_CLASS_FORMATTERS_TAG = "formatters";
+    public static final String API_CLASS_FORMATTERS_OPS = "Formatter operations";
 
 
     public static final String API_PARAM_RECORD_UUID = "Record UUID.";

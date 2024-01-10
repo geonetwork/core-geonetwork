@@ -19,13 +19,13 @@ Thank you for contributing to GeoNetwork:
 
 * Good housekeeping: Anytime you commit, try and clean the code around it to latest style guide. If you improve a function without comments: add comments. If you modify functionality that does not have tests: write a test. If you fix functionality without documentation: add documentation.
   
-* History: Clean commit messages and history: avoid big commits with hundreds of files, break commits up into understandable chunks, longer verbose commit messages are encouraged. Beware of reformatting and needless whitespace changes.
+* History: Clean commit messages and history: avoid big commits with hundreds of files, break commits up into understandable chunks, longer verbose commit messages are encouraged. Avoid reformatting and needless whitespace changes.
 
 * Draft: Use pull request *Draft** (or even the text "WIP") to identify work in progress.
   
 * Rebase / Squash and merge: No merge commits with current branch, use Rebase or Squash and merge!
   
-* API Change: Please identify any API change or behavior changes in commit messages.
+* API Change: Please identify any API change or behavior changes in commit messages. Also make sure that a [process for deprecation](PROCESS_FOR_DEPRECATION.md) of a feature is carefully dealt with.
 
 * Review: Review is required by another person, or more than one! Don't be shy asking for help or reviewing.
 

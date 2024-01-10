@@ -381,7 +381,7 @@ public class JCloudStore extends AbstractStore {
     }
 
     private GeonetworkDataDirectory getDataDirectory(ServiceContext context) {
-        return context.getBean(GeonetworkDataDirectory.class);
+        return ApplicationContextHolder.get().getBean(GeonetworkDataDirectory.class);
     }
 
     /**

@@ -546,7 +546,7 @@
     "categoriesUpdated": "Catégorie mise à jour.",
     "warnPublishDraft": "Lors de la publication d'une fiche ayant un statut brouillon, le statut passera à approuvé. Voulez-vous continuer ?",
     "cancelWorkingCopy": "Annuler la copie de travail",
-    "deleteWorkingCopyRecordConfirm": "Voulez-vous vraiment supprimer la copie de travail ?",
+    "deleteWorkingCopyRecordConfirm": "Voulez-vous vraiment supprimer la copie de travail '{{ resourceTitle}}' ?",
     "workingCopy": "Brouillon",
     "onTheWeb": "Plus d'information en ligne",
     "pdfReportTocTitle": "Titre de la table des matières",

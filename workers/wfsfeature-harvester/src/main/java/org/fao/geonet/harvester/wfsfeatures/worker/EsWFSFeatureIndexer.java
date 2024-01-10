@@ -39,7 +39,7 @@ import org.elasticsearch.action.bulk.BulkResponse;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.client.RequestOptions;
-import org.elasticsearch.common.xcontent.XContentType;
+import org.elasticsearch.xcontent.XContentType;
 import org.elasticsearch.rest.RestStatus;
 import org.fao.geonet.harvester.wfsfeatures.model.WFSHarvesterParameter;
 import org.fao.geonet.index.es.EsRestClient;
@@ -288,13 +288,6 @@ public class EsWFSFeatureIndexer {
             long begin = System.currentTimeMillis();
 
             String epsg = "urn:ogc:def:crs:OGC:1.3:CRS84";
-            // TODO: With QGIS server, this can be required
-            // for proper coordinate ordering.
-            // Not 100% sure if it always apply or related only
-            // to Ifremer setup
-            //            if (strategyId.contains("qgis")) {
-            //               epsg = "EPSG:4326";
-            //            }
 
             for (String featureType : resolvedTypeNames) {
                 SimpleFeatureCollection fc = wfs.getFeatureSource(featureType).getFeatures();

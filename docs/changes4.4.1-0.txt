@@ -1,0 +1,65 @@
+================================================================================
+===
+=== GeoNetwork 4.4.1: List of changes
+===
+================================================================================
+- Changelog / 441 and 427. (#7508)
+- i18n / Transifex update. (#7505)
+- Security / Jolokia update. (#7501)
+- Add web/src/main/webapp/WEB-INF/data/data/resources/schemapublication folder to .gitignore
+- Check http links in documentation (#7496)
+- Add more db information to the site information page. (#7403)
+- Update manual links to use https://docs.geonetwork-opensource.org/ (#7487)
+- Change the structure of the MkDocs assets. Stylesheets and logos are moved to the `overrides` directory (#7429)
+- Fix url link in full view. bracket ") " could be included in link (#7483)
+- Batch edit access level for editor role (#7464)
+- Fixed broken links and formatting in BUILDING.md (#7471)
+- Editor / Remove extra space on mandatory add action (#7438)
+- WRO4J / Fix unresolvable source map file on Windows (#7476)
+- Add node identifier parameter for xlst processing. Required in skin.xsl (#7454)
+- change label to "Access to the catalogue" (#7467)
+- API / Batch editing / XPath / Add support for attribute with namespace.
+- Remove exception class name from the error message (#6977)
+- Release / Create SQL migration script for new version (#7395)
+- Standard / Formatter / Citation improvements (#7434)
+- Update to GeoTools 30.0 Release (#7416)
+- Record view / Series / Technical information
+- List styling for related records (#7442)
+- Standard / Processes / Collection merge (#7436)
+- Indexing / Add related record title to the full text search (#7437)
+- Update docker.md
+- Fix cookies path when deployed on root "/" context (#7446)
+- Search results / Fix button size
+- Standard / Feature catalogues / Do not index empty codelist value (#7440)
+- Remove the `Download metadata` button in the metadata block on the Metadata page.
+- Fixed typos, formatting and numbering (#7430)
+- Fix issue with canViewRecord when calling related api (#7373)
+- Transifex updates (#7432)
+- Fix exception handling from schematron validation so that it flags the metadata as invalid if there is an exception (#6978)
+- Rename ElasticSearch to Elasticsearch (#7404)
+- Sort the portals by label, not by name (identifier) (#7424)
+- Metadata editor / ISO19115-3.2008 / Filter out metadata templates in the online resources dialog
+- Fix system info when ES throw errors (#7413)
+- Remove old password field for admins (#7417)
+- Add documentation to GitHub workflows (#7411)
+- GeoNetwork 4.4.x minor versions library updates
+- Change the url the icon in the homepage is linking to (#7422)
+- Fixed typos and updated SearchManager to EsSearchManager in core readme (#7418)
+- Update the links to documentation in the sofware development pages (#7408)
+- Update the CONTRIBUTING guide to detail the steps, before merging the pull requests (#7419)
+- Transifex updates
+- [feat] allow to open COG links in external viewer (#7387)
+- please prettier-java
+- Add 3DTILES support to gn_relatedresources_service module
+- add badge support for 3dtiles
+- add OGC:3DTILES to gnSearchSettings.mapProtocols.layers
+- support OGC:3DTILES protocol, set type to 3dtiles in buildAddToMapConfig
+- add OGC:3DTILES to possible values for gmd:protocol
+- Record view / fix double approved parameter in the metadata working copy page, for the buttons in the online resources panel. Related to #7248 (#7402)
+- Doc / Fix list (#7401)
+- Fixed typos in code_quality readme (#7407)
+- Use default mike settings to fix interaction between language chooser and versions
+- Correct canical_version to stable
+- Add 3.12.11 changelog and fix the display of the changelogs in the navigation bar (#7397)
+- Doc / 4.4.0 / Add note about datastore changes (#7398)
+- Update version to 4.4.1-SNAPSHOT

@@ -546,7 +546,7 @@
     "categoriesUpdated": "Categoriën geupdated.",
     "warnPublishDraft": "Wanneer de workflow is geactiveerd en de records worden gepubliceerd dan veranderd de status in 'Goedgekeurd'. Doorgaan?",
     "cancelWorkingCopy": "Annuleer concept versie",
-    "deleteWorkingCopyRecordConfirm": "Weet je zeker dat je de concept versie '{{title}}' wilt verwijderen?",
+    "deleteWorkingCopyRecordConfirm": "Weet je zeker dat je de concept versie '{{resourceTitle}}' wilt verwijderen?",
     "workingCopy": "Concept versie",
     "onTheWeb": "Meer informatie online",
     "pdfReportTocTitle": "Inhoudsopgave",

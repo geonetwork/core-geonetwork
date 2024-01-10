@@ -1054,31 +1054,31 @@
             "properties": {
               "default": {
                 "type": "keyword",
-                "copy_to": ["any.default"]
+                "copy_to": ["any.default", "organisationName.default"]
               },
               "langeng": {
                 "type": "keyword",
-                "copy_to": ["any.langeng"]
+                "copy_to": ["any.langeng", "organisationName.langeng"]
               },
               "langfre": {
                 "type": "keyword",
-                "copy_to": ["any.langfre"]
+                "copy_to": ["any.langfre", "organisationName.langfre"]
               },
               "langger": {
                 "type": "keyword",
-                "copy_to": ["any.langger"]
+                "copy_to": ["any.langger", "organisationName.langger"]
               },
               "langita": {
                 "type": "keyword",
-                "copy_to": ["any.langita"]
+                "copy_to": ["any.langita", "organisationName.langita"]
               },
               "langdut": {
                 "type": "keyword",
-                "copy_to": ["any.langdut"]
+                "copy_to": ["any.langdut", "organisationName.langdut"]
               },
               "langspa": {
                 "type": "keyword",
-                "copy_to": ["any.langspa"]
+                "copy_to": ["any.langspa", "organisationName.langspa"]
               },
               "link": {
                 "type": "keyword"
@@ -1632,6 +1632,29 @@
           }
         }
       },
+      "measure": {
+        "type": "nested",
+        "properties": {
+          "name": {
+            "type": "keyword"
+          },
+          "description": {
+            "type": "text"
+          },
+          "date": {
+            "type": "date"
+          },
+          "value": {
+            "type": "keyword"
+          },
+          "unit": {
+            "type": "keyword"
+          },
+          "type": {
+            "type": "keyword"
+          }
+        }
+      },
       "processSteps": {
         "type": "nested",
         "properties": {
@@ -1992,6 +2015,32 @@
                 "format": "date_optional_time"
               }
             }
+          }
+        }
+      },
+      "organisationName": {
+        "type": "object",
+        "properties": {
+          "default": {
+            "type": "keyword"
+          },
+          "langeng": {
+            "type": "keyword"
+          },
+          "langfre": {
+            "type": "keyword"
+          },
+          "langger": {
+            "type": "keyword"
+          },
+          "langita": {
+            "type": "keyword"
+          },
+          "langdut": {
+            "type": "keyword"
+          },
+          "langspa": {
+            "type": "keyword"
           }
         }
       }
