@@ -819,6 +819,7 @@
     "associatedResourcesTypes": [{
       "type": "service",
       "label": "linkToService",
+      "condition": "!gnCurrentEdit.isService",
       "config": {
         "sources": {
           "metadataStore": {
@@ -834,6 +835,7 @@
     }, {
       "type": "dataset",
       "label": "linkToDataset",
+      "condition": "gnCurrentEdit.isService",
       "config": {
         "sources": {
           "metadataStore": {

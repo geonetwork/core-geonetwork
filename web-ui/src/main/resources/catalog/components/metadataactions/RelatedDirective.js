@@ -1055,9 +1055,11 @@
 
           scope.getClass = function (type) {
             if (type === "dataset") {
-              return "fa fa-sitemap fa-rotate-180";
+              return "fa gn-icon-dataset";
             } else if (type === "service") {
               return "fa fa-fw fa-cloud";
+            } else if (type === "sources") {
+              return "fa gn-icon-source";
             } else if (type === "parent") {
               return "fa gn-icon-series";
             } else if (type === "fcats") {
@@ -1113,24 +1115,33 @@
               scope.relatedConfig.forEach(function (config) {
                 config.relations = scope.relations[config.type] || [];
 
-                scope.md.related[config.type] = scope.relations[config.type] || [];
-                // TODO: Review filter by siblings properties, Metadata instances doesn't have this information
-                if (config.config && config.config.fields) {
-                  var filterObject = { properties: {} };
+                var processConfig = true;
 
-                  for (var item in config.config.fields) {
-                    filterObject.properties[item] = config.config.fields[item];
-                  }
-
-                  config.relations = $filter("filter")(config.relations, filterObject);
+                // The configuration has an expression to evaluate if it should be processed
+                if (config.condition) {
+                  processConfig = eval(config.condition);
                 }
 
-                config.relationFound = config.relations.length > 0;
-                // By default, allow to add relations unless explicitly disallowed in the configuration.
-                config.allowToAddRelation = angular.isDefined(config.allowToAddRelation)
-                  ? config.allowToAddRelation
-                  : true;
-                scope.relatedConfigUI.push(config);
+                if (processConfig) {
+                  scope.md.related[config.type] = scope.relations[config.type] || [];
+                  // TODO: Review filter by siblings properties, Metadata instances doesn't have this information
+                  if (config.config && config.config.fields) {
+                    var filterObject = { properties: {} };
+
+                    for (var item in config.config.fields) {
+                      filterObject.properties[item] = config.config.fields[item];
+                    }
+
+                    config.relations = $filter("filter")(config.relations, filterObject);
+                  }
+
+                  config.relationFound = config.relations.length > 0;
+                  // By default, allow to add relations unless explicitly disallowed in the configuration.
+                  config.allowToAddRelation = angular.isDefined(config.allowToAddRelation)
+                    ? config.allowToAddRelation
+                    : true;
+                  scope.relatedConfigUI.push(config);
+                }
               });
             });
           };

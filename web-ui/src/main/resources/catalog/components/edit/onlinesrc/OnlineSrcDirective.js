@@ -1935,6 +1935,7 @@
                   params: {}
                 };
                 scope.modelOptions = angular.copy(gnGlobalSettings.modelOptions);
+                scope.selectRecords = [];
               },
               post: function postLink(scope, iElement, iAttrs) {
                 scope.mode = iAttrs["gnLinkToMetadata"];
@@ -1952,7 +1953,6 @@
                  * @returns {boolean}
                  */
                 scope.canEnableLinkButton = function (selectRecords) {
-                  if (selectRecords == undefined) return false;
                   if (selectRecords.length < 1) return false;
 
                   // Check if the metadata titles are defined
@@ -2003,6 +2003,7 @@
                     };
                   }
                   scope.$broadcast("resetSearch", searchParams);
+                  scope.selectRecords = [];
                 });
 
                 scope.gnOnlinesrc = gnOnlinesrc;

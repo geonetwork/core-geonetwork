@@ -71,6 +71,7 @@
     }, {
         "type": "service",
         "label": "linkToService",
+        "condition": "!gnCurrentEdit.isService",
         "config": {
           "sources": {
             "metadataStore": {
@@ -86,6 +87,22 @@
     }, {
       "type": "dataset",
       "label": "linkToDataset",
+      "condition": "gnCurrentEdit.isService",
+      "config": {
+        "sources": {
+          "metadataStore": {
+            "label": "searchAservice",
+            "params": {
+              "resourceType": ["platform"],
+              "isTemplate": "n"
+            }
+          },
+          "remoteurl": {"multiple": true}
+        }
+      }
+    }, {
+      "type": "sources",
+      "label": "linkToSource",
       "config": {
         "sources": {
           "metadataStore": {
