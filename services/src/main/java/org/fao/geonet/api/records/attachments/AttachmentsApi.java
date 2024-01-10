@@ -153,7 +153,7 @@ public class AttachmentsApi {
         return null;
     }
 
-    @io.swagger.v3.oas.annotations.Operation(summary = "List all metadata attachments", description = "<a href='https://geonetwork-opensource.org/manuals/trunk/eng/users/user-guide/associating-resources/using-filestore.html'>More info</a>")
+    @io.swagger.v3.oas.annotations.Operation(summary = "List all metadata attachments", description = "<a href='https://docs.geonetwork-opensource.org/latest/user-guide/associating-resources/using-filestore/'>More info</a>")
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.OK)
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Return the record attachments."),
