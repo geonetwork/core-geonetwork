@@ -175,7 +175,7 @@ public class CatalogApi {
         summary = "Get a set of metadata records as ZIP",
         description = "Metadata Exchange Format (MEF) is returned. MEF is a ZIP file containing " +
             "the metadata as XML and some others files depending on the version requested. " +
-            "See https://geonetwork-opensource.org/manuals/trunk/eng/users/annexes/mef-format.html.")
+            "See https://docs.geonetwork-opensource.org/latest/annexes/mef-format/.")
     @GetMapping(value = "/zip",
         consumes = {
             MediaType.ALL_VALUE
