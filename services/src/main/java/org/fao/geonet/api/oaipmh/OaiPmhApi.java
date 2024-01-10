@@ -68,7 +68,6 @@ public class OaiPmhApi {
         // Set the service name, used in OaiPmhDispatcher to build the oaiphm endpoint URL
         serviceContext.setService("api/oaipmh");
 
-
         return oaiPmhDispatcher.dispatch(oaiPmhParams, serviceContext);
     }
 
