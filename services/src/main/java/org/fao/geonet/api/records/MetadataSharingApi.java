@@ -280,7 +280,7 @@ public class MetadataSharingApi {
             "Clear first allows to unset all operations first before setting the new ones." +
             "Clear option does not remove reserved groups operation if user is not an " +
             "administrator, a reviewer or the owner of the record.<br/>" +
-            "<a href='http://geonetwork-opensource.org/manuals/trunk/eng/users/user-guide/publishing/managing-privileges.html'>More info</a>")
+            "<a href='https://geonetwork-opensource.org/manuals/trunk/eng/users/user-guide/publishing/managing-privileges.html'>More info</a>")
     @RequestMapping(
         value = "/{metadataUuid}/sharing",
         method = RequestMethod.PUT
