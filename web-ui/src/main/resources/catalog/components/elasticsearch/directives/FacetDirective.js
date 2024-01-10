@@ -417,7 +417,9 @@
   ]);
 
   module.filter("facetSearchUrlBuilder", [
-    function () {
+    "gnGlobalSettings",
+    "$filter",
+    function (gnGlobalSettings, $filter) {
       return function (facetValue, key, response, config, missingValue) {
         var field = (response.meta && response.meta.field) || key,
           filter = config.filters
@@ -426,7 +428,8 @@
           value = response.meta && response.meta.wildcard ? facetValue + "*" : facetValue;
 
         return (
-          '#/search?query_string={"' +
+          $filter("setUrlPlaceholder")(gnGlobalSettings.gnCfg.mods.search.appUrl) +
+          '?query_string={"' +
           field +
           '": {"' +
           (value === missingValue ? "%23MISSING%23" : value) +

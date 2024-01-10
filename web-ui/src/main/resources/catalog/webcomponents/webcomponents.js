@@ -69,8 +69,9 @@ customElements.define(
         JSON.stringify(uiConfig) +
         " || {};\n" +
         "    var cfgModule = angular.module('gn_config', []);\n" +
-        "    cfgModule.config(['gnViewerSettings', 'gnSearchSettings', 'gnGlobalSettings',\n" +
-        "      function (gnViewerSettings, gnSearchSettings, gnGlobalSettings) {\n" +
+        "    cfgModule.config(['gnViewerSettings', 'gnSearchSettings', 'gnGlobalSettings', '$sceDelegateProvider',\n" +
+        "      function (gnViewerSettings, gnSearchSettings, gnGlobalSettings, $sceDelegateProvider) {\n" +
+        "        $sceDelegateProvider.trustedResourceUrlList(['self', '" + baseUrl + "/**']);\n" +
         "        gnGlobalSettings.init(config, '" +
         gnUrl + "', '" + gnUrl +
         "', gnViewerSettings, gnSearchSettings);\n" +
@@ -180,7 +181,7 @@ customElements.define(
             console.warn(e);
             return;
           }
-          url += "?uiconfig=" + uiConfig;
+          url += "?uiconfig=" + encodeURIComponent(uiConfig);
         }
       }
       app.setAttribute("src", url);

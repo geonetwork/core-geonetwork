@@ -1,0 +1,44 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>GeoNetwork as web component / Tests</title>
+  </head>
+  <body style="background-color: lightgrey; padding: 20px; font-family: monospace;">
+    <h1>Full text search box linking to catalogue</h1>
+
+    <gn-app url="http://localhost:8080/geonetwork" portal="srv"
+            config='{
+  "mods": {
+    "footer": {
+      "enabled": false
+    },
+    "header": {
+      "enabled": false
+    },
+    "search": {
+      "appUrl": "http://localhost:8080/geonetwork/{{node}}/{{lang}}/catalog.search?view=default#/search"
+    },
+    "home": {
+      "facetConfig": {
+        "resourceType": {
+          "terms": {
+            "field": "resourceType",
+            "size": 10
+          },
+          "meta": {
+            "decorator": {
+              "type": "icon",
+              "prefix": "fa fa-2x pull-left gn-icon-"
+            }
+          }
+        }
+      },
+      "showMosaic": false,
+      "showMaps": false
+    }
+  }
+}'></gn-app>
+
+    <script src="webcomponents.js"></script>
+  </body>
+</html>

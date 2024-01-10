@@ -275,7 +275,15 @@
       gnMdView.initMdView();
 
       $scope.goToSearch = function (any) {
-        $location.path("/search").search({ any: any });
+        if (gnGlobalSettings.gnCfg.mods.search.appUrl.indexOf("http") === 0) {
+          location.replace(
+            $filter("setUrlPlaceholder")(gnGlobalSettings.gnCfg.mods.search.appUrl) +
+              "?any=" +
+              any
+          );
+        } else {
+          $location.path("/search").search({ any: any });
+        }
       };
       $scope.canEdit = function (record) {
         // TODO: take catalog config for harvested records

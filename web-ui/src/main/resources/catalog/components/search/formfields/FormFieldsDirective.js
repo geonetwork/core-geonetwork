@@ -403,7 +403,7 @@
           templateUrl: function (elem, attrs) {
             return (
               attrs.template ||
-              "../../catalog/components/search/formfields/" + "partials/sortByCombo.html"
+              "../../catalog/components/search/formfields/partials/sortByCombo.html"
             );
           },
           scope: {

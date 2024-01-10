@@ -49,7 +49,7 @@
             class="btn btn-default btn-lg"
             type="button"
             data-ng-disabled="searchInfo.hits.total.value == 0"
-            data-ng-href="#/search?any={{homeAnyField}}"
+            data-ng-href="{{(gnCfg.mods.search.appUrl + '?any=' + homeAnyField) | setUrlPlaceholder}}"
           >
             <i class="fa fa-search"></i>
             <span class="sr-only" data-translate="">search</span>
