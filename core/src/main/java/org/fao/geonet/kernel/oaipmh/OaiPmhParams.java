@@ -102,7 +102,9 @@ public class OaiPmhParams {
         }
 
         if (StringUtils.isNotEmpty(metadataPrefix)) {
-            params.put(OaiPmh.ParamNames.METADATA_PREFIX, metadataPrefix);
+            //--- remove any non letter, number, dot or dash character
+            String processedMetadataPrefix = metadataPrefix.replaceAll("[^a-zA-Z0-9.-]", "");
+            params.put(OaiPmh.ParamNames.METADATA_PREFIX, processedMetadataPrefix);
         }
 
         if (StringUtils.isNotEmpty(identifier)) {
