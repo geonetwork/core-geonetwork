@@ -240,35 +240,38 @@
           "fa-angle-double-left fa-angle-double-right"
         );
       };
-      hotkeys
-        .bindTo($scope)
-        .add({
-          combo: "h",
-          description: $translate.instant("hotkeyHome"),
-          callback: function (event) {
-            $location.path("/home");
-          }
-        })
-        .add({
-          combo: "t",
-          description: $translate.instant("hotkeyFocusToSearch"),
-          callback: function (event) {
-            event.preventDefault();
-            var anyField = $("#gn-any-field");
-            if (anyField) {
-              gnUtilityService.scrollTo();
-              $location.path("/search");
-              anyField.focus();
+
+      if (gnGlobalSettings.gnCfg.mods.global.hotkeys) {
+        hotkeys
+          .bindTo($scope)
+          .add({
+            combo: "h",
+            description: $translate.instant("hotkeyHome"),
+            callback: function (event) {
+              $location.path("/home");
             }
-          }
-        })
-        .add({
-          combo: "m",
-          description: $translate.instant("hotkeyMap"),
-          callback: function (event) {
-            $location.path("/map");
-          }
-        });
+          })
+          .add({
+            combo: "t",
+            description: $translate.instant("hotkeyFocusToSearch"),
+            callback: function (event) {
+              event.preventDefault();
+              var anyField = $("#gn-any-field");
+              if (anyField) {
+                gnUtilityService.scrollTo();
+                $location.path("/search");
+                anyField.focus();
+              }
+            }
+          })
+          .add({
+            combo: "m",
+            description: $translate.instant("hotkeyMap"),
+            callback: function (event) {
+              $location.path("/map");
+            }
+          });
+      }
 
       // TODO: Previous record should be stored on the client side
       $scope.mdView = mdView;
