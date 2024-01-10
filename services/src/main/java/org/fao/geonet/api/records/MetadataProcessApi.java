@@ -84,7 +84,7 @@ public class MetadataProcessApi {
     SettingManager sm;
 
     @io.swagger.v3.oas.annotations.Operation(summary = "Get suggestions", description ="Analyze the record an suggest processes to improve the quality of the record.<br/>"
-        + "<a href='http://geonetwork-opensource.org/manuals/trunk/eng/users/user-guide/workflow/batchupdate-xsl.html'>More info</a>")
+        + "<a href='https://docs.geonetwork-opensource.org/latest/user-guide/workflow/batchupdate-xsl/'>More info</a>")
     @RequestMapping(value = "/{metadataUuid}/processes", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('Editor')")
     @ResponseStatus(HttpStatus.OK)

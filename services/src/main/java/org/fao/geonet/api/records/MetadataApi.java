@@ -367,7 +367,7 @@ public class MetadataApi {
         summary = "Get a metadata record as ZIP",
         description = "Metadata Exchange Format (MEF) is returned. MEF is a ZIP file containing " +
             "the metadata as XML and some others files depending on the version requested. " +
-            "See http://geonetwork-opensource.org/manuals/trunk/eng/users/annexes/mef-format.html.")
+            "See https://docs.geonetwork-opensource.org/latest/annexes/mef-format/.")
     @RequestMapping(value = "/{metadataUuid}/formatters/zip",
         method = RequestMethod.GET,
         consumes = {
@@ -596,7 +596,7 @@ public class MetadataApi {
         summary = "Get record related resources",
         description = "Retrieve related services, datasets, onlines, thumbnails, sources, ... " +
             "to this records.<br/>" +
-            "<a href='http://geonetwork-opensource.org/manuals/trunk/eng/users/user-guide/associating-resources/index.html'>More info</a>")
+            "<a href='https://geonetwork-opensource.org/manuals/trunk/eng/users/user-guide/associating-resources/index.html'>More info</a>")
     @RequestMapping(value = "/{metadataUuid:.+}/related",
         method = RequestMethod.GET,
         produces = {

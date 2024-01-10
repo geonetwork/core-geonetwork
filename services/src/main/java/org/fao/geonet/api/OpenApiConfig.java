@@ -91,7 +91,7 @@ public class OpenApiConfig {
                     )
                     .license(new License()
                         .name("GPL 2.0")
-                        .url("http://www.gnu.org/licenses/old-licenses/gpl-2.0.html")))
+                        .url("https://www.gnu.org/licenses/old-licenses/gpl-2.0.html")))
                 .externalDocs(new ExternalDocumentation()
                     .description("Learn how to access the catalog using the GeoNetwork REST API."));
 
