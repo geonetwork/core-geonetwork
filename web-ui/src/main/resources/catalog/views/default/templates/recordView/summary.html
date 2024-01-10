@@ -44,21 +44,17 @@
     </span>
     <div>
       <h3 data-translate="">resourceVerticalRange</h3>
-      <div
-        class="flex flex-row flex-align-center gn-vertical-range"
-        data-ng-repeat="range in mdView.current.record.resourceVerticalRange"
-      >
-        <div class="width-25">
-          <i class="fa fa-fw fa-chevron-up" />
-        </div>
-        <div class="width-75">
-          <div data-ng-show="range.lte">
-            <dt>{{range.lte}}</dt>
-          </div>
-          <div data-ng-show="range.gte">
-            <dt>{{range.gte}}</dt>
-          </div>
-        </div>
+      <div class="flex flex-col">
+        <p data-ng-repeat="range in mdView.current.record.resourceVerticalRange">
+          <span data-ng-show="range.gte || range.gte===0"> {{range.gte}}m </span>
+          <span
+            class="spacer"
+            data-ng-show="(range.gte || range.gte===0) && (range.lte || range.lte===0)"
+          >
+            <i class="fa fa-long-arrow-right"></i>
+          </span>
+          <span data-ng-show="range.lte || range.lte===0"> {{range.lte}}m </span>
+        </p>
       </div>
     </div>
   </div>
