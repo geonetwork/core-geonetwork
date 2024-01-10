@@ -1927,6 +1927,7 @@
                   params: {}
                 };
                 scope.modelOptions = angular.copy(gnGlobalSettings.modelOptions);
+                scope.selectRecords = [];
               },
               post: function postLink(scope, iElement, iAttrs) {
                 scope.mode = iAttrs["gnLinkToMetadata"];
