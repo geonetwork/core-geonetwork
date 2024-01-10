@@ -181,6 +181,37 @@
                 }
               }
             },
+            info: [
+              {
+                type: "search",
+                title: "lastRecords",
+                active: true,
+                params: {
+                  isTemplate: "n",
+                  sortBy: "createDate",
+                  sortOrder: "desc",
+                  from: 1,
+                  to: 12
+                }
+              },
+              {
+                type: "search",
+                title: "preferredRecords",
+                params: {
+                  isTemplate: "n",
+                  sortBy: "popularity",
+                  sortOrder: "desc",
+                  from: 1,
+                  to: 12
+                }
+              },
+              {
+                type: "featuredUserSearches"
+              },
+              {
+                type: "Comments"
+              }
+            ],
             fluidLayout: true
           },
           search: {

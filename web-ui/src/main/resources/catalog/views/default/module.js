@@ -66,7 +66,7 @@
     }
   ]);
 
-  module.controller("gnsSearchPopularController", [
+  module.controller("gnsHomeSearchController", [
     "$scope",
     "gnSearchSettings",
     function ($scope, gnSearchSettings) {
@@ -75,33 +75,7 @@
         internal: true,
         filters: gnSearchSettings.filters,
         configId: "home",
-        params: {
-          isTemplate: "n",
-          sortBy: "popularity",
-          sortOrder: "desc",
-          from: 1,
-          to: 12
-        }
-      };
-    }
-  ]);
-
-  module.controller("gnsSearchLatestController", [
-    "$scope",
-    "gnSearchSettings",
-    function ($scope, gnSearchSettings) {
-      $scope.searchObj = {
-        permalink: false,
-        internal: true,
-        filters: gnSearchSettings.filters,
-        configId: "home",
-        params: {
-          isTemplate: "n",
-          sortBy: "createDate",
-          sortOrder: "desc",
-          from: 1,
-          to: 12
-        }
+        params: {}
       };
     }
   ]);
@@ -343,17 +317,12 @@
       $scope.toggleListType = function (type) {
         $scope.type = type;
       };
-
-      $scope.infoTabs = {
-        lastRecords: {
-          title: "lastRecords",
-          titleInfo: "",
-          active: true
-        },
-        preferredRecords: {
-          title: "preferredRecords",
-          titleInfo: "",
-          active: false
+      $scope.getActiveInfoTab = function () {
+        for (var i = 0; i < $scope.gnCfg.mods.home.info.length; i++) {
+          var info = $scope.gnCfg.mods.home.info[i];
+          if (info.active) {
+            return info;
+          }
         }
       };
 
