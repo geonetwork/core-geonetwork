@@ -1,7 +1,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>GeoNetwork as web component / Tests</title>
+    <title>Embedding GeoNetwork / Search app</title>
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -12,6 +12,7 @@
   <body style="background-color: lightgrey; padding: 20px">
     <h1>Webcomponent with shadow DOM</h1>
 
+    <i>This page is for testing interactions between Bootstrap 4 and 5 CSS.</i>
     <button
       class="btn btn-primary"
       type="button"
@@ -25,7 +26,13 @@
 
     <div class="collapse" id="collapseExample">
       <div class="card card-body">
-        <gn-app url="http://localhost:8080/geonetwork" portal="srv"></gn-app>
+        <gn-app url="http://localhost:8080/geonetwork" portal="srv"
+                config='{"mods": {
+                  "global": {"hotkeys": false},
+                  "home": {"enabled": false},
+                  "footer": {"enabled": false},
+                  "header": {"enabled": false}
+                  }}'></gn-app>
       </div>
     </div>
 
@@ -35,7 +42,5 @@
       integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8"
       crossorigin="anonymous"
     ></script>
-
-    <em>This page is for testing interactions between Bootstrap 4 and 5 CSS.</em>
   </body>
 </html>

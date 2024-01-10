@@ -1,23 +1,33 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>GeoNetwork as web component / Tests</title>
+    <title>Embedding GeoNetwork opensource in third party apps</title>
+    <link rel="stylesheet" href="../lib/style/bootstrap/dist/css/bootstrap.css"/>
   </head>
   <body style="background-color: lightgrey; padding: 20px">
-    <h1>GeoNetwork app in a WebComponent</h1>
+    <h1>Embedding GeoNetwork opensource in third party apps</h1>
 
-    <ul>
-      <li><a href="test-webcomponent.html">Webcomponent with shadow DOM</a></li>
-      <li><a href="test-webcomponent-home.html">Full text search box</a></li>
-      <li><a href="test-webcomponent-results.html">Simple search results</a></li>
-      <li>
-        <a href="test-webcomponent-iframe.html">Webcomponent with iframe</a>
+    <div class="well">
+      Here are some examples to easily embed GeoNetwork in other HTML pages.
+      Iframe is a standard and easy way to add your catalogue into third party apps.
+      Webcomponent can also be used with some limitations.
+
+      When embedding the application, customize it using the user interface configuration.
+    </div>
+
+    <ul class="list-group">
+      <li class="list-group-item"><a href="test-webcomponent.html">Search app only</a></li>
+      <li class="list-group-item"><a href="test-webcomponent-home.html">Full text search box</a></li>
+      <li class="list-group-item"><a href="test-webcomponent-results.html">Simple search results</a></li>
+      <li class="list-group-item">
+        <a href="test-webcomponent-iframe.html">Search app (as iframe)</a>
       </li>
-      <li>
+      <li class="list-group-item">
         <a href="test-webcomponent-bs5.html"
-          >Webcomponent in a bootstrap 5 page</a
+          >Search app (in a page with bootstrap 5)</a
         >
       </li>
+      <li class="list-group-item"><a href="test-webcomponent-map.html">Map viewer only</a></li>
     </ul>
   </body>
 </html>

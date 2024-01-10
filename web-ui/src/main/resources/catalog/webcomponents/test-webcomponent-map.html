@@ -4,14 +4,13 @@
     <title>Embedding GeoNetwork / Search app</title>
   </head>
   <body style="background-color: lightgrey; padding: 20px; font-family: monospace;">
-    <h1>Search app</h1>
-
-    <i>Webcomponent with shadow DOM</i>
+    <h1>Map viewer only</h1>
 
     <gn-app url="http://localhost:8080/geonetwork" portal="srv"
             config='{"mods": {
                   "global": {"hotkeys": false},
                   "home": {"enabled": false},
+                  "search": {"enabled": false},
                   "footer": {"enabled": false},
                   "header": {"enabled": false}
                   }}'></gn-app>

@@ -1,10 +1,10 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>GeoNetwork as web component / Tests</title>
+    <title>Embedding GeoNetwork / Search box</title>
   </head>
   <body style="background-color: lightgrey; padding: 20px; font-family: monospace;">
-    <h1>Full text search box linking to catalogue</h1>
+    <h1>Full text search box linking to the catalogue</h1>
 
     <gn-app url="http://localhost:8080/geonetwork" portal="srv"
             config='{
@@ -31,7 +31,8 @@
         }
       },
       "showMosaic": false,
-      "showMaps": false
+      "showMaps": false,
+      "info": []
     }
   }
 }'></gn-app>

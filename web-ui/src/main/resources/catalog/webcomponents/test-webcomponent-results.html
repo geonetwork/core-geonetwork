@@ -1,11 +1,12 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8"/>
-  <title>GeoNetwork as web component / Tests</title>
+  <title>Embedding GeoNetwork / Search results</title>
 </head>
 <body style="background-color: lightgrey; padding: 20px; font-family: monospace;">
 <h1>Simple search results</h1>
 
+<h2>All records</h2>
 <gn-app url="http://localhost:8080/geonetwork" portal="srv"
         config='{
   "mods": {
@@ -44,6 +45,7 @@
 due to angularjs limitation but iframe mode can be used in this case.</i>
 <br/>
 
+<h2>All about Africa</h2>
 <gn-app-frame url="http://localhost:8080/geonetwork" portal="srv"
         config='{
   "mods": {
