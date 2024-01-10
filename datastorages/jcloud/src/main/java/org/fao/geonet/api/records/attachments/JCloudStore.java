@@ -30,6 +30,7 @@ import static org.jclouds.blobstore.options.PutOptions.Builder.multipart;
 import jeeves.server.context.ServiceContext;
 
 import org.apache.commons.lang.StringUtils;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.MetadataResource;
