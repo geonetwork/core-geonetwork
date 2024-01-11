@@ -433,7 +433,7 @@
     "associated-parent": "Parent Metadata",
     "associated-service": "Service",
     "associated-dataset": "Dataset",
-    "associated-sources": "Source datasets",
+    "associated-source": "Source datasets",
     "associated-fcats": "Feature catalog",
     "associated-siblings": "Other resources",
     "associated-hasfeaturecats": "Using this feature catalog",

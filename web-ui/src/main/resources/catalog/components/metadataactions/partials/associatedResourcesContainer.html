@@ -21,7 +21,7 @@
       <ul
         data-ng-if="md.related[config.type]"
         class="list-group"
-        data-ng-init="mainType = relatedResourcesConfig.getType(md, config.type);
+        data-ng-init="mainType = relatedResourcesConfig.getType(md, mapUIRelationToApi(config.type));
                   icon = relatedResourcesConfig.getClassIcon(mainType);"
       >
         <li class="list-group-item" data-ng-repeat="record in md.related[config.type]">

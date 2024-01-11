@@ -983,9 +983,7 @@
    *
    */
   module.directive("gnAssociatedResourcesPanel", [
-    "gnCurrentEdit",
-    "gnSchemaManagerService",
-    function (gnCurrentEdit, gnSchemaManagerService) {
+    function () {
       return {
         restrict: "A",
         templateUrl: function (elem, attrs) {
@@ -998,16 +996,7 @@
           md: "=gnAssociatedResourcesPanel",
           mode: "="
         },
-        link: function (scope, element, attrs) {
-          gnSchemaManagerService
-            .getEditorAssociationPanelConfig(
-              gnCurrentEdit.schema,
-              gnCurrentEdit.associatedPanelConfigId
-            )
-            .then(function (r) {
-              scope.relatedConfig = r.config.associatedResourcesTypes;
-            });
-        }
+        link: function (scope, element, attrs) {}
       };
     }
   ]);
@@ -1021,6 +1010,7 @@
     "gnConfigService",
     "gnOnlinesrc",
     "gnCurrentEdit",
+    "gnSchemaManagerService",
     "$injector",
     "$filter",
     function (
@@ -1028,6 +1018,7 @@
       gnConfigService,
       gnOnlinesrc,
       gnCurrentEdit,
+      gnSchemaManagerService,
       $injector,
       $filter
     ) {
@@ -1041,8 +1032,7 @@
         },
         scope: {
           md: "=gnAssociatedResourcesContainer",
-          mode: "=",
-          relatedConfig: "="
+          mode: "="
         },
         link: function (scope, element, attrs, controller) {
           scope.lang = scope.lang || scope.$parent.lang;
@@ -1054,18 +1044,43 @@
             scope.onlinesrcService = $injector.get("gnOnlinesrc");
           }
 
+          // Values for relation types used in the UI (and also to filter some metadata by resource type: dataset / service
+          var UIRelationTypeValues = {
+            dataset: "dataset",
+            service: "service",
+            source: "source",
+            parent: "parent",
+            fcats: "fcats",
+            siblings: "siblings"
+          };
+
+          // Values used for the relation types by the /associated API, that doesn't match with the UI
+          var APIRelationTypeValues = {
+            dataset: "datasets",
+            service: "services",
+            source: "sources",
+            parent: "parent",
+            fcats: "fcats",
+            siblings: "siblings"
+          };
+
+          // A mapper from relation types from the UI to the API values
+          scope.mapUIRelationToApi = function (type) {
+            return APIRelationTypeValues[type];
+          };
+
           scope.getClass = function (type) {
-            if (type === "dataset") {
+            if (type === UIRelationTypeValues.dataset) {
               return "fa gn-icon-dataset";
-            } else if (type === "service") {
+            } else if (type === UIRelationTypeValues.service) {
               return "fa fa-fw fa-cloud";
-            } else if (type === "sources") {
+            } else if (type === UIRelationTypeValues.source) {
               return "fa gn-icon-source";
-            } else if (type === "parent") {
+            } else if (type === UIRelationTypeValues.parent) {
               return "fa gn-icon-series";
-            } else if (type === "fcats") {
+            } else if (type === UIRelationTypeValues.fcats) {
               return "fa fa-table";
-            } else if (type === "siblings") {
+            } else if (type === UIRelationTypeValues.siblings) {
               return "fa fa-sign-out";
             }
 
@@ -1076,40 +1091,55 @@
               return true;
             } else {
               return (
-                type === "datasets" ||
-                type === "services" ||
-                type === "parent" ||
-                type === "sources" ||
-                type === "fcats" ||
-                type === "siblings"
+                type === UIRelationTypeValues.dataset ||
+                type === UIRelationTypeValues.service ||
+                type === UIRelationTypeValues.parent ||
+                type === UIRelationTypeValues.source ||
+                type === UIRelationTypeValues.fcats ||
+                type === UIRelationTypeValues.siblings
               );
             }
           };
 
           scope.remove = function (record, type) {
-            if (type === "datasets") {
+            if (type === UIRelationTypeValues.dataset) {
               scope.onlinesrcService.removeDataset(record);
-            } else if (type === "services") {
+            } else if (type === UIRelationTypeValues.service) {
               scope.onlinesrcService.removeService(record);
-            } else if (type === "parent") {
-              scope.onlinesrcService.removeMdLink("parent", record);
-            } else if (type === "sources") {
-              scope.onlinesrcService.onlinesrcService.removeMdLink("source", record);
-            } else if (type === "fcats") {
+            } else if (type === UIRelationTypeValues.parent) {
+              scope.onlinesrcService.removeMdLink(UIRelationTypeValues.parent, record);
+            } else if (type === UIRelationTypeValues.source) {
+              scope.onlinesrcService.onlinesrcService.removeMdLink(
+                UIRelationTypeValues.source,
+                record
+              );
+            } else if (type === UIRelationTypeValues.fcats) {
               scope.onlinesrcService.removeFeatureCatalog(record);
-            } else if (type === "siblings") {
+            } else if (type === UIRelationTypeValues.siblings) {
               scope.onlinesrcService.removeSibling(record);
             }
           };
 
-          var loadRelations = function () {
-            gnOnlinesrc.getAllResources().then(function (data) {
+          var loadRelations = function (relationTypes) {
+            gnOnlinesrc.getAllResources(relationTypes).then(function (data) {
               var res = gnOnlinesrc.formatResources(
                 data,
                 scope.lang,
                 gnCurrentEdit.mdLanguage
               );
-              scope.relations = res.relations;
+
+              // Change the relation keys from the API response to the UI values
+              scope.relations = _.mapKeys(res.relations, function (value, key) {
+                if (key === APIRelationTypeValues.service) {
+                  return UIRelationTypeValues.service;
+                } else if (key === APIRelationTypeValues.dataset) {
+                  return UIRelationTypeValues.dataset;
+                } else if (key === APIRelationTypeValues.source) {
+                  return UIRelationTypeValues.source;
+                } else {
+                  return key;
+                }
+              });
 
               scope.md.related = {};
 
@@ -1147,7 +1177,32 @@
             });
           };
 
-          loadRelations();
+          gnSchemaManagerService
+            .getEditorAssociationPanelConfig(
+              gnCurrentEdit.schema,
+              gnCurrentEdit.associatedPanelConfigId
+            )
+            .then(function (r) {
+              scope.relatedConfig = r.config.associatedResourcesTypes;
+              var relationTypes = _.map(scope.relatedConfig, "type");
+
+              // Adapt the UI types to the backend types value: services --> service, datasets --> dataset
+              // The UI depends on the values also filter by resource type in
+              // the associated resources dialogs.
+              relationTypes = _.map(relationTypes, function (value) {
+                if (value === UIRelationTypeValues.service) {
+                  return APIRelationTypeValues.service;
+                } else if (value === UIRelationTypeValues.dataset) {
+                  return APIRelationTypeValues.dataset;
+                } else if (value === UIRelationTypeValues.source) {
+                  return APIRelationTypeValues.source;
+                } else {
+                  return value;
+                }
+              });
+
+              loadRelations(relationTypes);
+            });
         }
       };
     }

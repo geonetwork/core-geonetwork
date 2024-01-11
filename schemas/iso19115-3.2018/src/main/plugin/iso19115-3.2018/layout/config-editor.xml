@@ -618,14 +618,14 @@
           class="gn-label-above-input gn-indent-bluescale">
       <sidePanel>
         <directive data-gn-need-help="creating-metadata"/>
-        <directive data-gn-overview-manager=""
-                   data-file-types=".png,.gif,.jpeg,.jpg"/>
+        <!--<directive data-gn-overview-manager=""
+                   data-file-types=".png,.gif,.jpeg,.jpg"/>-->
 
-        <directive data-gn-file-uploader=""
-                   data-type="onlines"/>
+        <!--<directive data-gn-file-uploader=""
+                   data-type="onlines"/>-->
 
-        <directive data-gn-onlinesrc-list=""
-                   data-types="onlinesrc"/>
+        <!--<directive data-gn-onlinesrc-list=""
+                   data-types="onlinesrc"/>-->
 
         <directive data-gn-associated-resources-panel="gnCurrentEdit.metadata" />
 

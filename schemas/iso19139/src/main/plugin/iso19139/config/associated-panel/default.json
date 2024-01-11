@@ -101,7 +101,7 @@
         }
       }
     }, {
-      "type": "sources",
+      "type": "source",
       "label": "linkToSource",
       "config": {
         "sources": {
