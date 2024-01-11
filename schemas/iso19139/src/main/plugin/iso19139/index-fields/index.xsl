@@ -977,7 +977,7 @@
           <xsl:variable name="description"
                         select="(../../gmd:measureDescription/gco:CharacterString)[1]"/>
           <xsl:variable name="measureDate"
-                        select="../../gmd:dateTime/gco:DateTime"/>
+                        select="(../../gmd:dateTime/gco:DateTime)[1]"/>
           <measure type="object">{
             "name": "<xsl:value-of select="util:escapeForJson($name)"/>",
             <xsl:if test="$description != ''">

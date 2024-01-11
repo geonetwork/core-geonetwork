@@ -92,6 +92,7 @@ import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -874,7 +875,7 @@ public class SiteApi {
             )) {
                 for (Path sheet : sheets) {
                     String id = sheet.toString();
-                    if (id != null && id.contains("convert/from") && id.endsWith(".xsl")) {
+                    if (id != null && id.contains("convert" + File.separator + "from") && id.endsWith(".xsl")) {
                         String name = com.google.common.io.Files.getNameWithoutExtension(
                             sheet.getFileName().toString());
                         list.add(IMPORT_STYLESHEETS_SCHEMA_PREFIX + schema + ":convert/" + name);
