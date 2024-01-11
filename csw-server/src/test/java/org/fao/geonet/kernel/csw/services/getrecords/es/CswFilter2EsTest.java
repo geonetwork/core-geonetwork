@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2023 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2024 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -29,10 +29,10 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.fao.geonet.kernel.csw.services.getrecords.FilterParser;
 import org.fao.geonet.kernel.csw.services.getrecords.IFieldMapper;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.geotools.api.filter.Filter;
 import org.geotools.api.filter.capability.FilterCapabilities;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -141,12 +141,11 @@ class CswFilter2EsTest {
         // INPUT:
         final String input =
             "<Filter xmlns=\"http://www.opengis.net/ogc\">\n" //
-            + "    <PropertyIsEqualTo>\n" //
-            + "          <PropertyName>Title</PropertyName>\n" //
-            + "          <Literal>Hydrological</Literal>\n" //
-            + "    </PropertyIsEqualTo>\n" //
-            + "      </Filter>" //
-            + "";
+                + "    <PropertyIsEqualTo>\n" //
+                + "          <PropertyName>Title</PropertyName>\n" //
+                + "          <Literal>Hydrological</Literal>\n" //
+                + "    </PropertyIsEqualTo>\n" //
+                + "      </Filter>";
 
         // EXPECTED:
         final ObjectNode expected = EsJsonHelper.boolbdr(). //
@@ -165,8 +164,7 @@ class CswFilter2EsTest {
                 + "          <PropertyName>OnlineResourceType</PropertyName>\n" //
                 + "          <Literal>OGC:WMS</Literal>\n" //
                 + "    </PropertyIsEqualTo>\n" //
-                + "      </Filter>" //
-                + "";
+                + "      </Filter>";
 
         // EXPECTED:
         final ObjectNode expected = EsJsonHelper.boolbdr(). //
@@ -186,8 +184,7 @@ class CswFilter2EsTest {
                 + "          <PropertyName>AnyText</PropertyName>\n" //
                 + "          <Literal>s\\_rvice\\%</Literal>\n" //
                 + "    </PropertyIsLike>\n" //
-                + "      </Filter>" //
-                + "";
+                + "      </Filter>";
 
         // EXPECTED:
         final ObjectNode expected = EsJsonHelper.boolbdr(). //
@@ -207,8 +204,7 @@ class CswFilter2EsTest {
                 + "          <PropertyName>AnyText</PropertyName>\n" //
                 + "          <Literal>\"service\"</Literal>\n" //
                 + "    </PropertyIsLike>\n" //
-                + "      </Filter>" //
-                + "";
+                + "      </Filter>";
 
         // EXPECTED:
         final ObjectNode expected = EsJsonHelper.boolbdr(). //
@@ -225,8 +221,7 @@ class CswFilter2EsTest {
                 + "          <PropertyName>AnyText</PropertyName>\n" //
                 + "          <Literal>OGC:WMS\\%</Literal>\n" //
                 + "    </PropertyIsLike>\n" //
-                + "      </Filter>" //
-                + "";
+                + "      </Filter>";
 
         // EXPECTED:
         final ObjectNode expected2 = EsJsonHelper.boolbdr(). //
@@ -243,28 +238,27 @@ class CswFilter2EsTest {
         // INPUT:
         final String input =
             "      <Filter xmlns=\"http://www.opengis.net/ogc\">\n" //
-            + "        <And>\n" //
-            + "      <PropertyIsEqualTo>\n" //
-            + "        <PropertyName>Title</PropertyName>\n" //
-            + "            <Literal>Hydrological</Literal>\n" //
-            + "      </PropertyIsEqualTo>\n" //
-            + "      <PropertyIsEqualTo>\n" //
-            + "        <PropertyName>Title</PropertyName>\n" //
-            + "            <Literal>Africa</Literal>\n" //
-            + "      </PropertyIsEqualTo>\n" //
-            + "    </And>\n" //
-            + "      </Filter>\n" //
-            + "";
+                + "        <And>\n" //
+                + "      <PropertyIsEqualTo>\n" //
+                + "        <PropertyName>Title</PropertyName>\n" //
+                + "            <Literal>Hydrological</Literal>\n" //
+                + "      </PropertyIsEqualTo>\n" //
+                + "      <PropertyIsEqualTo>\n" //
+                + "        <PropertyName>Title</PropertyName>\n" //
+                + "            <Literal>Africa</Literal>\n" //
+                + "      </PropertyIsEqualTo>\n" //
+                + "    </And>\n" //
+                + "      </Filter>\n";
 
         // EXPECTED:
         final ObjectNode expected = EsJsonHelper.boolbdr(). //
             must(
-                array(
-                    queryStringPart("Title", "Africa"),
-                    queryStringPart("Title", "Hydrological"))) //
+            array(
+                queryStringPart("Title", "Africa"),
+                queryStringPart("Title", "Hydrological"))) //
             . //
-            filter(queryStringPart()). //
-            bld();
+                filter(queryStringPart()). //
+                bld();
 
         assertFilterEquals(expected, input);
     }
@@ -275,23 +269,22 @@ class CswFilter2EsTest {
         // INPUT:
         final String input = //
             "      <ogc:Filter xmlns:ogc=\"http://www.opengis.net/ogc\">\n" //
-            + "          <ogc:BBOX>\n" //
-            + "            <gml:Envelope xmlns:gml=\"http://www.opengis.net/gml\">\n" //
-            + "              <gml:lowerCorner>-180 -90</gml:lowerCorner>\n" //
-            + "              <gml:upperCorner>180 90</gml:upperCorner>\n" //
-            + "            </gml:Envelope>\n" //
-            + "          </ogc:BBOX>\n" //
-            + "      </ogc:Filter>\n" //
-            + "";
+                + "          <ogc:BBOX>\n" //
+                + "            <gml:Envelope xmlns:gml=\"http://www.opengis.net/gml\">\n" //
+                + "              <gml:lowerCorner>-180 -90</gml:lowerCorner>\n" //
+                + "              <gml:upperCorner>180 90</gml:upperCorner>\n" //
+                + "            </gml:Envelope>\n" //
+                + "          </ogc:BBOX>\n" //
+                + "      </ogc:Filter>\n";
 
         // EXPECTED:
         final ObjectNode expected = boolbdr(). //
             must(array(geoShape("geom", //
-                envelope(-180d, 90d, 180d, -90d), //
-                "intersects"))) //
+            envelope(-180d, 90d, 180d, -90d), //
+            "intersects"))) //
             . //
-            filter(queryStringPart()). //
-            bld();
+                filter(queryStringPart()). //
+                bld();
 
         assertFilterEquals(expected, input);
     }
@@ -307,33 +300,33 @@ class CswFilter2EsTest {
         // INPUT:
         final String input = //
             "      <ogc:Filter xmlns:ogc=\"http://www.opengis.net/ogc\">\n" //
-            + "        <ogc:And>\n" //
-            + "          <ogc:Or>\n" //
-            + "            <ogc:PropertyIsEqualTo matchCase=\"true\">\n" //
-            + "              <ogc:PropertyName>Type</ogc:PropertyName>\n" //
-            + "              <ogc:Literal>data</ogc:Literal>\n" //
-            + "            </ogc:PropertyIsEqualTo>\n" //
-            + "            <ogc:PropertyIsEqualTo matchCase=\"true\">\n" //
-            + "              <ogc:PropertyName>Type</ogc:PropertyName>\n" //
-            + "              <ogc:Literal>dataset</ogc:Literal>\n" //
-            + "            </ogc:PropertyIsEqualTo>\n" //
-            + "            <ogc:PropertyIsEqualTo matchCase=\"true\">\n" //
-            + "              <ogc:PropertyName>Type</ogc:PropertyName>\n" //
-            + "              <ogc:Literal>datasetcollection</ogc:Literal>\n" //
-            + "            </ogc:PropertyIsEqualTo>\n" //
-            + "            <ogc:PropertyIsEqualTo matchCase=\"true\">\n" //
-            + "              <ogc:PropertyName>Type</ogc:PropertyName>\n" //
-            + "              <ogc:Literal>series</ogc:Literal>\n" //
-            + "            </ogc:PropertyIsEqualTo>\n" //
-            + "          </ogc:Or>\n" //
-            + "          <ogc:BBOX>\n" //
-            + "            <gml:Envelope xmlns:gml=\"http://www.opengis.net/gml\">\n" //
-            + "              <gml:lowerCorner>-180 -90</gml:lowerCorner>\n" //
-            + "              <gml:upperCorner>180 90</gml:upperCorner>\n" //
-            + "            </gml:Envelope>\n" //
-            + "          </ogc:BBOX>\n" //
-            + "        </ogc:And>\n" //
-            + "      </ogc:Filter>";
+                + "        <ogc:And>\n" //
+                + "          <ogc:Or>\n" //
+                + "            <ogc:PropertyIsEqualTo matchCase=\"true\">\n" //
+                + "              <ogc:PropertyName>Type</ogc:PropertyName>\n" //
+                + "              <ogc:Literal>data</ogc:Literal>\n" //
+                + "            </ogc:PropertyIsEqualTo>\n" //
+                + "            <ogc:PropertyIsEqualTo matchCase=\"true\">\n" //
+                + "              <ogc:PropertyName>Type</ogc:PropertyName>\n" //
+                + "              <ogc:Literal>dataset</ogc:Literal>\n" //
+                + "            </ogc:PropertyIsEqualTo>\n" //
+                + "            <ogc:PropertyIsEqualTo matchCase=\"true\">\n" //
+                + "              <ogc:PropertyName>Type</ogc:PropertyName>\n" //
+                + "              <ogc:Literal>datasetcollection</ogc:Literal>\n" //
+                + "            </ogc:PropertyIsEqualTo>\n" //
+                + "            <ogc:PropertyIsEqualTo matchCase=\"true\">\n" //
+                + "              <ogc:PropertyName>Type</ogc:PropertyName>\n" //
+                + "              <ogc:Literal>series</ogc:Literal>\n" //
+                + "            </ogc:PropertyIsEqualTo>\n" //
+                + "          </ogc:Or>\n" //
+                + "          <ogc:BBOX>\n" //
+                + "            <gml:Envelope xmlns:gml=\"http://www.opengis.net/gml\">\n" //
+                + "              <gml:lowerCorner>-180 -90</gml:lowerCorner>\n" //
+                + "              <gml:upperCorner>180 90</gml:upperCorner>\n" //
+                + "            </gml:Envelope>\n" //
+                + "          </ogc:BBOX>\n" //
+                + "        </ogc:And>\n" //
+                + "      </ogc:Filter>";
 
         final ObjectNode propertiesPart = boolbdr().should(array( //
                 queryStringPart("Type", "series"), //
@@ -350,10 +343,10 @@ class CswFilter2EsTest {
         // EXPECTED:
         final ObjectNode expected = boolbdr(). //
             must(array(geoShapePart, //
-                propertiesPart)) //
+            propertiesPart)) //
             . //
-            filter(queryStringPart()). //
-            bld();
+                filter(queryStringPart()). //
+                bld();
 
         assertFilterEquals(expected, input);
     }
