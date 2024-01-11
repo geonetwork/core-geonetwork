@@ -30,6 +30,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
@@ -227,14 +228,22 @@ public class EsSearchManager implements ISearchManager {
         } catch (Exception e) {
             LOGGER.error("Indexing stylesheet contains errors: {} \n  Marking the metadata as _indexingError=1 in index", e.getMessage());
             doc.addContent(new Element(INDEXING_ERROR_FIELD).setText("true"));
-            doc.addContent(new Element(INDEXING_ERROR_MSG).setText("GNIDX-XSL||" + e.getMessage()));
+            doc.addContent(createIndexingErrorMsgElement("indexingErrorMsg-indexingStyleSheetError", "error",
+                Map.of("message", e.getMessage())));
             doc.addContent(new Element(IndexFields.DRAFT).setText("n"));
         }
     }
 
     private void addMoreFields(Element doc, Multimap<String, Object> fields) {
-        fields.entries().forEach(e -> doc.addContent(new Element(e.getKey())
-            .setText(String.valueOf(e.getValue()))));
+        ArrayList<String> objectFields = Lists.newArrayList(INDEXING_ERROR_MSG);
+        fields.entries().forEach(e -> {
+            Element newElement = new Element(e.getKey())
+                .setText(String.valueOf(e.getValue()));
+            if(objectFields.contains(e.getKey())) {
+                newElement.setAttribute("type", "object");
+            }
+            doc.addContent(newElement);
+        });
     }
 
     public Element makeField(String name, String value) {
@@ -489,7 +498,7 @@ public class EsSearchManager implements ISearchManager {
                     docWithErrorInfo.put(IndexFields.DRAFT, "n");
                     docWithErrorInfo.put(INDEXING_ERROR_FIELD, true);
                     ArrayNode errors = docWithErrorInfo.putArray(INDEXING_ERROR_MSG);
-                    errors.add(e.getFailureMessage());
+                    errors.add(createIndexingErrorMsgObject(e.getFailureMessage(), "error", Map.of()));
                     // TODO: Report the JSON which was causing the error ?
 
                     LOGGER.error("Document with error #{}: {}.",
@@ -981,5 +990,38 @@ public class EsSearchManager implements ISearchManager {
 
     public boolean isIndexing() {
         return listOfDocumentsToIndex.size() > 0;
+    }
+
+    /**
+     * Make a JSON Object that properly represents an indexingErrorMsg, to be used in the index.
+     *
+     * @param type either 'error' or 'warning'
+     * @param string a string that is translatable (see, e.g., en-search.json)
+     * @param values values that replace the placeholders in the `string` parameter
+     * @return a json object that represents an indexingErrorMsg
+     */
+    public ObjectNode createIndexingErrorMsgObject(String string, String type, Map<String, Object> values) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        ObjectNode indexingErrorMsg = objectMapper.createObjectNode();
+        indexingErrorMsg.put("string", string);
+        indexingErrorMsg.put("type", type);
+        ObjectNode valuesObject = objectMapper.createObjectNode();
+        values.forEach((k,v) -> valuesObject.put(k, String.valueOf(v)));
+        indexingErrorMsg.set("values", valuesObject);
+        return indexingErrorMsg;
+    }
+
+    /**
+     * Create an Element that represents an indexingErrorMsg object, to be used in the index.
+     *
+     * @param type either 'error' or 'warning'
+     * @param string a string that is translatable (see, e.g., en-search.json)
+     * @param values values that replace the placeholders in the `string` parameter
+     * @return an Element that represents an indexingErrorMsg
+     */
+    public Element createIndexingErrorMsgElement(String string, String type, Map<String, Object> values) {
+        return new Element(INDEXING_ERROR_MSG)
+            .setText(createIndexingErrorMsgObject(string, type, values).toString())
+            .setAttribute("type", "object");
     }
 }
