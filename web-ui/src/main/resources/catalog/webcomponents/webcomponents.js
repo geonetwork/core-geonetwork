@@ -1,14 +1,9 @@
 function validURL(str) {
-  var urlPattern = new RegExp(
-    "^(https?:\\/\\/)?" +
-      "((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|" +
-      "((\\d{1,3}\\.){3}\\d{1,3})|localhost)" +
-      "(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*" +
-      "(\\?[;&a-z\\d%_.~+=-]*)?" +
-      "(\\#[-a-z\\d_]*)?$",
-    "i"
-  );
-  return !!urlPattern.test(str);
+  try {
+    return Boolean(new URL(str));
+  } catch(e) {
+    return false;
+  }
 }
 
 var DEFAULT_BASEURL = "http://localhost:8080/geonetwork";
