@@ -880,6 +880,10 @@
             appUrl: "https://secure.geonames.org/searchJSON"
           },
           recordview: {
+            // To use to redirect to another application for rendering record
+            // eg. when embedding simple search results using a web component
+            // and redirecting to the catalogue to view metadata record
+            // appUrl: "https://sextant.ifremer.fr/Donnees/Catalogue",
             isSocialbarEnabled: true,
             showStatusWatermarkFor: "",
             showStatusTopBarFor: "",
