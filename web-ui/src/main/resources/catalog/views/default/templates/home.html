@@ -1,4 +1,7 @@
-<div class="row gn-row-main hidden-print">
+<div
+  class="row gn-row-main hidden-print"
+  data-ng-hide="gnCfg.mods.home.showSearch === false"
+>
   <div data-ng-class="fluidLayout ? 'container-fluid' : 'container'">
     <div class="col-sm-offset-6" data-gn-index-error-panel=""></div>
 
@@ -112,7 +115,7 @@
 >
   <div data-ng-class="fluidLayout ? 'container-fluid' : 'container'">
     <div data-ng-show="homeFacet.list.length > 0">
-      <div class="row">
+      <div class="row" data-ng-show="homeFacet.list.length > 1">
         <h1 class="col-md-12">
           <span data-translate="">browseBy</span>
         </h1>

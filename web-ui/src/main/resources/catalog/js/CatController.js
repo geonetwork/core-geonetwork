@@ -128,6 +128,7 @@
           home: {
             enabled: true,
             appUrl: "../../{{node}}/{{lang}}/catalog.search#/home",
+            showSearch: true,
             showSocialBarInFooter: true,
             showMosaic: true,
             showMaps: true,
