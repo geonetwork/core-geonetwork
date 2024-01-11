@@ -38,6 +38,7 @@ import com.jayway.jsonpath.JsonPath;
 import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -301,10 +302,10 @@ public class EsHTTPProxy {
         HttpServletResponse response,
         @RequestBody
         @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "JSON request based on Elasticsearch API.",
-            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, examples = {
+            content = @Content(examples = {
                 @ExampleObject(value = "{\"query\":{\"match\":{\"_id\":\"catalogue_uuid\"}}}")
             }))
-        Map<String, Object> body) throws Exception {
+        String body) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
         call(context, httpSession, request, response, SEARCH_ENDPOINT, body, bucket, relatedTypes);
     }
@@ -339,10 +340,10 @@ public class EsHTTPProxy {
         HttpServletResponse response,
         @RequestBody
         @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "JSON request based on Elasticsearch API.",
-            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, examples = {
+            content = @Content(examples = {
             @ExampleObject(value = "{\"query\":{\"match\":{\"_id\":\"catalogue_uuid\"}}}")
         }))
-        Map<String, Object> body) throws Exception {
+        String body) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
         call(context, httpSession, request, response, MULTISEARCH_ENDPOINT, body, bucket, relatedTypes);
     }
@@ -380,10 +381,10 @@ public class EsHTTPProxy {
         HttpServletResponse response,
         @RequestBody
         @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "JSON request based on Elasticsearch API.",
-            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, examples = {
+            content = @Content(examples = {
                 @ExampleObject(value = "{\"query\":{\"match\":{\"_id\":\"catalogue_uuid\"}}}")
             }))
-        Map<String, Object> body) throws Exception {
+        String body) throws Exception {
 
         ServiceContext context = ApiUtils.createServiceContext(request);
         call(context, httpSession, request, response, endPoint, body, bucket, null);
@@ -391,22 +392,20 @@ public class EsHTTPProxy {
 
     private void call(ServiceContext context, HttpSession httpSession, HttpServletRequest request,
                      HttpServletResponse response,
-                     String endPoint, Map<String, Object> body,
+                     String endPoint, String body,
                      String selectionBucket,
                      RelatedItemType[] relatedTypes) throws Exception {
         final String url = client.getServerUrl() + "/" + defaultIndex + "/" + endPoint + "?";
         // Make query on multiple indices
 //        final String url = client.getServerUrl() + "/" + defaultIndex + ",gn-features/" + endPoint + "?";
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        String requestBodyString = objectMapper.writeValueAsString(body);
-
         if (SEARCH_ENDPOINT.equals(endPoint) || MULTISEARCH_ENDPOINT.equals(endPoint)) {
             UserSession session = context.getUserSession();
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode nodeQuery = objectMapper.readTree(body);
 
             // multisearch support
-            final MappingIterator<Object> mappingIterator = objectMapper.readerFor(JsonNode.class).readValues(requestBodyString);
-            StringBuffer requestBodyBuffer = new StringBuffer();
+            final MappingIterator<Object> mappingIterator = objectMapper.readerFor(JsonNode.class).readValues(body);
+            StringBuffer requestBody = new StringBuffer();
             while (mappingIterator.hasNextValue()) {
                 JsonNode node = (JsonNode) mappingIterator.nextValue();
                 final JsonNode indexNode = node.get("index");
@@ -434,13 +433,13 @@ public class EsHTTPProxy {
                         }
                     }
                 }
-                requestBodyBuffer.append(node.toString()).append(System.lineSeparator());
+                requestBody.append(node.toString()).append(System.lineSeparator());
             }
             handleRequest(context, httpSession, request, response, url, endPoint,
-                requestBodyBuffer.toString(), true, selectionBucket, relatedTypes);
+                requestBody.toString(), true, selectionBucket, relatedTypes);
         } else {
             handleRequest(context, httpSession, request, response, url, endPoint,
-                requestBodyString, true, selectionBucket, relatedTypes);
+                body, true, selectionBucket, relatedTypes);
         }
     }
 
