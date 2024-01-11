@@ -301,12 +301,9 @@ public class EsHTTPProxy {
         HttpServletResponse response,
         @RequestBody
         @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "JSON request based on Elasticsearch API.",
-            content = @Content(
-                mediaType = MediaType.APPLICATION_JSON_VALUE,
-                schema = @Schema(
-                    type = "object",
-                    additionalProperties = Schema.AdditionalPropertiesValue.TRUE,
-                    example = "{\"query\":{\"match\":{\"_id\":\"catalogue_uuid\"}}}")))
+            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, examples = {
+                @ExampleObject(value = "{\"query\":{\"match\":{\"_id\":\"catalogue_uuid\"}}}")
+            }))
         Map<String, Object> body) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
         call(context, httpSession, request, response, SEARCH_ENDPOINT, body, bucket, relatedTypes);
@@ -342,12 +339,9 @@ public class EsHTTPProxy {
         HttpServletResponse response,
         @RequestBody
         @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "JSON request based on Elasticsearch API.",
-            content = @Content(
-                mediaType = MediaType.APPLICATION_JSON_VALUE,
-                schema = @Schema(
-                    type = "object",
-                    additionalProperties = Schema.AdditionalPropertiesValue.TRUE,
-                    example = "{\"query\":{\"match\":{\"_id\":\"catalogue_uuid\"}}}")))
+            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, examples = {
+            @ExampleObject(value = "{\"query\":{\"match\":{\"_id\":\"catalogue_uuid\"}}}")
+        }))
         Map<String, Object> body) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
         call(context, httpSession, request, response, MULTISEARCH_ENDPOINT, body, bucket, relatedTypes);
@@ -386,12 +380,9 @@ public class EsHTTPProxy {
         HttpServletResponse response,
         @RequestBody
         @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "JSON request based on Elasticsearch API.",
-            content = @Content(
-                mediaType = MediaType.APPLICATION_JSON_VALUE,
-                schema = @Schema(
-                    type = "object",
-                    additionalProperties = Schema.AdditionalPropertiesValue.TRUE,
-                    example = "{\"query\":{\"match\":{\"_id\":\"catalogue_uuid\"}}}")))
+            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, examples = {
+                @ExampleObject(value = "{\"query\":{\"match\":{\"_id\":\"catalogue_uuid\"}}}")
+            }))
         Map<String, Object> body) throws Exception {
 
         ServiceContext context = ApiUtils.createServiceContext(request);
