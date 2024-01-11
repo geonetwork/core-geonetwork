@@ -1046,6 +1046,7 @@
         },
         link: function (scope, element, attrs, controller) {
           scope.lang = scope.lang || scope.$parent.lang;
+          scope.gnCurrentEdit = gnCurrentEdit;
           scope.relations = [];
           scope.relatedConfigUI = [];
           scope.relatedResourcesConfig = gnRelatedResources;
@@ -1119,7 +1120,7 @@
 
                 // The configuration has an expression to evaluate if it should be processed
                 if (config.condition) {
-                  processConfig = eval(config.condition);
+                  processConfig = scope.$eval(config.condition);
                 }
 
                 if (processConfig) {
