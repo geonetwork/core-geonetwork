@@ -24,6 +24,8 @@
 package org.fao.geonet.api.records;
 
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -137,9 +139,6 @@ public class MetadataApi {
             "When requesting HTML, the default formatter is used.")
     @RequestMapping(value = "/{metadataUuid:.+}",
         method = RequestMethod.GET,
-        consumes = {
-            MediaType.ALL_VALUE
-        },
         produces = {
             MediaType.TEXT_HTML_VALUE,
             MediaType.APPLICATION_XML_VALUE,
@@ -152,9 +151,20 @@ public class MetadataApi {
             MediaType.ALL_VALUE
         })
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Return the record."),
-        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW),
-        @ApiResponse(responseCode = "404", description = ApiParams.API_RESPONSE_RESOURCE_NOT_FOUND)
+        @ApiResponse(responseCode = "200", description = "Return the record.",
+            content = @Content(schema = @Schema(type = "string", format = "binary"))),
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW,
+            content = {
+                @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(type = "string")),
+                @Content(mediaType = MediaType.APPLICATION_XML_VALUE, schema = @Schema(type = "string")),
+                @Content(mediaType = MediaType.APPLICATION_XHTML_XML_VALUE, schema = @Schema(type = "string"))
+            }),
+        @ApiResponse(responseCode = "404", description = ApiParams.API_RESPONSE_RESOURCE_NOT_FOUND,
+            content = {
+                @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(type = "string")),
+                @Content(mediaType = MediaType.APPLICATION_XML_VALUE, schema = @Schema(type = "string")),
+                @Content(mediaType = MediaType.APPLICATION_XHTML_XML_VALUE, schema = @Schema(type = "string"))
+            })
     })
     public String getRecord(
         @Parameter(description = API_PARAM_RECORD_UUID,
@@ -188,9 +198,10 @@ public class MetadataApi {
             || accept.contains(MediaType.APPLICATION_XHTML_XML_VALUE)
             || accept.contains("application/pdf")) {
             return "forward:" + (metadataUuid + "/formatters/" + defaultFormatter);
-        } else if (accept.contains(MediaType.APPLICATION_XML_VALUE)
-            || accept.contains(MediaType.APPLICATION_JSON_VALUE)) {
+        } else if (accept.contains(MediaType.APPLICATION_XML_VALUE)) {
             return "forward:" + (metadataUuid + "/formatters/xml");
+        } else if (accept.contains(MediaType.APPLICATION_JSON_VALUE)) {
+            return "forward:" + (metadataUuid + "/formatters/json");
         } else if (accept.contains("application/zip")
             || accept.contains(MEF_V1_ACCEPT_TYPE)
             || accept.contains(MEF_V2_ACCEPT_TYPE)) {
@@ -236,25 +247,18 @@ public class MetadataApi {
     }
 
 
-    @io.swagger.v3.oas.annotations.Operation(summary = "Get a metadata record as XML or JSON",
-        description = "")
-    @RequestMapping(value =
-        {
-            "/{metadataUuid}/formatters/xml",
-            "/{metadataUuid}/formatters/json"
-        },
+    @io.swagger.v3.oas.annotations.Operation(summary = "Get a metadata record as JSON")
+    @RequestMapping(value = "/{metadataUuid}/formatters/json",
         method = RequestMethod.GET,
-        produces = {
-            MediaType.APPLICATION_XML_VALUE,
-            MediaType.APPLICATION_JSON_VALUE
-        })
+        produces = MediaType.APPLICATION_JSON_VALUE
+        )
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Return the record."),
+        @ApiResponse(responseCode = "200", description = "Return the record.",
+            content = @Content(schema = @Schema(type = "string", format = "binary"))),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)
     })
-    public
     @ResponseBody
-    Object getRecordAs(
+    public Object getRecordAsJson(
         @Parameter(
             description = API_PARAM_RECORD_UUID,
             required = true)
@@ -281,13 +285,88 @@ public class MetadataApi {
             required = false)
         @RequestParam(required = false, defaultValue = "true")
         boolean approved,
-        @RequestHeader(
-            value = HttpHeaders.ACCEPT,
-            defaultValue = MediaType.APPLICATION_XML_VALUE
-        )
-        String acceptHeader,
         HttpServletResponse response,
         HttpServletRequest request
+    )
+        throws Exception {
+        return getRecordAs(metadataUuid, addSchemaLocation, increasePopularity, withInfo, attachment, approved, response, request, MediaType.APPLICATION_JSON);
+    }
+
+    @io.swagger.v3.oas.annotations.Operation(summary = "Get a metadata record as XML")
+    @RequestMapping(value = "/{metadataUuid}/formatters/xml",
+        method = RequestMethod.GET,
+        produces = MediaType.APPLICATION_XML_VALUE
+        )
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Return the record.",
+            content = @Content(schema = @Schema(type = "string", format = "binary"))),
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)
+    })
+    @ResponseBody
+    public Object getRecordAsXml(
+        @Parameter(
+            description = API_PARAM_RECORD_UUID,
+            required = true)
+        @PathVariable
+        String metadataUuid,
+        @Parameter(description = "Add XSD schema location based on standard configuration " +
+            "(see schema-ident.xml).",
+            required = false)
+        @RequestParam(required = false, defaultValue = "true")
+        boolean addSchemaLocation,
+        @Parameter(description = "Increase record popularity",
+            required = false)
+        @RequestParam(required = false, defaultValue = "true")
+        boolean increasePopularity,
+        @Parameter(description = "Add geonet:info details",
+            required = false)
+        @RequestParam(required = false, defaultValue = "false")
+        boolean withInfo,
+        @Parameter(description = "Download as a file",
+            required = false)
+        @RequestParam(required = false, defaultValue = "false")
+        boolean attachment,
+        @Parameter(description = "Download the approved version",
+            required = false)
+        @RequestParam(required = false, defaultValue = "true")
+        boolean approved,
+        HttpServletResponse response,
+        HttpServletRequest request
+    )
+        throws Exception {
+        return getRecordAs(metadataUuid, addSchemaLocation, increasePopularity, withInfo, attachment, approved, response, request, MediaType.APPLICATION_XML);
+    }
+
+    /**
+     * Get records based on media type. Supports xml or json
+     * @return It will default to xml if the media type is not known.
+     */
+
+    /**
+     * Get records based on media type.
+     *
+     * @param metadataUuid Record UUID.
+     * @param addSchemaLocation Add XSD schema location based on standard configuration (see schema-ident.xml).
+     * @param increasePopularity Increase record popularity
+     * @param withInfo Add geonet:info details
+     * @param attachment Download as a file
+     * @param approved Download the approved version
+     * @param response object
+     * @param request object
+     * @param mediaType Supports xml or json - default to xml if the media type is not known.
+     * @return It will the object
+     * @throws Exception if record not found of permissions denied.
+     */
+   private  Object getRecordAs(
+        String metadataUuid,
+        boolean addSchemaLocation,
+        boolean increasePopularity,
+        boolean withInfo,
+        boolean attachment,
+        boolean approved,
+        HttpServletResponse response,
+        HttpServletRequest request,
+        MediaType mediaType
     )
         throws Exception {
         AbstractMetadata metadata;
@@ -352,7 +431,7 @@ public class MetadataApi {
             }
         }
 
-        boolean isJson = acceptHeader.contains(MediaType.APPLICATION_JSON_VALUE);
+        boolean isJson = mediaType.equals(MediaType.APPLICATION_JSON);
 
         String mode = (attachment) ? "attachment" : "inline";
         response.setHeader("Content-Disposition", String.format(
