@@ -189,6 +189,7 @@
             "../../catalog/components/edit/onlinesrc/" +
             "partials/remote-record-selector.html",
           link: function (scope, element, attrs) {
+            scope.multipleSelection = attrs.multiple === "true";
             scope.allowRemoteRecordLink = false;
             if (gnGlobalSettings.gnCfg.mods.editor.allowRemoteRecordLink === false) {
               return;
@@ -302,9 +303,6 @@
                         scope.isRemoteRecordPropertiesExtracted = getProperties(
                           response.data
                         );
-                        if (scope.isRemoteRecordPropertiesExtracted) {
-                          scope.updateSelection();
-                        }
                       }
                     },
                     function (response) {
@@ -314,9 +312,18 @@
               }
             };
 
+            scope.updateSelectionAndTriggerSearch = function () {
+              // Ignore in multiple selection mode
+              if (scope.multipleSelection) return;
+
+              scope.updateSelection();
+              scope.triggerSearch();
+            };
             scope.updateSelection = function () {
               if (scope.selectionList) {
-                scope.selectionList.length = 0;
+                if (!scope.multipleSelection) {
+                  scope.selectionList.length = 0;
+                }
                 scope.selectionList.push(scope.remoteRecord);
               } else if (angular.isFunction(scope.addToSelection)) {
                 // sibling mode
@@ -327,6 +334,10 @@
                   scope.config.initiativeType
                 );
               }
+
+              if (scope.multipleSelection) {
+                scope.resetLink(true);
+              }
             };
 
             scope.resetLink = function (allProperties) {
@@ -334,10 +345,20 @@
                 ? scope.stateObj.selectRecords
                 : scope.selectRecords;
               scope.isRemoteRecordUrlOk = true;
-              scope.remoteRecord.title = "";
-              scope.remoteRecord.uuid = "";
               if (allProperties) {
-                scope.remoteRecord.remoteUrl = "";
+                if (scope.multipleSelection) {
+                  // Create a new object to support multiple remote links in the selection list
+                  scope.remoteRecord = {
+                    remoteUrl: "",
+                    title: "",
+                    uuid: ""
+                  };
+                } else {
+                  scope.remoteRecord.remoteUrl = "";
+                }
+              } else {
+                scope.remoteRecord.title = "";
+                scope.remoteRecord.uuid = "";
               }
               clearSelection();
             };

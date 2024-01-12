@@ -31,7 +31,7 @@
   <div class="col-md-offset-2 list-group" data-ng-if="remoteRecord.uuid">
     <li
       class="list-group-item"
-      data-ng-click="updateSelection();triggerSearch();"
+      data-ng-click="updateSelectionAndTriggerSearch()"
       data-ng-class="{'active' : selectionList[0].uuid === remoteRecord.uuid}"
     >
       <input
@@ -64,4 +64,14 @@
       {{remoteRecord.remoteUrl}}
     </a>
   </div>
+
+  <button
+    type="button"
+    class="btn btn-default col-md-offset-2"
+    data-ng-click="updateSelection();triggerSearch();"
+    data-ng-if="multipleSelection && remoteRecord.uuid"
+    data-translate=""
+  >
+    add
+  </button>
 </div>

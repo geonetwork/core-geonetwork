@@ -65,7 +65,7 @@
               "isTemplate": "n"
             }
           },
-          "remoteurl": {"multiple": true}
+          "remoteurl": {"multiple": false}
         }
       }
     }, {
@@ -81,7 +81,7 @@
                 "isTemplate": "n"
               }
             },
-            "remoteurl": {"multiple": true}
+            "remoteurl": {"multiple": false}
           }
         }
     }, {
@@ -97,7 +97,7 @@
               "isTemplate": "n"
             }
           },
-          "remoteurl": {"multiple": true}
+          "remoteurl": {"multiple": false}
         }
       }
     }, {
@@ -112,7 +112,7 @@
               "isTemplate": "n"
             }
           },
-          "remoteurl": {"multiple": true}
+          "remoteurl": {"multiple": false}
         }
       }
     }, {
@@ -127,7 +127,7 @@
               "isTemplate": "n"
             }
           },
-          "remoteurl": {"multiple": true}
+          "remoteurl": {"multiple": false}
         }
       }
     }, {
