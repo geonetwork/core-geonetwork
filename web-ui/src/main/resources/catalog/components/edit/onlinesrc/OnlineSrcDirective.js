@@ -2082,32 +2082,6 @@
                  * Register a method on popup open to reset
                  * the search form and trigger a search.
                  */
-                // TODO: Remove this register, added for compatibility with data-gn-onlinesrc-list
-                gnOnlinesrc.register("siblings", function (config) {
-                  if (config && !angular.isObject(config)) {
-                    config = angular.fromJson(config);
-                  }
-
-                  scope.config = {
-                    associationTypeForced: angular.isDefined(
-                      config && config.fields && config.fields.associationType
-                    ),
-                    associationType:
-                      (config && config.fields && config.fields.associationType) || null,
-                    initiativeTypeForced: angular.isDefined(
-                      config && config.fields && config.fields.initiativeType
-                    ),
-                    initiativeType:
-                      (config && config.fields && config.fields.initiativeType) || null,
-                    sources: config && config.sources
-                  };
-
-                  $(scope.popupid).modal("show");
-
-                  scope.$broadcast("resetSearch");
-                  scope.selection = [];
-                });
-
                 gnOnlinesrc.register("siblings", function (config) {
                   if (config && !angular.isObject(config)) {
                     config = angular.fromJson(config);

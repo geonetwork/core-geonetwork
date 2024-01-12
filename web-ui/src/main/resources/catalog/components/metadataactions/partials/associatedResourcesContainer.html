@@ -19,12 +19,12 @@
       </h2>
 
       <ul
-        data-ng-if="md.related[config.type]"
+        data-ng-if="config.relations.length > 0"
         class="list-group"
         data-ng-init="mainType = relatedResourcesConfig.getType(md, mapUIRelationToApi(config.type));
                   icon = relatedResourcesConfig.getClassIcon(mainType);"
       >
-        <li class="list-group-item" data-ng-repeat="record in md.related[config.type]">
+        <li class="list-group-item" data-ng-repeat="record in config.relations">
           <div class="row">
             <div class="col-md-11">
               <a
