@@ -24,6 +24,7 @@
 package org.fao.geonet.api.registries.vocabularies;
 
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -634,7 +635,8 @@ public class KeywordsApi {
             MediaType.TEXT_XML_VALUE
         })
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Thesaurus in SKOS format."),
+        @ApiResponse(responseCode = "200", description = "Thesaurus in SKOS format.",
+        content = @Content(schema = @io.swagger.v3.oas.annotations.media.Schema(type = "string", format = "binary"))),
         @ApiResponse(responseCode = "404", description = ApiParams.API_RESPONSE_RESOURCE_NOT_FOUND)
     })
     @ResponseBody
