@@ -44,9 +44,6 @@ jobs:
     - name: Remove SNAPSHOT jars from repository
       run: |
         find ~/.m2/repository -name "*SNAPSHOT*" -type d | xargs rm -rf {}
-    - name: Remove Schema 3.8 jars from repository
-      run: |
-        find ~/.m2/repository -name "*3.8*" -type d | xargs rm -rf {}
 
   QA:
     runs-on: ubuntu-22.04
@@ -74,6 +71,3 @@ jobs:
     - name: Remove SNAPSHOT jars from repository
       run: |
         find ~/.m2/repository -name "*SNAPSHOT*" -type d | xargs rm -rf {}
-    - name: Remove Schema 3.8 jars from repository
-      run: |
-        find ~/.m2/repository -name "*3.8*" -type d | xargs rm -rf {}
