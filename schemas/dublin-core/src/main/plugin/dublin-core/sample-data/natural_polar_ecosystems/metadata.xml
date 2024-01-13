@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<simpledc xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <dc:title>Natural polar ecosystems</dc:title>
+  <dc:creator>GeoNetwork test user</dc:creator>
+  <dc:subject>Antarctic ecosystem</dc:subject>
+  <dc:subject>Arctic ecosystem</dc:subject>
+  <dc:subject>polar ecosystem</dc:subject>
+  <dc:description>A harmonised database of natural ecosystems in the Circumpolar Arctic, based on published vegetation maps. </dc:description>
+  <dc:publisher>GeoNetwork test centre</dc:publisher>
+  <dc:contributor>Unknown</dc:contributor>
+  <dc:date>2000</dc:date>
+  <dc:type>Maps and graphics</dc:type>
+  <dc:format>Web page</dc:format>
+  <dc:identifier>01f8da31-10d7-11da-b569-000f1f1a7b03</dc:identifier>
+  <dc:source>Compiled from published vegetation maps of the 8 circumpolar countries.</dc:source>
+  <dc:language>en</dc:language>
+  <dc:relation>Unknown</dc:relation>
+  <dc:coverage>North 90, South -90, East 180, West -180.  (Global)</dc:coverage>
+  <dc:rights>Access constraints: None.  Usage constraints: No restrictions</dc:rights>
+</simpledc>
