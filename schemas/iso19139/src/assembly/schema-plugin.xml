@@ -11,6 +11,17 @@
       <directory>src/main/plugin/</directory>
       <outputDirectory></outputDirectory>
       <useDefaultExcludes>true</useDefaultExcludes>
+      <excludes>
+        <exclude>iso19139/sample-data/**</exclude>
+      </excludes>
+    </fileSet>
+    <fileSet>
+      <directory>target/sample-data</directory>
+      <outputDirectory>iso19139/sample-data</outputDirectory>
+      <useDefaultExcludes>true</useDefaultExcludes>
+      <includes>
+        <include>*.mef</include>
+      </includes>
     </fileSet>
   </fileSets>
 </assembly>
