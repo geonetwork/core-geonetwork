@@ -360,7 +360,7 @@ public class EsWFSFeatureIndexer {
                                                 featurePointer);
                                             LOGGER.warn(msg);
                                             report.put("error_ss", msg);
-                                            break;
+                                            continue;
                                         }
                                     }
 
