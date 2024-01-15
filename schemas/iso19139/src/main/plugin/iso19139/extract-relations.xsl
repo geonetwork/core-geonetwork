@@ -98,9 +98,9 @@
       </xsl:call-template>
     </xsl:variable>
 
-    <xsl:if test="count(*/descendant::*[name(.) = 'gmd:graphicOverview']/*) > 0">
+    <xsl:if test="count(*//gmd:graphicOverview) > 0">
       <thumbnails>
-        <xsl:for-each select="*/descendant::*[name(.) = 'gmd:graphicOverview']">
+        <xsl:for-each select="*//gmd:graphicOverview">
           <item>
             <id>
               <xsl:value-of select="gmd:MD_BrowseGraphic/gmd:fileName/gco:CharacterString"/>
@@ -109,7 +109,7 @@
               <xsl:value-of select="position()"/>
             </idx>
             <hash>
-              <xsl:value-of select="util:md5Hex(exslt:node-set(.))"/>
+              <xsl:value-of select="util:md5Hex(string(exslt:node-set(.)))"/>
             </hash>
             <url>
               <xsl:apply-templates mode="get-iso19139-localized-string"
@@ -125,9 +125,9 @@
       </thumbnails>
     </xsl:if>
 
-    <xsl:if test="count(*/descendant::*[name(.) = 'gmd:onLine']/*[gmd:linkage/gmd:URL!='']) > 0">
+    <xsl:if test="count(*//gmd:MD_DigitalTransferOptions/gmd:onLine[gmd:CI_OnlineResource[gmd:linkage/gmd:URL!='']]) > 0">
       <onlines>
-        <xsl:for-each select="*/descendant::*[name(.) = 'gmd:onLine']">
+        <xsl:for-each select="*//gmd:MD_DigitalTransferOptions/gmd:onLine">
           <xsl:if test="gmd:CI_OnlineResource[gmd:linkage/gmd:URL!='']">
             <item>
               <xsl:variable name="langCode">
@@ -141,7 +141,7 @@
                 <xsl:value-of select="position()"/>
               </idx>
               <hash>
-                <xsl:value-of select="util:md5Hex(exslt:node-set(.))"/>
+                <xsl:value-of select="util:md5Hex(string(exslt:node-set(.)))"/>
               </hash>
               <title>
                 <xsl:apply-templates mode="get-iso19139-localized-string"
