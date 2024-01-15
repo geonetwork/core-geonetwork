@@ -709,7 +709,7 @@
           </validationProperties>
           <validationShouldFailIfNoMatch>false</validationShouldFailIfNoMatch>
         </configuration>
-	    </plugin>
+      </plugin>
       <plugin>
         <artifactId>maven-clean-plugin</artifactId>
         <configuration>
