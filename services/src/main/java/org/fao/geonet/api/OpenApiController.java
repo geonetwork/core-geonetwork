@@ -98,6 +98,9 @@ public class OpenApiController extends AbstractOpenApiResource {
         springDocConfigProperties.setWriterWithOrderByKeys(true);
         springDocConfigProperties.setWriterWithDefaultPrettyPrinter(true);
 
+        // remove default response
+        springDocConfigProperties.setOverrideWithGenericResponse(false);
+
         this.requestMappingHandlerMapping = requestMappingHandlerMapping;
         this.servletContextProvider = servletContextProvider;
         this.springSecurityOAuth2Provider = springSecurityOAuth2Provider;
