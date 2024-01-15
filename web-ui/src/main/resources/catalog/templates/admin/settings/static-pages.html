@@ -62,7 +62,7 @@
             <button
               type="button"
               class="btn btn-primary"
-              data-ng-disabled="!gnStaticPageEdit.$valid && !gnStaticPageEdit.dirty"
+              data-ng-disabled="!gnStaticPageEdit.$valid || !gnStaticPageEdit.$dirty"
               data-gn-click-and-spin="saveStaticPage('#gn-static-page-edit')"
             >
               <i class="fa fa-save"></i>&nbsp;
@@ -140,6 +140,23 @@
                 required=""
                 data-ng-model="staticPageSelected.label"
               />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="control-label col-sm-3" data-translate="">pageIcon</label>
+
+            <div class="col-sm-9">
+              <input
+                type="text"
+                name="label"
+                class="form-control"
+                data-ng-model="staticPageSelected.icon"
+              />
+            </div>
+
+            <div class="col-sm-9 col-sm-offset-3">
+              <p class="help-block ng-scope" data-translate="">pageIcon-help</p>
             </div>
           </div>
 

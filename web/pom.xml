@@ -668,7 +668,6 @@
             <includeOnlyProperty>^git.tags$</includeOnlyProperty>
             <includeOnlyProperty>^git.branch$</includeOnlyProperty>
             <includeOnlyProperty>^git.commit.id$</includeOnlyProperty>
-            <includeOnlyProperty>^git.commit.id.describe.*$</includeOnlyProperty>
             <includeOnlyProperty>^git.build.time$</includeOnlyProperty>
           </includeOnlyProperties>
           <replacementProperties>

@@ -1516,12 +1516,18 @@
        * allow only host registered in metadata link table
     -->
     <proxy.securityMode>DB_LINK_CHECK</proxy.securityMode>
+    <!-- Hosts to exclude from http proxy access: typically localhost, intranet resources -->
+    <proxy.excludeHosts>^(localhost|127\..*|0\..*|255\.255\.255\.255|.*\.local|.*\.localhost|0:0:0:0:0:0:1|::1)$</proxy.excludeHosts>
+
+    <!-- Additional ports (separated by | char) allowed to be access through the http proxy. 80 and 443 are always allowed -->
+    <proxy.allowPorts></proxy.allowPorts>
+    <!--<proxy.allowPorts>8443|8080</proxy.allowPorts>-->
 
     <!-- Jetty plugin port configuration -->
     <jetty.port>8080</jetty.port>
     <jetty.stop.port>8090</jetty.stop.port>
 
-    <es.version>7.15.1</es.version>
+    <es.version>7.17.15</es.version>
     <es.platform>linux-x86_64</es.platform>
     <es.installer.extension>tar.gz</es.installer.extension>
     <es.protocol>http</es.protocol>
@@ -1579,7 +1585,7 @@
      request the list of hosts (but JPA cache db queries). -->
     <cors.allowedHosts>*</cors.allowedHosts>
 
-    <jetty.version>9.4.52.v20230823</jetty.version>
+    <jetty.version>9.4.53.v20231009</jetty.version>
     <jetty.file>jetty-distribution-${jetty.version}</jetty.file>
     <jetty.download>https://repo1.maven.org/maven2/org/eclipse/jetty/jetty-distribution/${jetty.version}/${jetty.file}.tar.gz</jetty.download>
 
@@ -1589,9 +1595,9 @@
     <jts.version>1.19.0</jts.version>
     <pg.version>42.6.0</pg.version>
 
-    <spring.version>5.3.30</spring.version>
-    <spring.security.version>5.8.7</spring.security.version>
-    <spring.jpa.version>2.7.16</spring.jpa.version>
+    <spring.version>5.3.31</spring.version>
+    <spring.security.version>5.8.8</spring.security.version>
+    <spring.jpa.version>2.7.18</spring.jpa.version>
     <springboot.version>2.7.0</springboot.version>
     <springdoc.version>1.5.13</springdoc.version>
     <hibernate.version>5.6.15.Final</hibernate.version>
@@ -1604,7 +1610,7 @@
     <wro.debug>true</wro.debug>
     <fop.version>2.7</fop.version>
     <xmlunit.version>2.1.1</xmlunit.version>
-    <jackson.version>2.15.2</jackson.version>
+    <jackson.version>2.15.3</jackson.version>
     <flying-saucer>9.1.22</flying-saucer>
     <camel.version>2.25.1</camel.version>
     <log4j2.version>2.17.2</log4j2.version>

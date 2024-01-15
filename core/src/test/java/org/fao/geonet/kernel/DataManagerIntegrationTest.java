@@ -25,7 +25,6 @@ package org.fao.geonet.kernel;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Maps;
-import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.constants.Geonet;
@@ -40,11 +39,9 @@ import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.domain.Source;
 import org.fao.geonet.domain.SourceType;
 import org.fao.geonet.domain.User;
-import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.repository.GroupRepository;
-import org.fao.geonet.repository.MetadataCategoryRepository;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.utils.Xml;
@@ -76,24 +73,12 @@ public class DataManagerIntegrationTest extends AbstractDataManagerIntegrationTe
     public void testDeleteMetadata() throws Exception {
         ServiceContext serviceContext = createContextAndLogAsAdmin();
         long count = metadataRepository.count();
-        String mdId = dataManager.insertMetadata(
-                serviceContext,
-                "iso19139",
-                new Element("MD_Metadata"),
-                "uuid",
-                serviceContext.getUserSession().getUserIdAsInt(),
-                "" + ReservedGroup.all.getId(),
-                "sourceid",
-                "n",
-                "doctype",
-                null,
-                new ISODate().getDateAndTime(),
-                new ISODate().getDateAndTime(),
-                false,
-                IndexingMode.none);
+
+        int mdId = injectMetadataInDbDoNotRefreshHeader(getSampleMetadataXml(), serviceContext).getId();
+
         assertEquals(count + 1, metadataRepository.count());
 
-        metadataManager.deleteMetadata(serviceContext, mdId);
+        metadataManager.deleteMetadata(serviceContext, String.valueOf(mdId));
 
         assertEquals(count, metadataRepository.count());
     }

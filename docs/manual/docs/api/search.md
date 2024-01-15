@@ -11,7 +11,7 @@ The Q Search endpoint is replaced by the ``/srv/api/search/records/_search`` end
 
 Parameter Reference:
 
--   [Serach API](https://www.elastic.co/guide/en/elasticsearch/reference/current/search-search.html) (Elasticsearch)
+-   [Search API](https://www.elastic.co/guide/en/elasticsearch/reference/current/search-search.html) (Elasticsearch)
 
 ## Q Search
 

@@ -296,7 +296,7 @@ public class GroupsApi {
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.PUT
     )
-    @ResponseStatus(value = HttpStatus.OK)
+    @ResponseStatus(value = HttpStatus.CREATED)
     @PreAuthorize("hasAuthority('UserAdmin')")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "201", description = "Group created."),
@@ -357,6 +357,7 @@ public class GroupsApi {
         method = RequestMethod.GET)
     @ResponseStatus(value = HttpStatus.OK)
     @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Group information for the group id supplied."),
         @ApiResponse(responseCode = "404", description = ApiParams.API_RESPONSE_RESOURCE_NOT_FOUND)
     })
     @ResponseBody

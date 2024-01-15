@@ -106,7 +106,7 @@ public class MetadataApi {
 
     private ApplicationContext context;
 
-    public static RelatedResponse getAssociatedResources(
+    public static RelatedResponse getRelatedResources(
         String language, ServiceContext context,
         AbstractMetadata md, RelatedItemType[] type, int start, int rows) throws Exception {
         // TODO PERF: ByPass XSL processing and create response directly
@@ -367,7 +367,7 @@ public class MetadataApi {
         summary = "Get a metadata record as ZIP",
         description = "Metadata Exchange Format (MEF) is returned. MEF is a ZIP file containing " +
             "the metadata as XML and some others files depending on the version requested. " +
-            "See http://geonetwork-opensource.org/manuals/trunk/eng/users/annexes/mef-format.html.")
+            "See https://docs.geonetwork-opensource.org/latest/annexes/mef-format/.")
     @RequestMapping(value = "/{metadataUuid}/formatters/zip",
         method = RequestMethod.GET,
         consumes = {
@@ -471,7 +471,7 @@ public class MetadataApi {
                 if (withRelated) {
                     // Adding children in MEF file
 
-                    RelatedResponse related = getAssociatedResources(
+                    RelatedResponse related = getRelatedResources(
                         metadataUuid, null, approved, 0, 100, request);
                     uuidsToExport.addAll(getUuidsOfAssociatedRecords(related.getParent()));
                     uuidsToExport.addAll(getUuidsOfAssociatedRecords(related.getChildren()));
@@ -521,7 +521,7 @@ public class MetadataApi {
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW),
         @ApiResponse(responseCode = "404", description = ApiParams.API_RESPONSE_RESOURCE_NOT_FOUND)
     })
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<String> getRecordPopularity(
         @Parameter(description = API_PARAM_RECORD_UUID,
             required = true)
@@ -596,7 +596,7 @@ public class MetadataApi {
         summary = "Get record related resources",
         description = "Retrieve related services, datasets, onlines, thumbnails, sources, ... " +
             "to this records.<br/>" +
-            "<a href='http://geonetwork-opensource.org/manuals/trunk/eng/users/user-guide/associating-resources/index.html'>More info</a>")
+            "<a href='https://geonetwork-opensource.org/manuals/trunk/eng/users/user-guide/associating-resources/index.html'>More info</a>")
     @RequestMapping(value = "/{metadataUuid:.+}/related",
         method = RequestMethod.GET,
         produces = {
@@ -609,7 +609,7 @@ public class MetadataApi {
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)
     })
     @ResponseBody
-    public RelatedResponse getAssociatedResources(
+    public RelatedResponse getRelatedResources(
         @Parameter(
             description = API_PARAM_RECORD_UUID,
             required = true)
@@ -644,7 +644,7 @@ public class MetadataApi {
         String language = languageUtils.getIso3langCode(request.getLocales());
         final ServiceContext serviceContext = ApiUtils.createServiceContext(request);
 
-        return getAssociatedResources(language, serviceContext, md, type, start, rows);
+        return getRelatedResources(language, serviceContext, md, type, start, rows);
     }
 
     @io.swagger.v3.oas.annotations.Operation(
@@ -680,7 +680,7 @@ public class MetadataApi {
         Map<String, String[]> decodeMap = new HashMap<>();
 
         try {
-            RelatedResponse related = getAssociatedResources(
+            RelatedResponse related = getRelatedResources(
                 metadataUuid, type, approved, 0, 100, request);
 
             if (isIncludedAttributeTable(related.getFcats())) {

@@ -546,7 +546,7 @@
     "categoriesUpdated": "Flokkar uppfærðir.",
     "warnPublishDraft": "Þegar færslur eru birtar með vinnuflæði virkt, mun staðan breytast yfir í  'Samþykkt. Ertu viss um að þú viljir halda áfram?",
     "cancelWorkingCopy": "Hætta við vinnuafrit",
-    "deleteWorkingCopyRecordConfirm": "Ertu viss um að þú viljir fjarlægja vinnuafritið '{{titill}}'?",
+    "deleteWorkingCopyRecordConfirm": "Ertu viss um að þú viljir fjarlægja vinnuafritið '{{resourceTitle}}'?",
     "workingCopy": "Vinnuafrit",
     "onTheWeb": "More online information",
     "pdfReportTocTitle": "Contents",

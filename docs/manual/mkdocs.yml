@@ -63,11 +63,11 @@ plugins:
           name: English
           build: true
           default: true
-          site_name: 'GeoNetwork Opensource (EN)'
+          site_name: 'GeoNetwork opensource (EN)'
         - locale: fr
           name: Français
           build: !ENV [FRENCH,true]
-          site_name: 'GeoNetwork Opensource (FR)'
+          site_name: 'GeoNetwork opensource (FR)'
           site_description: Catalogue GeoNetwork pour répertorier, rechercher et examiner les enregistrements.
           nav_translations:
             Home: Home
@@ -326,11 +326,6 @@ nav:
             - install-guide/logging.md
             - install-guide/map-print-setup.md
             - install-guide/loading-samples.md
-      - 'Setting up search/content statistics':
-        - maintainer-guide/statistics/index.md
-        - maintainer-guide/statistics/setup-elasticsearch.md
-        - maintainer-guide/statistics/setup-kibana.md
-        - maintainer-guide/statistics/setup-geonetwork.md
       - maintainer-guide/production-use/index.md
       - 'Updating the application': maintainer-guide/updating/index.md
   - 'API':

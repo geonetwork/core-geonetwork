@@ -766,7 +766,13 @@
           if (!this.mainLanguage) {
             return [];
           }
-          return [this.mainLanguage].concat(this.otherLanguage).unique();
+          return [this.mainLanguage]
+            .concat(this.otherLanguage)
+            .unique()
+            .filter(function (l) {
+              // do not allow null values
+              return !!l;
+            });
         },
         isPublished: function (pubOption) {
           if (pubOption) {

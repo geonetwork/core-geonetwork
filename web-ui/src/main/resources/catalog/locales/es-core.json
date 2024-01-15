@@ -546,7 +546,7 @@
     "categoriesUpdated": "Categorías actualizadas.",
     "warnPublishDraft": "Al publicar registros con el flujo de trabajo habilitado, el estado cambiará a  'Approve'. Estás seguro de que quieres continuar?",
     "cancelWorkingCopy": "Cancelar copia de trabajo",
-    "deleteWorkingCopyRecordConfirm": "¿Realmente desea eliminar la copia de trabajo '{{title}}'?",
+    "deleteWorkingCopyRecordConfirm": "¿Realmente desea eliminar la copia de trabajo '{{resourceTitle}}'?",
     "workingCopy": "Copia de trabajo",
     "onTheWeb": "Más información en línea",
     "pdfReportTocTitle": "Contenido",

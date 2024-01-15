@@ -116,7 +116,7 @@ public class WFSHarvesterExchangeState implements Serializable {
         if (INVESTIGATOR_STRATEGY.equals(parameters.getStrategy())) {
             factory = new WFSDataStoreWithStrategyInvestigator();
             ((WFSDataStoreWithStrategyInvestigator) factory).init(
-                parameters.getUrl(), parameters.getTypeName());
+                parameters.getUrl(), parameters.getTypeName(), parameters.getVersion());
         } else {
             factory = new WFSDataStoreFactory();
         }
@@ -145,15 +145,9 @@ public class WFSHarvesterExchangeState implements Serializable {
             }
 
             wfsDatastore = factory.createDataStore(m);
-            // Default to GeoTools auto mode for MapServer.
             if(factory instanceof WFSDataStoreWithStrategyInvestigator) {
                 WFSClientWithStrategyInvestigator wfsClientWithStrategyInvestigator = (WFSClientWithStrategyInvestigator) wfsDatastore.getWfsClient();
                 this.strategyId = wfsClientWithStrategyInvestigator.getStrategyId();
-                if (MAPSERVER_STRATEGY.equals(wfsClientWithStrategyInvestigator.getStrategyId())) {
-                    Map<String, Object> connectionParameters = new HashMap<>();
-                    connectionParameters.put("WFSDataStoreFactory:GET_CAPABILITIES_URL", parameters.getUrl());
-                    wfsDatastore = (WFSDataStore) DataStoreFinder.getDataStore(connectionParameters);
-                }
             }
         } catch (IOException e) {
             String errorMsg = String.format(
