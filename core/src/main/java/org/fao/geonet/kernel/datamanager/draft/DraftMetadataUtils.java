@@ -589,7 +589,7 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
 
                     List<MetadataStatus> listOfStatusChange = new ArrayList<>(1);
                     listOfStatusChange.add(metadataStatus);
-                    sa.onStatusChange(listOfStatusChange);
+                    sa.onStatusChange(listOfStatusChange, true);
                 }
             }
 

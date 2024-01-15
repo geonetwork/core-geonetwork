@@ -420,7 +420,7 @@ public class MetadataEditingApi {
 
                         List<MetadataStatus> listOfStatusChange = new ArrayList<>(1);
                         listOfStatusChange.add(metadataStatus);
-                        sa.onStatusChange(listOfStatusChange);
+                        sa.onStatusChange(listOfStatusChange, true);
                     } else {
                         throw new SecurityException(String.format("Only users with editor profile can submit."));
                     }
@@ -442,7 +442,7 @@ public class MetadataEditingApi {
 
                         List<MetadataStatus> listOfStatusChange = new ArrayList<>(1);
                         listOfStatusChange.add(metadataStatus);
-                        sa.onStatusChange(listOfStatusChange);
+                        sa.onStatusChange(listOfStatusChange, true);
                     } else {
                         throw new SecurityException(String.format("Only users with review profile can approve."));
                     }
