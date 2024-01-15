@@ -61,35 +61,53 @@
   <!--  Add new gmd:graphicOverview -->
   <xsl:template match="gmd:identificationInfo/*[$update_flag = false()]">
     <xsl:copy>
-      <xsl:apply-templates select="node()|@*"/>
+      <xsl:copy-of select="@*"/>
+      <xsl:apply-templates select="gmd:citation"/>
+      <xsl:apply-templates select="gmd:abstract"/>
+      <xsl:apply-templates select="gmd:purpose"/>
+      <xsl:apply-templates select="gmd:credit"/>
+      <xsl:apply-templates select="gmd:status"/>
+      <xsl:apply-templates select="gmd:pointOfContact"/>
+      <xsl:apply-templates select="gmd:resourceMaintenance"/>
+
       <xsl:call-template name="fill"/>
+
+      <xsl:apply-templates select="gmd:graphicOverview"/>
+
+      <xsl:apply-templates select="gmd:resourceFormat"/>
+      <xsl:apply-templates select="gmd:descriptiveKeywords"/>
+      <xsl:apply-templates select="gmd:resourceSpecificUsage"/>
+      <xsl:apply-templates select="gmd:resourceConstraints"/>
+      <xsl:apply-templates select="gmd:aggregationInfo"/>
+      <xsl:apply-templates select="gmd:spatialRepresentationType"/>
+      <xsl:apply-templates select="gmd:spatialResolution"/>
+      <xsl:apply-templates select="gmd:language"/>
+      <xsl:apply-templates select="gmd:characterSet"/>
+      <xsl:apply-templates select="gmd:topicCategory"/>
+      <xsl:apply-templates select="gmd:environmentDescription"/>
+      <xsl:apply-templates select="gmd:extent"/>
+      <xsl:apply-templates select="gmd:supplementalInformation"/>
+
+      <xsl:apply-templates select="srv:*"/>
+
+      <xsl:apply-templates select="*[namespace-uri()!='http://www.isotc211.org/2005/gmd' and
+                                     namespace-uri()!='http://www.isotc211.org/2005/srv']"/>
     </xsl:copy>
   </xsl:template>
 
   <!-- Updating the gmd:graphicOverview based on update parameters -->
+  <!-- Note: first part of the match needs to match the xsl:for-each select from extract-relations.xsl in order to get the position() to match -->
   <xsl:template
     priority="2"
-    match="*[$update_flag = true() and gmd:graphicOverview]">
-    <xsl:copy>
-      <xsl:apply-templates select="@*|node() except gmd:graphicOverview" />
-
-      <xsl:for-each select="gmd:graphicOverview">
-        <xsl:choose>
-          <xsl:when test="($resourceIdx = '' or position() = xs:integer($resourceIdx))
-                      and ($resourceHash != '' or ($updateKey != '' and normalize-space($updateKey) = concat(
+    match="*//gmd:graphicOverview
+         [$resourceIdx = '' or position() = xs:integer($resourceIdx)]
+         [    ($resourceHash != '' or ($updateKey != '' and normalize-space($updateKey) = concat(
                            */gmd:fileName/gco:CharacterString,
                            */gmd:fileName/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale = '#DE'],
                            */gmd:fileDescription/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale = '#DE'],
                            */gmd:fileDescription/gco:CharacterString)))
-                     and ($resourceHash = '' or digestUtils:md5Hex(exslt:node-set(.)) = $resourceHash)">
-            <xsl:call-template name="fill"/>
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:apply-templates select="."/>
-          </xsl:otherwise>
-        </xsl:choose>
-      </xsl:for-each>
-    </xsl:copy>
+          and ($resourceHash = '' or digestUtils:md5Hex(string(exslt:node-set(.))) = $resourceHash)]">
+    <xsl:call-template name="fill"/>
   </xsl:template>
 
   <!-- TMP TO REMOVE when gco:characterString is added in multilingual elements

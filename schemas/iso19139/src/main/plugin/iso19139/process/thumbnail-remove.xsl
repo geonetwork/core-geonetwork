@@ -46,25 +46,13 @@
   <xsl:param name="resourceIdx" select="''"/>
 
   <!-- Remove the thumbnail define in thumbnail_url parameter -->
+  <!-- Note: first part of the match needs to match the xsl:for-each select from extract-relations.xsl in order to get the position() to match -->
   <xsl:template
     priority="4"
-    match="*[gmd:graphicOverview]">
-    <xsl:copy>
-      <xsl:apply-templates select="@*|node() except gmd:graphicOverview" />
-      <xsl:for-each select="gmd:graphicOverview">
-        <xsl:choose>
-          <xsl:when test="($resourceIdx = '' or position() = xs:integer($resourceIdx))
-                      and ($resourceHash != '' or ($thumbnail_url != '' and normalize-space(gmd:MD_BrowseGraphic/gmd:fileName/gco:CharacterString) = normalize-space($thumbnail_url)))
-                      and ($resourceHash = '' or digestUtils:md5Hex(exslt:node-set(.)) = $resourceHash)">
-            <!-- Remove the thumbnail -->
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:apply-templates select="."/>
-          </xsl:otherwise>
-        </xsl:choose>
-      </xsl:for-each>
-    </xsl:copy>
-  </xsl:template>
+    match="*//gmd:graphicOverview
+         [$resourceIdx = '' or position() = xs:integer($resourceIdx)]
+         [    ($resourceHash != '' or ($thumbnail_url != '' and normalize-space(gmd:MD_BrowseGraphic/gmd:fileName/gco:CharacterString) = normalize-space($thumbnail_url)))
+          and ($resourceHash = '' or digestUtils:md5Hex(string(exslt:node-set(.))) = $resourceHash)]"/>
 
   <!-- Do a copy of every node and attribute -->
   <xsl:template match="@*|node()">

@@ -25,6 +25,11 @@
 <!--
 Processing to insert or update an online resource element.
 Insert is made in first transferOptions found.
+
+Note: It assumes that it will be adding new items in
+      the first /gmd:distributionInfo
+      and first /gmd:MD_Distribution
+      and first /gmd:transferOptions
 -->
 <xsl:stylesheet xmlns:gmd="http://www.isotc211.org/2005/gmd"
                 xmlns:gco="http://www.isotc211.org/2005/gco"
@@ -77,70 +82,101 @@ Insert is made in first transferOptions found.
 
   <!-- Add new gmd:onLine and consider cases where parent elements don't exist -->
   <!--  <gmd:distributionInfo> does not exist-->
-  <xsl:template match="gmd:MD_Metadata[$update_flag = false()]|*[@gco:isoType='gmd:MD_Metadata' and $update_flag = false()]">
+  <xsl:template match="gmd:MD_Metadata[not(gmd:distributionInfo) and $update_flag = false()]|*[@gco:isoType='gmd:MD_Metadata' and not(gmd:distributionInfo) and $update_flag = false()]">
     <xsl:copy>
-      <xsl:apply-templates select="node()|@*"/>
-      <xsl:if test="not(gmd:distributionInfo)">
-        <gmd:distributionInfo>
-          <gmd:MD_Distribution>
-            <gmd:transferOptions>
-              <gmd:MD_DigitalTransferOptions>
-                <xsl:call-template name="createOnlineSrc"/>
-              </gmd:MD_DigitalTransferOptions>
-            </gmd:transferOptions>
-          </gmd:MD_Distribution>
-        </gmd:distributionInfo>
-      </xsl:if>
-    </xsl:copy>
-  </xsl:template>
+      <xsl:apply-templates select="@*"/>
+      <xsl:apply-templates
+        select="gmd:fileIdentifier|
+                gmd:language|
+                gmd:characterSet|
+                gmd:parentIdentifier|
+                gmd:hierarchyLevel|
+                gmd:hierarchyLevelName|
+                gmd:contact|
+                gmd:dateStamp|
+                gmd:metadataStandardName|
+                gmd:metadataStandardVersion|
+                gmd:dataSetURI|
+                gmd:locale|
+                gmd:spatialRepresentationInfo|
+                gmd:referenceSystemInfo|
+                gmd:metadataExtensionInfo|
+                gmd:identificationInfo|
+                gmd:contentInfo"/>
 
-  <!--  <gmd:MD_Distribution> does not exist-->
-  <xsl:template match="*/gmd:distributionInfo[$update_flag = false()]">
-    <xsl:copy>
-      <xsl:apply-templates select="node()|@*"/>
-          <xsl:if test="not(gmd:MD_Distribution)">
-            <gmd:MD_Distribution>
-              <gmd:transferOptions>
-                <gmd:MD_DigitalTransferOptions>
-                  <xsl:call-template name="createOnlineSrc"/>
-                </gmd:MD_DigitalTransferOptions>
-              </gmd:transferOptions>
-            </gmd:MD_Distribution>
-          </xsl:if>
-    </xsl:copy>
-  </xsl:template>
-
-  <!--  <gmd:transferOptions> does not exist-->
-  <xsl:template match="*/gmd:distributionInfo/gmd:MD_Distribution[$update_flag = false()]">
-    <xsl:copy>
-      <xsl:apply-templates select="node()|@*"/>
-        <xsl:if test="not(gmd:transferOptions)">
+      <gmd:distributionInfo>
+        <gmd:MD_Distribution>
           <gmd:transferOptions>
             <gmd:MD_DigitalTransferOptions>
               <xsl:call-template name="createOnlineSrc"/>
             </gmd:MD_DigitalTransferOptions>
           </gmd:transferOptions>
-        </xsl:if>
+        </gmd:MD_Distribution>
+      </gmd:distributionInfo>
+
+
+      <xsl:apply-templates
+        select="gmd:dataQualityInfo|
+                gmd:portrayalCatalogueInfo|
+                gmd:metadataConstraints|
+                gmd:applicationSchemaInfo|
+                gmd:metadataMaintenance|
+                gmd:series|
+                gmd:describes|
+                gmd:propertyType|
+                gmd:featureType|
+                gmd:featureAttribute"/>
+    </xsl:copy>
+  </xsl:template>
+
+  <!--  <gmd:MD_Distribution> does not exist-->
+  <xsl:template match="*/gmd:distributionInfo[not(gmd:MD_Distribution) and $update_flag = false() and position() = 1]">
+    <xsl:copy>
+      <xsl:apply-templates select="node()|@*"/>
+      <gmd:MD_Distribution>
+        <gmd:transferOptions>
+          <gmd:MD_DigitalTransferOptions>
+            <xsl:call-template name="createOnlineSrc"/>
+          </gmd:MD_DigitalTransferOptions>
+        </gmd:transferOptions>
+      </gmd:MD_Distribution>
+    </xsl:copy>
+  </xsl:template>
+
+  <!--  <gmd:transferOptions> does not exist-->
+  <xsl:template match="*/gmd:distributionInfo[1]/gmd:MD_Distribution[not(gmd:transferOptions) and $update_flag = false() and position() = 1]">
+    <xsl:copy>
+      <xsl:apply-templates select="node()|@*"/>
+      <gmd:transferOptions>
+        <gmd:MD_DigitalTransferOptions>
+          <xsl:call-template name="createOnlineSrc"/>
+        </gmd:MD_DigitalTransferOptions>
+      </gmd:transferOptions>
     </xsl:copy>
   </xsl:template>
 
   <!--  <gmd:MD_DigitalTransferOptions> does not exist-->
-  <xsl:template match="*/gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions[$update_flag = false()][1]">
+  <xsl:template match="*/gmd:distributionInfo[1]/gmd:MD_Distribution[1]/gmd:transferOptions[not(gmd:MD_DigitalTransferOptions) and $update_flag = false() and position() = 1]">
     <xsl:copy>
       <xsl:apply-templates select="node()|@*"/>
-      <xsl:if test="not(gmd:MD_DigitalTransferOptions)">
-        <gmd:MD_DigitalTransferOptions>
-          <xsl:call-template name="createOnlineSrc"/>
-        </gmd:MD_DigitalTransferOptions>
-      </xsl:if>
+      <gmd:MD_DigitalTransferOptions>
+        <xsl:call-template name="createOnlineSrc"/>
+      </gmd:MD_DigitalTransferOptions>
     </xsl:copy>
   </xsl:template>
 
   <!--  Add new gmd:gmd:onLine-->
-  <xsl:template match="*/gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions[1]/gmd:MD_DigitalTransferOptions[$update_flag = false()]">
+  <xsl:template match="*/gmd:distributionInfo[1]/gmd:MD_Distribution[1]/gmd:transferOptions[1]/gmd:MD_DigitalTransferOptions[$update_flag = false() and position() = 1]">
     <xsl:copy>
-      <xsl:apply-templates select="node()|@*"/>
+      <xsl:apply-templates select="@*"/>
+      <xsl:apply-templates
+        select="gmd:unitsOfDistribution|
+                gmd:transferSize|
+                gmd:onLine"/>
+
       <xsl:call-template name="createOnlineSrc"/>
+
+      <xsl:apply-templates select="gmd:offLine"/>
     </xsl:copy>
   </xsl:template>
 
@@ -148,28 +184,17 @@ Insert is made in first transferOptions found.
 
 
   <!-- Updating the gmd:onLine based on update parameters -->
+  <!-- Note: first part of the match needs to match the xsl:for-each select from extract-relations.xsl in order to get the position() to match -->
   <xsl:template
-    priority="2"
-    match="*[$update_flag = true() and gmd:onLine]">
-    <xsl:copy>
-      <xsl:apply-templates select="@*|node() except gmd:onLine" />
-
-      <xsl:for-each select="gmd:onLine">
-        <xsl:choose>
-          <xsl:when test="($resourceIdx = '' or position() = xs:integer($resourceIdx))
-                     and ($resourceHash != '' or ($updateKey != '' and normalize-space($updateKey) = concat(
+    match="*//gmd:MD_DigitalTransferOptions/gmd:onLine
+        [gmd:CI_OnlineResource[gmd:linkage/gmd:URL!=''] and ($resourceIdx = '' or position() = xs:integer($resourceIdx))]
+        [($resourceHash != '' or ($updateKey != '' and normalize-space($updateKey) = concat(
                           gmd:CI_OnlineResource/gmd:linkage/gmd:URL,
                           gmd:CI_OnlineResource/gmd:protocol/*,
                           gmd:CI_OnlineResource/gmd:name/gco:CharacterString)))
-                     and ($resourceHash = '' or digestUtils:md5Hex(exslt:node-set(.)) = $resourceHash)">
-             <xsl:call-template name="createOnlineSrc"/>
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:apply-templates select="."/>
-          </xsl:otherwise>
-        </xsl:choose>
-      </xsl:for-each>
-    </xsl:copy>
+                     and ($resourceHash = '' or digestUtils:md5Hex(string(exslt:node-set(.))) = $resourceHash)]"
+    priority="2">
+    <xsl:call-template name="createOnlineSrc"/>
   </xsl:template>
 
 

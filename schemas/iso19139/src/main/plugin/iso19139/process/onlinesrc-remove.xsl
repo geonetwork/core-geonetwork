@@ -50,30 +50,16 @@ Stylesheet used to remove a reference to a online resource.
   <xsl:param name="name" select="''"/>
 
   <!-- Remove the gmd:onLine define in url parameter  -->
+  <!-- Note: first part of the match needs to match the xsl:for-each select from extract-relations.xsl in order to get the position() to match -->
   <xsl:template
-    priority="2"
-    match="*[gmd:onLine]">
-    <xsl:copy>
-      <xsl:apply-templates select="@*|node() except gmd:onLine" />
-
-      <xsl:for-each select="gmd:onLine">
-        <xsl:choose>
-          <xsl:when test="gmd:CI_OnlineResource[gmd:linkage/gmd:URL!='']
-                    and ($resourceIdx = '' or position() = xs:integer($resourceIdx))
-                    and ($resourceHash != '' or ($url != null and (normalize-space(gmd:CI_OnlineResource/gmd:linkage/gmd:URL) = $url and normalize-space(gmd:CI_OnlineResource/gmd:name/gco:CharacterString) = normalize-space($name)
+    match="*//gmd:MD_DigitalTransferOptions/gmd:onLine
+        [gmd:CI_OnlineResource[gmd:linkage/gmd:URL!=''] and ($resourceIdx = '' or position() = xs:integer($resourceIdx))]
+        [($resourceHash != '' or ($url != null and (normalize-space(gmd:CI_OnlineResource/gmd:linkage/gmd:URL) = $url and normalize-space(gmd:CI_OnlineResource/gmd:name/gco:CharacterString) = normalize-space($name)
                                                                 or normalize-space(gmd:CI_OnlineResource/gmd:linkage/gmd:URL) = $url and count(gmd:CI_OnlineResource/gmd:name/gmd:PT_FreeText/gmd:textGroup[gmd:LocalisedCharacterString = $name]) > 0
                                                                 or normalize-space(gmd:CI_OnlineResource/gmd:linkage/gmd:URL) = $url and normalize-space(gmd:CI_OnlineResource/gmd:protocol/*) = 'WWW:DOWNLOAD-1.0-http--download'))
                         )
-                    and ($resourceHash = '' or digestUtils:md5Hex(exslt:node-set(.)) = $resourceHash)">
-            <!-- Remove the thumbnail -->
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:apply-templates select="."/>
-          </xsl:otherwise>
-        </xsl:choose>
-      </xsl:for-each>
-    </xsl:copy>
-  </xsl:template>
+                        and ($resourceHash = '' or digestUtils:md5Hex(string(exslt:node-set(.))) = $resourceHash)]"
+    priority="2"/>
 
   <!-- Do a copy of every node and attribute -->
   <xsl:template match="@*|node()">
