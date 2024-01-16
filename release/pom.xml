@@ -57,7 +57,7 @@
       <id>jetty-download</id>
       <activation>
         <property>
-          <name>jetty-download</name>
+          <name>release</name>
         </property>
       </activation>
       <build>
