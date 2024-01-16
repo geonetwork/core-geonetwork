@@ -104,13 +104,6 @@
           </execution>
         </executions>
       </plugin>
-      <!-- no need to install this to local repo -->
-      <plugin>
-        <artifactId>maven-install-plugin</artifactId>
-        <configuration>
-          <skip>true</skip>
-        </configuration>
-      </plugin>
       <!-- no need to deploy to nexus repo -->
       <plugin>
         <artifactId>maven-deploy-plugin</artifactId>
