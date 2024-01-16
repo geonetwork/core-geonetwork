@@ -752,7 +752,8 @@
                   <includes>
                     <include>META-INF/MANIFEST.MF</include>
                     <include>data/**</include>
-                    <include>doc/**</include>
+                    <include>doc/en/**</include>
+                    <include>doc/fr/**</include>
                     <include>images/logos/*</include>
                     <include>images/logos/statTmp</include>
                     <include>scripts/lib/**</include>
