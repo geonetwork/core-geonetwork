@@ -63,13 +63,9 @@ public class ResourceTest extends AbstractServiceIntegrationTest {
         assertCorrectExec("test.xml", 200, "application/xml");
         assertCorrectExec("test.json", 200, "application/json");
         assertCorrectExec("testyxz", 200, "application/octet-stream");
-        assertCorrectExec("view.groovy", 200, "text/x-groovy-source,groovy");
         assertCorrectExec("test.xsl", 200, "application/xslt+xml");
         assertCorrectExec("test.xslt", 200, "application/xslt+xml");
         assertCorrectExec("nosuchfile", 404, null);
-        assertCorrectExec("../xml_view/view.groovy", 403, null);
-
-
     }
 
     protected Path getFile(String fileName) throws URISyntaxException {

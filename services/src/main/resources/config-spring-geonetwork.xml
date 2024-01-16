@@ -64,7 +64,7 @@
   </bean>
 
   <bean id="InspireValidatorUtils"
-        class="org.fao.geonet.api.records.editing.InspireValidatorUtils"
+        class="org.fao.geonet.inspire.validator.InspireValidatorUtils"
         scope="singleton">
   </bean>
 

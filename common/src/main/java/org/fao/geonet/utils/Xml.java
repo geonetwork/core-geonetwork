@@ -31,14 +31,9 @@ import net.sf.json.xml.XMLSerializer;
 import net.sf.saxon.Configuration;
 import net.sf.saxon.Controller;
 import net.sf.saxon.FeatureKeys;
-import org.apache.commons.io.IOUtils;
 import org.apache.fop.apps.Fop;
 import org.apache.fop.apps.FopFactory;
 import org.apache.fop.apps.MimeConstants;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.xml.resolver.tools.CatalogResolver;
 import org.fao.geonet.exceptions.XSDValidationErrorEx;
 import org.fao.geonet.utils.nio.NioPathAwareEntityResolver;
@@ -100,7 +95,6 @@ import java.nio.charset.CharacterCodingException;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CharsetEncoder;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystemNotFoundException;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
@@ -399,6 +393,9 @@ public final class Xml {
     public static Element transform(Element xml, Path styleSheetPath, Map<String, Object> params) throws Exception {
         JDOMResult resXml = new JDOMResult();
         transform(xml, styleSheetPath, resXml, params);
+        if (resXml.getDocument() == null) {
+            throw new NullPointerException("Failed to create a Document for " + resXml.getResult());
+        }
         return (Element) resXml.getDocument().getRootElement().detach();
     }
     //--------------------------------------------------------------------------

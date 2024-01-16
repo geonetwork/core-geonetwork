@@ -38,11 +38,8 @@ import org.apache.http.client.methods.HttpUriRequest;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Constants;
 import org.fao.geonet.SystemInfo;
-import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiUtils;
-import org.fao.geonet.api.records.extent.MapRenderer;
 import org.fao.geonet.api.records.formatters.cache.*;
-import org.fao.geonet.api.records.formatters.groovy.ParamValue;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.*;
@@ -55,10 +52,8 @@ import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.specification.OperationAllowedSpecs;
-import org.fao.geonet.util.XslUtil;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.geonet.utils.IO;
-import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -79,7 +74,6 @@ import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.context.request.WebRequest;
-import org.xhtmlrenderer.pdf.ITextRenderer;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -115,6 +109,9 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
 
     @Autowired
     IsoLanguagesMapper isoLanguagesMapper;
+
+    @Autowired
+    PdfOrHtmlResponseWriter writer;
 
     /**
      * Map (canonical path to formatter dir -> Element containing all xml files in Formatter
@@ -313,7 +310,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
             if (!skipPopularityBool && approved) {
                 context.getBean(DataManager.class).increasePopularity(context, String.valueOf(metadata.getId()));
             }
-            writeOutResponse(context, metadataUuid,
+            writer.writeOutResponse(context, metadataUuid,
                 isoLanguagesMapper.iso639_2T_to_iso639_2B(locale.getISO3Language()),
                 request.getNativeResponse(HttpServletResponse.class), formatType, bytes);
         }
@@ -377,7 +374,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
         final String formattedMetadata = result.one().format(result.two());
         byte[] bytes = formattedMetadata.getBytes(Constants.CHARSET);
 
-        writeOutResponse(context, "", lang, request.getNativeResponse(HttpServletResponse.class), formatType, bytes);
+        writer.writeOutResponse(context, "", lang, request.getNativeResponse(HttpServletResponse.class), formatType, bytes);
     }
 
     /**
@@ -446,7 +443,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
         final boolean hideWithheld = Boolean.TRUE.equals(hide_withheld) ||
             !context.getBean(AccessManager.class).canEdit(context, resolvedId);
         Key key = new Key(Integer.parseInt(resolvedId), lang, formatType, xslid, hideWithheld, width);
-        final boolean skipPopularityBool = new ParamValue(skipPopularity).toBool();
+        final boolean skipPopularityBool = skipPopularity.equals("y");
 
         ISODate changeDate = context.getBean(EsSearchManager.class).getDocChangeDate(resolvedId);
 
@@ -477,23 +474,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
                 context.getBean(DataManager.class).increasePopularity(context, resolvedId);
             }
 
-            writeOutResponse(context, resolvedId, lang, request.getNativeResponse(HttpServletResponse.class), formatType, bytes);
-        }
-    }
-
-    private void writeOutResponse(ServiceContext context, String metadataUuid, String lang, HttpServletResponse response, FormatType formatType, byte[] formattedMetadata) throws Exception {
-        response.setContentType(formatType.contentType);
-        String filename = "metadata-" + metadataUuid + "." + formatType;
-        response.addHeader("Content-Disposition", "inline; filename=\"" + filename + "\"");
-        response.setStatus(HttpServletResponse.SC_OK);
-        if (formatType == FormatType.pdf) {
-            writerAsPDF(context, response, formattedMetadata, lang);
-        } else {
-            response.setCharacterEncoding(Constants.ENCODING);
-            response.setContentType(formatType.contentType);
-            response.setContentLength(formattedMetadata.length);
-            response.setHeader("Cache-Control", "no-cache");
-            response.getOutputStream().write(formattedMetadata);
+            writer.writeOutResponse(context, resolvedId, lang, request.getNativeResponse(HttpServletResponse.class), formatType, bytes);
         }
     }
 
@@ -507,7 +488,6 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
         }
         return false;
     }
-
 
     private String getXmlFromUrl(ServiceContext context, String lang, String url, WebRequest request) throws IOException, URISyntaxException {
         String adjustedUrl = url;
@@ -537,24 +517,6 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
         return new String(ByteStreams.toByteArray(execute.getBody()), Constants.CHARSET);
     }
 
-    private void writerAsPDF(ServiceContext context, HttpServletResponse response, byte[] bytes, String lang) throws IOException, com.lowagie.text.DocumentException {
-        final String htmlContent = new String(bytes, Constants.CHARSET);
-        try {
-            XslUtil.setNoScript();
-            ITextRenderer renderer = new ITextRenderer();
-            String siteUrl = context.getBean(SettingManager.class).getSiteURL(lang);
-            MapRenderer mapRenderer = new MapRenderer(context);
-            renderer.getSharedContext().setReplacedElementFactory(new ImageReplacedElementFactory(siteUrl.replace("/" + lang + "/", "/eng/"), renderer.getSharedContext()
-                .getReplacedElementFactory(), mapRenderer));
-            renderer.getSharedContext().setDotsPerPixel(13);
-            renderer.setDocumentFromString(htmlContent, siteUrl);
-            renderer.layout();
-            renderer.createPDF(response.getOutputStream());
-        } catch (final Exception e) {
-            Log.error(Geonet.FORMATTER, "Error converting formatter output to a file: " + htmlContent, e);
-            throw e;
-        }
-    }
 
     @VisibleForTesting
     Pair<FormatterImpl, FormatterParams> loadMetadataAndCreateFormatterAndParams(ServiceContext context, Key key, final NativeWebRequest request) throws Exception {
@@ -607,14 +569,10 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
         fparams.formatterInSchemaPlugin = isFormatterInSchemaPlugin(formatDir, schemaDir);
 
         Path viewXslFile = formatDir.resolve(FormatterConstants.VIEW_XSL_FILENAME);
-        Path viewGroovyFile = formatDir.resolve(FormatterConstants.VIEW_GROOVY_FILENAME);
         FormatterImpl formatter;
         if (Files.exists(viewXslFile)) {
             fparams.viewFile = viewXslFile.toRealPath();
             formatter = context.getBean(XsltFormatter.class);
-        } else if (Files.exists(viewGroovyFile)) {
-            fparams.viewFile = viewGroovyFile.toRealPath();
-            formatter = context.getBean(GroovyFormatter.class);
         } else {
             throw new IllegalArgumentException("The 'xsl' parameter must be a valid id of a formatter");
         }

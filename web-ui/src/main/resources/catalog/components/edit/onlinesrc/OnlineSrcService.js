@@ -246,7 +246,8 @@
             isArray = angular.isArray(types),
             defaultRelatedTypes = ["thumbnails", "onlines"],
             relatedTypes = [],
-            associatedTypes = [];
+            associatedTypes = [],
+            isApproved = gnCurrentEdit.metadata.draft !== "y";
 
           if (isArray) {
             var relatedTypeFilterFn = function (t) {
@@ -261,18 +262,30 @@
           }
 
           linksAndRelatedPromises.push(
-            $http.get(apiPrefix + "/related?type=" + relatedTypes.join("&type="), {
-              headers: {
-                Accept: "application/json"
+            $http.get(
+              apiPrefix +
+                "/related?type=" +
+                relatedTypes.join("&type=") +
+                (!isApproved ? "&approved=false" : ""),
+              {
+                headers: {
+                  Accept: "application/json"
+                }
               }
-            })
+            )
           );
           linksAndRelatedPromises.push(
-            $http.get(apiPrefix + "/associated?type=" + associatedTypes.join("&type="), {
-              headers: {
-                Accept: "application/json"
+            $http.get(
+              apiPrefix +
+                "/associated?type=" +
+                associatedTypes.join("&type=") +
+                (!isApproved ? "&approved=false" : ""),
+              {
+                headers: {
+                  Accept: "application/json"
+                }
               }
-            })
+            )
           );
 
           var all = $q.all(linksAndRelatedPromises).then(function (result) {
@@ -472,13 +485,14 @@
 
         getApprovedUrl: function (url) {
           if (
-            gnCurrentEdit.metadata.draft &&
-            url.match(".*/api/records/(.*)/attachments/.*") != null
+            gnCurrentEdit.metadata.draft === "y" &&
+            url.match(".*/api/records/" + gnCurrentEdit.uuid + "/attachments/.*") != null
           ) {
-            url +=
-              url.indexOf("?") > 0
-                ? "&"
-                : "?" + "approved=" + (gnCurrentEdit.metadata.draft != "y");
+            if (url.match(".*(&?)((approved=.*)(&?))+")) {
+              // Remove approved parameter if already exists.
+              url = gnUrlUtils.remove(url, ["approved"], true);
+            }
+            url += (url.indexOf("?") > 0 ? "&" : "?") + "approved=false";
           }
           return url;
         },
@@ -699,11 +713,18 @@
          * @param {Object} onlinesrc the online resource to remove
          */
         removeOnlinesrc: function (onlinesrc) {
+          var url = onlinesrc.lUrl || onlinesrc.url;
+          if (
+            url.match(".*/api/records/' + gnCurrentEdit.uuid + '/attachments/.*") != null
+          ) {
+            url = gnUrlUtils.remove(url, ["approved"], true);
+          }
+
           return runProcess(
             this,
             setParams("onlinesrc-remove", {
               id: gnCurrentEdit.id,
-              url: onlinesrc.lUrl || onlinesrc.url,
+              url: url,
               name: $filter("gnLocalized")(onlinesrc.title)
             })
           );

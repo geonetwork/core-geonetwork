@@ -68,7 +68,7 @@
         // down rendering.
         viewerSettings.cesiumProxy = true;
       } else {
-        viewerSettings.singleTileWMS = true;
+        viewerSettings.singleTileWMS = viewerSettings.mapConfig.singleTileWMS;
       }
 
       var bboxStyle = new ol.style.Style({

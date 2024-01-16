@@ -31,7 +31,7 @@
   <parent>
     <groupId>org.geonetwork-opensource</groupId>
     <artifactId>geonetwork</artifactId>
-    <version>4.4.0-SNAPSHOT</version>
+    <version>4.4.2-SNAPSHOT</version>
   </parent>
 
 
@@ -84,6 +84,10 @@
     <dependency>
       <groupId>org.apache.jcs</groupId>
       <artifactId>jcs</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>xalan</groupId>
+      <artifactId>serializer</artifactId>
     </dependency>
     <dependency>
       <groupId>net.sf.saxon</groupId>

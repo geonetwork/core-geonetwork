@@ -139,7 +139,7 @@ public class AtomPredefinedFeed {
         if (StringUtils.isNotBlank(searchTerms)) {
             params.put("searchTerms", searchTerms.toLowerCase());
         }
-        Element feed = InspireAtomUtil.getDatasetFeed(context, spIdentifier, spNamespace, params, language);
+        Element feed = InspireAtomUtil.getMetadataFeedByResourceIdentifier(context, spIdentifier, spNamespace, params, language);
         return writeOutResponse(Xml.getString(feed), "application", "atom+xml");
     }
 
@@ -247,7 +247,7 @@ public class AtomPredefinedFeed {
         if (StringUtils.isNotBlank(searchTerms)) {
             params.put("searchTerms", searchTerms.toLowerCase());
         }
-        Element feed = InspireAtomUtil.getDatasetFeed(context, spIdentifier, spNamespace, params, language);
+        Element feed = InspireAtomUtil.getMetadataFeedByResourceIdentifier(context, spIdentifier, spNamespace, params, language);
         Map<Integer, Element> crsCounts = new HashMap<Integer, Element>();;
         Namespace ns = Namespace.getNamespace("http://www.w3.org/2005/Atom");
         if (crs!=null) {
@@ -368,7 +368,9 @@ public class AtomPredefinedFeed {
         String defaultLanguage = dm.extractDefaultLanguage(schema, md);
         Map<String, Object> params = getDefaultXSLParams(sm, context, XslUtil.twoCharLangCode(defaultLanguage));
 
-        Element inputDoc = InspireAtomUtil.prepareOpenSearchDescriptionEltBeforeTransform(context, params, uuid, schema, InspireAtomUtil.convertDatasetMdToAtom("iso19139", InspireAtomUtil.prepareServiceFeedEltBeforeTransform(schema, md, dm), dm, params), defaultLanguage, dm);
+        Element inputDoc = InspireAtomUtil.prepareOpenSearchDescriptionEltBeforeTransform(context, params, uuid,
+            InspireAtomUtil.convertDatasetMdToAtom("iso19139",
+                InspireAtomUtil.prepareServiceFeedEltBeforeTransform(schema, md, dm), dm, params), defaultLanguage);
 
         return InspireAtomUtil.convertServiceMdToOpenSearchDescription(context, inputDoc, params);
     }

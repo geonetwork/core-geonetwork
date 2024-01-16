@@ -482,9 +482,11 @@
           var addGeonames = !attrs["disableGeonames"];
           scope.regionTypes = [];
 
+          scope.lang = attrs["lang"];
+
           function setDefault() {
             var defaultThesaurus = attrs["default"];
-            for (t in scope.regionTypes) {
+            for (var t in scope.regionTypes) {
               if (scope.regionTypes[t].name === defaultThesaurus) {
                 scope.regionType = scope.regionTypes[t];
                 return;
@@ -729,13 +731,15 @@
         link: function (scope, element, attrs) {
           if (attrs["gnRegionType"]) {
             gnRegionService.loadList().then(function (data) {
-              for (i = 0; i < data.length; ++i) {
+              for (var i = 0; i < data.length; ++i) {
                 if (attrs["gnRegionType"] == data[i].name) {
                   scope.regionType = data[i];
                 }
               }
             });
           }
+          scope.lang = attrs["lang"];
+
           scope.$watch("regionType", function (val) {
             if (scope.regionType) {
               if (scope.regionType.id == "geonames") {
@@ -1267,18 +1271,22 @@
   ]);
 
   module.directive("gnStatusBadge", [
-    function () {
+    "$translate",
+    function ($translate) {
       return {
         restrict: "A",
         replace: true,
-        transclude: true,
-        template:
-          '<div data-ng-if="::md.cl_status.length > 0"' +
-          ' title="{{::md.cl_status[0].key | translate}}"' +
-          ' class="gn-status gn-status-{{::md.cl_status[0].key}}">{{::md.cl_status[0].key | translate}}' +
-          "</div>",
+        templateUrl: "../../catalog/components/utility/partials/statusbadge.html",
         scope: {
           md: "=gnStatusBadge"
+        },
+        link: function (scope, element, attrs) {
+          scope.statusTitle = "";
+          if (scope.md && scope.md.cl_status && scope.md.cl_status.length > 0) {
+            angular.forEach(scope.md.cl_status, function (status) {
+              scope.statusTitle += $translate.instant(status.key) + "\n";
+            });
+          }
         }
       };
     }
@@ -1347,7 +1355,7 @@
           "    </defs>" +
           '    <circle fill="url(\'#image{{imageId}}\')" style="stroke-miterlimit:10;" cx="250" cy="250" r="240"/>' +
           '    <text x="50%" y="50%"' +
-          '          text-anchor="middle" alignment-baseline="central"' +
+          '          text-anchor="middle" alignment-baseline="central" dominant-baseline="central"' +
           "          font-size=\"300\">{{hasIcon ? '' : org.substr(0, 1).toUpperCase()}}</text>" +
           "</svg>",
         scope: {
@@ -2368,7 +2376,7 @@
                   '  <button type=button class="btn btn-danger gn-btn-modal-img">' +
                   '<i class="fa fa-times"/></button>' +
                   '  <img src="' +
-                  (img.lUrl || img.url || img.id) +
+                  (attr.ngSrc || img.lUrl || img.url || img.id) +
                   '"/>' +
                   (label != "" ? labelDiv : "") +
                   "</div>" +
@@ -2574,7 +2582,7 @@
         replace: true,
         scope: {
           uuid: "=gnMetadataSelector", // Model property with the metadata uuid selected
-          searchObj: "=", // ElasticSearch search object
+          searchObj: "=", // Elasticsearch search object
           md: "=", // Metadata object selected
           elementName: "@" // Input element name for the uuid control
         },
@@ -2714,6 +2722,42 @@
         };
 
         updateInputCss();
+      }
+    };
+  });
+
+  module.directive("equalWith", function () {
+    return {
+      require: "ngModel",
+      scope: { equalWith: "&" },
+      link: function (scope, elem, attrs, ngModelCtrl) {
+        ngModelCtrl.$validators.equalWith = function (modelValue) {
+          return modelValue === scope.equalWith();
+        };
+
+        scope.$watch(scope.equalWith, function (value) {
+          ngModelCtrl.$validate();
+        });
+      }
+    };
+  });
+
+  module.directive("confirmOnExit", function () {
+    return {
+      link: function ($scope, elem, attrs) {
+        var message = attrs["confirmMessage"];
+        window.onbeforeunload = function () {
+          if ($scope[attrs["name"]].$dirty) {
+            return message;
+          }
+        };
+        $scope.$on("$locationChangeStart", function (event, next, current) {
+          if ($scope[attrs["name"]].$dirty) {
+            if (!confirm(message)) {
+              event.preventDefault();
+            }
+          }
+        });
       }
     };
   });

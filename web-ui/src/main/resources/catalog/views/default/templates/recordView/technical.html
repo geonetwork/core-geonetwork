@@ -64,7 +64,7 @@
     data-ng-if="mdView.current.record.resourceIdentifier"
     class="gn-margin-bottom flex-row"
   >
-    <span class="badge badge-rounded" title="{{identifier | translate}}">
+    <span class="badge badge-rounded" title="{{'identifier' | translate}}">
       <i class="fa fa-fw fa-info"></i>
     </span>
     <div>
@@ -72,6 +72,23 @@
       <ul class="gn-comma-list">
         <li data-ng-repeat="i in mdView.current.record.resourceIdentifier">
           <span data-ng-bind-html="i.code | linky" />
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div
+    data-ng-if="mdView.current.record.resourceEdition"
+    class="gn-margin-bottom flex-row"
+  >
+    <span class="badge badge-rounded" title="{{'resourceEdition' | translate}}">
+      <i class="fa fa-fw fa-square-check"></i>
+    </span>
+    <div>
+      <h3 data-translate="">resourceEdition</h3>
+      <ul class="gn-comma-list">
+        <li>
+          <span>{{mdView.current.record.resourceEdition}}</span>
         </li>
       </ul>
     </div>
@@ -88,8 +105,11 @@
     <div>
       <h3 data-translate="">language</h3>
       <ul class="gn-comma-list">
-        <li data-ng-repeat="l in mdView.current.record.resourceLanguage">
-          {{l | translate}}
+        <li
+          data-ng-repeat="l in mdView.current.record.resourceLanguage"
+          data-translate=""
+        >
+          {{l}}
         </li>
       </ul>
     </div>

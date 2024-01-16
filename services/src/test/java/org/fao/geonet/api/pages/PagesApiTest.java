@@ -109,6 +109,7 @@ public class PagesApiTest extends AbstractServiceIntegrationTest {
         newPage.setPageId(pageId);
         newPage.setLink(link + "updated");
         newPage.setLabel(pageId + "updated");
+        newPage.setIcon("dummy-icon");
         newPage.getSections().add(Page.PageSection.FOOTER);
         MockHttpServletRequestBuilder updatePageBuilder = put("/srv/api/pages/eng/license")
             .content(gson.toJson(newPage))
@@ -123,6 +124,7 @@ public class PagesApiTest extends AbstractServiceIntegrationTest {
         Assert.assertTrue(page.isPresent());
         Assert.assertEquals(link + "updated", page.get().getLink());
         Assert.assertEquals(pageId + "updated", page.get().getLabel());
+        Assert.assertEquals("dummy-icon", page.get().getIcon());
         Assert.assertTrue(page.get().getSections().contains(Page.PageSection.TOP));
         Assert.assertTrue(page.get().getSections().contains(Page.PageSection.FOOTER));
 

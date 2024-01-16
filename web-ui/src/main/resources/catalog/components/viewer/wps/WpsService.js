@@ -99,7 +99,7 @@
        *  requests are cancelled
        */
       this.describeProcess = function (uri, processId, options) {
-        url = gnOwsCapabilities.mergeDefaultParams(uri, {
+        var url = gnOwsCapabilities.mergeDefaultParams(uri, {
           service: "WPS",
           version: "1.0.0",
           request: "DescribeProcess",
@@ -240,6 +240,23 @@
           // when bbox is cleared value is still set to ',,,'
           if (input.boundingBoxData && data && data != ",,,") {
             var bbox = data.split(",");
+
+            var geomCrs = "EPSG:4326";
+            if (
+              input.boundingBoxData._default &&
+              input.boundingBoxData._default.crs &&
+              input.boundingBoxData._default.crs !== geomCrs
+            ) {
+              geomCrs = input.boundingBoxData._default.crs;
+              try {
+                bbox = ol.proj.transformExtent(bbox, "EPSG:4326", geomCrs);
+              } catch (e) {
+                console.warn(
+                  "WPS | Failed to convert boundingBoxData to requested CRS " + geomCrs
+                );
+              }
+            }
+
             request.value.dataInputs.input.push({
               identifier: {
                 value: input.identifier.value
@@ -247,7 +264,7 @@
               data: {
                 boundingBoxData: {
                   dimensions: 2,
-                  crs: "EPSG:4326",
+                  crs: geomCrs,
                   lowerCorner: [bbox[1], bbox[0]],
                   upperCorner: [bbox[3], bbox[2]]
                 }

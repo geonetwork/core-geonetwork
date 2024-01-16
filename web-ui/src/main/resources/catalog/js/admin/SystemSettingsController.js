@@ -192,6 +192,11 @@
        * element name in XML Jeeves request element).
        */
       function loadSettings() {
+        $http.get("../api/site/info/proxy").then(function (response) {
+          $scope.isProxyConfiguredInSystemProperties =
+            response.data.proxyConfiguredInSystemProperties;
+        });
+
         $http.get("../api/site/info/build").then(function (response) {
           $scope.systemInfo = response.data;
         });
@@ -269,10 +274,23 @@
                 var level2name = level1name + "/" + tokens[1];
                 if (sectionsLevel2.indexOf(level2name) === -1) {
                   sectionsLevel2.push(level2name);
+
+                  var sectionChildren;
+
+                  // Remove the system proxy information if using Java system properties
+                  if (
+                    level2name === "system/proxy" &&
+                    $scope.isProxyConfiguredInSystemProperties
+                  ) {
+                    sectionChildren = [];
+                  } else {
+                    sectionChildren = filterBySection($scope.settings, level2name);
+                  }
+
                   $scope.sectionsLevel1[level1name].children.push({
                     name: level2name,
                     position: $scope.settings[i].position,
-                    children: filterBySection($scope.settings, level2name)
+                    children: sectionChildren
                   });
                 }
               }

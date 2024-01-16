@@ -74,7 +74,7 @@
             type="button"
             class="btn btn-primary pull-right"
             data-ng-hide="!user.isUserAdminOrMore()"
-            data-ng-disabled="!gnGroupEdit.$valid && !gnGroupEdit.dirty"
+            data-ng-disabled="!gnGroupEdit.$valid || !gnGroupEdit.$dirty"
             data-ng-click="saveGroup('#gn-group-edit', '#group-logo-upload')"
             id="gn-btn-group-save"
           >
@@ -123,7 +123,7 @@
                 class="form-control"
                 data-ng-disabled="!user.isAdministratorOrMore()"
                 data-ng-model="groupSelected.name"
-                data-ng-maxlength="32"
+                data-ng-maxlength="255"
                 data-ng-required="true"
               />
               <p class="help-block" data-translate="">groupNameHelp</p>
@@ -295,9 +295,9 @@
           <h3>
             <ng-pluralize
               count="searchResults.count"
-              when="{'0': ('noRecordFound' | translate),
-                'one': '1' +  ('groupRecord' | translate) + ' {{groupSelected.label[lang]}}',
-                'other': '{}' +  ('groupRecords' | translate) + ' {{groupSelected.label[lang]}}'}"
+              when="{'0': '{{&quot;noRecordFound&quot; | translate}}',
+                'one': '1' + '{{&quot;groupRecord&quot; | translate}}' + ' {{groupSelected.label[lang]}}',
+                'other': '{}' + '{{&quot;groupRecords&quot; | translate}}' + ' {{groupSelected.label[lang]}}'}"
             ></ng-pluralize>
           </h3>
           <div

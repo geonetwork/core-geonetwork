@@ -369,7 +369,7 @@ public class Aligner extends AbstractAligner<GeonetParams> {
             try {
                 Integer groupIdVal = null;
                 if (StringUtils.isNotEmpty(params.getOwnerIdGroup())) {
-                    groupIdVal = Integer.parseInt(params.getOwnerIdGroup());
+                    groupIdVal = getGroupOwner();
                 }
 
                 params.getValidate().validate(dataMan, context, md, groupIdVal);

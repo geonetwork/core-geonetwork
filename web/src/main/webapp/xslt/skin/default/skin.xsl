@@ -14,6 +14,8 @@
                 version="2.0"
                 exclude-result-prefixes="#all">
 
+  <xsl:param name="output" as="xs:string" select="'not-pdf'"/>
+
   <xsl:function name="geonet:updateUrlPlaceholder" as="xs:string">
     <xsl:param name="url" as="xs:string"/>
     <xsl:param name="node" as="xs:string"/>
@@ -73,73 +75,86 @@
                   <li>
                     <a href="{$appUrl}">
                       <xsl:if test="not($isLogoInHeader)">
-                        <img class="gn-logo"
-                             alt="{$i18n/siteLogo}"
-                             src="{/root/gui/nodeUrl}../images/logos/{$env//system/site/siteId}.png"/>
-                      </xsl:if>
-                      <xsl:if test="$isShowGNName">
-                        <xsl:value-of select="$env//system/site/name"/>
+                        <xsl:choose>
+                          <xsl:when test="$output = 'pdf' and $env//metadata/pdfReport/headerLogoFileName != ''">
+                            <img class="gn-logo"
+                                 alt="{$i18n/siteLogo}"
+                                 src="{/root/gui/nodeUrl}../images/harvesting/{$env//metadata/pdfReport/headerLogoFileName}"/>
+                          </xsl:when>
+                          <xsl:otherwise>
+                            <img class="gn-logo"
+                                 alt="{$i18n/siteLogo}"
+                                 src="{/root/gui/nodeUrl}../images/logos/{$env//system/site/siteId}.png"/>
+                            <xsl:if test="$isShowGNName">
+                              <xsl:value-of select="$env//system/site/name"/>
+                            </xsl:if>
+                          </xsl:otherwise>
+                        </xsl:choose>
                       </xsl:if>
                     </a>
                   </li>
                 </xsl:if>
               </xsl:if>
 
-              <xsl:variable name="isSearchEnabled"
-                            select="if (util:getUiConfigurationJsonProperty(/root/request/ui, 'mods.search.enabled') = 'false')
+              <xsl:if test="$output != 'pdf'">
+                <xsl:variable name="isSearchEnabled"
+                              select="if (util:getUiConfigurationJsonProperty(/root/request/ui, 'mods.search.enabled') = 'false')
                                     then false()
                                     else true()"/>
-              <xsl:if test="$isSearchEnabled">
-                <xsl:variable name="searchUrl"
-                              select="if(util:getUiConfigurationJsonProperty(/root/request/ui, 'mods.search.appUrl'))
+                <xsl:if test="$isSearchEnabled">
+                  <xsl:variable name="searchUrl"
+                                select="if(util:getUiConfigurationJsonProperty(/root/request/ui, 'mods.search.appUrl'))
                                     then geonet:updateUrlPlaceholder(util:getUiConfigurationJsonProperty(/root/request/ui, 'mods.search.appUrl'), /root/gui/nodeId, $lang)
                                     else concat(/root/gui/nodeUrl, $lang, '/catalog.search#/search')"/>
-                <li>
-                  <a title="{$t/search}" href="{$searchUrl}" onclick="location.href=('{$searchUrl}');return false;">
-                    <i class="fa fa-fw fa-search hidden-sm">&#160;</i>
-                    <span><xsl:value-of select="$t/search"/></span>
-                  </a>
-                </li>
-              </xsl:if>
+                  <li>
+                    <a title="{$t/search}" href="{$searchUrl}" onclick="location.href=('{$searchUrl}');return false;">
+                      <i class="fa fa-fw fa-search hidden-sm">&#160;</i>
+                      <span><xsl:value-of select="$t/search"/></span>
+                    </a>
+                  </li>
+                </xsl:if>
 
-              <xsl:variable name="isMapEnabled"
-                            select="if (util:getUiConfigurationJsonProperty(/root/request/ui, 'mods.map.enabled') = 'false')
+                <xsl:variable name="isMapEnabled"
+                              select="if (util:getUiConfigurationJsonProperty(/root/request/ui, 'mods.map.enabled') = 'false')
                                     then false()
                                     else true()"/>
-              <xsl:if test="$isMapEnabled">
-                <xsl:variable name="mapUrl"
-                              select="if(util:getUiConfigurationJsonProperty(/root/request/ui, 'mods.map.appUrl'))
+                <xsl:if test="$isMapEnabled">
+                  <xsl:variable name="mapUrl"
+                                select="if(util:getUiConfigurationJsonProperty(/root/request/ui, 'mods.map.appUrl'))
                                     then geonet:updateUrlPlaceholder(util:getUiConfigurationJsonProperty(/root/request/ui, 'mods.map.appUrl'), /root/gui/nodeId, $lang)
                                     else concat(/root/gui/nodeUrl, $lang , '/catalog.search#/map')"/>
-                <li id="map-menu" class="hidden-nojs">
-                  <a title="{$t/map}"
-                     href="{$mapUrl}">
-                    <i class="fa fa-fw fa-globe hidden-sm">&#160;</i>
-                    <span><xsl:value-of select="$t/map"/></span></a>
-                </li>
+                  <li id="map-menu" class="hidden-nojs">
+                    <a title="{$t/map}"
+                       href="{$mapUrl}">
+                      <i class="fa fa-fw fa-globe hidden-sm">&#160;</i>
+                      <span><xsl:value-of select="$t/map"/></span></a>
+                  </li>
+                </xsl:if>
               </xsl:if>
             </ul>
 
-            <xsl:variable name="isAuthenticated"
-                          select="util:isAuthenticated()"/>
-            <xsl:variable name="isSigninEnabled"
-                          select="if (util:getUiConfigurationJsonProperty(/root/request/ui, 'mods.authentication.enabled') = 'false')
+            <xsl:if test="$output != 'pdf'">
+              <xsl:variable name="isAuthenticated"
+                            select="util:isAuthenticated()"/>
+              <xsl:variable name="isSigninEnabled"
+                            select="if (util:getUiConfigurationJsonProperty(/root/request/ui, 'mods.authentication.enabled') = 'false')
                                     then false()
                                     else true()"/>
-            <xsl:if test="$isSigninEnabled and not($isAuthenticated) and not($isDisableLoginForm)">
-              <xsl:variable name="signinUrl"
-                            select="if(util:getUiConfigurationJsonProperty(/root/request/ui, 'mods.signin.appUrl'))
+              <xsl:if test="$isSigninEnabled and not($isAuthenticated) and not($isDisableLoginForm)">
+                <xsl:variable name="signinUrl"
+                              select="if(util:getUiConfigurationJsonProperty(/root/request/ui, 'mods.signin.appUrl'))
                                     then geonet:updateUrlPlaceholder(util:getUiConfigurationJsonProperty(/root/request/ui, 'mods.signin.appUrl'), /root/gui/nodeId, $lang)
                                     else concat(/root/gui/nodeUrl, $lang , '/catalog.signin')"/>
-              <ul class="nav navbar-nav navbar-right">
-                <li>
-                  <a href="{$signinUrl}"
-                     title="{$t/signIn}">
-                    <i class="fa fa-sign-in fa-fw">&#160;</i>
-                    <xsl:value-of select="$t/signIn"/>
-                  </a>
-                </li>
-              </ul>
+                <ul class="nav navbar-nav navbar-right">
+                  <li>
+                    <a href="{$signinUrl}"
+                       title="{$t/signIn}">
+                      <i class="fa fa-sign-in fa-fw">&#160;</i>
+                      <xsl:value-of select="$t/signIn"/>
+                    </a>
+                  </li>
+                </ul>
+              </xsl:if>
             </xsl:if>
           </div>
         </div>
@@ -182,33 +197,35 @@
   </xsl:template>
 
   <xsl:template name="footer">
-    <xsl:variable name="isFooterEnabled"
-                  select="if (util:getUiConfigurationJsonProperty(/root/request/ui, 'mods.footer.enabled') = 'false')
-                        then false()
-                        else true()"/>
-    <xsl:if test="$isFooterEnabled">
-      <div class="navbar navbar-default gn-bottom-bar" role="navigation">
-        <ul class="nav navbar-nav">
-          <li class="gn-footer-text">
+    <xsl:if test="$output != 'pdf'">
+      <xsl:variable name="isFooterEnabled"
+                    select="if (util:getUiConfigurationJsonProperty(/root/request/ui, 'mods.footer.enabled') = 'false')
+                          then false()
+                          else true()"/>
+      <xsl:if test="$isFooterEnabled">
+        <div class="navbar navbar-default gn-bottom-bar" role="navigation">
+          <ul class="nav navbar-nav">
+            <li class="gn-footer-text">
 
-          </li>
-          <li>
-            <a href="http://geonetwork-opensource.org/">
-              <i class="fa fa-fw">&#160;</i>
-              <span><xsl:value-of select="$t/about"/></span>
-            </a>
-          </li>
-          <li class="hidden-sm">
-            <a href="https://github.com/geonetwork/core-geonetwork">
-              <i class="fa fa-github">&#160;</i>
-              <span><xsl:value-of select="$t/github"/></span>
-            </a>
-          </li>
-          <li>
-            <a href="{/root/gui/url}/doc/api" title="{$t/learnTheApi}"><xsl:value-of select="$t/API"/>&#160;</a>
-          </li>
-        </ul>
-      </div>
+            </li>
+            <li>
+              <a href="http://geonetwork-opensource.org/">
+                <i class="fa fa-fw">&#160;</i>
+                <span><xsl:value-of select="$t/about"/></span>
+              </a>
+            </li>
+            <li class="hidden-sm">
+              <a href="https://github.com/geonetwork/core-geonetwork">
+                <i class="fa fa-github">&#160;</i>
+                <span><xsl:value-of select="$t/github"/></span>
+              </a>
+            </li>
+            <li>
+              <a href="{/root/gui/url}/doc/api" title="{$t/learnTheApi}"><xsl:value-of select="$t/API"/>&#160;</a>
+            </li>
+          </ul>
+        </div>
+      </xsl:if>
     </xsl:if>
   </xsl:template>
 

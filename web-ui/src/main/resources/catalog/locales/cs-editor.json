@@ -44,13 +44,13 @@
     "removeField": "Odstranit toto pole",
     "addXpath-help": "Aktualizace záznamů pomocí programu XPath vyžaduje pečlivé vymezení změn. Změna je definována:",
     "addXpathTitle": "volitelný titul",
-    "addXpathXpath": "povinný <a href='http://xmlfr.org/w3c/TR/xpath/'>XPath</a>, který odkazuje na prvek(y), které se mají aktualizovat. XPath může obsahovat výraz filtru.",
+    "addXpathXpath": "povinná <a href='https://www.w3.org/TR/1999/REC-xpath-19991116/'> XPath</a> , která ukazuje na prvek(y), který se má aktualizovat. XPath může obsahovat výraz filtru.",
     "addXpathInsertMode": "typ aktualizace",
     "xpath": "XPath",
     "xpathValue": "Text nebo XML hodnota",
     "gn_create": "Vytvořte prvek",
-    "gn_add": "Přidejte prvek nebo hodnotu (v prvním odpovídajícím rodiči) nebo jej vytvořte",
-    "gn_replace": "Nahradit prvek nebo hodnotu (v prvním odpovídajícím rodiči)",
+    "gn_add": "Přidejte prvek nebo hodnotu (ve všech odpovídajících nadřazených) nebo je vytvořte",
+    "gn_replace": "Nahradit prvek nebo hodnotu (ve všech odpovídajících nadřazených)",
     "gn_delete": "Odstraňte všechny odpovídající prvky",
     "addXpathValue": "hodnota, která by mohla být fragmentem XML, pokud režim není 'delete'",
     "chooseASet": "1. Vyberte sadu záznamů",
@@ -428,5 +428,6 @@
     "confirmCancelEdit": "Chcete zrušit všechny změny a zavřít editor?",
     "allowEditGroupMembers": "Povolit editorům skupin úpravy",
     "wmsSelectedLayers": "Vybrané vrstvy",
-    "wmsSelectedLayersNone": "Nevybrány žádné vrstvy"
+    "wmsSelectedLayersNone": "Nevybrány žádné vrstvy",
+    "remoteAssociatedMetadataTitlePlaceholder": "Nadpis vzdáleně přiřazených metadat"
 }

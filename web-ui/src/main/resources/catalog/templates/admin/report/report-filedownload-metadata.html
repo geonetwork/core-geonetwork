@@ -11,7 +11,7 @@
           <button
             type="button"
             class="btn btn-primary pull-right"
-            data-ng-disabled="!gnMetadataFileDownloadsReport.$valid && !gnMetadataFileDownloadsReport.dirty"
+            data-ng-disabled="!gnMetadataFileDownloadsReport.$valid"
             data-ng-click="createReport('#gn-metadata-filedownloads-report', '../api/reports/datadownloads')"
           >
             <span class="fa fa-save"></span> {{"createReport"|translate}}

@@ -562,9 +562,29 @@
     }
   ]);
 
+  module.directive("gnMetadataSocialLink", [
+    "gnUtilityService",
+    "$http",
+    function (gnUtilityService, $http) {
+      return {
+        templateUrl: "../../catalog/components/search/mdview/partials/social.html",
+        scope: {
+          md: "=gnMetadataSocialLink"
+        },
+        link: function (scope, element, attrs) {
+          scope.mdService = gnUtilityService;
+          $http
+            .get("../api/records/" + scope.md.getUuid() + "/permalink")
+            .then(function (r) {
+              scope.socialMediaLink = r.data;
+            });
+        }
+      };
+    }
+  ]);
+
   module.directive("gnQualityMeasuresTable", [
-    "gnGlobalSettings",
-    function (gnGlobalSettings) {
+    function () {
       return {
         templateUrl:
           "../../catalog/components/search/mdview/partials/qualitymeasures.html",
@@ -576,9 +596,10 @@
             name: false,
             description: false,
             value: false,
-            type: false
+            type: false,
+            date: false
           };
-          for (idx in scope.measures) {
+          for (var idx in scope.measures) {
             angular.forEach(Object.keys(scope.columnVisibility), function (p) {
               if (scope.measures[idx][p]) {
                 scope.columnVisibility[p] = true;

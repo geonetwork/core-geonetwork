@@ -18,7 +18,13 @@
           gn-formatter="formatter.defaultUrl"
         >
           <h1>
-            <span class="clamp-2">{{md.resourceTitle}}</span>
+            <span class="clamp-2">
+              <i
+                data-ng-show="md.resourceTitle.trim()=='' || md.resourceTitle===undefined"
+                >{{'missingTitle' | translate}}</i
+              >
+              {{md.resourceTitle}}
+            </span>
           </h1>
         </a>
       </div>

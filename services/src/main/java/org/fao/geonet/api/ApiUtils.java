@@ -113,7 +113,11 @@ public class ApiUtils {
         throws Exception {
 
         IMetadataUtils metadataUtils = ApplicationContextHolder.get().getBean(IMetadataUtils.class);
-        String id = String.valueOf(metadataUtils.findOneByUuid(uuidOrInternalId).getId());
+        AbstractMetadata metadata = metadataUtils.findOneByUuid(uuidOrInternalId);
+        String id = null;
+        if (metadata != null) {
+            id = String.valueOf(metadata.getId());
+        }
 
         if (StringUtils.isEmpty(id)) {
             //It wasn't a UUID
@@ -280,10 +284,26 @@ public class ApiUtils {
     }
 
     /**
-     * Check if the current user can view this record.
+     * Check if the current user can view this approved record
      */
     public static AbstractMetadata canViewRecord(String metadataUuid, HttpServletRequest request) throws Exception {
-        AbstractMetadata metadata = getRecord(metadataUuid);
+        return canViewRecord(metadataUuid, true, request);
+    }
+
+    /**
+     * Check if the current user can view this record.
+     */
+    public static AbstractMetadata canViewRecord(String metadataUuid, boolean approved, HttpServletRequest request) throws Exception {
+        String metadataId;
+        if (!approved) {
+            // If the record is not approved then we need to get the id of the record.
+            metadataId = getInternalId(metadataUuid, approved);
+        } else {
+            // Otherwise use the uuid or id that was supplied.
+            metadataId = metadataUuid;
+        }
+
+        AbstractMetadata metadata = getRecord(metadataId);
         try {
             Lib.resource.checkPrivilege(createServiceContext(request), String.valueOf(metadata.getId()), ReservedOperation.view);
         } catch (Exception e) {

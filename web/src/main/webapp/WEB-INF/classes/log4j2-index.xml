@@ -44,7 +44,7 @@
     <Logger name="geonetwork.geoserver.rest" level="error"/>
     <Logger name="geonetwork.harvest.wfs.features"/>
     <Logger name="geonetwork.harvester" level="info"/>
-    <Logger name="geonetwork.harvester" level="info"/>
+    <Logger name="geonetwork.harvest-man" level="info"/>
     <Logger name="geonetwork.index" level="error"/>
     <Logger name="geonetwork.ldap" level="error"/>
     <Logger name="geonetwork.lucene" level="error"/>

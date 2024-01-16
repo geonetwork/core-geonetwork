@@ -482,7 +482,7 @@
 
                 <!-- Data download links are inferred from the record metadata -->
                 <xsl:variable name="count"
-                              select="dataset/metas/default/records_count"/>
+                              select="metas/records_count|dataset/metas/default/records_count"/>
                 <xsl:if test="$count > 0">
                   <xsl:call-template name="dataLink">
                     <xsl:with-param name="format">csv</xsl:with-param>
@@ -496,7 +496,7 @@
                     </xsl:call-template>
                     <xsl:if test="$count &lt; 5000">
                       <xsl:call-template name="dataLink">
-                        <xsl:with-param name="format">shapefile</xsl:with-param>
+                        <xsl:with-param name="format">shp</xsl:with-param>
                       </xsl:call-template>
                     </xsl:if>
                   </xsl:if>
@@ -562,10 +562,9 @@
           <cit:linkage>
             <gco:CharacterString>
               <xsl:value-of select="concat(nodeUrl,
-                                   '/explore/dataset/',
+                                   '/api/explore/v2.1/catalog/datasets/',
                                    (datasetid|dataset/dataset_id)[1],
-                                   '/download?format=', $format,
-                                   '&amp;timezone=Europe/Berlin&amp;use_labels_for_header=false')" />
+                                   '/exports/', $format, '?use_labels=true')" />
             </gco:CharacterString>
           </cit:linkage>
           <cit:protocol>

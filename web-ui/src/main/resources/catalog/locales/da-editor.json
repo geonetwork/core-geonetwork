@@ -44,13 +44,13 @@
     "removeField": "Fjern dette felt",
     "addXpath-help": "Opdatering af poster vha. XPath kræver en nøje definition af ændringerne. En ændring defineres som:",
     "addXpathTitle": "En valgfri titel",
-    "addXpathXpath": "en obligatorisk <a href='http://xmlfr.org/w3c/TR/xpath/'>XPath</a>, som henviser til elementet/erne, som skal opdateres. XPath kan indeholde et filterudtryk.",
+    "addXpathXpath": "a mandatory <a href='https://www.w3.org/TR/1999/REC-xpath-19991116/'>XPath</a> to point to the element(s) to update. XPath may contain a filter expression.",
     "addXpathInsertMode": "en type opdatering",
     "xpath": "XPath",
     "xpathValue": "Tekst eller XML-værdi",
     "gn_create": "Opret elementet",
-    "gn_add": "Tilføj elementet eller værdi (i det første matchende parent) eller opret den",
-    "gn_replace": "Udskift elementet eller værdien (i det første matchende parent)",
+    "gn_add": "Add the element or value (in all matching parents) or create it",
+    "gn_replace": "Replace the element or value (in all matching parents)",
     "gn_delete": "Fjern alle matchende elementer",
     "addXpathValue": "En værdi, som kunne forekomme som en 'XML snippet', hvis tilstanden ikke er sat til 'slet'",
     "chooseASet": "1. Vælg et sæt poster",
@@ -428,5 +428,6 @@
     "confirmCancelEdit": "Vil du annullere alle ændringer og lukke redigeringsværktøjet?",
     "allowEditGroupMembers": "Tillad grupperedaktører at foretage ændringer",
     "wmsSelectedLayers": "Valgte lag",
-    "wmsSelectedLayersNone": "Ingen lag valgt"
+    "wmsSelectedLayersNone": "Ingen lag valgt",
+    "remoteAssociatedMetadataTitlePlaceholder": "Remote associated metadata title"
 }

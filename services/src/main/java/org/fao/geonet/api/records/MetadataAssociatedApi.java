@@ -40,6 +40,7 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,8 +52,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static org.fao.geonet.api.ApiParams.*;
 
@@ -94,7 +93,7 @@ public class MetadataAssociatedApi {
         summary = "Get record associated resources",
         description = "Retrieve related services, datasets, sources, ... " +
             "to this records.<br/>" +
-            "<a href='http://geonetwork-opensource.org/manuals/trunk/eng/users/user-guide/associating-resources/index.html'>More info</a>")
+            "<a href='https://docs.geonetwork-opensource.org/latest/user-guide/associating-resources/'>More info</a>")
     @RequestMapping(value = "/{metadataUuid:.+}/associated",
         method = RequestMethod.GET,
         produces = {
@@ -117,6 +116,9 @@ public class MetadataAssociatedApi {
         )
         @RequestParam(defaultValue = "")
             RelatedItemType[] type,
+        @Parameter(description = "Use approved version or not", example = "true")
+        @RequestParam(required = false, defaultValue = "true")
+            Boolean approved,
         @Parameter(description = "Start offset for paging. Default 1. Only applies to related metadata records (ie. not for thumbnails).",
             required = false
         )
@@ -129,7 +131,7 @@ public class MetadataAssociatedApi {
 
         AbstractMetadata md;
         try {
-            md = ApiUtils.canViewRecord(metadataUuid, request);
+            md = ApiUtils.canViewRecord(metadataUuid, approved, request);
         } catch (SecurityException e) {
             Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
             throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);

@@ -39,12 +39,12 @@ import org.elasticsearch.action.bulk.BulkResponse;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.client.RequestOptions;
-import org.elasticsearch.common.xcontent.XContentType;
+import org.elasticsearch.xcontent.XContentType;
 import org.elasticsearch.rest.RestStatus;
 import org.fao.geonet.harvester.wfsfeatures.model.WFSHarvesterParameter;
 import org.fao.geonet.index.es.EsRestClient;
 import org.fao.geonet.kernel.search.EsSearchManager;
-import org.geotools.data.DataSourceException;
+import org.geotools.api.data.DataSourceException;
 import org.geotools.data.simple.SimpleFeatureCollection;
 import org.geotools.data.store.ReprojectingFeatureCollection;
 import org.geotools.data.wfs.WFSDataStore;
@@ -58,10 +58,10 @@ import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.geom.Point;
 import org.locationtech.jts.geom.PrecisionModel;
 import org.locationtech.jts.precision.GeometryPrecisionReducer;
-import org.opengis.feature.simple.SimpleFeature;
-import org.opengis.geometry.BoundingBox;
-import org.opengis.temporal.Instant;
-import org.opengis.temporal.Position;
+import org.geotools.api.feature.simple.SimpleFeature;
+import org.geotools.api.geometry.BoundingBox;
+import org.geotools.api.temporal.Instant;
+import org.geotools.api.temporal.Position;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -288,13 +288,6 @@ public class EsWFSFeatureIndexer {
             long begin = System.currentTimeMillis();
 
             String epsg = "urn:ogc:def:crs:OGC:1.3:CRS84";
-            // TODO: With QGIS server, this can be required
-            // for proper coordinate ordering.
-            // Not 100% sure if it always apply or related only
-            // to Ifremer setup
-            //            if (strategyId.contains("qgis")) {
-            //               epsg = "EPSG:4326";
-            //            }
 
             for (String featureType : resolvedTypeNames) {
                 SimpleFeatureCollection fc = wfs.getFeatureSource(featureType).getFeatures();

@@ -2,12 +2,12 @@
 <div
   class="row gn-card gn-card-{{mdView.current.record.resourceType[0]}} gn-margin-top gn-margin-bottom gn-padding-top gn-padding-bottom"
 >
-  <div ng-include="'../../catalog/views/default/templates/recordView/status.html'" />
-
   <div class="col-md-8 gn-record">
     <div ng-include="'../../catalog/views/default/templates/recordView/title.html'" />
   </div>
   <div class="col-md-4 gn-md-side">
+    <div ng-include="'../../catalog/views/default/templates/recordView/status.html'" />
+
     <div gn-record-is-replaced-by="mdView.current.record.uuid"></div>
 
     <div
@@ -25,6 +25,9 @@
 <!-- map & extent -->
 <div
   class="row gn-section gn-section-{{mdView.current.record.resourceType[0]}} gn-padding-top"
+  data-ng-if="mdView.current.record.geom
+              || mdView.current.record.extentDescriptionObject
+              || mdView.current.record.extentIdentifierObject"
 >
   <div class="gn-record" data-ng-class="showDataBrowser ? 'col-md-12' : 'col-md-8'">
     <div data-ng-if="mdView.current.record.geom">
@@ -68,6 +71,7 @@
     />
   </div>
   <!-- /.col-md-8 gn-record -->
+
   <div
     class="gn-md-side"
     data-ng-class="[].concat(mdView.current.record.related.datasets, mdView.current.record.related.services).length > 3 ? 'col-md-12' : 'col-md-4'"
@@ -86,6 +90,14 @@
         </ul>
       </div>
     </div>
+
+    <div
+      class="gn-contact-col-1"
+      data-ng-if="mdView.current.record.contactForDistribution"
+      data-gn-metadata-contacts="mdView.current.record.contactForDistribution"
+      data-gn-mode="default"
+      data-layout="icon"
+    />
 
     <div
       data-ng-if="mdView.current.record.related.uuids"
@@ -154,7 +166,7 @@
 
 <div
   class="row gn-section gn-section-{{mdView.current.record.resourceType[0]}} gn-padding-bottom-lg"
-  data-ng-if="mdView.current.record.specificationConformance || mdView.current.record.processSteps"
+  data-ng-if="mdView.current.record.specificationConformance || mdView.current.record.measure || mdView.current.record.processSteps"
 >
   <div class="col-md-8 gn-record">
     <div ng-include="'../../catalog/views/default/templates/recordView/quality.html'" />

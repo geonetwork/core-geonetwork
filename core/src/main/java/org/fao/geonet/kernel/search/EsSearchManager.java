@@ -35,6 +35,7 @@ import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
+import org.elasticsearch.ElasticsearchParseException;
 import org.elasticsearch.action.ActionListener;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
 import org.elasticsearch.action.bulk.BulkRequest;
@@ -47,7 +48,7 @@ import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.indices.CreateIndexRequest;
 import org.elasticsearch.client.indices.CreateIndexResponse;
 import org.elasticsearch.client.indices.GetIndexRequest;
-import org.elasticsearch.common.xcontent.XContentType;
+import org.elasticsearch.xcontent.XContentType;
 import org.elasticsearch.index.query.QueryStringQueryBuilder;
 import org.elasticsearch.index.reindex.DeleteByQueryRequest;
 import org.elasticsearch.script.Script;
@@ -153,7 +154,7 @@ public class EsSearchManager implements ISearchManager {
             .build();
 
         FIELDLIST_RELATED_SCRIPTED = ImmutableMap.<String, String>builder()
-            // ElasticSearch scripted field to get the first overview url. Scripted fields must return single values.
+            // Elasticsearch scripted field to get the first overview url. Scripted fields must return single values.
             .put("overview", "return params['_source'].overview == null ? [] : params['_source'].overview.stream().map(f -> f.url).findFirst().orElse('');")
             .build();
     }
@@ -271,11 +272,11 @@ public class EsSearchManager implements ISearchManager {
                 DeleteIndexRequest request = new DeleteIndexRequest(indexName);
                 AcknowledgedResponse deleteIndexResponse = client.getClient().indices().delete(request, RequestOptions.DEFAULT);
                 if (deleteIndexResponse.isAcknowledged()) {
-                    LOGGER.debug("Index '{}' removed.", new Object[]{indexName});
+                    LOGGER.debug("Index '{}' removed.", indexName);
                 }
             } catch (Exception e) {
                 // index does not exist ?
-                LOGGER.debug("Error during index '{}' removal. Error is: {}", new Object[]{indexName, e.getMessage()});
+                LOGGER.debug("Error during index '{}' removal. Error is: {}", indexName, e.getMessage());
             }
         }
 
@@ -304,7 +305,7 @@ public class EsSearchManager implements ISearchManager {
                     CreateIndexResponse createIndexResponse = client.getClient().indices().create(createIndexRequest, RequestOptions.DEFAULT);
 
                     if (createIndexResponse.isAcknowledged()) {
-                        LOGGER.debug("Index '{}' created", new Object[]{indexName});
+                        LOGGER.debug("Index '{}' created", indexName);
                     } else {
                         final String message = String.format("Index '%s' was not created. Error is: %s", indexName, createIndexResponse.toString());
                         LOGGER.error(message);
@@ -317,10 +318,13 @@ public class EsSearchManager implements ISearchManager {
                         indexName));
                 }
             }
+        } catch (ElasticsearchParseException ex) {
+            LOGGER.error(ex.getMessage(), ex);
+            throw new IOException(ex.getMessage());
         } catch (Exception cnce) {
             final String message = String.format("Could not connect to index '%s'. Error is %s. Is the index server  up and running?",
                 defaultIndex, cnce.getMessage());
-            LOGGER.error(message);
+            LOGGER.error(message, cnce);
             throw new IOException(message);
         }
     }
@@ -444,7 +448,7 @@ public class EsSearchManager implements ISearchManager {
             } catch (Exception e) {
                 LOGGER.error(
                     "An error occurred while indexing {} documents in current indexing list. Error is {}.",
-                    new Object[]{listOfDocumentsToIndex.size(), e.getMessage()});
+                        listOfDocumentsToIndex.size(), e.getMessage());
             } finally {
                 // TODO: Trigger this async ?
                 documents.keySet().forEach(uuid -> overviewFieldUpdater.process(uuid));
@@ -489,14 +493,14 @@ public class EsSearchManager implements ISearchManager {
                     // TODO: Report the JSON which was causing the error ?
 
                     LOGGER.error("Document with error #{}: {}.",
-                        new Object[]{e.getId(), e.getFailureMessage()});
+                            e.getId(), e.getFailureMessage());
                     LOGGER.error(failureDoc);
 
                     try {
                         listErrorOfDocumentsToIndex.put(e.getId(), mapper.writeValueAsString(docWithErrorInfo));
                     } catch (JsonProcessingException e1) {
                         LOGGER.error("Generated document for the index is not properly formatted. Check document #{}: {}.",
-                            new Object[]{e.getId(), e1.getMessage()});
+                                e.getId(), e1.getMessage());
                     }
                 }
             });
@@ -505,7 +509,7 @@ public class EsSearchManager implements ISearchManager {
                 BulkResponse response = client.bulkRequest(defaultIndex, listErrorOfDocumentsToIndex);
                 if (response.status().getStatus() != 201) {
                     LOGGER.error("Failed to save error documents {}.",
-                        new Object[]{Arrays.toString(errorDocumentIds.toArray())});
+                            Arrays.toString(errorDocumentIds.toArray()));
                 }
             }
         }
@@ -638,7 +642,7 @@ public class EsSearchManager implements ISearchManager {
                                 mapper.readTree(node.getText()));
                         } catch (IOException e) {
                             LOGGER.error("Parsing invalid JSON node {} for property {}. Error is: {}",
-                                new Object[]{node.getTextNormalize(), propertyName, e.getMessage()});
+                                    node.getTextNormalize(), propertyName, e.getMessage());
                         }
                     } else {
                         arrayNode.add(
@@ -657,7 +661,7 @@ public class EsSearchManager implements ISearchManager {
                     doc.set("geom", mapper.readTree(nodeElements.get(0).getTextNormalize()));
                 } catch (IOException e) {
                     LOGGER.error("Parsing invalid geometry for JSON node {}. Error is: {}",
-                        new Object[]{nodeElements.get(0).getTextNormalize(), e.getMessage()});
+                            nodeElements.get(0).getTextNormalize(), e.getMessage());
                 }
                 continue;
             }
@@ -670,7 +674,7 @@ public class EsSearchManager implements ISearchManager {
                         ));
                 } catch (IOException e) {
                     LOGGER.error("Parsing invalid JSON node {} for property {}. Error is: {}",
-                        new Object[]{nodeElements.get(0).getTextNormalize(), propertyName, e.getMessage()});
+                            nodeElements.get(0).getTextNormalize(), propertyName, e.getMessage());
                 }
             } else {
                 doc.put(propertyName,

@@ -1,0 +1,23 @@
+TY  - DATA
+AU  - Production géomatique et traitement de données (SPW - Secrétariat général - SPW Digital - Département Données transversales - Production géomatique et traitement de données)
+TI  - Utilisation du Sol en Wallonie - WALOUS 2018
+KW  - Données de base
+KW  - Nature et environnement
+KW  - Aménagement du territoire
+KW  - Sol et sous-sol
+KW  - WalOnMap
+KW  - BDInfraSIG
+KW  - Reporting INSPIRENO
+KW  - Open Data
+KW  - PanierTelechargementGeoportail
+KW  - Régional
+KW  - Utilisation du sol
+KW  - Usage du sol
+KW  - WALOUS
+KW  - Télédétection
+KW  - Aménagement du territoire
+KW  - UTS
+KW  - COSW
+UR  - http://localhost:8080/srv/api/records/{uuid}
+ID  - {uuid}
+ER  -

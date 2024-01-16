@@ -806,6 +806,8 @@
             // By default, such an attribute is identified in the form by
             // the parent element id + '_' + attribute name
             if (angular.isDefined(attrs.thesaurusConceptIdAttribute)) {
+              var input;
+
               if (scope.templateField) {
                 scope.conceptIdElementName =
                   // In multilingual mode, the ref to the CharacterString is known using the id
