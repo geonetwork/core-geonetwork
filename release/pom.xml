@@ -12,8 +12,8 @@
 
   <artifactId>release</artifactId>
   <packaging>jar</packaging>
-  <name>Release module</name>
-  <description>Use to create distribution packages.</description>
+  <name>GeoNetwork Release module</name>
+  <description>Use to create zip distribution packages (copies from files from web which must be built first).</description>
 
   <licenses>
     <license>
@@ -23,16 +23,14 @@
     </license>
   </licenses>
 
-  <!-- To force the war build before this module is processed -->
   <dependencies>
     <dependency>
-      <groupId>org.geonetwork-opensource</groupId>
+      <groupId>${project.groupId}</groupId>
       <artifactId>web-app</artifactId>
       <version>${project.version}</version>
       <type>war</type>
     </dependency>
   </dependencies>
-
   <build>
     <plugins>
       <plugin>
@@ -41,14 +39,10 @@
           <execution>
             <id>reset</id>
             <goals><goal>clean</goal></goals>
-            <!-- reset working files covered by .gitignore -->
             <configuration>
               <filesets>
                 <fileset>
-                  <directory>.</directory>
-                  <includes>
-                    <include>jetty/**</include>
-                  </includes>
+                  <directory>jetty</directory>
                 </fileset>
               </filesets>
             </configuration>
@@ -59,18 +53,15 @@
   </build>
 
   <profiles>
+    <!-- jetty-download is an optional build step for generating release -->
+    <!-- hack: using the integration phase steps to build before install -->
     <profile>
       <id>jetty-download</id>
       <activation>
         <property>
-          <name>jetty-download</name>
+          <name>release</name>
         </property>
       </activation>
-      <!--activation>
-        <file>
-            <missing>jetty</missing>
-        </file>
-      </activation-->
       <build>
         <plugins>
           <plugin>
@@ -78,8 +69,9 @@
             <artifactId>download-maven-plugin</artifactId>
             <executions>
               <execution>
-                <id>download-jetty</id>
-                <phase>generate-resources</phase>
+                <id>jetty-download</id>
+                <phase>pre-integration-test</phase>
+                <!-- prepare-package step moved later in maven lifecycle to avoid slowing down local testing -->
                 <goals>
                   <goal>wget</goal>
                 </goals>
@@ -92,11 +84,12 @@
             </executions>
           </plugin>
           <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-antrun-plugin</artifactId>
             <executions>
               <execution>
-                <phase>process-resources</phase>
+                <id>jetty-rename</id>
+                <phase>pre-integration-test</phase>
+                <!-- prepare-package step moved later in maven lifecycle to avoid slowing down local testing -->
                 <goals>
                   <goal>run</goal>
                 </goals>
@@ -119,27 +112,24 @@
     <profile>
       <id>bundle</id>
       <activation>
-        <file>
-            <exists>jetty</exists>
-        </file>
+        <property>
+          <name>release</name>
+        </property>
       </activation>
       <build>
         <plugins>
           <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-antrun-plugin</artifactId>
             <executions>
               <execution>
-                <phase>package</phase>
+                <phase>post-integration-test</phase>
+                <!-- package step moved later in maven lifecycle to avoid slowing down local testing -->
                 <goals>
                   <goal>run</goal>
                 </goals>
                 <configuration>
                   <target>
-                    <ant antfile="build.xml" dir="${basedir}" target="distributions">
-                      <property name="build.directory" value="${project.build.directory}"/>
-                      <property name="project.version" value="${project.version}"/>
-                    </ant>
+                    <ant antfile="build.xml"/>
                   </target>
                 </configuration>
               </execution>
