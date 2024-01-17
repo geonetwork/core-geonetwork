@@ -1,7 +1,10 @@
 <div data-ng-if="allowRemoteRecordLink">
   <form class="form-horizontal">
     <div class="form-group">
-      <label for="gnRemoteRecordUrl" class="control-label col-sm-2" data-translate=""
+      <label
+        ng-attr-for="{{ 'gnRemoteRecordUrl' + popupId }}"
+        class="control-label col-sm-2"
+        data-translate=""
         >orUseRemoteRecordUrl</label
       >
       <div class="col-sm-10">
@@ -9,7 +12,7 @@
           <input
             class="form-control"
             placeholder="https://catalog.sdi.org/csw?REQUEST=GetRecordById&..."
-            id="gnRemoteRecordUrl"
+            ng-attr-id="{{ 'gnRemoteRecordUrl' + popupId }}"
             autocomplete="off"
             data-ng-model="remoteRecord.remoteUrl"
             data-ng-model-options="{debounce: 300}"
