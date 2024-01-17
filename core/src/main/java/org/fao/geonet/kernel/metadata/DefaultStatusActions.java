@@ -220,8 +220,8 @@ public class DefaultStatusActions implements StatusActions {
      */
     private boolean applyStatusChange(int metadataId, MetadataStatus status, String toStatusId, boolean updateIndex) throws Exception {
         boolean deleted = false;
-        if (!deleted && updateIndex) {
-            metadataStatusManager.setStatusExt(status, true);
+        if (!deleted) {
+            metadataStatusManager.setStatusExt(status, updateIndex);
         }
         return deleted;
     }
