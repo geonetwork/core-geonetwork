@@ -14,8 +14,8 @@ Thank you for contributing to GeoNetwork:
 * Before merging a pull request, should be defined the following properties:
 
   - Milestone to include the change.
-  - Add the label `changelog` when  the change is relevant to be added to the release changelog file .
-  - Add the label(s) to the backport to previous branch(es), when the change is a bug fix or if it is a small improvement that may be relevant to the backport.
+  - Add the label `changelog` when  the change is relevant to be added to the release changelog file.
+  - Add `backport <branch>` to indicate when change is a bug fix or is a small improvement that may be relevant to the backport.
 
 * Good housekeeping: Anytime you commit, try and clean the code around it to latest style guide. If you improve a function without comments: add comments. If you modify functionality that does not have tests: write a test. If you fix functionality without documentation: add documentation.
   
