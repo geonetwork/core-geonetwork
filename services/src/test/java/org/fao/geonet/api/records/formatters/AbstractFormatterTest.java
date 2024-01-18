@@ -118,7 +118,7 @@ public abstract class AbstractFormatterTest extends AbstractServiceIntegrationTe
         TestFunction testFunction = new TestFunction() {
             @Override
             public void exec() throws Exception {
-                formatService.exec(getUILang(), getOutputType().name(), "" + id, null, formatterId, "true", false, FormatterWidth._100,
+                formatService.exec(getUILang(), getOutputType().name(), "" + id, null, formatterId, "true", FormatterWidth._100,
                     webRequest);
             }
         };
