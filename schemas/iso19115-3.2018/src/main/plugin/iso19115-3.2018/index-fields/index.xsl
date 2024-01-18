@@ -869,6 +869,7 @@
                 <xsl:if test="$max castable as xs:double
                               and xs:double($min) &lt; xs:double($max)">
                   ,"lte": <xsl:value-of select="normalize-space($max)"/>
+                  ,"unit": "m"
                 </xsl:if>
                 }</resourceVerticalRange>
             </xsl:if>
