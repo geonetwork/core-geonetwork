@@ -39,7 +39,7 @@ GeoNetwork uses feature branches for development, and a pull-request workflow fo
 
 ### Quality Assurance
 
-A number of [workflows]((../.github/workflows/) are setup to ensure each PR compiles, passes tests and so forth.
+A number of [workflows](../.github/workflows/) are setup to ensure each PR compiles, passes tests and so forth.
 
 * [linux.yml](../.github/workflows/linux.yml): build and QA, including -Drelease check
 * [docs.yml](../.github/workflows/docs.yml): publish docs to gh-pages branch
