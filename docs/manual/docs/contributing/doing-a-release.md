@@ -149,7 +149,7 @@ with the following utilities: ***sed***, ***xmlstarlet*** and ***sftp***.
     git tag -a $version -m "Tag for $version release"
     ```
 
-3.  Build
+6.  Build
 
     ``` shell
     # deep clean
@@ -171,7 +171,7 @@ with the following utilities: ***sed***, ***xmlstarlet*** and ***sftp***.
     mvn deploy -Drelease
     ```
 
-4.  Test
+7.  Test
 
     ``` shell
     cd target/GeoNetwork-$newversion
@@ -180,16 +180,16 @@ with the following utilities: ***sed***, ***xmlstarlet*** and ***sftp***.
     ./startup.sh -f
     ```
 
-5.  Set the next version
+8.  Set the next version
 
     ``` shell
     # Set version number to SNAPSHOT
     ./update-version.sh $newversion $nextversion
 
     # Add SQL migration step for the next version
-    mkdir web/src/main/webapp/WEB-INF/classes/setup/sql/migrate/v424
-    cat <<EOF > web/src/main/webapp/WEB-INF/classes/setup/sql/migrate/v424/migrate-default.sql
-    UPDATE Settings SET value='4.2.4' WHERE name='system/platform/version';
+    mkdir web/src/main/webapp/WEB-INF/classes/setup/sql/migrate/v442
+    cat <<EOF > web/src/main/webapp/WEB-INF/classes/setup/sql/migrate/v442/migrate-default.sql
+    UPDATE Settings SET value='4.4.2' WHERE name='system/platform/version';
     UPDATE Settings SET value='SNAPSHOT' WHERE name='system/platform/subVersion';
     EOF
     vi web/src/main/webResources/WEB-INF/config-db/database_migration.xml
@@ -198,9 +198,9 @@ with the following utilities: ***sed***, ***xmlstarlet*** and ***sftp***.
     In `WEB-INF/config-db/database_migration.xml` add an entry for the new version in the 2 steps:
 
     ``` xml
-    <entry key="3.12.2">
+    <entry key="4.4.2">
       <list>
-        <value>WEB-INF/classes/setup/sql/migrate/v3122/migrate-</value>
+        <value>WEB-INF/classes/setup/sql/migrate/v442/migrate-</value>
       </list>
     </entry>
     ```
@@ -210,7 +210,7 @@ with the following utilities: ***sed***, ***xmlstarlet*** and ***sftp***.
     git commit -m "Update version to $nextversion"
     ```
 
-6.  Publishing
+9.  Publishing
 
     ``` shell
     # Push the branch and tag
@@ -218,7 +218,7 @@ with the following utilities: ***sed***, ***xmlstarlet*** and ***sftp***.
     git push origin $version
     ```
 
-7.  Generate checksum files
+10. Generate checksum files
 
     -   If using Linux:
 
@@ -242,15 +242,15 @@ with the following utilities: ***sed***, ***xmlstarlet*** and ***sftp***.
     cd /home/frs/project/g/ge/geonetwork/GeoNetwork_opensource
     # or for RC release
     cd /home/frs/project/g/ge/geonetwork/GeoNetwork_unstable_development_versions/
-    mkdir v3.12.1
-    cd v3.12.1
-    put docs/changes3.12.1-0.txt
+    mkdir v4.4.1
+    cd v4.4.1
+    put docs/changes/changes4.4.1-0.txt
     put release/target/GeoNetwork*/geonetwork-bundle*.zip*
     put web/target/geonetwork.war*
     bye
     ```
 
-9.  Close the milestone on github <https://github.com/geonetwork/core-geonetwork/milestones?state=closed> with link to sourceforge download.
+11.  Close the milestone on github <https://github.com/geonetwork/core-geonetwork/milestones?state=closed> with link to sourceforge download.
 
     Publish the release on github <https://github.com/geonetwork/core-geonetwork/releases> .
 
