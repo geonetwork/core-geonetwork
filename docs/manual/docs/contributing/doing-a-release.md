@@ -152,18 +152,23 @@ with the following utilities: ***sed***, ***xmlstarlet*** and ***sftp***.
 3.  Build
 
     ``` shell
+    # deep clean
+    mvn clean:clean@reset
+    
     # Build the new release
+    mvn install -Drelease
+    
+    # Create a minimal war (with only the default datasources)
+    cd web
     mvn clean install -DskipTests -Pwar -Pwro4j-prebuild-cache
 
-
     # Download Jetty and create the installer
-    cd release
-    mvn clean install -Djetty-download
-    ant
-
+    cd ../release
+    mvn clean install -Djetty-download,bundle
 
     # Deploy to osgeo repository (requires credentials in ~/.m2/settings.xml)
-    mvn deploy
+    cd ..
+    mvn deploy -Drelease
     ```
 
 4.  Test
