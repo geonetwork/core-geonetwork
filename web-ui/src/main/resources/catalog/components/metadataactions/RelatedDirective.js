@@ -1109,10 +1109,7 @@
             } else if (type === UIRelationTypeValues.parent) {
               scope.onlinesrcService.removeMdLink(UIRelationTypeValues.parent, record);
             } else if (type === UIRelationTypeValues.source) {
-              scope.onlinesrcService.onlinesrcService.removeMdLink(
-                UIRelationTypeValues.source,
-                record
-              );
+              scope.onlinesrcService.removeMdLink(UIRelationTypeValues.source, record);
             } else if (type === UIRelationTypeValues.fcats) {
               scope.onlinesrcService.removeFeatureCatalog(record);
             } else if (type === UIRelationTypeValues.siblings) {

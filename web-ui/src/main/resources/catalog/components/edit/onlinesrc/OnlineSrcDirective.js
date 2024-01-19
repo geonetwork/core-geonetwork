@@ -189,27 +189,54 @@
             "../../catalog/components/edit/onlinesrc/" +
             "partials/remote-record-selector.html",
           link: function (scope, element, attrs) {
-            scope.multipleSelection = attrs.multiple === "true";
             scope.allowRemoteRecordLink = false;
             if (gnGlobalSettings.gnCfg.mods.editor.allowRemoteRecordLink === false) {
               return;
             } else {
               scope.allowRemoteRecordLink = true;
             }
-            scope.remoteRecord = {
-              remoteUrl: "",
-              title: "",
-              uuid: ""
-            };
-            scope.isRemoteRecordUrlOk = true;
-            scope.isRemoteRecordPropertiesExtracted = false;
-            scope.selectionList = undefined;
 
-            scope.$on("resetSearch", function (event, args) {
-              scope.remoteRecord = {
+            scope.multipleSelection = false;
+
+            scope.$watch("config.sources.remoteurl", function (newVal, oldVal) {
+              if (newVal != oldVal) {
+                scope.multipleSelection = newVal.multiple;
+              }
+            });
+
+            // Model for the multiple selection mode
+            scope.multipleSelectionModel = {
+              remoteLinksToCheck: 0,
+              checkingRemoteLinks: false,
+              invalidRemoteLinks: [],
+              remoteRecordsList: ""
+            };
+
+            // Model for the single selection mode
+            scope.singleSelectionModel = {
+              remoteRecord: {
                 remoteUrl: "",
                 title: "",
                 uuid: ""
+              },
+              isRemoteRecordUrlOk: true,
+              isRemoteRecordPropertiesExtracted: false
+            };
+
+            scope.selectionList = undefined;
+
+            scope.$on("resetSearch", function (event, args) {
+              scope.singleSelectionModel.remoteRecord = {
+                remoteUrl: "",
+                title: "",
+                uuid: ""
+              };
+
+              scope.multipleSelectionModel = {
+                remoteLinksToCheck: 0,
+                checkingRemoteLinks: false,
+                invalidRemoteLinks: [],
+                remoteRecordsList: ""
               };
             });
 
@@ -224,8 +251,9 @@
               return "application/xml";
             }
 
-            function getProperties(doc) {
-              scope.isRemoteRecordPropertiesExtracted = true;
+            function getProperties(doc, url) {
+              var record = {};
+
               if (angular.isObject(doc)) {
                 // JSON doc
               } else if (doc.startsWith("<?xml")) {
@@ -244,7 +272,7 @@
                     null
                   );
                   if (titles.stringValue) {
-                    scope.remoteRecord.title = titles.stringValue;
+                    record.title = titles.stringValue;
                   }
 
                   var uuid = xml.evaluate(
@@ -257,56 +285,172 @@
                     null
                   );
                   if (uuid.stringValue) {
-                    scope.remoteRecord.uuid = uuid.stringValue;
+                    record.uuid = uuid.stringValue;
                   } else {
-                    scope.remoteRecord.uuid = scope.remoteRecord.remoteUrl;
+                    record.uuid = url;
                   }
                 } catch (e) {
                   console.warn(e);
-                  return false;
+                  return {};
                 }
               } else if (doc.indexOf("<html") != -1) {
                 // Basic support of HTML page eg. GeoNode record page
                 // In this case the head/title is considered the record title.
                 // No UUID can be easily extracted.
                 try {
-                  scope.remoteRecord.title = doc.replace(
+                  record.title = doc.replace(
                     /(.|[\r\n])*<title(.*)>(.*)<\/title>(.|[\r\n])*/,
                     "$3"
                   );
 
-                  scope.remoteRecord.uuid = scope.remoteRecord.remoteUrl;
+                  record.uuid = url;
 
                   // Looking for schema.org tags or json+ld format could also be an option.
                 } catch (e) {
                   console.warn(e);
-                  return false;
+                  return {};
                 }
               } else {
-                return false;
+                return {};
               }
-              return true;
+
+              record.remoteUrl = url;
+              return record;
             }
 
+            scope.$watch(
+              "multipleSelectionModel.remoteLinksToCheck",
+              function (newVal, oldVal) {
+                if (newVal != oldVal) {
+                  if (newVal == 0) {
+                    scope.multipleSelectionModel.remoteRecordsList = "";
+                    scope.multipleSelectionModel.checkingRemoteLinks = false;
+                  }
+                }
+              }
+            );
+
+            /**
+             * Checks if the button to add multiple links can be enabled:
+             *   - There are links to add.
+             *   - The processs to add the links is not on-going.
+             *   - The association type field is selected.
+             * Used in the multiple mode selection.
+             *
+             * @returns {boolean}
+             */
+            scope.canAddMultipleLinks = function () {
+              return (
+                scope.multipleSelectionModel.remoteRecordsList !== "" &&
+                !scope.multipleSelectionModel.checkingRemoteLinks &&
+                scope.config &&
+                scope.config.associationType != null
+              );
+            };
+
+            /**
+             * Process the urls links to extract the record information: title, url.
+             *
+             * Used in the multiple mode selection.
+             */
+            scope.addMultipleLinks = function () {
+              // Ignore in single selection mode
+              if (!scope.multipleSelection) return;
+
+              var remoteUrls = scope.multipleSelectionModel.remoteRecordsList.split("\n");
+              scope.multipleSelectionModel.invalidRemoteLinks = [];
+              scope.multipleSelectionModel.remoteLinksToCheck = remoteUrls.length;
+              scope.multipleSelectionModel.checkingRemoteLinks = true;
+              for (var i = 0; i < remoteUrls.length; i++) {
+                var url = remoteUrls[i];
+                if (url.indexOf("http") === 0) {
+                  $http
+                    .get(url, {
+                      headers: { Accept: guessContentType() }
+                    })
+                    .then(
+                      function (response) {
+                        scope.multipleSelectionModel.remoteLinksToCheck--;
+
+                        var isRemoteRecordUrlOk = response.status === 200;
+                        if (isRemoteRecordUrlOk) {
+                          // Check we can retrieve title
+                          var remoteRecordInfo = getProperties(
+                            response.data,
+                            response.config.url
+                          );
+
+                          if (!_.isEmpty(remoteRecordInfo)) {
+                            remoteRecordInfo.resourceTitle = remoteRecordInfo.title;
+                            scope.addToSelection(
+                              remoteRecordInfo,
+                              scope.config.associationType,
+                              scope.config.initiativeType
+                            );
+                          } else {
+                            scope.multipleSelectionModel.invalidRemoteLinks.push(
+                              response.config.url
+                            );
+                          }
+                        }
+                      },
+                      function (response) {
+                        scope.multipleSelectionModel.remoteLinksToCheck--;
+                        scope.multipleSelectionModel.invalidRemoteLinks.push(
+                          response.config.url
+                        );
+                      }
+                    );
+                } else {
+                  scope.multipleSelectionModel.remoteLinksToCheck--;
+                  scope.multipleSelectionModel.invalidRemoteLinks.push(url);
+                }
+              }
+            };
+
+            /**
+             * Checks a link and adds it to the selection.
+             *
+             * Used in single mode selection.
+             *
+             * @returns {*}
+             */
             scope.checkLink = function () {
+              // Ignore in multiple selection mode
+              if (scope.multipleSelection) return;
+
               scope.resetLink(false);
-              if (scope.remoteRecord.remoteUrl.indexOf("http") === 0) {
+              if (
+                scope.singleSelectionModel.remoteRecord.remoteUrl.indexOf("http") === 0
+              ) {
                 return $http
-                  .get(scope.remoteRecord.remoteUrl, {
+                  .get(scope.singleSelectionModel.remoteRecord.remoteUrl, {
                     headers: { Accept: guessContentType() }
                   })
                   .then(
                     function (response) {
-                      scope.isRemoteRecordUrlOk = response.status === 200;
-                      if (scope.isRemoteRecordUrlOk) {
+                      scope.singleSelectionModel.isRemoteRecordUrlOk =
+                        response.status === 200;
+                      if (scope.singleSelectionModel.isRemoteRecordUrlOk) {
                         // Check we can retrieve title
-                        scope.isRemoteRecordPropertiesExtracted = getProperties(
-                          response.data
+                        var remoteRecordInfo = getProperties(
+                          response.data,
+                          scope.singleSelectionModel.remoteRecord.remoteUrl
                         );
+                        scope.singleSelectionModel.isRemoteRecordPropertiesExtracted =
+                          !_.isEmpty(remoteRecordInfo);
+                        if (
+                          scope.singleSelectionModel.isRemoteRecordPropertiesExtracted
+                        ) {
+                          scope.singleSelectionModel.remoteRecord = remoteRecordInfo;
+                          scope.singleSelectionModel.resourceTitle =
+                            remoteRecordInfo.title;
+                        }
                       }
                     },
                     function (response) {
-                      scope.isRemoteRecordUrlOk = response.status === 500;
+                      scope.singleSelectionModel.isRemoteRecordUrlOk =
+                        response.status === 500;
                     }
                   );
               }
@@ -319,46 +463,41 @@
               scope.updateSelection();
               scope.triggerSearch();
             };
+
             scope.updateSelection = function () {
+              // Ignore in multiple selection mode
+              if (scope.multipleSelection) return;
+
               if (scope.selectionList) {
                 if (!scope.multipleSelection) {
                   scope.selectionList.length = 0;
                 }
-                scope.selectionList.push(scope.remoteRecord);
+                scope.selectionList.push(scope.singleSelectionModel.remoteRecord);
               } else if (angular.isFunction(scope.addToSelection)) {
                 // sibling mode
-                scope.remoteRecord.resourceTitle = scope.remoteRecord.title;
+                scope.singleSelectionModel.remoteRecord.resourceTitle =
+                  scope.singleSelectionModel.remoteRecord.title;
                 scope.addToSelection(
-                  scope.remoteRecord,
+                  scope.singleSelectionModel.remoteRecord,
                   scope.config.associationType,
                   scope.config.initiativeType
                 );
               }
-
-              if (scope.multipleSelection) {
-                scope.resetLink(true);
-              }
             };
 
             scope.resetLink = function (allProperties) {
+              // Ignore in multiple selection mode
+              if (scope.multipleSelection) return;
+
               scope.selectionList = angular.isDefined(scope.stateObj)
                 ? scope.stateObj.selectRecords
                 : scope.selectRecords;
-              scope.isRemoteRecordUrlOk = true;
+              scope.singleSelectionModel.isRemoteRecordUrlOk = true;
               if (allProperties) {
-                if (scope.multipleSelection) {
-                  // Create a new object to support multiple remote links in the selection list
-                  scope.remoteRecord = {
-                    remoteUrl: "",
-                    title: "",
-                    uuid: ""
-                  };
-                } else {
-                  scope.remoteRecord.remoteUrl = "";
-                }
+                scope.singleSelectionModel.remoteRecord.remoteUrl = "";
               } else {
-                scope.remoteRecord.title = "";
-                scope.remoteRecord.uuid = "";
+                scope.singleSelectionModel.remoteRecord.title = "";
+                scope.singleSelectionModel.remoteRecord.uuid = "";
               }
               clearSelection();
             };
