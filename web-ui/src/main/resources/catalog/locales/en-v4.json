@@ -418,5 +418,6 @@
   "associationType": "Association type",
   "initiativeType": "Initiative type",
   "associatedTo": "Associated ",
-  "filterHelp": "Please click on one of the buttons below to activate the filter"
+  "filterHelp": "Please click on one of the buttons below to activate the filter",
+  "selectDOIResource": "or choose a DOI resource"
 }

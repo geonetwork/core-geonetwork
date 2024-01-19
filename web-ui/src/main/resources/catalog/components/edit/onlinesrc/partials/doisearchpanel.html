@@ -1,6 +1,6 @@
 <div>
   <label class="col-sm-2 control-label">
-    <span data-translate="">Add DOI resources</span>
+    <span data-translate="">selectDOIResource</span>
   </label>
 
   <div class="col-sm-10">
@@ -10,7 +10,7 @@
           <i class="fa fa-search" />
         </span>
         <input
-          id="doiapiserach"
+          id="doiapisearch"
           class="form-control"
           data-ng-change="search();"
           data-ng-model="queryValue"
@@ -28,10 +28,16 @@
         </span>
       </div>
 
-      <i data-ng-show="isSearching" class="fa fa-spinner fa-spin" />
-      <p data-ng-show="!isSearching && results.length == 0">No results</p>
+      <i data-ng-show="isSearching" class="fa fa-spinner fa-spin gn-margin-top-sm" />
+      <p
+        class="gn-margin-top-sm"
+        data-ng-show="!isSearching && results.length == 0"
+        data-translate=""
+      >
+        zarooResult
+      </p>
 
-      <div class="list-group fixed gn-nopadding-left gn-nopadding-right">
+      <div class="list-group gn-nopadding-left gn-nopadding-right">
         <a
           href=""
           data-ng-repeat="md in results"
