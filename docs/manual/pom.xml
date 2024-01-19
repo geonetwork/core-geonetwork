@@ -60,7 +60,7 @@
                 <exec executable="mkdocs" failonerror="true" dir="${basedir}">
                   <env key="FRENCH" value="${french}"/>
                   <arg line="build"/>
-                  <arg line="--no-directory-urls"/>
+                  <arg line="--no-directory-urls --strict"/>
                 </exec>
               </target>
             </configuration>
@@ -77,7 +77,7 @@
                   <env key="FRENCH" value="${french}"/>
                   <arg line="build"/>
                   <arg line="--config-file help.yml"/>
-                  <arg line="--no-directory-urls"/>
+                  <arg line="--no-directory-urls --strict"/>
                 </exec>
               </target>
             </configuration>
