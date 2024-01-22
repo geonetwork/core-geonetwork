@@ -16,7 +16,7 @@
         <link rel="prev" href="../maintainer-guide/">
       
       
-        <link rel="next" href="installing-from-zip/">
+        <link rel="next" href="installing-index/">
       
       
       <link rel="icon" href="../../assets/images/geonetwork-logo.png">
@@ -1757,6 +1757,27 @@
   
   
     <li class="md-nav__item">
+      <a href="installing-index/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Installing search platform
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="installing-from-zip/" class="md-nav__link">
         
   
@@ -1825,27 +1846,6 @@
   
   <span class="md-ellipsis">
     Building from Source Code
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="installing-index/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Installing search platform
   </span>
   
 
@@ -1998,6 +1998,10 @@
       
         
       
+        
+      
+        
+      
     
     
     
@@ -2094,7 +2098,7 @@
         
   
   <span class="md-ellipsis">
-    Catalog Service for the Web (CSW)
+    OGC Catalog Service (CSW)
   </span>
   
 
@@ -2111,32 +2115,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../api/opensearch/" class="md-nav__link">
+      <a href="../api/inspire_atom/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    OpenSearch and INSPIRE ATOM
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../api/rdf-dcat/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    RDF DCAT end point
+    Inspire atom
   </span>
   
 
@@ -2157,7 +2140,70 @@
         
   
   <span class="md-ellipsis">
-    Open Archive Initiative (OAI)
+    Open Archive Initiative
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/opensearch/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    OpenSearch
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/q-search/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Q Search
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/rdf-dcat/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    RDF DCAT
   </span>
   
 
@@ -2949,18 +2995,28 @@
 <p>GeoNetwork 4.4 requires a Java 11 environment (JRE) to be installed on your system. Later versions of Java will not work at present. This must be done prior to installation.</p>
 <p>Prior versions of GeoNetwork require a Java 8 environment (JRE) to be installed on your system.</p>
 </div>
-<p>Before you can use GeoNetwork on your own computer, you need to install it. There are several different ways to install GeoNetwork:</p>
+<p>Before you can use GeoNetwork on your own computer, you need to install it:</p>
+<ol>
+<li>
+<p>GeoNetwork uses the Elasticsearch engine which must be installed first:</p>
+<ul>
+<li><a href="installing-index/">Installing search platform</a></li>
+</ul>
+</li>
+<li>
+<p>There are several different ways to install GeoNetwork:</p>
 <ul>
 <li><a href="installing-from-zip/">Installing using a ZIP file</a></li>
 <li><a href="installing-from-war-file/">Installing from WAR file</a></li>
 <li><a href="installing-with-docker/">Installing with docker</a></li>
 <li><a href="installing-from-source-code/">Building from Source Code</a></li>
-<li><a href="installing-index/">Installing search platform</a></li>
 </ul>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>A windows installer is also available from the GeoNetwork download page, <a href="https://geonetwork-opensource.org/downloads.html#third-party-distributions">Installing a third-party distribution</a> .</p>
 </div>
+</li>
+<li>
 <p>After installing the application, you can configure the following:</p>
 <ul>
 <li><a href="configuring-database/">Configuring the database</a></li>
@@ -2969,6 +3025,8 @@
 <li><a href="map-print-setup/">Configuring printing of the map</a></li>
 <li><a href="loading-samples/">Loading templates and sample data</a></li>
 </ul>
+</li>
+</ol>
 
 
 
@@ -3023,13 +3081,13 @@
         
         
           
-          <a href="installing-from-zip/" class="md-footer__link md-footer__link--next" aria-label="Suivant: Installing using a ZIP file">
+          <a href="installing-index/" class="md-footer__link md-footer__link--next" aria-label="Suivant: Installing search platform">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Suivant
               </span>
               <div class="md-ellipsis">
-                Installing using a ZIP file
+                Installing search platform
               </div>
             </div>
             <div class="md-footer__button md-icon">

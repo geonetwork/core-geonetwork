@@ -16,7 +16,7 @@
         <link rel="prev" href="../search/">
       
       
-        <link rel="next" href="../opensearch/">
+        <link rel="next" href="../inspire_atom/">
       
       
       <link rel="icon" href="../../../assets/images/geonetwork-logo.png">
@@ -24,7 +24,7 @@
     
     
       
-        <title>Catalog Service for the Web (CSW) - GeoNetwork opensource (FR)</title>
+        <title>OGC Catalog Service (CSW) - GeoNetwork opensource (FR)</title>
       
     
     
@@ -115,7 +115,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Catalog Service for the Web (CSW)
+              OGC Catalog Service (CSW)
             
           </span>
         </div>
@@ -1766,6 +1766,10 @@
       
         
       
+        
+      
+        
+      
     
     
     
@@ -1871,7 +1875,7 @@
           
   
   <span class="md-ellipsis">
-    Catalog Service for the Web (CSW)
+    OGC Catalog Service (CSW)
   </span>
   
 
@@ -1882,7 +1886,7 @@
         
   
   <span class="md-ellipsis">
-    Catalog Service for the Web (CSW)
+    OGC Catalog Service (CSW)
   </span>
   
 
@@ -1930,6 +1934,15 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#upgrading-from-geonetwork-30-guidance" class="md-nav__link">
+    <span class="md-ellipsis">
+      Upgrading from GeoNetwork 3.0 Guidance
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1946,32 +1959,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../opensearch/" class="md-nav__link">
+      <a href="../inspire_atom/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    OpenSearch and INSPIRE ATOM
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../rdf-dcat/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    RDF DCAT end point
+    Inspire atom
   </span>
   
 
@@ -1992,7 +1984,70 @@
         
   
   <span class="md-ellipsis">
-    Open Archive Initiative (OAI)
+    Open Archive Initiative
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../opensearch/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    OpenSearch
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../q-search/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Q Search
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rdf-dcat/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    RDF DCAT
   </span>
   
 
@@ -2782,6 +2837,15 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#upgrading-from-geonetwork-30-guidance" class="md-nav__link">
+    <span class="md-ellipsis">
+      Upgrading from GeoNetwork 3.0 Guidance
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2813,12 +2877,16 @@
   
 
 
-<h1 id="csw-api">Catalog Service for the Web (CSW)</h1>
+<h1 id="csw-api">OGC Catalog Service (CSW)</h1>
 <p>The CSW end point exposes the metadata records in your catalog in XML format using the OGC CSW protocol (version 2.0.2).</p>
-<p>Two protocols are available:</p>
+<p>Two Catalogue Service profiles are available:</p>
 <ul>
-<li>CSW: Provides the ability to search and publish metadata for data, services and related information.</li>
-<li>CSW-T: Provides an interface for creating, modifying and deleting catalog records via the CSW protocol.</li>
+<li>Catalogue Services for the Web (CSW): Provides the ability to search and publish metadata for data, services and related information.</li>
+<li>Catalogue Services for the Web Transaction (CSW-T): Provides additional operations for creating, modifying and deleting catalog records via the CSW protocol.</li>
+</ul>
+<p>Reference:</p>
+<ul>
+<li><a href="https://www.ogc.org/standard/cat/">Catalogue Service</a> (OGC)</li>
 </ul>
 <h2 id="configuration">Configuration</h2>
 <p>See <a href="../../administrator-guide/configuring-the-catalog/csw-configuration/">Configuring CSW</a> for details of how to configure the CSW end point.</p>
@@ -2870,6 +2938,8 @@
 </span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="nt">&lt;/csw:GetRecords&gt;</span>
 </span></code></pre></div>
 <p>The mapping between CSW standard queryable and the index fields are defined in <strong><code>web/src/main/webapp/WEB-INF/config-csw.xml</code></strong>.</p>
+<h2 id="upgrading-from-geonetwork-30-guidance">Upgrading from GeoNetwork 3.0 Guidance</h2>
+<p>The configuration of "Virtual CSW" end-points are replaced by <a href="../../administrator-guide/configuring-the-catalog/portal-configuration/">sub-portals</a>.</p>
 
 
 
@@ -2924,13 +2994,13 @@
         
         
           
-          <a href="../opensearch/" class="md-footer__link md-footer__link--next" aria-label="Suivant: OpenSearch and INSPIRE ATOM">
+          <a href="../inspire_atom/" class="md-footer__link md-footer__link--next" aria-label="Suivant: Inspire atom">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Suivant
               </span>
               <div class="md-ellipsis">
-                OpenSearch and INSPIRE ATOM
+                Inspire atom
               </div>
             </div>
             <div class="md-footer__button md-icon">

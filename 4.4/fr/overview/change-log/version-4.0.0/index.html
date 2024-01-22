@@ -1156,6 +1156,17 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Version 4.0.0
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -1165,6 +1176,34 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table des matières">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#removed-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      Removed features
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -2910,6 +2949,10 @@
       
         
       
+        
+      
+        
+      
     
     
     
@@ -3006,7 +3049,7 @@
         
   
   <span class="md-ellipsis">
-    Catalog Service for the Web (CSW)
+    OGC Catalog Service (CSW)
   </span>
   
 
@@ -3023,32 +3066,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../api/opensearch/" class="md-nav__link">
+      <a href="../../../api/inspire_atom/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    OpenSearch and INSPIRE ATOM
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../api/rdf-dcat/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    RDF DCAT end point
+    Inspire atom
   </span>
   
 
@@ -3069,7 +3091,70 @@
         
   
   <span class="md-ellipsis">
-    Open Archive Initiative (OAI)
+    Open Archive Initiative
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/opensearch/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    OpenSearch
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/q-search/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Q Search
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/rdf-dcat/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    RDF DCAT
   </span>
   
 
@@ -3826,6 +3911,23 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#removed-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      Removed features
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -3866,12 +3968,6 @@
 <li>Simplify the geonetwork codebase</li>
 </ul>
 <p>The Elasticsearch engine supports GeoNetwork core functionality: user can search, edit records and manage the catalogue as usual. Only the searches (and all related protocols) are affected by the change to Elasticsearch. The editor and admin application remains the same.</p>
-<p>There remains opportunities to help:</p>
-<ul>
-<li><strong>A number of features that you enjoy in GeoNetwork 3 may not yet be available</strong>.</li>
-<li>Multilingual editing is the same, but multilingual search is not yet fully operational.</li>
-<li>Read carefully the <a href="https://github.com/geonetwork/core-geonetwork/issues/4727">list of missing features</a> before migrating.</li>
-</ul>
 <p>Before you start:</p>
 <ul>
 <li>Installing the application require to install an Elasticsearch instance (see <a href="../../../install-guide/installing-index/">Installing search platform</a>).</li>
@@ -3910,6 +4006,59 @@
 </li>
 </ul>
 <p>See <a href="https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+milestone%3A4.0.0+is%3Aclosed">4.0.0 issues</a> and <a href="https://github.com/geonetwork/core-geonetwork/pulls?q=is%3Apr+milestone%3A4.0.0+is%3Aclosed">pull requests</a> for full details.</p>
+<h2 id="removed-features">Removed features</h2>
+<p>There remains opportunities to help:</p>
+<ul>
+<li><strong>A number of features that you enjoy in GeoNetwork 3 may not yet be available</strong>.</li>
+<li>Multilingual editing is the same, but multilingual search is not yet fully operational.</li>
+</ul>
+<p>Read carefully the <a href="https://github.com/geonetwork/core-geonetwork/issues/4727">list of missing features</a> before migrating.</p>
+<ul>
+<li>Search API - RDF (replaced with use CSW with DCAT output format)</li>
+<li>Search API - Z39.50</li>
+<li>Search API - SRU</li>
+<li>Search API - OpenSearch</li>
+<li>Search API - OAI-PMH </li>
+<li>
+<p>GeoNetwork API features:</p>
+</li>
+<li>
+<p>ReportUploads</p>
+</li>
+<li>XLink: Remove directory entry used in other record </li>
+<li>
+<p>Lucene: Lucene is no longer available, migrated scripts to Elastisearch API</p>
+</li>
+<li>
+<p>Index</p>
+</li>
+<li>
+<p>Search on bounding polygons, currently only the geometry is indexed but not used in search</p>
+</li>
+<li>
+<p>Admin</p>
+</li>
+<li>
+<p>Information about the index - not needed, can be replaced by Kibana admin?</p>
+</li>
+<li>Schematron rules (See SchematronCriteriaGroupServiceIntegrationTest)</li>
+<li>
+<p>Search / Statistics and search stat dashboards</p>
+</li>
+<li>
+<p>Security</p>
+</li>
+<li>
+<p>ECAS not tested</p>
+</li>
+<li>
+<p>Harvester</p>
+</li>
+<li>
+<p>GeoNetwork 4 can not be harvested using GeoNetwork protocol by GeoNetwork 3 version.</p>
+<p>Mitigation: Use CSW Harvester instead.</p>
+</li>
+</ul>
 
 
 

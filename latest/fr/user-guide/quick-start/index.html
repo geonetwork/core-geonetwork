@@ -1128,6 +1128,15 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#upgrading-from-geonetwork-3-guidance" class="md-nav__link">
+    <span class="md-ellipsis">
+      Upgrading from GeoNetwork 3 Guidance
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1842,6 +1851,10 @@
       
         
       
+        
+      
+        
+      
     
     
     
@@ -1938,7 +1951,7 @@
         
   
   <span class="md-ellipsis">
-    Catalog Service for the Web (CSW)
+    OGC Catalog Service (CSW)
   </span>
   
 
@@ -1955,32 +1968,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../api/opensearch/" class="md-nav__link">
+      <a href="../../api/inspire_atom/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    OpenSearch and INSPIRE ATOM
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../api/rdf-dcat/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    RDF DCAT end point
+    Inspire atom
   </span>
   
 
@@ -2001,7 +1993,70 @@
         
   
   <span class="md-ellipsis">
-    Open Archive Initiative (OAI)
+    Open Archive Initiative
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/opensearch/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    OpenSearch
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/q-search/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Q Search
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/rdf-dcat/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    RDF DCAT
   </span>
   
 
@@ -2800,6 +2855,15 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#upgrading-from-geonetwork-3-guidance" class="md-nav__link">
+    <span class="md-ellipsis">
+      Upgrading from GeoNetwork 3 Guidance
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2947,6 +3011,31 @@ b.  Click <code>load templates</code> to load examples.</p>
 </li>
 </ul>
 <p>Read more about use of the <a href="../map/">Maps and dataset visualisation</a></p>
+<h2 id="upgrading-from-geonetwork-3-guidance">Upgrading from GeoNetwork 3 Guidance</h2>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Permalink to search page from GeoNetwork 3.x will need to be updated to work with 4.x. </p>
+</div>
+<p>If you have linked to search results please be advised that some of the URL parameters have changed and you should test and recreate these URLs.</p>
+<ul>
+<li>The catalog services does not provide <strong>permalink</strong> to search results.</li>
+<li>
+<p>URLs created with <strong><em>GeoNetwork 3.x</em></strong> search results are not intended to work with <strong><em>GeoNetwork 4.x</em></strong>.</p>
+</li>
+<li>
+<p>The use of a new search engine has resulted in changes to the URL parameter names and facets:</p>
+</li>
+</ul>
+<p>Very simple text query:</p>
+<ul>
+<li>GeoNetwork 3: <code>http://localhost:8080/geonetwork/srv/eng/catalog.search#/search?any=road</code></li>
+<li>GeoNetwork 4: <code>http://localhost:8080/geonetwork/srv/eng/catalog.search#/search?any=road</code></li>
+</ul>
+<p>The use of a new search engine has resulted in changes to the URL parameter names and facets:</p>
+<ul>
+<li>GeoNetwork 3: <code>http://localhost:8080/geonetwork/srv/eng/catalog.search#/searchsrv/eng/catalog.search#/search?resultType=details&amp;sortBy=changeDate&amp;any=road&amp;fast=index&amp;_content_type=json&amp;from=1&amp;to=20</code></li>
+<li>GeoNetwork 4: <code>http://localhost:8080/geonetwork/srv/eng/catalog.search#/search?isTemplate=n&amp;resourceTemporalDateRange=%7B%22range%22:%7B%22resourceTemporalDateRange%22:%7B%22gte%22:null,%22lte%22:null,%22relation%22:%22intersects%22%7D%7D%7D&amp;sortBy=dateStamp&amp;sortOrder=desc&amp;any=road&amp;from=1&amp;to=20</code></li>
+</ul>
 
 
 
