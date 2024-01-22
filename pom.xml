@@ -134,6 +134,14 @@
           <version>3.1.0</version>
         </plugin>
         <plugin>
+          <artifactId>maven-install-plugin</artifactId>
+          <version>3.1.1</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-deploy-plugin</artifactId>
+          <version>3.1.1</version>
+        </plugin>
+        <plugin>
           <groupId>net.alchim31.maven</groupId>
           <artifactId>yuicompressor-maven-plugin</artifactId>
           <version>1.5.1</version>
@@ -1449,16 +1457,6 @@
       <url>https://repo.osgeo.org/repository/geonetwork-snapshots/</url>
      </snapshotRepository>
   </distributionManagement>
-
-  <!--
-  <distributionManagement>
-    <snapshotRepository>
-      <id>scp-repository.geonetwork-opensource.org</id>
-      <name>GeoNetwork opensource repositories</name>
-      <url>scpexe://TO DEFINED</url>
-    </snapshotRepository>
-  </distributionManagement>
-  -->
 
   <properties>
     <db.properties>WEB-INF/config-db/jdbc.properties</db.properties>

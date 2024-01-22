@@ -1,11 +1,15 @@
-# Catalog Service for the Web (CSW) {#csw-api}
+# OGC Catalog Service (CSW) {#csw-api}
 
 The CSW end point exposes the metadata records in your catalog in XML format using the OGC CSW protocol (version 2.0.2).
 
-Two protocols are available:
+Two Catalogue Service profiles are available:
 
--   CSW: Provides the ability to search and publish metadata for data, services and related information.
--   CSW-T: Provides an interface for creating, modifying and deleting catalog records via the CSW protocol.
+-   Catalogue Services for the Web (CSW): Provides the ability to search and publish metadata for data, services and related information.
+-   Catalogue Services for the Web Transaction (CSW-T): Provides additional operations for creating, modifying and deleting catalog records via the CSW protocol.
+
+Reference:
+
+* [Catalogue Service](https://www.ogc.org/standard/cat/) (OGC)
 
 ## Configuration
 
@@ -69,3 +73,7 @@ Example of a request using an index field name:
 ```
 
 The mapping between CSW standard queryable and the index fields are defined in **`web/src/main/webapp/WEB-INF/config-csw.xml`**.
+
+## Upgrading from GeoNetwork 3.0 Guidance
+
+The configuration of "Virtual CSW" end-points are replaced by [sub-portals](../administrator-guide/configuring-the-catalog/portal-configuration.md).

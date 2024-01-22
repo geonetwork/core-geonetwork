@@ -578,7 +578,7 @@ public class SiteApi {
         method = RequestMethod.PUT)
     @PreAuthorize("hasAuthority('Editor')")
     @ResponseBody
-    public HttpEntity index(
+    public HttpEntity indexSite(
         @Parameter(description = "Drop and recreate index",
             required = false)
         @RequestParam(required = false, defaultValue = "true")
