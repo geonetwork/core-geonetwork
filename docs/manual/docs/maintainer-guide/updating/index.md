@@ -43,7 +43,6 @@ Before you start:
     1. Stop the services:
         
         * Application server running GeoNetwork
-        * Elasticserach
 Update:
 
 === "Application data directory"
