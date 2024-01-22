@@ -13,7 +13,7 @@ with the following utilities: ***sed***, ***xmlstarlet*** and ***sftp***.
     ``` shell
     # Setup properties
     from=origin
-    frombranch=origin/main
+    frombranch=origin/4.2.x
     series=4.2
     versionbranch=$series.x
     version=4.2.1
@@ -91,7 +91,7 @@ with the following utilities: ***sed***, ***xmlstarlet*** and ***sftp***.
 3.  Create change log page: `docs/manual/docs/overview/change-log/`
 
     ``` shell
-    cat <<EOF > docs/manual/docs/overview/changes/version-$newversion.md
+    cat <<EOF > docs/manual/docs/overview/change-log/version-$version.md
     # Version $version
     
     GeoNetwork $version is a minor release.
@@ -110,9 +110,9 @@ with the following utilities: ***sed***, ***xmlstarlet*** and ***sftp***.
     
     EOF
 
-    git log --pretty='format:* %N' $previousversion.. | grep -v "^* $" >> docs/manual/docs/overview/changes/version-$newversion.md
+    git log --pretty='format:* %N' $previousversion... | grep -v "^* $" >> docs/manual/docs/overview/change-log/version-$version.md
 
-    cat <<EOF > docs/manual/docs/overview/changes/version-$newversion.md
+    cat <<EOF > docs/manual/docs/overview/change-log/version-$version.md
     
     and more \... see [$version issues](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+milestone%3A$version+is%3Aclosed) and [pull requests](https://github.com/geonetwork/core-geonetwork/pulls?page=3&q=is%3Apr+milestone%3A$version+is%3Aclosed) for full details.
     EOF
@@ -158,13 +158,13 @@ with the following utilities: ***sed***, ***xmlstarlet*** and ***sftp***.
     # Build the new release
     mvn install -Drelease
     
-    # Create a minimal war (with only the default datasources)
+    # Create a minimal war
     cd web
     mvn clean install -DskipTests -Pwar -Pwro4j-prebuild-cache
 
     # Download Jetty and create the installer
     cd ../release
-    mvn clean install -Djetty-download,bundle
+    mvn clean install -Pjetty-download,bundle
 
     # Deploy to osgeo repository (requires credentials in ~/.m2/settings.xml)
     cd ..
@@ -174,7 +174,7 @@ with the following utilities: ***sed***, ***xmlstarlet*** and ***sftp***.
 7.  Test
 
     ``` shell
-    cd target/GeoNetwork-$newversion
+    cd target/GeoNetwork-$version
     unzip geonetwork-bundle-$newversion.zip -d geonetwork-bundle-$newversion
     cd geonetwork-bundle-$newversion/bin
     ./startup.sh -f
@@ -231,7 +231,7 @@ with the following utilities: ***sed***, ***xmlstarlet*** and ***sftp***.
 
         ``` shell
         md5 -r web/target/geonetwork.war > web/target/geonetwork.war.md5
-        md5 -r release/target/GeoNetwork-$newversion/geonetwork-bundle-$newversion.zip > release/target/GeoNetwork-$newversion/geonetwork-bundle-$newversion.zip.md5
+        md5 -r release/target/GeoNetwork-$version/geonetwork-bundle-$newversion.zip > release/target/GeoNetwork-$version/geonetwork-bundle-$newversion.zip.md5
         ```
 
     On sourceforge first:
