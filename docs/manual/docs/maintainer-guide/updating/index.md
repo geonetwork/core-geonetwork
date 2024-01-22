@@ -96,7 +96,6 @@ Update:
 
     4. Restart services:
         
-        * Elasticsearch
         * Application server for GeoNetwork
         
 Guidance:
