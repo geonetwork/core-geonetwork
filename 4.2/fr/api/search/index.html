@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#q-search" class="md-skip">
+        <a href="#search-service" class="md-skip">
           Aller au contenu
         </a>
       
@@ -1764,6 +1764,10 @@
       
         
       
+        
+      
+        
+      
     
     
     
@@ -1881,62 +1885,11 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#openapi-search" class="md-nav__link">
+  <a href="#elasticsearch" class="md-nav__link">
     <span class="md-ellipsis">
-      OpenAPI Search
+      Elasticsearch
     </span>
   </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#q-search_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      Q Search
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Q Search">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#query-results-parameters" class="md-nav__link">
-    <span class="md-ellipsis">
-      Query results parameters
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#query-filter-parameters" class="md-nav__link">
-    <span class="md-ellipsis">
-      Query filter parameters
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#date-searches" class="md-nav__link">
-    <span class="md-ellipsis">
-      Date Searches
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#query-examples" class="md-nav__link">
-    <span class="md-ellipsis">
-      Query examples
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -1960,7 +1913,7 @@
         
   
   <span class="md-ellipsis">
-    Catalog Service for the Web (CSW)
+    OGC Catalog Service (CSW)
   </span>
   
 
@@ -1977,32 +1930,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../opensearch/" class="md-nav__link">
+      <a href="../inspire_atom/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    OpenSearch and INSPIRE ATOM
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../rdf-dcat/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    RDF DCAT end point
+    Inspire atom
   </span>
   
 
@@ -2023,7 +1955,70 @@
         
   
   <span class="md-ellipsis">
-    Open Archive Initiative (OAI)
+    Open Archive Initiative
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../opensearch/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    OpenSearch
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../q-search/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Q Search
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rdf-dcat/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    RDF DCAT
   </span>
   
 
@@ -2787,62 +2782,11 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#openapi-search" class="md-nav__link">
+  <a href="#elasticsearch" class="md-nav__link">
     <span class="md-ellipsis">
-      OpenAPI Search
+      Elasticsearch
     </span>
   </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#q-search_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      Q Search
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Q Search">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#query-results-parameters" class="md-nav__link">
-    <span class="md-ellipsis">
-      Query results parameters
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#query-filter-parameters" class="md-nav__link">
-    <span class="md-ellipsis">
-      Query filter parameters
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#date-searches" class="md-nav__link">
-    <span class="md-ellipsis">
-      Date Searches
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#query-examples" class="md-nav__link">
-    <span class="md-ellipsis">
-      Query examples
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -2877,100 +2821,13 @@
   
 
 
-<h1 id="q-search">Search Service</h1>
-<h2 id="openapi-search">OpenAPI Search</h2>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>GeoNetwork 4</p>
-</div>
-<p>The Q Search endpoint is replaced by the <code>/srv/api/search/records/_search</code> endpoint.</p>
-<p>Parameter Reference:</p>
+<h1 id="search-service">Search Service</h1>
+<h2 id="elasticsearch">Elasticsearch</h2>
+<p>GeoNetwork provides a full Elasticsearch end-point: <code>/srv/api/search/records/_search</code></p>
+<p>Reference</p>
 <ul>
-<li><a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/search-search.html">Serach API</a> (Elasticsearch)</li>
+<li><a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/search-search.html">Search API</a> (Elasticsearch)</li>
 </ul>
-<h2 id="q-search_1">Q Search</h2>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>GeoNetwork 3</p>
-</div>
-<p>The Q Search endpoint allows you to query the catalog programmatically. It is available in the local catalog at <code>http://localhost:8080/geonetwork/srv/eng/q</code> (otherwise substitute your catalog URL).</p>
-<h3 id="query-results-parameters">Query results parameters</h3>
-<p>The following parameters can be appended to your request to format the results:</p>
-<ul>
-<li><code>_content_type=json</code>: returns results in json format. If this parameter is not provided, then the results are returned in xml format.</li>
-<li><code>sortBy</code>: sorts the results by different criteria (example: <code>sortBy=relevance</code>):<ul>
-<li><code>relevance</code> (default sorting method if not provided)</li>
-<li><code>title</code> (metadata title)</li>
-<li><code>changeDate</code> (metadata datestamp)</li>
-<li><code>rating</code></li>
-<li><code>popularity</code></li>
-<li><code>denominatorDesc</code></li>
-<li><code>denominatorAsc</code></li>
-</ul>
-</li>
-<li><code>sortOrder=reverse</code>: Used to sort alphabetically. Note this will sort in <strong>ASCENDING</strong> order (eg A - Z)</li>
-<li><code>from</code>, <code>to</code>: Used to return a subset of the results, usually for pagination (example: <code>from=1&amp;to=20</code>)</li>
-<li>
-<p><code>fast</code>: Used to indicate the information to return. Possible values:</p>
-<ul>
-<li>
-<p><code>index</code>: returns the metadata information from the Lucene index (a subset of the information). In most cases this is the best option as the retrieval of information from the Lucene index is very fast.</p>
-<p>The fields returned are configured in the <code>dumpFields</code> section in <a href="https://github.com/geonetwork/core-geonetwork/blob/master/web/src/main/webapp/WEB-INF/config-lucene.xml#L107">https://github.com/geonetwork/core-geonetwork/blob/master/web/src/main/webapp/WEB-INF/config-lucene.xml#L107</a></p>
-</li>
-<li>
-<p><code>false</code>: returns the raw (full) metadata. This is slower as it will retrieve every metadata attribute from the database. If this parameter is not provided, it returns a minimal set of information for each record: uuid, internal id, metadata schema, create/change dates</p>
-</li>
-<li><code>buildSummary</code>: Returns a summary element with search facets that can be used to filter the metadata, typically used to provide quick filters (facets) on the search results page. Values:</li>
-<li><code>true</code> (default, if the parameter is not provided).</li>
-<li><code>false</code>: does not return the summary.</li>
-<li><code>summaryOnly</code>: Returns the summary (depending on the value of the parameter <code>buildSummary</code>) and results. Values:</li>
-<li><code>0</code> (default, if the parameter is not provided).</li>
-<li>Any other value returns the summary only.</li>
-<li><code>resultType</code>: type of summary to return. Summaries are configured in the <code>summaryTypes</code> section in <a href="https://github.com/geonetwork/core-geonetwork/blob/master/web/src/main/webapp/WEB-INF/config-summary.xml#L132-L249">https://github.com/geonetwork/core-geonetwork/blob/master/web/src/main/webapp/WEB-INF/config-summary.xml#L132-L249</a></li>
-<li><code>hits</code> (default value if not provided), returns the fields configured in the <code>hits</code> section in <a href="https://github.com/geonetwork/core-geonetwork/blob/master/web/src/main/webapp/WEB-INF/config-summary.xml#L185">https://github.com/geonetwork/core-geonetwork/blob/master/web/src/main/webapp/WEB-INF/config-summary.xml#L185</a></li>
-<li><code>details</code> (recommended value to send), returns the fields configured in the <code>details</code> section in <a href="https://github.com/geonetwork/core-geonetwork/blob/master/web/src/main/webapp/WEB-INF/config-summary.xml#L133">https://github.com/geonetwork/core-geonetwork/blob/master/web/src/main/webapp/WEB-INF/config-summary.xml#L133</a></li>
-<li><code>extraDumpFields</code>: a comma-separated list of additional fields that you wish to return alongside the fields returned according to the resultType you have chosen. The wildcard character <code>*</code> can be used to match multiple fields. For example <code>extraDumpFields=mycustomfield*</code> would match mycustomfield1 and mycustomfield2.</li>
-<li>Other values in the summaries section are allowed</li>
-</ul>
-</li>
-</ul>
-<h3 id="query-filter-parameters">Query filter parameters</h3>
-<p>You can search on any field(s) indexed in Lucene. For a complete reference see <a href="https://github.com/geonetwork/core-geonetwork/blob/master/schemas/iso19139/src/main/plugin/iso19139/index-fields/default.xsl">https://github.com/geonetwork/core-geonetwork/blob/master/schemas/iso19139/src/main/plugin/iso19139/index-fields/default.xsl</a></p>
-<p>Note you can query the Lucene index graphically,using a Java-based graphical tool such as <a href="https://github.com/DmitryKey/luke">Luke</a>. Version <a href="https://github.com/DmitryKey/luke/releases/tag/luke-4.10.4.1/">4.10.4</a> is required to work with the version of Lucene bundled with GeoNetwork. Download the jar file where you can access the GeoNetwork index files, then execute with:</p>
-<p><code>java -jar luke-with-deps.jar</code></p>
-<p>Then follow the instructions in the tool.</p>
-<p>Most relevant fields:</p>
-<ul>
-<li><code>any</code>: A special Lucene field that indexes all the text content in the metadata. Example: <a href="http://localhost:8080/geonetwork/srv/eng/q?any=water&amp;from=1&amp;to=20&amp;resultType=details&amp;fast=index&amp;_content_type=json">http://localhost:8080/geonetwork/srv/eng/q?any=water&amp;from=1&amp;to=20&amp;resultType=details&amp;fast=index&amp;_content_type=json</a></li>
-</ul>
-<p>There are some additional query fields, that use the content from the Lucene field <code>any</code>.</p>
-<ul>
-<li><code>or</code>: extract the tokens of the query parameter to return the results that contain at least 1 of the tokens</li>
-<li><code>without</code>: extract the tokens of the query parameter to return the results that don't contain any of the tokens.</li>
-<li><code>phrase</code>: return the results that contain the exact text as provided in the search query parameter.</li>
-<li><code>title</code>: metadata title.</li>
-<li><code>abstract</code>: metadata abstract.</li>
-<li><code>topicCat</code>: metadata topic categories.</li>
-<li><code>keyword</code>: metadata keywords.</li>
-<li><code>type</code>: hierarchyLevel (dataset, service, etc.)</li>
-</ul>
-<p>If several tokens are included in the query, an AND query with all the tokens is executed. For example, <code>title=roads&amp;topicCat=biota</code>. This query will return the results that contain roads in the title AND have the topic category biota.</p>
-<p>An OR query of several fields can be executed using the format: <code>field1_OR_field2_OR_... =value</code>. For example, <code>title_OR_abstract=roads</code> returns the metadata that contain roads in the title OR the abstract.</p>
-<p>Additionally an OR query of several values for a single field can be executed, if the Lucene configuration for that field allows it, with the following format: <code>field=value1 or value2 or ...</code> For example <code>topicCat=biota or farming</code>, returns the metadata where the topic category is either biota OR farming. If the query was executed as <code>topicCat=biota&amp;topicCat=farming</code> then only the metadata with BOTH topic categories would be returned.</p>
-<h3 id="date-searches">Date Searches</h3>
-<p>There are a number of ways that you can search by date. Date searches should be of the form YYYY-MM-DD</p>
-<ul>
-<li>dateFrom/dateTo: uses the changeDate parameter in the index.</li>
-<li>creationDateFrom/To: uses the creation date.</li>
-<li>revisionDateFrom/To: uses the revision date.</li>
-</ul>
-<h3 id="query-examples">Query examples</h3>
-<p>Query with any field for metadata containing the string 'infrastructure', returning json, using the fast index to return results, and returning the fields configured in <code>config-summary.xml</code>:</p>
-<p><a href="http://localhost:8080/geonetwork/srv/eng/q?any=infrastructure&amp;_content_type=json&amp;fast=index&amp;from=1&amp;resultType=details&amp;sortBy=relevance&amp;to=20">http://localhost:8080/geonetwork/srv/eng/q?any=infrastructure&amp;_content_type=json&amp;fast=index&amp;from=1&amp;resultType=details&amp;sortBy=relevance&amp;to=20</a></p>
-<p>Query datasets with title containing the string 'infrastructure', returning json, using the fast index to return results, returning the fields configured in <code>config-summary.xml</code> and returning only the first 20 results (ordered by relevance):</p>
-<p><a href="http://localhost:8080/geonetwork/srv/eng/q?title=infrastructure&amp;type=dataset&amp;_content_type=json&amp;fast=index&amp;from=1&amp;resultType=details&amp;sortBy=relevance&amp;to=20">http://localhost:8080/geonetwork/srv/eng/q?title=infrastructure&amp;type=dataset&amp;_content_type=json&amp;fast=index&amp;from=1&amp;resultType=details&amp;sortBy=relevance&amp;to=20</a></p>
-<p>Query datasets with a revision date in June 2019 using the fast index to return results, returning the fields configured in <code>config-summary.xml</code> and returning only the first 20 results (ordered by relevance):</p>
-<p><a href="http://localhost:8080/geonetwork/srv/eng/q?_content_type=json&amp;revisionDateFrom=2019-06-01&amp;revisionDateTo=2019-06-30&amp;fast=index&amp;from=1&amp;resultType=details&amp;sortBy=relevance&amp;to=20">http://localhost:8080/geonetwork/srv/eng/q?_content_type=json&amp;revisionDateFrom=2019-06-01&amp;revisionDateTo=2019-06-30&amp;fast=index&amp;from=1&amp;resultType=details&amp;sortBy=relevance&amp;to=20</a></p>
 
 
 
@@ -3025,13 +2882,13 @@
         
         
           
-          <a href="../csw/" class="md-footer__link md-footer__link--next" aria-label="Suivant: Catalog Service for the Web (CSW)">
+          <a href="../csw/" class="md-footer__link md-footer__link--next" aria-label="Suivant: OGC Catalog Service (CSW)">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Suivant
               </span>
               <div class="md-ellipsis">
-                Catalog Service for the Web (CSW)
+                OGC Catalog Service (CSW)
               </div>
             </div>
             <div class="md-footer__button md-icon">

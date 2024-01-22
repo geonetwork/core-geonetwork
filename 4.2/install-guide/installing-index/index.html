@@ -13,10 +13,10 @@
         <link rel="canonical" href="https://docs.geonetwork-opensource.org/4.2/install-guide/installing-index/">
       
       
-        <link rel="prev" href="../installing-from-source-code/">
+        <link rel="prev" href="../">
       
       
-        <link rel="next" href="../configuring-database/">
+        <link rel="next" href="../installing-from-zip/">
       
       
       <link rel="icon" href="../../assets/images/geonetwork-logo.png">
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#installing-index" class="md-skip">
+        <a href="#installing-search-platform" class="md-skip">
           Skip to content
         </a>
       
@@ -1752,6 +1752,121 @@
                 
   
   
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Installing search platform
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Installing search platform
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#elasticsearch-compatibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      Elasticsearch compatibility
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#installation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Installation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#index-creation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Index creation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#customizing-index" class="md-nav__link">
+    <span class="md-ellipsis">
+      Customizing index
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#check-elasticsearch-installation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Check Elasticsearch installation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configure-geonetwork-connection-to-elasticsearch" class="md-nav__link">
+    <span class="md-ellipsis">
+      Configure GeoNetwork connection to Elasticsearch
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
   
   
     <li class="md-nav__item">
@@ -1827,112 +1942,6 @@
   
 
       </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-    
-  
-  
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  <span class="md-ellipsis">
-    Installing search platform
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
-        
-  
-  <span class="md-ellipsis">
-    Installing search platform
-  </span>
-  
-
-      </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#manual-installation" class="md-nav__link">
-    <span class="md-ellipsis">
-      Manual installation
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#customizing-index" class="md-nav__link">
-    <span class="md-ellipsis">
-      Customizing index
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#install-using-maven" class="md-nav__link">
-    <span class="md-ellipsis">
-      Install using Maven
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#check-installation" class="md-nav__link">
-    <span class="md-ellipsis">
-      Check installation
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#configure-connection" class="md-nav__link">
-    <span class="md-ellipsis">
-      Configure connection
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -2081,6 +2090,10 @@
       
         
       
+        
+      
+        
+      
     
     
     
@@ -2177,7 +2190,7 @@
         
   
   <span class="md-ellipsis">
-    Catalog Service for the Web (CSW)
+    OGC Catalog Service (CSW)
   </span>
   
 
@@ -2194,32 +2207,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../api/opensearch/" class="md-nav__link">
+      <a href="../../api/inspire_atom/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    OpenSearch and INSPIRE ATOM
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../api/rdf-dcat/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    RDF DCAT end point
+    Inspire atom
   </span>
   
 
@@ -2240,7 +2232,70 @@
         
   
   <span class="md-ellipsis">
-    Open Archive Initiative (OAI)
+    Open Archive Initiative
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/opensearch/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    OpenSearch
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/q-search/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Q Search
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/rdf-dcat/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    RDF DCAT
   </span>
   
 
@@ -3004,9 +3059,27 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#manual-installation" class="md-nav__link">
+  <a href="#elasticsearch-compatibility" class="md-nav__link">
     <span class="md-ellipsis">
-      Manual installation
+      Elasticsearch compatibility
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#installation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Installation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#index-creation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Index creation
     </span>
   </a>
   
@@ -3022,27 +3095,18 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#install-using-maven" class="md-nav__link">
+  <a href="#check-elasticsearch-installation" class="md-nav__link">
     <span class="md-ellipsis">
-      Install using Maven
+      Check Elasticsearch installation
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#check-installation" class="md-nav__link">
+  <a href="#configure-geonetwork-connection-to-elasticsearch" class="md-nav__link">
     <span class="md-ellipsis">
-      Check installation
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#configure-connection" class="md-nav__link">
-    <span class="md-ellipsis">
-      Configure connection
+      Configure GeoNetwork connection to Elasticsearch
     </span>
   </a>
   
@@ -3079,51 +3143,151 @@
   
 
 
-<h1 id="installing-index">Installing search platform</h1>
-<p>The GeoNetwork search engine is built on top of Elasticsearch. The platform is used to index records and also to analyze WFS data (See <a href="../../user-guide/analyzing/data/">Analyze and visualize data</a> ), an <a href="https://www.elastic.co/products/elasticsearch">Elasticsearch</a> instance must be installed next to the catalog.</p>
-<h2 id="manual-installation">Manual installation</h2>
-<p>Download Elasticsearch 7.x (at least <code>7.9.2</code>) from <a href="https://www.elastic.co/downloads/elasticsearch">https://www.elastic.co/downloads/elasticsearch</a> and unzip the file.</p>
-<div class="language-shell highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>wget<span class="w"> </span>https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.9.2.tar.gz
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>tar<span class="w"> </span>xvfz<span class="w"> </span>elasticsearch-7.9.2.tar.gz
+<h1 id="installing-search-platform">Installing search platform</h1>
+<p>The GeoNetwork search engine is built on top of Elasticsearch. The platform is used to index records and also to analyze WFS data (See <a href="../../user-guide/analyzing/data/">Analyze and visualize data</a> ).</p>
+<p>GeoNetwork requires an <a href="https://www.elastic.co/products/elasticsearch">Elasticsearch</a> instance to be installed next to the catalog.</p>
+<h2 id="elasticsearch-compatibility">Elasticsearch compatibility</h2>
+<table>
+<thead>
+<tr>
+<th>Elasticsearch Version</th>
+<th>Compatibility</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Elasticsearch 7.9.2</td>
+<td>minimum</td>
+</tr>
+<tr>
+<td>Elasticsearch 7.17.15</td>
+<td>tested</td>
+</tr>
+<tr>
+<td>Elasticsearch 8.x</td>
+<td>INCOMPATIBLE</td>
+</tr>
+</tbody>
+</table>
+<h2 id="installation">Installation</h2>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Manual installation</label><label for="__tabbed_1_2">Install using Maven</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<ol>
+<li>
+<p><strong>Download:</strong> Elasticsearch 7.x (<code>7.17.15</code> tested, minimum <code>7.9.2</code>) from <a href="https://www.elastic.co/downloads/elasticsearch">https://www.elastic.co/downloads/elasticsearch</a> and unzip the file.</p>
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>wget<span class="w"> </span>https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.17.15.tar.gz
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>tar<span class="w"> </span>xvfz<span class="w"> </span>elasticsearch-7.17.15.tar.gz
 </span></code></pre></div>
-<p>Manually start and stop Elasticsearch using:</p>
-<div class="language-shell highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>elasticsearch-7.9.2/bin/elasticsearch
+</li>
+<li>
+<p><strong>Start</strong>: Manually start Elasticsearch using:</p>
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>elasticsearch-7.17.15/bin/elasticsearch
 </span></code></pre></div>
-<p>Stop Elasticsearch using</p>
-<div class="language-shell highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>elasticsearch-7.9.2/bin/elasticsearch<span class="w"> </span>stop
+</li>
+<li>
+<p><strong>Stop</strong>: Manually stop Elasticsearch using:</p>
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>elasticsearch-7.17.15/bin/elasticsearch<span class="w"> </span>stop
 </span></code></pre></div>
-<p>GeoNetwork will start even if Elasticsearch index is down. A warning will be displayed. Once the Elasticsearch index is up, indices are created if they do not exist.</p>
-<p>(Optional) Then create the default index (the application will create them automatically once the index is up and running and if no indices are found):</p>
+</li>
+</ol>
+</div>
+<div class="tabbed-block">
+<ol>
+<li>
+<p>Developers are encouraged to run Elasticseach using maven in order to test against the version of Elasticsearch intended for the next release.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>When running from source code the Elasticsearch version is obtained from <a href="https://github.com/geonetwork/core-geonetwork/blob/main/pom.xml">pom.xml</a> property <code>es.version</code>.</p>
+</div>
+</li>
+<li>
+<p><strong>Download</strong>: Run maven from the <strong><code>es</code></strong> directory.</p>
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nb">cd</span><span class="w"> </span>es
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>mvn<span class="w"> </span>install<span class="w"> </span>-Pes-download
+</span></code></pre></div>
+</li>
+<li>
+<p><strong>Start</strong>: Use maven <code>exec</code> plugin to run Elasticsearch:</p>
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>mvn<span class="w"> </span>exec:exec<span class="w"> </span>-Des-start
+</span></code></pre></div>
+<p>Elasticsearch will run in foreground mode sending output to the shell.</p>
+</li>
+<li>
+<p><strong>Stop</strong>: To stop Elasticsearch use <span class="keys"><kbd class="key-control">Ctrl</kbd><span>+</span><kbd class="key-c">C</kbd></span> to stop the maven process.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<h2 id="index-creation">Index creation</h2>
+<ol>
+<li>
+<p>GeoNetwork will connect to Elasticsearch on startup, and indices will be created if they do not exist.</p>
+<ul>
+<li>
+<p>GeoNetwork will start even if Elasticsearch index is down (or not yet running).</p>
+</li>
+<li>
+<p>When GeoNetwork cannot contact Elasticsearch a warning will be displayed.</p>
+</li>
+<li>
+<p>When Elasticsearch index is available, indices are created if they do not exist.</p>
+</li>
+</ul>
+</li>
+<li>
+<p>Optional: To manually create indices use the <strong>Admin Console</strong> to create the default index.</p>
+<p>The application will create indices automatically once the Elasticsearch is up and running and if no indices are found.</p>
+</li>
+</ol>
 <h2 id="customizing-index">Customizing index</h2>
-<p>User may want to customize the index settings for example to change language configuration (see <code>es/README.md</code>). Check the configuration file in <code>`</code>$GN_DATA_DIRECTORY/config/index ```. To manually remove and recreate the index, use the following:</p>
-<div class="language-shell highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nb">cd</span><span class="w"> </span><span class="nv">$GN_DATA_DIRECTORY</span>/config/index
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>curl<span class="w"> </span>-X<span class="w"> </span>DELETE<span class="w"> </span>http://localhost:9200/features
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>curl<span class="w"> </span>-X<span class="w"> </span>DELETE<span class="w"> </span>http://localhost:9200/records
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>curl<span class="w"> </span>-X<span class="w"> </span>DELETE<span class="w"> </span>http://localhost:9200/searchlogs
-</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
-</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>curl<span class="w"> </span>-X<span class="w"> </span>PUT<span class="w"> </span>http://localhost:9200/features<span class="w"> </span>-H<span class="w"> </span><span class="s1">&#39;Content-Type: application/json&#39;</span><span class="w"> </span>-d<span class="w"> </span>@features.json
-</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>curl<span class="w"> </span>-X<span class="w"> </span>PUT<span class="w"> </span>http://localhost:9200/records<span class="w"> </span>-H<span class="w"> </span><span class="s1">&#39;Content-Type: application/json&#39;</span><span class="w"> </span>-d<span class="w"> </span>@records.json
-</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>curl<span class="w"> </span>-X<span class="w"> </span>PUT<span class="w"> </span>http://localhost:9200/searchlogs<span class="w"> </span>-H<span class="w"> </span><span class="s1">&#39;Content-Type: application/json&#39;</span><span class="w"> </span>-d<span class="w"> </span>@searchlogs.json
+<ol>
+<li>
+<p>User may want to customize the index settings for example to change language configuration (see <a href="https://github.com/geonetwork/core-geonetwork/tree/main/es#readme">es/README.md</a>).</p>
+</li>
+<li>
+<p>Check the configuration file in <strong><code>$GN_DATA_DIRECTORY/config/index</code></strong>.</p>
+</li>
+<li>
+<p>To manually remove and recreate the index, use the following:</p>
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nb">cd</span><span class="w"> </span><span class="nv">$GN_DATA_DIRECTORY</span>/config/index
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>curl<span class="w"> </span>-X<span class="w"> </span>DELETE<span class="w"> </span>http://localhost:9200/features
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>curl<span class="w"> </span>-X<span class="w"> </span>DELETE<span class="w"> </span>http://localhost:9200/records
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>curl<span class="w"> </span>-X<span class="w"> </span>DELETE<span class="w"> </span>http://localhost:9200/searchlogs
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>curl<span class="w"> </span>-X<span class="w"> </span>PUT<span class="w"> </span>http://localhost:9200/features<span class="w"> </span>-H<span class="w"> </span><span class="s1">&#39;Content-Type: application/json&#39;</span><span class="w"> </span>-d<span class="w"> </span>@features.json
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>curl<span class="w"> </span>-X<span class="w"> </span>PUT<span class="w"> </span>http://localhost:9200/records<span class="w"> </span>-H<span class="w"> </span><span class="s1">&#39;Content-Type: application/json&#39;</span><span class="w"> </span>-d<span class="w"> </span>@records.json
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>curl<span class="w"> </span>-X<span class="w"> </span>PUT<span class="w"> </span>http://localhost:9200/searchlogs<span class="w"> </span>-H<span class="w"> </span><span class="s1">&#39;Content-Type: application/json&#39;</span><span class="w"> </span>-d<span class="w"> </span>@searchlogs.json
 </span></code></pre></div>
-<h2 id="install-using-maven">Install using Maven</h2>
-<p>Running from the source code, use Maven to download.</p>
-<div class="language-shell highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nb">cd</span><span class="w"> </span>es
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>mvn<span class="w"> </span>install<span class="w"> </span>-Pes-download
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>mvn<span class="w"> </span>exec:exec<span class="w"> </span>-Des-start
-</span></code></pre></div>
-<p>To stop Elasticsearch when using Maven, simply stop the process as Elasticsearch is started in foreground mode.</p>
-<h2 id="check-installation">Check installation</h2>
+</li>
+</ol>
+<h2 id="check-elasticsearch-installation">Check Elasticsearch installation</h2>
+<ol>
+<li>
 <p>Access Elasticsearch admin page from <a href="http://localhost:9200/">http://localhost:9200/</a>.</p>
-<h2 id="configure-connection">Configure connection</h2>
-<p>Update Elasticsearch connection details in <code>WEB-INF/config.properties</code> and restart the application:</p>
-<div class="language-shell highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>es.protocol<span class="o">=</span>http
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>es.port<span class="o">=</span><span class="m">9200</span>
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>es.host<span class="o">=</span>localhost
-</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>es.url<span class="o">=</span><span class="si">${</span><span class="nv">es</span><span class="p">.protocol</span><span class="si">}</span>://<span class="si">${</span><span class="nv">es</span><span class="p">.host</span><span class="si">}</span>:<span class="si">${</span><span class="nv">es</span><span class="p">.port</span><span class="si">}</span>
-</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>es.username<span class="o">=</span>
-</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>es.password<span class="o">=</span>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>It is not needed nor recommended to open port <code>9200</code> to the outside. GeoNetwork is protecting the Elasticsearch instance exposing only the search API and taking care of user privileges.</p>
+</div>
+</li>
+</ol>
+<h2 id="configure-geonetwork-connection-to-elasticsearch">Configure GeoNetwork connection to Elasticsearch</h2>
+<ol>
+<li>
+<p>Update Elasticsearch connection details in <code>WEB-INF/config.properties</code>:</p>
+<div class="language-properties highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="na">es.protocol</span><span class="o">=</span><span class="s">http</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="na">es.port</span><span class="o">=</span><span class="s">9200</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="na">es.host</span><span class="o">=</span><span class="s">localhost</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="na">es.url</span><span class="o">=</span><span class="s">${es.protocol}://${es.host}:${es.port}</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="na">es.username</span><span class="o">=</span>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="na">es.password</span><span class="o">=</span>
 </span></code></pre></div>
-<p>It is not needed nor recommended to open port 9200 to the outside. GeoNetwork is protecting the Elasticsearch instance exposing only the search API and taking care of user privileges.</p>
+</li>
+<li>
+<p>Restart the application:</p>
+</li>
+</ol>
 
 
 
@@ -3161,7 +3325,7 @@
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../installing-from-source-code/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Building from Source Code">
+          <a href="../" class="md-footer__link md-footer__link--prev" aria-label="Previous: Installation guide">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
@@ -3171,20 +3335,20 @@
                 Previous
               </span>
               <div class="md-ellipsis">
-                Building from Source Code
+                Installation guide
               </div>
             </div>
           </a>
         
         
           
-          <a href="../configuring-database/" class="md-footer__link md-footer__link--next" aria-label="Next: Configuring the database">
+          <a href="../installing-from-zip/" class="md-footer__link md-footer__link--next" aria-label="Next: Installing using a ZIP file">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Configuring the database
+                Installing using a ZIP file
               </div>
             </div>
             <div class="md-footer__button md-icon">

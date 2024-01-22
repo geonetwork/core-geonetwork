@@ -13,10 +13,10 @@
         <link rel="canonical" href="https://docs.geonetwork-opensource.org/4.2/api/opensearch/">
       
       
-        <link rel="prev" href="../csw/">
+        <link rel="prev" href="../oai-pmh/">
       
       
-        <link rel="next" href="../rdf-dcat/">
+        <link rel="next" href="../q-search/">
       
       
       <link rel="icon" href="../../assets/images/geonetwork-logo.png">
@@ -24,7 +24,7 @@
     
     
       
-        <title>OpenSearch and INSPIRE ATOM - GeoNetwork opensource (EN)</title>
+        <title>OpenSearch - GeoNetwork opensource (EN)</title>
       
     
     
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#opensearch-and-atom" class="md-skip">
+        <a href="#opensearch" class="md-skip">
           Skip to content
         </a>
       
@@ -115,7 +115,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              OpenSearch and INSPIRE ATOM
+              OpenSearch
             
           </span>
         </div>
@@ -1764,6 +1764,10 @@
       
         
       
+        
+      
+        
+      
     
     
     
@@ -1860,7 +1864,49 @@
         
   
   <span class="md-ellipsis">
-    Catalog Service for the Web (CSW)
+    OGC Catalog Service (CSW)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../inspire_atom/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Inspire atom
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../oai-pmh/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Open Archive Initiative
   </span>
   
 
@@ -1890,7 +1936,7 @@
           
   
   <span class="md-ellipsis">
-    OpenSearch and INSPIRE ATOM
+    OpenSearch
   </span>
   
 
@@ -1901,7 +1947,7 @@
         
   
   <span class="md-ellipsis">
-    OpenSearch and INSPIRE ATOM
+    OpenSearch
   </span>
   
 
@@ -1923,18 +1969,9 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#opensearch" class="md-nav__link">
+  <a href="#upgrading-from-geonetwork-30-guidance" class="md-nav__link">
     <span class="md-ellipsis">
-      OpenSearch
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#inspire-atom" class="md-nav__link">
-    <span class="md-ellipsis">
-      INSPIRE ATOM
+      Upgrading from GeoNetwork 3.0 Guidance
     </span>
   </a>
   
@@ -1956,11 +1993,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../rdf-dcat/" class="md-nav__link">
+      <a href="../q-search/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    RDF DCAT end point
+    Q Search
   </span>
   
 
@@ -1977,11 +2014,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../oai-pmh/" class="md-nav__link">
+      <a href="../rdf-dcat/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Open Archive Initiative (OAI)
+    RDF DCAT
   </span>
   
 
@@ -2745,18 +2782,9 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#opensearch" class="md-nav__link">
+  <a href="#upgrading-from-geonetwork-30-guidance" class="md-nav__link">
     <span class="md-ellipsis">
-      OpenSearch
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#inspire-atom" class="md-nav__link">
-    <span class="md-ellipsis">
-      INSPIRE ATOM
+      Upgrading from GeoNetwork 3.0 Guidance
     </span>
   </a>
   
@@ -2793,34 +2821,33 @@
   
 
 
-<h1 id="opensearch-and-atom">OpenSearch and INSPIRE ATOM</h1>
+<h1 id="opensearch">OpenSearch</h1>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
-<p>Not yet available in version 4.</p>
+<p>Unavailable since version 4.0.0.</p>
+<p>There is no known sponsor or interested party for implementing OpenSearch.</p>
 </div>
-<h2 id="opensearch">OpenSearch</h2>
-<p>The catalog provides an opensearch entry point at <a href="http://localhost:8080/geonetwork/srv/eng/portal.opensearch">http://localhost:8080/geonetwork/srv/eng/portal.opensearch</a>. This service is advertised in the HTML.</p>
-<p><img alt="" src="../img/opensearch.png" /></p>
-<p>Browsers detect the availability of opensearch by checking the index page at the root of the (sub)domain. If you install geonetwork in a subfolder, consider to set up a rewrite rule forwarding the index request to the subfolder.</p>
-<p>An example of such a rewrite rule in Apache:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>RewriteEngine on
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>RewriteRule   &quot;^/$&quot;  &quot;/geonetwork/&quot;  [R]
-</span></code></pre></div>
-<p>Verify in a browser if opensearch is detected by typing the url and then a space. The url bar should then give an indication that you're searching within the site.</p>
-<p><img alt="" src="../img/opensearch-in-browser.png" width="300px" /></p>
-<h2 id="inspire-atom">INSPIRE ATOM</h2>
-<p>The INSPIRE technical guideline for download services facilitates an option to set up a download service based on OpenSearch and Atom. A separate OpenSearch endpoint is created for every Atom-based download service.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Only records based on the ISO19139 standard can be used with Atom. ISO19115-3 records are not.</p>
-</div>
-<p>A remote ATOM feed can be registered in a metadata record (see <a href="../../user-guide/associating-resources/linking-online-resources/#linking-data-using-atom-feed">Linking data using ATOM feeds</a>), but the catalog can also create ATOM feeds from records describing datasets and services.</p>
-<p>For a service metadata record, the corresponding ATOM feed is accessed at: <code>http://localhost:8080/geonetwork/srv/atom/describe/service?uuid=8b719ebd-646e-4963-b9e0-16b3c2a6d94e</code>. If the service is attached to one or more datasets (see <a href="../../user-guide/associating-resources/linking-dataset-or-service/">Linking a dataset with a service</a>), then the feed will also expose each dataset as an <code>entry</code> in the feed. Check that the service type is set to <code>download</code> (if not, the dataset feed will return an exception).</p>
-<p>The dataset feed is accessible at: <code>http://localhost:8080/geonetwork/srv/atom/describe/dataset?spatial_dataset_identifier_code=b795de68-726c-4bdf-a62a-a42686aa5b6f</code>. Links will be created for each online resource flagged with a <code>function</code> set to <code>download</code>.</p>
-<p>Examples:</p>
+<p>The OpenSerach API provides a serivce description advertised in the HTML.</p>
+<p>Browsers detect the availability of opensearch by checking the index page at the root of the (sub)domain. Setup required defining a rewrite rule forwarding requests to the geonetwork application.</p>
+<p>Reference:</p>
 <ul>
-<li><a href="https://catalog.inspire.geoportail.lu/geonetwork">https://catalog.inspire.geoportail.lu/geonetwork</a></li>
+<li><a href="https://www.ogc.org/standard/opensearch/">OpenSearch</a> (Open Geospatial Consortium)</li>
 </ul>
+<h2 id="upgrading-from-geonetwork-30-guidance">Upgrading from GeoNetwork 3.0 Guidance</h2>
+<p>OpenSearch API is no longer available.</p>
+<ul>
+<li>Recommend migrating to <a href="../the-geonetwork-api/">GeoNetwork OpenAPI</a> if html discoverability is of primary importance.</li>
+</ul>
+<p>This provides a self-describing service, and automation tools for developer access in different programming languages.
+  However the result is specific to the GeoNetwork application, and not an industry standard for interoperability.</p>
+<ul>
+<li>Recommend migration to <a href="../csw/">OpenGIS Web Catalogue Service (CSW)</a> if standards compliance is of primary importance.</li>
+</ul>
+<div class="admonition note ogc api - records">
+<p class="admonition-title">Note</p>
+<p>The OGC API - Records standard is not yet ready, but is expected to provide the best of both worlds: html discoverability, and standards compliance.</p>
+<p>Interested parties are encouraged to contribute towards this roadmap activity.</p>
+</div>
 
 
 
@@ -2858,7 +2885,7 @@
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../csw/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Catalog Service for the Web (CSW)">
+          <a href="../oai-pmh/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Open Archive Initiative">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
@@ -2868,20 +2895,20 @@
                 Previous
               </span>
               <div class="md-ellipsis">
-                Catalog Service for the Web (CSW)
+                Open Archive Initiative
               </div>
             </div>
           </a>
         
         
           
-          <a href="../rdf-dcat/" class="md-footer__link md-footer__link--next" aria-label="Next: RDF DCAT end point">
+          <a href="../q-search/" class="md-footer__link md-footer__link--next" aria-label="Next: Q Search">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                RDF DCAT end point
+                Q Search
               </div>
             </div>
             <div class="md-footer__button md-icon">
