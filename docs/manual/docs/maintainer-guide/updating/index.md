@@ -53,7 +53,7 @@ Update:
        
     2. This release of GeoNetwork 4.4 is developed and tested with Elasticsearch `7.17.15`.
     
-        If required update Elasticserach, see [Installing search platform](../../install-guide/installing-index.md).
+        If required update Elasticsearch, see [Installing search platform](../../install-guide/installing-index.md).
     
     3. Minor update may be performed in place, update **`geonetwork`** according to [installation approach](../../install-guide/index.md) used.
         
@@ -80,7 +80,7 @@ Update:
 
     2. This release of GeoNetwork 4.4 is developed and tested with Elasticsearch `7.17.15`.
     
-        If required update Elasticserach, see [Installing search platform](../../install-guide/installing-index.md).
+        If required update Elasticsearch, see [Installing search platform](../../install-guide/installing-index.md).
 
     3. Minor update may be performed in place, update **`geonetwork`** according to [installation approach](../../install-guide/index.md) used.
        

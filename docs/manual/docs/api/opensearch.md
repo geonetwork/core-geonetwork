@@ -23,10 +23,10 @@ OpenSearch API is no longer available.
   This provides a self-describing service, and automation tools for developer access in different programming languages.
   However the result is specific to the GeoNetwork application, and not an industry standard for interoperability.
 
-* Recommend migration to [OpenGIS Web Catalogue Serivce (CSW)](csw.md) if standards compliance is of primary importance.
+* Recommend migration to [OpenGIS Web Catalogue Service (CSW)](csw.md) if standards compliance is of primary importance.
 
 !!! note OGC API - Records
     
-    The OGC API - Records stadard is not yet ready, but is expected to provide the best of both worlds: html discoverability, and standards compliance.
+    The OGC API - Records standard is not yet ready, but is expected to provide the best of both worlds: html discoverability, and standards compliance.
     
     Interested parties are encouraged to contribute towards this roadmap activity.

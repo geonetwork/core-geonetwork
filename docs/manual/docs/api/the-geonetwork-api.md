@@ -25,12 +25,12 @@ GeoNetwork API is provided as a self-describing OpenAPI document, browsable in h
 3. The page documents each service end-point, including parameters and output results.
    
     ![](img/geonetwork-api-document.png)
-    **GeoNetwork API Serivce Endpoint Description**
+    **GeoNetwork API Service Endpoint Description**
 
 4. Selecting **Server variables** at the top of the page allows API testing:
 
     ![](img/geonetwork-api-test.png)
-    **GeoNetwork API Serivce Endpoint Test**
+    **GeoNetwork API Service Endpoint Test**
 
 5.  The OpenAPI document is also available as `text/json` and `text/xml` for script access:
 

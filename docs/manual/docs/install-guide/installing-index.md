@@ -7,9 +7,9 @@ GeoNetwork requires an [Elasticsearch](https://www.elastic.co/products/elasticse
 ## Elasticsearch compatibility
 
 | Elasticsearch Version | Compatibility |
-| --------------------- | ------------- |
+|-----------------------| ------------- |
 | Elasticsearch 7.9.2   | minimum       |
-| Elasticserach 7.17.15 | tested        |
+| Elasticsearch 7.17.15 | tested        |
 | Elasticsearch 8.x     | INCOMPATIBLE  |
 
 ## Installation
@@ -61,7 +61,7 @@ GeoNetwork requires an [Elasticsearch](https://www.elastic.co/products/elasticse
 
 ## Index creation
 
-1. GeoNetwork will connect to Elasticserach on startup, and indices will be created if they do not exist.
+1. GeoNetwork will connect to Elasticsearch on startup, and indices will be created if they do not exist.
    
     * GeoNetwork will start even if Elasticsearch index is down (or not yet running).
     
