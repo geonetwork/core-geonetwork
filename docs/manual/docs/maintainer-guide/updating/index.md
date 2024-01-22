@@ -71,7 +71,6 @@ Update:
 
     5. Restart services:
         
-        * Elasticsearch
         * Application server for GeoNetwork
 
 === "External data directory"
