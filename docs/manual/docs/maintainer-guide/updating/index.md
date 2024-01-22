@@ -24,7 +24,7 @@ By default, a random encryption password is generated when GeoNetwork is started
 
 ## Updating from GeoNetwork 4.2 to GeoNetwork 4.4
 
-Updating fro GeoNetwork 4.2 to GeoNetwork 4.4 is a minor upgrade and may be performed in place.
+Updating from GeoNetwork 4.2 to GeoNetwork 4.4 is a minor upgrade and may be performed in place.
 
 Before you start:
 
