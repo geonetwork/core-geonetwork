@@ -33,7 +33,6 @@ Before you start:
     1. Stop the services:
         
         * Application server running GeoNetwork
-        * Elasticserach
     
     2. When using application data directory be sure to backup  **`/geonetwork/WEB-INF/data/config/encryptor/encryptor.properties`** 
 
