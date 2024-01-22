@@ -25,7 +25,6 @@ with the following utilities: ***sed***, ***xmlstarlet*** and ***sftp***.
     nextversion=4.2.2-SNAPSHOT
     nextMajorVersion=4.4.0-SNAPSHOT
 
-
     # Get the branch
     git clone --recursive https://github.com/geonetwork/core-geonetwork.git \
               geonetwork-$versionbranch
@@ -186,10 +185,12 @@ with the following utilities: ***sed***, ***xmlstarlet*** and ***sftp***.
     # Set version number to SNAPSHOT
     ./update-version.sh $newversion $nextversion
 
+    nextversionnosnapshot=${nextversion//[-SNAPSHOT]/}
+    
     # Add SQL migration step for the next version
-    mkdir web/src/main/webapp/WEB-INF/classes/setup/sql/migrate/v422
-    cat <<EOF > web/src/main/webapp/WEB-INF/classes/setup/sql/migrate/v422/migrate-default.sql
-    UPDATE Settings SET value='4.2.2' WHERE name='system/platform/version';
+    mkdir web/src/main/webapp/WEB-INF/classes/setup/sql/migrate/v${nextversionnosnapshot//[.]/}
+    cat <<EOF > web/src/main/webapp/WEB-INF/classes/setup/sql/migrate/v${nextversionnosnapshot//[.]/}/migrate-default.sql
+    UPDATE Settings SET value='${nextversionnosnapshot}' WHERE name='system/platform/version';
     UPDATE Settings SET value='SNAPSHOT' WHERE name='system/platform/subVersion';
     EOF
     vi web/src/main/webResources/WEB-INF/config-db/database_migration.xml
