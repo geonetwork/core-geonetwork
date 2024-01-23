@@ -1,0 +1,120 @@
+================================================================================
+===
+=== GeoNetwork 4.4.2: List of changes
+===
+================================================================================
+- Transifex updates. (#7651)
+- Upgrade guidance for geonetwork 3 users (#7644)
+- Documentation / Unify version numbers in doing a release page
+- Remove unused Jeeves classes (#7612)
+- Miscellaneous code cleanup with MetadataStatus and RelatedResponse Fix some incorrect comments Remove class prefix as it was not required. Added missing license.
+- Move Direction as an reference object in the open api specification.
+- Remove problematic migration to add a column
+- Update GITHUB.md
+- Bump actions/cache from 3 to 4
+- build release procedure updates to include docs in release tag (#7412)
+- unpack schema sample data into folders, produce mef files at build time (#7457)
+- Update CONTRIBUTING.md
+- document `backport 4.2.x` label change required for bot
+- Fix the grid on the homepage of the documentation (#7559)
+- backport bot to respond to PR tags
+- Fix error on edit page elements with non-unique id #gnRemoteRecordUrl (#7621)
+- Record view / Display WFS downloads for WFS online resources without a name defined (#7626)
+- Do not clean api docs out of src/main/webapp
+- build fix: do not remove api docs during clean:clean@reset
+- Bump actions/setup-java from 3.12.0 to 4.0.0 (#7522)
+- Use Java 21 for Sonarcloud plugin (#7622)
+- Build / release module build workflow improvements / fixes (#7619)
+- Remove default response from open api specification. (#7609)
+- Cleanup consumes from metadata insert api. (#7616)
+- Add missing @ApiResponse status for successful api search response. (#7594)
+- Fix SpringDoc duplicate OperationId (#7580)
+- CSW GetRecords doesn't escape query values when creating the Elasticsearch query (#7529)
+- Add missing import from commit 63cd59fb38df389694566d69459bcfbedb7ca89e (Service context null pointer (#7593))
+- Changed http to https for urls that appear in open api specification. (#7601)
+- Fix duplicate API endpoint /feeds (#7581)
+- Service context null pointer (#7593)
+- Update files with Prettier formatting
+- Preventing indexing error by limiting selection amount
+- Fix linux specific file separator used for harvester transform option list
+- Fix issue with @ResponseStatus and @ApiResponse being out of sync. (#7588)
+- Spring doc - Set API enum as ref (#7595)
+- Add missing swagger icons that were referenced in the index.html file. (#7597)
+- using icon for call/phone
+- feat: avoid race condition, resize map once target size ok (#7545)
+- Configuration to restrict the hosts and ports accessible by the http proxy servlet (#7326)
+- Search results / Configure related records type depending on template. (#7376)
+- Fix duplicate operation id caused by use of 2 methods  GET/POST method from getKeywordById api (#7586)
+- Build info improvements. (#7400)
+- Harvesting / WFS feature / Add WFS2 support for MapServer
+- Github / PR template / Add funded by (#7554)
+- INSPIRE Atom feeds / Fix link to atom search endpoint
+- Fix add element attribute in the metadata editor, causing the element section is removed from the user interface until the metadata is saved
+- fix duplicate check on uuid+initiative+association (#7567)
+- Record view / Invalid timezone shift for years outside moment's 10 years range.
+- Home page / sort topic categories and INSPIRE themes facets alphabetically (#7569)
+- Metadata extents API / Make configurable to display the metadata bboxes using geodesic extents for local projections. (#7560)
+- Spring doc API for link api should accept a structured object instead of JSONObject (#7585)
+- Update SpringDoc json/yaml generator to make the results more deterministic. (#7574)
+- Add missing apiResponse for group and map api (#7590)
+- API should return a structured object instead of JSONObject (#7584)
+- Fix initialization of SpringDoc so that it does not use null servername and null version (#7575)
+- Fix duplicate spring doc tags. Ensure that all tags have the same description.
+- Fix case of wrong use for HttpStatus.CREATED and HttpStatus.OK In some cases HttpStatus.CREATED was used when it should have been HttpStatus.OK and other cases it is the opposite.
+- Overview not shown in PDF export when the overview image is stored in GeoNetwork and requires authentication to access it. Fixes #7540 (#7556)
+- fix for empty language leading to spurious comma
+- Add German codelist translations for scope code (#7566)
+- Fix PULL_REQUEST_TEMPLATE.md link to contribution guidelines
+- Remove ?debug from link to admin dashboard. (#7564)
+- Update iso19139 csw-full.xsl (#7558)
+- add icon to static pages, configurable
+- cryptic parse exception
+- Visual fix for icon text circles (firefox)
+- Update authors.md
+- Update authors.md
+- Documentation / Update Elasticsearch installation page typos and remove the old elastic search documentation. Fixes #7551 (#7555)
+- Restructure the 'composed of' block on the detail page (#7480)
+- Metadata indexing - create an organisation name field that tracks the organisations of the different types of contacts
+- Elasticsearch index creation - log the exception when a parsing error of the index configuration file occurs
+- Add ownerId to geonet:info (#7547)
+- Update PROCESS_FOR_DEPRECATION.md
+- Create PROCESS_FOR_DEPRECATION.md
+- Update CONTRIBUTING.md
+- Don't display header menu and footer in single metadata PDF export (#7532)
+- Edited small typos and text. Some link fixes.
+- Use Apache Commons Text library to escape JSON content in xslt processing (#7525)
+- Edited small typos and text. Some link fixes.
+- OpenId / Use the user profile configured locally if the configuration option OPENIDCONNECT_USERPROFILEUPDATEENABLED is disabled (#7445)
+- Bump actions/setup-python from 4 to 5
+- INSPIRE Validator - exception handling improvements (#7519)
+- Automatic HTML formatting
+- Fix check to verify if a group has enabled the workflow, checking if the workflow is also enabled (#7535)
+- Admin console / Improve form checks for group, category and source (#7449)
+- Administration form validation improvements (#7533)
+- Reset user password dialog - don't display the field to request the old password for administrators - unify UI check with backend check (#7510)
+- New property to define an alternate logo for pdf export (#7481)
+- Metadata workflow / Record view / reload the page with the approved version when cancelling a working copy (#7503)
+- consistent styling of recordgroup label
+- Metadata indexing / Escape website and logo information for contacts
+- Search / Add option to show less facet values (#7497)
+- GeoNetwork 4.4.x minor versions library updates:
+- Update CONTRIBUTING.md
+- Update README.md
+- Validation of INSPIRE ATOM services to return API exceptions instead of error 400 (#7490)
+- INSPIRE Atom Search - add missing filter by feed dataset identifiers (#7492)
+- Remote INSPIRE Atom Feeds harvester - Remove duplicates by dataset identifier (#7491)
+- Fix language for region picker directives (#7495)
+- When getting locale message, default locale to LocaleContextHolder when locale is null (#7516)
+- Fix some cases that were not considering both message and description when displaying errors. (#7517)
+- Elasticsearch / Update to 7.17.15 (#7368)
+- Record view / DQ / Add measure date information
+- Ensure only dataset are returned when linking dataset to service
+- Record view / Add distributor contact. (#7473)
+- Record view / Topic category / Translations
+- Record view / Improve language list.
+- Fix indexing of iso19110 metadata with cardinalities composed of multiple ranges (#7486)
+- Harvesting / WFS / Cleaning comment (#7504)
+- CSW Harvester / Don't set a default search filter field (#7494)
+- Docs / Fix mike parameter with extra dash. Follow up of #7507
+- Docs / Fix the mike version to 2.0.0 and change the parameter --no-redirect to --alias-type=copy (changed in mike 2.0.0) (#7507)
+- Update version 4.4.2-SNAPSHOT

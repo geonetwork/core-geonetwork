@@ -204,6 +204,9 @@
             scope.isRemoteRecordPropertiesExtracted = false;
             scope.selectionList = undefined;
 
+            // Get the parent div's ID
+            scope.popupId = element.closest(".onlinesrc-popup").attr("id");
+
             scope.$on("resetSearch", function (event, args) {
               scope.remoteRecord = {
                 remoteUrl: "",

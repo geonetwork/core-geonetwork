@@ -11,6 +11,17 @@
       <directory>src/main/plugin/</directory>
       <outputDirectory></outputDirectory>
       <useDefaultExcludes>true</useDefaultExcludes>
+      <excludes>
+        <exclude>dublin-core/sample-data/**</exclude>
+      </excludes>
+    </fileSet>
+    <fileSet>
+      <directory>target/sample-data</directory>
+      <outputDirectory>dublin-core/sample-data</outputDirectory>
+      <useDefaultExcludes>true</useDefaultExcludes>
+      <includes>
+        <include>*.mef</include>
+      </includes>
     </fileSet>
   </fileSets>
 </assembly>

@@ -111,3 +111,26 @@ From the results or the record view, you can add WMS layers referenced in a meta
     ![](img/map-africa-basin.png)
 
 Read more about use of the [Maps and dataset visualisation](../map/index.md)
+
+## Upgrading from GeoNetwork 3 Guidance
+   
+!!! warning
+
+    Permalink to search page from GeoNetwork 3.x will need to be updated to work with 4.x. 
+
+If you have linked to search results please be advised that some of the URL parameters have changed and you should test and recreate these URLs.
+
+* The catalog services does not provide **permalink** to search results.
+* URLs created with ***GeoNetwork 3.x*** search results are not intended to work with ***GeoNetwork 4.x***.
+
+* The use of a new search engine has resulted in changes to the URL parameter names and facets:
+  
+  Very simple text query:
+  
+   * GeoNetwork 3: ``http://localhost:8080/geonetwork/srv/eng/catalog.search#/search?any=road``
+   * GeoNetwork 4: ``http://localhost:8080/geonetwork/srv/eng/catalog.search#/search?any=road``
+
+  The use of a new search engine has resulted in changes to the URL parameter names and facets:
+   
+   * GeoNetwork 3: ``http://localhost:8080/geonetwork/srv/eng/catalog.search#/searchsrv/eng/catalog.search#/search?resultType=details&sortBy=changeDate&any=road&fast=index&_content_type=json&from=1&to=20``
+   * GeoNetwork 4: ``http://localhost:8080/geonetwork/srv/eng/catalog.search#/search?isTemplate=n&resourceTemporalDateRange=%7B%22range%22:%7B%22resourceTemporalDateRange%22:%7B%22gte%22:null,%22lte%22:null,%22relation%22:%22intersects%22%7D%7D%7D&sortBy=dateStamp&sortOrder=desc&any=road&from=1&to=20``
