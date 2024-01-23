@@ -51,7 +51,7 @@
   <xsl:template
     priority="4"
     match="*//gmd:graphicOverview
-         [$resourceIdx = '' or position() = xs:integer($resourceIdx)]
+         [$resourceIdx = '' or (count(preceding::gmd:graphicOverview) + 1) = xs:integer($resourceIdx)]
          [    ($resourceHash != '' or ($thumbnail_url != '' and normalize-space(gmd:MD_BrowseGraphic/gmd:fileName/gco:CharacterString) = normalize-space($thumbnail_url)))
           and ($resourceHash = '' or digestUtils:md5Hex(string(exslt:node-set(.))) = $resourceHash)]"/>
 
