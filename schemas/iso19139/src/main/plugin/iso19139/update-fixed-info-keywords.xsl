@@ -307,11 +307,11 @@
             <gmd:descriptiveKeywords
                         xlink:href="{concat(
                                       $hrefPrefix,
-                                      'skipdescriptivekeywords=true&amp;thesaurus=', current-grouping-key(),
-                                      '&amp;id=',
-                                      string-join(
+                                      'thesaurus=', current-grouping-key(),
+                                      '&amp;id=', string-join(
                                         current-group()/id[. != ''],
                                         ','),
+                                      (if (contains($queryString, 'skipdescriptivekeywords=true')) then '' else '&amp;skipdescriptivekeywords=true'),
                                       $queryString)}"/>
           </xsl:if>
         </xsl:for-each-group>
