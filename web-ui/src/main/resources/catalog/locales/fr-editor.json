@@ -44,7 +44,7 @@
     "removeField": "Supprimer ce champ",
     "addXpath-help": "La mise à jour des enregistrements à l'aide de XPath nécessite une définition précise des modifications. Un changement est défini par :",
     "addXpathTitle": "un titre (optionel)",
-    "addXpathXpath": "un <a href='http://xmlfr.org/w3c/TR/xpath/'>XPath</a> est obligatoire pour pointer vers le(s) élément(s) à mettre à jour. XPath peut contenir un filtre.",
+    "addXpathXpath": "un <a href=\"https://www.w3.org/TR/1999/REC-xpath-19991116/\">XPath</a> est obligatoire pour pointer vers le(s) élément(s) à mettre à jour. XPath peut contenir un filtre.",
     "addXpathInsertMode": "un type de mise à jour",
     "xpath": "XPath",
     "xpathValue": "Texte ou XML",
