@@ -23,15 +23,21 @@ then
   exit
 fi
 
-# TODO: main only works for latest
+# Setup properties
+from=origin
 frombranch=origin/main
+series=4.4
+#versionbranch=$series.x
 versionbranch=main
 version=$1
 minorversion=0
+release=latest
 newversion=$version-$minorversion
 currentversion=$1-SNAPSHOT
 previousversion=$3
 nextversion=$2-SNAPSHOT
+nextMajorVersion=4.6.0-SNAPSHOT
+
 
 
 echo "Creating release for version $newversion (from $currentversion). Next version will be $nextversion"
@@ -55,14 +61,14 @@ fi
 # TODO: Check the JRE URL replacement
 
 # Generate list of changes
-cat <<EOF > docs/changes$newversion.txt
+cat <<EOF > docs/changes/changes$newversion.txt
 ================================================================================
 ===
 === GeoNetwork $version: List of changes
 ===
 ================================================================================
 EOF
-git log --pretty='format:- %s' $previousversion... >> docs/changes$newversion.txt
+git log --pretty='format:- %s' $previousversion... >> docs/changes/changes$newversion.txt
 
 # Then commit the new version
 git add .

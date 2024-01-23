@@ -30,10 +30,7 @@ sourceforge_username=$3
 sourceforge_username=XXXXX
 
 sftp $sourceforge_username,geonetwork@frs.sourceforge.net << EOT
-# For stable release
 cd /home/frs/project/g/ge/geonetwork/GeoNetwork_opensource
-# or for RC release
-#cd /home/frs/project/g/ge/geonetwork/GeoNetwork_unstable_development_versions/
 mkdir v${version}
 cd v${version}
 put docs/changes{$version}-0.txt
@@ -47,4 +44,5 @@ EOT
 git push origin $versionbranch
 git push origin $version
 
-# TODO: OSGeo maven repo ?
+# Deploy to osgeo repository (requires credentials in ~/.m2/settings.xml)
+mvn deploy -Drelease
