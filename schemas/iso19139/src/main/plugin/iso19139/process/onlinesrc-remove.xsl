@@ -54,7 +54,7 @@ Stylesheet used to remove a reference to a online resource.
   <!-- Note: first part of the match needs to match the xsl:for-each select from extract-relations.xsl in order to get the position() to match -->
   <xsl:template
     match="*//gmd:MD_DigitalTransferOptions/gmd:onLine
-        [gmd:CI_OnlineResource[gmd:linkage/gmd:URL!=''] and ($resourceIdx = '' or position() = xs:integer($resourceIdx))]
+        [gmd:CI_OnlineResource[gmd:linkage/gmd:URL!=''] and ($resourceIdx = '' or (count(preceding::gmd:onLine) + 1) = xs:integer($resourceIdx))]
         [($resourceHash != '' or ($url != null and (normalize-space(gmd:CI_OnlineResource/gmd:linkage/gmd:URL) = $url and normalize-space(gmd:CI_OnlineResource/gmd:name/gco:CharacterString) = normalize-space($name)
                                                                 or normalize-space(gmd:CI_OnlineResource/gmd:linkage/gmd:URL) = $url and count(gmd:CI_OnlineResource/gmd:name/gmd:PT_FreeText/gmd:textGroup[gmd:LocalisedCharacterString = $name]) > 0
                                                                 or normalize-space(gmd:CI_OnlineResource/gmd:linkage/gmd:URL) = $url and normalize-space(gmd:CI_OnlineResource/gmd:protocol/*) = 'WWW:DOWNLOAD-1.0-http--download'))
