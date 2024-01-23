@@ -292,6 +292,8 @@
           scope.dimensions = {};
           scope.parameters = { time: "fa-clock-o", elevation: "fa-signal fa-rotate-90" };
 
+          scope.unsetTimeDimension = false;
+
           function initDimension(dimension) {
             var dimensionConfig = scope.layer.get(dimension);
             if (dimensionConfig) {
@@ -336,6 +338,19 @@
                 })
               };
               angular.extend(scope.dimensions[dimension], dimensionConfig);
+
+              scope.$watch("unsetTimeDimension", function (value) {
+                if (value) {
+                  scope.stop(dimension);
+
+                  delete scope.params[dimension.toUpperCase()];
+                  scope.layer.getSource().updateParams(scope.params);
+                } else {
+                  scope.params[dimension.toUpperCase()] =
+                    scope.dimensions[dimension].current;
+                  scope.layer.getSource().updateParams(scope.params);
+                }
+              });
 
               scope.$watch("dimensions." + dimension + ".current", function (instant) {
                 if (!instant) {
