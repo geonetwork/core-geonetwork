@@ -31,6 +31,7 @@ Stylesheet used to remove a reference to a online resource.
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 xmlns:digestUtils="java:org.apache.commons.codec.digest.DigestUtils"
                 xmlns:exslt="http://exslt.org/common"
+                exclude-result-prefixes="#all"
                 version="2.0">
 
   <!--
