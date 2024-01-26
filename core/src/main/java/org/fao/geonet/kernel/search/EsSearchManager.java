@@ -648,7 +648,7 @@ public class EsSearchManager implements ISearchManager {
                     if (isObject) {
                         try {
                             arrayNode.add(
-                                mapper.readTree(node.getText()));
+                                mapper.readTree(node.getTextNormalize()));
                         } catch (IOException e) {
                             LOGGER.error("Parsing invalid JSON node {} for property {}. Error is: {}",
                                     node.getTextNormalize(), propertyName, e.getMessage());
