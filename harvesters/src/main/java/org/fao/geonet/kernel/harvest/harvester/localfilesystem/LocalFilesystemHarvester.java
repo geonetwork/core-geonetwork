@@ -158,8 +158,6 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult, L
             metadataManager.save(metadata);
         }
 
-        OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
-        repository.deleteAllByMetadataId(Integer.parseInt(id));
         aligner.addPrivileges(id, params.getPrivileges(), localGroups, context);
 
         metadata.getCategories().clear();
