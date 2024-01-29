@@ -50,6 +50,7 @@ import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.repository.specification.HarvestHistorySpecs;
 import org.fao.geonet.services.harvesting.Util;
 import org.jdom.Element;
+import org.jdom.JDOMException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpEntity;
@@ -70,6 +71,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RequestMapping(value = {
     "/{portal}/api/harvesters"
@@ -436,7 +438,7 @@ public class HarvestersApi {
         summary = "Download a logfile from harvesting",
         description = "")
     @GetMapping(
-        value = "/log",
+        value = "/{harvesterHistoryIdentifier}/log",
         produces = {
             "text/plain"
         })
@@ -448,21 +450,25 @@ public class HarvestersApi {
     @ResponseBody
     public void getLog(
         @Parameter(
-            description = "Harvester log file name",
+            description = "Harvester identifier",
             required = true
         )
-        @RequestParam(name = "file")
-            String logFile,
-        HttpServletResponse response) throws IOException, ResourceNotFoundException {
+        @PathVariable
+        Integer harvesterHistoryIdentifier,
+        HttpServletResponse response) throws IOException, JDOMException, ResourceNotFoundException {
 
-        // Security checks, this is no free proxy!!
-        if (logFile.startsWith("http") ||
-            logFile.startsWith("ftp") ||
-            logFile.startsWith("sftp") ||
-            logFile.contains("..") ||
-            !logFile.endsWith(".log") ||
-            !logFile.contains("harvester_")) {
-            throw new IllegalArgumentException(String.format("No valid harvester log file name: %s", logFile));
+
+        Optional<HarvestHistory> harvestHistoryOptional = historyRepository.findById(harvesterHistoryIdentifier);
+        String logFile = "";
+
+        if (harvestHistoryOptional.isPresent()) {
+            Element info = harvestHistoryOptional.get().getInfoAsXml();
+            logFile = info.getChildText("logfile");
+        }
+
+        if (StringUtils.isEmpty(logFile)) {
+            throw new ResourceNotFoundException(
+                "Couldn't find or read the logfile in catalogue log directory for the harvester history entry. Check log file configuration.");
         }
 
         File mainLogFile = GeonetworkDataDirectory.getLogfile();
