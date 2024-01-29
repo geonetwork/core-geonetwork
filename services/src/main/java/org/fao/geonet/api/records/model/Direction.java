@@ -22,6 +22,9 @@
  */
 package org.fao.geonet.api.records.model;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
+@Schema(enumAsRef = true)
 public enum Direction {
     up, down
 }

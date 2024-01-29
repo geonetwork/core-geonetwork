@@ -54,22 +54,6 @@ import jeeves.xlink.Processor;
  * (id, data, lastChangeDate).
  */
 public abstract class XmlSerializer {
-    private static InheritableThreadLocal<ThreadLocalConfiguration> configThreadLocal = new InheritableThreadLocal<XmlSerializer.ThreadLocalConfiguration>();
-
-    public static ThreadLocalConfiguration getThreadLocal(boolean setIfNotPresent) {
-        ThreadLocalConfiguration config = configThreadLocal.get();
-        if (config == null && setIfNotPresent) {
-            config = new ThreadLocalConfiguration();
-            configThreadLocal.set(config);
-        }
-
-        return config;
-    }
-
-    public static void clearThreadLocal() {
-        configThreadLocal.set(null);
-    }
-
     public static void removeFilteredElement(Element metadata,
                                              final MetadataSchemaOperationFilter filter,
                                              List<Namespace> namespaces) throws JDOMException {
@@ -82,6 +66,7 @@ public abstract class XmlSerializer {
         List<?> nodes = Xml.selectNodes(metadata,
             xpath,
             namespaces);
+
         for (Object object : nodes) {
             if (object instanceof Element) {
                 Element element = (Element) object;
@@ -125,7 +110,7 @@ public abstract class XmlSerializer {
             return false;
         }
 
-    String xlR = _settingManager.getValue(Settings.SYSTEM_XLINKRESOLVER_ENABLE);
+        String xlR = _settingManager.getValue(Settings.SYSTEM_XLINKRESOLVER_ENABLE);
         if (xlR != null) {
             boolean isEnabled = xlR.equals("true");
             if (isEnabled) Log.debug(Geonet.DATA_MANAGER, "XLink Resolver enabled.");
@@ -217,7 +202,8 @@ public abstract class XmlSerializer {
                     }
                 }
             }
-            if (filterEditOperationElements || (getThreadLocal(false) != null && getThreadLocal(false).forceFilterEditOperation)) {
+
+            if (filterEditOperationElements) {
                 removeFilteredElement(metadataXml, editFilter, namespaces);
             }
         }
@@ -292,7 +278,7 @@ public abstract class XmlSerializer {
     public abstract void delete(String id, ServiceContext context)
         throws Exception;
 
-	/* API to be overridden by extensions */
+    /* API to be overridden by extensions */
 
     public abstract void update(String id, Element xml,
                                 String changeDate, boolean updateDateStamp, String uuid, ServiceContext context)
@@ -310,16 +296,4 @@ public abstract class XmlSerializer {
 
     public abstract Element selectNoXLinkResolver(String id, boolean isIndexingTask, boolean applyOperationsFilters)
         throws Exception;
-
-    public static class ThreadLocalConfiguration {
-        private boolean forceFilterEditOperation = false;
-
-        public boolean isForceFilterEditOperation() {
-            return forceFilterEditOperation;
-        }
-
-        public void setForceFilterEditOperation(boolean forceFilterEditOperation) {
-            this.forceFilterEditOperation = forceFilterEditOperation;
-        }
-    }
 }

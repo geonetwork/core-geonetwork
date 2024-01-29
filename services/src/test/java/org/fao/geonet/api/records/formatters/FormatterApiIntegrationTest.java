@@ -94,7 +94,7 @@ public class FormatterApiIntegrationTest extends AbstractServiceIntegrationTest 
             JeevesDelegatingFilterProxy.setApplicationContextAttributeKey(srvAppContext);
             RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
 
-            formatService.exec("eng", "html", "" + id, null, formatter.getId(), "true", false, _100, new ServletWebRequest(request, response));
+            formatService.exec("eng", "html", "" + id, null, formatter.getId(), "true", _100, new ServletWebRequest(request, response));
 
             final String view = response.getContentAsString();
             try {
@@ -105,7 +105,7 @@ public class FormatterApiIntegrationTest extends AbstractServiceIntegrationTest 
             }
             try {
                 response = new MockHttpServletResponse();
-                formatService.exec("eng", "testpdf", "" + id, null, formatter.getId(), "true", false, _100,
+                formatService.exec("eng", "testpdf", "" + id, null, formatter.getId(), "true", _100,
                     new ServletWebRequest(request, response));
 //                Files.write(Paths.get("e:/tmp/view.pdf"), response.getContentAsByteArray());
 //                System.exit(0);
@@ -138,7 +138,7 @@ public class FormatterApiIntegrationTest extends AbstractServiceIntegrationTest 
         JeevesDelegatingFilterProxy.setApplicationContextAttributeKey(applicationContextAttributeKey);
 
         final MockHttpServletResponse response = new MockHttpServletResponse();
-        formatService.exec("eng", "html", "" + id, null, formatterName, "true", false, _100, new ServletWebRequest(request, response));
+        formatService.exec("eng", "html", "" + id, null, formatterName, "true", _100, new ServletWebRequest(request, response));
         final String viewXml = response.getContentAsString();
         final Element view = Xml.loadString(viewXml, false);
         assertEqualsText("fromFunction", view, "*//p");

@@ -42,6 +42,7 @@ import org.fao.geonet.NodeInfo;
 import org.fao.geonet.SystemInfo;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
+import org.fao.geonet.api.OpenApiConfig;
 import org.fao.geonet.api.exception.NotAllowedException;
 import org.fao.geonet.api.site.model.SettingSet;
 import org.fao.geonet.api.site.model.SettingsListResponse;
@@ -92,6 +93,7 @@ import javax.servlet.ServletRegistration;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -420,6 +422,7 @@ public class SiteApi {
         ApplicationContext applicationContext = ApplicationContextHolder.get();
         String currentUuid = settingManager.getSiteId();
         String oldSiteName = settingManager.getSiteName();
+        String oldBaseUrl = settingManager.getBaseURL();
 
         if (!settingManager.setValues(allRequestParams)) {
             throw new OperationAbortedEx("Cannot set all values");
@@ -438,6 +441,11 @@ public class SiteApi {
                 );
                 sourceRepository.save(siteSource);
             }
+        }
+        String newBaseUrl = settingManager.getBaseURL();
+        // Update SpringDoc host information if the base url is changed.
+        if (!oldBaseUrl.equals(newBaseUrl)) {
+            OpenApiConfig.setHostRelatedInfo();
         }
 
         // Update the system default timezone. If the setting is blank use the timezone user.timezone property from command line or
@@ -571,7 +579,7 @@ public class SiteApi {
         method = RequestMethod.PUT)
     @PreAuthorize("hasAuthority('Editor')")
     @ResponseBody
-    public HttpEntity index(
+    public HttpEntity indexSite(
         @Parameter(description = "Drop and recreate index",
             required = false)
         @RequestParam(required = false, defaultValue = "true")
@@ -869,7 +877,7 @@ public class SiteApi {
             )) {
                 for (Path sheet : sheets) {
                     String id = sheet.toString();
-                    if (id != null && id.contains("convert/from") && id.endsWith(".xsl")) {
+                    if (id != null && id.contains("convert" + File.separator + "from") && id.endsWith(".xsl")) {
                         String name = com.google.common.io.Files.getNameWithoutExtension(
                             sheet.getFileName().toString());
                         list.add(IMPORT_STYLESHEETS_SCHEMA_PREFIX + schema + ":convert/" + name);

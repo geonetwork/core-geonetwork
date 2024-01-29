@@ -1,5 +1,5 @@
 <div
-  data-ng-repeat="(k, facet) in aggregations[key].items"
+  data-ng-repeat="(k, facet) in aggregations[key].items | orderBy: facetSorter(aggregations[key], aggregations[key].key)"
   data-ng-init="facetValue = facet.value;"
   data-ng-show="facetValue"
   data-ng-class="isInspire ? ('bg-iti-' + (facet.key | facetCssClassCode: isInspire)) : ''"

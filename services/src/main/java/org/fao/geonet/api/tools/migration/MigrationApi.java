@@ -23,6 +23,9 @@
 
 package org.fao.geonet.api.tools.migration;
 
+import static org.fao.geonet.api.ApiParams.API_CLASS_TOOLS_OPS;
+import static org.fao.geonet.api.ApiParams.API_CLASS_TOOLS_TAG;
+
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.fao.geonet.ApplicationContextHolder;
@@ -43,7 +46,8 @@ import java.sql.Connection;
 @RequestMapping(value = {
     "/{portal}/api/tools/migration"
 })
-@Tag(name = "tools")
+@Tag(name = API_CLASS_TOOLS_TAG,
+    description = API_CLASS_TOOLS_OPS)
 @RestController
 public class MigrationApi {
 
