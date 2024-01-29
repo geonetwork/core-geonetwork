@@ -209,8 +209,7 @@
           relatedConfig: "=",
           editorConfig: "@"
         },
-        link: function (scope, element, attrs) {
-        }
+        link: function (scope, element, attrs) {}
       };
     }
   ]);
