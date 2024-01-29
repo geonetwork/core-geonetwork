@@ -12,12 +12,6 @@ By moving from Lucene to Elasticsearch GeoNetwork 4.0.0 offers:
 
 The Elasticsearch engine supports GeoNetwork core functionality: user can search, edit records and manage the catalogue as usual. Only the searches (and all related protocols) are affected by the change to Elasticsearch. The editor and admin application remains the same.
 
-There remains opportunities to help:
-
--   **A number of features that you enjoy in GeoNetwork 3 may not yet be available**.
--   Multilingual editing is the same, but multilingual search is not yet fully operational.
--   Read carefully the [list of missing features](https://github.com/geonetwork/core-geonetwork/issues/4727) before migrating.
-
 Before you start:
 
 -   Installing the application require to install an Elasticsearch instance (see [Installing search platform](../../install-guide/installing-index.md)).
@@ -49,3 +43,44 @@ Release highlights:
 -   [Restrict access to Elasticsearch API](https://github.com/geonetwork/core-geonetwork/pull/5023)
 
 See [4.0.0 issues](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+milestone%3A4.0.0+is%3Aclosed) and [pull requests](https://github.com/geonetwork/core-geonetwork/pulls?q=is%3Apr+milestone%3A4.0.0+is%3Aclosed) for full details.
+
+## Removed features
+
+There remains opportunities to help:
+
+-   **A number of features that you enjoy in GeoNetwork 3 may not yet be available**.
+-   Multilingual editing is the same, but multilingual search is not yet fully operational.
+
+Read carefully the [list of missing features](https://github.com/geonetwork/core-geonetwork/issues/4727) before migrating.
+
+* Search API - RDF (replaced with use CSW with DCAT output format)
+* Search API - Z39.50
+* Search API - SRU
+* Search API - OpenSearch
+* Search API - OAI-PMH 
+* GeoNetwork API features:
+
+   - ReportUploads
+   - XLink: Remove directory entry used in other record 
+   - Lucene: Lucene is no longer available, migrated scripts to Elastisearch API
+   
+* Index
+
+  - Search on bounding polygons, currently only the geometry is indexed but not used in search
+
+* Admin
+
+   - Information about the index - not needed, can be replaced by Kibana admin?
+   - Schematron rules (See SchematronCriteriaGroupServiceIntegrationTest)
+   - Search / Statistics and search stat dashboards
+
+* Security
+
+   - ECAS not tested
+  
+* Harvester
+
+   - GeoNetwork 4 can not be harvested using GeoNetwork protocol by GeoNetwork 3 version.
+     
+     Mitigation: Use CSW Harvester instead.
+   

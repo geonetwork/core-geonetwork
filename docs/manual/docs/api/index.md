@@ -14,12 +14,11 @@ The API guide describes entry points that can be used to interact with the catal
 
     The OGC Industry standard to search, retrieve record in XML format. Can be used to manage records with transaction operation.
 
-GeoNetwork 3.12.x only:
-
--   [OpenSearch and INSPIRE ATOM](opensearch.md)
--   [RDF DCAT](rdf-dcat.md)
--   [Open Archive Initiative](oai-pmh.md)
-
 No longer supported:
 
+-   [INSPIRE ATOM](inspire_atom.md)
+-   [Open Archive Initiative](oai-pmh.md)
+-   [OpenSearch](opensearch.md)
+-   [Q Search](q-search.md)
+-   [RDF DCAT](rdf-dcat.md)
 -   [Z39-50](z39-50.md)

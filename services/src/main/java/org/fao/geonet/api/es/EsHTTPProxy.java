@@ -37,7 +37,11 @@ import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
@@ -65,8 +69,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -273,9 +277,13 @@ public class EsHTTPProxy {
         summary = "Search endpoint",
         description = "See https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl.html for search parameters details.")
     @RequestMapping(value = "/search/records/_search",
-        method = {
-            RequestMethod.POST
-        })
+        method = RequestMethod.POST,
+        produces = MediaType.APPLICATION_JSON_VALUE,
+        consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Search results.",
+            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(type = "string")))
+    })
     @ResponseStatus(value = HttpStatus.OK)
     @ResponseBody
     public void search(
@@ -292,12 +300,14 @@ public class EsHTTPProxy {
         HttpServletRequest request,
         @Parameter(hidden = true)
         HttpServletResponse response,
-        @RequestBody(description = "JSON request based on Elasticsearch API.")
-        String body,
-        @Parameter(hidden = true)
-        HttpEntity<String> httpEntity) throws Exception {
+        @RequestBody
+        @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "JSON request based on Elasticsearch API.",
+            content = @Content(examples = {
+                @ExampleObject(value = "{\"query\":{\"match\":{\"_id\":\"catalogue_uuid\"}}}")
+            }))
+        String body) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
-        call(context, httpSession, request, response, SEARCH_ENDPOINT, httpEntity.getBody(), bucket, relatedTypes);
+        call(context, httpSession, request, response, SEARCH_ENDPOINT, body, bucket, relatedTypes);
     }
 
 
@@ -305,9 +315,13 @@ public class EsHTTPProxy {
         summary = "Search endpoint",
         description = "See https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl.html for search parameters details.")
     @RequestMapping(value = "/search/records/_msearch",
-        method = {
-            RequestMethod.POST
-        })
+        method = RequestMethod.POST,
+        produces = MediaType.APPLICATION_JSON_VALUE,
+        consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Search results.",
+            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(type = "string")))
+    })
     @ResponseStatus(value = HttpStatus.OK)
     @ResponseBody
     public void msearch(
@@ -324,12 +338,14 @@ public class EsHTTPProxy {
         HttpServletRequest request,
         @Parameter(hidden = true)
         HttpServletResponse response,
-        @RequestBody(description = "JSON request based on Elasticsearch API.")
-        String body,
-        @Parameter(hidden = true)
-        HttpEntity<String> httpEntity) throws Exception {
+        @RequestBody
+        @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "JSON request based on Elasticsearch API.",
+            content = @Content(examples = {
+            @ExampleObject(value = "{\"query\":{\"match\":{\"_id\":\"catalogue_uuid\"}}}")
+        }))
+        String body) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
-        call(context, httpSession, request, response, MULTISEARCH_ENDPOINT, httpEntity.getBody(), bucket, relatedTypes);
+        call(context, httpSession, request, response, MULTISEARCH_ENDPOINT, body, bucket, relatedTypes);
     }
 
 
@@ -342,7 +358,13 @@ public class EsHTTPProxy {
     @RequestMapping(value = "/search/records/{endPoint}",
         method = {
             RequestMethod.POST, RequestMethod.GET
-        })
+        },
+        produces = MediaType.APPLICATION_JSON_VALUE,
+        consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Search results.",
+            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(type = "string")))
+    })
     @ResponseStatus(value = HttpStatus.OK)
     @PreAuthorize("hasAuthority('Administrator')")
     @ResponseBody
@@ -357,16 +379,18 @@ public class EsHTTPProxy {
         HttpServletRequest request,
         @Parameter(hidden = true)
         HttpServletResponse response,
-        @RequestBody(description = "JSON request based on Elasticsearch API.")
-        String body,
-        @Parameter(hidden = true)
-        HttpEntity<String> httpEntity) throws Exception {
+        @RequestBody
+        @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "JSON request based on Elasticsearch API.",
+            content = @Content(examples = {
+                @ExampleObject(value = "{\"query\":{\"match\":{\"_id\":\"catalogue_uuid\"}}}")
+            }))
+        String body) throws Exception {
 
         ServiceContext context = ApiUtils.createServiceContext(request);
-        call(context, httpSession, request, response, endPoint, httpEntity.getBody(), bucket, null);
+        call(context, httpSession, request, response, endPoint, body, bucket, null);
     }
 
-    public void call(ServiceContext context, HttpSession httpSession, HttpServletRequest request,
+    private void call(ServiceContext context, HttpSession httpSession, HttpServletRequest request,
                      HttpServletResponse response,
                      String endPoint, String body,
                      String selectionBucket,
