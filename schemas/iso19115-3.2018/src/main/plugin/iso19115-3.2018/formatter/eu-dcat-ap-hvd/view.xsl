@@ -11,12 +11,12 @@
   <!-- https://semiceu.github.io/DCAT-AP/releases/2.2.0-hvd/ -->
   <xsl:import href="eu-dcat-ap-hvd-core.xsl"/>
 
-  <xsl:template match="/root"
+  <xsl:template match="/"
                 priority="2">
     <rdf:RDF>
       <xsl:call-template name="create-namespaces-eu-dcat-ap"/>
       <xsl:apply-templates mode="iso19115-3-to-dcat"
-                           select="mdb:MD_Metadata"/>
+                           select="root/mdb:MD_Metadata|mdb:MD_Metadata"/>
     </rdf:RDF>
   </xsl:template>
 </xsl:stylesheet>

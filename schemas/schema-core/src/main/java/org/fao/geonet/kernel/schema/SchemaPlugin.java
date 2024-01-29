@@ -29,16 +29,17 @@ import org.jdom.Namespace;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
-/**
- * Created by francois on 6/16/14.
- */
 public abstract class SchemaPlugin implements CSWPlugin {
     public static final String LOGGER_NAME = "geonetwork.schema-plugin";
+
+    /**
+     * List of output schemas supported by the CSW for this plugin.
+     * The key correspond to the XSLT filename to use for the corresponding value (usually URI).
+     * XSLT are in the folder present/csw/{key-?(brief|summary|full)?}.xsl
+     */
+    private Map<String, String> outputSchemas = new HashMap<>();
 
     protected SchemaPlugin(String identifier,
                            ImmutableSet<Namespace> allNamespaces) {
@@ -126,4 +127,12 @@ public abstract class SchemaPlugin implements CSWPlugin {
     public Element processElement(Element el, String attributeName, String parsedAttributeName, String attributeValue) {
         return el;
     };
+
+    public Map<String, String> getOutputSchemas() {
+        return outputSchemas;
+    }
+
+    public void setOutputSchemas(Map<String, String> outputSchemas) {
+        this.outputSchemas = outputSchemas;
+    }
 }

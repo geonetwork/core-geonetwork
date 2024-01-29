@@ -10,15 +10,11 @@
 
   <xsl:import href="dcat-core.xsl"/>
 
-  <xsl:template match="/root">
+  <xsl:template match="/">
     <rdf:RDF>
       <xsl:call-template name="create-namespaces"/>
-      <xsl:if test="$isValidating">
-        <xsl:apply-templates mode="iso19115-3-to-dcat-validation"
-                             select="mdb:MD_Metadata"/>
-      </xsl:if>
       <xsl:apply-templates mode="iso19115-3-to-dcat"
-                           select="mdb:MD_Metadata"/>
+                           select="root/mdb:MD_Metadata|mdb:MD_Metadata"/>
     </rdf:RDF>
   </xsl:template>
 </xsl:stylesheet>

@@ -65,6 +65,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.fao.geonet.kernel.setting.SettingManager.isPortRequired;
 
@@ -529,6 +530,8 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
      */
     private void populateTypeNameAndOutputSchema(Element op) {
         Map<String, Namespace> typenames = _schemaManager.getHmSchemasTypenames();
+        List<String> outputSchemas = _schemaManager.getOutputSchemas().values().stream().sorted().collect(Collectors.toList());
+
         List<Element> operations = op.getChildren("Parameter", Csw.NAMESPACE_OWS);
         for (Element operation : operations) {
             if ("typeNames".equals(operation.getAttributeValue("name"))) {
@@ -541,12 +544,10 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
                         .setText(typename));
                 }
             } else if ("outputSchema".equals(operation.getAttributeValue("name"))) {
-                for (Map.Entry<String, Namespace> entry : typenames.entrySet()) {
-                    Namespace ns = entry.getValue();
-                    operation.addNamespaceDeclaration(ns);
+                outputSchemas.forEach(uri ->
                     operation.addContent(new Element("Value", Csw.NAMESPACE_OWS)
-                        .setText(ns.getURI()));
-                }
+                        .setText(uri))
+                );
             }
         }
     }
