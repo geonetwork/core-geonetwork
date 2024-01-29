@@ -21,7 +21,11 @@
 package org.fao.geonet.api;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.SerializationFeature;
+
+import io.swagger.v3.core.util.Json;
 import io.swagger.v3.core.util.PathUtils;
+import io.swagger.v3.core.util.Yaml;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.models.OpenAPI;
 import org.springdoc.api.AbstractOpenApiResource;
@@ -105,6 +109,10 @@ public class OpenApiController extends AbstractOpenApiResource {
         this.servletContextProvider = servletContextProvider;
         this.springSecurityOAuth2Provider = springSecurityOAuth2Provider;
         this.routerFunctionProvider = routerFunctionProvider;
+
+        // Ensure all enums are written based on the enum name.
+        Json.mapper().configure(SerializationFeature.WRITE_ENUMS_USING_TO_STRING, false);
+        Yaml.mapper().configure(SerializationFeature.WRITE_ENUMS_USING_TO_STRING, false);
     }
 
     @Operation(hidden = true)
