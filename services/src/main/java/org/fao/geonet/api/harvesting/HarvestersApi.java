@@ -23,6 +23,7 @@
 
 package org.fao.geonet.api.harvesting;
 
+import com.google.common.collect.Lists;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -38,6 +39,7 @@ import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.HarvestHistory;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Source;
+import org.fao.geonet.exceptions.ObjectNotFoundEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
@@ -45,10 +47,14 @@ import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.harvest.Common;
 import org.fao.geonet.kernel.harvest.HarvestManager;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.HarvestHistoryRepository;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.repository.specification.HarvestHistorySpecs;
 import org.fao.geonet.services.harvesting.Util;
+import org.fao.geonet.utils.Xml;
+import org.jdom.Content;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,9 +75,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @RequestMapping(value = {
     "/{portal}/api/harvesters"
@@ -93,6 +97,8 @@ public class HarvestersApi {
     private IMetadataManager metadataManager;
     @Autowired
     private DataManager dataManager;
+    @Autowired
+    private SettingManager settingManager;
 
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Assign harvester records to a new source",
@@ -457,7 +463,6 @@ public class HarvestersApi {
         Integer harvesterHistoryIdentifier,
         HttpServletResponse response) throws IOException, JDOMException, ResourceNotFoundException {
 
-
         Optional<HarvestHistory> harvestHistoryOptional = historyRepository.findById(harvesterHistoryIdentifier);
         String logFile = "";
 
@@ -494,6 +499,103 @@ public class HarvestersApi {
         } finally {
             out.flush();
             out.close();
+        }
+    }
+
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "List harvesters",
+        description = ""
+    )
+    @GetMapping(
+        produces = {
+            MediaType.APPLICATION_JSON_VALUE
+        }
+    )
+    @ResponseStatus(value = HttpStatus.OK)
+    @PreAuthorize("hasAuthority('UserAdmin')")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "List of harvesters."),
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
+    })
+    @ResponseBody
+    public String list(
+        @Parameter(
+            description = "The harvesters identifiers"
+        )
+        @RequestParam(name = "id", required = false)
+        Integer[] harvesterIds,
+        @Parameter(
+            description = "Return only information"
+        )
+        @RequestParam(required = false, defaultValue = "false")
+        Boolean onlyInfo,
+        @RequestParam(required = false, defaultValue = "site[1]/name[1]")
+        String sortField,
+        HttpServletRequest request) throws Exception {
+
+        ServiceContext context = ApiUtils.createServiceContext(request);
+
+        //--- if 'id' is null all entries are returned
+        String[] disabledTypes = StringUtils.split(
+            StringUtils.defaultIfBlank(
+                settingManager.getValue(Settings.SYSTEM_HARVESTER_DISABLED_HARVESTER_TYPES),
+                "").toLowerCase().replace(',', ' '),
+            " ");
+
+        List<Integer> ids;
+        if (harvesterIds.length == 0) {
+            ids = Collections.singletonList(-1);
+        } else {
+            ids = Arrays.asList(harvesterIds);
+        }
+        Element result = new Element("nodes");
+        for (Integer id : ids) {
+            Element node = harvestManager.get(String.valueOf(id), context, sortField);
+
+            if (node != null) {
+                if (id == -1) {
+                    List<Element> childNodes = node.getChildren();
+                    for (Element childNode : childNodes) {
+                        String harvesterType = childNode.getAttributeValue("type");
+                        if (Arrays.stream(disabledTypes).noneMatch(disabledType -> disabledType.equalsIgnoreCase(harvesterType))) {
+                            result.addContent((Content) childNode.clone());
+                        }
+                    }
+                } else {
+                    String harvesterType = node.getAttributeValue("type");
+                    if (Arrays.stream(disabledTypes).noneMatch(disabledType -> disabledType.equalsIgnoreCase(harvesterType))) {
+                        result.addContent(node.detach());
+                    }
+                }
+            } else {
+                throw new ObjectNotFoundEx("No Harvester found with id: " + id);
+            }
+        }
+
+        if (onlyInfo) {
+            removeAllDataExceptInfo(result);
+        }
+
+        return Xml.getJSON(result);
+    }
+
+    private void removeAllDataExceptInfo(Element node) {
+        final List<Element> toRemove = Lists.newArrayList();
+        @SuppressWarnings("unchecked")
+        final List<Element> children = node.getChildren();
+
+        for (Element harvesters : children) {
+            @SuppressWarnings("unchecked")
+            final List<Element> harvesterInfo = harvesters.getChildren();
+            for (Element element : harvesterInfo) {
+                if (!element.getName().equalsIgnoreCase("info") && !element.getName().equalsIgnoreCase("error")) {
+                    toRemove.add(element);
+                }
+            }
+        }
+
+        for (Element element : toRemove) {
+            element.detach();
         }
     }
 }

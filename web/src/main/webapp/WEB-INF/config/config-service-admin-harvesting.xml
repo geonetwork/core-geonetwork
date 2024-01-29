@@ -25,7 +25,7 @@
 <geonet>
   <services package="org.fao.geonet">
 
-    <service name="admin.harvester.list">
+    <service name="admin.harvester.list" deprecated="true">
       <documentation><![CDATA[
               Return the list of harvester in the catalog.
               ]]></documentation>

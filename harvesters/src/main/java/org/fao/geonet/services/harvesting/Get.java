@@ -51,6 +51,7 @@ import javax.annotation.Nullable;
 /**
  *
  */
+@Deprecated
 public class Get implements Service {
     //--------------------------------------------------------------------------
     //---

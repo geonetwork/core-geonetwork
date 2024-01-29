@@ -107,7 +107,7 @@
 
       function loadHarvester(id) {
         $scope.isLoadingOneHarvester = true;
-        return $http.get("admin.harvester.list?_content_type=json&id=" + id).then(
+        return $http.get("../api/harvesters?id=" + id).then(
           function (response) {
             var data = response.data;
 
