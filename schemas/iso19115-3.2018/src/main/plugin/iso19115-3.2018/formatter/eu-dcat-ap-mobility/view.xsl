@@ -10,9 +10,12 @@
                 exclude-result-prefixes="#all">
   <!-- https://mobilitydcat-ap.github.io/mobilityDCAT-AP/drafts/latest/ -->
 
+  <xsl:import href="mobility-dcat-ap-core.xsl"/>
+
   <xsl:template match="/root"
                 priority="2">
     <rdf:RDF>
+      <xsl:call-template name="create-namespaces-eu-dcat-mobilitydcatap"/>
       <xsl:apply-templates mode="iso19115-3-to-dcat"
                            select="mdb:MD_Metadata"/>
     </rdf:RDF>
