@@ -102,21 +102,28 @@ public class AttachmentsApi {
         if (contentType == null) {
             String ext = FilenameUtils.getExtension(file.getFileName().toString()).toLowerCase();
             switch (ext) {
-            case "png":
-            case "gif":
-            case "bmp":
-            case "tif":
-            case "tiff":
-            case "jpg":
-            case "jpeg":
-                contentType = "image/" + ext;
-                break;
-            case "txt":
-            case "html":
-                contentType = "text/" + ext;
-                break;
-            default:
-                contentType = "application/" + ext;
+                case "png":
+                case "gif":
+                case "bmp":
+                    contentType = "image/" + ext;
+                    break;
+                case "tif":
+                case "tiff":
+                    contentType = "image/tiff";
+                    break;
+                case "jpg":
+                case "jpeg":
+                    contentType = "image/jpeg";
+                    break;
+                case "txt":
+                    contentType = "text/plain";
+                    break;
+                case "htm":
+                case "html":
+                    contentType = "text/html";
+                    break;
+                default:
+                    contentType = "application/" + ext;
             }
         }
         return contentType;
