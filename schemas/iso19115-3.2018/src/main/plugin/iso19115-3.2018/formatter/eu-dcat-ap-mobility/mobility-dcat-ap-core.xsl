@@ -16,17 +16,12 @@
                 xmlns:mobilitydcatap="https://w3id.org/mobilitydcat-ap"
                 exclude-result-prefixes="#all">
 
-  <!-- Import related templates -->
   <xsl:import href="../eu-dcat-ap/eu-dcat-ap-core.xsl"/>
-  <xsl:import href="mobility-dcat-ap-dataset.xsl"/>
 
   <xsl:template name="create-namespaces-eu-dcat-mobilitydcatap">
     <xsl:call-template name="create-namespaces-eu-dcat-ap"/>
     <xsl:namespace name="mobilitydcatap" select="'https://w3id.org/mobilitydcat-ap'"/>
   </xsl:template>
-
-
-
 
 
   <xsl:variable name="mobilityThemeThesaurusKey"
