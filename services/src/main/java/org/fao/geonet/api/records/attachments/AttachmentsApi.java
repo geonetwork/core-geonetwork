@@ -111,15 +111,22 @@ public class AttachmentsApi {
                 case "png":
                 case "gif":
                 case "bmp":
-                case "tif":
-                case "tiff":
-                case "jpg":
-                case "jpeg":
                     contentType = "image/" + ext;
                     break;
+                case "tif":
+                case "tiff":
+                    contentType = "image/tiff";
+                    break;
+                case "jpg":
+                case "jpeg":
+                    contentType = "image/jpeg";
+                    break;
                 case "txt":
+                    contentType = "text/plain";
+                    break;
+                case "htm":
                 case "html":
-                    contentType = "text/" + ext;
+                    contentType = "text/html";
                     break;
                 default:
                     contentType = "application/" + ext;
