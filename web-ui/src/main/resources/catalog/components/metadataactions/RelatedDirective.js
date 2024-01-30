@@ -368,8 +368,7 @@
 
           if ($injector.has("gnOnlinesrc")) {
             scope.onlinesrcService = $injector.get("gnOnlinesrc");
-            gnCurrentEdit = $injector.get("gnCurrentEdit");
-            gnCurrentEdit.associatedPanelConfigId = scope.editorConfig;
+            $injector.get("gnCurrentEdit").associatedPanelConfigId = scope.editorConfig;
           }
 
           /**
