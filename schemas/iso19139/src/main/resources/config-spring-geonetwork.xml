@@ -31,6 +31,21 @@
 
   <bean id="iso19139SchemaPlugin"
         class="org.fao.geonet.schema.iso19139.ISO19139SchemaPlugin">
+    <property name="outputSchemas">
+      <util:map key-type="java.lang.String" value-type="java.lang.String">
+        <entry key="csw" value="http://www.opengis.net/cat/csw/2.0.2"/>
+        <entry key="mdb" value="http://standards.iso.org/iso/19115/-3/mdb/2.0"/>
+        <entry key="gmd" value="http://www.isotc211.org/2005/gmd"/>
+        <entry key="dcat" value="http://www.w3.org/ns/dcat#"/>
+        <entry key="dcat-core" value="http://www.w3.org/ns/dcat#core"/>
+        <entry key="eu-dcat-ap" value="http://data.europa.eu/r5r/"/>
+        <!-- EU DCAT HVD does not define a particular namespace -->
+        <entry key="eu-dcat-ap-hvd" value="https://semiceu.github.io/DCAT-AP/releases/2.2.0-hvd/"/>
+        <entry key="eu-dcat-ap-mobility" value="https://w3id.org/mobilitydcat-ap"/>
+        <entry key="eu-geodcat-ap" value="http://data.europa.eu/930/"/>
+        <entry key="eu-geodcat-ap-semiceu" value="http://data.europa.eu/930/#semiceu"/>
+      </util:map>
+    </property>
     <property name="xpathTitle">
       <util:list value-type="java.lang.String">
         <value>gmd:identificationInfo/*/gmd:citation/*/gmd:title/gco:CharacterString</value>
