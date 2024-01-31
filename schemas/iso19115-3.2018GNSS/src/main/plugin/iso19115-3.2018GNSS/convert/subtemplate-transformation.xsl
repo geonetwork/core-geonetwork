@@ -19,10 +19,16 @@
 
   <xsl:import href="ISO19139/mapping/defaults.xsl"/>
   <xsl:import href="ISO19139/mapping/CI_ResponsibleParty.xsl"/>
+  <xsl:import href="fromISO19115-3.2018.xsl"/>
 
   <!-- A set of templates use to convert subtemplates to
        iso19115-3 fragments. -->
   <xsl:template name="contact-from-iso19139-to-iso19115-3.2018GNSS">
-    <xsl:apply-templates select="." mode="from19139to19115-3.2018GNSS"/>
+    <xsl:apply-templates select="." mode="from19139to19115-3.2018"/>
+  </xsl:template>
+  <!-- A set of templates use to convert subtemplates from
+   iso19115-3 fragments to iso19115-3amd2. -->
+  <xsl:template name="crs-from-iso19115-3.2018-to-Amd2">
+    <xsl:apply-templates select="." mode="fromIso19115-3.2018toAmd2"/>
   </xsl:template>
 </xsl:stylesheet>

@@ -287,22 +287,24 @@
               data-variables="cit:role/cit:CI_RoleCode/@codeListValue~{role}"/>
     </for>
 
-    <!--<for name="mdb:referenceSystemInfo" addDirective="data-gn-directory-entry-selector">
+    <for name="mdb:referenceSystemInfo" addDirective="data-gn-directory-entry-selector">
       <directiveAttributes
-        data-template-add-action="true"
+        data-template-add-action="false"
         data-search-action="true"
         data-template-type="CRS"
         data-filter='{"root": "mrs:MD_ReferenceSystem"}'
-        data-insert-modes=""/>
-    </for>-->
+        data-transformation="crs-from-iso19115-3.2018-to-Amd2""
+        data-insert-modes="text"/>
+    </for>
 
     <for name="gex:verticalCRSId" addDirective="data-gn-directory-entry-selector">
       <directiveAttributes
-        data-template-add-action="true"
+        data-template-add-action="false"
         data-search-action="true"
         data-template-type="CRS"
         data-filter='{"root": "mrs:MD_ReferenceSystem"}'
-        data-insert-modes=""/>
+        data-transformation="crs-from-iso19115-3.2018-to-Amd2""
+        data-insert-modes="text"/>
     </for>
 
     <for name="mri:extent" addDirective="data-gn-directory-entry-selector">
@@ -935,7 +937,7 @@
                  in="/mdb:MD_Metadata" />
       </tab>
 
-      <tab id="distributionICSM" mode="flat" displayIfRecord="count(mdb:MD_Metadata/mdb:identificationInfo/srv:SV_ServiceIdentification) = 0">
+      <!--<tab id="distributionICSM" mode="flat" displayIfRecord="count(mdb:MD_Metadata/mdb:identificationInfo/srv:SV_ServiceIdentification) = 0">
         <section name="Distributions">
           <field xpath="/mdb:MD_Metadata/mdb:distributionInfo"
                  del=".."/>
@@ -977,7 +979,7 @@
             </template>
           </action>
         </section>
-      </tab>
+      </tab>-->
 
       <!--<tab id="metadataIcsm" mode="flat">
           <section name="metadataContactsIcsm">
