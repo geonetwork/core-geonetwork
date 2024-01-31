@@ -1,0 +1,40 @@
+<mco:MD_SecurityConstraints xmlns:mco="http://standards.iso.org/iso/19115/-3/mco/1.0" xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0" xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/2.0">
+  <mco:useLimitation>
+    <gco:CharacterString>UNOFFICIAL</gco:CharacterString>
+  </mco:useLimitation>
+  <mco:reference>
+    <cit:CI_Citation>
+      <cit:title>
+        <gco:CharacterString>Protective Security Australia - UNOFFICIAL</gco:CharacterString>
+      </cit:title>
+      <cit:onlineResource>
+        <cit:CI_OnlineResource>
+          <cit:linkage>
+            <gco:CharacterString>https://www.protectivesecurity.gov.au/information/sensitive-classified-information/Pages/default.aspx</gco:CharacterString>
+          </cit:linkage>
+          <cit:protocol gco:nilReason="missing">
+            <gco:CharacterString>https</gco:CharacterString>
+          </cit:protocol>
+          <cit:name gco:nilReason="missing">
+            <gco:CharacterString />
+          </cit:name>
+          <cit:description gco:nilReason="missing">
+            <gco:CharacterString />
+          </cit:description>
+          <cit:function>
+            <cit:CI_OnLineFunctionCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_OnLineFunctionCode" codeListValue="" />
+          </cit:function>
+        </cit:CI_OnlineResource>
+      </cit:onlineResource>
+    </cit:CI_Citation>
+  </mco:reference>
+  <mco:classification>
+    <mco:MD_ClassificationCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_ClassificationCode" codeListValue="unclassified" />
+  </mco:classification>
+  <mco:userNote>
+    <gco:CharacterString>No damage if compromised. Does not form part of official duty.</gco:CharacterString>
+  </mco:userNote>
+  <mco:classificationSystem>
+    <gco:CharacterString>Protective Security Australia</gco:CharacterString>
+  </mco:classificationSystem>
+</mco:MD_SecurityConstraints>

@@ -1,0 +1,18 @@
+<mrs:MD_ReferenceSystem xmlns:mrs="http://standards.iso.org/iso/19115/-3/mrs/1.0" xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0" xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0" xmlns:gcx="http://standards.iso.org/iso/19115/-3/gcx/1.0" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <mrs:referenceSystemIdentifier>
+    <mcc:MD_Identifier>
+      <mcc:code>
+        <gcx:Anchor xlink:href="http://www.opengis.net/def/crs/EPSG/0/28355">EPSG:28355</gcx:Anchor>
+      </mcc:code>
+      <mcc:codeSpace>
+        <gco:CharacterString>EPSG</gco:CharacterString>
+      </mcc:codeSpace>
+      <mcc:description>
+        <gco:CharacterString>GDA94 / MGA zone 55 (EPSG:28355)</gco:CharacterString>
+      </mcc:description>
+    </mcc:MD_Identifier>
+  </mrs:referenceSystemIdentifier>
+  <mrs:referenceSystemType>
+    <mrs:MD_ReferenceSystemTypeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_ReferenceSystemTypeCode" codeListValue="projected" />
+  </mrs:referenceSystemType>
+</mrs:MD_ReferenceSystem>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cit:CI_Responsibility xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/2.0" xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0" xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0" xmlns:gcx="http://standards.iso.org/iso/19115/-3/gcx/1.0" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:geonet="http://www.fao.org/geonetwork" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" uuid="b1662aca-2527-4474-bdbd-6cecef2a5acc" xsi:schemaLocation="http://standards.iso.org/iso/19115/-3/mdb/2.0 https://schemas.isotc211.org/19115/-3/mdb/2.0/mdb.xsd">
+  <cit:role>
+    <cit:CI_RoleCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_RoleCode" codeListValue="sponsor" />
+  </cit:role>
+  <cit:party>
+    <cit:CI_Organisation>
+      <cit:name>
+        <gco:CharacterString>Org Name</gco:CharacterString>
+      </cit:name>
+      <cit:contactInfo>
+        <cit:CI_Contact>
+          <cit:address>
+            <cit:CI_Address>
+              <cit:electronicMailAddress>
+                <gco:CharacterString>email@addre.ss</gco:CharacterString>
+              </cit:electronicMailAddress>
+            </cit:CI_Address>
+          </cit:address>
+        </cit:CI_Contact>
+      </cit:contactInfo>
+      <cit:partyIdentifier>
+        <mcc:MD_Identifier>
+          <mcc:authority>
+            <cit:CI_Citation>
+              <cit:title>
+                <gco:CharacterString>ORCid</gco:CharacterString>
+              </cit:title>
+              <cit:onlineResource>
+                <cit:CI_OnlineResource>
+                  <cit:linkage>
+                    <gco:CharacterString>https://orcid.org/</gco:CharacterString>
+                  </cit:linkage>
+                  <cit:protocol gco:nilReason="missing">
+                    <gco:CharacterString />
+                  </cit:protocol>
+                  <cit:name gco:nilReason="missing">
+                    <gco:CharacterString />
+                  </cit:name>
+                  <cit:description gco:nilReason="missing">
+                    <gco:CharacterString />
+                  </cit:description>
+                  <cit:function>
+                    <cit:CI_OnLineFunctionCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_OnLineFunctionCode" codeListValue="" />
+                  </cit:function>
+                </cit:CI_OnlineResource>
+              </cit:onlineResource>
+            </cit:CI_Citation>
+          </mcc:authority>
+          <mcc:code>
+            <gcx:Anchor xlink:href="https://orcid.org/0000-0001-6388-5481">0000-0000-0000-0000</gcx:Anchor>
+          </mcc:code>
+        </mcc:MD_Identifier>
+      </cit:partyIdentifier>
+    </cit:CI_Organisation>
+  </cit:party>
+</cit:CI_Responsibility>

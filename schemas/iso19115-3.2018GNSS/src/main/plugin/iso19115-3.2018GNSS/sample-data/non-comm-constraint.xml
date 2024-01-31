@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mco:MD_Constraints xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0"
+    xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/2.0"
+    xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0"
+    xmlns:mco="http://standards.iso.org/iso/19115/-3/mco/1.0"
+    xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:gcx="http://standards.iso.org/iso/19115/-3/gcx/1.0">
+    <mco:useLimitation>
+        <gco:CharacterString>For non-commercial purposes only</gco:CharacterString>
+    </mco:useLimitation>
+    <mco:constraintApplicationScope>
+        <mcc:MD_Scope>
+            <mcc:level>
+                <mcc:MD_ScopeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#MD_ScopeCode"
+                    codeListValue="dataset"/>
+            </mcc:level>
+        </mcc:MD_Scope>
+    </mco:constraintApplicationScope>
+    <mco:reference>
+        <cit:CI_Citation>
+            <cit:title>
+                <gco:CharacterString>For non-commercial purposes only</gco:CharacterString>
+            </cit:title>
+        </cit:CI_Citation>
+    </mco:reference>
+</mco:MD_Constraints>
