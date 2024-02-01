@@ -69,7 +69,7 @@
                                     else true()"/>
                 <xsl:if test="not($isLogoInHeader) or $isShowGNName">
                   <xsl:variable name="appUrl"
-                                select="if(util:getUiConfigurationJsonProperty(/root/request/ui, 'mods.home.appUrl'))
+                                select="if(output != 'pdf' and util:getUiConfigurationJsonProperty(/root/request/ui, 'mods.home.appUrl'))
                                     then geonet:updateUrlPlaceholder(util:getUiConfigurationJsonProperty(/root/request/ui, 'mods.home.appUrl'), /root/gui/nodeId, $lang)
                                     else /root/gui/nodeUrl"/>
                   <li>
