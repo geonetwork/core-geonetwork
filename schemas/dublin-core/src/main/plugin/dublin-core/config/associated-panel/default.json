@@ -19,9 +19,7 @@
       "config": {
         "sources": {
           "metadataStore": {
-            "label": "searchAservice",
             "params": {
-              "resourceType": ["platform"],
               "isTemplate": "n"
             }
           },

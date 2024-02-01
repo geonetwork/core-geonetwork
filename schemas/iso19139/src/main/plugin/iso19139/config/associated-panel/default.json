@@ -59,9 +59,9 @@
       "config": {
         "sources": {
           "metadataStore": {
-            "label": "searchAservice",
+            "label": "linkToParent",
             "params": {
-              "resourceType": ["platform"],
+              "resourceType": ["series"],
               "isTemplate": "n"
             }
           },
@@ -77,7 +77,7 @@
             "metadataStore": {
               "label": "searchAservice",
               "params": {
-                "resourceType": ["platform"],
+                "resourceType": ["service"],
                 "isTemplate": "n"
               }
             },
@@ -91,9 +91,8 @@
       "config": {
         "sources": {
           "metadataStore": {
-            "label": "searchAservice",
             "params": {
-              "resourceType": ["platform"],
+              "resourceType": ["dataset"],
               "isTemplate": "n"
             }
           },
@@ -106,9 +105,9 @@
       "config": {
         "sources": {
           "metadataStore": {
-            "label": "searchAservice",
+            "label": "linkToSource",
             "params": {
-              "resourceType": ["platform"],
+              "resourceType": ["dataset"],
               "isTemplate": "n"
             }
           },
@@ -121,9 +120,9 @@
       "config": {
         "sources": {
           "metadataStore": {
-            "label": "searchAservice",
+            "label": "linkToFeatureCatalog",
             "params": {
-              "resourceType": ["platform"],
+              "resourceType": ["featureCatalog"],
               "isTemplate": "n"
             }
           },
@@ -136,9 +135,7 @@
       "config": {
         "sources": {
           "metadataStore": {
-            "label": "searchAservice",
             "params": {
-              "resourceType": ["platform"],
               "isTemplate": "n"
             }
           },

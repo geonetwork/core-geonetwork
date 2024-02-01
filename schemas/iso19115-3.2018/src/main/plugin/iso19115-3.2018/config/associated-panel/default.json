@@ -817,6 +817,19 @@
       }
     ],
     "associatedResourcesTypes": [{
+      "type": "siblings",
+      "label": "linkToSibling",
+      "config": {
+        "sources": {
+          "metadataStore": {
+            "params": {
+              "isTemplate": "n"
+            }
+          },
+          "remoteurl": {"multiple": true}
+        }
+      }
+    }, {
       "type": "service",
       "label": "linkToService",
       "condition": "!gnCurrentEdit.isService",
@@ -825,7 +838,7 @@
           "metadataStore": {
             "label": "searchAservice",
             "params": {
-              "resourceType": ["platform"],
+              "resourceType": ["service"],
               "isTemplate": "n"
             }
           },
@@ -839,9 +852,23 @@
       "config": {
         "sources": {
           "metadataStore": {
-            "label": "searchAservice",
             "params": {
-              "resourceType": ["platform"],
+              "resourceType": ["dataset"],
+              "isTemplate": "n"
+            }
+          },
+          "remoteurl": {"multiple": false}
+        }
+      }
+    }, {
+      "type": "source",
+      "label": "linkToSource",
+      "config": {
+        "sources": {
+          "metadataStore": {
+            "label": "linkToSource",
+            "params": {
+              "resourceType": ["dataset"],
               "isTemplate": "n"
             }
           },
@@ -854,31 +881,15 @@
       "config": {
         "sources": {
           "metadataStore": {
-            "label": "searchAservice",
+            "label": "linkToFeatureCatalog",
             "params": {
-              "resourceType": ["platform"],
+              "resourceType": ["featureCatalog"],
               "isTemplate": "n"
             }
           },
           "remoteurl": {"multiple": false}
         }
       }
-    }, {
-      "type": "siblings",
-      "label": "linkToSibling",
-      "config": {
-        "sources": {
-          "metadataStore": {
-            "label": "searchAservice",
-            "params": {
-              "resourceType": ["platform"],
-              "isTemplate": "n"
-            }
-          },
-          "remoteurl": {"multiple": true}
-        }
-      }
-    }
-    ]
+    }]
   }
 }

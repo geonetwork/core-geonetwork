@@ -2087,8 +2087,7 @@
         return {
           restrict: "A",
           scope: {},
-          templateUrl:
-            "../../catalog/components/edit/onlinesrc/" + "partials/linkToMd.html",
+          templateUrl: "../../catalog/components/edit/onlinesrc/partials/linkToMd.html",
           compile: function compile(tElement, tAttrs, transclude) {
             return {
               pre: function preLink(scope) {
@@ -2141,30 +2140,10 @@
                   };
 
                   $(scope.popupid).modal("show");
-                  var searchParams = {};
-                  if (scope.mode === "fcats") {
-                    searchParams = {
-                      resourceType: "featureCatalog",
-                      isTemplate: "n"
-                    };
-                    scope.btn = {
-                      label: $translate.instant("linkToFeatureCatalog")
-                    };
-                  } else if (scope.mode === "parent") {
-                    searchParams = {
-                      isTemplate: "n"
-                    };
-                    scope.btn = {
-                      label: $translate.instant("linkToParent")
-                    };
-                  } else if (scope.mode === "source") {
-                    searchParams = {
-                      isTemplate: "n"
-                    };
-                    scope.btn = {
-                      label: $translate.instant("linkToSource")
-                    };
-                  }
+                  var searchParams =
+                    scope.config.sources && scope.config.sources.metadataStore
+                      ? scope.config.sources.metadataStore.params || {}
+                      : {};
                   scope.$broadcast("resetSearch", searchParams);
                   scope.selectRecords = [];
                 });
