@@ -254,6 +254,28 @@
                         </option>
                       </select>
 
+                      <select
+                        data-ng-switch-when="metadata/history/accesslevel"
+                        class="form-control"
+                        name="{{s.name}}"
+                      >
+                        <option
+                          value="RegisteredUser"
+                          ng-selected="'RegisteredUser' == s.value"
+                        >
+                          {{'RegisteredUser' | translate}}
+                        </option>
+                        <option value="Editor" ng-selected="'Editor' == s.value">
+                          {{'Editor' | translate}}
+                        </option>
+                        <option
+                          value="Administrator"
+                          ng-selected="'Administrator' == s.value"
+                        >
+                          {{'Administrator' | translate}}
+                        </option>
+                      </select>
+
                       <div data-ng-switch-when="system/metadatacreate/preferredGroup">
                         <input
                           type="hidden"
