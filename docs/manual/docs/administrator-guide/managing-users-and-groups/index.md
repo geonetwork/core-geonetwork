@@ -127,7 +127,6 @@ The tables below show a comprehensive overview of Roles and Features, it explain
     | Manage Record / Work flow / cancel approval submission| | | :material-check-circle: | |                         | :material-check-circle: |
     | Manage Record / DOI Creation request| | | :material-check-circle: | :material-check-circle: |           UI            | :material-check-circle: |
     | Manage Record / Duplicate| | | :material-check-circle: | :material-check-circle: |           UI            | :material-check-circle: |
-    | Manage Record / Create a child| | | :material-check-circle: | :material-check-circle: |           UI            | :material-check-circle: |
     | Download record / Permalink| :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: |
     | Download record / Export (ZIP)| :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: |
     | Download record / Export (PDF)| :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: |
@@ -193,7 +192,6 @@ The tables below show a comprehensive overview of Roles and Features, it explain
     | Settings / Logo| | | | | | :material-check-circle: |
     | Settings / Sources| | | | | :material-check-circle: | :material-check-circle: |
     | Settings / CSW| | | | | | :material-check-circle: |
-    | Settings / Virtual CSW| | | | | | :material-check-circle: |
     | Settings / CSW test| | | | | | :material-check-circle: |
     | Settings / Map servers| | | | | | :material-check-circle: |
     | Tools / Catalogue admin tools| | | | | | :material-check-circle: |
