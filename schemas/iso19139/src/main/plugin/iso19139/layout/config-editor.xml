@@ -518,15 +518,36 @@
     <view name="inspire" upAndDownControlHidden="true" displayIfServiceInfo="/settings/system/inspire/enable='true'">
       <sidePanel>
         <directive data-gn-need-help="creating-metadata"/>
+
         <directive data-gn-validation-report=""/>
-        <directive data-gn-onlinesrc-list=""
-                   data-types="onlinesrc"/>
+
+        <directive data-gn-overview-manager=""
+                   data-file-types=".png,.gif,.jpeg,.jpg"/>
+
+        <directive data-gn-distribution-resources-panel="gnCurrentEdit.metadata"
+                   data-mode="viewConfig.distributionConfig.layout || ''"
+                   data-editor-config="default"
+                   data-related-config="[{
+                                           title: 'API',
+                                           filter: 'protocol:OGC:.*|ESRI:.*|atom.*',
+                                           editActions: ['addOnlinesrc']},
+                                         {
+                                           title: 'download',
+                                           filter: 'protocol:.*DOWNLOAD.*|DB:.*|FILE:.*',
+                                           editActions: ['addOnlinesrc']},
+                                         {
+                                            title: 'links',
+                                            filter:'-protocol:OGC:.*|ESRI:.*|atom.*|.*DOWNLOAD.*|DB:.*|FILE:.* AND -function:legend|featureCatalogue|dataQualityReport',
+                                            editActions: ['addOnlinesrc']}]"
+        />
 
         <directive data-gn-associated-resources-panel="gnCurrentEdit.metadata" />
+
         <directive gn-geo-publisher=""
                    data-ng-if="gnCurrentEdit.geoPublisherConfig"
                    data-config="{{gnCurrentEdit.geoPublisherConfig}}"
                    data-lang="lang"/>
+
         <directive data-gn-suggestion-list=""/>
       </sidePanel>
 
@@ -3186,14 +3207,27 @@
         -->
         <directive data-gn-need-help="creating-metadata"/>
 
+        <directive data-gn-validation-report=""/>
+
         <directive data-gn-overview-manager=""
                    data-file-types=".png,.gif,.jpeg,.jpg"/>
 
-        <directive data-gn-file-uploader=""
-                   data-type="onlines"/>
-
-        <directive data-gn-onlinesrc-list=""
-                   data-types="onlinesrc"/>
+        <directive data-gn-distribution-resources-panel="gnCurrentEdit.metadata"
+                   data-mode="viewConfig.distributionConfig.layout || ''"
+                   data-editor-config="default"
+                   data-related-config="[{
+                                           title: 'API',
+                                           filter: 'protocol:OGC:.*|ESRI:.*|atom.*',
+                                           editActions: ['addOnlinesrc']},
+                                         {
+                                           title: 'download',
+                                           filter: 'protocol:.*DOWNLOAD.*|DB:.*|FILE:.*',
+                                           editActions: ['addOnlinesrc']},
+                                         {
+                                            title: 'links',
+                                            filter:'-protocol:OGC:.*|ESRI:.*|atom.*|.*DOWNLOAD.*|DB:.*|FILE:.* AND -function:legend|featureCatalogue|dataQualityReport',
+                                            editActions: ['addOnlinesrc']}]"
+        />
 
         <directive data-gn-associated-resources-panel="gnCurrentEdit.metadata" />
 
@@ -3202,10 +3236,7 @@
                    data-config="{{gnCurrentEdit.geoPublisherConfig}}"
                    data-lang="lang"/>
 
-        <directive data-gn-validation-report=""/>
-
         <directive data-gn-suggestion-list=""/>
-
       </sidePanel>
 
       <tab id="default" default="true" mode="flat">
@@ -3310,14 +3341,36 @@
           class="gn-label-above-input gn-indent-bluescale">
       <sidePanel>
         <directive data-gn-need-help="creating-metadata"/>
+
         <directive data-gn-validation-report=""/>
-        <directive data-gn-onlinesrc-list=""
-                   data-types="onlinesrc"/>
+
+        <directive data-gn-overview-manager=""
+                   data-file-types=".png,.gif,.jpeg,.jpg"/>
+
+        <directive data-gn-distribution-resources-panel="gnCurrentEdit.metadata"
+                   data-mode="viewConfig.distributionConfig.layout || ''"
+                   data-editor-config="default"
+                   data-related-config="[{
+                                           title: 'API',
+                                           filter: 'protocol:OGC:.*|ESRI:.*|atom.*',
+                                           editActions: ['addOnlinesrc']},
+                                         {
+                                           title: 'download',
+                                           filter: 'protocol:.*DOWNLOAD.*|DB:.*|FILE:.*',
+                                           editActions: ['addOnlinesrc']},
+                                         {
+                                            title: 'links',
+                                            filter:'-protocol:OGC:.*|ESRI:.*|atom.*|.*DOWNLOAD.*|DB:.*|FILE:.* AND -function:legend|featureCatalogue|dataQualityReport',
+                                            editActions: ['addOnlinesrc']}]"
+        />
+
         <directive data-gn-associated-resources-panel="gnCurrentEdit.metadata" />
+
         <directive gn-geo-publisher=""
                    data-ng-if="gnCurrentEdit.geoPublisherConfig"
                    data-config="{{gnCurrentEdit.geoPublisherConfig}}"
                    data-lang="lang"/>
+
         <directive data-gn-suggestion-list=""/>
       </sidePanel>
 
@@ -3388,14 +3441,36 @@
     <view name="xml">
       <sidePanel>
         <directive data-gn-need-help="creating-metadata"/>
+
         <directive data-gn-validation-report=""/>
-        <directive data-gn-onlinesrc-list=""
-                   data-types="onlinesrc"/>
+
+        <directive data-gn-overview-manager=""
+                   data-file-types=".png,.gif,.jpeg,.jpg"/>
+
+        <directive data-gn-distribution-resources-panel="gnCurrentEdit.metadata"
+                   data-mode="viewConfig.distributionConfig.layout || ''"
+                   data-editor-config="default"
+                   data-related-config="[{
+                                           title: 'API',
+                                           filter: 'protocol:OGC:.*|ESRI:.*|atom.*',
+                                           editActions: ['addOnlinesrc']},
+                                         {
+                                           title: 'download',
+                                           filter: 'protocol:.*DOWNLOAD.*|DB:.*|FILE:.*',
+                                           editActions: ['addOnlinesrc']},
+                                         {
+                                            title: 'links',
+                                            filter:'-protocol:OGC:.*|ESRI:.*|atom.*|.*DOWNLOAD.*|DB:.*|FILE:.* AND -function:legend|featureCatalogue|dataQualityReport',
+                                            editActions: ['addOnlinesrc']}]"
+        />
+
         <directive data-gn-associated-resources-panel="gnCurrentEdit.metadata" />
+
         <directive gn-geo-publisher=""
                    data-ng-if="gnCurrentEdit.geoPublisherConfig"
                    data-config="{{gnCurrentEdit.geoPublisherConfig}}"
                    data-lang="lang"/>
+
         <directive data-gn-suggestion-list=""/>
       </sidePanel>
       <tab id="xml" default="true"/>

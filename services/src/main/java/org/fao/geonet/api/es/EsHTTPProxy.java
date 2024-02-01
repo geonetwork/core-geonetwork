@@ -35,6 +35,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.Sets;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
+import com.jayway.jsonpath.PathNotFoundException;
 import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -902,7 +903,11 @@ public class EsHTTPProxy {
 
         for(String jsonPath : jsonPathFilters) {
             if (StringUtils.isNotBlank(jsonPath)) {
-                jsonContext = jsonContext.delete(jsonPath);
+                try {
+                    jsonContext = jsonContext.delete(jsonPath);
+                } catch (PathNotFoundException ex) {
+                    // The node to remove is not returned in the response, ignore the error
+                }
             }
         }
 

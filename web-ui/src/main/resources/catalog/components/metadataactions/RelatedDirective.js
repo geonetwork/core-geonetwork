@@ -189,6 +189,318 @@
     }
   ]);
 
+  /**
+   * Directive to display a panel in the metadata editor with a header and a list of distributions grouped by type.
+   *
+   */
+  module.directive("gnDistributionResourcesPanel", [
+    function () {
+      return {
+        restrict: "A",
+        templateUrl: function (elem, attrs) {
+          return (
+            attrs.template ||
+            "../../catalog/components/metadataactions/partials/distributionResourcesPanel.html"
+          );
+        },
+        scope: {
+          md: "=gnDistributionResourcesPanel",
+          mode: "=",
+          relatedConfig: "=",
+          editorConfig: "@"
+        },
+        link: function (scope, element, attrs) {}
+      };
+    }
+  ]);
+
+  /**
+   * Displays a panel with different types of distributions available in the metadata object 'md'.
+   *
+   *  - mode: mode to display the distributions.
+   *      - tabset: displays the distributions in a tabset panel.
+   *      - (other value): displays the distributions in different div blocks.
+   *
+   *  - layout: Layout for the distribution items.
+   *      - card: display the distribution items as a card.
+   *      - (other value): display the distribution items as a list.
+   *
+   *  - editable: when used in the metadata editor, set to true.
+   *
+   *  - relatedConfig: array with the configuration of the distributions to display. For each distribution:
+   *      - filter: Filter a type based on an attribute.
+   *                Can't be used when multiple types are requested
+   *                eg. data-filter="associationType:upstreamData"
+   *                    data-filter="protocol:OGC:.*|ESRI:.*"
+   *                    data-filter="-protocol:OGC:.*"
+   *      - title: title translation key for the relations section.
+   *      - editActions: List of edit actions to add online resources to the distribution.
+   *                     eg. editActions: ['addOnlinesrc'] -> adds a button to open the default dialog to add
+   *                            an online resource.
+   *                         editActions: ['addOnlinesrc', 'onlineDiscoverWMS', 'onlineDiscoverArcGIS'] ->
+   *                            adds a button to open the default dialog to add an online resourceand other 2 buttons
+   *                            with predefined values to add WMS and ArcGIS resources.
+   *
+   * Example configuration (view mode):
+   *
+   * <div data-gn-distribution-resources-container="md"
+   *      data-mode="tabset"
+   *      data-related-config="[{'filter': 'protocol:OGC:.*|ESRI:.*|atom.*', 'title': 'API'},
+   *                      {'filter': 'protocol:.*DOWNLOAD.*|DB:.*|FILE:.*', 'title': 'download'},
+   *                      {'filter': '-protocol:OGC:.*|ESRI:.*|atom.*|.*DOWNLOAD.*|DB:.*|FILE:.*', 'title': 'links'}]">
+   *
+   * </div>
+   *
+   * Example configuration (edit mode):
+   *
+   * <div data-gn-distribution-resources-container="md"
+   *      data-related-config="[{'filter': 'protocol:OGC:.*|ESRI:.*|atom.*', 'title': 'API', editActions: ['addOnlinesrc']},
+   *                      {'filter': 'protocol:.*DOWNLOAD.*|DB:.*|FILE:.*', 'title': 'download', editActions: ['addOnlinesrc']},
+   *                      {'filter': '-protocol:OGC:.*|ESRI:.*|atom.*|.*DOWNLOAD.*|DB:.*|FILE:.*', 'title': 'links', editActions: ['addOnlinesrc']}]">
+   *
+   * </div>
+   *
+   */
+  module.directive("gnDistributionResourcesContainer", [
+    "gnRelatedResources",
+    "gnConfigService",
+    "$injector",
+    function (gnRelatedResources, gnConfigService, $injector) {
+      return {
+        restrict: "A",
+        templateUrl: function (elem, attrs) {
+          return (
+            attrs.template ||
+            "../../catalog/components/metadataactions/partials/distributionResourcesContainer.html"
+          );
+        },
+        scope: {
+          md: "=gnDistributionResourcesContainer",
+          mode: "=",
+          relatedConfig: "=",
+          editorConfig: "="
+        },
+        link: function (scope, element, attrs, controller) {
+          scope.lang = scope.lang || scope.$parent.lang;
+          scope.relations = {};
+          scope.relatedConfigUI = [];
+          scope.editable = angular.isDefined(scope.editorConfig);
+          scope.config = gnRelatedResources;
+          if ($injector.has("gnOnlinesrc")) {
+            scope.onlinesrcService = $injector.get("gnOnlinesrc");
+          }
+
+          scope.relatedConfig.forEach(function (config) {
+            config.relations = scope.md.link || {};
+            config.relationFound = config.relations.length > 0;
+
+            var value = config.relations;
+
+            // Check if tabs needs to be displayed
+            if (scope.mode === "tabset" && config.filter && angular.isArray(value)) {
+              var filters = gnConfigService.parseFilters(config.filter);
+
+              config.relations = [];
+              for (var j = 0; j < value.length; j++) {
+                gnConfigService.testFilters(filters, value[j]) &&
+                  config.relations.push(value[j]);
+              }
+              config.relationFound = config.relations.length > 0;
+            } else {
+              config.relations = value;
+            }
+
+            scope.relatedConfigUI.push(config);
+          });
+        }
+      };
+    }
+  ]);
+
+  module.directive("gnRelatedDistribution", [
+    "gnGlobalSettings",
+    "gnSearchSettings",
+    "gnRelatedResources",
+    "gnExternalViewer",
+    "gnConfigService",
+    "gnUrlUtils",
+    "gnDoiService",
+    "$injector",
+    function (
+      gnGlobalSettings,
+      gnSearchSettings,
+      gnRelatedResources,
+      gnExternalViewer,
+      gnConfigService,
+      gnUrlUtils,
+      gnDoiService,
+      $injector
+    ) {
+      return {
+        restrict: "A",
+        templateUrl: function (elem, attrs) {
+          return (
+            attrs.template ||
+            "../../catalog/components/metadataactions/partials/relatedDistribution.html"
+          );
+        },
+        scope: {
+          md: "=gnRelatedDistribution",
+          template: "@",
+          title: "@",
+          altTitle: "@",
+          list: "@",
+          // Filter a type based on an attribute.
+          // Can't be used when multiple types are requested
+          // eg. data-filter="associationType:upstreamData"
+          // data-filter="protocol:OGC:.*|ESRI:.*"
+          // data-filter="-protocol:OGC:.*"
+          filter: "@",
+          user: "=",
+          hasResults: "=?",
+          layout: "@",
+          editorConfig: "="
+        },
+        link: function (scope, element, attrs) {
+          scope.canPublishDoiForResource = gnDoiService.canPublishDoiForResource;
+          scope.editable = angular.isDefined(scope.editorConfig);
+          scope.lang = scope.lang || scope.$parent.lang;
+
+          if ($injector.has("gnOnlinesrc")) {
+            scope.onlinesrcService = $injector.get("gnOnlinesrc");
+            $injector.get("gnCurrentEdit").associatedPanelConfigId = scope.editorConfig;
+          }
+
+          /**
+           * The type is use to find the config to use for this
+           * type of link. See link-utility.xsl.
+           */
+          function getType(fn) {
+            if (fn === "legend") {
+              return fn;
+            } else if (fn === "featureCatalogue") {
+              return "fcats";
+            } else if (fn === "dataQualityReport") {
+              return "dq-report";
+            }
+            return "onlinesrc";
+          }
+
+          function convertLangProperties(object) {
+            if (!angular.isObject(object)) {
+              return;
+            }
+            var newObject = {};
+            Object.keys(object).forEach(function (key) {
+              newObject[key.replace(/^lang/, "")] = object[key];
+            });
+            return newObject;
+          }
+
+          scope.convertLinkToEdit = function (link) {
+            var convertedLink = {
+              id: link.url,
+              url: convertLangProperties(link.urlObject),
+              type: getType(link.function),
+              title: convertLangProperties(link.nameObject),
+              protocol: link.protocol,
+              description: convertLangProperties(link.descriptionObject),
+              function: link["function"],
+              mimeType: link.mimeType,
+              applicationProfile: link.applicationProfile,
+              lUrl: link.url,
+              locTitle: link.nameObject ? link.nameObject["default"] : "",
+              locDescription: link.descriptionObject
+                ? link.descriptionObject["default"]
+                : "",
+              locUrl: link.urlObject["default"]
+            };
+            return convertedLink;
+          };
+
+          scope.loadDistributions = function (distribution) {
+            var distributionCount = 0;
+            scope.distributionFound = false;
+            scope.distributions = [];
+
+            angular.forEach(distribution, function (value) {
+              if (!value) {
+                return;
+              }
+
+              // init object if required
+              scope.distributions = scope.distributions || [];
+              scope.hasResults = true;
+
+              if (!scope.distributions) {
+                scope.distributions = [];
+              }
+              if (scope.filter) {
+                var filters = gnConfigService.parseFilters(scope.filter);
+
+                if (gnConfigService.testFilters(filters, value)) {
+                  scope.distributions.push(value);
+                }
+              } else {
+                scope.distributions = value;
+              }
+
+              // For draft version append "approved=false" to url
+              if (scope.md.draft === "y") {
+                for (var i = 0; i < scope.distributions.length; i++) {
+                  if (
+                    scope.distributions[i].url.match(
+                      ".*/api/records/" + scope.md.uuid + "/attachments/.*"
+                    ) != null
+                  ) {
+                    scope.distributions[i].url = gnUrlUtils.remove(
+                      scope.distributions[i].url,
+                      ["approved"],
+                      true
+                    );
+                    scope.distributions[i].url = gnUrlUtils.append(
+                      scope.distributions[i].url,
+                      "approved=false"
+                    );
+                  }
+                }
+              }
+
+              distributionCount += scope.distributions.length;
+            });
+            scope.distributionFound = distributionCount > 0;
+          };
+
+          scope.getOrderBy = function (link) {
+            return link && link.resourceTitle ? link.resourceTitle : link.locTitle;
+          };
+
+          scope.externalViewerAction = function (mainType, link, md) {
+            gnExternalViewer.viewService(md, link);
+          };
+          scope.hasAction = gnRelatedResources.hasAction;
+          scope.getBadgeLabel = gnRelatedResources.getBadgeLabel;
+          scope.isLayerProtocol = gnRelatedResources.isLayerProtocol;
+          scope.externalViewerActionEnabled = gnExternalViewer.isEnabledViewAction();
+
+          scope.config = gnRelatedResources;
+
+          scope.$watchCollection("md.link", function (n, o) {
+            if (n && n !== o) {
+              if (scope.md != null && scope.md.link) {
+                scope.loadDistributions(scope.md.link);
+              }
+            }
+          });
+
+          if (scope.md != null && scope.md.link) {
+            scope.loadDistributions(scope.md.link);
+          }
+        }
+      };
+    }
+  ]);
+
   module.directive("gnRelatedList", [
     "gnRelatedResources",
     function (gnRelatedResources) {
