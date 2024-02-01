@@ -185,7 +185,6 @@
     "generateThumbnail": "Generate thumbnail",
     "generateThumbnail-help": "Thumbnail will be created and saved in the filestore. Use the filestore to add the thumbnail in the metadata record.",
     "createAThumbnail": "Generate thumbnail using the view service",
-    "noLayersForThumbnail": "No layer defined in record to generate thumbnail from",
     "noTemplatesAvailable": "Warning! There is no templates available in the catalog. You should add or <a href='admin.console#/metadata'>import</a> some.",
     "none": "None",
     "notFoundInThesaurus": "<strong>Warning! Keywords {{invalid}} not found in thesaurus.</strong> Others {{found}} were found in the thesaurus. 2 reasons: <ul><li>keywords in this record are in a language that is not in the current user interface language</li><li>keywords does not exists in the thesaurus</li></ul><strong>Those keywords will not be modified by this editing session</strong> unless you remove this thesaurus section.",

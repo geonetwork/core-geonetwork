@@ -678,13 +678,6 @@
                 //   });
                 // }
                 // Add each WMS layer to the map
-                if (scope.gnCurrentEdit.layerConfig == undefined) {
-                  scope.layers = scope.gnCurrentEdit.layerConfig;
-                } else {
-                  scope.layers = Array.isArray(scope.gnCurrentEdit.layerConfig)
-                    ? scope.gnCurrentEdit.layerConfig
-                    : [scope.gnCurrentEdit.layerConfig];
-                }
                 angular.forEach(scope.gnCurrentEdit.layerConfig, function (layer) {
                   scope.map.addLayer(
                     new ol.layer.Tile({
