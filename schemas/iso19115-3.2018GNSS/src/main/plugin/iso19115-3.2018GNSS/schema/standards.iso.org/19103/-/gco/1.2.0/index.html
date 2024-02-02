@@ -1,0 +1,109 @@
+<!DOCTYPE html><html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+      <title>Geospatial Common Objects (GCO) Version: 1.2</title>
+      <style>
+						h1 { font-family: Arial; color: DarkBlue; font-size: 14pt; font-weight:bold; }
+						body { font-family: Arial; color: black; font-size: 10pt;}
+						td { font-family: Arial; color: black; font-size: 10pt;}
+						table, th, td {border: 1px solid black; padding: 2px; border-spacing: 1px;}
+						.paraSmall {font-size: 0.7em; font-style: italic;}
+						.metagroup { font-family: Arial; color: #0099FF; font-size: 10pt; font-weight:bold; }
+					</style>
+   </head>
+   <body>
+      <h1>Geospatial Common Objects (GCO) Version: 1.2</h1>
+      <!-- 
+         <img title="Classes in the gco namespace" alt="UML diagram of Geographic Common Objects classes in the gco namespace" width="750" src="./.png"/>
+      <img title="Codelist(s) in the gco namespace" alt="UML diagram of Geographic Common Objects codelists in the gco codelists namespace" width="750" src="./.png"/>
+      -->
+      <h2>Description</h2>
+      <p>GCO 1.2 is an XML Schema implementation derived from ISO ISO 19103:2015, Geographic Information - Conceptual schema language.  
+         It includes utility elements for Geographic Common Objects. 
+         The XML schema was encoded using the rules described in ISO/TS 19139:2007.
+      </p>
+       <h2>XML Namespace for gco 1.2</h2>
+      <p>The namespace URI for gco 1.2 is <b>https://schemas.isotc211.org/19103/-/gco/1.2</b>.
+      </p>
+      <h2>XML Schema for gco 1.2</h2>
+      <p><b><a href="../../../../19103/3/-/gco/1.2.0/gco.xsd">gco.xsd</a></b> is the XML Schema document to be referenced by XML documents containing XML elements
+         in the gco 1.2 namespace or by XML Schema documents importing the gco 1.2 namespace. 
+         This XML schema includes (indirectly) all the implemented concepts of the gco namespace, but it does not contain the declaration of any types.
+      </p>
+      
+      <h2>Related XML Schema for gco 1.2</h2>
+      <p><b><a href="../../../../19103/3/-/gco/1.2.0/baseTypes.xsd">baseTypes.xsd</a></b> implements the UML conceptual schema defined in ISO 19103:2015, Geographic Information - Conceptual schema language. 
+         It was created using the encoding rules defined in ISO 19118, ISO 19139.</p>
+      <a href="https://schemas.isotc211.org/19103/3/-/gco/1.2.0/baseTypes.xsd">https://schemas.isotc211.org/19103/3/-/gco/1.2.0/baseTypes.xsd</a> contains the folowing classes:
+      <ul>
+         <li>AbstractObject</li>
+         <li>TypeName</li>
+         <li>MemberName</li>
+         <li>Multiplicity</li>
+         <li>MultiplicityRange</li>
+         <li>CharacterString</li>
+         <li>Boolean</li>
+         <li>DateTime</li>
+         <li>Date</li>
+         <li>Decimal</li>
+         <li>Real</li>
+         <li>Integer</li>
+         <li>UnlimitedInteger</li>
+         <li>Record</li>
+         <li>Field</li>
+         <li>RecordType</li>
+         <li>FieldType</li>
+         <li>Binary</li>
+         <li>UomIdentifier</li>
+         <li>UomSymbol</li>
+         <li>UomURI</li>
+         <li>UomIdentifierType</li>
+         <li>UomArea</li>
+         <li>UomAngle</li>
+         <li>UomAngularAcceleration</li>
+         <li>UomSpeed</li>
+         <li>UomVolume</li>
+         <li>UomScale</li>
+         <li>UomVelocity</li>
+         <li>Uomlength</li>
+         <li>UomAcceleration</li>
+         <li>UomAngularSpeed</li>
+         <li>UomCurrency</li>
+         <li>UomTime</li>
+         <li>UomWeight</li>
+         <li>Measure</li>
+         <li>Length</li>
+         <li>Distance</li>
+         <li>Angle</li>
+         <li>TimeMeasure</li>
+         <li>Volume</li>
+         <li>Weight</li>
+         <li>Area</li>
+         <li>Currency</li>
+         <li>Angular</li>
+         <li>Speed</li>
+         <li>Scale</li>
+         <li>DirectMeasurement</li>
+         <li>ScopeName</li>
+         <li>TM_PeriodDuration</li>
+      </ul>
+      <h2>Related XML Namespaces for cit 1.3</h2> The cit 1.3 namespace imports these other namespaces: 
+      <table>
+         <tr>
+            <th>Name</th>
+            <th>Standard Prefix</th>
+            <th>Namespace Location</th>
+            <th>Schema Location</th>
+         </tr>
+         <tr>
+            <td>Sensor Web Enablement</td>
+            <td>swe</td>
+            <td><a href="http://www.opengis.net/swe/2.0">http://www.opengis.net/swe/2.0</a></td>
+            <td>http://schemas.opengis.net/sweCommon/2.0/swe.xsd</td>
+         </tr>
+       </table>
+      <h2>Working Versions</h2> When revisions to these schema become necessary, they will be managed in the <a href="https://github.com/ISO-TC211/XML">ISO TC211 Git Repository</a>. 
+      <hr>
+      <p class="paraSmall">Written by hand. Version: 2021-02-24</p>
+   </body>
+</html>

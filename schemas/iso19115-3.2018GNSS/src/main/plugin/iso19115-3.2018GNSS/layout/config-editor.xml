@@ -25,6 +25,7 @@
         xmlns:gfc="http://standards.iso.org/iso/19110/gfc/1.1"
         xmlns:gts="http://www.isotc211.org/2005/gts"
         xmlns:gml="http://www.opengis.net/gml/3.2"
+        xmlns:rbc="https://schemas.isotc211.org/19111/-/rbc/3.1"
         xmlns:xlink="http://www.w3.org/1999/xlink">
 
   <!-- Form field type configuration. Default is text. -->
@@ -73,12 +74,16 @@
     <for name="mrd:orderOptions" use="textarea"/>
     <for name="mrc:rangeElement" use="textarea"/>
 
+    <for name="rbc:coordinateEpoch" use="number"/>
+    <for name="mrs:coordinateEpoch" use="number"/>
+
     <for name="gco:Distance" use="number"/>
     <for name="gco:Decimal" use="number"/>
     <for name="gco:Integer" use="number"/>
     <for name="gco:Real" use="number"/>
     <for name="gco:Angle" use="number"/>
     <for name="gco:Boolean" use="checkbox"/>
+    <for name="gco:TimeMeasure" use="number"/>
 
     <for name="gco:Date" use="data-gn-date-picker"/>
     <for name="gco:DateTime" use="data-gn-date-picker"/>
@@ -289,25 +294,25 @@
 
     <for name="mdb:referenceSystemInfo" addDirective="data-gn-directory-entry-selector">
       <directiveAttributes
-        data-template-add-action="false"
         data-search-action="true"
+        data-popup-action="true"
         data-template-type="CRS"
         data-filter='{"root": "mrs:MD_ReferenceSystem"}'
-        data-transformation="crs-from-iso19115-3.2018-to-Amd2""
+        data-transformation="crs-from-iso19115-3.2018-to-Amd2"
         data-insert-modes="text"/>
     </for>
 
     <for name="gex:verticalCRSId" addDirective="data-gn-directory-entry-selector">
       <directiveAttributes
-        data-template-add-action="false"
         data-search-action="true"
+        data-popup-action="true"
         data-template-type="CRS"
         data-filter='{"root": "mrs:MD_ReferenceSystem"}'
-        data-transformation="crs-from-iso19115-3.2018-to-Amd2""
+        data-transformation="crs-from-iso19115-3.2018-to-Amd2"
         data-insert-modes="text"/>
     </for>
 
-    <for name="mri:extent" addDirective="data-gn-directory-entry-selector">
+    <!--<for name="mri:extent" addDirective="data-gn-directory-entry-selector">
       <directiveAttributes
         data-template-add-action="true"
         data-search-action="true"
@@ -332,7 +337,7 @@
         data-template-type="extent"
         data-filter='{"root": "gex:EX_Extent"}'
         data-insert-modes=""/>
-    </for>
+    </for>-->
 
     <for name="cit:logo" addDirective="data-gn-directory-entry-selector">
       <directiveAttributes
@@ -356,7 +361,7 @@
       <directiveAttributes
               data-template-add-action="true"
               data-search-action="true"
-              data-popup-action="false"
+              data-popup-action="true"
               data-template-type="resourceConstraints"
               data-filter='{"root": "mco:MD_*"}'/>
     </for>
@@ -606,12 +611,14 @@
         <col label="mrs:referenceSystemType" />
         <col label="mcc:code" />
         <col label="mcc:description" />
+        <col label="mrs:coordinateEpoch" />
         <col />
       </header>
       <row>
         <col xpath="mrs:referenceSystemType" />
         <col xpath="mrs:referenceSystemIdentifier/mcc:MD_Identifier/mcc:code" />
         <col xpath="mrs:referenceSystemIdentifier/mcc:MD_Identifier/mcc:description" />
+        <col xpath="mrs:coordinateEpoch" />
         <col del=".." />
       </row>
     </table>
@@ -1033,6 +1040,7 @@
         <for name="gex:verticalElement" />
         <for name="mcc:code" />
         <for name="mrs:coordinateEpoch" />
+        <for name="rbc:coordinateEpoch" />
         <for name="mrs:referenceSystemType" />
         <for name="mcc:description" />
         <!--<for name="mcc:codeSpace" />-->

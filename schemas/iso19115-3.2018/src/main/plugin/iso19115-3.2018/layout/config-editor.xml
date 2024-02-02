@@ -291,6 +291,7 @@
       <directiveAttributes
         data-template-add-action="false"
         data-search-action="true"
+        data-popup-action="true"
         data-template-type="CRS"
         data-filter='{"root": "mrs:MD_ReferenceSystem"}'
         data-insert-modes="text"/>
@@ -300,6 +301,7 @@
       <directiveAttributes
         data-template-add-action="false"
         data-search-action="true"
+        data-popup-action="true"
         data-template-type="CRS"
         data-filter='{"root": "mrs:MD_ReferenceSystem"}'
         data-insert-modes="text"/>
@@ -352,10 +354,10 @@
 
     <for name="mri:resourceConstraints" addDirective="data-gn-directory-entry-selector">
       <directiveAttributes
-              data-template-add-action="true"
               data-search-action="true"
-              data-popup-action="false"
+              data-popup-action="true"
               data-template-type="resourceConstraints"
+              data-insert-modes="text"
               data-filter='{"root": "mco:MD_*"}'/>
     </for>
     <for name="mdb:metadataConstraints" addDirective="data-gn-directory-entry-selector">
