@@ -25,6 +25,8 @@ package org.fao.geonet.api.records.formatters.cache;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Joiner;
+import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.api.records.attachments.FilesystemStoreConfig;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.lib.Lib;
@@ -266,8 +268,8 @@ public class FilesystemStore implements PersistentStore {
 
     @Override
     public void setPublished(int metadataId, final boolean published) throws IOException {
-
-        final Path metadataDir = Lib.resource.getMetadataDir(getBaseCacheDir().resolve(PRIVATE), String.valueOf(metadataId));
+        // TODO: Datastore review
+        final Path metadataDir = Lib.resource.getMetadataDir(getBaseCacheDir().resolve(PRIVATE), String.valueOf(metadataId), ApplicationContextHolder.get().getBean(FilesystemStoreConfig.class));
         if (Files.exists(metadataDir)) {
             Files.walkFileTree(metadataDir, new SimpleFileVisitor<Path>() {
                 @Override
@@ -360,18 +362,20 @@ public class FilesystemStore implements PersistentStore {
         this.geonetworkDataDir = geonetworkDataDir;
     }
 
-    public Path getPrivatePath(Key key) {
+    public Path getPrivatePath(Key key) throws IOException {
         return getCacheFile(key, false);
     }
 
-    public Path getPublicPath(Key key) {
+    public Path getPublicPath(Key key) throws IOException {
         return getCacheFile(key, true);
     }
 
-    private Path getCacheFile(Key key, boolean isPublicCache) {
+    private Path getCacheFile(Key key, boolean isPublicCache) throws IOException {
         final String accessDir = isPublicCache ? PUBLIC : PRIVATE;
         final String sMdId = String.valueOf(key.mdId);
-        final Path metadataDir = Lib.resource.getMetadataDir(getBaseCacheDir().resolve(accessDir), sMdId);
+
+
+        final Path metadataDir = Lib.resource.getMetadataDir(getBaseCacheDir().resolve(accessDir), sMdId, ApplicationContextHolder.get().getBean(FilesystemStoreConfig.class));
         String hidden = key.hideWithheld ? WITHHELD_MD_DIRNAME : FULL_MD_NAME;
         return metadataDir.resolve(key.formatterId).resolve(key.lang).resolve(hidden).resolve(key.hashCode() + "." + key.formatType.name());
     }

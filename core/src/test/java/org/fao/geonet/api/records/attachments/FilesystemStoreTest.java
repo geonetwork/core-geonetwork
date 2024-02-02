@@ -36,7 +36,9 @@ import org.jdom.Element;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.io.File;
 import java.io.InputStream;
+import java.nio.file.Files;
 import java.util.Date;
 
 import static org.junit.Assert.*;
@@ -47,6 +49,8 @@ public class FilesystemStoreTest extends AbstractCoreIntegrationTest {
     protected IMetadataManager metadataManager;
     @Autowired
     protected SettingManager settingManager;
+    @Autowired
+    protected FilesystemStoreConfig filesystemStoreConfig;
 
     @Test
     public void getResourceDescription() throws Exception {
@@ -70,6 +74,7 @@ public class FilesystemStoreTest extends AbstractCoreIntegrationTest {
             IndexingMode.none);
 
         FilesystemStore filesystemStore = new FilesystemStore();
+        filesystemStore.filesystemStoreConfig = filesystemStoreConfig;
         filesystemStore.settingManager = this.settingManager;
 
         MetadataResource resource = filesystemStore.getResourceDescription(context, "uuid", MetadataResourceVisibility.PUBLIC, "test.jpg", true);
@@ -92,9 +97,10 @@ public class FilesystemStoreTest extends AbstractCoreIntegrationTest {
     public void testGetResourceDescriptionNonExistingUuid() throws Exception {
         ServiceContext context = createServiceContext();
         loginAsAdmin(context);
+
         FilesystemStore filesystemStore = new FilesystemStore();
         filesystemStore.settingManager = this.settingManager;
-
+        filesystemStore.filesystemStoreConfig = filesystemStoreConfig;
 
         // context, metadataUuid, visibility, path, approved)
         filesystemStore.getResourceDescription(context, "nonExistingUuid",

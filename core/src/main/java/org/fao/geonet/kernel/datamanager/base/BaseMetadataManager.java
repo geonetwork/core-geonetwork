@@ -34,6 +34,7 @@ import jeeves.transaction.TransactionTask;
 import jeeves.xlink.Processor;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.api.records.attachments.FilesystemStoreConfig;
 import org.fao.geonet.api.records.attachments.Store;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
@@ -973,7 +974,9 @@ public class BaseMetadataManager implements IMetadataManager {
                 env.addContent(new Element("parentUuid").setText(parentUuid));
             }
             if (metadataId.isPresent()) {
-                final Path resourceDir = Lib.resource.getDir(Params.Access.PRIVATE, metadataId.get());
+                // TODO: Datastore review
+                final Path resourceDir = Lib.resource.getDir(Params.Access.PRIVATE, metadataId.get(),
+                    getApplicationContext().getBean(FilesystemStoreConfig.class));
                 env.addContent(new Element("datadir").setText(resourceDir.toString()));
             }
 

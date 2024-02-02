@@ -1,6 +1,6 @@
 /*
  * =============================================================================
- * ===	Copyright (C) 2001-2022 Food and Agriculture Organization of the
+ * ===	Copyright (C) 2001-2023 Food and Agriculture Organization of the
  * ===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * ===	and United Nations Environment Programme (UNEP)
  * ===
@@ -66,21 +66,22 @@ import java.util.concurrent.TimeUnit;
  * </pre>
  */
 public class FilesystemStore extends AbstractStore {
+
     public static final String DEFAULT_FILTER = "*.*";
 
     @Autowired
     SettingManager settingManager;
 
-    public FilesystemStore() {
-    }
+    @Autowired
+    FilesystemStoreConfig filesystemStoreConfig;
 
     @Override
     public List<MetadataResource> getResources(ServiceContext context, String metadataUuid, MetadataResourceVisibility visibility,
                                                String filter, Boolean approved) throws Exception {
         int metadataId = canDownload(context, metadataUuid, visibility, approved);
 
-        Path metadataDir = Lib.resource.getMetadataDir(getDataDirectory(context), metadataId);
-        Path resourceTypeDir = metadataDir.resolve(visibility.toString());
+        Path metadataDir = Lib.resource.getMetadataDir(getDataDirectory(context), metadataId, filesystemStoreConfig);
+        Path resourceTypeDir = calculateMetadataDir(metadataDir, visibility);
 
         List<MetadataResource> resourceList = new ArrayList<>();
         if (filter == null) {
@@ -108,7 +109,7 @@ public class FilesystemStore extends AbstractStore {
         int metadataId = canDownload(context, metadataUuid, visibility, approved);
         checkResourceId(resourceId);
 
-        final Path resourceFile = Lib.resource.getDir(visibility.toString(), metadataId).
+        final Path resourceFile = Lib.resource.getDir(visibility.toString(), metadataId, filesystemStoreConfig).
                 resolve(getFilename(metadataUuid, resourceId));
 
         if (Files.exists(resourceFile)) {
@@ -131,7 +132,8 @@ public class FilesystemStore extends AbstractStore {
         int metadataId = getAndCheckMetadataId(metadataUuid, approved);
         checkResourceId(resourceId);
 
-        final Path resourceFile = Lib.resource.getDir(visibility.toString(), metadataId).
+        final Path resourceFile = Lib.resource.getDir(visibility.toString(), metadataId,
+                filesystemStoreConfig).
             resolve(getFilename(metadataUuid, resourceId));
 
         if (Files.exists(resourceFile)) {
@@ -181,7 +183,7 @@ public class FilesystemStore extends AbstractStore {
     public MetadataResourceContainer getResourceContainerDescription(ServiceContext context, String metadataUuid, Boolean approved) throws Exception {
 
         int metadataId = getAndCheckMetadataId(metadataUuid, approved);
-        final Path metadataDir = Lib.resource.getMetadataDir(getDataDirectory(context), metadataId);
+        final Path metadataDir = Lib.resource.getMetadataDir(getDataDirectory(context), metadataId, filesystemStoreConfig);
         if (!Files.exists(metadataDir)) {
             try {
                 Files.createDirectories(metadataDir);
@@ -231,7 +233,7 @@ public class FilesystemStore extends AbstractStore {
     @Override
     public String delResources(ServiceContext context, String metadataUuid, Boolean approved) throws Exception {
         int metadataId = canEdit(context, metadataUuid, approved);
-        Path metadataDir = Lib.resource.getMetadataDir(getDataDirectory(context), metadataId);
+        Path metadataDir = Lib.resource.getMetadataDir(getDataDirectory(context), metadataId, filesystemStoreConfig);
         try {
             IO.deleteFileOrDirectory(metadataDir, true);
             return String.format("Metadata '%s' directory removed.", metadataId);
@@ -282,22 +284,48 @@ public class FilesystemStore extends AbstractStore {
         return getResourceDescription(context, metadataUuid, visibility, newFilePath, approved);
     }
 
+    @Override
+    public List<MetadataResource> getResources(ServiceContext context, String metadataUuid, Sort sort, String filter, Boolean approved)
+        throws Exception {
+        int metadataId = getAndCheckMetadataId(metadataUuid, approved);
+        boolean canEdit = getAccessManager(context).canEdit(context, String.valueOf(metadataId));
+
+        List<MetadataResource> resourceList = new ArrayList<>(
+            getResources(context, metadataUuid, MetadataResourceVisibility.PUBLIC, filter, approved));
+        if (canEdit && filesystemStoreConfig.getFolderPrivilegesStrategy().equals(FilesystemStoreConfig.FolderPrivilegesStrategy.DEFAULT)) {
+            resourceList.addAll(getResources(context, metadataUuid, MetadataResourceVisibility.PRIVATE, filter, approved));
+        }
+
+        if (sort == Sort.name) {
+            resourceList.sort(MetadataResourceVisibility.sortByFileName);
+        }
+
+        return resourceList;
+    }
+
     private Path ensureDirectory(final ServiceContext context, final int metadataId, final String resourceId,
                                  final MetadataResourceVisibility visibility) throws IOException {
-        final Path metadataDir = Lib.resource.getMetadataDir(getDataDirectory(context), metadataId);
-        final Path newFolderPath = metadataDir.resolve(visibility.toString());
+        final Path metadataDir = Lib.resource.getMetadataDir(getDataDirectory(context), metadataId, filesystemStoreConfig);
+        final Path newFolderPath = calculateMetadataDir(metadataDir, visibility);
         if (!Files.exists(newFolderPath)) {
             try {
                 Files.createDirectories(newFolderPath);
             } catch (Exception e) {
                 throw new IOException(
-                        String.format("Can't create folder '%s' to store resource with name '%s' for metadata '%d'.", visibility,
-                                      resourceId, metadataId));
+                    String.format("Can't create folder '%s' to store resource with name '%s' for metadata '%d'.", visibility,
+                        resourceId, metadataId));
             }
         }
         return newFolderPath;
     }
 
+    private Path calculateMetadataDir(final Path metadataDir, final MetadataResourceVisibility visibility) {
+        if (filesystemStoreConfig.getFolderPrivilegesStrategy().equals(FilesystemStoreConfig.FolderPrivilegesStrategy.DEFAULT)) {
+            return metadataDir.resolve(visibility.toString());
+        } else {
+            return metadataDir;
+        }
+    }
     private GeonetworkDataDirectory getDataDirectory(ServiceContext context) {
         return context.getBean(GeonetworkDataDirectory.class);
     }

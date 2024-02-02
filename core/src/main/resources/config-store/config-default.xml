@@ -32,6 +32,10 @@
   <bean id="filesystemStore"
         class="org.fao.geonet.api.records.attachments.FilesystemStore"/>
 
+  <bean id="filesystemStoreConfig"
+        class="org.fao.geonet.api.records.attachments.FilesystemStoreConfig">
+  </bean>
+
   <bean id="resourceStore"
         class="org.fao.geonet.api.records.attachments.ResourceLoggerStore">
     <constructor-arg index="0" ref="filesystemStore"/>
