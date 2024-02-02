@@ -31,5 +31,28 @@
       </li>
       <li class="list-group-item"><a href="test-webcomponent-map.html">Map viewer only</a></li>
     </ul>
+
+    <div class="well">
+      Web components can be configured using 2 ways:
+
+      Using a JSON UI configuration in the config attribute:
+      <pre>
+      &lt;gn-app url="http://localhost:8080/geonetwork" portal="srv"
+              config='{"mods": {
+                    "global": {"hotkeys": false},
+                    "home": {"enabled": false},
+                    "footer": {"enabled": false},
+                    "header": {"enabled": false}
+                    }}'&gt;&lt;/gn-app&gt;
+
+      &lt;script src="http://localhost:8080/geonetwork/catalog/webcomponents/webcomponents.js"&gt;&lt;/script&gt;
+      </pre>
+      or using a UI configuration id created in the admin console > UI settings:
+      <pre>
+      &lt;gn-app url="http://localhost:8080/geonetwork" portal="srv"
+              config='odatis'&gt;&lt;/gn-app&gt;
+      &lt;script src="http://localhost:8080/geonetwork/catalog/webcomponents/webcomponents.js"&gt;&lt;/script&gt;
+      </pre>
+    </div>
   </body>
 </html>

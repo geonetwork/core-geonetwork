@@ -99,7 +99,10 @@
       </div>
     </div>
 
-    <div class="panel panel-default" data-ng-show="uiConfiguration.configuration">
+    <div
+      class="panel panel-default"
+      data-ng-show="uiConfiguration.configuration !== undefined"
+    >
       <div class="panel-heading">
         <h1><span data-translate="">ui</span> <strong>{{uiConfiguration.id}}</strong></h1>
 

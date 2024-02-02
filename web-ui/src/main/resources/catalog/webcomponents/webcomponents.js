@@ -105,30 +105,54 @@ customElements.define(
         console.warn("Invalid configuration. Check URL");
         return;
       }
+      function start(customElements, uiConfig) {
+        try {
+          uiConfig = JSON.parse(uiConfig);
+        } catch (e) {
+          console.warn("Invalid configuration: " + uiConfig + ". Using default.");
+          console.warn(e);
+          uiConfig = {};
+        }
 
-      var uiConfig = this.getAttribute("config");
-      try {
-        uiConfig = JSON.parse(uiConfig);
-      } catch (e) {
-        console.warn("Invalid configuration: " + uiConfig + ". Using default.");
-        console.warn(e);
-        uiConfig = {};
+        if (typeof angular !== "undefined") {
+          // TODO: Could we reload a running angular app?
+          // var aApp = angular.element($("#gn-app")).scope();
+          // aApp.gnGlobalSettings.init(
+          //   config,
+          //   "http://localhost:8080/geonetwork/srv/",
+          //   gnViewerSettings,
+          //   gnSearchSettings
+          // )
+        } else if (customElements.attached === false) {
+          customElements.attachShadow({mode: "open"}).appendChild(
+            customElements.getTemplate(document, baseUrl, portal, uiConfig)
+          );
+          customElements.attached = true;
+        }
       }
 
-      if (typeof angular !== "undefined") {
-        // TODO: Could we reload a running angular app?
-        // var aApp = angular.element($("#gn-app")).scope();
-        // aApp.gnGlobalSettings.init(
-        //   config,
-        //   "http://localhost:8080/geonetwork/srv/",
-        //   gnViewerSettings,
-        //   gnSearchSettings
-        // )
-      } else if (this.attached === false) {
-        this.attachShadow({ mode: "open" }).appendChild(
-          this.getTemplate(document, baseUrl, portal, uiConfig)
-        );
-        this.attached = true;
+      var baseUrl = this.getAttribute("url") || DEFAULT_BASEURL;
+      var portal = this.getAttribute("portal") || DEFAULT_PORTAL;
+      var gnUrl = baseUrl + "/" + portal;
+      if (!validURL(gnUrl)) {
+        console.warn("Invalid configuration. Check URL");
+        return;
+      }
+
+      var uiConfig = this.getAttribute("config");
+      var customElements = this;
+      if (uiConfig.match(/^[\w-]*$/) != null) {
+        fetch(gnUrl + "/api/ui/" + uiConfig, {
+          headers: {
+            "Accept": "application/json",
+          }
+        }).then(function (response) {
+          response.json().then(function(json) {
+            start(customElements, json.configuration);
+          });
+        });
+      } else {
+        start(this, uiConfig);
       }
     }
 
