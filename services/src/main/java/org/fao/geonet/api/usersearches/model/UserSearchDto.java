@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2024 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -184,17 +184,17 @@ public class UserSearchDto implements Serializable {
         this.getNames().forEach((key, value) -> userSearch.getLabelTranslations().put(key, value));
 
         GroupRepository groupRepository = ApplicationContextHolder.get().getBean(GroupRepository.class);
-        Set<Group> groups = new HashSet<>();
+        Set<Group> groupsForUserSearch = new HashSet<>();
         getGroups().forEach(groupId -> {
             if (groupId != null) {
                 Optional<Group> g = groupRepository.findById(groupId);
 
                 if (g.isPresent()) {
-                    groups.add(g.get());
+                    groupsForUserSearch.add(g.get());
                 }
             }
         });
-        userSearch.setGroups(groups);
+        userSearch.setGroups(groupsForUserSearch);
 
         return userSearch;
     }
@@ -205,7 +205,7 @@ public class UserSearchDto implements Serializable {
         if (o == null || getClass() != o.getClass()) return false;
         UserSearchDto that = (UserSearchDto) o;
         return id == that.id &&
-            featuredType == that.featuredType &&
+            featuredType.equals(that.featuredType) &&
             creatorId == that.creatorId &&
             url.equals(that.url) &&
             creationDate.equals(that.creationDate) &&

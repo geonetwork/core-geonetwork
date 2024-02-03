@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2023 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2024 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -482,8 +482,9 @@ public class MetadataSharingApi {
 
             // Check not trying to publish a retired metadata
             if (isMdWorkflowEnable && (groupOwnerId != null)) {
-                java.util.Optional<Group> groupOwner = groupRepository.findById(groupOwnerId);
-                boolean isGroupWithEnabledWorkflow = WorkflowUtil.isGroupWithEnabledWorkflow(groupOwner.get().getName());
+                java.util.Optional<Group> groupOwnerOpt = groupRepository.findById(groupOwnerId);
+                boolean isGroupWithEnabledWorkflow = groupOwnerOpt.isPresent() &&
+                    WorkflowUtil.isGroupWithEnabledWorkflow(groupOwnerOpt.get().getName());
 
                 if (isGroupWithEnabledWorkflow) {
                     MetadataStatus mdStatus = metadataStatus.getStatus(metadata.getId());
@@ -658,7 +659,7 @@ public class MetadataSharingApi {
         List<Group> elGroup = groupRepository.findAll();
         List<Operation> allOperations = operationRepository.findAll();
 
-        List<GroupPrivilege> groupPrivileges = new ArrayList<>(elGroup.size());
+        List<GroupPrivilege> groupPrivileges = new ArrayList<>();
         if (elGroup != null) {
             for (Group g : elGroup) {
                 if (!hasNetworkConfig

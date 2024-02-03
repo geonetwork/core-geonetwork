@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2024 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -35,9 +35,8 @@ import org.fao.geonet.util.XslUtil;
 
 import java.util.*;
 
-import static org.apache.commons.lang.StringUtils.isNotBlank;
 import static org.fao.geonet.domain.userfeedback.RatingCriteria.AVERAGE_ID;
-import static org.fao.geonet.util.XslUtil.md5Hex;
+
 
 /**
  * Utilities to convert Entities to DTOs and to calculate AVG in ratings.
@@ -65,15 +64,11 @@ public class UserFeedbackUtils {
         userfeedback.setCommentText(inputDto.getComment());
 
         // Detailed rating list
-        List<Rating> ratingList = null;
+        List<Rating> ratingList = new ArrayList<>();
 
-        userfeedback.setDetailedRatingList(ratingList = new ArrayList<>());
-
-        int avg = 0;
-        int avgCount = 0;
+        userfeedback.setDetailedRatingList(ratingList);
 
         RatingCriteriaRepository ratingCriteriaRepository = ApplicationContextHolder.get().getBean(RatingCriteriaRepository.class);
-        List<RatingCriteria> criteriaList = ratingCriteriaRepository.findAll();
         if (inputDto.getRating() != null) {
             Iterator<Integer> iterator = inputDto.getRating().keySet().iterator();
             while (iterator.hasNext()) {
@@ -173,7 +168,7 @@ public class UserFeedbackUtils {
         Map<Integer, Integer> ratings = new HashMap<>();
         for (final Rating rating : ratingList) {
             Integer id = rating.getCategory().getId();
-            if (id == RatingCriteria.AVERAGE_ID) {
+            if (Objects.equals(id, RatingCriteria.AVERAGE_ID)) {
                 userfeedbackDto.setRatingAVG(rating.getRating());
             } else {
                 ratings.put(id, rating.getRating());
@@ -218,7 +213,7 @@ public class UserFeedbackUtils {
         ISODate maxDate = null; // LAST COMMENT DATE
         RatingAverage v = null;
 
-        if (list.size() > 0) {
+        if (!list.isEmpty()) {
             Map<Integer, Integer> ratingAverages = new HashMap<>();
             RatingCriteriaRepository criteriaRepository = ApplicationContextHolder.get().getBean(RatingCriteriaRepository.class);
             List<RatingCriteria> criteriaList = criteriaRepository.findAll();
@@ -231,7 +226,7 @@ public class UserFeedbackUtils {
                     maxDate = new ISODate(userFeedback.getCreationDate().getTime());
                 }
 
-                if (userFeedback.getDetailedRatingList() != null && userFeedback.getDetailedRatingList().size() > 0) {
+                if (userFeedback.getDetailedRatingList() != null && !userFeedback.getDetailedRatingList().isEmpty()) {
 
                     for (final Rating rating : userFeedback.getDetailedRatingList()) {
                         Integer criteriaId = rating.getCategory().getId();
@@ -243,7 +238,7 @@ public class UserFeedbackUtils {
                                     ? value
                                     : (ratingAverages.get(criteriaId) + value) / 2);
                         }
-                        if (criteriaId == AVERAGE_ID) {
+                        if (Objects.equals(criteriaId, AVERAGE_ID)) {
                             ratingCount++;
                         }
                     }

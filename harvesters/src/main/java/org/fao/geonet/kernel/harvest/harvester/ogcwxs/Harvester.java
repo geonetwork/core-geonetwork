@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2007 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2024 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -159,7 +159,7 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
      * updated in the catalogue) instead of a delete/insert operation.
      */
     private String capabilitiesUrl;
-    private List<WxSLayerRegistry> layersRegistry = new ArrayList<WxSLayerRegistry>();
+    private List<WxSLayerRegistry> layersRegistry = new ArrayList<>();
 
     /**
      * Constructor
@@ -291,7 +291,7 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
             return Collections.<String>emptyList();
         }
 
-        List<String> uuids = new LinkedList<String>();
+        List<String> uuids = new LinkedList<>();
 
         //--- Loading categories and groups
         localCateg = new CategoryMapper(context);
@@ -308,7 +308,7 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
 
         Element md = null;
 
-        Map<String, Object> xsltParams = new HashMap<String, Object>();
+        Map<String, Object> xsltParams = new HashMap<>();
         xsltParams.put("lang", params.lang);
         xsltParams.put("topic", params.topic);
         xsltParams.put("uuid", uuid);
@@ -357,7 +357,7 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
             Element clone = (Element) capa.clone();
             document.addContent(clone);
             List<Element> layers = xp.selectNodes(document);
-            if (layers.size() > 0) {
+            if (!layers.isEmpty()) {
                 log.info("  - Number of layers, featureTypes, Coverages or process found : " + layers.size());
 
                 for (Element layer : layers) {
@@ -488,8 +488,8 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
             schema = dataMan.getMetadataSchema(templateId);
         }
 
-        Element record = new Element("record");
-        record.addContent(existingRecordXml);
+        Element recordEl = new Element("record");
+        recordEl.addContent(existingRecordXml);
 
 
         Element getCapabilities = new Element("getCapabilities");
@@ -499,7 +499,7 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
 
 
         Element root = new Element("root");
-        root.addContent(record);
+        root.addContent(recordEl);
         root.addContent(getCapabilities);
 
         Path styleSheet = schemaMan.getSchemaDir(schema).
@@ -589,7 +589,7 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
                 name = layer.getChild("Name");
             }
             //--- For the moment, skip non-requestable category layers
-            if (name == null || name.getValue().trim().equals("")) {
+            if (name == null || StringUtils.isBlank(name.getValue())) {
                 log.info("  - skipping layer with no name element");
                 return null;
             }
@@ -692,7 +692,7 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
                     } else if (xml.getName().equals("ProcessOfferings")) {
                         // Convert WPS process metadata to ISO record
 
-                        Map<String, Object> xsltParams = new HashMap<String, Object>();
+                        Map<String, Object> xsltParams = new HashMap<>();
                         xsltParams.put("lang", params.lang);
                         xsltParams.put("topic", params.topic);
                         xsltParams.put("Name", reg.name);
@@ -759,7 +759,7 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
         if (!loaded && params.useLayer) {
             try {
                 //--- set XSL param to filter on layer and set uuid
-                Map<String, Object> param = new HashMap<String, Object>();
+                Map<String, Object> param = new HashMap<>();
                 param.put("uuid", reg.uuid);
                 param.put("Name", reg.name);
                 param.put("serviceType", params.ogctype.substring(0, 3));
@@ -824,13 +824,13 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
                 setHarvested(true).
                 setUuid(params.getUuid()).
                 setUri(params.url);
-            if (params.datasetCategory != null && !params.datasetCategory.equals("")) {
-                MetadataCategory metadataCategory = context.getBean(MetadataCategoryRepository.class).findById(Integer.parseInt(params.datasetCategory)).get();
+            if (params.datasetCategory != null && StringUtils.isNotBlank(params.datasetCategory)) {
+                Optional<MetadataCategory> metadataCategoryOptional = context.getBean(MetadataCategoryRepository.class).findById(Integer.parseInt(params.datasetCategory));
 
-                if (metadataCategory == null) {
+                if (!metadataCategoryOptional.isPresent()) {
                     throw new IllegalArgumentException("No category found with name: " + params.datasetCategory);
                 }
-                metadata.getCategories().add(metadataCategory);
+                metadata.getCategories().add(metadataCategoryOptional.get());
             }
             if (!dataMan.existsMetadataUuid(reg.uuid)) {
                 result.addedMetadata++;
@@ -859,7 +859,7 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
 
                 if (params.ogctype.startsWith("WMS") && params.createThumbnails && isISOPlugin) {
                     List<ISOPlugin.Extent> extents = ((ISOPlugin) plugin).getExtents(xml);
-                    if (extents.size() > 0) {
+                    if (!extents.isEmpty()) {
                         reg.minx = extents.get(0).xmin;
                         reg.maxx = extents.get(0).xmax;
                         reg.miny = extents.get(0).ymin;

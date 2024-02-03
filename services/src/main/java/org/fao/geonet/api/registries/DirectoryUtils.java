@@ -1,10 +1,33 @@
+//=============================================================================
+//===	Copyright (C) 2001-2024 Food and Agriculture Organization of the
+//===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
+//===	and United Nations Environment Programme (UNEP)
+//===
+//===	This program is free software; you can redistribute it and/or modify
+//===	it under the terms of the GNU General Public License as published by
+//===	the Free Software Foundation; either version 2 of the License, or (at
+//===	your option) any later version.
+//===
+//===	This program is distributed in the hope that it will be useful, but
+//===	WITHOUT ANY WARRANTY; without even the implied warranty of
+//===	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+//===	General Public License for more details.
+//===
+//===	You should have received a copy of the GNU General Public License
+//===	along with this program; if not, write to the Free Software
+//===	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+//===
+//===	Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+//===	Rome - Italy. email: geonetwork@osgeo.org
+//==============================================================================
+
 package org.fao.geonet.api.registries;
 
 import com.google.common.collect.Table;
-import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.xlink.XLink;
 import org.apache.commons.lang.StringUtils;
+import org.apache.lucene.search.TotalHits;
 import org.elasticsearch.action.search.SearchResponse;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.kernel.DataManager;
@@ -28,6 +51,13 @@ public class DirectoryUtils {
     private static final String LOGGER = DirectoryApi.LOGGER;
 
     /**
+     * Private constructor, to avoid instantiate the class.
+     */
+    private DirectoryUtils() {
+
+    }
+
+    /**
      * Save entries and metadata
      */
     public static Map<String, Exception> saveEntries(ServiceContext context,
@@ -41,9 +71,11 @@ public class DirectoryUtils {
         Table<String, String, Element> entries = collectResults.getEntries();
         Iterator<String> entriesIterator =
             entries.rowKeySet().iterator();
-        AbstractMetadata record = collectResults.getRecord();
-        boolean validate = false, ufo = false,
-            notify = false, publicForGroup = true, refreshReaders = false;
+        AbstractMetadata metadataRecord = collectResults.getRecord();
+        boolean validate = false;
+        boolean ufo = false;
+        boolean publicForGroup = true;
+        boolean refreshReaders = false;
         Map<String, Exception> errors = new HashMap<>();
 
         while (entriesIterator.hasNext()) {
@@ -58,7 +90,7 @@ public class DirectoryUtils {
                 AbstractMetadata subtemplate = new Metadata();
                 subtemplate.setUuid(uuid);
                 subtemplate.getDataInfo().
-                    setSchemaId(record.getDataInfo().getSchemaId()).
+                    setSchemaId(metadataRecord.getDataInfo().getSchemaId()).
                     setRoot(entry.getQualifiedName()).
                     setType(MetadataType.SUB_TEMPLATE);
                 subtemplate.getSourceInfo().
@@ -99,7 +131,7 @@ public class DirectoryUtils {
         if (saveRecord) {
             try {
                 dataManager.updateMetadata(
-                    context, "" + record.getId(), record.getXmlData(validate),
+                    context, "" + metadataRecord.getId(), metadataRecord.getXmlData(validate),
                     validate, ufo, context.getLanguage(),
                     new ISODate().toString(), true, IndexingMode.none);
             } catch (Exception e) {
@@ -114,10 +146,10 @@ public class DirectoryUtils {
      * record, and the identifier match, only one is reported (the last one).
      */
     public static CollectResults collectEntries(ServiceContext context,
-                                                AbstractMetadata record,
+                                                AbstractMetadata metadataRecord,
                                                 String xpath,
                                                 String identifierXpath) throws Exception {
-        return collectEntries(context, record, xpath, identifierXpath, null, false, false, null);
+        return collectEntries(context, metadataRecord, xpath, identifierXpath, null, false, false, null);
     }
 
     /**
@@ -126,27 +158,27 @@ public class DirectoryUtils {
      * propertiesToCopy
      */
     public static CollectResults synchronizeEntries(ServiceContext context,
-                                                    AbstractMetadata record,
+                                                    AbstractMetadata metadataRecord,
                                                     String xpath,
                                                     String identifierXpath,
                                                     List<String> propertiesToCopy,
                                                     boolean substituteAsXLink,
                                                     String directoryFilterQuery) throws Exception {
-        return collectEntries(context, record, xpath, identifierXpath,
+        return collectEntries(context, metadataRecord, xpath, identifierXpath,
             propertiesToCopy, substituteAsXLink, true, directoryFilterQuery);
     }
 
 
     private static CollectResults collectEntries(ServiceContext context,
-                                                 AbstractMetadata record,
+                                                 AbstractMetadata metadataRecord,
                                                  String xpath,
                                                  String identifierXpath,
                                                  List<String> propertiesToCopy,
                                                  boolean substituteAsXLink,
                                                  boolean updateFromDirectory,
                                                  String directoryFilterQuery) throws Exception {
-        CollectResults collectResults = new CollectResults(record);
-        Map<String, List<Namespace>> namespaceList = new HashMap<String, List<Namespace>>();
+        CollectResults collectResults = new CollectResults(metadataRecord);
+        Map<String, List<Namespace>> namespaceList = new HashMap<>();
 
         MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
 
@@ -154,18 +186,18 @@ public class DirectoryUtils {
             Log.debug(LOGGER, String.format(
                 "Collecting directory entries for record '%s' " +
                     "using XPath '%s' and identifier XPath '%s'.",
-                record.getUuid(), xpath, identifierXpath
+                metadataRecord.getUuid(), xpath, identifierXpath
             ));
         }
 
-        Element md = record.getXmlData(false);
-        MetadataDataInfo mdInfo = record.getDataInfo();
+        Element md = metadataRecord.getXmlData(false);
+        MetadataDataInfo mdInfo = metadataRecord.getDataInfo();
         String localXlinkUrlPrefix = "local://" + context.getLanguage() + "/subtemplate?uuid=";
 
         // Build a list of all Namespaces in the metadata document
         List<Namespace> metadataNamespaces = namespaceList.get(mdInfo.getSchemaId());
         if (metadataNamespaces == null) {
-            metadataNamespaces = new ArrayList<Namespace>();
+            metadataNamespaces = new ArrayList<>();
             Namespace ns = md.getNamespace();
             if (ns != null) {
                 metadataNamespaces.add(ns);
@@ -180,7 +212,7 @@ public class DirectoryUtils {
         if (Log.isDebugEnabled(LOGGER)) {
             Log.debug(LOGGER, String.format(
                 "%d nodes matching XPath '%s' in record '%s'.",
-                nodes.size(), xpath, record.getUuid()
+                nodes.size(), xpath, metadataRecord.getUuid()
             ));
         }
 
@@ -264,7 +296,7 @@ public class DirectoryUtils {
                         }
                     } else {
                         // or search in Lucene
-                        Map<String, String> parameters = new HashMap();
+                        Map<String, String> parameters = new HashMap<>();
                         if (directoryFilterQuery != null) {
                             String[] tokens = directoryFilterQuery.split(":");
                             if (tokens.length == 2) {
@@ -397,8 +429,6 @@ public class DirectoryUtils {
      * @return The record identifier
      */
     private static String search(ServiceContext context, Map<String, String> searchParameters) {
-        ServiceConfig _config = new ServiceConfig();
-
         EsSearchManager searchMan = context.getBean(EsSearchManager.class);
 
         StringBuilder query = new StringBuilder("+isTemplate:s");
@@ -408,7 +438,8 @@ public class DirectoryUtils {
 
         try {
             SearchResponse results = searchMan.query(query.toString(), null, 0, 1);
-            if (results.getHits().getTotalHits().value > 0) {
+            TotalHits totalHits = results.getHits().getTotalHits();
+            if ((totalHits != null) && (totalHits.value > 0)) {
                 return results.getHits().getHits()[0].getId();
             }
         } catch (Exception e) {

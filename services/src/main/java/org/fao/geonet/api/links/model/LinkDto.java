@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2024 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -32,10 +32,7 @@ import org.fao.geonet.repository.UserRepository;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * DTO class for user link information {@link link}.
@@ -162,9 +159,9 @@ public class LinkDto implements Serializable {
         }
 
         UserRepository userRepository = ApplicationContextHolder.get().getBean(UserRepository.class);
-        User user = userRepository.findById(this.getCreatorId()).get();
-        if (user != null) {
-            userSearch.setCreator(user);
+        Optional<User> userOptional = userRepository.findById(this.getCreatorId());
+        if (userOptional.isPresent()) {
+            userSearch.setCreator(userOptional.get());
         }
 
         this.getNames().forEach((key, value) -> userSearch.getLabelTranslations().put(key, value));
@@ -178,7 +175,7 @@ public class LinkDto implements Serializable {
         if (o == null || getClass() != o.getClass()) return false;
         LinkDto that = (LinkDto) o;
         return id == that.id &&
-            featuredType == that.featuredType &&
+            featuredType.equals(that.featuredType) &&
             creatorId == that.creatorId &&
             url.equals(that.url) &&
             creationDate.equals(that.creationDate) &&

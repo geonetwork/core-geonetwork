@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2023 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2024 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -81,17 +81,13 @@ public class ImageReplacedElementFactory implements ReplacedElementFactory {
         this.mapRenderer = mapRenderer;
     }
 
-    private static Set<String> getSupportedExts() {
+    private static synchronized Set<String> getSupportedExts() {
         if (imgFormatExts == null) {
-            synchronized (ImageReplacedElementFactory.class) {
-                if (imgFormatExts == null) {
-                    Set<String> tmpImgFormatExts = Sets.newHashSet();
-                    for (String ext : ImageIO.getReaderFileSuffixes()) {
-                        tmpImgFormatExts.add(ext.toLowerCase());
-                    }
-                    imgFormatExts = tmpImgFormatExts;
-                }
+            Set<String> tmpImgFormatExts = Sets.newHashSet();
+            for (String ext : ImageIO.getReaderFileSuffixes()) {
+                tmpImgFormatExts.add(ext.toLowerCase());
             }
+            imgFormatExts = tmpImgFormatExts;
         }
 
         return imgFormatExts;
