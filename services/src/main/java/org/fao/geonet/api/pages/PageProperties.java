@@ -21,6 +21,7 @@ public class PageProperties implements Serializable {
     private String label;
     private String icon;
     private Page.PageFormat format;
+    private String group;
     private Page page;
 
     public PageProperties() {
@@ -36,6 +37,7 @@ public class PageProperties implements Serializable {
         status = p.getStatus();
         label = p.getLabel();
         icon = p.getIcon();
+        group = p.getAccessExpression();
     }
 
     @Override
@@ -113,5 +115,13 @@ public class PageProperties implements Serializable {
 
     public void setIcon(String icon) {
         this.icon = icon;
+    }
+
+    public String getGroup() {
+        return group;
+    }
+
+    public void setGroup(String group) {
+        this.group = group;
     }
 }

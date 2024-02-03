@@ -41,6 +41,7 @@
       $scope.staticPageSelected = null;
       $scope.queue = [];
       $scope.uploadScope = angular.element("#gn-static-page-edit").scope();
+      $scope.groups = [];
 
       $scope.unsupportedFile = false;
       $scope.$watchCollection("queue", function (n, o) {
@@ -61,6 +62,13 @@
         });
         $http.get("../api/pages/config/sections").then(function (r) {
           $scope.sections = r.data;
+        });
+      }
+
+      function loadGroups() {
+        $http.get("../api/groups").then(function (r) {
+          $scope.groups = r.data;
+          console.log("group loaded: ", $scope.groups);
         });
       }
 
@@ -144,6 +152,7 @@
 
       $scope.addStaticPage = function () {
         $scope.isUpdate = false;
+        $scope.isGroupEnabled = false;
         $scope.staticPageSelected = {
           language: "",
           pageId: "",
@@ -152,6 +161,7 @@
           data: "",
           content: "",
           status: "HIDDEN",
+          group: "",
           label: "",
           sections: []
         };
@@ -164,6 +174,7 @@
       $scope.selectStaticPage = function (v) {
         $scope.isUpdate = true;
         $scope.staticPageSelected = v;
+        $scope.isGroupEnabled = $scope.staticPageSelected.status == "PRIVATE_GROUP";
 
         var link =
           "api/pages/" +
@@ -225,6 +236,13 @@
             });
         }
       };
+      $scope.updateGroupSelection = function () {
+        if ($scope.staticPageSelected.status === "PRIVATE_GROUP") {
+          $scope.isGroupEnabled = true;
+        } else {
+          $scope.isGroupEnabled = false;
+        }
+      };
 
       $scope.deleteStaticPageConfig = function () {
         $("#gn-confirm-remove-static-page").modal("show");
@@ -262,6 +280,7 @@
       loadFormats();
       loadDbLanguages();
       loadStaticPages();
+      loadGroups();
     }
   ]);
 })();

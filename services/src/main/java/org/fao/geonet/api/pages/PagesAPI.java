@@ -202,6 +202,7 @@ public class PagesAPI {
         Page.PageFormat format = pageProperties.getFormat();
         String newLabel = pageProperties.getLabel();
         String newIcon = pageProperties.getIcon();
+        String group = pageProperties.getGroup();
 
         checkValidLanguage(language);
 
@@ -240,7 +241,8 @@ public class PagesAPI {
                 pageProperties.getSections() != null ? pageProperties.getSections() : pageToUpdate.getSections(),
                 pageProperties.getStatus() != null ? pageProperties.getStatus() : pageToUpdate.getStatus(),
                 newLabel != null ? newLabel : pageToUpdate.getLabel(),
-                newIcon != null ? newIcon : pageToUpdate.getIcon());
+                newIcon != null ? newIcon : pageToUpdate.getIcon(),
+                group != null ? group : pageToUpdate.getAccessExpression());
 
             pageRepository.save(pageCopy);
             pageRepository.delete(pageToUpdate);
@@ -251,6 +253,7 @@ public class PagesAPI {
             pageToUpdate.setStatus(pageProperties.getStatus() != null ? pageProperties.getStatus() : pageToUpdate.getStatus());
             pageToUpdate.setLabel(newLabel);
             pageToUpdate.setIcon(newIcon);
+            pageToUpdate.setAccessExpression(group != null ? group : pageToUpdate.getAccessExpression());
             pageRepository.save(pageToUpdate);
         }
 
@@ -349,7 +352,7 @@ public class PagesAPI {
         final UserSession us = ApiUtils.getUserSession(session);
         if (page.get().getStatus().equals(Page.PageStatus.HIDDEN) && us.getProfile() != Profile.Administrator) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        } else if (page.get().getStatus().equals(Page.PageStatus.PRIVATE) && (us.getProfile() == null || us.getProfile() == Profile.Guest)) {
+        } else if ((page.get().getStatus().equals(Page.PageStatus.PRIVATE) || page.get().getStatus().equals(Page.PageStatus.PRIVATE_GROUP)) && (us.getProfile() == null || us.getProfile() == Profile.Guest)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         } else {
             String content;
@@ -396,6 +399,7 @@ public class PagesAPI {
         for (final Page page : unfilteredResult) {
             if (page.getStatus().equals(Page.PageStatus.HIDDEN) && us.getProfile() == Profile.Administrator
                 || page.getStatus().equals(Page.PageStatus.PRIVATE) && us.getProfile() != null && us.getProfile() != Profile.Guest
+                || page.getStatus().equals(Page.PageStatus.PRIVATE_GROUP) && us.getProfile() != null && us.getProfile() != Profile.Guest
                 || page.getStatus().equals(Page.PageStatus.PUBLIC)
                 || page.getStatus().equals(Page.PageStatus.PUBLIC_ONLY) && !us.isAuthenticated()) {
                 if (section == null) {
@@ -504,7 +508,7 @@ public class PagesAPI {
             final UserSession us = ApiUtils.getUserSession(session);
             if (page.getStatus().equals(Page.PageStatus.HIDDEN) && us.getProfile() != Profile.Administrator) {
                 return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-            } else if (page.getStatus().equals(Page.PageStatus.PRIVATE) && (us.getProfile() == null || us.getProfile() == Profile.Guest)) {
+            } else if ((page.getStatus().equals(Page.PageStatus.PRIVATE) || page.getStatus().equals(Page.PageStatus.PRIVATE_GROUP)) && (us.getProfile() == null || us.getProfile() == Profile.Guest)) {
                 return new ResponseEntity<>(HttpStatus.FORBIDDEN);
             } else {
                 return new ResponseEntity<>(new org.fao.geonet.api.pages.PageProperties(page), HttpStatus.OK);
@@ -536,7 +540,7 @@ public class PagesAPI {
      */
     protected Page getEmptyHiddenDraftPage(final String language, final String pageId, final String label, final String icon, final Page.PageFormat format) {
         final List<Page.PageSection> sections = new ArrayList<>();
-        return new Page(new PageIdentity(language, pageId), null, null, format, sections, Page.PageStatus.HIDDEN, label, icon);
+        return new Page(new PageIdentity(language, pageId), null, null, format, sections, Page.PageStatus.HIDDEN, label, icon, null);
     }
 
     /**

@@ -56,6 +56,7 @@ public class Page extends GeonetEntity implements Serializable {
     private PageFormat format;
     private List<PageSection> sections;
     private PageStatus status;
+    private String accessExpression;
 
     private String label;
     private String icon;
@@ -64,7 +65,7 @@ public class Page extends GeonetEntity implements Serializable {
 
     }
 
-    public Page(PageIdentity pageIdentity, byte[] data, String link, PageFormat format, List<PageSection> sections, PageStatus status, String label, String icon) {
+    public Page(PageIdentity pageIdentity, byte[] data, String link, PageFormat format, List<PageSection> sections, PageStatus status, String label, String icon, String accessExpression) {
         super();
         this.pageIdentity = pageIdentity;
         this.data = data;
@@ -74,10 +75,11 @@ public class Page extends GeonetEntity implements Serializable {
         this.status = status;
         this.label = label;
         this.icon = icon;
+        this.accessExpression = accessExpression;
     }
 
     public enum PageStatus {
-        PUBLIC, PUBLIC_ONLY, PRIVATE, HIDDEN;
+        PUBLIC, PUBLIC_ONLY, PRIVATE_GROUP, PRIVATE, HIDDEN;
     }
 
     public enum PageFormat {
@@ -136,6 +138,11 @@ public class Page extends GeonetEntity implements Serializable {
         return status;
     }
 
+    @Column(nullable = true, name = "access_expression")
+    public String getAccessExpression() {
+        return accessExpression;
+    }
+
     @Column(nullable = false)
     public String getLabel() {
         return label;
@@ -177,6 +184,8 @@ public class Page extends GeonetEntity implements Serializable {
     public void setIcon(String icon) {
         this.icon = icon;
     }
+
+    public void setAccessExpression(String accessExpression) { this.accessExpression = accessExpression; }
 
     @Override
     public String toString() {
