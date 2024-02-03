@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2023 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2024 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -150,7 +150,7 @@ public final class XslUtil {
         if (value instanceof HashMap) {
             @SuppressWarnings("rawtypes")
             HashMap map = (HashMap) value;
-            List<Polygon> geoms = new ArrayList<Polygon>();
+            List<Polygon> geoms = new ArrayList<>();
             for (Object entry : map.values()) {
                 addToList(geoms, entry);
             }
@@ -283,14 +283,13 @@ public final class XslUtil {
     private static final char CS_DEFAULT = ',';
     private static final char TS_WKT = ',';
     private static final char CS_WKT = ' ';
-    private static ThreadLocal<Boolean> allowScripting = new InheritableThreadLocal<Boolean>();
+    private static ThreadLocal<Boolean> allowScripting = new InheritableThreadLocal<>();
 
     /**
      * clean the src of ' and <>
      */
     public static String clean(Object src) {
-        String result = src.toString().replaceAll("'", "\'").replaceAll("[><\n\r]", " ");
-        return result;
+        return src.toString().replaceAll("'", "\'").replaceAll("[><\n\r]", " ");
     }
 
     /**
@@ -308,8 +307,7 @@ public final class XslUtil {
      * Replace the pattern with the substitution
      */
     public static String replace(Object src, Object pattern, Object substitution) {
-        String result = src.toString().replaceAll(pattern.toString(), substitution.toString());
-        return result;
+        return src.toString().replaceAll(pattern.toString(), substitution.toString());
     }
 
     public static boolean isCasEnabled() {
@@ -372,7 +370,6 @@ public final class XslUtil {
 
         if (uiSettingsRepository != null) {
             Optional<UiSetting> oneOpt = null;
-            UiSetting one = null;
             if (portal != null && StringUtils.isNotEmpty(portal.getUiConfig())) {
                 oneOpt = uiSettingsRepository.findById(portal.getUiConfig());
             }
@@ -864,8 +861,8 @@ public final class XslUtil {
     }
 
     public static String getIndexFieldById(Object appName, Object id, Object field, Object lang) {
-        String fieldname = field.toString();
-        String language = (lang.toString().equals("") ? null : lang.toString());
+//        String fieldname = field.toString();
+//        String language = (lang.toString().equals("") ? null : lang.toString());
         throw new NotImplementedException("getIndexFieldById not implemented in ES");
 //        try {
 //            String fieldValue = LuceneSearcher.getMetadataFromIndexById(language, id.toString(), fieldname);
@@ -1063,7 +1060,10 @@ public final class XslUtil {
             Element elemRet = new Element("EX_GeographicBoundingBox", ISO19139Namespaces.GMD);
 
             boolean forceXY = Boolean.getBoolean(System.getProperty("org.geotools.referencing.forceXY", "false"));
-            Element elemminx, elemmaxx, elemminy, elemmaxy;
+            Element elemminx;
+            Element elemmaxx;
+            Element elemminy;
+            Element elemmaxy;
             if (forceXY) {
                 elemminx = new Element("westBoundLongitude", ISO19139Namespaces.GMD)
                     .addContent(new Element("Decimal", ISO19139Namespaces.GCO).setText("" + reprojected.getMinX()));
@@ -1155,7 +1155,7 @@ public final class XslUtil {
                             "XslUtil getRecord warning: Can't retrieve record %s (schema %s) in schema %s. A formatter is required for this conversion.",
                             uuid, metadataSchema, schema));
 
-                    };
+                    }
                     metadata = Xml.transform(metadata, styleSheet);
                 }
                 DOMOutputter outputter = new DOMOutputter();
@@ -1480,7 +1480,7 @@ public final class XslUtil {
 
 
     public static List<String> getKeywordHierarchy(String keyword, String thesaurusId, String langCode) {
-        List<String> res = new ArrayList<String>();
+        List<String> res = new ArrayList<>();
         if (StringUtils.isEmpty(thesaurusId)) {
             return res;
         }
@@ -1683,19 +1683,19 @@ public final class XslUtil {
         SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
         String recordUrlPrefix = settingManager.getNodeURL() + "api/records/";
         ArrayList<Element> listOfLinks = new ArrayList<>();
-        hits.forEach(record -> {
+        hits.forEach(recordHit -> {
             Element recordLink = new Element("recordLink");
             recordLink.setAttribute("type", "object");
             ObjectNode recordLinkProperties = mapper.createObjectNode();
 
-            recordLinkProperties.put("to", record.getId());
+            recordLinkProperties.put("to", recordHit.getId());
             recordLinkProperties.put("origin", "catalog");
             recordLinkProperties.put("created", "bySearch");
-            Map<String, String> titleObject = (Map<String, String>) record.getSourceAsMap().get("resourceTitleObject");
+            Map<String, String> titleObject = (Map<String, String>) recordHit.getSourceAsMap().get("resourceTitleObject");
             if (titleObject != null) {
                 recordLinkProperties.put("title", titleObject.get("default"));
             }
-            recordLinkProperties.put("url", recordUrlPrefix + record.getId());
+            recordLinkProperties.put("url", recordUrlPrefix + recordHit.getId());
             recordLinkProperties.put("type", type);
 
             try {

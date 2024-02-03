@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2007 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2024 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -53,7 +53,7 @@ import static org.springframework.http.HttpStatus.CREATED;
 public class AtomHarvester {
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Scan records for ATOM feeds",
-        description = "Check in the settings which protocol identify ATOM feeds in your catalogue." +
+        description = "Check in the settings which protocol identify ATOM feeds in your catalogue. " +
             "Only applies to ISO19139 records.")
     @GetMapping(
         value = "/scan",

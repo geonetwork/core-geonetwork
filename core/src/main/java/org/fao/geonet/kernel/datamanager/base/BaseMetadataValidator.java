@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2011 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2024 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -254,7 +254,7 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
         String schemaLoc = md.getAttributeValue("schemaLocation", Namespaces.XSI);
         LOGGER.debug("Extracted schemaLocation of {}", schemaLoc);
         boolean noChoiceButToUseSchemaLocation = schema == null;
-        boolean isSchemaLocationDefinedInMd = schemaLoc != null && schemaLoc != "";
+        boolean isSchemaLocationDefinedInMd = StringUtils.isNotBlank(schemaLoc);
 
         if (noChoiceButToUseSchemaLocation || isSchemaLocationDefinedInMd) {
             return Xml.validateInfo(md, eh, schema);

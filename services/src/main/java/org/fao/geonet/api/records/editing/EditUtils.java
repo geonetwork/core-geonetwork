@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2007 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2024 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -44,10 +44,7 @@ import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.*;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 /**
@@ -91,7 +88,7 @@ class EditUtils {
         for (Object descendant : list) {
             if (descendant instanceof Element) {
                 Element e = (Element) descendant;
-                if (e.getName() != Edit.RootChild.ELEMENT
+                if (!e.getName().equals(Edit.RootChild.ELEMENT)
                     && e.getNamespace() != Edit.NAMESPACE) {
                     Element geonetRef = e.getChild(Edit.RootChild.ELEMENT, Edit.NAMESPACE);
                     if (geonetRef == null) {
@@ -154,7 +151,7 @@ class EditUtils {
         //--- build hashtable with changes
         //--- each change is a couple (pos, value)
 
-        Map<String, String> htChanges = new HashMap<String, String>(100);
+        Map<String, String> htChanges = new HashMap<>(100);
         @SuppressWarnings("unchecked")
         List<Element> list = params.getChildren();
         for (Element el : list) {
@@ -245,7 +242,7 @@ class EditUtils {
                 // by the XML Serializer when an update is submitted - a better solution is
                 // to modify the argument handler in Jeeves to store arguments with their name
                 // as a value rather than as the element itself
-                Integer indexColon = attr.indexOf("COLON");
+                int indexColon = attr.indexOf("COLON");
                 if (indexColon != -1) {
                     String prefix = attr.substring(0, indexColon);
                     String localname = attr.substring(indexColon + 5);
@@ -317,7 +314,7 @@ class EditUtils {
                         .getTranslationForElement(parent, language);
 
                     // Element exists, set the value
-                    if (elems != null && elems.size() > 0) {
+                    if (elems != null && !elems.isEmpty()) {
                         elems.get(0).setText(val);
                     } else {
                         ((MultilingualSchemaPlugin) schemaPlugin).addTranslationToElement(
