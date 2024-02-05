@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2024 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -25,8 +25,6 @@ package org.fao.geonet.api.records.formatters.cache;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Joiner;
-import org.fao.geonet.ApplicationContextHolder;
-import org.fao.geonet.api.records.attachments.FilesystemStoreConfig;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.lib.Lib;
@@ -269,7 +267,7 @@ public class FilesystemStore implements PersistentStore {
     @Override
     public void setPublished(int metadataId, final boolean published) throws IOException {
         // TODO: Datastore review
-        final Path metadataDir = Lib.resource.getMetadataDir(getBaseCacheDir().resolve(PRIVATE), String.valueOf(metadataId), ApplicationContextHolder.get().getBean(FilesystemStoreConfig.class));
+        final Path metadataDir = Lib.resource.getMetadataDir(getBaseCacheDir().resolve(PRIVATE), String.valueOf(metadataId));
         if (Files.exists(metadataDir)) {
             Files.walkFileTree(metadataDir, new SimpleFileVisitor<Path>() {
                 @Override
@@ -375,7 +373,7 @@ public class FilesystemStore implements PersistentStore {
         final String sMdId = String.valueOf(key.mdId);
 
 
-        final Path metadataDir = Lib.resource.getMetadataDir(getBaseCacheDir().resolve(accessDir), sMdId, ApplicationContextHolder.get().getBean(FilesystemStoreConfig.class));
+        final Path metadataDir = Lib.resource.getMetadataDir(getBaseCacheDir().resolve(accessDir), sMdId);
         String hidden = key.hideWithheld ? WITHHELD_MD_DIRNAME : FULL_MD_NAME;
         return metadataDir.resolve(key.formatterId).resolve(key.lang).resolve(hidden).resolve(key.hashCode() + "." + key.formatType.name());
     }

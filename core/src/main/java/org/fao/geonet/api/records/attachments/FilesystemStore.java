@@ -1,6 +1,6 @@
 /*
  * =============================================================================
- * ===	Copyright (C) 2001-2023 Food and Agriculture Organization of the
+ * ===	Copyright (C) 2001-2024 Food and Agriculture Organization of the
  * ===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * ===	and United Nations Environment Programme (UNEP)
  * ===
@@ -80,7 +80,7 @@ public class FilesystemStore extends AbstractStore {
                                                String filter, Boolean approved) throws Exception {
         int metadataId = canDownload(context, metadataUuid, visibility, approved);
 
-        Path metadataDir = Lib.resource.getMetadataDir(getDataDirectory(context), metadataId, filesystemStoreConfig);
+        Path metadataDir = Lib.resource.getMetadataDir(getDataDirectory(context), metadataId);
         Path resourceTypeDir = calculateMetadataDir(metadataDir, visibility);
 
         List<MetadataResource> resourceList = new ArrayList<>();
@@ -109,7 +109,7 @@ public class FilesystemStore extends AbstractStore {
         int metadataId = canDownload(context, metadataUuid, visibility, approved);
         checkResourceId(resourceId);
 
-        final Path resourceFile = Lib.resource.getDir(visibility.toString(), metadataId, filesystemStoreConfig).
+        final Path resourceFile = Lib.resource.getDir(visibility.toString(), metadataId).
                 resolve(getFilename(metadataUuid, resourceId));
 
         if (Files.exists(resourceFile)) {
@@ -132,8 +132,7 @@ public class FilesystemStore extends AbstractStore {
         int metadataId = getAndCheckMetadataId(metadataUuid, approved);
         checkResourceId(resourceId);
 
-        final Path resourceFile = Lib.resource.getDir(visibility.toString(), metadataId,
-                filesystemStoreConfig).
+        final Path resourceFile = Lib.resource.getDir(visibility.toString(), metadataId).
             resolve(getFilename(metadataUuid, resourceId));
 
         if (Files.exists(resourceFile)) {
@@ -183,7 +182,7 @@ public class FilesystemStore extends AbstractStore {
     public MetadataResourceContainer getResourceContainerDescription(ServiceContext context, String metadataUuid, Boolean approved) throws Exception {
 
         int metadataId = getAndCheckMetadataId(metadataUuid, approved);
-        final Path metadataDir = Lib.resource.getMetadataDir(getDataDirectory(context), metadataId, filesystemStoreConfig);
+        final Path metadataDir = Lib.resource.getMetadataDir(getDataDirectory(context), metadataId);
         if (!Files.exists(metadataDir)) {
             try {
                 Files.createDirectories(metadataDir);
@@ -233,7 +232,7 @@ public class FilesystemStore extends AbstractStore {
     @Override
     public String delResources(ServiceContext context, String metadataUuid, Boolean approved) throws Exception {
         int metadataId = canEdit(context, metadataUuid, approved);
-        Path metadataDir = Lib.resource.getMetadataDir(getDataDirectory(context), metadataId, filesystemStoreConfig);
+        Path metadataDir = Lib.resource.getMetadataDir(getDataDirectory(context), metadataId);
         try {
             IO.deleteFileOrDirectory(metadataDir, true);
             return String.format("Metadata '%s' directory removed.", metadataId);
@@ -305,7 +304,7 @@ public class FilesystemStore extends AbstractStore {
 
     private Path ensureDirectory(final ServiceContext context, final int metadataId, final String resourceId,
                                  final MetadataResourceVisibility visibility) throws IOException {
-        final Path metadataDir = Lib.resource.getMetadataDir(getDataDirectory(context), metadataId, filesystemStoreConfig);
+        final Path metadataDir = Lib.resource.getMetadataDir(getDataDirectory(context), metadataId);
         final Path newFolderPath = calculateMetadataDir(metadataDir, visibility);
         if (!Files.exists(newFolderPath)) {
             try {

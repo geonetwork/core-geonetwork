@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2023 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2024 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -65,10 +65,9 @@ public class ResourceLib {
      * @param id     The metadata identifier
      * @return The metadata directory
      */
-    public Path getDir(String access, int id,
-                       FilesystemStoreConfig filesystemStoreConfig) throws IOException {
-        Path mdDir = getMetadataDir(ApplicationContextHolder.get().getBean(GeonetworkDataDirectory.class), id,
-            filesystemStoreConfig);
+    public Path getDir(String access, int id) throws IOException {
+        Path mdDir = getMetadataDir(ApplicationContextHolder.get().getBean(GeonetworkDataDirectory.class), id);
+        FilesystemStoreConfig filesystemStoreConfig = ApplicationContextHolder.get().getBean(FilesystemStoreConfig.class);
 
         if (filesystemStoreConfig.getFolderPrivilegesStrategy() == FilesystemStoreConfig.FolderPrivilegesStrategy.DEFAULT) {
             String subDir = (access != null && access.equals(Params.Access.PUBLIC)) ? Params.Access.PUBLIC
@@ -79,9 +78,8 @@ public class ResourceLib {
         }
     }
 
-    public Path getMetadataDir(GeonetworkDataDirectory dataDirectory, int id,
-                               FilesystemStoreConfig filesystemStoreConfig) throws IOException {
-        return getMetadataDir(dataDirectory, id + "", filesystemStoreConfig);
+    public Path getMetadataDir(GeonetworkDataDirectory dataDirectory, int id) throws IOException {
+        return getMetadataDir(dataDirectory, id + "");
     }
 
     /**
@@ -90,10 +88,9 @@ public class ResourceLib {
      * @param id The metadata identifier
      * @return The metadata data directory
      */
-    public Path getMetadataDir(GeonetworkDataDirectory dataDirectory, String id,
-                               FilesystemStoreConfig filesystemStoreConfig) throws IOException {
+    public Path getMetadataDir(GeonetworkDataDirectory dataDirectory, String id) throws IOException {
         Path dataDir = dataDirectory.getMetadataDataDir();
-        return getMetadataDir(dataDir, id, filesystemStoreConfig);
+        return getMetadataDir(dataDir, id);
     }
 
     /**
@@ -103,14 +100,15 @@ public class ResourceLib {
      * @param id      The metadata identifier
      * @return The metadata data directory
      */
-    public Path getMetadataDir(Path dataDir, String id, FilesystemStoreConfig filesystemStoreConfig) throws IOException {
+    public Path getMetadataDir(Path dataDir, String id) throws IOException {
+        FilesystemStoreConfig filesystemStoreConfig = ApplicationContextHolder.get().getBean(FilesystemStoreConfig.class);
 
         if (filesystemStoreConfig.getFolderStructureType().equals(FilesystemStoreConfig.FolderStructureType.DEFAULT)) {
             String group = pad(Integer.parseInt(id) / 100, 3);
             String groupDir = group + "00-" + group + "99";
             return dataDir.resolve(groupDir).resolve(id);
         } else {
-            return getCustomMetadataFolder(dataDir, id, filesystemStoreConfig);
+            return getCustomMetadataFolder(dataDir, id);
         }
     }
 
@@ -153,24 +151,6 @@ public class ResourceLib {
             denyAccess(context);
     }
 
-    /**
-     * @return the absolute path of the folder choosen to store all deleted metadata
-     */
-    @Deprecated
-    public Path getRemovedDir(ServiceContext context) {
-        GeonetContext gc = (GeonetContext) context
-            .getHandlerContext(Geonet.CONTEXT_NAME);
-        return gc.getBean(GeonetworkDataDirectory.class).getBackupDir();
-    }
-
-    /**
-     * See {@link #getRemovedDir(Path, String)}
-     */
-    @Deprecated
-    public Path getRemovedDir(ServiceContext context, String id) {
-        return getRemovedDir(getRemovedDir(context), id);
-    }
-
     public Path getRemovedDir(int id) {
         ApplicationContext appContext = ApplicationContextHolder.get();
         GeonetworkDataDirectory dataDirectory = appContext.getBean(GeonetworkDataDirectory.class);
@@ -204,9 +184,11 @@ public class ResourceLib {
     }
 
     // TODO: Datastore review
-    private Path getCustomMetadataFolder(Path dataDir, String id, FilesystemStoreConfig filesystemStoreConfig) throws IOException {
+    private Path getCustomMetadataFolder(Path dataDir, String id) throws IOException {
         try {
             IMetadataUtils metadataUtils = ApplicationContextHolder.get().getBean(IMetadataUtils.class);
+            FilesystemStoreConfig filesystemStoreConfig = ApplicationContextHolder.get().getBean(FilesystemStoreConfig.class);
+
             String metadataUuid = metadataUtils.getMetadataUuid(id);
 
             EsSearchManager esSearchManager = ApplicationContextHolder.get().getBean(EsSearchManager.class);

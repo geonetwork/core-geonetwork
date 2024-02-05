@@ -975,8 +975,7 @@ public class BaseMetadataManager implements IMetadataManager {
             }
             if (metadataId.isPresent()) {
                 // TODO: Datastore review
-                final Path resourceDir = Lib.resource.getDir(Params.Access.PRIVATE, metadataId.get(),
-                    getApplicationContext().getBean(FilesystemStoreConfig.class));
+                final Path resourceDir = Lib.resource.getDir(Params.Access.PRIVATE, metadataId.get());
                 env.addContent(new Element("datadir").setText(resourceDir.toString()));
             }
 
