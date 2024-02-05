@@ -27,6 +27,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.server.UserSession;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.api.ApiParams;
@@ -36,9 +37,13 @@ import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.api.exception.WebApplicationException;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.domain.Profile;
+import org.fao.geonet.domain.UserGroup;
 import org.fao.geonet.domain.page.Page;
 import org.fao.geonet.domain.page.PageIdentity;
+import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.page.PageRepository;
+import org.fao.geonet.repository.specification.UserGroupSpecs;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -75,6 +80,9 @@ public class PagesAPI {
     private static final String ERROR_CREATE = "Wrong parameters are provided";
 
     private final PageRepository pageRepository;
+
+    @Autowired
+    UserGroupRepository userGroupRepository;
 
     private final LanguageUtils languageUtils;
 
@@ -157,6 +165,7 @@ public class PagesAPI {
         String language = pageProperties.getLanguage();
         String pageId = pageProperties.getPageId();
         Page.PageFormat format = pageProperties.getFormat();
+        String group = pageProperties.getGroup();
 
         if (language != null) {
             checkValidLanguage(language);
@@ -182,6 +191,10 @@ public class PagesAPI {
 
             if (status != null) {
                 newPage.setStatus(status);
+            }
+
+            if (StringUtils.isNotEmpty(group)) {
+                newPage.setAccessExpression(group);
             }
 
             pageRepository.save(newPage);
@@ -386,6 +399,7 @@ public class PagesAPI {
         @Parameter(hidden = true) final HttpSession session) {
 
         final UserSession us = ApiUtils.getUserSession(session);
+
         List<Page> unfilteredResult;
 
         if (language == null) {
@@ -399,7 +413,6 @@ public class PagesAPI {
         for (final Page page : unfilteredResult) {
             if (page.getStatus().equals(Page.PageStatus.HIDDEN) && us.getProfile() == Profile.Administrator
                 || page.getStatus().equals(Page.PageStatus.PRIVATE) && us.getProfile() != null && us.getProfile() != Profile.Guest
-                || page.getStatus().equals(Page.PageStatus.PRIVATE_GROUP) && us.getProfile() != null && us.getProfile() != Profile.Guest
                 || page.getStatus().equals(Page.PageStatus.PUBLIC)
                 || page.getStatus().equals(Page.PageStatus.PUBLIC_ONLY) && !us.isAuthenticated()) {
                 if (section == null) {
@@ -411,6 +424,25 @@ public class PagesAPI {
                         filteredResult.add(new org.fao.geonet.api.pages.PageProperties(page));
                     }
                 }
+            } else if (page.getStatus().equals(Page.PageStatus.PRIVATE_GROUP) && us.getProfile() != null && us.getProfile() != Profile.Guest) {
+                String myUserId = us.getUserId();
+                String group = page.getAccessExpression();
+
+                if (us.getProfile() == Profile.Administrator) {
+                    filteredResult.add(new org.fao.geonet.api.pages.PageProperties(page));
+                } else if (StringUtils.isNotEmpty(myUserId)) {
+                    List<UserGroup> userGroups = userGroupRepository.findAll(UserGroupSpecs.hasUserId(Integer.parseInt(myUserId)));
+                    if (CollectionUtils.isNotEmpty(userGroups)) {
+                        for (UserGroup userGroup : userGroups) {
+                            if (userGroup.getGroup().getName().equals(group)) {
+                                filteredResult.add(new org.fao.geonet.api.pages.PageProperties(page));
+                                break;
+                            }
+
+                        }
+                    }
+                }
+
             }
         }
 
