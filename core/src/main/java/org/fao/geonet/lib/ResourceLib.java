@@ -208,13 +208,13 @@ public class ResourceLib {
 
     /**
      * Calculates the metadata folder path using the default GeoNetwork folder structure:
-     *
-     *      00000-00099/
-     *          UUID1/...
-     *          UUID2/...
-     *      00100-00199
-     *          UUID3/...
-     *      ...
+     * <p>
+     * 00000-00099/
+     * UUID1/...
+     * UUID2/...
+     * 00100-00199
+     * UUID3/...
+     * ...
      */
     private class DefaultMetadataFolderPathProcessor implements IMetadataFolderProcessor {
         Path dataDir;
@@ -224,6 +224,7 @@ public class ResourceLib {
             this.dataDir = dataDir;
             this.metadataId = metadataId;
         }
+
         public Path calculateFolderPath() {
             String group = pad(Integer.parseInt(metadataId) / 100, 3);
             String groupDir = group + "00-" + group + "99";
@@ -236,9 +237,8 @@ public class ResourceLib {
      * config.properties "datastore.folderStructure". The property supports placeholders using JSONPath
      * expressions to retrieve the values from the Elasticsearch index. For example, to use the
      * metadata uuid instead of the metadata internal id:
-     *
-     *      $.uuid/
-     *
+     * <p>
+     * $.uuid/
      */
     private class CustomMetadataFolderPathProcessor implements IMetadataFolderProcessor {
         Path dataDir;
@@ -250,18 +250,24 @@ public class ResourceLib {
             this.filesystemStoreConfig = filesystemStoreConfig;
             this.searchHit = searchHit;
         }
+
         public Path calculateFolderPath() {
             DocumentContext jsonContext = JsonPath.parse(searchHit.getSourceAsString());
-            boolean isWorkingCopy = (searchHit.getSourceAsMap().get("draft") != null) &&
-                (searchHit.getSourceAsMap().get("draft").equals("y"));
+            boolean isDraft = (searchHit.getSourceAsMap().get("draft") != null) &&
+                (!searchHit.getSourceAsMap().get("draft").equals("n"));
 
-            String path = "";
+            String path;
 
             try {
-                path = replaceTokens(jsonContext, filesystemStoreConfig.getFolderStructure().split(File.separator), isWorkingCopy);
+                String folderStructure = !isDraft ?
+                    filesystemStoreConfig.getFolderStructure() : filesystemStoreConfig.getFolderStructureDraft();
+                path = replaceTokens(jsonContext, folderStructure.split(File.separator), isDraft);
 
             } catch (Exception ex) {
-                path = replaceTokens(jsonContext, filesystemStoreConfig.getFolderStructureFallback().split(File.separator), isWorkingCopy);
+                String folderStructure = !isDraft ?
+                    filesystemStoreConfig.getFolderStructureFallback() : filesystemStoreConfig.getFolderStructureFallbackDraft();
+
+                path = replaceTokens(jsonContext, folderStructure.split(File.separator), isDraft);
             }
 
             return dataDir.resolve(path);
@@ -269,7 +275,7 @@ public class ResourceLib {
 
         private String replaceTokens(DocumentContext jsonContext, String[] tokens, boolean isWorkingCopy) {
             List<String> replacedTokens = new ArrayList<>();
-            for(int i = 0; i < tokens.length; i++) {
+            for (int i = 0; i < tokens.length; i++) {
                 String valueToAdd = "";
                 String token = tokens[i];
 

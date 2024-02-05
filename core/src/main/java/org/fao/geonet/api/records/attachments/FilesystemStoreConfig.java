@@ -47,6 +47,13 @@ public class FilesystemStoreConfig {
 
     @Value("${datastore.folderStructureFallback}")
     private String folderStructureFallback;
+
+    @Value("${datastore.folderStructureDraft}")
+    private String folderStructureDraft;
+
+    @Value("${datastore.folderStructureFallbackDraft}")
+    private String folderStructureFallbackDraft;
+
     FilesystemStoreConfig() {
 
     }
@@ -65,5 +72,13 @@ public class FilesystemStoreConfig {
 
     public String getFolderStructureFallback() {
         return folderStructureFallback;
+    }
+
+    public String getFolderStructureDraft() {
+        return folderStructureDraft;
+    }
+
+    public String getFolderStructureFallbackDraft() {
+        return folderStructureFallbackDraft;
     }
 }
