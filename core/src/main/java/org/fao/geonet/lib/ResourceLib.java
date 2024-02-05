@@ -23,11 +23,15 @@
 
 package org.fao.geonet.lib;
 
+import com.jayway.jsonpath.DocumentContext;
+import com.jayway.jsonpath.JsonPath;
 import jeeves.server.context.ServiceContext;
 
-import org.apache.commons.lang.StringUtils;
+import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.search.SearchHit;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.api.records.attachments.FilesystemStoreConfig;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
@@ -36,7 +40,6 @@ import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.exceptions.OperationNotAllowedEx;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
-import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.access.AccessDeniedException;
@@ -45,10 +48,7 @@ import org.springframework.stereotype.Component;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Utility class to deal with data and removed directory. Also provide user privileges checking
@@ -104,9 +104,8 @@ public class ResourceLib {
         FilesystemStoreConfig filesystemStoreConfig = ApplicationContextHolder.get().getBean(FilesystemStoreConfig.class);
 
         if (filesystemStoreConfig.getFolderStructureType().equals(FilesystemStoreConfig.FolderStructureType.DEFAULT)) {
-            String group = pad(Integer.parseInt(id) / 100, 3);
-            String groupDir = group + "00-" + group + "99";
-            return dataDir.resolve(groupDir).resolve(id);
+            IMetadataFolderProcessor metadataFolderProcessor = new DefaultMetadataFolderPathProcessor(dataDir, id);
+            return metadataFolderProcessor.calculateFolderPath();
         } else {
             return getCustomMetadataFolder(dataDir, id);
         }
@@ -183,39 +182,115 @@ public class ResourceLib {
         return text;
     }
 
-    // TODO: Datastore review
     private Path getCustomMetadataFolder(Path dataDir, String id) throws IOException {
         try {
-            IMetadataUtils metadataUtils = ApplicationContextHolder.get().getBean(IMetadataUtils.class);
             FilesystemStoreConfig filesystemStoreConfig = ApplicationContextHolder.get().getBean(FilesystemStoreConfig.class);
 
-            String metadataUuid = metadataUtils.getMetadataUuid(id);
-
             EsSearchManager esSearchManager = ApplicationContextHolder.get().getBean(EsSearchManager.class);
-            Map<String, Object> metadataIndexDoc =  esSearchManager.getDocument(metadataUuid);
-            String resourceId = "";
+            SearchResponse searchResponse = esSearchManager.query(String.format("id:(%s)", id), null, 0, 10);
+            if ((searchResponse.getHits().getTotalHits() != null) && (searchResponse.getHits().getTotalHits().value > 0)) {
+                SearchHit searchHit = searchResponse.getHits().getAt(0);
 
-            if (metadataIndexDoc.get("resourceIdentifier") != null) {
-                if (!((ArrayList) metadataIndexDoc.get("resourceIdentifier")).isEmpty()) {
-                    resourceId = ((ArrayList<HashMap<String, String>>) metadataIndexDoc.get("resourceIdentifier")).get(0).get("code");
-                }
+                IMetadataFolderProcessor customMetadataFolderPathProcessor = new CustomMetadataFolderPathProcessor(dataDir, filesystemStoreConfig, searchHit);
+                return customMetadataFolderPathProcessor.calculateFolderPath();
+            } else {
+                throw new ResourceNotFoundException("Metadata not found");
             }
-            boolean isWorkingCopy = (metadataIndexDoc.get("draft") != null) && metadataIndexDoc.get("draft").equals("e");
-
-            boolean useFallback = StringUtils.isEmpty(resourceId);
-
-            if (!useFallback) {
-                String folderPath = filesystemStoreConfig.getFolderStructure().replace("{index:resourceIdentifier}", resourceId) + (isWorkingCopy ? "-draft" : "");
-
-                File metadataDataDir = dataDir.resolve(folderPath).toFile();
-                return metadataDataDir.toPath();
-            }
-
-            String folderPath = filesystemStoreConfig.getFolderStructure().replace("{index:uuid}", metadataUuid) + (isWorkingCopy ? "-draft" : "");
-            return dataDir.resolve(folderPath);
 
         } catch (Exception ex) {
             throw new IOException(ex);
+        }
+    }
+
+    private interface IMetadataFolderProcessor {
+        Path calculateFolderPath();
+    }
+
+    /**
+     * Calculates the metadata folder path using the default GeoNetwork folder structure:
+     *
+     *      00000-00099/
+     *          UUID1/...
+     *          UUID2/...
+     *      00100-00199
+     *          UUID3/...
+     *      ...
+     */
+    private class DefaultMetadataFolderPathProcessor implements IMetadataFolderProcessor {
+        Path dataDir;
+        String metadataId;
+
+        DefaultMetadataFolderPathProcessor(Path dataDir, String metadataId) {
+            this.dataDir = dataDir;
+            this.metadataId = metadataId;
+        }
+        public Path calculateFolderPath() {
+            String group = pad(Integer.parseInt(metadataId) / 100, 3);
+            String groupDir = group + "00-" + group + "99";
+            return dataDir.resolve(groupDir).resolve(metadataId);
+        }
+    }
+
+    /**
+     * Calculates the metadata folder path using the a custom GeoNetwork folder structure defined in
+     * config.properties "datastore.folderStructure". The property supports placeholders using JSONPath
+     * expressions to retrieve the values from the Elasticsearch index. For example, to use the
+     * metadata uuid instead of the metadata internal id:
+     *
+     *      $.uuid/
+     *
+     */
+    private class CustomMetadataFolderPathProcessor implements IMetadataFolderProcessor {
+        Path dataDir;
+        FilesystemStoreConfig filesystemStoreConfig;
+        SearchHit searchHit;
+
+        CustomMetadataFolderPathProcessor(Path dataDir, FilesystemStoreConfig filesystemStoreConfig, SearchHit searchHit) {
+            this.dataDir = dataDir;
+            this.filesystemStoreConfig = filesystemStoreConfig;
+            this.searchHit = searchHit;
+        }
+        public Path calculateFolderPath() {
+            DocumentContext jsonContext = JsonPath.parse(searchHit.getSourceAsString());
+            boolean isWorkingCopy = (searchHit.getSourceAsMap().get("draft") != null) &&
+                (searchHit.getSourceAsMap().get("draft").equals("y"));
+
+            String path = "";
+
+            try {
+                path = replaceTokens(jsonContext, filesystemStoreConfig.getFolderStructure().split(File.separator), isWorkingCopy);
+
+            } catch (Exception ex) {
+                path = replaceTokens(jsonContext, filesystemStoreConfig.getFolderStructureFallback().split(File.separator), isWorkingCopy);
+            }
+
+            return dataDir.resolve(path);
+        }
+
+        private String replaceTokens(DocumentContext jsonContext, String[] tokens, boolean isWorkingCopy) {
+            List<String> replacedTokens = new ArrayList<>();
+            for(int i = 0; i < tokens.length; i++) {
+                String valueToAdd = "";
+                String token = tokens[i];
+
+                if (token.startsWith("$")) {
+                    String value = jsonContext.read(tokens[i]);
+
+                    if (value != null) {
+                        valueToAdd = value;
+                    }
+                } else {
+                    valueToAdd = token;
+                }
+
+                if ((i == tokens.length - 1) && isWorkingCopy) {
+                    valueToAdd = valueToAdd + "-draft";
+                }
+
+                replacedTokens.add(valueToAdd);
+            }
+
+            return String.join(File.separator, replacedTokens);
         }
     }
 }

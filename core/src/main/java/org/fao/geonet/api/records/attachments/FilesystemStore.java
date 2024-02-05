@@ -78,10 +78,12 @@ public class FilesystemStore extends AbstractStore {
     @Override
     public List<MetadataResource> getResources(ServiceContext context, String metadataUuid, MetadataResourceVisibility visibility,
                                                String filter, Boolean approved) throws Exception {
-        int metadataId = canDownload(context, metadataUuid, visibility, approved);
+        MetadataResourceVisibility visibilityToUse = calculateVisibilityToUse(visibility);
+
+        int metadataId = canDownload(context, metadataUuid, visibilityToUse, approved);
 
         Path metadataDir = Lib.resource.getMetadataDir(getDataDirectory(context), metadataId);
-        Path resourceTypeDir = calculateMetadataDir(metadataDir, visibility);
+        Path resourceTypeDir = calculateMetadataDir(metadataDir, visibilityToUse);
 
         List<MetadataResource> resourceList = new ArrayList<>();
         if (filter == null) {
@@ -90,7 +92,7 @@ public class FilesystemStore extends AbstractStore {
         try (DirectoryStream<Path> directoryStream = Files.newDirectoryStream(resourceTypeDir, filter)) {
             for (Path path: directoryStream) {
                 MetadataResource resource = new FilesystemStoreResource(metadataUuid, metadataId, path.getFileName().toString(),
-                                                                        settingManager.getNodeURL() + "api/records/", visibility,
+                                                                        settingManager.getNodeURL() + "api/records/", visibilityToUse,
                                                                         Files.size(path),
                                                                         new Date(Files.getLastModifiedTime(path).toMillis()), approved);
                 resourceList.add(resource);
@@ -145,8 +147,11 @@ public class FilesystemStore extends AbstractStore {
 
     public MetadataResource getResourceDescription(final ServiceContext context, String metadataUuid, MetadataResourceVisibility visibility,
                                                    String filename, Boolean approved) throws Exception {
-        Path path = getPath(context, metadataUuid, visibility, filename, approved);
-        return getResourceDescription(context, metadataUuid, visibility, path, approved);
+
+        MetadataResourceVisibility visibilityToUse = calculateVisibilityToUse(visibility);
+
+        Path path = getPath(context, metadataUuid, visibilityToUse, filename, approved);
+        return getResourceDescription(context, metadataUuid, visibilityToUse, path, approved);
     }
 
     /**
@@ -180,7 +185,6 @@ public class FilesystemStore extends AbstractStore {
 
     @Override
     public MetadataResourceContainer getResourceContainerDescription(ServiceContext context, String metadataUuid, Boolean approved) throws Exception {
-
         int metadataId = getAndCheckMetadataId(metadataUuid, approved);
         final Path metadataDir = Lib.resource.getMetadataDir(getDataDirectory(context), metadataId);
         if (!Files.exists(metadataDir)) {
@@ -202,13 +206,16 @@ public class FilesystemStore extends AbstractStore {
                                         Boolean approved) throws Exception {
         int metadataId = canEdit(context, metadataUuid, approved);
         checkResourceId(filename);
-        Path filePath = getPath(context, metadataId, visibility, filename, approved);
+
+        MetadataResourceVisibility visibilityToUse = calculateVisibilityToUse(visibility);
+
+        Path filePath = getPath(context, metadataId, visibilityToUse, filename, approved);
         Files.copy(is, filePath, StandardCopyOption.REPLACE_EXISTING);
         if (changeDate != null) {
             IO.touch(filePath, FileTime.from(changeDate.getTime(), TimeUnit.MILLISECONDS));
         }
 
-        return getResourceDescription(context, metadataUuid, visibility, filePath, approved);
+        return getResourceDescription(context, metadataUuid, visibilityToUse, filePath, approved);
     }
 
     private Path getPath(ServiceContext context, String metadataUuid, MetadataResourceVisibility visibility, String fileName,
@@ -221,12 +228,24 @@ public class FilesystemStore extends AbstractStore {
                          Boolean approved) throws Exception {
         final Path folderPath = ensureDirectory(context, metadataId, fileName, visibility);
         Path filePath = folderPath.resolve(fileName);
-        if (Files.exists(filePath) && !approved) {
+        if (Files.exists(filePath) && Boolean.TRUE.equals(!approved)) {
             throw new ResourceAlreadyExistException(
                     String.format("A resource with name '%s' and status '%s' already exists for metadata '%d'.", fileName, visibility,
                                   metadataId));
         }
         return filePath;
+    }
+
+    @Override
+    public void copyResources(ServiceContext context, String sourceUuid, String targetUuid,
+                              MetadataResourceVisibility metadataResourceVisibility,
+                              boolean sourceApproved, boolean targetApproved) throws Exception {
+       if (filesystemStoreConfig.getFolderPrivilegesStrategy().equals(FilesystemStoreConfig.FolderPrivilegesStrategy.NONE) &&
+           metadataResourceVisibility.equals(MetadataResourceVisibility.PRIVATE)) {
+           return;
+       }
+
+        super.copyResources(context, sourceUuid, targetUuid, metadataResourceVisibility, sourceApproved, targetApproved);
     }
 
     @Override
@@ -256,6 +275,12 @@ public class FilesystemStore extends AbstractStore {
     @Override
     public String delResource(final ServiceContext context, final String metadataUuid, final MetadataResourceVisibility visibility,
                               final String resourceId, Boolean approved) throws Exception {
+
+        if (filesystemStoreConfig.getFolderPrivilegesStrategy().equals(FilesystemStoreConfig.FolderPrivilegesStrategy.NONE) &&
+            visibility.equals(MetadataResourceVisibility.PRIVATE)) {
+            return null;
+        }
+
         canEdit(context, metadataUuid, approved);
 
         try (ResourceHolder filePath = getResource(context, metadataUuid, visibility, resourceId, approved)) {
@@ -268,8 +293,13 @@ public class FilesystemStore extends AbstractStore {
 
     @Override
     public MetadataResource patchResourceStatus(ServiceContext context, String metadataUuid, String resourceId,
-
                                                 MetadataResourceVisibility visibility, Boolean approved) throws Exception {
+
+        if (filesystemStoreConfig.getFolderPrivilegesStrategy().equals(FilesystemStoreConfig.FolderPrivilegesStrategy.NONE) &&
+            visibility.equals(MetadataResourceVisibility.PRIVATE)) {
+            return null;
+        }
+
         int metadataId = canEdit(context, metadataUuid, approved);
 
         ResourceHolder filePath = getResource(context, metadataUuid, resourceId, approved);
@@ -302,6 +332,13 @@ public class FilesystemStore extends AbstractStore {
         return resourceList;
     }
 
+    @Override
+    public void renameFolder(Path originalPath, Path newPath) {
+        if (Files.exists(originalPath)) {
+            originalPath.toFile().renameTo(newPath.toFile());
+        }
+    }
+
     private Path ensureDirectory(final ServiceContext context, final int metadataId, final String resourceId,
                                  final MetadataResourceVisibility visibility) throws IOException {
         final Path metadataDir = Lib.resource.getMetadataDir(getDataDirectory(context), metadataId);
@@ -327,6 +364,16 @@ public class FilesystemStore extends AbstractStore {
     }
     private GeonetworkDataDirectory getDataDirectory(ServiceContext context) {
         return context.getBean(GeonetworkDataDirectory.class);
+    }
+
+    private MetadataResourceVisibility calculateVisibilityToUse(MetadataResourceVisibility visibility) {
+        // If the folder privileges strategy is NONE, use the PUBLIC visibility
+        if (filesystemStoreConfig.getFolderPrivilegesStrategy().equals(FilesystemStoreConfig.FolderPrivilegesStrategy.NONE) &&
+            visibility.equals(MetadataResourceVisibility.PRIVATE)) {
+            return MetadataResourceVisibility.PUBLIC;
+        } else {
+            return visibility;
+        }
     }
 
     private static class ResourceHolderImpl implements ResourceHolder {
