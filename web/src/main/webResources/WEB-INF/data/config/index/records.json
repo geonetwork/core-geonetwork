@@ -1075,6 +1075,10 @@
                 "type": "keyword",
                 "copy_to": ["any.langdut", "organisationName.langdut"]
               },
+              "langdan": {
+                "type": "keyword",
+                "copy_to": ["any.langdan", "organisationName.langdan"]
+              },
               "langspa": {
                 "type": "keyword",
                 "copy_to": ["any.langspa", "organisationName.langspa"]
@@ -1154,6 +1158,19 @@
                 "analyzer": "dutch",
                 "copy_to": [
                   "any.langdut"
+                ],
+                "fields": {
+                  "keyword": {
+                    "type": "keyword",
+                    "ignore_above": ${es.index.ignore_above}
+                  }
+                }
+              },
+              "langdan": {
+                "type": "text",
+                "analyzer": "danish",
+                "copy_to": [
+                  "any.langdan"
                 ],
                 "fields": {
                   "keyword": {
@@ -1275,6 +1292,12 @@
                 "type": "keyword",
                 "copy_to": [
                   "any.langdut"
+                ]
+              },
+              "langdan": {
+                "type": "keyword",
+                "copy_to": [
+                  "any.langdan"
                 ]
               },
               "langita": {
@@ -1462,6 +1485,10 @@
             "type": "text",
             "analyzer": "dutch"
           },
+          "langdan": {
+            "type": "text",
+            "analyzer": "danish"
+          },
           "langita": {
             "type": "text",
             "analyzer": "italian"
@@ -1502,6 +1529,12 @@
             "type": "keyword",
             "copy_to": [
               "any.langdut"
+              ]
+          },
+          "langdan": {
+            "type": "keyword",
+            "copy_to": [
+              "any.langdan"
               ]
           },
           "langita": {
@@ -1998,6 +2031,9 @@
             "type": "keyword"
           },
           "langdut": {
+            "type": "keyword"
+          },
+          "langdan": {
             "type": "keyword"
           },
           "langspa": {
