@@ -529,7 +529,7 @@
       <div
         id="gn-addonlinesrc-thumbnail-panel"
         class="panel panel-default"
-        data-ng-show="params.linkType.sources.thumbnailMaker"
+        data-ng-show="params.linkType.sources.thumbnailMaker && gnCurrentEdit.layerConfig.length > 0"
       >
         <div class="panel-heading" data-translate="">createAThumbnail</div>
         <div class="panel-body">
@@ -537,15 +537,7 @@
             id="gn-addonlinesrc-thumbnail-map"
             class="form-group gn-thumbnail-maker-panel"
           >
-            <div
-              id="gn-addonlinesrc-thumbnail-warning"
-              class="alert alert-warning"
-              data-ng-show="layers == undefined"
-              data-translate=""
-            >
-              noLayersForThumbnail
-            </div>
-            <div data-ng-hide="layers == undefined">
+            <div>
               <textarea
                 id="gn-addonlinesrc-thumbnail-json"
                 class="form-control hidden"
