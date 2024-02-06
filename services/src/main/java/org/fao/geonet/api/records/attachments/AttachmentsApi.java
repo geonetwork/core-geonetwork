@@ -1,6 +1,6 @@
 /*
  * =============================================================================
- * ===	Copyright (C) 2001-2023 Food and Agriculture Organization of the
+ * ===	Copyright (C) 2001-2024 Food and Agriculture Organization of the
  * ===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * ===	and United Nations Environment Programme (UNEP)
  * ===
@@ -44,7 +44,11 @@ import org.fao.geonet.domain.MetadataResourceVisibility;
 import org.fao.geonet.domain.MetadataResourceVisibilityConverter;
 import org.fao.geonet.events.history.AttachmentAddedEvent;
 import org.fao.geonet.events.history.AttachmentDeletedEvent;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
+import org.fao.geonet.util.FileMimetypeChecker;
 import org.fao.geonet.util.ImageUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -71,6 +75,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -88,6 +93,11 @@ public class AttachmentsApi {
     public static final Integer MAX_IMAGE_SIZE = 2048;
     private final ApplicationContext appContext = ApplicationContextHolder.get();
     private Store store;
+
+    @Autowired
+    FileMimetypeChecker fileMimetypeChecker;
+    @Autowired
+    SettingManager settingManager;
 
     public AttachmentsApi() {
     }
@@ -155,7 +165,7 @@ public class AttachmentsApi {
     }
 
     public List<MetadataResource> getResources() {
-        return null;
+        return Collections.emptyList();
     }
 
     @io.swagger.v3.oas.annotations.Operation(summary = "List all metadata attachments", description = "<a href='https://docs.geonetwork-opensource.org/latest/user-guide/associating-resources/using-filestore/'>More info</a>")
@@ -171,8 +181,7 @@ public class AttachmentsApi {
         @RequestParam(required = false, defaultValue = FilesystemStore.DEFAULT_FILTER) String filter,
         @Parameter(hidden = true) HttpServletRequest request) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
-        List<MetadataResource> list = store.getResources(context, metadataUuid, sort, filter, approved);
-        return list;
+        return store.getResources(context, metadataUuid, sort, filter, approved);
     }
 
     @io.swagger.v3.oas.annotations.Operation(summary = "Delete all uploaded metadata resources")
@@ -213,6 +222,10 @@ public class AttachmentsApi {
         @Parameter(description = "Use approved version or not", example = "true") @RequestParam(required = false, defaultValue = "false") Boolean approved,
         @Parameter(hidden = true) HttpServletRequest request) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
+
+        String supportedFileMimetypes = settingManager.getValue(Settings.METADATA_EDIT_SUPPORTEDFILEMIMETYPES);
+        fileMimetypeChecker.checkValidMimeType(file, supportedFileMimetypes.split("\\|"));
+
         MetadataResource resource = store.putResource(context, metadataUuid, file, visibility, approved);
 
         String metadataIdString = ApiUtils.getInternalId(metadataUuid, approved);
