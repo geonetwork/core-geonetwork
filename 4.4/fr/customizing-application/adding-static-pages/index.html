@@ -20,7 +20,7 @@
       
       
       <link rel="icon" href="../../../assets/images/geonetwork-logo.png">
-      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.6">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.7">
     
     
       
@@ -28,7 +28,7 @@
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.50c56a3b.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.f2e4d321.min.css">
       
         
         <link rel="stylesheet" href="../../../assets/stylesheets/palette.06af60db.min.css">
@@ -3262,16 +3262,16 @@
 <li>
 <p>Each page can be in 3 states:</p>
 <ul>
-<li><code>EN</code>: visible to administrator.</li>
-<li><code>TE</code>: visible to logged users.</li>
-<li><code>IC</code>: visible to everyone.</li>
+<li><code>HIDDEN</code>: visible to administrator.</li>
+<li><code>PRIVATE</code>: visible to logged users.</li>
+<li><code>PUBLIC</code>: visible to everyone.</li>
 </ul>
 </li>
 <li>
-<p>Pages can be added to different page sections. Currently the sections implemented are <code>OP</code> (top menu of the main page) and <code>ER</code> (footer of the main page).</p>
+<p>Pages can be added to different page sections. Currently the sections implemented are <code>TOP</code> (top menu of the main page) and <code>FOOTER</code> (footer of the main page).</p>
 </li>
 <li>
-<p>Only the administrator can edit the pages and see the pages in <code>EN</code> status.</p>
+<p>Only the administrator can edit the pages and see the pages in <code>HIDDEN</code> status.</p>
 </li>
 <li>
 <p>The creation and the management of the content is done via the API.</p>
@@ -3327,10 +3327,10 @@
 <h3 id="change-the-page-status">Change the page status</h3>
 <p>The status of the page can be changed with the method PUT <code>/api/pages/{language}/{pageId}/{status}</code> where status could assume these values:</p>
 <ul>
-<li><code>IC</code> - Visible to every user</li>
-<li><code>LY</code> - Visible to not logged users</li>
-<li><code>TE</code> - Visible to logged users</li>
-<li><code>EN</code> - Hidden to anyone</li>
+<li><code>PUBLIC</code> - Visible to every user</li>
+<li><code>PUBLIC_ONLY</code> - Visible to not logged users</li>
+<li><code>PRIVATE</code> - Visible to logged users</li>
+<li><code>HIDDEN</code> - Hidden to anyone</li>
 </ul>
 <p>Other methods in the API are to change/delete a page and to GET the list of the pages or the info of a specific one.</p>
 <h3 id="change-the-menu-order-in-the-top-toolbar">Change the menu order in the top toolbar</h3>
@@ -3532,7 +3532,7 @@
     <script id="__config" type="application/json">{"base": "../../..", "features": ["content.action.view", "content.action.edit", "content.code.copy", "content.tabs.link", "navigation.tabs", "navigation.tracking", "navigation.prune", "navigation.indexes", "toc.follow", "navigation.top", "navigation.footer", "announce.dismiss"], "search": "../../../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copi\u00e9 dans le presse-papier", "clipboard.copy": "Copier dans le presse-papier", "search.result.more.one": "1 de plus sur cette page", "search.result.more.other": "# de plus sur cette page", "search.result.none": "Aucun document trouv\u00e9", "search.result.one": "1 document trouv\u00e9", "search.result.other": "# documents trouv\u00e9s", "search.result.placeholder": "Taper pour d\u00e9marrer la recherche", "search.result.term.missing": "Non trouv\u00e9", "select.version": "S\u00e9lectionner la version"}, "version": {"default": "stable", "provider": "mike"}}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.e1c3ead8.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.caa56a14.min.js"></script>
       
     
   </body>
