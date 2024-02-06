@@ -20,7 +20,7 @@
       
       
       <link rel="icon" href="../../../assets/images/geonetwork-logo.png">
-      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.6">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.7">
     
     
       
@@ -28,7 +28,7 @@
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.50c56a3b.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.f2e4d321.min.css">
       
         
         <link rel="stylesheet" href="../../../assets/stylesheets/palette.06af60db.min.css">
@@ -3465,7 +3465,7 @@
 </span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">    </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;from&quot;:0,&quot;size&quot;:0,&quot;query&quot;:{&quot;query_string&quot;:{&quot;query&quot;:&quot;+resourceIdentifier:1234&quot;}}}&#39;</span>
 </span></code></pre></div>
 <p>To customize how the field is indexed see <code>web/src/main/webResources/WEB-INF/data/config/index/records.json</code>.</p>
-<p>To return it in the search response, use the <code>ce</code> parameter of the query. See <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/search-fields.html">https://www.elastic.co/guide/en/elasticsearch/reference/current/search-fields.html</a>.</p>
+<p>To return it in the search response, use the <code>_source</code> parameter of the query. See <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/search-fields.html">https://www.elastic.co/guide/en/elasticsearch/reference/current/search-fields.html</a>.</p>
 <h2 id="boosting-at-search-time">Boosting at search time</h2>
 <p>See <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-query-string-query.html#_boosting">https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-query-string-query.html#_boosting</a>.</p>
 <p>By default, the search is defined as (see <code>web-ui/src/main/resources/catalog/js/CatController.js</code>):</p>
@@ -3506,7 +3506,7 @@
 </span><span id="__span-10-30"><a id="__codelineno-10-30" name="__codelineno-10-30" href="#__codelineno-10-30"></a><span class="w"> </span><span class="p">},</span>
 </span></code></pre></div>
 <h2 id="language-analyzer">Language analyzer</h2>
-<p>By default a <code>rd</code> analyzer is used. If the catalog content is english, it may make sense to change the analyzer to <code>sh</code>. To customize the analyzer see <code>web/src/main/webResources/WEB-INF/data/config/index/records.json</code></p>
+<p>By default a <code>standard</code> analyzer is used. If the catalog content is english, it may make sense to change the analyzer to <code>english</code>. To customize the analyzer see <code>web/src/main/webResources/WEB-INF/data/config/index/records.json</code></p>
 
 
 
@@ -3684,7 +3684,7 @@
     <script id="__config" type="application/json">{"base": "../../..", "features": ["content.action.view", "content.action.edit", "content.code.copy", "content.tabs.link", "navigation.tabs", "navigation.tracking", "navigation.prune", "navigation.indexes", "toc.follow", "navigation.top", "navigation.footer", "announce.dismiss"], "search": "../../../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copi\u00e9 dans le presse-papier", "clipboard.copy": "Copier dans le presse-papier", "search.result.more.one": "1 de plus sur cette page", "search.result.more.other": "# de plus sur cette page", "search.result.none": "Aucun document trouv\u00e9", "search.result.one": "1 document trouv\u00e9", "search.result.other": "# documents trouv\u00e9s", "search.result.placeholder": "Taper pour d\u00e9marrer la recherche", "search.result.term.missing": "Non trouv\u00e9", "select.version": "S\u00e9lectionner la version"}, "version": {"default": "stable", "provider": "mike"}}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.e1c3ead8.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.caa56a14.min.js"></script>
       
     
   </body>
