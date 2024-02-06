@@ -51,7 +51,7 @@ public interface MetadataValidationRepositoryCustom {
      * @param metadataId the id of the metadata.
      * @return the number of rows deleted
      */
-    @Modifying(clearAutomatically=true)
+    @Modifying(flushAutomatically = true, clearAutomatically = true)
     @Transactional
     @Query(value="DELETE FROM MetadataValidation v where v.id.metadataId = ?1 AND valtype != 'inspire'")
     int deleteAllInternalValidationById_MetadataId(Integer metadataId);
