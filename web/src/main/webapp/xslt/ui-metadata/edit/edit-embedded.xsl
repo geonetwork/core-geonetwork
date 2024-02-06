@@ -45,16 +45,33 @@
 
   <xsl:template match="/">
 
-    <xsl:variable name="snippet">
+    <xsl:variable name="tempSnippet">
       <!-- Process the added object using schema layout ... -->
       <xsl:for-each
-        select="/root/*[name(.)!='gui' and name(.)!='request']//*[@gn:addedObj = 'true']">
+        select="/root/*[name(.) != 'gui' and name(.) != 'request']//*[@gn:addedObj = 'true']">
         <!-- Dispatch to profile mode -->
         <xsl:variable name="profileTemplate" select="concat('dispatch-', $schema)"/>
         <saxon:call-template name="{$profileTemplate}">
           <xsl:with-param name="base" select="."/>
         </saxon:call-template>
       </xsl:for-each>
+    </xsl:variable>
+
+    <xsl:variable name="snippet">
+      <xsl:choose>
+        <xsl:when test="string($tempSnippet) or count($tempSnippet/*) > 0"><xsl:copy-of select="$tempSnippet"/></xsl:when>
+        <xsl:otherwise>
+          <!-- If no template defined for the added object, process the parent of the added element using schema layout ... -->
+          <xsl:for-each
+            select="/root/*[name(.)!='gui' and name(.)!='request']//*[@gn:addedObj = 'true']">
+            <!-- Dispatch to profile mode -->
+            <xsl:variable name="profileTemplate" select="concat('dispatch-', $schema)"/>
+            <saxon:call-template name="{$profileTemplate}">
+              <xsl:with-param name="base" select=".."/>
+            </saxon:call-template>
+          </xsl:for-each>
+        </xsl:otherwise>
+      </xsl:choose>
     </xsl:variable>
 
     <!-- In case the form generated contains multiple children

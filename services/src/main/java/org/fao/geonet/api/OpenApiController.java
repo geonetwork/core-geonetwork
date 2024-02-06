@@ -21,6 +21,8 @@
 package org.fao.geonet.api;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.SerializationFeature;
+
 import io.swagger.v3.core.util.Json;
 import io.swagger.v3.core.util.PathUtils;
 import io.swagger.v3.core.util.Yaml;
@@ -33,12 +35,9 @@ import org.springdoc.core.customizers.OperationCustomizer;
 import org.springdoc.webmvc.core.RouterFunctionProvider;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.ModelAndView;
@@ -47,6 +46,7 @@ import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfoHandlerMapping;
 
 import javax.servlet.http.HttpServletRequest;
+
 import java.util.*;
 
 import static org.springdoc.core.Constants.*;
@@ -64,6 +64,8 @@ import static org.springframework.util.AntPathMatcher.DEFAULT_PATH_SEPARATOR;
  * springdoc.api-docs.enabled=true
  * springdoc.api-docs.path=/api/doc
  * springdoc.cache.disabled=true
+ * springdoc.writer-with-order-by-keys=true
+ * springdoc.writer-with-default-pretty-printer=true
  */
 @RestController
 public class OpenApiController extends AbstractOpenApiResource {
@@ -95,28 +97,40 @@ public class OpenApiController extends AbstractOpenApiResource {
             "org.fao.geonet.api",
             "org.fao.geonet.services.inspireatom",
             "org.fao.geonet.monitor.service"}));
+
+        // Ensure open api document is consistently orders to make it easier to compare changes later.
+        springDocConfigProperties.setWriterWithOrderByKeys(true);
+        springDocConfigProperties.setWriterWithDefaultPrettyPrinter(true);
+
+        // remove default response
+        springDocConfigProperties.setOverrideWithGenericResponse(false);
+
         this.requestMappingHandlerMapping = requestMappingHandlerMapping;
         this.servletContextProvider = servletContextProvider;
         this.springSecurityOAuth2Provider = springSecurityOAuth2Provider;
         this.routerFunctionProvider = routerFunctionProvider;
+
+        // Ensure all enums are written based on the enum name.
+        Json.mapper().configure(SerializationFeature.WRITE_ENUMS_USING_TO_STRING, false);
+        Yaml.mapper().configure(SerializationFeature.WRITE_ENUMS_USING_TO_STRING, false);
     }
 
     @Operation(hidden = true)
     @GetMapping(value = "/{portal}/api/doc", produces = MediaType.APPLICATION_JSON_VALUE)
-    public String openapiJson(HttpServletRequest request, @Value(API_DOCS_URL) String apiDocsUrl)
+    public String openapiJson(HttpServletRequest request)
         throws JsonProcessingException {
-        calculateServerUrl(request, apiDocsUrl);
+        setServerBaseUrl(request);
         OpenAPI openAPI = this.getOpenApi(request.getLocale());
-        return Json.mapper().writeValueAsString(openAPI);
+        return writeJsonValue(openAPI);
     }
 
     @Operation(hidden = true)
     @GetMapping(value = "/{portal}/api/doc.yml", produces = APPLICATION_OPENAPI_YAML)
-    public String openapiYaml(HttpServletRequest request, @Value(DEFAULT_API_DOCS_URL_YAML) String apiDocsUrl)
+    public String openapiYaml(HttpServletRequest request)
         throws JsonProcessingException {
-        calculateServerUrl(request, apiDocsUrl);
+        setServerBaseUrl(request);
         OpenAPI openAPI = this.getOpenApi(request.getLocale());
-        return Yaml.mapper().writeValueAsString(openAPI);
+        return writeYamlValue(openAPI);
     }
 
     @Override
@@ -180,9 +194,14 @@ public class OpenApiController extends AbstractOpenApiResource {
                 || !ModelAndView.class.isAssignableFrom(handlerMethod.getMethod().getReturnType()));
     }
 
-    protected void calculateServerUrl(HttpServletRequest request, String apiDocsUrl) {
-        String requestUrl = decode(request.getRequestURL().toString());
-        String calculatedUrl = requestUrl.substring(0, requestUrl.length() - apiDocsUrl.length());
-        this.openAPIService.setServerBaseUrl(calculatedUrl);
+    private String getServerBaseUrl(HttpServletRequest request) {
+        String contextPath = request.getContextPath();
+        StringBuffer requestURL = request.getRequestURL();
+        String serverBaseUrl = requestURL.substring(0, requestURL.indexOf(contextPath) + contextPath.length());
+        return serverBaseUrl;
+    }
+
+    protected void setServerBaseUrl(HttpServletRequest request) {
+        this.openAPIService.setServerBaseUrl(getServerBaseUrl(request));
     }
 }
