@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2023 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2024 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -39,6 +39,7 @@ import org.fao.geonet.api.exception.NotAllowedException;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.api.processing.report.MetadataProcessingReport;
 import org.fao.geonet.api.processing.report.SimpleMetadataProcessingReport;
+import org.fao.geonet.api.records.attachments.Store;
 import org.fao.geonet.api.records.model.*;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.config.IPublicationConfig;
@@ -50,10 +51,12 @@ import org.fao.geonet.events.history.RecordOwnerChangeEvent;
 import org.fao.geonet.events.history.RecordPrivilegesChangeEvent;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.datamanager.*;
 import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
+import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.*;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.repository.specification.MetadataValidationSpecs;
@@ -74,6 +77,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.nio.file.Path;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -1150,10 +1154,20 @@ public class MetadataSharingApi {
         List<MetadataPublicationNotificationInfo> metadataListToNotifyPublication = new ArrayList<>();
         boolean notifyByEmail = StringUtils.isNoneEmpty(sm.getValue(SYSTEM_METADATAPRIVS_PUBLICATION_NOTIFICATIONLEVEL));
 
+        Path originalMetadataDataDir = Lib.resource.getMetadataDir(ApplicationContextHolder.get().getBean(GeonetworkDataDirectory.class), metadata.getId());
+
         setOperations(sharing, dataManager, context, appContext, metadata, operationMap, privileges,
             ApiUtils.getUserSession(session).getUserIdAsInt(), true, null, request,
             metadataListToNotifyPublication, notifyByEmail);
         metadataIndexer.indexMetadata(String.valueOf(metadata.getId()), true, IndexingMode.full);
+
+        // Rename the metadata data folder when required, for example when using a custom folder structure based on
+        // the metadata resource identifier, the folder can change.
+        Path newMetadataDataDir = Lib.resource.getMetadataDir(ApplicationContextHolder.get().getBean(GeonetworkDataDirectory.class), metadata.getId());
+        if (!originalMetadataDataDir.equals(newMetadataDataDir)) {
+            Store store = context.getBean("resourceStore", Store.class);
+            store.renameFolder(originalMetadataDataDir, newMetadataDataDir);
+        }
 
         java.util.Optional<PublicationOption> publicationOption = publicationConfig.getPublicationOptionConfiguration(publicationType);
         if (publicationOption.isPresent() &&

@@ -34,7 +34,6 @@ import jeeves.transaction.TransactionTask;
 import jeeves.xlink.Processor;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
-import org.fao.geonet.api.records.attachments.FilesystemStoreConfig;
 import org.fao.geonet.api.records.attachments.Store;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;

@@ -27,7 +27,7 @@ package org.fao.geonet.api.records.attachments;
 
 import org.springframework.beans.factory.annotation.Value;
 
-public class FilesystemStoreConfig {
+public class StoreFolderConfig {
     public enum FolderStructureType {
         DEFAULT, CUSTOM
     }
@@ -48,13 +48,13 @@ public class FilesystemStoreConfig {
     @Value("${datastore.folderStructureFallback}")
     private String folderStructureFallback;
 
-    @Value("${datastore.folderStructureDraft}")
-    private String folderStructureDraft;
+    @Value("${datastore.folderStructureNonPublic}")
+    private String folderStructureNonPublic;
 
-    @Value("${datastore.folderStructureFallbackDraft}")
-    private String folderStructureFallbackDraft;
+    @Value("${datastore.folderStructureFallbackNonPublic}")
+    private String folderStructureFallbackNonPublic;
 
-    FilesystemStoreConfig() {
+    StoreFolderConfig() {
 
     }
 
@@ -74,11 +74,11 @@ public class FilesystemStoreConfig {
         return folderStructureFallback;
     }
 
-    public String getFolderStructureDraft() {
-        return folderStructureDraft;
+    public String getFolderStructureNonPublic() {
+        return folderStructureNonPublic;
     }
 
-    public String getFolderStructureFallbackDraft() {
-        return folderStructureFallbackDraft;
+    public String getFolderStructureFallbackNonPublic() {
+        return folderStructureFallbackNonPublic;
     }
 }

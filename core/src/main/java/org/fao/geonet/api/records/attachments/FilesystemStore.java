@@ -73,7 +73,7 @@ public class FilesystemStore extends AbstractStore {
     SettingManager settingManager;
 
     @Autowired
-    FilesystemStoreConfig filesystemStoreConfig;
+    StoreFolderConfig storeFolderConfig;
 
     @Override
     public List<MetadataResource> getResources(ServiceContext context, String metadataUuid, MetadataResourceVisibility visibility,
@@ -240,7 +240,7 @@ public class FilesystemStore extends AbstractStore {
     public void copyResources(ServiceContext context, String sourceUuid, String targetUuid,
                               MetadataResourceVisibility metadataResourceVisibility,
                               boolean sourceApproved, boolean targetApproved) throws Exception {
-       if (filesystemStoreConfig.getFolderPrivilegesStrategy().equals(FilesystemStoreConfig.FolderPrivilegesStrategy.NONE) &&
+       if (storeFolderConfig.getFolderPrivilegesStrategy().equals(StoreFolderConfig.FolderPrivilegesStrategy.NONE) &&
            metadataResourceVisibility.equals(MetadataResourceVisibility.PRIVATE)) {
            return;
        }
@@ -276,7 +276,7 @@ public class FilesystemStore extends AbstractStore {
     public String delResource(final ServiceContext context, final String metadataUuid, final MetadataResourceVisibility visibility,
                               final String resourceId, Boolean approved) throws Exception {
 
-        if (filesystemStoreConfig.getFolderPrivilegesStrategy().equals(FilesystemStoreConfig.FolderPrivilegesStrategy.NONE) &&
+        if (storeFolderConfig.getFolderPrivilegesStrategy().equals(StoreFolderConfig.FolderPrivilegesStrategy.NONE) &&
             visibility.equals(MetadataResourceVisibility.PRIVATE)) {
             return null;
         }
@@ -295,7 +295,7 @@ public class FilesystemStore extends AbstractStore {
     public MetadataResource patchResourceStatus(ServiceContext context, String metadataUuid, String resourceId,
                                                 MetadataResourceVisibility visibility, Boolean approved) throws Exception {
 
-        if (filesystemStoreConfig.getFolderPrivilegesStrategy().equals(FilesystemStoreConfig.FolderPrivilegesStrategy.NONE) &&
+        if (storeFolderConfig.getFolderPrivilegesStrategy().equals(StoreFolderConfig.FolderPrivilegesStrategy.NONE) &&
             visibility.equals(MetadataResourceVisibility.PRIVATE)) {
             return null;
         }
@@ -321,7 +321,7 @@ public class FilesystemStore extends AbstractStore {
 
         List<MetadataResource> resourceList = new ArrayList<>(
             getResources(context, metadataUuid, MetadataResourceVisibility.PUBLIC, filter, approved));
-        if (canEdit && filesystemStoreConfig.getFolderPrivilegesStrategy().equals(FilesystemStoreConfig.FolderPrivilegesStrategy.DEFAULT)) {
+        if (canEdit && storeFolderConfig.getFolderPrivilegesStrategy().equals(StoreFolderConfig.FolderPrivilegesStrategy.DEFAULT)) {
             resourceList.addAll(getResources(context, metadataUuid, MetadataResourceVisibility.PRIVATE, filter, approved));
         }
 
@@ -356,7 +356,7 @@ public class FilesystemStore extends AbstractStore {
     }
 
     private Path calculateMetadataDir(final Path metadataDir, final MetadataResourceVisibility visibility) {
-        if (filesystemStoreConfig.getFolderPrivilegesStrategy().equals(FilesystemStoreConfig.FolderPrivilegesStrategy.DEFAULT)) {
+        if (storeFolderConfig.getFolderPrivilegesStrategy().equals(StoreFolderConfig.FolderPrivilegesStrategy.DEFAULT)) {
             return metadataDir.resolve(visibility.toString());
         } else {
             return metadataDir;
@@ -368,7 +368,7 @@ public class FilesystemStore extends AbstractStore {
 
     private MetadataResourceVisibility calculateVisibilityToUse(MetadataResourceVisibility visibility) {
         // If the folder privileges strategy is NONE, use the PUBLIC visibility
-        if (filesystemStoreConfig.getFolderPrivilegesStrategy().equals(FilesystemStoreConfig.FolderPrivilegesStrategy.NONE) &&
+        if (storeFolderConfig.getFolderPrivilegesStrategy().equals(StoreFolderConfig.FolderPrivilegesStrategy.NONE) &&
             visibility.equals(MetadataResourceVisibility.PRIVATE)) {
             return MetadataResourceVisibility.PUBLIC;
         } else {

@@ -32,7 +32,7 @@ import org.elasticsearch.search.SearchHit;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
-import org.fao.geonet.api.records.attachments.FilesystemStoreConfig;
+import org.fao.geonet.api.records.attachments.StoreFolderConfig;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Operation;
@@ -67,9 +67,9 @@ public class ResourceLib {
      */
     public Path getDir(String access, int id) throws IOException {
         Path mdDir = getMetadataDir(ApplicationContextHolder.get().getBean(GeonetworkDataDirectory.class), id);
-        FilesystemStoreConfig filesystemStoreConfig = ApplicationContextHolder.get().getBean(FilesystemStoreConfig.class);
+        StoreFolderConfig storeFolderConfig = ApplicationContextHolder.get().getBean(StoreFolderConfig.class);
 
-        if (filesystemStoreConfig.getFolderPrivilegesStrategy() == FilesystemStoreConfig.FolderPrivilegesStrategy.DEFAULT) {
+        if (storeFolderConfig.getFolderPrivilegesStrategy() == StoreFolderConfig.FolderPrivilegesStrategy.DEFAULT) {
             String subDir = (access != null && access.equals(Params.Access.PUBLIC)) ? Params.Access.PUBLIC
                 : Params.Access.PRIVATE;
             return mdDir.resolve(subDir);
@@ -101,9 +101,9 @@ public class ResourceLib {
      * @return The metadata data directory
      */
     public Path getMetadataDir(Path dataDir, String id) throws IOException {
-        FilesystemStoreConfig filesystemStoreConfig = ApplicationContextHolder.get().getBean(FilesystemStoreConfig.class);
+        StoreFolderConfig storeFolderConfig = ApplicationContextHolder.get().getBean(StoreFolderConfig.class);
 
-        if (filesystemStoreConfig.getFolderStructureType().equals(FilesystemStoreConfig.FolderStructureType.DEFAULT)) {
+        if (storeFolderConfig.getFolderStructureType().equals(StoreFolderConfig.FolderStructureType.DEFAULT)) {
             IMetadataFolderProcessor metadataFolderProcessor = new DefaultMetadataFolderPathProcessor(dataDir, id);
             return metadataFolderProcessor.calculateFolderPath();
         } else {
@@ -184,14 +184,14 @@ public class ResourceLib {
 
     private Path getCustomMetadataFolder(Path dataDir, String id) throws IOException {
         try {
-            FilesystemStoreConfig filesystemStoreConfig = ApplicationContextHolder.get().getBean(FilesystemStoreConfig.class);
+            StoreFolderConfig storeFolderConfig = ApplicationContextHolder.get().getBean(StoreFolderConfig.class);
 
             EsSearchManager esSearchManager = ApplicationContextHolder.get().getBean(EsSearchManager.class);
             SearchResponse searchResponse = esSearchManager.query(String.format("id:(%s)", id), null, 0, 10);
             if ((searchResponse.getHits().getTotalHits() != null) && (searchResponse.getHits().getTotalHits().value > 0)) {
                 SearchHit searchHit = searchResponse.getHits().getAt(0);
 
-                IMetadataFolderProcessor customMetadataFolderPathProcessor = new CustomMetadataFolderPathProcessor(dataDir, filesystemStoreConfig, searchHit);
+                IMetadataFolderProcessor customMetadataFolderPathProcessor = new CustomMetadataFolderPathProcessor(dataDir, storeFolderConfig, searchHit);
                 return customMetadataFolderPathProcessor.calculateFolderPath();
             } else {
                 throw new ResourceNotFoundException("Metadata not found");
@@ -242,38 +242,38 @@ public class ResourceLib {
      */
     private class CustomMetadataFolderPathProcessor implements IMetadataFolderProcessor {
         Path dataDir;
-        FilesystemStoreConfig filesystemStoreConfig;
+        StoreFolderConfig filesystemStoreConfig;
         SearchHit searchHit;
 
-        CustomMetadataFolderPathProcessor(Path dataDir, FilesystemStoreConfig filesystemStoreConfig, SearchHit searchHit) {
+        CustomMetadataFolderPathProcessor(Path dataDir, StoreFolderConfig storeFolderConfig, SearchHit searchHit) {
             this.dataDir = dataDir;
-            this.filesystemStoreConfig = filesystemStoreConfig;
+            this.filesystemStoreConfig = storeFolderConfig;
             this.searchHit = searchHit;
         }
 
         public Path calculateFolderPath() {
             DocumentContext jsonContext = JsonPath.parse(searchHit.getSourceAsString());
-            boolean isDraft = (searchHit.getSourceAsMap().get("draft") != null) &&
-                (!searchHit.getSourceAsMap().get("draft").equals("n"));
+            boolean isPublished = (searchHit.getSourceAsMap().get("isPublishedToAll") != null) &&
+                (searchHit.getSourceAsMap().get("isPublishedToAll").equals("true"));
 
             String path;
 
             try {
-                String folderStructure = !isDraft ?
-                    filesystemStoreConfig.getFolderStructure() : filesystemStoreConfig.getFolderStructureDraft();
-                path = replaceTokens(jsonContext, folderStructure.split(File.separator), isDraft);
+                String folderStructure = isPublished ?
+                    filesystemStoreConfig.getFolderStructure() : filesystemStoreConfig.getFolderStructureNonPublic();
+                path = replaceTokens(jsonContext, folderStructure.split(File.separator), isPublished);
 
             } catch (Exception ex) {
-                String folderStructure = !isDraft ?
-                    filesystemStoreConfig.getFolderStructureFallback() : filesystemStoreConfig.getFolderStructureFallbackDraft();
+                String folderStructure = isPublished ?
+                    filesystemStoreConfig.getFolderStructureFallback() : filesystemStoreConfig.getFolderStructureFallbackNonPublic();
 
-                path = replaceTokens(jsonContext, folderStructure.split(File.separator), isDraft);
+                path = replaceTokens(jsonContext, folderStructure.split(File.separator), isPublished);
             }
 
             return dataDir.resolve(path);
         }
 
-        private String replaceTokens(DocumentContext jsonContext, String[] tokens, boolean isWorkingCopy) {
+        private String replaceTokens(DocumentContext jsonContext, String[] tokens, boolean isPublished) {
             List<String> replacedTokens = new ArrayList<>();
             for (int i = 0; i < tokens.length; i++) {
                 String valueToAdd = "";
@@ -289,7 +289,7 @@ public class ResourceLib {
                     valueToAdd = token;
                 }
 
-                if ((i == tokens.length - 1) && isWorkingCopy) {
+                if ((i == tokens.length - 1) && !isPublished) {
                     valueToAdd = valueToAdd + "-draft";
                 }
 
