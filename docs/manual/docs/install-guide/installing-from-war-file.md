@@ -65,7 +65,7 @@ For [Jetty](https://www.eclipse.org/jetty/) we the following versions: 9.4.x. Ne
 
     Open <http://localhost:9200> in your web browser to check that Elasticsearch is running.
 
-    To use an existing instance check `on` in [Installing search platform](installing-index.md).
+    To use an existing instance check Configure connection in [Installing search platform](installing-index.md).
 
 5.  Up and running?
 
