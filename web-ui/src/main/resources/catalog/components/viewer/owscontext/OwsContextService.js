@@ -559,8 +559,6 @@
             name = "{type=osm}";
           } else if (source instanceof ol.source.BingMaps) {
             name = "{type=bing_aerial}";
-          } else if (source instanceof ol.source.Stamen) {
-            name = "{type=stamen,name=" + layer.getSource().get("type") + "}";
           } else if (source instanceof ol.source.WMTS) {
             name = "{type=wmts,name=" + layer.get("name") + "}";
             params.server = [
