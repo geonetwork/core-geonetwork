@@ -296,7 +296,6 @@
            * Handled types are:
            *  * `osm`: OSM, no other prop required
            *  * `bing_aerial`: Bing Aerial background, required prop: `key`
-           *  * `stamen`: Stamen layers, required prop: `name`
            *  * `wms`: generic WMS layer, required props: `name`, `url`
            *  * `wmts`: generic WMTS layer, required props: `name`, `url`
            *  * `tms`: generic TMS layer, required prop: `url`
@@ -383,21 +382,6 @@
                       imagerySet: "Aerial"
                     }),
                     title: layerInfo.title || "Bing Aerial"
-                  })
-                );
-                break;
-
-              case "stamen":
-                //We make watercolor the default layer
-                var type = layerInfo.name ? layerInfo.name : "watercolor",
-                  source = new ol.source.Stamen({
-                    layer: type
-                  });
-                source.set("type", type);
-                defer.resolve(
-                  new ol.layer.Tile({
-                    source: source,
-                    title: layerInfo.title || "Stamen"
                   })
                 );
                 break;
@@ -2327,17 +2311,6 @@
                     imagerySet: "Aerial"
                   }),
                   title: title || "Bing Aerial"
-                });
-              case "stamen":
-                //We make watercolor the default layer
-                var type = opt && opt.name ? opt.name : "watercolor",
-                  source = new ol.source.Stamen({
-                    layer: type
-                  });
-                source.set("type", type);
-                return new ol.layer.Tile({
-                  source: source,
-                  title: title || "Stamen"
                 });
 
               case "wmts":
