@@ -677,7 +677,6 @@
                 //   });
                 // }
                 // Add each WMS layer to the map
-                scope.layers = scope.gnCurrentEdit.layerConfig;
                 angular.forEach(scope.gnCurrentEdit.layerConfig, function (layer) {
                   scope.map.addLayer(
                     new ol.layer.Tile({
@@ -1952,6 +1951,7 @@
                   params: {}
                 };
                 scope.modelOptions = angular.copy(gnGlobalSettings.modelOptions);
+                scope.selectRecords = [];
               },
               post: function postLink(scope, iElement, iAttrs) {
                 scope.mode = iAttrs["gnLinkToMetadata"];
