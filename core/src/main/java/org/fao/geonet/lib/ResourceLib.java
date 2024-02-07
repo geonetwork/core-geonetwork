@@ -132,7 +132,7 @@ public class ResourceLib {
         denyAccess(context);
     }
 
-    public void denyAccess(ServiceContext context) throws Exception {
+    public void denyAccess(ServiceContext context) throws AccessDeniedException, OperationNotAllowedEx {
         if (context.getUserSession().isAuthenticated()) {
             throw new AccessDeniedException("User is not permitted to access this resource");
         } else {
@@ -150,6 +150,9 @@ public class ResourceLib {
             denyAccess(context);
     }
 
+    /**
+     * @return the absolute path of the folder choosen to store all deleted metadata
+     */
     public Path getRemovedDir(int id) {
         ApplicationContext appContext = ApplicationContextHolder.get();
         GeonetworkDataDirectory dataDirectory = appContext.getBean(GeonetworkDataDirectory.class);
@@ -173,10 +176,10 @@ public class ResourceLib {
     // ---
     // -----------------------------------------------------------------------------
 
-    private String pad(int group, int lenght) {
+    private String pad(int group, int length) {
         String text = Integer.toString(group);
 
-        while (text.length() < lenght)
+        while (text.length() < length)
             text = "0" + text;
 
         return text;
