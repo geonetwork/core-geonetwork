@@ -174,7 +174,7 @@
       $scope.selectStaticPage = function (v) {
         $scope.isUpdate = true;
         $scope.staticPageSelected = v;
-        $scope.isGroupEnabled = $scope.staticPageSelected.status == "PRIVATE_GROUP";
+        $scope.isGroupEnabled = $scope.staticPageSelected.status == "GROUP";
 
         var link =
           "api/pages/" +
@@ -237,7 +237,7 @@
         }
       };
       $scope.updateGroupSelection = function () {
-        if ($scope.staticPageSelected.status === "PRIVATE_GROUP") {
+        if ($scope.staticPageSelected.status === "GROUP") {
           $scope.isGroupEnabled = true;
         } else {
           $scope.isGroupEnabled = false;

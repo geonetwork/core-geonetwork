@@ -79,7 +79,7 @@ public class Page extends GeonetEntity implements Serializable {
     }
 
     public enum PageStatus {
-        PUBLIC, PUBLIC_ONLY, PRIVATE_GROUP, PRIVATE, HIDDEN;
+        PUBLIC, PUBLIC_ONLY, GROUP, PRIVATE, HIDDEN;
     }
 
     public enum PageFormat {
@@ -138,7 +138,7 @@ public class Page extends GeonetEntity implements Serializable {
         return status;
     }
 
-    @Column(nullable = true, name = "access_expression")
+    @Column(name = "access_expression")
     public String getAccessExpression() {
         return accessExpression;
     }

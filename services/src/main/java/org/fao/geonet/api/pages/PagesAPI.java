@@ -365,7 +365,7 @@ public class PagesAPI {
         final UserSession us = ApiUtils.getUserSession(session);
         if (page.get().getStatus().equals(Page.PageStatus.HIDDEN) && us.getProfile() != Profile.Administrator) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        } else if ((page.get().getStatus().equals(Page.PageStatus.PRIVATE) || page.get().getStatus().equals(Page.PageStatus.PRIVATE_GROUP)) && (us.getProfile() == null || us.getProfile() == Profile.Guest)) {
+        } else if ((page.get().getStatus().equals(Page.PageStatus.PRIVATE) || page.get().getStatus().equals(Page.PageStatus.GROUP)) && (us.getProfile() == null || us.getProfile() == Profile.Guest)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         } else {
             String content;
@@ -416,26 +416,26 @@ public class PagesAPI {
                 || page.getStatus().equals(Page.PageStatus.PUBLIC)
                 || page.getStatus().equals(Page.PageStatus.PUBLIC_ONLY) && !us.isAuthenticated()) {
                 if (section == null) {
-                    filteredResult.add(new org.fao.geonet.api.pages.PageProperties(page));
+                    filteredResult.add(new PageProperties(page));
                 } else {
                     final List<Page.PageSection> sections = page.getSections();
                     final boolean containsRequestedSection = sections.contains(section);
                     if (containsRequestedSection) {
-                        filteredResult.add(new org.fao.geonet.api.pages.PageProperties(page));
+                        filteredResult.add(new PageProperties(page));
                     }
                 }
-            } else if (page.getStatus().equals(Page.PageStatus.PRIVATE_GROUP) && us.getProfile() != null && us.getProfile() != Profile.Guest) {
-                String myUserId = us.getUserId();
+            } else if (page.getStatus().equals(Page.PageStatus.GROUP) && us.getProfile() != null && us.getProfile() != Profile.Guest) {
+                String currentUserId = us.getUserId();
                 String group = page.getAccessExpression();
 
                 if (us.getProfile() == Profile.Administrator) {
-                    filteredResult.add(new org.fao.geonet.api.pages.PageProperties(page));
-                } else if (StringUtils.isNotEmpty(myUserId)) {
-                    List<UserGroup> userGroups = userGroupRepository.findAll(UserGroupSpecs.hasUserId(Integer.parseInt(myUserId)));
+                    filteredResult.add(new PageProperties(page));
+                } else if (StringUtils.isNotEmpty(currentUserId)) {
+                    List<UserGroup> userGroups = userGroupRepository.findAll(UserGroupSpecs.hasUserId(Integer.parseInt(currentUserId)));
                     if (CollectionUtils.isNotEmpty(userGroups)) {
                         for (UserGroup userGroup : userGroups) {
                             if (userGroup.getGroup().getName().equals(group)) {
-                                filteredResult.add(new org.fao.geonet.api.pages.PageProperties(page));
+                                filteredResult.add(new PageProperties(page));
                                 break;
                             }
 
@@ -533,17 +533,17 @@ public class PagesAPI {
      * @param page    the page
      * @return the response entity
      */
-    private ResponseEntity<org.fao.geonet.api.pages.PageProperties> checkPermissionsOnSinglePageAndReturn(final HttpSession session, final Page page) {
+    private ResponseEntity<PageProperties> checkPermissionsOnSinglePageAndReturn(final HttpSession session, final Page page) {
         if (page == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {
             final UserSession us = ApiUtils.getUserSession(session);
             if (page.getStatus().equals(Page.PageStatus.HIDDEN) && us.getProfile() != Profile.Administrator) {
                 return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-            } else if ((page.getStatus().equals(Page.PageStatus.PRIVATE) || page.getStatus().equals(Page.PageStatus.PRIVATE_GROUP)) && (us.getProfile() == null || us.getProfile() == Profile.Guest)) {
+            } else if ((page.getStatus().equals(Page.PageStatus.PRIVATE) || page.getStatus().equals(Page.PageStatus.GROUP)) && (us.getProfile() == null || us.getProfile() == Profile.Guest)) {
                 return new ResponseEntity<>(HttpStatus.FORBIDDEN);
             } else {
-                return new ResponseEntity<>(new org.fao.geonet.api.pages.PageProperties(page), HttpStatus.OK);
+                return new ResponseEntity<>(new PageProperties(page), HttpStatus.OK);
             }
         }
     }

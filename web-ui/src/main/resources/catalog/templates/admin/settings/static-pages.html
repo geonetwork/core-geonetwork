@@ -312,9 +312,7 @@
                 <option value="PRIVATE">
                   {{'staticPageStatus-PRIVATE' | translate }}
                 </option>
-                <option value="PRIVATE_GROUP">
-                  {{'staticPageStatus-PRIVATE_GROUP' | translate }}
-                </option>
+                <option value="GROUP">{{'staticPageStatus-GROUP' | translate }}</option>
                 <option value="PUBLIC">{{'staticPageStatus-PUBLIC' | translate }}</option>
               </select>
             </div>
@@ -331,11 +329,7 @@
                 data-ng-readonly="!isGroupEnabled"
                 data-ng-model="staticPageSelected.group"
               >
-                <option
-                  data-ng-repeat="g in groups"
-                  value="{{g.name}}"
-                  data-ng-selected="g.name==='dfo'"
-                >
+                <option data-ng-repeat="g in groups" value="{{g.name}}">
                   {{g.label[lang]|empty:g.name}}
                 </option>
               </select>
