@@ -124,9 +124,8 @@
                     as="xs:boolean"/>
 
       <!-- Add creation date if it does not exist-->
-      <xsl:if test="not($isCreationDateAvailable)
-                    or (/root/env/createDate != ''
-                        and /root/env/newRecord = 'true')">
+      <xsl:if test="/root/env/createDate != '' and
+                    (not($isCreationDateAvailable) or /root/env/newRecord = 'true')">
         <mdb:dateInfo>
           <xsl:copy-of select="gn-fn-iso19115-3.2018:write-date-or-dateTime(/root/env/createDate, 'creation')"/>
         </mdb:dateInfo>
