@@ -19,7 +19,7 @@
 
 
   <!-- Readonly elements -->
-  <xsl:template mode="modeso19115-i-3.2018GNSS"
+  <xsl:template mode="mode-iso19115-3.2018GNSS"
                 match="mdb:metadataIdentifier/mcc:MD_Identifier/mcc:code|
                        mdb:dateInfo/cit:CI_Date[cit:dateType/cit:CI_DateTypeCode = 'revision']/cit:date|
                        mdb:dateInfo/cit:CI_Date[cit:dateType/cit:CI_DateTypeCode = 'revision']/cit:dateType"
@@ -372,7 +372,7 @@
   <xsl:template mode="mode-iso19115-3.2018GNSS"
                 match="*[
                         *[1]/name() = $editorConfig/editor/tableFields/table/@for and
-                        preceding-sibling::*[1]/name() = name() and
+                        preceding-sibling::*[1]/*[1]/name() = *[1]/name() and
                         not(@gn:addedObj) and
                         $isFlatMode]"
                 priority="2000"/>
