@@ -420,6 +420,9 @@
             resourceManagementExternalProperties: angular.fromJson(
               getInputValue("resourceManagementExternalProperties")
             ),
+            resourceFolderPrivilegesStrategy: getInputValue(
+              "resourceFolderPrivilegesStrategy"
+            ),
             extent: extent,
             dataFormats: dataFormats,
             isMinor: getInputValue("minor") === "true",
