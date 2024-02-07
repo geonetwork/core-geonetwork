@@ -194,6 +194,7 @@ The tables below show a comprehensive overview of Roles and Features, it explain
     | Settings / CSW| | | | | | :material-check-circle: |
     | Settings / CSW test| | | | | | :material-check-circle: |
     | Settings / Map servers| | | | | | :material-check-circle: |
+    | Settings / Static pages| | | | | | :material-check-circle: |
     | Tools / Catalogue admin tools| | | | | | :material-check-circle: |
     | Tools / Batch process| | | | | | :material-check-circle: |
     | Tools / Transfer ownership| | | | | | :material-check-circle: |
