@@ -38,6 +38,7 @@
   <modules>
     <module>camelPeriodicProducer</module>
     <module>wfsfeature-harvester</module>
+    <module>data-analyzer</module>
   </modules>
   <dependencies>
 
@@ -131,7 +132,6 @@
       <groupId>org.geotools</groupId>
       <artifactId>gt-wfs-ng</artifactId>
     </dependency>
-
   </dependencies>
 
   <build>
