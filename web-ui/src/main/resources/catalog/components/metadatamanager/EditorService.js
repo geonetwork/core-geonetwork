@@ -390,7 +390,9 @@
           // and is depending on each schema. If emtpy an empty array is set.
           var getLayerConfiguration = function () {
             var configuration = angular.fromJson(getInputValue("layerConfig")) || [];
-            return Array.isArray(configuration) ? configuration : [configuration.resource];
+            return Array.isArray(configuration)
+              ? configuration
+              : [configuration.resource];
           };
 
           var extent = [],

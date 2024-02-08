@@ -1210,6 +1210,12 @@
           <artifactId>diff-match-patch</artifactId>
           <version>1.2</version>
       </dependency>
+
+      <dependency>
+        <groupId>org.json</groupId>
+        <artifactId>json</artifactId>
+        <version>20240205</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
