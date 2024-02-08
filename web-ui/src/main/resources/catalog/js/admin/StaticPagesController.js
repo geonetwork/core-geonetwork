@@ -68,7 +68,6 @@
       function loadGroups() {
         $http.get("../api/groups").then(function (r) {
           $scope.groups = r.data;
-          console.log("group loaded: ", $scope.groups);
         });
       }
 
@@ -161,7 +160,7 @@
           data: "",
           content: "",
           status: "HIDDEN",
-          group: "",
+          groups: "",
           label: "",
           sections: []
         };
@@ -174,7 +173,7 @@
       $scope.selectStaticPage = function (v) {
         $scope.isUpdate = true;
         $scope.staticPageSelected = v;
-        $scope.isGroupEnabled = $scope.staticPageSelected.status == "GROUP";
+        $scope.isGroupEnabled = $scope.staticPageSelected.status == "GROUPS";
 
         var link =
           "api/pages/" +
@@ -225,6 +224,12 @@
           $scope.uploadScope.submit();
         } else {
           delete sp.data;
+
+          // Reset empty string to null to avoid parsing error
+          if (sp.groups =='') {
+            sp.groups = null;
+          }
+
           return $http
             .put(action, sp, {
               headers: {
@@ -237,7 +242,7 @@
         }
       };
       $scope.updateGroupSelection = function () {
-        if ($scope.staticPageSelected.status === "GROUP") {
+        if ($scope.staticPageSelected.status === "GROUPS") {
           $scope.isGroupEnabled = true;
         } else {
           $scope.isGroupEnabled = false;

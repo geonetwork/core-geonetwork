@@ -312,22 +312,23 @@
                 <option value="PRIVATE">
                   {{'staticPageStatus-PRIVATE' | translate }}
                 </option>
-                <option value="GROUP">{{'staticPageStatus-GROUP' | translate }}</option>
+                <option value="GROUPS">{{'staticPageStatus-GROUPS' | translate }}</option>
                 <option value="PUBLIC">{{'staticPageStatus-PUBLIC' | translate }}</option>
               </select>
             </div>
           </div>
 
           <div class="form-group">
-            <label class="control-label col-sm-3" data-translate="">group</label>
+            <label class="control-label col-sm-3" data-translate="">groups</label>
 
             <div class="col-sm-9">
               <select
-                name="group"
+                name="groups"
                 class="form-control"
                 data-ng-disabled="!isGroupEnabled"
                 data-ng-readonly="!isGroupEnabled"
-                data-ng-model="staticPageSelected.group"
+                data-ng-model="staticPageSelected.groups"
+                multiple
               >
                 <option data-ng-repeat="g in groups" value="{{g.name}}">
                   {{g.label[lang]|empty:g.name}}

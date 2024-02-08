@@ -22,6 +22,7 @@
  */
 package org.fao.geonet.api.pages;
 
+import com.google.gson.Gson;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -165,7 +166,7 @@ public class PagesAPI {
         String language = pageProperties.getLanguage();
         String pageId = pageProperties.getPageId();
         Page.PageFormat format = pageProperties.getFormat();
-        String group = pageProperties.getGroup();
+        List<String> groups = pageProperties.getGroups();
 
         if (language != null) {
             checkValidLanguage(language);
@@ -193,8 +194,12 @@ public class PagesAPI {
                 newPage.setStatus(status);
             }
 
-            if (StringUtils.isNotEmpty(group)) {
-                newPage.setAccessExpression(group);
+            if (CollectionUtils.isNotEmpty(groups)) {
+                AccessExpression ae = new AccessExpression();
+                ae.setGroups(groups);
+                Gson gson = new Gson();
+
+                newPage.setAccessExpression(gson.toJson(ae));
             }
 
             pageRepository.save(newPage);
@@ -215,7 +220,15 @@ public class PagesAPI {
         Page.PageFormat format = pageProperties.getFormat();
         String newLabel = pageProperties.getLabel();
         String newIcon = pageProperties.getIcon();
-        String group = pageProperties.getGroup();
+
+        String accessExpressionJSON = null;
+        if (CollectionUtils.isNotEmpty(pageProperties.getGroups())) {
+            AccessExpression ae = new AccessExpression();
+            ae.setGroups(pageProperties.getGroups());
+            Gson gson = new Gson();
+            accessExpressionJSON = gson.toJson(ae);
+        }
+
 
         checkValidLanguage(language);
 
@@ -255,7 +268,7 @@ public class PagesAPI {
                 pageProperties.getStatus() != null ? pageProperties.getStatus() : pageToUpdate.getStatus(),
                 newLabel != null ? newLabel : pageToUpdate.getLabel(),
                 newIcon != null ? newIcon : pageToUpdate.getIcon(),
-                group != null ? group : pageToUpdate.getAccessExpression());
+                StringUtils.isNotEmpty(accessExpressionJSON) ? accessExpressionJSON : pageToUpdate.getAccessExpression());
 
             pageRepository.save(pageCopy);
             pageRepository.delete(pageToUpdate);
@@ -266,7 +279,7 @@ public class PagesAPI {
             pageToUpdate.setStatus(pageProperties.getStatus() != null ? pageProperties.getStatus() : pageToUpdate.getStatus());
             pageToUpdate.setLabel(newLabel);
             pageToUpdate.setIcon(newIcon);
-            pageToUpdate.setAccessExpression(group != null ? group : pageToUpdate.getAccessExpression());
+            pageToUpdate.setAccessExpression(StringUtils.isNotEmpty(accessExpressionJSON) ? accessExpressionJSON : pageToUpdate.getAccessExpression());
             pageRepository.save(pageToUpdate);
         }
 
@@ -365,7 +378,7 @@ public class PagesAPI {
         final UserSession us = ApiUtils.getUserSession(session);
         if (page.get().getStatus().equals(Page.PageStatus.HIDDEN) && us.getProfile() != Profile.Administrator) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        } else if ((page.get().getStatus().equals(Page.PageStatus.PRIVATE) || page.get().getStatus().equals(Page.PageStatus.GROUP)) && (us.getProfile() == null || us.getProfile() == Profile.Guest)) {
+        } else if ((page.get().getStatus().equals(Page.PageStatus.PRIVATE) || page.get().getStatus().equals(Page.PageStatus.GROUPS)) && (us.getProfile() == null || us.getProfile() == Profile.Guest)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         } else {
             String content;
@@ -424,21 +437,25 @@ public class PagesAPI {
                         filteredResult.add(new PageProperties(page));
                     }
                 }
-            } else if (page.getStatus().equals(Page.PageStatus.GROUP) && us.getProfile() != null && us.getProfile() != Profile.Guest) {
+            } else if (page.getStatus().equals(Page.PageStatus.GROUPS) && us.getProfile() != null && us.getProfile() != Profile.Guest) {
                 String currentUserId = us.getUserId();
-                String group = page.getAccessExpression();
 
                 if (us.getProfile() == Profile.Administrator) {
                     filteredResult.add(new PageProperties(page));
                 } else if (StringUtils.isNotEmpty(currentUserId)) {
                     List<UserGroup> userGroups = userGroupRepository.findAll(UserGroupSpecs.hasUserId(Integer.parseInt(currentUserId)));
-                    if (CollectionUtils.isNotEmpty(userGroups)) {
-                        for (UserGroup userGroup : userGroups) {
-                            if (userGroup.getGroup().getName().equals(group)) {
-                                filteredResult.add(new PageProperties(page));
-                                break;
-                            }
 
+                    Gson gson = new Gson();
+                    AccessExpression accessExpression = gson.fromJson(page.getAccessExpression(), AccessExpression.class);
+
+                    if (CollectionUtils.isNotEmpty(userGroups) && accessExpression!=null && CollectionUtils.isNotEmpty(accessExpression.getGroups())) {
+                        for (UserGroup userGroup : userGroups) {
+                            for (String group : accessExpression.getGroups()) {
+                                if (userGroup.getGroup().getName().equals(group)) {
+                                    filteredResult.add(new PageProperties(page));
+                                    break;
+                                }
+                            }
                         }
                     }
                 }
@@ -540,7 +557,7 @@ public class PagesAPI {
             final UserSession us = ApiUtils.getUserSession(session);
             if (page.getStatus().equals(Page.PageStatus.HIDDEN) && us.getProfile() != Profile.Administrator) {
                 return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-            } else if ((page.getStatus().equals(Page.PageStatus.PRIVATE) || page.getStatus().equals(Page.PageStatus.GROUP)) && (us.getProfile() == null || us.getProfile() == Profile.Guest)) {
+            } else if ((page.getStatus().equals(Page.PageStatus.PRIVATE) || page.getStatus().equals(Page.PageStatus.GROUPS)) && (us.getProfile() == null || us.getProfile() == Profile.Guest)) {
                 return new ResponseEntity<>(HttpStatus.FORBIDDEN);
             } else {
                 return new ResponseEntity<>(new PageProperties(page), HttpStatus.OK);
