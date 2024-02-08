@@ -335,10 +335,24 @@ public class FilesystemStore extends AbstractStore {
     @Override
     public void renameFolder(Path originalPath, Path newPath) {
         if (Files.exists(originalPath)) {
+            try {
+                Files.createDirectories(newPath.getParent());
+            } catch (IOException e) {
+                Log.error(Geonet.RESOURCES,
+                        String.format("Datastore issue. Failed to create parent folders of %s. Error is: %s", newPath, e.getMessage()));
+            }
             boolean succeed = originalPath.toFile().renameTo(newPath.toFile());
             if (!succeed) {
                 Log.error(Geonet.RESOURCES,
                         String.format("Datastore issue. Failed to rename %s in %s", originalPath, newPath));
+            }
+            // TODO: cleanup empty folder of originalPath?
+        } else {
+            try {
+                Files.createDirectories(newPath);
+            } catch (IOException e) {
+                Log.error(Geonet.RESOURCES,
+                        String.format("Datastore issue. Failed to create folder %s. Error is: %s", newPath, e.getMessage()));
             }
         }
     }
