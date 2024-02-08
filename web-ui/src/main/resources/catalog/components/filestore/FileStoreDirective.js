@@ -147,11 +147,12 @@
       ) {
         return {
           restrict: "A",
-          templateUrl: "../../catalog/components/filestore/" + "partials/filestore.html",
+          templateUrl: "../../catalog/components/filestore/partials/filestore.html",
           scope: {
             uuid: "=gnFileStore",
             selectCallback: "&",
-            filter: "="
+            filter: "=",
+            layout: "@"
           },
           link: function (scope, element, attrs, controller) {
             scope.autoUpload =
@@ -161,11 +162,12 @@
               : attrs["defaultStatus"];
             scope.onlinesrcService = gnOnlinesrc;
             scope.gnCurrentEdit = gnCurrentEdit;
+            scope.selectOptions = { current: undefined };
+            scope.metadataResources = [];
 
             scope.setResource = function (r) {
               scope.selectCallback({ selected: r });
             };
-            scope.metadataResources = [];
 
             scope.loadMetadataResources = function () {
               return gnfilestoreService
@@ -195,14 +197,35 @@
                 }
               );
             };
+
             scope.deleteResource = function (r) {
               gnfilestoreService.delete(r).then(scope.loadMetadataResources);
             };
-            scope.$on("gnFileStoreUploadDone", scope.loadMetadataResources);
+
+            scope.$on("gnFileStoreUploadDone", function (evt, data) {
+              if (data) {
+                // Select the provided resource by the url value.
+                scope.loadMetadataResources().then(function () {
+                  for (var i = 0; i < scope.metadataResources.length; i++) {
+                    if (scope.metadataResources[i].url === data) {
+                      scope.setResource(scope.metadataResources[i]);
+                      break;
+                    }
+                  }
+                });
+              } else {
+                scope.loadMetadataResources();
+              }
+            });
 
             scope.$watch("filter", function (newValue, oldValue) {
               if (angular.isDefined(scope.uuid) && newValue != oldValue) {
                 scope.loadMetadataResources();
+              }
+            });
+            scope.$watch("selectOptions.current", function (newValue, oldValue) {
+              if (newValue != oldValue) {
+                scope.setResource(scope.selectOptions.current);
               }
             });
             scope.$watch("uuid", function (newValue, oldValue) {
@@ -221,6 +244,9 @@
                 };
               }
             });
+            if (angular.isDefined(scope.uuid)) {
+              scope.loadMetadataResources();
+            }
           }
         };
       }
