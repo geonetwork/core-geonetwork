@@ -25,6 +25,7 @@
 
 package org.fao.geonet.api.records.attachments;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 
 public class StoreFolderConfig {
@@ -75,10 +76,10 @@ public class StoreFolderConfig {
     }
 
     public String getFolderStructureNonPublic() {
-        return folderStructureNonPublic;
+        return StringUtils.isNotBlank(folderStructureNonPublic) ? folderStructureNonPublic : getFolderStructure();
     }
 
     public String getFolderStructureFallbackNonPublic() {
-        return folderStructureFallbackNonPublic;
+        return StringUtils.isNotBlank(folderStructureFallbackNonPublic) ? folderStructureFallbackNonPublic : getFolderStructureFallback();
     }
 }
