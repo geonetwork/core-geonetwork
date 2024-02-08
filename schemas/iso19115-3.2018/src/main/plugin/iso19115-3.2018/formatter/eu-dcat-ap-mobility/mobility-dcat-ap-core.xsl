@@ -16,6 +16,7 @@
                 xmlns:mobilitydcatap="https://w3id.org/mobilitydcat-ap"
                 exclude-result-prefixes="#all">
 
+  <!-- Import related templates -->
   <xsl:import href="../eu-dcat-ap/eu-dcat-ap-core.xsl"/>
 
   <xsl:template name="create-namespaces-eu-dcat-mobilitydcatap">
@@ -23,7 +24,7 @@
     <xsl:namespace name="mobilitydcatap" select="'https://w3id.org/mobilitydcat-ap'"/>
   </xsl:template>
 
-
+  <!-- Create Mobility Theme element -->
   <xsl:variable name="mobilityThemeThesaurusKey"
                 select="'https://w3id.org/mobilitydcat-ap/mobility-theme'"/>
 
@@ -31,18 +32,56 @@
                 match="mri:descriptiveKeywords[*/mri:thesaurusName/*/cit:title/*/@xlink:href = $mobilityThemeThesaurusKey]">
     <xsl:for-each select="*/mri:keyword[*/text() != '']">
 
-<!--      <xsl:variable name="hvdCategory"-->
-<!--                    select="$euHvdDataCategories/rdf:RDF/rdf:Description[skos:prefLabel/text() = current()/*/text()]"/>-->
-<!--      <xsl:if test="$hvdCategory">-->
-        <mobilitydcatap:mobilityTheme>
-<!--          <skos:Concept rdf:about="{$hvdCategory/@rdf:about}">-->
-<!--            <xsl:copy-of select="$hvdCategory/skos:prefLabel[@xml:lang = $languages/@iso2code]"/>-->
-<!--          </skos:Concept>-->
-          <skos:Concept rdf:about="{*/@xlink:href}">
-            <skos:prefLabel><xsl:value-of select="*/text()"/></skos:prefLabel>
-          </skos:Concept>
-        </mobilitydcatap:mobilityTheme>
-<!--      </xsl:if>-->
+      <mobilitydcatap:mobilityTheme>
+        <skos:Concept rdf:about="{*/@xlink:href}">
+          <skos:prefLabel><xsl:value-of select="*/text()"/></skos:prefLabel>
+        </skos:Concept>
+      </mobilitydcatap:mobilityTheme>
+    </xsl:for-each>
+  </xsl:template>
+
+  <!-- Create georeferencing method  element -->
+  <xsl:variable name="georeferencingMethodThesaurusKey"
+                select="'https://w3id.org/mobilitydcat-ap/georeferencing-method'"/>
+  <xsl:template mode="iso19115-3-to-dcat"
+                match="mri:descriptiveKeywords[*/mri:thesaurusName/*/cit:title/*/@xlink:href = $georeferencingMethodThesaurusKey]">
+    <xsl:for-each select="*/mri:keyword[*/text() != '']">
+
+      <mobilitydcatap:georeferencingMethod>
+        <skos:Concept rdf:about="{*/@xlink:href}">
+          <skos:prefLabel><xsl:value-of select="*/text()"/></skos:prefLabel>
+        </skos:Concept>
+      </mobilitydcatap:georeferencingMethod>
+    </xsl:for-each>
+  </xsl:template>
+
+  <!-- Create network coverage  element -->
+  <xsl:variable name="networkCoverageThesaurusKey"
+                select="'https://w3id.org/mobilitydcat-ap/network-coverage'"/>
+  <xsl:template mode="iso19115-3-to-dcat"
+                match="mri:descriptiveKeywords[*/mri:thesaurusName/*/cit:title/*/@xlink:href = $networkCoverageThesaurusKey]">
+    <xsl:for-each select="*/mri:keyword[*/text() != '']">
+
+      <mobilitydcatap:networkCoverage>
+        <skos:Concept rdf:about="{*/@xlink:href}">
+          <skos:prefLabel><xsl:value-of select="*/text()"/></skos:prefLabel>
+        </skos:Concept>
+      </mobilitydcatap:networkCoverage>
+    </xsl:for-each>
+  </xsl:template>
+
+  <!-- Create Transportation Mode element -->
+  <xsl:variable name="transportationModeThesaurusKey"
+                select="'https://w3id.org/mobilitydcat-ap/transport-mode'"/>
+  <xsl:template mode="iso19115-3-to-dcat"
+                match="mri:descriptiveKeywords[*/mri:thesaurusName/*/cit:title/*/@xlink:href = $transportationModeThesaurusKey]">
+    <xsl:for-each select="*/mri:keyword[*/text() != '']">
+
+      <mobilitydcatap:transportMode>
+        <skos:Concept rdf:about="{*/@xlink:href}">
+          <skos:prefLabel><xsl:value-of select="*/text()"/></skos:prefLabel>
+        </skos:Concept>
+      </mobilitydcatap:transportMode>
     </xsl:for-each>
   </xsl:template>
 
