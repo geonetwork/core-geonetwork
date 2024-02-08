@@ -276,7 +276,7 @@ public class EsHTTPProxy {
 
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Execute a search query and get back search hits that match the query.",
-        description = "The search API execute a search query (q query string or JSON request body). For more information see https://www.elastic.co/guide/en/elasticsearch/reference/current/search-search.html for search parameters, and https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl.html Query DSL.")
+        description = "The search API execute a search query with a JSON request body. For more information see https://www.elastic.co/guide/en/elasticsearch/reference/current/search-search.html for search parameters, and https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl.html JSON Query DSL.")
     @RequestMapping(value = "/search/records/_search",
         method = RequestMethod.POST,
         produces = MediaType.APPLICATION_JSON_VALUE,
