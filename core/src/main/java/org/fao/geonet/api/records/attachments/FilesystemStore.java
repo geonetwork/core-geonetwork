@@ -335,7 +335,11 @@ public class FilesystemStore extends AbstractStore {
     @Override
     public void renameFolder(Path originalPath, Path newPath) {
         if (Files.exists(originalPath)) {
-            originalPath.toFile().renameTo(newPath.toFile());
+            boolean succeed = originalPath.toFile().renameTo(newPath.toFile());
+            if (!succeed) {
+                Log.error(Geonet.RESOURCES,
+                        String.format("Datastore issue. Failed to rename %s in %s", originalPath, newPath));
+            }
         }
     }
 
