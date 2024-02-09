@@ -23,14 +23,13 @@
 
 package org.fao.geonet.kernel.csw.services.getrecords;
 
+import co.elastic.clients.elasticsearch._types.SortOptions;
+import co.elastic.clients.elasticsearch.core.SearchResponse;
+import co.elastic.clients.elasticsearch.core.search.Hit;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
-import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.search.SearchHit;
-import org.elasticsearch.search.sort.FieldSortBuilder;
-import org.elasticsearch.search.sort.SortBuilder;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.NodeInfo;
@@ -53,8 +52,6 @@ import org.fao.geonet.kernel.search.EsFilterBuilder;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
-import org.geotools.xsd.Configuration;
-import org.geotools.xsd.Parser;
 import org.jdom.Attribute;
 import org.jdom.Content;
 import org.jdom.Element;
@@ -62,11 +59,7 @@ import org.jdom.Namespace;
 import org.geotools.api.filter.Filter;
 import org.geotools.api.filter.capability.FilterCapabilities;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.xml.sax.SAXException;
 
-import javax.xml.parsers.ParserConfigurationException;
-import java.io.IOException;
-import java.io.StringReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -439,7 +432,7 @@ public class SearchController {
      */
         public Element search(ServiceContext context, int startPos, int maxRecords,
                                          ResultType resultType, String outSchema, ElementSetName setName,
-                                         Element filterExpr, String filterVersion, List<SortBuilder<FieldSortBuilder>> sort,
+                                         Element filterExpr, String filterVersion, List<SortOptions> sort,
                                          Set<String> elemNames, String typeName, int maxHitsFromSummary,
                                          String strategy) throws CatalogException {
 
@@ -462,11 +455,11 @@ public class SearchController {
         // TODO: Check to get summary or remove custom summary output
 
         try {
-            SearchResponse result = searchManager.query(esJsonQuery, new HashSet<String>(), startPos-1, maxRecords, sort);
+            SearchResponse result = searchManager.query(esJsonQuery, new HashSet<>(), startPos-1, maxRecords, sort);
 
-            SearchHit[] hits = result.getHits().getHits();
+            List<Hit> hits = result.hits().hits();
 
-            long numMatches = result.getHits().getTotalHits().value;
+            long numMatches = result.hits().hits().size();
 
             if (numMatches != 0 && startPos > numMatches) {
                 throw new InvalidParameterValueEx("startPosition", String.format(
@@ -477,8 +470,10 @@ public class SearchController {
 
             int counter = 0;
 
-            for(SearchHit hit : hits) {
-                int mdId =  Integer.parseInt((String) hit.getSourceAsMap().get("id"));
+            ObjectMapper objectMapper = new ObjectMapper();
+
+            for(Hit hit : hits) {
+                int mdId =  Integer.parseInt((String) objectMapper.convertValue(hit.source(), Map.class).get("id"));
 
                 AbstractMetadata metadata = metadataUtils.findOne(mdId);
 
@@ -543,7 +538,7 @@ public class SearchController {
                     outputSchema, id, schema, styleSheet.toString()));
             return null;
         } else {
-            Map<String, Object> params = new HashMap<String, Object>();
+            Map<String, Object> params = new HashMap<>();
             params.put("lang", displayLanguage);
 
             try {

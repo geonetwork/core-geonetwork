@@ -23,14 +23,12 @@
 
 package org.fao.geonet.monitor.health;
 
+import co.elastic.clients.elasticsearch.core.SearchResponse;
 import com.yammer.metrics.core.HealthCheck;
 import jeeves.monitor.HealthCheckFactory;
 import jeeves.server.context.ServiceContext;
-import org.elasticsearch.action.search.SearchResponse;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.kernel.search.EsSearchManager;
-import org.fao.geonet.kernel.setting.SettingInfo;
-import org.openrdf.sesame.sail.query.In;
 import org.springframework.context.ApplicationContext;
 
 /**
@@ -45,17 +43,12 @@ public class IndexHealthCheck implements HealthCheckFactory {
                     ApplicationContext applicationContext = ApplicationContextHolder.get();
                     EsSearchManager searchMan = applicationContext.getBean(EsSearchManager.class);
                     final SearchResponse result = searchMan.query("*", null, 0, 0);
-                    if (result.status().getStatus() == 200) {
-                        return Result.healthy(String.format(
-                            "%s records indexed in remote index currently.",
-                            result.getHits().getTotalHits().value
-                        ));
-                    } else {
-                        return Result.unhealthy(
-                            "Index storing records is not available currently. " +
-                                "This component is required. Check your installation.");
-                    }
-                } catch (Throwable e) {
+
+                    return Result.healthy(String.format(
+                        "%s records indexed in remote index currently.",
+                        result.hits().total().value()
+                    ));
+                } catch (Exception e) {
                     return Result.unhealthy(e);
                 }
             }

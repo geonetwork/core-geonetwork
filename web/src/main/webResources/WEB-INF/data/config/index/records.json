@@ -8,6 +8,7 @@
       "analysis": {
         "normalizer": {
           "sorting": {
+            "type": "custom",
             "filter": ["lowercase", "asciifolding"]
           }
         },
@@ -23,6 +24,7 @@
             "filter": ["reverse"]
           },
           "french_rebuilt": {
+            "type": "custom",
             "tokenizer": "standard",
             "filter": [
               "lowercase",
@@ -35,6 +37,7 @@
             ]
           },
           "english_rebuilt": {
+            "type": "custom",
             "tokenizer": "standard",
             "filter": [
               "english_possessive_stemmer",
@@ -47,6 +50,7 @@
             ]
           },
           "synInspireAnnexes": {
+            "type": "custom",
             "tokenizer": "keyword",
             "filter": [
               "lowercase",
@@ -56,22 +60,27 @@
             ]
           },
           "synInspireThemeUris": {
+            "type": "custom",
             "tokenizer": "keyword",
             "filter": ["lowercase", "synInspireThemeUris"]
           },
           "synInspireThemes": {
+            "type": "custom",
             "tokenizer": "keyword",
             "filter": ["lowercase", "synInspireThemes"]
           },
           "keepInspireServiceTypes": {
+            "type": "custom",
             "tokenizer": "keyword",
             "filter": ["lowercase", "keepInspireServiceTypes"]
           },
           "keepInspireAnnexes": {
+            "type": "custom",
             "tokenizer": "keyword",
             "filter": ["lowercase", "keepInspireAnnexes"]
           },
           "keepInspireThemes": {
+            "type": "custom",
             "tokenizer": "keyword",
             "filter": ["lowercase", "keepInspireThemes"]
           }
@@ -1252,9 +1261,8 @@
       {
         "tag": {
           "match": "th_*",
+          "match_mapping_type": "object",
           "mapping": {
-            "type": "object",
-            "copy_to": ["tag"],
             "properties": {
               "default": {
                 "type": "keyword",
@@ -1405,7 +1413,7 @@
         "synInspireAnnexesType": {
           "match": "inspireAnnex*",
           "mapping": {
-            "type": "keyword",
+            "type": "text",
             "fielddata": true,
             "analyzer": "synInspireAnnexes",
             "search_analyzer": "keyword"
@@ -1416,7 +1424,7 @@
         "synInspireThemeType": {
           "match": "inspireTheme*",
           "mapping": {
-            "type": "keyword",
+            "type": "text",
             "fielddata": true,
             "analyzer": "synInspireThemes",
             "search_analyzer": "keyword"
@@ -1427,7 +1435,7 @@
         "inspireServiceType": {
           "match": "inspireServiceType",
           "mapping": {
-            "type": "keyword",
+            "type": "text",
             "fielddata": true,
             "analyzer": "keepInspireServiceTypes",
             "search_analyzer": "keyword"
@@ -1526,8 +1534,7 @@
       },
       "document": {
         "type": "text",
-        "index": false,
-        "doc_values": false
+        "index": false
       },
       "documentStandard": {
         "type": "keyword"
@@ -1925,8 +1932,7 @@
       },
       "validReport": {
         "type": "text",
-        "index": false,
-        "doc_values": false
+        "index": false
       },
       "useLimitation": {
         "type": "text",
