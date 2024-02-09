@@ -103,7 +103,7 @@ Query datasets with title containing the string `infrastructure`, using a query 
       "must": [
         {
           "query_string": {
-            "query": "+anytext: infraestructure +resourceType:dataset"
+            "query": "+anytext:infrastructure +resourceType:dataset"
           }
         }
       ],
