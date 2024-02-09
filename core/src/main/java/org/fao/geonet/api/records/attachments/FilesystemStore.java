@@ -40,17 +40,16 @@ import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.Nullable;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.DirectoryStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
+import java.nio.file.*;
 import java.nio.file.attribute.FileTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Stream;
 
 /**
  * A FileSystemStore store resources files in the catalog data directory. Each metadata record as a directory in the data directory
@@ -74,6 +73,9 @@ public class FilesystemStore extends AbstractStore {
 
     @Autowired
     StoreFolderConfig storeFolderConfig;
+
+    @Autowired
+    GeonetworkDataDirectory dataDirectory;
 
     @Override
     public List<MetadataResource> getResources(ServiceContext context, String metadataUuid, MetadataResourceVisibility visibility,
@@ -345,8 +347,9 @@ public class FilesystemStore extends AbstractStore {
             if (!succeed) {
                 Log.error(Geonet.RESOURCES,
                         String.format("Datastore issue. Failed to rename %s in %s", originalPath, newPath));
+            } else {
+                removeEmptyParentFolders(originalPath);
             }
-            // TODO: cleanup empty folder of originalPath?
         } else {
             try {
                 Files.createDirectories(newPath);
@@ -354,6 +357,21 @@ public class FilesystemStore extends AbstractStore {
                 Log.error(Geonet.RESOURCES,
                         String.format("Datastore issue. Failed to create folder %s. Error is: %s", newPath, e.getMessage()));
             }
+        }
+    }
+
+    private void removeEmptyParentFolders(Path originalPath) {
+        Path directory = originalPath;
+        while(directory.getNameCount() > dataDirectory.getMetadataDataDir().getNameCount()) {
+            try {
+                if (Files.exists(directory) && Files.list(directory).findAny().isEmpty()) {
+                    Files.delete(directory);
+                }
+            } catch (IOException e) {
+                Log.error(Geonet.RESOURCES,
+                        String.format("Datastore issue. Failed to empty parent folder %s. Error is: %s", directory.toString(), e.getMessage()));
+            }
+            directory = directory.getParent();
         }
     }
 
