@@ -179,6 +179,15 @@
       "gn_urlutils_service",
       "gn_related_directive"
     ])
+    .directive("gnUrlValidator", [
+      function () {
+        return {
+          restrict: "A",
+          templateUrl:
+            "../../catalog/components/edit/onlinesrc/partials/urlValidator.html"
+        };
+      }
+    ])
     .directive("gnRemoteRecordSelector", [
       "$http",
       "gnGlobalSettings",
@@ -273,14 +282,12 @@
                 // No UUID can be easily extracted.
                 try {
                   scope.remoteRecord.title = doc.replace(
-                    /(.|[\r\n])*<title>(.*)<\/title>(.|[\r\n])*/,
-                    "$2"
+                    /(.|[\r\n])*<title(.*)>(.*)<\/title>(.|[\r\n])*/,
+                    "$3"
                   );
+
                   scope.remoteRecord.uuid = scope.remoteRecord.remoteUrl;
 
-                  if (scope.remoteRecord.title === "") {
-                    return false;
-                  }
                   // Looking for schema.org tags or json+ld format could also be an option.
                 } catch (e) {
                   console.warn(e);
@@ -399,13 +406,15 @@
       "gnConfigService",
       "$filter",
       "gnConfig",
+      "gnDoiService",
       function (
         gnOnlinesrc,
         gnCurrentEdit,
         gnRelatedResources,
         gnConfigService,
         $filter,
-        gnConfig
+        gnConfig,
+        gnDoiService
       ) {
         return {
           restrict: "A",
@@ -427,11 +436,10 @@
             scope.isMdWorkflowEnableForMetadata =
               gnConfig["metadata.workflow.enable"] &&
               scope.gnCurrentEdit.metadata.draft === "y";
-            scope.isDoiApplicableForMetadata =
-              gnConfig["system.publication.doi.doienabled"] &&
-              scope.gnCurrentEdit.metadata.isTemplate === "n" &&
-              scope.gnCurrentEdit.metadata.isPublished() &&
-              JSON.parse(scope.gnCurrentEdit.metadata.isHarvested) === false;
+            scope.isDoiApplicableForMetadata = gnDoiService.isDoiApplicableForMetadata(
+              scope.gnCurrentEdit.metadata
+            );
+            scope.canPublishDoiForResource = gnDoiService.canPublishDoiForResource;
 
             /**
              * Calls service 'relations.get' to load
@@ -453,24 +461,6 @@
               return angular.isUndefined(scope.types)
                 ? true
                 : category.match(scope.types) !== null;
-            };
-
-            /**
-             * Doi can be published for a resource if:
-             *   - Doi publication is enabled.
-             *   - The resource matches doi.org url
-             *   - The workflow is not enabled for the metadata and
-             *     the metadata is published.
-             *
-             */
-            scope.canPublishDoiForResource = function (resource) {
-              var doiKey = gnConfig["system.publication.doi.doikey"];
-              return (
-                scope.isDoiApplicableForMetadata &&
-                resource.lUrl !== null &&
-                resource.lUrl.match("doi.org/" + doiKey) !== null &&
-                !scope.isMdWorkflowEnableForMetadata
-              );
             };
 
             /**
@@ -591,7 +581,7 @@
         return {
           restrict: "A",
           templateUrl:
-            "../../catalog/components/edit/onlinesrc/" + "partials/addOnlinesrc.html",
+            "../../catalog/components/edit/onlinesrc/partials/addOnlinesrc.html",
           link: {
             pre: function preLink(scope) {
               scope.searchObj = {
@@ -614,7 +604,7 @@
 
               scope.config = null;
               scope.linkType = null;
-
+              scope.linkTypeGroupFilter = null;
               scope.loaded = false;
               scope.layers = null;
               scope.capabilitiesLayers = null;
@@ -628,6 +618,13 @@
                 params: {
                   sortBy: "resourceTitleObject.default.sort"
                 }
+              };
+
+              scope.filterTypeChoices = function (type) {
+                if (!scope.linkTypeGroupFilter) {
+                  return true;
+                }
+                return type.group.match(new RegExp(scope.linkTypeGroupFilter)) != null;
               };
 
               // This object is used to share value between this
@@ -726,7 +723,7 @@
               scope.generateThumbnail = function () {
                 //Added mandatory custom params here to avoid
                 //changing other printing services
-                jsonSpec = angular.extend(scope.jsonSpec, {
+                var jsonSpec = angular.extend(scope.jsonSpec, {
                   hasNoTitle: true
                 });
 
@@ -743,8 +740,8 @@
                       }
                     }
                   )
-                  .then(function () {
-                    $rootScope.$broadcast("gnFileStoreUploadDone");
+                  .then(function (response) {
+                    $rootScope.$broadcast("gnFileStoreUploadDone", response.data.url);
                   });
               };
 
@@ -869,13 +866,12 @@
                 } else {
                   return DEFAULT_CONFIG;
                 }
-
-                return DEFAULT_CONFIG;
               }
 
               gnOnlinesrc.register("onlinesrc", function (linkToEditOrType) {
                 var linkToEdit = undefined,
                   linkType = undefined;
+
                 if (angular.isDefined(linkToEditOrType)) {
                   if (angular.isObject(linkToEditOrType)) {
                     linkToEdit = linkToEditOrType;
@@ -885,6 +881,14 @@
                 }
 
                 scope.isEditing = angular.isDefined(linkToEdit);
+
+                // In edit mode or in add mode when the link type is provided and
+                // it's not the default addOnlinesrc value, can't be edited
+                scope.isEditableLinkType =
+                  !scope.isEditing &&
+                  (!angular.isDefined(linkType) ||
+                    linkType.indexOf("addOnlinesrc") === 0);
+
                 // Flag used when editing an online resource to prevent the watcher to update the online
                 // resource description when loading the dialog.
                 scope.processSelectedWMSLayer = false;
@@ -903,7 +907,14 @@
                         return t;
                       }
                     }
-                    return scope.config.types[0];
+                    return scope.config.types.filter(scope.filterTypeChoices)[0];
+                  }
+
+                  // LinkType may describe an additional group filter
+                  if (linkType && linkType.indexOf("#")) {
+                    var linkTypeConfig = linkType.split("#");
+                    linkType = linkTypeConfig[0];
+                    scope.linkTypeGroupFilter = linkTypeConfig[1];
                   }
 
                   var typeConfig = linkToEdit
@@ -1238,6 +1249,14 @@
               scope.onAddSuccess = function () {
                 gnEditor.refreshEditorForm();
                 scope.onlinesrcService.reload = true;
+              };
+
+              scope.isUrlEmpty = function () {
+                var url = scope.params.url;
+                if (angular.isObject(url)) {
+                  url = url[scope.ctrl.urlCurLang];
+                }
+                return (url || "") === "";
               };
 
               /**
@@ -1581,10 +1600,9 @@
               scope.selectUploadedResource = function (res) {
                 if (res && res.url) {
                   var o = {
-                    name: decodeURI(res.id.split("/").splice(2).join("/")),
                     url: res.url
                   };
-                  ["url", "name"].forEach(function (pName) {
+                  ["url"].forEach(function (pName) {
                     setParameterValue(pName, o[pName]);
                   });
                   scope.params.protocol = scope.params.protocol || "WWW:DOWNLOAD";
@@ -1703,7 +1721,7 @@
                   } else {
                     // Any records which are not services
                     // ie. dataset, series, ...
-                    searchParams["-type"] = "service";
+                    searchParams["-resourceType"] = "service";
                   }
                   scope.$broadcast("resetSearch", searchParams);
                   scope.layers = [];
@@ -1945,6 +1963,29 @@
                 };
 
                 /**
+                 * Checks if there are selected records and the selected records have a title.
+                 *
+                 * @param selectRecords
+                 * @returns {boolean}
+                 */
+                scope.canEnableLinkButton = function (selectRecords) {
+                  if (
+                    !selectRecords ||
+                    !Array.isArray(selectRecords) ||
+                    selectRecords.length < 1
+                  )
+                    return false;
+
+                  // Check if the metadata titles are defined
+                  for (var i = 0; i < selectRecords.length; i++) {
+                    if (!selectRecords[i].title && !selectRecords[i].resourceTitle)
+                      return false;
+                  }
+
+                  return true;
+                };
+
+                /**
                  * Register a method on popup open to reset
                  * the search form and trigger a search.
                  */
@@ -2129,7 +2170,7 @@
                  * Return the index or -1 if not present.
                  */
                 var findObj = function (md) {
-                  for (i = 0; i < scope.selection.length; ++i) {
+                  for (var i = 0; i < scope.selection.length; ++i) {
                     if (scope.selection[i].md === md) {
                       return i;
                     }
@@ -2177,7 +2218,7 @@
                  */
                 scope.linkToResource = function () {
                   var uuids = [];
-                  for (i = 0; i < scope.selection.length; ++i) {
+                  for (var i = 0; i < scope.selection.length; ++i) {
                     var obj = scope.selection[i],
                       parameter =
                         obj.md.uuid +
