@@ -38,21 +38,21 @@ public class StoreFolderConfig {
     }
 
     @Value("${datastore.folderStructureType}")
-    private FolderStructureType folderStructureType;
+    private FolderStructureType folderStructureType = FolderStructureType.DEFAULT;
 
     @Value("${datastore.folderPrivilegesStrategy}")
-    private FolderPrivilegesStrategy folderPrivilegesStrategy;
+    private FolderPrivilegesStrategy folderPrivilegesStrategy = FolderPrivilegesStrategy.DEFAULT;
 
-    @Value("${datastore.folderStructure}")
+    @Value("${datastore.folderStructure:}")
     private String folderStructure;
 
-    @Value("${datastore.folderStructureFallback}")
+    @Value("${datastore.folderStructureFallback:}")
     private String folderStructureFallback;
 
-    @Value("${datastore.folderStructureNonPublic}")
+    @Value("${datastore.folderStructureNonPublic:}")
     private String folderStructureNonPublic;
 
-    @Value("${datastore.folderStructureFallbackNonPublic}")
+    @Value("${datastore.folderStructureFallbackNonPublic:}")
     private String folderStructureFallbackNonPublic;
 
     StoreFolderConfig() {
