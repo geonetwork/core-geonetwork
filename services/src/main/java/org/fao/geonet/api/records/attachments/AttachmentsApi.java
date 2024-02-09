@@ -36,6 +36,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+import org.apache.tika.Tika;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
@@ -107,40 +108,13 @@ public class AttachmentsApi {
     }
 
     /**
-     * Based on the file content or file extension return an appropiate mime type.
+     * Based on the file content return an appropiate mime type.
      *
-     * @return The mime type or application/{{file_extension}} if none found.
+     * @return The mime type.
      */
     public static String getFileContentType(Path file) throws IOException {
-        String contentType = Files.probeContentType(file);
-        if (contentType == null) {
-            String ext = com.google.common.io.Files.getFileExtension(file.getFileName().toString()).toLowerCase();
-            switch (ext) {
-                case "png":
-                case "gif":
-                case "bmp":
-                    contentType = "image/" + ext;
-                    break;
-                case "tif":
-                case "tiff":
-                    contentType = "image/tiff";
-                    break;
-                case "jpg":
-                case "jpeg":
-                    contentType = "image/jpeg";
-                    break;
-                case "txt":
-                    contentType = "text/plain";
-                    break;
-                case "htm":
-                case "html":
-                    contentType = "text/html";
-                    break;
-                default:
-                    contentType = "application/" + ext;
-            }
-        }
-        return contentType;
+        Tika tika = new Tika();
+        return tika.detect(file);
     }
 
     public Store getStore() {
