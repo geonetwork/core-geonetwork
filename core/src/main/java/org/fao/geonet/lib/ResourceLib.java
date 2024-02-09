@@ -38,6 +38,7 @@ import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Operation;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.exceptions.OperationNotAllowedEx;
+import org.fao.geonet.index.es.EsRestClient;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.search.EsSearchManager;
@@ -188,7 +189,6 @@ public class ResourceLib {
     private Path getCustomMetadataFolder(Path dataDir, String id) throws IOException {
         try {
             StoreFolderConfig storeFolderConfig = ApplicationContextHolder.get().getBean(StoreFolderConfig.class);
-
             EsSearchManager esSearchManager = ApplicationContextHolder.get().getBean(EsSearchManager.class);
             SearchResponse searchResponse = esSearchManager.query(String.format("id:(%s)", id), null, 0, 10);
             if ((searchResponse.getHits().getTotalHits() != null) && (searchResponse.getHits().getTotalHits().value > 0)) {
@@ -265,7 +265,6 @@ public class ResourceLib {
                 String folderStructure = isPublished ?
                     filesystemStoreConfig.getFolderStructure() : filesystemStoreConfig.getFolderStructureNonPublic();
                 path = replaceTokens(jsonContext, folderStructure.split(File.separator), isPublished);
-
             } catch (Exception ex) {
                 String folderStructure = isPublished ?
                     filesystemStoreConfig.getFolderStructureFallback() : filesystemStoreConfig.getFolderStructureFallbackNonPublic();
@@ -286,7 +285,7 @@ public class ResourceLib {
                     String value = jsonContext.read(tokens[i]);
 
                     if (value != null) {
-                        valueToAdd = value;
+                        valueToAdd = value.replace(File.separator, "_");
                     }
                 } else {
                     valueToAdd = token;
