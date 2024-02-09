@@ -23,12 +23,12 @@
 
 package org.fao.geonet.kernel.harvest.harvester.csw;
 
+import co.elastic.clients.elasticsearch.core.SearchResponse;
+import co.elastic.clients.elasticsearch.core.search.Hit;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
-import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.search.SearchHit;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
@@ -672,8 +672,8 @@ public class Aligner extends BaseAligner<CswParams> {
                 FIELDLIST_UUID,
                 0, 1000);
 
-            for (SearchHit hit : queryResult.getHits()) {
-                String uuid = hit.getSourceAsMap().get(Geonet.IndexFieldNames.UUID).toString();
+            for (Hit hit : (List<Hit>) queryResult.hits().hits()) {
+                String uuid = objectMapper.convertValue(hit.source(), Map.class).get(Geonet.IndexFieldNames.UUID).toString();
                 metadataUuids.add(uuid);
             }
 

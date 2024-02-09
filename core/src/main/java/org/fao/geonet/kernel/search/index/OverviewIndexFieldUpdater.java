@@ -23,8 +23,10 @@
 
 package org.fao.geonet.kernel.search.index;
 
+import co.elastic.clients.elasticsearch.core.SearchResponse;
+import co.elastic.clients.elasticsearch.core.search.Hit;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang.StringUtils;
-import org.elasticsearch.action.search.SearchResponse;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.util.XslUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,9 +65,11 @@ public class OverviewIndexFieldUpdater {
             response = searchManager.query(String.format(
                 "+id:\"%s\" _exists_:overview.url -_exists_:overview.data",
                 id), null, source, 0, 1);
-            response.getHits().forEach(hit -> {
+            ObjectMapper objectMapper = new ObjectMapper();
+            response.hits().hits().forEach(h -> {
+                Hit hit = (Hit) h;
                 AtomicBoolean updates = new AtomicBoolean(false);
-                Map<String, Object> fields = hit.getSourceAsMap();
+                Map<String, Object> fields = objectMapper.convertValue(hit.source(), Map.class);
                 getHitOverviews(fields)
                     .stream()
                     .forEach(overview -> {

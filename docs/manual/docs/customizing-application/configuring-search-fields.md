@@ -195,7 +195,7 @@ curl -X POST "localhost:8080/geonetwork/srv/api/search/records/_search" \
 
 To customize how the field is indexed see `web/src/main/webResources/WEB-INF/data/config/index/records.json`.
 
-To return it in the search response, use the `ce` parameter of the query. See <https://www.elastic.co/guide/en/elasticsearch/reference/current/search-fields.html>.
+To return it in the search response, use the `_source` parameter of the query. See <https://www.elastic.co/guide/en/elasticsearch/reference/current/search-fields.html>.
 
 ## Boosting at search time
 
@@ -248,7 +248,8 @@ By default, the search score is defined as (see `web-ui/src/main/resources/catal
 
 ## Language analyzer
 
-By default a `rd` analyzer is used. If the catalog content is english, it may make sense to change the analyzer to `sh`. To customize the analyzer see `web/src/main/webResources/WEB-INF/data/config/index/records.json`
+
+By default a `standard` analyzer is used. If the catalog content is english, it may make sense to change the analyzer to `english`. To customize the analyzer see `web/src/main/webResources/WEB-INF/data/config/index/records.json`
 
 To add a new language, check first if Elasticsearch provides a specific analyzer for that language (see https://www.elastic.co/guide/en/elasticsearch/reference/current/analysis-lang-analyzer.html). Then configure fields that are multilingual 
 in `records.json` (eg. adding Danish):
