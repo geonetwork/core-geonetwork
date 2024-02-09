@@ -3794,7 +3794,6 @@
 <li><strong>wmts</strong>: generic WMTS layer, required properties: <code>name, url</code>.</li>
 <li><strong>tms</strong>: generic TMS layer, required property: <code>url</code>.</li>
 <li><strong>osm</strong>: OpenStreetMap default layer, no other property required.</li>
-<li><strong>stamen</strong>: Stamen layers, required property: <code>name</code>.</li>
 <li><strong>bing_aerial</strong>: Bing Aerial background, required property: <code>key</code> containing the license key.</li>
 </ul>
 </li>
@@ -3806,13 +3805,10 @@
 <li><strong>projectionList</strong> Projection array to restrict this layer to certain projections on the map.</li>
 </ul>
 <p>Examples of layers:</p>
-<p>This layer will use OpenStreetMap Stamen style, but only when the map is in <code>EPSG:3857</code>:</p>
-<div class="language-json highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">{</span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="s2">&quot;stamen&quot;</span><span class="p">,</span><span class="nt">&quot;projectionList&quot;</span><span class="p">:[</span><span class="s2">&quot;EPSG:3857&quot;</span><span class="p">]}</span>
-</span></code></pre></div>
 <p>This WMS layer will be shown but only when the map is on <code>EPSG:4326</code>:</p>
-<div class="language-json highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">{</span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="s2">&quot;wms&quot;</span><span class="p">,</span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="s2">&quot;OI.OrthoimageCoverage&quot;</span><span class="p">,</span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;OI.OrthoimageCoverage&quot;</span><span class="p">,</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nt">&quot;url&quot;</span><span class="p">:</span><span class="s2">&quot;http://www.ign.es/wms-inspire/pnoa-ma?request=GetCapabilities&amp;service=WMS&quot;</span><span class="p">,</span>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nt">&quot;projectionList&quot;</span><span class="p">:[</span><span class="s2">&quot;EPSG:4326&quot;</span><span class="p">]}</span>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">{</span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="s2">&quot;wms&quot;</span><span class="p">,</span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="s2">&quot;OI.OrthoimageCoverage&quot;</span><span class="p">,</span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;OI.OrthoimageCoverage&quot;</span><span class="p">,</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nt">&quot;url&quot;</span><span class="p">:</span><span class="s2">&quot;http://www.ign.es/wms-inspire/pnoa-ma?request=GetCapabilities&amp;service=WMS&quot;</span><span class="p">,</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nt">&quot;projectionList&quot;</span><span class="p">:[</span><span class="s2">&quot;EPSG:4326&quot;</span><span class="p">]}</span>
 </span></code></pre></div>
 <h3 id="search-map-configuration">Search Map Configuration</h3>
 <p>This section defines the configuration for the mini map shown on the search page. It uses the same options as in <a href="./#user-interface-config-viewermap">Viewer Map Configuration</a>.</p>
