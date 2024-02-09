@@ -226,7 +226,7 @@
           delete sp.data;
 
           // Reset empty string to null to avoid parsing error
-          if (sp.groups =='') {
+          if (sp.groups == "") {
             sp.groups = null;
           }
 
