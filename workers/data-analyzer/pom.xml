@@ -8,7 +8,7 @@
         <version>4.4.3-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>data-analyzer</artifactId>
+    <artifactId>gn-data-analyzer</artifactId>
     <description>Data analysis</description>
 
     <properties>
@@ -29,6 +29,11 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.geonetwork-opensource</groupId>
+            <artifactId>gn-core</artifactId>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 
