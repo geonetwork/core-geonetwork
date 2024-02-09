@@ -282,9 +282,7 @@ public class EsWFSFeatureIndexer {
             throw new RuntimeException(msg);
         }
 
-        final Phaser phaser = new Phaser();
-
-        BulkResutHandler brh = new AsyncBulkResutHandler(phaser, typeName, url, nbOfFeatures, report, state.getParameters().getMetadataUuid());
+        BulkResutHandler brh = new AsyncBulkResutHandler(typeName, url, nbOfFeatures, report, state.getParameters().getMetadataUuid());
 
         try {
             nbOfFeatures = 0;
@@ -441,14 +439,6 @@ public class EsWFSFeatureIndexer {
                 }
             }
 
-//            try {
-//                if (nbOfFeatures > 0) {
-//                    phaser.awaitAdvanceInterruptibly(0, 3, TimeUnit.HOURS);
-//                }
-//            } catch (TimeoutException e) {
-//                throw new Exception("Timeout when awaiting all bulks to be processed.");
-//            }
-
             LOGGER.info("{}: {} features processed in {} ms.", new Object[]{
                 typeName, nbOfFeatures,
                 System.currentTimeMillis() - begin
@@ -578,7 +568,6 @@ public class EsWFSFeatureIndexer {
 
     abstract class BulkResutHandler {
 
-        protected Phaser phaser;
         protected String typeName;
         private String url;
         protected int firstFeatureIndex;
@@ -590,8 +579,7 @@ public class EsWFSFeatureIndexer {
         protected int failuresCount;
         BulkListener<String> listener;
 
-        public BulkResutHandler(Phaser phaser, String typeName, String url, int firstFeatureIndex, Report report, String metadataUuid) {
-            this.phaser = phaser;
+        public BulkResutHandler(String typeName, String url, int firstFeatureIndex, Report report, String metadataUuid) {
             this.typeName = typeName;
             this.url = url;
             this.firstFeatureIndex = firstFeatureIndex;
@@ -629,7 +617,7 @@ public class EsWFSFeatureIndexer {
                         bulkResponse.errors() ?
                             " but with " + bulkFailures + " errors" : "");
                     failuresCount = bulkFailures.get();
-                    phaser.arriveAndDeregister();
+                    report.saveHarvesterReport();
                 }
 
                 @Override
@@ -642,7 +630,7 @@ public class EsWFSFeatureIndexer {
                     );
                     report.put("error_ss", msg);
                     LOGGER.error(msg);
-                    phaser.arriveAndDeregister();
+                    report.saveHarvesterReport();
                 }
             };
 
@@ -682,27 +670,17 @@ public class EsWFSFeatureIndexer {
             bulkSize++;
         }
 
-        protected void prepareLaunch() {
-            phaser.register();
-            this.begin = System.currentTimeMillis();
-        }
         public void close() {
             if (this.bulk != null) {
                 this.bulk.close();
             }
         }
-
-        abstract public void launchBulk(EsRestClient client) throws Exception;
     }
 
     // depending on situation, one can expect going up to 1.5 faster using an async result handler (e.g. huge collection of points)
     class AsyncBulkResutHandler extends BulkResutHandler {
-        public AsyncBulkResutHandler(Phaser phaser, String typeName, String url, int firstFeatureIndex, Report report, String metadataUuid) {
-            super(phaser, typeName, url, firstFeatureIndex, report, metadataUuid);
-        }
-
-        public void launchBulk(EsRestClient client) throws Exception {
-            prepareLaunch();
+        public AsyncBulkResutHandler(String typeName, String url, int firstFeatureIndex, Report report, String metadataUuid) {
+            super(typeName, url, firstFeatureIndex, report, metadataUuid);
         }
     }
 
