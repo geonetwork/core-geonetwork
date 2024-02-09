@@ -281,14 +281,15 @@ public class EsWFSFeatureIndexer {
             LOGGER.error(msg);
             throw new RuntimeException(msg);
         }
+
         final Phaser phaser = new Phaser();
 
         BulkResutHandler brh = new AsyncBulkResutHandler(phaser, typeName, url, nbOfFeatures, report, state.getParameters().getMetadataUuid());
 
         try {
             nbOfFeatures = 0;
-            long begin = System.currentTimeMillis();
 
+            long begin = System.currentTimeMillis();
             String epsg = "urn:ogc:def:crs:OGC:1.3:CRS84";
 
             for (String featureType : resolvedTypeNames) {
@@ -423,7 +424,7 @@ public class EsWFSFeatureIndexer {
                                 }
                             }
 
-                            nbOfFeatures++;
+                            nbOfFeatures ++;
                             brh.addAction(rootNode, feature);
 
                         } catch (Exception ex) {
@@ -434,28 +435,20 @@ public class EsWFSFeatureIndexer {
                             LOGGER.warn(msg);
                             report.put("error_ss", msg);
                         }
-
-                        if (brh.getBulkSize() >= featureCommitInterval) {
-                            brh.launchBulk(client);
-                            brh = new AsyncBulkResutHandler(phaser, typeName, url, nbOfFeatures, report, state.getParameters().getMetadataUuid());
-                        }
                     }
                 } finally {
                     features.close();
                 }
             }
 
-            if (brh.getBulkSize() > 0) {
-                brh.launchBulk(client);
-            }
+//            try {
+//                if (nbOfFeatures > 0) {
+//                    phaser.awaitAdvanceInterruptibly(0, 3, TimeUnit.HOURS);
+//                }
+//            } catch (TimeoutException e) {
+//                throw new Exception("Timeout when awaiting all bulks to be processed.");
+//            }
 
-            try {
-                if (nbOfFeatures > 0) {
-                    phaser.awaitAdvanceInterruptibly(0, 3, TimeUnit.HOURS);
-                }
-            } catch (TimeoutException e) {
-                throw new Exception("Timeout when awaiting all bulks to be processed.");
-            }
             LOGGER.info("{}: {} features processed in {} ms.", new Object[]{
                 typeName, nbOfFeatures,
                 System.currentTimeMillis() - begin
@@ -467,10 +460,11 @@ public class EsWFSFeatureIndexer {
             LOGGER.error(e.getMessage());
             throw e;
         } finally {
-            report.saveHarvesterReport();
             brh.close();
+            report.saveHarvesterReport();
             future.complete(null);
         }
+
 
         return future;
     }
@@ -556,7 +550,7 @@ public class EsWFSFeatureIndexer {
 
             try {
                 IndexResponse response = client.getClient().index(request);
-                if (response.result() == Result.Created) {
+                if (response.result() == Result.Created || response.result() == Result.Updated) {
                     LOGGER.info("Report saved for service {} and typename {}. Report id is {}",
                         url, typeName, report.get("id"));
                 } else {
@@ -607,8 +601,8 @@ public class EsWFSFeatureIndexer {
 
             this.bulkSize = 0;
             this.failuresCount = 0;
-            LOGGER.debug("  {} - Indexing bulk (size {}) starting at {} ...",
-                typeName, featureCommitInterval, firstFeatureIndex);
+            LOGGER.debug("  {} - Indexing with bulk ingester (with size {}) ...",
+                typeName, featureCommitInterval);
 
             listener = new BulkListener<String>() {
                 @Override
@@ -630,7 +624,7 @@ public class EsWFSFeatureIndexer {
                             }
                         });
                     }
-                    LOGGER.debug("  {} - Features [{}-{}] indexed in {} ms{}.", typeName, firstFeatureIndex, firstFeatureIndex + bulkSize,
+                    LOGGER.debug("  {} - {} features indexed in {} ms{}.", typeName, firstFeatureIndex + bulkSize,
                         System.currentTimeMillis() - begin,
                         bulkResponse.errors() ?
                             " but with " + bulkFailures + " errors" : "");
@@ -641,8 +635,8 @@ public class EsWFSFeatureIndexer {
                 @Override
                 public void afterBulk(long executionId, BulkRequest request, List<String> contexts, Throwable failure) {
                     String msg = String.format(
-                        "  %s - Features [%s-%s] indexed in %s ms but with errors. Exception: %s",
-                        typeName, firstFeatureIndex, firstFeatureIndex + bulkSize,
+                        "  %s - %s features indexed in %s ms but with errors. Exception: %s",
+                        typeName, firstFeatureIndex + bulkSize,
                         System.currentTimeMillis() - begin,
                         failure.getMessage()
                     );
