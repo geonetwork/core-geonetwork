@@ -65,7 +65,7 @@ Query with any field for metadata containing the string `infrastructure`, using 
       "must": [
         {
           "query_string": {
-            "query": "+anytext: infraestructure "
+            "query": "+anytext:infrastructure "
           }
         }
       ],
