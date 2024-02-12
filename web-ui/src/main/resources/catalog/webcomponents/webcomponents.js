@@ -139,7 +139,7 @@ customElements.define(
         return;
       }
 
-      var uiConfig = this.getAttribute("config");
+      var uiConfig = this.getAttribute("config") || "{}";;
       var customElements = this;
       if (uiConfig.match(/^[\w-]*$/) != null) {
         fetch(gnUrl + "/api/ui/" + uiConfig, {
