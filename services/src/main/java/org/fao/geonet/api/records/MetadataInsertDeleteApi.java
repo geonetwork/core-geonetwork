@@ -87,6 +87,7 @@ import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.Updater;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
+import org.fao.geonet.util.UserUtil;
 import org.fao.geonet.utils.FilePathChecker;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
@@ -102,8 +103,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -127,7 +126,16 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.ResourceBundle;
+import java.util.Set;
+import java.util.UUID;
 
 import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_OPS;
 import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_TAG;
@@ -236,7 +244,7 @@ public class MetadataInsertDeleteApi {
 
         UserSession userSession = ApiUtils.getUserSession(request.getSession());
         if (accessMan.isVisibleToAll(String.valueOf(metadata.getId())) ) {
-            checkUserProfileToDeletePublishedMetadata(userSession);
+            UserUtil.checkUserProfileLevel(userSession, settingManager, roleHierarchy, Settings.METADATA_PUBLISHED_DELETE_USERPROFILE, Profile.Editor, "delete published metadata");
         }
 
         store.delResources(context, metadata.getUuid(), approved);
@@ -288,7 +296,7 @@ public class MetadataInsertDeleteApi {
 
                 if (accessMan.isVisibleToAll(String.valueOf(metadata.getId())) ) {
                     try {
-                        checkUserProfileToDeletePublishedMetadata(userSession);
+                        UserUtil.checkUserProfileLevel(userSession, settingManager, roleHierarchy, Settings.METADATA_PUBLISHED_DELETE_USERPROFILE, Profile.Editor, "delete published metadata");
                     } catch (NotAllowedException ex) {
                         report.addMetadataInfos(metadata, "The user has no permissions to delete published metadata.");
                         continue;
@@ -360,7 +368,7 @@ public class MetadataInsertDeleteApi {
         SimpleMetadataProcessingReport report = new SimpleMetadataProcessingReport();
 
         UserSession userSession = ApiUtils.getUserSession(request.getSession());
-        checkUserProfileToImportMetadata(userSession);
+        UserUtil.checkUserProfileLevel(userSession, settingManager, roleHierarchy, Settings.METADATA_IMPORT_USERPROFILE, Profile.Editor, "import metadata");
 
         if (xml != null) {
             Element element = null;
@@ -619,7 +627,7 @@ public class MetadataInsertDeleteApi {
         SimpleMetadataProcessingReport report = new SimpleMetadataProcessingReport();
         if (file != null) {
           try (ServiceContext context = ApiUtils.createServiceContext(request)) {
-            checkUserProfileToImportMetadata(context.getUserSession());
+            UserUtil.checkUserProfileLevel(context.getUserSession(), settingManager, roleHierarchy, Settings.METADATA_IMPORT_USERPROFILE, Profile.Editor, "import metadata");
 
             for (MultipartFile f : file) {
                 if (MEFLib.isValidArchiveExtensionForMEF(f.getOriginalFilename())) {
@@ -1012,60 +1020,4 @@ public class MetadataInsertDeleteApi {
       }
     }
 
-    /**
-     * Checks if the user profile is allowed to import metadata.
-     *
-     * @param userSession
-     */
-    private void checkUserProfileToImportMetadata(UserSession userSession) {
-        if (userSession.getProfile() != Profile.Administrator) {
-            String allowedUserProfileToImportMetadata =
-                StringUtils.defaultIfBlank(settingManager.getValue(Settings.METADATA_IMPORT_USERPROFILE), Profile.Editor.toString());
-
-            // Is the user profile is higher than the profile allowed to import metadata?
-            if (!hasHierarchyRole(allowedUserProfileToImportMetadata, this.roleHierarchy)) {
-                throw new NotAllowedException("The user has no permissions to import metadata.");
-            }
-        }
-
-    }
-
-    /**
-     * Checks if the user profile is allowed to import metadata.
-     *
-     * @param userSession
-     */
-    private void checkUserProfileToDeletePublishedMetadata(UserSession userSession) {
-        if (userSession.getProfile() != Profile.Administrator) {
-            String allowedUserProfileToImportMetadata =
-                StringUtils.defaultIfBlank(settingManager.getValue(Settings.METADATA_PUBLISHED_DELETE_USERPROFILE), Profile.Editor.toString());
-
-            // Is the user profile is higher than the profile allowed to import metadata?
-            if (!hasHierarchyRole(allowedUserProfileToImportMetadata, this.roleHierarchy)) {
-                throw new NotAllowedException("The user has no permissions to delete published metadata.");
-            }
-        }
-
-    }
-
-    /**
-     * Checks if the current user has a role using the role hierarchy.
-     *
-     * @param role  Role to check.
-     * @param roleHierarchy  Role hierarchy.
-     * @return true if the current user has a role using the role hierarchy, otherwise false.
-     */
-    private boolean hasHierarchyRole(String role, RoleHierarchy roleHierarchy) {
-        Collection<? extends GrantedAuthority> authorities = SecurityContextHolder.getContext().getAuthentication().getAuthorities();
-
-        Collection<? extends GrantedAuthority> hierarchyAuthorities = roleHierarchy.getReachableGrantedAuthorities(authorities);
-
-        for (GrantedAuthority authority : hierarchyAuthorities) {
-            if (authority.getAuthority().equals(role)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
 }

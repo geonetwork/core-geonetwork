@@ -217,7 +217,7 @@ public class EsSearchManager implements ISearchManager {
 
     @Autowired
     SourceRepository sourceRepository;
-    
+
     @Override
     public void index(Path schemaDir, Element metadata, String id, List<Element> moreFields,
                       MetadataType metadataType, String root, boolean forceRefreshReaders) throws Exception {

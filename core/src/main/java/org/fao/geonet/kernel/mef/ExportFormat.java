@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2023 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -23,17 +23,11 @@
 
 package org.fao.geonet.kernel.mef;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
+import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.AbstractMetadata;
-import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkExtension;
@@ -44,7 +38,12 @@ import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 
-import jeeves.server.context.ServiceContext;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * An extension point called to create files to export as part of the MEF export.
@@ -72,7 +71,7 @@ public class ExportFormat implements GeonetworkExtension {
                 String outputFileName = entry.getValue();
                 Path path = metadataSchema.getSchemaDir().resolve(xslFileName);
                 if (Files.isRegularFile(path)) {
-                    String outputData = formatData(metadata, true, path);
+                    String outputData = formatData(context, metadata, true, path);
                     allExports.add(Pair.read(outputFileName, outputData));
                 } else {
                     // A conversion that does not exist
@@ -96,10 +95,9 @@ public class ExportFormat implements GeonetworkExtension {
      *
      * @return ByteArrayInputStream
      */
-    public static String formatData(AbstractMetadata metadata, boolean transform, Path stylePath) throws Exception {
-        String xmlData = metadata.getData();
-
-        Element md = Xml.loadString(xmlData, false);
+    public static String formatData(ServiceContext context, AbstractMetadata metadata, boolean transform, Path stylePath) throws Exception {
+        Element md = context.getBean(DataManager.class).getMetadata(context, metadata.getId() + "", false, false, true);
+        md.removeChild("info", Edit.NAMESPACE);
 
         // Apply a stylesheet transformation when schema is ISO profil
         if (transform) {

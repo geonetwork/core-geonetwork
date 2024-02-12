@@ -52,7 +52,7 @@
       <div class="panel-heading">
         <span data-translate="">settings</span>
 
-        <div data-gn-need-help="administrator-guide/configuring-the-catalog/system-configuration.html"
+        <div data-gn-need-help="administrator-guide/configuring-the-catalog/system-configuration/"
              class="pull-right"></div>
       </div>
       <div class="panel-body">
@@ -67,19 +67,19 @@
               <legend>{{section2.name | translate}}
 
                 <div data-ng-if="::section2.name === 'system/inspire'"
-                     data-gn-need-help="administrator-guide/configuring-the-catalog/inspire-configuration.html"
+                     data-gn-need-help="administrator-guide/configuring-the-catalog/inspire-configuration/"
                      class="pull-right"></div>
                 <div data-ng-if="::section2.name === 'system/publication'"
-                     data-gn-need-help="user-guide/associating-resources/doi.html"
+                     data-gn-need-help="user-guide/associating-resources/doi/"
                      class="pull-right"></div>
                 <div data-ng-if="::section2.name === 'metadata/workflow'"
-                     data-gn-need-help="user-guide/workflow/life-cycle.html"
+                     data-gn-need-help="user-guide/workflow/life-cycle/"
                      class="pull-right"></div>
                 <div data-ng-if="::section2.name === 'system/userSelfRegistration'"
-                     data-gn-need-help="administrator-guide/managing-users-and-groups/user-self-registration.html"
+                     data-gn-need-help="administrator-guide/managing-users-and-groups/user-self-registration/"
                      class="pull-right"></div>
                 <div data-ng-if="::section2.name === 'system/csw'"
-                     data-gn-need-help="administrator-guide/configuring-the-catalog/csw-configuration.html"
+                     data-gn-need-help="administrator-guide/configuring-the-catalog/csw-configuration/"
                      class="pull-right"></div>
               </legend>
               <!-- According to data type -->
@@ -140,19 +140,37 @@
                       </option>
                     </select>
 
+                      <select data-ng-switch-when="metadata/batchediting/accesslevel"
+                              class="form-control"
+                              name="{{s.name}}">
+                        <option value="Editor"
+                                ng-selected="'Editor' == s.value">{{'Editor' | translate}}
+                        </option>
+                        <option value="Reviewer"
+                                ng-selected="'Reviewer' == s.value">{{'Reviewer' | translate}}
+                        </option>
+                        <option value="Administrator"
+                                ng-selected="'Administrator' == s.value">{{'Administrator' | translate}}
+                        </option>
+                      </select>
+
                     <div data-ng-switch-when="metadata/workflow/draftWhenInGroup">
                       <input type="radio" class="gn-no-setting" data-ng-model="draftInAllGroups"
                              data-ng-value="true" /> {{'draftWhenInGroup-all' | translate}}<br>
                       <input type="radio" class="gn-no-setting" data-ng-model="draftInAllGroups"
                              data-ng-value="false" /> {{'draftWhenInGroup-selection' | translate}}<br>
 
-                      <input type="hidden"
-                             class="form-control" id="{{s['name']}}" name="{{s.name}}" value=".*"
-                             data-ng-disabled="draftInAllGroups != true" />
-
-                      <input type="text"
-                             class="form-control" id="{{s['name']}}" name="{{s.name}}" value="{{s.value}}"
-                             data-ng-disabled="draftInAllGroups == true" />
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="{{s['name']}}"
+                        name="{{s.name}}"
+                        data-ng-model="draftInAllGroupsUserValue"
+                        data-ng-init="draftInAllGroupsInputValue=s.value || '.*'"
+                        data-ng-change="draftInAllGroups == true?null:draftInAllGroupsInputValue=draftInAllGroupsUserValue"
+                        data-ng-readonly="draftInAllGroups == true"
+                        data-ng-value="draftInAllGroups == true ? '.*' : draftInAllGroupsInputValue"
+                      />
                     </div>
 
                     <input data-ng-switch-when="system/server/timeZone"

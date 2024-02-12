@@ -177,7 +177,7 @@ public class VirtualCswApiTest extends AbstractServiceIntegrationTest {
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(400))
-            .andExpect(jsonPath("$.description", is("A service already exist with this name 'csw-endpoint1'. Choose another name.")));
+            .andExpect(jsonPath("$.message", is("A service already exist with this name 'csw-endpoint1'. Choose another name.")));
     }
 
     @Test

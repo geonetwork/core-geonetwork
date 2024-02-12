@@ -350,9 +350,9 @@
        * @param {string} flag
        * @return {*}
        */
-      this.publish = function(md, bucket, flag, scope) {
+      this.publish = function(md, bucket, flag, scope, publicationType) {
         if (md) {
-          flag = md.isPublished() ? 'off' : 'on';
+          flag = md.isPublished(publicationType) ? 'off' : 'on';
         }
 
         scope.isMdWorkflowEnable = gnConfig['metadata.workflow.enable'];
@@ -369,12 +369,15 @@
         var onOrOff = flag === 'on';
 
         return gnShareService.publish(
-            angular.isDefined(md) ? md.getId() : undefined,
-            angular.isDefined(md) ? undefined : bucket,
-            onOrOff, $rootScope.user)
-            .then(
-            function(response) {
-              if (response.data !== '') {
+          angular.isDefined(md) ? md.getId() : undefined,
+          angular.isDefined(md) ? undefined : bucket,
+          onOrOff,
+          $rootScope.user,
+          publicationType.name === "default" ? "" : publicationType.name
+        )
+          .then(
+            function (response) {
+              if (response.data !== "") {
                 scope.processReport = response.data;
 
                 // A report is returned
@@ -401,7 +404,7 @@
               }
 
               if (md) {
-                md.publish();
+                md.publish(publicationType);
               }
             }, function(response) {
               scope.$emit('PrivilegesUpdated', false);

@@ -178,7 +178,7 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
                 .session(this.mockHttpSession)
                 .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(400))
-            .andExpect(jsonPath("$.description", is("You cannot delete yourself from the user database")))
+            .andExpect(jsonPath("$.message", is("You cannot delete yourself from the user database")))
             .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING));
     }
 
@@ -208,7 +208,7 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
                 .session(this.mockHttpSession)
                 .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(400))
-            .andExpect(jsonPath("$.description", is("You don't have rights to delete this user because the user is not part of your group")))
+            .andExpect(jsonPath("$.message", is("You don't have rights to delete this user because the user is not part of your group")))
             .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING));
     }
 
@@ -265,7 +265,7 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
                 .contentType(API_JSON_EXPECTED_ENCODING)
                 .session(this.mockHttpSession)
                 .accept(MediaType.parseMediaType("application/json")))
-            .andExpect(jsonPath("$.description", is("username is a required parameter for newuser operation")))
+            .andExpect(jsonPath("$.message", is("username is a required parameter for newuser operation")))
             .andExpect(status().is(400));
     }
 
@@ -293,7 +293,7 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
                 .contentType(API_JSON_EXPECTED_ENCODING)
                 .session(this.mockHttpSession)
                 .accept(MediaType.parseMediaType("application/json")))
-            .andExpect(jsonPath("$.description", is("Users with username " + user.getUsername()
+            .andExpect(jsonPath("$.message", is("Users with username " + user.getUsername()
                 + " ignore case already exists")))
             .andExpect(status().is(400));
 
@@ -323,7 +323,7 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
                 .contentType(API_JSON_EXPECTED_ENCODING)
                 .session(this.mockHttpSession)
                 .accept(MediaType.parseMediaType("application/json")))
-            .andExpect(jsonPath("$.description", is("Users with username " + user.getUsername()
+            .andExpect(jsonPath("$.message", is("Users with username " + user.getUsername()
                 + " ignore case already exists")))
             .andExpect(status().is(400));
 
@@ -363,7 +363,7 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
                         System.err.println(invalidName + " has been accepted as user name and it shouldn't");
                     }
                 })
-                .andExpect(jsonPath("$.description", is("username may only contain alphanumeric "
+                .andExpect(jsonPath("$.message", is("username may only contain alphanumeric "
                     + "characters or single hyphens, single at signs or single dots. Cannot begin or end with a "
                     + "hyphen, at sign or dot.")))
                 .andExpect(status().is(400));
@@ -393,7 +393,7 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
                 .session(this.mockHttpSession)
                 .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(400))
-            .andExpect(jsonPath("$.description", is("The old password is not valid.")));
+            .andExpect(jsonPath("$.message", is("The old password is not valid.")));
 
 
         passwordReset.setPasswordOld("testuser-editor-password");
@@ -433,7 +433,7 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
                 .contentType(API_JSON_EXPECTED_ENCODING)
                 .session(this.mockHttpSession)
                 .accept(MediaType.parseMediaType("application/json")))
-            .andExpect(jsonPath("$.description", is("You don't have rights to do this")))
+            .andExpect(jsonPath("$.message", is("You don't have rights to do this")))
             .andExpect(status().is(400));
     }
 
@@ -460,7 +460,7 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
                 .content(json)
                 .session(this.mockHttpSession)
                 .accept(MediaType.parseMediaType("application/json")))
-            .andExpect(jsonPath("$.description", is("Passwords should be equal")))
+            .andExpect(jsonPath("$.message", is("Passwords should be equal")))
             .andExpect(status().is(400));
     }
 
@@ -487,7 +487,7 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
                 .content(json)
                 .session(this.mockHttpSession)
                 .accept(MediaType.parseMediaType("application/json")))
-            .andExpect(jsonPath("$.description", is("The old password is not valid.")))
+            .andExpect(jsonPath("$.message", is("The old password is not valid.")))
             .andExpect(status().is(400));
     }
 
@@ -513,7 +513,7 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
                 .content(json)
                 .session(this.mockHttpSession)
                 .accept(MediaType.parseMediaType("application/json")))
-            .andExpect(jsonPath("$.description", is("User not found")))
+            .andExpect(jsonPath("$.message", is("User not found")))
             .andExpect(status().is(404));
     }
 
@@ -608,7 +608,7 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
                     }
                 })
                 .andExpect(status().is(400))
-                .andExpect(jsonPath("$.description", is("username may only contain alphanumeric "
+                .andExpect(jsonPath("$.message", is("username may only contain alphanumeric "
                     + "characters or single hyphens, single at signs or single dots. Cannot begin or end with a "
                     + "hyphen, at sign or dot.")));
         }
@@ -677,7 +677,7 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
                 .contentType(API_JSON_EXPECTED_ENCODING)
                 .session(this.mockHttpSession)
                 .accept(MediaType.parseMediaType("application/json")))
-            .andExpect(jsonPath("$.description", is("You don't have rights to do this")))
+            .andExpect(jsonPath("$.message", is("You don't have rights to do this")))
             .andExpect(status().is(400));
     }
 
@@ -712,7 +712,7 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
                 .contentType(API_JSON_EXPECTED_ENCODING)
                 .session(this.mockHttpSession)
                 .accept(MediaType.parseMediaType("application/json")))
-            .andExpect(jsonPath("$.description", is("Another user with username "
+            .andExpect(jsonPath("$.message", is("Another user with username "
                 + "'testuser-editor' ignore case already exists")))
             .andExpect(status().is(400));
     }
@@ -747,7 +747,7 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
                 .contentType(API_JSON_EXPECTED_ENCODING)
                 .session(this.mockHttpSession)
                 .accept(MediaType.parseMediaType("application/json")))
-            .andExpect(jsonPath("$.description", is("Another user with username 'testuser-editor' ignore case already exists")))
+            .andExpect(jsonPath("$.message", is("Another user with username 'testuser-editor' ignore case already exists")))
             .andExpect(status().is(400));
     }
 
@@ -815,7 +815,7 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
                 .session(this.mockHttpSession)
                 .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(400))
-            .andExpect(jsonPath("$.description", is("Another user with username 'testuser-editor' ignore case already exists")));
+            .andExpect(jsonPath("$.message", is("Another user with username 'testuser-editor' ignore case already exists")));
     }
 
     /**

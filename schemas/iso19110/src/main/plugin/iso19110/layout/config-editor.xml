@@ -76,7 +76,7 @@
       <sidePanel>
         <directive data-gn-validation-report=""/>
         <directive data-gn-suggestion-list=""/>
-        <directive data-gn-need-help="user-guide/describing-information/creating-metadata.html"/>
+        <directive data-gn-need-help="user-guide/describing-information/creating-metadata/"/>
       </sidePanel>
       <tab id="default" default="true" mode="flat">
         <section>
@@ -115,7 +115,7 @@
       <sidePanel>
         <directive data-gn-validation-report=""/>
         <directive data-gn-suggestion-list=""/>
-        <directive data-gn-need-help="user-guide/describing-information/creating-metadata.html"/>
+        <directive data-gn-need-help="user-guide/describing-information/creating-metadata/"/>
       </sidePanel>
       <tab id="advanced">
         <section xpath="/gfc:FC_FeatureCatalogue"/>
@@ -125,7 +125,7 @@
       <sidePanel>
         <directive data-gn-validation-report=""/>
         <directive data-gn-suggestion-list=""/>
-        <directive data-gn-need-help="user-guide/describing-information/creating-metadata.html"/>
+        <directive data-gn-need-help="user-guide/describing-information/creating-metadata/"/>
       </sidePanel>
       <tab id="xml" default="true"/>
     </view>

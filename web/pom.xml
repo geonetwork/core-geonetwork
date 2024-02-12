@@ -55,19 +55,11 @@
   <dependencies>
     <dependency>
       <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-log4j12</artifactId>
+      <artifactId>slf4j-reload4j</artifactId>
     </dependency>
     <dependency>
-      <groupId>log4j</groupId>
-      <artifactId>log4j</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.logging.log4j</groupId>
-      <artifactId>log4j-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.logging.log4j</groupId>
-      <artifactId>log4j-core</artifactId>
+      <groupId>ch.qos.reload4j</groupId>
+      <artifactId>reload4j</artifactId>
     </dependency>
     <dependency>
       <groupId>org.tuckey</groupId>
@@ -253,10 +245,6 @@
       <artifactId>xmlgraphics-commons</artifactId>
     </dependency>
     <dependency>
-      <groupId>commons-fileupload</groupId>
-      <artifactId>commons-fileupload</artifactId>
-    </dependency>
-    <dependency>
       <groupId>commons-collections</groupId>
       <artifactId>commons-collections</artifactId>
     </dependency>
@@ -367,6 +355,10 @@
         <exclusion>
           <groupId>org.apache.xmlgraphics</groupId>
           <artifactId>batik-transcoder</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>log4j</groupId>
+          <artifactId>log4j</artifactId>
         </exclusion>
       </exclusions>
     </dependency>
@@ -620,6 +612,12 @@
       <artifactId>schema-iso19115-3.2018</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>org.xmlunit</groupId>
+      <artifactId>xmlunit-matchers</artifactId>
+      <version>${xmlunit.version}</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <build>
@@ -796,6 +794,21 @@
               </sources>
             </configuration>
           </execution>
+          <execution>
+            <id>add-test-resource</id>
+            <phase>generate-test-resources</phase>
+            <goals>
+              <goal>add-test-resource</goal>
+            </goals>
+            <configuration>
+              <resources>
+                <resource>
+                  <directory>${basedir}/src/main/webapp/xslt</directory>
+                  <targetPath>resources/xslt</targetPath>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
         </executions>
       </plugin>
 
@@ -824,24 +837,6 @@
                 <filter>${basedir}/src/main/filters/${env}.properties</filter>
               </filters>
               <overwrite>true</overwrite>
-            </configuration>
-          </execution>
-          <execution>
-            <id>copy-documentation</id>
-            <phase>process-resources</phase>
-            <goals>
-              <goal>copy-resources</goal>
-            </goals>
-            <configuration>
-              <includeEmptyDirs>true</includeEmptyDirs>
-              <overwrite>true</overwrite>
-              <outputDirectory>${build.webapp.resources}</outputDirectory>
-              <resources>
-                <resource>
-                  <directory>${project.basedir}/../docs/manuals/target/doc</directory>
-                  <targetPath>${basedir}/src/main/webapp/doc</targetPath>
-                </resource>
-              </resources>
             </configuration>
           </execution>
           <execution>
@@ -1176,6 +1171,48 @@
       <properties>
         <env>inspire</env>
       </properties>
+    </profile>
+
+    <profile>
+      <id>with-doc</id>
+      <dependencies>
+        <dependency>
+          <groupId>${project.groupId}</groupId>
+          <artifactId>gn-guide</artifactId>
+          <version>${project.version}</version>
+          <classifier>help</classifier>
+          <type>zip</type>
+        </dependency>
+      </dependencies>
+
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-resources-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>copy-documentation</id>
+                <phase>process-resources</phase>
+                <goals>
+                  <goal>copy-resources</goal>
+                </goals>
+                <configuration>
+                  <includeEmptyDirs>true</includeEmptyDirs>
+                  <overwrite>true</overwrite>
+                  <outputDirectory>${build.webapp.resources}</outputDirectory>
+                  <resources>
+                    <resource>
+                      <directory>${project.basedir}/../docs/manual/target/help</directory>
+                      <targetPath>${basedir}/src/main/webapp/doc/en</targetPath>
+                    </resource>
+                  </resources>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
     </profile>
 
     <profile>

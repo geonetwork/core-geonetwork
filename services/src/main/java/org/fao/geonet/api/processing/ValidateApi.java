@@ -28,6 +28,8 @@ import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_TAG;
 import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUIDS_OR_SELECTION;
 
 import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import javax.annotation.PostConstruct;
@@ -55,6 +57,10 @@ import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.MetadataValidationRepository;
 import org.fao.geonet.services.metadata.BatchOpsMetadataReindexer;
+import org.fao.geonet.utils.Xml;
+import org.jdom.Element;
+import org.jdom.Namespace;
+import org.jdom.Text;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
@@ -212,12 +218,32 @@ public class ValidateApi {
                         if (!accessMan.canEdit(serviceContext, String.valueOf(record.getId()))) {
                             report.addNotEditableMetadataId(record.getId());
                         } else {
-                            boolean isValid = validator.doValidate(record, serviceContext.getLanguage());
+                            final Pair<Element, Boolean> validationPair = validator.doValidate(record, serviceContext.getLanguage());
+                            boolean isValid = validationPair.two();
                             if (isValid) {
                                 report.addMetadataInfos(record, "Is valid");
                                 new RecordValidationTriggeredEvent(record.getId(), ApiUtils.getUserSession(request.getSession()).getUserIdAsInt(), "1").publish(applicationContext);
                             } else {
-                                report.addMetadataError(record, "Is invalid");
+                                report.addMetadataError(record, "(" + record.getUuid() + ") Is invalid");
+                                Element schemaTronReport = validationPair.one();
+                                if (schemaTronReport != null) {
+                                    List<Namespace> theNSs = new ArrayList<Namespace>();
+                                    theNSs.add(Namespace.getNamespace("geonet", "http://www.fao.org/geonetwork"));
+                                    theNSs.add(Namespace.getNamespace("svrl", "http://purl.oclc.org/dsdl/svrl"));
+
+                                    // Extract all the know errors that exists in the report as List of Text
+                                    List<?> schemaTronReportErrors = Xml.selectNodes(schemaTronReport,
+                                        "geonet:xsderrors/geonet:error/geonet:message[normalize-space(.) != '']" +
+                                            "| geonet:schematronerrors/geonet:report[@geonet:required = '" + SchematronRequirement.REQUIRED + "']/svrl:schematron-output/svrl:failed-assert/svrl:text[normalize-space(.) != '']" +
+                                            "| geonet:schematronerrors/geonet:report[@geonet:required = '" + SchematronRequirement.REQUIRED + "']/geonet:schematronVerificationError[normalize-space(.) != '']",
+                                        theNSs);
+
+                                    for (Object schemaTronReportError :schemaTronReportErrors) {
+                                        // Add normalized string to the report.
+                                        report.addMetadataError(record, Xml.selectString((Element) schemaTronReportError, "normalize-space(.)",  theNSs));
+                                    }
+                                }
+
                                 new RecordValidationTriggeredEvent(record.getId(), ApiUtils.getUserSession(request.getSession()).getUserIdAsInt(), "0").publish(applicationContext);
                             }
                             report.addMetadataId(record.getId());

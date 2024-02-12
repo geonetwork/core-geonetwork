@@ -88,7 +88,7 @@
               <i class="fa fa-fw fa-bookmark"></i>&nbsp;<span translate>directoryManager</span>
             </a>
           </li>
-          <li class="gn-menuitem-xs" role="menuitem">
+          <li class="gn-menuitem-xs" role="menuitem" data-ng-if="user.canBatchEditMetadata()">
             <a data-gn-active-tb-item="{{gnCfg.mods.editor.appUrl}}#/batchedit">
               <i class="fa fa-fw fa-pencil"></i>&nbsp;<span translate>batchEditing</span>
             </a>

@@ -1,25 +1,25 @@
-//=============================================================================
-//===	Copyright (C) 2001-2011 Food and Agriculture Organization of the
-//===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
-//===	and United Nations Environment Programme (UNEP)
-//===
-//===	This program is free software; you can redistribute it and/or modify
-//===	it under the terms of the GNU General Public License as published by
-//===	the Free Software Foundation; either version 2 of the License, or (at
-//===	your option) any later version.
-//===
-//===	This program is distributed in the hope that it will be useful, but
-//===	WITHOUT ANY WARRANTY; without even the implied warranty of
-//===	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-//===	General Public License for more details.
-//===
-//===	You should have received a copy of the GNU General Public License
-//===	along with this program; if not, write to the Free Software
-//===	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
-//===
-//===	Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
-//===	Rome - Italy. email: geonetwork@osgeo.org
-//==============================================================================
+/*
+ * Copyright (C) 2001-2023 Food and Agriculture Organization of the
+ * United Nations (FAO-UN), United Nations World Food Programme (WFP)
+ * and United Nations Environment Programme (UNEP)
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or (at
+ * your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+ *
+ * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+ * Rome - Italy. email: geonetwork@osgeo.org
+ */
 
 package org.fao.geonet.kernel.datamanager.base;
 
@@ -43,6 +43,8 @@ import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.XmlSerializer;
 import org.fao.geonet.kernel.datamanager.*;
 import org.fao.geonet.kernel.schema.MetadataSchema;
+import org.fao.geonet.kernel.schema.MetadataSchemaOperation;
+import org.fao.geonet.kernel.schema.MetadataSchemaOperationFilter;
 import org.fao.geonet.kernel.search.index.IndexingList;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
@@ -141,8 +143,8 @@ public class BaseMetadataUtils implements IMetadataUtils {
         final AbstractMetadata metadata = findOne(metadataId);
         if (metadata != null && metadata.getDataInfo().getType() == MetadataType.METADATA) {
             MetadataSchema mds = schemaManager.getSchema(metadata.getDataInfo().getSchemaId());
-            Pair<String, Element> editXpathFilter = mds.getOperationFilter(ReservedOperation.editing);
-            XmlSerializer.removeFilteredElement(md, editXpathFilter, mds.getNamespaces());
+            MetadataSchemaOperationFilter editFilter = mds.getOperationFilter(MetadataSchemaOperation.editing);
+            XmlSerializer.removeFilteredElement(md, editFilter, mds.getNamespaces());
 
             String uuid = getMetadataUuid(metadataId);
             metadataNotifierManager.updateMetadata(md, metadataId, uuid, getServiceContext());

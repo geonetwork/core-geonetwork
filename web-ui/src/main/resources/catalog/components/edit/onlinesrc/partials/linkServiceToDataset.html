@@ -54,13 +54,13 @@
     <div class="">
       <button type="button" class="btn navbar-btn btn-success"
               data-gn-click-and-spin="linkTo(addOnlineSrcInDataset)"
-              data-ng-class="{'disabled': (stateObj.selectRecords.length < 1)}">
+              ng-disabled="(stateObj.selectRecords.length < 1)">
         <i class="fa gn-icon-service"/>&nbsp;
         <span data-translate="" data-ng-show="mode == 'service'">linkToService</span>
         <span data-translate="" data-ng-hide="mode == 'service'">linkToDataset</span>
       </button>
 
-      <div data-gn-need-help="user-guide/associating-resources/linking-dataset-or-service.html"
+      <div data-gn-need-help="user-guide/associating-resources/linking-dataset-or-service/"
            class="pull-right"></div>
     </div>
   </form>

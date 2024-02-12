@@ -55,7 +55,7 @@
         <directive data-gn-validation-report=""/>
         <directive data-gn-onlinesrc-list=""
                    data-types="onlines"/>
-        <directive data-gn-need-help="user-guide/describing-information/creating-metadata.html"/>
+        <directive data-gn-need-help="user-guide/describing-information/creating-metadata/"/>
       </sidePanel>
       <tab id="default" default="true" mode="flat">
         <section xpath="/simpledc"/>
@@ -69,7 +69,7 @@
         <directive data-gn-validation-report=""/>
         <directive data-gn-onlinesrc-list=""
                    data-types="onlines"/>
-        <directive data-gn-need-help="user-guide/describing-information/creating-metadata.html"/>
+        <directive data-gn-need-help="user-guide/describing-information/creating-metadata/"/>
       </sidePanel>
       <tab id="advanced" default="true">
         <section xpath="/simpledc"/>
@@ -80,7 +80,7 @@
         <directive data-gn-validation-report=""/>
         <directive data-gn-onlinesrc-list=""
                    data-types="onlines"/>
-        <directive data-gn-need-help="user-guide/describing-information/creating-metadata.html"/>
+        <directive data-gn-need-help="user-guide/describing-information/creating-metadata/"/>
       </sidePanel>
       <tab id="xml" default="true"/>
     </view>

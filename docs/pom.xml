@@ -40,7 +40,8 @@
     </license>
   </licenses>
   <modules>
+    <module>manual</module>
     <!--<module>schema-doc</module>-->
-    <module>manuals</module>
+    <!--module>manuals</module>-->
   </modules>
 </project>

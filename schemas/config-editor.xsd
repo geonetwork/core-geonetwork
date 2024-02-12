@@ -700,7 +700,7 @@ A good default config with all directives is:
                    data-lang="lang"/>
         <directive data-gn-validation-report=""/>
         <directive data-gn-suggestion-list=""/>
-        <directive data-gn-need-help="user-guide/describing-information/creating-metadata.html"/>
+        <directive data-gn-need-help="user-guide/describing-information/creating-metadata/"/>
         <directive data-gn-onlinesrc-list=""
                    types="thumbnail|onlinesrc|parent|dataset|service|source|sibling|associated|fcats"/>
       </sidePanel>

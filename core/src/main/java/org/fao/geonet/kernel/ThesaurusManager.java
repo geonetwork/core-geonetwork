@@ -492,6 +492,18 @@ public class ThesaurusManager implements ThesaurusFinder {
             String date = currentTh.getDate();
             elDate.addContent(date);
 
+            Element elCreatedDate = new Element("createdDate");
+            String createdDate = currentTh.getCreatedDate();
+            elCreatedDate.addContent(createdDate);
+
+            Element elIssuedDate = new Element("issuedDate");
+            String issuedDate = currentTh.getIssuedDate();
+            elIssuedDate.addContent(issuedDate);
+
+            Element elModifiedDate = new Element("modifiedDate");
+            String modifiedDate = currentTh.getModifiedDate();
+            elModifiedDate.addContent(modifiedDate);
+
             Element elUrl = new Element("url");
             String url = currentTh.getDownloadUrl();
             elUrl.addContent(url);
@@ -519,6 +531,9 @@ public class ThesaurusManager implements ThesaurusFinder {
             elLoop.addContent(elMultilingualTitles);
             elLoop.addContent(elDublinCoreMultilingual);
             elLoop.addContent(elDate);
+            elLoop.addContent(elCreatedDate);
+            elLoop.addContent(elIssuedDate);
+            elLoop.addContent(elModifiedDate);
             elLoop.addContent(elUrl);
             elLoop.addContent(elDefaultURI);
             elLoop.addContent(elType);

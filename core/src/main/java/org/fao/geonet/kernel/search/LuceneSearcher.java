@@ -1,31 +1,34 @@
-//==============================================================================
-//===	Copyright (C) 2001-2022 Food and Agriculture Organization of the
-//===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
-//===	and United Nations Environment Programme (UNEP)
-//===
-//===	This program is free software; you can redistribute it and/or modify
-//===	it under the terms of the GNU General Public License as published by
-//===	the Free Software Foundation; either version 2 of the License, or (at
-//===	your option) any later version.
-//===
-//===	This program is distributed in the hope that it will be useful, but
-//===	WITHOUT ANY WARRANTY; without even the implied warranty of
-//===	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-//===	General Public License for more details.
-//===
-//===	You should have received a copy of the GNU General Public License
-//===	along with this program; if not, write to the Free Software
-//===	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
-//===
-//===	Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
-//===	Rome - Italy. email: geonetwork@osgeo.org
-//==============================================================================
+/*
+ * Copyright (C) 2001-2023 Food and Agriculture Organization of the
+ * United Nations (FAO-UN), United Nations World Food Programme (WFP)
+ * and United Nations Environment Programme (UNEP)
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or (at
+ * your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+ *
+ * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+ * Rome - Italy. email: geonetwork@osgeo.org
+ */
 
 package org.fao.geonet.kernel.search;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import org.fao.geonet.kernel.schema.MetadataSchema;
+import org.fao.geonet.kernel.schema.MetadataSchemaOperation;
+import org.fao.geonet.kernel.schema.MetadataSchemaOperationFilter;
 import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.io.WKTReader;
 import jeeves.constants.Jeeves;
@@ -146,6 +149,12 @@ import java.util.Set;
  */
 public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelector {
     private static Logger LOGGER = LoggerFactory.getLogger(Geonet.SEARCH_ENGINE);
+
+    // Pattern added at the end of a Lucene field to indicate that the value should be withheld
+    private static String WITHHELD_INDEX_VALUE = "|nilReasonWithheld";
+
+    private static String WITHHELD_VALUE = "withheld";
+
     private SearchManager _sm;
     private String _styleSheetName;
 
@@ -267,6 +276,8 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
         }
 
         addElement(infoEl, Edit.Info.Elem.IS_PUBLISHED_TO_ALL, hasOperation(doc, ReservedGroup.all, ReservedOperation.view));
+        addElement(infoEl, Edit.Info.Elem.IS_PUBLISHED_TO_INTRANET, hasOperation(doc, ReservedGroup.intranet, ReservedOperation.view));
+        addElement(infoEl, Edit.Info.Elem.IS_PUBLISHED_TO_GUEST, hasOperation(doc, ReservedGroup.guest, ReservedOperation.view));
         addOperationsElement(infoEl, ReservedOperation.view.name(), operations.contains(ReservedOperation.view));
         addOperationsElement(infoEl, ReservedOperation.notify.name(), operations.contains(ReservedOperation.notify));
         addOperationsElement(infoEl, ReservedOperation.download.name(), operations.contains(ReservedOperation.download));
@@ -820,7 +831,7 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
         addElement(info, Edit.Info.Elem.CHANGE_DATE, changeDate);
         addElement(info, Edit.Info.Elem.SOURCE, source);
 
-        HashSet<String> addedTranslation = new LinkedHashSet<String>();
+        HashSet<String> addedTranslation = new LinkedHashSet<>();
         if ((dumpAllField || dumpFields != null) && searchLang != null && multiLangSearchTerm != null) {
             // get the translated fields and dump those instead of the non-translated
             for (String fieldName : multiLangSearchTerm) {
@@ -830,7 +841,14 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
                         String stringValue = f.stringValue();
                         if (!stringValue.trim().isEmpty()) {
                             addedTranslation.add(fieldName);
-                            md.addContent(new Element(dumpFields.get(fieldName)).setText(stringValue));
+
+                            boolean hasWithheld = stringValue.endsWith(WITHHELD_INDEX_VALUE);
+                            if (hasWithheld) {
+                                stringValue = stringValue.replace(WITHHELD_INDEX_VALUE, "");
+                                md.addContent(new Element(fieldName).setAttribute("nilReason", WITHHELD_VALUE).setText(stringValue));
+                            } else {
+                                md.addContent(new Element(dumpFields.get(fieldName)).setText(stringValue));
+                            }
                         }
                     }
                 }
@@ -868,12 +886,131 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
                 if (fieldName.equals("_cat")) {
                     addElement(info, Edit.Info.Elem.CATEGORY, fieldValue);
                 } else if (dumpAllField && (addedTranslation == null || !addedTranslation.contains(fieldName))) {
-                    // And all other field to the root element in dump all mode
-                    md.addContent(new Element(fieldName).setText(fieldValue));
+                    boolean hasWithheld = fieldValue.endsWith(WITHHELD_INDEX_VALUE);
+                    if (hasWithheld) {
+                        fieldValue = fieldValue.replace(WITHHELD_INDEX_VALUE, "");
+
+                        // And all other field to the root element in dump all mode
+                        md.addContent(new Element(fieldName).setAttribute("nilReason", WITHHELD_VALUE).setText(fieldValue));
+                    } else {
+                        // And all other field to the root element in dump all mode
+                        md.addContent(new Element(fieldName).setText(fieldValue));
+                    }
                 }
             }
         }
         md.addContent(info);
+
+        return md;
+    }
+
+    /**
+     * Remove hidden elements from the response.
+     *
+     * Supports only elements containing withheld.
+     *
+     * To withheld a field value add to the end of the field value the text |nilReasonWithheld
+     * in the indexing file of the metadata schema:
+     *
+     * For example to withheld metadata contact information:
+     *
+     *  <xsl:variable name="withheld"
+     *                   select="if ($type = 'metadata')
+     *                           then '|nilReasonWithheld'
+     *                           else ''" />
+     *
+     *
+     *  <Field name="{$fieldPrefix}"
+     *            string="{concat($roleTranslation, '|',
+     *                            $type, '|',
+     *                            $orgName, '|',
+     *                            $logo, '|',
+     *                            string-join($email, ','), '|',
+     *                            string-join($individualNames, ','), '|',
+     *                            string-join($positionName, ','), '|',
+     *                            $address, '|',
+     *                            string-join($phones, ','), '|',
+     *                            $uuid, '|',
+     *                            $position, '|',
+     *                            $website, $withheld)}"
+     *            store="true" index="false"/>
+     *
+     * @param context
+     * @param md
+     * @param schema
+     * @return
+     */
+    private static Element removeHiddenElements(ServiceContext context, Element md, String schema) {
+        try {
+            List<?> nodes = Xml.selectNodes(md,
+                "*[@nilReason]", new ArrayList<>());
+
+            if (!nodes.isEmpty()) {
+                Element info = md.getChild(Edit.RootChild.INFO, Edit.NAMESPACE);
+
+                boolean cleanNilReasonAttributes = true;
+
+                if (context != null) {
+                    MetadataSchema mds = context.getBean(DataManager.class).getSchema(schema);
+
+                    MetadataSchemaOperationFilter editFilter = mds.getOperationFilter(MetadataSchemaOperation.editing);
+                    boolean filterEditOperationElements = false;
+
+                    if (editFilter != null && editFilter.getXpath().contains(WITHHELD_VALUE)) {
+                        boolean canEdit = (Boolean.TRUE.toString().equals(info.getChildText(Edit.Info.Elem.EDIT)));
+                        filterEditOperationElements = !canEdit;
+                    }
+
+                    MetadataSchemaOperationFilter authenticatedFilter = mds.getOperationFilter(MetadataSchemaOperation.authenticated);
+                    boolean filterAuthOperationElements = false;
+                    if (authenticatedFilter != null && authenticatedFilter.getXpath().contains(WITHHELD_VALUE)) {
+                        boolean isAuthenticated = context.getUserSession().isAuthenticated();
+                        filterAuthOperationElements = !isAuthenticated;
+                    }
+
+                    MetadataSchemaOperationFilter downloadFilter = mds.getOperationFilter(MetadataSchemaOperation.download);
+                    boolean filterDownloadOperationElements = false;
+                    if (downloadFilter != null && downloadFilter.getXpath().contains(WITHHELD_VALUE)) {
+                        boolean canDownload = (Boolean.TRUE.toString().equals(info.getChildText(Edit.Info.Elem.DOWNLOAD)));
+                        filterDownloadOperationElements = !canDownload;
+                    }
+                    MetadataSchemaOperationFilter dynamicFilter = mds.getOperationFilter(MetadataSchemaOperation.dynamic);
+                    boolean filterDynamicOperationElements = false;
+                    if (dynamicFilter != null && dynamicFilter.getXpath().contains(WITHHELD_VALUE)) {
+                        boolean canDynamic = (Boolean.TRUE.toString().equals(info.getChildText(Edit.Info.Elem.DYNAMIC)));
+                        if (!canDynamic) {
+                            filterDynamicOperationElements = true;
+                        }
+                    }
+
+                    if (filterEditOperationElements || filterAuthOperationElements ||
+                        filterDownloadOperationElements || filterDynamicOperationElements) {
+                        // No need to cleanup the nilReason attributes, as the elements are removed
+                        cleanNilReasonAttributes = false;
+
+                        for (Object object : nodes) {
+                            if (object instanceof Element) {
+                                Element element = (Element) object;
+                                md.removeContent(element);
+                            }
+                        }
+                    }
+                }
+
+                if (cleanNilReasonAttributes) {
+                    // Cleanup nilReason attribute from the result
+                    for (Object object : nodes) {
+                        if (object instanceof Element) {
+                            Element element = (Element) object;
+                            element.removeAttribute("nilReason");
+                        }
+                    }
+                }
+            }
+        } catch (Exception ex) {
+            LOGGER.error(ex.getMessage(), ex);
+        }
+
         return md;
     }
 
@@ -889,7 +1026,13 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
         f) {
         if (f != null) {
             if (addedTranslation == null || !addedTranslation.contains(fieldName)) {
-                md.addContent(new Element(outputName).setText(f.stringValue()));
+                boolean hasWithheld = f.stringValue().endsWith(WITHHELD_INDEX_VALUE);
+
+                if (!hasWithheld) {
+                    md.addContent(new Element(outputName).setText(f.stringValue()));
+                } else {
+                     md.addContent(new Element(outputName).setAttribute("nilReason", "withheld").setText(f.stringValue().replace("|withheld", "")));
+                }
             }
         }
     }
@@ -1245,6 +1388,9 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
                         //--- search results
 
                         if (md != null) {
+                            // Remove withheld elements
+                            md = removeHiddenElements(srvContext, md, doc.get(Geonet.IndexFieldNames.SCHEMA));
+
                             // Calculate score and add it to info elem
                             if (_luceneConfig.isTrackDocScores()) {
                                 Float score = tdocs.scoreDocs[i].score;

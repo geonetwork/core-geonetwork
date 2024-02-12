@@ -190,7 +190,10 @@
           this.dictionary = this.$http.get('../api/records/'+uuid+'/featureCatalog?_content_type=json')
           .then(function(response) {
             if(response.data['decodeMap']!=null) {
-              return response.data['decodeMap'];
+              return Object.keys(response.data['decodeMap']).reduce(function(acc, key) {
+                acc[key.toLowerCase()] = response.data['decodeMap'][key];
+                return acc;
+              }, {});
             } else {
               return null;
         	}
@@ -258,7 +261,7 @@
 
       var columns = Object.keys(features[0].getProperties()).map(function(x) {
         return {
-          field: x,
+          field: x.toLowerCase(),
           title: x,
           titleTooltip: x,
           sortable: true,

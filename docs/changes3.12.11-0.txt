@@ -1,0 +1,51 @@
+================================================================================
+===
+=== GeoNetwork 3.12.11: List of changes
+===
+================================================================================
+- Fix unit tests and logic related to ApiUtils.canViewRecord to retrieve the metadata internal identifier. Follow up of #7279 (#7394)
+- [BP] Changed GENERATEUUID to NOTHING based on discussion on issue #7274
+- [BP] Fix working copy display so that links go to working copy (#7279)
+- Add missing roleHierarchy bean to service test context file (#7388)
+- Documentation 3.12: Update link to the manual and remove simple url harvester (#7379)
+- [BP] Update MkDocs configuration to publish to gh-pages branch (#7375)
+- [BP] User Manual refresh using Markdown and MkDocs (#7329)
+- [BP] batch edit user profile check in APIs (#7243)
+- [BP] Add support for emails with subdomains (#7314)
+- [BP] Fix write after response commit on proxy response (#7353)
+- [BP] Batch Editing access level in general system settings (#7238)
+- [BP] Fix robots.txt and sitemap 500 errors if no right content type is provided (#7327)
+- [BP] INSPIRE ATOM - retrieve the metadata ATOM feed using only the resource identifier (#7306)
+- [BP] Bump actions/checkout from 3 to 4 (#7318)
+- Fix missing includes from [BP] Use resource files for messages (#7281)
+- [BP] Set html emails as utf-8
+- [BP] fix ui issue (#7256)
+- [BP] Use resource files for messages (#7281)
+- [BP] Handle empty allGroupOpsAfter instead of throwing error. If we cannot find publishedAfter then default to publishedBefore so that no emails are sent.
+- Fix check to index WFS features linked in harvested metadata
+- [BP] Fix record history parameter name. Related to #7074 (#7249)
+- [BP] Fix German typo of the label for 'otherRestrictions' (#7245)
+- Fixed encoding issues in french properties.  back port values from main branch. (#7242)
+- [BP] Escape {{ to avoid error parsing argument. (#7237)
+- [BP] Update skin.xsl so that it works better in nojs mode. (#7015)
+- [BP] When authenticating user, only update the usergroups in the database if they have changed (#7165)
+- Add support for OL Attributions (#7062)
+- [BP] Update status emails to contain link to metadata which does not contain anchor. (#7130)
+- Fix wrong index field name added in the backport of #7074 (#7226)
+- Bulk publish / Publish privileges should be assigned to the approved version, not to the working copy version. (#7184)
+- [BP] Thesaurus / Region / Use ISO format for date (#7208)
+- [BP] Remote INSPIRE ATOM Feed / code cleanup and optimisations for ATOM describe service (#7189)
+- [BP] Change line-height for username so that it is not truncated. (#7185)
+- [BP] Move tooltip from reccusive input field to a single label (#7039)
+- [BP] Support code elements with anchors in ATOM predefined feeds
+- [BP] Support customising the metadata publication options (#7148)
+- [BP] Send metadata mail notifications for public metadata when is re-approved (#7074)
+- [BP] ISO19139 / Metadata editor / Fix display of contact individual name label in German (#7122)
+- Do not rethrow any random exception as general exception but only for UndeclaredThrowableException (#6850)
+- [BP] Allow multiple request matchers to decide if require CSRF (#7123)
+- [BP] Include the parent exception in the MetadataProcessingReport error so that we can see the real error in the logs. (#7119)
+- Fix only my records filter when reset the search in the editor board or access to the editor board from other pages (#7109)
+- Update link type protocol values for map layers (#7116)
+- [BP] Metadata workflow / send mail notifications for metadata status change to DRAFT when doing a rejection, not when creating a working copy
+- Update documentation url
+- Fix ui config html display (#6995)

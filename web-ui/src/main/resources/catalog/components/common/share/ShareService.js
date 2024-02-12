@@ -62,8 +62,8 @@
    * (eg. view, download, edit) a group of user can do.
    */
   module.factory('gnShareService', [
-    '$q', '$http', 'gnShareConstants',
-    function($q, $http, gnShareConstants) {
+    '$q', '$http', 'gnShareConstants', 'gnUrlUtils',
+    function($q, $http, gnShareConstants, gnUrlUtils) {
       var isAdminOrReviewer = function(userProfile, groupOwner,
                                        privileges, batchMode) {
         if ($.inArray(userProfile,
@@ -169,14 +169,18 @@
           return defer.promise;
         },
 
-        publish: function(metadataId, bucket, publish, user) {
+        publish: function(metadataId, bucket, publish, user, publicationType) {
           var defer = $q.defer();
           var url = '../api/records' + (
               angular.isDefined(metadataId) ? '/' + metadataId : '') +
             '/' + (publish?'publish':'unpublish');
 
           if (angular.isDefined(bucket)) {
-            url += '?bucket=' + bucket;
+            url = gnUrlUtils.append(url, "bucket=" + bucket);
+          }
+
+          if (angular.isDefined(publicationType)) {
+            url = gnUrlUtils.append(url, "publicationType=" + publicationType);
           }
 
           $http.put(url)

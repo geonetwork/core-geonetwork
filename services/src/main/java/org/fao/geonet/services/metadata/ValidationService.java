@@ -30,12 +30,14 @@ import java.util.Map;
 import java.util.Set;
 
 import org.fao.geonet.domain.AbstractMetadata;
+import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.responses.StatusResponse;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.datamanager.IMetadataValidator;
+import org.jdom.Element;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.http.MediaType;
@@ -124,17 +126,18 @@ public class ValidationService implements ApplicationContextAware {
 
         final IMetadataUtils metadataRepository = context.getBean(IMetadataUtils.class);
         for (String uuid : setOfUuidsToValidate) {
-            for(AbstractMetadata record : metadataRepository.findAllByUuid(uuid)) {
-	            if (!accessMan.isOwner(serviceContext, String.valueOf(record.getId()))) {
-	                this.report.get("notOwnerRecords").add(record.getId());
-	            } else {
-	                boolean isValid = validator.doValidate(record, serviceContext.getLanguage());
-	                if (isValid) {
-	                    this.report.get("validRecords").add(record.getId());
-	                }
-	                this.report.get("records").add(record.getId());
+            for (AbstractMetadata record : metadataRepository.findAllByUuid(uuid)) {
+                if (!accessMan.isOwner(serviceContext, String.valueOf(record.getId()))) {
+                    this.report.get("notOwnerRecords").add(record.getId());
+                } else {
+                    final Pair<Element, Boolean> validationPair = validator.doValidate(record, serviceContext.getLanguage());
+                    boolean isValid = validationPair.two();
+                    if (isValid) {
+                        this.report.get("validRecords").add(record.getId());
+                    }
+                    this.report.get("records").add(record.getId());
 
-	            }
+                }
             }
         }
     }

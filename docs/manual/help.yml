@@ -1,0 +1,112 @@
+# Project information
+site_name: Catalogue Help
+site_dir: target/help
+docs_dir: docs/help
+
+# Copyright
+copyright: Copyright &copy; 2001 - 2023 FAO-UN and others
+
+extra_css:
+  - assets/stylesheets/extra.css
+
+theme:
+  name: material
+  language: en
+  custom_dir: overrides
+  logo: assets/images/geonetwork-logo.svg
+  favicon: assets/images/geonetwork-logo.png
+  palette:
+    # Palette toggle for light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: blue
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    # Palette toggle for dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+  features:
+    - content.code.annotate
+    - content.tabs.link
+    - navigation.tracking
+    - navigation.prune
+    - navigation.indexes
+    - toc.follow
+    - navigation.top
+    - navigation.footer
+    - announce.dismiss
+
+plugins:
+  - search
+  - offline
+  - i18n:
+      docs_structure: suffix
+      reconfigure_material: true
+      languages:
+        - locale: en
+          default: true
+          name: English
+          build: true
+        - locale: fr
+          name: Français
+          build: !ENV [FRENCH,true]
+          site_name: 'Online Help (FR)'
+          nav_translations:
+            Home: Home
+            Search: Search
+            Record: Record
+            Map: Map
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - def_list
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
+      options:
+        custom_icons:
+          - overrides/.icons
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.snippets
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - tables
+
+extra:
+  homepage: https://geonetwork-opensource.org/
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/geonetwork
+    - icon: fontawesome/brands/docker
+      link: https://hub.docker.com/_/geonetwork
+    - icon: geonetwork/logo_bw
+      link: https://geonetwork-opensource.org/
+      name: GeoNetwork Website
+
+nav:
+  - 'index.md'
+  - 'Home':
+    - home/index.md
+  - 'Search':
+    - search/index.md
+  - 'Detail':
+    - record/index.md
+  - 'Map':
+    - map/index.md
+    - map/visualize/index.md

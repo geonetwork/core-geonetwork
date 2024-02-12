@@ -32,11 +32,15 @@ import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.api.exception.WebApplicationException;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
+import org.fao.geonet.domain.Profile;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.schema.editorconfig.BatchEditing;
 import org.fao.geonet.kernel.schema.editorconfig.Editor;
 import org.fao.geonet.kernel.schema.labels.Codelists;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
+import org.fao.geonet.util.UserUtil;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.json.JSONObject;
@@ -45,13 +49,27 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.servlet.http.HttpServletRequest;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 
 /**
  *
@@ -73,6 +91,12 @@ public class StandardsApi implements ApplicationContextAware {
 
     @Autowired
     LanguageUtils languageUtils;
+
+    @Autowired
+    SettingManager settingManager;
+
+    @Autowired
+    RoleHierarchy roleHierarchy;
 
     private ApplicationContext context;
 
@@ -138,8 +162,13 @@ public class StandardsApi implements ApplicationContextAware {
             required = false,
             example = "iso19139")
         @RequestParam(required = false)
-            String[] schema
+            String[] schema,
+        HttpServletRequest request
     ) throws Exception {
+
+        ServiceContext serviceContext = ApiUtils.createServiceContext(request);
+        UserUtil.checkUserProfileLevel(serviceContext.getUserSession(), settingManager, roleHierarchy, Settings.METADATA_BATCH_EDITING_ACCESS_LEVEL, Profile.Editor, "batch edit metadata");
+
         List<String> listOfRequestedSchema = schema == null ? new ArrayList<String>() : Arrays.asList(schema);
         Set<String> listOfSchemas = schemaManager.getSchemas();
         Map<String, BatchEditing> schemasConfig = new HashMap<>();
@@ -366,4 +395,5 @@ public class StandardsApi implements ApplicationContextAware {
             name, schemasProcessed.toString()));
 
     }
+
 }

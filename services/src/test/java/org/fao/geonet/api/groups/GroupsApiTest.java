@@ -256,7 +256,7 @@ public class GroupsApiTest extends AbstractServiceIntegrationTest {
                     }
                 })
                 .andExpect(status().is(400))
-                .andExpect(jsonPath("$.description", is("Group name may only contain alphanumeric "
+                .andExpect(jsonPath("$.message", is("Group name may only contain alphanumeric "
                     + "characters or single hyphens. Cannot begin or end with a hyphen.")));
         }
     }
@@ -364,7 +364,7 @@ public class GroupsApiTest extends AbstractServiceIntegrationTest {
                     }
                 })
                 .andExpect(status().is(400))
-                .andExpect(jsonPath("$.description", is("Group name may only contain alphanumeric "
+                .andExpect(jsonPath("$.message", is("Group name may only contain alphanumeric "
                     + "characters or single hyphens. Cannot begin or end with a hyphen.")));
         }
     }
@@ -398,7 +398,7 @@ public class GroupsApiTest extends AbstractServiceIntegrationTest {
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(400))
-            .andExpect(jsonPath("$.description", is("A group with name 'sample' already exist.")));
+            .andExpect(jsonPath("$.message", is("A group with name 'sample' already exist.")));
     }
 
     /**

@@ -198,7 +198,7 @@ goog.require('gn_alert');
           'linkTypes': {
             'links': ['LINK', 'kml'],
             'downloads': ['DOWNLOAD'],
-            'layers': ['OGC', 'ESRI:REST'],
+            'layers': ['OGC:WMS', 'OGC:WMTS', 'ESRI:REST'],
             'maps': ['ows']
           },
           'isFilterTagsDisplayedInSearch': false,
@@ -333,7 +333,7 @@ goog.require('gn_alert');
       requireProxy: [],
       gnCfg: angular.copy(defaultConfig),
       gnUrl: '',
-      docUrl: 'https://geonetwork-opensource.org/manuals/trunk/',
+      docUrl: 'https://docs.geonetwork-opensource.org/3.12/',
       //docUrl: '../../doc/',
       modelOptions: {
         updateOn: 'default blur',
@@ -649,6 +649,11 @@ goog.require('gn_alert');
       $scope.isUserGroupUpdateEnabled = gnGlobalSettings.isUserGroupUpdateEnabled;
       $scope.isExternalViewerEnabled = gnExternalViewer.isEnabled();
       $scope.externalViewerUrl = gnExternalViewer.getBaseUrl();
+      $scope.publicationOptions = [];
+
+      $http.get("../api/records/sharing/options").then(function (response) {
+        $scope.publicationOptions = response.data;
+      });
 
       $scope.isSelfRegisterPossible = function() {
         return gnConfig['system.userSelfRegistration.enable'];
@@ -794,6 +799,14 @@ goog.require('gn_alert');
                 '');
             return angular.isFunction(this[fnName]) ? this[fnName]() : false;
           },
+          canBatchEditMetadata: function () {
+            var profile = gnConfig["metadata.batchediting.accesslevel"] || 'Editor',
+              fnName =
+                profile !== ''
+                  ? 'is' + profile[0].toUpperCase() + profile.substring(1) + 'OrMore'
+                  : '';
+            return angular.isFunction(this[fnName]) ? this[fnName]() : false;
+          },
           canDeletePublishedMetadata: function () {
             var profile = gnConfig['metadata.delete.profilePublishedMetadata']
                 || 'Editor',
@@ -882,6 +895,14 @@ goog.require('gn_alert');
            });
         });
 
+        // Retrieve the publication options
+        userLogin.then(function (value) {
+          if ($scope.user && $scope.user.isReviewerOrMore()) {
+            $http.get("../api/records/sharing/options").then(function (response) {
+              $scope.publicationOptions = response.data;
+            });
+          }
+        });
 
         // Retrieve main search information
         var searchInfo = userLogin.then(function(value) {
@@ -906,7 +927,75 @@ goog.require('gn_alert');
         return gnConfig['metadata.workflow.allowPublishInvalidMd'];
       };
 
-      $scope.$on('StatusUpdated', function(event, status) {
+      $scope.allowPublishNonApprovedMd = function () {
+        return gnConfig["metadata.workflow.allowPublishNonApprovedMd"];
+      };
+
+      $scope.getPublicationOptionClass = function (
+        md,
+        user,
+        isMdWorkflowEnable,
+        pubOption
+      ) {
+        var publicationOptionTitle = $scope.getPublicationOptionTitle(
+          md,
+          user,
+          isMdWorkflowEnable,
+          pubOption
+        );
+        switch (publicationOptionTitle) {
+          case "mdnonapprovedcantpublish":
+          case "mdinvalidcantpublish":
+            return "disabled";
+            break;
+          default:
+            return "";
+        }
+      };
+
+      // Function to get the title name to be used when displaying the publish item in the menu
+      $scope.getPublicationOptionTitle = function (
+        md,
+        user,
+        isMdWorkflowEnable,
+        pubOption
+      ) {
+        var publicationOptionTitle = "";
+        if (!md.isPublished(pubOption)) {
+          if (md.isValid()) {
+            publicationOptionTitle = "mdvalid";
+          } else {
+            if (
+              isMdWorkflowEnable &&
+              md.isWorkflowEnabled() &&
+              $scope.allowPublishInvalidMd() === false &&
+              pubOption.name === "default"
+            ) {
+              publicationOptionTitle = "mdinvalidcantpublish";
+            } else {
+              if (!md.hasValidation()) {
+                publicationOptionTitle = "mdnovalidation";
+              } else {
+                publicationOptionTitle = "mdinvalid";
+              }
+            }
+          }
+          // if we are not using a disabled option like mdinvalidcantpublish then check if there is an approval
+          if (
+            publicationOptionTitle != "mdinvalidcantpublish" &&
+            isMdWorkflowEnable &&
+            md.isWorkflowEnabled() &&
+            md.mdStatus != 2 &&
+            $scope.allowPublishNonApprovedMd() === false &&
+            pubOption.name === "default"
+          ) {
+            publicationOptionTitle = "mdnonapprovedcantpublish";
+          }
+        }
+        return publicationOptionTitle;
+      };
+
+      $scope.$on('StatusUpdated', function (event, status) {
         var statusToApply = {};
         $.extend(statusToApply, defaultStatus, status);
 

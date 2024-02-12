@@ -38,7 +38,7 @@ then
 fi
 
 
-if [[ $1 =~ ^[0-9]+.[0-9]+.[0-9x]$  || $1 =~ ^[0-9]+.[0-9]+(-SNAPSHOT|-RC[0-2]|-[0-9]+)$ ]]; then
+if [[ $1 =~ ^[0-9]+.[0-9]+.[0-9]+x?$  || $1 =~ ^[0-9]+.[0-9]+(-SNAPSHOT|-RC[0-2]|-[0-9]+)$ ]]; then
     echo
 else
 	echo
@@ -50,7 +50,7 @@ else
 	exit
 fi
 
-if [[ $2 =~ ^[0-9]+.[0-9]+.[0-9x]$  || $2 =~ ^[0-9]+.[0-9]+(-SNAPSHOT|-RC[0-2]|-[0-9]+)$ ]]; then
+if [[ $2 =~ ^[0-9]+.[0-9]+.[0-9]+x?$  || $2 =~ ^[0-9]+.[0-9]+(-SNAPSHOT|-RC[0-2]|-[0-9]+)$ ]]; then
     # Retrieve version and subversion
     if [[ $2 =~ ^[0-9]+.[0-9]+-.*$ ]]; then
         patch=${version##*.}
@@ -97,12 +97,6 @@ echo 'sed will use the following option: ' $sedopt
 echo
 
 # TODO: check that version is the version in the file to be updated.
-
-# Update version in sphinx doc files
-echo 'Documentation'
-echo ' * updating docs/manuals/source/conf.py'
-sed $sedopt "s/${version}/${new_version_main}/g" docs/manuals/source/conf.py
-echo
 
 
 # Update release properties

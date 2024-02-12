@@ -55,11 +55,12 @@
         'gnAlertService',
         'gnConfigService',
         'gnConfig',
+        'gnUrlUtils',
         '$filter',
         'gnExternalViewer',
         function(gnMap, gnOwsCapabilities, gnSearchSettings, gnViewerSettings,
             olDecorateLayer, gnSearchLocation, gnOwsContextService, gnWfsService,
-            gnAlertService, gnConfigService, gnConfig, $filter, gnExternalViewer) {
+            gnAlertService, gnConfigService, gnConfig, gnUrlUtils, $filter, gnExternalViewer) {
 
           this.configure = function(options) {
             angular.extend(this.map, options);
@@ -188,18 +189,28 @@
             }
           };
 
-          var openLink = function(record, link) {
-            var url = $filter('gnLocalized')(record.url) || record.url;
+          var openLink = function(link, record) {
+            var url = $filter('gnLocalized')(link.url) || link.url;
             if (url &&
-                angular.isString(url) &&
-                url.match("^(http|ftp|sftp|\\\\|//)")) {
+              angular.isString(url) &&
+              url.match("^(http|ftp|sftp|\\\\|//)")) {
+
+              if (record && record.draft === "y") {
+                if (
+                  url.match(".*/api/records/" + record.uuid + "/attachments/.*") != null
+                ) {
+                  url = gnUrlUtils.remove(url, ["approved"], true);
+                }
+                url += (url.indexOf("?") > 0 ? "&" : "?") + "approved=false";
+              }
+
               return window.open(url, '_blank');
             } else if (url && url.indexOf('www.') == 0) {
               return window.open('http://' + url, '_blank');
-            } else if (record.title &&
-                       angular.isString(record.title) &&
-                       record.title.match("^(http|ftp|sftp|\\\\|//)")) {
-              return window.location.assign(record.title);
+            } else if (link.title &&
+              angular.isString(link.title) &&
+              link.title.match("^(http|ftp|sftp|\\\\|//)")) {
+              return window.location.assign(link.title);
             } else {
               gnAlertService.addAlert({
                 msg: 'Unable to open link',

@@ -285,10 +285,10 @@
           <Field name="revisionDate"
                  string="{string(gco:Date[.!='']|gco:DateTime[.!=''])}"
                  store="true" index="true"/>
-          <Field name="createDateMonth"
+          <Field name="revisionDateMonth"
                  string="{substring(gco:Date[.!='']|gco:DateTime[.!=''], 0, 8)}"
                  store="true" index="true"/>
-          <Field name="createDateYear"
+          <Field name="revisionDateYear"
                  string="{substring(gco:Date[.!='']|gco:DateTime[.!=''], 0, 5)}"
                  store="true" index="true"/>
           <xsl:if test="$useDateAsTemporalExtent">
@@ -320,6 +320,12 @@
         <xsl:for-each select="cit:date/cit:CI_Date[cit:dateType/cit:CI_DateTypeCode/@codeListValue='publication']/cit:date">
           <Field name="publicationDate"
                  string="{string(gco:Date[.!='']|gco:DateTime[.!=''])}"
+                 store="true" index="true"/>
+          <Field name="publicationDateMonth"
+                 string="{substring(gco:Date[.!='']|gco:DateTime[.!=''], 0, 8)}"
+                 store="true" index="true"/>
+          <Field name="publicationDateYear"
+                 string="{substring(gco:Date[.!='']|gco:DateTime[.!=''], 0, 5)}"
                  store="true" index="true"/>
           <xsl:if test="$useDateAsTemporalExtent">
             <Field name="tempExtentBegin"
@@ -832,11 +838,11 @@
         <xsl:if test="count($attributes) > 0">
           "attributeTable" : [
           <xsl:for-each select="$attributes">
-            {"name": "<xsl:apply-templates mode="localised" 
-                  select="*/gfc:memberName"><xsl:with-param name="langId" 
+            {"name": "<xsl:apply-templates mode="localised"
+                  select="*/gfc:memberName"><xsl:with-param name="langId"
                   select="concat('#', $langId)"/></xsl:apply-templates>",
-            "definition": "<xsl:apply-templates mode="localised" 
-                  select="*/gfc:definition"><xsl:with-param name="langId" 
+            "definition": "<xsl:apply-templates mode="localised"
+                  select="*/gfc:definition"><xsl:with-param name="langId"
                   select="concat('#', $langId)"/></xsl:apply-templates>",
             "code": "<xsl:value-of select="*/gfc:code/*/text()"/>",
             "link": "<xsl:value-of select="*/gfc:code/*/@xlink:href"/>",
@@ -844,12 +850,12 @@
             <xsl:if test="*/gfc:listedValue">
               ,"values": [
               <xsl:for-each select="*/gfc:listedValue">{
-                "label": "<xsl:apply-templates mode="localised" 
-                  select="*/gfc:label"><xsl:with-param name="langId" 
+                "label": "<xsl:apply-templates mode="localised"
+                  select="*/gfc:label"><xsl:with-param name="langId"
                   select="concat('#', $langId)"/></xsl:apply-templates>",
                 "code": "<xsl:value-of select="*/gfc:code/*/text()"/>",
-                "definition": "<xsl:apply-templates mode="localised" 
-                  select="*/gfc:definition"><xsl:with-param name="langId" 
+                "definition": "<xsl:apply-templates mode="localised"
+                  select="*/gfc:definition"><xsl:with-param name="langId"
                   select="concat('#', $langId)"/></xsl:apply-templates>"
                 }
                 <xsl:if test="position() != last()">,</xsl:if>

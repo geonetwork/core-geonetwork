@@ -145,7 +145,6 @@
           },bstConfig)
       );
       scope.$watch('ctrl.active', function() {
-        element.bootstrapTable('resetWidth');
         element.bootstrapTable('resetView');
       });
     }.bind(this));

@@ -41,17 +41,12 @@ import org.fao.geonet.Constants;
 import org.fao.geonet.NodeInfo;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.exceptions.MetadataNotFoundEx;
 import org.fao.geonet.exceptions.OperationNotAllowedEx;
 import org.fao.geonet.exceptions.UnAuthorizedException;
 import org.fao.geonet.inspireatom.util.InspireAtomUtil;
 import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.datamanager.IMetadataUtils;
-import org.fao.geonet.kernel.search.MetaSearcher;
-import org.fao.geonet.kernel.search.SearchManager;
-import org.fao.geonet.kernel.search.SearcherType;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
@@ -59,25 +54,19 @@ import org.fao.geonet.lib.Lib;
 import org.fao.geonet.util.XslUtil;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
-import org.jdom.Document;
 import org.jdom.Element;
-import org.jdom.Text;
-import org.jdom.xpath.XPath;
 import org.jdom.Namespace;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.NativeWebRequest;
 
-import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
-import jeeves.server.sources.http.ServletPathFinder;
 
 
 /**
@@ -149,7 +138,7 @@ public class AtomPredefinedFeed {
         if (StringUtils.isNotBlank(searchTerms)) {
             params.put("searchTerms", searchTerms.toLowerCase());
         }
-        Element feed = InspireAtomUtil.getDatasetFeed(context, spIdentifier, spNamespace, params, language);
+        Element feed = InspireAtomUtil.getMetadataFeedByResourceIdentifier(context, spIdentifier, spNamespace, params, language);
         return writeOutResponse(Xml.getString(feed), "application", "atom+xml");
       }
     }
@@ -266,7 +255,7 @@ public class AtomPredefinedFeed {
         if (StringUtils.isNotBlank(searchTerms)) {
             params.put("searchTerms", searchTerms.toLowerCase());
         }
-        Element feed = InspireAtomUtil.getDatasetFeed(context, spIdentifier, spNamespace, params, language);
+        Element feed = InspireAtomUtil.getMetadataFeedByResourceIdentifier(context, spIdentifier, spNamespace, params, language);
         Map<Integer, Element> crsCounts = new HashMap<Integer, Element>();;
         Namespace ns = Namespace.getNamespace("http://www.w3.org/2005/Atom");
         if (crs!=null) {

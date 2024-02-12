@@ -520,7 +520,7 @@
                    data-config="{{gnCurrentEdit.geoPublisherConfig}}"
                    data-lang="lang"/>
         <directive data-gn-suggestion-list=""/>
-        <directive data-gn-need-help="user-guide/describing-information/creating-metadata.html"/>
+        <directive data-gn-need-help="user-guide/describing-information/creating-metadata/"/>
       </sidePanel>
 
       <tab id="inspire" default="true" mode="flat">
@@ -3191,7 +3191,7 @@
                    data-lang="lang"/>
 
         <directive data-gn-suggestion-list=""/>
-        <directive data-gn-need-help="user-guide/describing-information/creating-metadata.html"/>
+        <directive data-gn-need-help="user-guide/describing-information/creating-metadata/"/>
       </sidePanel>
 
       <tab id="default" default="true" mode="flat">
@@ -3274,7 +3274,7 @@
                    data-config="{{gnCurrentEdit.geoPublisherConfig}}"
                    data-lang="lang"/>
         <directive data-gn-suggestion-list=""/>
-        <directive data-gn-need-help="user-guide/describing-information/creating-metadata.html"/>
+        <directive data-gn-need-help="user-guide/describing-information/creating-metadata/"/>
       </sidePanel>
 
       <tab id="identificationInfo" default="true">
@@ -3350,7 +3350,7 @@
                    data-config="{{gnCurrentEdit.geoPublisherConfig}}"
                    data-lang="lang"/>
         <directive data-gn-suggestion-list=""/>
-        <directive data-gn-need-help="user-guide/describing-information/creating-metadata.html"/>
+        <directive data-gn-need-help="user-guide/describing-information/creating-metadata/"/>
       </sidePanel>
       <tab id="xml" default="true"/>
     </view>

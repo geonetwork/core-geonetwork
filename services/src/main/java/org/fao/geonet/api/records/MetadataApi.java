@@ -84,6 +84,7 @@ import java.util.Map;
 import java.util.Set;
 
 import static org.fao.geonet.api.ApiParams.*;
+import static org.fao.geonet.api.records.attachments.AbstractStore.getAndCheckMetadataId;
 import static org.fao.geonet.kernel.mef.MEFLib.Version.Constants.MEF_V1_ACCEPT_TYPE;
 import static org.fao.geonet.kernel.mef.MEFLib.Version.Constants.MEF_V2_ACCEPT_TYPE;
 
@@ -548,6 +549,10 @@ public class MetadataApi {
         )
         @RequestParam(defaultValue = "")
             RelatedItemType[] type,
+        @ApiParam(value = "Use approved version or not",
+            required = false, defaultValue = "true")
+        @RequestParam(required = false, defaultValue = "true")
+        boolean approved,
         @ApiParam(value = "Start offset for paging. Default 1. Only applies to related metadata records (ie. not for thumbnails).",
             required = false
         )
@@ -560,7 +565,7 @@ public class MetadataApi {
       try (ServiceContext context = ApiUtils.createServiceContext(request)) {
         AbstractMetadata md;
         try {
-            md = ApiUtils.canViewRecord(metadataUuid, context);
+            md = ApiUtils.canViewRecord(metadataUuid, approved, request);
         } catch (SecurityException e) {
             Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
             throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
@@ -609,6 +614,10 @@ public class MetadataApi {
             required = true)
         @PathVariable
             String metadataUuid,
+        @ApiParam(value = "Use approved version or not",
+            required = false, defaultValue = "true")
+        @RequestParam(required = false, defaultValue = "true")
+            boolean approved,
         HttpServletRequest request) throws ResourceNotFoundException {
 
         RelatedItemType[] type = {RelatedItemType.fcats};
@@ -618,7 +627,7 @@ public class MetadataApi {
         Map<String, String[]> decodeMap = new HashMap<>();
 
         try {
-            RelatedResponse related = getRelated(metadataUuid, type, 1, 100, request);
+            RelatedResponse related = getRelated(metadataUuid, type, approved, 1, 100, request);
 
             if (isIncludedAttributeTable(related.getFcats())) {
                 for (AttributeTable.Element element : related.getFcats().getItem().get(0).getFeatureType().getAttributeTable().getElement()) {

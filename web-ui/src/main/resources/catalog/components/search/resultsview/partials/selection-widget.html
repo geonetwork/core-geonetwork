@@ -71,16 +71,19 @@
           <i class="fa fa-fw fa-pencil"></i>&nbsp;<span translate>editRecords</span>
         </a>
       </li>
-      <li  data-ng-show="!excludePattern.test('publish')"
-           data-ng-if="user.isReviewerOrMore()">
-        <a href="" data-ng-click="mdService.publish(undefined, searchResults.selectionBucket, 'on', getCatScope())">
-          <i class="fa fa-fw fa-unlock"></i>&nbsp;<span translate>publish</span>
+      <li
+        data-ng-repeat="pubOption in publicationOptions"
+        data-ng-show="!excludePattern.test('publish')"
+        data-ng-if="user.isReviewerOrMore()">
+        <a href="" data-ng-click="mdService.publish(undefined, searchResults.selectionBucket, 'on', getCatScope(), pubOption)">
+          <i class="fa fa-fw fa-unlock"></i>&nbsp;<span translate>{{ 'publish' + (pubOption.name === 'default'? '': pubOption.name)}}</span>
         </a>
       </li>
-      <li  data-ng-show="!excludePattern.test('unpublish')"
-           data-ng-if="user.isReviewerOrMore()">
-        <a href="" data-ng-click="mdService.publish(undefined, searchResults.selectionBucket, 'off', getCatScope())">
-          <i class="fa fa-fw fa-lock"></i>&nbsp;<span translate>unpublish</span>
+      <li data-ng-repeat="pubOption in publicationOptions"
+          data-ng-show="!excludePattern.test('unpublish')"
+          data-ng-if="user.isReviewerOrMore()">
+        <a href="" data-ng-click="mdService.publish(undefined, searchResults.selectionBucket, 'off', getCatScope(), pubOption)">
+          <i class="fa fa-fw fa-lock"></i>&nbsp;<span translate>{{ 'unpublish' + (pubOption.name === 'default'? '': pubOption.name)}}</span>
         </a>
       </li>
       <li  data-ng-show="!excludePattern.test('submit')"

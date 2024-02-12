@@ -163,7 +163,7 @@ public abstract class MetadataProcessingReport extends ProcessingReport {
         try {
             metadataDraft = ApplicationContextHolder.get().getBean(IMetadataUtils.class).isMetadataDraft(metadataId);
         } catch (Exception e) {
-            throw new RuntimeException("Error detecting if metadata is draft");
+            throw new RuntimeException("Error detecting if metadata is draft", e);
         }
         return metadataDraft;
     }
@@ -173,7 +173,7 @@ public abstract class MetadataProcessingReport extends ProcessingReport {
         try {
             metadataApproved = ApplicationContextHolder.get().getBean(IMetadataUtils.class).isMetadataApproved(metadataId);
         } catch (Exception e) {
-            throw new RuntimeException("Error detecting if metadata is approved");
+            throw new RuntimeException("Error detecting if metadata is approved", e);
         }
         return metadataApproved;
     }

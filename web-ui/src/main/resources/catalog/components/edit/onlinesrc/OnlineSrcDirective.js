@@ -1093,7 +1093,7 @@
                       // Editing an online resource after saving the metadata doesn't trigger the params.protocol watcher
                       processSelectedWMSLayers();
                     });
-                    scope.isImage = curUrl.match(/.*.(png|jpg|jpeg|gif)$/i);
+                    scope.isImage = curUrl.match(/.*.(png|jpg|jpeg|gif)(\?.*)?$/i);
                   }
 
                 };
@@ -1186,7 +1186,7 @@
                 scope.selectUploadedResource = function(res) {
                   if (res && res.url) {
                     var o = {
-                      name: res.id.split('/').splice(2).join('/'),
+                      name: decodeURI(res.id.split("/").splice(2).join("/")),
                       url: res.url
                     };
                     ['url', 'name'].forEach(function(pName) {

@@ -23,30 +23,12 @@
 
 package org.fao.geonet.api;
 
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URLEncoder;
-import java.nio.file.FileVisitResult;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.SimpleFileVisitor;
-import java.nio.file.attribute.BasicFileAttributes;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
-import java.util.Set;
-
-import javax.imageio.ImageIO;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
+import com.google.common.collect.Sets;
+import jeeves.constants.Jeeves;
+import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
+import jeeves.server.dispatchers.ServiceManager;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
@@ -67,15 +49,29 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.util.StringUtils;
-
-import com.google.common.collect.Sets;
-
-import jeeves.constants.Jeeves;
-import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
-import jeeves.server.dispatchers.ServiceManager;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
+
+import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URLEncoder;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.List;
+import java.util.*;
+
+import static org.fao.geonet.api.records.attachments.AbstractStore.getAndCheckMetadataId;
 
 /**
  * API utilities mainly to deal with parameters.
@@ -123,7 +119,11 @@ public class ApiUtils {
         throws Exception {
 
         IMetadataUtils metadataUtils = ApplicationContextHolder.get().getBean(IMetadataUtils.class);
-        String id = String.valueOf(metadataUtils.findOneByUuid(uuidOrInternalId).getId());
+        AbstractMetadata metadata = metadataUtils.findOneByUuid(uuidOrInternalId);
+        String id = null;
+        if (metadata != null) {
+            id = String.valueOf(metadata.getId());
+        }
 
         if (StringUtils.isEmpty(id)) {
             //It wasn't a UUID
@@ -466,7 +466,7 @@ public class ApiUtils {
     }
 
     /**
-     * Check if the current user can view this record.
+     * Check if the current user can view this approved record
      *
      * This method creates a temporary service context using the provided request to check record access,
      * if you have a service context already please use {@link #canViewRecord(String, ServiceContext)}.
@@ -477,13 +477,36 @@ public class ApiUtils {
      * @throws SecurityException if user is not allowed to view
      */
     public static AbstractMetadata canViewRecord(String metadataUuid, HttpServletRequest request) throws Exception {
+        return canViewRecord(metadataUuid, true, request);
+    }
+    /**
+     * Check if the current user can view this record.
+     *
+     * This method creates a temporary service context using the provided request to check record access,
+     * if you have a service context already please use {@link #canViewRecord(String, ServiceContext)}.
+     *
+     * @param metadataUuid Look up metadata record
+     * @param request Request to identify current user
+     * @return metadata record
+     * @throws SecurityException if user is not allowed to view
+     */
+    public static AbstractMetadata canViewRecord(String metadataUuid, boolean approved, HttpServletRequest request) throws Exception {
+        String metadataId;
+
+        // If provided in metadataUuid a metadata uuid (non numeric value),
+        // retrieve the internal id, otherwise use the value as the metadata internal id
+        if (!NumberUtils.isParsable(metadataUuid)) {
+            metadataId = String.valueOf(getAndCheckMetadataId(metadataUuid, approved));
+        } else {
+            metadataId = metadataUuid;
+        }
+
         ServiceContext previous = ServiceContext.get();
         if (previous != null) previous.clearAsThreadLocal();
 
         try (ServiceContext context = createServiceContext(request)) {
-            return canViewRecord(metadataUuid,context);
-        }
-        finally {
+            return canViewRecord(metadataId, context);
+        } finally {
             if (previous != null) previous.setAsThreadLocal();
         }
     }
@@ -495,7 +518,27 @@ public class ApiUtils {
      * @throws SecurityException if user is not allowed to view
      */
     public static AbstractMetadata canViewRecord(String metadataUuid, ServiceContext context) throws Exception {
-        AbstractMetadata metadata = getRecord(metadataUuid);
+        return canViewRecord(metadataUuid, true, context);
+    }
+
+    /**
+     * Check if the current user can view this record.
+     *
+     * @param metadataUuid Look up metadata record
+     * @return metadata record
+     * @throws SecurityException if user is not allowed to view
+     */
+    public static AbstractMetadata canViewRecord(String metadataUuid, boolean approved, ServiceContext context) throws Exception {
+        String metadataId;
+        if (!approved) {
+            // If the record is not approved then we need to get the id of the record.
+            metadataId = getInternalId(metadataUuid, approved);
+        } else {
+            // Otherwise use the uuid or id that was supplied.
+            metadataId = metadataUuid;
+        }
+
+        AbstractMetadata metadata = getRecord(metadataId);
         try {
             Lib.resource.checkPrivilege(context, String.valueOf(metadata.getId()), ReservedOperation.view);
         } catch (Exception e) {
@@ -540,7 +583,7 @@ public class ApiUtils {
      */
     public static String processRequestValidation(BindingResult bindingResult, ResourceBundle messages) {
         if (bindingResult.hasErrors()) {
-            java.util.List<ObjectError> errorList = bindingResult.getAllErrors();
+            List<ObjectError> errorList = bindingResult.getAllErrors();
 
             StringBuilder sb = new StringBuilder();
             Iterator<ObjectError> it = errorList.iterator();
@@ -573,5 +616,11 @@ public class ApiUtils {
         } else {
             return "";
         }
+    }
+
+    public static ResourceBundle getMessagesResourceBundle(Enumeration<Locale> locales) {
+        LanguageUtils languageUtils = ApplicationContextHolder.get().getBean(LanguageUtils.class);
+        Locale locale = languageUtils.parseAcceptLanguage(locales);
+        return ResourceBundle.getBundle("org.fao.geonet.api.Messages", locale);
     }
 }

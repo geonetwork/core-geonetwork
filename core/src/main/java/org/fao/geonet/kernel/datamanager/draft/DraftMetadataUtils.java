@@ -87,7 +87,9 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.Set;
 
 import static org.fao.geonet.repository.specification.MetadataSpecs.hasMetadataUuid;
@@ -588,6 +590,10 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
             Integer status = Integer.valueOf(StatusValue.Status.DRAFT);
             StatusValue statusValue = statusValueRepository.findOne(status);
 
+            String lang = context.getLanguage();
+            ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages",
+                new Locale(lang));
+
             for (Integer mdId : metadataIds) {
                 MetadataStatus metadataStatus = new MetadataStatus();
                 metadataStatus.setMetadataId(mdId);
@@ -595,7 +601,7 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
                 metadataStatus.setChangeDate(new ISODate());
                 metadataStatus.setUserId(author);
                 metadataStatus.setStatusValue(statusValue);
-                metadataStatus.setChangeMessage("Editing instance created");
+                metadataStatus.setChangeMessage(messages.getString("metadata_status_editing_instance_created_text"));
                 metadataStatus.setTitles(metadataUtils.extractTitles(newMetadata.getDataInfo().getSchemaId(), xml));
 
                 List<MetadataStatus> listOfStatusChange = new ArrayList<>(1);

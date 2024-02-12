@@ -66,7 +66,7 @@
             filters.push('owner=' + filter.ownerFilter.id);
           }
           if (filter.recordFilter) {
-            filters.push('record=' + filter.recordFilter);
+            filters.push('recordIdentifier=' + filter.recordFilter);
           }
           if (filter.dateFromFilter) {
             filters.push('dateFrom=' + $filter('date')(filter.dateFromFilter, 'yyyy-MM-dd'));
