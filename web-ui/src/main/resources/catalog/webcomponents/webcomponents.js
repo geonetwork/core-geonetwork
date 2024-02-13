@@ -6,7 +6,14 @@ function validURL(str) {
   }
 }
 
-var DEFAULT_BASEURL = "http://localhost:8080/geonetwork";
+function buildBaseUrl(urlAttribute) {
+  if (urlAttribute) {
+    return urlAttribute;
+  } else {
+    return window.location.href.replace(/(.*)\/catalog.*/, "$1");
+  }
+}
+
 var DEFAULT_PORTAL = "srv";
 
 customElements.define(
@@ -18,7 +25,7 @@ customElements.define(
 
     connectedCallback() {
       this.load();
-      var baseUrl = this.getAttribute("url") || DEFAULT_BASEURL;
+      var baseUrl = buildBaseUrl(this.getAttribute("url"));
       var link = document.createElement("link");
       link.setAttribute("rel", "stylesheet");
       link.setAttribute("href", baseUrl + "/catalog/style/gn_web_components.css");
@@ -98,7 +105,7 @@ customElements.define(
     attached = false;
 
     load() {
-      var baseUrl = this.getAttribute("url") || DEFAULT_BASEURL;
+      var baseUrl = buildBaseUrl(this.getAttribute("url"));
       var portal = this.getAttribute("portal") || DEFAULT_PORTAL;
 
       if (!validURL(baseUrl + "/" + portal)) {
@@ -131,7 +138,7 @@ customElements.define(
         }
       }
 
-      var baseUrl = this.getAttribute("url") || DEFAULT_BASEURL;
+      var baseUrl = buildBaseUrl(this.getAttribute("url"));
       var portal = this.getAttribute("portal") || DEFAULT_PORTAL;
       var gnUrl = baseUrl + "/" + portal;
       if (!validURL(gnUrl)) {
@@ -208,7 +215,7 @@ customElements.define(
     }
 
     load() {
-      var baseUrl = this.getAttribute("url") || DEFAULT_BASEURL;
+      var baseUrl = buildBaseUrl(this.getAttribute("url"));
       var portal = this.getAttribute("portal") || DEFAULT_PORTAL;
 
       if (!validURL(baseUrl + "/" + portal)) {

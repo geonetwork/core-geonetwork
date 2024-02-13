@@ -4,19 +4,21 @@
     <title>Embedding GeoNetwork / Search box</title>
   </head>
   <body style="background-color: lightgrey; padding: 20px; font-family: monospace;">
-    <h1>Full text search box linking to the catalogue</h1>
+    <h1>Numbers using facets</h1>
 
-    <gn-app portal="srv"
+    <h2>Type of resources</h2>
+    <gn-app
+            style="height: 340px;display: block;"
+            portal="srv"
             config='{
   "mods": {
     "global": {"hotkeys": false},
     "cookieWarning": {"enabled": false},
     "footer": {"enabled": false},
     "header": {"enabled": false},
+    "home": {"enabled": false},
     "search": {
-      "appUrl": "http://localhost:8080/geonetwork/{{node}}/{{lang}}/catalog.search?view=default#/search"
-    },
-    "home": {
+      "appUrl": "http://localhost:8080/geonetwork/{{node}}/{{lang}}/catalog.search#/search",
       "facetConfig": {
         "resourceType": {
           "terms": {
