@@ -33,7 +33,7 @@ To init AngularJS main module you have to use the directive ``ng-app`` and point
 <html ng-app="{$angularModule}" lang="{$lang}" id="ng-app">
 ```
 
-In the case of the search page (``catalog.search``), the `$angularApp` variable equals `gn_search`. And for the `lt` view the `$angularModule` equals `gn_search_default`.
+In the case of the search page (``catalog.search``), the `$angularApp` variable equals `gn_search`. And for the `default` view the `$angularModule` equals `gn_search_default`.
 
 So, by default, the main AngularJS module is loaded here from `gn_search_default` module declared here (See `web-ui/src/main/resources/catalog/views/default/module.js`.
 
