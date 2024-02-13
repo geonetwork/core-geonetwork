@@ -392,7 +392,7 @@ GeoNetwork comes with a sample LDAP configuration that you can use in Apache Dir
 
 There are currently two ways to convert an LDAP group to GeoNetwork Groups/Profiles.
 
--   The `LDAPRoleConverterGroupNameParser`, which works the same as the original LDAP configuration. It uses a regular expression to parse the LDAP group name into a GeoNetwork Group/Profile. This will convert the LDAP role `OR` into the GeoNetwork group `AL` with Profile `r.`
+-   The `LDAPRoleConverterGroupNameParser`, which works the same as the original LDAP configuration. It uses a regular expression to parse the LDAP group name into a GeoNetwork Group/Profile. This will convert the LDAP role `GCAT_GENERAL_EDITOR` into the GeoNetwork group `GENERAL` with Profile `Editor`.
 
     ``` xml
     <bean id="ldapRoleConverterGroupNameParser"  class="LDAPRoleConverterGroupNameParser">
