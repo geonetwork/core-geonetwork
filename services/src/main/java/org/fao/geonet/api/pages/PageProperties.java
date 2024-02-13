@@ -2,6 +2,7 @@ package org.fao.geonet.api.pages;
 
 import com.google.gson.Gson;
 import org.apache.commons.lang3.StringUtils;
+import org.fao.geonet.api.pages.model.GroupAccessExpression;
 import org.fao.geonet.domain.page.Page;
 import org.fao.geonet.domain.page.Page.PageFormat;
 import org.fao.geonet.domain.page.Page.PageSection;
@@ -41,8 +42,8 @@ public class PageProperties implements Serializable {
         icon = p.getIcon();
         if (StringUtils.isNotBlank(p.getAccessExpression())) {
             Gson gson = new Gson();
-            AccessExpression accessExpression = gson.fromJson(p.getAccessExpression(), AccessExpression.class);
-            groups = accessExpression.getGroups();
+            GroupAccessExpression groupAccessExpression = gson.fromJson(p.getAccessExpression(), GroupAccessExpression.class);
+            groups = groupAccessExpression.getGroups();
         }
     }
 

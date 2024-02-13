@@ -36,6 +36,7 @@ import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.exception.ResourceAlreadyExistException;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.api.exception.WebApplicationException;
+import org.fao.geonet.api.pages.model.GroupAccessExpression;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.UserGroup;
@@ -195,7 +196,7 @@ public class PagesAPI {
             }
 
             if (CollectionUtils.isNotEmpty(groups)) {
-                AccessExpression ae = new AccessExpression();
+                GroupAccessExpression ae = new GroupAccessExpression();
                 ae.setGroups(groups);
                 Gson gson = new Gson();
 
@@ -223,7 +224,7 @@ public class PagesAPI {
 
         String accessExpressionJSON = null;
         if (CollectionUtils.isNotEmpty(pageProperties.getGroups())) {
-            AccessExpression ae = new AccessExpression();
+            GroupAccessExpression ae = new GroupAccessExpression();
             ae.setGroups(pageProperties.getGroups());
             Gson gson = new Gson();
             accessExpressionJSON = gson.toJson(ae);
@@ -426,6 +427,7 @@ public class PagesAPI {
         for (final Page page : unfilteredResult) {
             if (page.getStatus().equals(Page.PageStatus.HIDDEN) && us.getProfile() == Profile.Administrator
                 || page.getStatus().equals(Page.PageStatus.PRIVATE) && us.getProfile() != null && us.getProfile() != Profile.Guest
+                || page.getStatus().equals(Page.PageStatus.GROUPS) && us.getProfile() != null && us.getProfile() != Profile.Guest && checkGroupPermission(us, page)
                 || page.getStatus().equals(Page.PageStatus.PUBLIC)
                 || page.getStatus().equals(Page.PageStatus.PUBLIC_ONLY) && !us.isAuthenticated()) {
                 if (section == null) {
@@ -437,29 +439,6 @@ public class PagesAPI {
                         filteredResult.add(new PageProperties(page));
                     }
                 }
-            } else if (page.getStatus().equals(Page.PageStatus.GROUPS) && us.getProfile() != null && us.getProfile() != Profile.Guest) {
-                String currentUserId = us.getUserId();
-
-                if (us.getProfile() == Profile.Administrator) {
-                    filteredResult.add(new PageProperties(page));
-                } else if (StringUtils.isNotEmpty(currentUserId)) {
-                    List<UserGroup> userGroups = userGroupRepository.findAll(UserGroupSpecs.hasUserId(Integer.parseInt(currentUserId)));
-
-                    Gson gson = new Gson();
-                    AccessExpression accessExpression = gson.fromJson(page.getAccessExpression(), AccessExpression.class);
-
-                    if (CollectionUtils.isNotEmpty(userGroups) && accessExpression!=null && CollectionUtils.isNotEmpty(accessExpression.getGroups())) {
-                        for (UserGroup userGroup : userGroups) {
-                            for (String group : accessExpression.getGroups()) {
-                                if (userGroup.getGroup().getName().equals(group)) {
-                                    filteredResult.add(new PageProperties(page));
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                }
-
             }
         }
 
@@ -621,5 +600,38 @@ public class PagesAPI {
             }
         }
 
+    }
+
+    /**
+     * Check is the user is in designated group to access the static page when page permission level is set to GROUP
+     * @param us Current User Session
+     * @param page static page object
+     * @return permission granted
+     */
+    private boolean checkGroupPermission (UserSession us, Page page) {
+        boolean isGranted = false;
+        String currentUserId = us.getUserId();
+
+        if (us.getProfile() == Profile.Administrator) {
+            isGranted = true;
+        } else if (page.getStatus().equals(Page.PageStatus.GROUPS) && StringUtils.isNotEmpty(currentUserId)) {
+            List<UserGroup> userGroups = userGroupRepository.findAll(UserGroupSpecs.hasUserId(Integer.parseInt(currentUserId)));
+
+            Gson gson = new Gson();
+            GroupAccessExpression groupAccessExpression = gson.fromJson(page.getAccessExpression(), GroupAccessExpression.class);
+
+            if (CollectionUtils.isNotEmpty(userGroups) && groupAccessExpression !=null && CollectionUtils.isNotEmpty(groupAccessExpression.getGroups())) {
+                for (UserGroup userGroup : userGroups) {
+                    for (String group : groupAccessExpression.getGroups()) {
+                        if (userGroup.getGroup().getName().equals(group)) {
+                            isGranted = true;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        return isGranted;
     }
 }

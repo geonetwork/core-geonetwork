@@ -138,7 +138,7 @@ public class Page extends GeonetEntity implements Serializable {
         return status;
     }
 
-    @Column(name = "access_expression")
+    @Column(name = "accessexpression")
     public String getAccessExpression() {
         return accessExpression;
     }
