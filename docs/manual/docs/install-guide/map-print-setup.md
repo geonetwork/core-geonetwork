@@ -11,4 +11,4 @@ The folder contains 3 template files:
 -   ``template.pdf`` and ``template-landscape.pdf`` which are used to generate the map viewer pdf
 -   ``template-thumbnail.pdf`` which is used to build a thumbnail in the metadata editor (see [Generating a thumbnail using WMS layers](../user-guide/associating-resources/linking-thumbnail.md#linking-thumbnail-from-wms)).
 
-These templates are created by exporting pdf from the included ``template.odf`` file in the folder.
+These templates are created by exporting pdf from the included ``template.pdf`` file in the folder.
