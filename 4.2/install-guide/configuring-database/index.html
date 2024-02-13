@@ -1593,7 +1593,7 @@
 </span></code></pre></div>
 </li>
 </ol>
-<p>Within PostgreSQL it is possible to configure <code>es</code> or <code>is</code>. In the latter case GeoNetwork will use spatial capabilities of PostGIS to filter metadata. In the first case (and for other database dialects) a Shapefile is created for storage of metadata coverage.</p>
+<p>Within PostgreSQL it is possible to configure <code>postgres</code> or <code>postgis</code>. In the latter case GeoNetwork will use spatial capabilities of PostGIS to filter metadata. In the first case (and for other database dialects) a Shapefile is created for storage of metadata coverage.</p>
 <h2 id="logging">Logging</h2>
 <p>To see more details about the database connection and queries, the log can be switched to DEBUG level in <code>web/src/main/webapp/WEB-INF/classes/log4j.xml</code> (or see <a href="../../administrator-guide/configuring-the-catalog/system-configuration/#system-config-server">Catalog Server</a> &rarr; Log level).</p>
 <div class="language-xml highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nt">&lt;logger</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;org.hibernate.SQL&quot;</span><span class="w"> </span><span class="na">additivity=</span><span class="s">&quot;false&quot;</span><span class="nt">&gt;</span>

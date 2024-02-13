@@ -2467,12 +2467,12 @@
 <h1 id="version-402">Version 4.0.2</h1>
 <p>GeoNetwork 4.0.2 release is a minor release but adds a better multilingual support which may require some changes in your installations:</p>
 <h2 id="database-migration">Database migration</h2>
-<p>With the possibility to <a href="https://github.com/geonetwork/core-geonetwork/pull/4817">restore deleted record</a>, catalog maintainer has to update the database with the <a href="https://github.com/geonetwork/core-geonetwork/blob/master/web/src/main/webapp/WEB-INF/classes/setup/sql/migrate/v3110/migrate-default.sql#L10-L27">following migration SQL script</a>.</p>
+<p>With the possibility to <a href="https://github.com/geonetwork/core-geonetwork/pull/4817">restore deleted records</a>, the catalog maintainer has to update the database with the <a href="https://github.com/geonetwork/core-geonetwork/blob/master/web/src/main/webapp/WEB-INF/classes/setup/sql/migrate/v3110/migrate-default.sql#L10-L27">following migration SQL script</a>.</p>
 <h2 id="index-migration">Index migration</h2>
 <p>Index migration is only required if you created custom facets configuration in the admin or created custom Kibana dashboards. Changes are related to name or structure changes in index fields due to the improvement made for multilingual record support. The changes affect the following type of fields:</p>
 <h3 id="codelist">Codelist</h3>
-<p><code>t_</code> is now <code>l_</code> and is an object composed of:</p>
-<p>So <code>et</code> was:</p>
+<p><code>codelist</code> is now <code>cl_</code> and is an object composed of:</p>
+<p>characterSet was:</p>
 <div class="language-js highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nx">codelist_characterSet</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="s2">&quot;utf8&quot;</span>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="p">],</span>
@@ -2491,10 +2491,10 @@
 </span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span><span class="nx">link</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_CharacterSetCode&quot;</span>
 </span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="p">}]</span>
 </span></code></pre></div>
-<p>So if using <code>xt</code> in a facet, use <code>cl_characterSet.default</code> with this new version.</p>
+<p>So if using <code>codelist_characterSet_text</code> in a facet, use <code>cl_characterSet.default</code> with this new version.</p>
 <h3 id="thesaurus">Thesaurus</h3>
-<p>The <code>ds</code> field is now only used for rendering (not for query) to limit the total number of field and avoid some errors on large catalogues.</p>
-<p>Use the per thesaurus fields which were named <code>thesaurus_geonetwork+external/local+type+thesaurusid</code> and are now <code>id</code>. The field is also an object composed of:</p>
+<p>The <code>allKeywords</code> field is now only used for rendering (not for query) to limit the total number of field and avoid some errors on large catalogues.</p>
+<p>Use the per thesaurus fields, which were named <code>thesaurus_geonetwork+external/local+type+thesaurusid</code> and are now <code>th_thesaurusid</code>. The field is also an object composed of:</p>
 <div class="language-js highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nx">thesaurus_geonetworkthesaurusexternalthemeeeatopics</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="s2">&quot;Land use&quot;</span><span class="p">,</span>
 </span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="s2">&quot;http://www.eea.europa.eu/portal_vocabularies/themes/landuse&quot;</span><span class="p">,</span>
@@ -2515,9 +2515,9 @@
 </span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="p">}</span>
 </span></code></pre></div>
 <h3 id="topic-category">Topic category</h3>
-<p><code>ic</code> is renamed to <code>ic</code> and has the same structure as a codelist.</p>
+<p><code>topic</code> is renamed to <code>cl_topic</code> and has the same structure as a codelist.</p>
 <h3 id="geotag">GeoTag</h3>
-<p><code>ag</code> is now stored in the <code>template field for keyword types](https://github.com/geonetwork/core-geonetwork/pull/5243) ie. [keywordType-place</code></p>
+<p><code>geotag</code> is now stored in the <a href="https://github.com/geonetwork/core-geonetwork/pull/5243">template field for keyword types</a> ie. <code>keywordType-place</code></p>
 <p>For more details check <a href="../../../customizing-application/configuring-search-fields/">Configuring search fields</a> and <a href="../../../customizing-application/configuring-faceted-search/">Configuring faceted search</a>.</p>
 <h2 id="main-changes-in-version-402">Main changes in version 4.0.2</h2>
 <ul>
