@@ -41,6 +41,7 @@ import org.fao.geonet.api.processing.report.MetadataProcessingReport;
 import org.fao.geonet.api.processing.report.SimpleMetadataProcessingReport;
 import org.fao.geonet.api.records.model.*;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
+import org.fao.geonet.config.IPublicationAction;
 import org.fao.geonet.config.IPublicationConfig;
 import org.fao.geonet.config.PublicationOption;
 import org.fao.geonet.domain.*;
@@ -232,7 +233,7 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
         HttpServletRequest request
     )
         throws Exception {
-
+        ServiceContext serviceContext = ApiUtils.createServiceContext(request);
         UserSession userSession = ApiUtils.getUserSession(request.getSession());
         checkUserProfileToPublishMetadata(userSession);
 
@@ -241,6 +242,13 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
         }
 
         shareMetadataWithReservedGroup(metadataUuid, true, publicationType, session, request);
+
+        if (publicationConfig instanceof IPublicationAction) {
+            java.util.Optional<PublicationOption> publicationOption = publicationConfig.getPublicationOptionConfiguration(publicationType);
+            if (publicationOption.isPresent()) {
+                ((IPublicationAction) publicationConfig).processMetadata(serviceContext, publicationOption.get(), ApiUtils.getRecord(metadataUuid), true);
+            }
+        }
     }
 
     @io.swagger.v3.oas.annotations.Operation(
@@ -271,7 +279,7 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
         HttpServletRequest request
     )
         throws Exception {
-
+        ServiceContext serviceContext = ApiUtils.createServiceContext(request);
         UserSession userSession = ApiUtils.getUserSession(request.getSession());
         checkUserProfileToUnpublishMetadata(userSession);
 
@@ -280,6 +288,13 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
         }
 
         shareMetadataWithReservedGroup(metadataUuid, false, publicationType, session, request);
+
+        if (publicationConfig instanceof IPublicationAction) {
+            java.util.Optional<PublicationOption> publicationOption = publicationConfig.getPublicationOptionConfiguration(publicationType);
+            if (publicationOption.isPresent()) {
+                ((IPublicationAction) publicationConfig).processMetadata(serviceContext, publicationOption.get(), ApiUtils.getRecord(metadataUuid), false);
+            }
+        }
     }
 
     @io.swagger.v3.oas.annotations.Operation(
@@ -385,10 +400,25 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
         HttpServletRequest request
     )
         throws Exception {
-
+        ServiceContext serviceContext = ApiUtils.createServiceContext(request);
+        String publicationTypeToUse =
+            StringUtils.isNotEmpty(publicationType) ? publicationType : DEFAULT_PUBLICATION_TYPE_NAME;
         SharingParameter sharing = buildSharingForPublicationConfig(true,
-            StringUtils.isNotEmpty(publicationType) ? publicationType : DEFAULT_PUBLICATION_TYPE_NAME);
-        return shareSelection(uuids, bucket, sharing, session, request);
+            publicationTypeToUse);
+        MetadataProcessingReport metadataProcessingReport = shareSelection(uuids, bucket, sharing, session, request);
+
+        if (publicationConfig instanceof IPublicationAction) {
+            java.util.Optional<PublicationOption> publicationOption = publicationConfig.getPublicationOptionConfiguration(publicationTypeToUse);
+            if (publicationOption.isPresent()) {
+                Set<Integer> metadataProcessed = metadataProcessingReport.getMetadata();
+                for(Integer metadataId: metadataProcessed) {
+                    ((IPublicationAction) publicationConfig).processMetadata(serviceContext, publicationOption.get(),
+                        metadataRepository.findOneById(metadataId), true);
+                }
+            }
+        }
+
+        return metadataProcessingReport;
     }
 
     @io.swagger.v3.oas.annotations.Operation(
@@ -421,10 +451,25 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
         HttpServletRequest request
     )
         throws Exception {
-
+        ServiceContext serviceContext = ApiUtils.createServiceContext(request);
+        String publicationTypeToUse =
+            StringUtils.isNotEmpty(publicationType) ? publicationType : DEFAULT_PUBLICATION_TYPE_NAME;
         SharingParameter sharing = buildSharingForPublicationConfig(false,
-            StringUtils.isNotEmpty(publicationType) ? publicationType : DEFAULT_PUBLICATION_TYPE_NAME);
-        return shareSelection(uuids, bucket, sharing, session, request);
+            publicationTypeToUse);
+        MetadataProcessingReport metadataProcessingReport = shareSelection(uuids, bucket, sharing, session, request);
+
+        if (publicationConfig instanceof IPublicationAction) {
+            java.util.Optional<PublicationOption> publicationOption = publicationConfig.getPublicationOptionConfiguration(publicationTypeToUse);
+            if (publicationOption.isPresent()) {
+                Set<Integer> metadataProcessed = metadataProcessingReport.getMetadata();
+                for(Integer metadataId: metadataProcessed) {
+                    ((IPublicationAction) publicationConfig).processMetadata(serviceContext, publicationOption.get(),
+                        metadataRepository.findOneById(metadataId), false);
+                }
+            }
+        }
+
+        return metadataProcessingReport;
     }
 
     @io.swagger.v3.oas.annotations.Operation(
