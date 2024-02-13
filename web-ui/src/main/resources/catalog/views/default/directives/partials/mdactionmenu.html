@@ -62,6 +62,7 @@
         role="menuitem"
         data-ng-if="displayPublicationOption(md, user, pubOption)"
         data-ng-class="getPublicationOptionClass(md, user, isMdWorkflowEnable, pubOption)"
+        class="gn-puboption-{{pubOption.name}}-{{md.isPublished(pubOption)?'unpublish':'publish'}}"
         title="{{getPublicationOptionTitle(md, user, isMdWorkflowEnable, pubOption) | translate}}"
       >
         <a
