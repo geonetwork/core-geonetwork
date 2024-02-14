@@ -557,7 +557,12 @@
       this.assignCategories = function (metadataId, categories) {
         var defer = $q.defer();
         $http
-          .get("../records/" + metadataId + "/tags?id=" + categories.join("&id="))
+          .get(
+            "../records/" +
+              encodeURIComponent(metadataId) +
+              "/tags?id=" +
+              categories.join("&id=")
+          )
           .then(
             function (response) {
               defer.resolve(response.data);
@@ -589,9 +594,11 @@
        * @param {Object} md
        */
       this.getPermalink = function (md) {
-        $http.get("../api/records/" + md.getUuid() + "/permalink").then(function (r) {
-          gnUtilityService.displayPermalink(md.resourceTitle, r.data);
-        });
+        $http
+          .get("../api/records/" + encodeURIComponent(md.getUuid()) + "/permalink")
+          .then(function (r) {
+            gnUtilityService.displayPermalink(md.resourceTitle, r.data);
+          });
       };
 
       /**

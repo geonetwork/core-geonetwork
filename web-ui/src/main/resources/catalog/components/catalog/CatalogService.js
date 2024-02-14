@@ -79,7 +79,9 @@
          * @return {HttpPromise} Future object
          */
         validate: function (id) {
-          return $http.put("../api/records/" + id + "/validate/internal");
+          return $http.put(
+            "../api/records/" + encodeURIComponent(id) + "/validate/internal"
+          );
         },
 
         /**
@@ -96,7 +98,9 @@
          */
         validateDirectoryEntry: function (id, newState) {
           var param = "?isvalid=" + (newState ? "true" : "false");
-          return $http.put("../api/records/" + id + "/validate/internal" + param);
+          return $http.put(
+            "../api/records/" + encodeURIComponent(id) + "/validate/internal" + param
+          );
         },
 
         /**

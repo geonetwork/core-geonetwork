@@ -97,7 +97,7 @@ public class MetadataTagApi {
         description = "Tags are used to classify information.<br/>" +
             "<a href='https://docs.geonetwork-opensource.org/latest/user-guide/tag-information/tagging-with-categories/'>More info</a>")
     @GetMapping(
-        value = "/{metadataUuid}/tags",
+        value = "/{metadataUuid:.+}/tags",
         produces = {
             MediaType.APPLICATION_JSON_VALUE
         })
@@ -123,7 +123,7 @@ public class MetadataTagApi {
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Add tags to a record",
         description = "")
-    @PutMapping(value = "/{metadataUuid}/tags")
+    @PutMapping(value = "/{metadataUuid:.+}/tags")
     @ResponseStatus(value = HttpStatus.CREATED)
     @ApiResponses(value = {
         @ApiResponse(responseCode = "201", description = "Record tags added."),
@@ -209,7 +209,7 @@ public class MetadataTagApi {
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Delete tags of a record",
         description = "")
-    @DeleteMapping(value = "/{metadataUuid}/tags")
+    @DeleteMapping(value = "/{metadataUuid:.+}/tags")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     @ApiResponses(value = {
         @ApiResponse(responseCode = "204", description = "Record tags removed."),

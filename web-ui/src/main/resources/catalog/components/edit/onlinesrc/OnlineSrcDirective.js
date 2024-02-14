@@ -425,6 +425,7 @@
           },
           link: function (scope, element, attrs) {
             scope.onlinesrcService = gnOnlinesrc;
+
             scope.gnCurrentEdit = gnCurrentEdit;
             scope.gnRelatedResources = gnRelatedResources;
             scope.allowEdits = true;
@@ -730,7 +731,7 @@
                 return $http
                   .put(
                     "../api/records/" +
-                      scope.gnCurrentEdit.uuid +
+                      encodeURIComponent(scope.gnCurrentEdit.uuid) +
                       "/attachments/print-thumbnail",
                     null,
                     {

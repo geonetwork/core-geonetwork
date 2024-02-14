@@ -110,7 +110,7 @@ public class MetadataEditingApi {
     private StatusValueRepository statusValueRepository;
 
     @io.swagger.v3.oas.annotations.Operation(summary = "Edit a record", description = "Return HTML form for editing.")
-    @RequestMapping(value = "/{metadataUuid}/editor", method = RequestMethod.GET, consumes = {
+    @RequestMapping(value = "/{metadataUuid:.+}/editor", method = RequestMethod.GET, consumes = {
         MediaType.ALL_VALUE}, produces = {MediaType.APPLICATION_XML_VALUE})
     @PreAuthorize("hasAuthority('Editor')")
     @ResponseStatus(HttpStatus.OK)
@@ -189,7 +189,7 @@ public class MetadataEditingApi {
     }
 
     @io.swagger.v3.oas.annotations.Operation(summary = "Save edits", description = "Save the HTML form content.")
-    @RequestMapping(value = "/{metadataUuid}/editor", method = RequestMethod.POST, consumes = {
+    @RequestMapping(value = "/{metadataUuid:.+}/editor", method = RequestMethod.POST, consumes = {
         MediaType.ALL_VALUE}, produces = {MediaType.APPLICATION_XML_VALUE})
     @PreAuthorize("hasAuthority('Editor')")
     @ResponseStatus(HttpStatus.OK)
@@ -528,7 +528,7 @@ public class MetadataEditingApi {
     }
 
     @io.swagger.v3.oas.annotations.Operation(summary = "Cancel edits", description = "Cancel current editing session.")
-    @RequestMapping(value = "/{metadataUuid}/editor", method = RequestMethod.DELETE, consumes = {
+    @RequestMapping(value = "/{metadataUuid:.+}/editor", method = RequestMethod.DELETE, consumes = {
         MediaType.ALL_VALUE}, produces = {MediaType.APPLICATION_XML_VALUE})
     @PreAuthorize("hasAuthority('Editor')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -547,7 +547,7 @@ public class MetadataEditingApi {
     }
 
     @io.swagger.v3.oas.annotations.Operation(summary = "Add element", description = "")
-    @RequestMapping(value = "/{metadataUuid}/editor/elements", method = RequestMethod.PUT, consumes = {
+    @RequestMapping(value = "/{metadataUuid:.+}/editor/elements", method = RequestMethod.PUT, consumes = {
         MediaType.ALL_VALUE}, produces = {MediaType.APPLICATION_XML_VALUE})
     @PreAuthorize("hasAuthority('Editor')")
     @ResponseStatus(HttpStatus.OK)
@@ -589,7 +589,7 @@ public class MetadataEditingApi {
     }
 
     @io.swagger.v3.oas.annotations.Operation(summary = "Reorder element", description = "")
-    @RequestMapping(value = "/{metadataUuid}/editor/elements/{direction}", method = RequestMethod.PUT, consumes = {
+    @RequestMapping(value = "/{metadataUuid:.+}/editor/elements/{direction}", method = RequestMethod.PUT, consumes = {
         MediaType.ALL_VALUE}, produces = {MediaType.APPLICATION_XML_VALUE})
     @PreAuthorize("hasAuthority('Editor')")
     @ResponseStatus(HttpStatus.CREATED)
@@ -610,7 +610,7 @@ public class MetadataEditingApi {
     }
 
     @io.swagger.v3.oas.annotations.Operation(summary = "Delete element", description = "")
-    @RequestMapping(value = "/{metadataUuid}/editor/elements", method = RequestMethod.DELETE, consumes = {
+    @RequestMapping(value = "/{metadataUuid:.+}/editor/elements", method = RequestMethod.DELETE, consumes = {
         MediaType.ALL_VALUE}, produces = {MediaType.APPLICATION_XML_VALUE})
     @PreAuthorize("hasAuthority('Editor')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -634,7 +634,7 @@ public class MetadataEditingApi {
     }
 
     @io.swagger.v3.oas.annotations.Operation(summary = "Delete attribute", description = "")
-    @RequestMapping(value = "/{metadataUuid}/editor/attributes", method = RequestMethod.DELETE, consumes = {
+    @RequestMapping(value = "/{metadataUuid:.+}/editor/attributes", method = RequestMethod.DELETE, consumes = {
         MediaType.ALL_VALUE}, produces = {MediaType.APPLICATION_XML_VALUE})
     @PreAuthorize("hasAuthority('Editor')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
