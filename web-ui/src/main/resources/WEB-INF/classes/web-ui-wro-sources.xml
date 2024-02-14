@@ -75,7 +75,6 @@
     <jsSource webappPath="/catalog/lib/jquery.ext/jquery.floatThead-slim.min.js"/>
     <jsSource webappPath="/catalog/lib/jquery.ext/jquery-ui-slider.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/bootstrap.ext/typeahead.js/typeahead.bundle.js"/>
-    <jsSource webappPath="/catalog/lib/bootstrap.ext/typeahead.js/handlebars-v2.0.0.js"/>
     <jsSource webappPath="/catalog/lib/bootstrap.ext/tagsinput/bootstrap-tagsinput.min.js"
               minimize="false"/>
     <jsSource webappPath="/catalog/lib/bootstrap.ext/tagsinput/bootstrap-tagsinput-angular.js"/>
@@ -148,7 +147,6 @@
     <jsSource webappPath="/catalog/lib/jquery.ext/jquery.fileupload-angular.js"/>
     <jsSource webappPath="/catalog/lib/jquery.ext/jquery-ui-slider.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/bootstrap.ext/typeahead.js/typeahead.bundle.js"/>
-    <jsSource webappPath="/catalog/lib/bootstrap.ext/typeahead.js/handlebars-v2.0.0.js"/>
     <jsSource webappPath="/catalog/lib/bootstrap.ext/tagsinput/bootstrap-tagsinput.min.js"
               minimize="false"/>
     <jsSource webappPath="/catalog/lib/bootstrap.ext/tagsinput/bootstrap-tagsinput-angular.js"/>
