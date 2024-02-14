@@ -72,7 +72,7 @@ Setting configuration properties via environment variables is common in containe
         -e jdbc.port=5432 geonetwork:latest
     ```
 
-Within PostgreSQL it is possible to configure `es` or `is`. In the latter case GeoNetwork will use spatial capabilities of PostGIS to filter metadata. In the first case (and for other database dialects) a Shapefile is created for storage of metadata coverage.
+Within PostgreSQL it is possible to configure `postgres` or `postgis`. In the latter case GeoNetwork will use spatial capabilities of PostGIS to filter metadata. In the first case (and for other database dialects) a Shapefile is created for storage of metadata coverage.
 
 ## Logging
 

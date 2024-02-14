@@ -162,7 +162,8 @@
           baseLayer: "=?baseLayer",
           layer: "=?layer",
           md: "=?",
-          managerOnly: "@?"
+          managerOnly: "@?",
+          alertTimeout: "@?"
         },
         controller: function () {},
         link: function (scope, element, attrs, ctrl) {
@@ -177,6 +178,7 @@
             wfsIndexJobSavedPromise;
           scope.managerOnly = scope.managerOnly === "true";
           scope.map = scope.$parent.map;
+
           var map = scope.map;
 
           scope.strategy = attrs["strategy"] || "investigator";
@@ -383,6 +385,9 @@
               },
               function () {
                 scope.isWfsAvailable = false;
+                $timeout(function () {
+                  scope.isWfsAvailable = undefined;
+                }, scope.alertTimeout || 0);
               }
             );
           };

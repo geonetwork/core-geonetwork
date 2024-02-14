@@ -35,6 +35,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.Sets;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
+import com.jayway.jsonpath.PathNotFoundException;
 import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -274,8 +275,8 @@ public class EsHTTPProxy {
 
 
     @io.swagger.v3.oas.annotations.Operation(
-        summary = "Search endpoint",
-        description = "See https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl.html for search parameters details.")
+        summary = "Execute a search query and get back search hits that match the query.",
+        description = "The search API execute a search query with a JSON request body. For more information see https://www.elastic.co/guide/en/elasticsearch/reference/current/search-search.html for search parameters, and https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl.html JSON Query DSL.")
     @RequestMapping(value = "/search/records/_search",
         method = RequestMethod.POST,
         produces = MediaType.APPLICATION_JSON_VALUE,
@@ -312,8 +313,8 @@ public class EsHTTPProxy {
 
 
     @io.swagger.v3.oas.annotations.Operation(
-        summary = "Search endpoint",
-        description = "See https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl.html for search parameters details.")
+        summary = "Executes several searches with a Elasticsearch API request.",
+        description = "The multi search API executes several searches from a single API request. See https://www.elastic.co/guide/en/elasticsearch/reference/current/search-multi-search.html for search parameters, and https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl.html Query DSL.")
     @RequestMapping(value = "/search/records/_msearch",
         method = RequestMethod.POST,
         produces = MediaType.APPLICATION_JSON_VALUE,
@@ -902,7 +903,11 @@ public class EsHTTPProxy {
 
         for(String jsonPath : jsonPathFilters) {
             if (StringUtils.isNotBlank(jsonPath)) {
-                jsonContext = jsonContext.delete(jsonPath);
+                try {
+                    jsonContext = jsonContext.delete(jsonPath);
+                } catch (PathNotFoundException ex) {
+                    // The node to remove is not returned in the response, ignore the error
+                }
             }
         }
 
