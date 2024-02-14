@@ -365,7 +365,7 @@ public class EsSearchManager implements ISearchManager {
         UpdateOperation addFieldRequestOperation = UpdateOperation.of(
             b -> b.id(id)
                 .index(defaultIndex)
-                .action(action -> action.upsert(fieldMap))
+                .action(action -> action.doc(fieldMap))
         );
 
         List<BulkOperation> bulkOperationList = new ArrayList<>();
