@@ -1173,12 +1173,12 @@
         <xsl:for-each select="mdq:report/*[
                 normalize-space(mdq:measure/*/mdq:nameOfMeasure/gco:CharacterString) != ''
                 or normalize-space(mdq:measure/*/mdq:measureDescription/gco:CharacterString) != ''
-                ]/mdq:result/mdq:DQ_QuantitativeResult">
+                ]/mdq:result/(mdq:DQ_QuantitativeResult|mdq:DQ_DescriptiveResult)">
 
           <xsl:variable name="name"
                         select="(../../mdq:measure/*/mdq:nameOfMeasure/gco:CharacterString)[1]"/>
           <xsl:variable name="value"
-                        select="mdq:value"/>
+                        select="mdq:value/gco:Record[. != '']|mdq:statement/gco:CharacterString[. != '']"/>
           <xsl:variable name="unit"
                         select="mdq:valueUnit//gml:identifier"/>
           <xsl:variable name="description"
@@ -1196,7 +1196,7 @@
               "date": "<xsl:value-of select="util:escapeForJson($measureDate)"/>",
             </xsl:if>
             <!-- First value only. -->
-            "value": "<xsl:value-of select="util:escapeForJson($value/gco:Record[1])"/>",
+            "value": "<xsl:value-of select="util:escapeForJson($value[1])"/>",
             <xsl:if test="$unit != ''">
               "unit": "<xsl:value-of select="util:escapeForJson($unit)"/>",
             </xsl:if>
@@ -1204,7 +1204,7 @@
             }
           </measure>
 
-          <xsl:for-each select="mdq:value/gco:Record[. != '']">
+          <xsl:for-each select="$value">
             <xsl:element name="measure_{gn-fn-index:build-field-name($name)}">
               <xsl:value-of select="."/>
             </xsl:element>
