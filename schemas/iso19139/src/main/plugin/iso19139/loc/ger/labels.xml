@@ -2966,7 +2966,7 @@
     <label>Vergleichsmaßstab</label>
     <help/>
     <condition>auszufüllen, wenn keine Distanz (Bodenauflösung) angegeben wird</condition>
-    <description>Detailliertheitsgrad, angegeben durch den Massstab einer vergleichbaren gedruckten
+    <description>Detailliertheitsgrad, angegeben durch den Maßstab einer vergleichbaren gedruckten
       Karte</description>
   </element>
   <element name="gmd:distance" context="gmd:MD_Resolution" id="61">
