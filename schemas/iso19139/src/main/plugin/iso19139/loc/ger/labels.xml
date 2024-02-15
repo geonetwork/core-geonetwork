@@ -2392,7 +2392,7 @@
   </element>
   <element name="gmd:spatialResolution" id="38">
     <label>Räumliche Auflösung</label>
-    <help>z.B. Massstab, Bodenauflösung, Gitterweite, Rasterauflösung</help>
+    <help>z.B. Maßstab, Bodenauflösung, Gitterweite, Rasterauflösung</help>
     <condition/>
     <description>Angaben über die räumliche Auflösung der geografischen
       Informationen
@@ -2918,7 +2918,7 @@
     <label>Representative Fraction</label>
     <help/>
     <condition/>
-    <description>Hergeleitet vom ISO 19103; Massstab, wobei MD_RepresentativFraction.denominator = 1
+    <description>Hergeleitet vom ISO 19103; Maßstab, wobei MD_RepresentativFraction.denominator = 1
       / Scale.measure Und Scale.targetUnits = Scale.sourceUnits</description>
   </element>
   <element name="gmd:denominator" id="57">
@@ -2950,7 +2950,7 @@
     <label>Auflösung</label>
     <help/>
     <condition/>
-    <description>Detailliertheitsgrad, angegeben durch eine Massstabszahl oder eine
+    <description>Detailliertheitsgrad, angegeben durch eine Maßstabszahl oder eine
       Bodenauflösung</description>
   </element>
   <element name="gmd:hierarchyLevel" id="6">
@@ -2970,7 +2970,7 @@
   <element name="gmd:distance" context="gmd:MD_Resolution" id="61">
     <label>Distanz</label>
     <help>Abstand der Rastermittelpunkte bzw. Gitterstützpunkte</help>
-    <condition>auszufüllen, wenn kein Vergleichsmassstab angegeben wird</condition>
+    <condition>auszufüllen, wenn kein Vergleichsmaßstab angegeben wird</condition>
     <description>Bodenauflösung</description>
     <helper>
       <option value="0.10">10 cm</option>
