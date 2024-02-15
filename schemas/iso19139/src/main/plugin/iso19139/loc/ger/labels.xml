@@ -1094,7 +1094,7 @@
     <condition/>
     <description>Information zum Inhalt einer Rasterdatenzelle</description>
   </element>
-  <element name="gmd:citation" context="gmd:MD_Identification"
+  <element name="gmd:citation" context="gmd:MD_DataIdentification"
            id="24">
     <label>Bibliografische Angaben</label>
     <help>Ressourcen können z.B. Datensätze, digitale Karten, Messreihen,
@@ -1543,6 +1543,10 @@
     <help>z.B. Nummer, Datum</help>
     <condition>Obligatorisch</condition>
     <description>Version des Datenformats</description>
+  </element>
+  <element name="gmd:version">
+    <label>Version</label>
+    <description></description>
   </element>
   <element name="gmd:amendmentNumber" context="gmd:MD_Format" id="287">
     <label>Revisionsnummer</label>
@@ -2114,7 +2118,7 @@
     <condition/>
     <description>Einschränkungen bezüglich der Ressource</description>
   </element>
-  <element name="gmd:aggregationInfo" context="gmd:MD_Identification"
+  <element name="gmd:aggregationInfo" context="gmd:MD_DataIdentification"
            id="35.1">
     <label>Beziehungsinformation</label>
     <help/>
@@ -2286,7 +2290,7 @@
       Ressource gehört
     </description>
   </element>
-  <element name="gmd:spatialRepresentationType" context="gmd:MD_Identification"
+  <element name="gmd:spatialRepresentationType" context="gmd:MD_DataIdentification"
            id="37">
     <label>Räumliche Darstellungsart</label>
     <help/>
@@ -2401,7 +2405,7 @@
     <description>Adressangaben zur verantwortlichen Stelle</description>
   </element>
   <element name="gmd:deliveryPoint" context="gmd:CI_Address" id="381">
-    <label>Adresse</label>
+    <label>Straße und Hausnummer</label>
     <help/>
     <condition/>
     <description>Angabe der Strasse und Hausnummer (ggf. auch als
@@ -2732,6 +2736,11 @@
       gehört
     </description>
   </element>
+  <element name="gmd:name">
+    <label>Bezeichnung</label>
+    <description>
+    </description>
+  </element>
   <element name="gmd:issueIdentification" context="gmd:CI_Series"
            id="405">
     <label>Kennung</label>
@@ -2774,7 +2783,7 @@
     </description>
   </element>
   <element name="gmd:topicCategory" id="41">
-    <label>Thematik</label>
+    <label>ISO-Thematik</label>
     <help/>
     <condition>Obligatorisch wenn Hierarchieebene = Datenbestand, bzw. auf
       alle Fälle obligatorisch nach INSPIRE
@@ -2913,7 +2922,7 @@
       / Scale.measure Und Scale.targetUnits = Scale.sourceUnits</description>
   </element>
   <element name="gmd:denominator" id="57">
-    <label>Massstabszahl</label>
+    <label>Maßstabszahl</label>
     <help>Empfehlung: Falls ein Massstabsbereich angegeben werden soll, ist die Klasse MD_Resolution
       zweifach zu nutzen und jeweils die obere und untere Massstabszahl einzutragen.</help>
     <condition>Soll ausgefüllt werden, falls keine Distanz (Bodenauflösung) angegeben wird</condition>
@@ -2952,7 +2961,7 @@
       Hierarchieebenen sind dem ISO 19115 - Anhang H zu entnehmen)</description>
   </element>
   <element name="gmd:equivalentScale" context="gmd:MD_Resolution" id="60">
-    <label>Vergleichsmassstab</label>
+    <label>Vergleichsmaßstab</label>
     <help/>
     <condition>auszufüllen, wenn keine Distanz (Bodenauflösung) angegeben wird</condition>
     <description>Detailliertheitsgrad, angegeben durch den Massstab einer vergleichbaren gedruckten
@@ -3255,7 +3264,7 @@
     <description>Detaillierte Beschreibung der Ebene der Quelldaten</description>
   </element>
   <element name="gmd:scaleDenominator" context="gmd:LI_Source" id="94">
-    <label>Massstabszahl</label>
+    <label>Maßstabszahl</label>
     <help/>
     <condition/>
     <description>Angabe der Massstabszahl (mz) eines Massstabs 1 : mz der Ausgangskarte</description>
