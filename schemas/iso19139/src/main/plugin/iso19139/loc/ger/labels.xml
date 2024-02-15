@@ -2928,7 +2928,7 @@
     <help>Empfehlung: Falls ein Maßstabsbereich angegeben werden soll, ist die Klasse MD_Resolution
       zweifach zu nutzen und jeweils die obere und untere Maßstabszahl einzutragen.</help>
     <condition>Soll ausgefüllt werden, falls keine Distanz (Bodenauflösung) angegeben wird</condition>
-    <description>Angabe der Massstabszahl (mz) eines Massstabs 1 : mz</description>
+    <description>Angabe der Maßstabszahl (mz) eines Maßstabs 1 : mz</description>
     <helper>
       <option value="5000">1:5´000</option>
       <option value="10000">1:10´000</option>
