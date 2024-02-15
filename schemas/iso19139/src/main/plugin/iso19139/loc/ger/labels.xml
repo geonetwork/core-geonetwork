@@ -2925,8 +2925,8 @@
   </element>
   <element name="gmd:denominator" id="57">
     <label>Maßstabszahl</label>
-    <help>Empfehlung: Falls ein Massstabsbereich angegeben werden soll, ist die Klasse MD_Resolution
-      zweifach zu nutzen und jeweils die obere und untere Massstabszahl einzutragen.</help>
+    <help>Empfehlung: Falls ein Maßstabsbereich angegeben werden soll, ist die Klasse MD_Resolution
+      zweifach zu nutzen und jeweils die obere und untere Maßstabszahl einzutragen.</help>
     <condition>Soll ausgefüllt werden, falls keine Distanz (Bodenauflösung) angegeben wird</condition>
     <description>Angabe der Massstabszahl (mz) eines Massstabs 1 : mz</description>
     <helper>
