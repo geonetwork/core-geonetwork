@@ -438,6 +438,12 @@
         $scope.harvesterHistory = {};
         $scope.searchResults = null;
         $scope.searchResultsTotal = null;
+        $scope.harvesterHistoryPaging = {
+          page: 1,
+          size: 3,
+          pages: 0,
+          total: 0
+        };
 
         loadHarvester(h["@id"]).then(function (data) {
           loadHistory();
