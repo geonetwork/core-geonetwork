@@ -3269,7 +3269,7 @@
     <label>Maßstabszahl</label>
     <help/>
     <condition/>
-    <description>Angabe der Massstabszahl (mz) eines Massstabs 1 : mz der Ausgangskarte</description>
+    <description>Angabe der Maßstabszahl (mz) eines Maßstab 1 : mz der Ausgangskarte</description>
   </element>
   <element name="gmd:sourceReferenceSystem" context="gmd:LI_Source" id="95">
     <label>Bezugssystem</label>
