@@ -239,19 +239,21 @@ nav:
       - user-guide/describing-information/multilingual-editing.md
     - 'Associating Resources':
       - user-guide/associating-resources/index.md
-      - user-guide/associating-resources/cite.md
+      - 'Associating documents':
+        - user-guide/associating-resources/linking-documents.md
+        - user-guide/associating-resources/using-filestore.md
+        - user-guide/associating-resources/linking-thumbnail.md
+        - user-guide/associating-resources/linking-online-resources.md
+      - 'Associating another record':
+        - user-guide/associating-resources/linking-records.md
+        - user-guide/associating-resources/linking-parent.md
+        - user-guide/associating-resources/linking-source.md
+        - user-guide/associating-resources/linking-dataset-or-service.md
+        - user-guide/associating-resources/linking-feature-catalog.md
+        - user-guide/associating-resources/linking-others.md
+        - user-guide/associating-resources/linking-remote-records.md
       - user-guide/associating-resources/doi.md
-      - user-guide/associating-resources/linking-dataset-or-service.md
-      - user-guide/associating-resources/linking-documents.md
-      - user-guide/associating-resources/linking-feature-catalog.md
-      - user-guide/associating-resources/linking-online-resources.md
-      - user-guide/associating-resources/linking-others.md
-      - user-guide/associating-resources/linking-parent.md
-      - user-guide/associating-resources/linking-records.md
-      - user-guide/associating-resources/linking-remote-records.md
-      - user-guide/associating-resources/linking-source.md
-      - user-guide/associating-resources/linking-thumbnail.md
-      - user-guide/associating-resources/using-filestore.md
+      - user-guide/associating-resources/cite.md
     - 'Tag information':
       - user-guide/tag-information/index.md
       - user-guide/tag-information/tagging-with-categories.md
@@ -267,10 +269,11 @@ nav:
       - user-guide/analyzing/metadata.md
     - 'Workflow':
       - user-guide/workflow/index.md
-      - user-guide/workflow/batchediting.md
-      - user-guide/workflow/batchupdate-from-admin.md
-      - user-guide/workflow/batchupdate-xsl.md
-      - user-guide/workflow/batchupdate.md
+      - 'Updating a set of records':
+        - user-guide/workflow/batchupdate.md
+        - user-guide/workflow/batchediting.md
+        - user-guide/workflow/batchupdate-from-admin.md
+        - user-guide/workflow/batchupdate-xsl.md
       - user-guide/workflow/geopublication.md
       - user-guide/workflow/life-cycle.md
       - user-guide/workflow/suggestion.md
