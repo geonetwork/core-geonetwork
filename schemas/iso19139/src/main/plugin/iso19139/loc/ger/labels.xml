@@ -2408,7 +2408,7 @@
     <label>Straße und Hausnummer</label>
     <help/>
     <condition/>
-    <description>Angabe der Strasse und Hausnummer (ggf. auch als
+    <description>Angabe der Straße und Hausnummer (ggf. auch als
       Postfach) gemäss ISO 11180, Anhang
       A
     </description>
