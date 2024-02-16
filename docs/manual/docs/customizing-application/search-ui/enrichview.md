@@ -6,7 +6,7 @@ For that, you can include default view content, or build your own application on
 
 ## GeoNetwork components
 
-UI design is based on shared widgets, logic and components. In AngularJS terms, we talk about `es` and `es`.
+UI design is based on shared widgets, logic and components. In AngularJS terms, we talk about `services` and `directives`.
 
 All components are stored in the folder [components](https://github.com/geonetwork/core-geonetwork/tree/develop/web-ui/src/main/resources/catalog/components)
 

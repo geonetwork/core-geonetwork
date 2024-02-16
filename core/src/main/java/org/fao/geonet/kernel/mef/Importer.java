@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2020 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2024 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -27,6 +27,7 @@ import com.google.common.base.Optional;
 import com.google.common.collect.Maps;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.MetadataResourceDatabaseMigration;
@@ -52,9 +53,11 @@ import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.fao.oaipmh.exceptions.BadArgumentException;
 import org.jdom.Element;
+import org.jdom.JDOMException;
 import org.springframework.context.ApplicationContext;
 
 import javax.annotation.Nonnull;
+import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
@@ -64,6 +67,12 @@ import java.util.*;
 import static org.fao.geonet.domain.Localized.translationXmlToLangMap;
 
 public class Importer {
+    /**
+     * Private constructor to avoid instantiate the class.
+     */
+    private Importer() {
+    }
+
     @Deprecated
     public static List<String> doImport(final Element params, final ServiceContext context, final Path mefFile,
                                         final Path stylePath) throws Exception {
@@ -77,7 +86,7 @@ public class Importer {
         boolean validate = Util.getParam(params, Params.VALIDATE, "off").equals("on");
         boolean assign = Util.getParam(params, "assign", "off").equals("on");
 
-        return doImport(fileType, MEFLib.UuidAction.parse(uuidAction), style, source, isTemplate, new String[] { category }, groupId,
+        return doImport(fileType, MEFLib.UuidAction.parse(uuidAction), style, source, isTemplate, new String[]{category}, groupId,
             validate, assign, context, mefFile);
     }
 
@@ -91,9 +100,9 @@ public class Importer {
         // Load preferred schema and set to iso19139 by default
         String preferredSchema = applicationContext.getBean(ServiceConfig.class).getValue("preferredSchema", "iso19139");
 
-        final List<String> metadataIdMap = new ArrayList<String>();
-        final List<Element> md = new ArrayList<Element>();
-        final List<Element> fc = new ArrayList<Element>();
+        final List<String> metadataIdMap = new ArrayList<>();
+        final List<Element> md = new ArrayList<>();
+        final List<Element> fc = new ArrayList<>();
 
         // Try to define MEF version from mef file not from parameter
         if (fileType.equals("mef")) {
@@ -145,7 +154,7 @@ public class Importer {
 
                 Element metadataValidForImport;
 
-                Map<String, Pair<String, Element>> mdFiles = new HashMap<String, Pair<String, Element>>();
+                Map<String, Pair<String, Element>> mdFiles = new HashMap<>();
                 for (Path file : metadataXmlFiles) {
                     if (file != null && java.nio.file.Files.isRegularFile(file)) {
                         Element metadata = Xml.loadFile(file);
@@ -268,7 +277,7 @@ public class Importer {
                     throw new Exception("Unknown schema");
 
                 // Handle non MEF files insertion
-                if (info.getChildren().size() == 0) {
+                if (info.getChildren().isEmpty()) {
                     if (category != null) {
                         categs = new Element("categories");
                         for (String c : category) {
@@ -351,7 +360,7 @@ public class Importer {
                     throw new Exception("Failed to import metadata with uuid '" + uuid + "'. " + e.getLocalizedMessage(), e);
                 }
 
-                if (fc.size() != 0 && fc.get(index) != null) {
+                if (!fc.isEmpty() && fc.get(index) != null) {
                     // UUID is set as @uuid in root element
                     uuid = UUID.randomUUID().toString();
 
@@ -361,7 +370,10 @@ public class Importer {
                     // insert metadata
                     //
                     int userid = context.getUserSession().getUserIdAsInt();
-                    String group = null, docType = null, title = null, category = null;
+                    String group = null;
+                    String docType = null;
+                    String title = null;
+                    String category = null;
                     boolean ufo = false;
                     String fcId = dm
                         .insertMetadata(context, "iso19110", fc.get(index), uuid, userid, group, source, isTemplate.codeString, docType,
@@ -391,7 +403,8 @@ public class Importer {
                 final Element finalCategs = categs;
                 final String finalGroupId = groupId;
                 context.getBean(IMetadataManager.class).update(iMetadataId, new Updater<Metadata>() {
-                    @Override public void apply(@Nonnull final Metadata metadata) {
+                    @Override
+                    public void apply(@Nonnull final Metadata metadata) {
                         final MetadataDataInfo dataInfo = metadata.getDataInfo();
                         if (finalPopularity != null) {
                             dataInfo.setPopularity(Integer.valueOf(finalPopularity));
@@ -487,9 +500,13 @@ public class Importer {
         DataManager dm = gc.getBean(DataManager.class);
         IMetadataManager metadataManager = gc.getBean(IMetadataManager.class);
 
-        if (uuid == null || uuid.equals("") || uuidAction == MEFLib.UuidAction.GENERATEUUID) {
+        if (StringUtils.isBlank(uuid) || uuidAction == MEFLib.UuidAction.GENERATEUUID) {
             String newuuid = UUID.randomUUID().toString();
             source = null;
+
+            if (StringUtils.isNotBlank(uuid)) {
+                md.add(index, updateMetadataUuidReferences(md.get(index), uuid, newuuid));
+            }
 
             Log.debug(Geonet.MEF, "Replacing UUID " + uuid + " with " + newuuid);
             uuid = newuuid;
@@ -521,7 +538,7 @@ public class Importer {
         String metadataId = "";
         if (metadataExist && uuidAction == MEFLib.UuidAction.NOTHING) {
             throw new UnAuthorizedException("Record already exists. Change the import mode to overwrite or generating a new UUID.", null);
-        } else if (metadataExist && uuidAction == MEFLib.UuidAction.OVERWRITE){
+        } else if (metadataExist && uuidAction == MEFLib.UuidAction.OVERWRITE) {
             if (isMdWorkflowEnable) {
                 throw new UnAuthorizedException("Overwrite mode is not allowed when workflow is enabled. Use the metadata editor.", null);
             }
@@ -544,7 +561,7 @@ public class Importer {
             } else {
                 throw new UnAuthorizedException("User has no privilege to overwrite existing metadata", null);
             }
-        } else if (metadataExist && uuidAction == MEFLib.UuidAction.REMOVE_AND_REPLACE){
+        } else if (metadataExist && uuidAction == MEFLib.UuidAction.REMOVE_AND_REPLACE) {
             if (isMdWorkflowEnable) {
                 throw new UnAuthorizedException("Overwrite mode is not allowed when workflow is enabled. Use the metadata editor.", null);
             }
@@ -576,7 +593,8 @@ public class Importer {
             Log.debug(Geonet.MEF, "Adding metadata with uuid:" + uuid);
 
         int userid = context.getUserSession().getUserIdAsInt();
-        String docType = null, category = null;
+        String docType = null;
+        String category = null;
         boolean ufo = false;
 
         String metadataId = metadataManager
@@ -607,8 +625,8 @@ public class Importer {
         @SuppressWarnings("unchecked") List<Element> list = privil.getChildren("group");
 
         Group owner = null;
-        Set<OperationAllowed> opAllowedToAdd = new HashSet<OperationAllowed>();
-        List<Group> groupsToAdd = new ArrayList<Group>();
+        Set<OperationAllowed> opAllowedToAdd = new HashSet<>();
+        List<Group> groupsToAdd = new ArrayList<>();
 
         for (Element group : list) {
             String grpName = group.getAttributeValue("name");
@@ -646,7 +664,7 @@ public class Importer {
                                                        final int metadataId, final int grpId) {
         @SuppressWarnings("unchecked") List<Element> operations = group.getChildren("operation");
 
-        Set<OperationAllowed> toAdd = new HashSet<OperationAllowed>();
+        Set<OperationAllowed> toAdd = new HashSet<>();
         for (Element operation : operations) {
             String opName = operation.getAttributeValue("name");
 
@@ -670,6 +688,17 @@ public class Importer {
         }
 
         return toAdd;
+    }
+
+    /**
+     * Replace oldUuid references by newUuid.
+     * This will update metadata identifier, but also other usages
+     * which may be in graphicOverview URLs, resources identifier,
+     * metadata point of truth URL, ...
+     */
+    private static Element updateMetadataUuidReferences(Element xml, String oldUuid, String newUuid) throws IOException, JDOMException {
+        String data = Xml.getString(xml);
+        return Xml.loadString(data.replace(oldUuid, newUuid), false);
     }
 
 }
