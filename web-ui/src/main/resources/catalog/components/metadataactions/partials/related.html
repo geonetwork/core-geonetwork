@@ -80,6 +80,13 @@
               data-typename="{{::isLayerProtocol(r) ? r.locTitle : ''}}"
               data-url="{{::r.locUrl}}"
             ></div>
+
+            <div
+              data-ng-if="::!isLayerProtocol(r)"
+              data-gn-wfs-download=""
+              data-typename=""
+              data-url="{{::r.locUrl}}"
+            ></div>
           </div>
 
           <div data-ng-switch-when="ATOM">

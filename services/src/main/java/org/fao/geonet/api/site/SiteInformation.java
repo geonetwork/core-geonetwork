@@ -23,12 +23,12 @@
 
 package org.fao.geonet.api.site;
 
+import co.elastic.clients.elasticsearch._types.ElasticsearchException;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.commons.lang.StringUtils;
-import org.elasticsearch.ElasticsearchException;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.EsSearchManager;

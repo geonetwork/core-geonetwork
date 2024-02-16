@@ -1,6 +1,6 @@
 # Creating group
 
-The administrator can create new groups of users. User groups could correspond to logical units within an organisation, for example `es`, `re`, `nd`, `er`, `th` and so on.
+The administrator can create new groups of users. User groups could correspond to logical units within an organisation, for example `Fisheries`, `Agriculture`, `Land`, `Water`, `Health` and so on.
 
 To create new groups you should be logged on with an account that has administrative privileges.
 

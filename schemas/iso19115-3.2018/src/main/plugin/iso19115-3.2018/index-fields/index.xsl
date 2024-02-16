@@ -902,6 +902,7 @@
                 <xsl:if test="$max castable as xs:double
                               and xs:double($min) &lt; xs:double($max)">
                   ,"lte": <xsl:value-of select="normalize-space($max)"/>
+                  ,"unit": "m"
                 </xsl:if>
                 }</resourceVerticalRange>
             </xsl:if>
@@ -1384,18 +1385,6 @@
           <xsl:element name="{concat('agg_associated_', $associationType)}"><xsl:value-of select="$code"/></xsl:element>
         </xsl:if>
       </xsl:for-each>
-
-      <xsl:variable name="indexingTimeRecordLink"
-                    select="util:getSettingValue('system/index/indexingTimeRecordLink')" />
-      <xsl:if test="$indexingTimeRecordLink = 'true'">
-        <xsl:variable name="parentUuid"
-                      select=".//mri:associatedResource/*[mri:associationType/*/@codeListValue = $parentAssociatedResourceType]/mri:metadataReference/@uuidref[. != '']"/>
-        <xsl:variable name="recordsLinks"
-                      select="util:getTargetAssociatedResourcesAsNode(
-                                        $identifier,
-                                        if ($parentUuid) then $parentUuid else mdb:parentMetadata[@uuidref != '']/@uuidref)"/>
-        <xsl:copy-of select="$recordsLinks//recordLink"/>
-      </xsl:if>
     </doc>
 
     <!-- Index more documents for this element -->

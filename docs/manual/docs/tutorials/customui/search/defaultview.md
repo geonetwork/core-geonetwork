@@ -13,17 +13,13 @@ Read instructions about [default view customization](../../../customizing-applic
 
 -   Propose to sort only by change date and title.
 
--   Use Stamen layer source for search map background.
-
 -   Recenter search map on Seoul
 
--   
+-   Change full map configuration
 
-    Change full map configuration
-
-    :   -   play with initial extent
-        -   change brackground layer list
-        -   add WMS layers to the default map
+    -   play with initial extent
+    -   change brackground layer list
+    -   add WMS layers to the default map
 
 -   Change default location for map search
 

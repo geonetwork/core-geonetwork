@@ -106,7 +106,7 @@
 
     <echo message="Creating ZIP file for ${appName} ${version}..."/>
 
-    <zip destfile="target/${appName}-${version}/${bundleName}-${version}-${subVersion}.zip">
+    <zip destfile="target/${appName}-${version}/${bundleName}-${version}-${subVersion}.zip" update="yes">
       <zipfileset dir="./bin" excludes="**.sh" prefix="bin" />
       <zipfileset dir="./bin" includes="**.sh" prefix="bin" filemode="774"/>
       <zipfileset dir="${propsdir}" includes="readme.html, license.html" />
@@ -118,6 +118,7 @@
     <checksum
       file="target/${appName}-${version}/${bundleName}-${version}-${subVersion}.zip"
       forceOverwrite="yes"/>
+
   </target>
 
   <!-- Copy and rename WAR file and calculate checksum -->

@@ -315,9 +315,9 @@ public class MetadataInsertDeleteApi {
         + "URL or file in a folder on the catalog server. When loading"
         + "from the catalog server folder, it might be faster to use a "
         + "local filesystem harvester.")
-    @RequestMapping(method = {RequestMethod.PUT}, produces = {MediaType.APPLICATION_JSON_VALUE}, consumes = {
-        MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE,
-        MediaType.APPLICATION_FORM_URLENCODED_VALUE})
+    @RequestMapping(method = RequestMethod.PUT,
+        produces = MediaType.APPLICATION_JSON_VALUE,
+        consumes = MediaType.APPLICATION_XML_VALUE)
     @ApiResponses(value = {@ApiResponse(responseCode = "201", description = API_PARAM_REPORT_ABOUT_IMPORTED_RECORDS),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_EDITOR)})
     @PreAuthorize("hasAuthority('Editor')")

@@ -231,3 +231,4 @@ To select records from multiple search results:
     
     ![](img/export_index_csv.png)
     *Export CSV*
+

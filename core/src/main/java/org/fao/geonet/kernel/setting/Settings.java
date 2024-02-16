@@ -119,7 +119,6 @@ public class Settings {
     public static final String SYSTEM_HARVESTING_MAIL_TEMPLATE = "system/harvesting/mail/template";
     public static final String SYSTEM_METADATACREATE_GENERATE_UUID = "system/metadatacreate/generateUuid";
     public static final String SYSTEM_THREADEDINDEXING_MAXTHREADS = "system/threadedindexing/maxthreads";
-    public static final String SYSTEM_INDEX_INDEXINGTIMERECORDLINK = "system/index/indexingTimeRecordLink";
     public static final String SYSTEM_RESOURCE_PREFIX = "metadata/resourceIdentifierPrefix";
     public static final String SYSTEM_INSPIRE_REMOTE_VALIDATION_URL = "system/inspire/remotevalidation/url";
     public static final String SYSTEM_INSPIRE_REMOTE_VALIDATION_URL_QUERY = "system/inspire/remotevalidation/urlquery";

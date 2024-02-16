@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<info version="1.1">
+  <general>
+    <createDate>2015-05-04T16:34:08</createDate>
+    <changeDate>2019-12-09T16:45:53</changeDate>
+    <schema>iso19115-3.2018</schema>
+    <isTemplate>n</isTemplate>
+    <localId>1772</localId>
+    <format>full</format>
+    <rating>0</rating>
+    <popularity>0</popularity>
+    <uuid>0dbac056-cd5a-4c9c-bbec-564e47c4507c</uuid>
+  </general>
+  <categories />
+  <privileges>
+    <group name="all">
+      <operation name="featured" />
+      <operation name="dynamic" />
+      <operation name="notify" />
+      <operation name="editing" />
+      <operation name="download" />
+      <operation name="view" />
+    </group>
+  </privileges>
+  <public />
+  <private />
+</info>
+
