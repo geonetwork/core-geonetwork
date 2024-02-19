@@ -109,7 +109,7 @@
               <xsl:value-of select="position()"/>
             </idx>
             <hash>
-              <xsl:value-of select="util:md5Hex(string(exslt:node-set(.)))"/>
+              <xsl:value-of select="util:md5HexIgnoreWhiteSpaces(string(exslt:node-set(.)))"/>
             </hash>
             <url>
               <xsl:apply-templates mode="get-iso19139-localized-string"
@@ -141,7 +141,7 @@
                 <xsl:value-of select="position()"/>
               </idx>
               <hash>
-                <xsl:value-of select="util:md5Hex(string(exslt:node-set(.)))"/>
+                <xsl:value-of select="util:md5HexIgnoreWhiteSpaces(string(exslt:node-set(.)))"/>
               </hash>
               <title>
                 <xsl:apply-templates mode="get-iso19139-localized-string"
