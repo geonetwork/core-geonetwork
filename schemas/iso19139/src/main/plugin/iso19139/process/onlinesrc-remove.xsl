@@ -29,7 +29,7 @@ Stylesheet used to remove a reference to a online resource.
                 xmlns:gco="http://www.isotc211.org/2005/gco"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
-                xmlns:util="java:org.fao.geonet.util.XslUtil"
+                xmlns:digestUtils="java:org.apache.commons.codec.digest.DigestUtils"
                 xmlns:exslt="http://exslt.org/common"
                 exclude-result-prefixes="#all"
                 version="2.0">
@@ -59,7 +59,7 @@ Stylesheet used to remove a reference to a online resource.
                                                                 or normalize-space(gmd:CI_OnlineResource/gmd:linkage/gmd:URL) = $url and count(gmd:CI_OnlineResource/gmd:name/gmd:PT_FreeText/gmd:textGroup[gmd:LocalisedCharacterString = $name]) > 0
                                                                 or normalize-space(gmd:CI_OnlineResource/gmd:linkage/gmd:URL) = $url and normalize-space(gmd:CI_OnlineResource/gmd:protocol/*) = 'WWW:DOWNLOAD-1.0-http--download'))
                         )
-                        and ($resourceHash = '' or util:md5HexIgnoreWhiteSpaces(string(exslt:node-set(.))) = $resourceHash)]"
+                        and ($resourceHash = '' or digestUtils:md5Hex(string(exslt:node-set(normalize-space(.)))) = $resourceHash)]"
     priority="2"/>
 
   <!-- Do a copy of every node and attribute -->
