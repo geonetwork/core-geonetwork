@@ -41,7 +41,6 @@ import org.fao.geonet.api.processing.report.MetadataProcessingReport;
 import org.fao.geonet.api.processing.report.SimpleMetadataProcessingReport;
 import org.fao.geonet.api.records.model.*;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
-import org.fao.geonet.config.IPublicationAction;
 import org.fao.geonet.config.IPublicationConfig;
 import org.fao.geonet.config.PublicationOption;
 import org.fao.geonet.domain.*;
@@ -243,11 +242,10 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
 
         shareMetadataWithReservedGroup(metadataUuid, true, publicationType, session, request);
 
-        if (publicationConfig instanceof IPublicationAction) {
-            java.util.Optional<PublicationOption> publicationOption = publicationConfig.getPublicationOptionConfiguration(publicationType);
-            if (publicationOption.isPresent()) {
-                ((IPublicationAction) publicationConfig).processMetadata(serviceContext, publicationOption.get(), ApiUtils.getRecord(metadataUuid), true);
-            }
+        java.util.Optional<PublicationOption> publicationOption = publicationConfig.getPublicationOptionConfiguration(publicationType);
+        if (publicationOption.isPresent()) {
+            AbstractMetadata metadata = ApiUtils.getRecord(metadataUuid);
+            publicationConfig.processMetadata(serviceContext, publicationOption.get(), metadata.getId(), true);
         }
     }
 
@@ -289,11 +287,10 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
 
         shareMetadataWithReservedGroup(metadataUuid, false, publicationType, session, request);
 
-        if (publicationConfig instanceof IPublicationAction) {
-            java.util.Optional<PublicationOption> publicationOption = publicationConfig.getPublicationOptionConfiguration(publicationType);
-            if (publicationOption.isPresent()) {
-                ((IPublicationAction) publicationConfig).processMetadata(serviceContext, publicationOption.get(), ApiUtils.getRecord(metadataUuid), false);
-            }
+        java.util.Optional<PublicationOption> publicationOption = publicationConfig.getPublicationOptionConfiguration(publicationType);
+        if (publicationOption.isPresent()) {
+            AbstractMetadata metadata = ApiUtils.getRecord(metadataUuid);
+            publicationConfig.processMetadata(serviceContext, publicationOption.get(), metadata.getId(), false);
         }
     }
 
@@ -407,14 +404,12 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
             publicationTypeToUse);
         MetadataProcessingReport metadataProcessingReport = shareSelection(uuids, bucket, sharing, session, request);
 
-        if (publicationConfig instanceof IPublicationAction) {
-            java.util.Optional<PublicationOption> publicationOption = publicationConfig.getPublicationOptionConfiguration(publicationTypeToUse);
-            if (publicationOption.isPresent()) {
-                Set<Integer> metadataProcessed = metadataProcessingReport.getMetadata();
-                for(Integer metadataId: metadataProcessed) {
-                    ((IPublicationAction) publicationConfig).processMetadata(serviceContext, publicationOption.get(),
-                        metadataRepository.findOneById(metadataId), true);
-                }
+        java.util.Optional<PublicationOption> publicationOption = publicationConfig.getPublicationOptionConfiguration(publicationTypeToUse);
+        if (publicationOption.isPresent()) {
+            Set<Integer> metadataProcessed = metadataProcessingReport.getMetadata();
+            for(Integer metadataId: metadataProcessed) {
+                publicationConfig.processMetadata(serviceContext, publicationOption.get(),
+                    metadataId, true);
             }
         }
 
@@ -458,17 +453,14 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
             publicationTypeToUse);
         MetadataProcessingReport metadataProcessingReport = shareSelection(uuids, bucket, sharing, session, request);
 
-        if (publicationConfig instanceof IPublicationAction) {
-            java.util.Optional<PublicationOption> publicationOption = publicationConfig.getPublicationOptionConfiguration(publicationTypeToUse);
-            if (publicationOption.isPresent()) {
-                Set<Integer> metadataProcessed = metadataProcessingReport.getMetadata();
-                for(Integer metadataId: metadataProcessed) {
-                    ((IPublicationAction) publicationConfig).processMetadata(serviceContext, publicationOption.get(),
-                        metadataRepository.findOneById(metadataId), false);
-                }
+        java.util.Optional<PublicationOption> publicationOption = publicationConfig.getPublicationOptionConfiguration(publicationTypeToUse);
+        if (publicationOption.isPresent()) {
+            Set<Integer> metadataProcessed = metadataProcessingReport.getMetadata();
+            for(Integer metadataId: metadataProcessed) {
+                publicationConfig.processMetadata(serviceContext, publicationOption.get(),
+                    metadataId, false);
             }
         }
-
         return metadataProcessingReport;
     }
 
@@ -1292,6 +1284,7 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
 
                                 report.incrementProcessedRecords();
                                 listOfUpdatedRecords.add(String.valueOf(md.getId()));
+                                report.addMetadataId(metadata.getId());
                             } else {
                                 setOperations(sharing, dataManager, context, appContext, metadata, operationMap, privileges,
                                     ApiUtils.getUserSession(session).getUserIdAsInt(), skipAllReservedGroup, report, request,
@@ -1299,6 +1292,7 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
 
                                 report.incrementProcessedRecords();
                                 listOfUpdatedRecords.add(String.valueOf(metadata.getId()));
+                                report.addMetadataId(metadata.getId());
                             }
 
                         } else {
@@ -1308,6 +1302,7 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware
 
                             report.incrementProcessedRecords();
                             listOfUpdatedRecords.add(String.valueOf(metadata.getId()));
+                            report.addMetadataId(metadata.getId());
                         }
                     } catch (NotAllowedException ex) {
                         report.addMetadataError(metadata, ex.getMessage());
