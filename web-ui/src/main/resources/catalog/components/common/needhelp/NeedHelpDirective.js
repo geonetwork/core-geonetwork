@@ -70,10 +70,15 @@
         link: function (scope, element, attrs) {
           scope.iconOnly = attrs.iconOnly === "true";
           scope.documentationLinks = null;
+          scope.applicationVersion = "";
 
-          scope.helpBaseUrl = "https://docs.geonetwork-opensource.org/latest/{lang}";
+          scope.helpBaseUrl =
+            "https://docs.geonetwork-opensource.org/{{version}}/{{lang}}";
 
           gnConfigService.load().then(function (c) {
+            var version = gnConfig["system.platform.version"];
+            scope.applicationVersion = version.substring(0, version.lastIndexOf("."));
+
             var docUrl = gnConfig["system.documentation.url"];
 
             if (docUrl) {
@@ -145,17 +150,21 @@
             var baseUrl;
 
             if (gnGlobalSettings.lang !== "en") {
-              baseUrl = scope.helpBaseUrl.replace("{lang}", gnGlobalSettings.lang);
+              baseUrl = scope.helpBaseUrl.replace("{{lang}}", gnGlobalSettings.lang);
             } else {
-              baseUrl = scope.helpBaseUrl.replace("/{lang}", "");
+              baseUrl = scope.helpBaseUrl.replace("/{{lang}}", "");
             }
+
+            baseUrl = baseUrl.replace("{{version}}", scope.applicationVersion);
 
             var helpPageUrl = baseUrl + "/" + page;
 
             testAndOpen(helpPageUrl).then(
               function () {},
               function () {
-                var baseUrl = scope.helpBaseUrl.replace("/{lang}", "");
+                var baseUrl = scope.helpBaseUrl
+                  .replace("/{{lang}}", "")
+                  .replace("{{version}}", scope.applicationVersion);
                 var helpPageUrl = baseUrl + "/" + page;
 
                 testAndOpen(helpPageUrl);
