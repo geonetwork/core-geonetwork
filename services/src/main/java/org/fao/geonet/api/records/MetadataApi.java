@@ -431,7 +431,7 @@ public class MetadataApi {
         Path stylePath = dataDirectory.getWebappDir().resolve(Geonet.Path.SCHEMAS);
         Path file = null;
         ServiceContext serviceContext = ApiUtils.createServiceContext(request);
-        String acceptHeader = StringUtils.isBlank(request.getHeader(HttpHeaders.ACCEPT))?"application/x-gn-mef-2-zip":request.getHeader(HttpHeaders.ACCEPT);
+        String acceptHeader = StringUtils.isBlank(request.getHeader(HttpHeaders.ACCEPT)) ? "application/x-gn-mef-2-zip" : request.getHeader(HttpHeaders.ACCEPT);
         MEFLib.Version version = MEFLib.Version.find(acceptHeader);
         try {
             if (version == MEFLib.Version.V1) {
