@@ -379,7 +379,7 @@ public class KeywordsApi {
         @Parameter(hidden = true)
         HttpServletRequest request
         ) throws Exception {
-        return getKeyword(uri,sThesaurusName,langs, keywordOnly, transformation,langMapJson,allRequestParams, accept, request);
+        return getKeyword(uri,sThesaurusName,langs, keywordOnly, transformation,langMapJson,allRequestParams, request);
     }
 
     /**
@@ -450,15 +450,10 @@ public class KeywordsApi {
         @Parameter(hidden = true)
         @RequestParam
             Map<String, String> allRequestParams,
-        @RequestHeader(
-            value = "Accept",
-            defaultValue = MediaType.APPLICATION_XML_VALUE
-        )
-        String accept,
         @Parameter(hidden = true)
         HttpServletRequest request
         ) throws Exception {
-        return getKeyword(uri,sThesaurusName,langs, keywordOnly, transformation,langMapJson,allRequestParams, accept, request);
+        return getKeyword(uri,sThesaurusName,langs, keywordOnly, transformation,langMapJson,allRequestParams, request);
     }
 
     /**
@@ -482,7 +477,6 @@ public class KeywordsApi {
         String transformation,
         String  langMapJson,
         Map<String, String> allRequestParams,
-        String accept,
         HttpServletRequest request
     ) throws Exception {
         final String SEPARATOR = ",";
