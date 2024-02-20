@@ -48,10 +48,20 @@
   module.directive("gnNeedHelp", [
     "gnGlobalSettings",
     "gnAlertService",
+    "gnConfigService",
+    "gnConfig",
     "$http",
     "$q",
     "$translate",
-    function (gnGlobalSettings, gnAlertService, $http, $q, $translate) {
+    function (
+      gnGlobalSettings,
+      gnAlertService,
+      gnConfigService,
+      gnConfig,
+      $http,
+      $q,
+      $translate
+    ) {
       return {
         restrict: "A",
         replace: true,
@@ -61,15 +71,21 @@
           scope.iconOnly = attrs.iconOnly === "true";
           scope.documentationLinks = null;
 
+          scope.helpBaseUrl = "https://docs.geonetwork-opensource.org/latest/{lang}";
+
+          gnConfigService.load().then(function (c) {
+            var docUrl = gnConfig["system.documentation.url"];
+
+            if (docUrl) {
+              scope.helpBaseUrl = docUrl;
+            }
+          });
+
           scope.$watch("documentationLinks", function (n, o) {
             if (n !== o && n != null) {
               scope.checkUrl();
             }
           });
-
-          var helpBaseUrl =
-            gnGlobalSettings.docUrl ||
-            "https://docs.geonetwork-opensource.org/latest/{lang}";
 
           /**
            * load the JSON file with all the documentation links and put the links in the scope
@@ -129,9 +145,9 @@
             var baseUrl;
 
             if (gnGlobalSettings.lang !== "en") {
-              baseUrl = helpBaseUrl.replace("{lang}", gnGlobalSettings.lang);
+              baseUrl = scope.helpBaseUrl.replace("{lang}", gnGlobalSettings.lang);
             } else {
-              baseUrl = helpBaseUrl.replace("/{lang}", "");
+              baseUrl = scope.helpBaseUrl.replace("/{lang}", "");
             }
 
             var helpPageUrl = baseUrl + "/" + page;
@@ -139,7 +155,7 @@
             testAndOpen(helpPageUrl).then(
               function () {},
               function () {
-                var baseUrl = helpBaseUrl.replace("/{lang}", "");
+                var baseUrl = scope.helpBaseUrl.replace("/{lang}", "");
                 var helpPageUrl = baseUrl + "/" + page;
 
                 testAndOpen(helpPageUrl);
