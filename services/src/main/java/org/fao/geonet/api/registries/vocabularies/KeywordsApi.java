@@ -487,7 +487,7 @@ public class KeywordsApi {
     ) throws Exception {
         final String SEPARATOR = ",";
         ServiceContext context = ApiUtils.createServiceContext(request);
-        String acceptHeader = StringUtils.isBlank(request.getHeader(HttpHeaders.ACCEPT))?MediaType.APPLICATION_XML_VALUE:request.getHeader(HttpHeaders.ACCEPT);
+        String acceptHeader = StringUtils.isBlank(request.getHeader(HttpHeaders.ACCEPT)) ? MediaType.APPLICATION_XML_VALUE : request.getHeader(HttpHeaders.ACCEPT);
         boolean isJson = MediaType.APPLICATION_JSON_VALUE.equals(acceptHeader);
 
         // Search thesaurus by name (as facet key only contains the name of the thesaurus)

@@ -167,7 +167,7 @@ public class MetadataApi {
                 @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(type = "string")),
                 @Content(mediaType = MediaType.APPLICATION_XML_VALUE, schema = @Schema(type = "string")),
                 @Content(mediaType = MediaType.APPLICATION_XHTML_XML_VALUE, schema = @Schema(type = "string"))
-    })
+            })
     })
     public String getRecord(
         @Parameter(description = API_PARAM_RECORD_UUID,
@@ -185,7 +185,7 @@ public class MetadataApi {
             throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
         }
 
-        String acceptHeader = StringUtils.isBlank(request.getHeader(HttpHeaders.ACCEPT))?MediaType.APPLICATION_XML_VALUE:request.getHeader(HttpHeaders.ACCEPT);
+        String acceptHeader = StringUtils.isBlank(request.getHeader(HttpHeaders.ACCEPT)) ? MediaType.APPLICATION_XML_VALUE : request.getHeader(HttpHeaders.ACCEPT);
         List<String> accept = Arrays.asList(acceptHeader.split(","));
 
         String defaultFormatter = "xsl-view";
@@ -246,12 +246,12 @@ public class MetadataApi {
     @RequestMapping(value = "/{metadataUuid}/formatters/json",
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE
-        )
+    )
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Return the record.",
             content = @Content(schema = @Schema(type = "string", format = "binary"))),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)
-        })
+    })
     @ResponseBody
     public Object getRecordAsJson(
         @Parameter(
@@ -291,7 +291,7 @@ public class MetadataApi {
     @RequestMapping(value = "/{metadataUuid}/formatters/xml",
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_XML_VALUE
-        )
+    )
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Return the record.",
             content = @Content(schema = @Schema(type = "string", format = "binary"))),
@@ -340,19 +340,19 @@ public class MetadataApi {
     /**
      * Get records based on media type.
      *
-     * @param metadataUuid Record UUID.
-     * @param addSchemaLocation Add XSD schema location based on standard configuration (see schema-ident.xml).
+     * @param metadataUuid       Record UUID.
+     * @param addSchemaLocation  Add XSD schema location based on standard configuration (see schema-ident.xml).
      * @param increasePopularity Increase record popularity
-     * @param withInfo Add geonet:info details
-     * @param attachment Download as a file
-     * @param approved Download the approved version
-     * @param response object
-     * @param request object
-     * @param mediaType Supports xml or json - default to xml if the media type is not known.
+     * @param withInfo           Add geonet:info details
+     * @param attachment         Download as a file
+     * @param approved           Download the approved version
+     * @param response           object
+     * @param request            object
+     * @param mediaType          Supports xml or json - default to xml if the media type is not known.
      * @return It will the object
      * @throws Exception if record not found of permissions denied.
      */
-   private  Object getRecordAs(
+    private Object getRecordAs(
         String metadataUuid,
         boolean addSchemaLocation,
         boolean increasePopularity,
@@ -514,7 +514,7 @@ public class MetadataApi {
         Path stylePath = dataDirectory.getWebappDir().resolve(Geonet.Path.SCHEMAS);
         Path file = null;
         ServiceContext serviceContext = ApiUtils.createServiceContext(request);
-        String acceptHeader = StringUtils.isBlank(request.getHeader(HttpHeaders.ACCEPT))?"application/x-gn-mef-2-zip":request.getHeader(HttpHeaders.ACCEPT);
+        String acceptHeader = StringUtils.isBlank(request.getHeader(HttpHeaders.ACCEPT)) ? "application/x-gn-mef-2-zip" : request.getHeader(HttpHeaders.ACCEPT);
         MEFLib.Version version = MEFLib.Version.find(acceptHeader);
         try {
             if (version == MEFLib.Version.V1) {
