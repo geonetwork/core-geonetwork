@@ -342,7 +342,7 @@ public class MetadataApi {
             }
         }
 
-        String acceptHeader = StringUtils.isBlank(request.getHeader(HttpHeaders.ACCEPT))?MediaType.APPLICATION_XML_VALUE:request.getHeader(HttpHeaders.ACCEPT);
+        String acceptHeader = StringUtils.isBlank(request.getHeader(HttpHeaders.ACCEPT)) ? MediaType.APPLICATION_XML_VALUE : request.getHeader(HttpHeaders.ACCEPT);
         boolean isJson = acceptHeader.contains(MediaType.APPLICATION_JSON_VALUE);
 
         String mode = (attachment) ? "attachment" : "inline";
