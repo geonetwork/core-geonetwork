@@ -98,7 +98,7 @@
                 return suggestedTz.name;
               },
               templates: {
-                suggestion: Handlebars.compile("<div>{{name}} (GMT{{offset}})</div>")
+                suggestion: _.template("<div><%- name %> (GMT<%- offset %>)</div>")
               }
             }
           );
