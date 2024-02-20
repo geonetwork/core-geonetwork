@@ -220,7 +220,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
 
         Locale locale = languageUtils.parseAcceptLanguage(servletRequest.getLocales());
 
-        String acceptHeader = StringUtils.isBlank(request.getHeader(HttpHeaders.ACCEPT))?MediaType.TEXT_HTML_VALUE:request.getHeader(HttpHeaders.ACCEPT);
+        String acceptHeader = StringUtils.isBlank(request.getHeader(HttpHeaders.ACCEPT)) ? MediaType.TEXT_HTML_VALUE : request.getHeader(HttpHeaders.ACCEPT);
 
         // TODO :
         // if text/html > xsl_view
