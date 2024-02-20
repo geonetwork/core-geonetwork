@@ -27,6 +27,8 @@ import javax.xml.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 /**
  * <p>Java class for anonymous complex type.
  *
@@ -378,6 +380,8 @@ public class FCRelatedMetadataItem extends RelatedMetadataItem {
                 "type",
                 "values"
             })
+            // Use different schema name for source to resolve conflict with org.fao.geonet.kernel.schema.labels.Element
+            @Schema(name = "FCRelatedElement")
             public static class Element {
 
                 protected String name;
