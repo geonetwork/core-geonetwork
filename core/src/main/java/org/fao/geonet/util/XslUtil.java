@@ -1300,13 +1300,6 @@ public final class XslUtil {
         return org.apache.commons.codec.digest.DigestUtils.md5Hex(str);
     }
 
-    public static String md5HexIgnoreWhiteSpaces(String str) {
-        str = org.apache.commons.lang3.StringUtils.remove(str, '\n');
-        str = org.apache.commons.lang3.StringUtils.remove(str, ' ');
-
-        return org.apache.commons.codec.digest.DigestUtils.md5Hex(str);
-    }
-
     public static String encodeForURL(String str) {
         try {
             return DefaultEncoder.getInstance().encodeForURL(str);
