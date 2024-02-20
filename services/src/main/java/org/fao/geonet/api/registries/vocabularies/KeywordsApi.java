@@ -63,6 +63,7 @@ import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -649,7 +650,8 @@ public class KeywordsApi {
             required = true)
         @PathVariable(value = "thesaurus")
             String thesaurus,
-        HttpServletResponse response
+        HttpServletResponse response,
+        HttpServletRequest request
     ) throws Exception {
 
         Thesaurus directory = thesaurusMan.getThesaurusByName(thesaurus);
@@ -660,8 +662,10 @@ public class KeywordsApi {
         if (!Files.exists(directoryFile))
             throw new IllegalArgumentException("Thesaurus file not found --> " + thesaurus);
 
-        response.setContentType("text/xml");
-        response.setHeader("Content-Disposition", "attachment;filename=" + directoryFile.getFileName());
+        String acceptHeader = StringUtils.isBlank(request.getHeader(HttpHeaders.ACCEPT))
+                ? MediaType.TEXT_XML_VALUE : request.getHeader(HttpHeaders.ACCEPT);
+        response.setContentType(acceptHeader);
+        response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + directoryFile.getFileName());
         ServletOutputStream out = response.getOutputStream();
         BufferedReader reader1 = new BufferedReader(new InputStreamReader(new FileInputStream(directoryFile.toFile()), StandardCharsets.UTF_8));
         IOUtils.copy(reader1, out);
