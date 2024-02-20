@@ -36,7 +36,7 @@
     <jsSource webappPath="/catalog/lib/modernizr.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/jquery-2.2.4.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/moment-with-locales.min.js" minimize="false"/>
-    <jsSource webappPath="/catalog/lib/moment-timezone-with-data-10-year-range.min.js" minimize="false" />
+    <jsSource webappPath="/catalog/lib/moment-timezone-with-data-1970-2030.min.js" minimize="false" />
     <jsSource webappPath="/catalog/lib/angular/angular.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/angular-filter.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/angular/angular-resource.min.js" minimize="false"/>
@@ -75,7 +75,6 @@
     <jsSource webappPath="/catalog/lib/jquery.ext/jquery.floatThead-slim.min.js"/>
     <jsSource webappPath="/catalog/lib/jquery.ext/jquery-ui-slider.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/bootstrap.ext/typeahead.js/typeahead.bundle.js"/>
-    <jsSource webappPath="/catalog/lib/bootstrap.ext/typeahead.js/handlebars-v2.0.0.js"/>
     <jsSource webappPath="/catalog/lib/bootstrap.ext/tagsinput/bootstrap-tagsinput.min.js"
               minimize="false"/>
     <jsSource webappPath="/catalog/lib/bootstrap.ext/tagsinput/bootstrap-tagsinput-angular.js"/>
@@ -106,7 +105,7 @@
     <jsSource webappPath="/catalog/lib/modernizr.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/jquery-2.2.4.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/moment-with-locales.min.js" minimize="false"/>
-    <jsSource webappPath="/catalog/lib/moment-timezone-with-data-10-year-range.min.js" minimize="false" />
+    <jsSource webappPath="/catalog/lib/moment-timezone-with-data-1970-2030.min.js" minimize="false" />
     <jsSource webappPath="/catalog/lib/angular/angular.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/angular-filter.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/angular/angular-resource.min.js" minimize="false"/>
@@ -148,7 +147,6 @@
     <jsSource webappPath="/catalog/lib/jquery.ext/jquery.fileupload-angular.js"/>
     <jsSource webappPath="/catalog/lib/jquery.ext/jquery-ui-slider.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/bootstrap.ext/typeahead.js/typeahead.bundle.js"/>
-    <jsSource webappPath="/catalog/lib/bootstrap.ext/typeahead.js/handlebars-v2.0.0.js"/>
     <jsSource webappPath="/catalog/lib/bootstrap.ext/tagsinput/bootstrap-tagsinput.min.js"
               minimize="false"/>
     <jsSource webappPath="/catalog/lib/bootstrap.ext/tagsinput/bootstrap-tagsinput-angular.js"/>

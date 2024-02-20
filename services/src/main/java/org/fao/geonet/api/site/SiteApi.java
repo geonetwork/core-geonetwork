@@ -23,6 +23,8 @@
 
 package org.fao.geonet.api.site;
 
+import co.elastic.clients.elasticsearch.core.CountRequest;
+import co.elastic.clients.elasticsearch.core.CountResponse;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -32,10 +34,8 @@ import jeeves.config.springutil.ServerBeanPropertyUpdater;
 import jeeves.server.JeevesProxyInfo;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+import jeeves.xlink.Processor;
 import org.apache.commons.lang3.StringUtils;
-import org.elasticsearch.client.RequestOptions;
-import org.elasticsearch.client.core.CountRequest;
-import org.elasticsearch.client.core.CountResponse;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.NodeInfo;
@@ -89,10 +89,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.imageio.ImageIO;
-import javax.servlet.ServletRegistration;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -578,7 +578,7 @@ public class SiteApi {
         method = RequestMethod.PUT)
     @PreAuthorize("hasAuthority('Editor')")
     @ResponseBody
-    public HttpEntity index(
+    public HttpEntity indexSite(
         @Parameter(description = "Drop and recreate index",
             required = false)
         @RequestParam(required = false, defaultValue = "true")
@@ -587,10 +587,6 @@ public class SiteApi {
             required = false)
         @RequestParam(required = false, defaultValue = "false")
             boolean asynchronous,
-        @Parameter(description = "Records having only XLinks",
-            required = false)
-        @RequestParam(required = false, defaultValue = "false")
-            boolean havingXlinkOnly,
         @Parameter(description = "Index. By default only remove record index.",
             required = false)
         @RequestParam(required = false, defaultValue = "records")
@@ -618,11 +614,14 @@ public class SiteApi {
             searchMan.init(true, Optional.of(Arrays.asList(indices)));
         }
 
+        // clean XLink Cache so that cache and index remain in sync
+        Processor.clearCache();
+
         if (StringUtils.isEmpty(bucket)) {
             BaseMetadataManager metadataManager = ApplicationContextHolder.get().getBean(BaseMetadataManager.class);
             metadataManager.synchronizeDbWithIndex(context, false, asynchronous);
         } else {
-            searchMan.rebuildIndex(context, havingXlinkOnly, false, bucket);
+            searchMan.rebuildIndex(context, false, bucket);
         }
 
         return new HttpEntity<>(HttpStatus.CREATED);
@@ -683,9 +682,9 @@ public class SiteApi {
 
         EsSearchManager searchMan = ApplicationContextHolder.get().getBean(EsSearchManager.class);
         CountResponse countResponse = esRestClient.getClient().count(
-            new CountRequest(searchMan.getDefaultIndex()),
-            RequestOptions.DEFAULT);
-        infoIndexDbSynch.put("index.count", countResponse.getCount());
+            CountRequest.of(b -> b.index(searchMan.getDefaultIndex()))
+        );
+        infoIndexDbSynch.put("index.count", countResponse.count());
         return infoIndexDbSynch;
     }
 
@@ -876,7 +875,7 @@ public class SiteApi {
             )) {
                 for (Path sheet : sheets) {
                     String id = sheet.toString();
-                    if (id != null && id.contains("convert/from") && id.endsWith(".xsl")) {
+                    if (id != null && id.contains("convert" + File.separator + "from") && id.endsWith(".xsl")) {
                         String name = com.google.common.io.Files.getNameWithoutExtension(
                             sheet.getFileName().toString());
                         list.add(IMPORT_STYLESHEETS_SCHEMA_PREFIX + schema + ":convert/" + name);

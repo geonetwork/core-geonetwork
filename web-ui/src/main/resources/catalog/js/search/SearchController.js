@@ -107,7 +107,7 @@
 
       /* Default result view template */
       $scope.resultTemplate =
-        gnSearchSettings.resultTemplate || gnSearchSettings.resultViewTpls[0].tplUrl;
+        gnSearchSettings.resultTemplate || gnSearchSettings.resultViewTpls[0];
       /* Default advanced search form template */
       $scope.advancedSearchTemplate =
         gnSearchSettings.advancedSearchTemplate ||

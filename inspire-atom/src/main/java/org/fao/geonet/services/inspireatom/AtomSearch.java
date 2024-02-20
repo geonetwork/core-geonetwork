@@ -22,6 +22,8 @@
 //==============================================================================
 package org.fao.geonet.services.inspireatom;
 
+import co.elastic.clients.elasticsearch.core.SearchResponse;
+import co.elastic.clients.elasticsearch.core.search.Hit;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -31,8 +33,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.StringEscapeUtils;
-import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.search.SearchHit;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.exception.FeatureNotEnabledException;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
@@ -56,12 +56,16 @@ import org.fao.geonet.utils.Xml;
 import org.jdom.Content;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static org.fao.geonet.kernel.search.EsFilterBuilder.buildPermissionsFilter;
@@ -103,14 +107,17 @@ public class AtomSearch {
         description = "")
     @GetMapping(
         value = "/feeds",
-        produces = MediaType.APPLICATION_XML_VALUE
+        produces = {
+            MediaType.APPLICATION_XML_VALUE,
+            MediaType.TEXT_HTML_VALUE
+        }
     )
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Get a list of feeds."),
         @ApiResponse(responseCode = "204", description = "Not authenticated.")
     })
     @ResponseStatus(OK)
-    public Element feeds(
+    public Object feeds(
         @Parameter(
             description = "fileIdentifier",
             required = false)
@@ -118,6 +125,20 @@ public class AtomSearch {
         String fileIdentifier,
         @Parameter(hidden = true)
         HttpServletRequest request) throws Exception {
+
+        String acceptHeader = StringUtils.isBlank(request.getHeader(HttpHeaders.ACCEPT))?MediaType.APPLICATION_XML_VALUE:request.getHeader(HttpHeaders.ACCEPT);
+        List<String> accept = Arrays.asList(acceptHeader.split(","));
+
+        if (accept.contains(MediaType.TEXT_HTML_VALUE)) {
+            return feedsAsHtml(fileIdentifier, request);
+        } else{
+            return feedsAsXml(fileIdentifier, request);
+        }
+    }
+    private Element feedsAsXml(
+        String fileIdentifier,
+        HttpServletRequest request) throws Exception {
+
         ServiceContext context = ApiUtils.createServiceContext(request);
 
         boolean inspireEnable = sm.getValueAsBool(Settings.SYSTEM_INSPIRE_ENABLE);
@@ -182,41 +203,24 @@ public class AtomSearch {
 
         // Loop over the results and retrieve feeds to add in results
         // First element in results (pos=0) is the summary, ignore it
-        for (SearchHit hit : result.getHits().getHits()) {
-            String id = hit.getSourceAsMap().get(Geonet.IndexFieldNames.ID).toString();
+        for (Hit hit : (List<Hit>) result.hits().hits()) {
+            String id = objectMapper.convertValue(hit.source(), Map.class).get(Geonet.IndexFieldNames.ID).toString();
             InspireAtomFeed feed = service.findByMetadataId(Integer.parseInt(id));
             if (feed != null) {
                 Element feedEl = Xml.loadString(feed.getAtom(), false);
                 feeds.addContent((Content) feedEl.clone());
             } else {
-                Log.debug(Geonet.ATOM, String.format("No feed available for %s", hit.getId()));
+                Log.debug(Geonet.ATOM, String.format("No feed available for %s", hit.id()));
             }
         }
         return feeds;
     }
 
 
-    @io.swagger.v3.oas.annotations.Operation(
-        summary = "Get ATOM feeds",
-        description = "")
-    @GetMapping(
-        value = "/feeds",
-        produces = MediaType.TEXT_HTML_VALUE
-    )
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Get a list of feeds."),
-        @ApiResponse(responseCode = "204", description = "Not authenticated.")
-    })
-    @ResponseStatus(OK)
-    public String feedsAsHtml(
-        @Parameter(
-            description = "fileIdentifier",
-            required = false)
-        @RequestParam(defaultValue = "")
+    private String feedsAsHtml(
         String fileIdentifier,
-        @Parameter(hidden = true)
         HttpServletRequest request) throws Exception {
-        Element feeds = feeds(fileIdentifier, request);
+        Element feeds = feedsAsXml(fileIdentifier, request);
 
         Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
         String language = IsoLanguagesMapper.iso639_2T_to_iso639_2B(locale.getISO3Language());

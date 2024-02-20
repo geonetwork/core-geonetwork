@@ -317,11 +317,19 @@
         };
       };
 
-      this.addSourceConfiguration = function (esParams, type) {
+      this.addSourceConfiguration = function (esParams, type, templateSource) {
         if (type === undefined) {
           type = "simplelist";
         }
-        var source = typeof type === "string" ? this.configs[type].source : type;
+        var source =
+          typeof type === "string" ? angular.copy(this.configs[type].source, {}) : type;
+        if (templateSource) {
+          if (templateSource.exclude) {
+            source.includes = source.includes.filter(function (field) {
+              return templateSource.exclude.indexOf(field) === -1;
+            });
+          }
+        }
         esParams._source = source;
         if (this.configs[type].script_fields) {
           esParams.script_fields = this.configs[type].script_fields;
