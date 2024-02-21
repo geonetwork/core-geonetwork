@@ -12,6 +12,11 @@
       <span data-translate="">about</span>
     </a>
   </li>
+  <li ng-show="::getContactusVisible()">
+    <a href="contact.us">
+      <span data-translate="">contact</span>
+    </a>
+  </li>
   <li class="hidden-sm">
     <a href="https://github.com/geonetwork/core-geonetwork">
       <span class="fa fa-fw fa-github"></span>
@@ -20,13 +25,6 @@
   </li>
   <li>
     <a href="../../doc/api" title="{{'learnTheApi' | translate}}">API</a>
-  </li>
-</ul>
-<ul class="nav navbar-nav" ng-show="::getContactusVisible()">
-  <li>
-    <a href="contact.us">
-      <span data-translate="">contact</span>
-    </a>
   </li>
 </ul>
 <ul
