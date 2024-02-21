@@ -1151,7 +1151,8 @@
         <xsl:value-of select="normalize-space(.)"/>
 
         <xsl:if test="@uom">
-          &#160;<xsl:value-of select="@uom"/>
+          <!-- Display the unit value only -->
+          &#160; <xsl:value-of select="tokenize(@uom, '#')[2]"/>
         </xsl:if>
       </xsl:otherwise>
     </xsl:choose>

@@ -1180,7 +1180,8 @@
 
 
     <xsl:if test="@uom">
-      <xsl:comment select="'.'"/>&#160;<xsl:value-of select="@uom"/>
+      <!-- Display the unit value only -->
+      <xsl:comment select="'.'"/>&#160; <xsl:value-of select="tokenize(@uom, '#')[2]"/>
     </xsl:if>
   </xsl:template>
 
