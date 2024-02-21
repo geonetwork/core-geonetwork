@@ -141,7 +141,7 @@ public class KeywordsApi {
     @Autowired
     ThesaurusManager thesaurusManager;
 
-    List<String> allowedExtensions = Arrays.asList("rdf", "owl", "xml");
+    List<String> allowedExtensions = Arrays.asList("rdf", "owl", "xml", "sdmx");
 
     /**
      * Search keywords.
@@ -720,7 +720,7 @@ public class KeywordsApi {
      */
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Uploads a new thesaurus from a file",
-        description = "Uploads a new thesaurus."
+        description = "Supported thesaurus are RDF/XML files using SKOS specification, OWL file describing NamedIndividual elements or SDMX file describing Codelist element. For RDF, extension must be .rdf or .xml, for OWL, .owl and for SDMX, .sdmx."
     )
     @RequestMapping(
         method = RequestMethod.POST,
@@ -826,7 +826,13 @@ public class KeywordsApi {
     }
 
     private static String getStylesheetForExtension(String stylesheet, String extension) {
-        return extension.equals("owl") ? "owl-to-skos" : stylesheet;
+        if (extension.equals("owl")) {
+            return "owl-to-skos";
+        } else if (extension.equals("sdmx")) {
+            return "sdmx-to-skos";
+        } else {
+            return stylesheet;
+        }
     }
 
 
