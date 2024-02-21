@@ -35,6 +35,7 @@
                 xmlns:index="java:org.fao.geonet.kernel.search.EsSearchManager"
                 xmlns:digestUtils="java:org.apache.commons.codec.digest.DigestUtils"
                 xmlns:exslt="http://exslt.org/common"
+                xmlns:util="java:org.fao.geonet.util.XslUtil"
                 xmlns:date-util="java:org.fao.geonet.utils.DateUtil"
                 xmlns:daobs="http://daobs.org"
                 xmlns:saxon="http://saxon.sf.net/"
