@@ -32,7 +32,6 @@ import io.swagger.v3.oas.models.OpenAPI;
 import org.springdoc.api.AbstractOpenApiResource;
 import org.springdoc.core.*;
 import org.springdoc.core.customizers.SpringDocCustomizers;
-import org.springdoc.core.fn.RouterOperation;
 import org.springdoc.core.providers.ActuatorProvider;
 import org.springdoc.core.providers.SecurityOAuth2Provider;
 import org.springdoc.core.providers.SpringWebProvider;
@@ -84,8 +83,6 @@ public class OpenApiController extends AbstractOpenApiResource {
 
     private final Optional<SecurityOAuth2Provider> springSecurityOAuth2Provider;
 
-    private final List<RouterOperation> routerOperations;
-
     @Autowired
     public OpenApiController(ObjectFactory<OpenAPIService> openAPIBuilderObjectFactory,
                              AbstractRequestService requestBuilder,
@@ -95,15 +92,13 @@ public class OpenApiController extends AbstractOpenApiResource {
                              SpringDocConfigProperties springDocConfigProperties,
                              SpringDocProviders springDocProviders,
                              SpringDocCustomizers springDocCustomizers,
-                             List<RouterOperation> routerOperations,
                              Optional<ActuatorProvider> servletContextProvider,
                              Optional<SecurityOAuth2Provider> springSecurityOAuth2Provider) {
         super(DEFAULT_GROUP_NAME, openAPIBuilderObjectFactory, requestBuilder, responseBuilder, operationParser, springDocConfigProperties, springDocProviders, springDocCustomizers);
-        springDocConfigProperties.setPathsToExclude(Arrays.asList(new String[]{"/0.1/**"}));
-        springDocConfigProperties.setPackagesToScan(Arrays.asList(new String[]{
-            "org.fao.geonet.api",
-            "org.fao.geonet.services.inspireatom",
-            "org.fao.geonet.monitor.service"}));
+        springDocConfigProperties.setPathsToExclude(List.of("/0.1/**"));
+        springDocConfigProperties.setPackagesToScan(Arrays.asList("org.fao.geonet.api",
+                "org.fao.geonet.services.inspireatom",
+                "org.fao.geonet.monitor.service"));
 
         // Ensure open api document is consistently orders to make it easier to compare changes later.
         springDocConfigProperties.setWriterWithOrderByKeys(true);
@@ -115,7 +110,6 @@ public class OpenApiController extends AbstractOpenApiResource {
         this.requestMappingHandlerMapping = requestMappingHandlerMapping;
         this.servletContextProvider = servletContextProvider;
         this.springSecurityOAuth2Provider = springSecurityOAuth2Provider;
-        this.routerOperations = routerOperations;
 
         // Ensure all enums are written based on the enum name.
         Json.mapper().configure(SerializationFeature.WRITE_ENUMS_USING_TO_STRING, false);
@@ -143,11 +137,11 @@ public class OpenApiController extends AbstractOpenApiResource {
     @Override
     protected void getPaths(Map<String, Object> restControllers, Locale locale, OpenAPI openAPI) {
         Map<RequestMappingInfo, HandlerMethod> map = requestMappingHandlerMapping.getHandlerMethods();
-        calculatePath(restControllers, map, Optional.empty(), locale, openAPI);
+        calculatePath(restControllers, map, locale, openAPI);
 
         if (servletContextProvider.isPresent()) {
             map = servletContextProvider.get().getMethods();
-            calculatePath(restControllers, map, servletContextProvider, locale, openAPI);
+            calculatePath(restControllers, map, locale, openAPI);
         }
         if (this.springSecurityOAuth2Provider.isPresent()) {
             SecurityOAuth2Provider securityOAuth2Provider = this.springSecurityOAuth2Provider.get();
@@ -155,13 +149,13 @@ public class OpenApiController extends AbstractOpenApiResource {
             Map<String, Object> requestMappingMapSec = securityOAuth2Provider.getFrameworkEndpoints();
             Class[] additionalRestClasses = requestMappingMapSec.values().stream().map(Object::getClass).toArray(Class[]::new);
             AbstractOpenApiResource.addRestControllers(additionalRestClasses);
-            calculatePath(requestMappingMapSec, mapOauth, Optional.empty(), locale, openAPI);
+            calculatePath(requestMappingMapSec, mapOauth, locale, openAPI);
         }
     }
 
+
     protected void calculatePath(Map<String, Object> restControllers,
                                  Map<RequestMappingInfo, HandlerMethod> map,
-                                 Optional<ActuatorProvider> actuatorProvider,
                                  Locale locale,
                                  OpenAPI openAPI) {
         TreeMap<RequestMappingInfo, HandlerMethod> methodTreeMap = new TreeMap<>(byReversedRequestMappingInfos());
