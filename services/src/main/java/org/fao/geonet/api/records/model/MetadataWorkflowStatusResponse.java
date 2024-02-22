@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2024 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -32,7 +32,7 @@ import java.util.List;
 
 @XmlRootElement
 public class MetadataWorkflowStatusResponse {
-    private MetadataStatus currentStatus;
+    private MetadataStatusDto currentStatus;
     private List<User> reviewers;
     private boolean hasEditPermission;
     private List<StatusValue> status;
@@ -44,18 +44,22 @@ public class MetadataWorkflowStatusResponse {
                                           List<User> reviewers,
                                           boolean hasEditPermission,
                                           List<StatusValue> status) {
-        this.currentStatus = currentStatus;
+        setCurrentStatus(currentStatus);
         this.reviewers = reviewers;
         this.hasEditPermission = hasEditPermission;
         this.status = status;
     }
 
-    public MetadataStatus getCurrentStatus() {
+    public MetadataStatusDto getCurrentStatus() {
         return currentStatus;
     }
 
     public void setCurrentStatus(MetadataStatus currentStatus) {
-        this.currentStatus = currentStatus;
+        if (currentStatus != null) {
+            this.currentStatus = new MetadataStatusDto(currentStatus);
+        } else {
+            this.currentStatus = null;
+        }
     }
 
     public List<User> getReviewers() {
