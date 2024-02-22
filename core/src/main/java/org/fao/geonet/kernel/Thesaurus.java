@@ -959,7 +959,7 @@ public class Thesaurus {
                 "skos:ConceptScheme/dc:title|skos:ConceptScheme/dcterms:title" +
                     "|skos:ConceptScheme/rdfs:label|skos:ConceptScheme/skos:prefLabel" +
                     "|skos:Collection/dc:title|skos:Collection/dcterms:title" +
-                    "|rdf:Description/dc:title|rdf:Description/dcterms:title", getThesaurusNamespaces());
+                    "|rdf:Description/dc:title|rdf:Description/dcterms:title", theNSs);
 
             if (titleEl != null) {
                 this.title = titleEl.getValue();
