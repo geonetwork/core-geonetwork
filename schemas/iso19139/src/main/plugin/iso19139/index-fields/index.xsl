@@ -1209,17 +1209,6 @@
         </xsl:if>
       </xsl:for-each>
 
-
-      <xsl:variable name="indexingTimeRecordLink"
-                    select="util:getSettingValue('system/index/indexingTimeRecordLink')" />
-      <xsl:if test="$indexingTimeRecordLink = 'true'">
-        <xsl:variable name="recordsLinks"
-                      select="util:getTargetAssociatedResourcesAsNode(
-                                        $identifier,
-                                        gmd:parentIdentifier/*[text() != '']/text())"/>
-        <xsl:copy-of select="$recordsLinks//recordLink"/>
-      </xsl:if>
-
       <!-- Index more fields in this element -->
       <xsl:apply-templates mode="index-extra-fields" select="."/>
     </doc>

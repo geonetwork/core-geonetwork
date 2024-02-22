@@ -869,6 +869,7 @@
                 <xsl:if test="$max castable as xs:double
                               and xs:double($min) &lt; xs:double($max)">
                   ,"lte": <xsl:value-of select="normalize-space($max)"/>
+                  ,"unit": "m"
                 </xsl:if>
                 }</resourceVerticalRange>
             </xsl:if>
@@ -1172,12 +1173,12 @@
         <xsl:for-each select="mdq:report/*[
                 normalize-space(mdq:measure/*/mdq:nameOfMeasure/gco:CharacterString) != ''
                 or normalize-space(mdq:measure/*/mdq:measureDescription/gco:CharacterString) != ''
-                ]/mdq:result/mdq:DQ_QuantitativeResult">
+                ]/mdq:result/(mdq:DQ_QuantitativeResult|mdq:DQ_DescriptiveResult)">
 
           <xsl:variable name="name"
                         select="(../../mdq:measure/*/mdq:nameOfMeasure/gco:CharacterString)[1]"/>
           <xsl:variable name="value"
-                        select="mdq:value"/>
+                        select="mdq:value/gco:Record[. != '']|mdq:statement/gco:CharacterString[. != '']"/>
           <xsl:variable name="unit"
                         select="mdq:valueUnit//gml:identifier"/>
           <xsl:variable name="description"
@@ -1195,7 +1196,7 @@
               "date": "<xsl:value-of select="util:escapeForJson($measureDate)"/>",
             </xsl:if>
             <!-- First value only. -->
-            "value": "<xsl:value-of select="util:escapeForJson($value/gco:Record[1])"/>",
+            "value": "<xsl:value-of select="util:escapeForJson($value[1])"/>",
             <xsl:if test="$unit != ''">
               "unit": "<xsl:value-of select="util:escapeForJson($unit)"/>",
             </xsl:if>
@@ -1203,7 +1204,7 @@
             }
           </measure>
 
-          <xsl:for-each select="mdq:value/gco:Record[. != '']">
+          <xsl:for-each select="$value">
             <xsl:element name="measure_{gn-fn-index:build-field-name($name)}">
               <xsl:value-of select="."/>
             </xsl:element>
@@ -1351,18 +1352,6 @@
           <xsl:element name="{concat('agg_associated_', $associationType)}"><xsl:value-of select="$code"/></xsl:element>
         </xsl:if>
       </xsl:for-each>
-
-      <xsl:variable name="indexingTimeRecordLink"
-                    select="util:getSettingValue('system/index/indexingTimeRecordLink')" />
-      <xsl:if test="$indexingTimeRecordLink = 'true'">
-        <xsl:variable name="parentUuid"
-                      select=".//mri:associatedResource/*[mri:associationType/*/@codeListValue = $parentAssociatedResourceType]/mri:metadataReference/@uuidref[. != '']"/>
-        <xsl:variable name="recordsLinks"
-                      select="util:getTargetAssociatedResourcesAsNode(
-                                        $identifier,
-                                        if ($parentUuid) then $parentUuid else mdb:parentMetadata[@uuidref != '']/@uuidref)"/>
-        <xsl:copy-of select="$recordsLinks//recordLink"/>
-      </xsl:if>
     </doc>
 
     <!-- Index more documents for this element -->

@@ -23,6 +23,9 @@
 
 package org.fao.geonet.api.records;
 
+import co.elastic.clients.elasticsearch.core.SearchResponse;
+import co.elastic.clients.elasticsearch.core.search.Hit;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableSet;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -42,7 +45,6 @@ import org.apache.commons.csv.QuoteMode;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.text.StrSubstitutor;
-import org.elasticsearch.action.search.SearchResponse;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
@@ -239,11 +241,6 @@ public class CatalogApi {
             required = false)
         @RequestParam(required = false, defaultValue = "true")
         boolean approved,
-        @RequestHeader(
-            value = HttpHeaders.ACCEPT,
-            defaultValue = "application/x-gn-mef-2-zip"
-        )
-        String acceptHeader,
         @Parameter(hidden = true)
         HttpSession httpSession,
         @Parameter(hidden = true)
@@ -265,6 +262,7 @@ public class CatalogApi {
         Log.info(Geonet.MEF, "Current record(s) in selection: " + uuidList.size());
 
         ServiceContext context = ApiUtils.createServiceContext(request);
+        String acceptHeader = StringUtils.isBlank(request.getHeader(HttpHeaders.ACCEPT)) ? "application/x-gn-mef-2-zip" : request.getHeader(HttpHeaders.ACCEPT);
         MEFLib.Version version = MEFLib.Version.find(acceptHeader);
         if (version == MEFLib.Version.V1) {
             throw new IllegalArgumentException("MEF version 1 only support one record. Use the /records/{uuid}/formatters/zip to retrieve that format");
@@ -401,9 +399,11 @@ public class CatalogApi {
         });
 
         Element response = new Element("response");
-        Arrays.asList(searchResponse.getHits().getHits()).forEach(h -> {
+        ObjectMapper objectMapper = new ObjectMapper();
+        searchResponse.hits().hits().forEach(h1 -> {
+            Hit h = (Hit) h1;
             Element r = new Element("metadata");
-            final Map<String, Object> source = h.getSourceAsMap();
+            final Map<String, Object> source = objectMapper.convertValue(h.source(), Map.class);
             source.entrySet().forEach(e -> {
                 Object v = e.getValue();
                 if (v instanceof String) {
@@ -548,8 +548,9 @@ public class CatalogApi {
             EsFilterBuilder.buildPermissionsFilter(ApiUtils.createServiceContext(httpRequest)),
             FIELDLIST_CORE, 0, maxhits);
 
-        List<String> idsToExport = Arrays.stream(searchResponse.getHits().getHits())
-            .map(h -> (String) h.getSourceAsMap().get("id"))
+        ObjectMapper objectMapper = new ObjectMapper();
+        List<String> idsToExport = (List<String>) searchResponse.hits().hits().stream()
+            .map(h -> (String) objectMapper.convertValue(((Hit) h).source(), Map.class).get("id"))
             .collect(Collectors.toList());
 
         // Determine filename to use

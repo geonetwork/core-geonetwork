@@ -186,11 +186,6 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
         @Parameter(
             description = "Formatter type to use."
         )
-        @RequestHeader(
-            value = HttpHeaders.ACCEPT,
-            defaultValue = MediaType.TEXT_HTML_VALUE
-        )
-            String acceptHeader,
         @PathVariable(
             value = "formatterId"
         ) final String formatterId,
@@ -224,6 +219,8 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
         final HttpServletRequest servletRequest) throws Exception {
 
         Locale locale = languageUtils.parseAcceptLanguage(servletRequest.getLocales());
+
+        String acceptHeader = StringUtils.isBlank(request.getHeader(HttpHeaders.ACCEPT)) ? MediaType.TEXT_HTML_VALUE : request.getHeader(HttpHeaders.ACCEPT);
 
         // TODO :
         // if text/html > xsl_view

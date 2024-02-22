@@ -177,7 +177,6 @@ This section is for configuring the map shown when viewing a record.
     -   **wmts**: generic WMTS layer, required properties: `name, url`.
     -   **tms**: generic TMS layer, required property: `url`.
     -   **osm**: OpenStreetMap default layer, no other property required.
-    -   **stamen**: Stamen layers, required property: `name`.
     -   **bing_aerial**: Bing Aerial background, required property: `key` containing the license key.
 
 ![](img/ui-settings-mapviewerlayers.png)
@@ -189,11 +188,6 @@ All layers can also have some optional extra properties:
 
 Examples of layers:
 
-This layer will use OpenStreetMap Stamen style, but only when the map is in `EPSG:3857`:
-
-``` json
-{"type":"stamen","projectionList":["EPSG:3857"]}
-```
 
 This WMS layer will be shown but only when the map is on `EPSG:4326`:
 

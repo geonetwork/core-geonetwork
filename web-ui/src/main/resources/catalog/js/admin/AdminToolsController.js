@@ -287,27 +287,6 @@
         );
       };
 
-      $scope.clearXLinkCache = function () {
-        return $http.get("admin.index.rebuildxlinks").then(
-          function (response) {
-            $rootScope.$broadcast("StatusUpdated", {
-              msg: $translate.instant("xlinkCacheCleared"),
-              timeout: 2,
-              type: "success"
-            });
-            // TODO: Does this is asynch and make the search unavailable?
-          },
-          function (response) {
-            $rootScope.$broadcast("StatusUpdated", {
-              title: $translate.instant("rebuildIndexError"),
-              error: response.data,
-              timeout: 0,
-              type: "danger"
-            });
-          }
-        );
-      };
-
       $scope.clearJsCache = function () {
         return $http.get("../../static/wroAPI/reloadModel").then(function (response) {
           $http.get("../../static/wroAPI/reloadCache").then(function (response) {
