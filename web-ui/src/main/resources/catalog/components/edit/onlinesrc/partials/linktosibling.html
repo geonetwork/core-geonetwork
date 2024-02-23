@@ -67,15 +67,23 @@
           </div>
           <div>
             <div class="list-group fixed gn-nopadding-left gn-nopadding-right">
-              <a
-                href=""
-                data-ng-repeat="md in searchResults.records"
-                class="list-group-item"
-                data-ng-click="addToSelection(md, config.associationType, config.initiativeType)"
-              >
-                {{md.resourceTitle}}
-                <span class="fa fa-plus pull-right"></span>
-              </a>
+              <div class="list-group-item" data-ng-repeat="md in searchResults.records">
+                <a
+                  class="pull-right gn-margin-left-sm"
+                  target="_blank"
+                  href="catalog.search#/metadata/{{md.uuid}}"
+                >
+                  <span class="fa fa-eye"></span
+                ></a>
+                <div
+                  class="d-inline"
+                  style="cursor: pointer"
+                  data-ng-click="addToSelection(md, config.associationType, config.initiativeType)"
+                >
+                  {{md.resourceTitle}}
+                  <span class="fa fa-plus pull-right"></span>
+                </div>
+              </div>
             </div>
           </div>
           <div data-gn-pagination="paginationInfo" />
@@ -88,6 +96,7 @@
         data-doi-url="config.sources['doiapi'].url"
         data-doi-prefix="config.sources['doiapi'].params.prefix"
         data-doi-query-pattern="config.sources['doiapi'].params.query"
+        data-mode="add"
         data-add-to-selection-cb="addToSelection(record, config.associationType, config.initiativeType)"
         data-remove-from-selection-cb="removeFromSelection(record)"
         data-ng-show="config.sources['doiapi']"

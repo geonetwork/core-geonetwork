@@ -41,19 +41,20 @@
         <li
           data-ng-repeat="md in results"
           class="list-group-item"
-          data-ng-class="isSelected(md) ? 'active' : ''"
+          data-ng-class="(mode == 'select' && isSelected(md)) ? 'active' : ''"
         >
+          <div class="pull-right gn-margin-left-sm">
+            <a target="_blank" href="{{md.remoteUrl}}">
+              <span class="fa fa-eye"></span
+            ></a>
+          </div>
           <div
             class="d-inline"
             style="cursor: pointer"
             data-ng-click="updateSelection(md, associationType, initiativeType)"
           >
             {{md.resourceTitle}}
-          </div>
-          <div class="pull-right">
-            <a class="pull-right" target="_blank" href="{{md.remoteUrl}}">
-              <span class="fa fa-eye"></span
-            ></a>
+            <span data-ng-if="mode == 'add'" class="fa fa-plus pull-right"></span>
           </div>
         </li>
       </ul>

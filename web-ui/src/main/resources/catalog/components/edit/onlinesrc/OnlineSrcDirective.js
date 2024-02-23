@@ -2449,12 +2449,15 @@
             doiUrl: "=?",
             doiPrefix: "=?",
             doiQueryPattern: "=?",
+            mode: "@",
             addToSelectionCb: "&?",
             removeFromSelectionCb: "&?"
           },
           templateUrl:
             "../../catalog/components/edit/onlinesrc/" + "partials/doisearchpanel.html",
           link: function (scope, element, attrs) {
+            // select (single value) / add mode (used in siblings dialog)
+            scope.mode = scope.mode || "select";
             scope.updateSelection = angular.isFunction(scope.addToSelectionCb)
               ? function (md) {
                   if (scope.isSelected(md)) {
