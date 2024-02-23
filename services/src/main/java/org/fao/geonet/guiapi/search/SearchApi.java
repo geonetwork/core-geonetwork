@@ -113,8 +113,8 @@ public class SearchApi {
 
             response.getWriter().write(
                 new XsltResponseWriter(null, "search", language)
-                    .withJson("catalog/locales/en-core.json")
-                    .withJson("catalog/locales/en-search.json")
+                    .withJson(String.format("catalog/locales/%s-core.json", language2code))
+                    .withJson(String.format("catalog/locales/%s-search.json", language2code))
                     .withXml(results)
                     .withXsl(
                         isRdf ?
