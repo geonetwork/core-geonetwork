@@ -1,6 +1,7 @@
 <div>
   <form class="form-horizontal" role="form" data-ng-search-form="">
     <input type="hidden" name="_csrf" value="{{csrf}}" />
+
     <div class="onlinesrc-container">
       <div class="form-group" data-ng-show="::config.sources.metadataStore">
         <label class="col-sm-2 control-label">
@@ -25,12 +26,13 @@
             />
           </div>
 
+          <!-- $parent.selectRecords as data-ng-search-form introduces a new scope -->
           <div
             data-gn-search-form-results=""
             data-gn-search-form-results-mode="title"
             data-gn-search-form-results-selection-mode="local simple"
             data-search-results="searchResults"
-            data-select-records="selectRecords"
+            data-select-records="$parent.selectRecords"
             data-pagination-info="paginationInfo"
           ></div>
         </div>

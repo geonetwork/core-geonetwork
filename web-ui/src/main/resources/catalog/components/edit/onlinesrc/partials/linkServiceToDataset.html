@@ -26,12 +26,13 @@
             />
           </div>
 
+          <!-- $parent.stateObj.selectRecords as data-ng-search-form introduces a new scope -->
           <div
             data-gn-search-form-results
             data-gn-search-form-results-mode="simple"
             data-gn-search-form-results-selection-mode="local simple"
             data-search-results="searchResults"
-            data-select-records="stateObj.selectRecords"
+            data-select-records="$parent.stateObj.selectRecords"
             data-pagination-info="paginationInfo"
           ></div>
         </div>
