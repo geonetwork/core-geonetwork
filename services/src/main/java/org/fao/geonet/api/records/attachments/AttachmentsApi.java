@@ -271,10 +271,11 @@ public class AttachmentsApi {
         @Parameter(hidden = true) HttpServletRequest request,
         @Parameter(hidden = true) HttpServletResponse response
     ) throws Exception {
-        ServiceContext context = ApiUtils.createServiceContext(request);
 
         // To support files in subfolders
-        String resourceIdFile = new AntPathMatcher().extractPathWithinPattern(request.getAttribute(HandlerMapping.BEST_MATCHING_PATTERN_ATTRIBUTE).toString(),request.getRequestURI());
+        String resourceIdFile = retrieveResourceFileFromUrl(request);
+
+        ServiceContext context = ApiUtils.createServiceContext(request);
 
         try (Store.ResourceHolder file = store.getResource(context, metadataUuid, resourceIdFile, approved)) {
 
@@ -306,7 +307,7 @@ public class AttachmentsApi {
     @PreAuthorize("hasAuthority('Editor')")
     @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "Attachment visibility updated."),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)})
-    @RequestMapping(value = "/{resourceId:.+}", method = RequestMethod.PATCH, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/{resourceId}/**", method = RequestMethod.PATCH, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.CREATED)
     @ResponseBody
     public MetadataResource patchResource(
@@ -315,13 +316,17 @@ public class AttachmentsApi {
         @Parameter(description = "The visibility", required = true, example = "public") @RequestParam(required = true) MetadataResourceVisibility visibility,
         @Parameter(description = "Use approved version or not", example = "true") @RequestParam(required = false, defaultValue = "false") Boolean approved,
         @Parameter(hidden = true) HttpServletRequest request) throws Exception {
+
+        // To support files in subfolders
+        String resourceIdFile = retrieveResourceFileFromUrl(request);
+
         ServiceContext context = ApiUtils.createServiceContext(request);
-        return store.patchResourceStatus(context, metadataUuid, resourceId, visibility, approved);
+        return store.patchResourceStatus(context, metadataUuid, resourceIdFile, visibility, approved);
     }
 
     @io.swagger.v3.oas.annotations.Operation(summary = "Delete a metadata resource")
     @PreAuthorize("hasAuthority('Editor')")
-    @RequestMapping(value = "/{resourceId:.+}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/{resourceId}/**", method = RequestMethod.DELETE)
     @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Attachment visibility removed."),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)})
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
@@ -330,8 +335,12 @@ public class AttachmentsApi {
         @Parameter(description = "The resource identifier (ie. filename)", required = true) @PathVariable String resourceId,
         @Parameter(description = "Use approved version or not", example = "true") @RequestParam(required = false, defaultValue = "false") Boolean approved,
         @Parameter(hidden = true) HttpServletRequest request) throws Exception {
+
+        // To support files in subfolders
+        String resourceIdFile = retrieveResourceFileFromUrl(request);
+
         ServiceContext context = ApiUtils.createServiceContext(request);
-        store.delResource(context, metadataUuid, resourceId, approved);
+        store.delResource(context, metadataUuid, resourceIdFile, approved);
 
         String metadataIdString = ApiUtils.getInternalId(metadataUuid, approved);
         if (metadataIdString != null) {
@@ -340,5 +349,10 @@ public class AttachmentsApi {
             new AttachmentDeletedEvent(metadataId, userSession.getUserIdAsInt(), resourceId)
                 .publish(ApplicationContextHolder.get());
         }
+    }
+
+    private String retrieveResourceFileFromUrl(HttpServletRequest request) {
+        return new AntPathMatcher().extractPathWithinPattern(
+            request.getAttribute(HandlerMapping.BEST_MATCHING_PATTERN_ATTRIBUTE).toString(),request.getRequestURI());
     }
 }
