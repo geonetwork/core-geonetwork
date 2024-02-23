@@ -50,10 +50,10 @@ public class StoreFolderConfig {
     private String folderStructureFallback;
 
     @Value("${datastore.folderStructureNonPublic}")
-    private String folderStructureNonPublic;
+    private String folderStructureNonPublic = "";
 
     @Value("${datastore.folderStructureFallbackNonPublic}")
-    private String folderStructureFallbackNonPublic;
+    private String folderStructureFallbackNonPublic = "";
 
     StoreFolderConfig() {
 
@@ -81,5 +81,13 @@ public class StoreFolderConfig {
 
     public String getFolderStructureFallbackNonPublic() {
         return StringUtils.isNotBlank(folderStructureFallbackNonPublic) ? folderStructureFallbackNonPublic : getFolderStructureFallback();
+    }
+
+    public boolean hasCustomFolderStructureNonPublic() {
+        return getFolderStructureNonPublic() != getFolderStructure();
+    }
+
+    public boolean hasFolderStructureFallbackNonPublic() {
+        return getFolderStructureFallbackNonPublic() != getFolderStructureFallback();
     }
 }

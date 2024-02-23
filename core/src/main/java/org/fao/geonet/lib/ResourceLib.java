@@ -263,18 +263,21 @@ public class ResourceLib {
             try {
                 String folderStructure = isPublished ?
                     filesystemStoreConfig.getFolderStructure() : filesystemStoreConfig.getFolderStructureNonPublic();
-                path = replaceTokens(jsonContext, folderStructure.split(File.separator), isPublished);
+
+                boolean hasCustomFolderStructureNonPublic = filesystemStoreConfig.hasCustomFolderStructureNonPublic();
+                path = replaceTokens(jsonContext, folderStructure.split(File.separator), hasCustomFolderStructureNonPublic);
             } catch (Exception ex) {
                 String folderStructure = isPublished ?
                     filesystemStoreConfig.getFolderStructureFallback() : filesystemStoreConfig.getFolderStructureFallbackNonPublic();
 
-                path = replaceTokens(jsonContext, folderStructure.split(File.separator), isPublished);
+                boolean hasFolderStructureFallbackNonPublic = filesystemStoreConfig.hasFolderStructureFallbackNonPublic();
+                path = replaceTokens(jsonContext, folderStructure.split(File.separator), hasFolderStructureFallbackNonPublic);
             }
 
             return dataDir.resolve(path);
         }
 
-        private String replaceTokens(DocumentContext jsonContext, String[] tokens, boolean isPublished) {
+        private String replaceTokens(DocumentContext jsonContext, String[] tokens, boolean hasCustomPrivateFolder) {
             List<String> replacedTokens = new ArrayList<>();
             for (int i = 0; i < tokens.length; i++) {
                 String valueToAdd = "";
@@ -290,7 +293,7 @@ public class ResourceLib {
                     valueToAdd = token;
                 }
 
-                if ((i == tokens.length - 1) && !isPublished) {
+                if ((i == tokens.length - 1) && !hasCustomPrivateFolder) {
                     valueToAdd = valueToAdd + "-draft";
                 }
 

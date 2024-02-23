@@ -108,8 +108,6 @@ public class FilesystemStore extends AbstractStore {
                     new Date(Files.getLastModifiedTime(path).toMillis()), approved);
                 resourceList.add(resource);
             }
-        } catch (IOException ex) {
-            ex.printStackTrace();
         }
 
         resourceList.sort(MetadataResourceVisibility.sortByFileName);
