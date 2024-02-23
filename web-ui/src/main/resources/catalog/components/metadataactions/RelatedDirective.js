@@ -1295,7 +1295,8 @@
    *
    */
   module.directive("gnAssociatedResourcesPanel", [
-    function () {
+    "gnCurrentEdit",
+    function (gnCurrentEdit) {
       return {
         restrict: "A",
         templateUrl: function (elem, attrs) {
@@ -1308,7 +1309,9 @@
           md: "=gnAssociatedResourcesPanel",
           mode: "="
         },
-        link: function (scope, element, attrs) {}
+        link: function (scope, element, attrs) {
+          gnCurrentEdit.associatedPanelConfigId = attrs["editorConfig"] || "default";
+        }
       };
     }
   ]);

@@ -39,18 +39,16 @@
       <div
         class="form-group gn-nomargin-bottom"
         data-gn-doi-search-panel=""
-        data-association-type="::config.associationType"
-        data-initiative-type="::config.initiativeType"
-        data-doi-url="::config.sources['doiapi'].url"
-        data-doi-prefix="::config.sources['doiapi'].params.prefix"
-        data-doi-query-pattern="::config.sources['doiapi'].params.query"
-        data-add-to-selection-cb="addToSelection(record, config.associationType, config.initiativeType)"
-        data-ng-show="::config.sources['doiapi']"
+        data-doi-url="config.sources['doiapi'].url"
+        data-doi-prefix="config.sources['doiapi'].params.prefix"
+        data-doi-query-pattern="config.sources['doiapi'].params.query"
+        data-add-to-selection-cb="selectRecords.push(record)"
+        data-ng-show="config.sources['doiapi']"
       ></div>
 
       <div
         data-gn-remote-record-selector=""
-        data-ng-show="::config.sources['remoteurl']"
+        data-ng-show="config.sources['remoteurl']"
       ></div>
     </div>
     <div class="">

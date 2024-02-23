@@ -1980,6 +1980,10 @@
                   }
                 };
 
+                scope.addToSelection = function (record) {
+                  scope.stateObj.selectRecords.length = 0;
+                  scope.stateObj.selectRecords.push(record);
+                };
                 /**
                  * Watch the result metadata selection change.
                  * selectRecords is a value of the SearchFormController scope.
@@ -2168,7 +2172,6 @@
                   scope.$broadcast("resetSearch", searchParams);
                   scope.selectRecords = [];
                 });
-
                 scope.gnOnlinesrc = gnOnlinesrc;
               }
             };
@@ -2335,7 +2338,7 @@
                 /**
                  * Add the result metadata to the selection.
                  * Add it only it associationType & initiativeType are set.
-                 * If the metadata alreay exists, it override it with the new
+                 * If the metadata already exists, it overrides it with the new
                  * given associationType/initiativeType.
                  */
                 scope.addToSelection = function (md, associationType, initiativeType) {
