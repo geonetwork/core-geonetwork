@@ -73,7 +73,7 @@
                   target="_blank"
                   href="catalog.search#/metadata/{{md.uuid}}"
                 >
-                  <span class="fa fa-eye"></span
+                  <span class="fa fa-eye" style="vertical-align: middle"></span
                 ></a>
                 <div
                   class="d-inline"
@@ -81,7 +81,9 @@
                   data-ng-click="addToSelection(md, config.associationType, config.initiativeType)"
                 >
                   {{md.resourceTitle}}
-                  <span class="fa fa-plus pull-right"></span>
+                  <div class="pull-right">
+                    <span class="fa fa-plus"></span>
+                  </div>
                 </div>
               </div>
             </div>
