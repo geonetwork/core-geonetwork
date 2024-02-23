@@ -208,7 +208,7 @@
             scope.multipleSelection = false;
 
             scope.$watch("config.sources.remoteurl", function (newVal, oldVal) {
-              if (newVal != oldVal) {
+              if (newVal != oldVal && newVal) {
                 scope.multipleSelection = newVal.multiple;
               }
             });
@@ -2445,10 +2445,12 @@
               scope.results = [];
             };
 
+            scope.$on("resetSearch", scope.clearSearch);
+
             scope.search = function () {
               var searchQuery =
                 scope.queryValue !== ""
-                  ? scope.doiQueryPattern.replace("{query}", scope.queryValue)
+                  ? scope.doiQueryPattern.replaceAll("{query}", scope.queryValue)
                   : "";
               scope.isSearching = true;
               gnDoiSearchService.search(scope.doiUrl, scope.doiPrefix, searchQuery).then(
