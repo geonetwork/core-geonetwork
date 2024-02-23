@@ -1984,6 +1984,14 @@
                   scope.stateObj.selectRecords.length = 0;
                   scope.stateObj.selectRecords.push(record);
                 };
+
+                scope.removeFromSelection = function (record) {
+                  var index = scope.stateObj.selectRecords.indexOf(record);
+                  if (index > -1) {
+                    scope.stateObj.selectRecords.splice(index, 1);
+                  }
+                };
+
                 /**
                  * Watch the result metadata selection change.
                  * selectRecords is a value of the SearchFormController scope.
@@ -2149,6 +2157,18 @@
                   }
 
                   return true;
+                };
+
+                scope.addToSelection = function (record) {
+                  scope.selectRecords.length = 0;
+                  scope.selectRecords.push(record);
+                };
+
+                scope.removeFromSelection = function (record) {
+                  var index = scope.selectRecords.indexOf(record);
+                  if (index > -1) {
+                    scope.selectRecords.splice(index, 1);
+                  }
                 };
 
                 /**
@@ -2429,16 +2449,29 @@
             doiUrl: "=?",
             doiPrefix: "=?",
             doiQueryPattern: "=?",
-            addToSelectionCb: "&?"
+            addToSelectionCb: "&?",
+            removeFromSelectionCb: "&?"
           },
           templateUrl:
             "../../catalog/components/edit/onlinesrc/" + "partials/doisearchpanel.html",
           link: function (scope, element, attrs) {
-            scope.addToSelection = angular.isFunction(scope.addToSelectionCb)
+            scope.updateSelection = angular.isFunction(scope.addToSelectionCb)
               ? function (md) {
-                  scope.addToSelectionCb({ record: md });
+                  if (scope.isSelected(md)) {
+                    scope.selectedMd = null;
+                    if (angular.isFunction(scope.removeFromSelectionCb)) {
+                      scope.removeFromSelectionCb({ record: md });
+                    }
+                  } else {
+                    scope.selectedMd = md;
+                    scope.addToSelectionCb({ record: md });
+                  }
                 }
               : undefined;
+
+            scope.isSelected = function (md) {
+              return md == scope.selectedMd;
+            };
 
             scope.queryValue = "";
             scope.isSearching = false;

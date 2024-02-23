@@ -37,17 +37,26 @@
         zarooResult
       </p>
 
-      <div class="list-group gn-nopadding-left gn-nopadding-right">
-        <a
-          href=""
+      <ul class="list-group gn-nopadding-left gn-nopadding-right">
+        <li
           data-ng-repeat="md in results"
           class="list-group-item"
-          data-ng-click="addToSelection(md, associationType, initiativeType)"
+          data-ng-class="isSelected(md) ? 'active' : ''"
         >
-          {{md.resourceTitle}}
-          <span class="fa fa-plus pull-right"></span>
-        </a>
-      </div>
+          <div
+            class="d-inline"
+            style="cursor: pointer"
+            data-ng-click="updateSelection(md, associationType, initiativeType)"
+          >
+            {{md.resourceTitle}}
+          </div>
+          <div class="pull-right">
+            <a class="pull-right" target="_blank" href="{{md.remoteUrl}}">
+              <span class="fa fa-eye"></span
+            ></a>
+          </div>
+        </li>
+      </ul>
     </div>
   </div>
 </div>
