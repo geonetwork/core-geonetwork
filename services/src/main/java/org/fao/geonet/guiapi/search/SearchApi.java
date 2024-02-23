@@ -110,6 +110,7 @@ public class SearchApi {
         } else {
             Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
             String language = IsoLanguagesMapper.iso639_2T_to_iso639_2B(locale.getISO3Language());
+            String language2code = XslUtil.twoCharLangCode(language, "eng").toLowerCase();
 
             response.getWriter().write(
                 new XsltResponseWriter(null, "search", language)
