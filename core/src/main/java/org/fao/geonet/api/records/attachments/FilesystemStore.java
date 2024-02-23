@@ -49,7 +49,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Stream;
 
 /**
  * A FileSystemStore store resources files in the catalog data directory. Each metadata record as a directory in the data directory
@@ -91,9 +90,14 @@ public class FilesystemStore extends AbstractStore {
         if (filter == null) {
             filter = FilesystemStore.DEFAULT_FILTER;
         }
+        filter = "*";
         try (DirectoryStream<Path> directoryStream = Files.newDirectoryStream(resourceTypeDir, filter)) {
-            for (Path path: directoryStream) {
-                MetadataResource resource = new FilesystemStoreResource(metadataUuid, metadataId, path.getFileName().toString(),
+            List<Path> processedFilesInFolder = processFolder(directoryStream, filter);
+
+            for (Path path: processedFilesInFolder) {
+                String fileName = path.toAbsolutePath().toString().replace(metadataDir.toString() + File.separator, "");
+
+                MetadataResource resource = new FilesystemStoreResource(metadataUuid, metadataId, fileName,
                                                                         settingManager.getNodeURL() + "api/records/", visibilityToUse,
                                                                         Files.size(path),
                                                                         new Date(Files.getLastModifiedTime(path).toMillis()), approved);
@@ -102,9 +106,26 @@ public class FilesystemStore extends AbstractStore {
         } catch (IOException ignored) {
         }
 
+
         resourceList.sort(MetadataResourceVisibility.sortByFileName);
 
         return resourceList;
+    }
+
+    private List<Path> processFolder(DirectoryStream<Path> directoryStream, String filter) throws IOException {
+        List<Path> results = new ArrayList<>();
+
+        for (Path path: directoryStream) {
+            if (Files.isDirectory(path)) {
+                try (DirectoryStream<Path> directoryStream2 = Files.newDirectoryStream(path, filter)) {
+                    results.addAll(processFolder(directoryStream2, filter));
+                }
+            } else if (!Files.isHidden(path)) {
+                results.add(path);
+            }
+        }
+
+        return results;
     }
 
     @Override

@@ -38,7 +38,6 @@ import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Operation;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.exceptions.OperationNotAllowedEx;
-import org.fao.geonet.index.es.EsRestClient;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.search.EsSearchManager;
