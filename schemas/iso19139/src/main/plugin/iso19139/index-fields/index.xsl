@@ -1332,7 +1332,7 @@
         <xsl:variable name="getRecordByIdId">
           <xsl:if test="@xlink:href != ''">
             <xsl:analyze-string select="@xlink:href"
-                                regex=".*[i|I][d|D]=([_\w\-\.\{{\}}]*).*">
+                                regex=".*[i|I][d|D]=([a-zA-Z0-9\-\.\{{\}}]*).*">
               <xsl:matching-substring>
                 <xsl:value-of select="regex-group(1)"/>
               </xsl:matching-substring>
