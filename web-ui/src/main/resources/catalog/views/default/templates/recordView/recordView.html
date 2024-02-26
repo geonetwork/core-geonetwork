@@ -92,14 +92,28 @@
 
         <div class="pull-right">
           <!--record view menu static pages-->
-          <div class="btn-group pull-left" role="group">
+          <div data-ng-show="showStaticPageMenu" class="btn-group pull-left" role="group">
+            <button
+              type="button"
+              class="btn btn-default dropdown-toggle"
+              data-toggle="dropdown"
+              aria-label="{{'additionalLinks' | translate}}"
+              aria-expanded="false"
+            >
+              <span class="fa fa-light fa-arrow-up-right-from-square"></span>
+              <span data-translate="" class="hidden-sm hidden-xs">additionalLinks</span>
+              <span class="caret"></span>
+            </button>
+
             <ul
-              class="nav navbar-nav"
+              class="dropdown-menu"
+              role="menu"
               gn-static-pages-list-viewer
               data-section="record_view_menu"
               data-language="{{lang}}"
             ></ul>
           </div>
+
           <!-- edit -->
           <div class="btn-group pull-left" role="group">
             <a

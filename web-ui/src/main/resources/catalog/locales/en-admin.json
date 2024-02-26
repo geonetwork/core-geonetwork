@@ -1344,6 +1344,8 @@
     "ui-isSocialbarEnabled-help": "Show the button bar with all the social buttons (facebook, twitter, etc.)",
     "ui-showStatusWatermarkFor": "Show a watermark",
     "ui-showStatusWatermarkFor-help": "List of codelist values (eg. completed,historicalArchive,obsolete,superseded) for which the record status as a watermark displayed through the text",
+    "ui-showStaticPageMenu": "Show Additional Links",
+    "ui-showStaticPageMenu-help": "List of Additional Links configured as Static Pages type Record View Page",
     "ui-showStatusTopBarFor": "Show status bar",
     "ui-showStatusTopBarFor-help": "List of codelist values (eg. completed,historicalArchive,obsolete,superseded) for which the record status as a bar at the top of the record",
     "ui-isLogoInHeader": "Show the logo in header",
