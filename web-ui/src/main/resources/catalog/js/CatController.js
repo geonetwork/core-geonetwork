@@ -859,6 +859,7 @@
             isSocialbarEnabled: true,
             showStatusWatermarkFor: "",
             showStatusTopBarFor: "",
+            showStaticPageMenu: false,
             showCitation: {
               enabled: false,
               // if: {'documentStandard': ['iso19115-3.2018']}
