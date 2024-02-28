@@ -268,17 +268,14 @@
                             <tr data-ng-repeat="errorMsg in ::indexMessages(md)">
                               <td>
                                 <dl>
-                                  <dt>{{::indexMessageTitle(errorMsg) | translate}}</dt>
-                                  <dd>
-                                    <span
-                                      >Error reason:
-                                      {{::indexMessageReason(errorMsg)}}</span
-                                    >
-                                    <pre
-                                      data-ng-hide="::rawIndexMessageDetail(errorMsg).length == 0"
-                                    >
-{{::indexMessageDetail(errorMsg)}}</pre
-                                    >
+                                  <dt>
+                                    {{('indexingError-'+errorMsg.type) | translate}}
+                                  </dt>
+                                  <dd
+                                    data-translate-values="errorMsg.values"
+                                    data-translate=""
+                                  >
+                                    {{errorMsg.string}}
                                   </dd>
                                 </dl>
                               </td>

@@ -1030,6 +1030,8 @@
     "GNIDX-GEO" : "Error indexing geometry",
     "GNIDX-BADNUMVALUE" : "Error converting lucene index value to a number",
     "indexingErrors" : "Indexing Errors",
+    "indexingError-warning": "Indexing Warning",
+    "indexingError-error": "Indexing Error",
     "manageSources" : "Sources",
     "threadStatus" : "Thread Status",
     "doSaveConfirm" : "Do you want to save your changes?",
