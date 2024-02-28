@@ -20,7 +20,7 @@ jobs:
           show-progress: 'false'
 
       - name: Setup Java JDK
-        uses: actions/setup-java@v4.0.0
+        uses: actions/setup-java@v4.1.0
         with:
           java-version: 11
           # Java distribution. See the list of supported distributions in README file
