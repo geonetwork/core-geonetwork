@@ -1,8 +1,5 @@
 package org.fao.geonet.kernel.security.openidconnect.bearer;
 
-import org.springframework.security.oauth2.core.OAuth2AccessToken;
-
-import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 
