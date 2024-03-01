@@ -338,7 +338,16 @@
                 </xsl:element>
               </xsl:when>
               <xsl:otherwise>
-                <indexingErrorMsg>Warning / Date <xsl:value-of select="$dateType"/> with value '<xsl:value-of select="$date"/>' was not a valid date format.</indexingErrorMsg>
+                <indexingErrorMsg type="object">
+                  {
+                    "string": "indexingErrorMsg-invalidDateFormat",
+                    "type": "warning",
+                    "values": {
+                      "dateType": "<xsl:value-of select="util:escapeForJson($dateType)"/>",
+                      "date": "<xsl:value-of select="util:escapeForJson($date)"/>"
+                    }
+                  }
+                </indexingErrorMsg>
               </xsl:otherwise>
             </xsl:choose>
           </xsl:for-each>
@@ -592,7 +601,16 @@
                      records in the admin. -->
                     <xsl:if test="$thesaurusId != '' and $keywordUri = ''">
                       <errors>
-                        <indexingErrorMsg>Warning / Keyword <xsl:value-of select="(*/text())[1]"/> not found in <xsl:value-of select="$thesaurusId"/>.</indexingErrorMsg>
+                        <indexingErrorMsg type="object">
+                          {
+                            "string": "indexingErrorMsg-keywordNotFoundInThesaurus",
+                            "type": "warning",
+                            "values": {
+                              "keyword": "<xsl:value-of select="util:escapeForJson((*/text())[1])"/>",
+                              "thesaurus": "<xsl:value-of select="util:escapeForJson($thesaurusId)"/>"
+                            }
+                          }
+                        </indexingErrorMsg>
                       </errors>
                     </xsl:if>
 
@@ -840,14 +858,29 @@
                 }</resourceTemporalExtentDateRange>
               </xsl:when>
               <xsl:otherwise>
-                <indexingErrorMsg>Warning / Field resourceTemporalDateRange / Lower and upper bounds empty. Date range not indexed.</indexingErrorMsg>
+                <indexingErrorMsg type="object">
+                  {
+                  "string": "indexingErrorMsg-invalidBounds",
+                  "type": "warning",
+                  "values": { }
+                  }
+                </indexingErrorMsg>
               </xsl:otherwise>
             </xsl:choose>
 
             <xsl:if test="$zuluStartDate != ''
                           and $zuluEndDate != ''
                           and $start &gt; $end">
-              <indexingErrorMsg>Warning / Field resourceTemporalDateRange / Lower range bound '<xsl:value-of select="$start"/>' can not be greater than upper bound '<xsl:value-of select="$end"/>'.</indexingErrorMsg>
+              <indexingErrorMsg type="object">
+                {
+                  "string": "indexingErrorMsg-temporalRangeLowerGreaterThanUpper",
+                  "type": "warning",
+                  "values": {
+                    "lowerBound": "<xsl:value-of select="util:escapeForJson($start)"/>",
+                    "upperBound": "<xsl:value-of select="util:escapeForJson($end)"/>"
+                  }
+                }
+              </indexingErrorMsg>
             </xsl:if>
 
 
@@ -1173,12 +1206,12 @@
         <xsl:for-each select="mdq:report/*[
                 normalize-space(mdq:measure/*/mdq:nameOfMeasure/gco:CharacterString) != ''
                 or normalize-space(mdq:measure/*/mdq:measureDescription/gco:CharacterString) != ''
-                ]/mdq:result/mdq:DQ_QuantitativeResult">
+                ]/mdq:result/(mdq:DQ_QuantitativeResult|mdq:DQ_DescriptiveResult)">
 
           <xsl:variable name="name"
                         select="(../../mdq:measure/*/mdq:nameOfMeasure/gco:CharacterString)[1]"/>
           <xsl:variable name="value"
-                        select="mdq:value"/>
+                        select="mdq:value/gco:Record[. != '']|mdq:statement/gco:CharacterString[. != '']"/>
           <xsl:variable name="unit"
                         select="mdq:valueUnit//gml:identifier"/>
           <xsl:variable name="description"
@@ -1196,7 +1229,7 @@
               "date": "<xsl:value-of select="util:escapeForJson($measureDate)"/>",
             </xsl:if>
             <!-- First value only. -->
-            "value": "<xsl:value-of select="util:escapeForJson($value/gco:Record[1])"/>",
+            "value": "<xsl:value-of select="util:escapeForJson($value[1])"/>",
             <xsl:if test="$unit != ''">
               "unit": "<xsl:value-of select="util:escapeForJson($unit)"/>",
             </xsl:if>
@@ -1204,7 +1237,7 @@
             }
           </measure>
 
-          <xsl:for-each select="mdq:value/gco:Record[. != '']">
+          <xsl:for-each select="$value">
             <xsl:element name="measure_{gn-fn-index:build-field-name($name)}">
               <xsl:value-of select="."/>
             </xsl:element>

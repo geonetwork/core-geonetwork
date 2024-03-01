@@ -383,10 +383,10 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
             if (!schemaManager.existsSchema(schema)) {
                 fields.put(IndexFields.DRAFT, "n");
                 fields.put(IndexFields.INDEXING_ERROR_FIELD, true);
-                fields.put(IndexFields.INDEXING_ERROR_MSG, String.format(
-                    "Schema '%s' is not registered in this catalog. Install it or remove those records",
-                    schema
-                ));
+                fields.put(IndexFields.INDEXING_ERROR_MSG,
+                    searchManager.createIndexingErrorMsgObject("indexingErrorMsg-schemaNotRegistered",
+                        "error",
+                        Map.of("record", metadataId, "schema", schema)));
                 searchManager.index(null, md, indexKey, fields, metadataType,
                     forceRefreshReaders, indexingMode);
                 Log.error(Geonet.DATA_MANAGER, String.format(
@@ -548,6 +548,7 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
         Log.warning(Geonet.INDEX_ENGINE, String.format("Record #%s (mode: %s) indexed in %dms",
             metadataId, indexingMode, System.currentTimeMillis() - start));
     }
+
 
     @Override
     public void indexMetadataPrivileges(String uuid, int id) throws Exception {

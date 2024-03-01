@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2023 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2024 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -63,7 +63,7 @@ public class OverviewIndexFieldUpdater {
         SearchResponse response = null;
         try {
             response = searchManager.query(String.format(
-                "+id:\"%s\" _exists_:overview.url -_exists_:overview.data",
+                "+_id:\"%s\" _exists_:overview.url -_exists_:overview.data",
                 id), null, source, 0, 1);
             ObjectMapper objectMapper = new ObjectMapper();
             response.hits().hits().forEach(h -> {

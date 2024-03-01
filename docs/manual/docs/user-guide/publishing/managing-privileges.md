@@ -20,7 +20,7 @@ Below is a brief description for each privilege to help you identify which ones 
 
 **Interactive Map**: Users in the specified group/s are able to get an interactive map. The interactive map has to be created separately using a Web Map Server such as GeoServer, which is distributed with GeoNetwork.
 
-**Featured**: When randomly selected by GeoNetwork, the metadata record can appear in the `ed` section of the GeoNetwork home page.
+**Featured**: When randomly selected by GeoNetwork, the metadata record can appear in the `Featured` section of the GeoNetwork home page.
 
 **Notify**: Users in the specified group receive notification if data attached to the metadata record is downloaded.
 
