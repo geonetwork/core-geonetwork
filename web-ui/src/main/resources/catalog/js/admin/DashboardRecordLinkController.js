@@ -84,7 +84,7 @@
         $http.post("../api/records/links/analyze?analyze=true");
       };
       $scope.testLink = function (url) {
-        $http.post("../api/records/links/analyze?url=" + url);
+        $http.post("../api/records/links/analyzeurl?url=" + encodeURIComponent(url));
       };
 
       $scope.downloadAsCsv = function () {
