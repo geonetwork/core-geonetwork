@@ -141,6 +141,61 @@
         };
       }
     ])
+    .directive("gnDataAnalyzerButton", [
+      "gnEditor",
+      "gnCurrentEdit",
+      "$http",
+      "gnSuggestion",
+      function (gnEditor, gnCurrentEdit, $http, gnSuggestion) {
+        return {
+          restrict: "A",
+          replace: true,
+          scope: {
+            processId: "@gnDataAnalyzerButton",
+            params: "@",
+            name: "@",
+            datasource: "@",
+            help: "@",
+            icon: "@",
+            target: "@?"
+          },
+          templateUrl:
+            "../../catalog/components/edit/suggestion/partials/dataanalyzerbutton.html",
+          link: function (scope, element, attrs) {
+            scope.sugg = undefined;
+            scope.gnSuggestion = gnSuggestion;
+            scope.info = function () {
+              var url =
+                "../api/data/" +
+                gnCurrentEdit.uuid +
+                "/data/analyze?datasource=" +
+                scope.datasource.replaceAll(/.*\/attachments\//g, "attachments/");
+              window.open(url, "_blank");
+            };
+            scope.preview = function () {
+              var url =
+                "../api/data/" +
+                gnCurrentEdit.uuid +
+                "/data/analysis/preview?datasource=" +
+                scope.datasource.replaceAll(/.*\/attachments\//g, "attachments/");
+              window.open(url, "_blank");
+            };
+            scope.save = function () {
+              $http
+                .put(
+                  "../api/data/" +
+                    gnCurrentEdit.uuid +
+                    "/data/analysis/apply?datasource=" +
+                    scope.datasource.replaceAll(/.*\/attachments\//g, "attachments/")
+                )
+                .then(function (response) {
+                  gnEditor.refreshEditorForm();
+                });
+            };
+          }
+        };
+      }
+    ])
     .directive("gnRunSuggestion", [
       "gnSuggestion",
       "$interpolate",

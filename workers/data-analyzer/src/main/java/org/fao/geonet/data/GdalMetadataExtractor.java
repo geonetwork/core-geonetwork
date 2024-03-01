@@ -30,7 +30,7 @@ public class GdalMetadataExtractor {
 
     private final String defaultOgrinfoDescribe = " -json -so -al ${datasetConnection}";
 
-    @Value("${data.ingester.gdal.ogrinfo.describe:}")
+    @Value("${data.ingester.gdal.ogrinfo.describe}")
     private String ogrinfoDescribe;
 
     private final String defaultOgrinfoVersion = " --version";
@@ -38,7 +38,7 @@ public class GdalMetadataExtractor {
     @Value("${data.ingester.gdal.ogrinfo.version:}")
     private String ogrinfoVersion;
 
-    private static final String LOGGER_NAME = "geonetwork.data.analysis.gdal";
+    public static final String LOGGER_NAME = "geonetwork.data.analysis.gdal";
     private static final Logger LOGGER = LoggerFactory.getLogger(GdalMetadataExtractor.LOGGER_NAME);
 
     @Autowired
@@ -65,7 +65,7 @@ public class GdalMetadataExtractor {
             throw new IOException(String.format("Invalid datasource name %s.", datasetConnection));
         }
         String defaultOgrCommand = ogrinfoApp
-                + (StringUtils.isNotEmpty(ogrinfoDescribe) ? ogrinfoDescribe : defaultOgrinfoDescribe);
+                + " " + (StringUtils.isNotEmpty(ogrinfoDescribe) ? ogrinfoDescribe : defaultOgrinfoDescribe);
         Map<String, String> parameters = new HashMap<>();
         parameters.put("datasetConnection", datasetConnection);
 

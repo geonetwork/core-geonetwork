@@ -233,6 +233,12 @@
       data-name="suggest-create-featurecatalogue-from-wfs"
       data-target="{{'link#' + r.protocol + '#' + r.locUrl + '#' + r.name}}"
     ></span>
+    <span
+      data-ng-if="r.locUrl.indexOf('/attachments/') !== -1"
+      data-gn-data-analyzer-button="analyze-data"
+      data-name="suggest-analyze-data"
+      data-datasource="{{r.locUrl}}"
+    ></span>
 
     <div data-ng-switch on="mainType">
       <div data-ng-switch-when="DB">
