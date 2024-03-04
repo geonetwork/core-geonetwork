@@ -34,6 +34,8 @@ import co.elastic.clients.elasticsearch.core.bulk.BulkOperation;
 import co.elastic.clients.elasticsearch.core.bulk.IndexOperation;
 import co.elastic.clients.json.JsonData;
 import co.elastic.clients.json.JsonpMapper;
+import co.elastic.clients.util.BinaryData;
+import co.elastic.clients.util.ContentType;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -506,7 +508,7 @@ public class EsWFSFeatureIndexer {
         private String typeName;
         private boolean pointOnlyForGeoms;
 
-        public Report(String url, String typeName) throws UnsupportedEncodingException {
+        public Report(String url, String typeName) {
             this.typeName = typeName;
             this.url = url;
             pointOnlyForGeoms = true;
@@ -589,7 +591,7 @@ public class EsWFSFeatureIndexer {
 
             this.bulkSize = 0;
             this.failuresCount = 0;
-            LOGGER.debug("  {} - Indexing with bulk ingester (with size {}) ...",
+            LOGGER.debug("  {} - Indexing with bulk ingester (with maxOperations {}) ...",
                 typeName, featureCommitInterval);
 
             listener = new BulkListener<String>() {
@@ -617,7 +619,6 @@ public class EsWFSFeatureIndexer {
                         bulkResponse.errors() ?
                             " but with " + bulkFailures + " errors" : "");
                     failuresCount = bulkFailures.get();
-                    report.saveHarvesterReport();
                 }
 
                 @Override
@@ -630,12 +631,13 @@ public class EsWFSFeatureIndexer {
                     );
                     report.put("error_ss", msg);
                     LOGGER.error(msg);
-                    report.saveHarvesterReport();
                 }
             };
 
             this.bulk = BulkIngester.of(b -> b.client(client.getAsynchClient())
                 .listener(listener)
+                // .maxConcurrentRequests(1)
+                // .flushInterval(10, TimeUnit.SECONDS)
                 .maxOperations(featureCommitInterval));
 
         }
@@ -656,17 +658,15 @@ public class EsWFSFeatureIndexer {
             }
 
             String id = String.format("%s#%s#%s", url, typeName, featureId);
-            StringReader reader = new StringReader(jacksonMapper.writeValueAsString(rootNode));
-            // https://discuss.elastic.co/t/java-8-1-bulk-request/302423
-            JsonpMapper jsonpMapper = client.getClient()._transport().jsonpMapper();
-            JsonProvider jsonProvider = jsonpMapper.jsonProvider();
-            JsonData jd = JsonData.from(jsonProvider.createParser(reader), jsonpMapper);
+            BinaryData data = BinaryData.of(
+                    jacksonMapper.writeValueAsString(rootNode).getBytes(StandardCharsets.UTF_8),
+                    ContentType.APPLICATION_JSON);
 
             bulk.add(b ->
                 b.index(io -> io
                     .index(index)
                     .id(id)
-                    .document(jd)), id);
+                    .document(data)), id);
             bulkSize++;
         }
 
