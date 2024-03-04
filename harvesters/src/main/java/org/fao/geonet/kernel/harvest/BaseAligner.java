@@ -119,9 +119,9 @@ public abstract class BaseAligner<P extends AbstractParams> extends AbstractAlig
             String name = localGroups.getName(priv.getGroupId());
 
             if (name == null) {
-                LOGGER.debug("    - Skipping removed group with id:{}", priv.getGroupId());
+                LOGGER.debug("    - Skipping removed group with id: {}", priv.getGroupId());
             } else {
-                LOGGER.debug("    - Setting privileges for group : {}", name);
+                LOGGER.debug("    - Setting privileges for group: {}", name);
                 for (int opId : priv.getOperations()) {
                     name = dataManager.getAccessManager().getPrivilegeName(opId);
                     //--- all existing operation

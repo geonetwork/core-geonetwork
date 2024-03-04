@@ -54,8 +54,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.XML;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
@@ -75,7 +73,6 @@ import static org.fao.geonet.kernel.HarvestValidationEnum.NOVALIDATION;
  * @author Jesse on 11/6/2014.
  */
 class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
-    private Logger LOGGER = LoggerFactory.getLogger(Geonet.HARVESTER);
 
     private final LocalFilesystemParams params;
     private final DataManager dataMan;
@@ -110,9 +107,7 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
         this.repo = context.getBean(IMetadataUtils.class);
         this.startTime = System.currentTimeMillis();
 
-        String harvesterName = params.getName().replaceAll("\\W+", "_");
-        LOGGER =  LoggerFactory.getLogger(harvesterName);
-        LOGGER.debug("Start visiting files at {}.", this.startTime);
+        harvester.getLogger().debug(String.format("Start visiting files at %s.", this.startTime));
     }
 
     @Override
@@ -136,9 +131,9 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
         try {
             result.totalMetadata++;
 
-            if (LOGGER.isDebugEnabled() && result.totalMetadata % 1000 == 0) {
+            if (harvester.getLogger().isDebugEnabled() && result.totalMetadata % 1000 == 0) {
                 long elapsedTime = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis() - startTime);
-                LOGGER.debug("{} records inserted in {} s ({} records/s).", new Object[] {
+                harvester.getLogger().debug("{} records inserted in {} s ({} records/s).", new Object[] {
                     result.totalMetadata,
                     elapsedTime,
                     result.totalMetadata / elapsedTime});
@@ -152,7 +147,7 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
                 processXml(file);
             }
         } catch (Exception e) {
-            LOGGER.error("An error occurred while harvesting file {}. Error is: {}.",
+            harvester.getLogger().error("An error occurred while harvesting file {}. Error is: {}.",
                 file.toAbsolutePath().normalize(), e.getMessage());
         }
         return FileVisitResult.CONTINUE;
@@ -168,7 +163,7 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
         ObjectMapper objectMapper = new ObjectMapper();
         Element recordAsElement;
         try {
-            LOGGER.debug("reading file: {}", filePath);
+            harvester.getLogger().debug("reading file: {}", filePath);
             String uuid = com.google.common.io.Files.getNameWithoutExtension(file.getFileName().toString());
             String recordAsJson = objectMapper.readTree(filePath.toFile()).toString();
             JSONObject sanitizedJson = sanitize(new JSONObject(recordAsJson));
@@ -180,18 +175,18 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
             recordAsElement = Xml.loadString(recordAsXml, false);
             recordAsElement.addContent(new Element("uuid").setText(uuid));
         } catch (JsonProcessingException e) {
-            LOGGER.error("Error processing JSON from file {}, ignoring", filePath);
-            LOGGER.error("full stack", e);
+            harvester.getLogger().error("Error processing JSON from file {}, ignoring", filePath);
+            harvester.getLogger().error("full stack", e);
             result.badFormat++;
             return;
         } catch (JDOMException e) {
-            LOGGER.error("Error transforming JSON into XML from file {}, ignoring", filePath);
-            LOGGER.error("full stack", e);
+            harvester.getLogger().error("Error transforming JSON into XML from file {}, ignoring", filePath);
+            harvester.getLogger().error("full stack", e);
             result.badFormat++;
             return;
         } catch (Exception e) {
-            LOGGER.error("Error retrieving JSON from file {}, ignoring", filePath);
-            LOGGER.error("full stack", e);
+            harvester.getLogger().error("Error retrieving JSON from file {}, ignoring", filePath);
+            harvester.getLogger().error("full stack", e);
             result.unretrievable++;
             return;
         }
@@ -241,16 +236,16 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
 
         Element xml;
         try {
-            LOGGER.debug("reading file: {}", filePath);
+            harvester.getLogger().debug(String.format("reading file: %s", filePath));
             xml = Xml.loadFile(file);
         } catch (JDOMException e) {
-            LOGGER.error("Error loading XML from file {}, ignoring", filePath);
-            LOGGER.error("full stack", e);
+            harvester.getLogger().error("Error loading XML from file {}, ignoring", filePath);
+            harvester.getLogger().error("full stack", e);
             result.badFormat++;
             return;
         } catch (Exception e) {
-            LOGGER.error("Error retrieving XML from file {}, ignoring", filePath);
-            LOGGER.error("full stack", e);
+            harvester.getLogger().error("Error retrieving XML from file {}, ignoring", filePath);
+            harvester.getLogger().error("full stack", e);
             result.unretrievable++;
             return;
         }
@@ -266,7 +261,7 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
             try {
                 xml = Xml.transform(xml, thisXslt);
             } catch (Exception e) {
-                LOGGER.error("Cannot transform XML from file {}, ignoring. Error was: {}", filePath, e.getMessage());
+                harvester.getLogger().error("Cannot transform XML from file {}, ignoring. Error was: {}", filePath, e.getMessage());
                 result.badFormat++;
                 return;
             }
@@ -288,7 +283,7 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
 
             params.getValidate().validate(dataMan, context, xml, groupIdVal);
         } catch (Exception e) {
-            LOGGER.error("Cannot validate XML from file {}, ignoring. Error was: {}", filePath, e.getMessage());
+            harvester.getLogger().error("Cannot validate XML from file {}, ignoring. Error was: {}", filePath, e.getMessage());
             result.doesNotValidate++;
             return;
         }
@@ -315,14 +310,14 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
                         updateMetadata(file, filePath, xml, schema, id, metadata, true);
                         break;
                     case RANDOM:
-                        LOGGER.debug("Generating random uuid for remote record with uuid " + metadata.getUuid());
+                        harvester.getLogger().debug("Generating random uuid for remote record with uuid " + metadata.getUuid());
                         String createDate = getCreateDate(file, xml, schema, uuid);
                         String newUuid = UUID.randomUUID().toString();
                         id = addMetadata(xml, schema, newUuid, createDate);
 
                         break;
                     case SKIP:
-                        LOGGER.debug("Skipping record with uuid " + metadata.getUuid());
+                        harvester.getLogger().debug("Skipping record with uuid " + metadata.getUuid());
                         result.uuidSkipped++;
                         result.unchangedMetadata++;
 
@@ -351,7 +346,7 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
             try {
                 createDate = dataMan.extractDateModified(schema, xml);
             } catch (Exception ex) {
-                LOGGER.error("LocalFilesystemHarvester - addMetadata - can't get metadata modified date for metadata uuid= {} " +
+                harvester.getLogger().error("LocalFilesystemHarvester - addMetadata - can't get metadata modified date for metadata uuid= {} " +
                     "using current date for modified date", uuid);
                 createDate = new ISODate().toString();
             }
@@ -376,25 +371,25 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
 
             String changeDate = new ISODate(fileDate.getTime(), false).getDateAndTime();
 
-            LOGGER.debug(" File date is: {} / record date is: {}", filePath, modified);
+            harvester.getLogger().debug(" File date is: {} / record date is: {}", filePath, modified);
 
             if (DateUtils.truncate(recordDate, Calendar.SECOND)
                 .before(DateUtils.truncate(fileDate, Calendar.SECOND))) {
-                LOGGER.debug("  Db record is older than file. Updating record with id: {}", id);
+                harvester.getLogger().debug(String.format("  Db record is older than file. Updating record with id: %s", id));
                 updateMedata(xml, id, changeDate, force);
             } else {
-                LOGGER.debug("  Db record is not older than last modified date of file. No need for update.");
+                harvester.getLogger().debug("  Db record is not older than last modified date of file. No need for update.");
                 result.unchangedMetadata++;
             }
         } else {
-            LOGGER.debug("  updating existing metadata, id is: " + id);
+            harvester.getLogger().debug("  updating existing metadata, id is: " + id);
 
             String changeDate;
 
             try {
                 changeDate = dataMan.extractDateModified(schema, xml);
             } catch (Exception ex) {
-                LOGGER.error("LocalFilesystemHarvester - updateMetadata - can't get metadata modified date for " +
+                harvester.getLogger().error("LocalFilesystemHarvester - updateMetadata - can't get metadata modified date for " +
                     "metadata id= {}, using current date for modified date", id);
                 changeDate = new ISODate().toString();
             }
@@ -406,7 +401,7 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
     private void processMef(Path file) {
         Path filePath = file.toAbsolutePath().normalize();
 
-        LOGGER.debug("reading file: {}", filePath);
+        harvester.getLogger().debug(String.format("reading file: %s", filePath));
         try {
             String xsl = params.getImportXslt();
             MEFLib.Version version = MEFLib.getMEFVersion(file);
@@ -439,7 +434,7 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
                 params.getValidate() != NOVALIDATION,
                 false, context, file);
             for (String id : ids) {
-                LOGGER.debug("Metadata imported from MEF: {}", id);
+                harvester.getLogger().debug(String.format("Metadata imported from MEF: %s", id));
                 context.getBean(MetadataRepository.class).update(Integer.valueOf(id), new Updater<Metadata>() {
                     @Override
                     public void apply(@Nonnull final Metadata metadata) {
@@ -454,8 +449,8 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
                 result.addedMetadata++;
             }
         } catch (Exception e) {
-            LOGGER.error("Error retrieving MEF from file {}, ignoring", filePath);
-            LOGGER.error("Error: ",  e);
+            harvester.getLogger().error("Error retrieving MEF from file {}, ignoring", filePath);
+            harvester.getLogger().error("Error: ",  e);
             result.unretrievable++;
         }
     }
@@ -465,26 +460,26 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
         try {
             uuid = dataMan.extractUUID(schema, xml);
         } catch (Exception e) {
-            LOGGER.debug("Failed to extract metadata UUID for file {}" +
+            harvester.getLogger().debug("Failed to extract metadata UUID for file {}" +
                 " using XSL extract-uuid. The record is probably " +
                 "a subtemplate. Will check uuid attribute on root element.", filePath);
 
             // Extract UUID from uuid attribute in subtemplates
             String uuidAttribute = xml.getAttributeValue("uuid");
             if (uuidAttribute != null) {
-                LOGGER.debug("Found uuid attribute {} for file {}.", uuidAttribute, filePath);
+                harvester.getLogger().debug("Found uuid attribute {} for file {}.", uuidAttribute, filePath);
                 uuid = uuidAttribute;
             } else {
                 // Assigning a new UUID
                 uuid = UUID.randomUUID().toString();
-                LOGGER.debug("No UUID found, the record will be assigned a random uuid {} for file {}.", uuid, filePath);
+                harvester.getLogger().debug("No UUID found, the record will be assigned a random uuid {} for file {}.", uuid, filePath);
             }
         }
         return uuid;
     }
 
     private String addMetadata(Element xml, String schema, String uuid, String createDate) throws Exception {
-        LOGGER.debug("adding new metadata");
+        harvester.getLogger().debug("adding new metadata");
         String id = harvester.addMetadata(xml, uuid, schema, localGroups, localCateg, createDate, aligner, false);
         listOfRecordsToIndex.add(Integer.valueOf(id));
         result.addedMetadata++;
