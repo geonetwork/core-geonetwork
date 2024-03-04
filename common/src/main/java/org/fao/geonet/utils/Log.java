@@ -24,22 +24,18 @@
 package org.fao.geonet.utils;
 
 
-import org.apache.log4j.Priority;
 import org.apache.log4j.bridge.AppenderWrapper;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.Appender;
+import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.appender.FileAppender;
 import org.apache.logging.log4j.core.appender.RollingFileAppender;
-import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.config.Configuration;
 import org.apache.logging.log4j.core.config.LoggerConfig;
 
 import java.io.File;
-import java.util.Enumeration;
-
-//=============================================================================
 
 /**
  * Jeeves logging integration, defining functional logger categories by module
@@ -125,8 +121,12 @@ public final class Log {
         LogManager.getLogger(module).debug(message);
     }
 
-    public static void debug(String module, Object message, Exception e) {
-        LogManager.getLogger(module).debug(message, e);
+    public static void debug(String module, String message, Object... objects) {
+        LogManager.getLogger(module).debug(message, objects);
+    }
+
+    public static void debug(String module, String message, Throwable throwable) {
+        LogManager.getLogger(module).debug(message, throwable);
     }
 
     public static boolean isDebugEnabled(String module) {
@@ -157,9 +157,14 @@ public final class Log {
         LogManager.getLogger(module).info(message);
     }
 
-    public static void info(String module, Object message, Throwable t) {
-        LogManager.getLogger(module).info(message, t);
+    public static void info(String module, String message, Object... objects) {
+        LogManager.getLogger(module).info(message, objects);
     }
+
+    public static void info(String module, String message, Throwable throwable) {
+        LogManager.getLogger(module).info(message, throwable);
+    }
+
 
     //---------------------------------------------------------------------------
 
@@ -180,6 +185,14 @@ public final class Log {
 
     public static void error(String module, Object message, Throwable t) {
         LogManager.getLogger(module).error(message, t);
+    }
+
+    public static void error(String module, String message, Object... objects) {
+        LogManager.getLogger(module).error(message, objects);
+    }
+
+    public static void error(String module, String message, Throwable throwable) {
+        LogManager.getLogger(module).error(message, throwable);
     }
 
     //---------------------------------------------------------------------------
@@ -225,16 +238,56 @@ public final class Log {
                 Log.debug(module, message);
             }
 
+            @Override
+            public void debug(String message, Throwable throwable) {
+                Log.debug(module, message, throwable);
+            }
+
+            @Override
+            public void debug(String message, Object... object) {
+                Log.debug(module, message, object);
+            }
+
             public void info(String message) {
                 Log.info(module, message);
+            }
+
+            @Override
+            public void info(String message, Throwable throwable) {
+                Log.info(module, message, throwable);
+            }
+
+            @Override
+            public void info(String message, Object... object) {
+                Log.info(module, message, object);
             }
 
             public void warning(String message) {
                 Log.warning(module, message);
             }
 
+            @Override
+            public void warning(String message, Throwable throwable) {
+                Log.warning(module, message, throwable);
+            }
+
+            @Override
+            public void warning(String message, Object... object) {
+
+            }
+
             public void error(String message) {
                 Log.error(module, message);
+            }
+
+            @Override
+            public void error(String message, Throwable throwable) {
+                Log.error(module, message, throwable);
+            }
+
+            @Override
+            public void error(String message, Object... object) {
+                Log.error(module, message, object);
             }
 
             public void fatal(String message) {
@@ -279,7 +332,7 @@ public final class Log {
                     }
                 }
                 LoggerConfig fallbackConfig = configuration.getLoggers().get(fallbackModule);
-                if( fallbackConfig != null) {
+                if (fallbackConfig != null) {
                     for (Appender appender : fallbackConfig.getAppenders().values()) {
                         File file = toLogFile(appender);
                         if (file != null && file.exists()) {
