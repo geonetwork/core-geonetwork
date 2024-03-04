@@ -45,7 +45,6 @@ import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.utils.IO;
 import org.jdom.Element;
