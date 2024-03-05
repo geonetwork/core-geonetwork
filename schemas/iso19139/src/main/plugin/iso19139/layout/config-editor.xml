@@ -3218,11 +3218,11 @@
                                          {
                                            title: 'download',
                                            filter: 'protocol:.*DOWNLOAD.*|DB:.*|FILE:.*',
-                                           editActions: ['addOnlinesrc']},
+                                           editActions: []},
                                          {
                                             title: 'links',
                                             filter:'-protocol:OGC:.*|ESRI:.*|atom.*|.*DOWNLOAD.*|DB:.*|FILE:.* AND -function:legend|featureCatalogue|dataQualityReport',
-                                            editActions: ['addOnlinesrc']}]"
+                                            editActions: []}]"
         />
 
         <directive data-gn-onlinesrc-list=""
