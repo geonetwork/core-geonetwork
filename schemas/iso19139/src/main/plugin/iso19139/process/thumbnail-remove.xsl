@@ -29,7 +29,6 @@
                 xmlns:geonet="http://www.fao.org/geonetwork" exclude-result-prefixes="#all"
                 xmlns:digestUtils="java:org.apache.commons.codec.digest.DigestUtils"
                 xmlns:exslt="http://exslt.org/common"
-                exclude-result-prefixes="#all"
                 version="2.0">
 
   <!--
