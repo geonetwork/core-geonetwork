@@ -21,7 +21,7 @@
             class="list-group-item"
             data-ng-repeat="v in staticPages | filter:staticPagesSearch | orderBy:'linkText'"
             data-ng-class="v.pageId === staticPageSelected.pageId && v.language === staticPageSelected.language ? 'active' : ''"
-            data-ng-click="selectStaticPage(v)"
+            data-ng-change="selectStaticPage(v)"
             title="{{v.pageId}}"
           >
             {{v.label}} (id: {{v.pageId}} / {{v.language}})
