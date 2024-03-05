@@ -182,6 +182,7 @@ Note: It assumes that it will be adding new items in
 
   <!-- Updating the gmd:onLine based on update parameters -->
   <!-- Note: first part of the match needs to match the xsl:for-each select from extract-relations.xsl in order to get the position() to match -->
+  <!-- The unique identifier is marked with resourceIdx which is the position index and resourceHash which is hash code of the current node (combination of url, resource name, and description) -->
   <xsl:template
     match="*//gmd:MD_DigitalTransferOptions/gmd:onLine
         [gmd:CI_OnlineResource[gmd:linkage/gmd:URL!=''] and ($resourceIdx = '' or position() = xs:integer($resourceIdx))]

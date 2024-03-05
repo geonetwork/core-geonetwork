@@ -52,6 +52,7 @@ Stylesheet used to remove a reference to a online resource.
 
   <!-- Remove the gmd:onLine define in url parameter  -->
   <!-- Note: first part of the match needs to match the xsl:for-each select from extract-relations.xsl in order to get the position() to match -->
+  <!-- The unique identifier is marked with resourceIdx which is the position index and resourceHash which is hash code of the current node (combination of url, resource name, and description) -->
   <xsl:template
     match="*//gmd:MD_DigitalTransferOptions/gmd:onLine
         [gmd:CI_OnlineResource[gmd:linkage/gmd:URL!=''] and ($resourceIdx = '' or (count(preceding::gmd:onLine) + 1) = xs:integer($resourceIdx))]

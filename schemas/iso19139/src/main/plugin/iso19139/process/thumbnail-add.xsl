@@ -97,6 +97,7 @@
 
   <!-- Updating the gmd:graphicOverview based on update parameters -->
   <!-- Note: first part of the match needs to match the xsl:for-each select from extract-relations.xsl in order to get the position() to match -->
+  <!-- The unique identifier is marked with resourceIdx which is the position index and resourceHash which is hash code of the current node (combination of url, resource name, and description) -->
   <xsl:template
     priority="2"
     match="*//gmd:graphicOverview
