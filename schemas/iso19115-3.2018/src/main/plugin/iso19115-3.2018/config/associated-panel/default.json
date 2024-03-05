@@ -335,7 +335,7 @@
             "isMultilingual": false
           },
           "protocol": {
-            "value": "WWW:LINK",
+            "value": "WWW:DOWNLOAD",
             "hidden": true,
             "isMultilingual": false
           },
