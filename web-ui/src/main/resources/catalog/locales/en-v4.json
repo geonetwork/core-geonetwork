@@ -359,6 +359,7 @@
   "harvesterConfigIsNotValid": "The harvester config does not look to be a valid configuration.",
   "specificationConformance": "Specification conformance",
   "toggleOptions": "Toggle filter options (open or close filter tree)",
+  "ui-showMetadataPanel": "Show latest and most popular metadata in home page",
   "ui-showMosaic": "Show overview mosaic in home page",
   "ui-showMaps": "Show latest maps in home page",
   "ui-queryBaseOptions": "Search query options",

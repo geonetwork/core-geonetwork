@@ -167,6 +167,7 @@
 
 <div
   class="row gn-row-info"
+  data-ng-if="showMetadataPanel || (isUserSearchesEnabled && displayFeaturedSearchesPanel) || isUserFeedbackEnabled"
   data-ng-show="searchInfo.hits.total.value > 0"
   data-ng-class="{'gn-info-list-blocks': type === 'blocks' || type === undefined, 'gn-info-list-large': type === 'large', 'gn-info-list-small': type === 'small'}"
 >
@@ -214,7 +215,11 @@
       </div>
 
       <tabset id="info-tabset" type="pills" justified="false" role="tablist">
-        <tab heading="{{'lastRecords' | translate}}" active="infoTabs.lastRecords.active">
+        <tab
+          heading="{{'lastRecords' | translate}}"
+          data-ng-if="showMetadataPanel"
+          active="infoTabs.lastRecords.active"
+        >
           <form
             class="form-horizontal"
             data-ng-controller="gnsSearchLatestController"
@@ -229,6 +234,7 @@
         </tab>
         <tab
           heading="{{'preferredRecords' | translate}}"
+          data-ng-if="showMetadataPanel"
           active="infoTabs.preferredRecords.active"
         >
           <form

@@ -129,6 +129,7 @@
             appUrl: "../../{{node}}/{{lang}}/catalog.search#/home",
             showSocialBarInFooter: true,
             showMosaic: true,
+            showMetadataPanel: true,
             showMaps: true,
             facetConfig: {
               "th_httpinspireeceuropaeutheme-theme_tree.key": {
