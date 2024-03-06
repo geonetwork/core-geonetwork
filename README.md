@@ -4,6 +4,9 @@
 
 [![Build Status](https://github.com/geonetwork/core-geonetwork/actions/workflows/linux.yml/badge.svg?branch=main)](https://github.com/geonetwork/core-geonetwork/actions/workflows/linux.yml?query=branch%3Amain)
 
+## Open Source Security Foundation (OpenSSF) best practices status
+[![OpenSSF Best Practices](https://www.bestpractices.dev/projects/8626/badge)](https://www.bestpractices.dev/projects/8626)
+
 ## Features
 
 * Immediate search access to local and distributed geospatial catalogues
