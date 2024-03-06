@@ -549,6 +549,9 @@
           thesaurus: "=thesaurus"
         },
         link: function (scope, element, attrs) {
+          scope.thesaurus = angular.isArray(scope.thesaurus)
+            ? scope.thesaurus
+            : [scope.thesaurus];
           scope.allKeywords = scope.record && scope.record.allKeywords;
           scope.getOrderByConfig = function (thesaurus) {
             return thesaurus === "th_regions"
