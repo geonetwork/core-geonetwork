@@ -240,15 +240,13 @@
   </element>
   <element name="gmd:spatialRepresentationInfo" id="12">
     <label>Struktur der räumlichen Daten</label>
-    <abbrLabel>Räumlichen</abbrLabel>
-    <help>Angaben, wie räumliche Ausprägungen definiert werden.
-      Unterschieden werden Vektordaten und
-      Rasterdaten.
+    <abbrLabel>Datenstruktur</abbrLabel>
+    <help>Angabe zur technischen Beschaffenheit der Daten. Unterschieden werden z. B. Vektordaten und Rasterdaten.
+      Vektordaten können aus unterschiedlichen Geometrietypen bestehen und werden durch attributive Informationen
+      (alphanumerischen Daten) in ihrer Aussage unterstützt.
     </help>
     <condition/>
-    <description>Digitale Darstellung der räumlichen Informationen im
-      Datenbestand
-    </description>
+    <description>Typ der digitalen Daten (Raster / Vektor / Alphanumerisch)</description>
   </element>
   <element name="gmd:DQ_TemporalAccuracy" id="120">
     <label>Zeitliche Genauigkeit</label>
@@ -913,11 +911,11 @@
   </element>
   <element name="gmd:portrayalCatalogueInfo" id="19">
     <label>Darstellungskatalog</label>
-    <abbrLabel>Darstellungs</abbrLabel>
+    <abbrLabel>Darst.katalog</abbrLabel>
     <help>z.B. Signaturenkatalog</help>
     <condition/>
     <description>Information über das Regelwerk für die Darstellung einer
-      Ressource
+      Ressource in einer Karte
     </description>
   </element>
   <element name="gmd:RS_ReferenceSystem" id="195">
@@ -1005,15 +1003,11 @@
   </element>
   <element name="gmd:applicationSchemaInfo" id="21">
     <label>Anwendungsschema</label>
-    <abbrLabel>Anwendung</abbrLabel>
-    <help>Mit diesem Element werden Informationen zu einem
-      Anwendungsschema erfasst. Ein
-      Anwendungsschema bietet eine formale Beschreibung der Datenstruktur und des Inhaltes
-      und somit
-      die Voraussetzung für den Austausch von Daten zwischen verschiedenen
-      Systemen. Die ISO
-      konforme Erstellung von Anwendungsschemata erfolgt nach dem ISO Standard
-      19109.
+    <abbrLabel>Schema</abbrLabel>
+    <help>Mit diesem Element werden Informationen zu einem Anwendungsschema / Datenmodell erfasst. Ein Anwendungsschema
+      bietet eine formale Beschreibung der Datenstruktur und des Inhaltes der Daten und ist somit die Voraussetzung für
+      den Austausch von Daten zwischen verschiedenen Systemen. Die ISO-konforme Erstellung der
+      Anwendungsschemata erfolgt nach dem ISO Standard 19109.
     </help>
     <condition/>
     <description>Information zum Datenmodell des Datenbestands</description>
@@ -1094,7 +1088,7 @@
     <condition/>
     <description>Information zum Inhalt einer Rasterdatenzelle</description>
   </element>
-  <element name="gmd:citation" context="gmd:MD_Identification"
+  <element name="gmd:citation" context="gmd:MD_DataIdentification"
            id="24">
     <label>Bibliografische Angaben</label>
     <help>Ressourcen können z.B. Datensätze, digitale Karten, Messreihen,
@@ -1544,6 +1538,10 @@
     <condition>Obligatorisch</condition>
     <description>Version des Datenformats</description>
   </element>
+  <element name="gmd:version">
+    <label>Version</label>
+    <description></description>
+  </element>
   <element name="gmd:amendmentNumber" context="gmd:MD_Format" id="287">
     <label>Revisionsnummer</label>
     <help>Nummern von Änderungen, Revisionen oder Zusätzen</help>
@@ -1939,10 +1937,11 @@
     </description>
   </element>
   <element name="gmd:descriptiveKeywords" id="33">
-    <label>Schlüsselwörter</label>
+    <label>Schlagwörter</label>
     <help/>
     <condition/>
-    <description>Schlüsselwörter, ihr Typ und Quellenangabe</description>
+    <description>Schlagwörter, ihr Typ (thematische Zugehörigkeit) und Quellenangabe
+      (häufig ein Thesaurus mit Publikationsdatum)</description>
   </element>
   <element name="gmd:EX_Extent" id="334">
     <label>Ausdehnung</label>
@@ -2114,7 +2113,7 @@
     <condition/>
     <description>Einschränkungen bezüglich der Ressource</description>
   </element>
-  <element name="gmd:aggregationInfo" context="gmd:MD_Identification"
+  <element name="gmd:aggregationInfo" context="gmd:MD_DataIdentification"
            id="35.1">
     <label>Beziehungsinformation</label>
     <help/>
@@ -2286,7 +2285,7 @@
       Ressource gehört
     </description>
   </element>
-  <element name="gmd:spatialRepresentationType" context="gmd:MD_Identification"
+  <element name="gmd:spatialRepresentationType" context="gmd:MD_DataIdentification"
            id="37">
     <label>Räumliche Darstellungsart</label>
     <help/>
@@ -2388,7 +2387,7 @@
   </element>
   <element name="gmd:spatialResolution" id="38">
     <label>Räumliche Auflösung</label>
-    <help>z.B. Massstab, Bodenauflösung, Gitterweite, Rasterauflösung</help>
+    <help>z.B. Maßstab, Bodenauflösung, Gitterweite, Rasterauflösung</help>
     <condition/>
     <description>Angaben über die räumliche Auflösung der geografischen
       Informationen
@@ -2401,10 +2400,10 @@
     <description>Adressangaben zur verantwortlichen Stelle</description>
   </element>
   <element name="gmd:deliveryPoint" context="gmd:CI_Address" id="381">
-    <label>Adresse</label>
+    <label>Straße und Hausnummer</label>
     <help/>
     <condition/>
-    <description>Angabe der Strasse und Hausnummer (ggf. auch als
+    <description>Angabe der Straße und Hausnummer (ggf. auch als
       Postfach) gemäss ISO 11180, Anhang
       A
     </description>
@@ -2734,6 +2733,11 @@
       gehört
     </description>
   </element>
+  <element name="gmd:name">
+    <label>Bezeichnung</label>
+    <description>
+    </description>
+  </element>
   <element name="gmd:issueIdentification" context="gmd:CI_Series"
            id="405">
     <label>Kennung</label>
@@ -2776,7 +2780,7 @@
     </description>
   </element>
   <element name="gmd:topicCategory" id="41">
-    <label>Thematik</label>
+    <label>ISO-Thematik</label>
     <help/>
     <condition>Obligatorisch wenn Hierarchieebene = Datenbestand, bzw. auf
       alle Fälle obligatorisch nach INSPIRE
@@ -2908,18 +2912,18 @@
       Quelle von Schlüsselwörtern</description>
   </element>
   <element name="gmd:MD_RepresentativeFraction" id="56">
-    <label>Representative Fraction</label>
+    <label>Maßstab</label>
     <help/>
     <condition/>
-    <description>Hergeleitet vom ISO 19103; Massstab, wobei MD_RepresentativFraction.denominator = 1
+    <description>Hergeleitet vom ISO 19103; Maßstab, wobei MD_RepresentativFraction.denominator = 1
       / Scale.measure Und Scale.targetUnits = Scale.sourceUnits</description>
   </element>
   <element name="gmd:denominator" id="57">
-    <label>Massstabszahl</label>
-    <help>Empfehlung: Falls ein Massstabsbereich angegeben werden soll, ist die Klasse MD_Resolution
-      zweifach zu nutzen und jeweils die obere und untere Massstabszahl einzutragen.</help>
+    <label>Maßstabszahl</label>
+    <help>Empfehlung: Falls ein Maßstabsbereich angegeben werden soll, ist die Klasse MD_Resolution
+      zweifach zu nutzen und jeweils die obere und untere Maßstabszahl einzutragen.</help>
     <condition>Soll ausgefüllt werden, falls keine Distanz (Bodenauflösung) angegeben wird</condition>
-    <description>Angabe der Massstabszahl (mz) eines Massstabs 1 : mz</description>
+    <description>Angabe der Maßstabszahl (mz) eines Maßstabs 1 : mz</description>
     <helper>
       <option value="5000">1:5´000</option>
       <option value="10000">1:10´000</option>
@@ -2943,7 +2947,7 @@
     <label>Auflösung</label>
     <help/>
     <condition/>
-    <description>Detailliertheitsgrad, angegeben durch eine Massstabszahl oder eine
+    <description>Detailliertheitsgrad, angegeben durch eine Maßstabszahl oder eine
       Bodenauflösung</description>
   </element>
   <element name="gmd:hierarchyLevel" id="6">
@@ -2954,16 +2958,16 @@
       Hierarchieebenen sind dem ISO 19115 - Anhang H zu entnehmen)</description>
   </element>
   <element name="gmd:equivalentScale" context="gmd:MD_Resolution" id="60">
-    <label>Vergleichsmassstab</label>
+    <label>Vergleichsmaßstab</label>
     <help/>
     <condition>auszufüllen, wenn keine Distanz (Bodenauflösung) angegeben wird</condition>
-    <description>Detailliertheitsgrad, angegeben durch den Massstab einer vergleichbaren gedruckten
+    <description>Detailliertheitsgrad, angegeben durch den Maßstab einer vergleichbaren gedruckten
       Karte</description>
   </element>
   <element name="gmd:distance" context="gmd:MD_Resolution" id="61">
     <label>Distanz</label>
     <help>Abstand der Rastermittelpunkte bzw. Gitterstützpunkte</help>
-    <condition>auszufüllen, wenn kein Vergleichsmassstab angegeben wird</condition>
+    <condition>auszufüllen, wenn kein Vergleichsmaßstab angegeben wird</condition>
     <description>Bodenauflösung</description>
     <helper>
       <option value="0.10">10 cm</option>
@@ -3257,10 +3261,10 @@
     <description>Detaillierte Beschreibung der Ebene der Quelldaten</description>
   </element>
   <element name="gmd:scaleDenominator" context="gmd:LI_Source" id="94">
-    <label>Massstabszahl</label>
+    <label>Maßstabszahl</label>
     <help/>
     <condition/>
-    <description>Angabe der Massstabszahl (mz) eines Massstabs 1 : mz der Ausgangskarte</description>
+    <description>Angabe der Maßstabszahl (mz) eines Maßstab 1 : mz der Ausgangskarte</description>
   </element>
   <element name="gmd:sourceReferenceSystem" context="gmd:LI_Source" id="95">
     <label>Bezugssystem</label>

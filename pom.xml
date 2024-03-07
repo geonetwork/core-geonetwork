@@ -112,11 +112,6 @@
           <version>3.1.2</version>
         </plugin>
         <plugin>
-          <groupId>org.codehaus.mojo</groupId>
-          <artifactId>jslint-maven-plugin</artifactId>
-          <version>1.0.1</version>
-        </plugin>
-        <plugin>
           <groupId>org.bsc.maven</groupId>
           <artifactId>maven-processor-plugin</artifactId>
           <version>3.3.3</version>
@@ -1214,9 +1209,10 @@
         <artifactId>jaxb-impl</artifactId>
         <version>2.3.1</version>
       </dependency>
+
       <dependency>
-        <groupId>org.elasticsearch.client</groupId>
-        <artifactId>elasticsearch-rest-high-level-client</artifactId>
+        <groupId>co.elastic.clients</groupId>
+        <artifactId>elasticsearch-java</artifactId>
         <version>${es.version}</version>
       </dependency>
       <dependency>
@@ -1283,6 +1279,12 @@
         <groupId>com.amazonaws</groupId>
         <artifactId>aws-java-sdk-s3</artifactId>
         <version>1.12.261</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.json</groupId>
+        <artifactId>json</artifactId>
+        <version>20240205</version>
       </dependency>
 
     </dependencies>
@@ -1539,7 +1541,7 @@
     <jetty.port>8080</jetty.port>
     <jetty.stop.port>8090</jetty.stop.port>
 
-    <es.version>7.17.15</es.version>
+    <es.version>8.11.3</es.version>
     <es.platform>linux-x86_64</es.platform>
     <es.installer.extension>tar.gz</es.installer.extension>
     <es.protocol>http</es.protocol>
@@ -1552,7 +1554,7 @@
     <es.index.records.type>records</es.index.records.type>
     <es.index.searchlogs>gn-searchlogs</es.index.searchlogs>
     <es.index.searchlogs.type>searchlogs</es.index.searchlogs.type>
-    <es.maven.plugin.version>6.19</es.maven.plugin.version>
+    <es.maven.plugin.version>6.28</es.maven.plugin.version>
 
     <!-- Define the default analyzer for full text search. -->
     <es.index.analyzer.default>standard</es.index.analyzer.default>

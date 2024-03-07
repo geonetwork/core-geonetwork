@@ -49,6 +49,7 @@ import org.fao.geonet.domain.utils.ObjectJSONUtils;
 import org.fao.geonet.events.history.RecordGroupOwnerChangeEvent;
 import org.fao.geonet.events.history.RecordOwnerChangeEvent;
 import org.fao.geonet.events.history.RecordPrivilegesChangeEvent;
+import org.fao.geonet.events.md.MetadataUnpublished;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
@@ -66,6 +67,8 @@ import org.fao.geonet.util.UserUtil;
 import org.fao.geonet.util.WorkflowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
@@ -95,7 +98,8 @@ import static org.springframework.data.jpa.domain.Specification.where;
 @PreAuthorize("hasAuthority('Editor')")
 @Controller("recordSharing")
 @ReadWriteController
-public class MetadataSharingApi {
+public class MetadataSharingApi implements ApplicationEventPublisherAware
+{
     private static final String DEFAULT_PUBLICATION_TYPE_NAME = "default";
 
     @Autowired
@@ -160,6 +164,14 @@ public class MetadataSharingApi {
      */
     @Autowired
     private IPublicationConfig publicationConfig;
+
+    private ApplicationEventPublisher eventPublisher;
+
+    @Override
+    public void setApplicationEventPublisher(
+        ApplicationEventPublisher applicationEventPublisher) {
+        this.eventPublisher = applicationEventPublisher;
+    }
 
     public static Vector<OperationAllowedId> retrievePrivileges(ServiceContext context, String id, Integer userId, Integer groupId) {
 
@@ -553,12 +565,17 @@ public class MetadataSharingApi {
                 }
             }
 
+            java.util.Optional<GroupPrivilege> allGroupPrivsBefore =
+                sharingBefore.getPrivileges().stream().filter(p -> p.getGroup() == ReservedGroup.all.getId()).findFirst();
+            boolean publishedBefore = allGroupPrivsBefore.get().getOperations().get(ReservedOperation.view.name());
+
+            if (sharing.isClear() && publishedBefore && !metadataUtils.isMetadataPublished(metadata.getId())) {
+                // Throw the metadata unpublish event, when removing privileges, are not part of the parameters,
+                // not processed in setOperation / unsetOperation that triggers the metadata publish/unpublish events
+                eventPublisher.publishEvent(new MetadataUnpublished(metadata));
+            }
+
             if (notifyByMail) {
-                java.util.Optional<GroupPrivilege> allGroupPrivsBefore =
-                    sharingBefore.getPrivileges().stream().filter(p -> p.getGroup() == ReservedGroup.all.getId()).findFirst();
-
-                boolean publishedBefore = allGroupPrivsBefore.get().getOperations().get(ReservedOperation.view.name());
-
                 java.util.Optional<GroupOperations> allGroupOpsAfter =
                     privileges.stream().filter(p -> p.getGroup() == ReservedGroup.all.getId()).findFirst();
 

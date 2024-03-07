@@ -47,14 +47,6 @@
     </license>
   </licenses>
 
-  <dependencies>
-    <dependency>
-      <groupId>org.codehaus.mojo</groupId>
-      <artifactId>jslint-maven-plugin</artifactId>
-      <version>1.0.1</version>
-    </dependency>
-  </dependencies>
-
   <build>
     <resources>
       <!-- The resource that are filtered should only be the fewest possible because

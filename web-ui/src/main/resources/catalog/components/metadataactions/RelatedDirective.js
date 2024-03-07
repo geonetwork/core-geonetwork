@@ -486,14 +486,12 @@
           scope.config = gnRelatedResources;
 
           scope.$watchCollection("md.link", function (n, o) {
-            if (n && n !== o) {
-              if (scope.md != null && scope.md.link) {
-                scope.loadDistributions(scope.md.link);
-              }
+            if (scope.md != null && n !== o) {
+              scope.loadDistributions(scope.md.link);
             }
           });
 
-          if (scope.md != null && scope.md.link) {
+          if (scope.md != null) {
             scope.loadDistributions(scope.md.link);
           }
         }

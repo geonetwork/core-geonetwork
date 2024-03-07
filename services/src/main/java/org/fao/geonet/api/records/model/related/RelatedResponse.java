@@ -31,6 +31,7 @@ import javax.xml.bind.annotation.XmlType;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * <p>Java class for relatedResponse complex type.
@@ -1037,6 +1038,8 @@ public class RelatedResponse {
     @XmlType(name = "", propOrder = {
         "item"
     })
+    // Use different schema name for source to resolve conflict with org.fao.geonet.domain.Source
+    @Schema(name = "RelatedSource")
     public static class Source implements IListOnlyClassToArray {
 
         protected List<RelatedMetadataItem> item;

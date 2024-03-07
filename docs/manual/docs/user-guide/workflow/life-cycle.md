@@ -31,7 +31,7 @@ In the last case, to enable workflow and change the status from `Unknown` to `Dr
 
 To enable workflow for the full catalogue or certain groups, check Administration --> Settings --> Metadata Workflow. In workflow mode, in case approved records are modified, you're working on a copy of the approved record. Changes on the record will not be visible to users outside your group until the modified record is approved again.
 
-When done editing you can submit a record for review by a content reviewer. The submit button is available on the `rd` menu in the metadata view. A popup will open in which you can leave a message for the content reviewer.
+When done editing you can submit a record for review by a content reviewer. The submit button is available on the `manage record` menu in the metadata view. A popup will open in which you can leave a message for the content reviewer.
 
 ![](img/submit-for-review.png)
 

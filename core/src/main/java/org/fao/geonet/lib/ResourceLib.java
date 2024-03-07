@@ -23,12 +23,13 @@
 
 package org.fao.geonet.lib;
 
+import co.elastic.clients.elasticsearch.core.SearchResponse;
+import co.elastic.clients.elasticsearch.core.search.Hit;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 import jeeves.server.context.ServiceContext;
 
-import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.search.SearchHit;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
@@ -190,8 +191,8 @@ public class ResourceLib {
             StoreFolderConfig storeFolderConfig = ApplicationContextHolder.get().getBean(StoreFolderConfig.class);
             EsSearchManager esSearchManager = ApplicationContextHolder.get().getBean(EsSearchManager.class);
             SearchResponse searchResponse = esSearchManager.query(String.format("id:(%s)", id), null, 0, 10);
-            if ((searchResponse.getHits().getTotalHits() != null) && (searchResponse.getHits().getTotalHits().value > 0)) {
-                SearchHit searchHit = searchResponse.getHits().getAt(0);
+            if ((!searchResponse.hits().hits().isEmpty())) {
+                Hit searchHit = (Hit) searchResponse.hits().hits().get(0);
 
                 IMetadataFolderProcessor customMetadataFolderPathProcessor = new CustomMetadataFolderPathProcessor(dataDir, storeFolderConfig, searchHit);
                 return customMetadataFolderPathProcessor.calculateFolderPath();
@@ -245,18 +246,21 @@ public class ResourceLib {
     private class CustomMetadataFolderPathProcessor implements IMetadataFolderProcessor {
         Path dataDir;
         StoreFolderConfig filesystemStoreConfig;
-        SearchHit searchHit;
+        Hit searchHit;
 
-        CustomMetadataFolderPathProcessor(Path dataDir, StoreFolderConfig storeFolderConfig, SearchHit searchHit) {
+        CustomMetadataFolderPathProcessor(Path dataDir, StoreFolderConfig storeFolderConfig, Hit searchHit) {
             this.dataDir = dataDir;
             this.filesystemStoreConfig = storeFolderConfig;
             this.searchHit = searchHit;
         }
 
         public Path calculateFolderPath() {
-            DocumentContext jsonContext = JsonPath.parse(searchHit.getSourceAsString());
-            boolean isPublished = (searchHit.getSourceAsMap().get("isPublishedToAll") != null) &&
-                (searchHit.getSourceAsMap().get("isPublishedToAll").equals("true"));
+            DocumentContext jsonContext = JsonPath.parse(searchHit.source());
+            ObjectMapper objectMapper = new ObjectMapper();
+            Map<String, String> sourceMap = objectMapper.convertValue(searchHit.source(), Map.class);
+
+            boolean isPublished = (sourceMap.get("isPublishedToAll") != null) &&
+                (sourceMap.get("isPublishedToAll").equals("true"));
 
             String path;
 

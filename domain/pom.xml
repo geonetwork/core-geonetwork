@@ -293,6 +293,7 @@
               <clusterName>test</clusterName>
               <transportPort>9300</transportPort>
               <httpPort>9200</httpPort>
+              <environmentVariables><ES_JAVA_OPTS>-Xmx2g</ES_JAVA_OPTS></environmentVariables>
             </configuration>
             <executions>
               <execution>

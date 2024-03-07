@@ -1343,8 +1343,8 @@ public class BaseMetadataManager implements IMetadataManager {
     }
 
     boolean hasReferencingMetadata(ServiceContext context, AbstractMetadata metadata) throws Exception {
-        StringBuilder query = new StringBuilder(String.format("xlink:*%s*", metadata.getUuid()));
-        return this.searchManager.query(query.toString(), null, 0, 0).getHits().getTotalHits().value > 0;
+        StringBuilder query = new StringBuilder(String.format("xlink:\"%s\"", metadata.getUuid()));
+        return this.searchManager.query(query.toString(), null, 0, 0).hits().total().value() > 0;
     }
 
 }

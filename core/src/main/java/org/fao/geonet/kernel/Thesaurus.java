@@ -76,6 +76,7 @@ public class Thesaurus {
     private static final String DEFAULT_THESAURUS_NAMESPACE = "http://custom.shared.obj.ch/concept#";
 
     private static final String RDF_NAMESPACE = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
+    private static final String RDF_SCHEMA_NAMESPACE = "http://www.w3.org/2000/01/rdf-schema#";
 
     private static final String SKOS_NAMESPACE = "http://www.w3.org/2004/02/skos/core#";
 
@@ -360,7 +361,8 @@ public class Thesaurus {
         try {
             return performRequest(query).getRowCount() > 0;
         } catch (Exception e) {
-            Log.error(Geonet.THESAURUS_MAN, "Error retrieving concept scheme for " + thesaurusFile + ". Error is: " + e.getMessage());
+            Log.error(Geonet.THESAURUS_MAN,
+                String.format("Error retrieving concept scheme for %s. Error is: %s", thesaurusFile, e.getMessage()));
             throw new RuntimeException(e);
         }
     }
@@ -380,7 +382,8 @@ public class Thesaurus {
             }
             return ret;
         } catch (Exception e) {
-            Log.error(Geonet.THESAURUS_MAN, "Error retrieving concept schemes for " + thesaurusFile + ". Error is: " + e.getMessage());
+            Log.error(Geonet.THESAURUS_MAN, String.format(
+                "Error retrieving concept schemes for %s. Error is: %s", thesaurusFile, e.getMessage()));
             return Collections.emptyList();
         }
     }
@@ -452,8 +455,7 @@ public class Thesaurus {
     /**
      * Remove keyword from thesaurus.
      */
-    public synchronized Thesaurus removeElement(KeywordBean keyword) throws MalformedQueryException,
-        QueryEvaluationException, IOException, AccessDeniedException {
+    public synchronized Thesaurus removeElement(KeywordBean keyword) throws AccessDeniedException {
         String namespace = keyword.getNameSpaceCode();
         String code = keyword.getRelativeCode();
 
@@ -518,8 +520,7 @@ public class Thesaurus {
      *                languages) and the coordinates will only be updated if they are non-empty
      *                strings.
      */
-    public synchronized URI updateElement(KeywordBean keyword, boolean replace) throws AccessDeniedException, IOException,
-        MalformedQueryException, QueryEvaluationException, GraphException {
+    public synchronized URI updateElement(KeywordBean keyword, boolean replace) throws AccessDeniedException {
         THESAURUS_SEARCH_CACHE.invalidateAll();
 
         // Get thesaurus graph
@@ -661,7 +662,7 @@ public class Thesaurus {
      * Update concept code by creating URI from namespace and code. This is recommended when
      * thesaurus concept identifiers contains # eg. http://vocab.nerc.ac.uk/collection/P07/current#CFV13N44
      */
-    public synchronized Thesaurus updateCode(String namespace, String oldcode, String newcode) throws AccessDeniedException, IOException {
+    public synchronized Thesaurus updateCode(String namespace, String oldcode, String newcode) throws AccessDeniedException {
         Graph myGraph = repository.getGraph();
 
         ValueFactory myFactory = myGraph.getValueFactory();
@@ -679,7 +680,7 @@ public class Thesaurus {
      *
      * eg. http://vocab.nerc.ac.uk/collection/P07/current/CFV13N44/
      */
-    public synchronized Thesaurus updateCodeByURI(String olduri, String newuri) throws AccessDeniedException, IOException {
+    public synchronized Thesaurus updateCodeByURI(String olduri, String newuri) throws AccessDeniedException {
         Graph myGraph = repository.getGraph();
 
         ValueFactory myFactory = myGraph.getValueFactory();
@@ -894,7 +895,11 @@ public class Thesaurus {
     //  }
     private void retrieveMultiLingualTitles(Element thesaurusEl) {
         try {
-            String xpathTitles = "skos:ConceptScheme/dc:title[@xml:lang]|skos:ConceptScheme/dcterms:title[@xml:lang]|rdf:Description[rdf:type/@rdf:resource = 'http://www.w3.org/2004/02/skos/core#ConceptScheme']/dc:title[@xml:lang]";
+            String xpathTitles = "skos:ConceptScheme/dc:title[@xml:lang]" +
+                "|skos:ConceptScheme/dcterms:title[@xml:lang]" +
+                "|skos:ConceptScheme/rdfs:label[@xml:lang]" +
+                "|skos:ConceptScheme/skos:prefLabel[@xml:lang]" +
+                "|rdf:Description[rdf:type/@rdf:resource = 'http://www.w3.org/2004/02/skos/core#ConceptScheme']/dc:title[@xml:lang]";
             multilingualTitles.clear();
             multilingualTitles.putAll(retrieveMultilingualField(thesaurusEl, xpathTitles));
         } catch (Exception e) {
@@ -944,25 +949,23 @@ public class Thesaurus {
         try {
             Element thesaurusEl = Xml.loadFile(thesaurusFile);
 
-            List<Namespace> theNSs = new ArrayList<>();
-            Namespace rdfNamespace = Namespace.getNamespace("rdf", RDF_NAMESPACE);
-            theNSs.add(rdfNamespace);
-            theNSs.add(Namespace.getNamespace("skos", SKOS_NAMESPACE));
-            theNSs.add(Namespace.getNamespace("dc", DC_NAMESPACE));
-            theNSs.add(Namespace.getNamespace("dcterms", DCTERMS_NAMESPACE));
+            List<Namespace> theNSs = getThesaurusNamespaces();
 
             this.defaultNamespace = null;
             retrieveMultiLingualTitles(thesaurusEl);
             retrieveDublinCore(thesaurusEl);
 
             Element titleEl = Xml.selectElement(thesaurusEl,
-                "skos:ConceptScheme/dc:title|skos:ConceptScheme/dcterms:title|" +
-                    "skos:Collection/dc:title|skos:Collection/dcterms:title|" +
-                    "rdf:Description/dc:title|rdf:Description/dcterms:title", theNSs);
+                "skos:ConceptScheme/dc:title|skos:ConceptScheme/dcterms:title" +
+                    "|skos:ConceptScheme/rdfs:label|skos:ConceptScheme/skos:prefLabel" +
+                    "|skos:Collection/dc:title|skos:Collection/dcterms:title" +
+                    "|rdf:Description/dc:title|rdf:Description/dcterms:title", theNSs);
 
             if (titleEl != null) {
                 this.title = titleEl.getValue();
-                this.defaultNamespace = titleEl.getParentElement().getAttributeValue("about", rdfNamespace);
+                this.defaultNamespace = titleEl
+                    .getParentElement()
+                    .getAttributeValue("about", Namespace.getNamespace("rdf", RDF_NAMESPACE));
             } else {
                 this.title = defaultTitle;
                 this.defaultNamespace = DEFAULT_THESAURUS_NAMESPACE;
@@ -1027,11 +1030,13 @@ public class Thesaurus {
             }
 
             if (Log.isDebugEnabled(Geonet.THESAURUS_MAN)) {
-                Log.debug(Geonet.THESAURUS_MAN, "Thesaurus information: " + this.title + " (" + this.date + ")");
+                Log.debug(Geonet.THESAURUS_MAN, String.format(
+                    "Thesaurus information: %s (%s)", this.title, this.date));
             }
         } catch (Exception ex) {
             if (!ignoreMissingError)
-                Log.error(Geonet.THESAURUS_MAN, "Error getting thesaurus info for " + thesaurusFile + ". Error is: " + ex.getMessage());
+                Log.error(Geonet.THESAURUS_MAN, String.format(
+                    "Error getting thesaurus info for %s. Error is: %s", thesaurusFile, ex.getMessage()));
         }
     }
 
@@ -1102,8 +1107,7 @@ public class Thesaurus {
      * @param subject the keyword that is related to the other keyword
      * @param related the relation between the two keywords
      */
-    public synchronized void addRelation(String subject, KeywordRelation related, String relatedSubject) throws AccessDeniedException, IOException,
-        MalformedQueryException, QueryEvaluationException, GraphException {
+    public synchronized void addRelation(String subject, KeywordRelation related, String relatedSubject) throws AccessDeniedException {
         THESAURUS_SEARCH_CACHE.invalidateAll();
 
         Graph myGraph = repository.getGraph();
@@ -1126,7 +1130,7 @@ public class Thesaurus {
      * @return keyword
      */
     public KeywordBean getKeyword(String uri, String... languages) {
-        String cacheKey = "getKeyword" + uri + Arrays.stream(languages).collect(Collectors.joining(""));
+        String cacheKey = "getKeyword" + uri + String.join("", languages);
         Object cacheValue = THESAURUS_SEARCH_CACHE.getIfPresent(cacheKey);
         if (cacheValue != null) {
             return (KeywordBean) cacheValue;
@@ -1370,6 +1374,7 @@ public class Thesaurus {
     private List<Namespace> getThesaurusNamespaces() {
         List<Namespace> theNSs = new ArrayList<>();
         theNSs.add(Namespace.getNamespace("rdf", RDF_NAMESPACE));
+        theNSs.add(Namespace.getNamespace("rdfs", RDF_SCHEMA_NAMESPACE));
         theNSs.add(Namespace.getNamespace("skos", SKOS_NAMESPACE));
         theNSs.add(Namespace.getNamespace("dc", DC_NAMESPACE));
         theNSs.add(Namespace.getNamespace("dcterms", DCTERMS_NAMESPACE));

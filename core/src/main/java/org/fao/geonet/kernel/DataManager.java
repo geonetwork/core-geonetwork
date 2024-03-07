@@ -3,7 +3,7 @@
 //=== DataManager
 //===
 //=============================================================================
-//===	Copyright (C) 2001-2007 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2023 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -141,11 +141,6 @@ public class DataManager {
             LOGGER_DATA_MANAGER.debug("Hopefully this is cron job or routinely background task. Who called us?",
                 new Exception("Dummy Exception to know the stacktrace"));
         }
-    }
-
-    @Deprecated
-    public synchronized void rebuildIndexXLinkedMetadata(final ServiceContext context) throws Exception {
-        metadataIndexer.rebuildIndexXLinkedMetadata(context);
     }
 
     @Deprecated
