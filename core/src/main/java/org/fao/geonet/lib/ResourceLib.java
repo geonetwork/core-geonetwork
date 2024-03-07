@@ -255,7 +255,7 @@ public class ResourceLib {
         }
 
         public Path calculateFolderPath() {
-            DocumentContext jsonContext = JsonPath.parse(searchHit.source());
+            DocumentContext jsonContext = JsonPath.parse(searchHit.source().toString());
             ObjectMapper objectMapper = new ObjectMapper();
             Map<String, String> sourceMap = objectMapper.convertValue(searchHit.source(), Map.class);
 
