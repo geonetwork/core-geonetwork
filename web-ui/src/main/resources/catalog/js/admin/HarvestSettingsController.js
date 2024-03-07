@@ -52,6 +52,7 @@
     "gnMapsManager",
     "gnGlobalSettings",
     "gnConfig",
+    "gnConfigService",
     "gnClipboard",
     "gnSearchSettings",
     function (
@@ -68,6 +69,7 @@
       gnMapsManager,
       gnGlobalSettings,
       gnConfig,
+      gnConfigService,
       gnClipboard,
       gnSearchSettings
     ) {
@@ -92,6 +94,8 @@
       $scope.harvesterNew = false;
       $scope.harvesterHistory = {};
       $scope.isLoadingOneHarvester = false;
+      $scope.translationProviderConfigured = false;
+
       $scope.harvesterHistoryPaging = {
         page: 1,
         size: 3,
@@ -100,6 +104,12 @@
       };
       $scope.isLoadingHarvesterHistory = false;
       $scope.deleting = []; // all harvesters being deleted
+
+      gnConfigService.load().then(function (c) {
+        $scope.translationProviderConfigured =
+          gnConfig["system.translation.provider"] !== null &&
+          gnConfig["system.translation.provider"] !== "";
+      });
 
       var unbindStatusListener = null;
 
