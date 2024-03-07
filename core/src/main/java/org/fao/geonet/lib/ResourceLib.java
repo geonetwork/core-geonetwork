@@ -259,8 +259,8 @@ public class ResourceLib {
             ObjectMapper objectMapper = new ObjectMapper();
             Map<String, String> sourceMap = objectMapper.convertValue(searchHit.source(), Map.class);
 
-            boolean isPublished = (sourceMap.get("isPublishedToAll") != null) &&
-                (sourceMap.get("isPublishedToAll").equals("true"));
+            boolean isPublished = (sourceMap.get(Geonet.IndexFieldNames.IS_PUBLISHED_TO_ALL) != null) &&
+                (sourceMap.get(Geonet.IndexFieldNames.IS_PUBLISHED_TO_ALL).equals("true"));
 
             String path;
 
