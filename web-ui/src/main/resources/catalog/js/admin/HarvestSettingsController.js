@@ -131,6 +131,11 @@
             }
             $scope.isLoadingOneHarvester = false;
 
+            // The backend returns an empty array in json serialization if the field is empty, instead of a string
+            if (angular.isArray($scope.harvesterSelected.content.translateContentLangs)) {
+              $scope.harvesterSelected.content.translateContentLangs = "";
+            }
+
             if (
               $scope.harvesterSelected.content &&
               $scope.harvesterSelected.content.batchEdits
@@ -441,6 +446,8 @@
           $scope.threddsAtomicsMode =
             h.options.outputSchemaOnCollectionsDIF !== "" ? "DIF" : "UNIDATA";
         }
+
+        $scope.harvesterSelected = null;
 
         $scope.harvesterSelected = h;
         $scope.harvesterUpdated = false;
