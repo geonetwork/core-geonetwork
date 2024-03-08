@@ -1029,28 +1029,28 @@
                     });
                     source.initialize();
 
-                    scope.$watch(
-                      "value",
-                      function (newValue, oldValue) {
-                        if ((newValue !== oldValue) || (scope.initialValues.length == 0 && newValue)) {
-                          scope.initialValues = newValue.split(",");
+                    scope.$watch("value", function (newValue, oldValue) {
+                      if (
+                        newValue !== oldValue ||
+                        (scope.initialValues.length == 0 && newValue)
+                      ) {
+                        scope.initialValues = newValue.split(",");
 
-                          scope.selected = [];
-                          $(id).tagsinput("removeAll");
+                        scope.selected = [];
+                        $(id).tagsinput("removeAll");
 
-                          angular.forEach(scope.initialValues, function (value) {
-                            scope.selected = scope.selected.concat(
-                              _.filter(source.local, ["code", value])
-                            );
-                          });
+                        angular.forEach(scope.initialValues, function (value) {
+                          scope.selected = scope.selected.concat(
+                            _.filter(source.local, ["code", value])
+                          );
+                        });
 
-                          // Add selection to the list of tags
-                          angular.forEach(scope.selected, function (keyword) {
-                            $(id).tagsinput("add", keyword);
-                          });
-                        }
+                        // Add selection to the list of tags
+                        angular.forEach(scope.selected, function (keyword) {
+                          $(id).tagsinput("add", keyword);
+                        });
                       }
-                    );
+                    });
 
                     function allOrSearchFn(q, sync) {
                       if (q === "") {

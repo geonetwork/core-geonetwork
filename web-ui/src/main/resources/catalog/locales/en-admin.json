@@ -20,7 +20,7 @@
     "harvesterTranslateContent": "Translate metadata content",
     "harvesterTranslateContentHelp": "Allow to use a translation provider to translate the metadata elements.",
     "harvesterTranslateContentLangs": "Languages to translate the metadata content",
-    "harvesterTranslateContentLangsHelp": "A comma separated list of iso3 language codes to translate the metadata.",
+    "harvesterTranslateContentLangsHelp": "A list of languages to translate the metadata.",
     "harvesterTranslateContentFields": "Fields to translate",
     "harvesterTranslateContentFieldsHelp": "A list of XPATH fields to translate (one per line). For ISO19139 / ISO19115.3-2008 metadata fields should be of type string (gco:CharacterString / gmx:Anchor).",
     "andNodeLogo": " and logo",
