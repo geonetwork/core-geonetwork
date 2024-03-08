@@ -162,6 +162,9 @@
           templateUrl:
             "../../catalog/components/edit/suggestion/partials/dataanalyzerbutton.html",
           link: function (scope, element, attrs) {
+            scope.isSupported = function() {
+              return scope.datasource.match(/.*\/attachments\/.*(.shp|.csv|.xls|.xlsx|.gpkg|.parquet)$/i) !== null;
+            }
             scope.sugg = undefined;
             scope.gnSuggestion = gnSuggestion;
             scope.info = function () {
