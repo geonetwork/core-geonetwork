@@ -1,23 +1,23 @@
 INSERT INTO Languages (id, name, isinspire) VALUES ('wel','Cymraeg', 'y');
 
 -- Take care to table ID (related to other loc files)
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (1,'wel','Maps & graphics');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (2,'wel','Datasets');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (3,'wel','Interactive resources');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (4,'wel','Applications');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (5,'wel','Case studies, best practices');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (6,'wel','Conference proceedings');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (7,'wel','Photo');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (8,'wel','Audio/Video');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (9,'wel','Directories');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (10,'wel','Other information resources');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (12,'wel','Registers');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (13,'wel','Physical Samples');
+INSERT INTO CategoriesDes (iddes, langid, label) VALUES (1,'wel','Mapiau & graffeg');
+INSERT INTO CategoriesDes (iddes, langid, label) VALUES (2,'wel','Setiau data');
+INSERT INTO CategoriesDes (iddes, langid, label) VALUES (3,'wel','Adnoddau rhyngweithiol');
+INSERT INTO CategoriesDes (iddes, langid, label) VALUES (4,'wel','Ceisiadau');
+INSERT INTO CategoriesDes (iddes, langid, label) VALUES (5,'wel','Astudiaethau achos, arferion gorau');
+INSERT INTO CategoriesDes (iddes, langid, label) VALUES (6,'wel','Trafodion y gynhadledd');
+INSERT INTO CategoriesDes (iddes, langid, label) VALUES (7,'wel','Llun');
+INSERT INTO CategoriesDes (iddes, langid, label) VALUES (8,'wel','Sain/Fideo');
+INSERT INTO CategoriesDes (iddes, langid, label) VALUES (9,'wel','Cyfeirlyfrau');
+INSERT INTO CategoriesDes (iddes, langid, label) VALUES (10,'wel','Adnoddau gwybodaeth eraill');
+INSERT INTO CategoriesDes (iddes, langid, label) VALUES (12,'wel','Cofrestri');
+INSERT INTO CategoriesDes (iddes, langid, label) VALUES (13,'wel','Samplau Corfforol');
 
-INSERT INTO GroupsDes (iddes, langid, label) VALUES (-1,'wel','Guest');
-INSERT INTO GroupsDes (iddes, langid, label) VALUES (0,'wel','Intranet');
-INSERT INTO GroupsDes (iddes, langid, label) VALUES (1,'wel','All');
-INSERT INTO GroupsDes (iddes, langid, label) VALUES (2,'wel','Sample group');
+INSERT INTO GroupsDes (iddes, langid, label) VALUES (-1,'wel','Gwestai');
+INSERT INTO GroupsDes (iddes, langid, label) VALUES (0,'wel','Mewnrwyd');
+INSERT INTO GroupsDes (iddes, langid, label) VALUES (1,'wel','I gyd');
+INSERT INTO GroupsDes (iddes, langid, label) VALUES (2,'wel','Grŵp sampl');
 
 INSERT INTO IsoLanguagesDes  (iddes, langid, label) VALUES (1,'wel','Afar');
 INSERT INTO IsoLanguagesDes  (iddes, langid, label) VALUES (2,'wel','Abkhazian');
@@ -483,7 +483,7 @@ INSERT INTO IsoLanguagesDes  (iddes, langid, label) VALUES (461,'wel','Wakashan 
 INSERT INTO IsoLanguagesDes  (iddes, langid, label) VALUES (462,'wel','Walamo');
 INSERT INTO IsoLanguagesDes  (iddes, langid, label) VALUES (463,'wel','Waray');
 INSERT INTO IsoLanguagesDes  (iddes, langid, label) VALUES (464,'wel','Washo');
-INSERT INTO IsoLanguagesDes  (iddes, langid, label) VALUES (465,'wel','Welsh');
+INSERT INTO IsoLanguagesDes  (iddes, langid, label) VALUES (465,'wel','Cymraeg');
 INSERT INTO IsoLanguagesDes  (iddes, langid, label) VALUES (466,'wel','Sorbian languages');
 INSERT INTO IsoLanguagesDes  (iddes, langid, label) VALUES (467,'wel','Walloon');
 INSERT INTO IsoLanguagesDes  (iddes, langid, label) VALUES (468,'wel','Wolof');
@@ -504,42 +504,42 @@ INSERT INTO IsoLanguagesDes  (iddes, langid, label) VALUES (482,'wel','No lingui
 INSERT INTO IsoLanguagesDes  (iddes, langid, label) VALUES (483,'wel','N''Ko');
 INSERT INTO IsoLanguagesDes  (iddes, langid, label) VALUES (484,'wel','Zaza; Dimili; Dimli; Kirdki; Kirmanjki');
 
-INSERT INTO OperationsDes  (iddes, langid, label) VALUES (0,'wel','Publish');
-INSERT INTO OperationsDes  (iddes, langid, label) VALUES (1,'wel','Download');
-INSERT INTO OperationsDes  (iddes, langid, label) VALUES (2,'wel','Editing');
-INSERT INTO OperationsDes  (iddes, langid, label) VALUES (3,'wel','Notify');
-INSERT INTO OperationsDes  (iddes, langid, label) VALUES (5,'wel','Interactive Map');
-INSERT INTO OperationsDes  (iddes, langid, label) VALUES (6,'wel','Featured');
+INSERT INTO OperationsDes  (iddes, langid, label) VALUES (0,'wel','Cyhoeddi');
+INSERT INTO OperationsDes  (iddes, langid, label) VALUES (1,'wel','Lawrlwytho');
+INSERT INTO OperationsDes  (iddes, langid, label) VALUES (2,'wel','Golygu');
+INSERT INTO OperationsDes  (iddes, langid, label) VALUES (3,'wel','Hysbysu');
+INSERT INTO OperationsDes  (iddes, langid, label) VALUES (5,'wel','Map Rhyngweithiol');
+INSERT INTO OperationsDes  (iddes, langid, label) VALUES (6,'wel','Yn cael sylw');
 
-INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (0,'wel','Unknown');
-INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (1,'wel','Draft');
-INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (2,'wel','Approved');
-INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (3,'wel','Retired');
-INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (4,'wel','Submitted');
-INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (5,'wel','Rejected');
-INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (50,'wel','Record created.');
-INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (51,'wel','Record updated.');
-INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (52,'wel','Attachment {{h.item1}} added.');
-INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (53,'wel','Attachment {{h.item1}} deleted.');
-INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (54,'wel','Owner changed from {{h.item1}} to {{h.item2}}.');
-INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (55,'wel','Group owner changed from {{h.item1}} to {{h.item2}}.');
-INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (56,'wel','Privileges updated.');
-INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (57,'wel','Category changed. Now categories are {{h.item1}}.');
-INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (58,'wel','Validation triggered. Exit status is now {{h.item1}}.');
-INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (59,'wel','Status changed from {{h.item1}} to {{h.item2}}.');
-INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (60,'wel','Record updated by process {{h.item1}}.');
-INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (61,'wel','Record deleted.');
-INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (62,'wel','Record imported.');
-INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (63,'wel','Record restored.');
-INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (100,'wel','DOI creation requested.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (0,'wel','Anhysbys');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (1,'wel','Drafft');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (2,'wel','Cymeradwywyd');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (3,'wel','Wedi ymddeol');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (4,'wel','Cyflwynwyd');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (5,'wel','Gwrthodwyd');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (50,'wel','Cofnod wedi''i greu.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (51,'wel','Cofnod wedi''i ddiweddaru.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (52,'wel','Atodiad {{h.item1}} wedi''i ychwanegu.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (53,'wel','Ymlyniad {{h.item1}} wedi''i ddileu');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (54,'wel','Perchennog wedi newid o {{h.item1}} i {{h.item2}}.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (55,'wel','Newidiodd perchennog y grŵp o {{h.item1}} i {{h.item2}}');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (56,'wel','Breintiau wedi''u diweddaru.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (57,'wel','Categori wedi''i newid. Nawr mae''r categorïau yn {{h.item1}}.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (58,'wel','Dilysu wedi''i sbarduno. Y statws ymadael nawr yw {{h.item1}}.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (59,'wel','Statws wedi''i newid o {{h.item1}} i {{h.item2}}.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (60,'wel','Diweddarwyd y cofnod trwy broses {{h.item1}}.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (61,'wel','Cofnod wedi''i ddileu.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (62,'wel','Cofnod wedi''i fewnforio.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (63,'wel','Cofnod wedi''i adfer.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (100,'wel','Gofynnwyd am greu DOI.');
 
-INSERT INTO SelectionsDes (iddes, langid, label) VALUES (0,'wel','Preferred records');
-INSERT INTO SelectionsDes (iddes, langid, label) VALUES (1,'wel','Watch list');
+INSERT INTO SelectionsDes (iddes, langid, label) VALUES (0,'wel','Cofnodion a ffefrir');
+INSERT INTO SelectionsDes (iddes, langid, label) VALUES (1,'wel','Rhestr wylio');
 
 
-INSERT INTO GUF_RatingCriteriaDes (iddes, langid, label) VALUES (-1,'wel', 'Average');
-INSERT INTO GUF_RatingCriteriaDes (iddes, langid, label) VALUES (0,'wel', 'Completeness#Is the information on this page complete enough to know what you can expect from this dataset?');
-INSERT INTO GUF_RatingCriteriaDes (iddes, langid, label) VALUES (1,'wel', 'Discoverability#Was it easy to find this information page?');
-INSERT INTO GUF_RatingCriteriaDes (iddes, langid, label) VALUES (2,'wel', 'Readability#Was it easy to read and understand the contents of this page?');
-INSERT INTO GUF_RatingCriteriaDes (iddes, langid, label) VALUES (3,'wel', 'Data quality#Does the dataset contain the information you expected, the dataset has enough accuracy, the data is valid/up-to-date?');
-INSERT INTO GUF_RatingCriteriaDes (iddes, langid, label) VALUES (4,'wel', 'Service quality#The dataset is provided as a service or mediatype that is easy to work with?');
+INSERT INTO GUF_RatingCriteriaDes (iddes, langid, label) VALUES (-1,'wel', 'Cyfartaledd');
+INSERT INTO GUF_RatingCriteriaDes (iddes, langid, label) VALUES (0,'wel', 'Cyflawnrwydd# A yw''r wybodaeth ar y dudalen hon yn ddigon cyflawn i wybod beth y gallwch ei ddisgwyl o''r set ddata hon?');
+INSERT INTO GUF_RatingCriteriaDes (iddes, langid, label) VALUES (1,'wel', 'Discoverability#A oedd hi''n hawdd dod o hyd i''r dudalen wybodaeth hon?');
+INSERT INTO GUF_RatingCriteriaDes (iddes, langid, label) VALUES (2,'wel', 'Darllenadwyedd#A oedd hi''n hawdd darllen a deall cynnwys y dudalen hon?');
+INSERT INTO GUF_RatingCriteriaDes (iddes, langid, label) VALUES (3,'wel', 'Ansawdd data# A yw''r set ddata yn cynnwys y wybodaeth yr oeddech yn ei disgwyl, a oes gan y set ddata ddigon o gywirdeb, a yw''r data yn ddilys/yn gyfoes?');
+INSERT INTO GUF_RatingCriteriaDes (iddes, langid, label) VALUES (4,'wel', 'Ansawdd gwasanaeth# Darperir y set ddata fel gwasanaeth neu deip cyfryngol sy''n hawdd gweithio ag ef?');
