@@ -21,7 +21,22 @@
   ~ Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
+<!-- TODO: Create an XSD and a Java model -->
 <config>
+    <title>
+        <add>
+            <iso19139 xpath="./gmd:identificationInfo/*/gmd:citation/*/gmd:title/gco:CharacterString"
+                      condition="starts-with(./gmd:identificationInfo/*/gmd:citation/*/gmd:title/gco:CharacterString, 'Copy of')">
+                <gn_add>
+                    <gn_add>${layerName}</gn_add>
+                </gn_add>
+            </iso19139>
+            <iso19115-3.2018 xpath="./mdb:identificationInfo/*/mri:citation/*/cit:title/gco:CharacterString"
+                             condition="starts-with(./mdb:identificationInfo/*/mri:citation/*/cit:title/gco:CharacterString, 'Copy of')">
+                <gn_add>${layerName}</gn_add>
+            </iso19115-3.2018>
+        </add>
+    </title>
     <spatialRepresentation help="For each layers, set the feature count and geometry type if geometry column found">
         <delete>
             <iso19139 xpath="./gmd:spatialRepresentationInfo">
@@ -83,7 +98,7 @@
             <iso19139 xpath="./gmd:identificationInfo/*/gmd:extent/*/gmd:geographicElement[gmd:EX_GeographicBoundingBox]">
                 <gn_delete/>
             </iso19139>
-            <iso19115-3.2018 xpath="./mdb:identificationInfo/*/gmd:extent/*/gex:geographicElement[gex:EX_GeographicBoundingBox]">
+            <iso19115-3.2018 xpath="./mdb:identificationInfo/*/mri:extent/*/gex:geographicElement[gex:EX_GeographicBoundingBox]">
                 <gn_delete/>
             </iso19115-3.2018>
         </delete>
@@ -191,7 +206,7 @@
     <featureCatalogue>
         <delete>
             <iso19115-3.2018
-                    xpath="./mdb:contentInfo/mrc:MD_FeatureCatalogue[mrc:featureCatalogue/*/gfc:featureType/*/gfc:typeName]">
+                    xpath="./mdb:contentInfo[*/mrc:featureCatalogue/*/gfc:featureType/*/gfc:typeName]">
                 <gn_delete/>
             </iso19115-3.2018>
         </delete>

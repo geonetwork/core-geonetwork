@@ -49,6 +49,7 @@ import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -187,6 +188,11 @@ public class DataApi {
                     required = true)
             @RequestParam(name = "datasource")
             String datasource,
+            @Parameter(
+                    description = "Layer",
+                    required = false)
+            @RequestParam(name = "layer", required = false)
+            String layer,
             @Parameter(hidden = true)
             HttpServletRequest request
     ) throws Exception {
@@ -195,11 +201,11 @@ public class DataApi {
 
         if (datasource.startsWith("attachments")) {
             try (Store.ResourceHolder file = store.getResource(serviceContext, metadataUuid, datasource.replace("attachments/", ""), true)) {
-                datasource = file.getPath().toString().replace(geonetworkDataDir.getMetadataDataDir().toString(), "");
+                datasource = file.getPath().toString();
             }
         }
 
-        return new ResponseEntity<>(gdalMetadataExtractor.analyze(datasource), HttpStatus.OK);
+        return new ResponseEntity<>(gdalMetadataExtractor.analyze(datasource, layer), HttpStatus.OK);
     }
 
 
@@ -231,10 +237,15 @@ public class DataApi {
                     required = true)
             @RequestParam(name = "datasource")
             String datasource,
+            @Parameter(
+                    description = "Layer",
+                    required = false)
+            @RequestParam(name = "layer", required = false)
+            String layer,
             @Parameter(hidden = true)
             HttpServletRequest request
     ) throws Exception {
-        Pair<SimpleMetadataProcessingReport, Element> batchEdits = applyGdalAnalysis(metadataUuid, datasource, request, true);
+        Pair<SimpleMetadataProcessingReport, Element> batchEdits = applyGdalAnalysis(metadataUuid, datasource, layer, request, true);
         return batchEdits.two();
     }
 
@@ -267,26 +278,31 @@ public class DataApi {
                     required = true)
             @RequestParam(name = "datasource")
             String datasource,
+            @Parameter(
+                    description = "Layer"
+            )
+            @RequestParam(name = "layer", required = false)
+            String layer,
             @Parameter(hidden = true)
             HttpServletRequest request
     ) throws Exception {
-        Pair<SimpleMetadataProcessingReport, Element> batchEdits = applyGdalAnalysis(metadataUuid, datasource, request, false);
+        Pair<SimpleMetadataProcessingReport, Element> batchEdits = applyGdalAnalysis(metadataUuid, datasource, layer, request, false);
         return batchEdits.one();
     }
 
 
-    private Pair<SimpleMetadataProcessingReport, Element> applyGdalAnalysis(String metadataUuid, String datasource, HttpServletRequest request, Boolean previewOnly) throws Exception {
+    private Pair<SimpleMetadataProcessingReport, Element> applyGdalAnalysis(String metadataUuid, String datasource, String layer, HttpServletRequest request, Boolean previewOnly) throws Exception {
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
         ServiceContext serviceContext = ApiUtils.createServiceContext(request);
 
         if (datasource.startsWith("attachments")) {
             try (Store.ResourceHolder file = store.getResource(serviceContext, metadataUuid, datasource.replace("attachments/", ""), true)) {
-                datasource = file.getPath().toString().replace(geonetworkDataDir.getMetadataDataDir().toString(), "");
+                datasource = file.getPath().toString();
             }
         }
 
 
-        GdalDataset data = gdalMetadataExtractor.analyze(datasource);
+        GdalDataset data = gdalMetadataExtractor.analyze(datasource, layer);
 
         List<BatchEditParameter> edits = new ArrayList<>();
         // Remove first?
@@ -314,6 +330,10 @@ public class DataApi {
             if (schemaActionConfiguration != null) {
                 BatchEditParameter action = new BatchEditParameter();
                 action.setXpath(schemaActionConfiguration.getAttributeValue("xpath"));
+                String condition = schemaActionConfiguration.getAttributeValue("condition");
+                if (condition != null) {
+                    action.setCondition(condition);
+                }
                 if (actionType == ActionTypes.add) {
                     action.setValue(replacePlaceholderFromDataProperties(type, data, schemaActionConfiguration));
                 } else {
@@ -332,12 +352,16 @@ public class DataApi {
         if (type.equals("spatialRepresentation")) {
             addFragment = addFragment.replace("${featureCount}",
                     String.valueOf(data.getLayers().get(0).getFeatureCount().longValue()));
+        } else if (type.equals("title")) {
+            addFragment = addFragment.replace("${layerName}",
+                    String.valueOf(data.getLayers().get(0).getName()));
         } else if (type.equals("distributionFormat")) {
             addFragment = addFragment.replace("${driverLongName}",
                     String.valueOf(data.getDriverLongName()));
         }  else if (type.equals("geographicBoundingBox") && !data.getLayers().get(0).getGeometryFields().isEmpty()) {
             // TODO: For each layers ?
             List<Double> extent = data.getLayers().get(0).getGeometryFields().get(0).getExtent();
+            // TODO: Convert to WGS84
             addFragment = addFragment
                     .replace("${east}", extent.get(0).toString())
                     .replace("${west}", extent.get(2).toString())

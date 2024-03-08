@@ -28,12 +28,16 @@ public class GdalMetadataExtractor {
     @Value("${data.ingester.gdal.ogrinfo}")
     private String ogrinfoApp = "ogrinfo";
 
+    @Value("${data.ingester.gdal.ogrinfo.datadir}")
+    private String ogrinfoDataDir = "";
+
     private final String defaultOgrinfoDescribe = " -json -so -al ${datasetConnection}";
 
     @Value("${data.ingester.gdal.ogrinfo.describe}")
     private String ogrinfoDescribe;
 
     private final String defaultOgrinfoVersion = " --version";
+    private final String defaultOgrinfoFormat = " --formats";
 
     @Value("${data.ingester.gdal.ogrinfo.version:}")
     private String ogrinfoVersion;
@@ -56,27 +60,34 @@ public class GdalMetadataExtractor {
         return StringUtils.isNotEmpty(getVersion());
     }
 
-    private boolean isValidDatasource(String datasetConnection) {
+    private boolean isValidDatasource(String datasetConnection, String layer) {
+        // Limit service URL in link table or in same domain ?
         return true; // Check valid file or connection
     }
 
-    public GdalDataset analyze(String datasetConnection) throws IOException {
-        if (!isValidDatasource(datasetConnection)) {
+    public GdalDataset analyze(String datasetConnection, String layer) throws IOException {
+        if (!isValidDatasource(datasetConnection, layer)) {
             throw new IOException(String.format("Invalid datasource name %s.", datasetConnection));
         }
+
+        if (datasetConnection.startsWith(geonetworkDataDir.getMetadataDataDir().toString()) && StringUtils.isNotEmpty(ogrinfoDataDir)) {
+            datasetConnection = datasetConnection.replace(geonetworkDataDir.getMetadataDataDir().toString(), ogrinfoDataDir);
+        }
+
         String defaultOgrCommand = ogrinfoApp
                 + " " + (StringUtils.isNotEmpty(ogrinfoDescribe) ? ogrinfoDescribe : defaultOgrinfoDescribe);
         Map<String, String> parameters = new HashMap<>();
         parameters.put("datasetConnection", datasetConnection);
-
+        parameters.put("datasetLayer", StringUtils.isNotEmpty(layer) ? layer : "");
+        String ogrInfo = "";
         try {
-            String ogrInfo = execute(defaultOgrCommand, parameters);
+            ogrInfo = execute(defaultOgrCommand, parameters);
             ObjectMapper mapper = new ObjectMapper();
             GdalDataset dataset = mapper.readValue(ogrInfo, GdalDataset.class);
             LOGGER.debug(dataset.getDriverLongName());
             return dataset;
         } catch (JsonParseException jsonParseException) {
-            throw new IOException(String.format("Failed to analyze %s. Error is %s", datasetConnection, jsonParseException.getMessage()));
+            throw new IOException(String.format("Failed to analyze %s. Error is %s", datasetConnection, ogrInfo));
         } catch (IOException e) {
             throw new IOException(String.format("Failed to analyze %s. Error is %s", datasetConnection, e.getMessage()));
         }
@@ -97,11 +108,13 @@ public class GdalMetadataExtractor {
         builder.redirectErrorStream(true);
 
         Process p = builder.start();
+        // TODO: Check what happen if Java app is killed and process is still running
+        // p.destroy();
         return StreamUtils.copyToString(p.getInputStream(), StandardCharsets.UTF_8);
     }
 
     public static void main(String[] args) throws Exception {
-        new GdalMetadataExtractor().analyze(args[0]);
+        new GdalMetadataExtractor().analyze(args[0], args[1]);
     }
 
 
