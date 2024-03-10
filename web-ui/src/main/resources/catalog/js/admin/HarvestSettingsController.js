@@ -55,6 +55,7 @@
     "gnConfigService",
     "gnClipboard",
     "gnSearchSettings",
+    "gnLanguageService",
     function (
       $scope,
       $q,
@@ -71,7 +72,8 @@
       gnConfig,
       gnConfigService,
       gnClipboard,
-      gnSearchSettings
+      gnSearchSettings,
+      gnLanguageService
     ) {
       $scope.searchObj = {
         internal: true,
@@ -95,6 +97,18 @@
       $scope.harvesterHistory = {};
       $scope.isLoadingOneHarvester = false;
       $scope.translationProviderConfigured = false;
+
+      $scope.languageSource = null;
+      gnLanguageService.getLanguages().then(function (data) {
+        angular.forEach(data, function (lang) {
+          lang.english = lang.label["eng"];
+          lang.name = lang.label[$scope.lang] || lang.english;
+          lang.code = lang.code;
+          lang.tokens = [lang.name, lang.code, lang.english];
+        });
+
+        $scope.languageSource = gnLanguageService.getLanguageAutocompleter(data);
+      });
 
       $scope.harvesterHistoryPaging = {
         page: 1,
