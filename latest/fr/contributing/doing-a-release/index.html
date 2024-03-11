@@ -20,7 +20,7 @@
       
       
       <link rel="icon" href="../../../assets/images/geonetwork-logo.png">
-      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.11">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.13">
     
     
       
@@ -1388,7 +1388,7 @@ with the following utilities: <strong><em>sed</em></strong>, <strong><em>xmlstar
 </li>
 <li>
 <p>Create change log page: <code>docs/manual/docs/overview/change-log/</code></p>
-<div class="language-shell highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>cat<span class="w"> </span><span class="s">&lt;&lt;EOF &gt; docs/manual/docs/overview/changes/version-$newversion.md</span>
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>cat<span class="w"> </span><span class="s">&lt;&lt;EOF &gt; docs/manual/docs/overview/change-log/version-$version.md</span>
 </span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="s"># Version $version</span>
 </span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
 </span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="s">GeoNetwork $version is a minor release.</span>
@@ -1407,9 +1407,9 @@ with the following utilities: <strong><em>sed</em></strong>, <strong><em>xmlstar
 </span><span id="__span-7-17"><a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>
 </span><span id="__span-7-18"><a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a><span class="s">EOF</span>
 </span><span id="__span-7-19"><a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>
-</span><span id="__span-7-20"><a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>git<span class="w"> </span>log<span class="w"> </span>--pretty<span class="o">=</span><span class="s1">&#39;format:* %N&#39;</span><span class="w"> </span><span class="nv">$previousversion</span>..<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;^* </span>$<span class="s2">&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>docs/manual/docs/overview/changes/version-<span class="nv">$newversion</span>.md
+</span><span id="__span-7-20"><a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>git<span class="w"> </span>log<span class="w"> </span>--pretty<span class="o">=</span><span class="s1">&#39;format:* %N&#39;</span><span class="w"> </span><span class="nv">$previousversion</span>..<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;^* </span>$<span class="s2">&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>docs/manual/docs/overview/change-log/version-<span class="nv">$version</span>.md
 </span><span id="__span-7-21"><a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>
-</span><span id="__span-7-22"><a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>cat<span class="w"> </span><span class="s">&lt;&lt;EOF &gt; docs/manual/docs/overview/changes/version-$newversion.md</span>
+</span><span id="__span-7-22"><a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>cat<span class="w"> </span><span class="s">&lt;&lt;EOF &gt; docs/manual/docs/overview/change-log/version-$version.md</span>
 </span><span id="__span-7-23"><a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>
 </span><span id="__span-7-24"><a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a><span class="s">and more \... see [$version issues](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+milestone%3A$version+is%3Aclosed) and [pull requests](https://github.com/geonetwork/core-geonetwork/pulls?page=3&amp;q=is%3Apr+milestone%3A$version+is%3Aclosed) for full details.</span>
 </span><span id="__span-7-25"><a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a><span class="s">EOF</span>
@@ -1457,7 +1457,7 @@ Once running check the new page:
 </span><span id="__span-11-10"><a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>
 </span><span id="__span-11-11"><a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a><span class="c1"># Download Jetty and create the installer</span>
 </span><span id="__span-11-12"><a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a><span class="nb">cd</span><span class="w"> </span>../release
-</span><span id="__span-11-13"><a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>mvn<span class="w"> </span>clean<span class="w"> </span>install<span class="w"> </span>-Djetty-download,bundle
+</span><span id="__span-11-13"><a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>mvn<span class="w"> </span>clean<span class="w"> </span>install<span class="w"> </span>-Pjetty-download,bundle
 </span><span id="__span-11-14"><a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>
 </span><span id="__span-11-15"><a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a><span class="c1"># Deploy to osgeo repository (requires credentials in ~/.m2/settings.xml)</span>
 </span><span id="__span-11-16"><a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a><span class="nb">cd</span><span class="w"> </span>..
@@ -1477,13 +1477,15 @@ Once running check the new page:
 <div class="language-shell highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Set version number to SNAPSHOT</span>
 </span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>./update-version.sh<span class="w"> </span><span class="nv">$newversion</span><span class="w"> </span><span class="nv">$nextversion</span>
 </span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
-</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c1"># Add SQL migration step for the next version</span>
-</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>mkdir<span class="w"> </span>web/src/main/webapp/WEB-INF/classes/setup/sql/migrate/v442
-</span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>cat<span class="w"> </span><span class="s">&lt;&lt;EOF &gt; web/src/main/webapp/WEB-INF/classes/setup/sql/migrate/v442/migrate-default.sql</span>
-</span><span id="__span-13-7"><a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="s">UPDATE Settings SET value=&#39;4.4.2&#39; WHERE name=&#39;system/platform/version&#39;;</span>
-</span><span id="__span-13-8"><a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="s">UPDATE Settings SET value=&#39;SNAPSHOT&#39; WHERE name=&#39;system/platform/subVersion&#39;;</span>
-</span><span id="__span-13-9"><a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="s">EOF</span>
-</span><span id="__span-13-10"><a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>vi<span class="w"> </span>web/src/main/webResources/WEB-INF/config-db/database_migration.xml
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="nv">nextversionnosnapshot</span><span class="o">=</span><span class="si">${</span><span class="nv">nextversion</span><span class="p">//[-SNAPSHOT]/</span><span class="si">}</span>
+</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>
+</span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="c1"># Add SQL migration step for the next version</span>
+</span><span id="__span-13-7"><a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>mkdir<span class="w"> </span>web/src/main/webapp/WEB-INF/classes/setup/sql/migrate/v<span class="si">${</span><span class="nv">nextversionnosnapshot</span><span class="p">//[.]/</span><span class="si">}</span>
+</span><span id="__span-13-8"><a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>cat<span class="w"> </span><span class="s">&lt;&lt;EOF &gt; web/src/main/webapp/WEB-INF/classes/setup/sql/migrate/v${nextversionnosnapshot//[.]/}/migrate-default.sql</span>
+</span><span id="__span-13-9"><a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="s">UPDATE Settings SET value=&#39;${nextversionnosnapshot}&#39; WHERE name=&#39;system/platform/version&#39;;</span>
+</span><span id="__span-13-10"><a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="s">UPDATE Settings SET value=&#39;SNAPSHOT&#39; WHERE name=&#39;system/platform/subVersion&#39;;</span>
+</span><span id="__span-13-11"><a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a><span class="s">EOF</span>
+</span><span id="__span-13-12"><a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>vi<span class="w"> </span>web/src/main/webResources/WEB-INF/config-db/database_migration.xml
 </span></code></pre></div>
 <p>In <code>WEB-INF/config-db/database_migration.xml</code> add an entry for the new version in the 2 steps:</p>
 <div class="language-xml highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="nt">&lt;entry</span><span class="w"> </span><span class="na">key=</span><span class="s">&quot;4.4.2&quot;</span><span class="nt">&gt;</span>
@@ -1515,7 +1517,7 @@ Once running check the new page:
 <li>
 <p>If using Mac OS X:</p>
 <div class="language-shell highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>md5<span class="w"> </span>-r<span class="w"> </span>web/target/geonetwork.war<span class="w"> </span>&gt;<span class="w"> </span>web/target/geonetwork.war.md5
-</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>md5<span class="w"> </span>-r<span class="w"> </span>release/target/GeoNetwork-<span class="nv">$newversion</span>/geonetwork-bundle-<span class="nv">$newversion</span>.zip<span class="w"> </span>&gt;<span class="w"> </span>release/target/GeoNetwork-<span class="nv">$newversion</span>/geonetwork-bundle-<span class="nv">$newversion</span>.zip.md5
+</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>md5<span class="w"> </span>-r<span class="w"> </span>release/target/GeoNetwork-<span class="nv">$version</span>/geonetwork-bundle-<span class="nv">$newversion</span>.zip<span class="w"> </span>&gt;<span class="w"> </span>release/target/GeoNetwork-<span class="nv">$version</span>/geonetwork-bundle-<span class="nv">$newversion</span>.zip.md5
 </span></code></pre></div>
 </li>
 </ul>
@@ -1745,7 +1747,7 @@ Once running check the new page:
     <script id="__config" type="application/json">{"base": "../../..", "features": ["content.action.view", "content.action.edit", "content.code.copy", "content.tabs.link", "navigation.tabs", "navigation.tracking", "navigation.prune", "navigation.indexes", "toc.follow", "navigation.top", "navigation.footer", "announce.dismiss"], "search": "../../../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copi\u00e9 dans le presse-papier", "clipboard.copy": "Copier dans le presse-papier", "search.result.more.one": "1 de plus sur cette page", "search.result.more.other": "# de plus sur cette page", "search.result.none": "Aucun document trouv\u00e9", "search.result.one": "1 document trouv\u00e9", "search.result.other": "# documents trouv\u00e9s", "search.result.placeholder": "Taper pour d\u00e9marrer la recherche", "search.result.term.missing": "Non trouv\u00e9", "select.version": "S\u00e9lectionner la version"}, "version": {"default": "stable", "provider": "mike"}}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.8fd75fb4.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.c8d2eff1.min.js"></script>
       
     
   </body>
