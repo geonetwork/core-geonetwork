@@ -4,19 +4,20 @@ This section documents the steps followed by the development team to do a new re
 
 Once the release branch has been thoroughly tested and is stable a release can be made.
 
-1.  Prepare the release
+1.  Prepare the release (examples prepairs version 3.12.12 as latest release):
 
     ``` shell
     # Setup properties
-    frombranch=origin/main
-    versionbranch=4.2.x
-    version=4.2.3
+    frombranch=origin/3.12.x
+    versionbranch=3.12.x
+    version=3.12.12
     minorversion=0
     newversion=$version-$minorversion
-    currentversion=4.2.3-SNAPSHOT
-    previousversion=4.2.2
-    nextversion=4.2.4-SNAPSHOT
-    nextMajorVersion=4.4.0-SNAPSHOT
+    currentversion=3.12-SNAPSHOT
+    previousversion=3.12.11
+    nextversion=3.12.13
+    nextversionsnapshot=$currentversion
+    nextMajorVersion=4.0.0-SNAPSHOT
 
 
     # Get the branch
@@ -34,7 +35,7 @@ Once the release branch has been thoroughly tested and is stable a release can b
 
 
     # Update version number (in pom.xml, installer config and SQL)
-    ./update-version.sh $currentversion $newversion
+    ./update-version.sh $currentversion $version
 
     # Generate list of changes
     cat <<EOF > docs/changes$newversion.txt
@@ -47,7 +48,54 @@ Once the release branch has been thoroughly tested and is stable a release can b
     git log --pretty='format:- %s' $previousversion... >> docs/changes$newversion.txt
     ```
 
-2.  Commit & tag the new version
+2.  Create change log page: `docs/manual/docs/overview/change-log/`
+
+    ``` shell
+    cat <<EOF > docs/manual/docs/overview/change-log/version-$version.md
+    # Version $version
+    
+    GeoNetwork $version is a minor release.
+
+    ## Migration notes
+    
+    ### API changes
+    
+    ### Installation changes
+    
+    ### Index changes
+    
+    ## List of changes
+
+    Major changes:
+    
+    EOF
+
+    git log --pretty='format:* %N' $previousversion... | grep -v "^* $" >> docs/manual/docs/overview/change-log/version-$version.md
+
+    cat <<EOF >> docs/manual/docs/overview/change-log/version-$version.md
+    
+    and more \... see [$version issues](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+milestone%3A$version+is%3Aclosed) and [pull requests](https://github.com/geonetwork/core-geonetwork/pulls?page=3&q=is%3Apr+milestone%3A$version+is%3Aclosed) for full details.
+    EOF
+    ```
+
+    Fill in the above markdown file, removing any unused headings.
+
+3. Update links and navigation:
+
+  * ``docs/manual/mkdocs.yml``
+  * ``docs/manual/docs/overview/change-log/maintenance.md``
+
+   Test documentation locally:
+    ```
+    cd docs/manual
+    mkdocs serve
+    ```
+   Once running check the new page:
+    ```
+    open http://localhost:8000/ocverview/change-log/$newversion
+    ```
+
+4.  Commit & tag the new version
 
     ``` shell
     # Then commit the new version
@@ -58,27 +106,27 @@ Once the release branch has been thoroughly tested and is stable a release can b
     git tag -a $version -m "Tag for $version release"
     ```
 
-3.  Build
+5.  Build
 
     ``` shell
     # Build the new release
-    mvn clean install -DskipTests -Pwar -Pwro4j-prebuild-cache
+    mvn clean install -DskipTests
 
 
     # Download Jetty and create the installer
     cd release
-    mvn clean install -Djetty-download
+    mvn clean install -Pjetty-download,bundle
     ant
 
-
     # Deploy to osgeo repository (requires credentials in ~/.m2/settings.xml)
-    mvn deploy
+    cd ..
+    mvn deploy -Drelease
     ```
 
-4.  Test
+6.  Test
 
     ``` shell
-    cd target/GeoNetwork-$newversion
+    cd target/GeoNetwork-$version
     unzip geonetwork-bundle-$newversion.zip -d geonetwork-bundle-$newversion
     cd geonetwork-bundle-$newversion/bin
     ./startup.sh -f
@@ -88,12 +136,12 @@ Once the release branch has been thoroughly tested and is stable a release can b
 
     ``` shell
     # Set version number to SNAPSHOT
-    ./update-version.sh $newversion $nextversion
-
+    ./update-version.sh $version $nextversionsnapshot
+    
     # Add SQL migration step for the next version
-    mkdir web/src/main/webapp/WEB-INF/classes/setup/sql/migrate/v424
-    cat <<EOF > web/src/main/webapp/WEB-INF/classes/setup/sql/migrate/v424/migrate-default.sql
-    UPDATE Settings SET value='4.2.4' WHERE name='system/platform/version';
+    mkdir web/src/main/webapp/WEB-INF/classes/setup/sql/migrate/v${nextversion//[.]/}
+    cat <<EOF > web/src/main/webapp/WEB-INF/classes/setup/sql/migrate/v${nextversion//[.]/}/migrate-default.sql
+    UPDATE Settings SET value='${nextversion}' WHERE name='system/platform/version';
     UPDATE Settings SET value='SNAPSHOT' WHERE name='system/platform/subVersion';
     EOF
     vi web/src/main/webResources/WEB-INF/config-db/database_migration.xml
@@ -102,16 +150,16 @@ Once the release branch has been thoroughly tested and is stable a release can b
     In `WEB-INF/config-db/database_migration.xml` add an entry for the new version in the 2 steps:
 
     ``` xml
-    <entry key="3.12.2">
+    <entry key="3.12.13">
       <list>
-        <value>WEB-INF/classes/setup/sql/migrate/v3122/migrate-</value>
+        <value>WEB-INF/classes/setup/sql/migrate/v31213/migrate-</value>
       </list>
     </entry>
     ```
 
     ``` shell
     git add .
-    git commit -m "Update version to $nextversion"
+    git commit -m "Update version to $nextversionsnapshot"
     ```
 
 6.  Publishing
@@ -146,9 +194,9 @@ Once the release branch has been thoroughly tested and is stable a release can b
     cd /home/frs/project/g/ge/geonetwork/GeoNetwork_opensource
     # or for RC release
     cd /home/frs/project/g/ge/geonetwork/GeoNetwork_unstable_development_versions/
-    mkdir v3.12.1
-    cd v3.12.1
-    put docs/changes3.12.1-0.txt
+    mkdir v3.12.12
+    cd v3.12.12
+    put docs/changes3.12.12-0.txt
     put release/target/GeoNetwork*/geonetwork-bundle*.zip*
     put web/target/geonetwork.war*
     bye
