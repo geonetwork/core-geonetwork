@@ -130,7 +130,7 @@
           <xsl:copy-of select="gn-fn-iso19115-3.2018:write-date-or-dateTime(/root/env/createDate, 'creation')"/>
         </mdb:dateInfo>
       </xsl:if>
-      <xsl:if test="not($isRevisionDateAvailable)">
+      <xsl:if test="/root/env/changeDate != '' and not($isRevisionDateAvailable)">
         <mdb:dateInfo>
           <xsl:copy-of select="gn-fn-iso19115-3.2018:write-date-or-dateTime(/root/env/changeDate, 'revision')"/>
         </mdb:dateInfo>
