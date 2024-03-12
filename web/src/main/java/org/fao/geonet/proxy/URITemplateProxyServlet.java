@@ -175,7 +175,7 @@ public class URITemplateProxyServlet extends ProxyServlet {
         // If not set externally try to use the value from web.xml
         if (StringUtils.isBlank(targetUriTemplate)) {
             targetUriTemplate = getConfigParam(P_TARGET_URI);
-            if (StringUtils.isBlank(targetUriTemplate)) {
+            if (targetUriTemplate == null) {
                 throw new ServletException(P_TARGET_URI + "  is required in web.xml or set externally");
             }
         }
