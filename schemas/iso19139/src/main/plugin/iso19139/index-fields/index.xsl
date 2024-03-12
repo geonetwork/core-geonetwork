@@ -1126,7 +1126,7 @@
               "nilReason": "<xsl:value-of select="../@gco:nilReason"/>",
             </xsl:if>
             "function":"<xsl:value-of select="gmd:function/gmd:CI_OnLineFunctionCode/@codeListValue"/>",
-            "applicationProfile":"<xsl:value-of select="util:escapeForJson(gmd:applicationProfile/*/text())"/>",
+            "applicationProfile":"<xsl:value-of select="util:escapeForJson(gmd:applicationProfile/(gco:CharacterString|gmx:Anchor)/text())"/>",
             "group": <xsl:value-of select="$transferGroup"/>
             }
             <!--Link object in Angular used to be
