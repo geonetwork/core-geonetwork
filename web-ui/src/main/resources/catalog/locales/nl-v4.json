@@ -31,6 +31,7 @@
   "language.id": "Identifier",
   "language.remove": "Verwijder taal",
   "layerName": "Laagnaam",
+  "layerNameTooltip": "A layer name from the GetCapabilities document",
   "ogcServiceUrl": "Service URL",
   "translation.addFor": "Voeg een nieuwe vertaling toe voor",
   "translation.add": "Toevoegen",
@@ -418,5 +419,8 @@
   "associationType": "Relatie link",
   "initiativeType": "Initiatief type",
   "associatedTo": "Gerelateerd",
+  "overviewDescription": "Overview description",
+  "overviewUrl": "Overview URL",
+  "restApiUrl": "REST API URL",
   "filterHelp": "Please click on one of the buttons below to activate the filter"
 }

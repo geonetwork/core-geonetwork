@@ -31,6 +31,7 @@
   "language.id": "Identifikátor",
   "language.remove": "Odebrat jazyk",
   "layerName": "Název vrstvy",
+  "layerNameTooltip": "A layer name from the GetCapabilities document",
   "ogcServiceUrl": "URL služby",
   "translation.addFor": "Přidat nový překlad pro",
   "translation.add": "Přidat",
@@ -418,5 +419,8 @@
   "associationType": "Typ přidružení",
   "initiativeType": "Typ iniciativy",
   "associatedTo": "Přidružený",
+  "overviewDescription": "Overview description",
+  "overviewUrl": "Overview URL",
+  "restApiUrl": "REST API URL",
   "filterHelp": "Pro aktivaci filtru klikněte na jedno z níže uvedených tlačítek"
 }
