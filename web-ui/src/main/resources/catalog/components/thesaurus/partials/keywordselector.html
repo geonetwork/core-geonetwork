@@ -18,7 +18,12 @@
 
   <span data-ng-show="!invalidKeywordMatch">
     <div class="row">
-      <label class="col-sm-2 control-label"> {{thesaurusTitle}} </label>
+      <label
+        class="col-sm-2 control-label"
+        data-gn-field-tooltip="{{schema}}|{{thesaurusKey}}"
+      >
+        {{thesaurusTitle}}
+      </label>
       <div
         class="col-sm-9"
         data-ng-class="maxTags && selected.length == maxTags ? 'gn-maxtags' : ''"
