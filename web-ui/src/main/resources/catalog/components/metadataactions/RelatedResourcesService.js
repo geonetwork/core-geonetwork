@@ -54,6 +54,7 @@
     "$filter",
     "gnExternalViewer",
     "gnGlobalSettings",
+    "gnWebAnalyticsService",
     function (
       gnMap,
       gnOwsCapabilities,
@@ -68,7 +69,8 @@
       gnConfig,
       $filter,
       gnExternalViewer,
-      gnGlobalSettings
+      gnGlobalSettings,
+      gnWebAnalyticsService
     ) {
       this.configure = function (options) {
         angular.extend(this.map, options);
@@ -135,6 +137,7 @@
 
       var addWFSToMap = function (link, md) {
         var url = $filter("gnLocalized")(link.url) || link.url;
+        gnWebAnalyticsService.trackLink(url, link.protocol);
 
         var isServiceLink =
           gnSearchSettings.mapProtocols.services.indexOf(link.protocol) > -1;
@@ -211,6 +214,7 @@
 
       function addMapToMap(record, md) {
         var url = $filter("gnLocalized")(record.url) || record.url;
+        gnWebAnalyticsService.trackLink(url, record.protocol);
         gnOwsContextService.loadContextFromUrl(url, gnSearchSettings.viewerMap);
 
         gnSearchLocation.setMap("legend");
@@ -250,8 +254,12 @@
       var openLink = function (record, link) {
         var url = $filter("gnLocalized")(record.url) || record.url;
         if (url && angular.isString(url) && url.match("^(http|ftp|sftp|\\\\|//)")) {
+          gnWebAnalyticsService.trackLink(url, record.protocol);
+
           return window.open(url, "_blank");
         } else if (url && url.indexOf("www.") == 0) {
+          gnWebAnalyticsService.trackLink("http://" + url, record.protocol);
+
           return window.open("http://" + url, "_blank");
         } else if (
           record.title &&
