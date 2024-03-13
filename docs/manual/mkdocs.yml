@@ -147,8 +147,8 @@ nav:
     - overview/authors.md
     - 'Changelog':
       - overview/change-log/index.md
-      - 'Maintenance':
-        - overview/change-log/maintenance/index.md
+      - 'Archive':
+        - overview/change-log/archive/index.md
         - overview/change-log/version-3.12.12.md
         - overview/change-log/version-3.12.11.md
         - overview/change-log/version-3.12.10.md
@@ -162,8 +162,6 @@ nav:
         - overview/change-log/version-3.12.2.md
         - overview/change-log/version-3.12.1.md
         - overview/change-log/version-3.12.0.md
-      - 'Archive':
-        - overview/change-log/archive/index.md
         - overview/change-log/version-3.10.10.md
         - overview/change-log/version-3.10.9.md
         - overview/change-log/version-3.10.8.md
