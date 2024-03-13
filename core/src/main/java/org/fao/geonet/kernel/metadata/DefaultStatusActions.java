@@ -181,15 +181,6 @@ public class DefaultStatusActions implements StatusActions {
             // we know we are allowed to do the change, apply any side effects
             boolean deleted = applyStatusChange(status.getMetadataId(), status, statusId);
 
-            // inform content reviewers if the status is submitted
-            try {
-                notify(getUserToNotify(status), status);
-            } catch (Exception e) {
-                context.warning(String.format(
-                    "Failed to send notification on status change for metadata %s with status %s. Error is: %s",
-                    status.getMetadataId(), status.getStatusValue().getId(), e.getMessage()));
-            }
-
             if (deleted) {
                 results.put(status.getMetadataId(), StatusChangeType.DELETED);
             } else {
@@ -206,6 +197,15 @@ public class DefaultStatusActions implements StatusActions {
                         status.getUserId()
                     ));
                 }
+            }
+
+            // inform content reviewers if the status is submitted
+            try {
+                notify(getUserToNotify(status), status);
+            } catch (Exception e) {
+                context.warning(String.format(
+                    "Failed to send notification on status change for metadata %s with status %s. Error is: %s",
+                    status.getMetadataId(), status.getStatusValue().getId(), e.getMessage()));
             }
 
         }
