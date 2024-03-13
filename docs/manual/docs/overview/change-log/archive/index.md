@@ -18,6 +18,22 @@ Volunteers wishing to backport security fixes to older versions of GeoNetwork ar
 -   [Version 4.0.0 Alpha.2](../version-4.0.0-alpha.2.md)
 -   [Version 4.0.0 Alpha.1](../version-4.0.0-alpha.1.md)
 
+## 3.12.x
+
+-   [Version 3.12.12](../version-3.12.12.md)
+-   [Version 3.12.11](../version-3.12.11.md)
+-   [Version 3.12.10](../version-3.12.10.md)
+-   [Version 3.12.9](../version-3.12.9.md)
+-   [Version 3.12.8](../version-3.12.8.md)
+-   [Version 3.12.7](../version-3.12.7.md)
+-   [Version 3.12.6](../version-3.12.6.md)
+-   [Version 3.12.5](../version-3.12.5.md)
+-   [Version 3.12.4](../version-3.12.4.md)
+-   [Version 3.12.3](../version-3.12.3.md)
+-   [Version 3.12.3](../version-3.12.2.md)
+-   [Version 3.12.1](../version-3.12.1.md)
+-   [Version 3.12.0](../version-3.12.0.md)
+
 ## 3.10.x
 
 -   [Version 3.10.10](../version-3.10.10.md)
