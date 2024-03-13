@@ -806,6 +806,13 @@
         <xhtml:link rel="alternate" hreflang="fr" href="https://docs.geonetwork-opensource.org/3.12fr/overview/change-log/version-3.12.11/"/>
     </url>
     <url>
+        <loc>https://docs.geonetwork-opensource.org/3.12/overview/change-log/version-3.12.12/</loc>
+        <lastmod>2024-03-13</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/3.12/overview/change-log/version-3.12.12/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://docs.geonetwork-opensource.org/3.12fr/overview/change-log/version-3.12.12/"/>
+    </url>
+    <url>
         <loc>https://docs.geonetwork-opensource.org/3.12/overview/change-log/version-3.12.2/</loc>
         <lastmod>2024-03-13</lastmod>
         <changefreq>daily</changefreq>
@@ -958,13 +965,6 @@
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/3.12/overview/change-log/archive/"/>
         <xhtml:link rel="alternate" hreflang="fr" href="https://docs.geonetwork-opensource.org/3.12fr/overview/change-log/archive/"/>
-    </url>
-    <url>
-        <loc>https://docs.geonetwork-opensource.org/3.12/overview/change-log/maintenance/</loc>
-        <lastmod>2024-03-13</lastmod>
-        <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/3.12/overview/change-log/maintenance/"/>
-        <xhtml:link rel="alternate" hreflang="fr" href="https://docs.geonetwork-opensource.org/3.12fr/overview/change-log/maintenance/"/>
     </url>
     <url>
         <loc>https://docs.geonetwork-opensource.org/3.12/overview/license/</loc>
@@ -2430,6 +2430,13 @@
         <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/3.12overview/change-log/version-3.12.11/"/>
     </url>
     <url>
+        <loc>https://docs.geonetwork-opensource.org/3.12/fr/overview/change-log/version-3.12.12/</loc>
+        <lastmod>2024-03-13</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://docs.geonetwork-opensource.org/3.12/fr/overview/change-log/version-3.12.12/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/3.12overview/change-log/version-3.12.12/"/>
+    </url>
+    <url>
         <loc>https://docs.geonetwork-opensource.org/3.12/fr/overview/change-log/version-3.12.2/</loc>
         <lastmod>2024-03-13</lastmod>
         <changefreq>daily</changefreq>
@@ -2582,13 +2589,6 @@
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="fr" href="https://docs.geonetwork-opensource.org/3.12/fr/overview/change-log/archive/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/3.12overview/change-log/archive/"/>
-    </url>
-    <url>
-        <loc>https://docs.geonetwork-opensource.org/3.12/fr/overview/change-log/maintenance/</loc>
-        <lastmod>2024-03-13</lastmod>
-        <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="fr" href="https://docs.geonetwork-opensource.org/3.12/fr/overview/change-log/maintenance/"/>
-        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/3.12overview/change-log/maintenance/"/>
     </url>
     <url>
         <loc>https://docs.geonetwork-opensource.org/3.12/fr/overview/license/</loc>
