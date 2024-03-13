@@ -59,6 +59,7 @@ l=(
     'nl::nl'
     'cs::cs_CZ'
     'ca::ca'
+    'cy::cy'
     'pt::pt_BR'
     'fi::fi'
     'is::is'
