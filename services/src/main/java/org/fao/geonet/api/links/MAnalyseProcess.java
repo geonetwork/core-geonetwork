@@ -47,6 +47,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -71,6 +72,10 @@ public class MAnalyseProcess implements SelfNaming {
     private final AtomicLong deleteAllDate =  new AtomicLong(Long.MAX_VALUE);
     private final AtomicLong analyseMdDate = new AtomicLong(Long.MAX_VALUE);
     private final AtomicLong testLinkDate = new AtomicLong(Long.MAX_VALUE);
+
+    private final AtomicLong finishDate  = new AtomicLong(Long.MAX_VALUE);
+
+    private final AtomicBoolean processFinished = new AtomicBoolean(Boolean.FALSE);
 
     @ManagedAttribute
     public int getMetadataToAnalyseCount() {
@@ -115,6 +120,16 @@ public class MAnalyseProcess implements SelfNaming {
     @ManagedAttribute
     public ObjectName getObjectName() {
         return this.probeName;
+    }
+
+    @ManagedAttribute
+    public long getFinishDate() {
+        return finishDate.get();
+    }
+
+    @ManagedAttribute
+    public boolean isProcessFinished() {
+        return this.processFinished.get();
     }
 
     public MAnalyseProcess(String catalogueId,
@@ -168,6 +183,8 @@ public class MAnalyseProcess implements SelfNaming {
         public void run() {
             try {
                 testLink(links);
+                finishDate.set(System.currentTimeMillis());
+                processFinished.set(Boolean.TRUE);
             } catch (Exception ex) {
                 Log.error(LOGGER, String.format("Error processing metadata links in process '%s'",
                     probeName), ex);
@@ -211,6 +228,8 @@ public class MAnalyseProcess implements SelfNaming {
         public void run() {
             try {
                 processMetadataAndTestLink(testLink, ids);
+                finishDate.set(System.currentTimeMillis());
+                processFinished.set(Boolean.TRUE);
             } catch (Exception ex) {
                 Log.error(LOGGER, String.format("Error processing metadata links in process '%s'",
                     probeName), ex);
