@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2023 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2024 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -421,7 +421,7 @@ public class URITemplateProxyServlet extends org.mitre.dsmiley.httpproxy.URITemp
                             ApplicationContextHolder.get().getBean(LinkRepository.class);
                         long linksFound = linkRepository.count(
                             LinkSpecs.filter(host, null, null,
-                                null, null, null));
+                                null, null, null, false,null));
                         if (linksFound == 0) {
                             String message = "The proxy does not allow to access the requested URI " +
                                 "because the URL host was not registered in any metadata records.";

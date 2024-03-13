@@ -12,7 +12,7 @@
             type="button"
             class="btn btn-primary"
             title="{{'analyzeLinks-help' | translate}}"
-            data-ng-disabled="!user.isAdministrator()"
+            data-ng-disabled="!user.isAdministrator() || processesRunning"
             data-gn-click-and-spin="analyzeLinks()"
           >
             <i class="fa fa-fw fa-cogs" />&nbsp;
@@ -23,7 +23,7 @@
             type="button"
             class="btn btn-danger"
             data-ng-click="removeAll()"
-            data-ng-disabled="!user.isAdministrator()"
+            data-ng-disabled="!user.isAdministrator() || processesRunning"
             data-gn-confirm-click="{{'removeAllLinksAndStatusConfirm' | translate}}"
           >
             <i class="fa fa-fw fa-times" />&nbsp;
@@ -49,60 +49,153 @@
         </div>
       </div>
 
-      <div class="row">
-        <div class="form-group col-lg-3 gn-nopadding-left">
-          <label class="control-label" for="gn-link-group-owner" data-translate=""
-            >groupOwner</label
-          >
-          <div
-            id="gn-link-group-owner"
-            data-groups-combo=""
-            data-set-default-value="false"
-            data-owner-group="groupOwnerIdFilter"
-            lang="lang"
-            groups="groups"
-            data-exclude-special-groups="true"
-          >
-            &nbsp;
-          </div>
-        </div>
-        <div class="form-group col-lg-3 gn-nopadding-left">
-          <label class="control-label" for="gn-link-group" data-translate=""
-            >groupPublished</label
-          >
-          <div
-            id="gn-link-group"
-            data-groups-combo=""
-            data-set-default-value="false"
-            data-owner-group="groupIdFilter"
-            lang="lang"
-            groups="groups"
-            data-exclude-special-groups="true"
-          >
-            &nbsp;
-          </div>
-        </div>
-        <div
-          class="form-group col-lg-3 gn-nopadding-left"
-          data-ng-if="selections.length > 0"
-        >
-          <label class="control-label" for="gn-link-selection" data-translate=""
-            >chooseASelection</label
-          >
-          <select
-            id="gn-link-selection"
-            class="form-control"
-            data-ng-model="selectedSelection.id"
-            data-ng-options="s.id as s.label
-                                   for s in selections | orderBy:'id'"
-          ></select>
-        </div>
+      <div class="gn-margin-top">
+        <gn-dashboard-record-links-processes-container
+          data-refresh="refreshProcesses"
+          data-processes-finished-callback="processesFinished()"
+        />
       </div>
+
+      <!-- Search fields -->
+      <fieldset>
+        <legend data-translate="">linkChecker-search</legend>
+
+        <div class="row">
+          <div class="form-group col-lg-4 gn-nopadding-left">
+            <label class="control-label" for="gn-link-group-owner" data-translate=""
+              >chooseMetadataGroupOwner</label
+            >
+            <div
+              id="gn-link-group-owner"
+              data-groups-combo=""
+              data-set-default-value="false"
+              data-owner-group="groupOwnerIdFilter"
+              lang="lang"
+              groups="groups"
+              data-exclude-special-groups="true"
+            >
+              &nbsp;
+            </div>
+          </div>
+          <div class="form-group col-lg-4 gn-nopadding-left">
+            <label class="control-label" for="gn-link-group" data-translate=""
+              >groupPublished</label
+            >
+            <div
+              id="gn-link-group"
+              data-groups-combo=""
+              data-set-default-value="false"
+              data-owner-group="groupIdFilter"
+              lang="lang"
+              groups="groups"
+              data-exclude-special-groups="true"
+            >
+              &nbsp;
+            </div>
+          </div>
+          <!-- selections.length > 1: there is always an empty selection -->
+          <div
+            class="form-group col-lg-4 gn-nopadding-left"
+            data-ng-if="selections.length > 1"
+          >
+            <label class="control-label" for="gn-link-selection" data-translate=""
+              >chooseASelection</label
+            >
+            <select
+              id="gn-link-selection"
+              class="form-control"
+              data-ng-model="selectedSelection.id"
+              data-ng-options="s.id as s.label
+                                   for s in selections | orderBy:'id'"
+            ></select>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="form-group col-lg-6 gn-nopadding-left">
+            <label class="control-label" for="gn-link-url" data-translate=""
+              >linkUrl</label
+            >
+            <input
+              type="text"
+              class="form-control"
+              id="gn-link-url"
+              data-ng-model="urlFilter"
+            />
+          </div>
+
+          <div class="form-group col-lg-6 gn-nopadding-left">
+            <label class="control-label" for="gn-link-associated" data-translate=""
+              >associatedUuid</label
+            >
+            <input
+              type="text"
+              class="form-control"
+              id="gn-link-associated"
+              data-ng-model="uuidFilter"
+            />
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="form-group col-lg-4 gn-nopadding-left">
+            <label class="control-label" for="gn-link-selection" data-translate=""
+              >chooseAlinkStatus</label
+            >
+            <select
+              id="gn-link-status"
+              class="form-control"
+              data-ng-model="linkStatusFilter"
+            >
+              <option value="">All statuses</option>
+              <option value="{{s}}" data-ng-repeat="s in linkStatusValues">
+                {{'linkStatus-' + s | translate}}
+              </option>
+            </select>
+          </div>
+
+          <div class="form-group col-lg-4 gn-nopadding-left">
+            <label class="control-label" for="gn-link-selection" data-translate=""
+              >chooseArequestStatus</label
+            >
+            <select
+              id="gn-link-status"
+              class="form-control"
+              data-ng-model="httpStatusValueFilter"
+            >
+              <option value="">All statuses</option>
+              <option value="{{s}}" data-ng-repeat="s in httpStatusValues">
+                {{'httpStatus-' + s | translate}}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="form-group col-lg-3 gn-nopadding-left">
+            <label class="control-label" for="gn-link-exclude-harvested">
+              <input
+                type="checkbox"
+                id="gn-link-exclude-harvested"
+                data-ng-model="excludeHarvestedMetadataFilter"
+              />{{'linkChecker-excludeHarvestedMetadata' | translate}}
+            </label>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="form-group">
+            <button class="btn btn-primary" data-ng-click="triggerSearch()">
+              Search
+            </button>
+            <button class="btn btn-default" data-ng-click="resetForm()">Reset</button>
+          </div>
+        </div>
+      </fieldset>
+
       <table id="bstable" bs-table-control="bsTableControl" ng-model="tc"></table>
 
       <br />
-
-      <gn-dashboard-record-links-processes-container />
     </div>
     <!-- /.panel-body -->
   </div>

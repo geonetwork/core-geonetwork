@@ -78,10 +78,7 @@ import javax.servlet.http.HttpSession;
 
 import java.beans.PropertyEditorSupport;
 import java.sql.SQLException;
-import java.util.ArrayDeque;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUIDS_OR_SELECTION;
@@ -162,6 +159,12 @@ public class LinksApi {
         @Parameter(description = "Optional, filter links to records created in that group.", required = false)
         @RequestParam(required = false)
         Integer[] groupOwnerIdFilter,
+        @Parameter(description = "Optional, filter links to http status.")
+        @RequestParam(required = false)
+        Integer[] httpErrorStatusValueFilter,
+        @Parameter(description = "Optional, filter links excluding harvested metadata.")
+        @RequestParam(required = false, defaultValue = "false")
+        boolean excludeHarvestedMetadataFilter,
         @Parameter(hidden = true)
         Pageable pageRequest,
         @Parameter(hidden = true)
@@ -170,7 +173,7 @@ public class LinksApi {
         HttpServletRequest request) throws Exception {
 
         final UserSession userSession = ApiUtils.getUserSession(session);
-        return getLinks(filter, groupIdFilter, groupOwnerIdFilter, pageRequest, userSession);
+        return getLinks(filter, groupIdFilter, groupOwnerIdFilter, httpErrorStatusValueFilter, excludeHarvestedMetadataFilter, pageRequest, userSession);
     }
 
     @io.swagger.v3.oas.annotations.Operation(
@@ -203,6 +206,12 @@ public class LinksApi {
         @Parameter(description = "Optional, filter links to records created in that group.", required = false)
         @RequestParam(required = false)
         Integer[] groupOwnerIdFilter,
+        @Parameter(description = "Optional, filter links to http status.")
+        @RequestParam(required = false)
+        Integer[] httpStatusValueFilter,
+        @Parameter(description = "Optional, filter links excluding harvested metadata.")
+        @RequestParam(required = false, defaultValue = "false")
+        boolean excludeHarvestedMetadataFilter,
         @Parameter(hidden = true)
         Pageable pageRequest,
         @Parameter(hidden = true)
@@ -211,13 +220,15 @@ public class LinksApi {
         HttpServletRequest request) throws Exception {
 
         final UserSession userSession = ApiUtils.getUserSession(session);
-        return getLinks(filter, groupIdFilter, groupOwnerIdFilter, pageRequest, userSession);
+        return getLinks(filter, groupIdFilter, groupOwnerIdFilter, httpStatusValueFilter, excludeHarvestedMetadataFilter, pageRequest, userSession);
     }
 
     private Page<Link> getLinks(
         LinkFilter filter,
         Integer[] groupIdFilter,
         Integer[] groupOwnerIdFilter,
+        Integer[] httpStatusValueFilter,
+        boolean excludeHarvestedMetadataFilter,
         Pageable pageRequest,
         UserSession userSession) throws SQLException, JSONException {
         Integer[] editingGroups = null;
@@ -228,8 +239,9 @@ public class LinksApi {
             }
         }
 
-        if (filter == null && (groupIdFilter != null || groupOwnerIdFilter != null || editingGroups != null)) {
-            return linkRepository.findAll(LinkSpecs.filter(null, null, null, groupIdFilter, groupOwnerIdFilter, editingGroups), pageRequest);
+        if (filter == null && (groupIdFilter != null || groupOwnerIdFilter != null || httpStatusValueFilter != null || editingGroups != null || excludeHarvestedMetadataFilter)) {
+            Page<Link> links = linkRepository.findAll(LinkSpecs.filter(null, null, null, groupIdFilter, groupOwnerIdFilter, httpStatusValueFilter, excludeHarvestedMetadataFilter, editingGroups), pageRequest);
+            return links;
         }
 
         if (filter != null) {
@@ -255,7 +267,8 @@ public class LinksApi {
                 ).collect(Collectors.toList());
             }
 
-            return linkRepository.findAll(LinkSpecs.filter(url, stateToMatch, associatedRecords, groupIdFilter, groupOwnerIdFilter, editingGroups), pageRequest);
+            Page<Link> links = linkRepository.findAll(LinkSpecs.filter(url, stateToMatch, associatedRecords, groupIdFilter, groupOwnerIdFilter, httpStatusValueFilter, excludeHarvestedMetadataFilter, editingGroups), pageRequest);
+            return links;
         } else {
             return linkRepository.findAll(pageRequest);
         }
@@ -294,6 +307,12 @@ public class LinksApi {
         @Parameter(description = "Optional, filter links to records created in that group.", required = false)
         @RequestParam(required = false)
         Integer[] groupOwnerIdFilter,
+        @Parameter(description = "Optional, filter links to http status.")
+        @RequestParam(required = false)
+        Integer[] httpStatusValueFilter,
+        @Parameter(description = "Optional, filter links excluding harvested metadata.")
+        @RequestParam(required = false, defaultValue = "false")
+        boolean excludeHarvestedMetadataFilter,
         @Parameter(hidden = true)
         Pageable pageRequest,
         @Parameter(hidden = true)
@@ -302,7 +321,7 @@ public class LinksApi {
         HttpServletResponse response) throws Exception {
         final UserSession userSession = ApiUtils.getUserSession(session);
 
-        final Page<Link> links = getLinks(filter, groupIdFilter, groupOwnerIdFilter, pageRequest, userSession);
+        final Page<Link> links = getLinks(filter, groupIdFilter, groupOwnerIdFilter, httpStatusValueFilter, excludeHarvestedMetadataFilter, pageRequest, userSession);
         response.setHeader("Content-disposition", "attachment; filename=links.csv");
         LinkAnalysisReport.create(links, response.getWriter());
     }
@@ -435,22 +454,20 @@ public class LinksApi {
     @ResponseBody
     public ResponseEntity purgeAll() {
         urlAnalyser.deleteAll();
+        cleanupFinishedMAnalyseProcesses();
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
     private MAnalyseProcess getRegistredMAnalyseProcess() {
+        cleanupFinishedMAnalyseProcesses();
+
         MAnalyseProcess mAnalyseProcess = new MAnalyseProcess(
             settingManager.getSiteId(),
             linkRepository,
             metadataRepository,
             urlAnalyser, appContext);
         mBeanExporter.registerManagedResource(mAnalyseProcess, mAnalyseProcess.getObjectName());
-        try {
-            mBeanExporter.unregisterManagedResource(mAnalyseProcesses.removeLast().getObjectName());
-        } catch (MalformedObjectNameException e) {
-            Log.error(LOGGER, String.format("Error unregistering metadata links analysis process '%s'",
-                settingManager.getSiteId()), e);
-        }
+
         mAnalyseProcesses.addFirst(mAnalyseProcess);
         return mAnalyseProcess;
     }
@@ -470,6 +487,30 @@ public class LinksApi {
                 value = new Gson().fromJson(text, LinkFilter.class);
             }
         });
+    }
+
+
+    private void cleanupFinishedMAnalyseProcesses() {
+        try {
+            List<SelfNaming> processToRemove = new ArrayList<>();
+
+            mAnalyseProcesses.forEach(p -> {
+                if (!(p instanceof EmptySlot)) {
+                    MAnalyseProcess process = (MAnalyseProcess) p;
+                    if (process.isProcessFinished()) {
+                        processToRemove.add(process);
+                    }
+                }
+            });
+            Iterator<SelfNaming> it = processToRemove.iterator();
+
+            while (it.hasNext()) {
+                mBeanExporter.unregisterManagedResource(it.next().getObjectName());
+            }
+        } catch (MalformedObjectNameException e) {
+            Log.error(LOGGER, String.format("Error unregistering metadata links analysis process '%s'",
+                settingManager.getSiteId()), e);
+        }
     }
 
     private static class LinkFilter {

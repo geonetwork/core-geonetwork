@@ -422,5 +422,22 @@
   "overviewDescription": "Overview description",
   "overviewUrl": "Overview URL",
   "restApiUrl": "REST API URL",
-  "filterHelp": "Please click on one of the buttons below to activate the filter"
+  "filterHelp": "Please click on one of the buttons below to activate the filter",
+  "httpStatus--200": "Invalid status",
+  "httpStatus-200": "Valid status",
+  "httpStatus-404": "Not found",
+  "httpStatus-401": "Not authorized",
+  "httpStatus-500": "Error",
+  "linkStatus-ok": "Valid",
+  "linkStatus-ko": "Invalid",
+  "linkStatus-unknown": "Unknown",
+  "chooseMetadataGroupOwner": "Metadata group owner",
+  "chooseArequestStatus": "Request status",
+  "chooseAlinkStatus": "Link status",
+  "linkChecker-search": "Search",
+  "linkChecker-excludeHarvestedMetadata": "Exclude harvested metadata",
+  "linkStatus": "Link status",
+  "requestStatus": "Request status",
+  "linkUrl": "Link url",
+  "associatedUuid": "Associated to metadata UUID"
 }
