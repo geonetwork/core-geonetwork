@@ -5,10 +5,11 @@ This series is under active use by our community, with regular improvements, doc
 
 ## Latest
 
-* [Version 3.12.11](../version-3.12.11.md)
+* [Version 3.12.12](../version-3.12.12.md)
 
 ## History
 
+* [Version 3.12.11](../version-3.12.11.md)
 * [Version 3.12.10](../version-3.12.10.md)
 * [Version 3.12.9](../version-3.12.9.md)
 * [Version 3.12.8](../version-3.12.8.md)
