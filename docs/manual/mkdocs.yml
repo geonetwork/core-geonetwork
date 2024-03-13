@@ -149,6 +149,7 @@ nav:
       - overview/change-log/index.md
       - 'Latest':
         - overview/change-log/latest/index.md
+        - overview/change-log/version-4.4.3.md
         - overview/change-log/version-4.4.2.md
         - overview/change-log/version-4.4.1.md
         - overview/change-log/version-4.4.0.md
