@@ -1,6 +1,10 @@
 # Version 3.4.1 {#version-341}
 
-## New features
+## New features / enhancements
+
+* New metadata page / sort tempalte by title
+* Create record from template having categories should copy cagtegories
+* Import / Add option to publish to all
 
 ## Removed features
 
