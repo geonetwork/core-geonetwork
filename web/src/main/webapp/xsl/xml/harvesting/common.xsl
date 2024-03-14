@@ -68,6 +68,15 @@
         <batchEdits>
           <xsl:value-of select="$con/batchEdits/value"/>
         </batchEdits>
+        <translateContent>
+          <xsl:value-of select="$con/translateContent/value"/>
+        </translateContent>
+        <translateContentLangs>
+          <xsl:value-of select="$con/translateContentLangs/value"/>
+        </translateContentLangs>
+        <translateContentFields>
+          <xsl:value-of select="$con/translateContentFields/value"/>
+        </translateContentFields>
       </content>
 
       <options>

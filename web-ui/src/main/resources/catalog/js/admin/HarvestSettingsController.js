@@ -52,8 +52,10 @@
     "gnMapsManager",
     "gnGlobalSettings",
     "gnConfig",
+    "gnConfigService",
     "gnClipboard",
     "gnSearchSettings",
+    "gnLanguageService",
     function (
       $scope,
       $q,
@@ -68,8 +70,10 @@
       gnMapsManager,
       gnGlobalSettings,
       gnConfig,
+      gnConfigService,
       gnClipboard,
-      gnSearchSettings
+      gnSearchSettings,
+      gnLanguageService
     ) {
       $scope.searchObj = {
         internal: true,
@@ -92,6 +96,20 @@
       $scope.harvesterNew = false;
       $scope.harvesterHistory = {};
       $scope.isLoadingOneHarvester = false;
+      $scope.translationProviderConfigured = false;
+
+      $scope.languageSource = null;
+      gnLanguageService.getLanguages().then(function (data) {
+        angular.forEach(data, function (lang) {
+          lang.english = lang.label["eng"];
+          lang.name = lang.label[$scope.lang] || lang.english;
+          lang.code = lang.code;
+          lang.tokens = [lang.name, lang.code, lang.english];
+        });
+
+        $scope.languageSource = gnLanguageService.getLanguageAutocompleter(data);
+      });
+
       $scope.harvesterHistoryPaging = {
         page: 1,
         size: 3,
@@ -100,6 +118,12 @@
       };
       $scope.isLoadingHarvesterHistory = false;
       $scope.deleting = []; // all harvesters being deleted
+
+      gnConfigService.load().then(function (c) {
+        $scope.translationProviderConfigured =
+          gnConfig["system.translation.provider"] !== null &&
+          gnConfig["system.translation.provider"] !== "";
+      });
 
       var unbindStatusListener = null;
 
@@ -120,6 +144,11 @@
               gnUtilityService.parseBoolean($scope.harvesterSelected);
             }
             $scope.isLoadingOneHarvester = false;
+
+            // The backend returns an empty array in json serialization if the field is empty, instead of a string
+            if (angular.isArray($scope.harvesterSelected.content.translateContentLangs)) {
+              $scope.harvesterSelected.content.translateContentLangs = "";
+            }
 
             if (
               $scope.harvesterSelected.content &&
@@ -431,6 +460,8 @@
           $scope.threddsAtomicsMode =
             h.options.outputSchemaOnCollectionsDIF !== "" ? "DIF" : "UNIDATA";
         }
+
+        $scope.harvesterSelected = null;
 
         $scope.harvesterSelected = h;
         $scope.harvesterUpdated = false;
