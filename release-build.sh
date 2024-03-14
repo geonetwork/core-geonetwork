@@ -17,6 +17,16 @@ then
 	exit
 fi
 
+buildRequiredApps=( "java" "git" "mvn" "ant" "xmlstarlet" )
+
+for app in "${buildRequiredApps[@]}"; do :
+   if ! [ -x "$(command -v ${app})" ]; then
+     echo "Error: ${app} is not installed." >&2
+     exit 1
+   fi
+done
+
+
 if [ $# -ne 3 ]
 then
   showUsage
