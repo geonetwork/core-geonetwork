@@ -1,22 +1,5 @@
 #!/bin/bash
 
-function showUsage
-{
-  echo -e "\nThis script is used to build a release"
-  echo
-  echo -e "Usage: ./`basename $0 $1 $2` actual_version next_version previous_version"
-  echo
-  echo -e "Example to build release 4.4.0 with next version 4.4.1 and previous version 4.2.5:"
-  echo -e "\t./`basename $0 $1` 4.4.0 4.4.1 4.2.5"
-  echo
-}
-
-if [ "$1" = "-h" ]
-then
-	showUsage
-	exit
-fi
-
 buildRequiredApps=( "java" "git" "mvn" "ant" "xmlstarlet" )
 
 for app in "${buildRequiredApps[@]}"; do :
@@ -26,49 +9,50 @@ for app in "${buildRequiredApps[@]}"; do :
    fi
 done
 
+function showUsage
+{
+  echo -e "\nThis script is used to build a release for the current branch"
+  echo
+}
 
-if [ $# -ne 3 ]
+if [ "$1" = "-h" ]
 then
-  showUsage
-  exit
+	showUsage
+	exit
 fi
 
-# Setup properties
+projectVersion=`xmlstarlet sel -t -m "/_:project/_:version" -v . -n pom.xml`
+subVersion=`cut -d "-" -f 2 <<< $projectVersion`
+mainVersion=`cut -d "-" -f 1 <<< $projectVersion`
+mainVersionMajor=`cut -d "." -f 1 <<< $mainVersion`
+mainVersionMinor=`cut -d "." -f 2 <<< $mainVersion`
+mainVersionSub=`cut -d "." -f 3 <<< $mainVersion`
+
+gitBranch=`git branch --show-current`
+
+nextVersionNumber="${mainVersionMajor}.${mainVersionMinor}.$((mainVersionSub+1))"
+previousVersionNumber="${mainVersionMajor}.${mainVersionMinor}.$((mainVersionSub-1))"
+
 from=origin
-frombranch=origin/main
-series=4.4
-#versionbranch=$series.x
-versionbranch=main
-version=$1
+frombranch=origin/${gitBranch}
+series=${mainVersionMajor}.${mainVersionMinor}
+versionbranch=${gitBranch}
+version=${projectVersion}
 minorversion=0
 release=latest
-newversion=$version-$minorversion
-currentversion=$1-SNAPSHOT
-previousversion=$3
-nextversion=$2-SNAPSHOT
-nextMajorVersion=4.6.0-SNAPSHOT
+newversion=${mainVersion}-$minorversion
+currentversion=${projectVersion}
+previousversion=${previousVersionNumber}
+nextversion=${nextVersionNumber}-SNAPSHOT
 
-
-
-echo "Creating release for version $newversion (from $currentversion). Next version will be $nextversion"
-
-git clone --recursive https://github.com/geonetwork/core-geonetwork.git \
-          geonetwork-$versionbranch
-cd geonetwork-$versionbranch
-
-if [ $versionbranch -ne "main" ]
-then
-  git checkout -b $versionbranch $frombranch
-fi
-
-
+echo "Creating release for version ${newversion} (from ${currentversion}). Next version will be ${nextversion}. Git branch ${gitBranch}."
+read -p "Press enter to continue"
 
 # TODO: Transifex update
 # TODO: Changelog
 
 # Update version number (in pom.xml, installer config and SQL)
 ./update-version.sh $currentversion $newversion
-# TODO: Check the JRE URL replacement
 
 # Generate list of changes
 cat <<EOF > docs/changes/changes$newversion.txt
