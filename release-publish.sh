@@ -4,10 +4,10 @@ function showUsage
 {
   echo -e "\nThis script is used to publish a release on sourceforge, github and maven repository"
   echo
-  echo -e "Usage: ./`basename $0 $1` branch version sourceforge_username"
+  echo -e "Usage: ./`basename` sourceforge_username"
   echo
-  echo -e "Example to publish 4.4.0:"
-  echo -e "\t./`basename $0 $1` main 4.4.0 sourceforgeusername"
+  echo -e "Example:"
+  echo -e "\t./`basename ` sourceforgeusername"
   echo
 }
 
@@ -17,17 +17,16 @@ then
 	exit
 fi
 
-if [ $# -ne 3 ]
+if [ $# -ne 1 ]
 then
   showUsage
   exit
 fi
 
-versionbranch=$1
-version=$2
-sourceforge_username=$3
-
-sourceforge_username=XXXXX
+projectVersion=`xmlstarlet sel -t -m "/_:project/_:version" -v . -n pom.xml`
+version=`cut -d "-" -f 1 <<< $projectVersion`
+versionbranch=`git branch --show-current`
+sourceforge_username=$1
 
 sftp $sourceforge_username,geonetwork@frs.sourceforge.net << EOT
 cd /home/frs/project/g/ge/geonetwork/GeoNetwork_opensource
