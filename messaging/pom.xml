@@ -5,7 +5,7 @@
   <parent>
     <artifactId>geonetwork</artifactId>
     <groupId>org.geonetwork-opensource</groupId>
-    <version>3.12-SNAPSHOT</version>
+    <version>3.12.12</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
