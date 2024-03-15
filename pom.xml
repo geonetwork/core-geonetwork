@@ -1616,7 +1616,7 @@
     of Postgres is used and update pg.version if needed. -->
     <geotools.version>30.0</geotools.version>
     <jts.version>1.19.0</jts.version>
-    <pg.version>42.6.0</pg.version>
+    <pg.version>42.7.3</pg.version>
 
     <spring.version>5.3.33</spring.version>
     <spring.security.version>5.8.11</spring.security.version>
