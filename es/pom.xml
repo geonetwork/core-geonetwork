@@ -81,7 +81,7 @@
                         kibana = Pattern.compile("kibana:(\\d.\\d\\d.\\d)");
                         patterns = new Pattern[]{ docker, kibana};
 
-                        reader = new BufferedReader(new FileReader(filename));
+                        reader = new BufferedReader(new FileReader("${project.basedir}"+"/"+filename));
 
                         number = 0;
                         while ((line = reader.readLine()) != null) {
