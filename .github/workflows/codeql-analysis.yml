@@ -41,7 +41,7 @@ jobs:
       uses: actions/checkout@v2
       
     - name: Setup Java JDK
-      uses: actions/setup-java@v2.3.1
+      uses: actions/setup-java@v4.2.1
       with:
         java-version: 8
         # Java distribution. See the list of supported distributions in README file
