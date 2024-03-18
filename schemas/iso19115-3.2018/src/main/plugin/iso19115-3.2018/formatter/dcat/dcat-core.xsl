@@ -31,6 +31,7 @@
                 xmlns:skos="http://www.w3.org/2004/02/skos/core#"
                 xmlns:owl="http://www.w3.org/2002/07/owl#"
                 xmlns:adms="http://www.w3.org/ns/adms#"
+                xmlns:gn-fn-dcat="http://geonetwork-opensource.org/xsl/functions/dcat"
                 xmlns:dct="http://purl.org/dc/terms/"
                 exclude-result-prefixes="#all">
 
@@ -50,8 +51,11 @@
   <xsl:import href="dcat-core-associated.xsl"/>
   <xsl:import href="dcat-core-lineage.xsl"/>
 
-  <xsl:variable name="recordUri"
-                select="/root/mdb:MD_Metadata/mdb:metadataLinkage/*/cit:linkage/*/text()"/>
+  <xsl:variable name="resourcePrefix"
+                select="concat(util:getSettingValue('nodeUrl'), 'api/records/')"
+                as="xs:string"/>
+  <!-- GeoNetwork historical DCAT export was using a setting
+                  select="util:getSettingValue('metadata/resourceIdentifierPrefix')"/>-->
 
   <xsl:variable name="languages"
                 as="node()*">
@@ -70,6 +74,17 @@
     </xsl:for-each>
   </xsl:variable>
 
+  <xsl:function name="gn-fn-dcat:getRecordUri" as="xs:string">
+    <xsl:param name="metadata" as="node()"/>
+
+    <xsl:variable name="metadataLinkage"
+                  select="$metadata/mdb:metadataLinkage/*/cit:linkage/*/text()"
+                  as="xs:string?"/>
+
+    <xsl:value-of select="if($metadataLinkage) then $metadataLinkage
+                          else concat($resourcePrefix, encode-for-uri($metadata/mdb:metadataIdentifier/*/mcc:code/*/text()))"
+                 />
+  </xsl:function>
 
   <xsl:template mode="iso19115-3-to-dcat-validation"
                 match="mdb:MD_Metadata">
@@ -80,7 +95,7 @@
   <!-- Create resource -->
   <xsl:template mode="iso19115-3-to-dcat"
                 match="mdb:MD_Metadata">
-    <rdf:Description rdf:about="{$recordUri}">
+    <rdf:Description rdf:about="{gn-fn-dcat:getRecordUri(.)}">
       <xsl:apply-templates mode="iso19115-3-to-dcat"
                            select="mdb:metadataScope/*/mdb:resourceScope/*/@codeListValue"/>
 
