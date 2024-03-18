@@ -1287,4 +1287,234 @@
       };
     }
   ]);
+
+  /**
+   * Directive to display a panel in the metadata editor with a header and a list of associated resources.
+   *
+   */
+  module.directive("gnAssociatedResourcesPanel", [
+    "gnCurrentEdit",
+    function (gnCurrentEdit) {
+      return {
+        restrict: "A",
+        templateUrl: function (elem, attrs) {
+          return (
+            attrs.template ||
+            "../../catalog/components/metadataactions/partials/associatedResourcesPanel.html"
+          );
+        },
+        scope: {
+          md: "=gnAssociatedResourcesPanel",
+          mode: "="
+        },
+        link: function (scope, element, attrs) {
+          gnCurrentEdit.associatedPanelConfigId = attrs["editorConfig"] || "default";
+        }
+      };
+    }
+  ]);
+
+  /**
+   * Displays a panel with different types of associations defined in the schema configuration and available in the metadata object 'md'.
+   *
+   */
+  module.directive("gnAssociatedResourcesContainer", [
+    "gnRelatedResources",
+    "gnConfigService",
+    "gnOnlinesrc",
+    "gnCurrentEdit",
+    "gnSchemaManagerService",
+    "$injector",
+    "$filter",
+    function (
+      gnRelatedResources,
+      gnConfigService,
+      gnOnlinesrc,
+      gnCurrentEdit,
+      gnSchemaManagerService,
+      $injector,
+      $filter
+    ) {
+      return {
+        restrict: "A",
+        templateUrl: function (elem, attrs) {
+          return (
+            attrs.template ||
+            "../../catalog/components/metadataactions/partials/associatedResourcesContainer.html"
+          );
+        },
+        scope: {
+          md: "=gnAssociatedResourcesContainer",
+          mode: "="
+        },
+        link: function (scope, element, attrs, controller) {
+          scope.lang = scope.lang || scope.$parent.lang;
+          scope.gnCurrentEdit = gnCurrentEdit;
+          scope.relations = [];
+          scope.relatedConfigUI = [];
+          scope.relatedResourcesConfig = gnRelatedResources;
+          if ($injector.has("gnOnlinesrc")) {
+            scope.onlinesrcService = $injector.get("gnOnlinesrc");
+          }
+
+          // Values for relation types used in the UI (and also to filter some metadata by resource type: dataset / service
+          var UIRelationTypeValues = {
+            dataset: "dataset",
+            service: "service",
+            source: "source",
+            parent: "parent",
+            fcats: "fcats",
+            siblings: "siblings"
+          };
+
+          // Values used for the relation types by the /associated API, that doesn't match with the UI
+          var APIRelationTypeValues = {
+            dataset: "datasets",
+            service: "services",
+            source: "sources",
+            parent: "parent",
+            fcats: "fcats",
+            siblings: "siblings"
+          };
+
+          // A mapper from relation types from the UI to the API values
+          scope.mapUIRelationToApi = function (type) {
+            return APIRelationTypeValues[type];
+          };
+
+          scope.getClass = function (type) {
+            if (type === UIRelationTypeValues.dataset) {
+              return "fa gn-icon-dataset";
+            } else if (type === UIRelationTypeValues.service) {
+              return "fa fa-fw fa-cloud";
+            } else if (type === UIRelationTypeValues.source) {
+              return "fa gn-icon-source";
+            } else if (type === UIRelationTypeValues.parent) {
+              return "fa gn-icon-series";
+            } else if (type === UIRelationTypeValues.fcats) {
+              return "fa fa-table";
+            } else if (type === UIRelationTypeValues.siblings) {
+              return "fa fa-sign-out";
+            }
+
+            return "";
+          };
+          scope.canRemoveLink = function (record, type) {
+            if (record.origin === "remote") {
+              return true;
+            } else {
+              return (
+                type === UIRelationTypeValues.dataset ||
+                type === UIRelationTypeValues.service ||
+                type === UIRelationTypeValues.parent ||
+                type === UIRelationTypeValues.source ||
+                type === UIRelationTypeValues.fcats ||
+                type === UIRelationTypeValues.siblings
+              );
+            }
+          };
+
+          scope.remove = function (record, type) {
+            if (type === UIRelationTypeValues.dataset) {
+              scope.onlinesrcService.removeDataset(record);
+            } else if (type === UIRelationTypeValues.service) {
+              scope.onlinesrcService.removeService(record);
+            } else if (type === UIRelationTypeValues.parent) {
+              scope.onlinesrcService.removeMdLink(UIRelationTypeValues.parent, record);
+            } else if (type === UIRelationTypeValues.source) {
+              scope.onlinesrcService.removeMdLink(UIRelationTypeValues.source, record);
+            } else if (type === UIRelationTypeValues.fcats) {
+              scope.onlinesrcService.removeFeatureCatalog(record);
+            } else if (type === UIRelationTypeValues.siblings) {
+              scope.onlinesrcService.removeSibling(record);
+            }
+          };
+
+          var loadRelations = function (relationTypes) {
+            gnOnlinesrc.getAllResources(relationTypes).then(function (data) {
+              var res = gnOnlinesrc.formatResources(
+                data,
+                scope.lang,
+                gnCurrentEdit.mdLanguage
+              );
+
+              // Change the relation keys from the API response to the UI values
+              scope.relations = _.mapKeys(res.relations, function (value, key) {
+                if (key === APIRelationTypeValues.service) {
+                  return UIRelationTypeValues.service;
+                } else if (key === APIRelationTypeValues.dataset) {
+                  return UIRelationTypeValues.dataset;
+                } else if (key === APIRelationTypeValues.source) {
+                  return UIRelationTypeValues.source;
+                } else {
+                  return key;
+                }
+              });
+
+              scope.md.related = {};
+
+              scope.relatedConfig.forEach(function (config) {
+                config.relations = scope.relations[config.type] || [];
+
+                var processConfig = true;
+
+                // The configuration has an expression to evaluate if it should be processed
+                if (config.condition) {
+                  processConfig = scope.$eval(config.condition);
+                }
+
+                if (processConfig) {
+                  scope.md.related[config.type] = scope.relations[config.type] || [];
+                  // TODO: Review filter by siblings properties, Metadata instances doesn't have this information
+                  if (config.config && config.config.fields) {
+                    var filterObject = { properties: {} };
+
+                    for (var item in config.config.fields) {
+                      filterObject.properties[item] = config.config.fields[item];
+                    }
+
+                    config.relations = $filter("filter")(config.relations, filterObject);
+                  }
+
+                  config.relationFound = config.relations.length > 0;
+                  // By default, allow to add relations unless explicitly disallowed in the configuration.
+                  config.allowToAddRelation = angular.isDefined(config.allowToAddRelation)
+                    ? config.allowToAddRelation
+                    : true;
+                  scope.relatedConfigUI.push(config);
+                }
+              });
+            });
+          };
+
+          gnSchemaManagerService
+            .getEditorAssociationPanelConfig(
+              gnCurrentEdit.schema,
+              gnCurrentEdit.associatedPanelConfigId
+            )
+            .then(function (r) {
+              scope.relatedConfig = r.config.associatedResourcesTypes;
+              var relationTypes = _.map(scope.relatedConfig, "type");
+
+              // Adapt the UI types to the backend types value: services --> service, datasets --> dataset
+              // The UI depends on the values also filter by resource type in
+              // the associated resources dialogs.
+              relationTypes = _.map(relationTypes, function (value) {
+                if (value === UIRelationTypeValues.service) {
+                  return APIRelationTypeValues.service;
+                } else if (value === UIRelationTypeValues.dataset) {
+                  return APIRelationTypeValues.dataset;
+                } else if (value === UIRelationTypeValues.source) {
+                  return APIRelationTypeValues.source;
+                } else {
+                  return value;
+                }
+              });
+
+              loadRelations(relationTypes);
+            });
+        }
+      };
+    }
+  ]);
 })();
