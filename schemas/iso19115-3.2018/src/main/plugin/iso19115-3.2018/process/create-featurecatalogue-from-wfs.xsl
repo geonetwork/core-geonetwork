@@ -64,21 +64,23 @@
 
 
     <xsl:variable name="wfsServices"
-                  select="$root[count(.//srv:SV_ServiceIdentification) = 0]//mdb:distributionInfo//mrd:onLine/*[contains(cit:protocol/*, 'WFS') or contains(cit:protocol/*, 'ESRI:REST')]/concat(
-                          cit:linkage/*/text(), '#', cit:name/*/text())"/>
+                  select="$root[count(.//srv:SV_ServiceIdentification) = 0]//mdb:distributionInfo//mrd:onLine/*[contains(cit:protocol/*, 'WFS') or contains(cit:protocol/*, 'ESRI:REST')]"/>
 
     <xsl:variable name="id"
                   select="generate-id(.)"/>
 
     <xsl:for-each select="$wfsServices">
+      <xsl:variable name="url" select="cit:linkage/*/text()"/>
+      <xsl:variable name="featureType" select="cit:name/*/text()"/>
+      <xsl:variable name="protocol" select="cit:protocol/*/text()"/>
       <suggestion process="create-featurecatalogue-from-wfs"
                   id="{concat($id, '-', position())}"
                   category="contentinfo"
-                  target="metadata">
-        <name><xsl:value-of select="geonet:i18n($add-featureCat-loc, 'a', $guiLang)"/><xsl:value-of select="."/></name>
+                  target="link#{$protocol}#{$url[1]}#{$featureType[1]}">
+        <name><xsl:value-of select="geonet:i18n($add-featureCat-loc, 'a', $guiLang)"/><xsl:value-of select="concat($url[1], '#', $featureType[1])"/></name>
         <operational>true</operational>
-        <params>{"featureCatWfsUrl":{"type":"text", "defaultValue":"<xsl:value-of select="substring-before(., '#')"/>"},
-          "featureCatWfsFeatureType":{"type":"text", "defaultValue":"<xsl:value-of select="substring-after(., '#')"/>"},
+        <params>{"featureCatWfsUrl":{"type":"text", "defaultValue":"<xsl:value-of select="$url[1]"/>"},
+          "featureCatWfsFeatureType":{"type":"text", "defaultValue":"<xsl:value-of select="$featureType[1]"/>"},
           "featureCatReplace":{"type":"boolean", "defaultValue":"<xsl:value-of select="$featureCatReplace"/>"}}</params>
       </suggestion>
     </xsl:for-each>
@@ -109,7 +111,6 @@
                 mdb:defaultLocale|
                 mdb:parentMetadata|
                 mdb:metadataScope|
-                mdb:contact|
                 mdb:dateInfo|
                 mdb:metadataStandard|
                 mdb:metadataProfile|

@@ -31,6 +31,7 @@
   "language.id": "Identifier",
   "language.remove": "Remove language",
   "layerName": "Layer name",
+  "layerNameTooltip": "A layer name from the GetCapabilities document",
   "ogcServiceUrl": "Service URL",
   "translation.addFor": "Add a new translation for",
   "translation.add": "Add",
@@ -50,7 +51,7 @@
   "remoteRecord": "Record from external catalog",
   "chooseACatalogRecord": "Choose a catalog record",
   "siblingListToAdd": "List of record links to add",
-  "orUseRemoteRecordUrl": "or link to a remote record",
+  "orUseRemoteRecordUrl": "Link to a remote record",
   "remoteRecordUrl-help": "Remote record can be linked to record in this catalog by pointing to an URL of the remote record. If the remote record is in a GeoNetwork catalog, the landing page of the record is recommended (eg. https://catalog/geonetwork/srv/api/records/{uuid}). For GeoNode, the HTML page can work. For others, XML document can be used (eg. API call or CSW GetRecordById request).",
   "remoteRecordPropertiesError": "Failed to extract title and UUID for remote record. Check the target document.",
   "remoteRecordUrlReturnedError": "Failed to access URL: ",
@@ -293,6 +294,8 @@
   "pageContent": "Page content",
   "pageContentFile": "Page content file",
   "pageLabel": "Page label",
+  "pageIcon": "Page icon",
+  "pageIcon-help": "Optionally, define a <a target='_blank' href='https://fontawesome.com/v4/icons/'>font-awesome icon</a>. Example: 'fa-wrench'.",
   "pageSection": "Page section",
   "pageApiLink": "Page API link",
   "uiRestorePrevious": "Restore last saved",
@@ -415,5 +418,10 @@
   "lastCreatedRecords": "Last created records",
   "associationType": "Association type",
   "initiativeType": "Initiative type",
-  "associatedTo": "Associated "
+  "associatedTo": "Associated ",
+  "overviewDescription": "Overview description",
+  "overviewUrl": "Overview URL",
+  "restApiUrl": "REST API URL",
+  "filterHelp": "Please click on one of the buttons below to activate the filter",
+  "selectDOIResource": "Choose a DOI resource"
 }

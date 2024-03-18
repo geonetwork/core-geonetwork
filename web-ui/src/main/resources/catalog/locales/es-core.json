@@ -218,7 +218,10 @@
     "passwordPattern": "La contraseña debe contener al menos 1 mayúscula, 1 minúscula, 1 número y 1 símbolo. Los símbolos incluyen: `~! @ # $% ^ & * () -_ = + [] {} \\ |;: '\",. <> /?');",
     "passwordOld": "Contraseña anterior",
     "passwordRepeat": "Repetir la contraseña",
-    "groupNameMaxlength": "¡El nombre del grupo no puede superar los 32 caracteres!",
+    "groupNameMaxlength": "Group name can not exceed 255 characters!",
+    "categoryNameMaxlength": "Category name can not exceed 255 characters!",
+    "portalNameMaxlength": "Portal name can not exceed 255 characters!",
+    "portalIdMaxlength": "Portal identifier can not exceed 255 characters!",
     "groupDescriptionMaxlength": "¡La descripción del grupo no puede superar los 255 caracteres!",
     "groupEmailMaxlength": "¡El correo electrónico de grupo no puede exceder los 128 caracteres!",
     "pol": "Polski",
@@ -546,7 +549,7 @@
     "categoriesUpdated": "Categorías actualizadas.",
     "warnPublishDraft": "Al publicar registros con el flujo de trabajo habilitado, el estado cambiará a  'Approve'. Estás seguro de que quieres continuar?",
     "cancelWorkingCopy": "Cancelar copia de trabajo",
-    "deleteWorkingCopyRecordConfirm": "¿Realmente desea eliminar la copia de trabajo '{{resourceTitle}}'?",
+    "deleteWorkingCopyRecordConfirm": "Do you really want to remove the working copy '{{resourceTitle}}'?",
     "workingCopy": "Copia de trabajo",
     "onTheWeb": "Más información en línea",
     "pdfReportTocTitle": "Contenido",
@@ -577,5 +580,9 @@
     "reviewerNotAllowedPublish": "Reviewer not allowed to publish the metadata",
     "reviewerNotAllowedUnpublish": "Reviewer not allowed to un-publish the metadata",
     "reviewerNotAllowedPublishUnpublish": "Reviewer not allowed to publish / un-publish the metadata",
-    "missingTitle": "Missing title"
+    "missingTitle": "Missing title",
+    "mapLegend": "Leyenda",
+    "quality": "Calidad",
+    "download": "Download",
+    "links": "Enlaces"
 }

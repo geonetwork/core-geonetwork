@@ -109,12 +109,11 @@
             params: "@",
             name: "@",
             help: "@",
-            icon: "@"
+            icon: "@",
+            target: "@?"
           },
           templateUrl:
-            "../../catalog/components/edit/" +
-            "suggestion/partials/" +
-            "suggestbutton.html",
+            "../../catalog/components/edit/suggestion/partials/suggestbutton.html",
           link: function (scope, element, attrs) {
             scope.sugg = undefined;
             scope.gnSuggestion = gnSuggestion;
@@ -125,8 +124,15 @@
                 scope.suggestions = data;
                 for (var i = 0; i < data.length; i++) {
                   if (data[i].process === scope.processId) {
-                    scope.sugg = data[i];
-                    break;
+                    if (scope.target) {
+                      if (data[i].target === scope.target) {
+                        scope.sugg = data[i];
+                        break;
+                      }
+                    } else {
+                      scope.sugg = data[i];
+                      break;
+                    }
                   }
                 }
               }
@@ -142,7 +148,7 @@
         return {
           restrict: "A",
           templateUrl:
-            "../../catalog/components/edit/suggestion/" + "partials/runprocess.html",
+            "../../catalog/components/edit/suggestion/partials/runprocess.html",
           link: function (scope, element, attrs) {
             scope.gnSuggestion = gnSuggestion;
             // Indicate if processing is running

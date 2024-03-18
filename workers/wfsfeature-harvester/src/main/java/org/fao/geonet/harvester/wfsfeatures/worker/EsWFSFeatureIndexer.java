@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2015 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2023 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -23,6 +23,19 @@
 
 package org.fao.geonet.harvester.wfsfeatures.worker;
 
+import co.elastic.clients.elasticsearch._helpers.bulk.BulkIngester;
+import co.elastic.clients.elasticsearch._helpers.bulk.BulkListener;
+import co.elastic.clients.elasticsearch._types.Result;
+import co.elastic.clients.elasticsearch.core.BulkRequest;
+import co.elastic.clients.elasticsearch.core.BulkResponse;
+import co.elastic.clients.elasticsearch.core.IndexRequest;
+import co.elastic.clients.elasticsearch.core.IndexResponse;
+import co.elastic.clients.elasticsearch.core.bulk.BulkOperation;
+import co.elastic.clients.elasticsearch.core.bulk.IndexOperation;
+import co.elastic.clients.json.JsonData;
+import co.elastic.clients.json.JsonpMapper;
+import co.elastic.clients.util.BinaryData;
+import co.elastic.clients.util.ContentType;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -30,17 +43,10 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableMap;
+import jakarta.json.spi.JsonProvider;
 import org.apache.camel.Exchange;
 import org.apache.camel.spring.SpringCamelContext;
 import org.apache.jcs.access.exception.InvalidArgumentException;
-import org.elasticsearch.action.ActionListener;
-import org.elasticsearch.action.bulk.BulkRequest;
-import org.elasticsearch.action.bulk.BulkResponse;
-import org.elasticsearch.action.index.IndexRequest;
-import org.elasticsearch.action.index.IndexResponse;
-import org.elasticsearch.client.RequestOptions;
-import org.elasticsearch.xcontent.XContentType;
-import org.elasticsearch.rest.RestStatus;
 import org.fao.geonet.harvester.wfsfeatures.model.WFSHarvesterParameter;
 import org.fao.geonet.index.es.EsRestClient;
 import org.fao.geonet.kernel.search.EsSearchManager;
@@ -68,6 +74,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.io.IOException;
+import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -82,8 +89,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static org.elasticsearch.rest.RestStatus.CREATED;
-import static org.elasticsearch.rest.RestStatus.OK;
 
 
 // TODO: GeoServer WFS 1.0.0 in some case return
@@ -279,14 +284,12 @@ public class EsWFSFeatureIndexer {
             throw new RuntimeException(msg);
         }
 
+        BulkResutHandler brh = new AsyncBulkResutHandler(typeName, url, nbOfFeatures, report, state.getParameters().getMetadataUuid());
+
         try {
             nbOfFeatures = 0;
 
-            final Phaser phaser = new Phaser();
-            BulkResutHandler brh = new AsyncBulkResutHandler(phaser, typeName, url, nbOfFeatures, report, state.getParameters().getMetadataUuid());
-
             long begin = System.currentTimeMillis();
-
             String epsg = "urn:ogc:def:crs:OGC:1.3:CRS84";
 
             for (String featureType : resolvedTypeNames) {
@@ -360,7 +363,7 @@ public class EsWFSFeatureIndexer {
                                                 featurePointer);
                                             LOGGER.warn(msg);
                                             report.put("error_ss", msg);
-                                            break;
+                                            continue;
                                         }
                                     }
 
@@ -421,7 +424,7 @@ public class EsWFSFeatureIndexer {
                                 }
                             }
 
-                            nbOfFeatures++;
+                            nbOfFeatures ++;
                             brh.addAction(rootNode, feature);
 
                         } catch (Exception ex) {
@@ -432,28 +435,12 @@ public class EsWFSFeatureIndexer {
                             LOGGER.warn(msg);
                             report.put("error_ss", msg);
                         }
-
-                        if (brh.getBulkSize() >= featureCommitInterval) {
-                            brh.launchBulk(client);
-                            brh = new AsyncBulkResutHandler(phaser, typeName, url, nbOfFeatures, report, state.getParameters().getMetadataUuid());
-                        }
                     }
                 } finally {
                     features.close();
                 }
             }
 
-            if (brh.getBulkSize() > 0) {
-                brh.launchBulk(client);
-            }
-
-            try {
-                if (nbOfFeatures > 0) {
-                    phaser.awaitAdvanceInterruptibly(0, 3, TimeUnit.HOURS);
-                }
-            } catch (TimeoutException e) {
-                throw new Exception("Timeout when awaiting all bulks to be processed.");
-            }
             LOGGER.info("{}: {} features processed in {} ms.", new Object[]{
                 typeName, nbOfFeatures,
                 System.currentTimeMillis() - begin
@@ -465,9 +452,11 @@ public class EsWFSFeatureIndexer {
             LOGGER.error(e.getMessage());
             throw e;
         } finally {
+            brh.close();
             report.saveHarvesterReport();
             future.complete(null);
         }
+
 
         return future;
     }
@@ -519,7 +508,7 @@ public class EsWFSFeatureIndexer {
         private String typeName;
         private boolean pointOnlyForGeoms;
 
-        public Report(String url, String typeName) throws UnsupportedEncodingException {
+        public Report(String url, String typeName) {
             this.typeName = typeName;
             this.url = url;
             pointOnlyForGeoms = true;
@@ -545,18 +534,21 @@ public class EsWFSFeatureIndexer {
         }
 
         public boolean saveHarvesterReport() {
-            IndexRequest request = new IndexRequest(index);
-            request.id(report.get("id").toString());
-            request.source(report);
+            IndexRequest request = IndexRequest.of(
+                b -> b.index(index)
+                    .id(report.get("id").toString())
+                    .document(report)
+            );
+
             try {
-                IndexResponse response = client.getClient().index(request, RequestOptions.DEFAULT);
-                if (response.status() == RestStatus.CREATED || response.status() == RestStatus.OK) {
+                IndexResponse response = client.getClient().index(request);
+                if (response.result() == Result.Created || response.result() == Result.Updated) {
                     LOGGER.info("Report saved for service {} and typename {}. Report id is {}",
                         url, typeName, report.get("id"));
                 } else {
                     LOGGER.info("Failed to save report for {}. Error was '{}'.",
                         typeName,
-                        response.getResult());
+                        response.result());
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -578,71 +570,76 @@ public class EsWFSFeatureIndexer {
 
     abstract class BulkResutHandler {
 
-        protected Phaser phaser;
         protected String typeName;
         private String url;
         protected int firstFeatureIndex;
         private Report report;
         private String metadataUuid;
         protected long begin;
-        protected BulkRequest bulk;
+        protected BulkIngester<String> bulk;
         protected int bulkSize;
         protected int failuresCount;
-        ActionListener<BulkResponse> listener;
+        BulkListener<String> listener;
 
-        public BulkResutHandler(Phaser phaser, String typeName, String url, int firstFeatureIndex, Report report, String metadataUuid) {
-            this.phaser = phaser;
+        public BulkResutHandler(String typeName, String url, int firstFeatureIndex, Report report, String metadataUuid) {
             this.typeName = typeName;
             this.url = url;
             this.firstFeatureIndex = firstFeatureIndex;
             this.report = report;
 
             this.metadataUuid = metadataUuid;
-            this.bulk = new BulkRequest(index);
+
             this.bulkSize = 0;
             this.failuresCount = 0;
-            LOGGER.debug("  {} - Indexing bulk (size {}) starting at {} ...",
-                typeName, featureCommitInterval, firstFeatureIndex);
+            LOGGER.debug("  {} - Indexing with bulk ingester (with maxOperations {}) ...",
+                typeName, featureCommitInterval);
 
-            listener = new ActionListener<BulkResponse>() {
+            listener = new BulkListener<String>() {
                 @Override
-                public void onResponse(BulkResponse bulkResponse) {
+                public void beforeBulk(long executionId, BulkRequest request, List<String> contexts) {
+                }
+
+                @Override
+                public void afterBulk(long executionId, BulkRequest request, List<String> contexts, BulkResponse bulkResponse) {
                     AtomicInteger bulkFailures = new AtomicInteger();
-                    if (bulkResponse.hasFailures()) {
-                        Arrays.stream(bulkResponse.getItems()).forEach(e -> {
-                            if (e.status() != OK
-                                && e.status() != CREATED) {
+                    if (bulkResponse.errors()) {
+                        bulkResponse.items().forEach(e -> {
+                            if (e.status() != 200
+                                && e.status() != 201) {
                                 String msg = String.format(
-                                    "Feature %s: Indexing error. Error is: %s", e.getId(), e.getFailure().toString());
+                                    "Feature %s: Indexing error. Error is: %s", e.id(), e.error().toString());
                                 report.put("error_ss", msg);
                                 LOGGER.warn(msg);
                                 bulkFailures.getAndIncrement();
                             }
                         });
                     }
-                    LOGGER.debug("  {} - Features [{}-{}] indexed in {} ms{}.", new Object[]{
-                        typeName, firstFeatureIndex, firstFeatureIndex + bulkSize,
+                    LOGGER.debug("  {} - {} features indexed in {} ms{}.", typeName, firstFeatureIndex + bulkSize,
                         System.currentTimeMillis() - begin,
-                        bulkResponse.hasFailures() ?
-                            " but with " + bulkFailures + " errors" : ""
-                    });
+                        bulkResponse.errors() ?
+                            " but with " + bulkFailures + " errors" : "");
                     failuresCount = bulkFailures.get();
-                    phaser.arriveAndDeregister();
                 }
 
                 @Override
-                public void onFailure(Exception e) {
+                public void afterBulk(long executionId, BulkRequest request, List<String> contexts, Throwable failure) {
                     String msg = String.format(
-                        "Features [%s-%s] indexed in %s ms but with errors. Exception: %s",
-                        typeName, firstFeatureIndex, bulkSize,
+                        "  %s - %s features indexed in %s ms but with errors. Exception: %s",
+                        typeName, firstFeatureIndex + bulkSize,
                         System.currentTimeMillis() - begin,
-                        e.getMessage()
+                        failure.getMessage()
                     );
                     report.put("error_ss", msg);
                     LOGGER.error(msg);
-                    phaser.arriveAndDeregister();
                 }
             };
+
+            this.bulk = BulkIngester.of(b -> b.client(client.getAsynchClient())
+                .listener(listener)
+                // .maxConcurrentRequests(1)
+                // .flushInterval(10, TimeUnit.SECONDS)
+                .maxOperations(featureCommitInterval));
+
         }
 
         public int getBulkSize() {
@@ -661,29 +658,29 @@ public class EsWFSFeatureIndexer {
             }
 
             String id = String.format("%s#%s#%s", url, typeName, featureId);
-            bulk.add(new IndexRequest(index).id(id)
-                .source(jacksonMapper.writeValueAsString(rootNode), XContentType.JSON));
-//                .routing(ROUTING_KEY));
+            BinaryData data = BinaryData.of(
+                    jacksonMapper.writeValueAsString(rootNode).getBytes(StandardCharsets.UTF_8),
+                    ContentType.APPLICATION_JSON);
+
+            bulk.add(b ->
+                b.index(io -> io
+                    .index(index)
+                    .id(id)
+                    .document(data)), id);
             bulkSize++;
         }
 
-        protected void prepareLaunch() {
-            phaser.register();
-            this.begin = System.currentTimeMillis();
+        public void close() {
+            if (this.bulk != null) {
+                this.bulk.close();
+            }
         }
-
-        abstract public void launchBulk(EsRestClient client) throws Exception;
     }
 
-    // depending on situation, one can expect going up to 1.5 faster using an async result handler (e.g. hudge collection of points)
+    // depending on situation, one can expect going up to 1.5 faster using an async result handler (e.g. huge collection of points)
     class AsyncBulkResutHandler extends BulkResutHandler {
-        public AsyncBulkResutHandler(Phaser phaser, String typeName, String url, int firstFeatureIndex, Report report, String metadataUuid) {
-            super(phaser, typeName, url, firstFeatureIndex, report, metadataUuid);
-        }
-
-        public void launchBulk(EsRestClient client) throws Exception {
-            prepareLaunch();
-            client.getClient().bulkAsync(this.bulk, RequestOptions.DEFAULT, this.listener);
+        public AsyncBulkResutHandler(String typeName, String url, int firstFeatureIndex, Report report, String metadataUuid) {
+            super(typeName, url, firstFeatureIndex, report, metadataUuid);
         }
     }
 

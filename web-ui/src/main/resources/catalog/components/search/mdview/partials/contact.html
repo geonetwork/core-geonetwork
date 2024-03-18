@@ -34,7 +34,8 @@
             {{c.address}}
           </div>
           <a href="tel:{{c.phone}}" data-ng-if="c.phone != ''">
-            <span data-translate="">call</span> {{c.phone}}
+            <i class="fa fa-fw fa-phone"></i>
+            {{c.phone}}
           </a>
         </address>
 
@@ -91,7 +92,8 @@
               {{c.address}}
             </div>
             <a href="tel:{{c.phone}}" data-ng-if="c.phone != ''">
-              <span data-translate="">call</span> {{c.phone}}
+              <i class="fa fa-fw fa-phone"></i>
+              {{c.phone}}
             </a>
           </address>
 
@@ -147,7 +149,8 @@
               {{c.address}}
             </div>
             <a href="tel:{{c.phone}}" data-ng-if="c.phone != ''">
-              <span data-translate="">call</span> {{c.phone}}
+              <i class="fa fa-fw fa-phone"></i>
+              {{c.phone}}
             </a>
           </address>
 
@@ -187,7 +190,8 @@
 
           <div data-ng-if="c.address != ''">{{c.address}}</div>
           <a href="tel:{{c.phone}}" data-ng-if="c.phone != ''">
-            <span data-translate="">call</span> {{c.phone}}
+            <i class="fa fa-fw fa-phone"></i>
+            {{c.phone}}
           </a>
         </address>
       </div>
@@ -226,7 +230,8 @@
           <span data-ng-repeat="c in contact | limitTo:1">
             <div data-ng-if="c.address != ''">{{c.address}}</div>
             <a href="tel:{{c.phone}}" data-ng-if="c.phone != ''">
-              <span data-translate="">call</span> {{c.phone}}
+              <i class="fa fa-fw fa-phone"></i>
+              {{c.phone}}
             </a>
           </span>
         </address>

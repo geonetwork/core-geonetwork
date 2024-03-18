@@ -7,6 +7,10 @@
     aria-haspopup="true"
     aria-expanded="true"
   >
+    <span
+      data-ng-show="page.icon && page.icon.length > 0"
+      class="fa fa-fw {{page.icon}}"
+    ></span>
     <span>{{page.label}}</span>
     <span class="caret hidden-xs"></span>
   </a>
@@ -23,6 +27,10 @@
         href="{{page.link}}"
         target="{{page.link.indexOf('http') === 0 ? '_blank' : '_self'}}"
       >
+        <span
+          data-ng-show="page.icon && page.icon.length > 0"
+          class="fa fa-fw {{page.icon}}"
+        ></span>
         <span>{{page.label}}</span>
       </a>
       <a
@@ -31,6 +39,10 @@
         title="{{page.pageId}}"
         data-ng-click="changePage($event)"
       >
+        <span
+          data-ng-show="page.icon && page.icon.length > 0"
+          class="fa fa-fw {{page.icon}}"
+        ></span>
         <span>{{page.label}}</span>
       </a>
     </li>
@@ -42,6 +54,10 @@
     href="{{page.link}}"
     target="_blank"
   >
+    <span
+      data-ng-show="page.icon && page.icon.length > 0"
+      class="fa fa-fw {{page.icon}}"
+    ></span>
     <span>{{page.label}}</span>
   </a>
   <a
@@ -51,6 +67,10 @@
     title="{{page.pageId}}"
     data-ng-click="changePage($event)"
   >
+    <span
+      data-ng-show="page.icon && page.icon.length > 0"
+      class="fa fa-fw {{page.icon}}"
+    ></span>
     <span>{{page.label}}</span>
   </a>
 </li>

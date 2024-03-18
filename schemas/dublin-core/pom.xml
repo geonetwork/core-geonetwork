@@ -5,7 +5,7 @@
   <parent>
     <artifactId>gn-schemas</artifactId>
     <groupId>org.geonetwork-opensource.schemas</groupId>
-    <version>4.4.2-SNAPSHOT</version>
+    <version>4.4.4-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
@@ -42,6 +42,28 @@
             <goals>
               <goal>test-jar</goal>
             </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>sample-data</id>
+            <phase>compile</phase>
+            <configuration>
+              <!-- inline ant build target -->
+              <target>
+                 <mkdir dir="target/sample-data"/>
+                 <defaultexcludes add="**/.DS_Store"/>
+                 <zip destfile="target/sample-data/natural_polar_ecosystems.mef"
+                   basedir="src/main/plugin/dublin-core/sample-data/natural_polar_ecosystems"
+                   whenempty="create"
+                   excludes="**/.keepme"/>
+              </target>
+            </configuration>
+            <goals><goal>run</goal></goals>
           </execution>
         </executions>
       </plugin>

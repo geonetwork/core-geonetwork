@@ -173,7 +173,7 @@ mvn jetty:run -Penv-dev
 
 After some moments of startup and initialization, GeoNetwork is available at: <http://localhost:8080/geonetwork>
 
-For changes related to the user interface in the ``web-ui`` module or the metadata schemas in the `schemeas` module, these can be deployed in Jetty executing the following Maven command in the **web** module:
+For changes related to the user interface in the ``web-ui`` module or the metadata schemas in the `schemas` module, these can be deployed in Jetty executing the following Maven command in the **web** module:
 
 ``` shell
 mvn process-resources -DschemasCopy=true

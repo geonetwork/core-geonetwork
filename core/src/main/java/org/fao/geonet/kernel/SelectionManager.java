@@ -23,13 +23,14 @@
 
 package org.fao.geonet.kernel;
 
+import co.elastic.clients.elasticsearch.core.SearchResponse;
+import co.elastic.clients.elasticsearch.core.search.Hit;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 
 import org.apache.commons.lang.StringUtils;
-import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.search.SearchHit;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
@@ -248,8 +249,9 @@ public class SelectionManager {
                     EsSearchManager searchManager = context.getBean(EsSearchManager.class);
                     searchResponse = searchManager.query(request.get("query"), FIELDLIST_UUID, 0, maxhits);
                     List<String> uuidList = new ArrayList();
-                    for (SearchHit h : Arrays.asList(searchResponse.getHits().getHits())) {
-                        uuidList.add((String) h.getSourceAsMap().get(Geonet.IndexFieldNames.UUID));
+                    ObjectMapper objectMapper = new ObjectMapper();
+                    for (Hit h : (List<Hit>) searchResponse.hits().hits()) {
+                        uuidList.add((String) objectMapper.convertValue(h.source(), Map.class).get(Geonet.IndexFieldNames.UUID));
                     }
 
                     if (selection != null) {

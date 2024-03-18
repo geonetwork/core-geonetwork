@@ -95,7 +95,7 @@ public class MetadataTagApi {
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Get record tags",
         description = "Tags are used to classify information.<br/>" +
-            "<a href='http://geonetwork-opensource.org/manuals/trunk/eng/users/user-guide/tag-information/tagging-with-categories.html'>More info</a>")
+            "<a href='https://docs.geonetwork-opensource.org/latest/user-guide/tag-information/tagging-with-categories/'>More info</a>")
     @GetMapping(
         value = "/{metadataUuid}/tags",
         produces = {
@@ -389,9 +389,9 @@ public class MetadataTagApi {
         produces = {
             MediaType.APPLICATION_JSON_VALUE
         })
-    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    @ResponseStatus(value = HttpStatus.OK)
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "201", description = "Report about removed records."),
+        @ApiResponse(responseCode = "200", description = "Report about removed records."),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_EDITOR)
     })
     @PreAuthorize("hasAuthority('Editor')")

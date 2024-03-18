@@ -2,18 +2,23 @@
 
 !!! warning
 
-    Not yet available in version 4.
-
+    Unavailable since version 4.0.0.
+    
+    There is no known sponsor or interested party for implementing RDF DCAT.
+    Interested parties may contact the project team for guidance and to express their intent.
 
 The RDF DCAT end point provides a way of getting information about the catalog, the datasets and services, and links to distributed resources in a machine-readable format. The formats of the output are based on DCAT, an RDF vocabulary that is designed to facilitate interoperability between web-based data catalogs.
 
-## URLS
+Reference:
 
-The following URLs are available (substitute your GeoNetwork URL):
+* [Data Catalog Vocabulary (DCAT)](https://www.w3.org/TR/vocab-dcat-3/)
 
--   <http://localhost:8080/geonetwork/srv/eng/rdf.metadata.get?uuid=> : returns an RDF record for the given UUID
--   <http://localhost:8080/geonetwork/srv/eng/rdf.search>?: returns a dcat:Catalog record. By default this will describe all the records in the catalog, but query filters are available (see below)
+## Upgrading from GeoNetwork 3.0 Guidance
 
-## Query parameters
+RDF DCAT API is no longer available.
 
--   `_cat`: Metadata Category
+1. We recommend migrating to use of [Catalog Service for the Web (CSW)](csw.md) API to query and explore data.
+
+2. When downloading using `GetRecord` make use of the `application/rdf+xml; charset=UTF-8` output format.
+   
+   This will allow retrieving records in the same document format as previously provided by RDF DCAT api.

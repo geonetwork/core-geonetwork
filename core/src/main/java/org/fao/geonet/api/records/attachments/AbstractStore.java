@@ -97,7 +97,7 @@ public abstract class AbstractStore implements Store {
     }
 
     protected static AccessManager getAccessManager(final ServiceContext context) {
-        return context.getBean(AccessManager.class);
+        return ApplicationContextHolder.get().getBean(AccessManager.class);
     }
 
     public static int getAndCheckMetadataId(String metadataUuid, Boolean approved) throws Exception {
