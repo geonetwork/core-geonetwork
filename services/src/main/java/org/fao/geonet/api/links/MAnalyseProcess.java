@@ -33,7 +33,6 @@ import org.fao.geonet.repository.LinkRepository;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.utils.Log;
 import org.jdom.Element;
-import org.jdom.JDOMException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.jmx.export.annotation.ManagedAttribute;
 import org.springframework.jmx.export.annotation.ManagedResource;
@@ -41,7 +40,6 @@ import org.springframework.jmx.export.naming.SelfNaming;
 
 import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
-import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -144,7 +142,7 @@ public class MAnalyseProcess implements SelfNaming {
         try {
             this.probeName = new ObjectName(String.format("geonetwork-%s:name=url-check,idx=%s", catalogueId, this.hashCode()));
         } catch (MalformedObjectNameException e) {
-            e.printStackTrace();
+            Log.error(LOGGER,"Error creating MAnalyseProcess for processing links", e);
         }
     }
 
@@ -174,7 +172,7 @@ public class MAnalyseProcess implements SelfNaming {
      * Test a list of links.
      */
     private final class LinksCheckUrlCallable implements Runnable {
-        private List<String> links;
+        private final List<String> links;
         LinksCheckUrlCallable(List<String> links) {
             this.links = links;
         }
@@ -217,8 +215,8 @@ public class MAnalyseProcess implements SelfNaming {
      * Test a list of links for the metadata provided.
      */
     private final class LinksCheckCallable implements Runnable {
-        private boolean testLink;
-        private Set<Integer> ids;
+        private final boolean testLink;
+        private final Set<Integer> ids;
         LinksCheckCallable(boolean testLink, Set<Integer> ids) {
             this.testLink = testLink;
             this.ids = ids;
@@ -236,7 +234,7 @@ public class MAnalyseProcess implements SelfNaming {
             }
         }
 
-        private void processMetadataAndTestLink(boolean testLink, Set<Integer> ids) throws JDOMException, IOException {
+        private void processMetadataAndTestLink(boolean testLink, Set<Integer> ids) {
             metadataToAnalyseCount.set(ids.size());
             analyseMdDate.set(System.currentTimeMillis());
 

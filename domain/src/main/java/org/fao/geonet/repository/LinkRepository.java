@@ -42,6 +42,5 @@ public interface LinkRepository extends GeonetRepository<Link, Integer>, LinkRep
     @Nullable
     Link findOneByUrl(@Nonnull String url);
 
-    @Nullable
     List<Link> findAllByUrlIn(@Nonnull List<String> url);
 }
