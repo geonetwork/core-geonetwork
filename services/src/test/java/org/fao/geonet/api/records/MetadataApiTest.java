@@ -180,7 +180,7 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
         contentTypes.put(MediaType.APPLICATION_XHTML_XML_VALUE, this.uuid + "/formatters/xsl-view");
         contentTypes.put("application/pdf", this.uuid + "/formatters/xsl-view");
         contentTypes.put(MediaType.APPLICATION_XML_VALUE, this.uuid + "/formatters/xml");
-        contentTypes.put(MediaType.APPLICATION_JSON_VALUE, this.uuid + "/formatters/xml");
+        contentTypes.put(MediaType.APPLICATION_JSON_VALUE, this.uuid + "/formatters/json");
         contentTypes.put("application/zip", this.uuid + "/formatters/zip");
         contentTypes.put(MEF_V1_ACCEPT_TYPE, this.uuid + "/formatters/zip");
         contentTypes.put(MEF_V2_ACCEPT_TYPE, this.uuid + "/formatters/zip");

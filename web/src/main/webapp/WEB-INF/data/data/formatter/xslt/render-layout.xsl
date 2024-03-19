@@ -295,7 +295,8 @@
               </div>
             </section>
 
-            <xsl:if test="$sideRelated != ''">
+            <!-- Don't add the associated resources in the metadata static page, this page doesn't include JS libs -->
+            <xsl:if test="$sideRelated != '' and $root != 'html'">
               <section class="gn-md-side-associated">
                 <h2>
                   <i class="fa fa-fw fa-link"><xsl:comment select="'icon'"/></i>

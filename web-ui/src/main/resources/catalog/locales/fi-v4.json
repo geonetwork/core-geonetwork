@@ -31,6 +31,7 @@
   "language.id": "Tunniste",
   "language.remove": "Remove language",
   "layerName": "Layer name",
+  "layerNameTooltip": "A layer name from the GetCapabilities document",
   "ogcServiceUrl": "Service URL",
   "translation.addFor": "Add a new translation for",
   "translation.add": "Lisää",
@@ -293,6 +294,8 @@
   "pageContent": "Page content",
   "pageContentFile": "Page content file",
   "pageLabel": "Page label",
+  "pageIcon": "Page icon",
+  "pageIcon-help": "Optionally, define a <a target='_blank' href='https://fontawesome.com/v4/icons/'>font-awesome icon</a>. Example: 'fa-wrench'.",
   "pageSection": "Page section",
   "pageApiLink": "Page API link",
   "uiRestorePrevious": "Restore last saved",
@@ -393,6 +396,7 @@
   "measureName": "Measure",
   "measureDescription": "Description",
   "measureValue": "Value",
+  "measureDate": "Date",
   "switchPortals": "Switch to another Portal",
   "dataPreview":  "Discover data",
   "tableOfContents": "Table of Contents",
@@ -414,5 +418,9 @@
   "lastCreatedRecords": "Last created records",
   "associationType": "Association type",
   "initiativeType": "Initiative type",
-  "associatedTo": "Associated "
+  "associatedTo": "Associated ",
+  "overviewDescription": "Overview description",
+  "overviewUrl": "Overview URL",
+  "restApiUrl": "REST API URL",
+  "filterHelp": "Please click on one of the buttons below to activate the filter"
 }

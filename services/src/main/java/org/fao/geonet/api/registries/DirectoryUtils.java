@@ -1,11 +1,12 @@
 package org.fao.geonet.api.registries;
 
+import co.elastic.clients.elasticsearch.core.SearchResponse;
+import co.elastic.clients.elasticsearch.core.search.Hit;
 import com.google.common.collect.Table;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.xlink.XLink;
 import org.apache.commons.lang.StringUtils;
-import org.elasticsearch.action.search.SearchResponse;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.UpdateDatestamp;
@@ -397,8 +398,6 @@ public class DirectoryUtils {
      * @return The record identifier
      */
     private static String search(ServiceContext context, Map<String, String> searchParameters) {
-        ServiceConfig _config = new ServiceConfig();
-
         EsSearchManager searchMan = context.getBean(EsSearchManager.class);
 
         StringBuilder query = new StringBuilder("+isTemplate:s");
@@ -408,8 +407,8 @@ public class DirectoryUtils {
 
         try {
             SearchResponse results = searchMan.query(query.toString(), null, 0, 1);
-            if (results.getHits().getTotalHits().value > 0) {
-                return results.getHits().getHits()[0].getId();
+            if (results.hits().hits().size() > 0) {
+                return ((Hit) results.hits().hits().get(0)).id();
             }
         } catch (Exception e) {
             e.printStackTrace();

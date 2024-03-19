@@ -23,11 +23,9 @@
 
 package org.fao.geonet.component.csw;
 
+import co.elastic.clients.elasticsearch._types.SortOptions;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
-import org.elasticsearch.search.sort.FieldSortBuilder;
-import org.elasticsearch.search.sort.SortBuilder;
-import org.elasticsearch.search.sort.SortOrder;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.*;
@@ -244,7 +242,7 @@ public class GetRecords extends AbstractOperation implements CatalogService {
 
             response.addContent(echoedRequest);
         } else {
-            List<SortBuilder<FieldSortBuilder>> sort = _sortByParser.parseSortBy(request);
+            List<SortOptions> sort = _sortByParser.parseSortBy(request);
 
             response = new Element(getName() + "Response", Csw.NAMESPACE_CSW);
 

@@ -32,16 +32,24 @@ import org.jdom.Element;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.mock.web.MockHttpSession;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.mock.web.MockMultipartHttpServletRequest;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
 
 import static org.fao.geonet.csw.common.Csw.NAMESPACE_DC;
+import static org.fao.geonet.csw.common.Csw.NAMESPACE_DCT;
 import static org.fao.geonet.kernel.rdf.Selectors.RDF_NAMESPACE;
 import static org.fao.geonet.kernel.rdf.Selectors.SKOS_NAMESPACE;
 import static org.junit.Assert.assertEquals;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * export CATALOG=http://localhost:8080/geonetwork
@@ -61,6 +69,8 @@ public class KeywordsApiTest extends AbstractServiceIntegrationTest {
     @Autowired
     private SpringLocalServiceInvoker invoker;
 
+    @Autowired
+    private WebApplicationContext wac;
 
     @Test
     public void testConvertCsvToSkos() throws Exception {
@@ -198,5 +208,47 @@ public class KeywordsApiTest extends AbstractServiceIntegrationTest {
             "taxref.csv#", scheme.getAttributeValue("about", RDF_NAMESPACE));
         assertEquals(
             "taxref.csv", scheme.getChildText("title", NAMESPACE_DC));
+    }
+
+
+    @Test
+    public void testImportOntologyToSkos() throws Exception {
+        createServiceContext();
+        User user = new User().setId(USER_ID);
+        HttpSession session = loginAs(user);
+        MockHttpSession mockHttpSession = loginAsAdmin();
+
+        MockMultipartHttpServletRequest request = new MockMultipartHttpServletRequest(session.getServletContext());
+        request.setRequestURI("/srv/api/registries/vocabularies");
+        MockMultipartFile file = new MockMultipartFile(
+            "file",
+            "mobility-theme.owl",
+            null,
+            getClass().getClassLoader().getResourceAsStream("mobility-theme.owl"));
+        request.addFile(file);
+        request.setSession(session);
+        request.setParameter("type", "external");
+        request.setParameter("dir", "theme");
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        invoker.invoke(request, response);
+        assertEquals(200, response.getStatus());
+
+
+        MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+        MvcResult result = mockMvc.perform(get("/srv/api/registries/vocabularies/external.theme.mobility-theme")
+                .accept("application/xml")
+                .session(mockHttpSession))
+            .andExpect(status().isOk())
+            .andReturn();
+
+        Element thesaurus = Xml.loadString(result.getResponse().getContentAsString(), false);
+        Element scheme = (Element) thesaurus.getChildren("ConceptScheme", SKOS_NAMESPACE).get(0);
+        assertEquals(
+            "https://w3id.org/mobilitydcat-ap/mobility-theme", scheme.getAttributeValue("about", RDF_NAMESPACE));
+        assertEquals(
+            "Mobility Theme", scheme.getChildText("title", NAMESPACE_DCT));
+
+        List concepts = thesaurus.getChildren("Concept", SKOS_NAMESPACE);
+        assertEquals(123, concepts.size());
     }
 }

@@ -31,6 +31,7 @@
   "language.id": "Identifikátor",
   "language.remove": "Odebrat jazyk",
   "layerName": "Název vrstvy",
+  "layerNameTooltip": "A layer name from the GetCapabilities document",
   "ogcServiceUrl": "URL služby",
   "translation.addFor": "Přidat nový překlad pro",
   "translation.add": "Přidat",
@@ -293,6 +294,8 @@
   "pageContent": "Obsah stránky",
   "pageContentFile": "Soubor s obsahem stránky",
   "pageLabel": "Štítek stránky",
+  "pageIcon": "Page icon",
+  "pageIcon-help": "Optionally, define a <a target='_blank' href='https://fontawesome.com/v4/icons/'>font-awesome icon</a>. Example: 'fa-wrench'.",
   "pageSection": "Sekce stránky",
   "pageApiLink": "Odkaz na API stránky",
   "uiRestorePrevious": "Obnovit naposledy uložené",
@@ -393,6 +396,7 @@
   "measureName": "Opatření",
   "measureDescription": "Popis",
   "measureValue": "Hodnota",
+  "measureDate": "datum",
   "switchPortals": "Přepnout na jiný portál",
   "dataPreview":  "Objevte data",
   "tableOfContents": "Obsah",
@@ -414,5 +418,9 @@
   "lastCreatedRecords": "Naposledy vytvořené záznamy",
   "associationType": "Typ přidružení",
   "initiativeType": "Typ iniciativy",
-  "associatedTo": "Přidružený"
+  "associatedTo": "Přidružený",
+  "overviewDescription": "Overview description",
+  "overviewUrl": "Overview URL",
+  "restApiUrl": "REST API URL",
+  "filterHelp": "Pro aktivaci filtru klikněte na jedno z níže uvedených tlačítek"
 }

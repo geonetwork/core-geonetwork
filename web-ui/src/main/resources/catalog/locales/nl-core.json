@@ -218,7 +218,10 @@
     "passwordPattern": "Wachtwoord moet minstens 1 hoofdletter, 1 kleine letter, 1 cijfer en 1 symbool bevatten. Symbolen zijn onder meer: `~! @ # $% ^ &amp; * () -_ = + [] {} \\ |;: &#39;&quot;,. &lt;&gt; /?&#39;);",
     "passwordOld": "Oud Wachtwoord",
     "passwordRepeat": "Herhaal wachtwoord",
-    "groupNameMaxlength": "De groepsnaam kan niet langer zijn dan 32 karakters.",
+    "groupNameMaxlength": "Group name can not exceed 255 characters!",
+    "categoryNameMaxlength": "Category name can not exceed 255 characters!",
+    "portalNameMaxlength": "Portal name can not exceed 255 characters!",
+    "portalIdMaxlength": "Portal identifier can not exceed 255 characters!",
     "groupDescriptionMaxlength": "De groepsomschrijving kan niet langer zijn dan 255 karakters.",
     "groupEmailMaxlength": "De groeps-e-mail kan niet langer zijn dan 128 karakters.",
     "pol": "Polski",
@@ -546,7 +549,7 @@
     "categoriesUpdated": "Categoriën geupdated.",
     "warnPublishDraft": "Wanneer de workflow is geactiveerd en de records worden gepubliceerd dan veranderd de status in 'Goedgekeurd'. Doorgaan?",
     "cancelWorkingCopy": "Annuleer concept versie",
-    "deleteWorkingCopyRecordConfirm": "Weet je zeker dat je de concept versie '{{resourceTitle}}' wilt verwijderen?",
+    "deleteWorkingCopyRecordConfirm": "Do you really want to remove the working copy '{{resourceTitle}}'?",
     "workingCopy": "Concept versie",
     "onTheWeb": "Meer informatie online",
     "pdfReportTocTitle": "Inhoudsopgave",
@@ -577,5 +580,9 @@
     "reviewerNotAllowedPublish": "Reviewer not allowed to publish the metadata",
     "reviewerNotAllowedUnpublish": "Reviewer not allowed to un-publish the metadata",
     "reviewerNotAllowedPublishUnpublish": "Reviewer not allowed to publish / un-publish the metadata",
-    "missingTitle": "Missing title"
+    "missingTitle": "Missing title",
+    "mapLegend": "Legenda",
+    "quality": "Kwaliteit",
+    "download": "Download bestand",
+    "links": "Links"
 }

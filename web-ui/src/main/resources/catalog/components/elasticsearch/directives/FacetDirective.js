@@ -453,8 +453,9 @@
   ]);
 
   module.directive("esFacetCards", [
+    "gnFacetSorter",
     "gnLangs",
-    function (gnLangs) {
+    function (gnFacetSorter, gnLangs) {
       return {
         restrict: "A",
         scope: {
@@ -486,6 +487,7 @@
 
           init();
 
+          scope.facetSorter = gnFacetSorter.sortByTranslation;
           scope.$watch("key", function (n, o) {
             if (n && n !== o) {
               init();
