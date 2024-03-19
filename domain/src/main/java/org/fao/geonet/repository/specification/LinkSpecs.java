@@ -107,28 +107,33 @@ public class LinkSpecs {
             }
 
             if (editingGroupIds != null && editingGroupIds.length > 0) {
+                // Filter by editing privilege
                 Join<Link, MetadataLink> metadataJoin = root.join(Link_.records, JoinType.INNER);
 
                 Subquery<Integer> subquery = query.subquery(Integer.class);
                 final Root<OperationAllowed> opAllowRoot = subquery.from(OperationAllowed.class);
-                final Root<Metadata> metadataRoot = subquery.from(Metadata.class);
-                final Predicate groupOwnerPredicate =
-                    metadataRoot.get(Metadata_.sourceInfo).get(MetadataSourceInfo_.groupOwner).in(editingGroupIds);
-                final Predicate metadataOperations = cb.equal(metadataRoot.get(Metadata_.id), opAllowRoot.get(OperationAllowed_.id).get(OperationAllowedId_.metadataId));
                 Predicate editableGroups = opAllowRoot.get(OperationAllowed_.id).get(OperationAllowedId_.groupId).in(Arrays.asList(editingGroupIds));
                 Predicate operationTypeEdit =
                     cb.equal(
                         opAllowRoot.get(OperationAllowed_.id).get(OperationAllowedId_.operationId),
                         cb.literal(ReservedOperation.editing.getId()));
                 subquery.where(
-                    cb.or(
-                        cb.and(metadataOperations, groupOwnerPredicate),
-                        cb.and(editableGroups, operationTypeEdit)));
+                    cb.and(editableGroups, operationTypeEdit));
 
                 Path<Integer> opAllowedMetadataId = opAllowRoot.get(OperationAllowed_.id).get(OperationAllowedId_.metadataId);
                 subquery.select(opAllowedMetadataId);
 
-                predicates.add(metadataJoin.get(MetadataLink_.metadataId).in(subquery));
+                // Filter by group owner
+                Subquery<Integer> subqueryGroupOwner = query.subquery(Integer.class);
+                final Root<Metadata> metadataRoot = subqueryGroupOwner.from(Metadata.class);
+                final Predicate groupOwnerPredicate2 =
+                    metadataRoot.get(Metadata_.sourceInfo).get(MetadataSourceInfo_.groupOwner).in(editingGroupIds);
+                subqueryGroupOwner.where(groupOwnerPredicate2);
+
+                Path<Integer> metadataId = metadataRoot.get(Metadata_.id);
+                subqueryGroupOwner.select(metadataId);
+
+                predicates.add(cb.or(metadataJoin.get(MetadataLink_.metadataId).in(subquery), metadataJoin.get(MetadataLink_.metadataId).in(subqueryGroupOwner)));
                 query.distinct(true);
             }
 
