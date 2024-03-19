@@ -240,8 +240,7 @@ public class LinksApi {
         }
 
         if (filter == null && (groupIdFilter != null || groupOwnerIdFilter != null || httpStatusValueFilter != null || editingGroups != null || excludeHarvestedMetadataFilter)) {
-            Page<Link> links = linkRepository.findAll(LinkSpecs.filter(null, null, null, groupIdFilter, groupOwnerIdFilter, httpStatusValueFilter, excludeHarvestedMetadataFilter, editingGroups), pageRequest);
-            return links;
+            return linkRepository.findAll(LinkSpecs.filter(null, null, null, groupIdFilter, groupOwnerIdFilter, httpStatusValueFilter, excludeHarvestedMetadataFilter, editingGroups), pageRequest);
         }
 
         if (filter != null) {
@@ -267,8 +266,7 @@ public class LinksApi {
                 ).collect(Collectors.toList());
             }
 
-            Page<Link> links = linkRepository.findAll(LinkSpecs.filter(url, stateToMatch, associatedRecords, groupIdFilter, groupOwnerIdFilter, httpStatusValueFilter, excludeHarvestedMetadataFilter, editingGroups), pageRequest);
-            return links;
+            return linkRepository.findAll(LinkSpecs.filter(url, stateToMatch, associatedRecords, groupIdFilter, groupOwnerIdFilter, httpStatusValueFilter, excludeHarvestedMetadataFilter, editingGroups), pageRequest);
         } else {
             return linkRepository.findAll(pageRequest);
         }
@@ -290,13 +288,11 @@ public class LinksApi {
             description = "Sorting criteria in the format: property(,asc|desc). " +
                 "Default sort order is ascending. ")
     })
-    @RequestMapping(
+    @GetMapping(
         path = "/csv",
-        method = RequestMethod.GET,
         produces = MediaType.TEXT_PLAIN_VALUE
     )
     @PreAuthorize("isAuthenticated()")
-    @ResponseBody
     public void getRecordLinksAsCsv(
         @Parameter(description = "Filter, e.g. \"{url: 'png', lastState: 'ko', records: 'e421'}\", lastState being 'ok'/'ko'/'unknown'", required = false)
         @RequestParam(required = false)
@@ -330,13 +326,11 @@ public class LinksApi {
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Analyze records links",
         description = "One of uuids or bucket parameter is required if not an Administrator. Only records that you can edit will be validated.")
-    @RequestMapping(
+    @PostMapping(
         path = "/analyze",
-        produces = MediaType.APPLICATION_JSON_VALUE,
-        method = RequestMethod.POST)
+        produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('Editor')")
     @ResponseStatus(HttpStatus.CREATED)
-    @ResponseBody
     public SimpleMetadataProcessingReport analyzeRecordLinks(
         @Parameter(description = API_PARAM_RECORD_UUIDS_OR_SELECTION)
         @RequestParam(required = false)
@@ -426,13 +420,11 @@ public class LinksApi {
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Analyze one or more links",
         description = "")
-    @RequestMapping(
+    @PostMapping(
         path = "/analyzeurl",
-        produces = MediaType.APPLICATION_JSON_VALUE,
-        method = RequestMethod.POST)
+        produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('Editor')")
     @ResponseStatus(HttpStatus.CREATED)
-    @ResponseBody
     public void analyzeLinks(
         @Parameter(description = "URL")
         @RequestParam(required = false)
@@ -446,12 +438,10 @@ public class LinksApi {
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Remove all links and status history",
         description = "")
-    @RequestMapping(
-        produces = MediaType.APPLICATION_JSON_VALUE,
-        method = RequestMethod.DELETE)
+    @DeleteMapping(
+        produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.OK)
     @PreAuthorize("hasAuthority('Administrator')")
-    @ResponseBody
     public ResponseEntity purgeAll() {
         urlAnalyser.deleteAll();
         cleanupFinishedMAnalyseProcesses();
