@@ -395,7 +395,7 @@
 
                             scope.getGeomType = function (geom) {
                               if (!geom) {
-                                return;
+                                return null;
                               }
                               var geom_type;
                               geom = geom.toLowerCase();
