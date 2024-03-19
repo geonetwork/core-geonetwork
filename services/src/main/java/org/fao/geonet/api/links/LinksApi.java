@@ -46,7 +46,6 @@ import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.exceptions.OperationNotAllowedEx;
 import org.fao.geonet.kernel.AccessManager;
-import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.url.UrlAnalyzer;
@@ -103,8 +102,6 @@ public class LinksApi {
     IMetadataUtils metadataUtils;
     @Autowired
     MetadataRepository metadataRepository;
-    @Autowired
-    DataManager dataManager;
     @Autowired
     UrlAnalyzer urlAnalyser;
     @Autowired
@@ -442,10 +439,10 @@ public class LinksApi {
         produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.OK)
     @PreAuthorize("hasAuthority('Administrator')")
-    public ResponseEntity purgeAll() {
+    public ResponseEntity<Void> purgeAll() {
         urlAnalyser.deleteAll();
         cleanupFinishedMAnalyseProcesses();
-        return new ResponseEntity(HttpStatus.NO_CONTENT);
+        return ResponseEntity.noContent().build();
     }
 
     private MAnalyseProcess getRegistredMAnalyseProcess() {
