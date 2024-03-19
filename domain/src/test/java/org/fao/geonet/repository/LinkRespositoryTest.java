@@ -31,6 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 public class LinkRespositoryTest extends AbstractSpringDataTest {
@@ -73,17 +74,19 @@ public class LinkRespositoryTest extends AbstractSpringDataTest {
 
         repository.save(link);
 
-        Link linkToCheck = repository.findOneByUrl("https://test.com/link");
+        Optional<Link> linkToCheck = repository.findOneByUrl("https://test.com/link");
 
         Assert.assertNotNull(linkToCheck);
-        Assert.assertEquals(link.getUrl(), linkToCheck.getUrl());
+        Assert.assertTrue(linkToCheck.isPresent());
+        Assert.assertEquals(link.getUrl(), linkToCheck.get().getUrl());
     }
 
     @Test
     public void testFindOneByUrlNoResult() {
-        Link link = repository.findOneByUrl("https://test.com/link");
+        Optional<Link> link = repository.findOneByUrl("https://test.com/link");
 
-        Assert.assertNull(link);
+        Assert.assertNotNull(link);
+        Assert.assertTrue(link.isEmpty());
     }
 
 }
