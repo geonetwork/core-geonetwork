@@ -81,13 +81,15 @@
             <label class="control-label" for="gn-link-group" data-translate=""
               >groupPublished</label
             >
+            <!-- Use `group2` for groups instead of `group`, otherwise has a side effect with the model property from previous combo.
+                 The directive loads the model and adds an extra empty entry if used in both `group -->
             <div
               id="gn-link-group"
               data-groups-combo=""
               data-set-default-value="false"
               data-owner-group="groupIdFilter"
               lang="lang"
-              groups="groups"
+              groups="groups2"
               data-exclude-special-groups="true"
             >
               &nbsp;
@@ -173,12 +175,13 @@
 
         <div class="row">
           <div class="form-group col-lg-3 gn-nopadding-left">
-            <label class="control-label" for="gn-link-exclude-harvested">
+            <label for="gn-link-exclude-harvested">
               <input
                 type="checkbox"
                 id="gn-link-exclude-harvested"
                 data-ng-model="excludeHarvestedMetadataFilter"
-              />{{'linkChecker-excludeHarvestedMetadata' | translate}}
+              />
+              <span>{{'linkChecker-excludeHarvestedMetadata' | translate}}</span>
             </label>
           </div>
         </div>

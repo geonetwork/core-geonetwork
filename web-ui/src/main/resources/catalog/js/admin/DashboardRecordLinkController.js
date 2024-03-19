@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2024 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -90,6 +90,7 @@
 
       $scope.processesFinished = function () {
         $scope.processesRunning = false;
+        $scope.triggerSearch();
       };
 
       $scope.resetForm = function () {
@@ -162,10 +163,6 @@
         ko: $translate.instant("valid-0"),
         unknown: $translate.instant("valid--1")
       };
-
-      /*$scope.$watch("groupIdFilter", $scope.triggerSearch);
-      $scope.$watch("groupOwnerIdFilter", $scope.triggerSearch);
-      $scope.$watch("selectionFilter", $scope.triggerSearch);*/
 
       $scope.$watch("selectedSelection.id", function (n, o) {
         if (angular.isDefined(n) && n !== o) {
@@ -269,8 +266,6 @@
               field: "lastState",
               title: $translate.instant("linkStatus"),
               titleTooltip: "",
-              //filterControl: "select",
-              //filterData: "var:lastState",
               formatter: function (val, row) {
                 var _class = "fa-question text-muted";
                 // as I can't upgrade bstable version, defining key so is a very dirty fix for
@@ -298,8 +293,6 @@
               title: $translate.instant("url"),
               titleTooltip: $translate.instant("url"),
               sortable: true,
-              //filterControl: "input",
-              //filterControlPlaceholder: "",
               formatter: function (val, row) {
                 return "<a href='" + row.url + "' target='_blank'>" + row.url + "</a>";
               }.bind(this)
@@ -345,8 +338,6 @@
               title: $translate.instant("associatedRecords"),
               titleTooltip: $translate.instant("associatedRecords"),
               sortable: false,
-              //filterControl: "input",
-              //filterControlPlaceholder: "",
               formatter: function (val, row) {
                 var ulElem = "<ul>";
                 for (var i = 0; i < row.records.length; i++) {
