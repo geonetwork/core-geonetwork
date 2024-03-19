@@ -240,15 +240,13 @@
   </element>
   <element name="gmd:spatialRepresentationInfo" id="12">
     <label>Struktur der räumlichen Daten</label>
-    <abbrLabel>Räumlichen</abbrLabel>
-    <help>Angaben, wie räumliche Ausprägungen definiert werden.
-      Unterschieden werden Vektordaten und
-      Rasterdaten.
+    <abbrLabel>Datenstruktur</abbrLabel>
+    <help>Angabe zur technischen Beschaffenheit der Daten. Unterschieden werden z. B. Vektordaten und Rasterdaten.
+      Vektordaten können aus unterschiedlichen Geometrietypen bestehen und werden durch attributive Informationen
+      (alphanumerischen Daten) in ihrer Aussage unterstützt.
     </help>
     <condition/>
-    <description>Digitale Darstellung der räumlichen Informationen im
-      Datenbestand
-    </description>
+    <description>Typ der digitalen Daten (Raster / Vektor / Alphanumerisch)</description>
   </element>
   <element name="gmd:DQ_TemporalAccuracy" id="120">
     <label>Zeitliche Genauigkeit</label>
@@ -913,11 +911,11 @@
   </element>
   <element name="gmd:portrayalCatalogueInfo" id="19">
     <label>Darstellungskatalog</label>
-    <abbrLabel>Darstellungs</abbrLabel>
+    <abbrLabel>Darst.katalog</abbrLabel>
     <help>z.B. Signaturenkatalog</help>
     <condition/>
     <description>Information über das Regelwerk für die Darstellung einer
-      Ressource
+      Ressource in einer Karte
     </description>
   </element>
   <element name="gmd:RS_ReferenceSystem" id="195">
@@ -1005,15 +1003,11 @@
   </element>
   <element name="gmd:applicationSchemaInfo" id="21">
     <label>Anwendungsschema</label>
-    <abbrLabel>Anwendung</abbrLabel>
-    <help>Mit diesem Element werden Informationen zu einem
-      Anwendungsschema erfasst. Ein
-      Anwendungsschema bietet eine formale Beschreibung der Datenstruktur und des Inhaltes
-      und somit
-      die Voraussetzung für den Austausch von Daten zwischen verschiedenen
-      Systemen. Die ISO
-      konforme Erstellung von Anwendungsschemata erfolgt nach dem ISO Standard
-      19109.
+    <abbrLabel>Schema</abbrLabel>
+    <help>Mit diesem Element werden Informationen zu einem Anwendungsschema / Datenmodell erfasst. Ein Anwendungsschema
+      bietet eine formale Beschreibung der Datenstruktur und des Inhaltes der Daten und ist somit die Voraussetzung für
+      den Austausch von Daten zwischen verschiedenen Systemen. Die ISO-konforme Erstellung der
+      Anwendungsschemata erfolgt nach dem ISO Standard 19109.
     </help>
     <condition/>
     <description>Information zum Datenmodell des Datenbestands</description>
@@ -1943,10 +1937,11 @@
     </description>
   </element>
   <element name="gmd:descriptiveKeywords" id="33">
-    <label>Schlüsselwörter</label>
+    <label>Schlagwörter</label>
     <help/>
     <condition/>
-    <description>Schlüsselwörter, ihr Typ und Quellenangabe</description>
+    <description>Schlagwörter, ihr Typ (thematische Zugehörigkeit) und Quellenangabe
+      (häufig ein Thesaurus mit Publikationsdatum)</description>
   </element>
   <element name="gmd:EX_Extent" id="334">
     <label>Ausdehnung</label>
@@ -2917,7 +2912,7 @@
       Quelle von Schlüsselwörtern</description>
   </element>
   <element name="gmd:MD_RepresentativeFraction" id="56">
-    <label>Representative Fraction</label>
+    <label>Maßstab</label>
     <help/>
     <condition/>
     <description>Hergeleitet vom ISO 19103; Maßstab, wobei MD_RepresentativFraction.denominator = 1

@@ -541,8 +541,7 @@
                                             editActions: ['addOnlinesrc']}]"
         />
 
-        <directive data-gn-onlinesrc-list=""
-                   data-types="parent|dataset|service|source|sibling|associated|fcats"/>
+        <directive data-gn-associated-resources-panel="gnCurrentEdit.metadata" />
 
         <directive gn-geo-publisher=""
                    data-ng-if="gnCurrentEdit.geoPublisherConfig"
@@ -3201,6 +3200,11 @@
     <view name="default" default="true"
           class="gn-label-above-input gn-indent-bluescale">
       <sidePanel>
+        <!-- Simple overview manager + online source manger for other types
+        Limit the max number of overviews with data-number-of-overviews="3" attribute.
+        In the full view, editor can access and manage the file store and
+        thumbnail name and description not supported by the overview manager.
+        -->
         <directive data-gn-need-help="creating-metadata"/>
 
         <directive data-gn-validation-report=""/>
@@ -3218,15 +3222,14 @@
                                          {
                                            title: 'download',
                                            filter: 'protocol:.*DOWNLOAD.*|DB:.*|FILE:.*',
-                                           editActions: ['addOnlinesrc']},
+                                           editActions: []},
                                          {
                                             title: 'links',
                                             filter:'-protocol:OGC:.*|ESRI:.*|atom.*|.*DOWNLOAD.*|DB:.*|FILE:.* AND -function:legend|featureCatalogue|dataQualityReport',
-                                            editActions: ['addOnlinesrc']}]"
+                                            editActions: []}]"
         />
 
-        <directive data-gn-onlinesrc-list=""
-                   data-types="parent|dataset|service|source|sibling|associated|fcats"/>
+        <directive data-gn-associated-resources-panel="gnCurrentEdit.metadata" />
 
         <directive gn-geo-publisher=""
                    data-ng-if="gnCurrentEdit.geoPublisherConfig"
@@ -3361,8 +3364,7 @@
                                             editActions: ['addOnlinesrc']}]"
         />
 
-        <directive data-gn-onlinesrc-list=""
-                   data-types="parent|dataset|service|source|sibling|associated|fcats"/>
+        <directive data-gn-associated-resources-panel="gnCurrentEdit.metadata" />
 
         <directive gn-geo-publisher=""
                    data-ng-if="gnCurrentEdit.geoPublisherConfig"
@@ -3462,8 +3464,7 @@
                                             editActions: ['addOnlinesrc']}]"
         />
 
-        <directive data-gn-onlinesrc-list=""
-                   data-types="parent|dataset|service|source|sibling|associated|fcats"/>
+        <directive data-gn-associated-resources-panel="gnCurrentEdit.metadata" />
 
         <directive gn-geo-publisher=""
                    data-ng-if="gnCurrentEdit.geoPublisherConfig"

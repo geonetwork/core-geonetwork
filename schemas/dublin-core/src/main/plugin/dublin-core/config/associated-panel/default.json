@@ -12,6 +12,20 @@
       "fields": {
         "url": {}
       }
+    }],
+    "associatedResourcesTypes": [{
+      "type": "parent",
+      "label": "linkToParent",
+      "config": {
+        "sources": {
+          "metadataStore": {
+            "params": {
+              "isTemplate": "n"
+            }
+          },
+          "remoteurl": {"multiple": true}
+        }
+      }
     }]
   }
 }
