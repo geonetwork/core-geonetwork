@@ -261,32 +261,37 @@
             relatedTypes = defaultRelatedTypes;
           }
 
-          linksAndRelatedPromises.push(
-            $http.get(
-              apiPrefix +
-                "/related?type=" +
-                relatedTypes.join("&type=") +
-                (!isApproved ? "&approved=false" : ""),
-              {
-                headers: {
-                  Accept: "application/json"
+          if (relatedTypes.length > 0) {
+            linksAndRelatedPromises.push(
+              $http.get(
+                apiPrefix +
+                  "/related?type=" +
+                  relatedTypes.join("&type=") +
+                  (!isApproved ? "&approved=false" : ""),
+                {
+                  headers: {
+                    Accept: "application/json"
+                  }
                 }
-              }
-            )
-          );
-          linksAndRelatedPromises.push(
-            $http.get(
-              apiPrefix +
-                "/associated?type=" +
-                associatedTypes.join("&type=") +
-                (!isApproved ? "&approved=false" : ""),
-              {
-                headers: {
-                  Accept: "application/json"
+              )
+            );
+          }
+
+          if (associatedTypes.length > 0) {
+            linksAndRelatedPromises.push(
+              $http.get(
+                apiPrefix +
+                  "/associated?type=" +
+                  associatedTypes.join(",") +
+                  (!isApproved ? "&approved=false" : ""),
+                {
+                  headers: {
+                    Accept: "application/json"
+                  }
                 }
-              }
-            )
-          );
+              )
+            );
+          }
 
           var all = $q.all(linksAndRelatedPromises).then(function (result) {
             var relations = {};
@@ -899,6 +904,20 @@
             }
           }
           return xml;
+        }
+      };
+    }
+  ]);
+
+  /**
+   * Service to query a DOI service and return the results.
+   */
+  module.service("gnDoiSearchService", [
+    "$http",
+    function ($http) {
+      return {
+        search: function (url, prefix, query) {
+          return $http.get(url + "?prefix=" + prefix + "&query=" + query);
         }
       };
     }

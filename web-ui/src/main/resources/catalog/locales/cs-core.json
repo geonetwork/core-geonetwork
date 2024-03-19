@@ -580,5 +580,9 @@
     "reviewerNotAllowedPublish": "Prohlížející nemá oprávnění publikovat metadata",
     "reviewerNotAllowedUnpublish": "Prohlížející nemůže zrušit publikování metadat",
     "reviewerNotAllowedPublishUnpublish": "Prohlížející nemá oprávnění publikovat/zrušit publikování metadat",
-    "missingTitle": "Chybí název"
+    "missingTitle": "Chybí název",
+    "mapLegend": "Legenda",
+    "quality": "Kvalita",
+    "download": "Download",
+    "links": "Odkazy"
 }

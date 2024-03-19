@@ -37,7 +37,7 @@ jobs:
     - name: Set up Maven
       uses: stCarolas/setup-maven@v5
       with:
-        maven-version: 3.6.3
+        maven-version: 3.8.3
     - name: Build with Maven
       run: |
         mvn -B -ntp -V install -DskipTests=true -Dmaven.javadoc.skip=true -Drelease -Pwith-doc
@@ -63,7 +63,7 @@ jobs:
     - name: Set up Maven
       uses: stCarolas/setup-maven@v5
       with:
-        maven-version: 3.6.3
+        maven-version: 3.8.3
     - name: Test with maven
       run: |
         mvn -B resources:resources@copy-index-schema-to-source -f web
