@@ -39,17 +39,18 @@ theme:
         icon: material/weather-sunny
         name: Switch to light mode
   features:
-    - content.action.view
-    - content.action.edit
-    - content.code.copy
-    - content.tabs.link
-    - navigation.tabs
+    - toc.follow
     - navigation.tracking
+    - navigation.top
+    - navigation.tabs
     - navigation.prune
     - navigation.indexes
-    - toc.follow
-    - navigation.top
     - navigation.footer
+    - header.autohide
+    - content.tabs.link
+    - content.code.copy
+    - content.action.view
+    - content.action.edit
     - announce.dismiss
 
 # Plugins - install using: pip3 install -r requirements.txt
@@ -65,11 +66,11 @@ plugins:
           name: English
           build: true
           default: true
-          site_name: 'GeoNetwork opensource (EN)'
+          site_name: 'GeoNetwork opensource'
         - locale: fr
           name: Français
           build: !ENV [FRENCH,true]
-          site_name: 'GeoNetwork opensource (FR)'
+          site_name: 'GeoNetwork opensource'
           site_description: Catalogue GeoNetwork pour répertorier, rechercher et examiner les enregistrements.
           nav_translations:
             Home: Home
