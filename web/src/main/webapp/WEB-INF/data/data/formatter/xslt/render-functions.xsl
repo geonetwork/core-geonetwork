@@ -37,13 +37,19 @@
     <xsl:param name="east" as="xs:double"/>
     <xsl:param name="north" as="xs:double"/>
 
+    <xsl:variable name="isPoint"
+                  select="$west = $east and $south = $north"
+                  as="xs:boolean"/>
+
     <xsl:variable name="boxGeometry"
-                  select="concat('POLYGON((',
-                  $east, '%20', $south, ',',
-                  $east, '%20', $north, ',',
-                  $west, '%20', $north, ',',
-                  $west, '%20', $south, ',',
-                  $east, '%20', $south, '))')"/>
+                  select="if ($isPoint)
+                          then concat('POINT(', $east, '%20', $south, ')')
+                          else concat('POLYGON((',
+                            $east, '%20', $south, ',',
+                            $east, '%20', $north, ',',
+                            $west, '%20', $north, ',',
+                            $west, '%20', $south, ',',
+                            $east, '%20', $south, '))')"/>
     <xsl:variable name="numberFormat" select="'0.00'"/>
 
     <div class="thumbnail extent">

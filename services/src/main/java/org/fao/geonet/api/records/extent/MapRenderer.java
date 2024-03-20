@@ -166,7 +166,11 @@ public class MapRenderer {
             }
         }
         BufferedImage image;
-        Envelope bboxOfImage = new Envelope(geom.getEnvelopeInternal());
+        boolean isPoint = geom.getGeometryType().equals("Point");
+        int pointBufferSize = 150;
+
+        Envelope bboxOfImage = new Envelope(isPoint ?
+                geom.buffer(pointBufferSize).getEnvelopeInternal() : geom.getEnvelopeInternal());
         double expandFactor = calculateExpandFactor(regionGetMapExpandFactors, bboxOfImage, srs);
         bboxOfImage.expandBy(bboxOfImage.getWidth() * expandFactor, bboxOfImage.getHeight() * expandFactor);
         Dimension imageDimensions = calculateImageSize(bboxOfImage, width, height);
