@@ -75,56 +75,27 @@ If you are not familiar with python the mkdocs-material website has instructions
    ```
    
 2. Preview: http://localhost:8000
-
-## Maven Integration
-
-1. Build documentation with ``compile`` phase:
-   ```
-   mvn compile
-   ```
-
-2. Assemble ``zip`` with ``package`` phase:
-   ```bash
-   mvn compile
-   ```
-
-3. Both ``install`` and ``deploy`` are skipped (so ``mvn clean install`` is fine).
-
-4. Use default profile to only build the default english docs:
-
-   ```
-   mvn install -Pdefault
-   ```
    
-## Publish
+## Publish 2.10.x Archive Docs
 
-We use ``mike`` for publishing (from the `gh-pages` branch):
+We use ``mike`` for publishing (from the `gh-pages` branch). Docs are published by the ``.github/workflows/docs.yml`` automation each time pull-request is merged.
 
-1. To publish development docs from the `main` branch:
+If you wish to preview using your own `gh-pages` branch:
 
-   ```bash
-   mike deploy --update-aliases 4.4.x latest 
-   ```
     
-1. To publish documentation for a new release:
+1. To update publish documentation:
    
    ```bash
-   mike deploy --push --update-aliases 4.2.5 stable
+   mike deploy --push 2.10
    ```
 
-2. To publish documentation for a maintenance release:
-
-   ```bash
-   mike deploy --push --update-aliases 3.12.10 maintenance
-   ```
-
-3. To show published versions:
+2. To show published versions:
 
    ```bash
    mike list
    ```
 
-4. To preview things locally (uses your local ``gh-pages`` branch):
+3. To preview things locally (uses your local ``gh-pages`` branch):
    
    ```bash
    mike serve
