@@ -2,7 +2,7 @@
 site_name: GeoNetwork opensource
 site_description: GeoNetwork catalogue for listing, searching and reviewing records.
 site_dir: target/html
-site_url: http://jodygarnett.github.io/core-geonetwork/
+site_url: https://docs.geonetwork-opensource.org/
 
 # Repository
 repo_name: geonetwork/core-geonetwork
@@ -13,15 +13,15 @@ edit_uri: edit/mkdocs/docs/manual/docs
 copyright: Copyright &copy; 2001 - 2023 FAO-UN and others
 
 extra_css:
-  - stylesheets/extra.css
+  - assets/stylesheets/extra.css
 
 # Configuration
 theme:
   name: material
   language: en
   custom_dir: overrides
-  logo: assets/geonetwork-logo.svg
-  favicon: assets/geonetwork-logo.png
+  logo: assets/images/geonetwork-logo.svg
+  favicon: assets/images/geonetwork-logo.png
   icon:
     repo: fontawesome/brands/github
   palette:
@@ -54,7 +54,10 @@ theme:
 
 # Plugins - install using: pip3 install -r requirements.txt
 plugins:
-  - search
+  - exclude:
+      glob:
+        # ignore, used with include-markdown below
+        - users/managing_metadata/import/importActions.md
   - i18n:
       docs_structure: suffix
       reconfigure_material: true
@@ -74,11 +77,8 @@ plugins:
             Search: Search
             Record: Record
             Map: Map
-  - exclude:
-      glob:
-        # ignore, used with include-markdown below
-        - users/managing_metadata/import/importActions.md
   - include-markdown
+  - search
 
 # Customizations
 extra:
@@ -95,6 +95,17 @@ extra:
       link: https://geonetwork-opensource.org/
       name: GeoNetwork Website
 
+# To quite warnings on this older branch
+validation:
+  nav:
+    omitted_files: warn
+    not_found: warn
+    absolute_links: warn
+  links:
+    not_found: warn
+    absolute_links: warn
+    unrecognized_links: warn
+
 # Extensions
 # - These are carefully chosen to work with pandoc markdown support for whole document translation
 markdown_extensions:
@@ -103,8 +114,8 @@ markdown_extensions:
   - def_list
   - pymdownx.details
   - pymdownx.emoji:
-      emoji_index: !!python/name:materialx.emoji.twemoji
-      emoji_generator: !!python/name:materialx.emoji.to_svg
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
       options:
         custom_icons:
           - overrides/.icons
@@ -132,7 +143,6 @@ nav:
   - index.md
   - 'User':
     - users/index.md
-
     - 'Preface':
       - users/preface.md
     - 'Quick Start Guide':
