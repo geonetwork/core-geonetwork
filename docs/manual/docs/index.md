@@ -5,10 +5,6 @@ hide:
 
 # GeoNetwork {#toc}
 
-!!! Warning
-
-    GeoNetwork `2.10.x` is deprecated and not maintained anymore.
-
 Welcome to GeoNetwork. this documentation is organized into specific guides targeting different audience.
 
 <div class="grid cards" markdown>

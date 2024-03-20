@@ -82,7 +82,6 @@ We use ``mike`` for publishing (from the `gh-pages` branch). Docs are published 
 
 If you wish to preview using your own `gh-pages` branch:
 
-    
 1. To update publish documentation:
    
    ```bash
