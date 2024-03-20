@@ -61,7 +61,7 @@
         <legend data-translate="">linkChecker-search</legend>
 
         <div class="row">
-          <div class="form-group col-lg-4 gn-nopadding-left">
+          <div class="form-group col-lg-6 gn-nopadding-left">
             <label class="control-label" for="gn-link-group-owner" data-translate=""
               >chooseMetadataGroupOwner</label
             >
@@ -77,7 +77,7 @@
               &nbsp;
             </div>
           </div>
-          <div class="form-group col-lg-4 gn-nopadding-left">
+          <div class="form-group col-lg-6 gn-nopadding-left">
             <label class="control-label" for="gn-link-group" data-translate=""
               >groupPublished</label
             >
@@ -94,22 +94,6 @@
             >
               &nbsp;
             </div>
-          </div>
-          <!-- selections.length > 1: there is always an empty selection -->
-          <div
-            class="form-group col-lg-4 gn-nopadding-left"
-            data-ng-if="selections.length > 1"
-          >
-            <label class="control-label" for="gn-link-selection" data-translate=""
-              >chooseASelection</label
-            >
-            <select
-              id="gn-link-selection"
-              class="form-control"
-              data-ng-model="selectedSelection.id"
-              data-ng-options="s.id as s.label
-                                   for s in selections | orderBy:'id'"
-            ></select>
           </div>
         </div>
 
@@ -140,7 +124,7 @@
         </div>
 
         <div class="row">
-          <div class="form-group col-lg-4 gn-nopadding-left">
+          <div class="form-group col-lg-6 gn-nopadding-left">
             <label class="control-label" for="gn-link-selection" data-translate=""
               >chooseAlinkStatus</label
             >
@@ -149,14 +133,14 @@
               class="form-control"
               data-ng-model="linkStatusFilter"
             >
-              <option value="">All statuses</option>
+              <option value="" data-translate="">all</option>
               <option value="{{s}}" data-ng-repeat="s in linkStatusValues">
                 {{'linkStatus-' + s | translate}}
               </option>
             </select>
           </div>
 
-          <div class="form-group col-lg-4 gn-nopadding-left">
+          <div class="form-group col-lg-6 gn-nopadding-left">
             <label class="control-label" for="gn-link-selection" data-translate=""
               >chooseArequestStatus</label
             >
@@ -165,7 +149,7 @@
               class="form-control"
               data-ng-model="httpStatusValueFilter"
             >
-              <option value="">All statuses</option>
+              <option value="" data-translate="">all</option>
               <option value="{{s}}" data-ng-repeat="s in httpStatusValues">
                 {{'httpStatus-' + s | translate}}
               </option>
@@ -174,7 +158,23 @@
         </div>
 
         <div class="row">
-          <div class="form-group col-lg-3 gn-nopadding-left">
+          <!-- selections.length > 1: there is always an empty selection -->
+          <div
+            class="form-group col-lg-6 gn-nopadding-left"
+            data-ng-if="selections.length > 1"
+          >
+            <label class="control-label" for="gn-link-selection" data-translate=""
+              >chooseASelection</label
+            >
+            <select
+              id="gn-link-selection"
+              class="form-control"
+              data-ng-model="selectedSelection.id"
+              data-ng-options="s.id as s.label
+                                   for s in selections | orderBy:'id'"
+            ></select>
+          </div>
+          <div class="form-group checkbox col-lg-3 gn-nopadding-left">
             <label for="gn-link-exclude-harvested">
               <input
                 type="checkbox"
@@ -189,9 +189,13 @@
         <div class="row">
           <div class="form-group">
             <button class="btn btn-primary" data-ng-click="triggerSearch()">
-              Search
+              <i class="fa fa-fw fa-search"></i>
+              <span data-translate="">search</span>
             </button>
-            <button class="btn btn-default" data-ng-click="resetForm()">Reset</button>
+            <button class="btn btn-default" data-ng-click="resetForm()">
+              <i class="fa fa-fw fa-times"></i>
+              <span data-translate="">reset</span>
+            </button>
           </div>
         </div>
       </fieldset>

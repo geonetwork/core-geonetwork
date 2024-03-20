@@ -95,6 +95,7 @@
 
       $scope.resetForm = function () {
         $scope.selectionFilter = "";
+        $scope.selectedSelection.id = null;
         $scope.groupLinkFilter = null;
         $scope.groupOwnerIdFilter = null;
         $scope.excludeHarvestedMetadataFilter = true;
@@ -413,13 +414,12 @@
         },
         templateUrl:
           "../../catalog/components/admin/recordlink/partials/recordlinksanalyseprocesscontainer.html",
-        link: function (scope, element, attrs) {},
         controllerAs: "ctrl",
         controller: [
           "$scope",
           "$element",
           "$attrs",
-          function ($scope, $element, $attrs) {
+          function ($scope) {
             this.tasks = [];
             var me = this;
 
@@ -533,12 +533,11 @@
 
                   if (processesFinished) {
                     $scope.processesFinishedCallback();
+                  } else {
+                    setTimeout(me.refresh, 5000);
                   }
-
-                  setTimeout(me.refresh, 5000);
                 });
             };
-
             this.refresh();
           }
         ]
@@ -552,8 +551,7 @@
         restrict: "E",
         scope: { taskInfo: "<" },
         templateUrl:
-          "../../catalog/components/admin/recordlink/partials/recordlinksanalyseprocessstatus.html",
-        link: function (scope, element, attrs) {}
+          "../../catalog/components/admin/recordlink/partials/recordlinksanalyseprocessstatus.html"
       };
     }
   ]);
