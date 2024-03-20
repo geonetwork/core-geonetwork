@@ -2,7 +2,7 @@
 
 ## Installation options
 
-### Docker compose installation (Recomemnded)
+### Docker compose installation (Recommended)
 
 1. Use docker compose with the provided [docker-compose.yml](es/docker-compose.yml):
 

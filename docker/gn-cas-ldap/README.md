@@ -6,7 +6,7 @@ GeoNetwork easier.
 This composition also integrates a LDAP, so that testing the
 config-spring-cas-ldap configuration is also possible.
 
-These docker images are intended for development and debugging. For production we recommend the official geonetwork docker images at https://github.com/geonetwork/docker-geonetwork.git repository.
+These docker images are intended for development and debugging. For production we recommend the official GeoNetwork docker images at https://github.com/geonetwork/docker-geonetwork.git repository.
 
 # Prerequisites
 
