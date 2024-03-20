@@ -552,6 +552,7 @@ public class EsSearchManager implements ISearchManager {
     static {
         arrayFields = ImmutableSet.<String>builder()
             .add(Geonet.IndexFieldNames.RECORDLINK)
+            .add("geom")
             .add("topic")
             .add("cat")
             .add("keyword")
@@ -664,14 +665,7 @@ public class EsSearchManager implements ISearchManager {
                 || propertyName.endsWith("DateForResource")
                 || propertyName.startsWith("cl_");
 
-            if (name.equals("geom")) {
-                try {
-                    doc.set("geom", mapper.readTree(nodeElements.get(0).getTextNormalize()));
-                } catch (IOException e) {
-                    LOGGER.error("Parsing invalid geometry for JSON node {}. Error is: {}",
-                        nodeElements.get(0).getTextNormalize(), e.getMessage());
-                }
-            } else if (isArray) {
+            if (isArray) {
                 ArrayNode arrayNode = doc.putArray(propertyName);
                 for (Element node : nodeElements) {
                     if (isObject) {

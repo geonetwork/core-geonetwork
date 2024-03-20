@@ -751,7 +751,6 @@
             <xsl:copy-of select="gn-fn-index:add-multilingual-field('extentDescription', ., $allLanguages)"/>
           </xsl:for-each>
 
-          <!-- TODO: index bounding polygon -->
           <xsl:for-each select=".//gex:EX_GeographicBoundingBox[
                                 ./gex:westBoundLongitude/gco:Decimal castable as xs:decimal and
                                 ./gex:eastBoundLongitude/gco:Decimal castable as xs:decimal and
@@ -769,25 +768,6 @@
             <xsl:variable name="s"
                           select="format-number(./gex:southBoundLatitude/gco:Decimal/text(), $format)"/>
 
-            <!-- Example: ENVELOPE(-10, 20, 15, 10) which is minX, maxX, maxY, minY order
-            http://wiki.apache.org/solr/SolrAdaptersForLuceneSpatial4
-            https://cwiki.apache.org/confluence/display/solr/Spatial+Search
-
-            bbox field type limited to one. TODO
-            <xsl:if test="position() = 1">
-              <bbox>
-                <xsl:text>ENVELOPE(</xsl:text>
-                <xsl:value-of select="$w"/>
-                <xsl:text>,</xsl:text>
-                <xsl:value-of select="$e"/>
-                <xsl:text>,</xsl:text>
-                <xsl:value-of select="$n"/>
-                <xsl:text>,</xsl:text>
-                <xsl:value-of select="$s"/>
-                <xsl:text>)</xsl:text>
-              </field>
-            </xsl:if>
-            -->
             <xsl:choose>
               <xsl:when test="-180 &lt;= number($e) and number($e) &lt;= 180 and
                               -180 &lt;= number($w) and number($w) &lt;= 180 and
@@ -796,6 +776,10 @@
                 <xsl:choose>
                   <xsl:when test="$e = $w and $s = $n">
                     <location><xsl:value-of select="concat($s, ',', $w)"/></location>
+                    <geom type="object">
+                      <xsl:text>{"type": "Point", "coordinates": </xsl:text>
+                      <xsl:value-of select="concat('[', $w, ',', $s, ']}')"/>
+                    </geom>
                   </xsl:when>
                   <xsl:when
                     test="($e = $w and $s != $n) or ($e != $w and $s = $n)">
