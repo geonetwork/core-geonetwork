@@ -406,5 +406,22 @@
   "lastCreatedRecords": "Last created records",
   "associationType": "Association type",
   "initiativeType": "Initiative type",
-  "associatedTo": "Associated "
+  "associatedTo": "Associated ",
+  "httpStatus--200": "Invalid status",
+  "httpStatus-200": "200: Valid status",
+  "httpStatus-404": "404: Not found",
+  "httpStatus-401": "401: Not authorized",
+  "httpStatus-500": "500: Error",
+  "linkStatus-ok": "Valid",
+  "linkStatus-ko": "Invalid",
+  "linkStatus-unknown": "Unknown",
+  "chooseMetadataGroupOwner": "Metadata group owner",
+  "chooseArequestStatus": "Request status",
+  "chooseAlinkStatus": "Link status",
+  "linkChecker-search": "Search",
+  "linkChecker-excludeHarvestedMetadata": "Exclude harvested metadata",
+  "linkStatus": "Link status",
+  "requestStatus": "Request status",
+  "linkUrl": "Link url",
+  "associatedUuid": "Associated to metadata UUID"
 }
