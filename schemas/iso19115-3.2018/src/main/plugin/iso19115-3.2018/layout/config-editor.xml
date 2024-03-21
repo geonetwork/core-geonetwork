@@ -628,7 +628,7 @@
             <div class="info">Upload new files and trigger analysis to populate main metadata informations</div>
           </text>
           <directive data-gn-file-uploader=""
-                     data-title="Data file (eg. CSV, XLS, SHP, GPKG, (GEO)PARQUET)"
+                     data-title="Data file (eg. CSV, (GEO)JSON, XLS, SHP, GPKG, (GEO)PARQUET)"
                      data-btn-label="Drop a file here"
                      data-icon="fa-cloud"
                      data-type="onlines"/>
