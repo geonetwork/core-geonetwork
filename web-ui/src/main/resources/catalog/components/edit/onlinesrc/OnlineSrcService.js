@@ -261,32 +261,37 @@
             relatedTypes = defaultRelatedTypes;
           }
 
-          linksAndRelatedPromises.push(
-            $http.get(
-              apiPrefix +
-                "/related?type=" +
-                relatedTypes.join("&type=") +
-                (!isApproved ? "&approved=false" : ""),
-              {
-                headers: {
-                  Accept: "application/json"
+          if (relatedTypes.length > 0) {
+            linksAndRelatedPromises.push(
+              $http.get(
+                apiPrefix +
+                  "/related?type=" +
+                  relatedTypes.join("&type=") +
+                  (!isApproved ? "&approved=false" : ""),
+                {
+                  headers: {
+                    Accept: "application/json"
+                  }
                 }
-              }
-            )
-          );
-          linksAndRelatedPromises.push(
-            $http.get(
-              apiPrefix +
-                "/associated?type=" +
-                associatedTypes.join("&type=") +
-                (!isApproved ? "&approved=false" : ""),
-              {
-                headers: {
-                  Accept: "application/json"
+              )
+            );
+          }
+
+          if (associatedTypes.length > 0) {
+            linksAndRelatedPromises.push(
+              $http.get(
+                apiPrefix +
+                  "/associated?type=" +
+                  associatedTypes.join(",") +
+                  (!isApproved ? "&approved=false" : ""),
+                {
+                  headers: {
+                    Accept: "application/json"
+                  }
                 }
-              }
-            )
-          );
+              )
+            );
+          }
 
           var all = $q.all(linksAndRelatedPromises).then(function (result) {
             var relations = {};
@@ -682,17 +687,21 @@
               this,
               setParams("thumbnail-remove", {
                 id: gnCurrentEdit.id,
-                thumbnail_url: thumb.id
+                thumbnail_url: thumb.id,
+                resourceIdx: thumb.idx,
+                resourceHash: thumb.hash
               })
             );
           }
-          // It is an uploaded tumbnail
+          // It is an uploaded thumbnail
           else {
             return runService(
               "removeThumbnail",
               {
                 type: thumb.title === "thumbnail" ? "small" : "large",
                 id: gnCurrentEdit.id,
+                resourceIdx: thumb.idx,
+                resourceHash: thumb.hash,
                 version: gnCurrentEdit.version
               },
               this
@@ -724,6 +733,8 @@
             this,
             setParams("onlinesrc-remove", {
               id: gnCurrentEdit.id,
+              resourceHash: onlinesrc.hash,
+              resourceIdx: onlinesrc.idx,
               url: url,
               name: $filter("gnLocalized")(onlinesrc.title)
             })
@@ -899,6 +910,20 @@
             }
           }
           return xml;
+        }
+      };
+    }
+  ]);
+
+  /**
+   * Service to query a DOI service and return the results.
+   */
+  module.service("gnDoiSearchService", [
+    "$http",
+    function ($http) {
+      return {
+        search: function (url, prefix, query) {
+          return $http.get(url + "?prefix=" + prefix + "&query=" + query);
         }
       };
     }

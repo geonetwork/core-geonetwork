@@ -186,11 +186,6 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
         @Parameter(
             description = "Formatter type to use."
         )
-        @RequestHeader(
-            value = HttpHeaders.ACCEPT,
-            defaultValue = MediaType.TEXT_HTML_VALUE
-        )
-            String acceptHeader,
         @PathVariable(
             value = "formatterId"
         ) final String formatterId,
@@ -225,11 +220,13 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
 
         Locale locale = languageUtils.parseAcceptLanguage(servletRequest.getLocales());
 
+        String acceptHeader = StringUtils.isBlank(request.getHeader(HttpHeaders.ACCEPT)) ? MediaType.TEXT_HTML_VALUE : request.getHeader(HttpHeaders.ACCEPT);
+
         // TODO :
         // if text/html > xsl_view
         // if application/pdf > xsl_view and PDF output
         // if application/x-gn-<formatterId>+(xml|html|pdf|text)
-        // Force PDF ouutput when URL parameter is set.
+        // Force PDF output when URL parameter is set.
         // This is useful when making GET link to PDF which
         // can not use headers.
         if (MediaType.ALL_VALUE.equals(acceptHeader)) {

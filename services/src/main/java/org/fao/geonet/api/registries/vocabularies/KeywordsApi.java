@@ -63,6 +63,7 @@ import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -140,7 +141,7 @@ public class KeywordsApi {
     @Autowired
     ThesaurusManager thesaurusManager;
 
-    List<String> allowedExtensions = Arrays.asList("rdf", "owl", "xml");
+    List<String> allowedExtensions = Arrays.asList("rdf", "owl", "xml", "sdmx");
 
     /**
      * Search keywords.
@@ -375,15 +376,10 @@ public class KeywordsApi {
         @Parameter(hidden = true)
         @RequestParam
             Map<String, String> allRequestParams,
-        @RequestHeader(
-            value = "Accept",
-            defaultValue = MediaType.APPLICATION_XML_VALUE
-        )
-        String accept,
         @Parameter(hidden = true)
         HttpServletRequest request
         ) throws Exception {
-        return getKeyword(uri,sThesaurusName,langs, keywordOnly, transformation,langMapJson,allRequestParams, accept, request);
+        return getKeyword(uri,sThesaurusName,langs, keywordOnly, transformation,langMapJson,allRequestParams, request);
     }
 
     /**
@@ -454,15 +450,10 @@ public class KeywordsApi {
         @Parameter(hidden = true)
         @RequestParam
             Map<String, String> allRequestParams,
-        @RequestHeader(
-            value = "Accept",
-            defaultValue = MediaType.APPLICATION_XML_VALUE
-        )
-        String accept,
         @Parameter(hidden = true)
         HttpServletRequest request
         ) throws Exception {
-        return getKeyword(uri,sThesaurusName,langs, keywordOnly, transformation,langMapJson,allRequestParams, accept, request);
+        return getKeyword(uri,sThesaurusName,langs, keywordOnly, transformation,langMapJson,allRequestParams, request);
     }
 
     /**
@@ -486,12 +477,12 @@ public class KeywordsApi {
         String transformation,
         String  langMapJson,
         Map<String, String> allRequestParams,
-        String accept,
         HttpServletRequest request
     ) throws Exception {
         final String SEPARATOR = ",";
         ServiceContext context = ApiUtils.createServiceContext(request);
-        boolean isJson = MediaType.APPLICATION_JSON_VALUE.equals(accept);
+        String acceptHeader = StringUtils.isBlank(request.getHeader(HttpHeaders.ACCEPT)) ? MediaType.APPLICATION_XML_VALUE : request.getHeader(HttpHeaders.ACCEPT);
+        boolean isJson = MediaType.APPLICATION_JSON_VALUE.equals(acceptHeader);
 
         // Search thesaurus by name (as facet key only contains the name of the thesaurus)
         Thesaurus thesaurus = thesaurusManager.getThesaurusByName(sThesaurusName);
@@ -729,7 +720,7 @@ public class KeywordsApi {
      */
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Uploads a new thesaurus from a file",
-        description = "Uploads a new thesaurus."
+        description = "Supported thesaurus are RDF/XML files using SKOS specification, OWL file describing NamedIndividual elements or SDMX file describing Codelist element. For RDF, extension must be .rdf or .xml, for OWL, .owl and for SDMX, .sdmx."
     )
     @RequestMapping(
         method = RequestMethod.POST,
@@ -835,7 +826,13 @@ public class KeywordsApi {
     }
 
     private static String getStylesheetForExtension(String stylesheet, String extension) {
-        return extension.equals("owl") ? "owl-to-skos" : stylesheet;
+        if (extension.equals("owl")) {
+            return "owl-to-skos";
+        } else if (extension.equals("sdmx")) {
+            return "sdmx-to-skos";
+        } else {
+            return stylesheet;
+        }
     }
 
 

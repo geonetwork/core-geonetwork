@@ -34,6 +34,8 @@ import co.elastic.clients.elasticsearch.core.bulk.BulkOperation;
 import co.elastic.clients.elasticsearch.core.bulk.IndexOperation;
 import co.elastic.clients.json.JsonData;
 import co.elastic.clients.json.JsonpMapper;
+import co.elastic.clients.util.BinaryData;
+import co.elastic.clients.util.ContentType;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -281,14 +283,13 @@ public class EsWFSFeatureIndexer {
             LOGGER.error(msg);
             throw new RuntimeException(msg);
         }
-        final Phaser phaser = new Phaser();
 
-        BulkResutHandler brh = new AsyncBulkResutHandler(phaser, typeName, url, nbOfFeatures, report, state.getParameters().getMetadataUuid());
+        BulkResutHandler brh = new AsyncBulkResutHandler(typeName, url, nbOfFeatures, report, state.getParameters().getMetadataUuid());
 
         try {
             nbOfFeatures = 0;
-            long begin = System.currentTimeMillis();
 
+            long begin = System.currentTimeMillis();
             String epsg = "urn:ogc:def:crs:OGC:1.3:CRS84";
 
             for (String featureType : resolvedTypeNames) {
@@ -362,7 +363,7 @@ public class EsWFSFeatureIndexer {
                                                 featurePointer);
                                             LOGGER.warn(msg);
                                             report.put("error_ss", msg);
-                                            break;
+                                            continue;
                                         }
                                     }
 
@@ -423,7 +424,7 @@ public class EsWFSFeatureIndexer {
                                 }
                             }
 
-                            nbOfFeatures++;
+                            nbOfFeatures ++;
                             brh.addAction(rootNode, feature);
 
                         } catch (Exception ex) {
@@ -434,28 +435,12 @@ public class EsWFSFeatureIndexer {
                             LOGGER.warn(msg);
                             report.put("error_ss", msg);
                         }
-
-                        if (brh.getBulkSize() >= featureCommitInterval) {
-                            brh.launchBulk(client);
-                            brh = new AsyncBulkResutHandler(phaser, typeName, url, nbOfFeatures, report, state.getParameters().getMetadataUuid());
-                        }
                     }
                 } finally {
                     features.close();
                 }
             }
 
-            if (brh.getBulkSize() > 0) {
-                brh.launchBulk(client);
-            }
-
-            try {
-                if (nbOfFeatures > 0) {
-                    phaser.awaitAdvanceInterruptibly(0, 3, TimeUnit.HOURS);
-                }
-            } catch (TimeoutException e) {
-                throw new Exception("Timeout when awaiting all bulks to be processed.");
-            }
             LOGGER.info("{}: {} features processed in {} ms.", new Object[]{
                 typeName, nbOfFeatures,
                 System.currentTimeMillis() - begin
@@ -467,10 +452,11 @@ public class EsWFSFeatureIndexer {
             LOGGER.error(e.getMessage());
             throw e;
         } finally {
-            report.saveHarvesterReport();
             brh.close();
+            report.saveHarvesterReport();
             future.complete(null);
         }
+
 
         return future;
     }
@@ -522,7 +508,7 @@ public class EsWFSFeatureIndexer {
         private String typeName;
         private boolean pointOnlyForGeoms;
 
-        public Report(String url, String typeName) throws UnsupportedEncodingException {
+        public Report(String url, String typeName) {
             this.typeName = typeName;
             this.url = url;
             pointOnlyForGeoms = true;
@@ -556,7 +542,7 @@ public class EsWFSFeatureIndexer {
 
             try {
                 IndexResponse response = client.getClient().index(request);
-                if (response.result() == Result.Created) {
+                if (response.result() == Result.Created || response.result() == Result.Updated) {
                     LOGGER.info("Report saved for service {} and typename {}. Report id is {}",
                         url, typeName, report.get("id"));
                 } else {
@@ -584,7 +570,6 @@ public class EsWFSFeatureIndexer {
 
     abstract class BulkResutHandler {
 
-        protected Phaser phaser;
         protected String typeName;
         private String url;
         protected int firstFeatureIndex;
@@ -596,8 +581,7 @@ public class EsWFSFeatureIndexer {
         protected int failuresCount;
         BulkListener<String> listener;
 
-        public BulkResutHandler(Phaser phaser, String typeName, String url, int firstFeatureIndex, Report report, String metadataUuid) {
-            this.phaser = phaser;
+        public BulkResutHandler(String typeName, String url, int firstFeatureIndex, Report report, String metadataUuid) {
             this.typeName = typeName;
             this.url = url;
             this.firstFeatureIndex = firstFeatureIndex;
@@ -607,8 +591,8 @@ public class EsWFSFeatureIndexer {
 
             this.bulkSize = 0;
             this.failuresCount = 0;
-            LOGGER.debug("  {} - Indexing bulk (size {}) starting at {} ...",
-                typeName, featureCommitInterval, firstFeatureIndex);
+            LOGGER.debug("  {} - Indexing with bulk ingester (with maxOperations {}) ...",
+                typeName, featureCommitInterval);
 
             listener = new BulkListener<String>() {
                 @Override
@@ -630,30 +614,30 @@ public class EsWFSFeatureIndexer {
                             }
                         });
                     }
-                    LOGGER.debug("  {} - Features [{}-{}] indexed in {} ms{}.", typeName, firstFeatureIndex, firstFeatureIndex + bulkSize,
+                    LOGGER.debug("  {} - {} features indexed in {} ms{}.", typeName, firstFeatureIndex + bulkSize,
                         System.currentTimeMillis() - begin,
                         bulkResponse.errors() ?
                             " but with " + bulkFailures + " errors" : "");
                     failuresCount = bulkFailures.get();
-                    phaser.arriveAndDeregister();
                 }
 
                 @Override
                 public void afterBulk(long executionId, BulkRequest request, List<String> contexts, Throwable failure) {
                     String msg = String.format(
-                        "  %s - Features [%s-%s] indexed in %s ms but with errors. Exception: %s",
-                        typeName, firstFeatureIndex, firstFeatureIndex + bulkSize,
+                        "  %s - %s features indexed in %s ms but with errors. Exception: %s",
+                        typeName, firstFeatureIndex + bulkSize,
                         System.currentTimeMillis() - begin,
                         failure.getMessage()
                     );
                     report.put("error_ss", msg);
                     LOGGER.error(msg);
-                    phaser.arriveAndDeregister();
                 }
             };
 
             this.bulk = BulkIngester.of(b -> b.client(client.getAsynchClient())
                 .listener(listener)
+                // .maxConcurrentRequests(1)
+                // .flushInterval(10, TimeUnit.SECONDS)
                 .maxOperations(featureCommitInterval));
 
         }
@@ -674,41 +658,29 @@ public class EsWFSFeatureIndexer {
             }
 
             String id = String.format("%s#%s#%s", url, typeName, featureId);
-            StringReader reader = new StringReader(jacksonMapper.writeValueAsString(rootNode));
-            // https://discuss.elastic.co/t/java-8-1-bulk-request/302423
-            JsonpMapper jsonpMapper = client.getClient()._transport().jsonpMapper();
-            JsonProvider jsonProvider = jsonpMapper.jsonProvider();
-            JsonData jd = JsonData.from(jsonProvider.createParser(reader), jsonpMapper);
+            BinaryData data = BinaryData.of(
+                    jacksonMapper.writeValueAsString(rootNode).getBytes(StandardCharsets.UTF_8),
+                    ContentType.APPLICATION_JSON);
 
             bulk.add(b ->
                 b.index(io -> io
                     .index(index)
                     .id(id)
-                    .document(jd)), id);
+                    .document(data)), id);
             bulkSize++;
         }
 
-        protected void prepareLaunch() {
-            phaser.register();
-            this.begin = System.currentTimeMillis();
-        }
         public void close() {
             if (this.bulk != null) {
                 this.bulk.close();
             }
         }
-
-        abstract public void launchBulk(EsRestClient client) throws Exception;
     }
 
     // depending on situation, one can expect going up to 1.5 faster using an async result handler (e.g. huge collection of points)
     class AsyncBulkResutHandler extends BulkResutHandler {
-        public AsyncBulkResutHandler(Phaser phaser, String typeName, String url, int firstFeatureIndex, Report report, String metadataUuid) {
-            super(phaser, typeName, url, firstFeatureIndex, report, metadataUuid);
-        }
-
-        public void launchBulk(EsRestClient client) throws Exception {
-            prepareLaunch();
+        public AsyncBulkResutHandler(String typeName, String url, int firstFeatureIndex, Report report, String metadataUuid) {
+            super(typeName, url, firstFeatureIndex, report, metadataUuid);
         }
     }
 
