@@ -51,6 +51,11 @@
     <property name="numberOfDecimals" value="\${es.index.features.numberOfDecimals}"/>
   </bean>
 
+  <bean id="OGRFeatureIndexer"
+        class="org.fao.geonet.harvester.wfsfeatures.worker.FeatureIndexer"
+        scope="prototype">
+  </bean>
+
 
 
   <cm:camelContext id="harvest-wfs"

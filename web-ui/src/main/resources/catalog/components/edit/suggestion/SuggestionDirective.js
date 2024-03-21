@@ -176,7 +176,7 @@
                 "../api/data/" +
                 gnCurrentEdit.uuid +
                 "/data/analyze?datasource=" +
-                scope.datasource.replaceAll(/.*\/attachments\//g, "attachments/");
+                scope.datasource.replace(/.*\/attachments\//, "attachments/");
               window.open(url, "_blank");
             };
             scope.preview = function () {
@@ -184,7 +184,7 @@
                 "../api/data/" +
                 gnCurrentEdit.uuid +
                 "/data/analysis/preview?datasource=" +
-                scope.datasource.replaceAll(/.*\/attachments\//g, "attachments/");
+                scope.datasource.replace(/.*\/attachments\//, "attachments/");
               window.open(url, "_blank");
             };
             scope.save = function () {
@@ -193,7 +193,7 @@
                   "../api/data/" +
                     gnCurrentEdit.uuid +
                     "/data/analysis/apply?datasource=" +
-                    scope.datasource.replaceAll(/.*\/attachments\//g, "attachments/")
+                  scope.datasource.replace(/.*\/attachments\//, "attachments/")
                 )
                 .then(function (response) {
                   gnEditor.refreshEditorForm();

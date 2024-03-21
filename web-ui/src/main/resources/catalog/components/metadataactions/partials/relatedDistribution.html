@@ -211,8 +211,9 @@
     ></div>
 
     <div
-      data-ng-if="r.protocol !== null
-                  && r.protocol.match('OGC:WMS') !== null"
+      data-ng-if="(r.protocol !== null
+                   && r.protocol.match('OGC:WMS') !== null) ||
+                  r.lUrl.match('.*\/attachments\/.*(.shp|.csv|.xls|.xlsx|.gpkg|.parquet|.json|.geojson)$') !== null"
       data-gn-wfs-filter-facets=""
       data-manager-only="true"
       data-wfs-url="{{::r.locUrl}}"
