@@ -91,12 +91,15 @@ See [Configuring Shibboleth](../managing-users-and-groups/authentication-mode.md
 
 Enable the self registration form. See [User Self-Registration](../managing-users-and-groups/user-self-registration.md).
 
-## system/userFeedback
+## User application feedback
 
-!!! warning "Deprecated"
+Enabling the setting, displays in the application footer a link to a page that allows sending comments about the application.
 
-    3.0.0
+![](img/application-feedback-link.png)
 
+![](img/application-feedback.png)
+
+It requires an email server configured.
 
 ## Link in metadata records
 
