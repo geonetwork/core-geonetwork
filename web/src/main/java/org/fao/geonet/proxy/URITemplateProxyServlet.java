@@ -436,7 +436,7 @@ public class URITemplateProxyServlet extends ProxyServlet {
                             ApplicationContextHolder.get().getBean(LinkRepository.class);
                         long linksFound = linkRepository.count(
                             LinkSpecs.filter(host, null, null,
-                                null, null, null));
+                                null, null, null, false,null));
                         if (linksFound == 0) {
                             String message = "The proxy does not allow to access the requested URI " +
                                 "because the URL host was not registered in any metadata records.";
