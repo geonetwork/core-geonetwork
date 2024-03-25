@@ -109,7 +109,8 @@
               rus: "ru",
               slo: "sk",
               fin: "fi",
-              swe: "sv"
+              swe: "sv",
+              wel: "cy"
             },
             isLogoInHeader: false,
             logoInHeaderPosition: "left",
@@ -1037,7 +1038,7 @@
                     prefix: "fa fa-fw ",
                     map: {
                       false: "fa-lock",
-                      true: "fa-unlock"
+                      true: "fa-lock-open"
                     }
                   }
                 }
@@ -1672,7 +1673,8 @@
         chi: "中文",
         slo: "Slovenčina",
         swe: "Svenska",
-        dan: "Dansk"
+        dan: "Dansk",
+        wel: "Cymraeg"
       };
       $scope.url = "";
       $scope.gnUrl = gnGlobalSettings.gnUrl;

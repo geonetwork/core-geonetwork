@@ -137,9 +137,20 @@
             />
 
             <div class="form-group" data-ng-hide="user.id == userSelected.id">
-              <label class="control-label col-sm-3" data-translate="">enable</label>
-              <div class="col-sm-9">
-                <input type="checkbox" class=form-control" data-ng-model="userIsEnabled"/>
+              <label
+                class="control-label col-sm-3"
+                data-translate=""
+                for="userIsEnabledCheck"
+                >enable</label
+              >
+              <div class="col-sm-9 checkbox">
+                <label>
+                  <input
+                    type="checkbox"
+                    data-ng-model="userIsEnabled"
+                    id="userIsEnabledCheck"
+                  />
+                </label>
               </div>
             </div>
 

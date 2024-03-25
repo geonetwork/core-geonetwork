@@ -33,7 +33,8 @@ import java.util.Arrays;
 @Component
 public class FileMimetypeChecker {
     private static final String[] validImagesMimeTypes = {"image/gif", "image/png", "image/jpeg"};
-    private static final String[] validThesaurusMimeTypes = {"application/rdf+xml"};
+    // application/xml --> SDMX files, application/rdf+xml --> RDF, OWL files
+    private static final String[] validThesaurusMimeTypes = {"application/xml", "application/rdf+xml"};
 
     private static final String[] validCsvMimeTypes = {"text/plain"};
 

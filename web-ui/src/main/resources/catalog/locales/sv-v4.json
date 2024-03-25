@@ -31,6 +31,7 @@
   "language.id": "Identifier",
   "language.remove": "Ta bort språk",
   "layerName": "Lagernamn",
+  "layerNameTooltip": "A layer name from the GetCapabilities document",
   "ogcServiceUrl": "Tjänstens URL",
   "translation.addFor": "Lägg till en ny översättning för",
   "translation.add": "Lägga till",
@@ -418,5 +419,8 @@
   "associationType": "Association type",
   "initiativeType": "Initiative type",
   "associatedTo": "Associated ",
+  "overviewDescription": "Overview description",
+  "overviewUrl": "Overview URL",
+  "restApiUrl": "REST API URL",
   "filterHelp": "Please click on one of the buttons below to activate the filter"
 }

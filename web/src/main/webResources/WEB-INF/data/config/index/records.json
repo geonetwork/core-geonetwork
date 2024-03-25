@@ -2029,7 +2029,18 @@
         "type": "boolean"
       },
       "indexingErrorMsg": {
-        "type": "keyword"
+        "type": "object",
+        "properties": {
+          "string": {
+            "type": "keyword"
+          },
+          "type": {
+            "type": "keyword"
+          },
+          "values": {
+            "type": "nested"
+          }
+        }
       },
       "statusWorkflow": {
         "type": "keyword"

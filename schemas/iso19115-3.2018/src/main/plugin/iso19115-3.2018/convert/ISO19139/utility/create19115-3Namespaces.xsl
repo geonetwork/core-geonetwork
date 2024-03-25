@@ -19,7 +19,7 @@
     <!-- Language Localization (ISO 19115-3) -->
     <xsl:namespace name="lan" select="'http://standards.iso.org/iso/19115/-3/lan/1.0'"/>
     <!-- Metadata for Services (ISO 19115-3) -->
-    <xsl:namespace name="srv" select="'http://standards.iso.org/iso/19115/-3/srv/2.1'"/>
+    <xsl:namespace name="srv" select="'http://standards.iso.org/iso/19115/-3/srv/2.0'"/>
     <!-- Metadata for Application Schema (ISO 19115-3) -->
     <xsl:namespace name="mas" select="'http://standards.iso.org/iso/19115/-3/mas/1.0'"/>
     <!-- Metadata for Common Classes (ISO 19115-3) -->
