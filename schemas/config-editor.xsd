@@ -20,10 +20,13 @@
   ~
   ~ Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
   ~ Rome - Italy. email: geonetwork@osgeo.org
+  
+  History note: updates by Stephen Richard to align schema with actual config-edtor.xml
+  in Geonetwork 4.4 instances.
+  
   -->
 
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-           elementFormDefault="qualified">
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
   <xs:element name="editor">
     <xs:annotation>
       <xs:documentation>
@@ -31,36 +34,37 @@
 A metadata editor configuration is defined for a specific schema plugin standard
 (see :ref:`implementing-a-schema-plugin`).
 
-The editor configuration defines the navigation menu for the editor (i.e. list of views and tabs),
-the list of fields and the type of control to use. Controls can
-be HTML-type (e.g. text, date) or more advanced controls built using
-`AngularJS directives <https://docs.angularjs.org/guide/directive>`_.
+The editor configuration defined the navigation menu (ie. list of views and tabs)
+for the editor, the list of fields and the type of control to use. Controls could
+be HTML type (eg. text, date) or more advanced control build using
+`AngularJS directive <https://docs.angularjs.org/guide/directive>`_.
 
 
-To build such an editor configuration, the user needs to know the XSD of the standard
-to properly build views, tabs and fields according to the element names
+To build such an editor configuration user needs to know the XSD of the standard
+to properly build views, tabs and fields according to element names
 (see :code:`schemas/config-editor.xsd`). Create an editor root element and
 attach:
 
-* the schema and
-* namespaces for the standards
+- the schema and
+
+- namespaces for the standards
 
 
 .. code-block:: xml
 
     <editor xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="../../../../../../config-editor.xsd"
       xmlns:gn="http://www.fao.org/geonetwork"
       xmlns:gco="http://www.isotc211.org/2005/gco"
       xmlns:gmd="http://www.isotc211.org/2005/gmd"
       xmlns:gmx="http://www.isotc211.org/2005/gmx"
       xmlns:srv="http://www.isotc211.org/2005/srv"
       xmlns:gml="http://www.opengis.net/gml"
-      xmlns:xlink="http://www.w3.org/1999/xlink"
-      xsi:noNamespaceSchemaLocation="../../../../../../config-editor.xsd">
+      xmlns:xlink="http://www.w3.org/1999/xlink">
 
 
-An editor configuration should first define some general element descriptions and then
-a set of views with at least one defined view.
+An editor configuration should define first some general element description and then
+a set of views with at least one.
 
 
         ]]></xs:documentation>
@@ -73,7 +77,6 @@ a set of views with at least one defined view.
         <xs:element minOccurs="0" maxOccurs="1" ref="multilingualFields"/>
         <xs:element minOccurs="0" maxOccurs="1" ref="tableFields"/>
         <xs:element minOccurs="1" maxOccurs="1" ref="views"/>
-        <xs:element minOccurs="0" maxOccurs="1" ref="snippets"/>
         <xs:element minOccurs="0" maxOccurs="1" ref="batchEditing"/>
       </xs:sequence>
     </xs:complexType>
@@ -86,15 +89,16 @@ a set of views with at least one defined view.
 Defining field type
 -------------------
 
-Define the form fields type configuration. The default is simple text input.
-This list contains a list of fields which do not use a simple text input.
+Define the form fields type configuration. Default is simple text input.
+This list contains the list of exception which does not use a simple text input.
 The list of possible values are:
 
-* all HTML5 input type or
-* an AngularJS directive name. MUST start with ``data-`` and
-  could end with ``-textarea`` to create a textarea element or
-  with ``-div`` if the directive does not apply
-  to the input or textarea but to the div element containing it.
+- all HTML5 input type or
+
+- an AngularJS directive name. MUST starts with 'data-' and
+  could end with '-textarea' to create a textarea element.
+  It could end with '-div' if the directive does not apply
+  to the input or textarea but to the div containing it.
 
 
 An element can only have one type defined.
@@ -111,8 +115,8 @@ An element can only have one type defined.
 
 
 The other option to define a more advanced field type is to catch the element using
-and XSL template. This approach is used for keywords in ISO19139
-(see for example :code:`schemas/iso19139/src/main/plugin/iso19139/layout/layout-custom-fields-keywords.xsl`).
+and XSL template. This approach is used for keywords in ISO19139 for example
+(see :code:`schemas/iso19139/src/main/plugin/iso19139/layout/layout-custom-fields-keywords.xsl`).
 
 
         ]]>
@@ -137,10 +141,10 @@ and XSL template. This approach is used for keywords in ISO19139
 Grouping element from the standards
 -----------------------------------
 
-List of elements to be displayed in a fieldset (i.e. boxed element). Those
-elements usually contain children elements and define major sections in the
-standard. For example, in ISO19139, `identification` and `distribution` are major
-sections and should usually be displayed as a group of `information`.
+List of element to be displayed in a fieldset (ie. boxed element). Those
+elements usually contain children elements and define major section in the
+standard. For example, in ISO19139, identification and distribution are major
+section and should usually be displayed as a group of information.
 
 .. code-block:: xml
 
@@ -205,8 +209,8 @@ Defining multilingual fields
 
 Configure here the list of multilingual fields for a standard.
 
-By default, if the standard has multilingual support like ISO19139, all fields will be displayed
-as multilingual fields. Define in the exclude section the exceptions (e.g. `gmd:identifier` in ISO19139).
+By default, if the standard as multilingual support like ISO19139, all fields will be displayed
+as multilingual fields. Define in the exclude section the exception (eg. gmd:identifier for example in ISO19139).
 
 Then this section also allows to define how multilingual fields are displayed using the expanded elements.
 If expanded, then one field per language is displayed with no need to click on the language switcher.
@@ -247,15 +251,9 @@ If expanded, then one field per language is displayed with no need to click on t
         <![CDATA[
 Defining fields to display as tables
 ------------------------------------
-
 Configure here the list of fields to display using a table. This only applies to flat mode views.
-
 .. figure:: ../../user-guide/describing-information/img/table-fields.png
-
-
 .. code-block:: xml
-
-
     <editor>
        <fields>...</fields>
        <fieldsWithFieldset>...</fieldsWithFieldset>
@@ -275,21 +273,12 @@ Configure here the list of fields to display using a table. This only applies to
               <col del=".."/>
             </row>
           </table>
-
-
-
 Tables can also contains subforms.
-
 Configuration is defined in the table config with a section element pointing to the element to add as a new row. In the following example, service operation are displayed in a table:
-
 * with 3 columns: operation name, DCP and connect point.
-
 * if parameters are defined, one subrow will be created per parameters
-
 * and if srv:parameters is in flatModeException, and extra row will be added to allow to add new parameters for the operation
-
 .. code-block:: xml
-
     <table for="srv:SV_OperationMetadata">
       <header>
         <col label="srv:operationName"/>
@@ -306,103 +295,47 @@ Configuration is defined in the table config with a section element pointing to 
                  or="parameters" in="srv:SV_OperationMetadata"/>
       </row>
     </table>
-
-        ]]></xs:documentation>
+        ]]>
+      </xs:documentation>
     </xs:annotation>
+    
     <xs:complexType>
       <xs:sequence>
-        <xs:element name="table">
+        <xs:element maxOccurs="unbounded" name="table">
           <xs:complexType>
+            <xs:sequence>
+              <xs:element maxOccurs="1" ref="header"/>
+              <xs:element maxOccurs="1" ref="row"/>
+            </xs:sequence>
             <xs:attribute name="for" use="required">
               <xs:annotation>
                 <xs:documentation>
-                  <![CDATA[
-Element to match for creating the table.
-                  ]]>
+                  <![CDATA[Element to match for creating the table.  ]]>
                 </xs:documentation>
               </xs:annotation>
             </xs:attribute>
             <xs:attribute name="label" type="xs:string" use="optional">
               <xs:annotation>
-                <xs:documentation>Table header label (from strings.xml), if not defined is used the value of attribute 'for' use the related element label from labels.xml</xs:documentation>
+                <xs:documentation>Table header label (from strings.xml), if not defined is used the
+                  value of attribute 'for' use the related element label from
+                  labels.xml</xs:documentation>
               </xs:annotation>
             </xs:attribute>
             <xs:attribute name="fieldset" type="xs:string" use="optional" fixed="false">
               <xs:annotation>
-                <xs:documentation>To not to add an extra section around the table. This means that editor can't remove the element targeted by the table.</xs:documentation>
+                <xs:documentation>To not to add an extra section around the table. This means that
+                  editor can't remove the element targeted by the table.</xs:documentation>
               </xs:annotation>
             </xs:attribute>
-            <xs:sequence>
-              <xs:element maxOccurs="1" ref="header"/>
-              <xs:element maxOccurs="1" ref="row"/>
-            </xs:sequence>
           </xs:complexType>
         </xs:element>
       </xs:sequence>
     </xs:complexType>
   </xs:element>
-
-
-  <xs:element name="snippets">
-    <xs:annotation>
-      <xs:documentation>
-        <![CDATA[
-
-Defining reusable list of snippets which can be referenced in templates.
-----------------------------------------------------------------------------------
-
-Defining reusable list of snippets which can be referenced in templates.
-
-.. code-block:: xml
-
-    <editor>
-        <snippets>
-            <list name="reports">
-                <snippet label="inspire-address">
-                    <gmd:report>...</gmd:report>
-                </snippet>
-                <snippet label="inspire-administrative-units">
-                    <gmd:report>...</gmd:report>
-                </snippet>
-            </list>
-        </snippets>
-
-        <!-- ... -->
-        <action type="add" ...>
-            <template>
-                <snippets name="reports"/>
-            <template>
-        </action>
-        ]]></xs:documentation>
-    </xs:annotation>
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element name="list">
-          <xs:complexType>
-            <xs:attribute name="name" use="required">
-              <xs:annotation>
-                <xs:documentation>
-                  <![CDATA[
-Snippet list name to be used as a reference.
-                  ]]>
-                </xs:documentation>
-              </xs:annotation>
-            </xs:attribute>
-            <xs:sequence>
-              <xs:element minOccurs="1" maxOccurs="unbounded" ref="snippet"/>
-            </xs:sequence>
-          </xs:complexType>
-        </xs:element>
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-
   <xs:element name="header">
     <xs:annotation>
       <xs:documentation>
-        <![CDATA[
-Table header row.
-        ]]>
+        <![CDATA[Table header row.]]>
       </xs:documentation>
     </xs:annotation>
     <xs:complexType>
@@ -415,34 +348,58 @@ Table header row.
       </xs:sequence>
     </xs:complexType>
   </xs:element>
-
-
   <xs:element name="row">
     <xs:annotation>
       <xs:documentation>
-        <![CDATA[
-Table column.
-        ]]>
+        <![CDATA[Table column.]]>
       </xs:documentation>
     </xs:annotation>
     <xs:complexType>
       <xs:sequence>
-        <xs:element minOccurs="1" maxOccurs="unbounded" name="col">
+        <xs:element minOccurs="1"  maxOccurs="unbounded" name="col">
           <xs:complexType>
-            <xs:sequence>
-              <xs:element ref="directiveAttributes"/>
-            </xs:sequence>
             <xs:attribute name="xpath" type="xs:string" use="optional"/>
             <xs:attribute name="del" type="xs:string" use="optional"/>
-            <xs:attribute name="use" type="xs:string" use="optional"/>
           </xs:complexType>
         </xs:element>
-        <xs:element minOccurs="0" maxOccurs="1" ref="section"/>
+        <xs:element minOccurs="0" maxOccurs="1" name="section">
+          <xs:annotation>
+            <xs:documentation>
+              <![CDATA[Tables can contain subforms.
+Configuration is defined with this section element pointing to the element to add as a new row. In the following example, service operation are displayed in a table:
+* with 3 columns: operation name, DCP and connect point.
+* if parameters are defined, one subrow will be created per parameter
+* and if srv:parameters is in flatModeException, and extra row will be added to allow to add new parameters for the operation
+.. code-block:: xml
+    <table for="srv:SV_OperationMetadata">
+      <header>
+        <col label="srv:operationName"/>
+        <col label="srv:DCP"/>
+        <col label="srv:connectPoint"/>
+        <col/>
+      </header>
+      <row>
+        <col xpath="srv:operationName"/>
+        <col xpath="srv:DCP"/>
+        <col xpath="srv:connectPoint/gmd:CI_OnlineResource/gmd:linkage"/>
+        <col del=".."/>
+        <section xpath="srv:SV_OperationMetadata/srv:parameters"
+                 or="parameters" in="srv:SV_OperationMetadata"/>
+      </row>
+    </table>]]>
+            </xs:documentation>
+          </xs:annotation>
+          <xs:complexType>
+            <xs:attribute name="xpath" type="xs:string" use="optional"/>
+            <xs:attribute ref="or" use="optional"/>
+            <xs:attribute ref="in" use="optional"/>
+          </xs:complexType>
+        
+        </xs:element>
       </xs:sequence>
     </xs:complexType>
   </xs:element>
-
-
+  
   <xs:element name="expanded">
     <xs:annotation>
       <xs:documentation>
@@ -471,47 +428,55 @@ relevant to have parent defined to have more control over the list.
     <xs:complexType>
       <xs:sequence>
         <xs:element name="name" minOccurs="1" maxOccurs="unbounded">
-          <xs:annotation>
-            <xs:documentation>
-              <![CDATA[
-        The element name including its namespace prefix (eg.
-        gmd:identificationInfo).
-        ]]>
-            </xs:documentation>
-          </xs:annotation>
           <xs:complexType>
-            <xs:attribute name="parent" type="xs:string" use="optional">
-              <xs:annotation>
-                <xs:documentation>
-                  <![CDATA[
+            <xs:simpleContent>
+              <xs:extension base="xs:string">
+                <xs:attribute name="parent" type="xs:string" use="optional">
+                  <xs:annotation>
+                    <xs:documentation>
+                      <![CDATA[
           The parent element name including its namespace prefix (eg.
           gmd:identificationInfo).
           ]]>
-                </xs:documentation>
-              </xs:annotation>
-            </xs:attribute>
-            <xs:attribute name="ancestor" type="xs:string" use="optional">
-              <xs:annotation>
-                <xs:documentation>
-                  <![CDATA[
+                    </xs:documentation>
+                  </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="ancestor" type="xs:string" use="optional">
+                  <xs:annotation>
+                    <xs:documentation>
+                      <![CDATA[
           One of the element ancestors name including its namespace prefix (eg.
           gmd:identificationInfo).
           ]]>
-                </xs:documentation>
-              </xs:annotation>
-            </xs:attribute>
-            <xs:attribute name="child" type="xs:string" use="optional">
-            <xs:annotation>
-              <xs:documentation>
-                <![CDATA[
+                    </xs:documentation>
+                  </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="child" type="xs:string" use="optional">
+                  <xs:annotation>
+                    <xs:documentation>
+                      <![CDATA[
           The first child name including its namespace prefix (eg.
           gmd:identificationInfo).
           ]]>
-              </xs:documentation>
-            </xs:annotation>
-          </xs:attribute>
+                    </xs:documentation>
+                  </xs:annotation>
+                </xs:attribute>
+              </xs:extension>
+            </xs:simpleContent>
           </xs:complexType>
         </xs:element>
+        <!--        
+          <xs:annotation>
+            <xs:documentation>
+              <![CDATA[ The element name including its namespace prefix (eg. gmd:identificationInfo).]]>
+            </xs:documentation>
+          </xs:annotation>
+          <!-\-<xs:complexType>-\->-->
+
+
+
+        <!--</xs:complexType>-->
+        <!--  </xs:element>-->
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -534,7 +499,6 @@ relevant to have parent defined to have more control over the list.
     <xs:complexType>
       <xs:sequence>
         <xs:element ref="directiveAttributes" minOccurs="0" maxOccurs="1"/>
-        <xs:element ref="template" minOccurs="0" maxOccurs="1"/>
       </xs:sequence>
       <xs:attribute name="name" type="xs:string" use="required">
         <xs:annotation>
@@ -549,40 +513,6 @@ relevant to have parent defined to have more control over the list.
       <xs:attribute ref="use"/>
       <xs:attribute ref="addDirective"/>
       <xs:attribute name="xpath" type="xs:string" use="optional"/>
-      <xs:attribute name="includeFrom" type="xs:string" use="optional">
-        <xs:annotation>
-          <xs:documentation>
-            <![CDATA[
-Used in for elements in flatModeException to include them from this mode if the parent or xpath of the element is listed in this attribute (comma separated value).
-
-For example, apply flatModeExceptions only to all mcc:description in resource identifier.
-
-.. code-block:: xml
-
-        <for name="mcc:description"
-             includeFrom="/mdb:MD_Metadata/mdb:identificationInfo/mri:MD_DataIdentification/mri:citation/cit:CI_Citation/cit:identifier/mcc:MD_Identifier"/>
-
-          ]]>
-          </xs:documentation>
-        </xs:annotation>
-      </xs:attribute>
-      <xs:attribute name="excludeFrom" type="xs:string" use="optional">
-        <xs:annotation>
-          <xs:documentation>
-            <![CDATA[
-Used in for elements in flatModeException to exclude them from this mode if the parent of the element is listed in this attribute (comma separated value).
-
-For example, apply flatModeExceptions to all gmd:contact, except for the ones in gmd:MD_MaintenanceInformation.
-
-.. code-block:: xml
-
-        <for name="gmd:contact"
-             excludeFrom="gmd:MD_MaintenanceInformation"/>
-
-          ]]>
-          </xs:documentation>
-        </xs:annotation>
-      </xs:attribute>
     </xs:complexType>
   </xs:element>
 
@@ -593,9 +523,9 @@ For example, apply flatModeExceptions to all gmd:contact, except for the ones in
 Configuring views
 -----------------
 
-At least one view MUST be defined, but more view modes can be defined depending on the needs.
+At least one view MUST be defined but more view modes can be defined depending on the needs.
 
-By default ISO19139 defines 3 views (i.e. default, advanced, xml) and has one disabled view (i.e. INSPIRE).
+By default ISO19139 define 3 views (ie. default, advanced, xml) and one disabled (ie. INSPIRE).
 See :code:`schemas/iso19139/src/main/plugin/iso19139/layout/config-editor.xml` for the configuration.
 
 .. figure:: ../../user-guide/describing-information/img/view-mode.png
@@ -629,20 +559,20 @@ To create a new view, use the following:
 Defining a view
 ---------------
 
-A view has a label and defines a specific rendering of the metadata records.
+A view has a label and define a specific rendering of the metadata records.
 A view is composed of one or more tabs.
 
 .. code-block:: xml
 
 
       <views>
-        <view name="custom-view">
-            ....
-        </view>
+          <view name="custom-view">
+              ....
+          </view>
 
 
 The view could be displayed or not according to the metadata record content or
-the current user session using the `displayIfRecord` and `displayIfServiceInfo` attributes.
+the current user session using the displayIfRecord and displayIfServiceInfo attribute.
 
         ]]>
       </xs:documentation>
@@ -676,16 +606,6 @@ The key of the view name stored in ``{schema}/loc/{lang}/strings.xml`` or the el
             ]]></xs:documentation>
         </xs:annotation>
       </xs:attribute>
-      <xs:attribute name="default" type="xs:boolean" fixed="true">
-        <xs:annotation>
-          <xs:documentation><![CDATA[
-One default view per schema can be configured. The default tab of the default
-view will be used if no tab parameter set. To customize the tab to use
-on a per metadata record basis, check the EditorController.js file schemaCustomConfig
-function.
-            ]]></xs:documentation>
-        </xs:annotation>
-      </xs:attribute>
       <xs:attribute name="disabled" type="xs:boolean" fixed="true">
         <xs:annotation>
           <xs:documentation><![CDATA[
@@ -703,7 +623,7 @@ to set the type of indent:
  * gn-indent-colored: colored left border on each fieldset
  * gn-indent-bluescale: blue scale colored left border on each fieldset
 
-See `catalog/views/default/less/gn_editor_default.less` to add your custom editor styles.
+See catalog/views/default/less/gn_editor_default.less to add your custom editor styles.
             ]]></xs:documentation>
         </xs:annotation>
       </xs:attribute>
@@ -738,13 +658,12 @@ Display help documentation for all elements by default when loading the view.
       <xs:attribute name="displayTooltipsMode">
         <xs:annotation>
           <xs:documentation><![CDATA[
-Display help documentation onfocus (default), onhover or by clicking on an icon.
+Display help documentation onhover elements (default) or by clicking on an icon.
 ]]></xs:documentation>
         </xs:annotation>
         <xs:simpleType>
           <xs:restriction base="xs:string">
             <xs:enumeration value="icon"/>
-            <xs:enumeration value="onfocus"/>
             <xs:enumeration value="onhover"/>
           </xs:restriction>
         </xs:simpleType>
@@ -755,8 +674,8 @@ Display help documentation onfocus (default), onhover or by clicking on an icon.
       <xs:attribute name="hideTimeInCalendar" type="xs:boolean" fixed="true">
         <xs:annotation>
           <xs:documentation><![CDATA[
-Define if calendar control should allow users to set date only or
-datetime. If the attribute is not set, then date and datetime can be set. This is controlled at the view level,
+Define if calendar control should allows users to set date only or
+datetime. If attribute is not set, then date and time can be set. This is controlled at the view level,
 switching to another view may allow more control over the dates.
 
 ]]></xs:documentation>
@@ -789,13 +708,13 @@ A good default config with all directives is:
                    data-lang="lang"/>
         <directive data-gn-validation-report=""/>
         <directive data-gn-suggestion-list=""/>
-        <directive data-gn-need-help="creating-metadata"/>
+        <directive data-gn-need-help="user-guide/describing-information/creating-metadata.html"/>
         <directive data-gn-onlinesrc-list=""
                    types="thumbnail|onlinesrc|parent|dataset|service|source|sibling|associated|fcats"/>
       </sidePanel>
 
 
-For the online source panel, the list of choices can be overridden with a "config-id" attribute
+For the online source panel, the list of choices can be overridden with a "config-id" attribute 
 pointing to a JSON configuration file in config/associated-panel. This file allows to customize
 the list of type of link user can set by defining for each type the list of fields to display and
 default values for fields (eg. protocol, function, application profile).
@@ -844,7 +763,6 @@ For overview, a simple manager can be used or the general one:
       <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:element ref="text"/>
         <xs:element ref="directive"/>
-        <xs:element ref="section"/>
       </xs:choice>
     </xs:complexType>
   </xs:element>
@@ -858,12 +776,12 @@ For overview, a simple manager can be used or the general one:
 Defining a tab
 --------------
 
-A view contains at least one tab. In that case it will be the default tab to display and no
+A view contains at least one tab. In that case it will be the default to display and no
 top toolbar will be displayed to switch from one tab to another.
 
 .. figure:: ../../user-guide/describing-information/img/editor-tab-switcher.png
 
-Add custom view with one default tab and a field for the title:
+Add custom view one default tab and a field for the title:
 
 .. code-block:: xml
 
@@ -910,18 +828,11 @@ It has to be unique for all views. A good practice is to use same prefix for all
       <xs:attribute ref="mode"/>
       <xs:attribute ref="displayIfRecord"/>
       <xs:attribute ref="displayIfServiceInfo"/>
-      <xs:attribute name="hideIfNotDisplayed" fixed="true" type="xs:boolean">
-        <xs:annotation>
-          <xs:documentation><![CDATA[
-Define if the tab should be hidden (and not disabled only) if not displayed based on display rules.
-            ]]></xs:documentation>
-        </xs:annotation>
-      </xs:attribute>
       <xs:attribute name="toggle" fixed="true" type="xs:boolean">
         <xs:annotation>
           <xs:documentation><![CDATA[
-Define if the tab should be displayed as a dropdown menu instead of a tab. This is used for advanced
-section, which is not used often by the end-user. More than one tab could be grouped in that dropdown tab menu.
+Define if the tab should be displayed in a drop down menu instead of a tab. This is used for advanced
+section which is not used often by the end-user. More than one tab could be grouped in that drop down tab menu.
             ]]></xs:documentation>
         </xs:annotation>
       </xs:attribute>
@@ -942,11 +853,11 @@ Configuring complex element display
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Elements to apply "flat" mode exceptions. By default,
-"flat" mode does not display elements containing only children and no values.
+"flat" mode does not display elements containing only children and no value.
 
-Use `or` and `in` attributes to display non-existing elements.
-To display the `gmd:descriptiveKeywords` element even if it does not exist in the metadata
-record, or if the field should be displayed to enable the user to add new occurrences:
+Use or and in attribute to display non existing element.
+To display gmd:descriptiveKeywords element even if does not exist in the metadata
+record or if the field should be displayed to add new occurrences:
 
 .. code-block:: xml
 
@@ -956,7 +867,7 @@ record, or if the field should be displayed to enable the user to add new occurr
             in="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords/*"/>
    </tab>
 
-   <!-* Elements that should not use the "flat" mode -->
+   <!-- Elements that should not use the "flat" mode -->
    <flatModeExceptions>
      <for name="gmd:descriptiveKeywords" />
    </flatModeExceptions>
@@ -978,14 +889,12 @@ record, or if the field should be displayed to enable the user to add new occurr
 Customizing thesaurus
 ~~~~~~~~~~~~~~~~~~~~~
 
-To configure:
- * the type of transformations (eg. to-iso19139-keyword, to-iso19139-keyword-with-anchor - see convert/thesaurus-transformation.xsl in each plugins),
- * the number of keywords allowed,
- * if the widget has to be displayed in a fieldset or as simple field
- * if the concept relationships are browsable (enable by default)
+To configure the type of transformations
+or the number of keyword allowed or if the widget
+has to be displayed in a fieldset or as simple field for e
+thesaurus define a specific configuration:
 
-
-e.g. only 2 INSPIRE themes:
+eg. only 2 INSPIRE themes.
 
 
 .. code-block:: xml
@@ -1008,7 +917,6 @@ e.g. only 2 INSPIRE themes:
             <xs:attribute name="maxtags" type="xs:integer" use="optional"/>
             <xs:attribute name="orderById" type="xs:boolean" use="optional"/>
             <xs:attribute name="fieldset" type="xs:string" use="optional" fixed="false"/>
-            <xs:attribute name="browsable" type="xs:string" use="optional" fixed="false"/>
             <xs:attribute name="transformations" type="xs:string" use="optional"/>
           </xs:complexType>
         </xs:element>
@@ -1021,15 +929,16 @@ e.g. only 2 INSPIRE themes:
       <xs:documentation><![CDATA[
 The "flat" mode is an important concept to understand for the editor. It controls the way:
 
- * complex elements are displayed (i.e. elements having children) and
- * non-existing elements are displayed (i.e. elements in the standard, not in the current document).
+ - complex elements are displayed (ie. elements having children) and
+
+ - non existing elements are displayed (ie. elements in the standard not in the current document).
 
 
-When a tab is in flat mode, this tab will not display elements which are not in the current metadata
-document and it will display complex elements as a group only if defined in the list of
-elements with fieldset (see :ref:`creating-custom-editor-fieldsWithFieldset`).
+When a tab is in flat mode, this tab will not display element which are not in the current metadata
+document and it will display complex element as a group only if defined in the list of
+element with fieldset (see :ref:`creating-custom-editor-fieldsWithFieldset`).
 
-Example for a contact in ""non-flat" mode:
+Example for a contact in non "flat" mode:
 
 
 .. figure:: ../../user-guide/describing-information/img/editor-contact-nonflatmode.png
@@ -1041,15 +950,16 @@ Example for a contact in "flat" mode:
 .. figure:: ../../user-guide/describing-information/img/editor-contact-flatmode.png
 
 
-This mode makes the layout simpler, but does not provide all controls to remove
-some of the usually boxed elements. End-users can still change to the advanced view mode
+This mode makes the layout simpler but does not provide all controls to remove
+some of the usually boxed element. End-user can still move  to the advanced view mode
 to access those hidden elements in flat mode.
 
-It's recommended to preserve at least one view in ""non-flat" mode for Reviewers or Administrators in order
+It's recommended to preserve at least one view in non "flat" mode for reviewer or administrator in order
 to be able:
 
- * to build proper templates based on the standards
- * to fix any type of errors.
+ - to build proper templates based on the standards
+
+ - to fix any types of errors.
 
 
         ]]></xs:documentation>
@@ -1061,22 +971,18 @@ to be able:
       <xs:documentation><![CDATA[
 Adding a section to a tab
 -------------------------
-
-A section is a group of fields. If a `name` attribute is provided,
+A section is a group of fields. If a name attribute is provided,
 then it will create an HTML fieldset which is collapsible.
-If no `name` attribute is provided, then it will just render the inner elements.
-For example, if you need a tab without a root fieldset, just create
-the mandatory section with no name and then the inner elements.
-
-
-        ]]></xs:documentation>
+If no name attribute is provided, then it just render the inner elements.
+For example, if you need a tab without a root fieldset, juste create 
+the mandatory section with no name and then the inner elements.   ]]>
+      </xs:documentation>
     </xs:annotation>
     <xs:complexType>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:element ref="field">
           <xs:annotation>
-            <xs:documentation>A form field to insert in the section (if the section match no
-              XPath).
+            <xs:documentation>A form field to insert in the section (if the section match no XPath).
             </xs:documentation>
           </xs:annotation>
         </xs:element>
@@ -1091,63 +997,26 @@ the mandatory section with no name and then the inner elements.
       <xs:attribute name="name" type="xs:string">
         <xs:annotation>
           <xs:documentation>An optional name to override the default one base on field name for the
-  section. The name must be defined in ``{schema}/loc/{lang}/strings.xml``.
+            section. The name must be defined in ``{schema}/loc/{lang}/strings.xml``.
           </xs:documentation>
         </xs:annotation>
       </xs:attribute>
       <xs:attribute name="xpath" type="xs:string">
         <xs:annotation>
-          <xs:documentation>The XPath of the element to match. If an XPath is set for a section, it
-  should not contain any fields.
-          </xs:documentation>
+          <xs:documentation>The xpath of the element to match. If an XPath is set for a section, it
+            should not contains any field. </xs:documentation>
         </xs:annotation>
       </xs:attribute>
-      <xs:attribute name="forEach" type="xs:string">
-        <xs:annotation>
-          <xs:documentation><![CDATA[
-The xpath of the element to loop on.
-If a for-each attribute is set for a section,
-then all children xpath will be relative to the current element.
-
-Note: Only sections with forEach support del attribute.
-
-.. code-block:: xml
-
-            <section forEach="/gmd:MD_Metadata/gmd:distributionInfo">
-              <text><h2>Distribution</h2></text>
-              <section forEach="*/gmd:transferOptions/*/gmd:onLine/gmd:CI_OnlineResource" name="A link">
-                <field xpath="gmd:linkage"/>
-                <field xpath="gmd:name" or="name" in="."/>
-              </section>
-              <text><hr/></text>
-            </section>
-
-          ]]></xs:documentation>
-        </xs:annotation>
-      </xs:attribute>
-      <xs:attribute ref="del"/>
+      <xs:attribute name="collapsible" type="xs:boolean"/>
+      <xs:attribute name="collapsed" type="xs:boolean"/>
       <xs:attribute ref="or"/>
       <xs:attribute ref="in"/>
       <xs:attribute ref="displayIfRecord"/>
-      <xs:attribute ref="displayIfServiceInfo"/>
-      <xs:attribute name="collapsed" type="xs:boolean" fixed="true">
-        <xs:annotation>
-          <xs:documentation>An optional attribute to collapse the section. If not set the section is expanded.
-          </xs:documentation>
-        </xs:annotation>
-      </xs:attribute>
-      <xs:attribute name="collapsible" type="xs:boolean" fixed="false">
-        <xs:annotation>
-          <xs:documentation>An optional attribute to not allow collapse for the section. If not set the section is expandable.
-          </xs:documentation>
-        </xs:annotation>
-      </xs:attribute>
     </xs:complexType>
     <xs:unique name="avoidDuplicateFieldWithSameXPath">
       <xs:annotation>
         <xs:documentation>If this happens, form fields will be displayed twice with same name and
-          trigger issues when saving the record.
-        </xs:documentation>
+          trigger issues when saving the record. </xs:documentation>
       </xs:annotation>
       <xs:selector xpath="field"/>
       <xs:field xpath="@xpath"/>
@@ -1163,8 +1032,7 @@ Note: Only sections with forEach support del attribute.
   <xs:attribute name="in" type="xs:string">
     <xs:annotation>
       <xs:documentation>XPath of the geonet:child element with the or name to look for. Usually
-        points to the parent of last element of the XPath attribute.
-      </xs:documentation>
+        points to the parent of last element of the XPath attribute. </xs:documentation>
     </xs:annotation>
   </xs:attribute>
 
@@ -1178,7 +1046,6 @@ Note: Only sections with forEach support del attribute.
         <xs:element ref="field"/>
       </xs:sequence>
       <xs:attribute name="name" use="required" type="xs:string"/>
-      <xs:attribute ref="displayIfServiceInfo"/>
     </xs:complexType>
   </xs:element>
 
@@ -1189,14 +1056,14 @@ Note: Only sections with forEach support del attribute.
 Adding a field
 --------------
 
-To display a simple element use the `xpath` attribute to point to the element to display:
+To display a simple element use the ``xpath`` attribute to point to the element to display:
 
 .. code-block:: xml
 
       <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/*/gmd:title"/>
 
 
-To override a field label use the `name` attribute and define that new label in ``{schema}/loc/{lang}/strings.xml``:
+To override a field label use the ``name`` attribute and define that new label in ``{schema}/loc/{lang}/strings.xml``:
 
 .. code-block:: xml
 
@@ -1204,19 +1071,19 @@ To override a field label use the `name` attribute and define that new label in 
              xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/*/gmd:title"/>
 
 
-To display a complex element which exists in the metadata document:
+To display a complex element which exist in the metadata document:
 
 .. code-block:: xml
 
       <field name="pointOfContact"
              xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:pointOfContact"/>
 
-In this case all children elements are also displayed.
+In that case all children elements are also displayed.
 
 
 
-To display a field if it exists in the metadata document or to provide an `add` button
-in case it does not exist (specify `in` and `or` attributes):
+To display a field if exist in the metadata document or providing a add button
+in case it does not exist (specify ``in`` and ``or`` attribute):
 
 
 .. code-block:: xml
@@ -1254,12 +1121,11 @@ Activate the "flat" mode at the tab level to make the form display only existing
         <xs:element ref="template" minOccurs="0" maxOccurs="1"/>
         <xs:element ref="directiveAttributes" minOccurs="0" maxOccurs="1"/>
       </xs:sequence>
-      <xs:attribute ref="displayIfServiceInfo"/>
       <xs:attribute name="if">
         <xs:annotation>
           <xs:documentation><![CDATA[
-An optional XPath expression to evaluate to define if the element should be displayed
-only in some situation (e.g. only for service metadata records). e.g.
+An optional xpath expression to evaluate to define if the element should be displayed
+only in some situation (eg. only for service metadata records). eg.
 
 .. code-block:: xml
 
@@ -1285,8 +1151,8 @@ only in some situation (e.g. only for service metadata records). e.g.
         <xs:annotation>
           <xs:documentation><![CDATA[
 The label to display if the element does not exist in the metadata record. It indicates that
-the element is missing in the current record. It could be used for a conformity section saying
-that the element is "not evaluated". **EXPERIMENTAL**
+the element is missing in the current record. It could be use for a conformity section saying
+that the element is "not evaluated". EXPERIMENTAL
             ]]>
           </xs:documentation>
         </xs:annotation>
@@ -1295,13 +1161,13 @@ that the element is "not evaluated". **EXPERIMENTAL**
         <xs:annotation>
           <xs:documentation>
             <![CDATA[
-The local name of the geonet child (i.e. non-existing element) to match.
+The local name of the geonet child (ie. non existing element) to match.
 
 .. code-block:: xml
 
     <field xpath="/gmd:MD_Metadata/gmd:language"
-            or="language"
-            in="/gmd:MD_Metadata"/>
+           or="language"
+           in="/gmd:MD_Metadata"/>
 
 ]]></xs:documentation>
         </xs:annotation>
@@ -1315,9 +1181,9 @@ The local name of the geonet child (i.e. non-existing element) to match.
         <xs:annotation>
           <xs:documentation>
             <![CDATA[
-Relative XPath of the element to remove when the `remove` button is clicked.
+Relative XPath of the element to remove when the remove button is clicked.
 
-e.g. If a template field match linkage and allows editing of field URL,
+eg. If a template field match linkage and allows editing of field URL,
 the remove control should remove the parent element gmd:onLine.
 
 .. code-block:: xml
@@ -1328,11 +1194,13 @@ the remove control should remove the parent element gmd:onLine.
       del="../..">
       <template>
 
-`del` attribute can be used in template mode or not. Example to remove
-`spatialResolution` while only editing `denominator` or `distance`. `denominator` or `distance`
-are mandatory, but as the `del` element points to the `spatialResolution`
+
+
+Del attribute can be used in template mode or not. Example to remove
+spatialResolution while only editing denominator or distance. Denominator or distance
+are mandatory but as the del element point to the spatialResolution
 ancestor, there is no mandatory flag displayed and the remove control
-removes the `spatialResolution` element.
+remove the spatialResolution element.
 
 
 .. code-block:: xml
@@ -1340,11 +1208,11 @@ removes the `spatialResolution` element.
 
     <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/
                     */gmd:spatialResolution/*/gmd:distance"
-            del="../.."/>
+           del="../.."/>
     <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/
                     */gmd:spatialResolution/
                       */gmd:equivalentScale/*/gmd:denominator"
-            del="../../../.."/>
+           del="../../../.."/>
 
             ]]>
           </xs:documentation>
@@ -1361,8 +1229,7 @@ displayed based on the XML template snippet field configuration. Default is fals
       <xs:attribute name="notDisplayedIfMissing" fixed="true" type="xs:boolean">
         <xs:annotation>
           <xs:documentation>If the field is found and a geonet child also, the geonet child to add a
-            new one is not displayed.
-          </xs:documentation>
+            new one is not displayed. </xs:documentation>
         </xs:annotation>
       </xs:attribute>
       <xs:attribute ref="use"/>
@@ -1394,7 +1261,7 @@ This mode is used to hide the complexity of the XML element to edit. eg.
                  xpath="gmd:URL"
                  tooltip="gmd:linkage"/>
           </values>
-          <snippet>
+          <snippet>t
             <gmd:linkage>
               <gmd:URL>{{url}}</gmd:URL>
             </gmd:linkage>
@@ -1431,14 +1298,7 @@ Warning: Template based field does not support multilingual editing for ISO stan
             <xs:documentation>The list of values to match from the template.</xs:documentation>
           </xs:annotation>
         </xs:element>
-        <xs:choice>
-          <xs:element minOccurs="1" maxOccurs="unbounded" ref="snippet"/>
-          <xs:element minOccurs="1" maxOccurs="1" name="snippets">
-            <xs:complexType>
-              <xs:attribute name="name" use="required" type="xs:string"/>
-            </xs:complexType>
-          </xs:element>
-        </xs:choice>
+        <xs:element minOccurs="1" maxOccurs="unbounded" ref="snippet"/>
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -1481,27 +1341,7 @@ The fragment is defined in localization file strings.xml:
         ]]></xs:documentation>
     </xs:annotation>
     <xs:complexType>
-      <xs:sequence>
-        <xs:annotation>
-          <xs:documentation><![CDATA[
-Any HTML to directly embed in the editor (if not multilingual content is required, use @ref if not).
-
-.. code-block:: xml
-
-        <section name="metadata" collapsed="true">
-          <text>
-            <div class="row">
-              <div class="col-sm-12">
-                <div class="alert alert-info">Describe here whatever you want</div>
-              </div>
-            </div>
-          </text>
-
-          ]]></xs:documentation>
-        </xs:annotation>
-        <xs:any/>
-      </xs:sequence>
-      <xs:attribute name="ref" type="xs:string">
+      <xs:attribute name="ref" use="required" type="xs:string">
         <xs:annotation>
           <xs:documentation>The tag name of the element to insert in the localization file.
           </xs:documentation>
@@ -1515,7 +1355,6 @@ An XPath expression to evaluate. If true, the text is displayed.
           ]]></xs:documentation>
         </xs:annotation>
       </xs:attribute>
-      <xs:attribute ref="displayIfServiceInfo"/>
     </xs:complexType>
   </xs:element>
 
@@ -1738,10 +1577,8 @@ For example, for sibling panel, the association type and initiative type could b
       <xs:attribute name="process" type="xs:string">
         <xs:annotation>
           <xs:documentation>The process identifier (eg. add-resource-id) or the associated resource
-            type to open
-            (eg. onlinesrc, fcats, parent, source, sibling, service, dataset, thumbnail) See
-            onlinesrc directive.
-          </xs:documentation>
+            type to open (eg. onlinesrc, fcats, parent, source, sibling, service, dataset,
+            thumbnail) See onlinesrc directive. </xs:documentation>
         </xs:annotation>
       </xs:attribute>
       <xs:attribute name="forceLabel" type="xs:boolean">
@@ -1776,10 +1613,10 @@ with the metadata identifier.
           ]]></xs:documentation>
         </xs:annotation>
       </xs:attribute>
-      <xs:attribute ref="displayIfServiceInfo"/>
       <xs:attribute name="class" type="xs:string">
         <xs:annotation>
-          <xs:documentation>Optional CSS class to add to the parent div element. eg. gn-required to show a *****.</xs:documentation>
+          <xs:documentation>Optional CSS class to add to the parent div element. eg. gn-required to
+            show a *.</xs:documentation>
         </xs:annotation>
       </xs:attribute>
       <xs:attribute name="btnLabel" type="xs:string">
@@ -1837,7 +1674,8 @@ This list is defined as an open enumeration. For directive, the value will be se
 text input by default. If the directive needs to deal with cariage return character, the
 directive name MUST contains "-textarea" in order to set the value in a textarea
 instead of the text input.
-        ]]> </xs:documentation>
+        ]]>
+      </xs:documentation>
     </xs:annotation>
     <xs:simpleType>
       <xs:union memberTypes="xs:string">
@@ -1847,45 +1685,40 @@ instead of the text input.
             <xs:enumeration value="number"/>
             <xs:enumeration value="data-gn-date-picker">
               <xs:annotation>
-                <xs:documentation>
-                  Custom date picker directive which rely on
-                  HTML5 month, date and time type if the browser supports it.
-                  If not, will provide a custom calendar picker.
-                </xs:documentation>
+                <xs:documentation> Custom date picker directive which rely on HTML5 month, date and
+                  time type if the browser supports it. If not, will provide a custom calendar
+                  picker. </xs:documentation>
               </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="date">
               <xs:annotation>
-                <xs:documentation>
-                  Use only if target browser support HTML5 date type
-                  (http://caniuse.com/input-datetime).
-                </xs:documentation>
+                <xs:documentation> Use only if target browser support HTML5 date type
+                  (http://caniuse.com/input-datetime). </xs:documentation>
               </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="datetime">
               <xs:annotation>
-                <xs:documentation>
-                  Use only if target browser support HTML5 date type
-                  (http://caniuse.com/input-datetime).
-                </xs:documentation>
+                <xs:documentation> Use only if target browser support HTML5 date type
+                  (http://caniuse.com/input-datetime). </xs:documentation>
               </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="email"/>
             <xs:enumeration value="data-gn-country-picker">
               <xs:annotation>
-                <xs:documentation>An autocompletion list for country (based on the region
-                  API).
+                <xs:documentation>An autocompletion list for country (based on the region API).
                 </xs:documentation>
               </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="data-gn-topiccategory-selector-div">
               <xs:annotation>
-                <xs:documentation>A directive to render topic category like keywords widget.</xs:documentation>
+                <xs:documentation>A directive to render topic category like keywords
+                  widget.</xs:documentation>
               </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="data-gn-field-duration-div">
               <xs:annotation>
-                <xs:documentation>A directive to set a complete duration type informations.</xs:documentation>
+                <xs:documentation>A directive to set a complete duration type
+                  informations.</xs:documentation>
               </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="data-gn-logo-selector">
@@ -1918,22 +1751,26 @@ An autocompletion list based on a thesaurus.
             </xs:enumeration>
             <xs:enumeration value="data-gn-anchor-switcher">
               <xs:annotation>
-                <xs:documentation>Facilitates easy conversion between Characterstring and Anchor.</xs:documentation>
+                <xs:documentation>Facilitates easy conversion between Characterstring and
+                  Anchor.</xs:documentation>
               </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="data-gn-logo-selector">
               <xs:annotation>
-                <xs:documentation>Users can upload a file into the file storage of a record. The link to the file will be stored as Anchor.</xs:documentation>
+                <xs:documentation>Users can upload a file into the file storage of a record. The
+                  link to the file will be stored as Anchor.</xs:documentation>
               </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="data-gn-checkbox-with-nilreason">
               <xs:annotation>
-                <xs:documentation>Boolean field with explicit true, false and nill options</xs:documentation>
+                <xs:documentation>Boolean field with explicit true, false and nill
+                  options</xs:documentation>
               </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="data-gn-field-upload-div">
               <xs:annotation>
-                <xs:documentation>Option to upload a document, link and title are stored in an Anchor element.</xs:documentation>
+                <xs:documentation>Option to upload a document, link and title are stored in an
+                  Anchor element.</xs:documentation>
               </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="data-gn-codelist-picker">
@@ -1943,7 +1780,8 @@ An autocompletion list based on a thesaurus.
             </xs:enumeration>
             <xs:enumeration value="data-gn-draw-bbox">
               <xs:annotation>
-                <xs:documentation>Interactive map facilitating to draw a bounds element</xs:documentation>
+                <xs:documentation>Interactive map facilitating to draw a bounds
+                  element</xs:documentation>
               </xs:annotation>
             </xs:enumeration>
           </xs:restriction>
@@ -1969,20 +1807,20 @@ An autocompletion list based on a thesaurus.
             <xs:enumeration value="data-gn-directory-entry-selector">
               <xs:annotation>
                 <xs:documentation><![CDATA[
-This field facilitates users in selecting a `subtemplate` (also known as xml-snippet) from the catalogue. Subtemplates are mostly used to store contact details,
-but can also be used to store snippets of xml having Quality reports, Access constraints, CRS definitions, etc.
+This field facilitates users in selecting a `subtemplate` (also known as xml-snippet) from the catalogue. Subtemplates are mostly used to store contact details, 
+but can also be used to store snippets of xml having Quality reports, Access constraints, CRS definitions, etc. 
 
 .. code-block:: xml
 
-    <for name="gmd:report"
-      addDirective="data-gn-directory-entry-selector"
+    <for name="gmd:report" 
+      addDirective="data-gn-directory-entry-selector" 
       xpath="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency/gmd:result">
-      <directiveAttributes
-        data-template-add-action="true"
-        data-search-action="true"
-        data-popup-action="false"
-        data-filter='{"_root": "gmd:DQ_DomainConsistency"}'
-        data-template-type="report"
+      <directiveAttributes 
+        data-template-add-action="true" 
+        data-search-action="true" 
+        data-popup-action="false" 
+        data-filter='{"_root": "gmd:DQ_DomainConsistency"}' 
+        data-template-type="report" 
         data-insert-modes="text" />
     </for>
                 ]]></xs:documentation>
@@ -2065,8 +1903,7 @@ contains an XLink.
             <xs:attribute name="name" type="xs:string">
               <xs:annotation>
                 <xs:documentation>An existing element name from labels.xml for the schema having an
-                  helper defined.
-                </xs:documentation>
+                  helper defined. </xs:documentation>
               </xs:annotation>
             </xs:attribute>
             <xs:attribute name="context" type="xs:string">
@@ -2308,12 +2145,8 @@ Translations are set on client side.
         <![CDATA[
 Trigger an XSL rendering mode. In some circumstances, you may want
 to customize a lot the editor. In such case, delegate to XSL template.
-
-
 For example, create a tab on the data quality section:
-
 .. code-block:: xml
-
       <tab id="qualityMeasures">
         <section>
           <xsl xpath="/mdb:MD_Metadata/mdb:dataQualityInfo"
@@ -2322,23 +2155,18 @@ For example, create a tab on the data quality section:
          </section>
       </tab>
 
-
-Then declare a template (eg. in iso19115-3/layout/layout-custom-tpl.xsl) to customize
-the layout:
+Then declare a template (eg. in iso19115-3/layout/layout-custom-tpl.xsl) to customize  the layout:
 
 .. code-block:: xml
 
       <xsl:template name="iso19115-3-qm">
         <h1><xsl:value-of select="$strings/qualityMeasures"/></h1>
 
-
 For example, create a table of contact:
-
 .. code-block:: xml
 
       <xsl xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:pointOfContact"
            mode="iso19139-table-contact"/>
-
 ]]>
       </xs:documentation>
     </xs:annotation>
@@ -2352,16 +2180,10 @@ For example, create a table of contact:
 
   <xs:element name="directive">
     <xs:annotation>
-      <xs:documentation><![CDATA[
-
-Include any custom directive with required attributes.
-
-      ]]></xs:documentation>
+      <xs:documentation><![CDATA[ Include any custom directive with required attributes. ]]></xs:documentation>
     </xs:annotation>
     <xs:complexType>
-      <xs:attribute ref="displayIfServiceInfo"/>
-      <xs:attribute ref="displayIfRecord"/>
-      <xs:anyAttribute/>
+      <xs:anyAttribute processContents="skip" />
     </xs:complexType>
   </xs:element>
 </xs:schema>
