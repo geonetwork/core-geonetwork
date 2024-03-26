@@ -276,6 +276,13 @@ public class TranslationApi {
     }
 
 
+    // Class used by getDbTranslations to define schema being returned.
+    // Based on https://github.com/swagger-api/swagger-core/issues/3724#issuecomment-718761089
+    private class ResponseMapDbTranslations extends HashMap<String, String>
+    {
+        private static final long serialVersionUID = 6453256719377446479L;
+    }
+
     @io.swagger.v3.oas.annotations.Operation(
         summary = "List database translations (used to overrides client application translations).")
     @GetMapping(value = "/db/translations",
@@ -289,10 +296,11 @@ public class TranslationApi {
                 "{" +
                     "  \"translationKey1\": \"Translated Key One\",\n" +
                     "  \"translationKey2\": \"Translated Key Two\",\n" +
-                    "  \"translationKey3\": \"Translated Key Two\"\n" +
+                    "  \"translationKey3\": \"Translated Key Tree\"\n" +
                     "}")
-        }, schema = @Schema(type = "{ < * >: string }"))
+        }, schema = @Schema(implementation = ResponseMapDbTranslations.class))
     )
+    @ResponseStatus(OK)
     @ResponseBody
     public Map<String, String> getDbTranslations(
         ServletRequest request
