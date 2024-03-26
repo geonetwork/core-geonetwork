@@ -55,8 +55,9 @@ public interface StatusActions {
      * Called when a record status is added.
      *
      * @param statusList List of status to update
+     * @param updateIndex index update flag
      * @return Ids of unchanged metadata records
      */
-    public Set<Integer> onStatusChange(List<MetadataStatus> statusList) throws Exception;
+    public Set<Integer> onStatusChange(List<MetadataStatus> statusList, boolean updateIndex) throws Exception;
 
 }

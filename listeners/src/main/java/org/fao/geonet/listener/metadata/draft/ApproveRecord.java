@@ -170,7 +170,7 @@ public class ApproveRecord implements ApplicationListener<MetadataStatusChanged>
             status.setChangeDate(new ISODate());
             status.setUserId(event.getUser());
 
-            metadataStatus.setStatusExt(status);
+            metadataStatus.setStatusExt(status, false);
 
         } else if (md instanceof Metadata) {
             draft = metadataDraftRepository.findOneByUuid(md.getUuid());

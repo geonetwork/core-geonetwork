@@ -606,7 +606,7 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
 
                 List<MetadataStatus> listOfStatusChange = new ArrayList<>(1);
                 listOfStatusChange.add(metadataStatus);
-                statusActions.onStatusChange(listOfStatusChange);
+                statusActions.onStatusChange(listOfStatusChange, true);
             }
             return String.valueOf(finalId);
         } catch (Throwable t) {
