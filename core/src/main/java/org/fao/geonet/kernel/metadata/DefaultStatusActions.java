@@ -136,7 +136,7 @@ public class DefaultStatusActions implements StatusActions {
      * @return
      * @throws Exception
      */
-    public Map<Integer, StatusChangeType> onStatusChange(List<MetadataStatus> listOfStatus) throws Exception {
+    public Map<Integer, StatusChangeType> onStatusChange(List<MetadataStatus> listOfStatus, boolean updateIndex) throws Exception {
 
         if (listOfStatus.stream().map(MetadataStatus::getMetadataId).distinct().count() != listOfStatus.size()) {
             throw new IllegalArgumentException("Multiple status update received on the same metadata");
@@ -179,7 +179,7 @@ public class DefaultStatusActions implements StatusActions {
                 context.debug("Change status of metadata with id " + status.getMetadataId() + " from " + currentStatusId + " to " + statusId);
 
             // we know we are allowed to do the change, apply any side effects
-            boolean deleted = applyStatusChange(status.getMetadataId(), status, statusId);
+            boolean deleted = applyStatusChange(status.getMetadataId(), status, statusId, updateIndex);
 
             if (deleted) {
                 results.put(status.getMetadataId(), StatusChangeType.DELETED);
@@ -218,10 +218,10 @@ public class DefaultStatusActions implements StatusActions {
      * eg. if APPROVED, publish a record,
      * if RETIRED, unpublish or delete the record.
      */
-    private boolean applyStatusChange(int metadataId, MetadataStatus status, String toStatusId) throws Exception {
+    private boolean applyStatusChange(int metadataId, MetadataStatus status, String toStatusId, boolean updateIndex) throws Exception {
         boolean deleted = false;
         if (!deleted) {
-            metadataStatusManager.setStatusExt(status);
+            metadataStatusManager.setStatusExt(status, updateIndex);
         }
         return deleted;
     }
