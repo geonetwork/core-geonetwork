@@ -28,10 +28,12 @@ import org.fao.geonet.domain.Profile;
 import org.fao.geonet.utils.Log;
 import org.geoserver.security.jwtheaders.JwtConfiguration;
 import org.geoserver.security.jwtheaders.roles.JwtHeadersRolesExtractor;
+import org.geoserver.security.jwtheaders.token.TokenValidator;
 import org.geoserver.security.jwtheaders.username.JwtHeaderUserNameExtractor;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -62,7 +64,7 @@ public class JwtHeadersTrivialUser {
         profileGroups = new HashMap<>();
     }
 
-    public static JwtHeadersTrivialUser create(JwtConfiguration config, HttpServletRequest request) {
+    public static JwtHeadersTrivialUser create(JwtConfiguration config, HttpServletRequest request) throws IOException {
         if (request == null || config == null || config.getUserNameHeaderAttributeName() == null) {
             Log.debug(Geonet.SECURITY, "JwtHeadersUser.create called with null args!");
             return null; // nothing to do
@@ -79,6 +81,14 @@ public class JwtHeadersTrivialUser {
 
         if (userName == null) {
             return null; // no username
+        }
+
+        var tokenValidator = new TokenValidator(config);
+        try {
+            tokenValidator.validate(userNameHeader);
+        }
+        catch (Exception e) {
+            throw new IOException("JWT Token is invalid",e);
         }
 
         //get roles from the headers (pay attention to config)

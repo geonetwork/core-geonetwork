@@ -202,7 +202,7 @@ public class JwtHeadersTrivialUserTest {
      * this is dependent on the above methods, so this is just a quick test
      */
     @Test
-    public void testCreate() {
+    public void testCreate() throws Exception {
         var config = JwtHeadersIntegrationTest.getBasicConfigJWT();
         var request = new MockHttpServletRequest();
         request.addHeader("TOKEN", JwtHeadersIntegrationTest.JWT);
