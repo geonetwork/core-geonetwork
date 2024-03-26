@@ -396,7 +396,8 @@
     .directive("sortbyCombo", [
       "$translate",
       "hotkeys",
-      function ($translate, hotkeys) {
+      "gnGlobalSettings",
+      function ($translate, hotkeys, gnGlobalSettings) {
         return {
           restrict: "A",
           require: "^ngSearchForm",
@@ -411,10 +412,19 @@
             values: "=gnSortbyValues"
           },
           link: function (scope, element, attrs, searchFormCtrl) {
+            scope.lang = attrs["lang"] || gnGlobalSettings.gnCfg.langDetector.default;
             scope.sortBy = function (v) {
               angular.extend(scope.params, v);
               searchFormCtrl.triggerSearch(true);
             };
+            // Replace the placeholder for the language in the sort field name
+            for (var i = 0; i < scope.values.length; i++) {
+              scope.values[i].sortBy = scope.values[i].sortBy.replace(
+                "${searchLang}",
+                "lang" + scope.lang
+              );
+            }
+
             hotkeys.bindTo(scope).add({
               combo: "s",
               description: $translate.instant("hotkeySortBy"),
