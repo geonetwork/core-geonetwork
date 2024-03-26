@@ -821,7 +821,7 @@ A similar setup is described for geoserver in the [geoserver documentation](http
 
 ## Configurating JWT/JSON Headers {#jwt-headers}
 
-The JWT Headers module provides a security module for header based security. It is equivalent to GeoServer's JWT Headers Module (both GeoServer and GeoNetwork share a code library to make them equivelent). 
+The JWT Headers module provides a security module for header based security. It is equivalent to GeoServer's JWT Headers Module (both GeoServer and GeoNetwork share a code library to make them equivalent). 
 
 This module allows  [JSON-based](https://en.wikipedia.org/wiki/JSON) headers (for username and roles) as well as [JWT-based](https://en.wikipedia.org/wiki/JSON_Web_Token>) headers (for username and roles).  It also allows for validating JWT-Based AccessTokens (i.e. via [OAUTH2](https://en.wikipedia.org/wiki/OAuth>)/[OpenID Connect](ttps://en.wikipedia.org/wiki/OpenID#OpenID_Connect_(OIDC)).
 
@@ -830,7 +830,7 @@ If you are using something like [Apache's mod_auth_openidc](https://github.com/O
 
 1. Get the username from an Apache-provided `OIDC_*` header (either as simple-strings or as a component of a JSON object).
 2. Get the user's roles from an Apache-provided `OIDC_*` header (as a component of a JSON object).
-3. The user's roles can also be from any of the standard GeoServer providers (i.e. User Group Service, Role Service, or Request Header).
+3. The user's roles can also come from the GeoNetwork Database (managed by the administrator in the GeoNetwork GUI).
 
 If you are using [OAUTH2/OIDC Access Tokens](https://www.oauth.com/oauth2-servers/access-tokens/):
 
@@ -843,7 +843,7 @@ If you are using [OAUTH2/OIDC Access Tokens](https://www.oauth.com/oauth2-server
    * Validate the token against a token verifier URL ("userinfo_endpoint") and check that subjects match
    * Validate components of the Access Token (like [aud (audience)](https://auth0.com/docs/secure/tokens/json-web-tokens/json-web-token-claims>))
    
-4. The user's roles can also be from any of the standard GeoServer providers (i.e. User Group Service, Role Service, or Request Header).
+4. The user's roles can also come from the GeoNetwork Database (managed by the administrator in the GeoNetwork GUI).
 5. You can also extract roles from the JWT Access Token (via a JSON path).
 
 ### JWT Headers configuration
@@ -980,22 +980,22 @@ In this JSON set of claims (mirrored in the JWT claims of the Access Token), and
 #### Role Conversion
 
 
-The JWT Headers module also allows for converting roles (from the external IDP) to the GeoServer internal role names.
+The JWT Headers module also allows for converting roles (from the external IDP) to the GeoNetwork internal role names.
 
 
-| Environment Variable | Meaning |
-| ------------- | ------- |
-|JWTHEADERS_RoleConverterString| Role Converter Map from External Roles to Geoserver Roles. <br> This is a ";" delimited map in the form of: <br> `ExternalRole1=GeoServerRole1;ExternalRole2=GeoServerRole2`|
-|JWTHEADERS_OnlyExternalListedRoles | Only allow External Roles that are explicitly named above. <br>If true, external roles that are not mentioned in the conversion map will be ignored.  If false, those external roles will be turned into GeoServer roles of the same name.|
+| Environment Variable | Meaning                                                                                                                                                                                                                                                                                                                                                                          |
+| ------------- |----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|JWTHEADERS_RoleConverterString| Role Converter Map from External Roles to GeoNetwork Roles. <br> This is a ";" delimited map in the form of: <br> `ExternalRole1=GeoNetworkRole1;ExternalRole2=GeoNetworkRole2`                                                                                                                                                                                                  |
+|JWTHEADERS_OnlyExternalListedRoles | Only allow External Roles that are explicitly named above. <br>If true, external roles that are not mentioned in the conversion map will be ignored.  If false, those external roles will be turned into GeoNetwork roles of the same name. <br>These roles should either be a Profile ("Administrator", "Reviewer", etc..) or group-based permissions ("GroupName:ProfileName") |
  
 
-For example, a conversion map like `GeonetworkAdministrator=ADMINISTRATOR` will convert our IDP "GeonetworkAdministrator" to the "ADMINISTRATOR" Profile..
+For example, a conversion map like `GeonetworkAdministrator=ADMINISTRATOR` will convert our IDP "GeonetworkAdministrator" to the "ADMINISTRATOR" Profile...
 
-In our example, the user has two roles "GeoserverAdministrator" and "GeonetworkAdministrator".  If the "Only allow External Roles that are explicitly named above" is true, then GeoServer will only see the "ADMINISTRATOR" role.  If true, it will see "ADMINISTRATOR" and "GeoserverAdministrator".  In neither case will it see the converted "GeonetworkAdministrator" roles.
+In our example, the user has two roles "GeoserverAdministrator" and "GeonetworkAdministrator".  If the "Only allow External Roles that are explicitly named above" is true, then GeoNetwork will only see the "ADMINISTRATOR" role.  If true, it will see "ADMINISTRATOR" and "GeoserverAdministrator".  In neither case will it see the converted "GeonetworkAdministrator" roles.
 
 ##### Groups
 
-As equivelent with the OIDC and Keycloak providers, specify group permissions in the `<groupName>:<Profile>` format.
+As equivalent with the OIDC and Keycloak providers, specify group permissions in the `<groupName>:<Profile>` format.
 
 
 ### JWT Validation
@@ -1003,7 +1003,7 @@ As equivelent with the OIDC and Keycloak providers, specify group permissions in
 
 If you are using Apache's `mod_auth_openidc` module, then you do *not* have to do JWT validation - Apache will ensure they are valid when it attaches the headers to the request.
 
-However, if you are using robot access to GeoServer, you can attach an Access Token to the request header for access.
+However, if you are using robot access to GeoNetwork, you can attach an Access Token to the request header for access.
 
 ```    
 Authentication: Bearer `base64 JWT Access Token`
