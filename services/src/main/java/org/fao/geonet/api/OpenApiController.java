@@ -95,7 +95,7 @@ public class OpenApiController extends AbstractOpenApiResource {
                              Optional<ActuatorProvider> servletContextProvider,
                              Optional<SecurityOAuth2Provider> springSecurityOAuth2Provider) {
         super(DEFAULT_GROUP_NAME, openAPIBuilderObjectFactory, requestBuilder, responseBuilder, operationParser, springDocConfigProperties, springDocProviders, springDocCustomizers);
-        springDocConfigProperties.setPathsToExclude(List.of("/0.1/**"));
+        springDocConfigProperties.setPathsToExclude(Arrays.asList("/0.1/**"));
         springDocConfigProperties.setPackagesToScan(Arrays.asList("org.fao.geonet.api",
                 "org.fao.geonet.services.inspireatom",
                 "org.fao.geonet.monitor.service"));
