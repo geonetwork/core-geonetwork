@@ -83,7 +83,10 @@
           sortBy: "dateStamp",
           sortOrder: "desc",
           isTemplate: ["y", "n"],
-          draft: gnGlobalSettings.gnCfg.mods.editor.workflowSearchRecordTypes || ["n", "e"],
+          draft: gnGlobalSettings.gnCfg.mods.editor.workflowSearchRecordTypes || [
+            "n",
+            "e"
+          ],
           resultType: $scope.facetsSummaryType,
           from: 1,
           to: 20
@@ -92,7 +95,10 @@
           sortBy: "dateStamp",
           sortOrder: "desc",
           isTemplate: ["y", "n"],
-          draft: gnGlobalSettings.gnCfg.mods.editor.workflowSearchRecordTypes || ["n", "e"],
+          draft: gnGlobalSettings.gnCfg.mods.editor.workflowSearchRecordTypes || [
+            "n",
+            "e"
+          ],
           resultType: $scope.facetsSummaryType,
           from: 1,
           to: 20
