@@ -42,7 +42,6 @@ var gnHarvesteroaipmh = {
                 {"@name": "dynamic"}
               ]
             }],
-            "groupsCopyPolicy": [],
             "info":   {
               "lastRun": [],
               "running": false
