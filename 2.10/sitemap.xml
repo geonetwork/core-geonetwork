@@ -1,567 +1,567 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
     <url>
-        <loc>http://jodygarnett.github.io/core-geonetwork/2.10/</loc>
-        <lastmod>2023-10-10</lastmod>
+        <loc>https://docs.geonetwork-opensource.org/2.10/</loc>
+        <lastmod>2024-03-27</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="http://jodygarnett.github.io/core-geonetwork/2.10/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/2.10/"/>
     </url>
     <url>
-        <loc>http://jodygarnett.github.io/core-geonetwork/2.10/developer/</loc>
-        <lastmod>2023-10-10</lastmod>
+        <loc>https://docs.geonetwork-opensource.org/2.10/developer/</loc>
+        <lastmod>2024-03-27</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="http://jodygarnett.github.io/core-geonetwork/2.10/developer/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/2.10/developer/"/>
     </url>
     <url>
-        <loc>http://jodygarnett.github.io/core-geonetwork/2.10/developer/development/</loc>
-        <lastmod>2023-10-10</lastmod>
+        <loc>https://docs.geonetwork-opensource.org/2.10/developer/development/</loc>
+        <lastmod>2024-03-27</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="http://jodygarnett.github.io/core-geonetwork/2.10/developer/development/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/2.10/developer/development/"/>
     </url>
     <url>
-        <loc>http://jodygarnett.github.io/core-geonetwork/2.10/developer/harvesting/</loc>
-        <lastmod>2023-10-10</lastmod>
+        <loc>https://docs.geonetwork-opensource.org/2.10/developer/harvesting/</loc>
+        <lastmod>2024-03-27</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="http://jodygarnett.github.io/core-geonetwork/2.10/developer/harvesting/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/2.10/developer/harvesting/"/>
     </url>
     <url>
-        <loc>http://jodygarnett.github.io/core-geonetwork/2.10/developer/mef/</loc>
-        <lastmod>2023-10-10</lastmod>
+        <loc>https://docs.geonetwork-opensource.org/2.10/developer/mef/</loc>
+        <lastmod>2024-03-27</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="http://jodygarnett.github.io/core-geonetwork/2.10/developer/mef/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/2.10/developer/mef/"/>
     </url>
     <url>
-        <loc>http://jodygarnett.github.io/core-geonetwork/2.10/developer/release/</loc>
-        <lastmod>2023-10-10</lastmod>
+        <loc>https://docs.geonetwork-opensource.org/2.10/developer/release/</loc>
+        <lastmod>2024-03-27</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="http://jodygarnett.github.io/core-geonetwork/2.10/developer/release/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/2.10/developer/release/"/>
     </url>
     <url>
-        <loc>http://jodygarnett.github.io/core-geonetwork/2.10/developer/schemaPlugins/</loc>
-        <lastmod>2023-10-10</lastmod>
+        <loc>https://docs.geonetwork-opensource.org/2.10/developer/schemaPlugins/</loc>
+        <lastmod>2024-03-27</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="http://jodygarnett.github.io/core-geonetwork/2.10/developer/schemaPlugins/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/2.10/developer/schemaPlugins/"/>
     </url>
     <url>
-        <loc>http://jodygarnett.github.io/core-geonetwork/2.10/developer/settings/</loc>
-        <lastmod>2023-10-10</lastmod>
+        <loc>https://docs.geonetwork-opensource.org/2.10/developer/settings/</loc>
+        <lastmod>2024-03-27</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="http://jodygarnett.github.io/core-geonetwork/2.10/developer/settings/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/2.10/developer/settings/"/>
     </url>
     <url>
-        <loc>http://jodygarnett.github.io/core-geonetwork/2.10/developer/userinterface/</loc>
-        <lastmod>2023-10-10</lastmod>
+        <loc>https://docs.geonetwork-opensource.org/2.10/developer/userinterface/</loc>
+        <lastmod>2024-03-27</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="http://jodygarnett.github.io/core-geonetwork/2.10/developer/userinterface/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/2.10/developer/userinterface/"/>
     </url>
     <url>
-        <loc>http://jodygarnett.github.io/core-geonetwork/2.10/developer/userinterface/html5ui/</loc>
-        <lastmod>2023-10-10</lastmod>
+        <loc>https://docs.geonetwork-opensource.org/2.10/developer/userinterface/html5ui/</loc>
+        <lastmod>2024-03-27</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="http://jodygarnett.github.io/core-geonetwork/2.10/developer/userinterface/html5ui/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/2.10/developer/userinterface/html5ui/"/>
     </url>
     <url>
-        <loc>http://jodygarnett.github.io/core-geonetwork/2.10/developer/userinterface/widgets/</loc>
-        <lastmod>2023-10-10</lastmod>
+        <loc>https://docs.geonetwork-opensource.org/2.10/developer/userinterface/widgets/</loc>
+        <lastmod>2024-03-27</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="http://jodygarnett.github.io/core-geonetwork/2.10/developer/userinterface/widgets/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/2.10/developer/userinterface/widgets/"/>
     </url>
     <url>
-        <loc>http://jodygarnett.github.io/core-geonetwork/2.10/developer/xml_services/</loc>
-        <lastmod>2023-10-10</lastmod>
+        <loc>https://docs.geonetwork-opensource.org/2.10/developer/xml_services/</loc>
+        <lastmod>2024-03-27</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="http://jodygarnett.github.io/core-geonetwork/2.10/developer/xml_services/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/2.10/developer/xml_services/"/>
     </url>
     <url>
-        <loc>http://jodygarnett.github.io/core-geonetwork/2.10/developer/xml_services/category_xml_services/</loc>
-        <lastmod>2023-10-10</lastmod>
+        <loc>https://docs.geonetwork-opensource.org/2.10/developer/xml_services/category_xml_services/</loc>
+        <lastmod>2024-03-27</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="http://jodygarnett.github.io/core-geonetwork/2.10/developer/xml_services/category_xml_services/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/2.10/developer/xml_services/category_xml_services/"/>
     </url>
     <url>
-        <loc>http://jodygarnett.github.io/core-geonetwork/2.10/developer/xml_services/csw_services/</loc>
-        <lastmod>2023-10-10</lastmod>
+        <loc>https://docs.geonetwork-opensource.org/2.10/developer/xml_services/csw_services/</loc>
+        <lastmod>2024-03-27</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="http://jodygarnett.github.io/core-geonetwork/2.10/developer/xml_services/csw_services/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/2.10/developer/xml_services/csw_services/"/>
     </url>
     <url>
-        <loc>http://jodygarnett.github.io/core-geonetwork/2.10/developer/xml_services/group_xml_services/</loc>
-        <lastmod>2023-10-10</lastmod>
+        <loc>https://docs.geonetwork-opensource.org/2.10/developer/xml_services/group_xml_services/</loc>
+        <lastmod>2024-03-27</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="http://jodygarnett.github.io/core-geonetwork/2.10/developer/xml_services/group_xml_services/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/2.10/developer/xml_services/group_xml_services/"/>
     </url>
     <url>
-        <loc>http://jodygarnett.github.io/core-geonetwork/2.10/developer/xml_services/java_xml_services/</loc>
-        <lastmod>2023-10-10</lastmod>
+        <loc>https://docs.geonetwork-opensource.org/2.10/developer/xml_services/java_xml_services/</loc>
+        <lastmod>2024-03-27</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="http://jodygarnett.github.io/core-geonetwork/2.10/developer/xml_services/java_xml_services/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/2.10/developer/xml_services/java_xml_services/"/>
     </url>
     <url>
-        <loc>http://jodygarnett.github.io/core-geonetwork/2.10/developer/xml_services/login_xml_services/</loc>
-        <lastmod>2023-10-10</lastmod>
+        <loc>https://docs.geonetwork-opensource.org/2.10/developer/xml_services/login_xml_services/</loc>
+        <lastmod>2024-03-27</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="http://jodygarnett.github.io/core-geonetwork/2.10/developer/xml_services/login_xml_services/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/2.10/developer/xml_services/login_xml_services/"/>
     </url>
     <url>
-        <loc>http://jodygarnett.github.io/core-geonetwork/2.10/developer/xml_services/metadata_xml_categories/</loc>
-        <lastmod>2023-10-10</lastmod>
+        <loc>https://docs.geonetwork-opensource.org/2.10/developer/xml_services/metadata_xml_categories/</loc>
+        <lastmod>2024-03-27</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="http://jodygarnett.github.io/core-geonetwork/2.10/developer/xml_services/metadata_xml_categories/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/2.10/developer/xml_services/metadata_xml_categories/"/>
     </url>
     <url>
-        <loc>http://jodygarnett.github.io/core-geonetwork/2.10/developer/xml_services/metadata_xml_insert_update_delete/</loc>
-        <lastmod>2023-10-10</lastmod>
+        <loc>https://docs.geonetwork-opensource.org/2.10/developer/xml_services/metadata_xml_insert_update_delete/</loc>
+        <lastmod>2024-03-27</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="http://jodygarnett.github.io/core-geonetwork/2.10/developer/xml_services/metadata_xml_insert_update_delete/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/2.10/developer/xml_services/metadata_xml_insert_update_delete/"/>
     </url>
     <url>
-        <loc>http://jodygarnett.github.io/core-geonetwork/2.10/developer/xml_services/metadata_xml_ownership/</loc>
-        <lastmod>2023-10-10</lastmod>
+        <loc>https://docs.geonetwork-opensource.org/2.10/developer/xml_services/metadata_xml_ownership/</loc>
+        <lastmod>2024-03-27</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="http://jodygarnett.github.io/core-geonetwork/2.10/developer/xml_services/metadata_xml_ownership/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/2.10/developer/xml_services/metadata_xml_ownership/"/>
     </url>
     <url>
-        <loc>http://jodygarnett.github.io/core-geonetwork/2.10/developer/xml_services/metadata_xml_privileges/</loc>
-        <lastmod>2023-10-10</lastmod>
+        <loc>https://docs.geonetwork-opensource.org/2.10/developer/xml_services/metadata_xml_privileges/</loc>
+        <lastmod>2024-03-27</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="http://jodygarnett.github.io/core-geonetwork/2.10/developer/xml_services/metadata_xml_privileges/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/2.10/developer/xml_services/metadata_xml_privileges/"/>
     </url>
     <url>
-        <loc>http://jodygarnett.github.io/core-geonetwork/2.10/developer/xml_services/metadata_xml_processing/</loc>
-        <lastmod>2023-10-10</lastmod>
+        <loc>https://docs.geonetwork-opensource.org/2.10/developer/xml_services/metadata_xml_processing/</loc>
+        <lastmod>2024-03-27</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="http://jodygarnett.github.io/core-geonetwork/2.10/developer/xml_services/metadata_xml_processing/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/2.10/developer/xml_services/metadata_xml_processing/"/>
     </url>
     <url>
-        <loc>http://jodygarnett.github.io/core-geonetwork/2.10/developer/xml_services/metadata_xml_relations/</loc>
-        <lastmod>2023-10-10</lastmod>
+        <loc>https://docs.geonetwork-opensource.org/2.10/developer/xml_services/metadata_xml_relations/</loc>
+        <lastmod>2024-03-27</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="http://jodygarnett.github.io/core-geonetwork/2.10/developer/xml_services/metadata_xml_relations/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/2.10/developer/xml_services/metadata_xml_relations/"/>
     </url>
     <url>
-        <loc>http://jodygarnett.github.io/core-geonetwork/2.10/developer/xml_services/metadata_xml_search_retrieve/</loc>
-        <lastmod>2023-10-10</lastmod>
+        <loc>https://docs.geonetwork-opensource.org/2.10/developer/xml_services/metadata_xml_search_retrieve/</loc>
+        <lastmod>2024-03-27</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="http://jodygarnett.github.io/core-geonetwork/2.10/developer/xml_services/metadata_xml_search_retrieve/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/2.10/developer/xml_services/metadata_xml_search_retrieve/"/>
     </url>
     <url>
-        <loc>http://jodygarnett.github.io/core-geonetwork/2.10/developer/xml_services/metadata_xml_select/</loc>
-        <lastmod>2023-10-10</lastmod>
+        <loc>https://docs.geonetwork-opensource.org/2.10/developer/xml_services/metadata_xml_select/</loc>
+        <lastmod>2024-03-27</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="http://jodygarnett.github.io/core-geonetwork/2.10/developer/xml_services/metadata_xml_select/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/2.10/developer/xml_services/metadata_xml_select/"/>
     </url>
     <url>
-        <loc>http://jodygarnett.github.io/core-geonetwork/2.10/developer/xml_services/metadata_xml_status/</loc>
-        <lastmod>2023-10-10</lastmod>
+        <loc>https://docs.geonetwork-opensource.org/2.10/developer/xml_services/metadata_xml_status/</loc>
+        <lastmod>2024-03-27</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="http://jodygarnett.github.io/core-geonetwork/2.10/developer/xml_services/metadata_xml_status/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/2.10/developer/xml_services/metadata_xml_status/"/>
     </url>
     <url>
-        <loc>http://jodygarnett.github.io/core-geonetwork/2.10/developer/xml_services/metadata_xml_validation/</loc>
-        <lastmod>2023-10-10</lastmod>
+        <loc>https://docs.geonetwork-opensource.org/2.10/developer/xml_services/metadata_xml_validation/</loc>
+        <lastmod>2024-03-27</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="http://jodygarnett.github.io/core-geonetwork/2.10/developer/xml_services/metadata_xml_validation/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/2.10/developer/xml_services/metadata_xml_validation/"/>
     </url>
     <url>
-        <loc>http://jodygarnett.github.io/core-geonetwork/2.10/developer/xml_services/metadata_xml_versioning/</loc>
-        <lastmod>2023-10-10</lastmod>
+        <loc>https://docs.geonetwork-opensource.org/2.10/developer/xml_services/metadata_xml_versioning/</loc>
+        <lastmod>2024-03-27</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="http://jodygarnett.github.io/core-geonetwork/2.10/developer/xml_services/metadata_xml_versioning/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/2.10/developer/xml_services/metadata_xml_versioning/"/>
     </url>
     <url>
-        <loc>http://jodygarnett.github.io/core-geonetwork/2.10/developer/xml_services/schema_services/</loc>
-        <lastmod>2023-10-10</lastmod>
+        <loc>https://docs.geonetwork-opensource.org/2.10/developer/xml_services/schema_services/</loc>
+        <lastmod>2024-03-27</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="http://jodygarnett.github.io/core-geonetwork/2.10/developer/xml_services/schema_services/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/2.10/developer/xml_services/schema_services/"/>
     </url>
     <url>
-        <loc>http://jodygarnett.github.io/core-geonetwork/2.10/developer/xml_services/services_calling/</loc>
-        <lastmod>2023-10-10</lastmod>
+        <loc>https://docs.geonetwork-opensource.org/2.10/developer/xml_services/services_calling/</loc>
+        <lastmod>2024-03-27</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="http://jodygarnett.github.io/core-geonetwork/2.10/developer/xml_services/services_calling/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/2.10/developer/xml_services/services_calling/"/>
     </url>
     <url>
-        <loc>http://jodygarnett.github.io/core-geonetwork/2.10/developer/xml_services/services_download/</loc>
-        <lastmod>2023-10-10</lastmod>
+        <loc>https://docs.geonetwork-opensource.org/2.10/developer/xml_services/services_download/</loc>
+        <lastmod>2024-03-27</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="http://jodygarnett.github.io/core-geonetwork/2.10/developer/xml_services/services_download/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/2.10/developer/xml_services/services_download/"/>
     </url>
     <url>
-        <loc>http://jodygarnett.github.io/core-geonetwork/2.10/developer/xml_services/services_harvesting/</loc>
-        <lastmod>2023-10-10</lastmod>
+        <loc>https://docs.geonetwork-opensource.org/2.10/developer/xml_services/services_harvesting/</loc>
+        <lastmod>2024-03-27</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="http://jodygarnett.github.io/core-geonetwork/2.10/developer/xml_services/services_harvesting/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/2.10/developer/xml_services/services_harvesting/"/>
     </url>
     <url>
-        <loc>http://jodygarnett.github.io/core-geonetwork/2.10/developer/xml_services/services_mef/</loc>
-        <lastmod>2023-10-10</lastmod>
+        <loc>https://docs.geonetwork-opensource.org/2.10/developer/xml_services/services_mef/</loc>
+        <lastmod>2024-03-27</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="http://jodygarnett.github.io/core-geonetwork/2.10/developer/xml_services/services_mef/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/2.10/developer/xml_services/services_mef/"/>
     </url>
     <url>
-        <loc>http://jodygarnett.github.io/core-geonetwork/2.10/developer/xml_services/services_site_info_forwarding/</loc>
-        <lastmod>2023-10-10</lastmod>
+        <loc>https://docs.geonetwork-opensource.org/2.10/developer/xml_services/services_site_info_forwarding/</loc>
+        <lastmod>2024-03-27</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="http://jodygarnett.github.io/core-geonetwork/2.10/developer/xml_services/services_site_info_forwarding/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/2.10/developer/xml_services/services_site_info_forwarding/"/>
     </url>
     <url>
-        <loc>http://jodygarnett.github.io/core-geonetwork/2.10/developer/xml_services/system_configuration/</loc>
-        <lastmod>2023-10-10</lastmod>
+        <loc>https://docs.geonetwork-opensource.org/2.10/developer/xml_services/system_configuration/</loc>
+        <lastmod>2024-03-27</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="http://jodygarnett.github.io/core-geonetwork/2.10/developer/xml_services/system_configuration/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/2.10/developer/xml_services/system_configuration/"/>
     </url>
     <url>
-        <loc>http://jodygarnett.github.io/core-geonetwork/2.10/developer/xml_services/user_xml_services/</loc>
-        <lastmod>2023-10-10</lastmod>
+        <loc>https://docs.geonetwork-opensource.org/2.10/developer/xml_services/user_xml_services/</loc>
+        <lastmod>2024-03-27</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="http://jodygarnett.github.io/core-geonetwork/2.10/developer/xml_services/user_xml_services/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/2.10/developer/xml_services/user_xml_services/"/>
     </url>
     <url>
-        <loc>http://jodygarnett.github.io/core-geonetwork/2.10/users/</loc>
-        <lastmod>2023-10-10</lastmod>
+        <loc>https://docs.geonetwork-opensource.org/2.10/users/</loc>
+        <lastmod>2024-03-27</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="http://jodygarnett.github.io/core-geonetwork/2.10/users/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/2.10/users/"/>
     </url>
     <url>
-        <loc>http://jodygarnett.github.io/core-geonetwork/2.10/users/faq/</loc>
-        <lastmod>2023-10-10</lastmod>
+        <loc>https://docs.geonetwork-opensource.org/2.10/users/faq/</loc>
+        <lastmod>2024-03-27</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="http://jodygarnett.github.io/core-geonetwork/2.10/users/faq/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/2.10/users/faq/"/>
     </url>
     <url>
-        <loc>http://jodygarnett.github.io/core-geonetwork/2.10/users/glossary/</loc>
-        <lastmod>2023-10-10</lastmod>
+        <loc>https://docs.geonetwork-opensource.org/2.10/users/glossary/</loc>
+        <lastmod>2024-03-27</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="http://jodygarnett.github.io/core-geonetwork/2.10/users/glossary/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/2.10/users/glossary/"/>
     </url>
     <url>
-        <loc>http://jodygarnett.github.io/core-geonetwork/2.10/users/preface/</loc>
-        <lastmod>2023-10-10</lastmod>
+        <loc>https://docs.geonetwork-opensource.org/2.10/users/preface/</loc>
+        <lastmod>2024-03-27</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="http://jodygarnett.github.io/core-geonetwork/2.10/users/preface/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/2.10/users/preface/"/>
     </url>
     <url>
-        <loc>http://jodygarnett.github.io/core-geonetwork/2.10/users/admin/</loc>
-        <lastmod>2023-10-10</lastmod>
+        <loc>https://docs.geonetwork-opensource.org/2.10/users/admin/</loc>
+        <lastmod>2024-03-27</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="http://jodygarnett.github.io/core-geonetwork/2.10/users/admin/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/2.10/users/admin/"/>
     </url>
     <url>
-        <loc>http://jodygarnett.github.io/core-geonetwork/2.10/users/admin/advanced-configuration/</loc>
-        <lastmod>2023-10-10</lastmod>
+        <loc>https://docs.geonetwork-opensource.org/2.10/users/admin/advanced-configuration/</loc>
+        <lastmod>2024-03-27</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="http://jodygarnett.github.io/core-geonetwork/2.10/users/admin/advanced-configuration/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/2.10/users/admin/advanced-configuration/"/>
     </url>
     <url>
-        <loc>http://jodygarnett.github.io/core-geonetwork/2.10/users/admin/authentication/</loc>
-        <lastmod>2023-10-10</lastmod>
+        <loc>https://docs.geonetwork-opensource.org/2.10/users/admin/authentication/</loc>
+        <lastmod>2024-03-27</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="http://jodygarnett.github.io/core-geonetwork/2.10/users/admin/authentication/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/2.10/users/admin/authentication/"/>
     </url>
     <url>
-        <loc>http://jodygarnett.github.io/core-geonetwork/2.10/users/admin/configuration/</loc>
-        <lastmod>2023-10-10</lastmod>
+        <loc>https://docs.geonetwork-opensource.org/2.10/users/admin/configuration/</loc>
+        <lastmod>2024-03-27</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="http://jodygarnett.github.io/core-geonetwork/2.10/users/admin/configuration/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/2.10/users/admin/configuration/"/>
     </url>
     <url>
-        <loc>http://jodygarnett.github.io/core-geonetwork/2.10/users/admin/csw-configuration/</loc>
-        <lastmod>2023-10-10</lastmod>
+        <loc>https://docs.geonetwork-opensource.org/2.10/users/admin/csw-configuration/</loc>
+        <lastmod>2024-03-27</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="http://jodygarnett.github.io/core-geonetwork/2.10/users/admin/csw-configuration/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/2.10/users/admin/csw-configuration/"/>
     </url>
     <url>
-        <loc>http://jodygarnett.github.io/core-geonetwork/2.10/users/admin/localization/</loc>
-        <lastmod>2023-10-10</lastmod>
+        <loc>https://docs.geonetwork-opensource.org/2.10/users/admin/localization/</loc>
+        <lastmod>2024-03-27</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="http://jodygarnett.github.io/core-geonetwork/2.10/users/admin/localization/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/2.10/users/admin/localization/"/>
     </url>
     <url>
-        <loc>http://jodygarnett.github.io/core-geonetwork/2.10/users/admin/monitoring/</loc>
-        <lastmod>2023-10-10</lastmod>
+        <loc>https://docs.geonetwork-opensource.org/2.10/users/admin/monitoring/</loc>
+        <lastmod>2024-03-27</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="http://jodygarnett.github.io/core-geonetwork/2.10/users/admin/monitoring/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/2.10/users/admin/monitoring/"/>
     </url>
     <url>
-        <loc>http://jodygarnett.github.io/core-geonetwork/2.10/users/admin/usersandgroups/</loc>
-        <lastmod>2023-10-10</lastmod>
+        <loc>https://docs.geonetwork-opensource.org/2.10/users/admin/usersandgroups/</loc>
+        <lastmod>2024-03-27</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="http://jodygarnett.github.io/core-geonetwork/2.10/users/admin/usersandgroups/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/2.10/users/admin/usersandgroups/"/>
     </url>
     <url>
-        <loc>http://jodygarnett.github.io/core-geonetwork/2.10/users/appendix/foss4g/</loc>
-        <lastmod>2023-10-10</lastmod>
+        <loc>https://docs.geonetwork-opensource.org/2.10/users/appendix/foss4g/</loc>
+        <lastmod>2024-03-27</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="http://jodygarnett.github.io/core-geonetwork/2.10/users/appendix/foss4g/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/2.10/users/appendix/foss4g/"/>
     </url>
     <url>
-        <loc>http://jodygarnett.github.io/core-geonetwork/2.10/users/appendix/glossary_of_metadata/</loc>
-        <lastmod>2023-10-10</lastmod>
+        <loc>https://docs.geonetwork-opensource.org/2.10/users/appendix/glossary_of_metadata/</loc>
+        <lastmod>2024-03-27</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="http://jodygarnett.github.io/core-geonetwork/2.10/users/appendix/glossary_of_metadata/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/2.10/users/appendix/glossary_of_metadata/"/>
     </url>
     <url>
-        <loc>http://jodygarnett.github.io/core-geonetwork/2.10/users/appendix/iso_topic_categories/</loc>
-        <lastmod>2023-10-10</lastmod>
+        <loc>https://docs.geonetwork-opensource.org/2.10/users/appendix/iso_topic_categories/</loc>
+        <lastmod>2024-03-27</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="http://jodygarnett.github.io/core-geonetwork/2.10/users/appendix/iso_topic_categories/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/2.10/users/appendix/iso_topic_categories/"/>
     </url>
     <url>
-        <loc>http://jodygarnett.github.io/core-geonetwork/2.10/users/features/</loc>
-        <lastmod>2023-10-10</lastmod>
+        <loc>https://docs.geonetwork-opensource.org/2.10/users/features/</loc>
+        <lastmod>2024-03-27</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="http://jodygarnett.github.io/core-geonetwork/2.10/users/features/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/2.10/users/features/"/>
     </url>
     <url>
-        <loc>http://jodygarnett.github.io/core-geonetwork/2.10/users/features/multilingual/</loc>
-        <lastmod>2023-10-10</lastmod>
+        <loc>https://docs.geonetwork-opensource.org/2.10/users/features/multilingual/</loc>
+        <lastmod>2024-03-27</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="http://jodygarnett.github.io/core-geonetwork/2.10/users/features/multilingual/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/2.10/users/features/multilingual/"/>
     </url>
     <url>
-        <loc>http://jodygarnett.github.io/core-geonetwork/2.10/users/features/search_statistics/</loc>
-        <lastmod>2023-10-10</lastmod>
+        <loc>https://docs.geonetwork-opensource.org/2.10/users/features/search_statistics/</loc>
+        <lastmod>2024-03-27</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="http://jodygarnett.github.io/core-geonetwork/2.10/users/features/search_statistics/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/2.10/users/features/search_statistics/"/>
     </url>
     <url>
-        <loc>http://jodygarnett.github.io/core-geonetwork/2.10/users/features/thesaurus/</loc>
-        <lastmod>2023-10-10</lastmod>
+        <loc>https://docs.geonetwork-opensource.org/2.10/users/features/thesaurus/</loc>
+        <lastmod>2024-03-27</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="http://jodygarnett.github.io/core-geonetwork/2.10/users/features/thesaurus/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/2.10/users/features/thesaurus/"/>
     </url>
     <url>
-        <loc>http://jodygarnett.github.io/core-geonetwork/2.10/users/features/user-self-registration/</loc>
-        <lastmod>2023-10-10</lastmod>
+        <loc>https://docs.geonetwork-opensource.org/2.10/users/features/user-self-registration/</loc>
+        <lastmod>2024-03-27</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="http://jodygarnett.github.io/core-geonetwork/2.10/users/features/user-self-registration/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/2.10/users/features/user-self-registration/"/>
     </url>
     <url>
-        <loc>http://jodygarnett.github.io/core-geonetwork/2.10/users/managing_metadata/</loc>
-        <lastmod>2023-10-10</lastmod>
+        <loc>https://docs.geonetwork-opensource.org/2.10/users/managing_metadata/</loc>
+        <lastmod>2024-03-27</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="http://jodygarnett.github.io/core-geonetwork/2.10/users/managing_metadata/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/2.10/users/managing_metadata/"/>
     </url>
     <url>
-        <loc>http://jodygarnett.github.io/core-geonetwork/2.10/users/managing_metadata/export/</loc>
-        <lastmod>2023-10-10</lastmod>
+        <loc>https://docs.geonetwork-opensource.org/2.10/users/managing_metadata/export/</loc>
+        <lastmod>2024-03-27</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="http://jodygarnett.github.io/core-geonetwork/2.10/users/managing_metadata/export/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/2.10/users/managing_metadata/export/"/>
     </url>
     <url>
-        <loc>http://jodygarnett.github.io/core-geonetwork/2.10/users/managing_metadata/formatter/</loc>
-        <lastmod>2023-10-10</lastmod>
+        <loc>https://docs.geonetwork-opensource.org/2.10/users/managing_metadata/formatter/</loc>
+        <lastmod>2024-03-27</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="http://jodygarnett.github.io/core-geonetwork/2.10/users/managing_metadata/formatter/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/2.10/users/managing_metadata/formatter/"/>
     </url>
     <url>
-        <loc>http://jodygarnett.github.io/core-geonetwork/2.10/users/managing_metadata/fragments/</loc>
-        <lastmod>2023-10-10</lastmod>
+        <loc>https://docs.geonetwork-opensource.org/2.10/users/managing_metadata/fragments/</loc>
+        <lastmod>2024-03-27</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="http://jodygarnett.github.io/core-geonetwork/2.10/users/managing_metadata/fragments/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/2.10/users/managing_metadata/fragments/"/>
     </url>
     <url>
-        <loc>http://jodygarnett.github.io/core-geonetwork/2.10/users/managing_metadata/harvesting/</loc>
-        <lastmod>2023-10-10</lastmod>
+        <loc>https://docs.geonetwork-opensource.org/2.10/users/managing_metadata/harvesting/</loc>
+        <lastmod>2024-03-27</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="http://jodygarnett.github.io/core-geonetwork/2.10/users/managing_metadata/harvesting/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/2.10/users/managing_metadata/harvesting/"/>
     </url>
     <url>
-        <loc>http://jodygarnett.github.io/core-geonetwork/2.10/users/managing_metadata/harvesting/common_categories/</loc>
-        <lastmod>2023-10-10</lastmod>
+        <loc>https://docs.geonetwork-opensource.org/2.10/users/managing_metadata/harvesting/common_categories/</loc>
+        <lastmod>2024-03-27</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="http://jodygarnett.github.io/core-geonetwork/2.10/users/managing_metadata/harvesting/common_categories/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/2.10/users/managing_metadata/harvesting/common_categories/"/>
     </url>
     <url>
-        <loc>http://jodygarnett.github.io/core-geonetwork/2.10/users/managing_metadata/harvesting/common_notes/</loc>
-        <lastmod>2023-10-10</lastmod>
+        <loc>https://docs.geonetwork-opensource.org/2.10/users/managing_metadata/harvesting/common_notes/</loc>
+        <lastmod>2024-03-27</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="http://jodygarnett.github.io/core-geonetwork/2.10/users/managing_metadata/harvesting/common_notes/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/2.10/users/managing_metadata/harvesting/common_notes/"/>
     </url>
     <url>
-        <loc>http://jodygarnett.github.io/core-geonetwork/2.10/users/managing_metadata/harvesting/common_options/</loc>
-        <lastmod>2023-10-10</lastmod>
+        <loc>https://docs.geonetwork-opensource.org/2.10/users/managing_metadata/harvesting/common_options/</loc>
+        <lastmod>2024-03-27</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="http://jodygarnett.github.io/core-geonetwork/2.10/users/managing_metadata/harvesting/common_options/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/2.10/users/managing_metadata/harvesting/common_options/"/>
     </url>
     <url>
-        <loc>http://jodygarnett.github.io/core-geonetwork/2.10/users/managing_metadata/harvesting/common_privileges/</loc>
-        <lastmod>2023-10-10</lastmod>
+        <loc>https://docs.geonetwork-opensource.org/2.10/users/managing_metadata/harvesting/common_privileges/</loc>
+        <lastmod>2024-03-27</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="http://jodygarnett.github.io/core-geonetwork/2.10/users/managing_metadata/harvesting/common_privileges/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/2.10/users/managing_metadata/harvesting/common_privileges/"/>
     </url>
     <url>
-        <loc>http://jodygarnett.github.io/core-geonetwork/2.10/users/managing_metadata/harvesting/csw/</loc>
-        <lastmod>2023-10-10</lastmod>
+        <loc>https://docs.geonetwork-opensource.org/2.10/users/managing_metadata/harvesting/csw/</loc>
+        <lastmod>2024-03-27</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="http://jodygarnett.github.io/core-geonetwork/2.10/users/managing_metadata/harvesting/csw/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/2.10/users/managing_metadata/harvesting/csw/"/>
     </url>
     <url>
-        <loc>http://jodygarnett.github.io/core-geonetwork/2.10/users/managing_metadata/harvesting/geoPREST/</loc>
-        <lastmod>2023-10-10</lastmod>
+        <loc>https://docs.geonetwork-opensource.org/2.10/users/managing_metadata/harvesting/geoPREST/</loc>
+        <lastmod>2024-03-27</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="http://jodygarnett.github.io/core-geonetwork/2.10/users/managing_metadata/harvesting/geoPREST/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/2.10/users/managing_metadata/harvesting/geoPREST/"/>
     </url>
     <url>
-        <loc>http://jodygarnett.github.io/core-geonetwork/2.10/users/managing_metadata/harvesting/gn/</loc>
-        <lastmod>2023-10-10</lastmod>
+        <loc>https://docs.geonetwork-opensource.org/2.10/users/managing_metadata/harvesting/gn/</loc>
+        <lastmod>2024-03-27</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="http://jodygarnett.github.io/core-geonetwork/2.10/users/managing_metadata/harvesting/gn/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/2.10/users/managing_metadata/harvesting/gn/"/>
     </url>
     <url>
-        <loc>http://jodygarnett.github.io/core-geonetwork/2.10/users/managing_metadata/harvesting/gn2.0/</loc>
-        <lastmod>2023-10-10</lastmod>
+        <loc>https://docs.geonetwork-opensource.org/2.10/users/managing_metadata/harvesting/gn2.0/</loc>
+        <lastmod>2024-03-27</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="http://jodygarnett.github.io/core-geonetwork/2.10/users/managing_metadata/harvesting/gn2.0/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/2.10/users/managing_metadata/harvesting/gn2.0/"/>
     </url>
     <url>
-        <loc>http://jodygarnett.github.io/core-geonetwork/2.10/users/managing_metadata/harvesting/localfilesystem/</loc>
-        <lastmod>2023-10-10</lastmod>
+        <loc>https://docs.geonetwork-opensource.org/2.10/users/managing_metadata/harvesting/localfilesystem/</loc>
+        <lastmod>2024-03-27</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="http://jodygarnett.github.io/core-geonetwork/2.10/users/managing_metadata/harvesting/localfilesystem/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/2.10/users/managing_metadata/harvesting/localfilesystem/"/>
     </url>
     <url>
-        <loc>http://jodygarnett.github.io/core-geonetwork/2.10/users/managing_metadata/harvesting/oaipmh/</loc>
-        <lastmod>2023-10-10</lastmod>
+        <loc>https://docs.geonetwork-opensource.org/2.10/users/managing_metadata/harvesting/oaipmh/</loc>
+        <lastmod>2024-03-27</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="http://jodygarnett.github.io/core-geonetwork/2.10/users/managing_metadata/harvesting/oaipmh/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/2.10/users/managing_metadata/harvesting/oaipmh/"/>
     </url>
     <url>
-        <loc>http://jodygarnett.github.io/core-geonetwork/2.10/users/managing_metadata/harvesting/ogcwxs/</loc>
-        <lastmod>2023-10-10</lastmod>
+        <loc>https://docs.geonetwork-opensource.org/2.10/users/managing_metadata/harvesting/ogcwxs/</loc>
+        <lastmod>2024-03-27</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="http://jodygarnett.github.io/core-geonetwork/2.10/users/managing_metadata/harvesting/ogcwxs/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/2.10/users/managing_metadata/harvesting/ogcwxs/"/>
     </url>
     <url>
-        <loc>http://jodygarnett.github.io/core-geonetwork/2.10/users/managing_metadata/harvesting/sde/</loc>
-        <lastmod>2023-10-10</lastmod>
+        <loc>https://docs.geonetwork-opensource.org/2.10/users/managing_metadata/harvesting/sde/</loc>
+        <lastmod>2024-03-27</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="http://jodygarnett.github.io/core-geonetwork/2.10/users/managing_metadata/harvesting/sde/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/2.10/users/managing_metadata/harvesting/sde/"/>
     </url>
     <url>
-        <loc>http://jodygarnett.github.io/core-geonetwork/2.10/users/managing_metadata/harvesting/thredds/</loc>
-        <lastmod>2023-10-10</lastmod>
+        <loc>https://docs.geonetwork-opensource.org/2.10/users/managing_metadata/harvesting/thredds/</loc>
+        <lastmod>2024-03-27</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="http://jodygarnett.github.io/core-geonetwork/2.10/users/managing_metadata/harvesting/thredds/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/2.10/users/managing_metadata/harvesting/thredds/"/>
     </url>
     <url>
-        <loc>http://jodygarnett.github.io/core-geonetwork/2.10/users/managing_metadata/harvesting/webdav/</loc>
-        <lastmod>2023-10-10</lastmod>
+        <loc>https://docs.geonetwork-opensource.org/2.10/users/managing_metadata/harvesting/webdav/</loc>
+        <lastmod>2024-03-27</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="http://jodygarnett.github.io/core-geonetwork/2.10/users/managing_metadata/harvesting/webdav/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/2.10/users/managing_metadata/harvesting/webdav/"/>
     </url>
     <url>
-        <loc>http://jodygarnett.github.io/core-geonetwork/2.10/users/managing_metadata/harvesting/wfs-getfeatures/</loc>
-        <lastmod>2023-10-10</lastmod>
+        <loc>https://docs.geonetwork-opensource.org/2.10/users/managing_metadata/harvesting/wfs-getfeatures/</loc>
+        <lastmod>2024-03-27</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="http://jodygarnett.github.io/core-geonetwork/2.10/users/managing_metadata/harvesting/wfs-getfeatures/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/2.10/users/managing_metadata/harvesting/wfs-getfeatures/"/>
     </url>
     <url>
-        <loc>http://jodygarnett.github.io/core-geonetwork/2.10/users/managing_metadata/harvesting/z3950/</loc>
-        <lastmod>2023-10-10</lastmod>
+        <loc>https://docs.geonetwork-opensource.org/2.10/users/managing_metadata/harvesting/z3950/</loc>
+        <lastmod>2024-03-27</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="http://jodygarnett.github.io/core-geonetwork/2.10/users/managing_metadata/harvesting/z3950/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/2.10/users/managing_metadata/harvesting/z3950/"/>
     </url>
     <url>
-        <loc>http://jodygarnett.github.io/core-geonetwork/2.10/users/managing_metadata/import/</loc>
-        <lastmod>2023-10-10</lastmod>
+        <loc>https://docs.geonetwork-opensource.org/2.10/users/managing_metadata/import/</loc>
+        <lastmod>2024-03-27</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="http://jodygarnett.github.io/core-geonetwork/2.10/users/managing_metadata/import/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/2.10/users/managing_metadata/import/"/>
     </url>
     <url>
-        <loc>http://jodygarnett.github.io/core-geonetwork/2.10/users/managing_metadata/massive_replace/</loc>
-        <lastmod>2023-10-10</lastmod>
+        <loc>https://docs.geonetwork-opensource.org/2.10/users/managing_metadata/massive_replace/</loc>
+        <lastmod>2024-03-27</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="http://jodygarnett.github.io/core-geonetwork/2.10/users/managing_metadata/massive_replace/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/2.10/users/managing_metadata/massive_replace/"/>
     </url>
     <url>
-        <loc>http://jodygarnett.github.io/core-geonetwork/2.10/users/managing_metadata/ownership/</loc>
-        <lastmod>2023-10-10</lastmod>
+        <loc>https://docs.geonetwork-opensource.org/2.10/users/managing_metadata/ownership/</loc>
+        <lastmod>2024-03-27</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="http://jodygarnett.github.io/core-geonetwork/2.10/users/managing_metadata/ownership/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/2.10/users/managing_metadata/ownership/"/>
     </url>
     <url>
-        <loc>http://jodygarnett.github.io/core-geonetwork/2.10/users/managing_metadata/processing/</loc>
-        <lastmod>2023-10-10</lastmod>
+        <loc>https://docs.geonetwork-opensource.org/2.10/users/managing_metadata/processing/</loc>
+        <lastmod>2024-03-27</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="http://jodygarnett.github.io/core-geonetwork/2.10/users/managing_metadata/processing/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/2.10/users/managing_metadata/processing/"/>
     </url>
     <url>
-        <loc>http://jodygarnett.github.io/core-geonetwork/2.10/users/managing_metadata/schemas/</loc>
-        <lastmod>2023-10-10</lastmod>
+        <loc>https://docs.geonetwork-opensource.org/2.10/users/managing_metadata/schemas/</loc>
+        <lastmod>2024-03-27</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="http://jodygarnett.github.io/core-geonetwork/2.10/users/managing_metadata/schemas/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/2.10/users/managing_metadata/schemas/"/>
     </url>
     <url>
-        <loc>http://jodygarnett.github.io/core-geonetwork/2.10/users/managing_metadata/status/</loc>
-        <lastmod>2023-10-10</lastmod>
+        <loc>https://docs.geonetwork-opensource.org/2.10/users/managing_metadata/status/</loc>
+        <lastmod>2024-03-27</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="http://jodygarnett.github.io/core-geonetwork/2.10/users/managing_metadata/status/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/2.10/users/managing_metadata/status/"/>
     </url>
     <url>
-        <loc>http://jodygarnett.github.io/core-geonetwork/2.10/users/managing_metadata/templates/</loc>
-        <lastmod>2023-10-10</lastmod>
+        <loc>https://docs.geonetwork-opensource.org/2.10/users/managing_metadata/templates/</loc>
+        <lastmod>2024-03-27</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="http://jodygarnett.github.io/core-geonetwork/2.10/users/managing_metadata/templates/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/2.10/users/managing_metadata/templates/"/>
     </url>
     <url>
-        <loc>http://jodygarnett.github.io/core-geonetwork/2.10/users/managing_metadata/versioning/</loc>
-        <lastmod>2023-10-10</lastmod>
+        <loc>https://docs.geonetwork-opensource.org/2.10/users/managing_metadata/versioning/</loc>
+        <lastmod>2024-03-27</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="http://jodygarnett.github.io/core-geonetwork/2.10/users/managing_metadata/versioning/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/2.10/users/managing_metadata/versioning/"/>
     </url>
     <url>
-        <loc>http://jodygarnett.github.io/core-geonetwork/2.10/users/quickstartguide/</loc>
-        <lastmod>2023-10-10</lastmod>
+        <loc>https://docs.geonetwork-opensource.org/2.10/users/quickstartguide/</loc>
+        <lastmod>2024-03-27</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="http://jodygarnett.github.io/core-geonetwork/2.10/users/quickstartguide/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/2.10/users/quickstartguide/"/>
     </url>
     <url>
-        <loc>http://jodygarnett.github.io/core-geonetwork/2.10/users/quickstartguide/geographic_management/</loc>
-        <lastmod>2023-10-10</lastmod>
+        <loc>https://docs.geonetwork-opensource.org/2.10/users/quickstartguide/geographic_management/</loc>
+        <lastmod>2024-03-27</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="http://jodygarnett.github.io/core-geonetwork/2.10/users/quickstartguide/geographic_management/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/2.10/users/quickstartguide/geographic_management/"/>
     </url>
     <url>
-        <loc>http://jodygarnett.github.io/core-geonetwork/2.10/users/quickstartguide/getting_started/</loc>
-        <lastmod>2023-10-10</lastmod>
+        <loc>https://docs.geonetwork-opensource.org/2.10/users/quickstartguide/getting_started/</loc>
+        <lastmod>2024-03-27</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="http://jodygarnett.github.io/core-geonetwork/2.10/users/quickstartguide/getting_started/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/2.10/users/quickstartguide/getting_started/"/>
     </url>
     <url>
-        <loc>http://jodygarnett.github.io/core-geonetwork/2.10/users/quickstartguide/installing/</loc>
-        <lastmod>2023-10-10</lastmod>
+        <loc>https://docs.geonetwork-opensource.org/2.10/users/quickstartguide/installing/</loc>
+        <lastmod>2024-03-27</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="http://jodygarnett.github.io/core-geonetwork/2.10/users/quickstartguide/installing/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/2.10/users/quickstartguide/installing/"/>
     </url>
     <url>
-        <loc>http://jodygarnett.github.io/core-geonetwork/2.10/users/quickstartguide/metadata_concepts/</loc>
-        <lastmod>2023-10-10</lastmod>
+        <loc>https://docs.geonetwork-opensource.org/2.10/users/quickstartguide/metadata_concepts/</loc>
+        <lastmod>2024-03-27</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="http://jodygarnett.github.io/core-geonetwork/2.10/users/quickstartguide/metadata_concepts/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/2.10/users/quickstartguide/metadata_concepts/"/>
     </url>
     <url>
-        <loc>http://jodygarnett.github.io/core-geonetwork/2.10/users/quickstartguide/new_metadata/</loc>
-        <lastmod>2023-10-10</lastmod>
+        <loc>https://docs.geonetwork-opensource.org/2.10/users/quickstartguide/new_metadata/</loc>
+        <lastmod>2024-03-27</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="http://jodygarnett.github.io/core-geonetwork/2.10/users/quickstartguide/new_metadata/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/2.10/users/quickstartguide/new_metadata/"/>
     </url>
     <url>
-        <loc>http://jodygarnett.github.io/core-geonetwork/2.10/users/quickstartguide/new_metadata/linking/</loc>
-        <lastmod>2023-10-10</lastmod>
+        <loc>https://docs.geonetwork-opensource.org/2.10/users/quickstartguide/new_metadata/linking/</loc>
+        <lastmod>2024-03-27</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="http://jodygarnett.github.io/core-geonetwork/2.10/users/quickstartguide/new_metadata/linking/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/2.10/users/quickstartguide/new_metadata/linking/"/>
     </url>
     <url>
-        <loc>http://jodygarnett.github.io/core-geonetwork/2.10/users/quickstartguide/newfeatures/</loc>
-        <lastmod>2023-10-10</lastmod>
+        <loc>https://docs.geonetwork-opensource.org/2.10/users/quickstartguide/newfeatures/</loc>
+        <lastmod>2024-03-27</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="http://jodygarnett.github.io/core-geonetwork/2.10/users/quickstartguide/newfeatures/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/2.10/users/quickstartguide/newfeatures/"/>
     </url>
     <url>
-        <loc>http://jodygarnett.github.io/core-geonetwork/2.10/users/quickstartguide/viewing/</loc>
-        <lastmod>2023-10-10</lastmod>
+        <loc>https://docs.geonetwork-opensource.org/2.10/users/quickstartguide/viewing/</loc>
+        <lastmod>2024-03-27</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="http://jodygarnett.github.io/core-geonetwork/2.10/users/quickstartguide/viewing/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.geonetwork-opensource.org/2.10/users/quickstartguide/viewing/"/>
     </url>
 </urlset>

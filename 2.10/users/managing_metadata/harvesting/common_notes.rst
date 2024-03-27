@@ -1,1 +1,0 @@
-- in order to be successfully harvested, metadata records retrieved from the remote site must match a metadata schema in the local GeoNetwork instance

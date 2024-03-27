@@ -1,1 +1,0 @@
-    - Select one or more categories from the scrolling list. The harvested metadata will be assigned to the selected categories.

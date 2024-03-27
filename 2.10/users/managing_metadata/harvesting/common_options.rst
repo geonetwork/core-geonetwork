@@ -1,3 +1,0 @@
-    - *Run at* - The time when the harvester will run.
-    - *Will run again every* - Choose an interval from the drop down list and then select the days for which this scheduling will take place.
-    - *One run only* - Checking this box will cause the harvester to run only when manually started using the ``Run`` button on the Harvesting Management page.
