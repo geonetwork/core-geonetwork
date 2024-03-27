@@ -203,6 +203,7 @@
       $scope.modelOptions = angular.copy(gnGlobalSettings.modelOptions);
       $scope.modelOptionsForm = angular.copy(gnGlobalSettings.modelOptions);
       $scope.showMosaic = gnGlobalSettings.gnCfg.mods.home.showMosaic;
+      $scope.showMetadataPanel = gnGlobalSettings.gnCfg.mods.home.showMetadataPanel;
       $scope.isFilterTagsDisplayedInSearch =
         gnGlobalSettings.gnCfg.mods.search.isFilterTagsDisplayedInSearch;
       $scope.searchMapPlacement = gnGlobalSettings.gnCfg.mods.search.searchMapPlacement;
