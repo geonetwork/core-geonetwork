@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2023 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2024 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -50,6 +50,7 @@ import org.fao.geonet.SystemInfo;
 import org.fao.geonet.api.records.attachments.FilesystemStore;
 import org.fao.geonet.api.records.attachments.FilesystemStoreResourceContainer;
 import org.fao.geonet.api.records.attachments.Store;
+import org.fao.geonet.api.records.attachments.StoreFolderConfig;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.kernel.*;
@@ -92,6 +93,7 @@ import org.geotools.api.referencing.operation.MathTransform;
 import org.owasp.esapi.errors.EncodingException;
 import org.owasp.esapi.reference.DefaultEncoder;
 import org.springframework.beans.factory.BeanCreationException;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.BeanFactoryAnnotationUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -140,7 +142,7 @@ public final class XslUtil {
         if (value instanceof HashMap) {
             @SuppressWarnings("rawtypes")
             HashMap map = (HashMap) value;
-            List<Polygon> geoms = new ArrayList<Polygon>();
+            List<Polygon> geoms = new ArrayList<>();
             for (Object entry : map.values()) {
                 addToList(geoms, entry);
             }
@@ -273,7 +275,7 @@ public final class XslUtil {
     private static final char CS_DEFAULT = ',';
     private static final char TS_WKT = ',';
     private static final char CS_WKT = ' ';
-    private static ThreadLocal<Boolean> allowScripting = new InheritableThreadLocal<Boolean>();
+    private static ThreadLocal<Boolean> allowScripting = new InheritableThreadLocal<>();
 
     /**
      * clean the src of ' and <>
@@ -1053,7 +1055,10 @@ public final class XslUtil {
             Element elemRet = new Element("EX_GeographicBoundingBox", ISO19139Namespaces.GMD);
 
             boolean forceXY = Boolean.getBoolean(System.getProperty("org.geotools.referencing.forceXY", "false"));
-            Element elemminx, elemmaxx, elemminy, elemmaxy;
+            Element elemminx;
+            Element elemmaxx;
+            Element elemminy;
+            Element elemmaxy;
             if (forceXY) {
                 elemminx = new Element("westBoundLongitude", ISO19139Namespaces.GMD)
                     .addContent(new Element("Decimal", ISO19139Namespaces.GCO).setText("" + reprojected.getMinX()));
@@ -1470,7 +1475,7 @@ public final class XslUtil {
 
 
     public static List<String> getKeywordHierarchy(String keyword, String thesaurusId, String langCode) {
-        List<String> res = new ArrayList<String>();
+        List<String> res = new ArrayList<>();
         if (StringUtils.isEmpty(thesaurusId)) {
             return res;
         }
@@ -1575,5 +1580,21 @@ public final class XslUtil {
 
     public static String escapeForJson(String value) {
         return StringEscapeUtils.escapeJson(value);
+    }
+
+    /**
+     * get the metadata data directory folder privileges strategy
+     *
+     * @return the folder privileges strategy to be used.
+     */
+    public static StoreFolderConfig.FolderPrivilegesStrategy getResourceFolderPrivilegesStrategy() {
+        try {
+            StoreFolderConfig storeFolderConfig = BeanFactoryAnnotationUtils.qualifiedBeanOfType(ApplicationContextHolder.get().getBeanFactory(), StoreFolderConfig.class, "storeFolderConfig");
+            return storeFolderConfig.getFolderPrivilegesStrategy();
+
+        } catch (NoSuchBeanDefinitionException ex) {
+            return StoreFolderConfig.FolderPrivilegesStrategy.DEFAULT;
+
+        }
     }
 }

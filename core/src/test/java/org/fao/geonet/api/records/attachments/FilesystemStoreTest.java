@@ -47,6 +47,8 @@ public class FilesystemStoreTest extends AbstractCoreIntegrationTest {
     protected IMetadataManager metadataManager;
     @Autowired
     protected SettingManager settingManager;
+    @Autowired
+    protected StoreFolderConfig storeFolderConfig;
 
     @Test
     public void getResourceDescription() throws Exception {
@@ -70,6 +72,7 @@ public class FilesystemStoreTest extends AbstractCoreIntegrationTest {
             IndexingMode.none);
 
         FilesystemStore filesystemStore = new FilesystemStore();
+        filesystemStore.storeFolderConfig = storeFolderConfig;
         filesystemStore.settingManager = this.settingManager;
 
         MetadataResource resource = filesystemStore.getResourceDescription(context, "uuid", MetadataResourceVisibility.PUBLIC, "test.jpg", true);
@@ -92,9 +95,10 @@ public class FilesystemStoreTest extends AbstractCoreIntegrationTest {
     public void testGetResourceDescriptionNonExistingUuid() throws Exception {
         ServiceContext context = createServiceContext();
         loginAsAdmin(context);
+
         FilesystemStore filesystemStore = new FilesystemStore();
         filesystemStore.settingManager = this.settingManager;
-
+        filesystemStore.storeFolderConfig = storeFolderConfig;
 
         // context, metadataUuid, visibility, path, approved)
         filesystemStore.getResourceDescription(context, "nonExistingUuid",
