@@ -171,6 +171,12 @@
 
               <!-- Complex input (geometry on map) -->
               <div ng-if="::input.complexData">
+                <select
+                  class="form-control"
+                  data-ng-if="::input.geometryType === null"
+                  data-ng-options="type for type in ['Point', 'LineString', 'Polygon']"
+                  data-ng-model="input.geometryType"
+                ></select>
                 <gn-geometry-tool
                   ng-repeat="field in getInputsByName(input.identifier.value)"
                   allow-reset
@@ -178,8 +184,8 @@
                   output="field.value"
                   output-format="{{ input.outputFormat }}"
                   output-crs="{{ map.getView().getProjection().getCode() }}"
-                  name-type="{{ input.geometryType }}"
-                  geometry-type="{{ input.geometryType }}"
+                  name-type="input.geometryType"
+                  geometry-type="input.geometryType"
                   output-crs="{{ map.getView().getProjection().getCode() }}"
                   output-as-features="true"
                   map="map"

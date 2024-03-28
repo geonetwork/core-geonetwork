@@ -157,6 +157,7 @@
         // create a promise (will be used to cancel request)
         this.getCapCanceller = $q.defer();
 
+        var that = this;
         // send request and decode result
         return $http
           .get(url, {
@@ -164,7 +165,7 @@
             timeout: this.getCapCanceller.promise
           })
           .then(function (response) {
-            this.getCapCanceller = null;
+            that.getCapCanceller = null;
             if (!response.data) {
               return;
             }

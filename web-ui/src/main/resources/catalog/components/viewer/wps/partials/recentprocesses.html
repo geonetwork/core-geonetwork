@@ -1,5 +1,5 @@
 <div>
-  <div class="alert alert-danger" role="alert" ng-show="notSupported">
+  <div class="alert alert-danger" role="alert" ng-show="withRecent && notSupported">
     <span translate>localStorageNotSupported</span>
   </div>
 
@@ -12,7 +12,7 @@
       ng-class="{active: p.name == wpsLink.name && p.url == wpsLink.url}"
       title="{{ p.url }}"
     >
-      <i class="fa fa-clock-o" />&nbsp;{{ p.name }}
+      <i class="fa fa-fw {{p.icon || 'fa-cog'}}" />&nbsp;{{ p.labels[lang]|empty:p.name }}
     </a>
   </ul>
 </div>
