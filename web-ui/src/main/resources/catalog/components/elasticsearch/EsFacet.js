@@ -142,6 +142,7 @@
               "valid",
               "isHarvested",
               "dateStamp",
+              "changeDate",
               "documentStandard",
               "mdStatus*",
               "*inspire*"
