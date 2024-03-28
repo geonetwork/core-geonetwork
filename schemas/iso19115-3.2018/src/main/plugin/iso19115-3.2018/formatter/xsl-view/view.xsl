@@ -230,9 +230,7 @@
             <xsl:copy-of select="gn-fn-render:extent($metadataUuid)"/>
           </xsl:when>
           <xsl:otherwise>
-            <xsl:apply-templates mode="render-field"
-                                 select=".//mdb:identificationInfo/*/mri:extent//gex:EX_GeographicBoundingBox">
-            </xsl:apply-templates>
+            <xsl:copy-of select="gn-fn-render:bboxes(.//mdb:identificationInfo/*/mri:extent//gex:EX_GeographicBoundingBox)"/>
           </xsl:otherwise>
         </xsl:choose>
       </section>

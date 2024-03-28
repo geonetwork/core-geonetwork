@@ -226,6 +226,12 @@ public class RegionsApi {
         @RequestParam(value = GEOM_TYPE_PARAM, defaultValue = "WKT") String geomType,
         @Parameter(description = "")
         @RequestParam(value = GEOM_SRS_PARAM, defaultValue = "EPSG:4326") String geomSrs,
+        @Parameter(description = API_PARAM_FILL_DESCRIPTION)
+        @RequestParam(value = "", required = false, defaultValue = "0,0,0,30")
+        String fillColor,
+        @Parameter(description = API_PARAM_STROKE_DESCRIPTION)
+        @RequestParam(value = "", required = false, defaultValue = "0,0,0,255")
+        String strokeColor,
         @Parameter(hidden = true)
             NativeWebRequest nativeWebRequest,
         @Parameter(hidden = true)
@@ -268,7 +274,7 @@ public class RegionsApi {
         }
 
         MapRenderer renderer = new MapRenderer(context);
-        BufferedImage image = renderer.render(regionId, srs, width, height, background, geomParam, geomType, geomSrs, null, null);
+        BufferedImage image = renderer.render(regionId, srs, width, height, background, geomParam, geomType, geomSrs, fillColor, strokeColor);
 
         if (image == null) return null;
 
