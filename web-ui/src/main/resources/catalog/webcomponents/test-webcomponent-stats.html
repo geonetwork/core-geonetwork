@@ -1,0 +1,80 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Embedding GeoNetwork / Search box</title>
+  </head>
+  <body style="background-color: lightgrey; padding: 20px; font-family: monospace;">
+    <h1>Numbers using facets</h1>
+
+    <h2>Type of resources</h2>
+    <gn-app
+            style="height: 340px;display: block;"
+            portal="srv"
+            config='{
+  "mods": {
+    "global": {"hotkeys": false},
+    "cookieWarning": {"enabled": false},
+    "footer": {"enabled": false},
+    "header": {"enabled": false},
+    "search": {
+      "appUrl": "http://localhost:8080/geonetwork/{{node}}/{{lang}}/catalog.search#/search"
+    },
+    "home": {
+      "showSearch": false,
+      "facetConfig": {
+        "resourceType": {
+          "terms": {
+            "field": "resourceType",
+            "size": 10
+          },
+          "meta": {
+            "decorator": {
+              "type": "icon",
+              "prefix": "fa fa-2x pull-left gn-icon-"
+            }
+          }
+        }
+      },
+      "showMosaic": false,
+      "showMaps": false,
+      "info": []
+    }
+  }
+}'></gn-app>
+
+
+    <h2>Spatial representation type</h2>
+    <gn-app-frame
+      url="http://localhost:8080/geonetwork"
+      portal="srv"
+      style="width:100%;height:220px;border:none;overflow:hidden"
+      config='{
+  "mods": {
+    "global": {"hotkeys": false},
+    "cookieWarning": {"enabled": false},
+    "footer": {"enabled": false},
+    "header": {"enabled": false},
+    "search": {
+      "appUrl": "http://localhost:8080/geonetwork/{{node}}/{{lang}}/catalog.search#/search"
+    },
+    "home": {
+      "showSearch": false,
+      "facetConfig": {
+        "cl_status.key": {
+          "terms": {
+            "field": "cl_spatialRepresentationType.key",
+            "size": 5
+          }
+        }
+      },
+      "showMosaic": false,
+      "showMaps": false,
+      "info": []
+    }
+  }
+}'></gn-app-frame>
+    <i>This shows limitation about using iframe which does not redirect the current page to the search page.
+    It also shows difficulties on sizing components.</i>
+    <script src="webcomponents.js"></script>
+  </body>
+</html>

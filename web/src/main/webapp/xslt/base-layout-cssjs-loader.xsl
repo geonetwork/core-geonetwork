@@ -141,7 +141,7 @@
           src="{$uiResourcesPath}lib/angular.ext/colorpicker/angularjs-color-picker.js?v={$buildNumber}"></script>
         <script src="{$uiResourcesPath}lib/tinycolor.js?v={$buildNumber}"></script>
 
-        <script src="{$uiResourcesPath}lib/style/bootstrap/dist/js/bootstrap.js?v={$buildNumber}"></script>
+        <script src="{$uiResourcesPath}lib/bootstrap.js?v={$buildNumber}"></script>
         <script src="{$uiResourcesPath}lib/jquery.ext/jquery-ui-slider.min.js?v={$buildNumber}"></script>
         <script src="{$uiResourcesPath}lib/proj4js-compressed.js?v={$buildNumber}"></script>
 
@@ -240,6 +240,8 @@
 
     <xsl:variable name="appConfig"
                   select="util:getUiConfiguration(/root/request/ui)"/>
+    <xsl:variable name="urlAppConfig"
+                  select="/root/request/uiconfig"/>
 
     <script type="text/javascript">
       var module = angular.module('<xsl:value-of select="$angularApp"/>');
@@ -298,8 +300,7 @@
       cfgModule.config(['gnViewerSettings', 'gnSearchSettings', 'gnGlobalSettings',
       function(gnViewerSettings, gnSearchSettings, gnGlobalSettings) {
       gnGlobalSettings.init(
-      <xsl:value-of select="if ($appConfig != '') then $appConfig else '{}'"/>,
-      // Relative path is safer as even if settings are wrong, the client app works.
+      <xsl:value-of select="if ($urlAppConfig != '') then $urlAppConfig else if ($appConfig != '') then $appConfig else '{}'"/>,
       null,
       <xsl:value-of select="if ($nodeUrl != '') then concat('&quot;', $nodeUrl, '&quot;') else 'null'"/>,
       gnViewerSettings, gnSearchSettings);

@@ -72,7 +72,10 @@ var
 
 		// The jQuery object is actually just the init constructor 'enhanced'
 		// Need init if jQuery is called (just allow error to be thrown if not included)
-		return new jQuery.fn.init( selector, context );
+    if (context == undefined && typeof gnShadowRoot !== 'undefined') {
+      context = gnShadowRoot;
+    }
+		return new jQuery.fn.init( selector, context);
 	},
 
 	// Support: Android<4.1
@@ -3651,7 +3654,9 @@ var acceptData = function( owner ) {
 	//  - Object
 	//    - Any
 	/* jshint -W018 */
-	return owner.nodeType === 1 || owner.nodeType === 9 || !( +owner.nodeType );
+  // https://github.com/jquery/jquery/issues/4317
+  return owner.nodeType === 1 || owner.nodeType === 9 || (owner.nodeType === 11 && owner.host) || !( +owner.nodeType );
+	// return owner.nodeType === 1 || owner.nodeType === 9 || !( +owner.nodeType );
 };
 
 

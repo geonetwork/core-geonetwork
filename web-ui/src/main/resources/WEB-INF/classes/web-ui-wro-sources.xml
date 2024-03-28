@@ -34,7 +34,7 @@
   </require>
   <declarative name="lib" pathOnDisk="web-ui/src/main/resources">
     <jsSource webappPath="/catalog/lib/modernizr.js" minimize="false"/>
-    <jsSource webappPath="/catalog/lib/jquery-2.2.4.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/jquery-2.2.4.js" minimize="true"/>
     <jsSource webappPath="/catalog/lib/moment-with-locales.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/moment-timezone-with-data-1970-2030.min.js" minimize="false" />
     <jsSource webappPath="/catalog/lib/angular/angular.min.js" minimize="false"/>
@@ -61,7 +61,7 @@
     <jsSource webappPath="/catalog/lib/angular.ext/angular-floatThead.js"/>
     <jsSource webappPath="/catalog/lib/tinycolor.js"/>
     <jsSource webappPath="/catalog/lib/franc-min/franc-min.js"/>
-    <jsSource webappPath="/catalog/lib/style/bootstrap/dist/js/bootstrap.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap.js" minimize="true"/>
     <jsSource webappPath="/catalog/lib/proj4js-compressed.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/openlayers/ol.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/d3.v3.min.js" minimize="false"/>
@@ -103,7 +103,7 @@
   <!-- Same as previous + olcesium -->
   <declarative name="lib3d" pathOnDisk="web-ui/src/main/resources">
     <jsSource webappPath="/catalog/lib/modernizr.js" minimize="false"/>
-    <jsSource webappPath="/catalog/lib/jquery-2.2.4.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/jquery-2.2.4.js" minimize="true"/>
     <jsSource webappPath="/catalog/lib/moment-with-locales.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/moment-timezone-with-data-1970-2030.min.js" minimize="false" />
     <jsSource webappPath="/catalog/lib/angular/angular.min.js" minimize="false"/>
@@ -131,7 +131,7 @@
     <jsSource webappPath="/catalog/lib/jquery.ext/jquery.floatThead-slim.min.js"/>
     <jsSource webappPath="/catalog/lib/tinycolor.js"/>
     <jsSource webappPath="/catalog/lib/franc-min/franc-min.js"/>
-    <jsSource webappPath="/catalog/lib/style/bootstrap/dist/js/bootstrap.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap.js" minimize="true"/>
     <jsSource webappPath="/catalog/lib/proj4js-compressed.js" minimize="false"/>
     <!-- FIXME in non debug mode, 3D mode does not work when WMS layer is displayed.
          No errors, only block tile loading-->
