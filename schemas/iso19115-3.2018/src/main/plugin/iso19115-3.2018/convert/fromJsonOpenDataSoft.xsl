@@ -45,7 +45,8 @@
                 xmlns:java-xsl-util="java:org.fao.geonet.util.XslUtil"
                 exclude-result-prefixes="#all">
 
-  <xsl:import href="protocol-mapping.xsl"></xsl:import>
+  <xsl:import href="protocol-mapping.xsl"/>
+  <xsl:import href="odstheme-mapping.xsl"/>
 
   <xsl:output method="xml" indent="yes"/>
 
@@ -130,26 +131,30 @@
           </cit:CI_Responsibility>
         </mdb:contact>
 
-        <mdb:dateInfo>
-          <cit:CI_Date>
-            <cit:date>
-              <gco:DateTime><xsl:value-of select="(metas/modified|dataset/metas/default/metadata_processed)[1]"/></gco:DateTime>
-            </cit:date>
-            <cit:dateType>
-              <cit:CI_DateTypeCode codeList="codeListLocation#CI_DateTypeCode" codeListValue="publication"/>
-            </cit:dateType>
-          </cit:CI_Date>
-        </mdb:dateInfo>
-        <mdb:dateInfo>
-          <cit:CI_Date>
-            <cit:date>
-              <gco:DateTime><xsl:value-of select="metas/metadata_processed"/></gco:DateTime>
-            </cit:date>
-            <cit:dateType>
-              <cit:CI_DateTypeCode codeList="codeListLocation#CI_DateTypeCode" codeListValue="revision"/>
-            </cit:dateType>
-          </cit:CI_Date>
-        </mdb:dateInfo>
+        <xsl:for-each select="metas/modified">
+          <mdb:dateInfo>
+            <cit:CI_Date>
+              <cit:date>
+                <gco:DateTime><xsl:value-of select="."/></gco:DateTime>
+              </cit:date>
+              <cit:dateType>
+                <cit:CI_DateTypeCode codeList="codeListLocation#CI_DateTypeCode" codeListValue="publication"/>
+              </cit:dateType>
+            </cit:CI_Date>
+          </mdb:dateInfo>
+        </xsl:for-each>
+        <xsl:for-each select="metas/metadata_processed|dataset/metas/default/metadata_processed">
+          <mdb:dateInfo>
+            <cit:CI_Date>
+              <cit:date>
+                <gco:DateTime><xsl:value-of select="."/></gco:DateTime>
+              </cit:date>
+              <cit:dateType>
+                <cit:CI_DateTypeCode codeList="codeListLocation#CI_DateTypeCode" codeListValue="revision"/>
+              </cit:dateType>
+            </cit:CI_Date>
+          </mdb:dateInfo>
+        </xsl:for-each>
         <mdb:metadataStandard>
           <cit:CI_Citation>
             <cit:title>
@@ -264,15 +269,33 @@
               </mri:pointOfContact>
             </xsl:for-each>
 
-            <!-- ODS themes copied as topicCategory -->
-            <xsl:if test="metas/theme">
-                <xsl:for-each select="metas/theme">
-                  <mri:topicCategory>
-                    <mri:MD_TopicCategoryCode>
-                      <xsl:value-of select="."/>
-                    </mri:MD_TopicCategoryCode>
-                  </mri:topicCategory>
-                </xsl:for-each>
+
+            <xsl:variable name="odsThemes"
+                          select="metas/theme|dataset/metas/default/theme"/>
+            <xsl:if test="count($odsThemes) > 0">
+              <xsl:for-each select="distinct-values($odsThemeToIsoTopic[theme = $odsThemes]/name())">
+                <mri:topicCategory>
+                  <mri:MD_TopicCategoryCode>
+                    <xsl:value-of select="."/>
+                  </mri:MD_TopicCategoryCode>
+                </mri:topicCategory>
+              </xsl:for-each>
+
+              <mri:descriptiveKeywords>
+                <mri:MD_Keywords>
+                  <xsl:for-each select="$odsThemes">
+                    <mri:keyword>
+                      <gco:CharacterString>
+                        <xsl:value-of select="."/>
+                      </gco:CharacterString>
+                    </mri:keyword>
+                  </xsl:for-each>
+                  <mri:type>
+                    <mri:MD_KeywordTypeCode codeListValue="theme"
+                                            codeList="./resources/codeList.xml#MD_KeywordTypeCode"/>
+                  </mri:type>
+                </mri:MD_Keywords>
+              </mri:descriptiveKeywords>
             </xsl:if>
 
             <!-- ODS keywords copied without type -->
@@ -291,6 +314,7 @@
                 </mri:MD_Keywords>
               </mri:descriptiveKeywords>
             </xsl:if>
+
 
             <!--
             license_url: "http://opendatacommons.org/licenses/odbl/",
