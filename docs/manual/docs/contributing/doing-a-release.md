@@ -91,7 +91,7 @@ with the following utilities: ***sed***, ***xmlstarlet*** and ***sftp***.
 3.  Create change log page: `docs/manual/docs/overview/change-log/`
 
     ``` shell
-    cat <<EOF > docs/manual/docs/overview/changes/version-$newversion.md
+    cat <<EOF > docs/manual/docs/overview/change-log/version-$version.md
     # Version $version
     
     GeoNetwork $version is a minor release.
@@ -110,9 +110,9 @@ with the following utilities: ***sed***, ***xmlstarlet*** and ***sftp***.
     
     EOF
 
-    git log --pretty='format:* %N' $previousversion.. | grep -v "^* $" >> docs/manual/docs/overview/changes/version-$newversion.md
+    git log --pretty='format:* %N' $previousversion.. | grep -v "^* $" >> docs/manual/docs/overview/change-log/version-$version.md
 
-    cat <<EOF > docs/manual/docs/overview/changes/version-$newversion.md
+    cat <<EOF > docs/manual/docs/overview/change-log/version-$version.md
     
     and more \... see [$version issues](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+milestone%3A$version+is%3Aclosed) and [pull requests](https://github.com/geonetwork/core-geonetwork/pulls?page=3&q=is%3Apr+milestone%3A$version+is%3Aclosed) for full details.
     EOF
@@ -164,7 +164,7 @@ with the following utilities: ***sed***, ***xmlstarlet*** and ***sftp***.
 
     # Download Jetty and create the installer
     cd ../release
-    mvn clean install -Djetty-download,bundle
+    mvn clean install -Pjetty-download,bundle
 
     # Deploy to osgeo repository (requires credentials in ~/.m2/settings.xml)
     cd ..
@@ -186,10 +186,12 @@ with the following utilities: ***sed***, ***xmlstarlet*** and ***sftp***.
     # Set version number to SNAPSHOT
     ./update-version.sh $newversion $nextversion
 
+    nextversionnosnapshot=${nextversion//[-SNAPSHOT]/}
+    
     # Add SQL migration step for the next version
-    mkdir web/src/main/webapp/WEB-INF/classes/setup/sql/migrate/v442
-    cat <<EOF > web/src/main/webapp/WEB-INF/classes/setup/sql/migrate/v442/migrate-default.sql
-    UPDATE Settings SET value='4.4.2' WHERE name='system/platform/version';
+    mkdir web/src/main/webapp/WEB-INF/classes/setup/sql/migrate/v${nextversionnosnapshot//[.]/}
+    cat <<EOF > web/src/main/webapp/WEB-INF/classes/setup/sql/migrate/v${nextversionnosnapshot//[.]/}/migrate-default.sql
+    UPDATE Settings SET value='${nextversionnosnapshot}' WHERE name='system/platform/version';
     UPDATE Settings SET value='SNAPSHOT' WHERE name='system/platform/subVersion';
     EOF
     vi web/src/main/webResources/WEB-INF/config-db/database_migration.xml
@@ -231,7 +233,7 @@ with the following utilities: ***sed***, ***xmlstarlet*** and ***sftp***.
 
         ``` shell
         md5 -r web/target/geonetwork.war > web/target/geonetwork.war.md5
-        md5 -r release/target/GeoNetwork-$newversion/geonetwork-bundle-$newversion.zip > release/target/GeoNetwork-$newversion/geonetwork-bundle-$newversion.zip.md5
+        md5 -r release/target/GeoNetwork-$version/geonetwork-bundle-$newversion.zip > release/target/GeoNetwork-$version/geonetwork-bundle-$newversion.zip.md5
         ```
 
     On sourceforge first:

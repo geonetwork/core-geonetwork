@@ -224,6 +224,7 @@
             <xsl:with-param name="type" select="@process"/>
             <xsl:with-param name="options" select="directiveAttributes"/>
             <xsl:with-param name="label" select="if ($label != '') then $label else $labelKey"/>
+            <xsl:with-param name="btnClass" select="@btnClass"/>
           </xsl:call-template>
         </xsl:when>
       </xsl:choose>
