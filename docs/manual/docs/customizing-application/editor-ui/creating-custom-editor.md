@@ -586,9 +586,9 @@ Child elements:
 
 ## Adding a template based field {#creating-custom-editor-template}
 
-A templace configuration for an XML snippet to edit.
+A template configuration for an XML snippet to edit.
 
-A template field is compose of an XML snippet corresponding to the element to edit where values to be edited are identified using {{fields}} notation. Each fields needs to be defined as values from which one input field will be created.
+A template field is composed of an XML snippet corresponding to the element to edit where values to be edited are identified using {{fields}} notation. Each fields needs to be defined as values from which one input field will be created.
 
 This mode is used to hide the complexity of the XML element to edit. eg.
 

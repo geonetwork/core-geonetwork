@@ -27,15 +27,13 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-
-import org.locationtech.jts.util.Assert;
-
 import org.fao.geonet.Constants;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.exceptions.TermNotFoundException;
 import org.fao.geonet.kernel.search.keyword.KeywordRelation;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.utils.Log;
+import org.locationtech.jts.util.Assert;
 import org.openrdf.model.GraphException;
 import org.openrdf.model.URI;
 import org.openrdf.sesame.config.AccessDeniedException;
@@ -46,6 +44,8 @@ import org.openrdf.sesame.query.QueryResultsTable;
 import org.openrdf.sesame.repository.local.LocalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -58,9 +58,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * @author Jesse on 2/27/2015.
@@ -221,8 +218,7 @@ public class AllThesaurus extends Thesaurus {
     }
 
     @Override
-    public synchronized Thesaurus removeElement(KeywordBean keyword) throws MalformedQueryException, QueryEvaluationException,
-        IOException, AccessDeniedException {
+    public synchronized Thesaurus removeElement(KeywordBean keyword) throws AccessDeniedException {
         throw new UnsupportedOperationException();
     }
 
@@ -237,8 +233,7 @@ public class AllThesaurus extends Thesaurus {
     }
 
     @Override
-    public synchronized URI updateElement(KeywordBean keyword, boolean replace) throws AccessDeniedException, IOException,
-        MalformedQueryException, QueryEvaluationException, GraphException {
+    public synchronized URI updateElement(KeywordBean keyword, boolean replace) throws AccessDeniedException {
         throw new UnsupportedOperationException();
     }
 
@@ -266,12 +261,12 @@ public class AllThesaurus extends Thesaurus {
     }
 
     @Override
-    public synchronized Thesaurus updateCode(String namespace, String oldcode, String newcode) throws AccessDeniedException, IOException {
+    public synchronized Thesaurus updateCode(String namespace, String oldcode, String newcode) throws AccessDeniedException {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public synchronized Thesaurus updateCodeByURI(String olduri, String newuri) throws AccessDeniedException, IOException {
+    public synchronized Thesaurus updateCodeByURI(String olduri, String newuri) throws AccessDeniedException {
         throw new UnsupportedOperationException();
     }
 
@@ -287,8 +282,7 @@ public class AllThesaurus extends Thesaurus {
     }
 
     @Override
-    public synchronized void addRelation(String subject, KeywordRelation related, String relatedSubject) throws AccessDeniedException,
-        IOException, MalformedQueryException, QueryEvaluationException, GraphException {
+    public synchronized void addRelation(String subject, KeywordRelation related, String relatedSubject) throws AccessDeniedException {
         throw new UnsupportedOperationException();
     }
 
