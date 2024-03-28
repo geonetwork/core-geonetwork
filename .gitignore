@@ -42,6 +42,7 @@ schemas/*/doc/*/*.rst
 schematrons/.build
 target/
 transifex/transifex-format/
+.vscode/
 
 # web-app, clear using: mvn -f web/pom.xml clean:clean@reset
 
