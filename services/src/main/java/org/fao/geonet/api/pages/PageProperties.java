@@ -1,14 +1,14 @@
 package org.fao.geonet.api.pages;
 
-import com.google.gson.Gson;
-import org.apache.commons.lang3.StringUtils;
-import org.fao.geonet.api.pages.model.GroupAccessExpression;
+import org.apache.commons.collections4.CollectionUtils;
+import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.page.Page;
 import org.fao.geonet.domain.page.Page.PageFormat;
 import org.fao.geonet.domain.page.Page.PageSection;
 import org.fao.geonet.domain.page.Page.PageStatus;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 public class PageProperties implements Serializable {
@@ -40,10 +40,11 @@ public class PageProperties implements Serializable {
         status = p.getStatus();
         label = p.getLabel();
         icon = p.getIcon();
-        if (StringUtils.isNotBlank(p.getAccessExpression())) {
-            Gson gson = new Gson();
-            GroupAccessExpression groupAccessExpression = gson.fromJson(p.getAccessExpression(), GroupAccessExpression.class);
-            groups = groupAccessExpression.getGroups();
+        if (CollectionUtils.isNotEmpty(p.getGroups())) {
+            groups = new ArrayList<>();
+            for (Group g : p.getGroups()) {
+                groups.add(g.getName());
+            }
         }
     }
 

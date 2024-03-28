@@ -23,10 +23,13 @@
 package org.fao.geonet.domain.page;
 
 import java.io.Serializable;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.Nullable;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -35,10 +38,14 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.Lob;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.fao.geonet.domain.GeonetEntity;
+import org.fao.geonet.domain.Group;
 import org.hibernate.annotations.Type;
 
 /**
@@ -56,7 +63,7 @@ public class Page extends GeonetEntity implements Serializable {
     private PageFormat format;
     private List<PageSection> sections;
     private PageStatus status;
-    private String accessExpression;
+    private Set<Group> groups = new LinkedHashSet<>();
 
     private String label;
     private String icon;
@@ -65,7 +72,7 @@ public class Page extends GeonetEntity implements Serializable {
 
     }
 
-    public Page(PageIdentity pageIdentity, byte[] data, String link, PageFormat format, List<PageSection> sections, PageStatus status, String label, String icon, String accessExpression) {
+    public Page(PageIdentity pageIdentity, byte[] data, String link, PageFormat format, List<PageSection> sections, PageStatus status, String label, String icon, Set<Group> groups) {
         super();
         this.pageIdentity = pageIdentity;
         this.data = data;
@@ -75,7 +82,7 @@ public class Page extends GeonetEntity implements Serializable {
         this.status = status;
         this.label = label;
         this.icon = icon;
-        this.accessExpression = accessExpression;
+        this.groups = groups;
     }
 
     public enum PageStatus {
@@ -138,11 +145,6 @@ public class Page extends GeonetEntity implements Serializable {
         return status;
     }
 
-    @Column(name = "accessexpression")
-    public String getAccessExpression() {
-        return accessExpression;
-    }
-
     @Column(nullable = false)
     public String getLabel() {
         return label;
@@ -151,6 +153,28 @@ public class Page extends GeonetEntity implements Serializable {
     @Column
     public String getIcon() {
         return icon;
+    }
+
+    /**
+     * Get all the user's addresses.
+     *
+     * @return all the user's addresses.
+     */
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST, orphanRemoval = false)
+    @JoinTable(name = "spg_page_group", joinColumns = {@JoinColumn(name = "language"), @JoinColumn(name = "linktext")},
+        inverseJoinColumns = {@JoinColumn(name = "groupid", referencedColumnName = "id", unique = true)})
+    public Set<Group> getGroups() {
+        return groups;
+    }
+
+    /**
+     * Set all the page's groups.
+     *
+     * @param groups all the page's groups.
+     * @return this group object
+     */
+    public void setGroups(Set<Group> groups) {
+        this.groups = groups;
     }
 
     public void setPageIdentity(PageIdentity pageIdentity) {
@@ -184,8 +208,6 @@ public class Page extends GeonetEntity implements Serializable {
     public void setIcon(String icon) {
         this.icon = icon;
     }
-
-    public void setAccessExpression(String accessExpression) { this.accessExpression = accessExpression; }
 
     @Override
     public String toString() {

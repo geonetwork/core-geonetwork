@@ -22,7 +22,6 @@
  */
 package org.fao.geonet.api.pages;
 
-import com.google.gson.Gson;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -36,12 +35,13 @@ import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.exception.ResourceAlreadyExistException;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.api.exception.WebApplicationException;
-import org.fao.geonet.api.pages.model.GroupAccessExpression;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
+import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.UserGroup;
 import org.fao.geonet.domain.page.Page;
 import org.fao.geonet.domain.page.PageIdentity;
+import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.page.PageRepository;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
@@ -62,8 +62,10 @@ import javax.validation.constraints.NotNull;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
 
@@ -82,14 +84,16 @@ public class PagesAPI {
     private static final String ERROR_CREATE = "Wrong parameters are provided";
 
     private final PageRepository pageRepository;
+    private final GroupRepository groupRepository;
 
     @Autowired
     UserGroupRepository userGroupRepository;
 
     private final LanguageUtils languageUtils;
 
-    public PagesAPI(PageRepository pageRepository, LanguageUtils languageUtils) {
+    public PagesAPI(PageRepository pageRepository, GroupRepository groupRepository, LanguageUtils languageUtils) {
         this.pageRepository = pageRepository;
+        this.groupRepository = groupRepository;
         this.languageUtils = languageUtils;
     }
 
@@ -193,14 +197,15 @@ public class PagesAPI {
 
             if (status != null) {
                 newPage.setStatus(status);
-            }
 
-            if (CollectionUtils.isNotEmpty(groups)) {
-                GroupAccessExpression ae = new GroupAccessExpression();
-                ae.setGroups(groups);
-                Gson gson = new Gson();
-
-                newPage.setAccessExpression(gson.toJson(ae));
+                if (status == Page.PageStatus.GROUPS && CollectionUtils.isNotEmpty(groups)) {
+                    Set<Group> _groups = new LinkedHashSet<>();
+                    for (String groupName : groups) {
+                        Group group = groupRepository.findByName(groupName);
+                        _groups.add(group);
+                    }
+                    newPage.setGroups(_groups);
+                }
             }
 
             pageRepository.save(newPage);
@@ -222,12 +227,27 @@ public class PagesAPI {
         String newLabel = pageProperties.getLabel();
         String newIcon = pageProperties.getIcon();
 
-        String accessExpressionJSON = null;
+        Set<Group> _groups = new LinkedHashSet<>();
         if (CollectionUtils.isNotEmpty(pageProperties.getGroups())) {
-            GroupAccessExpression ae = new GroupAccessExpression();
-            ae.setGroups(pageProperties.getGroups());
-            Gson gson = new Gson();
-            accessExpressionJSON = gson.toJson(ae);
+            for (String groupName : pageProperties.getGroups()) {
+                Group group = groupRepository.findByName(groupName);
+
+                Group groupToAdd= new Group();
+                groupToAdd.setId(group.getId());
+                groupToAdd.setAllowedCategories(group.getAllowedCategories());
+                groupToAdd.setDescription(group.getDescription());
+                groupToAdd.setEmail(group.getEmail());
+                groupToAdd.setLogo(group.getLogo());
+                groupToAdd.setEnableAllowedCategories(group.getEnableAllowedCategories());
+                groupToAdd.setDefaultCategory(group.getDefaultCategory());
+                groupToAdd.setName(group.getName());
+                groupToAdd.setReferrer(group.getReferrer());
+                groupToAdd.setWebsite(group.getWebsite());
+                groupToAdd.setLabelTranslations(group.getLabelTranslations());
+
+                _groups.add(groupToAdd);
+            }
+
         }
 
 
@@ -269,7 +289,7 @@ public class PagesAPI {
                 pageProperties.getStatus() != null ? pageProperties.getStatus() : pageToUpdate.getStatus(),
                 newLabel != null ? newLabel : pageToUpdate.getLabel(),
                 newIcon != null ? newIcon : pageToUpdate.getIcon(),
-                StringUtils.isNotEmpty(accessExpressionJSON) ? accessExpressionJSON : pageToUpdate.getAccessExpression());
+                CollectionUtils.isNotEmpty(_groups)? _groups: null);
 
             pageRepository.save(pageCopy);
             pageRepository.delete(pageToUpdate);
@@ -280,8 +300,14 @@ public class PagesAPI {
             pageToUpdate.setStatus(pageProperties.getStatus() != null ? pageProperties.getStatus() : pageToUpdate.getStatus());
             pageToUpdate.setLabel(newLabel);
             pageToUpdate.setIcon(newIcon);
-            pageToUpdate.setAccessExpression(StringUtils.isNotEmpty(accessExpressionJSON) ? accessExpressionJSON : pageToUpdate.getAccessExpression());
+
+            pageToUpdate.getGroups().clear();
+            if (pageToUpdate.getStatus() == Page.PageStatus.GROUPS) {
+                pageToUpdate.getGroups().addAll(_groups);
+            }
+
             pageRepository.save(pageToUpdate);
+
         }
 
         return ResponseEntity.noContent().build();
@@ -617,13 +643,12 @@ public class PagesAPI {
         } else if (page.getStatus().equals(Page.PageStatus.GROUPS) && StringUtils.isNotEmpty(currentUserId)) {
             List<UserGroup> userGroups = userGroupRepository.findAll(UserGroupSpecs.hasUserId(Integer.parseInt(currentUserId)));
 
-            Gson gson = new Gson();
-            GroupAccessExpression groupAccessExpression = gson.fromJson(page.getAccessExpression(), GroupAccessExpression.class);
+            Set<Group> accessingGroups = page.getGroups();
 
-            if (CollectionUtils.isNotEmpty(userGroups) && groupAccessExpression !=null && CollectionUtils.isNotEmpty(groupAccessExpression.getGroups())) {
+            if (CollectionUtils.isNotEmpty(userGroups) && CollectionUtils.isNotEmpty(accessingGroups)) {
                 for (UserGroup userGroup : userGroups) {
-                    for (String group : groupAccessExpression.getGroups()) {
-                        if (userGroup.getGroup().getName().equals(group)) {
+                    for (Group group : accessingGroups) {
+                        if (org.apache.commons.lang3.StringUtils.equals(userGroup.getGroup().getName(), group.getName())) {
                             isGranted = true;
                             break;
                         }
