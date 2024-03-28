@@ -551,6 +551,7 @@
     "cancelWorkingCopy": "Cancel working copy",
     "deleteWorkingCopyRecordConfirm": "Do you really want to remove the working copy '{{resourceTitle}}'?",
     "workingCopy": "Working copy",
+    "approvedRecord": "Approved record",
     "onTheWeb": "More online information",
     "pdfReportTocTitle": "Contents",
     "metadataValidated": "Metadata validated.",

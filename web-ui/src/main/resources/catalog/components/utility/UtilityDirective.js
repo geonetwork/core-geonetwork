@@ -2245,6 +2245,9 @@
     "$translate",
     function ($translate) {
       return function (workflowStatus) {
+        if (!workflowStatus) {
+          return;
+        }
         var split = workflowStatus.split("-");
         // the status of the record
         var metadataStatus = $translate.instant("status-" + split[0]);
