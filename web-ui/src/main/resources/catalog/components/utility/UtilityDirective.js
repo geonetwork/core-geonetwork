@@ -174,7 +174,10 @@
             } else {
               query.query = {
                 function_score: {
-                  random_score: { seed: Math.floor(Math.random() * 10000) },
+                  random_score: {
+                    seed: Math.floor(Math.random() * 10000),
+                    field: "uuid"
+                  },
                   query: query.query
                 }
               };
