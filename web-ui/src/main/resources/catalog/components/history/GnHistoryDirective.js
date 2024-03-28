@@ -140,11 +140,11 @@
           };
 
           scope.restoreHistoryElement = function (statusId) {
-            confirmMessage = $translate.instant("confirmRestore");
+            var confirmMessage = $translate.instant("confirmRestore");
             if ($window.confirm(confirmMessage)) {
               return gnRecordHistoryService.restoreHistoryElement(statusId).then(
                 function (r) {
-                  message = $translate.instant("recordRestored");
+                  var message = $translate.instant("recordRestored");
                   scope.$emit("StatusUpdated", {
                     msg: message,
                     timeout: 0,
@@ -154,7 +154,7 @@
                   $window.location.reload();
                 },
                 function (response) {
-                  message = "";
+                  var message = "";
                   if (response.status === 403) {
                     message = $translate.instant("notAllowedError");
                   } else if (response.status === 404) {

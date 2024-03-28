@@ -592,7 +592,7 @@
 
           scope.featuresInMapExtent = false;
 
-          onMoveEnd = function (evt) {
+          var onMoveEnd = function (evt) {
             var extent = scope.map.getView().calculateExtent(map.getSize());
             var wgsExtent = ol.extent.applyTransform(
               extent,
