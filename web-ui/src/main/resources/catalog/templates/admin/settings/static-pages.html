@@ -21,7 +21,7 @@
             class="list-group-item"
             data-ng-repeat="v in staticPages | filter:staticPagesSearch | orderBy:'linkText'"
             data-ng-class="v.pageId === staticPageSelected.pageId && v.language === staticPageSelected.language ? 'active' : ''"
-            data-ng-change="selectStaticPage(v)"
+            data-ng-click="selectStaticPage(v)"
             title="{{v.pageId}}"
           >
             {{v.label}} (id: {{v.pageId}} / {{v.language}})
@@ -306,7 +306,7 @@
                 class="form-control"
                 required=""
                 data-ng-model="staticPageSelected.status"
-                data-ng-click="updateGroupSelection()"
+                data-ng-change="updateGroupSelection()"
               >
                 <option value="HIDDEN">{{'staticPageStatus-HIDDEN' | translate }}</option>
                 <option value="PRIVATE">
