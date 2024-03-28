@@ -90,7 +90,7 @@
         }
 
         // Set the route only if not same as before
-        formatter = gnSearchLocation.getFormatter();
+        var formatter = gnSearchLocation.getFormatter();
 
         gnUtilityService.scrollTo();
 
@@ -341,7 +341,7 @@
                         var metadata = [];
                         metadata.push(new Metadata(r.data.hits.hits[i]));
 
-                        data = { metadata: metadata };
+                        var data = { metadata: metadata };
                         //Keep the search results (gnMdViewObj.records)
                         // that.feedMd(0, undefined, data.metadata);
                         //and the trace of where in the search result we are

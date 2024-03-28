@@ -269,7 +269,7 @@
           };
 
           scope.removeFilter = function (filter) {
-            removeFacetElement = [];
+            var removeFacetElement = [];
             removeFacetElement.push(filter.key);
             var keys = Object.keys(filter.value);
             if (angular.isObject(filter.value) && keys[0] != 0) {

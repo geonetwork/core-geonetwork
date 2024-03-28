@@ -237,7 +237,7 @@
                 layerAttributionArray = [];
                 for (var a = 0; a < layer.vendorExtension.attribution.length; a++) {
                   var attribution = layer.vendorExtension.attribution[a];
-                  layerAttribution = attribution.title;
+                  var layerAttribution = attribution.title;
                   // If href exist then make the title a link
                   if (attribution.onlineResource && attribution.onlineResource[0].href) {
                     var link = document.createElement("a");

@@ -726,7 +726,7 @@
               scope.generateThumbnail = function () {
                 //Added mandatory custom params here to avoid
                 //changing other printing services
-                jsonSpec = angular.extend(scope.jsonSpec, {
+                var jsonSpec = angular.extend(scope.jsonSpec, {
                   hasNoTitle: true
                 });
 
@@ -869,8 +869,6 @@
                 } else {
                   return DEFAULT_CONFIG;
                 }
-
-                return DEFAULT_CONFIG;
               }
 
               gnOnlinesrc.register("onlinesrc", function (linkToEditOrType) {
@@ -2135,7 +2133,7 @@
                  * Return the index or -1 if not present.
                  */
                 var findObj = function (md) {
-                  for (i = 0; i < scope.selection.length; ++i) {
+                  for (var i = 0; i < scope.selection.length; ++i) {
                     if (scope.selection[i].md === md) {
                       return i;
                     }
@@ -2183,7 +2181,7 @@
                  */
                 scope.linkToResource = function () {
                   var uuids = [];
-                  for (i = 0; i < scope.selection.length; ++i) {
+                  for (var i = 0; i < scope.selection.length; ++i) {
                     var obj = scope.selection[i],
                       parameter =
                         obj.md.uuid +

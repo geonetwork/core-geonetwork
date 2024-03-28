@@ -293,7 +293,7 @@
           } else {
             metadataUuid = getSelectedMdIdentifierTemplate().template;
 
-            for (key in $scope.mdIdentifierTemplateTokens) {
+            for (var key in $scope.mdIdentifierTemplateTokens) {
               var labelKey = $scope.mdIdentifierTemplateTokens[key].label;
               metadataUuid = metadataUuid.replace(
                 "{" + labelKey + "}",
@@ -359,7 +359,7 @@
       $scope.updateMdIdentifierTemplateLabel = function () {
         $scope.mdIdSelectedTemplateForLabel = getSelectedMdIdentifierTemplate().template;
 
-        for (key in $scope.mdIdentifierTemplateTokens) {
+        for (var key in $scope.mdIdentifierTemplateTokens) {
           if ($scope.mdIdentifierTemplateTokens[key].value) {
             var labelKey = $scope.mdIdentifierTemplateTokens[key].label;
 
@@ -402,7 +402,7 @@
 
         var fieldsFilled = true;
 
-        for (key in $scope.mdIdentifierTemplateTokens) {
+        for (var key in $scope.mdIdentifierTemplateTokens) {
           if (!$scope.mdIdentifierTemplateTokens[key].value) {
             fieldsFilled = false;
             break;
