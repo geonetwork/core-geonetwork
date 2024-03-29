@@ -33,7 +33,11 @@
     function ($http, gnCurrentEdit) {
       return {
         get: function () {
-          return $http.put("../api/records/" + gnCurrentEdit.uuid + "/validate/internal");
+          return $http.put(
+            "../api/records/" +
+              encodeURIComponent(gnCurrentEdit.uuid) +
+              "/validate/internal"
+          );
         },
         errorCheck: function () {
           return this.get().then(function (response) {

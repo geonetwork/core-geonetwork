@@ -435,11 +435,10 @@ public class EsRestClient implements InitializingBean {
                 final Hit hit = totalHits.get(0);
 
                 fields.forEach(f -> {
-                    final Object o = hit.fields().get(f);
-                    if (o instanceof String) {
-                        fieldValues.put(f, (String) o);
-                    } else if (o instanceof HashMap && f.endsWith("Object")) {
-                        fieldValues.put(f, (String) ((HashMap) o).get("default"));
+                    Map<String, Object> sourceAsMap = hit.fields();
+                    String fieldValue = getFieldValue(f, sourceAsMap);
+                    if (fieldValue != null) {
+                        fieldValues.put(f, fieldValue);
                     }
                 });
             } else {
@@ -458,6 +457,15 @@ public class EsRestClient implements InitializingBean {
         return fieldValues;
     }
 
+    public static String getFieldValue(String field, Map<String, Object> source) {
+        final Object o = source.get(field);
+        if (o instanceof String) {
+            return (String) o;
+        } else if (o instanceof HashMap && field.endsWith("Object")) {
+            return (String) ((HashMap) o).get("default");
+        }
+        return null;
+    }
 
     /**
      * Analyze a field and a value against the index

@@ -80,7 +80,7 @@ import java.util.List;
  */
 @EnableWebMvc
 @Service
-@RequestMapping(value = {"/{portal}/api/records/{metadataUuid}/attachments"})
+@RequestMapping(value = {"/{portal}/api/records/{metadataUuid:.+}/attachments"})
 @Tag(name = API_CLASS_RECORD_TAG,
     description = API_CLASS_RECORD_OPS)
 public class AttachmentsApi {

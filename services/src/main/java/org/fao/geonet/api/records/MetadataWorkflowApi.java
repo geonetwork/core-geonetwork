@@ -162,7 +162,7 @@ public class MetadataWorkflowApi {
 
 
     @io.swagger.v3.oas.annotations.Operation(summary = "Get record status history", description = "")
-    @RequestMapping(value = "/{metadataUuid}/status", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+    @RequestMapping(value = "/{metadataUuid:.+}/status", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
     @ResponseStatus(value = HttpStatus.OK)
     @ResponseBody
     public List<MetadataStatusResponse> getRecordStatusHistory(
@@ -184,7 +184,7 @@ public class MetadataWorkflowApi {
     }
 
     @io.swagger.v3.oas.annotations.Operation(summary = "Get record status history by type", description = "")
-    @RequestMapping(value = "/{metadataUuid}/status/{type}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+    @RequestMapping(value = "/{metadataUuid:.+}/status/{type}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
     @ResponseStatus(value = HttpStatus.OK)
     @ResponseBody
     public List<MetadataStatusResponse> getRecordStatusHistoryByType(
@@ -207,7 +207,7 @@ public class MetadataWorkflowApi {
     }
 
     @io.swagger.v3.oas.annotations.Operation(summary = "Get last workflow status for a record", description = "")
-    @RequestMapping(value = "/{metadataUuid}/status/workflow/last", method = RequestMethod.GET, produces = {
+    @RequestMapping(value = "/{metadataUuid:.+}/status/workflow/last", method = RequestMethod.GET, produces = {
         MediaType.APPLICATION_JSON_VALUE})
     @PreAuthorize("hasAuthority('Editor')")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Record status."),
@@ -437,7 +437,7 @@ public class MetadataWorkflowApi {
     }
 
     @io.swagger.v3.oas.annotations.Operation(summary = "Set the record status", description = "")
-    @RequestMapping(value = "/{metadataUuid}/status", method = RequestMethod.PUT)
+    @RequestMapping(value = "/{metadataUuid:.+}/status", method = RequestMethod.PUT)
     @PreAuthorize("hasAuthority('Editor')")
     @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "Status updated."),
         @ApiResponse(responseCode = "400", description = "Metadata workflow not enabled."),
@@ -562,7 +562,7 @@ public class MetadataWorkflowApi {
         summary = "Close a record task",
         description = "")
     @RequestMapping(
-        value = "/{metadataUuid}/status/{statusId:[0-9]+}.{userId:[0-9]+}.{changeDate}/close",
+        value = "/{metadataUuid:.+}/status/{statusId:[0-9]+}.{userId:[0-9]+}.{changeDate}/close",
         method = RequestMethod.PUT
     )
     @PreAuthorize("hasAuthority('Editor')")
@@ -592,7 +592,7 @@ public class MetadataWorkflowApi {
     }
 
     @io.swagger.v3.oas.annotations.Operation(summary = "Delete a record status", description = "")
-    @RequestMapping(value = "/{metadataUuid}/status/{statusId:[0-9]+}.{userId:[0-9]+}.{changeDate}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/{metadataUuid:.+}/status/{statusId:[0-9]+}.{userId:[0-9]+}.{changeDate}", method = RequestMethod.DELETE)
     @PreAuthorize("hasAuthority('Administrator')")
     @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Status removed."),
         @ApiResponse(responseCode = "404", description = "Status not found."),
@@ -619,7 +619,7 @@ public class MetadataWorkflowApi {
     }
 
     @io.swagger.v3.oas.annotations.Operation(summary = "Delete all record status", description = "")
-    @RequestMapping(value = "/{metadataUuid}/status", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/{metadataUuid:.+}/status", method = RequestMethod.DELETE)
     @PreAuthorize("hasAuthority('Administrator')")
     @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Status removed."),
         @ApiResponse(responseCode = "404", description = "Status not found."),
@@ -783,7 +783,7 @@ public class MetadataWorkflowApi {
         summary = "Get saved content from the status record before changes",
         description = "")
     @RequestMapping(
-        value = "/{metadataUuid}/status/{statusId:[0-9]+}.{userId:[0-9]+}.{changeDate}/before",
+        value = "/{metadataUuid:.+}/status/{statusId:[0-9]+}.{userId:[0-9]+}.{changeDate}/before",
         method = RequestMethod.GET,
         produces = {
             MediaType.APPLICATION_XML_VALUE
@@ -813,7 +813,7 @@ public class MetadataWorkflowApi {
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Get saved content from the status record after changes"
     )
-    @RequestMapping(value = "/{metadataUuid}/status/{statusId:[0-9]+}.{userId:[0-9]+}.{changeDate}/after",
+    @RequestMapping(value = "/{metadataUuid:.+}/status/{statusId:[0-9]+}.{userId:[0-9]+}.{changeDate}/after",
         method = RequestMethod.GET,
         produces = {
             MediaType.APPLICATION_XML_VALUE
@@ -843,7 +843,7 @@ public class MetadataWorkflowApi {
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Restore saved content from a status record")
     @RequestMapping(
-        value = "/{metadataUuid}/status/{statusId:[0-9]+}.{userId:[0-9]+}.{changeDate}/restore",
+        value = "/{metadataUuid:.+}/status/{statusId:[0-9]+}.{userId:[0-9]+}.{changeDate}/restore",
         method = RequestMethod.POST
     )
     @PreAuthorize("hasAuthority('Editor')")

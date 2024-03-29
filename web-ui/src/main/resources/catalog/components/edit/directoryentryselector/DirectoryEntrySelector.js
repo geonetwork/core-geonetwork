@@ -352,7 +352,7 @@
                     checkState(c);
                   } else {
                     $http
-                      .get("../api/registries/entries/" + uuid, {
+                      .get("../api/registries/entries/" + encodeURIComponent(uuid), {
                         params: params
                       })
                       .then(function (response) {
