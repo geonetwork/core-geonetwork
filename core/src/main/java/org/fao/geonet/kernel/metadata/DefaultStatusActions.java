@@ -169,18 +169,6 @@ public class DefaultStatusActions implements StatusActions {
                 continue;
             }
 
-            // --- set status, indexing is assumed to take place later
-            metadataStatusManager.setStatusExt(status);
-
-            // --- inform content reviewers if the status is submitted
-            try {
-                notify(getUserToNotify(status), status);
-            } catch (Exception e) {
-                context.warning(String.format(
-                    "Failed to send notification on status change for metadata %s with status %s. Error is: %s",
-                    status.getMetadataId(), status.getStatusValue().getId(), e.getMessage()));
-            }
-
             // Issue events
             Log.trace(Geonet.DATA_MANAGER, "Issue workflow events.");
 
@@ -218,6 +206,18 @@ public class DefaultStatusActions implements StatusActions {
 
                 throw statusChangeFailure;
 
+            }
+
+            // --- set status, indexing is assumed to take place later
+            metadataStatusManager.setStatusExt(status);
+
+            // --- inform content reviewers if the status is submitted
+            try {
+                notify(getUserToNotify(status), status);
+            } catch (Exception e) {
+                context.warning(String.format(
+                    "Failed to send notification on status change for metadata %s with status %s. Error is: %s",
+                    status.getMetadataId(), status.getStatusValue().getId(), e.getMessage()));
             }
         }
 
