@@ -92,7 +92,7 @@
           <button
             type="button"
             class="btn btn-primary pull-right"
-            data-ng-disabled="!gnUserEdit.$valid && !gnUserEdit.dirty"
+            data-ng-disabled="!gnUserEdit.$valid || !gnUserEdit.$dirty"
             data-ng-click="saveUser('#gn-user-edit')"
             id="gn-btn-user-save"
           >
@@ -117,6 +117,9 @@
           data-ng-keypress="updatingUser()"
           class="form-horizontal"
           role="form"
+          data-confirm-message="{{ 'formConfirmExit' | translate}}"
+          data-confirm-on-exit=""
+          novalidate=""
         >
           <input type="hidden" name="_csrf" value="{{csrf}}" />
           <fieldset>
@@ -134,15 +137,27 @@
             />
 
             <div class="form-group" data-ng-hide="user.id == userSelected.id">
-              <label class="control-label col-sm-3" data-translate="">enable</label>
-              <div class="col-sm-9">
-                <input type="checkbox" class=form-control" data-ng-model="userIsEnabled"/>
+              <label
+                class="control-label col-sm-3"
+                data-translate=""
+                for="userIsEnabledCheck"
+                >enable</label
+              >
+              <div class="col-sm-9 checkbox">
+                <label>
+                  <input
+                    type="checkbox"
+                    data-ng-model="userIsEnabled"
+                    id="userIsEnabledCheck"
+                  />
+                </label>
               </div>
             </div>
 
             <div
               data-ng-class="gnUserEdit.username.$error.required ||
-                                gnUserEdit.username.$error.gnDuplicateCheck ? 'has-error' : ''"
+                             (gnUserEdit.username.$touched && gnUserEdit.username.$invalid) ||
+                             gnUserEdit.username.$error.gnDuplicateCheck ? 'has-error' : ''"
               class="form-group"
             >
               <label class="control-label col-sm-3" data-translate="">username</label>
@@ -160,9 +175,18 @@
                   data-gn-duplicate-check-apply="userOperation == 'newuser'"
                   data-gn-duplicate-check-remote="../api/users/properties/userid?exist={value}"
                   data-ng-disabled="!user.isUserAdminOrMore() || !isUserProfileUpdateEnabled"
+                  data-ng-maxlength="255"
+                  placeholder="{{'usernameHelp' | translate}}"
                   autocomplete="off"
                 />
-                <p class="help-block" data-translate="">usernameHelp</p>
+                <div
+                  class="help-block"
+                  data-ng-messages="gnUserEdit.username.$error"
+                  data-ng-if="gnUserEdit.username.$touched"
+                >
+                  <p data-ng-message="maxlength" data-translate="">fieldTooLong</p>
+                  <p data-ng-message="required" data-translate="">fieldRequired</p>
+                </div>
                 <p
                   class="help-block"
                   ng-if="gnUserEdit.username.$error.gnDuplicateCheck"
@@ -175,8 +199,10 @@
             <!-- Password are disabled when updating user -->
             <div ng-if="userOperation == 'newuser'">
               <div
-                data-ng-class="gnUserEdit.password.$error.required || gnUserEdit.password.$error.minlength ||
-                               gnUserEdit.password.$error.maxlength ||  gnUserEdit.password.$error.pattern ? 'has-error' : ''"
+                data-ng-class="gnUserEdit.password.$error.required ||
+                               gnUserEdit.password.$error.minlength ||
+                               gnUserEdit.password.$error.maxlength ||
+                               gnUserEdit.password.$error.pattern ? 'has-error' : ''"
                 class="form-group"
               >
                 <label class="control-label col-sm-3" data-translate="">password</label>
@@ -227,7 +253,7 @@
               </div>
               <div
                 data-ng-class="gnUserEdit.password.$valid == false ||
-                  (passwordCheck !== userSelected.password) ? 'has-error' : ''"
+                               (passwordCheck !== userSelected.password) ? 'has-error' : ''"
                 class="form-group"
               >
                 <label class="control-label col-sm-3" data-translate=""
@@ -262,7 +288,7 @@
               </div>
             </div>
             <div
-              data-ng-class="gnUserEdit.name.$error.required ? 'has-error' : ''"
+              data-ng-class="gnUserEdit.name.$touched && gnUserEdit.name.$invalid ? 'has-error' : ''"
               class="form-group"
             >
               <label class="control-label col-sm-3" data-translate="">name</label>
@@ -272,13 +298,22 @@
                   name="name"
                   class="form-control"
                   data-ng-model="userSelected.name"
+                  data-ng-maxlength="255"
                   data-ng-required="true"
                   data-ng-disabled="!isUserProfileUpdateEnabled"
                 />
+                <div
+                  class="help-block"
+                  data-ng-messages="gnUserEdit.name.$error"
+                  data-ng-if="gnUserEdit.name.$touched"
+                >
+                  <p data-ng-message="maxlength" data-translate="">fieldTooLong</p>
+                  <p data-ng-message="required" data-translate="">fieldRequired</p>
+                </div>
               </div>
             </div>
             <div
-              data-ng-class="userSelected.surname == '' ? 'has-error' : ''"
+              data-ng-class="gnUserEdit.surname.$touched && gnUserEdit.surname.$invalid ? 'has-error' : ''"
               class="form-group"
             >
               <label class="control-label col-sm-3" data-translate="">surname</label>
@@ -289,12 +324,21 @@
                   class="form-control"
                   data-ng-model="userSelected.surname"
                   data-ng-required=""
+                  data-ng-maxlength="255"
                   data-ng-disabled="!isUserProfileUpdateEnabled"
                 />
+                <div
+                  class="help-block"
+                  data-ng-messages="gnUserEdit.surname.$error"
+                  data-ng-if="gnUserEdit.surname.$touched"
+                >
+                  <p data-ng-message="maxlength" data-translate="">fieldTooLong</p>
+                  <p data-ng-message="required" data-translate="">fieldRequired</p>
+                </div>
               </div>
             </div>
             <div
-              data-ng-class="gnUserEdit.email.$error.email || gnUserEdit.email.$error.required ? 'has-error' : ''"
+              data-ng-class="gnUserEdit.email.$touched && gnUserEdit.email.$invalid ? 'has-error' : ''"
               class="form-group"
             >
               <label class="control-label col-sm-3" data-translate="">email</label>
@@ -305,12 +349,25 @@
                   class="form-control"
                   data-ng-model="userSelected.emailAddresses[0]"
                   data-ng-required="true"
+                  data-ng-maxlength="128"
                   data-ng-disabled="!isUserProfileUpdateEnabled"
                 />
+                <div
+                  class="help-block"
+                  data-ng-messages="gnUserEdit.email.$error"
+                  data-ng-if="gnUserEdit.email.$touched"
+                >
+                  <p data-ng-message="maxlength" data-translate="">fieldTooLong</p>
+                  <p data-ng-message="required" data-translate="">fieldRequired</p>
+                  <p data-ng-message="email" data-translate="">fieldEmailNotValid</p>
+                </div>
                 <p class="help-block" data-translate="">configureYourAvatar</p>
               </div>
             </div>
-            <div class="form-group">
+            <div
+              class="form-group"
+              data-ng-class="{ 'has-error': gnUserEdit.org.$touched && gnUserEdit.org.$invalid}"
+            >
               <label class="control-label col-sm-3" data-translate="">organisation</label>
               <!-- TODO : Add org list -->
               <div class="col-sm-9">
@@ -318,78 +375,121 @@
                   type="text"
                   name="org"
                   class="form-control"
+                  data-ng-maxlength="255"
                   data-ng-model="userSelected.organisation"
                   data-ng-disabled="!isUserProfileUpdateEnabled"
                 />
+                <div
+                  class="help-block"
+                  data-ng-messages="gnUserEdit.org.$error"
+                  data-ng-if="gnUserEdit.org.$touched"
+                >
+                  <p data-ng-message="maxlength" data-translate="">fieldTooLong</p>
+                </div>
               </div>
             </div>
 
             <fieldset>
               <legend data-translate="">address</legend>
 
-              <div class="form-group">
+              <div
+                class="form-group"
+                data-ng-class="{ 'has-error': gnUserEdit.address.$touched && gnUserEdit.address.$invalid}"
+              >
                 <label class="control-label col-sm-3" data-translate="">address</label>
                 <div class="col-sm-9">
                   <input
                     type="text"
                     name="address"
                     class="form-control"
+                    data-ng-maxlength="255"
                     data-ng-model="userSelected.addresses[0].address"
                     data-ng-disabled="!isUserProfileUpdateEnabled"
                   />
+                  <div class="help-block" data-ng-messages="gnUserEdit.address.$error">
+                    <p data-ng-message="maxlength" data-translate="">fieldTooLong</p>
+                  </div>
                 </div>
               </div>
 
-              <div class="form-group">
+              <div
+                class="form-group"
+                data-ng-class="{ 'has-error': gnUserEdit.zip.$touched && gnUserEdit.zip.$invalid}"
+              >
                 <label class="control-label col-sm-3" data-translate="">zip</label>
                 <div class="col-sm-9">
                   <input
                     type="text"
                     name="zip"
                     class="form-control"
+                    data-ng-maxlength="16"
                     data-ng-model="userSelected.addresses[0].zip"
                     data-ng-disabled="!isUserProfileUpdateEnabled"
                   />
+                  <div class="help-block" data-ng-messages="gnUserEdit.zip.$error">
+                    <p data-ng-message="maxlength" data-translate="">fieldTooLong</p>
+                  </div>
                 </div>
               </div>
 
-              <div class="form-group">
+              <div
+                class="form-group"
+                data-ng-class="{ 'has-error': gnUserEdit.state.$touched && gnUserEdit.state.$invalid}"
+              >
                 <label class="control-label col-sm-3" data-translate="">state</label>
                 <div class="col-sm-9">
                   <input
                     type="text"
                     name="state"
                     class="form-control"
+                    data-ng-maxlength="255"
                     data-ng-model="userSelected.addresses[0].state"
                     data-ng-disabled="!isUserProfileUpdateEnabled"
                   />
+                  <div class="help-block" data-ng-messages="gnUserEdit.state.$error">
+                    <p data-ng-message="maxlength" data-translate="">fieldTooLong</p>
+                  </div>
                 </div>
               </div>
 
-              <div class="form-group">
+              <div
+                class="form-group"
+                data-ng-class="{ 'has-error': gnUserEdit.city.$touched && gnUserEdit.city.$invalid}"
+              >
                 <label class="control-label col-sm-3" data-translate="">city</label>
                 <div class="col-sm-9">
                   <input
                     type="text"
                     name="city"
                     class="form-control"
+                    data-ng-maxlength="255"
                     data-ng-model="userSelected.addresses[0].city"
                     data-ng-disabled="!isUserProfileUpdateEnabled"
                   />
+                  <div data-ng-messages="gnUserEdit.city.$error">
+                    <p data-ng-message="maxlength" data-translate="fieldTooLong"></p>
+                  </div>
                 </div>
               </div>
 
-              <div class="form-group">
+              <div
+                class="form-group"
+                data-ng-class="{ 'has-error': gnUserEdit.country.$touched && gnUserEdit.country.$invalid}"
+              >
                 <label class="control-label col-sm-3" data-translate="">country</label>
                 <div class="col-sm-9">
                   <input
                     type="text"
                     name="country"
                     class="form-control"
+                    data-ng-maxlength="255"
                     data-ng-model="userSelected.addresses[0].country"
                     data-gn-country-picker=""
                     data-ng-disabled="!isUserProfileUpdateEnabled"
                   />
+                  <div data-ng-messages="gnUserEdit.country.$error">
+                    <p data-ng-message="maxlength" data-translate="">fieldTooLong</p>
+                  </div>
                 </div>
               </div>
             </fieldset>
@@ -545,6 +645,7 @@
           <form id="gn-password-reset" class="form-horizontal" name="gnPasswordReset">
             <input type="hidden" name="_csrf" value="{{csrf}}" />
             <div
+              data-ng-show="!user.isAdministratorOrMore() || (user.isAdministratorOrMore() && !allowAdminReset)"
               class="form-group"
               data-ng-class="gnPasswordReset.passwordOld.$error.required ? 'has-error' : ''"
             >

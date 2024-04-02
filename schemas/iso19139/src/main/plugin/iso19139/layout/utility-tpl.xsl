@@ -29,6 +29,7 @@
                 xmlns:gmx="http://www.isotc211.org/2005/gmx"
                 xmlns:gn-fn-index="http://geonetwork-opensource.org/xsl/functions/index"
                 xmlns:gn="http://www.fao.org/geonetwork"
+                xmlns:util="java:org.fao.geonet.util.XslUtil"
                 version="2.0"
                 exclude-result-prefixes="#all">
 
@@ -47,8 +48,8 @@
   <xsl:template mode="get-formats-as-json" match="gmd:MD_Metadata">
     [
     <xsl:for-each select="gmd:distributionInfo/*/gmd:distributionFormat/*/gmd:name/*/text()">{
-      "value": "WWW:DOWNLOAD:<xsl:value-of select="gn-fn-index:json-escape(.)"/>",
-      "label": "<xsl:value-of select="gn-fn-index:json-escape(.)"/>"}
+      "value": "WWW:DOWNLOAD:<xsl:value-of select="util:escapeForJson(.)"/>",
+      "label": "<xsl:value-of select="util:escapeForJson(.)"/>"}
       <xsl:if test="position() != last()">,</xsl:if>
     </xsl:for-each>
     ]

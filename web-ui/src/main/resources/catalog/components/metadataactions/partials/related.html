@@ -80,6 +80,13 @@
               data-typename="{{::isLayerProtocol(r) ? r.locTitle : ''}}"
               data-url="{{::r.locUrl}}"
             ></div>
+
+            <div
+              data-ng-if="::!isLayerProtocol(r)"
+              data-gn-wfs-download=""
+              data-typename=""
+              data-url="{{::r.locUrl}}"
+            ></div>
           </div>
 
           <div data-ng-switch-when="ATOM">
@@ -176,8 +183,8 @@
       {{type.replace('siblings', '') | translate}}
     </h3>
 
-    <ul class="gn-related-list">
-      <li data-ng-repeat="md in items | orderBy:getOrderBy">
+    <ul class="gn-related-list list-group">
+      <li class="list-group-item" data-ng-repeat="md in items | orderBy:getOrderBy">
         <a
           data-ng-hide="md.remoteUrl"
           href=""

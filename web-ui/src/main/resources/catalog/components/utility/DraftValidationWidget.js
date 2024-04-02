@@ -39,7 +39,7 @@
         link: function (scope) {
           var query = {
             _source: {
-              include: ["id", "uuid", "draft", "isTemplate", "valid"]
+              includes: ["id", "uuid", "draft", "isTemplate", "valid"]
             },
             size: 10,
             query: {

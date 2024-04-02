@@ -126,7 +126,7 @@
   <xsl:template name="hyperlink">
     <xsl:param name="string" select="." />
     <xsl:analyze-string select="$string"
-                        regex="(http|https|ftp)://[^\s]+">
+                        regex="(http|https|ftp)://[^\s()&gt;&lt;]+[^\s`!()\[\]&amp;#123;&amp;#125;;:'&apos;&quot;.,&gt;&lt;?«»“”‘’]">
       <xsl:matching-substring>
         <a href="{.}">
           <xsl:value-of select="." />

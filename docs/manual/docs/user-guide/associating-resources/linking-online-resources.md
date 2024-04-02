@@ -166,4 +166,4 @@ Examples:
 
 Reference documents:
 
--   [INSPIRE technical guidelines for download services](http://inspire.ec.europa.eu/documents/technical-guidance-implementation-inspire-download-services).
+-   [INSPIRE technical guidelines for download services](https://inspire.ec.europa.eu/documents/technical-guidance-implementation-inspire-download-services).

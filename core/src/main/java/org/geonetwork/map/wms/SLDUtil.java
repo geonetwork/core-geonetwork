@@ -19,8 +19,8 @@ import org.jdom.JDOMException;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.opengis.filter.Filter;
-import org.opengis.filter.FilterFactory2;
+import org.geotools.api.filter.Filter;
+import org.geotools.api.filter.FilterFactory;
 
 import javax.mail.internet.ContentType;
 import javax.mail.internet.ParseException;
@@ -168,7 +168,7 @@ public class SLDUtil {
      */
 
     public static Filter generateCustomFilter(JSONObject userFilters) throws JSONException {
-        FilterFactory2 ff2 = CommonFactoryFinder.getFilterFactory2();
+        FilterFactory ff2 = CommonFactoryFinder.getFilterFactory();
 
         JSONArray filters = userFilters.getJSONArray("filters");
         List<Filter> res = new LinkedList<Filter>();
@@ -185,7 +185,7 @@ public class SLDUtil {
 
     private static Filter generateFilter(JSONObject jsonObject) throws JSONException {
 
-        FilterFactory2 ff2 = CommonFactoryFinder.getFilterFactory2();
+        FilterFactory ff2 = CommonFactoryFinder.getFilterFactory();
 
         String fieldName = jsonObject.getString("field_name");
 
@@ -203,7 +203,7 @@ public class SLDUtil {
 
     private static Filter generateFilter2(String fieldName, JSONObject jsonObject) throws JSONException {
 
-        FilterFactory2 ff2 = CommonFactoryFinder.getFilterFactory2();
+        FilterFactory ff2 = CommonFactoryFinder.getFilterFactory();
 
         String filterType = jsonObject.getString("filter_type");
 

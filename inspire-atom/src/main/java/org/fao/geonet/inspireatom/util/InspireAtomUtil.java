@@ -22,13 +22,13 @@
 //==============================================================================
 package org.fao.geonet.inspireatom.util;
 
+import co.elastic.clients.elasticsearch.core.SearchResponse;
+import co.elastic.clients.elasticsearch.core.search.Hit;
+import co.elastic.clients.elasticsearch.core.search.TotalHits;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
-import org.apache.lucene.search.TotalHits;
-import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.search.SearchHit;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.constants.Geonet;
@@ -372,8 +372,8 @@ public class InspireAtomUtil {
                 0, 10000);
 
             IMetadataUtils dataManager = context.getBean(IMetadataUtils.class);
-            for (SearchHit hit : result.getHits()) {
-                String id = hit.getSourceAsMap().get(Geonet.IndexFieldNames.ID).toString();
+            for (Hit hit : (List<Hit>) result.hits().hits()) {
+                String id = objectMapper.convertValue(hit.source(), Map.class).get(Geonet.IndexFieldNames.ID).toString();
                 allMdInfo.add(dataManager.findOne(id));
             }
         } catch (Exception ex) {
@@ -409,10 +409,10 @@ public class InspireAtomUtil {
                 FIELDLIST_CORE,
                 0, 1);
 
-            TotalHits totalHits = result.getHits().getTotalHits();
+            TotalHits totalHits = result.hits().total();
 
-            if ((totalHits != null) && (totalHits.value > 0)) {
-                id = result.getHits().getAt(0).getId();
+            if ((totalHits != null) && (totalHits.value() > 0)) {
+                id = ((Hit) result.hits().hits().get(0)).id();
             }
         } catch (Exception ex) {
             Log.error(Geonet.ATOM, ex.getMessage(), ex);
@@ -552,8 +552,8 @@ public class InspireAtomUtil {
                 esJsonQuery,
                 FIELDLIST_CORE,
                 0, 1);
-            for (SearchHit hit : result.getHits()) {
-                datasetMd = repo.findOneByUuid(hit.getId());
+            for (Hit hit : (List<Hit>) result.hits().hits()) {
+                datasetMd = repo.findOneByUuid(hit.id());
             }
         } catch (Exception e) {
 
@@ -600,8 +600,8 @@ public class InspireAtomUtil {
                 esJsonQuery,
                 FIELDLIST_CORE,
                 0, 1);
-            for (SearchHit hit : result.getHits()) {
-                serviceMetadata = repo.findOneByUuid(hit.getId());
+            for (Hit hit : (List<Hit>) result.hits().hits()) {
+                serviceMetadata = repo.findOneByUuid(hit.id());
             }
         } catch (Exception e) {
 

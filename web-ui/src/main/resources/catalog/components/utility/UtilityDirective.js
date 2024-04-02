@@ -174,7 +174,10 @@
             } else {
               query.query = {
                 function_score: {
-                  random_score: { seed: Math.floor(Math.random() * 10000) },
+                  random_score: {
+                    seed: Math.floor(Math.random() * 10000),
+                    field: "uuid"
+                  },
                   query: query.query
                 }
               };
@@ -482,12 +485,16 @@
           var addGeonames = !attrs["disableGeonames"];
           scope.regionTypes = [];
 
+          scope.lang = attrs["lang"];
+
           function setDefault() {
             var defaultThesaurus = attrs["default"];
-            for (var t in scope.regionTypes) {
-              if (scope.regionTypes[t].name === defaultThesaurus) {
-                scope.regionType = scope.regionTypes[t];
-                return;
+            if (defaultThesaurus) {
+              for (var t in scope.regionTypes) {
+                if (scope.regionTypes[t].name === defaultThesaurus) {
+                  scope.regionType = scope.regionTypes[t];
+                  return;
+                }
               }
             }
             scope.regionType = scope.regionTypes[0];
@@ -736,6 +743,8 @@
               }
             });
           }
+          scope.lang = attrs["lang"];
+
           scope.$watch("regionType", function (val) {
             if (scope.regionType) {
               if (scope.regionType.id == "geonames") {
@@ -760,7 +769,15 @@
                   queryTokenizer: Bloodhound.tokenizers.whitespace,
                   limit: 30,
                   remote: {
-                    wildcard: "QUERY",
+                    replace: function (url, query) {
+                      // url parameter will be decoded once by the proxy
+                      // and we have to keep URI component encoded in the API call to the service
+                      // If not, search with " " will fail because invalid URI.
+                      return url.replace(
+                        "QUERY",
+                        encodeURIComponent(encodeURIComponent(query))
+                      );
+                    },
                     url: url,
                     ajax: {
                       beforeSend: function () {
@@ -1351,7 +1368,7 @@
           "    </defs>" +
           '    <circle fill="url(\'#image{{imageId}}\')" style="stroke-miterlimit:10;" cx="250" cy="250" r="240"/>' +
           '    <text x="50%" y="50%"' +
-          '          text-anchor="middle" alignment-baseline="central"' +
+          '          text-anchor="middle" alignment-baseline="central" dominant-baseline="central"' +
           "          font-size=\"300\">{{hasIcon ? '' : org.substr(0, 1).toUpperCase()}}</text>" +
           "</svg>",
         scope: {
@@ -2578,7 +2595,7 @@
         replace: true,
         scope: {
           uuid: "=gnMetadataSelector", // Model property with the metadata uuid selected
-          searchObj: "=", // ElasticSearch search object
+          searchObj: "=", // Elasticsearch search object
           md: "=", // Metadata object selected
           elementName: "@" // Input element name for the uuid control
         },
@@ -2718,6 +2735,42 @@
         };
 
         updateInputCss();
+      }
+    };
+  });
+
+  module.directive("equalWith", function () {
+    return {
+      require: "ngModel",
+      scope: { equalWith: "&" },
+      link: function (scope, elem, attrs, ngModelCtrl) {
+        ngModelCtrl.$validators.equalWith = function (modelValue) {
+          return modelValue === scope.equalWith();
+        };
+
+        scope.$watch(scope.equalWith, function (value) {
+          ngModelCtrl.$validate();
+        });
+      }
+    };
+  });
+
+  module.directive("confirmOnExit", function () {
+    return {
+      link: function ($scope, elem, attrs) {
+        var message = attrs["confirmMessage"];
+        window.onbeforeunload = function () {
+          if ($scope[attrs["name"]].$dirty) {
+            return message;
+          }
+        };
+        $scope.$on("$locationChangeStart", function (event, next, current) {
+          if ($scope[attrs["name"]].$dirty) {
+            if (!confirm(message)) {
+              event.preventDefault();
+            }
+          }
+        });
       }
     };
   });

@@ -251,7 +251,7 @@
     <xs:attribute name="jsonpath">
       <xs:annotation>
         <xs:documentation>
-          An JSON path to select elements to filter in the ElasticSearch index.
+          An JSON path to select elements to filter in the Elasticsearch index.
         </xs:documentation>
       </xs:annotation>
     </xs:attribute>

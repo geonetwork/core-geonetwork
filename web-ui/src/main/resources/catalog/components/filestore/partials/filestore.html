@@ -1,87 +1,106 @@
 <div data-ng-show="uuid">
-  <div
-    class="alert alert-info"
-    data-ng-show="filter && metadataResources.length === 0"
-    data-translate=""
-    data-translate-values="{filter: filter}"
-  >
-    fileStoreNoFileMatching
+  <div data-ng-if="layout === 'select'">
+    <label data-ng-if="metadataResources.length > 0" data-translate=""
+      >filestoreChooseAFile</label
+    >
+    <select
+      class="form-control"
+      data-ng-if="metadataResources.length > 0"
+      data-ng-model="selectOptions.current"
+      data-ng-options="r as (r.id.split('/').splice(2).join('/') | decodeURIComponent) for r in metadataResources"
+    ></select>
+    <label data-translate="">filestoreUploadAFile</label><br />
+    <div
+      data-gn-data-uploader-button="'chooseOnlinesrc'"
+      data-after-upload-cb="setResource"
+      data-upload-options="filestoreUploadOptions"
+    ></div>
   </div>
+  <div data-ng-if="layout !== 'select'">
+    <div
+      class="alert alert-info"
+      data-ng-show="filter && metadataResources.length === 0"
+      data-translate=""
+      data-translate-values="{filter: filter}"
+    >
+      fileStoreNoFileMatching
+    </div>
 
-  <a
-    class="btn btn-default btn-xs pull-right"
-    data-ng-show="metadataResources.length > 0"
-    data-gn-click-and-spin="loadMetadataResources()"
-  >
-    <i class="fa fa-fw fa-refresh" />
-  </a>
+    <a
+      class="btn btn-default btn-xs pull-right"
+      data-ng-show="metadataResources.length > 0"
+      data-gn-click-and-spin="loadMetadataResources()"
+    >
+      <i class="fa fa-fw fa-refresh" />
+    </a>
 
-  <table class="table gn-data-store">
-    <tbody>
-      <tr data-ng-repeat="r in metadataResources">
-        <td>
-          <a
-            href=""
-            title="{{'clickToAddResource' | translate}}"
-            data-ng-click="setResource(r)"
+    <table class="table gn-data-store">
+      <tbody>
+        <tr data-ng-repeat="r in metadataResources">
+          <td>
+            <a
+              href=""
+              title="{{'clickToAddResource' | translate}}"
+              data-ng-click="setResource(r)"
+            >
+              {{r.id.split('/').splice(2).join('/') | decodeURIComponent}}
+            </a>
+          </td>
+          <td data-ng-if="r.version.length > 0">{{r.version}}</td>
+          <td
+            data-ng-if="gnCurrentEdit.resourceManagementExternalProperties.enabled && r.metadataResourceExternalManagementProperties.url.length > 0"
           >
-            {{r.id.split('/').splice(2).join('/') | decodeURIComponent}}
-          </a>
-        </td>
-        <td data-ng-if="r.version.length > 0">{{r.version}}</td>
-        <td
-          data-ng-if="gnCurrentEdit.resourceManagementExternalProperties.enabled && r.metadataResourceExternalManagementProperties.url.length > 0"
-        >
-          <a
-            class="btn btn-link"
-            title="{{'externalResourceManagement' | translate}}"
-            data-ng-click="onlinesrcService.openExternalResourceManagement(r)"
-          >
-            <span
-              class="fa external-resource-validation-status-{{r.metadataResourceExternalManagementProperties.validationStatus | lowercase}}"
-            ></span>
-          </a>
-        </td>
-        <td>
-          <a
-            class="btn btn-link"
-            title="{{'openResource' | translate}}"
-            target="_blank"
-            data-ng-href="{{onlinesrcService.getApprovedUrl(r.url)}}"
-          >
-            <i class="fa fa-eye"></i>
-          </a>
-        </td>
-        <td>
-          <a
-            class="btn btn-link"
-            title="{{'setResourceStatus' | translate}}"
-            data-ng-click="setResourceStatus(r)"
-          >
-            <i
-              class="fa"
-              data-ng-class="{'fa-lock text-danger': r.visibility == 'PRIVATE',
-                               'fa-unlock text-success': r.visibility == 'PUBLIC'}"
-            ></i>
-          </a>
-        </td>
-        <td>
-          <a
-            class="btn btn-link"
-            title="{{'deleteResource' | translate}}"
-            data-gn-confirm-click="{{'removeFileFromStoreConfirm' | translate:{url: r.url} }}"
-            data-ng-click="deleteResource(r)"
-          >
-            <i class="fa fa-times text-danger"></i>
-          </a>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+            <a
+              class="btn btn-link"
+              title="{{'externalResourceManagement' | translate}}"
+              data-ng-click="onlinesrcService.openExternalResourceManagement(r)"
+            >
+              <span
+                class="fa external-resource-validation-status-{{r.metadataResourceExternalManagementProperties.validationStatus | lowercase}}"
+              ></span>
+            </a>
+          </td>
+          <td>
+            <a
+              class="btn btn-link"
+              title="{{'openResource' | translate}}"
+              target="_blank"
+              data-ng-href="{{onlinesrcService.getApprovedUrl(r.url)}}"
+            >
+              <i class="fa fa-eye"></i>
+            </a>
+          </td>
+          <td>
+            <a
+              class="btn btn-link"
+              title="{{'setResourceStatus' | translate}}"
+              data-ng-click="setResourceStatus(r)"
+            >
+              <i
+                class="fa"
+                data-ng-class="{'fa-lock text-danger': r.visibility == 'PRIVATE',
+                               'fa-lock-open text-success': r.visibility == 'PUBLIC'}"
+              ></i>
+            </a>
+          </td>
+          <td>
+            <a
+              class="btn btn-link"
+              title="{{'deleteResource' | translate}}"
+              data-gn-confirm-click="{{'removeFileFromStoreConfirm' | translate:{url: r.url} }}"
+              data-ng-click="deleteResource(r)"
+            >
+              <i class="fa fa-times text-danger"></i>
+            </a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
 
-  <div
-    data-gn-data-uploader-button="'chooseOnlinesrc'"
-    data-after-upload-cb="linkUploadedFileToRecord"
-    data-upload-options="filestoreUploadOptions"
-  ></div>
+    <div
+      data-gn-data-uploader-button="'chooseOnlinesrc'"
+      data-after-upload-cb="linkUploadedFileToRecord"
+      data-upload-options="filestoreUploadOptions"
+    ></div>
+  </div>
 </div>

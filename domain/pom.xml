@@ -27,7 +27,7 @@
   <parent>
     <artifactId>geonetwork</artifactId>
     <groupId>org.geonetwork-opensource</groupId>
-    <version>4.4.0-SNAPSHOT</version>
+    <version>4.4.4-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
@@ -293,6 +293,7 @@
               <clusterName>test</clusterName>
               <transportPort>9300</transportPort>
               <httpPort>9200</httpPort>
+              <environmentVariables><ES_JAVA_OPTS>-Xmx2g</ES_JAVA_OPTS></environmentVariables>
             </configuration>
             <executions>
               <execution>

@@ -200,31 +200,6 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
         return metadataToDelete.size();
     }
 
-    @Override
-    /**
-     * Search for all records having XLinks (ie. indexed with _hasxlinks flag),
-     * clear the cache and reindex all records found.
-     */
-    public synchronized void rebuildIndexXLinkedMetadata(final ServiceContext context) throws Exception {
-
-        // get all metadata with XLinks
-        Set<Integer> toIndex = searchManager.getDocsWithXLinks();
-
-        if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
-            Log.debug(Geonet.DATA_MANAGER, "Will index " + toIndex.size() + " records with XLinks");
-        if (toIndex.size() > 0) {
-            // clean XLink Cache so that cache and index remain in sync
-            Processor.clearCache();
-
-            ArrayList<String> stringIds = new ArrayList<String>();
-            for (Integer id : toIndex) {
-                stringIds.add(id.toString());
-            }
-            // execute indexing operation
-            batchIndexInThreadPool(context, stringIds);
-        }
-    }
-
     /**
      * Reindex all records in current selection.
      */
@@ -350,9 +325,9 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
                 List<Attribute> xlinks = Processor.getXLinks(md);
                 if (xlinks.size() > 0) {
                     fields.put(Geonet.IndexFieldNames.HASXLINKS, true);
-                    StringBuilder sb = new StringBuilder();
                     for (Attribute xlink : xlinks) {
                         fields.put(Geonet.IndexFieldNames.XLINK, xlink.getValue());
+                        fields.put(Geonet.IndexFieldNames.XLINK, xlink.getValue().replaceAll("local://srv/api/registries/entries/(.*)\\?.*", "$1"));
                     }
                     Processor.detachXLink(md, getServiceContext());
                 } else {
@@ -408,10 +383,10 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
             if (!schemaManager.existsSchema(schema)) {
                 fields.put(IndexFields.DRAFT, "n");
                 fields.put(IndexFields.INDEXING_ERROR_FIELD, true);
-                fields.put(IndexFields.INDEXING_ERROR_MSG, String.format(
-                    "Schema '%s' is not registered in this catalog. Install it or remove those records",
-                    schema
-                ));
+                fields.put(IndexFields.INDEXING_ERROR_MSG,
+                    searchManager.createIndexingErrorMsgObject("indexingErrorMsg-schemaNotRegistered",
+                        "error",
+                        Map.of("record", metadataId, "schema", schema)));
                 searchManager.index(null, md, indexKey, fields, metadataType,
                     forceRefreshReaders, indexingMode);
                 Log.error(Geonet.DATA_MANAGER, String.format(
@@ -526,7 +501,11 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
 
                         // TODO: Check if ignore INSPIRE validation?
                         if (!type.equalsIgnoreCase("inspire")) {
-                            if (status == MetadataValidationStatus.INVALID && vi.isRequired()) {
+                            // If never validated and required then set status to never validated.
+                            if (status == MetadataValidationStatus.NEVER_CALCULATED && vi.isRequired()) {
+                                isValid = "-1";
+                            }
+                            if (status == MetadataValidationStatus.INVALID && vi.isRequired() && isValid != "-1") {
                                 isValid = "0";
                             }
                         } else {
@@ -569,6 +548,7 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
         Log.warning(Geonet.INDEX_ENGINE, String.format("Record #%s (mode: %s) indexed in %dms",
             metadataId, indexingMode, System.currentTimeMillis() - start));
     }
+
 
     @Override
     public void indexMetadataPrivileges(String uuid, int id) throws Exception {

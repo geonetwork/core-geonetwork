@@ -15,6 +15,13 @@
     <div gn-record-is-replaced-by="mdView.current.record.uuid"></div>
 
     <div
+      data-ng-if="!(mdView.current.record.related.uuids
+                    && mdView.current.record.related.uuids.length > 0)"
+      class="gn-margin-top"
+      ng-include="'../../catalog/views/default/templates/recordView/thumbnails.html'"
+    ></div>
+
+    <div
       class="gn-margin-top"
       ng-include="'../../catalog/views/default/templates/recordView/summary.html'"
     />
@@ -22,9 +29,11 @@
     <div data-gn-data-preview="mdView.current.record"></div>
   </div>
 </div>
-<div class="col-md-12 gn-record">
+
+<div class="row">
   <!-- Records filters -->
   <div
+    class="col-md-4 col-sm-12 gn-margin-bottom gn-padding-bottom-lg"
     data-ng-if="mdView.current.record.related.uuids"
     data-gn-records-filters
     data-agg="mdView.current.record.related.children.length > 0
@@ -33,31 +42,33 @@
     data-title="{{'seriesComposedOf' | translate}}"
   ></div>
 
-  <!-- Related records -->
-  <div
-    data-ng-if="mdView.current.record.related.uuids"
-    data-gn-related-with-stats="mdView.current.record.related.children.length > 0
-                                          ? mdView.current.record.related.children
-                                          : mdView.current.record.related.siblings"
-    data-agg="mdView.current.record.related.children.length > 0
-        ? mdView.current.record.related.aggregations_children
-        :mdView.current.record.related.aggregations_siblings"
-    data-type="'blocks'"
-    data-sort-by="resourceTitle"
-    data-title="{{'seriesComposedOf' | translate}}"
-  ></div>
+  <div class="col-md-8 col-sm-12">
+    <div
+      class="gn-margin-bottom"
+      data-ng-if="mdView.current.record.related.uuids"
+      data-gn-related-with-stats="mdView.current.record.related.children.length > 0
+                                            ? mdView.current.record.related.children
+                                            : mdView.current.record.related.siblings"
+      data-agg="mdView.current.record.related.children.length > 0
+          ? mdView.current.record.related.aggregations_children
+          :mdView.current.record.related.aggregations_siblings"
+      data-type="'blocks'"
+      data-sort-by="resourceTitle"
+      data-title="{{'seriesComposedOf' | translate}}"
+    ></div>
 
-  <!-- Related records table -->
-  <div
-    data-gn-records-table="mdView.current.record.related.children.length > 0
-                              ? mdView.current.record.related.children
-                              : mdView.current.record.related.siblings"
-    data-agg="mdView.current.record.related.children.length > 0
-        ? mdView.current.record.related.aggregations_children
-        :mdView.current.record.related.aggregations_siblings"
-    labels="{{::viewConfig.collectionTableConfig.labels}}"
-    columns="{{::viewConfig.collectionTableConfig.columns}}"
-  />
+    <!-- Related records table -->
+    <div
+      data-gn-records-table="mdView.current.record.related.children.length > 0
+                                ? mdView.current.record.related.children
+                                : mdView.current.record.related.siblings"
+      data-agg="mdView.current.record.related.children.length > 0
+          ? mdView.current.record.related.aggregations_children
+          :mdView.current.record.related.aggregations_siblings"
+      labels="{{::viewConfig.collectionTableConfig.labels}}"
+      columns="{{::viewConfig.collectionTableConfig.columns}}"
+    ></div>
+  </div>
 </div>
 
 <div class="row gn-section gn-section-{{mdView.current.record.resourceType[0]}}">
@@ -66,6 +77,14 @@
   </div>
   <div class="col-md-4 gn-md-side">
     <div
+      class="gn-contact-col-1"
+      data-ng-if="mdView.current.record.contactForDistribution"
+      data-gn-metadata-contacts="mdView.current.record.contactForDistribution"
+      data-gn-mode="default"
+      data-layout="icon"
+    />
+
+    <div
       data-ng-if="mdView.current.record.related.uuids"
       data-gn-related="mdView.current.record"
       data-user="user"
@@ -73,6 +92,21 @@
       data-types="services"
       data-title="{{'<span class=\'badge badge-rounded\'><i class=\'fa fa-fw fa-cloud\'></i></span><strong>' + ('openRecordservices' | translate) + '</strong>'}}"
     ></div>
+  </div>
+</div>
+
+<div class="row gn-section gn-section-{{mdView.current.record.resourceType[0]}}">
+  <div class="col-md-12 gn-record">
+    <h2 data-translate="">technicalInformation</h2>
+  </div>
+  <div class="gn-md-side gn-nopadding-top col-md-8">
+    <div
+      class="col-3 gn-padding-bottom-lg"
+      ng-include="'../../catalog/views/default/templates/recordView/technical.html'"
+    />
+  </div>
+  <div class="col-md-4 gn-md-side gn-nopadding-top">
+    <div ng-include="'../../catalog/views/default/templates/recordView/spatial.html'" />
   </div>
 </div>
 

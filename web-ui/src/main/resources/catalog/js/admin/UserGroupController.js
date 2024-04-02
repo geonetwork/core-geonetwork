@@ -32,7 +32,8 @@
     "gn_dbtranslation",
     "gn_multiselect",
     "gn_mdtypewidget",
-    "blueimp.fileupload"
+    "blueimp.fileupload",
+    "ngMessages"
   ]);
 
   /**
@@ -295,6 +296,7 @@
             var data = response.data;
 
             $scope.userSelected = data;
+            $scope.gnUserEdit.$setPristine();
             $scope.userIsAdmin = data.profile === "Administrator";
 
             $scope.userIsEnabled = data.enabled;
@@ -791,6 +793,8 @@
         // that breaks the group management.
         // TODO: Use custom controllers for groups and users management
         $scope.groupSelected = angular.copy(g);
+        $scope.gnGroupEdit.$setPristine();
+
         $scope.clear($scope.queue);
         delete $scope.groupSelected.langlabel;
 

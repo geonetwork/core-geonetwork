@@ -6,14 +6,15 @@ At the end of the installation process you will end up with the web applications
 
 Host ports requirements:
 
--   Java web server [Apache Tomcat](http://tomcat.apache.org/) or [Jetty](https://www.eclipse.org/jetty/): 8080
--   [ElasticSearch](https://www.elastic.co/elasticsearch/): 9200
+-   Java web server [Apache Tomcat](https://tomcat.apache.org/) or [Jetty](https://www.eclipse.org/jetty/): 8080
+-   [Elasticsearch](https://www.elastic.co/elasticsearch/): 9200
 -   [Kibana](https://www.elastic.co/kibana/): 5601
 -   Database eg. 5432 for a default [PostgreSQL](https://www.postgresql.org/) installation
 
 
-For  [Apache Tomcat](http://tomcat.apache.org/)  we recommend the following versions: 8.5.x and 9.0.x.
-For [Jetty](https://www.eclipse.org/jetty/) we the following versions: 9.4.x.
+For  [Apache Tomcat](https://tomcat.apache.org/) we recommend the following versions: 8.5.x and 9.0.x. The latest Apache Tomcat 10.x cannot be used at this time.
+
+For [Jetty](https://www.eclipse.org/jetty/) we the following versions: 9.4.x. Newer versions to Jetty cannot be used at this time.
 
 1.  Download the WAR file
 
@@ -56,15 +57,15 @@ For [Jetty](https://www.eclipse.org/jetty/) we the following versions: 9.4.x.
     Download Elasticsearch for your platform <https://www.elastic.co/downloads/elasticsearch>
 
     ``` shell
-    wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.6.2-linux-x86_64.tar.gz
-    tar xvfz elasticsearch-7.6.2-linux-x86_64.tar.gz
-    cd elasticsearch-7.6.2-linux-x86_64/bin
+    wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-8.11.3-linux-x86_64.tar.gz
+    tar xvfz elasticsearch-8.11.3-linux-x86_64.tar.gz
+    cd elasticsearch-8.11.3-linux-x86_64/bin
     ./elasticsearch
     ```
 
     Open <http://localhost:9200> in your web browser to check that Elasticsearch is running.
 
-    To use an existing instance check `on` in [Installing search platform](installing-index.md).
+    To use an existing instance check Configure connection in [Installing search platform](installing-index.md).
 
 5.  Up and running?
 

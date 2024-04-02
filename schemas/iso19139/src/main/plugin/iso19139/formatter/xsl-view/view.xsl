@@ -1151,7 +1151,10 @@
         <xsl:value-of select="normalize-space(.)"/>
 
         <xsl:if test="@uom">
-          &#160;<xsl:value-of select="@uom"/>
+          <!-- Display the unit value only -->
+          &#160; <xsl:value-of select="if (contains(@uom, '#'))
+                                    then concat(., ' ', tokenize(@uom, '#')[2])
+                                    else  concat(., ' ', @uom)"/>
         </xsl:if>
       </xsl:otherwise>
     </xsl:choose>

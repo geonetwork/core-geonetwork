@@ -48,10 +48,20 @@
   module.directive("gnNeedHelp", [
     "gnGlobalSettings",
     "gnAlertService",
+    "gnConfigService",
+    "gnConfig",
     "$http",
     "$q",
     "$translate",
-    function (gnGlobalSettings, gnAlertService, $http, $q, $translate) {
+    function (
+      gnGlobalSettings,
+      gnAlertService,
+      gnConfigService,
+      gnConfig,
+      $http,
+      $q,
+      $translate
+    ) {
       return {
         restrict: "A",
         replace: true,
@@ -60,16 +70,27 @@
         link: function (scope, element, attrs) {
           scope.iconOnly = attrs.iconOnly === "true";
           scope.documentationLinks = null;
+          scope.applicationVersion = "";
+
+          scope.helpBaseUrl =
+            "https://docs.geonetwork-opensource.org/{{version}}/{{lang}}";
+
+          gnConfigService.load().then(function (c) {
+            var version = gnConfig["system.platform.version"];
+            scope.applicationVersion = version.substring(0, version.lastIndexOf("."));
+
+            var docUrl = gnConfig["system.documentation.url"];
+
+            if (docUrl) {
+              scope.helpBaseUrl = docUrl;
+            }
+          });
 
           scope.$watch("documentationLinks", function (n, o) {
             if (n !== o && n != null) {
               scope.checkUrl();
             }
           });
-
-          var helpBaseUrl =
-            gnGlobalSettings.docUrl ||
-            "https://geonetwork-opensource.org/manuals/trunk/{lang}";
 
           /**
            * load the JSON file with all the documentation links and put the links in the scope
@@ -126,13 +147,24 @@
           scope.showHelp = function () {
             var pageId = attrs.gnNeedHelp;
             var page = scope.documentationLinks[pageId];
-            var baseUrl = helpBaseUrl.replace("{lang}", gnGlobalSettings.lang);
+            var baseUrl;
+
+            if (gnGlobalSettings.lang !== "en") {
+              baseUrl = scope.helpBaseUrl.replace("{{lang}}", gnGlobalSettings.lang);
+            } else {
+              baseUrl = scope.helpBaseUrl.replace("/{{lang}}", "");
+            }
+
+            baseUrl = baseUrl.replace("{{version}}", scope.applicationVersion);
+
             var helpPageUrl = baseUrl + "/" + page;
 
             testAndOpen(helpPageUrl).then(
               function () {},
               function () {
-                var baseUrl = helpBaseUrl.replace("{lang}", "en");
+                var baseUrl = scope.helpBaseUrl
+                  .replace("/{{lang}}", "")
+                  .replace("{{version}}", scope.applicationVersion);
                 var helpPageUrl = baseUrl + "/" + page;
 
                 testAndOpen(helpPageUrl);

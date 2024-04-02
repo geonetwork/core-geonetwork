@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2023 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -59,6 +59,7 @@
     "$rootScope",
     "$filter",
     "gnUtilityService",
+    "$window",
     function (
       $scope,
       $http,
@@ -77,7 +78,8 @@
       gnConfigService,
       $rootScope,
       $filter,
-      gnUtilityService
+      gnUtilityService,
+      $window
     ) {
       $scope.formatter = gnSearchSettings.formatter;
       $scope.gnMetadataActions = gnMetadataActions;
@@ -191,6 +193,35 @@
               type: "success"
             });
             $scope.closeRecord(md);
+          },
+          function (reason) {
+            // Data needs improvements
+            // See https://github.com/geonetwork/core-geonetwork/issues/723
+            gnAlertService.addAlert({
+              msg: reason.data.message || reason.data.description,
+              type: "danger"
+            });
+          }
+        );
+      };
+
+      $scope.cancelWorkingCopy = function (md) {
+        return gnMetadataActions.cancelWorkingCopy(md).then(
+          function (data) {
+            gnAlertService.addAlert({
+              msg: $translate.instant("metadataRemoved", {
+                title: md.resourceTitle
+              }),
+              type: "success"
+            });
+
+            // Set a timeout to reload the page, to display the alert
+            $window.setTimeout(function () {
+              $window.location.href = $location
+                .absUrl()
+                .replace("/metadraf/", "/metadata/");
+              $window.location.reload();
+            }, 500);
           },
           function (reason) {
             // Data needs improvements

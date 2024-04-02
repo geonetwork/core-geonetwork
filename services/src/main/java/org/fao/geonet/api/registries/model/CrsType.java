@@ -27,10 +27,10 @@ package org.fao.geonet.api.registries.model;
  * CRS type as categorized in GeoTools
  */
 public enum CrsType {
-    CoordinateReferenceSystem(org.opengis.referencing.crs.CoordinateReferenceSystem.class),
-    VerticalCRS(org.opengis.referencing.crs.VerticalCRS.class),
-    GeographicCRS(org.opengis.referencing.crs.GeographicCRS.class),
-    ProjectedCRS(org.opengis.referencing.crs.ProjectedCRS.class),
+    CoordinateReferenceSystem(org.geotools.api.referencing.crs.CoordinateReferenceSystem.class),
+    VerticalCRS(org.geotools.api.referencing.crs.VerticalCRS.class),
+    GeographicCRS(org.geotools.api.referencing.crs.GeographicCRS.class),
+    ProjectedCRS(org.geotools.api.referencing.crs.ProjectedCRS.class),
     ;
 
     private Class clazz;

@@ -65,6 +65,8 @@
         source.groupOwner = source.groupOwner || null;
         $scope.source = source;
         $scope.isNew = false;
+
+        $scope.gnSourceForm.$setPristine();
       };
 
       function filterSources() {

@@ -110,9 +110,11 @@
     "$scope",
     "gnRelatedResources",
     function ($scope, gnRelatedResources) {
-      $scope.resultTemplate =
-        "../../catalog/components/" +
-        "search/resultsview/partials/viewtemplates/grid4maps.html";
+      $scope.resultTemplate = {
+        tplUrl:
+          "../../catalog/components/" +
+          "search/resultsview/partials/viewtemplates/grid4maps.html"
+      };
       $scope.searchObj = {
         permalink: false,
         internal: true,
@@ -169,6 +171,7 @@
     "gnFacetSorter",
     "gnExternalViewer",
     "gnUrlUtils",
+    "gnAlertService",
     function (
       $scope,
       $location,
@@ -191,7 +194,8 @@
       gnESFacet,
       gnFacetSorter,
       gnExternalViewer,
-      gnUrlUtils
+      gnUrlUtils,
+      gnAlertService
     ) {
       var viewerMap = gnSearchSettings.viewerMap;
       var searchMap = gnSearchSettings.searchMap;
@@ -212,7 +216,7 @@
       $scope.activeTab = "/home";
       $scope.formatter = gnGlobalSettings.gnCfg.mods.search.formatter;
       $scope.listOfResultTemplate = gnGlobalSettings.gnCfg.mods.search.resultViewTpls;
-      $scope.resultTemplate = gnSearchSettings.resultTemplate;
+      $scope.resultTemplate = gnGlobalSettings.getDefaultResultTemplate();
       $scope.advandedSearchTemplate = gnSearchSettings.advancedSearchTemplate;
       $scope.facetsSummaryType = gnSearchSettings.facetsSummaryType;
       $scope.facetConfig = gnSearchSettings.facetConfig;
@@ -353,14 +357,23 @@
       });
 
       function buildAddToMapConfig(link, md) {
+        var type = "wms";
+        if (link.protocol.indexOf("WMTS") > -1) {
+          type = "wmts";
+        } else if (
+          link.protocol === "ESRI:REST" ||
+          link.protocol.startsWith("ESRI REST")
+        ) {
+          type = "esrirest";
+        } else if (link.protocol === "OGC:3DTILES") {
+          type = "3dtiles";
+        } else if (link.protocol === "OGC:COG") {
+          type = "cog";
+        }
+
         var config = {
           uuid: md ? md.uuid : null,
-          type:
-            link.protocol.indexOf("WMTS") > -1
-              ? "wmts"
-              : link.protocol == "ESRI:REST" || link.protocol.startsWith("ESRI REST")
-              ? "esrirest"
-              : "wms",
+          type,
           url: $filter("gnLocalized")(link.url) || link.url
         };
 
@@ -410,6 +423,19 @@
           );
           return;
         }
+
+        // no support for COG or 3DTiles for now
+        if (config.type === "cog" || config.type === "3dtiles") {
+          gnAlertService.addAlert({
+            msg: $translate.instant("layerProtocolNotSupported", {
+              type: link.protocol
+            }),
+            delay: 20000,
+            type: "warning"
+          });
+          return;
+        }
+
         return config;
       }
 
@@ -417,20 +443,28 @@
         addMdLayerToMap: function (link, md) {
           // This is probably only a service
           // Open the add service layer tab
+          var config = buildAddToMapConfig(link, md);
+          if (!config) {
+            return;
+          }
           $location.path("map").search({
-            add: encodeURIComponent(angular.toJson([buildAddToMapConfig(link, md)]))
+            add: encodeURIComponent(angular.toJson([config]))
           });
-          return;
         },
         addAllMdLayersToMap: function (layers, md) {
-          var config = [];
-          angular.forEach(layers, function (layer) {
-            config.push(buildAddToMapConfig(layer, md));
-          });
+          var config = layers
+            .map(function (layer) {
+              return buildAddToMapConfig(layer, md);
+            })
+            .filter(function (config) {
+              return !!config;
+            });
+          if (config.length === 0) {
+            return;
+          }
           $location.path("map").search({
             add: encodeURIComponent(angular.toJson(config))
           });
-          return;
         },
         loadMap: function (map, md) {
           gnOwsContextService.loadContextFromUrl(map.url, viewerMap);

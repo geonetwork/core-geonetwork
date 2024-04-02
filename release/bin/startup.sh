@@ -32,7 +32,7 @@ find logs -maxdepth 1 -name 'geonetwork.log.*' -type f -exec mv -t logs/archive/
 
 export JAVA_MEM_OPTS="-Xms512m -Xmx1g"
 
-export JAVA_OPTS="$JAVA_MEM_OPTS -Djetty.httpConfig.requestHeaderSize=32768 -Dorg.eclipse.jetty.server.Request.maxFormContentSize=500000 -Dorg.eclipse.jetty.server.Request.maxFormKeys=4000 -Xss2M -Djeeves.filecharsetdetectandconvert=enabled -Dmime-mappings=../web/geonetwork/WEB-INF/mime-types.properties -DSTOP.PORT=8079 -Djava.awt.headless=true -DSTOP.KEY=geonetwork"
+export JAVA_OPTS="$JAVA_MEM_OPTS --add-opens=jdk.management/com.sun.management.internal=ALL-UNNAMED -Djetty.httpConfig.requestHeaderSize=32768 -Dorg.eclipse.jetty.server.Request.maxFormContentSize=500000 -Dorg.eclipse.jetty.server.Request.maxFormKeys=4000 -Xss2M -Djeeves.filecharsetdetectandconvert=enabled -Dmime-mappings=../web/geonetwork/WEB-INF/mime-types.properties -DSTOP.PORT=8079 -Djava.awt.headless=true -DSTOP.KEY=geonetwork"
 
 # Set custom data directory location using Java property
 # export JAVA_OPTS="$JAVA_OPTS -Dgeonetwork.dir=/app/geonetwork_data_dir"

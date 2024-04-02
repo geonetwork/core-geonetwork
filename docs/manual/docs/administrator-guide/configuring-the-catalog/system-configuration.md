@@ -151,7 +151,7 @@ See [Configuring for the INSPIRE Directive](inspire-configuration.md).
 
 ## INSPIRE Atom Feed
 
-Allows to define the configuration of Atom Feeds referenced by the metadata to provide services related to the [INSPIRE technical guidance for download services](http://inspire.ec.europa.eu/documents/Network_Services/Technical_Guidance_Download_Services_3.0.pdf):
+Allows to define the configuration of Atom Feeds referenced by the metadata to provide services related to the [INSPIRE technical guidance for download services](https://inspire.ec.europa.eu/documents/Network_Services/Technical_Guidance_Download_Services_3.0.pdf):
 
 -   Select the type of atom feed:
 

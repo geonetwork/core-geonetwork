@@ -53,6 +53,15 @@
         <value>Conformance Class 2b: INSPIRE data sets and data set series metadata for Monitoring</value>
       </array>
     </entry>
+    <entry key="TG version 2.0 - Data sets and series (for Monitoring and IACS)">
+      <array value-type="java.lang.String">
+        <value>Common Requirements for ISO/TC 19139:2007 based INSPIRE metadata records.</value>
+        <value>Conformance Class 1: INSPIRE data sets and data set series baseline metadata.</value>
+        <value>Conformance Class 2: INSPIRE data sets and data set series interoperability metadata.</value>
+        <value>Conformance Class 2b: INSPIRE data sets and data set series metadata for Monitoring</value>
+        <value>Conformance Class 2c: INSPIRE data sets and data set series metadata for IACS</value>
+      </array>
+    </entry>
     <entry key="TG version 2.0 - Network services">
       <array value-type="java.lang.String">
         <value>Common Requirements for ISO/TC 19139:2007 based INSPIRE metadata records.</value>

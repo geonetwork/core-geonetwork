@@ -58,8 +58,6 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import static org.fao.geonet.api.records.attachments.AbstractStore.getAndCheckMetadataId;
-
 @RequestMapping(value = {
     "/{portal}/api/related"
 })
@@ -83,7 +81,7 @@ public class Related implements ApplicationContextAware {
         summary = "Get record related resources for all requested metadatas",
         description = "Retrieve related services, datasets, onlines, thumbnails, sources, ... " +
             "to all requested records.<br/>" +
-            "<a href='http://geonetwork-opensource.org/manuals/trunk/eng/users/user-guide/associating-resources/index.html'>More info</a>")
+            "<a href='https://geonetwork-opensource.org/manuals/trunk/eng/users/user-guide/associating-resources/index.html'>More info</a>")
     @RequestMapping(value = "",
         method = RequestMethod.GET,
         produces = {

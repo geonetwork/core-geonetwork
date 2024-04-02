@@ -89,8 +89,13 @@
                     scope.selection.splice(scope.selection.indexOf(md), 1);
                   }
                 } else {
-                  scope.selection.pop();
-                  scope.selection.push(md);
+                  // Unselect current
+                  if (scope.selection.length === 1 && scope.selection[0]._id === md._id) {
+                    scope.selection.pop();
+                  } else {
+                    scope.selection.pop();
+                    scope.selection.push(md);
+                  }
                 }
               };
             } else {

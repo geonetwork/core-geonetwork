@@ -71,7 +71,7 @@
     <xsl:variable name="resourceTitleObject" as="xs:string"
                   select="concat('{',
                           $doubleQuote, 'default', $doubleQuote, ':',
-                          $doubleQuote, gn-fn-index:json-escape($mainTitle) ,$doubleQuote,
+                          $doubleQuote, util:escapeForJson($mainTitle) ,$doubleQuote,
                         '}')"/>
 
     <xsl:variable name="identifier" as="xs:string?"
@@ -150,30 +150,30 @@
       </xsl:for-each>
 
       <xsl:for-each select="dc:format">
-        <format><xsl:value-of select="gn-fn-index:json-escape(.)"/></format>
+        <format><xsl:value-of select="util:escapeForJson(.)"/></format>
       </xsl:for-each>
 
       <xsl:for-each select="dc:type[. != '']">
-        <resourceType><xsl:value-of select="gn-fn-index:json-escape(.)"/></resourceType>
+        <resourceType><xsl:value-of select="util:escapeForJson(.)"/></resourceType>
       </xsl:for-each>
 
       <xsl:for-each select="dc:source">
-        <lineage><xsl:value-of select="gn-fn-index:json-escape(.)"/></lineage>
+        <lineage><xsl:value-of select="util:escapeForJson(.)"/></lineage>
       </xsl:for-each>
 
       <!-- TODO Change mapping of dc:relation -->
       <xsl:for-each select="dc:relation">
-        <related><xsl:value-of select="gn-fn-index:json-escape(.)"/></related>
+        <related><xsl:value-of select="util:escapeForJson(.)"/></related>
       </xsl:for-each>
 
       <!-- TODO Change mapping of dct:accessRights -->
       <xsl:for-each select="dct:accessRights">
-        <useLimitation><xsl:value-of select="gn-fn-index:json-escape(.)"/></useLimitation>
+        <useLimitation><xsl:value-of select="util:escapeForJson(.)"/></useLimitation>
       </xsl:for-each>
 
       <!-- TODO Change mapping of dct:rights -->
       <xsl:for-each select="dct:rights">
-        <useLimitation><xsl:value-of select="gn-fn-index:json-escape(.)"/></useLimitation>
+        <useLimitation><xsl:value-of select="util:escapeForJson(.)"/></useLimitation>
       </xsl:for-each>
 
       <xsl:variable name="allKeywords">
@@ -187,7 +187,7 @@
                 <keyword>
                   <values>
                     <value>
-                      "default": <xsl:value-of select="concat($doubleQuote, gn-fn-index:json-escape(.), $doubleQuote)"/>
+                      "default": <xsl:value-of select="concat($doubleQuote, util:escapeForJson(.), $doubleQuote)"/>
                     </value>
                   </values>
                 </keyword>
@@ -206,7 +206,7 @@
                 <keyword>
                   <values>
                     <value>
-                      "default": <xsl:value-of select="concat($doubleQuote, gn-fn-index:json-escape(.), $doubleQuote)"/>
+                      "default": <xsl:value-of select="concat($doubleQuote, util:escapeForJson(.), $doubleQuote)"/>
                     </value>
                   </values>
                 </keyword>
@@ -227,8 +227,8 @@
         <!-- Index link where last token after the last / is the link name. -->
         <link type="object">{
           "protocol":"<xsl:value-of select="'WWW:LINK'"/>",
-          "urlObject":{"default": "<xsl:value-of select="gn-fn-index:json-escape(.)"/>"},
-          "nameObject":{"default": "<xsl:value-of select="gn-fn-index:json-escape($name)"/>"},
+          "urlObject":{"default": "<xsl:value-of select="util:escapeForJson(.)"/>"},
+          "nameObject":{"default": "<xsl:value-of select="util:escapeForJson($name)"/>"},
           "descriptionObject":{"default": ""},
           "function": ""
           }</link>

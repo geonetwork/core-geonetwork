@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2023 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2024 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -43,7 +43,7 @@ import java.net.MalformedURLException;
 import java.net.Proxy;
 import java.net.URL;
 import java.net.URLConnection;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Properties;
 import java.util.regex.PatternSyntaxException;
 
@@ -229,7 +229,7 @@ public class NetLib {
                     conn = url.openConnection(proxy);
 
                     if (username.trim().length() != 0) {
-                        String encodedUserPwd = new Base64().encodeAsString((username + ":" + password).getBytes(Charset.forName("UTF-8")));
+                        String encodedUserPwd = new Base64().encodeAsString((username + ":" + password).getBytes(StandardCharsets.UTF_8));
                         conn.setRequestProperty("Accept-Charset", "UTF-8");
                         conn.setRequestProperty("Proxy-Authorization", "Basic " + encodedUserPwd);
                     }
