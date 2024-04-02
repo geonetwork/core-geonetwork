@@ -1608,8 +1608,8 @@
     <cors.allowedHosts>*</cors.allowedHosts>
 
     <jetty.version>10.0.20</jetty.version>
-    <jetty.file>jetty-distribution-${jetty.version}</jetty.file>
-    <jetty.download>https://repo1.maven.org/maven2/org/eclipse/jetty/jetty-distribution/${jetty.version}/${jetty.file}.tar.gz</jetty.download>
+    <jetty.file>jetty-home-${jetty.version}</jetty.file>
+    <jetty.download>https://repo1.maven.org/maven2/org/eclipse/jetty/jetty-home/${jetty.version}/${jetty.file}.tar.gz</jetty.download>
 
     <!-- NOTE: When updating GeoTools, check which version
     of Postgres is used and update pg.version if needed. -->
