@@ -639,22 +639,25 @@
                       //   Object.keys(linkToEdit.title).length > 1 ||
                       //   Object.keys(linkToEdit.description).length > 1;
 
-                    // Create a key which will be sent to XSL processing
-                    // for finding which element to edit.
-                    var keyName = $filter("gnLocalized")(linkToEdit.title);
-                    var keyUrl = $filter("gnLocalized")(linkToEdit.url);
-                    if (scope.isMdMultilingual) {
-                      // Key in multilingual mode is
-                      // the title in the main language
-                      keyName = linkToEdit.title[scope.mdLang];
-                      keyUrl = linkToEdit.url[scope.mdLang];
-                      if (!keyName || !keyUrl) {
-                        $log.warn("Failed to compute key for updating the resource.");
+
+                      // Create a key which will be sent to XSL processing
+                      // for finding which element to edit.
+                      var keyName = $filter('gnLocalized')(linkToEdit.title);
+                      var keyUrl = $filter('gnLocalized')(linkToEdit.url);
+                      if (scope.isMdMultilingual) {
+                        // Key in multilingual mode is
+                        // the title in the main language
+                        keyName = linkToEdit.title[scope.mdLang];
+                        keyUrl = linkToEdit.url[scope.mdLang];
+                        if (!keyName || ! keyUrl) {
+                          $log.warn(
+                            'Failed to compute key for updating the resource.');
+                        }
                       }
-                    }
-                    scope.editingKey = [keyUrl, linkToEdit.protocol, keyName].join("");
-                    scope.editingIdx = linkToEdit.idx;
-                    scope.editingHash = linkToEdit.hash;
+                      scope.editingKey = [keyUrl, linkToEdit.protocol,
+                        keyName].join('');
+					  scope.editingIdx = linkToEdit.idx;
+                      scope.editingHash = linkToEdit.hash;
 
                       scope.OGCProtocol = checkIsOgc(linkToEdit.protocol);
 
@@ -688,35 +691,30 @@
                         }
                       });
 
-                    scope.params = {
-                      linkType: typeConfig,
-                      url: fields.url,
-                      protocol: linkToEdit.protocol,
-                      mimeType: linkToEdit.mimeType,
-                      mimeTypeStrategy: "mimeType",
-                      name: fields.name,
-                      desc: fields.desc,
-                      applicationProfile: linkToEdit.applicationProfile,
-                      function: linkToEdit.function,
-                      selectedLayers: []
-                    };
-                  } else {
-                    scope.editingKey = null;
-                    scope.editingIdx = null;
-                    scope.editingHash = null;
-                    scope.params.linkType = typeConfig;
-                    scope.params.protocol = null;
-                    scope.params.mimeType = "";
-                    scope.mimeTypeStrategy = "mimeType";
-                    scope.params.name = "";
-                    scope.params.desc = "";
-                    initMultilingualFields();
-                  }
-                  scope.$broadcast("onlineSrcDialogInited", { popupid: scope.popupid });
-                };
-                function loadConfigAndInit(withInit) {
-                  gnSchemaManagerService
-                    .getEditorAssociationPanelConfig(
+                      scope.params = {
+                        linkType: typeConfig,
+                        url: fields.url,
+                        protocol: linkToEdit.protocol,
+                        name: fields.name,
+                        desc: fields.desc,
+                        applicationProfile: linkToEdit.applicationProfile,
+                        function: linkToEdit.function,
+                        selectedLayers: []
+                      };
+                    } else {
+                      scope.editingKey = null;
+					  scope.editingIdx = null;
+                      scope.editingHash = null;
+                      scope.params.linkType = typeConfig;
+                      scope.params.protocol = null;
+                      scope.params.name= '';
+                      scope.params.desc= '';
+                      initMultilingualFields();
+                    }
+                    scope.$broadcast('onlineSrcDialogInited', {"popupid": scope.popupid});
+                  };
+                  function loadConfigAndInit(withInit) {
+                    gnSchemaManagerService.getEditorAssociationPanelConfig(
                       gnCurrentEdit.schema,
                       gnCurrentEdit.associatedPanelConfigId).then(function (r) {
                       scope.config = r.config;
@@ -874,11 +872,11 @@
                         }
                       });
 
-                if (scope.isEditing) {
-                  processParams.updateKey = scope.editingKey;
-                  processParams.resourceIdx = scope.editingIdx;
-                  processParams.resourceHash = scope.editingHash;
-                }
+                  if (scope.isEditing) {
+                    processParams.updateKey = scope.editingKey;
+					processParams.resourceIdx = scope.editingIdx;
+                    processParams.resourceHash = scope.editingHash;
+                  }
 
                   // Add list of layers for WMS
                   if (scope.params.selectedLayers) {
