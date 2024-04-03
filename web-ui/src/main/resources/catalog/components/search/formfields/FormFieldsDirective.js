@@ -417,13 +417,6 @@
               angular.extend(scope.params, v);
               searchFormCtrl.triggerSearch(true);
             };
-            // Replace the placeholder for the language in the sort field name
-            for (var i = 0; i < scope.values.length; i++) {
-              scope.values[i].sortBy = scope.values[i].sortBy.replace(
-                "${searchLang}",
-                "lang" + scope.lang
-              );
-            }
 
             hotkeys.bindTo(scope).add({
               combo: "s",
