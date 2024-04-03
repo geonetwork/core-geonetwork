@@ -231,7 +231,7 @@
                   scope.wfsLink.name
                 );
 
-                // use filter values in Elasticsearch object state
+                // use filter values in ElasticSearch object state
                 // to overload input
                 if (esObject) {
                   // this will hold wfs filter values
@@ -395,7 +395,7 @@
 
                             scope.getGeomType = function (geom) {
                               if (!geom) {
-                                return;
+                                return null;
                               }
                               var geom_type;
                               geom = geom.toLowerCase();
@@ -677,7 +677,7 @@
             var inputs = scope.wpsLink.inputs;
             var output = scope.wpsLink.output;
 
-            updateStatus = function (statusLocation) {
+            var updateStatus = function (statusLocation) {
               gnWpsService.getStatus(statusLocation).then(
                 function (response) {
                   processResponse(response);
@@ -690,7 +690,7 @@
               );
             };
 
-            processResponse = function (response) {
+            var processResponse = function (response) {
               if (response.TYPE_NAME === "OWS_1_1_0.ExceptionReport") {
                 scope.executeState = "finished";
                 scope.running = false;
@@ -956,8 +956,7 @@
     function (gnWpsService, gnUrlUtils) {
       return {
         restrict: "E",
-        templateUrl:
-          "../../catalog/components/viewer/wps/" + "partials/urldiscovery.html",
+        templateUrl: "../../catalog/components/viewer/wps/partials/urldiscovery.html",
         scope: {
           wpsLink: "="
         },
@@ -1038,40 +1037,46 @@
       return {
         restrict: "E",
         replace: true,
-        templateUrl:
-          "../../catalog/components/viewer/wps/" + "partials/recentprocesses.html",
+        templateUrl: "../../catalog/components/viewer/wps/partials/recentprocesses.html",
         scope: {
-          wpsLink: "="
+          wpsLink: "=",
+          lang: "=?",
+          withRecent: "@?",
+          withList: "@?"
         },
         controllerAs: "ctrl",
         controller: [
           "$scope",
           "$window",
-          function ($scope, $window) {
-            if (!$window.localStorage) {
+          "gnGlobalSettings",
+          function ($scope, $window, gnGlobalSettings) {
+            if ($scope.withRecent === true && !$window.localStorage) {
               $scope.notSupported = true;
               return;
             }
 
-            $scope.processes = [];
-
-            $scope.$watch(
-              function () {
-                return $window.localStorage.getItem("gn-wps-processes-history") || "{}";
-              },
-              function (value) {
-                var wpsHistory = JSON.parse(value);
-                $scope.processes =
+            $scope.processes =
+              $scope.withList == "true"
+                ? gnGlobalSettings.gnCfg.mods.map.listOfServices.wps
+                : [];
+            if ($scope.withRecent == "true") {
+              $scope.$watch(
+                function () {
+                  return $window.localStorage.getItem("gn-wps-processes-history") || "{}";
+                },
+                function (value) {
+                  var wpsHistory = JSON.parse(value);
                   wpsHistory.processes &&
-                  wpsHistory.processes.map(function (p) {
-                    var values = p.split("@");
-                    return {
-                      name: values[0],
-                      url: values[1]
-                    };
-                  });
-              }
-            );
+                    wpsHistory.processes.forEach(function (p) {
+                      var values = p.split("@");
+                      $scope.processes.push({
+                        name: values[0],
+                        url: values[1]
+                      });
+                    });
+                }
+              );
+            }
 
             this.select = function (p) {
               if (!$scope.wpsLink) {
