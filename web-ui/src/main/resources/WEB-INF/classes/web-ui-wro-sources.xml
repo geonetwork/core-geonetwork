@@ -74,8 +74,7 @@
     <jsSource webappPath="/catalog/lib/jquery.ext/jquery.fileupload-process.js"/>
     <jsSource webappPath="/catalog/lib/jquery.ext/jquery.fileupload-angular.js"/>
     <jsSource webappPath="/catalog/lib/jquery.ext/jquery.floatThead-slim.min.js"/>
-    <jsSource webappPath="/catalog/lib/jquery.ext/jquery-ui-slider.min.js" minimize="false"/>
-    <!--<jsSource webappPath="/catalog/lib/jquery.ext/jquery-ui-slider-1.13.2.min.js" minimize="false"/>-->
+    <jsSource webappPath="/catalog/lib/jquery.ext/jquery-ui-slider-1.13.2.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/bootstrap.ext/typeahead.js/typeahead.bundle.js"/>
     <jsSource webappPath="/catalog/lib/bootstrap.ext/tagsinput/bootstrap-tagsinput.min.js"
               minimize="false"/>
@@ -148,7 +147,7 @@
     <jsSource webappPath="/catalog/lib/jquery.ext/jquery.fileupload.js"/>
     <jsSource webappPath="/catalog/lib/jquery.ext/jquery.fileupload-process.js"/>
     <jsSource webappPath="/catalog/lib/jquery.ext/jquery.fileupload-angular.js"/>
-    <jsSource webappPath="/catalog/lib/jquery.ext/jquery-ui-slider.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/jquery.ext/jquery-ui-slider-1.13.2.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/bootstrap.ext/typeahead.js/typeahead.bundle.js"/>
     <jsSource webappPath="/catalog/lib/bootstrap.ext/tagsinput/bootstrap-tagsinput.min.js"
               minimize="false"/>
