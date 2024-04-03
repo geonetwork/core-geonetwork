@@ -8,7 +8,7 @@
     class="alert alert-warning"
   >
     <button type="button" class="close" data-ng-click="dismiss()">
-      <i class="fa fa-times" />
+      <i class="fa fa-times"></i>
     </button>
     <span data-translate="" data-translate-values="{'url': '{{wfsUrl}}'}"
       >wfsNotAvailable</span
@@ -119,7 +119,7 @@
       title="{{statusTitle}}"
     >
       <button type="button" class="close" data-ng-click="status = null">
-        <i class="fa fa-times" />
+        <i class="fa fa-times"></i>
       </button>
       <span>{{status | translate}}</span>
     </div>
@@ -130,7 +130,7 @@
       feature-type="indexObject.config.docTypeId"
       filter="ctrl.query"
       enabled="enableHeatmap"
-    />
+    ></gn-heatmap>
 
     <!-- Search -->
     <div
@@ -282,7 +282,7 @@
             data-value="ctrl.searchGeometry"
             data-map="map"
             data-watch-value-change="true"
-          />
+          ></gn-bbox-input>
         </div>
       </div>
     </div>

@@ -99,7 +99,7 @@
           <p data-ng-repeat="e in layer.get('errors')" data-ng-bind-html="e"></p>
         </div>
 
-        <div data-gn-layer-dimensions="layer" />
+        <div data-gn-layer-dimensions="layer"></div>
 
         <p ng-if="layer.get('legend')">
           <img
@@ -115,7 +115,7 @@
             data-gn-layer-styles="layer.get('style')"
             data-gn-layer-styles-on-click="setLayerStyle(layer, style)"
             data-gn-layer-styles-current="layer.get('currentStyle')"
-          />
+          ></div>
         </div>
       </tab>
 
