@@ -10,7 +10,7 @@ repo_url: https://github.com/geonetwork/core-geonetwork
 edit_uri: edit/main/docs/manual/docs
 
 # Copyright
-copyright: Copyright &copy; 2001 - 2023 FAO-UN and others
+copyright: Copyright &copy; 2001 - 2024 FAO-UN and others
 
 extra_css:
   - assets/stylesheets/extra.css
@@ -54,7 +54,9 @@ theme:
 
 # Plugins - install using: pip3 install -r requirements.txt
 plugins:
-  - search
+  - exclude:
+      glob:
+        - annexes/gallery/bin/README.md
   - i18n:
       docs_structure: suffix
       reconfigure_material: true
@@ -74,9 +76,7 @@ plugins:
             Search: Search
             Record: Record
             Map: Map
-  - exclude:
-      glob:
-        - annexes/gallery/bin/README.md
+  - search
 
 # Customizations
 extra:
@@ -93,6 +93,17 @@ extra:
       link: https://geonetwork-opensource.org/
       name: GeoNetwork Website
 
+# For use with --strict to produce failures on build warnings
+validation:
+  nav:
+    omitted_files: warn
+    not_found: warn
+    absolute_links: warn
+  links:
+    not_found: warn
+    absolute_links: warn
+    unrecognized_links: warn
+
 # Extensions
 # - These are carefully chosen to work with pandoc markdown support for whole document translation
 markdown_extensions:
@@ -101,8 +112,8 @@ markdown_extensions:
   - def_list
   - pymdownx.details
   - pymdownx.emoji:
-      emoji_index: !!python/name:materialx.emoji.twemoji
-      emoji_generator: !!python/name:materialx.emoji.to_svg
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
       options:
         custom_icons:
           - overrides/.icons
@@ -138,10 +149,14 @@ nav:
       - overview/change-log/index.md
       - 'Latest':
         - overview/change-log/latest/index.md
+        - overview/change-log/version-4.4.3.md
+        - overview/change-log/version-4.4.2.md
         - overview/change-log/version-4.4.1.md
         - overview/change-log/version-4.4.0.md
       - 'Stable':
         - overview/change-log/stable/index.md
+        - overview/change-log/version-4.2.9.md
+        - overview/change-log/version-4.2.8.md
         - overview/change-log/version-4.2.7.md
         - overview/change-log/version-4.2.6.md
         - overview/change-log/version-4.2.5.md
@@ -152,6 +167,7 @@ nav:
         - overview/change-log/version-4.2.0.md
       - 'Maintenance':
         - overview/change-log/maintenance/index.md
+        - overview/change-log/version-3.12.12.md
         - overview/change-log/version-3.12.11.md
         - overview/change-log/version-3.12.10.md
         - overview/change-log/version-3.12.9.md
@@ -315,11 +331,11 @@ nav:
       - 'Installation':
           - 'Installing':
             - install-guide/index.md
+            - install-guide/installing-index.md
             - install-guide/installing-from-zip.md
             - install-guide/installing-from-war-file.md
             - install-guide/installing-with-docker.md
             - install-guide/installing-from-source-code.md
-            - install-guide/installing-index.md
           - 'Configuration':
             - install-guide/configuring-database.md
             - install-guide/customizing-data-directory.md
@@ -333,9 +349,11 @@ nav:
     - api/the-geonetwork-api.md
     - api/search.md
     - api/csw.md
+    - api/inspire_atom.md
+    - 'Open Archive Initiative': api/oai-pmh.md
     - api/opensearch.md
-    - api/rdf-dcat.md
-    - api/oai-pmh.md
+    - api/q-search.md
+    - 'RDF DCAT': api/rdf-dcat.md
     - api/z39-50.md
   - 'Development':
     - devel/index.md

@@ -30,6 +30,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.server.UserSession;
 import jeeves.services.ReadWriteController;
+import jeeves.xlink.Processor;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.kernel.DataManager;
@@ -118,8 +119,14 @@ public class MetadataIndexApi {
             }
         }
         index = ids.size();
-        new BatchOpsMetadataReindexer(dataManager, ids)
-            .process(settingManager.getSiteId(), false);
+
+        if (index > 0) {
+            // clean XLink Cache so that cache and index remain in sync
+            Processor.clearCache();
+
+            new BatchOpsMetadataReindexer(dataManager, ids)
+                .process(settingManager.getSiteId(), false);
+        }
 
         IndexResponse indexResponse = new IndexResponse();
         indexResponse.setSuccess(true);

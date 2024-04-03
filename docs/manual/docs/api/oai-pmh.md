@@ -2,24 +2,19 @@
 
 !!! warning
 
-    Not yet available in version 4.
+    Unavailable since version 4.0.0.
+    
+    There is some interest migrating OAI-PMH to Elasticsearch engine used by GeoNetwork 4.
+    Interested parties are encouraged to contact the project team for direction on this topic.
 
+The Open Archives Initiative Protocol for Metadata Harvesting (OAI-PMH) standard exposes the metadata records in your catalog in an XML format defined by version 2.0 of the OAI-PMH protocol.
 
-The OAI-PMH end point exposes the metadata records in your catalog in XML format using the version 2.0 of the OAI-PMH protocol.
+Reference:
 
-## Configuration
+* [Open Archives Initiative Protocol for Metadata Harvesting (OAI-PMH)](https://www.openarchives.org/OAI/openarchivesprotocol.html)
 
-The following URL is the standard end point for the catalog (substitute your GeoNetwork URL): <http://localhost:8080/geonetwork/srv/eng/oaipmh>?
+## Upgrading from GeoNetwork 3.0 Guidance
 
-## Requests
+The OAI-PMH API is no longer available.
 
-Standard OAI-PMH requests can be done using the url above and the 6 verbs provided by the standard:
-
--   GetRecord
--   Identify
--   ListIdentifiers
--   ListMetadataFormats
--   ListRecords
--   ListSets
-
-Please see <https://www.openarchives.org/OAI/openarchivesprotocol.html> for further details.
+Recommend migrating to use of [Catalog Service for the Web (CSW)](csw.md) API which provides XML document access.

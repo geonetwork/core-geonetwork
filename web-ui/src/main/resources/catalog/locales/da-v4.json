@@ -30,7 +30,8 @@
   "language.name": "Sprog",
   "language.id": "Identifikator",
   "language.remove": "Fjern sprog",
-  "layerName": "Layer name",
+  "layerName": "Lagnavn",
+  "layerNameTooltip": "A layer name from the GetCapabilities document",
   "ogcServiceUrl": "Service URL",
   "translation.addFor": "Tilføj en ny oversættelse for",
   "translation.add": "Tilføje",
@@ -293,6 +294,8 @@
   "pageContent": "Page content",
   "pageContentFile": "Page content file",
   "pageLabel": "Page label",
+  "pageIcon": "Page icon",
+  "pageIcon-help": "Optionally, define a <a target='_blank' href='https://fontawesome.com/v4/icons/'>font-awesome icon</a>. Example: 'fa-wrench'.",
   "pageSection": "Page section",
   "pageApiLink": "Page API link",
   "uiRestorePrevious": "Gendan sidst gemte",
@@ -393,6 +396,7 @@
   "measureName": "Measure",
   "measureDescription": "Description",
   "measureValue": "Value",
+  "measureDate": "Date",
   "switchPortals": "Skift til en anden portal",
   "dataPreview":  "Opdag data",
   "tableOfContents": "Indholdsfortegnelse",
@@ -414,5 +418,9 @@
   "lastCreatedRecords": "Last created records",
   "associationType": "Association type",
   "initiativeType": "Initiative type",
-  "associatedTo": "Associated "
+  "associatedTo": "Associated ",
+  "overviewDescription": "Overview description",
+  "overviewUrl": "Overview URL",
+  "restApiUrl": "REST API URL",
+  "filterHelp": "Please click on one of the buttons below to activate the filter"
 }

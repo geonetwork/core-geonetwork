@@ -258,7 +258,7 @@ public class MapServersApi {
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_REVIEWER)
     })
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateMapserver(
+    public void updateMapserverAuth(
         @Parameter(
             description = API_PARAM_MAPSERVER_IDENTIFIER,
             required = true,

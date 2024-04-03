@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<info version="1.0">
+  <general>
+    <createDate>2005-03-31T19:13:30</createDate>
+    <changeDate>2005-03-31T19:13:30</changeDate>
+    <schema>dublin-core</schema>
+    <isTemplate>false</isTemplate>
+    <format>full</format>
+  </general>
+  <categories />
+  <privileges>
+    <group name="all">
+      <operation name="download" />
+      <operation name="view" />
+    </group>
+  </privileges>
+  <public />
+  <private />
+</info>
+

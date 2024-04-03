@@ -2,7 +2,7 @@
 <editor xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="../../../../../../config-editor.xsd"
         xmlns:gn="http://www.fao.org/geonetwork"
-        xmlns:srv="http://standards.iso.org/iso/19115/-3/srv/2.1"
+        xmlns:srv="http://standards.iso.org/iso/19115/-3/srv/2.0"
         xmlns:mds="http://standards.iso.org/iso/19115/-3/mds/2.0"
         xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0"
         xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0"
@@ -621,11 +621,37 @@
         <directive data-gn-overview-manager=""
                    data-file-types=".png,.gif,.jpeg,.jpg"/>
 
-        <directive data-gn-file-uploader=""
-                   data-type="onlines"/>
+        <directive data-gn-distribution-resources-panel="gnCurrentEdit.metadata"
+                   data-mode="viewConfig.distributionConfig.layout || ''"
+                   data-editor-config="default"
+                   data-related-config="[{
+                                             title: 'API',
+                                             filter: 'protocol:OGC:WMS|OGC:WMTS|ESRI:.*|atom.*|REST|OGC API Maps|OGC API Records',
+                                             editActions: ['addOnlinesrc#API']
+                                           }, {
+                                              title: 'download',
+                                              filter: 'protocol:OGC:WFS|OGC:WCS|.*DOWNLOAD.*|DB:.*|FILE:.*|OGC API Features|OGC API Coverages',
+                                              editActions: ['addOnlinesrc#onlineDownload|localNetwork']
+                                           }, {
+                                             title: 'mapLegend',
+                                             filter: 'function:legend',
+                                             editActions: ['addOnlinesrc#onlineUseLegend']
+                                           }, {
+                                              title: 'links',
+                                              filter:'-protocol:OGC.*|REST|ESRI:.*|atom.*|.*DOWNLOAD.*|DB:.*|FILE:.* AND -function:legend|featureCatalogue|dataQualityReport',
+                                              editActions: ['addOnlinesrc#links']
+                                           }, {
+                                              title: 'quality',
+                                              filter: 'function:dataQualityReport',
+                                              editActions: ['addOnlinesrc#quality']
+                                           }, {
+                                              title: 'featureCatalog',
+                                              filter: 'function:featureCatalogue',
+                                              editActions: ['onlineUseFcats']
+                                           }]"
+        />
 
-        <directive data-gn-onlinesrc-list=""
-                   data-types="onlinesrc|sibling|associated|source|dataset|service|fcats"/>
+        <directive data-gn-associated-resources-panel="gnCurrentEdit.metadata" />
 
         <directive gn-geo-publisher=""
                    data-ng-if="gnCurrentEdit.geoPublisherConfig"
@@ -688,6 +714,7 @@
       </flatModeExceptions>
       <thesaurusList>
         <thesaurus key="external.theme.httpinspireeceuropaeutheme-theme" transformations="to-iso19115-3.2018-keyword-with-anchor"/>
+        <thesaurus key="external.theme.httpinspireeceuropaeumetadatacodelistIACSData-IACSData" transformations="to-iso19115-3.2018-keyword-with-anchor"/>
         <thesaurus key="external.theme.httpinspireeceuropaeumetadatacodelistSpatialScope-SpatialScope" transformations="to-iso19115-3.2018-keyword-with-anchor"/>
         <thesaurus key="external.theme.httpinspireeceuropaeumetadatacodelistPriorityDataset-PriorityDataset" transformations="to-iso19115-3.2018-keyword-with-anchor"/>
         <thesaurus key="external.theme.httpinspireeceuropaeufeatureconcept-featureconcept" transformations="to-iso19115-3.2018-keyword-with-anchor"/>
@@ -699,13 +726,48 @@
           class="gn-label-above-input gn-indent-bluescale">
       <sidePanel>
         <directive data-gn-need-help="creating-metadata"/>
-        <directive data-gn-validation-report=""/>
-        <directive data-gn-onlinesrc-list=""
-                   data-types="onlinesrc|sibling|associated|source|dataset|service|fcats"/>
+        <directive data-gn-overview-manager=""
+                   data-file-types=".png,.gif,.jpeg,.jpg"/>
+
+        <directive data-gn-distribution-resources-panel="gnCurrentEdit.metadata"
+                   data-mode="viewConfig.distributionConfig.layout || ''"
+                   data-editor-config="default"
+                   data-related-config="[{
+                                             title: 'API',
+                                             filter: 'protocol:OGC:WMS|OGC:WMTS|ESRI:.*|atom.*|REST|OGC API Maps|OGC API Records',
+                                             editActions: ['addOnlinesrc#API']
+                                           }, {
+                                              title: 'download',
+                                              filter: 'protocol:OGC:WFS|OGC:WCS|.*DOWNLOAD.*|DB:.*|FILE:.*|OGC API Features|OGC API Coverages',
+                                              editActions: ['addOnlinesrc#onlineDownload|localNetwork']
+                                           }, {
+                                             title: 'mapLegend',
+                                             filter: 'function:legend',
+                                             editActions: ['addOnlinesrc#onlineUseLegend']
+                                           }, {
+                                              title: 'links',
+                                              filter:'-protocol:OGC.*|REST|ESRI:.*|atom.*|.*DOWNLOAD.*|DB:.*|FILE:.* AND -function:legend|featureCatalogue|dataQualityReport',
+                                              editActions: ['addOnlinesrc#links']
+                                           }, {
+                                              title: 'quality',
+                                              filter: 'function:dataQualityReport',
+                                              editActions: ['addOnlinesrc#quality']
+                                           }, {
+                                              title: 'featureCatalog',
+                                              filter: 'function:featureCatalogue',
+                                              editActions: ['onlineUseFcats']
+                                           }]"
+        />
+
+        <directive data-gn-associated-resources-panel="gnCurrentEdit.metadata" />
+
         <directive gn-geo-publisher=""
                    data-ng-if="gnCurrentEdit.geoPublisherConfig"
                    data-config="{{gnCurrentEdit.geoPublisherConfig}}"
                    data-lang="lang"/>
+
+        <directive data-gn-validation-report=""/>
+
         <directive data-gn-suggestion-list=""/>
       </sidePanel>
 
@@ -793,20 +855,57 @@
       </tab>
       <thesaurusList>
         <thesaurus key="external.theme.httpinspireeceuropaeutheme-theme" transformations="to-iso19115-3.2018-keyword-with-anchor"/>
+        <thesaurus key="external.theme.httpinspireeceuropaeumetadatacodelistIACSData-IACSData" transformations="to-iso19115-3.2018-keyword-with-anchor"/>
         <thesaurus key="external.theme.httpinspireeceuropaeumetadatacodelistSpatialScope-SpatialScope" transformations="to-iso19115-3.2018-keyword-with-anchor"/>
         <thesaurus key="external.theme.httpinspireeceuropaeumetadatacodelistPriorityDataset-PriorityDataset" transformations="to-iso19115-3.2018-keyword-with-anchor"/>
+        <thesaurus key="external.theme.httpinspireeceuropaeufeatureconcept-featureconcept" transformations="to-iso19115-3.2018-keyword-with-anchor"/>
       </thesaurusList>
     </view>
     <view name="xml">
       <sidePanel>
         <directive data-gn-need-help="creating-metadata"/>
-        <directive data-gn-validation-report=""/>
-        <directive data-gn-onlinesrc-list=""
-                   data-types="onlinesrc|sibling|associated|source|dataset|service|fcats"/>
+        <directive data-gn-overview-manager=""
+                   data-file-types=".png,.gif,.jpeg,.jpg"/>
+
+        <directive data-gn-distribution-resources-panel="gnCurrentEdit.metadata"
+                   data-mode="viewConfig.distributionConfig.layout || ''"
+                   data-editor-config="default"
+                   data-related-config="[{
+                                             title: 'API',
+                                             filter: 'protocol:OGC:WMS|OGC:WMTS|ESRI:.*|atom.*|REST|OGC API Maps|OGC API Records',
+                                             editActions: ['addOnlinesrc#API']
+                                           }, {
+                                              title: 'download',
+                                              filter: 'protocol:OGC:WFS|OGC:WCS|.*DOWNLOAD.*|DB:.*|FILE:.*|OGC API Features|OGC API Coverages',
+                                              editActions: ['addOnlinesrc#onlineDownload|localNetwork']
+                                           }, {
+                                             title: 'mapLegend',
+                                             filter: 'function:legend',
+                                             editActions: ['addOnlinesrc#onlineUseLegend']
+                                           }, {
+                                              title: 'links',
+                                              filter:'-protocol:OGC.*|REST|ESRI:.*|atom.*|.*DOWNLOAD.*|DB:.*|FILE:.* AND -function:legend|featureCatalogue|dataQualityReport',
+                                              editActions: ['addOnlinesrc#links']
+                                           }, {
+                                              title: 'quality',
+                                              filter: 'function:dataQualityReport',
+                                              editActions: ['addOnlinesrc#quality']
+                                           }, {
+                                              title: 'featureCatalog',
+                                              filter: 'function:featureCatalogue',
+                                              editActions: ['onlineUseFcats']
+                                           }]"
+        />
+
+        <directive data-gn-associated-resources-panel="gnCurrentEdit.metadata" />
+
         <directive gn-geo-publisher=""
                    data-ng-if="gnCurrentEdit.geoPublisherConfig"
                    data-config="{{gnCurrentEdit.geoPublisherConfig}}"
                    data-lang="lang"/>
+
+        <directive data-gn-validation-report=""/>
+
         <directive data-gn-suggestion-list=""/>
       </sidePanel>
 

@@ -36,6 +36,7 @@ import io.swagger.v3.oas.models.servers.ServerVariable;
 import io.swagger.v3.oas.models.servers.ServerVariables;
 import org.fao.geonet.NodeInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.springdoc.core.SpringDocUtils;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.concurrent.ConcurrentMapCacheManager;
@@ -44,6 +45,7 @@ import org.springframework.context.annotation.Configuration;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static org.fao.geonet.kernel.setting.Settings.SYSTEM_PLATFORM_VERSION;
 
@@ -55,6 +57,16 @@ public class OpenApiConfig {
     private static OpenAPI openAPI = null;
 
     private static SettingManager settingManager = null;
+
+    static {
+        // By default, Spring Doc ignores injectable parameters supported by Spring MVC
+        //     https://springdoc.org/faq.html#_what_are_the_ignored_types_in_the_documentation
+        // This includes the following list.
+        //     https://docs.spring.io/spring-framework/docs/5.1.x/spring-framework-reference/web.html#mvc-ann-arguments
+        // As java.util.Map's are uses for JSON input and output values among other types, it is best to remove java.util.Map from this list.
+        // If we want to use java.util.Map as an injectable then we will need to ensure we hide the parameter.
+        SpringDocUtils.getConfig().removeRequestWrapperToIgnore(Map.class);
+    }
 
     @Bean(name = "cacheManager")
     public CacheManager cacheManager() {
@@ -91,7 +103,7 @@ public class OpenApiConfig {
                     )
                     .license(new License()
                         .name("GPL 2.0")
-                        .url("http://www.gnu.org/licenses/old-licenses/gpl-2.0.html")))
+                        .url("https://www.gnu.org/licenses/old-licenses/gpl-2.0.html")))
                 .externalDocs(new ExternalDocumentation()
                     .description("Learn how to access the catalog using the GeoNetwork REST API."));
 

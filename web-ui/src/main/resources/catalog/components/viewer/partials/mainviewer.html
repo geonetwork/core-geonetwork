@@ -208,15 +208,23 @@
         <h3>{{'processesTool' | translate}}</h3>
       </div>
       <div class="panel-body">
-        <p translate="" class="text-muted">WPSDescription</p>
         <tabset class="info-tabset">
-          <tab heading="{{'wpsByUrl' | translate}}" active="wpsTabs.byUrl" role="tab">
+          <tab
+            data-ng-repeat="(wpsType, active) in wpsTabs"
+            heading="{{('wpsProcess' + wpsType) | translate}}"
+            active="wpsTabs[wpsType]"
+            role="tab"
+          >
             <br />
-            <gn-wps-url-discovery wps-link="selectedWps" />
-          </tab>
-          <tab heading="{{'wpsRecent' | translate}}" active="wpsTabs.recent" role="tab">
-            <br />
-            <gn-wps-recent-list wps-link="selectedWps" />
+            <gn-wps-recent-list
+              data-ng-if="wpsType == 'list'"
+              wps-link="selectedWps"
+              with-list="true"
+              with-recent="false"
+              lang="lang"
+            />
+            <gn-wps-url-discovery data-ng-if="wpsType == 'url'" wps-link="selectedWps" />
+            <gn-wps-recent-list data-ng-if="wpsType == 'recent'" wps-link="selectedWps" />
           </tab>
         </tabset>
         <gn-wps-process-form
@@ -333,7 +341,7 @@
       ng-hide="disabledTools.syncAllLayers"
       aria-label="{{'syncAllLayers' | translate}}"
     >
-      <span class="fa fa-sync" ng-class="syncAllLayers ? 'fa-lock' : 'fa-unlock'" />
+      <span class="fa fa-sync" ng-class="syncAllLayers ? 'fa-lock' : 'fa-lock-open'" />
       <span class="label" ng-show="showToolLabels" translate="">syncAllLayers</span>
       <span role="tooltip" translate="">syncAllLayers</span>
     </button>

@@ -186,11 +186,6 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
         @Parameter(
             description = "Formatter type to use."
         )
-        @RequestHeader(
-            value = HttpHeaders.ACCEPT,
-            defaultValue = MediaType.TEXT_HTML_VALUE
-        )
-            String acceptHeader,
         @PathVariable(
             value = "formatterId"
         ) final String formatterId,
@@ -225,11 +220,13 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
 
         Locale locale = languageUtils.parseAcceptLanguage(servletRequest.getLocales());
 
+        String acceptHeader = StringUtils.isBlank(request.getHeader(HttpHeaders.ACCEPT)) ? MediaType.TEXT_HTML_VALUE : request.getHeader(HttpHeaders.ACCEPT);
+
         // TODO :
         // if text/html > xsl_view
         // if application/pdf > xsl_view and PDF output
         // if application/x-gn-<formatterId>+(xml|html|pdf|text)
-        // Force PDF ouutput when URL parameter is set.
+        // Force PDF output when URL parameter is set.
         // This is useful when making GET link to PDF which
         // can not use headers.
         if (MediaType.ALL_VALUE.equals(acceptHeader)) {
@@ -262,20 +259,18 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
         }
 
 
-        Boolean hideWithheld = true;
-//        final boolean hideWithheld = Boolean.TRUE.equals(hide_withheld) ||
-//            !context.getBean(AccessManager.class).canEdit(context, resolvedId);
+        final ServiceContext context = createServiceContext(
+            language,
+            formatType,
+            request.getNativeRequest(HttpServletRequest.class));
+
+        Boolean hideWithheld = !context.getBean(AccessManager.class).canEdit(context, String.valueOf(metadata.getId()));
         Key key = new Key(metadata.getId(), language, formatType, formatterId, hideWithheld, width);
         final boolean skipPopularityBool = false;
 
         ISODate changeDate = metadata.getDataInfo().getChangeDate();
 
         Validator validator;
-
-        final ServiceContext context = createServiceContext(
-            language,
-            formatType,
-            request.getNativeRequest(HttpServletRequest.class));
 
         if (changeDate != null) {
             final long changeDateAsTime = changeDate.toDate().getTime();
@@ -414,8 +409,6 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
      * @param id             the id, uuid or fileIdentifier of the metadata
      * @param xslid          the id of the formatter
      * @param skipPopularity if true then don't increment popularity
-     * @param hide_withheld  if true hideWithheld (private) elements even if the current user would
-     *                       normally have access to them.
      * @param width          the approximate size of the element that the formatter output will be
      *                       embedded in compared to the full device width.  Allowed options are the
      *                       enum values: {@link org.fao.geonet.api.records.formatters.FormatterWidth}
@@ -431,7 +424,6 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
         @RequestParam(value = "uuid", required = false) final String uuid,
         @RequestParam(value = "xsl", required = false) final String xslid,
         @RequestParam(defaultValue = "n") final String skipPopularity,
-        @RequestParam(value = "hide_withheld", required = false) final Boolean hide_withheld,
         @RequestParam(value = "width", defaultValue = "_100") final FormatterWidth width,
         final NativeWebRequest request) throws Exception {
         final FormatType formatType = FormatType.valueOf(type.toLowerCase());
@@ -440,8 +432,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
         ServiceContext context = createServiceContext(lang, formatType, request.getNativeRequest(HttpServletRequest.class));
         Lib.resource.checkPrivilege(context, resolvedId, ReservedOperation.view);
 
-        final boolean hideWithheld = Boolean.TRUE.equals(hide_withheld) ||
-            !context.getBean(AccessManager.class).canEdit(context, resolvedId);
+        final boolean hideWithheld = !context.getBean(AccessManager.class).canEdit(context, resolvedId);
         Key key = new Key(Integer.parseInt(resolvedId), lang, formatType, xslid, hideWithheld, width);
         final boolean skipPopularityBool = skipPopularity.equals("y");
 
@@ -609,11 +600,6 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
 
         Element metadata = serializer.removeHiddenElements(false, md, true);
         if (doXLinks) Processor.processXLink(metadata, context);
-
-        boolean withholdWithheldElements = hide_withheld != null && hide_withheld;
-        if (XmlSerializer.getThreadLocal(false) != null || withholdWithheldElements) {
-            XmlSerializer.getThreadLocal(true).setForceFilterEditOperation(withholdWithheldElements);
-        }
 
         return Pair.read(metadata, md);
 

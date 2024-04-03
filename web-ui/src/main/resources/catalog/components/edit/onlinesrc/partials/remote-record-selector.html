@@ -1,67 +1,130 @@
-<div data-ng-if="allowRemoteRecordLink">
-  <form class="form-horizontal">
-    <div class="form-group">
-      <label for="gnRemoteRecordUrl" class="control-label col-sm-2" data-translate=""
-        >orUseRemoteRecordUrl</label
-      >
-      <div class="col-sm-10">
-        <div class="input-group">
-          <input
-            class="form-control"
-            placeholder="https://catalog.sdi.org/csw?REQUEST=GetRecordById&..."
-            id="gnRemoteRecordUrl"
-            autocomplete="off"
-            data-ng-model="remoteRecord.remoteUrl"
-            data-ng-model-options="{debounce: 300}"
-            data-ng-focus="isTypingRemoteUrl = true;"
-            data-ng-blur="isTypingRemoteUrl = false;"
-            data-ng-change="checkLink()"
-          />
-          <span class="input-group-addon" data-ng-click="resetLink(true)">
-            <i class="fa fa-fw fa-times text-danger"></i>
-          </span>
-        </div>
-        <span class="help-block" data-ng-if="isTypingRemoteUrl" data-translate=""
-          >remoteRecordUrl-help</span
+<div data-ng-show="allowRemoteRecordLink">
+  <div data-ng-show="!multipleSelection">
+    <form class="form-horizontal">
+      <div class="form-group">
+        <label
+          ng-attr-for="{{ 'gnRemoteRecordUrl' + popupId }}"
+          class="control-label col-sm-2"
+          data-translate=""
+          >orUseRemoteRecordUrl</label
         >
+        <div class="col-sm-10">
+          <div class="input-group">
+            <input
+              class="form-control"
+              placeholder="https://catalog.sdi.org/csw?REQUEST=GetRecordById&..."
+              ng-attr-id="{{ 'gnRemoteRecordUrl' + popupId }}"
+              autocomplete="off"
+              data-ng-model="singleSelectionModel.remoteRecord.remoteUrl"
+              data-ng-model-options="{debounce: 300}"
+              data-ng-focus="isTypingRemoteUrl = true;"
+              data-ng-blur="isTypingRemoteUrl = false;"
+              data-ng-change="checkLink()"
+            />
+            <span class="input-group-addon" data-ng-click="resetLink(true)">
+              <i class="fa fa-fw fa-times text-danger"></i>
+            </span>
+          </div>
+          <span class="help-block" data-ng-if="isTypingRemoteUrl" data-translate=""
+            >remoteRecordUrl-help</span
+          >
+        </div>
       </div>
-    </div>
-  </form>
+    </form>
 
-  <div class="col-md-offset-2 list-group" data-ng-if="remoteRecord.uuid">
-    <li
-      class="list-group-item"
-      data-ng-click="updateSelection();triggerSearch();"
-      data-ng-class="{'active' : selectionList[0].uuid === remoteRecord.uuid}"
+    <div
+      class="col-md-offset-2 list-group"
+      data-ng-if="singleSelectionModel.remoteRecord.uuid"
     >
-      <input
-        type="text"
-        class="form-control"
-        data-ng-model="remoteRecord.title"
-        placeholder="{{'remoteAssociatedMetadataTitlePlaceholder' | translate}}"
-      />
-      ({{remoteRecord.uuid}})
-    </li>
+      <li
+        class="list-group-item"
+        data-ng-click="updateSelectionAndTriggerSearch()"
+        data-ng-class="{'active' : selectionList[0].uuid === singleSelectionModel.remoteRecord.uuid}"
+      >
+        <input
+          type="text"
+          class="form-control"
+          data-ng-model="singleSelectionModel.remoteRecord.title"
+          placeholder="{{'remoteAssociatedMetadataTitlePlaceholder' | translate}}"
+        />
+        ({{singleSelectionModel.remoteRecord.uuid}})
+      </li>
+    </div>
+
+    <div
+      id="gn-addonlinesrc-add-alert"
+      class="alert alert-warning"
+      data-ng-show="!singleSelectionModel.isRemoteRecordUrlOk"
+    >
+      <span data-translate="">remoteRecordUrlReturnedError</span>
+      <a class="btn btn-link" target="_blank" data-ng-href="remoteRecord.remoteUrl">
+        {{singleSelectionModel.remoteRecord.remoteUrl}}
+      </a>
+    </div>
+    <div
+      id="gn-addonlinesrc-add-alert"
+      class="alert alert-warning"
+      data-ng-show="singleSelectionModel.remoteRecord.remoteUrl != '' && singleSelectionModel.isRemoteRecordUrlOk && !singleSelectionModel.isRemoteRecordPropertiesExtracted"
+    >
+      <span data-translate="">remoteRecordPropertiesError</span>
+      <a
+        class="btn btn-link"
+        target="_blank"
+        data-ng-href="singleSelectionModel.remoteRecord.remoteUrl"
+      >
+        {{singleSelectionModel.remoteRecord.remoteUrl}}
+      </a>
+    </div>
+
+    <button
+      type="button"
+      class="btn btn-default col-md-offset-2"
+      data-ng-click="updateSelection();triggerSearch();"
+      data-ng-if="multipleSelection && remoteRecord.uuid"
+      data-translate=""
+    >
+      add
+    </button>
   </div>
 
-  <div
-    id="gn-addonlinesrc-add-alert"
-    class="alert alert-warning"
-    data-ng-show="!isRemoteRecordUrlOk"
-  >
-    <span data-translate="">remoteRecordUrlReturnedError</span>
-    <a class="btn btn-link" target="_blank" data-ng-href="remoteRecord.remoteUrl">
-      {{remoteRecord.remoteUrl}}
-    </a>
-  </div>
-  <div
-    id="gn-addonlinesrc-add-alert"
-    class="alert alert-warning"
-    data-ng-show="remoteRecord.remoteUrl != '' && isRemoteRecordUrlOk && !isRemoteRecordPropertiesExtracted"
-  >
-    <span data-translate="">remoteRecordPropertiesError</span>
-    <a class="btn btn-link" target="_blank" data-ng-href="remoteRecord.remoteUrl">
-      {{remoteRecord.remoteUrl}}
-    </a>
+  <div data-ng-show="multipleSelection">
+    <form class="form-horizontal">
+      <div class="form-group">
+        <label for="gnRemoteRecordUrl" class="control-label col-sm-2" data-translate=""
+          >orUseRemoteRecordUrl</label
+        >
+
+        <div class="col-sm-10">
+          <textarea
+            class="form-control"
+            rows="10"
+            id="gn-remoteRecordsList"
+            data-ng-model="multipleSelectionModel.remoteRecordsList"
+          ></textarea>
+
+          <div
+            class="gn-margin-top-sm"
+            data-ng-show="multipleSelectionModel.invalidRemoteLinks.length > 0"
+          >
+            <p data-translate="">remoteRecordPropertiesError</p>
+            <ul>
+              <li data-ng-repeat="l in multipleSelectionModel.invalidRemoteLinks">
+                <a class="btn btn-link" target="_blank" data-ng-href="l"> {{l}} </a>
+              </li>
+            </ul>
+          </div>
+
+          <button
+            type="button"
+            class="btn btn-default gn-margin-top-sm"
+            data-ng-disabled="!canAddMultipleLinks()"
+            data-ng-click="addMultipleLinks();"
+            data-translate=""
+          >
+            add
+          </button>
+        </div>
+      </div>
+    </form>
   </div>
 </div>

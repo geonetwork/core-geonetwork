@@ -394,7 +394,7 @@ public class Geonetwork implements ApplicationHandler {
                         final MockHttpServletResponse response = new MockHttpServletResponse();
                         try {
                             formatService.exec("eng", FormatType.html.toString(), mdId.toString(), null, formatterName,
-                                Boolean.TRUE.toString(), false, FormatterWidth._100, new ServletWebRequest(servletRequest, response));
+                                Boolean.TRUE.toString(), FormatterWidth._100, new ServletWebRequest(servletRequest, response));
                         } catch (Throwable t) {
                             Log.info(Geonet.GEONETWORK, "Error while initializing the Formatter with id: " + formatterName, t);
                         }

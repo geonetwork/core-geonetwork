@@ -120,10 +120,25 @@
               }
 
               /** wps process tabs */
-              scope.wpsTabs = {
-                byUrl: true,
-                recent: false
-              };
+              function initWpsConfiguration() {
+                var tabs = {};
+                if (!gnViewerSettings.mapConfig.wpsSources) {
+                  gnViewerSettings.mapConfig.wpsSources = ["url", "recent"];
+                }
+                if (
+                  gnViewerSettings.mapConfig.listOfServices.wps &&
+                  gnViewerSettings.mapConfig.listOfServices.wps.length > 0 &&
+                  gnViewerSettings.mapConfig.wpsSources &&
+                  gnViewerSettings.mapConfig.wpsSources.indexOf("list") === -1
+                ) {
+                  gnViewerSettings.mapConfig.wpsSources.unshift("list");
+                }
+                gnViewerSettings.mapConfig.wpsSources.map(function (type, index) {
+                  return (tabs[type] = index === 0);
+                });
+                return tabs;
+              }
+              scope.wpsTabs = initWpsConfiguration();
               scope.selectedWps = {};
 
               scope.zoom = function (map, delta) {

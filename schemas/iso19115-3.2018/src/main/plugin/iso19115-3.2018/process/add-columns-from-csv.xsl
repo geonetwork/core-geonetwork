@@ -28,7 +28,7 @@
                 xmlns:mrc="http://standards.iso.org/iso/19115/-3/mrc/2.0"
                 xmlns:mdb="http://standards.iso.org/iso/19115/-3/mdb/2.0"
                 xmlns:cat="http://standards.iso.org/iso/19115/-3/cat/1.0"
-                xmlns:srv="http://standards.iso.org/iso/19115/-3/srv/2.1"
+                xmlns:srv="http://standards.iso.org/iso/19115/-3/srv/2.0"
                 xmlns:geonet="http://www.fao.org/geonetwork"
                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
