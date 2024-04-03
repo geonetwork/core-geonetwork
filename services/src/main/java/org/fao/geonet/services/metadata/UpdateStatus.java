@@ -115,7 +115,7 @@ public class UpdateStatus extends NotInReadOnlyModeService {
         mdStatus.setStatusValue(statusValue);
         mdStatus.setChangeDate(changeDate);
         list.add(mdStatus);
-        sa.onStatusChange(list);
+        sa.onStatusChange(list, true);
 
         //--- reindex metadata
         dataMan.indexMetadata(id, true, null);

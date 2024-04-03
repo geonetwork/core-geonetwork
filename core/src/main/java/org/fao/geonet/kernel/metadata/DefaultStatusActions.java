@@ -139,10 +139,11 @@ public class DefaultStatusActions implements StatusActions {
      * Called when a record status is added.
      *
      * @param listOfStatus List of status to update
+     * @param updateIndex index update flag
      * @return Ids of unchanged metadata records
      * @throws Exception
      */
-    public Set<Integer> onStatusChange(List<MetadataStatus> listOfStatus) throws Exception {
+    public Set<Integer> onStatusChange(List<MetadataStatus> listOfStatus, boolean updateIndex) throws Exception {
 
         Set<Integer> unchanged = new HashSet<>();
 
@@ -170,7 +171,7 @@ public class DefaultStatusActions implements StatusActions {
             }
 
             // --- set status, indexing is assumed to take place later
-            metadataStatusManager.setStatusExt(status);
+            metadataStatusManager.setStatusExt(status, updateIndex);
 
             // Issue events
             Log.trace(Geonet.DATA_MANAGER, "Issue workflow events.");
@@ -235,7 +236,7 @@ public class DefaultStatusActions implements StatusActions {
      * @param status
      * @throws Exception
      */
-    private void applyRulesForStatusChange(MetadataStatus status) throws Exception {
+    private void applyRulesForStatusChange(MetadataStatus status, boolean updateIndex) throws Exception {
         String statusId = status.getStatusValue().getId() + "";
         if (statusId.equals(StatusValue.Status.APPROVED)) {
             // setAllOperations(mid); - this is a short cut that could be enabled

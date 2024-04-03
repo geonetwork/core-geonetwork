@@ -140,9 +140,11 @@ public class BaseMetadataStatus implements IMetadataStatus {
     }
 
     @Override
-    public MetadataStatus setStatusExt(MetadataStatus metatatStatus) throws Exception {
+    public MetadataStatus setStatusExt(MetadataStatus metatatStatus, boolean updateIndex) throws Exception {
         metadataStatusRepository.save(metatatStatus);
-        metadataIndexer.indexMetadata(metatatStatus.getMetadataId() + "", true, null);
+        if (updateIndex) {
+            metadataIndexer.indexMetadata(metatatStatus.getMetadataId() + "", true, null);
+        }
         return metatatStatus;
     }
 

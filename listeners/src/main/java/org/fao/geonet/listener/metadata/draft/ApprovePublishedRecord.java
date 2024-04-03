@@ -127,7 +127,7 @@ public class ApprovePublishedRecord implements ApplicationListener<MetadataPubli
         status.setChangeDate(new ISODate());
         status.setUserId(ServiceContext.get().getUserSession().getUserIdAsInt());
 
-        metadataStatus.setStatusExt(status);
+        metadataStatus.setStatusExt(status, false);
 
         Log.trace(Geonet.DATA_MANAGER, "Metadata with id " + md.getId() + " automatically approved due to publishing.");
     }
