@@ -111,7 +111,7 @@
 
         <script src="{$uiResourcesPath}lib/base64.js?v={$buildNumber}"></script>
         <!--<script src="{$uiResourcesPath}lib/jquery-2.2.4.js?v={$buildNumber}"></script>-->
-        <script src="{$uiResourcesPath}lib/jquery-3.7.1.js?v={$buildNumber}"></script>
+        <script src="{$uiResourcesPath}lib/jquery.js?v={$buildNumber}"></script>
         <script src="{$uiResourcesPath}lib/jquery-migrate-3.4.1.js?v={$buildNumber}"></script>
 
         <script src="{$uiResourcesPath}lib/moment-with-locales.min.js?v={$buildNumber}"></script>
@@ -144,8 +144,8 @@
         <script src="{$uiResourcesPath}lib/tinycolor.js?v={$buildNumber}"></script>
 
         <script src="{$uiResourcesPath}lib/style/bootstrap/dist/js/bootstrap.js?v={$buildNumber}"></script>
-        <!--<script src="{$uiResourcesPath}lib/jquery.ext/jquery-ui-slider.min.js?v={$buildNumber}"></script>-->
-        <script src="{$uiResourcesPath}lib/jquery.ext/ jquery-ui-slider-1.13.2.min.js?v={$buildNumber}"></script>
+        <script src="{$uiResourcesPath}lib/jquery.ext/jquery-ui-slider.min.js?v={$buildNumber}"></script>
+        <!--<script src="{$uiResourcesPath}lib/jquery.ext/ jquery-ui-slider-1.13.2.min.js?v={$buildNumber}"></script>-->
         <script src="{$uiResourcesPath}lib/proj4js-compressed.js?v={$buildNumber}"></script>
 
         <xsl:choose>
