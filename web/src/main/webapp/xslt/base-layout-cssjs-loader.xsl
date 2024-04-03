@@ -110,8 +110,7 @@
         <script src="{$uiResourcesPath}lib/closure/base.js?v={$buildNumber}"></script>
 
         <script src="{$uiResourcesPath}lib/base64.js?v={$buildNumber}"></script>
-        <!--<script src="{$uiResourcesPath}lib/jquery-2.2.4.js?v={$buildNumber}"></script>-->
-        <script src="{$uiResourcesPath}lib/jquery.js?v={$buildNumber}"></script>
+        <script src="{$uiResourcesPath}lib/jquery-3.7.1.js?v={$buildNumber}"></script>
         <script src="{$uiResourcesPath}lib/jquery-migrate-3.4.1.js?v={$buildNumber}"></script>
 
         <script src="{$uiResourcesPath}lib/moment-with-locales.min.js?v={$buildNumber}"></script>
@@ -307,6 +306,9 @@
       <xsl:value-of select="if ($nodeUrl != '') then concat('&quot;', $nodeUrl, '&quot;') else 'null'"/>,
       gnViewerSettings, gnSearchSettings);
       }]);
+
+      // See jQuery.htmlPrefilter changes: https://jquery.com/upgrade-guide/3.5/
+      jQuery.migrateEnablePatches( "self-closed-tags" );
     </script>
   </xsl:template>
 </xsl:stylesheet>
