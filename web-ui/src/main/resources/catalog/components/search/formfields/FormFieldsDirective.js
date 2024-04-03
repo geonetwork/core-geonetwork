@@ -412,7 +412,6 @@
             values: "=gnSortbyValues"
           },
           link: function (scope, element, attrs, searchFormCtrl) {
-            scope.lang = attrs["lang"] || gnGlobalSettings.gnCfg.langDetector.default;
             scope.sortBy = function (v) {
               angular.extend(scope.params, v);
               searchFormCtrl.triggerSearch(true);
