@@ -173,12 +173,12 @@
       <xsl:choose>
         <xsl:when test="@name='geoBox'">
           <xsl:value-of
-            select="replace(replace(string-join($metadata/*[name(.)=$currentColumn]/*, $internalSep), '\n|\r\n', ''), '&quot;', '\\&quot;')"
+            select="replace(replace(string-join($metadata/*[name(.)=$currentColumn]/*, $internalSep), '\n|\r\n', ''), '&quot;', '&quot;&quot;')"
           />
         </xsl:when>
         <xsl:otherwise>
           <xsl:value-of
-            select="replace(replace(string-join($metadata/*[name(.)=$currentColumn]/normalize-space(), $internalSep), '\n|\r\n', ''), '&quot;', '\\&quot;')"
+            select="replace(replace(string-join($metadata/*[name(.)=$currentColumn]/normalize-space(), $internalSep), '\n|\r\n', ''), '&quot;', '&quot;&quot;')"
           />
         </xsl:otherwise>
       </xsl:choose>
