@@ -5,6 +5,7 @@
                 xmlns:mdb="http://standards.iso.org/iso/19115/-3/mdb/2.0"
                 xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0"
                 xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
+                xmlns:mrl="http://standards.iso.org/iso/19115/-3/mrl/2.0"
                 xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0"
                 xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/2.0"
                 xmlns:mco="http://standards.iso.org/iso/19115/-3/mco/1.0"
@@ -100,6 +101,8 @@
   <xsl:template mode="iso19115-3-to-dcat"
                 match="mdb:MD_Metadata/mdb:defaultLocale/*/lan:characterEncoding/*/@codeListValue"/>
 
+
+
   <!--
   In ISO, license may be described in more than one elements (and could also define license per various scopes).
   EU DCAT-AP restrict it to one.
@@ -124,5 +127,19 @@
     <xsl:if test="current()/generate-id() = $allLicenseStatements[1]/generate-id()">
       <xsl:call-template name="iso19115-3-to-dcat-license"/>
     </xsl:if>
+  </xsl:template>
+
+
+  <!-- [o]	provenance	Provenance Statement	0..*	A statement about the lineage of a Dataset.
+  In DCAT, adms:versionNotes is used, see dcat/dcat-core-lineage.xsl -->
+  <xsl:template mode="iso19115-3-to-dcat"
+                match="mdb:resourceLineage/*/mrl:statement">
+    <dct:provenance>
+      <dct:ProvenanceStatement>
+        <xsl:call-template name="rdf-localised">
+          <xsl:with-param name="nodeName" select="'dct:description'"/>
+        </xsl:call-template>
+      </dct:ProvenanceStatement>
+    </dct:provenance>
   </xsl:template>
 </xsl:stylesheet>
