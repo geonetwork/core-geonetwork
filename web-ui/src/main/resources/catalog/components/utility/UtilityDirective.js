@@ -174,7 +174,10 @@
             } else {
               query.query = {
                 function_score: {
-                  random_score: { seed: Math.floor(Math.random() * 10000) },
+                  random_score: {
+                    seed: Math.floor(Math.random() * 10000),
+                    field: "uuid"
+                  },
                   query: query.query
                 }
               };
@@ -486,10 +489,12 @@
 
           function setDefault() {
             var defaultThesaurus = attrs["default"];
-            for (var t in scope.regionTypes) {
-              if (scope.regionTypes[t].name === defaultThesaurus) {
-                scope.regionType = scope.regionTypes[t];
-                return;
+            if (defaultThesaurus) {
+              for (var t in scope.regionTypes) {
+                if (scope.regionTypes[t].name === defaultThesaurus) {
+                  scope.regionType = scope.regionTypes[t];
+                  return;
+                }
               }
             }
             scope.regionType = scope.regionTypes[0];
@@ -764,7 +769,15 @@
                   queryTokenizer: Bloodhound.tokenizers.whitespace,
                   limit: 30,
                   remote: {
-                    wildcard: "QUERY",
+                    replace: function (url, query) {
+                      // url parameter will be decoded once by the proxy
+                      // and we have to keep URI component encoded in the API call to the service
+                      // If not, search with " " will fail because invalid URI.
+                      return url.replace(
+                        "QUERY",
+                        encodeURIComponent(encodeURIComponent(query))
+                      );
+                    },
                     url: url,
                     ajax: {
                       beforeSend: function () {

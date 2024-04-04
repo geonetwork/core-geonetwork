@@ -687,17 +687,21 @@
               this,
               setParams("thumbnail-remove", {
                 id: gnCurrentEdit.id,
-                thumbnail_url: thumb.id
+                thumbnail_url: thumb.id,
+                resourceIdx: thumb.idx,
+                resourceHash: thumb.hash
               })
             );
           }
-          // It is an uploaded tumbnail
+          // It is an uploaded thumbnail
           else {
             return runService(
               "removeThumbnail",
               {
                 type: thumb.title === "thumbnail" ? "small" : "large",
                 id: gnCurrentEdit.id,
+                resourceIdx: thumb.idx,
+                resourceHash: thumb.hash,
                 version: gnCurrentEdit.version
               },
               this
@@ -729,6 +733,8 @@
             this,
             setParams("onlinesrc-remove", {
               id: gnCurrentEdit.id,
+              resourceHash: onlinesrc.hash,
+              resourceIdx: onlinesrc.idx,
               url: url,
               name: $filter("gnLocalized")(onlinesrc.title)
             })

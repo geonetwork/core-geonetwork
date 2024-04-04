@@ -400,6 +400,8 @@
           scope.convertLinkToEdit = function (link) {
             var convertedLink = {
               id: link.url,
+              idx: link.idx,
+              hash: link.hash,
               url: convertLangProperties(link.urlObject),
               type: getType(link.function),
               title: convertLangProperties(link.nameObject),

@@ -1626,7 +1626,7 @@
     <spring.security.version>5.8.8</spring.security.version>
     <spring.jpa.version>2.7.18</spring.jpa.version>
     <springboot.version>2.7.0</springboot.version>
-    <springdoc.version>1.5.13</springdoc.version>
+    <springdoc.version>1.7.0</springdoc.version>
     <hibernate.version>5.6.15.Final</hibernate.version>
 
     <metrics.version>2.2.0</metrics.version>
