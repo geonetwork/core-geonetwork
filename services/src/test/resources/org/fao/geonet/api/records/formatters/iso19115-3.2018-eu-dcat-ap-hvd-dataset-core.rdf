@@ -272,6 +272,7 @@
         <prefLabel xmlns="http://www.w3.org/2004/02/skos/core#" xml:lang="fr">Mobilité</prefLabel>
       </skos:Concept>
     </dcatap:hvdCategory>
+    <dcatap:applicableLegislation rdf:resource="http://data.europa.eu/eli/reg/2014/1143/oj"/>
     <dct:accessRights>
       <dct:RightsStatement
         rdf:about="http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/noLimitations"/>

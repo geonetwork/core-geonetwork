@@ -277,6 +277,7 @@
     <dcat:keyword xml:lang="fre">Ressources minérales</dcat:keyword>
     <dcat:keyword xml:lang="fre">Santé et sécurité des personnes</dcat:keyword>
     <dcat:keyword xml:lang="fre">Mobilité</dcat:keyword>
+    <dcat:keyword xml:lang="fre">1143/2014</dcat:keyword>
     <dct:accessRights>
       <dct:RightsStatement
         rdf:about="http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/noLimitations"/>
