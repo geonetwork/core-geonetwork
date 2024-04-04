@@ -221,7 +221,7 @@
             -->
             <xsl:for-each select="ancestor::mrd:MD_DigitalTransferOptions/mrd:transferSize/*/text()[. castable as xs:double]">
               <!-- Not valid for eu-dcat-ap <dcat:byteSize><xsl:value-of select="concat(., ' MB')"/></dcat:byteSize>-->
-              <dcat:byteSize rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal"><xsl:value-of select="format-number(. * 1048576, '#')"/></dcat:byteSize>
+              <dcat:byteSize rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger"><xsl:value-of select="format-number(. * 1048576, '#')"/></dcat:byteSize>
             </xsl:for-each>
 
 

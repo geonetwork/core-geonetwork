@@ -351,7 +351,7 @@
       <dcat:Distribution>
         <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2023-12-08T00:00:00</dct:issued>
         <dcat:accessURL rdf:resource="https://data.monde.org/secteur.shp"/>
-        <dcat:byteSize rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">10485760</dcat:byteSize>
+        <dcat:byteSize rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">10485760</dcat:byteSize>
         <dct:format>
           <dct:MediaType>
             <rdfs:label>ESRI Shapefile (.shp)</rdfs:label>
