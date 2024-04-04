@@ -203,5 +203,4 @@
     <entry key="https://publications.europa.eu/resource/authority/file-type/GML">wps</entry>
     <entry key="https://publications.europa.eu/resource/authority/file-type/ZIP">zip</entry>
   </xsl:variable>
-
 </xsl:stylesheet>

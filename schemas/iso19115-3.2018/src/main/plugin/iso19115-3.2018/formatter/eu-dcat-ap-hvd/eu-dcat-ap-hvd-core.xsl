@@ -109,8 +109,10 @@
                 match="mdb:distributionInfo//mrd:onLine">
     <xsl:call-template name="iso19115-3-to-dcat-distribution">
       <xsl:with-param name="additionalProperties">
-        <xsl:apply-templates mode="iso19115-3-to-dcat"
-                             select="ancestor::mdb:MD_Metadata/mdb:identificationInfo/*/mri:resourceConstraints/mco:MD_LegalConstraints/mco:reference"/>
+        <xsl:if test="$isCopyingDatasetInfoToDistribution">
+          <xsl:apply-templates mode="iso19115-3-to-dcat"
+                               select="ancestor::mdb:MD_Metadata/mdb:identificationInfo/*/mri:resourceConstraints/mco:MD_LegalConstraints/mco:reference"/>
+        </xsl:if>
       </xsl:with-param>
     </xsl:call-template>
   </xsl:template>

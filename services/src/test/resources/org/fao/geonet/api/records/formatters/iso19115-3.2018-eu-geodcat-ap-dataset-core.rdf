@@ -419,33 +419,6 @@
         <dcat:compressFormat>
           <dct:MediaType rdf:about="https://publications.europa.eu/resource/authority/file-type/ZIP"/>
         </dcat:compressFormat>
-        <dct:license>
-          <dct:LicenseDocument
-            rdf:about="https://geoportail.wallonie.be/files/documents/ConditionsSPW/DataSPW-CGU.pdf"/>
-        </dct:license>
-        <dct:accessRights>
-          <dct:RightsStatement
-            rdf:about="http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/noLimitations"/>
-        </dct:accessRights>
-        <dcat:spatialResolutionInMeters rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.01
-        </dcat:spatialResolutionInMeters>
-        <dcat:temporalResolution rdf:datatype="http://www.w3.org/2001/XMLSchema#duration">P0Y2M0DT0H0M0S
-        </dcat:temporalResolution>
-        <dct:conformsTo>
-          <dct:Standard rdf:about="http://data.europa.eu/eli/reg/2010/1089"/>
-        </dct:conformsTo>
-        <dct:conformsTo>
-          <dct:Standard rdf:about="https://inspire.ec.europa.eu/id/document/tg/tn"/>
-        </dct:conformsTo>
-        <dct:conformsTo>
-          <dct:Standard>
-            <rdf:type rdf:resource="http://purl.org/dc/terms/Standard"/>
-            <rdfs:label xml:lang="fre">INSPIRE Data Specification on Transport Networks – Technical Guidelines, version
-              3.2
-            </rdfs:label>
-            <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2014-04-17</dct:issued>
-          </dct:Standard>
-        </dct:conformsTo>
       </dcat:Distribution>
     </dcat:distribution>
     <dcat:distribution>
@@ -462,33 +435,6 @@
             <dcat:endpointURL rdf:resource="http://geoapps.wallonie.be/webgisdgo4/#CTX=PDS"/>
           </rdf:Description>
         </dcat:accessService>
-        <dct:license>
-          <dct:LicenseDocument
-            rdf:about="https://geoportail.wallonie.be/files/documents/ConditionsSPW/DataSPW-CGU.pdf"/>
-        </dct:license>
-        <dct:accessRights>
-          <dct:RightsStatement
-            rdf:about="http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/noLimitations"/>
-        </dct:accessRights>
-        <dcat:spatialResolutionInMeters rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.01
-        </dcat:spatialResolutionInMeters>
-        <dcat:temporalResolution rdf:datatype="http://www.w3.org/2001/XMLSchema#duration">P0Y2M0DT0H0M0S
-        </dcat:temporalResolution>
-        <dct:conformsTo>
-          <dct:Standard rdf:about="http://data.europa.eu/eli/reg/2010/1089"/>
-        </dct:conformsTo>
-        <dct:conformsTo>
-          <dct:Standard rdf:about="https://inspire.ec.europa.eu/id/document/tg/tn"/>
-        </dct:conformsTo>
-        <dct:conformsTo>
-          <dct:Standard>
-            <rdf:type rdf:resource="http://purl.org/dc/terms/Standard"/>
-            <rdfs:label xml:lang="fre">INSPIRE Data Specification on Transport Networks – Technical Guidelines, version
-              3.2
-            </rdfs:label>
-            <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2014-04-17</dct:issued>
-          </dct:Standard>
-        </dct:conformsTo>
       </dcat:Distribution>
     </dcat:distribution>
     <dcat:distribution>
@@ -507,33 +453,6 @@
               rdf:resource="https://geoportail.wallonie.be/walonmap/#ADU=https://geoservices.wallonie.be/arcgis/rest/services/AMENAGEMENT_TERRITOIRE/PDS/MapServer"/>
           </rdf:Description>
         </dcat:accessService>
-        <dct:license>
-          <dct:LicenseDocument
-            rdf:about="https://geoportail.wallonie.be/files/documents/ConditionsSPW/DataSPW-CGU.pdf"/>
-        </dct:license>
-        <dct:accessRights>
-          <dct:RightsStatement
-            rdf:about="http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/noLimitations"/>
-        </dct:accessRights>
-        <dcat:spatialResolutionInMeters rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.01
-        </dcat:spatialResolutionInMeters>
-        <dcat:temporalResolution rdf:datatype="http://www.w3.org/2001/XMLSchema#duration">P0Y2M0DT0H0M0S
-        </dcat:temporalResolution>
-        <dct:conformsTo>
-          <dct:Standard rdf:about="http://data.europa.eu/eli/reg/2010/1089"/>
-        </dct:conformsTo>
-        <dct:conformsTo>
-          <dct:Standard rdf:about="https://inspire.ec.europa.eu/id/document/tg/tn"/>
-        </dct:conformsTo>
-        <dct:conformsTo>
-          <dct:Standard>
-            <rdf:type rdf:resource="http://purl.org/dc/terms/Standard"/>
-            <rdfs:label xml:lang="fre">INSPIRE Data Specification on Transport Networks – Technical Guidelines, version
-              3.2
-            </rdfs:label>
-            <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2014-04-17</dct:issued>
-          </dct:Standard>
-        </dct:conformsTo>
       </dcat:Distribution>
     </dcat:distribution>
     <dcat:distribution>
@@ -553,33 +472,6 @@
               rdf:resource="https://geoservices.wallonie.be/arcgis/rest/services/AMENAGEMENT_TERRITOIRE/PDS/MapServer"/>
           </rdf:Description>
         </dcat:accessService>
-        <dct:license>
-          <dct:LicenseDocument
-            rdf:about="https://geoportail.wallonie.be/files/documents/ConditionsSPW/DataSPW-CGU.pdf"/>
-        </dct:license>
-        <dct:accessRights>
-          <dct:RightsStatement
-            rdf:about="http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/noLimitations"/>
-        </dct:accessRights>
-        <dcat:spatialResolutionInMeters rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.01
-        </dcat:spatialResolutionInMeters>
-        <dcat:temporalResolution rdf:datatype="http://www.w3.org/2001/XMLSchema#duration">P0Y2M0DT0H0M0S
-        </dcat:temporalResolution>
-        <dct:conformsTo>
-          <dct:Standard rdf:about="http://data.europa.eu/eli/reg/2010/1089"/>
-        </dct:conformsTo>
-        <dct:conformsTo>
-          <dct:Standard rdf:about="https://inspire.ec.europa.eu/id/document/tg/tn"/>
-        </dct:conformsTo>
-        <dct:conformsTo>
-          <dct:Standard>
-            <rdf:type rdf:resource="http://purl.org/dc/terms/Standard"/>
-            <rdfs:label xml:lang="fre">INSPIRE Data Specification on Transport Networks – Technical Guidelines, version
-              3.2
-            </rdfs:label>
-            <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2014-04-17</dct:issued>
-          </dct:Standard>
-        </dct:conformsTo>
       </dcat:Distribution>
     </dcat:distribution>
     <dcat:distribution>
@@ -601,33 +493,6 @@
             </dct:conformsTo>
           </rdf:Description>
         </dcat:accessService>
-        <dct:license>
-          <dct:LicenseDocument
-            rdf:about="https://geoportail.wallonie.be/files/documents/ConditionsSPW/DataSPW-CGU.pdf"/>
-        </dct:license>
-        <dct:accessRights>
-          <dct:RightsStatement
-            rdf:about="http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/noLimitations"/>
-        </dct:accessRights>
-        <dcat:spatialResolutionInMeters rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.01
-        </dcat:spatialResolutionInMeters>
-        <dcat:temporalResolution rdf:datatype="http://www.w3.org/2001/XMLSchema#duration">P0Y2M0DT0H0M0S
-        </dcat:temporalResolution>
-        <dct:conformsTo>
-          <dct:Standard rdf:about="http://data.europa.eu/eli/reg/2010/1089"/>
-        </dct:conformsTo>
-        <dct:conformsTo>
-          <dct:Standard rdf:about="https://inspire.ec.europa.eu/id/document/tg/tn"/>
-        </dct:conformsTo>
-        <dct:conformsTo>
-          <dct:Standard>
-            <rdf:type rdf:resource="http://purl.org/dc/terms/Standard"/>
-            <rdfs:label xml:lang="fre">INSPIRE Data Specification on Transport Networks – Technical Guidelines, version
-              3.2
-            </rdfs:label>
-            <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2014-04-17</dct:issued>
-          </dct:Standard>
-        </dct:conformsTo>
       </dcat:Distribution>
     </dcat:distribution>
     <foaf:page>

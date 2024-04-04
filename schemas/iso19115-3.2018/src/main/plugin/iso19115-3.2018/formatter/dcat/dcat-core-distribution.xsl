@@ -22,10 +22,13 @@
   <!--
   Some information are duplicated from the dataset to the distributions.
   This can be enabled or not here.
+
+  Related discussion:
+  https://github.com/SEMICeu/GeoDCAT-AP/issues/100
   -->
   <xsl:param name="copyDatasetInfoToDistribution"
                 as="xs:string"
-                select="'true'"/>
+                select="'false'"/>
   <xsl:variable name="isCopyingDatasetInfoToDistribution"
                 as="xs:boolean"
                 select="xs:boolean($copyDatasetInfoToDistribution)"/>

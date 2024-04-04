@@ -186,23 +186,6 @@
             <dcat:endpointURL rdf:resource="https://geoservices.wallonie.be/inspire/atom/PS_Service.xml"/>
           </rdf:Description>
         </dcat:accessService>
-        <dct:license>
-          <dct:LicenseDocument rdf:about="https://geoportail.wallonie.be/files/documents/ConditionsSPW/LicServicesSPW.pdf"/>
-        </dct:license>
-        <dct:rights>
-          <dct:RightsStatement>
-            <dct:description xml:lang="fre">Conditions d'utilisation spécifiques</dct:description>
-          </dct:RightsStatement>
-        </dct:rights>
-        <dct:accessRights>
-          <dct:RightsStatement rdf:about="http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/noLimitations"/>
-        </dct:accessRights>
-        <dct:conformsTo>
-          <dct:Standard rdf:about="http://data.europa.eu/eli/reg/2009/976"/>
-        </dct:conformsTo>
-        <dct:conformsTo>
-          <dct:Standard rdf:about="http://data.europa.eu/eli/reg/2010/1089"/>
-        </dct:conformsTo>
       </dcat:Distribution>
     </dcat:distribution>
     <dcat:endpointURL rdf:resource="https://geoservices.wallonie.be/inspire/atom/PS_Opensearch.xml"/>
