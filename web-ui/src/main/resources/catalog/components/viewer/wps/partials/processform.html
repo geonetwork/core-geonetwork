@@ -68,23 +68,41 @@
                 >
               </label>
 
-              <!-- Date time -->
-              <div ng-if="isDateTime(input)">
-                <div
-                  ng-repeat="field in getInputsByName(input.identifier.value)"
-                  class="input-daterange input-group input-group-sm"
-                  gn-bootstrap-datepicker="pickerValues"
-                  config="{dateMin: getDateBounds(input, true), dateMax: getDateBounds(input, false)}"
-                  data-date-format="dd-mm-yyyy"
-                >
+              <div ng-if="isDateFormat(input)">
+                <!-- Date time -->
+                <div ng-if="isDateTime(input)">
                   <input
+                    ng-repeat="field in getInputsByName(input.identifier.value)"
                     ng-model="field.value"
                     data-ng-click="desactivateGeometryTool()"
-                    type="text"
+                    type="datetime-local"
                     ng-blur="onBlur($event)"
                     class="input-sm form-control"
                   />
-                  <span class="input-group-addon" translate>date</span>
+                </div>
+
+                <!-- Date -->
+                <div ng-if="isDate(input)">
+                  <input
+                    ng-repeat="field in getInputsByName(input.identifier.value)"
+                    ng-model="field.value"
+                    data-ng-click="desactivateGeometryTool()"
+                    type="date"
+                    ng-blur="onBlur($event)"
+                    class="input-sm form-control"
+                  />
+                </div>
+
+                <!-- Time -->
+                <div ng-if="isTime(input)">
+                  <input
+                    ng-repeat="field in getInputsByName(input.identifier.value)"
+                    ng-model="field.value"
+                    data-ng-click="desactivateGeometryTool()"
+                    type="time"
+                    ng-blur="onBlur($event)"
+                    class="input-sm form-control"
+                  />
                 </div>
               </div>
 
@@ -105,7 +123,9 @@
               </div>
 
               <!-- Basic form field (combo box or text field) -->
-              <div ng-if="::input.literalData && !isDateTime(input) && !isBoolean(input)">
+              <div
+                ng-if="::input.literalData && !isDateFormat(input) && !isBoolean(input)"
+              >
                 <div
                   class="input-group"
                   ng-repeat="field in getInputsByName(input.identifier.value)"

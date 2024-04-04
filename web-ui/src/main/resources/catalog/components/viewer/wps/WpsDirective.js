@@ -192,9 +192,45 @@
                 }
               }
 
-              scope.isDateTime = function (date) {
+              scope.isDateFormat = function (date) {
                 if (date.hasOwnProperty("metadata")) {
                   return date.metadata[0].href === "datetime";
+                }
+                return false;
+              };
+
+              scope.isDateTime = function (date) {
+                if (scope.isDateFormat(date)) {
+                  if (date.hasOwnProperty("literalData")) {
+                    return (
+                      date.literalData.hasOwnProperty("dataType") &&
+                      date.literalData.dataType.value === "dateTime"
+                    );
+                  }
+                }
+                return false;
+              };
+
+              scope.isDate = function (date) {
+                if (scope.isDateFormat(date)) {
+                  if (date.hasOwnProperty("literalData")) {
+                    return (
+                      date.literalData.hasOwnProperty("dataType") &&
+                      date.literalData.dataType.value === "date"
+                    );
+                  }
+                }
+                return false;
+              };
+
+              scope.isTime = function (date) {
+                if (scope.isDateFormat(date)) {
+                  if (date.hasOwnProperty("literalData")) {
+                    return (
+                      date.literalData.hasOwnProperty("dataType") &&
+                      date.literalData.dataType.value === "time"
+                    );
+                  }
                 }
                 return false;
               };
