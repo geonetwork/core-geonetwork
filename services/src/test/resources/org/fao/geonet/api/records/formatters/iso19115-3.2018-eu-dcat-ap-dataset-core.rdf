@@ -73,7 +73,6 @@
                 <owl:versionInfo xml:lang="fre">2003/Cor 1:2006</owl:versionInfo>
               </dct:Standard>
             </dct:conformsTo>
-
           </rdf:Description>
         </dct:source>
         <dct:conformsTo>
@@ -334,29 +333,33 @@
         <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2014-04-17</dct:issued>
       </dct:Standard>
     </dct:conformsTo>
-    <adms:versionNotes xml:lang="fre">La version numérique vectorielle du plan de secteur se base sur la version papier
-      originale
-      digitalisée par l'Institut Wallon en juin 1994 (fond de plan au 1/10.000) qui a été complétée en mai 2001 par
-      ce même institut. La donnée intègre la légende actuellement en vigueur et est mise à jour en continu par la
-      DGO4 depuis 2001.
+    <dct:provenance>
+      <dct:ProvenanceStatement>
+        <dct:description xml:lang="fre">La version numérique vectorielle du plan de secteur se base sur la version papier
+          originale
+          digitalisée par l'Institut Wallon en juin 1994 (fond de plan au 1/10.000) qui a été complétée en mai 2001 par
+          ce même institut. La donnée intègre la légende actuellement en vigueur et est mise à jour en continu par la
+          DGO4 depuis 2001.
 
-      L'intégration des nouveaux dossiers, la correction d'erreurs et la suppression des dossiers abrogés se font au
-      fur et à mesure de la réception des informations. Les données publiées sont mises à jour mensuellement sur
-      base des données de travail.
+          L'intégration des nouveaux dossiers, la correction d'erreurs et la suppression des dossiers abrogés se font au
+          fur et à mesure de la réception des informations. Les données publiées sont mises à jour mensuellement sur
+          base des données de travail.
 
-      Depuis leur adoption, les plans de secteur ont fait l’objet de nombreuses révisions. Le Gouvernement wallon a
-      en effet estimé nécessaire de les adapter pour y inscrire de nouveaux projets: routes, lignes électriques à
-      haute tension, tracé TGV, nouvelles zones d'activité économique, zones d’extraction, etc.
+          Depuis leur adoption, les plans de secteur ont fait l’objet de nombreuses révisions. Le Gouvernement wallon a
+          en effet estimé nécessaire de les adapter pour y inscrire de nouveaux projets: routes, lignes électriques à
+          haute tension, tracé TGV, nouvelles zones d'activité économique, zones d’extraction, etc.
 
-      La procédure de révision et la légende ont été modifiées à plusieurs reprises.
+          La procédure de révision et la légende ont été modifiées à plusieurs reprises.
 
-      Suite à l'entrée en vigueur du CoDT, des changements sont à noter :
-      - Trois nouvelles zones destinées à l'urbanisation : Zone de dépendance d’extraction destinée à accueillir les
-      dépôts et dépendances industrielles (transformation des matières) à l’activité d’extraction, la zone d'enjeu
-      communal (ZEC) et la zone d'enjeu régional (ZER). Les ZEC et ZER sont toutes deux accompagnées d'une carte
-      d'affectation des sols à valeur indicative
-      - une nouvelle zone non destinée à l'urbanisation : zone d'extraction (ZE).
-    </adms:versionNotes>
+          Suite à l'entrée en vigueur du CoDT, des changements sont à noter :
+          - Trois nouvelles zones destinées à l'urbanisation : Zone de dépendance d’extraction destinée à accueillir les
+          dépôts et dépendances industrielles (transformation des matières) à l’activité d’extraction, la zone d'enjeu
+          communal (ZEC) et la zone d'enjeu régional (ZER). Les ZEC et ZER sont toutes deux accompagnées d'une carte
+          d'affectation des sols à valeur indicative
+          - une nouvelle zone non destinée à l'urbanisation : zone d'extraction (ZE).
+        </dct:description>
+      </dct:ProvenanceStatement>
+    </dct:provenance>
     <adms:identifier>
       <rdf:Description>
         <rdf:type rdf:resource="http://www.w3.org/ns/adms#Identifier"/>

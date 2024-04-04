@@ -12,49 +12,11 @@
       <rdf:Description>
         <rdf:type rdf:resource="http://www.w3.org/ns/dcat#CatalogRecord"/>
         <dct:identifier rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">urn:uuid/{uuid}</dct:identifier>
-        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2023-12-11T07:25:51.082626Z
-        </dct:modified>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2023-12-11T07:25:51.082626Z</dct:modified>
         <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2019-04-02T12:35:21</dct:issued>
-        <dct:conformsTo>
-          <dct:Standard>
-            <rdf:type rdf:resource="http://purl.org/dc/terms/Standard"/>
-            <dct:title xml:lang="fre">ISO 19119</dct:title>
-            <owl:versionInfo xml:lang="fre">2005/Amd.1:2008</owl:versionInfo>
-          </dct:Standard>
-        </dct:conformsTo>
         <dct:title xml:lang="fre">INSPIRE - Sites protégés en Wallonie (BE) - Service de téléchargement</dct:title>
         <dct:title xml:lang="eng">INSPIRE - Protected site in Walloon region (BE) - Download service</dct:title>
-        <dct:description xml:lang="fre">Ce service de téléchargement ATOM Feed donne accès aux couches de données du
-          thème INSPIRE
-          "Sites protégés" au sein du territoire wallon (Belgique).
-
-          Ce service de téléchargement simple est fourni par le Service public de Wallonie (SPW) et permet le
-          téléchargement direct des couches de données géographiques constitutives du thème "sites protégés" de la
-          Directive INSPIRE (Annexe 1.9) sur l'ensemble du territoire wallon. Il utilise la technologie de flux de
-          données ATOM Feed.
-
-          Le service est conforme aux spécifications de la Directive INSPIRE en la matière.
-
-          Ce service de téléchargement simple permet d’accéder en téléchargement aux couches de données présentes dans
-          le thème "Sites protégés". Via ce service, les informations suivantes sont téléchargeables :
-          - "INSPIRE - Sites protégés en Wallonie" : série de couches de données regroupant l'ensemble des sites
-          protégés en Wallonie;
-          - "INSPIRE - Sites protégés Natura 2000 en Wallonie" : série de couches de données présentant uniquement les
-          sites classés selon le mécanisme de désignation Natura 2000;
-          - "INSPIRE - Sites protégés par type IUCN en Wallonie" : série de couches de données présentant uniquement les
-          sites classés selon le mécanisme de désignation IUCN;
-          - "INSPIRE - Sites protégés UNESCO en Wallonie" : série de couches de données présentant uniquement les sites
-          classés selon le mécanisme de désignation UNESCO;
-          - "INSPIRE - Sites protégés Monument National en Wallonie" : série de couches de données présentant uniquement
-          les sites classés selon le mécanisme de désignation Monument National
-
-          Le service propose les opérations suivantes :
-          - Accéder aux métadonnées du service de téléchargement;
-          - Décrire la série de couche de données géographiques relative au thème "Sites protégés" ainsi que les séries
-          dérivées selon le mécanisme de désignation;
-          - Accéder aux séries de couches de données géographiques relatives au thème "Sites protégés" et aux sites de
-          désignation par site protégé.
-        </dct:description>
+        <dct:description xml:lang="fre">Ce service de téléchargement ATOM Feed donne accès aux couches de données du thème INSPIRE "Sites protégés" au sein du territoire wallon (Belgique). Ce service de téléchargement simple est fourni par le Service public de Wallonie (SPW) et permet le téléchargement direct des couches de données géographiques constitutives du thème "sites protégés" de la Directive INSPIRE (Annexe 1.9) sur l'ensemble du territoire wallon. Il utilise la technologie de flux de données ATOM Feed. Le service est conforme aux spécifications de la Directive INSPIRE en la matière. Ce service de téléchargement simple permet d’accéder en téléchargement aux couches de données présentes dans le thème "Sites protégés". Via ce service, les informations suivantes sont téléchargeables : - "INSPIRE - Sites protégés en Wallonie" : série de couches de données regroupant l'ensemble des sites protégés en Wallonie; - "INSPIRE - Sites protégés Natura 2000 en Wallonie" : série de couches de données présentant uniquement les sites classés selon le mécanisme de désignation Natura 2000; - "INSPIRE - Sites protégés par type IUCN en Wallonie" : série de couches de données présentant uniquement les sites classés selon le mécanisme de désignation IUCN; - "INSPIRE - Sites protégés UNESCO en Wallonie" : série de couches de données présentant uniquement les sites classés selon le mécanisme de désignation UNESCO; - "INSPIRE - Sites protégés Monument National en Wallonie" : série de couches de données présentant uniquement les sites classés selon le mécanisme de désignation Monument National Le service propose les opérations suivantes : - Accéder aux métadonnées du service de téléchargement; - Décrire la série de couche de données géographiques relative au thème "Sites protégés" ainsi que les séries dérivées selon le mécanisme de désignation; - Accéder aux séries de couches de données géographiques relatives au thème "Sites protégés" et aux sites de désignation par site protégé.</dct:description>
         <foaf:primaryTopic rdf:resource="https://metawal.wallonie.be/geonetwork/srv/api/records/3dbe0017-a71f-4923-9b44-fdb5afef5778"/>
       </rdf:Description>
     </foaf:isPrimaryTopicOf>
@@ -181,17 +143,16 @@
     <dcat:keyword xml:lang="fre">Régional</dcat:keyword>
     <dcat:keyword xml:lang="fre">Régional</dcat:keyword>
     <dct:accessRights>
-      <dct:RightsStatement
-        rdf:about="http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/noLimitations"/>
+      <dct:RightsStatement rdf:about="http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/noLimitations"/>
     </dct:accessRights>
-    <dct:license>
-      <dct:LicenseDocument>
-        <dct:description xml:lang="fre">Conditions d'utilisation spécifiques</dct:description>
-      </dct:LicenseDocument>
-    </dct:license>
     <dct:license>
       <dct:LicenseDocument rdf:about="https://geoportail.wallonie.be/files/documents/ConditionsSPW/LicServicesSPW.pdf"/>
     </dct:license>
+    <dct:rights>
+      <dct:RightsStatement>
+        <dct:description xml:lang="fre">Conditions d'utilisation spécifiques</dct:description>
+      </dct:RightsStatement>
+    </dct:rights>
     <dct:conformsTo>
       <dct:Standard rdf:about="http://data.europa.eu/eli/reg/2009/976"/>
     </dct:conformsTo>
@@ -226,17 +187,15 @@
           </rdf:Description>
         </dcat:accessService>
         <dct:license>
-          <dct:LicenseDocument>
+          <dct:LicenseDocument rdf:about="https://geoportail.wallonie.be/files/documents/ConditionsSPW/LicServicesSPW.pdf"/>
+        </dct:license>
+        <dct:rights>
+          <dct:RightsStatement>
             <dct:description xml:lang="fre">Conditions d'utilisation spécifiques</dct:description>
-          </dct:LicenseDocument>
-        </dct:license>
-        <dct:license>
-          <dct:LicenseDocument
-            rdf:about="https://geoportail.wallonie.be/files/documents/ConditionsSPW/LicServicesSPW.pdf"/>
-        </dct:license>
+          </dct:RightsStatement>
+        </dct:rights>
         <dct:accessRights>
-          <dct:RightsStatement
-            rdf:about="http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/noLimitations"/>
+          <dct:RightsStatement rdf:about="http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/noLimitations"/>
         </dct:accessRights>
         <dct:conformsTo>
           <dct:Standard rdf:about="http://data.europa.eu/eli/reg/2009/976"/>
