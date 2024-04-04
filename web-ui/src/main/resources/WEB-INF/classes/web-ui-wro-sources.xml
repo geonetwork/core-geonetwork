@@ -35,6 +35,7 @@
   <declarative name="lib" pathOnDisk="web-ui/src/main/resources">
     <jsSource webappPath="/catalog/lib/modernizr.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/jquery-3.7.1.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/jquery-migrate-mute.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/jquery-migrate-3.4.1.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/moment-with-locales.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/moment-timezone-with-data-1970-2030.min.js" minimize="false" />
@@ -105,6 +106,7 @@
   <declarative name="lib3d" pathOnDisk="web-ui/src/main/resources">
     <jsSource webappPath="/catalog/lib/modernizr.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/jquery-3.7.1.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/jquery-migrate-mute.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/jquery-migrate-3.4.1.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/moment-with-locales.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/moment-timezone-with-data-1970-2030.min.js" minimize="false" />
