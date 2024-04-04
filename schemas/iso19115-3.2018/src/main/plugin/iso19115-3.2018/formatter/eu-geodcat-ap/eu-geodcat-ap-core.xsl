@@ -169,6 +169,14 @@
   This property MAY be used to provide more information about the format in which an Distribution is released. This is different from the file format as, for example, a ZIP file (file format) could contain an XML schema (representation technique).
 
   In GeoDCAT-AP, this property SHOULD be used to express the spatial representation type (grid, vector, tin), by using the URIs of the corresponding code list operated by the INSPIRE Registry [INSPIRE-SRT].
+
+
+  availability
+  Concept
+  0..1
+  An indication how long it is planned to keep the Distribution of the Dataset available.
+  P
+  https://github.com/SEMICeu/GeoDCAT-AP/issues/86
    -->
 
 

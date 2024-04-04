@@ -206,7 +206,7 @@
             Usage note:
             The checksum is related to the download URL.
 
-            TODO: Not supported
+            TODO: Not supported https://github.com/SEMICeu/GeoDCAT-AP/issues/89
             -->
 
 
