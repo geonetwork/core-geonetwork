@@ -5,6 +5,7 @@
                 xmlns:mdb="http://standards.iso.org/iso/19115/-3/mdb/2.0"
                 xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/2.0"
                 xmlns:lan="http://standards.iso.org/iso/19115/-3/lan/1.0"
+                xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0"
                 xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
                 xmlns:dct="http://purl.org/dc/terms/"
                 xmlns:cnt="http://www.w3.org/2011/content#"
@@ -156,8 +157,8 @@
   -->
 
   <!-- TODO: Dataset / ReferenceSystem -->
-  
-  <!-- TODO: Dataset
+
+  <!-- TODO: Distribution
    +representation technique
   adms:representationTechnique
   skos:Concept
@@ -169,4 +170,12 @@
    -->
 
 
+
+  <!-- TODO: https://github.com/SEMICeu/GeoDCAT-AP/issues/95
+  <xsl:template mode="iso19115-3-to-dcat"
+                match="mri:spatialResolution/*/mri:equivalentScale">
+    <geodcatap:spatialResolutionAsText>
+      ...
+    </geodcatap:spatialResolutionAsText>
+  </xsl:template>-->
 </xsl:stylesheet>
