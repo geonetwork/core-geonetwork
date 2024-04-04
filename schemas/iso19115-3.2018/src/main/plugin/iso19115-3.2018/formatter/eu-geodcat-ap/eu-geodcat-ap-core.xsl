@@ -156,6 +156,17 @@
   -->
 
   <!-- TODO: Dataset / ReferenceSystem -->
+  
+  <!-- TODO: Dataset
+   +representation technique
+  adms:representationTechnique
+  skos:Concept
+  https://github.com/SEMICeu/GeoDCAT-AP/issues/96
+
+  This property MAY be used to provide more information about the format in which an Distribution is released. This is different from the file format as, for example, a ZIP file (file format) could contain an XML schema (representation technique).
+
+  In GeoDCAT-AP, this property SHOULD be used to express the spatial representation type (grid, vector, tin), by using the URIs of the corresponding code list operated by the INSPIRE Registry [INSPIRE-SRT].
+   -->
 
 
 </xsl:stylesheet>
