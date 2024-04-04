@@ -426,7 +426,7 @@
                     //   $(id).tagsinput('add', keyword);
                     // });
 
-                    getRecordsAutocompleter = function (config) {
+                    var getRecordsAutocompleter = function (config) {
                       var recordsAutocompleter = new Bloodhound({
                         datumTokenizer: Bloodhound.tokenizers.whitespace("title"),
                         queryTokenizer: Bloodhound.tokenizers.whitespace,
@@ -469,7 +469,7 @@
                       recordsAutocompleter.initialize();
                       return recordsAutocompleter;
                     };
-                    autocompleter = getRecordsAutocompleter({ max: 10 });
+                    var autocompleter = getRecordsAutocompleter({ max: 10 });
 
                     // Init typeahead
                     field
@@ -558,7 +558,7 @@
                 urls.forEach(function (url, i) {
                   // local://srv/api/registries/entries/af8a36bb-ecea-4880-bf83-26b691e7570e?
                   //  transformation=contact-from-iso19139-to-foaf-agent&lang=eng,fre&schema=dcat2
-                  uuid = url.replace(/.*entries\/(.*)\?.*/, "$1");
+                  var uuid = url.replace(/.*entries\/(.*)\?.*/, "$1");
                   $http
                     .post(
                       "../api/search/records/_search",

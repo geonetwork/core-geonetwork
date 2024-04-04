@@ -202,11 +202,11 @@
 
       this.create = function (map, measureObj, scope) {
         // taken from https://openlayers.org/en/v3.15.0/examples/measure.html
-        getGeodesicLength = function (geometry) {
+        var getGeodesicLength = function (geometry) {
           var sourceProj = map.getView().getProjection();
           return formatLength(geometry, sourceProj);
         };
-        getGeodesicArea = function (geometry) {
+        var getGeodesicArea = function (geometry) {
           var sourceProj = map.getView().getProjection();
           return formatArea(geometry, sourceProj);
         };

@@ -176,7 +176,7 @@
               scope.$on("beforeSearchReset", function () {
                 field.typeahead("val", "");
                 stringValues = [];
-                for (i = 0; i < prev.length; i++) {
+                for (var i = 0; i < prev.length; i++) {
                   $(element).tagsinput("remove", prev[i]);
                 }
                 prev = [];

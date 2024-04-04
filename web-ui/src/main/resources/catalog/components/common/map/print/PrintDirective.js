@@ -604,7 +604,7 @@
         var encLegends;
         var attributions = [];
         var layers = this.map.getLayers();
-        pdfLegendsToDownload = [];
+        var pdfLegendsToDownload = [];
 
         angular.forEach(layers, function (layer) {
           layer.visible = true; // FIXME: was not set by default

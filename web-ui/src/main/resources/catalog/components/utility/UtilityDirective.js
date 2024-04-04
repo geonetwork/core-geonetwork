@@ -489,7 +489,7 @@
 
           function setDefault() {
             var defaultThesaurus = attrs["default"];
-            for (t in scope.regionTypes) {
+            for (var t in scope.regionTypes) {
               if (scope.regionTypes[t].name === defaultThesaurus) {
                 scope.regionType = scope.regionTypes[t];
                 return;
@@ -734,7 +734,7 @@
         link: function (scope, element, attrs) {
           if (attrs["gnRegionType"]) {
             gnRegionService.loadList().then(function (data) {
-              for (i = 0; i < data.length; ++i) {
+              for (var i = 0; i < data.length; ++i) {
                 if (attrs["gnRegionType"] == data[i].name) {
                   scope.regionType = data[i];
                 }

@@ -482,7 +482,7 @@
         // Do not densify if shape does not appear to be an extent
         if (geom.getType() !== "Polygon" || inCoords.length > 5) return;
         for (var i = 0; i < inCoords.length - 1; i++) {
-          var p0, p1, x0, y0, dX;
+          var p0, p1, x0, y0, dX, dY;
           p0 = inCoords[i];
           p1 = inCoords[i + 1];
           x0 = p0[0];
