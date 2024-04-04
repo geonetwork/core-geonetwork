@@ -198,9 +198,11 @@
         <skos:notation>
           <xsl:value-of select="$code"/>
         </skos:notation>
-        <adms:schemaAgency>
-          <xsl:value-of select="$codeSpace"/>
-        </adms:schemaAgency>
+        <xsl:if test="$codeSpace">
+          <adms:schemaAgency>
+            <xsl:value-of select="$codeSpace"/>
+          </adms:schemaAgency>
+        </xsl:if>
       </rdf:Description>
     </adms:identifier>
   </xsl:template>

@@ -156,7 +156,9 @@
   TODO: ? dct:issued is used in DCAT
   -->
 
-  <!-- TODO: Dataset / ReferenceSystem -->
+  <!-- TODO: Dataset / ReferenceSystem
+   https://github.com/SEMICeu/GeoDCAT-AP/issues/94
+   -->
 
   <!-- TODO: Distribution
    +representation technique
