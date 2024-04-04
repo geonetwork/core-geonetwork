@@ -227,7 +227,7 @@
     </dct:accessRights>
     <dct:rights>
       <dct:RightsStatement>
-        <rdfs:label xml:lang="fre">No limitations to public access</rdfs:label>
+        <dct:description xml:lang="fre">No limitations to public access</dct:description>
       </dct:RightsStatement>
     </dct:rights>
     <dct:license>
@@ -244,7 +244,7 @@
     </dct:rights>
     <dct:rights>
       <dct:RightsStatement>
-        <rdfs:label xml:lang="fre">Conditions d'accès et d'utilisation spécifiques</rdfs:label>
+        <dct:description xml:lang="fre">Conditions d'accès et d'utilisation spécifiques</dct:description>
       </dct:RightsStatement>
     </dct:rights>
     <dct:isPartOf rdf:resource="https://metawal.wallonie.be/geonetwork/srv/api/records/be875ddb-ffd9-4c23-a013-53063a366b5b"/>
@@ -354,7 +354,7 @@
         </dct:rights>
         <dct:rights>
           <dct:RightsStatement>
-            <rdfs:label xml:lang="fre">Conditions d'accès et d'utilisation spécifiques</rdfs:label>
+            <dct:description xml:lang="fre">Conditions d'accès et d'utilisation spécifiques</dct:description>
           </dct:RightsStatement>
         </dct:rights>
         <dct:accessRights>
@@ -363,7 +363,7 @@
         </dct:accessRights>
         <dct:rights>
           <dct:RightsStatement>
-            <rdfs:label xml:lang="fre">No limitations to public access</rdfs:label>
+            <dct:description xml:lang="fre">No limitations to public access</dct:description>
           </dct:RightsStatement>
         </dct:rights>
         <dcat:spatialResolutionInMeters rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.01
@@ -419,7 +419,7 @@
         </dct:rights>
         <dct:rights>
           <dct:RightsStatement>
-            <rdfs:label xml:lang="fre">Conditions d'accès et d'utilisation spécifiques</rdfs:label>
+            <dct:description xml:lang="fre">Conditions d'accès et d'utilisation spécifiques</dct:description>
           </dct:RightsStatement>
         </dct:rights>
         <dct:accessRights>
@@ -428,7 +428,7 @@
         </dct:accessRights>
         <dct:rights>
           <dct:RightsStatement>
-            <rdfs:label xml:lang="fre">No limitations to public access</rdfs:label>
+            <dct:description xml:lang="fre">No limitations to public access</dct:description>
           </dct:RightsStatement>
         </dct:rights>
         <dcat:spatialResolutionInMeters rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.01
@@ -487,7 +487,7 @@
         </dct:rights>
         <dct:rights>
           <dct:RightsStatement>
-            <rdfs:label xml:lang="fre">Conditions d'accès et d'utilisation spécifiques</rdfs:label>
+            <dct:description xml:lang="fre">Conditions d'accès et d'utilisation spécifiques</dct:description>
           </dct:RightsStatement>
         </dct:rights>
         <dct:accessRights>
@@ -496,7 +496,7 @@
         </dct:accessRights>
         <dct:rights>
           <dct:RightsStatement>
-            <rdfs:label xml:lang="fre">No limitations to public access</rdfs:label>
+            <dct:description xml:lang="fre">No limitations to public access</dct:description>
           </dct:RightsStatement>
         </dct:rights>
         <dcat:spatialResolutionInMeters rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.01
@@ -555,7 +555,7 @@
         </dct:rights>
         <dct:rights>
           <dct:RightsStatement>
-            <rdfs:label xml:lang="fre">Conditions d'accès et d'utilisation spécifiques</rdfs:label>
+            <dct:description xml:lang="fre">Conditions d'accès et d'utilisation spécifiques</dct:description>
           </dct:RightsStatement>
         </dct:rights>
         <dct:accessRights>
@@ -564,7 +564,7 @@
         </dct:accessRights>
         <dct:rights>
           <dct:RightsStatement>
-            <rdfs:label xml:lang="fre">No limitations to public access</rdfs:label>
+            <dct:description xml:lang="fre">No limitations to public access</dct:description>
           </dct:RightsStatement>
         </dct:rights>
         <dcat:spatialResolutionInMeters rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.01
@@ -625,7 +625,7 @@
         </dct:rights>
         <dct:rights>
           <dct:RightsStatement>
-            <rdfs:label xml:lang="fre">Conditions d'accès et d'utilisation spécifiques</rdfs:label>
+            <dct:description xml:lang="fre">Conditions d'accès et d'utilisation spécifiques</dct:description>
           </dct:RightsStatement>
         </dct:rights>
         <dct:accessRights>
@@ -634,7 +634,7 @@
         </dct:accessRights>
         <dct:rights>
           <dct:RightsStatement>
-            <rdfs:label xml:lang="fre">No limitations to public access</rdfs:label>
+            <dct:description xml:lang="fre">No limitations to public access</dct:description>
           </dct:RightsStatement>
         </dct:rights>
         <dcat:spatialResolutionInMeters rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.01

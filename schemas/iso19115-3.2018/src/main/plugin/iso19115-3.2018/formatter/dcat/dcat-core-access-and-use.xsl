@@ -60,7 +60,7 @@
                 </xsl:when>
                 <xsl:otherwise>
                   <xsl:call-template name="rdf-localised">
-                    <xsl:with-param name="nodeName" select="'rdfs:label'"/>
+                    <xsl:with-param name="nodeName" select="'dct:description'"/>
                   </xsl:call-template>
                 </xsl:otherwise>
               </xsl:choose>
@@ -92,7 +92,7 @@
                   </xsl:when>
                   <xsl:otherwise>
                     <xsl:call-template name="rdf-localised">
-                      <xsl:with-param name="nodeName" select="'rdfs:label'"/>
+                      <xsl:with-param name="nodeName" select="'dct:description'"/>
                     </xsl:call-template>
                   </xsl:otherwise>
                 </xsl:choose>
@@ -109,7 +109,7 @@
                     </xsl:when>
                     <xsl:otherwise>
                       <xsl:call-template name="rdf-localised">
-                        <xsl:with-param name="nodeName" select="'rdfs:label'"/>
+                        <xsl:with-param name="nodeName" select="'dct:description'"/>
                       </xsl:call-template>
                     </xsl:otherwise>
                   </xsl:choose>

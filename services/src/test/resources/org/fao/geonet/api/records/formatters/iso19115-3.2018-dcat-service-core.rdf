@@ -186,7 +186,7 @@
     </dct:accessRights>
     <dct:license>
       <dct:LicenseDocument>
-        <rdfs:label xml:lang="fre">Conditions d'utilisation spécifiques</rdfs:label>
+        <dct:description xml:lang="fre">Conditions d'utilisation spécifiques</dct:description>
       </dct:LicenseDocument>
     </dct:license>
     <dct:license>
@@ -227,7 +227,7 @@
         </dcat:accessService>
         <dct:license>
           <dct:LicenseDocument>
-            <rdfs:label xml:lang="fre">Conditions d'utilisation spécifiques</rdfs:label>
+            <dct:description xml:lang="fre">Conditions d'utilisation spécifiques</dct:description>
           </dct:LicenseDocument>
         </dct:license>
         <dct:license>

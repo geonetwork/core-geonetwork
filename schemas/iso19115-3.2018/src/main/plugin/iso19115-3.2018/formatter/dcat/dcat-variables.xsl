@@ -12,6 +12,10 @@
                 as="xs:boolean"
                 select="true()"/>
 
+  <!-- The first resourceConstraints is accessRights,
+  then rights is used for additional constraints information.
+  https://github.com/SEMICeu/GeoDCAT-AP/issues/82
+  -->
   <xsl:variable name="isPreservingAllResourceConstraints"
                 as="xs:boolean"
                 select="true()"/>
