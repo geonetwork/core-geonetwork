@@ -26,12 +26,6 @@
   <xsl:param name="publisherRoles"
                 select="'publisher'"/>
 
-  <xsl:output omit-xml-declaration="yes"
-              method="xml"
-              indent="yes"
-              saxon:indent-spaces="2"
-              encoding="UTF-8"/>
-
   <xsl:variable name="publisherRolesList"
                 select="tokenize($publisherRoles, ',')"/>
 
