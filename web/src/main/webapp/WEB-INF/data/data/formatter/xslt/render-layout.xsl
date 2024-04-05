@@ -20,7 +20,7 @@
   <xsl:import href="render-functions.xsl"/>
   <xsl:import href="render-layout-fields.xsl"/>
 
-  <xsl:output omit-xml-declaration="yes" method="html" doctype-system="html" indent="yes"
+  <xsl:output omit-xml-declaration="yes" method="xhtml" doctype-system="html" indent="yes"
               encoding="UTF-8"/>
 
   <!-- Those templates should be overriden in the schema plugin - start -->
