@@ -403,10 +403,14 @@ public final class Xml {
     /**
      * Transforms an xml tree putting the result to a stream (uses a stylesheet on disk).
      */
-    public static void transform(Element xml, Path styleSheetPath, OutputStream out) throws Exception {
+    public static void transform(Element xml, Path styleSheetPath, Map<String, Object> params, OutputStream out) throws Exception {
         StreamResult resStream = new StreamResult(out);
-        transform(xml, styleSheetPath, resStream, null);
+        transform(xml, styleSheetPath, resStream, params);
         out.flush();
+    }
+
+    public static void transform(Element xml, Path styleSheetPath, OutputStream out) throws Exception {
+        transform(xml, styleSheetPath, new HashMap<>(), out);
     }
 
 
@@ -515,13 +519,13 @@ public final class Xml {
                         t.setParameter(param.getKey(), param.getValue());
                     }
 
-                if (params.containsKey("geonet-force-xml")) {
-                    ((Controller) t).setOutputProperty("indent", "yes");
-                    ((Controller) t).setOutputProperty("method", "xml");
-                    ((Controller) t).setOutputProperty("{http://saxon.sf.net/}indent-spaces", "3");
+                    if (params.containsKey("geonet-force-xml")) {
+                        ((Controller) t).setOutputProperty("indent", "yes");
+                        ((Controller) t).setOutputProperty("method", "xml");
+                        ((Controller) t).setOutputProperty("{http://saxon.sf.net/}indent-spaces", "2");
+                    }
                 }
 
-                }
                 t.transform(srcXml, result);
             }
         }

@@ -12,6 +12,7 @@
                 extension-element-prefixes="saxon"
                 exclude-result-prefixes="#all">
 
+
   <xsl:param name="format"
              select="'html'"/>
 
@@ -24,6 +25,13 @@
   <!-- What entity is responsible for producing and/or distributing the data set?  Also, is there a physical location associated with the publisher? -->
   <xsl:param name="publisherRoles"
                 select="'publisher'"/>
+
+  <xsl:output omit-xml-declaration="yes"
+              method="xml"
+              indent="yes"
+              saxon:indent-spaces="2"
+              encoding="UTF-8"/>
+
   <xsl:variable name="publisherRolesList"
                 select="tokenize($publisherRoles, ',')"/>
 
@@ -115,7 +123,7 @@
     <blockquote>
       <div class="row">
         <div class="col-md-3">
-          <i class="fa fa-quote-left pull-right"><xsl:comment select="'icon'"/></i>
+          <i class="fa fa-quote-left pull-right"><xsl:comment/></i>
         </div>
         <div class="col-md-9">
           <p>
