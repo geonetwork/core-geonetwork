@@ -8,32 +8,33 @@ GeoNetwork requires an [Elasticsearch](https://www.elastic.co/products/elasticse
 
 | Elasticsearch Version | Compatibility |
 |-----------------------| ------------- |
-| Elasticsearch 7.9.2   | minimum       |
-| Elasticsearch 7.17.15 | tested        |
-| Elasticsearch 8.x     | INCOMPATIBLE  |
+| Elasticsearch 7.15.x  | minimum       |
+| Elasticsearch 8.11.3  | tested        |
+
 
 ## Installation
 
 === "Manual installation"
         
-    1. **Download:** Elasticsearch 7.x (`7.17.15` tested, minimum `7.9.2`) from <https://www.elastic.co/downloads/elasticsearch> and unzip the file.
+    1. **Download:** Elasticsearch 8.x (`8.11.3` tested, minimum `7.15.x`) from <https://www.elastic.co/downloads/elasticsearch> and unzip the file.
 
         ``` shell
-        wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.17.15.tar.gz
-        tar xvfz elasticsearch-7.17.15.tar.gz
+        wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-8.11.3.tar.gz
+        tar xvfz elasticsearch-8.11.3.tar.gz
         ```
 
     2. **Start**: Manually start Elasticsearch using:
 
         ``` shell
-        elasticsearch-7.17.15/bin/elasticsearch
+        elasticsearch-8.11.3/bin/elasticsearch
         ```
 
     3. **Stop**: Manually stop Elasticsearch using:
 
         ``` shell
-        elasticsearch-7.17.15/bin/elasticsearch stop
+        elasticsearch-8.11.3/bin/elasticsearch stop
         ```
+        
 === "Install using Maven"
 
     1. Developers are encouraged to run Elasticseach using maven in order to test against the version of Elasticsearch intended for the next release.

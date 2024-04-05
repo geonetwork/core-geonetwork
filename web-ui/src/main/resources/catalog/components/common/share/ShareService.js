@@ -31,7 +31,7 @@
     // TODO: Move config to DB using order in operations table
     columnOrder: ["view", "dynamic", "download", "editing", "notify"],
     icons: {
-      view: "fa-unlock",
+      view: "fa-lock-open",
       dynamic: "fa-globe",
       download: "fa-download",
       notify: "fa-envelope",

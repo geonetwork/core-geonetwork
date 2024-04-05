@@ -630,7 +630,7 @@ public final class Geonet {
 
     public static class IndexFieldNames {
         public static final String HASXLINKS = "_hasxlinks";
-        public static final String XLINK = "_xlink";
+        public static final String XLINK = "xlink";
         public static final String ROOT = "_root";
         public static final String SCHEMA = "documentStandard";
         public static final String DATABASE_CREATE_DATE = "createDate";

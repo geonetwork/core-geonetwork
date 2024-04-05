@@ -9,8 +9,6 @@ Set Kibana base path and index name in config/kibana.yml:
 ```
 server.basePath: "/geonetwork/dashboards"
 server.rewriteBasePath: false
-kibana.index: ".dashboards"
-
 ```
 
 Adapt if needed ```elasticsearch.url``` and ```server.host```.

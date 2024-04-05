@@ -10,7 +10,7 @@ repo_url: https://github.com/geonetwork/core-geonetwork
 edit_uri: edit/main/docs/manual/docs
 
 # Copyright
-copyright: Copyright &copy; 2001 - 2023 FAO-UN and others
+copyright: Copyright &copy; 2001 - 2024 FAO-UN and others
 
 extra_css:
   - assets/stylesheets/extra.css
@@ -149,11 +149,13 @@ nav:
       - overview/change-log/index.md
       - 'Latest':
         - overview/change-log/latest/index.md
+        - overview/change-log/version-4.4.3.md
         - overview/change-log/version-4.4.2.md
         - overview/change-log/version-4.4.1.md
         - overview/change-log/version-4.4.0.md
       - 'Stable':
         - overview/change-log/stable/index.md
+        - overview/change-log/version-4.2.9.md
         - overview/change-log/version-4.2.8.md
         - overview/change-log/version-4.2.7.md
         - overview/change-log/version-4.2.6.md
@@ -165,6 +167,7 @@ nav:
         - overview/change-log/version-4.2.0.md
       - 'Maintenance':
         - overview/change-log/maintenance/index.md
+        - overview/change-log/version-3.12.12.md
         - overview/change-log/version-3.12.11.md
         - overview/change-log/version-3.12.10.md
         - overview/change-log/version-3.12.9.md

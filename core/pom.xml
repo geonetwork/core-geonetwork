@@ -27,7 +27,7 @@
   <parent>
     <artifactId>geonetwork</artifactId>
     <groupId>org.geonetwork-opensource</groupId>
-    <version>4.4.3-SNAPSHOT</version>
+    <version>4.4.4-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
@@ -341,10 +341,6 @@
       <artifactId>xmlgraphics-commons</artifactId>
     </dependency>
     <dependency>
-      <groupId>commons-fileupload</groupId>
-      <artifactId>commons-fileupload</artifactId>
-    </dependency>
-    <dependency>
       <groupId>commons-collections</groupId>
       <artifactId>commons-collections</artifactId>
     </dependency>
@@ -583,9 +579,10 @@
       <artifactId>spring-test</artifactId>
       <scope>compile</scope>
     </dependency>
+
     <dependency>
-      <groupId>org.elasticsearch.client</groupId>
-      <artifactId>elasticsearch-rest-high-level-client</artifactId>
+      <groupId>co.elastic.clients</groupId>
+      <artifactId>elasticsearch-java</artifactId>
     </dependency>
 
     <dependency>
@@ -699,6 +696,7 @@
               <clusterName>test</clusterName>
               <transportPort>9300</transportPort>
               <httpPort>9200</httpPort>
+              <environmentVariables><ES_JAVA_OPTS>-Xmx2g</ES_JAVA_OPTS></environmentVariables>
             </configuration>
             <executions>
               <execution>

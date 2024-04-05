@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2007 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2024 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -67,7 +67,7 @@ public class DbLib {
         runSQL(context, data);
     }
 
-    static public void runSQL(final ServiceContext context, final List<String> data) {
+    public static void runSQL(final ServiceContext context, final List<String> data) {
         TransactionManager.runInTransaction("Apply SQL statements in database", context.getApplicationContext(),
             TransactionManager.TransactionRequirement.CREATE_ONLY_WHEN_NEEDED, TransactionManager.CommitBehavior.ALWAYS_COMMIT, false,
             new TransactionTask<Object>() {
@@ -88,7 +88,7 @@ public class DbLib {
         runSQL(statement, data, true);
     }
 
-    static private void runSQL(EntityManager entityManager, List<String> data, boolean failOnError) throws Exception {
+    private static void runSQL(EntityManager entityManager, List<String> data, boolean failOnError) throws Exception {
         StringBuffer sb = new StringBuffer();
 
         boolean inBlock = false;
@@ -244,7 +244,7 @@ public class DbLib {
             Path file = checkFilePath(servletContext, appPath, filePath, filePrefix, DatabaseType.lookup(connection).toString());
 
             // --- load the sql data
-            return Lib.text.load(servletContext, appPath, file, Constants.ENCODING);
+            return Lib.text.load(file, Constants.ENCODING);
         } finally {
             if (connection != null) {
                 connection.close();
@@ -258,7 +258,7 @@ public class DbLib {
         Path file = checkFilePath(servletContext, appPath, filePath, filePrefix, DatabaseType.lookup(statement.getConnection()).toString());
 
         // --- load the sql data
-        return Lib.text.load(servletContext, appPath, file, Constants.ENCODING);
+        return Lib.text.load(file, Constants.ENCODING);
     }
 
 }

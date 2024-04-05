@@ -179,8 +179,6 @@
         <script src="{$uiResourcesPath}lib/jquery.ext/jquery.fileupload-angular.js?v={$buildNumber}"></script>
         <script src="{$uiResourcesPath}lib/jquery.ext/jquery.floatThead-slim.js?v={$buildNumber}"></script>
         <script src="{$uiResourcesPath}lib/bootstrap.ext/typeahead.js/typeahead.bundle.js?v={$buildNumber}"></script>
-        <script
-          src="{$uiResourcesPath}lib/bootstrap.ext/typeahead.js/handlebars-v2.0.0.js?v={$buildNumber}"></script>
         <script src="{$uiResourcesPath}lib/bootstrap.ext/tagsinput/bootstrap-tagsinput.js?v={$buildNumber}"></script>
         <script
           src="{$uiResourcesPath}lib/bootstrap.ext/datepicker/bootstrap-datepicker.js?v={$buildNumber}"></script>

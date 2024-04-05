@@ -1,5 +1,7 @@
-UPDATE Settings SET value='4.4.3' WHERE name='system/platform/version';
-UPDATE Settings SET value='SNAPSHOT' WHERE name='system/platform/subVersion';
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/documentation/url', 'https://docs.geonetwork-opensource.org/{{version}}/{{lang}}', 0, 570, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/userFeedback/metadata/enable', 'false', 2, 1913, 'n');
 
-UPDATE settings SET name='metadata/history/enabled' WHERE name='system/metadata/history/enabled'
-INSERT INTO Settings (name, value, datatype, position, internal) SELECT distinct 'metadata/history/accesslevel', 'Editor', 0, 12021, 'n' from settings WHERE NOT EXISTS (SELECT name FROM Settings WHERE name = 'metadata/history/accesslevel');
+
+UPDATE Settings SET value='4.4.3' WHERE name='system/platform/version';
+
+UPDATE Settings SET value='0' WHERE name='system/platform/subVersion';

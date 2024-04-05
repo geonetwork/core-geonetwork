@@ -504,7 +504,7 @@ public class MetadataWorkflowApi {
 
         List<MetadataStatus> listOfStatusChange = new ArrayList<>(1);
         listOfStatusChange.add(metadataStatusValue);
-        Map<Integer, StatusChangeType> statusUpdate = sa.onStatusChange(listOfStatusChange);
+        Map<Integer, StatusChangeType> statusUpdate = sa.onStatusChange(listOfStatusChange, false);
 
         int metadataIdApproved = metadata.getId();
 
@@ -1326,7 +1326,7 @@ public class MetadataWorkflowApi {
         metadataStatusValue.setPreviousState(previousStatus);
         List<MetadataStatus> listOfStatusChange = new ArrayList<>(1);
         listOfStatusChange.add(metadataStatusValue);
-        sa.onStatusChange(listOfStatusChange);
+        sa.onStatusChange(listOfStatusChange, true);
     }
 
 }

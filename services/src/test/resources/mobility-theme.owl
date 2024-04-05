@@ -1,0 +1,1979 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns="https://w3id.org/mobilitydcat-ap/mobility-theme#"
+     xml:base="https://w3id.org/mobilitydcat-ap/mobility-theme"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:xml="http://www.w3.org/XML/1998/namespace"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:bibo="http://purl.org/ontology/bibo/"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+     xmlns:terms="http://purl.org/dc/terms/">
+    <owl:Ontology rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme">
+        <owl:versionIRI rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/1.0.0"/>
+        <terms:creator xml:lang="en">Mario Scrocca (Cefriel)</terms:creator>
+        <terms:creator xml:lang="en">Peter Lubrich (BASt)</terms:creator>
+        <terms:description xml:lang="en">Controlled vocabulary for the classification of the theme for a mobility dataset.</terms:description>
+        <terms:license rdf:resource="https://creativecommons.org/licenses/by/4.0/"/>
+        <terms:publisher xml:lang="en">NAPCORE SubWG4.4</terms:publisher>
+        <terms:title xml:lang="en">Mobility Theme</terms:title>
+        <bibo:status xml:lang="en">Published Controlled Vocabulary</bibo:status>
+        <owl:versionInfo xml:lang="en">1.0.0</owl:versionInfo>
+        <skos:hasTopConcept rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-category"/>
+        <skos:hasTopConcept rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+    </owl:Ontology>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Annotation properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+
+    
+
+
+    <!-- http://purl.org/dc/terms/creator -->
+
+
+    <owl:AnnotationProperty rdf:about="http://purl.org/dc/terms/creator"/>
+    
+
+
+    <!-- http://purl.org/dc/terms/description -->
+
+
+    <owl:AnnotationProperty rdf:about="http://purl.org/dc/terms/description"/>
+    
+
+
+    <!-- http://purl.org/dc/terms/license -->
+
+
+    <owl:AnnotationProperty rdf:about="http://purl.org/dc/terms/license"/>
+    
+
+
+    <!-- http://purl.org/dc/terms/publisher -->
+
+
+    <owl:AnnotationProperty rdf:about="http://purl.org/dc/terms/publisher"/>
+    
+
+
+    <!-- http://purl.org/dc/terms/title -->
+
+
+    <owl:AnnotationProperty rdf:about="http://purl.org/dc/terms/title"/>
+    
+
+
+    <!-- http://purl.org/ontology/bibo/status -->
+
+
+    <owl:AnnotationProperty rdf:about="http://purl.org/ontology/bibo/status"/>
+    
+
+
+    <!-- http://www.w3.org/2004/02/skos/core#broader -->
+
+
+    <owl:AnnotationProperty rdf:about="http://www.w3.org/2004/02/skos/core#broader"/>
+    
+
+
+    <!-- http://www.w3.org/2004/02/skos/core#hasTopConcept -->
+
+
+    <owl:AnnotationProperty rdf:about="http://www.w3.org/2004/02/skos/core#hasTopConcept"/>
+    
+
+
+    <!-- http://www.w3.org/2004/02/skos/core#inScheme -->
+
+
+    <owl:AnnotationProperty rdf:about="http://www.w3.org/2004/02/skos/core#inScheme"/>
+    
+
+
+    <!-- http://www.w3.org/2004/02/skos/core#narrower -->
+
+
+    <owl:AnnotationProperty rdf:about="http://www.w3.org/2004/02/skos/core#narrower"/>
+    
+
+
+    <!-- http://www.w3.org/2004/02/skos/core#prefLabel -->
+
+
+    <owl:AnnotationProperty rdf:about="http://www.w3.org/2004/02/skos/core#prefLabel"/>
+    
+
+
+    <!-- http://www.w3.org/2004/02/skos/core#topConceptOf -->
+
+
+    <owl:AnnotationProperty rdf:about="http://www.w3.org/2004/02/skos/core#topConceptOf"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+
+    
+
+
+    <!-- http://www.w3.org/2004/02/skos/core#Concept -->
+
+
+    <owl:Class rdf:about="http://www.w3.org/2004/02/skos/core#Concept"/>
+    
+
+
+    <!-- http://www.w3.org/2004/02/skos/core#ConceptScheme -->
+
+
+    <owl:Class rdf:about="http://www.w3.org/2004/02/skos/core#ConceptScheme"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Individuals
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#ConceptScheme"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/accesibility-information-for-vehicles -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/accesibility-information-for-vehicles">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/public-transport-non-scheduled-transport"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Accesibility information for vehicles</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/accidents-and-incidents -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/accidents-and-incidents">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/road-events-and-conditions"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Accidents and incidents</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/address-identifiers -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/address-identifiers">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/general-information-for-trip-planning-"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Address identifiers</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/air-and-space-travel -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/air-and-space-travel">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-category"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Air and space travel</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/applicable-road-user-charges-and-payment-methods -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/applicable-road-user-charges-and-payment-methods">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/toll-information"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Applicable road user charges and payment methods</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/availability-of-charging-points-for-electric-vehicles -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/availability-of-charging-points-for-electric-vehicles">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/filling-and-charging-stations"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Availability of charging points for electric vehicles</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/availability-of-delivery-areas -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/availability-of-delivery-areas">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/freight-and-logistics"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Availability of delivery areas</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/availability-of-filling-stations -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/availability-of-filling-stations">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/filling-and-charging-stations"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Availability of filling stations</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/basic-commercial-conditions -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/basic-commercial-conditions">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/public-transport-scheduled-transport"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Basic commercial conditions</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/basic-common-standard-fares -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/basic-common-standard-fares">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/public-transport-scheduled-transport"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Basic common standard fares</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/bike-hiring-availability -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/bike-hiring-availability">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/sharing-and-hiring-services"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Bike-hiring Availability</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/bike-hiring-stations -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/bike-hiring-stations">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/sharing-and-hiring-services"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Bike-hiring Stations</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/bike-parking-locations -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/bike-parking-locations">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/parking-service-and-rest-area-information"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Bike-parking locations</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/bike-sharing-availability -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/bike-sharing-availability">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/sharing-and-hiring-services"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Bike sharing Availability</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/bike-sharing-locations-and-stations -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/bike-sharing-locations-and-stations">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/sharing-and-hiring-services"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Bike-sharing Locations and stations</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/bridge-access-conditions -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/bridge-access-conditions">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/static-traffic-signs-and-regulations"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Bridge access conditions</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/bridge-closures-and-access-conditions -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/bridge-closures-and-access-conditions">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/dynamic-traffic-signs-and-regulations"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Bridge closures and access conditions</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/car-hiring-availability -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/car-hiring-availability">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/sharing-and-hiring-services"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Car-hiring Availability</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/car-parking-availability -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/car-parking-availability">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/parking-service-and-rest-area-information"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Car parking availability</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/car-parking-locations-and-conditions -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/car-parking-locations-and-conditions">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/parking-service-and-rest-area-information"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Car parking locations and conditions</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/car-sharing-availability -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/car-sharing-availability">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/sharing-and-hiring-services"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Car-sharing Availability</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/car-sharing-locations-and-stations -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/car-sharing-locations-and-stations">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/sharing-and-hiring-services"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Car-sharing Locations and stations</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/car-sharing-stations -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/car-sharing-stations">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/sharing-and-hiring-services"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Car-sharing Stations</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/common-fare-products -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/common-fare-products">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/public-transport-scheduled-transport"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Common fare products</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/connection-links -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/connection-links">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/public-transport-scheduled-transport"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Connection links</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/current-travel-times -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/current-travel-times">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/real-time-traffic-data"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Current travel times</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/cycle-network-data -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/cycle-network-data">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-category"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/network-closures-diversions"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/network-detailed-attributes"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/network-geometry-and-lane-character"/>
+        <skos:prefLabel xml:lang="en">Cycle network data</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-category -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-category">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/air-and-space-travel"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/cycle-network-data"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/dynamic-traffic-signs-and-regulations"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/filling-and-charging-stations"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/freight-and-logistics"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/general-information-for-trip-planning-"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/other"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/parking-service-and-rest-area-information"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/pedestrian-network-data"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/public-transport-non-scheduled-transport"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/public-transport-scheduled-transport"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/real-time-traffic-data"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/road-events-and-conditions"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/road-work-information"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/sharing-and-hiring-services"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/static-road-network-data"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/static-traffic-signs-and-regulations"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/toll-information"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/waterways-and-water-bodies"/>
+        <skos:prefLabel xml:lang="en">Data content category</skos:prefLabel>
+        <skos:topConceptOf rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/accesibility-information-for-vehicles"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/accidents-and-incidents"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/address-identifiers"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/applicable-road-user-charges-and-payment-methods"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/availability-of-charging-points-for-electric-vehicles"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/availability-of-delivery-areas"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/availability-of-filling-stations"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/basic-commercial-conditions"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/basic-common-standard-fares"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/bike-hiring-availability"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/bike-hiring-stations"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/bike-parking-locations"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/bike-sharing-availability"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/bike-sharing-locations-and-stations"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/bridge-access-conditions"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/bridge-closures-and-access-conditions"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/car-hiring-availability"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/car-parking-availability"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/car-parking-locations-and-conditions"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/car-sharing-availability"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/car-sharing-locations-and-stations"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/car-sharing-stations"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/common-fare-products"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/connection-links"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/current-travel-times"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/direction-of-travel-on-reversible-lanes"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/disruptions-delays-cancellations"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/dynamic-overtaking-bans-on-heavy-goods-vehicles"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/dynamic-speed-limits"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/e-scooter-sharing-availability"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/e-scooter-sharing-locations-and-stations"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/environmental-standards-for-vehicles"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/expected-delays"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/fares"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/freight-delivery-regulations"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/geometry"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/gradients"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/hours-of-operation"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/identification-of-tolled-roads"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/junctions"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/lane-closures-and-access-conditions"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/location-and-conditions-of-charging-points"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/location-and-conditions-of-filling-stations"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/location-and-length-of-queues"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/location-of-delivery-areas"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/location-of-tolling-stations"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/locations-and-stations"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/long-term-road-works"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/network-closures-diversions"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/network-detailed-attributes"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/network-geometry-and-lane-character"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/network-topology-and-routes-lines"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/number-of-lanes"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/operational-calendar"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/other-access-restrictions-and-traffic-regulations"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/other-static-traffic-signs"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/other-temporary-traffic-management-measures-or-plans"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/other-traffic-regulations"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/parameters-needed-to-calculate-costs"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/parameters-needed-to-calculate-environmental-factors"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/park-and-ride-stops"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/passenger-classes"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/payment-methods"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/payment-methods-for-tolls"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/pedestrian-accessibility-facilities"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/pedestrian-network-geometry"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/permanent-access-restrictions"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/planned-interchanges-between-scheduled-services"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/points-of-interest"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/poor-road-conditions"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/predicted-travel-times"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/provider-data"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/purchase-information"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/real-time-estimated-departure-and-arrival-times"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/reservation-and-purchase-options"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/road-classification"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/road-closures-and-access-conditions"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/road-weather-conditions"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/road-width"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/service-and-rest-area-availability"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/service-and-rest-area-locations-and-conditions"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/service-areas-and-service-times"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/short-term-road-works"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/special-fare-products"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/speed"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/speed-limits"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/stop-facilities-accessibility-and-paths-within-facility"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/stop-facilities-geometry-and-map-layout"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/stop-facilities-location-and-features"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/stop-facilities-status-of-features"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/timetables-static"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/topographic-places"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/traffic-circulation-plans"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/traffic-data-at-border-crossings-to-third-countries"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/traffic-volume"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/transport-operators"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/truck-parking-availability"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/truck-parking-locations-and-conditions"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/tunnel-access-conditions"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/tunnel-closures-and-access-conditions"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/vehicle-details"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/waiting-time-at-border-crossings-to-non-eu-member-states"/>
+        <skos:prefLabel xml:lang="en">Data content sub-category</skos:prefLabel>
+        <skos:topConceptOf rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/direction-of-travel-on-reversible-lanes -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/direction-of-travel-on-reversible-lanes">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/dynamic-traffic-signs-and-regulations"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Direction of travel on reversible lanes</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/disruptions-delays-cancellations -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/disruptions-delays-cancellations">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/public-transport-scheduled-transport"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Disruptions, delays, cancellations</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/dynamic-overtaking-bans-on-heavy-goods-vehicles -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/dynamic-overtaking-bans-on-heavy-goods-vehicles">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/dynamic-traffic-signs-and-regulations"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Dynamic overtaking bans on heavy goods vehicles</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/dynamic-speed-limits -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/dynamic-speed-limits">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/dynamic-traffic-signs-and-regulations"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Dynamic speed limits</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/dynamic-traffic-signs-and-regulations -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/dynamic-traffic-signs-and-regulations">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-category"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/bridge-closures-and-access-conditions"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/direction-of-travel-on-reversible-lanes"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/dynamic-overtaking-bans-on-heavy-goods-vehicles"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/dynamic-speed-limits"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/lane-closures-and-access-conditions"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/other-access-restrictions-and-traffic-regulations"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/other-temporary-traffic-management-measures-or-plans"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/road-closures-and-access-conditions"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/tunnel-closures-and-access-conditions"/>
+        <skos:prefLabel xml:lang="en">Dynamic traffic signs and regulations</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/e-scooter-sharing-availability -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/e-scooter-sharing-availability">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/sharing-and-hiring-services"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">E-scooter-sharing Availability</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/e-scooter-sharing-locations-and-stations -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/e-scooter-sharing-locations-and-stations">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/sharing-and-hiring-services"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">E-scooter-sharing Locations and stations</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/environmental-standards-for-vehicles -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/environmental-standards-for-vehicles">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/public-transport-non-scheduled-transport"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/public-transport-scheduled-transport"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/sharing-and-hiring-services"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Environmental standards for vehicles</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/expected-delays -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/expected-delays">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/real-time-traffic-data"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Expected delays</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/fares -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/fares">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/public-transport-non-scheduled-transport"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Fares</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/filling-and-charging-stations -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/filling-and-charging-stations">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-category"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/availability-of-charging-points-for-electric-vehicles"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/availability-of-filling-stations"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/location-and-conditions-of-charging-points"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/location-and-conditions-of-filling-stations"/>
+        <skos:prefLabel xml:lang="en">Filling and charging stations</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/freight-and-logistics -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/freight-and-logistics">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-category"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/availability-of-delivery-areas"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/freight-delivery-regulations"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/location-of-delivery-areas"/>
+        <skos:prefLabel xml:lang="en">Freight and logistics</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/freight-delivery-regulations -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/freight-delivery-regulations">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/freight-and-logistics"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Freight delivery regulations</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/general-information-for-trip-planning- -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/general-information-for-trip-planning-">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-category"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/address-identifiers"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/parameters-needed-to-calculate-costs"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/parameters-needed-to-calculate-environmental-factors"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/points-of-interest"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/topographic-places"/>
+        <skos:prefLabel xml:lang="en">General information for trip-planning</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/geometry -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/geometry">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/static-road-network-data"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Geometry</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/gradients -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/gradients">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/static-road-network-data"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Gradients</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/hours-of-operation -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/hours-of-operation">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/public-transport-scheduled-transport"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Hours of operation</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/identification-of-tolled-roads -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/identification-of-tolled-roads">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/toll-information"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Identification of tolled roads</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/junctions -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/junctions">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/static-road-network-data"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Junctions</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/lane-closures-and-access-conditions -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/lane-closures-and-access-conditions">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/dynamic-traffic-signs-and-regulations"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Lane closures and access conditions</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/location-and-conditions-of-charging-points -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/location-and-conditions-of-charging-points">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/filling-and-charging-stations"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Location and conditions of charging points</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/location-and-conditions-of-filling-stations -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/location-and-conditions-of-filling-stations">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/filling-and-charging-stations"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Location and conditions of filling stations</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/location-and-length-of-queues -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/location-and-length-of-queues">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/real-time-traffic-data"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Location and length of queues</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/location-of-delivery-areas -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/location-of-delivery-areas">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/freight-and-logistics"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Location of delivery areas</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/location-of-tolling-stations -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/location-of-tolling-stations">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/toll-information"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Location of tolling stations</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/locations-and-stations -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/locations-and-stations">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/public-transport-non-scheduled-transport"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Locations and stations</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/long-term-road-works -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/long-term-road-works">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/road-work-information"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Long-term road works</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/network-closures-diversions -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/network-closures-diversions">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/cycle-network-data"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Network closures/diversions</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/network-detailed-attributes -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/network-detailed-attributes">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/cycle-network-data"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Network detailed attributes</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/network-geometry-and-lane-character -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/network-geometry-and-lane-character">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/cycle-network-data"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Network geometry and lane character</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/network-topology-and-routes-lines -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/network-topology-and-routes-lines">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/public-transport-scheduled-transport"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Network topology and routes/lines</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/number-of-lanes -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/number-of-lanes">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/static-road-network-data"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Number of lanes</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/operational-calendar -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/operational-calendar">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/public-transport-scheduled-transport"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Operational Calendar</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/other -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/other">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-category"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Other</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/other-access-restrictions-and-traffic-regulations -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/other-access-restrictions-and-traffic-regulations">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/dynamic-traffic-signs-and-regulations"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Other access restrictions and traffic regulations</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/other-static-traffic-signs -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/other-static-traffic-signs">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/static-traffic-signs-and-regulations"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Other static traffic signs</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/other-temporary-traffic-management-measures-or-plans -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/other-temporary-traffic-management-measures-or-plans">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/dynamic-traffic-signs-and-regulations"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Other temporary traffic management measures or plans</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/other-traffic-regulations -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/other-traffic-regulations">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/static-traffic-signs-and-regulations"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Other traffic regulations</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/parameters-needed-to-calculate-costs -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/parameters-needed-to-calculate-costs">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/general-information-for-trip-planning-"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Parameters needed to calculate costs</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/parameters-needed-to-calculate-environmental-factors -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/parameters-needed-to-calculate-environmental-factors">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/general-information-for-trip-planning-"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Parameters needed to calculate environmental factors</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/park-and-ride-stops -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/park-and-ride-stops">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/parking-service-and-rest-area-information"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Park and Ride stops</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/parking-service-and-rest-area-information -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/parking-service-and-rest-area-information">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-category"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/bike-parking-locations"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/car-parking-availability"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/car-parking-locations-and-conditions"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/park-and-ride-stops"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/service-and-rest-area-availability"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/service-and-rest-area-locations-and-conditions"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/truck-parking-availability"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/truck-parking-locations-and-conditions"/>
+        <skos:prefLabel xml:lang="en">Parking, service and rest area information</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/passenger-classes -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/passenger-classes">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/public-transport-scheduled-transport"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Passenger classes</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/payment-methods -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/payment-methods">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/sharing-and-hiring-services"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Payment methods</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/payment-methods-for-tolls -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/payment-methods-for-tolls">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/toll-information"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Payment methods for tolls</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/pedestrian-accessibility-facilities -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/pedestrian-accessibility-facilities">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/pedestrian-network-data"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Pedestrian accessibility facilities</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/pedestrian-network-data -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/pedestrian-network-data">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-category"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/pedestrian-accessibility-facilities"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/pedestrian-network-geometry"/>
+        <skos:prefLabel xml:lang="en">Pedestrian network data</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/pedestrian-network-geometry -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/pedestrian-network-geometry">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/pedestrian-network-data"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Pedestrian network geometry</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/permanent-access-restrictions -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/permanent-access-restrictions">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/static-traffic-signs-and-regulations"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Permanent access restrictions</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/planned-interchanges-between-scheduled-services -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/planned-interchanges-between-scheduled-services">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/public-transport-scheduled-transport"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Planned interchanges between scheduled services</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/points-of-interest -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/points-of-interest">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/general-information-for-trip-planning-"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Points of interest</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/poor-road-conditions -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/poor-road-conditions">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/road-events-and-conditions"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Poor road conditions</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/predicted-travel-times -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/predicted-travel-times">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/real-time-traffic-data"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Predicted travel times</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/provider-data -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/provider-data">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/public-transport-non-scheduled-transport"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Provider data</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/public-transport-non-scheduled-transport -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/public-transport-non-scheduled-transport">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-category"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/accesibility-information-for-vehicles"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/environmental-standards-for-vehicles"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/fares"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/locations-and-stations"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/provider-data"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/reservation-and-purchase-options"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/service-areas-and-service-times"/>
+        <skos:prefLabel xml:lang="en">Public transport non-scheduled transport</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/public-transport-scheduled-transport -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/public-transport-scheduled-transport">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-category"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/basic-commercial-conditions"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/basic-common-standard-fares"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/common-fare-products"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/connection-links"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/disruptions-delays-cancellations"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/environmental-standards-for-vehicles"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/hours-of-operation"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/network-topology-and-routes-lines"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/operational-calendar"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/passenger-classes"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/planned-interchanges-between-scheduled-services"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/purchase-information"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/real-time-estimated-departure-and-arrival-times"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/special-fare-products"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/stop-facilities-accessibility-and-paths-within-facility"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/stop-facilities-geometry-and-map-layout"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/stop-facilities-location-and-features"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/stop-facilities-status-of-features"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/timetables-static"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/transport-operators"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/vehicle-details"/>
+        <skos:prefLabel xml:lang="en">Public transport scheduled transport</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/purchase-information -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/purchase-information">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/public-transport-scheduled-transport"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Purchase information</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/real-time-estimated-departure-and-arrival-times -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/real-time-estimated-departure-and-arrival-times">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/public-transport-scheduled-transport"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Real-time estimated departure and arrival times</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/real-time-traffic-data -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/real-time-traffic-data">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-category"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/current-travel-times"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/expected-delays"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/location-and-length-of-queues"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/predicted-travel-times"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/speed"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/traffic-data-at-border-crossings-to-third-countries"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/traffic-volume"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/waiting-time-at-border-crossings-to-non-eu-member-states"/>
+        <skos:prefLabel xml:lang="en">Real-time traffic data</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/reservation-and-purchase-options -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/reservation-and-purchase-options">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/public-transport-non-scheduled-transport"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Reservation and purchase options</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/road-classification -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/road-classification">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/static-road-network-data"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Road classification</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/road-closures-and-access-conditions -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/road-closures-and-access-conditions">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/dynamic-traffic-signs-and-regulations"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Road closures and access conditions</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/road-events-and-conditions -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/road-events-and-conditions">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-category"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/accidents-and-incidents"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/poor-road-conditions"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/road-weather-conditions"/>
+        <skos:prefLabel xml:lang="en">Road events and conditions</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/road-weather-conditions -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/road-weather-conditions">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/road-events-and-conditions"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Road weather conditions</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/road-width -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/road-width">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/static-road-network-data"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Road width</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/road-work-information -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/road-work-information">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-category"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/long-term-road-works"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/short-term-road-works"/>
+        <skos:prefLabel xml:lang="en">Road work information</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/service-and-rest-area-availability -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/service-and-rest-area-availability">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/parking-service-and-rest-area-information"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Service and rest area availability</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/service-and-rest-area-locations-and-conditions -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/service-and-rest-area-locations-and-conditions">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/parking-service-and-rest-area-information"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Service and rest area locations and conditions</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/service-areas-and-service-times -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/service-areas-and-service-times">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/public-transport-non-scheduled-transport"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Service areas and service times</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/sharing-and-hiring-services -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/sharing-and-hiring-services">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-category"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/bike-hiring-availability"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/bike-hiring-stations"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/bike-sharing-availability"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/bike-sharing-locations-and-stations"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/car-hiring-availability"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/car-sharing-availability"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/car-sharing-locations-and-stations"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/car-sharing-stations"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/e-scooter-sharing-availability"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/e-scooter-sharing-locations-and-stations"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/environmental-standards-for-vehicles"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/payment-methods"/>
+        <skos:prefLabel xml:lang="en">Sharing and Hiring Services</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/short-term-road-works -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/short-term-road-works">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/road-work-information"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Short-term road works</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/special-fare-products -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/special-fare-products">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/public-transport-scheduled-transport"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Special Fare Products</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/speed -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/speed">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/real-time-traffic-data"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Speed</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/speed-limits -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/speed-limits">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/static-traffic-signs-and-regulations"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Speed limits</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/static-road-network-data -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/static-road-network-data">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-category"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/geometry"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/gradients"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/junctions"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/number-of-lanes"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/road-classification"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/road-width"/>
+        <skos:prefLabel xml:lang="en">Static road network data</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/static-traffic-signs-and-regulations -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/static-traffic-signs-and-regulations">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-category"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/bridge-access-conditions"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/other-static-traffic-signs"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/other-traffic-regulations"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/permanent-access-restrictions"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/speed-limits"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/traffic-circulation-plans"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/tunnel-access-conditions"/>
+        <skos:prefLabel xml:lang="en">Static traffic signs and regulations</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/stop-facilities-accessibility-and-paths-within-facility -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/stop-facilities-accessibility-and-paths-within-facility">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/public-transport-scheduled-transport"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Stop facilities accessibility and paths within facility</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/stop-facilities-geometry-and-map-layout -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/stop-facilities-geometry-and-map-layout">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/public-transport-scheduled-transport"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Stop facilities geometry and map layout</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/stop-facilities-location-and-features -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/stop-facilities-location-and-features">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/public-transport-scheduled-transport"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Stop facilities location and features</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/stop-facilities-status-of-features -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/stop-facilities-status-of-features">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/public-transport-scheduled-transport"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Stop facilities status of features</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/timetables-static -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/timetables-static">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/public-transport-scheduled-transport"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Timetables static</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/toll-information -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/toll-information">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-category"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/applicable-road-user-charges-and-payment-methods"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/identification-of-tolled-roads"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/location-of-tolling-stations"/>
+        <skos:narrower rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/payment-methods-for-tolls"/>
+        <skos:prefLabel xml:lang="en">Toll information</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/topographic-places -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/topographic-places">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/general-information-for-trip-planning-"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Topographic places</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/traffic-circulation-plans -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/traffic-circulation-plans">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/static-traffic-signs-and-regulations"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Traffic circulation plans</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/traffic-data-at-border-crossings-to-third-countries -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/traffic-data-at-border-crossings-to-third-countries">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/real-time-traffic-data"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Traffic data at border crossings to third countries</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/traffic-volume -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/traffic-volume">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/real-time-traffic-data"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Traffic volume</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/transport-operators -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/transport-operators">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/public-transport-scheduled-transport"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Transport operators</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/truck-parking-availability -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/truck-parking-availability">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/parking-service-and-rest-area-information"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Truck parking availability</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/truck-parking-locations-and-conditions -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/truck-parking-locations-and-conditions">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/parking-service-and-rest-area-information"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Truck parking locations and conditions</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/tunnel-access-conditions -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/tunnel-access-conditions">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/static-traffic-signs-and-regulations"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Tunnel access conditions</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/tunnel-closures-and-access-conditions -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/tunnel-closures-and-access-conditions">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/dynamic-traffic-signs-and-regulations"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Tunnel closures and access conditions</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/vehicle-details -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/vehicle-details">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/public-transport-scheduled-transport"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Vehicle details</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/waiting-time-at-border-crossings-to-non-eu-member-states -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/waiting-time-at-border-crossings-to-non-eu-member-states">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/real-time-traffic-data"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Waiting time at border crossings to non-EU Member States</skos:prefLabel>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://w3id.org/mobilitydcat-ap/mobility-theme/waterways-and-water-bodies -->
+
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/mobilitydcat-ap/mobility-theme/waterways-and-water-bodies">
+        <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+        <skos:broader rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-category"/>
+        <skos:inScheme rdf:resource="https://w3id.org/mobilitydcat-ap/mobility-theme"/>
+        <skos:prefLabel xml:lang="en">Waterways and water bodies</skos:prefLabel>
+    </owl:NamedIndividual>
+</rdf:RDF>
+
+
+
+<!-- Generated by the OWL API (version 5.1.18) https://github.com/owlcs/owlapi/ -->
+
+
