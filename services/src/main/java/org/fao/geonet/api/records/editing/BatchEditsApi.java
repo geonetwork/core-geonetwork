@@ -307,21 +307,4 @@ public class BatchEditsApi implements ApplicationContextAware {
         return Pair.write(report, preview);
     }
 
-    /**
-     * Checks if the user profile is allowed to batch edit metadata.
-     *
-     * @param userSession
-     */
-    private void checkUserProfileToBatchEditMetadata(UserSession userSession) {
-        if (userSession.getProfile() != Profile.Administrator) {
-            String allowedUserProfileToImportMetadata =
-                StringUtils.defaultIfBlank(settingManager.getValue(Settings.METADATA_BATCH_EDITING_ACCESS_LEVEL), Profile.Editor.toString());
-
-            // Is the user profile is higher than the profile allowed to import metadata?
-            if (!UserUtil.hasHierarchyRole(allowedUserProfileToImportMetadata, this.roleHierarchy)) {
-                throw new NotAllowedException("The user has no permissions to batch edit metadata.");
-            }
-        }
-
-    }
 }
