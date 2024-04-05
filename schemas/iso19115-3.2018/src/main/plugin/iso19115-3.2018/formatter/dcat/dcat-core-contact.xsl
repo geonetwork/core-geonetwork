@@ -106,7 +106,7 @@
   <xsl:template name="rdf-contact-foaf">
     <xsl:variable name="individualName"
                   as="xs:string?"
-                  select="cit:individual/*/cit:name/*/text()"/>
+                  select="(cit:individual/*/cit:name/*/text())[1]"/>
     <xsl:variable name="isindividual"
                   as="xs:boolean"
                   select="$individualName != ''"/>
