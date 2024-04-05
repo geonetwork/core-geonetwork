@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2024 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -682,7 +682,7 @@
             source.clear();
           };
 
-          scope.submit = function () {
+          scope.executeWPSProcess = function () {
             source.clear();
             scope.validation_messages = [];
             scope.exception = undefined;
@@ -710,7 +710,22 @@
               return;
             }
 
-            var inputs = scope.wpsLink.inputs;
+            var inputs = scope.wpsLink.inputs.map(function (input) {
+              // Deep clone to avoid changing the original fields in scope.wpsLink.inputs
+              // from dates to string
+              var inputClone = angular.copy(input);
+              // Process date fields
+              if (inputClone.name === "DATE" && inputClone.value) {
+                inputClone.value = inputClone.value.toISOString().split("T")[0];
+              } else if (inputClone.name === "DATETIME" && inputClone.value) {
+                inputClone.value = inputClone.value.toISOString();
+              } else if (inputClone.name === "TIME" && inputClone.value) {
+                inputClone.value = inputClone.value.toISOString().split("T")[1];
+              }
+
+              return inputClone;
+            });
+
             var output = scope.wpsLink.output;
 
             var updateStatus = function (statusLocation) {
