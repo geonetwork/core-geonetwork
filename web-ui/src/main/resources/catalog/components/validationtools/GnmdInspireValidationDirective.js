@@ -71,7 +71,10 @@
             scope.md = gnCurrentEdit.metadata;
             $http({
               method: "GET",
-              url: "../api/records/" + scope.inspMdUuid + "/validate/inspire/testsuites"
+              url:
+                "../api/records/" +
+                encodeURIComponent(scope.inspMdUuid) +
+                "/validate/inspire/testsuites"
             }).then(function (r) {
               scope.testsuites = r.data;
             });
@@ -96,7 +99,7 @@
               scope.token = null;
               var url =
                 "../api/records/" +
-                scope.inspMdUuid +
+                encodeURIComponent(scope.inspMdUuid) +
                 "/validate/inspire?testsuite=" +
                 test;
               if (angular.isDefined(mode) && mode !== "") {

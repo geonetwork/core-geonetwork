@@ -352,7 +352,7 @@ public class MapServersApi {
 //            @Authorization(value = "basicAuth")
 //        }
     )
-    @RequestMapping(value = "/{mapserverId}/records/{metadataUuid}",
+    @RequestMapping(value = "/{mapserverId}/records/{metadataUuid:.+}",
         method = RequestMethod.GET,
         produces = {
             MediaType.TEXT_PLAIN_VALUE
@@ -406,7 +406,7 @@ public class MapServersApi {
 //            @Authorization(value = "basicAuth")
 //        }
     )
-    @RequestMapping(value = "/{mapserverId}/records/{metadataUuid}",
+    @RequestMapping(value = "/{mapserverId}/records/{metadataUuid:.+}",
         method = RequestMethod.PUT,
         produces = {
             MediaType.TEXT_PLAIN_VALUE
@@ -461,7 +461,7 @@ public class MapServersApi {
         //      })
     )
     @RequestMapping(
-        value = "/{mapserverId}/records/{metadataUuid}",
+        value = "/{mapserverId}/records/{metadataUuid:.+}",
         method = RequestMethod.DELETE,
         produces = {
             MediaType.TEXT_PLAIN_VALUE

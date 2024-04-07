@@ -25,48 +25,69 @@
 <beans
   xmlns:sec="http://www.springframework.org/schema/security"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:util="http://www.springframework.org/schema/util"
   xsi:schemaLocation="http://www.springframework.org/schema/beans
           http://www.springframework.org/schema/beans/spring-beans.xsd
           http://www.springframework.org/schema/security
-          http://www.springframework.org/schema/security/spring-security.xsd"
+          http://www.springframework.org/schema/security/spring-security.xsd
+          http://www.springframework.org/schema/util
+          https://www.springframework.org/schema/util/spring-util.xsd"
   xmlns="http://www.springframework.org/schema/beans">
 
   <alias name="filterChainProxy" alias="springSecurityFilterChain"/>
 
-  <bean id="filterChainProxy" class="org.springframework.security.web.FilterChainProxy">
-    <constructor-arg>
-      <list>
-        <!-- TODO: This needs to be secured to not access private info -->
-        <sec:filter-chain pattern="/index/**" filters=""/>
-        <sec:filter-chain pattern="/jolokia" filters="securityContextPersistenceFilter, authenticatedUserFilter"/>
-        <sec:filter-chain pattern="/jolokia/read/geonetwork-**" filters="securityContextPersistenceFilter, authenticatedUserFilter"/>
-        <sec:filter-chain pattern="/dashboards/**" filters="securityContextPersistenceFilter, basicAuthenticationFilter, authenticatedUserFilter"/>
-        <sec:filter-chain pattern="/doc/**" filters=""/>
-        <sec:filter-chain pattern="/api/**" filters=""/>
-        <!-- wroAPI is protected for admin only
-        This is causing issue on node-change-warning page.
-        <sec:filter-chain pattern="/static/wroAPI" filters=""/>-->
-        <sec:filter-chain pattern="/static/**" filters=""/>
-        <sec:filter-chain pattern="/catalog/**" filters=""/>
-        <sec:filter-chain pattern="/" filters=""/>
-        <sec:filter-chain pattern="/*.html" filters=""/>
-        <sec:filter-chain pattern="/*.jsp" filters=""/>
-        <sec:filter-chain pattern="/*.css" filters=""/>
-        <sec:filter-chain pattern="/images/**" filters=""/>
-        <sec:filter-chain pattern="/map/**" filters=""/>
-        <sec:filter-chain pattern="/htmlcache/**" filters=""/>
-        <sec:filter-chain pattern="/pdf/**" filters=""/>
-        <sec:filter-chain pattern="/loc/**" filters=""/>
-        <sec:filter-chain pattern="/xml/csw/test/*" filters=""/>
-        <sec:filter-chain pattern="/xml/schemas/**" filters=""/>
-        <sec:filter-chain pattern="/xsl/harvesting/**" filters=""/>
-        <sec:filter-chain pattern="/xsl/ownership/**" filters=""/>
-        <sec:filter-chain pattern="/config/**" filters=""/>
-        <ref bean="coreFilterChain"/>
-      </list>
-    </constructor-arg>
-  </bean>
+  <util:list id="filterChainPatterns">
+    <!-- TODO: This needs to be secured to not access private info -->
+    <sec:filter-chain pattern="/index/**" filters=""/>
+    <sec:filter-chain pattern="/jolokia/**" filters="securityContextPersistenceFilter, authenticatedUserFilter"/>
+    <sec:filter-chain pattern="/dashboards/**"
+                      filters="securityContextPersistenceFilter, basicAuthenticationFilter, authenticatedUserFilter"/>
+    <sec:filter-chain pattern="/doc/**" filters=""/>
+    <sec:filter-chain pattern="/api/**" filters=""/>
+    <!-- wroAPI is protected for admin only
+    This is causing issue on node-change-warning page.
+    <sec:filter-chain pattern="/static/wroAPI" filters=""/>-->
+    <sec:filter-chain pattern="/static/**" filters=""/>
+    <sec:filter-chain pattern="/catalog/**" filters=""/>
+    <sec:filter-chain pattern="/" filters=""/>
+    <sec:filter-chain pattern="/*.html" filters=""/>
+    <sec:filter-chain pattern="/*.jsp" filters=""/>
+    <sec:filter-chain pattern="/*.css" filters=""/>
+    <sec:filter-chain pattern="/images/**" filters=""/>
+    <sec:filter-chain pattern="/map/**" filters=""/>
+    <sec:filter-chain pattern="/htmlcache/**" filters=""/>
+    <sec:filter-chain pattern="/pdf/**" filters=""/>
+    <sec:filter-chain pattern="/loc/**" filters=""/>
+    <sec:filter-chain pattern="/xml/csw/test/*" filters=""/>
+    <sec:filter-chain pattern="/xml/schemas/**" filters=""/>
+    <sec:filter-chain pattern="/xsl/harvesting/**" filters=""/>
+    <sec:filter-chain pattern="/xsl/ownership/**" filters=""/>
+    <sec:filter-chain pattern="/config/**" filters=""/>
+    <ref bean="coreFilterChain"/>
+  </util:list>
 
+  <!-- Security options
+
+  geonetwork.security.coreconfig can be supplied
+  using the -Dgeonetwork.security.coreconfig
+  or via env as GEONETWORK_SECURITY_CORECONFIG
+  If not supplied it will default to "default" security configuration.
+
+  i.e.
+
+  Option include
+     default      - Default security
+     encodeduuid  - Required to UUID containing special character eg. /
+
+  If encodeduuid is enabled, on Tomcat it will also require
+  -Dorg.apache.tomcat.util.buf.UDecoder.ALLOW_ENCODED_SLASH=true
+
+  and if using an Apache reverse proxy
+  AllowEncodedSlashes On
+  ProxyPass /geonetwork http://localhost:8080/geonetwork nocanon
+  ProxyPassReverse /geonetwork http://localhost:8080/geonetwork
+  -->
+  <import resource="config-security-core-${geonetwork.security.coreconfig:default}.xml"/>
 
   <bean id="coreFilterChain"
         class="org.springframework.security.web.DefaultSecurityFilterChain">
@@ -85,7 +106,7 @@
       <list>
         <ref bean="securityContextPersistenceFilter"/>
         <!-- To disable csrf security (not recommended) comment the following line -->
-        <ref bean="csrfFilter" />
+        <ref bean="csrfFilter"/>
         <!-- To disable csrf security (not recommended) comment the upper line -->
         <ref bean="logoutFilter"/>
         <!-- A filter that check if an external service already authenticated user
@@ -125,7 +146,7 @@
   <bean id="securityContextRepository"
         class='org.springframework.security.web.context.HttpSessionSecurityContextRepository'>
     <property name="allowSessionCreation" value="true"/>
-    <property name="disableUrlRewriting" value="true" />
+    <property name="disableUrlRewriting" value="true"/>
   </bean>
 
   <bean class="org.fao.geonet.web.GeoNetworkHttpSessionRequestCache"
@@ -138,7 +159,8 @@
     </property>
   </bean>
 
-  <bean id="formLoginFilter" class="org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter">
+  <bean id="formLoginFilter"
+        class="org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter">
     <property name="postOnly" value="true"/>
     <property name="usernameParameter" value="username"/>
     <property name="passwordParameter" value="password"/>
@@ -226,7 +248,7 @@
     <constructor-arg name="loginFormUrl" value="${loginForm}"/>
   </bean>
 
-  <bean id="ajaxEntryPoint" class="org.springframework.security.web.authentication.Http403ForbiddenEntryPoint" />
+  <bean id="ajaxEntryPoint" class="org.springframework.security.web.authentication.Http403ForbiddenEntryPoint"/>
 
   <bean id="authenticationEntryPoint"
         class="org.springframework.security.web.authentication.DelegatingAuthenticationEntryPoint">
@@ -235,18 +257,18 @@
         <entry key-ref="apiRequestMatcher" value-ref="ajaxEntryPoint"/>
       </map>
     </constructor-arg>
-    <property name="defaultEntryPoint" ref="defaultAuthenticationEntryPoint" />
+    <property name="defaultEntryPoint" ref="defaultAuthenticationEntryPoint"/>
   </bean>
 
   <bean id="apiRequestMatcher"
         class="org.springframework.security.web.util.matcher.AntPathRequestMatcher">
-    <constructor-arg name="pattern" value="/*/api/**" />
+    <constructor-arg name="pattern" value="/*/api/**"/>
   </bean>
 
   <bean id="accessDeniedHandler"
         class="jeeves.config.springutil.JeevesAccessDeniedHandler">
     <property name="errorPage" value="/accessDenied.jsp"/>
-    <property name="onlyStatusResponsePages" value="/*/api/**" />
+    <property name="onlyStatusResponsePages" value="/*/api/**"/>
   </bean>
 
   <!-- TODO remember me.
@@ -321,13 +343,13 @@
 
   <bean id="anonymousUser" class="org.springframework.security.core.userdetails.memory.UserAttribute">
     <property name="password" value="anonymousUser"/>
-    <property name="authoritiesAsString" value ="ROLE_ANONYMOUS"/>
+    <property name="authoritiesAsString" value="ROLE_ANONYMOUS"/>
   </bean>
   <bean id="anonymousFilter"
         class="org.springframework.security.web.authentication.AnonymousAuthenticationFilter">
-    <constructor-arg value="GeonetworkAnonymousUser" />
-    <constructor-arg value="#{anonymousUser.password}" />
-    <constructor-arg value="#{anonymousUser.authorities}" />
+    <constructor-arg value="GeonetworkAnonymousUser"/>
+    <constructor-arg value="#{anonymousUser.password}"/>
+    <constructor-arg value="#{anonymousUser.authorities}"/>
   </bean>
 
   <bean id="anonymousProvider"
@@ -357,7 +379,7 @@
       <ref bean="csrfTokenRepository"/>
     </constructor-arg>
 
-    <property name="requireCsrfProtectionMatcher" ref="geonetworkCsrfSecurityRequestMatcher" />
+    <property name="requireCsrfProtectionMatcher" ref="geonetworkCsrfSecurityRequestMatcher"/>
   </bean>
 
   <bean class="org.fao.geonet.security.web.csrf.CookieCsrfTokenRepository"
