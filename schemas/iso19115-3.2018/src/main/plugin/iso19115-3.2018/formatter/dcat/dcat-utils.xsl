@@ -4,6 +4,7 @@
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0"
                 xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
+                xmlns:gcx="http://standards.iso.org/iso/19115/-3/gcx/1.0"
                 xmlns:lan="http://standards.iso.org/iso/19115/-3/lan/1.0"
                 xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/2.0"
                 xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0"
@@ -38,7 +39,7 @@
     </xsl:element>
 
     <xsl:variable name="hasDefaultLanguageCharacterString"
-                  select="count(gco:CharacterString) > 0"/>
+                  select="count(gco:CharacterString|gcx:Anchor) > 0"/>
 
     <xsl:for-each select="lan:PT_FreeText/*/lan:LocalisedCharacterString">
       <xsl:variable name="translationLanguage"

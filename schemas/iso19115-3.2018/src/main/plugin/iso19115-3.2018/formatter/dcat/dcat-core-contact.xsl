@@ -5,6 +5,9 @@
                 xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/2.0"
                 xmlns:mdb="http://standards.iso.org/iso/19115/-3/mdb/2.0"
                 xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0"
+                xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0"
+                xmlns:gcx="http://standards.iso.org/iso/19115/-3/gcx/1.0"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
                 xmlns:prov="http://www.w3.org/ns/prov#"
                 xmlns:dcat="http://www.w3.org/ns/dcat#"
                 xmlns:geodcatap="http://data.europa.eu/930/"
@@ -81,7 +84,14 @@
 
 
   <xsl:template name="rdf-contact-vcard">
+    <xsl:variable name="reference"
+                  as="xs:string?"
+                  select="(cit:partyIdentifier/*/mcc:code/*/text()|cit:name/gcx:Anchor/@xlink:href)[1]"/>
+
     <rdf:Description>
+      <xsl:if test="$reference != ''">
+        <xsl:attribute name="rdf:about" select="$reference"/>
+      </xsl:if>
       <rdf:type rdf:resource="http://www.w3.org/2006/vcard/ns#Organization"/>
       <xsl:for-each select="cit:name">
         <xsl:call-template name="rdf-localised">
@@ -113,8 +123,19 @@
     <xsl:variable name="organisation"
                   as="node()?"
                   select="cit:name"/>
+    <xsl:variable name="orgReference"
+                  as="xs:string?"
+                  select="(cit:partyIdentifier/*/mcc:code/*/text()|cit:name/gcx:Anchor/@xlink:href)[1]"/>
+    <xsl:variable name="reference"
+                  as="xs:string?"
+                  select="if ($isindividual)
+                          then (cit:individual/*/(cit:partyIdentifier/*/mcc:code/*/text()|cit:name/gcx:Anchor/@xlink:href))[1]
+                          else $orgReference"/>
 
     <rdf:Description>
+      <xsl:if test="$reference != ''">
+        <xsl:attribute name="rdf:about" select="$reference"/>
+      </xsl:if>
       <rdf:type rdf:resource="http://xmlns.com/foaf/0.1/{if ($isindividual) then 'Person' else 'Organization'}"/>
       <rdf:type rdf:resource="http://www.w3.org/ns/prov#Agent"/>
 
@@ -124,6 +145,9 @@
           <org:memberOf>
             <xsl:for-each select="$organisation">
               <foaf:Organization>
+                <xsl:if test="$orgReference != ''">
+                  <xsl:attribute name="rdf:about" select="$orgReference"/>
+                </xsl:if>
                 <xsl:call-template name="rdf-localised">
                   <xsl:with-param name="nodeName" select="'foaf:name'"/>
                 </xsl:call-template>
