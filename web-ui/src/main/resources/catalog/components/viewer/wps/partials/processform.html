@@ -69,41 +69,16 @@
               </label>
 
               <div ng-if="isDateFormat(input)">
-                <!-- Date time -->
-                <div ng-if="isDateTime(input)">
-                  <input
-                    ng-repeat="field in getInputsByName(input.identifier.value)"
-                    ng-model="field.value"
-                    data-ng-click="desactivateGeometryTool()"
-                    type="datetime-local"
-                    ng-blur="onBlur($event)"
-                    class="input-sm form-control"
-                  />
-                </div>
-
-                <!-- Date -->
-                <div ng-if="isDate(input)">
-                  <input
-                    ng-repeat="field in getInputsByName(input.identifier.value)"
-                    ng-model="field.value"
-                    data-ng-click="desactivateGeometryTool()"
-                    type="date"
-                    ng-blur="onBlur($event)"
-                    class="input-sm form-control"
-                  />
-                </div>
-
-                <!-- Time -->
-                <div ng-if="isTime(input)">
-                  <input
-                    ng-repeat="field in getInputsByName(input.identifier.value)"
-                    ng-model="field.value"
-                    data-ng-click="desactivateGeometryTool()"
-                    type="time"
-                    ng-blur="onBlur($event)"
-                    class="input-sm form-control"
-                  />
-                </div>
+                <input
+                  ng-repeat="field in getInputsByName(input.identifier.value)"
+                  ng-model="field.value"
+                  data-ng-click="desactivateGeometryTool()"
+                  type="{{getHtmlInputType(input)}}"
+                  min="{{getDateBounds(input, true)}}"
+                  max="{{getDateBounds(input, false)}}"
+                  ng-blur="onBlur($event)"
+                  class="input-sm form-control"
+                />
               </div>
 
               <div ng-if="isBoolean(input)">
