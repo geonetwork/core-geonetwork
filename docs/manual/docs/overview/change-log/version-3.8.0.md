@@ -4,20 +4,15 @@
 
 -   Search experience
     -   [Saved searches](https://github.com/geonetwork/core-geonetwork/pull/3778)
-
-        <figure>
-        <img src="img/380-usersearches.png" alt="img/380-usersearches.png" />
-        <figcaption>Saved user searches</figcaption>
-        </figure>
+      
+        ![Screenshot where the star left of the search field expands in a dropdown menu with three options](img/380-usersearches.png "Saved user searches")
 
     -   [Improve PDF output](https://github.com/geonetwork/core-geonetwork/pull/3912)
 
     -   [Add template to display related record as list](https://github.com/geonetwork/core-geonetwork/pull/3908)
 
-        > <figure>
-        > <img src="img/380-related.png" alt="img/380-related.png" />
-        > <figcaption>Add template</figcaption>
-        > </figure>
+        > ![Screenshot showing two related map records below each other](img/380-related.png "Add template")
+  
 
     -   [Add support for negative query on any fields](https://github.com/geonetwork/core-geonetwork/pull/3683)
 -   Standards
@@ -33,10 +28,8 @@
 
     -   [Associated resource can now be filtered, sorted](https://github.com/geonetwork/core-geonetwork/pull/3804), add [support for WFS and Atom services](https://github.com/geonetwork/core-geonetwork/pull/3817).
 
-        > <figure>
-        > <img src="img/380-associated.png" alt="img/380-associated.png" />
-        > <figcaption>Filtering associated resources</figcaption>
-        > </figure>
+        > ![Screenshot of Associated resources dialog with filter options](img/380-associated.png "Filtering associated resources")
+
 -   Harvester
     -   [GeoNetwork / Add paging for better support of large catalogues](https://github.com/geonetwork/core-geonetwork/pull/3916)
     -   [THREDDS / Modernise and simplify harvester](https://github.com/geonetwork/core-geonetwork/pull/3936)
