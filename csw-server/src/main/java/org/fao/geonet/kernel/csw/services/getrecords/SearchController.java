@@ -26,6 +26,7 @@ package org.fao.geonet.kernel.csw.services.getrecords;
 import co.elastic.clients.elasticsearch._types.SortOptions;
 import co.elastic.clients.elasticsearch.core.SearchResponse;
 import co.elastic.clients.elasticsearch.core.search.Hit;
+import co.elastic.clients.elasticsearch.core.search.TotalHits;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jeeves.server.context.ServiceContext;
@@ -458,8 +459,9 @@ public class SearchController {
             SearchResponse result = searchManager.query(esJsonQuery, new HashSet<>(), startPos-1, maxRecords, sort);
 
             List<Hit> hits = result.hits().hits();
-
-            long numMatches = result.hits().hits().size();
+            
+            TotalHits total = result.hits().total();
+            long numMatches = total != null ? total.value() : 0;
 
             if (numMatches != 0 && startPos > numMatches) {
                 throw new InvalidParameterValueEx("startPosition", String.format(
