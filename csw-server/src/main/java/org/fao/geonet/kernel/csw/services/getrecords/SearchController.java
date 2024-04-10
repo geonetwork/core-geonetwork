@@ -26,6 +26,7 @@ package org.fao.geonet.kernel.csw.services.getrecords;
 import co.elastic.clients.elasticsearch._types.SortOptions;
 import co.elastic.clients.elasticsearch.core.SearchResponse;
 import co.elastic.clients.elasticsearch.core.search.Hit;
+import co.elastic.clients.elasticsearch.core.search.TotalHits;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jeeves.server.context.ServiceContext;
@@ -60,12 +61,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 
 public class SearchController {
@@ -137,12 +133,9 @@ public class SearchController {
                 ObjectMapper objectMapper = new ObjectMapper();
                 esJsonQuery = objectMapper.readTree(jsonQuery);
 
-                Set<String> fieldsToRetrieve = new HashSet<>();
-                fieldsToRetrieve.add("uuid");
-                SearchResponse result = searchManager.query(esJsonQuery, fieldsToRetrieve, 0, 1);
+                TotalHits total = searchManager.query(esJsonQuery, new HashSet<>(), 0, 0).hits().total();
 
-                long numMatches = result.hits().hits().size();
-                if (numMatches == 0) {
+                if (Optional.ofNullable(total).map(TotalHits::value).orElse(0L) == 0) {
                     return null;
                 }
             } catch (Exception e) {
