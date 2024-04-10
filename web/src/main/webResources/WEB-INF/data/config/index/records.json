@@ -1048,6 +1048,14 @@
         }
       },
       {
+        "recordLink_": {
+          "match": "recordLink_*",
+          "mapping": {
+            "type": "keyword"
+          }
+        }
+      },
+      {
         "numbers": {
           "match": "*Number",
           "mapping": {
