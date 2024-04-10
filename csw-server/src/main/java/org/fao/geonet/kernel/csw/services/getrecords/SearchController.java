@@ -27,6 +27,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
+import org.apache.lucene.search.TotalHits;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.sort.FieldSortBuilder;
@@ -61,12 +62,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 
 public class SearchController {
@@ -138,12 +134,9 @@ public class SearchController {
                 ObjectMapper objectMapper = new ObjectMapper();
                 esJsonQuery = objectMapper.readTree(jsonQuery);
 
-                Set<String> fieldsToRetrieve = new HashSet<>();
-                fieldsToRetrieve.add("uuid");
-                SearchResponse result = searchManager.query(esJsonQuery, fieldsToRetrieve, 0, 1);
+                TotalHits total = searchManager.query(esJsonQuery, new HashSet<>(), 0, 0).getHits().getTotalHits();
 
-                long numMatches = result.getHits().getHits().length;
-                if (numMatches == 0) {
+                if (total.value == 0) {
                     return null;
                 }
             } catch (Exception e) {
