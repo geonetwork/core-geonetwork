@@ -17,6 +17,7 @@
                 xmlns:owl="http://www.w3.org/2002/07/owl#"
                 xmlns:adms="http://www.w3.org/ns/adms#"
                 xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                xmlns:gn-fn-dcat="http://geonetwork-opensource.org/xsl/functions/dcat"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
                 exclude-result-prefixes="#all">
 
@@ -84,20 +85,54 @@
     </xsl:element>
   </xsl:template>
 
-  <xsl:template mode="rdf-metadata-ref" match="*">
-    <xsl:choose>
-      <xsl:when test="@xlink:href">
-        <xsl:attribute name="rdf:resource" select="@xlink:href"/>
-      </xsl:when>
-      <xsl:when test="@uuidref">
-        <!-- TODO: Here we need a not relative URI? -->
-        <xsl:attribute name="rdf:resource" select="@uuidref"/>
-      </xsl:when>
-      <xsl:otherwise>
-        <!-- TODO: Here we need a not relative URI? -->
-        <xsl:attribute name="rdf:resource" select="*/mri:code/*/text()"/>
-      </xsl:otherwise>
-    </xsl:choose>
+
+  <!--
+  Get an object reference from an node.
+
+  In ISO, object reference are usually stored using gcx:Anchor elements (eg. keywords).
+  But in other cases, the reference can be stored in a more specific element.
+  Define here the rules to extract the reference from the object.
+  -->
+  <xsl:function name="gn-fn-dcat:rdf-object-ref" as="xs:string?">
+    <xsl:param name="node" as="node()"/>
+
+    <xsl:value-of select="if (name($node) = 'cit:CI_Organisation')
+                          then $node/(cit:partyIdentifier/*/mcc:code/*/text(),
+                           cit:contactInfo/*/cit:onlineResource/*/cit:linkage/gco:CharacterString/text(),
+                           cit:name/gcx:Anchor/@xlink:href,
+                           @uuid
+                          )[1]
+                          else if (name($node) = 'cit:CI_Individual')
+                          then $node/(cit:partyIdentifier/*/mcc:code/*/text(),
+                                cit:name/gcx:Anchor/@xlink:href,
+                                @uuid
+                          )[1]
+                          else if ($node/gcx:Anchor/@xlink:href) then $node/gcx:Anchor/@xlink:href
+                          else if ($node/@xlink:href) then $node/@xlink:href
+                          else if ($node/@uuidref) then $node/@uuidref
+                          else if ($node/*/mri:code/*/text() != '') then $node/*/mri:code/*/text()
+                          else ''"/>
+  </xsl:function>
+
+  <!--
+  Template for creating a reference to an object as an XML attribute.
+  -->
+  <xsl:template name="rdf-object-ref-attribute"
+                mode="rdf-object-ref-attribute"
+                match="*">
+    <xsl:param name="isAbout"
+               as="xs:boolean"
+               select="true()"/>
+    <xsl:param name="reference"
+               as="xs:string?"
+               select="gn-fn-dcat:rdf-object-ref(.)"/>
+
+    <xsl:variable name="attributeName"
+                  select="if($isAbout) then 'rdf:about' else 'rdf:resource'"/>
+
+    <xsl:if test="$reference != ''">
+      <xsl:attribute name="{$attributeName}" select="$reference"/>
+    </xsl:if>
   </xsl:template>
 
 </xsl:stylesheet>

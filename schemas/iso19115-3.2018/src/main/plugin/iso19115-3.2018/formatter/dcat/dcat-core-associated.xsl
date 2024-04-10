@@ -102,7 +102,10 @@
                           else 'dct:relation'"/>
 
     <xsl:element name="{$elementType}">
-      <xsl:apply-templates mode="rdf-metadata-ref" select="*/mri:metadataReference|*/mri:aggregateDataSetIdentifier"/>
+      <xsl:apply-templates mode="rdf-object-ref-attribute"
+                           select="*/mri:metadataReference|*/mri:aggregateDataSetIdentifier">
+        <xsl:with-param name="isAbout" select="false()"/>
+      </xsl:apply-templates>
     </xsl:element>
   </xsl:template>
 </xsl:stylesheet>

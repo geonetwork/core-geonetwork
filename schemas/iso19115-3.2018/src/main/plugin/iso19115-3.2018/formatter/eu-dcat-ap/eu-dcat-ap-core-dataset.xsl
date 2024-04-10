@@ -246,7 +246,9 @@
   <xsl:template mode="iso19115-3-to-eu-dcat-ap"
                 match="mrl:source">
     <dct:source>
-      <xsl:apply-templates mode="rdf-metadata-ref" select="."/>
+      <xsl:call-template name="rdf-object-ref-attribute">
+        <xsl:with-param name="isAbout" select="false()"/>
+      </xsl:call-template>
     </dct:source>
   </xsl:template>
 

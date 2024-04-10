@@ -135,6 +135,18 @@ public class FormatterApiTest extends AbstractServiceIntegrationTest {
                 boolean isXml = checkfile.endsWith(".xml");
 
                 if (isXml || isRdf) {
+                    if (isRdf) {
+                        try {
+                            Model model = ModelFactory.createMemModelMaker().createDefaultModel();
+                            RDFDataMgr.read(model,
+                                    IOUtils.toInputStream(actual, StandardCharsets.UTF_8),
+                                    Lang.RDFXML);
+                        } catch (Exception rdfException) {
+                            fail(String.format("%s. Checked with %s. RDF model error. %s. Checked with: %s",
+                                    url, checkfile, rdfException.getMessage(), actual));
+                        }
+                    }
+
                     Diff diff = DiffBuilder
                         .compare(Input.fromString(actual))
                         .withTest(Input.fromString(expected))
@@ -148,15 +160,6 @@ public class FormatterApiTest extends AbstractServiceIntegrationTest {
                         diff.hasDifferences());
 
                     if (isRdf) {
-                        try {
-                            Model model = ModelFactory.createMemModelMaker().createDefaultModel();
-                            RDFDataMgr.read(model,
-                                IOUtils.toInputStream(actual, StandardCharsets.UTF_8),
-                                Lang.RDFXML);
-                        } catch (Exception rdfException) {
-                            fail(String.format("%s. Checked with %s. RDF model error. %s. Checked with: %s",
-                                url, checkfile, rdfException.getMessage(), actual));
-                        }
                         String[] shaclValidation = {};
 //                        if("eu-dcat-ap".equalsIgnoreCase(formatter)){
 ////                            shaclValidation = new String[]{"dcat-ap-2.1.1-base-SHACL.ttl"};
