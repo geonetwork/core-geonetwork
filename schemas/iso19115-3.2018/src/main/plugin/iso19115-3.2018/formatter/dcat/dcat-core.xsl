@@ -86,12 +86,6 @@
                  />
   </xsl:function>
 
-  <xsl:template mode="iso19115-3-to-dcat-validation"
-                match="mdb:MD_Metadata">
-    <!-- Nothing to validate in DCAT core. -->
-  </xsl:template>
-
-
   <!-- Create resource -->
   <xsl:template mode="iso19115-3-to-dcat"
                 match="mdb:MD_Metadata">
