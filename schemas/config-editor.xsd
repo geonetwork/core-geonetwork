@@ -1909,6 +1909,12 @@ An autocompletion list based on a thesaurus.
 This field facilitates users in selecting a `subtemplate` (also known as xml-snippet) from the catalogue. Subtemplates are mostly used to store contact details,
 but can also be used to store snippets of xml having Quality reports, Access constraints, CRS definitions, etc.
 
+                  
+`data-insert-modes` can be `test` and/or `xlink` depending on how the subtemplate is encoded. 
+Contact can be forced to be `xlink` but some other type of subtemplates (eg. DQ report) are usually just simple default values 
+that need to be detailed by editors and in that case `text` mode is recommended. For `xlink`, the XLink resolver needs to be enabled in the admin settings.
+
+
 .. code-block:: xml
 
     <for name="gmd:report"
