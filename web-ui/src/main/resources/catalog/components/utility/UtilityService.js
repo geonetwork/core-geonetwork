@@ -401,6 +401,15 @@
     };
   }]);
 
+  /**
+   * Return the url with extra params.
+   */
+  module.filter('gnUrlParamAppending', ['gnGlobalSettings', function(gnGlobalSettings) {
+    return function(obj, param) {
+      return obj+param;
+    };
+  }]);
+
   module.factory('gnRegionService', [
     '$q',
     '$http',

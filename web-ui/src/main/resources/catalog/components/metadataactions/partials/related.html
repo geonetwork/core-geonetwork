@@ -163,7 +163,8 @@
 
             <p class="text-muted"
                data-ng-if="mainType.indexOf('MD') == -1">
-              <span ng-bind-html="r.url | gnLocalized: lang | linky:'_blank'"></span>
+              <span data-ng-if="md.draft == 'y'" ng-bind-html="r.url | gnLocalized: lang | gnUrlParamAppending: '?approved=false' | linky:'_blank'"></span>
+              <span data-ng-if="md.draft != 'y'" ng-bind-html="r.url | gnLocalized: lang | linky:'_blank'"></span>
             </p>
           </div>
         </div>
