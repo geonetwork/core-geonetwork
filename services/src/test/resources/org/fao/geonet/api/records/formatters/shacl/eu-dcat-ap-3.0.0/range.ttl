@@ -1,0 +1,449 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix : <https://semiceu.github.io/DCAT-AP/releases/3.0.0/html/shacl/range.ttl#> .
+@prefix adms: <http://www.w3.org/ns/adms#> .
+@prefix cc: <http://creativecommons.org/ns#> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix dcat: <http://www.w3.org/ns/dcat#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix lcon: <http://www.w3.org/ns/locn#> .
+@prefix org: <http://www.w3.org/ns/org#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix odrl: <http://www.w3.org/ns/odrl/2/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix schema: <http://schema.org/> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix spdx: <http://spdx.org/rdf/terms#> .
+@prefix time: <http://www.w3.org/2006/time#> .
+@prefix vcard: <http://www.w3.org/2006/vcard/ns#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dcatap: <http://data.europa.eu/r5r> .
+
+<https://semiceu.github.io/DCAT-AP/releases/3.0.0/html/shacl/range.ttl> 
+    dct:description "This file contains the class range constraints for all properties in DCAT-AP"@en.
+
+
+
+
+#-------------------------------------------------------------------------
+# The shapes in this file cover all class range constraints in DCAT-AP
+#
+# Depending on the exchange agreements these may be necessary to be part 
+# of the validation process. However they mostly figure in the semantical 
+# understanding of the ranges.
+# 
+#-------------------------------------------------------------------------
+
+:Agent_Shape
+    a sh:NodeShape ;
+    rdfs:label "Agent"@en ;
+    sh:property [
+        sh:class skos:Concept ;
+        sh:path dct:type ;
+        sh:severity sh:Violation
+    ] ;
+    sh:targetClass foaf:Agent .
+
+:CatalogRecord_Shape
+    a sh:NodeShape ;
+    rdfs:label "Catalog Record"@en ;
+    sh:property [
+        sh:node :DcatResource_Shape ;
+        sh:path foaf:primaryTopic ;
+        sh:severity sh:Violation
+    ], [
+        sh:class dct:Standard ;
+        sh:path dct:conformsTo ;
+        sh:severity sh:Violation
+    ], [
+        sh:class skos:Concept ;
+        sh:path adms:status ;
+        sh:severity sh:Violation
+    ], [
+        sh:class dct:LinguisticSystem ;
+        sh:path dct:language ;
+        sh:severity sh:Violation
+    ], [
+        sh:class dcat:CatalogRecord ;
+        sh:path dct:source ;
+        sh:severity sh:Violation
+    ] ;
+    sh:targetClass dcat:CatalogRecord .
+
+:Catalog_Shape
+    a sh:NodeShape ;
+    rdfs:label "Catalog"@en ;
+    sh:property [
+        sh:class dct:LinguisticSystem ;
+        sh:path dct:language ;
+        sh:severity sh:Violation
+    ], [
+  	sh:path dcatap:applicableLegislation;
+  	sh:class <http://data.europa.eu/eli/ontology#LegalResource>;
+        sh:severity sh:Violation
+    ], [
+        sh:class dct:LicenseDocument ;
+        sh:path dct:license ;
+        sh:severity sh:Violation
+    ], [
+        sh:class dct:Location ;
+        sh:path dct:spatial ;
+        sh:severity sh:Violation
+    ], [
+        sh:class dcat:Catalog ;
+        sh:path dct:hasPart ;
+        sh:severity sh:Violation
+    ], [
+        sh:class dcat:Catalog ;
+        sh:path dct:isPartOf ;
+        sh:severity sh:Violation
+    ], [
+        sh:class dct:RightsStatement ;
+        sh:path dct:rights ;
+        sh:severity sh:Violation
+    ], [
+        sh:class dcat:CatalogRecord ;
+        sh:path dcat:record ;
+        sh:severity sh:Violation
+    ], [
+        sh:class skos:ConceptScheme ;
+        sh:path dcat:themeTaxonomy ;
+        sh:severity sh:Violation
+    ], [
+        sh:class dcat:DataService ;
+        sh:path dcat:service ;
+        sh:severity sh:Violation
+    ], [
+        sh:class dcat:Catalog ;
+        sh:path dcat:catalog ;
+        sh:severity sh:Violation
+    ], [
+        sh:class foaf:Agent ;
+        sh:path dct:creator ;
+        sh:severity sh:Violation
+    ], [
+        sh:class dcat:Dataset ;
+        sh:path dcat:dataset ;
+        sh:severity sh:Violation
+    ], [
+        sh:class foaf:Agent ;
+        sh:path dct:publisher ;
+        sh:severity sh:Violation
+    ], [
+        sh:class foaf:Document ;
+        sh:path foaf:homepage ;
+        sh:severity sh:Violation
+    ] ;
+    sh:targetClass dcat:Catalog .
+
+
+:DataService_Shape
+    a sh:NodeShape ;
+    rdfs:label "Data Service"@en ;
+    sh:property [
+        sh:class dct:RightsStatement ;
+        sh:path dct:accessRights ;
+        sh:severity sh:Violation
+    ], [
+  	sh:path dcatap:applicableLegislation;
+  	sh:class <http://data.europa.eu/eli/ontology#LegalResource>;
+        sh:severity sh:Violation
+    ], [
+        sh:class dct:Standard ;
+        sh:path dct:conformsTo ;
+        sh:severity sh:Violation
+    ], [
+        sh:class vcard:Kind ;
+        sh:path dcat:contactPoint ;
+        sh:severity sh:Violation
+    ], [
+        sh:class dct:MediaTypeOrExtent ;
+        sh:path dct:format ;
+        sh:severity sh:Violation
+    ], [
+        sh:class foaf:Document ;
+        sh:path dcat:landingPage ;
+        sh:severity sh:Violation
+    ], [
+        sh:class dct:LicenseDocument ;
+        sh:path dct:license ;
+        sh:severity sh:Violation
+    ], [
+        sh:path dct:publisher ;
+  	sh:class foaf:Agent;
+        sh:severity sh:Violation
+    ], [
+        sh:class dcat:Dataset ;
+        sh:path dcat:servesDataset ;
+        sh:severity sh:Violation
+    ], [
+        sh:class skos:Concept ;
+        sh:path dcat:theme ;
+        sh:severity sh:Violation
+    ] ;
+    sh:targetClass dcat:DataService .
+
+
+:Dataset_Shape
+    a sh:NodeShape ;
+    rdfs:label "Dataset"@en ;
+    sh:property [
+        sh:class dct:RightsStatement ;
+        sh:path dct:accessRights ;
+        sh:severity sh:Violation
+    ], [
+  	sh:path dcatap:applicableLegislation;
+  	sh:class <http://data.europa.eu/eli/ontology#LegalResource>;
+        sh:severity sh:Violation
+    ], [
+        sh:class dct:Standard ;
+        sh:path dct:conformsTo ;
+        sh:severity sh:Violation
+    ], [
+        sh:class vcard:Kind ;
+        sh:path dcat:contactPoint ;
+        sh:severity sh:Violation
+    ], [
+        sh:class foaf:Agent ;
+        sh:path dct:creator ;
+        sh:severity sh:Violation
+    ], [
+        sh:class dcat:Distribution ;
+        sh:path dcat:distribution ;
+        sh:severity sh:Violation
+    ], [
+        sh:class foaf:Document ;
+        sh:path foaf:page ;
+        sh:severity sh:Violation
+    ], [
+	sh:path dct:accrualPeriodicity;
+  	sh:class dct:Frequency;
+        sh:severity sh:Violation
+    ], [
+        sh:class dct:Location ;
+        sh:path dct:spatial ;
+        sh:severity sh:Violation
+    ], [
+        sh:class dcat:Dataset ;
+        sh:path dct:hasVersion ;
+        sh:severity sh:Violation
+    ], [
+        sh:class dcat:DatasetSeries ;
+        sh:path dcat:inSeries ;
+        sh:severity sh:Violation
+    ], [
+        sh:class foaf:Document ;
+        sh:path dcat:landingPage ;
+        sh:severity sh:Violation
+    ], [
+        sh:class dct:LinguisticSystem ;
+        sh:path dct:language ;
+        sh:severity sh:Violation
+    ], [
+        sh:class adms:Identifier ;
+        sh:path adms:identifier ;
+        sh:severity sh:Violation
+    ], [
+        sh:class dct:ProvenanceStatement ;
+        sh:path dct:provenance ;
+        sh:severity sh:Violation
+    ], [
+        sh:class foaf:Agent ;
+        sh:path dct:publisher ;
+        sh:severity sh:Violation
+    ], [
+        sh:class prov:Attribution ;
+        sh:path prov:qualifiedAttribution ;
+        sh:severity sh:Violation
+    ], [
+        sh:class dcat:Relationship ;
+        sh:path dcat:qualifiedRelation ;
+        sh:severity sh:Violation
+    ], [
+        sh:class dcat:Distribution ;
+        sh:path adms:sample ;
+        sh:severity sh:Violation
+    ], [
+        sh:class dcat:Dataset ;
+        sh:path dct:source ;
+        sh:severity sh:Violation
+    ], [
+	sh:class dct:PeriodOfTime ;
+        sh:path dct:temporal ;
+        sh:severity sh:Violation
+    ], [
+        sh:class skos:Concept ;
+        sh:path dcat:theme ;
+        sh:severity sh:Violation
+    ], [
+        sh:class skos:Concept ;
+        sh:path dct:type ;
+        sh:severity sh:Violation
+    ], [
+        sh:class prov:Activity ;
+        sh:path prov:wasGeneratedBy ;
+        sh:severity sh:Violation
+    ] ;
+    sh:targetClass dcat:Dataset .
+
+
+:DcatResource_Shape
+    a sh:NodeShape ;
+    rdfs:comment "the union of Catalog, Dataset, DataService or Dataset Series" ;
+    rdfs:label "dcat:Resource" ;
+    sh:message "The node is either a Catalog, Dataset, DataService or a Dataset Series" ;
+    sh:or ([
+            sh:class dcat:Catalog
+        ]
+        [
+            sh:class dcat:Dataset
+        ]
+        [
+            sh:class dcat:DataService
+        ]
+        [
+            sh:class dcat:DatasetSeries
+        ]
+    ) .
+
+:Distribution_Shape
+    a sh:NodeShape ;
+    rdfs:label "Distribution"@en ;
+    sh:property [
+        sh:class dcat:DataService ;
+        sh:path dcat:accessService ;
+        sh:severity sh:Violation
+    ], [
+  	sh:path dcatap:applicableLegislation;
+  	sh:class <http://data.europa.eu/eli/ontology#LegalResource>;
+        sh:severity sh:Violation
+    ], [
+        sh:class skos:Concept ;
+        sh:path dcatap:availability ;
+        sh:severity sh:Violation
+    ], [
+        sh:class spdx:Checksum ;
+        sh:path spdx:checksum ;
+        sh:severity sh:Violation
+    ], [
+        sh:class dct:MediaType ;
+        sh:path dcat:compressFormat ;
+        sh:severity sh:Violation
+    ], [
+        sh:class foaf:Document ;
+        sh:path foaf:page ;
+        sh:severity sh:Violation
+    ], [
+        sh:class dct:MediaTypeOrExtent ;
+        sh:path dct:format ;
+        sh:severity sh:Violation
+    ], [
+        sh:class odrl:Policy ;
+        sh:path odrl:hasPolicy ;
+        sh:severity sh:Violation
+    ], [
+        sh:class dct:LinguisticSystem ;
+        sh:path dct:language ;
+        sh:severity sh:Violation
+    ], [
+        sh:class dct:LicenseDocument ;
+        sh:path dct:license ;
+        sh:severity sh:Violation
+    ], [
+        sh:class dct:Standard ;
+        sh:path dct:conformsTo ;
+        sh:severity sh:Violation
+    ], [
+        sh:class dct:MediaType ;
+        sh:path dcat:mediaType ;
+        sh:severity sh:Violation
+    ], [
+        sh:class dct:MediaType ;
+        sh:path dcat:packageFormat ;
+        sh:severity sh:Violation
+    ], [
+        sh:class dct:RightsStatement ;
+        sh:path dct:rights ;
+        sh:severity sh:Violation
+    ], [
+        sh:class skos:Concept ;
+        sh:path adms:status ;
+        sh:severity sh:Violation
+    ] ;
+    sh:targetClass dcat:Distribution .
+
+
+:LicenceDocument_Shape
+    a sh:NodeShape ;
+    rdfs:label "Licence Document"@en ;
+    sh:property [
+        sh:class skos:Concept ;
+        sh:path dct:type ;
+        sh:severity sh:Violation
+    ] ;
+    sh:targetClass dct:LicenseDocument .
+
+
+:PeriodOfTime_Shape
+    a sh:NodeShape ;
+    rdfs:label "PeriodOfTime"@en ;
+    sh:property [
+    ], [
+        sh:class time:Instant ;
+        sh:path time:hasBeginning ;
+        sh:severity sh:Violation
+    ], [
+        sh:class time:Instant ;
+        sh:path time:hasEnd ;
+        sh:severity sh:Violation
+    ] ;
+    sh:targetClass dct:PeriodOfTime .
+
+:Relationship_Shape
+    a sh:NodeShape ;
+    rdfs:label "Relationship"@en ;
+    sh:property [
+        sh:node :DcatResource_Shape ;
+        sh:path dct:relation ;
+        sh:severity sh:Violation
+    ], [
+        sh:class dcat:Role ;
+        sh:path dcat:hadRole ;
+        sh:severity sh:Violation
+    ] ;
+    sh:targetClass dcat:Relationship .
+
+:DatasetSeries_Shape
+    a sh:NodeShape ;
+    rdfs:label "Dataset Series"@en ;
+    sh:property [
+       sh:inversePath dcat:inSeries;
+       sh:severity sh:Warning
+    ], [
+  	sh:path dcatap:applicableLegislation;
+  	sh:class <http://data.europa.eu/eli/ontology#LegalResource>;
+        sh:severity sh:Violation
+    ], [
+  	sh:path dcat:contactPoint;
+  	sh:class vcard:Kind;
+        sh:severity sh:Violation
+    ], [
+	sh:path dct:accrualPeriodicity;
+  	sh:class dct:Frequency;
+        sh:severity sh:Violation
+    ], [
+  	sh:path dct:spatial;
+  	sh:class dct:Location;
+        sh:severity sh:Violation
+    ], [
+        sh:path dct:publisher ;
+  	sh:class foaf:Agent;
+        sh:severity sh:Violation
+    ], [
+  	sh:path dct:temporal;
+  	sh:class dct:PeriodOfTime;
+        sh:severity sh:Violation
+	 ] ;
+    sh:targetClass dcat:DatasetSeries .	

@@ -111,23 +111,23 @@ public class FormatterApiTest extends AbstractServiceIntegrationTest {
             String schema = testParameter[3];
             String checkfile = testParameter[4];
             String url = "/srv/api/records/"
-                + testDataUuidBySchema.get(testFile)
-                + "/formatters/" + formatter + urlParams;
+                    + testDataUuidBySchema.get(testFile)
+                    + "/formatters/" + formatter + urlParams;
             try {
                 MvcResult result = mockMvc.perform(get(url)
-                        .session(mockHttpSession)
-                        .accept(MediaType.ALL_VALUE))
-                    .andExpect(status().isOk())
-                    .andReturn();
+                                .session(mockHttpSession)
+                                .accept(MediaType.ALL_VALUE))
+                        .andExpect(status().isOk())
+                        .andReturn();
 
                 String expected = StreamUtils.copyToString(
-                        FormatterApiTest.class.getResourceAsStream(
-                            String.format("%s-%s-%s",
-                                schema, formatter, checkfile)
-                        ),
-                        StandardCharsets.UTF_8)
-                    .trim()
-                    .replace("{uuid}", testDataUuidBySchema.get(testFile));
+                                FormatterApiTest.class.getResourceAsStream(
+                                        String.format("%s-%s-%s",
+                                                schema, formatter, checkfile)
+                                ),
+                                StandardCharsets.UTF_8)
+                        .trim()
+                        .replace("{uuid}", testDataUuidBySchema.get(testFile));
 
                 String actual = result.getResponse().getContentAsString();
 
@@ -147,38 +147,43 @@ public class FormatterApiTest extends AbstractServiceIntegrationTest {
                         }
                     }
 
+
+//                    FileUtils.writeStringToFile(new File("/tmp/" + String.format("%s-%s-%s",
+//                            schema, formatter, checkfile)), actual, StandardCharsets.UTF_8);
+
                     Diff diff = DiffBuilder
-                        .compare(Input.fromString(actual))
-                        .withTest(Input.fromString(expected))
-                        .withNodeMatcher(new DefaultNodeMatcher(ElementSelectors.byName))
-                        .normalizeWhitespace()
-                        .ignoreComments()
-                        .checkForSimilar()
-                        .build();
+                            .compare(Input.fromString(actual))
+                            .withTest(Input.fromString(expected))
+                            .withNodeMatcher(new DefaultNodeMatcher(ElementSelectors.byName))
+                            .normalizeWhitespace()
+                            .ignoreComments()
+                            .checkForSimilar()
+                            .build();
                     assertFalse(
-                        String.format("%s. Checked with %s. Differences: %s", url, checkfile, diff.toString()),
-                        diff.hasDifferences());
+                            String.format("%s. Checked with %s. Differences: %s", url, checkfile, diff.toString()),
+                            diff.hasDifferences());
 
                     if (isRdf) {
                         String[] shaclValidation = {};
-//                        if("eu-dcat-ap".equalsIgnoreCase(formatter)){
-////                            shaclValidation = new String[]{"dcat-ap-2.1.1-base-SHACL.ttl"};
-//                            shaclValidation = new String[]{"dcat-ap-3-SHACL.ttl"};
-//                            // TODO: Failure with v3 shaclValidation = new String[]{"dcat-ap-2.1.1-base-SHACL.ttl", "dcat-ap-3-SHACL.ttl"};
+                        if ("eu-dcat-ap".equalsIgnoreCase(formatter)) {
+//                            shaclValidation = new String[]{"dcat-ap-2.1.1-base-SHACL.ttl"};
+                            // https://github.com/ISAITB/validator-resources-dcat-ap/blob/master/resources/config.properties#L117-L128
+                            //+ shapes.ttl + range.ttl + shapes_recommended.ttl + imports.ttl + deprecateduris.ttl+
+                            // shaclValidation = new String[]{"shacl/eu-dcat-ap-3.0.0/shapes.ttl"};
 //                        } else  if("eu-dcat-ap-hvd".equalsIgnoreCase(formatter)){
 //                            shaclValidation = new String[]{"dcat-ap-hvd-2.2.0-SHACL.ttl"};
 //                        } else  if("eu-geodcat-ap".equalsIgnoreCase(formatter)){
 //                            shaclValidation = new String[]{"geodcat-ap-2.0.1-SHACL.ttl"};
-//                        }
-//                        for(String shaclShapes : shaclValidation) {
-//                            applyShaclValidation(formatter, schema, checkfile, url, shaclShapes);
-//                        }
+                        }
+                        for (String shaclShapes : shaclValidation) {
+                            applyShaclValidation(formatter, schema, checkfile, url, shaclShapes);
+                        }
                     }
                 } else {
                     assertEquals(
-                        url,
-                        expected,
-                        actual.replaceAll("\\r\\n?", "\n")
+                            url,
+                            expected,
+                            actual.replaceAll("\\r\\n?", "\n")
                     );
                 }
             } catch (Exception e) {
@@ -196,55 +201,66 @@ public class FormatterApiTest extends AbstractServiceIntegrationTest {
         String checkfile = "dataset-core.rdf";
         String file = String.format("%s-%s-%s", schema, formatter, checkfile);
         String expected = StreamUtils.copyToString(
-            FormatterApiTest.class.getResourceAsStream(file),
-            StandardCharsets.UTF_8);
+                FormatterApiTest.class.getResourceAsStream(file),
+                StandardCharsets.UTF_8);
         try {
             Model model = ModelFactory.createMemModelMaker().createDefaultModel();
             RDFDataMgr.read(model,
-                IOUtils.toInputStream(expected, StandardCharsets.UTF_8),
-                Lang.RDFXML);
+                    IOUtils.toInputStream(expected, StandardCharsets.UTF_8),
+                    Lang.RDFXML);
         } catch (Exception rdfException) {
             fail(String.format("%s. RDF model error. %s.",
-                file, rdfException.getMessage()));
+                    file, rdfException.getMessage()));
         }
         String[] shaclValidation = new String[]{"dcat-ap-2.1.1-base-SHACL.ttl"};
 //        String[] shaclValidation = new String[]{"dcat-ap-3-SHACL.ttl"};
 //        String[] shaclValidation = new String[]{"dcat-ap-hvd-2.2.0-SHACL.ttl"};
 //        String[] shaclValidation = new String[]{"geodcat-ap-2.0.1-SHACL.ttl"};
-        for(String shaclShapes : shaclValidation) {
+        for (String shaclShapes : shaclValidation) {
             applyShaclValidation(formatter, schema, checkfile, "", shaclShapes);
         }
     }
+
     private static void applyShaclValidation(String formatter, String schema, String checkfile, String url, String shaclShapes) {
         String SHAPES = FormatterApiTest.class.getResource(shaclShapes).getFile();
-        if(SHAPES.startsWith("/")){ SHAPES.replaceFirst("/","");}
+        if (SHAPES.startsWith("/")) {
+            SHAPES.replaceFirst("/", "");
+        }
 
         //Load document to validate.
         String DATA = FormatterApiTest.class.getResource(
-            String.format("%s-%s-%s",
-                schema, formatter, checkfile)
+                String.format("%s-%s-%s",
+                        schema, formatter, checkfile)
         ).getFile();
-        if(DATA.startsWith("/")){
-            DATA.replaceFirst("/","");
+        if (DATA.startsWith("/")) {
+            DATA.replaceFirst("/", "");
+        }
+        Graph shapesGraph;
+        Shapes shapes;
+        try {
+            shapesGraph = RDFDataMgr.loadGraph(SHAPES);
+            shapes = Shapes.parse(shapesGraph);
+        } catch (Exception e) {
+            fail(String.format(
+                    "%s. Checked with %s [%s]. SHACL graph error. Error is: %s",
+                    url, checkfile, shaclShapes, e.getMessage()));
+            return;
         }
 
-        Graph shapesGraph = RDFDataMgr.loadGraph(SHAPES);
         Graph dataGraph = RDFDataMgr.loadGraph(DATA);
-
-        Shapes shapes = Shapes.parse(shapesGraph);
 
         ValidationReport report = ShaclValidator.get().validate(shapes, dataGraph);
 
-        if(!report.conforms()){
+        if (!report.conforms()) {
             long count = report.getEntries().stream()
-                .filter(e -> e.severity().level().getURI().equals("http://www.w3.org/ns/shacl#Violation"))
-                .count();
+                    .filter(e -> e.severity().level().getURI().equals("http://www.w3.org/ns/shacl#Violation"))
+                    .count();
 
             ShLib.printReport(report);
             System.out.println();
             RDFDataMgr.write(System.out, report.getModel(), Lang.TTL);
             fail(String.format("%s. Checked with %s [%s]. Invalid DCAT-AP document. %d violations found. See report in the test console output.",
-                url, checkfile, shaclShapes, count));
+                    url, checkfile, shaclShapes, count));
         }
     }
 
@@ -262,8 +278,8 @@ public class FormatterApiTest extends AbstractServiceIntegrationTest {
                 loadFile("iso19115-3.2018", getSampleISO19115MetadataXml());
             } else {
                 loadFile(file,
-                    Xml.loadStream(
-                        FormatterApiTest.class.getResourceAsStream(file)));
+                        Xml.loadStream(
+                                FormatterApiTest.class.getResourceAsStream(file)));
             }
         }
     }

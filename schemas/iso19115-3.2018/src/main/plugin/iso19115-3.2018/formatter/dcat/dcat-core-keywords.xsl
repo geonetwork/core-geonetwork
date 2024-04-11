@@ -29,10 +29,16 @@
     </xsl:for-each>
   </xsl:template>
 
+  <!--
+  dcat:keyword is a rdfs:Literal and not a skos:Concept.
+  Main drawback is that the keyword is not linked to a concept in a concept scheme
+  which is often the case in ISO encoding using Anchor.
+  Using dcat:theme when an Anchor is present.
+  -->
   <xsl:template mode="iso19115-3-to-dcat"
                 match="mdb:identificationInfo/*/mri:descriptiveKeywords/*/mri:keyword[gcx:Anchor/@xlink:href != '']"
                 priority="2">
-    <dcat:keyword>
+    <dcat:theme>
       <skos:Concept>
         <xsl:call-template name="rdf-object-ref-attribute"/>
         <xsl:call-template name="rdf-localised">
@@ -40,7 +46,7 @@
                           select="'skos:prefLabel'"/>
         </xsl:call-template>
       </skos:Concept>
-    </dcat:keyword>
+    </dcat:theme>
   </xsl:template>
 
   <xsl:template mode="iso19115-3-to-dcat"

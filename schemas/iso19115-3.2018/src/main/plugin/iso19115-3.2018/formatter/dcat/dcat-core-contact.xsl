@@ -8,6 +8,7 @@
                 xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0"
                 xmlns:gcx="http://standards.iso.org/iso/19115/-3/gcx/1.0"
                 xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
+                xmlns:skos="http://www.w3.org/2004/02/skos/core#"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
                 xmlns:prov="http://www.w3.org/ns/prov#"
                 xmlns:dcat="http://www.w3.org/ns/dcat#"
@@ -75,7 +76,15 @@
                 <xsl:call-template name="rdf-contact-foaf"/>
               </prov:agent>
               <dcat:hadRole>
-                <dcat:Role rdf:about="{concat($isoCodeListBaseUri, $role)}"/>
+                <dcat:Role rdf:about="{concat($isoCodeListBaseUri, $role)}">
+                  <!--
+                      Property needs to have at least 1 value
+                      Location:
+                      [Focus node] - [http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#custodian] -
+                      [Result path] - [http://www.w3.org/2004/02/skos/core#prefLabel]
+                  -->
+                  <skos:prefLabel><xsl:value-of select="$role"/></skos:prefLabel>
+                </dcat:Role>
               </dcat:hadRole>
             </prov:Attribution>
           </prov:qualifiedAttribution>
