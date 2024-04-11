@@ -166,14 +166,15 @@ public class FormatterApiTest extends AbstractServiceIntegrationTest {
                     if (isRdf) {
                         String[] shaclValidation = {};
                         if ("eu-dcat-ap".equalsIgnoreCase(formatter)) {
-//                            shaclValidation = new String[]{"dcat-ap-2.1.1-base-SHACL.ttl"};
+//                            shaclValidation = new String[]{"shacl/dcat-ap-2.1.1-base-SHACL.ttl"};
+//                            shaclValidation = new String[]{"shacl/dcat-ap-3.0.0-full.ttl"};
                             // https://github.com/ISAITB/validator-resources-dcat-ap/blob/master/resources/config.properties#L117-L128
                             //+ shapes.ttl + range.ttl + shapes_recommended.ttl + imports.ttl + deprecateduris.ttl+
                             // shaclValidation = new String[]{"shacl/eu-dcat-ap-3.0.0/shapes.ttl"};
 //                        } else  if("eu-dcat-ap-hvd".equalsIgnoreCase(formatter)){
-//                            shaclValidation = new String[]{"dcat-ap-hvd-2.2.0-SHACL.ttl"};
+//                            shaclValidation = new String[]{"shacl/dcat-ap-hvd-2.2.0-SHACL.ttl"};
 //                        } else  if("eu-geodcat-ap".equalsIgnoreCase(formatter)){
-//                            shaclValidation = new String[]{"geodcat-ap-2.0.1-SHACL.ttl"};
+//                            shaclValidation = new String[]{"shacl/geodcat-ap-2.0.1-SHACL.ttl"};
                         }
                         for (String shaclShapes : shaclValidation) {
                             applyShaclValidation(formatter, schema, checkfile, url, shaclShapes);
