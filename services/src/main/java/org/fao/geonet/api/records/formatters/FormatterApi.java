@@ -233,6 +233,9 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
             acceptHeader = MediaType.TEXT_HTML_VALUE;
         }
         if (formatType == null) {
+            formatType = FormatType.findByFormatterKey(formatterId);
+        }
+        if (formatType == null) {
             formatType = FormatType.find(acceptHeader);
         }
         if (formatType == null) {
