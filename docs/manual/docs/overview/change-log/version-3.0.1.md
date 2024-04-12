@@ -2,7 +2,7 @@
 
 ## New features
 
--   [Map viewer provides now 3D mode](https://github.com/geonetwork/core-geonetwork/pull/1012) using [Cesiumjs](http://cesiumjs.org/)
+-   [Map viewer provides now 3D mode](https://github.com/geonetwork/core-geonetwork/pull/1012) using [Cesiumjs](https://cesiumjs.org/)
 -   Make your map in the visualization tools and [save your maps in the catalog](https://github.com/geonetwork/core-geonetwork/issues/1036)
 -   [Spatial filter is now available on the minimap](https://github.com/geonetwork/core-geonetwork/issues/1051)
 -   [Browse catalog by INSPIRE themes](https://github.com/geonetwork/core-geonetwork/issues/1054) and use the new [INSPIRE icon set](https://github.com/titellus/INSPIRE-themes-icons)

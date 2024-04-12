@@ -193,7 +193,7 @@
         }
       ];
 
-      gnSearchSettings.resultTemplate = gnSearchSettings.resultViewTpls[0].tplUrl;
+      gnSearchSettings.resultTemplate = gnSearchSettings.resultViewTpls[0];
 
       $scope.facetsSummaryType = gnSearchSettings.facetsSummaryType = "manager";
       $scope.facetConfig = gnGlobalSettings.gnCfg.mods.editor.facetConfig;

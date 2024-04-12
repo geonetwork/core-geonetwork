@@ -31,6 +31,7 @@
   "language.id": "Identifiant",
   "language.remove": "Supprimer la langue",
   "layerName": "Couche",
+  "layerNameTooltip": "Un nom de couche présent dans le document GetCapabilities",
   "ogcServiceUrl": "URL du service",
   "translation.addFor": "Ajouter une nouvelle traduction pour",
   "translation.add": "Créer",
@@ -293,6 +294,8 @@
   "pageContent": "Contenu",
   "pageContentFile": "Fichier",
   "pageLabel": "Libellé",
+  "pageIcon": "Icône",
+  "pageIcon-help": "En option, définir une icône <a target='_blank' href='https://fontawesome.com/v4/icons/'>font-awesome</a>. Exemple: 'fa-wrench'.",
   "pageSection": "Section",
   "pageApiLink": "API link",
   "uiRestorePrevious": "Restaurer la dernière sauvegarde",
@@ -393,6 +396,7 @@
   "measureName": "Mesure",
   "measureDescription": "Description",
   "measureValue": "Valeur",
+  "measureDate": "Date",
   "switchPortals": "Basculer dans un autre portail",
   "dataPreview":  "Découvrir les données",
   "tableOfContents": "Table des matières",
@@ -414,5 +418,9 @@
   "lastCreatedRecords": "Nouvelles fiches",
   "associationType": "Type d'association",
   "initiativeType": "Type d'initiative",
-  "associatedTo": "Ressources associées"
+  "associatedTo": "Ressources associées",
+  "overviewDescription": "Description",
+  "overviewUrl": "URL",
+  "restApiUrl": "URL de l'API REST",
+  "filterHelp": "Veuillez cliquer sur l'un des boutons ci-dessous pour activer le filtre"
 }

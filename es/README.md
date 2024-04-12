@@ -1,17 +1,31 @@
 # Install, configure and start Elasticsearch
 
+This section describes several methods for configuring Elasticsearch for development.
+
+These configurations should not be used for a production deployment.
+
 ## Manual installation
 
-1. Download Elasticsearch (at least 7.6.2 for Geonetwork 4.0.x) from https://www.elastic.co/downloads/elasticsearch
-and copy to the ES module, e.g., es/elasticsearch-7.6.2
- 
-2. Start ES using:
+1. Download Elasticsearch 8.x (tested with 8.11.3 for Geonetwork 4.4.x) from https://www.elastic.co/downloads/elasticsearch
+and copy to the ES module, e.g., es/elasticsearch-8.11.3
+
+2. Disable the security
+
+Elasticsearch 8 has security enabled by default. To disable this configuration for development, update the file `config/elasticsearch.yml` adding at the end:
+
+```
+xpack.security.enabled: false
+xpack.security.enrollment.enabled: false
+```
+
+
+3. Start ES using:
 
    ```shell script
    ./bin/elasticsearch
    ```
 
-3. Check that elasticsearch is running by visiting http://localhost:9200 in a browser
+4. Check that elasticsearch is running by visiting http://localhost:9200 in a browser
 
 ## Maven installation
 
@@ -35,13 +49,17 @@ and copy to the ES module, e.g., es/elasticsearch-7.6.2
 1. Use docker pull to download the image (you can check version in the :file:`pom.xml` file):
 
    ```
-   docker pull docker.elastic.co/elasticsearch/elasticsearch:7.6.2
+   docker pull docker.elastic.co/elasticsearch/elasticsearch:8.11.3
    ```
 
 2. Use docker run, leaving 9200 available:
 
    ```
-   docker run -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" docker.elastic.co/elasticsearch/elasticsearch:7.6.2
+   docker run -p 9200:9200 -p 9300:9300 \ 
+      -e "discovery.type=single-node" \
+      -e "xpack.security.enabled=false" \
+      -e "xpack.security.enrollment.enabled=false" \ 
+      docker.elastic.co/elasticsearch/elasticsearch:8.11.3
    ```
 
 3. Check that elasticsearch is running by visiting http://localhost:9200 in a browser

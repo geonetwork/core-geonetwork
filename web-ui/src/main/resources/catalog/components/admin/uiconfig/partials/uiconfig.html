@@ -202,7 +202,7 @@
 
                 <div
                   class="row"
-                  data-ng-switch-when="autocompleteConfig|moreLikeThisConfig|facetConfig|relatedFacetConfig|filters|scoreConfig|queryBaseOptions|collectionTableConfig|distributionConfig|topCustomMenu|workflowSearchRecordTypes"
+                  data-ng-switch-when="autocompleteConfig|moreLikeThisConfig|facetConfig|relatedFacetConfig|filters|scoreConfig|queryBaseOptions|collectionTableConfig|distributionConfig|topCustomMenu|wpsSource|workflowSearchRecordTypes"
                   data-ng-switch-when-separator="|"
                 >
                   <div class="col-lg-5 gn-nopadding-left">
@@ -333,27 +333,46 @@
                       <tr data-ng-repeat="opt in mCfg[key] track by $index">
                         <td>
                           <div class="input-group">
-                            <span class="input-group-addon">Icon </span>
+                            <span class="input-group-addon"
+                              >{{('ui-' + key + '-icon') | translate}}</span
+                            >
                             <input
                               type="text"
                               class="form-control"
                               id="ui-tplIcon-{{$index}}"
                               data-ng-model="opt.icon"
                             />
-                            <span class="input-group-addon">Template URL </span>
+                            <span class="input-group-addon"
+                              >{{('ui-' + key + '-tplUrl') | translate}}</span
+                            >
                             <input
                               type="text"
                               class="form-control"
                               id="ui-tplURL-{{$index}}"
                               data-ng-model="opt.tplUrl"
                             />
-                            <span class="input-group-addon">Tooltip </span>
+                            <span class="input-group-addon"
+                              >{{('ui-' + key + '-tooltip') | translate}}</span
+                            >
                             <input
                               type="text"
                               class="form-control"
                               id="ui-tplTooltip-{{$index}}"
                               data-ng-model="opt.tooltip"
                             />
+                          </div>
+
+                          <div class="row">
+                            <label class="control-label"
+                              >{{('ui-' + key + '-source') | translate}}</label
+                            >
+                            <gn-json-edit height="300" model="opt.source"></gn-json-edit>
+                          </div>
+                          <div class="row">
+                            <label class="control-label"
+                              >{{('ui-' + key + '-relatedTypes') | translate}}</label
+                            >
+                            <gn-json-edit height="300" model="opt.related"></gn-json-edit>
                           </div>
                         </td>
                         <td class="w-30-px">

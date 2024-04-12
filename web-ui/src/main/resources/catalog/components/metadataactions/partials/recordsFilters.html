@@ -1,28 +1,19 @@
 <div data-ng-if="agg">
-  <div class="row">
-    <div class="col-md-2">
-      <h2>{{title}}</h2>
-    </div>
-    <div class="col-md-10">
-      <div data-ng-repeat="filter in filtersToProcess" class="row">
-        <div class="col-md-3">
-          <div class="pull-right">{{('facet-' + filter) | facetKeyTranslator}}</div>
-        </div>
-        <div class="col-md-9">
-          <div class="btn-group btn-group-sm" role="group" aria-label="filter">
-            <button
-              data-ng-repeat="(key, b) in agg[filter].buckets"
-              data-ng-click="filterRecordsBy(filter, b.key)"
-              data-ng-disabled="b.doc_count === children.length"
-              type="button"
-              class="btn btn-default"
-              data-ng-class="{'btn-primary': current === (filter + '-' + b.key)}"
-            >
-              {{(b.key | translate) || '&nbsp;'}} ({{b.doc_count}})
-            </button>
-          </div>
-        </div>
-      </div>
+  <h2>{{title}}</h2>
+  <p class="text-muted" translate="">filterHelp</p>
+  <div data-ng-repeat="filter in filtersToProcess">
+    <label>{{('facet-' + filter) | facetKeyTranslator}}</label>
+    <div>
+      <button
+        data-ng-repeat="(key, b) in agg[filter].buckets"
+        data-ng-click="filterRecordsBy(filter, b.key)"
+        data-ng-disabled="b.doc_count === children.length"
+        type="button"
+        class="btn btn-default btn-sm gn-margin-bottom-sm gn-margin-right-sm"
+        data-ng-class="{'btn-primary': current === (filter + '-' + b.key)}"
+      >
+        {{(b.key | translate) || '&nbsp;'}} ({{b.doc_count}})
+      </button>
     </div>
   </div>
 </div>

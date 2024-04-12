@@ -30,7 +30,7 @@
   <parent>
     <groupId>org.geonetwork-opensource</groupId>
     <artifactId>geonetwork</artifactId>
-    <version>4.4.1-SNAPSHOT</version>
+    <version>4.4.4-SNAPSHOT</version>
   </parent>
 
 
@@ -226,10 +226,6 @@
     <dependency>
       <groupId>org.apache.xmlgraphics</groupId>
       <artifactId>xmlgraphics-commons</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>commons-fileupload</groupId>
-      <artifactId>commons-fileupload</artifactId>
     </dependency>
     <dependency>
       <groupId>commons-collections</groupId>
@@ -668,7 +664,6 @@
             <includeOnlyProperty>^git.tags$</includeOnlyProperty>
             <includeOnlyProperty>^git.branch$</includeOnlyProperty>
             <includeOnlyProperty>^git.commit.id$</includeOnlyProperty>
-            <includeOnlyProperty>^git.commit.id.describe.*$</includeOnlyProperty>
             <includeOnlyProperty>^git.build.time$</includeOnlyProperty>
           </includeOnlyProperties>
           <replacementProperties>
@@ -710,7 +705,7 @@
           </validationProperties>
           <validationShouldFailIfNoMatch>false</validationShouldFailIfNoMatch>
         </configuration>
-	    </plugin>
+      </plugin>
       <plugin>
         <artifactId>maven-clean-plugin</artifactId>
         <configuration>
@@ -753,7 +748,8 @@
                   <includes>
                     <include>META-INF/MANIFEST.MF</include>
                     <include>data/**</include>
-                    <include>doc/**</include>
+                    <include>doc/en/**</include>
+                    <include>doc/fr/**</include>
                     <include>images/logos/*</include>
                     <include>images/logos/statTmp</include>
                     <include>scripts/lib/**</include>
@@ -850,24 +846,6 @@
                 <filter>${basedir}/src/main/filters/${env}.properties</filter>
               </filters>
               <overwrite>true</overwrite>
-            </configuration>
-          </execution>
-          <execution>
-            <id>copy-documentation</id>
-            <phase>process-resources</phase>
-            <goals>
-              <goal>copy-resources</goal>
-            </goals>
-            <configuration>
-              <includeEmptyDirs>true</includeEmptyDirs>
-              <overwrite>true</overwrite>
-              <outputDirectory>${build.webapp.resources}</outputDirectory>
-              <resources>
-                <resource>
-                  <directory>${project.basedir}/../docs/manual/target/help</directory>
-                  <targetPath>${basedir}/src/main/webapp/doc</targetPath>
-                </resource>
-              </resources>
             </configuration>
           </execution>
           <execution>
@@ -997,7 +975,8 @@
             catalog/lib/style/bootstrap/*.js,
             catalog/lib/style/bootstrap/*.md,
             catalog/lib/style/bootstrap/CNAME,
-            catalog/lib/style/bootstrap/docs/**,
+            catalog/lib/style/bootstrap/docs/en/**,
+            catalog/lib/style/bootstrap/docs/fr/**,
             catalog/lib/style/bootstrap/fonts/**,
             catalog/lib/style/bootstrap/nuget/**,
             catalog/lib/style/bootstrap/grunt/**,
@@ -1309,6 +1288,48 @@
       <properties>
         <env>inspire</env>
       </properties>
+    </profile>
+
+    <profile>
+      <id>with-doc</id>
+      <dependencies>
+        <dependency>
+          <groupId>${project.groupId}</groupId>
+          <artifactId>gn-guide</artifactId>
+          <version>${project.version}</version>
+          <classifier>help</classifier>
+          <type>zip</type>
+        </dependency>
+      </dependencies>
+
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-resources-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>copy-documentation</id>
+                <phase>process-resources</phase>
+                <goals>
+                  <goal>copy-resources</goal>
+                </goals>
+                <configuration>
+                  <includeEmptyDirs>true</includeEmptyDirs>
+                  <overwrite>true</overwrite>
+                  <outputDirectory>${build.webapp.resources}</outputDirectory>
+                  <resources>
+                    <resource>
+                      <directory>${project.basedir}/../docs/manual/target/help</directory>
+                      <targetPath>${basedir}/src/main/webapp/doc/en</targetPath>
+                    </resource>
+                  </resources>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
     </profile>
 
     <profile>

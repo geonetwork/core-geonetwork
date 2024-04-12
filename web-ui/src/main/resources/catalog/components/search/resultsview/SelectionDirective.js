@@ -96,7 +96,7 @@
                   },
                   function (r) {
                     gnAlertService.addAlert({
-                      msg: r.data.description,
+                      msg: r.data.message || r.data.description,
                       delay: 20000,
                       type: "danger"
                     });

@@ -248,9 +248,9 @@
         <xsl:variable name="p" select="normalize-space(gmd:protocol/*/text())"/>
         {
         "@type":"DataDownload",
-        "contentUrl":"<xsl:value-of select="gn-fn-index:json-escape(gmd:linkage/gmd:URL/text())"/>"
+        "contentUrl":"<xsl:value-of select="util:escapeForJson(gmd:linkage/gmd:URL/text())"/>"
         <xsl:if test="gmd:protocol">,
-        "encodingFormat":"<xsl:value-of select="gn-fn-index:json-escape(if ($p != '') then $p else gmd:protocol/*/@xlink:href)"/>"
+        "encodingFormat":"<xsl:value-of select="util:escapeForJson(if ($p != '') then $p else gmd:protocol/*/@xlink:href)"/>"
         </xsl:if>
         <xsl:if test="gmd:name">,
         "name": <xsl:apply-templates mode="toJsonLDLocalized"
@@ -403,7 +403,7 @@
                         select="$metadata/gmd:locale/*[concat('#', @id) = $languageId]/gmd:languageCode/*/@codeListValue"/>
           {
           <xsl:value-of select="concat('&quot;@value&quot;: &quot;',
-                              gn-fn-index:json-escape(gmd:LocalisedCharacterString/text()),
+                              util:escapeForJson(gmd:LocalisedCharacterString/text()),
                               '&quot;')"/>,
           <xsl:value-of select="concat('&quot;@language&quot;: &quot;',
                               $languageCode,
@@ -418,14 +418,14 @@
         <xsl:variable name="requestedValue"
                       select="gmd:PT_FreeText/*/gmd:LocalisedCharacterString[@id = $requestedLanguageId]/text()"/>
         <xsl:value-of select="concat('&quot;',
-                              gn-fn-index:json-escape(
+                              util:escapeForJson(
                                 if ($requestedValue != '') then $requestedValue else (gco:CharacterString|gmx:Anchor)),
                               '&quot;')"/>
       </xsl:when>
       <xsl:otherwise>
         <!-- A simple property value -->
         <xsl:value-of select="concat('&quot;',
-                              gn-fn-index:json-escape(gco:CharacterString|gmx:Anchor),
+                              util:escapeForJson(gco:CharacterString|gmx:Anchor),
                               '&quot;')"/>
       </xsl:otherwise>
     </xsl:choose>

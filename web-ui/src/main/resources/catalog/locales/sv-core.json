@@ -218,7 +218,10 @@
     "passwordPattern": "Lösenordet måste innehålla minst 1 stor bokstav, 1 liten bokstav, 1 siffra och 1 symbol. Symboler inkluderar: `~! @ # $% ^ &amp; * () -_ = + [] {} \\ |;: &#39;&quot;,. &lt;&gt; /?&#39;);",
     "passwordOld": "Gammalt lösenord",
     "passwordRepeat": "Upprepa lösenord",
-    "groupNameMaxlength": "Gruppnamnet får inte överstiga 32 tecken!",
+    "groupNameMaxlength": "Group name can not exceed 255 characters!",
+    "categoryNameMaxlength": "Category name can not exceed 255 characters!",
+    "portalNameMaxlength": "Portal name can not exceed 255 characters!",
+    "portalIdMaxlength": "Portal identifier can not exceed 255 characters!",
     "groupDescriptionMaxlength": "Gruppbeskrivningen får inte överstiga 255 tecken!",
     "groupEmailMaxlength": "Gruppmail-adress kan inte överstiga 128 tecken!",
     "pol": "Polska",
@@ -546,7 +549,7 @@
     "categoriesUpdated": "Uppdatareade kategorier.",
     "warnPublishDraft": "När du publicerar poster med arbetsflöde aktiverat kommer status att ändras till 'Godkänn'. Är du säker på att du vill fortsätta?",
     "cancelWorkingCopy": "Avbryt arbetskopian",
-    "deleteWorkingCopyRecordConfirm": "Vill du verkligen ta bort arbetskopian '{{title}}'?",
+    "deleteWorkingCopyRecordConfirm": "Do you really want to remove the working copy '{{resourceTitle}}'?",
     "workingCopy": "Arbetskopia",
     "onTheWeb": "Mer information online",
     "pdfReportTocTitle": "Innehåll",
@@ -577,5 +580,9 @@
     "reviewerNotAllowedPublish": "Reviewer not allowed to publish the metadata",
     "reviewerNotAllowedUnpublish": "Reviewer not allowed to un-publish the metadata",
     "reviewerNotAllowedPublishUnpublish": "Reviewer not allowed to publish / un-publish the metadata",
-    "missingTitle": "Missing title"
+    "missingTitle": "Missing title",
+    "mapLegend": "Legend",
+    "quality": "Kvalitet",
+    "download": "Download",
+    "links": "Länkar"
 }

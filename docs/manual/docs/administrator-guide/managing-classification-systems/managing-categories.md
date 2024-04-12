@@ -6,4 +6,4 @@ To assign a category to a metadata document. Go to the metadata modification for
 
 To modify the available categories in the catalog, from the admin page, open the "classification systems" and then the "category" tab.
 
-Note: If you add or modify categories, they may not obtain an appropriate icon. These icon are managed in `/catalog/style/gn_icons.less`. In this file category-classes are mapped to font-awesome variables that map to a certain [font-awesome icon](http://fontawesome.io).
+Note: If you add or modify categories, they may not obtain an appropriate icon. These icon are managed in `/catalog/style/gn_icons.less`. In this file category-classes are mapped to font-awesome variables that map to a certain [font-awesome icon](https://fontawesome.io).

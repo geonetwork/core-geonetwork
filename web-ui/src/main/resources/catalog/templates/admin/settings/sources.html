@@ -74,7 +74,7 @@
     <div data-gn-need-help="portal-configuration"></div>
   </div>
 
-  <div class="col-lg-8" data-ng-if="source">
+  <div class="col-lg-8" data-ng-hide="!source">
     <div class="panel panel-default">
       <div class="panel-heading">
         {{source.name}} ({{('source-' + source.type) | translate}})
@@ -82,7 +82,7 @@
           <button
             type="button"
             class="btn btn-primary pull-right"
-            data-ng-disabled="source.type === 'subportal' && !gnSourceForm.$valid && !gnSourceForm.dirty"
+            data-ng-disabled="source.type === 'subportal' && (!gnSourceForm.$valid || !gnSourceForm.$dirty)"
             data-ng-click="updateSource()"
           >
             <i class="fa fa-floppy-o"></i>&nbsp;
@@ -103,35 +103,71 @@
       <div class="panel-body">
         <div data-ng-show="source.type === 'subportal'">
           <form name="gnSourceForm">
-            <label data-translate="" class="gn-required">sourceUuid</label>
-            <input
-              type="text"
-              class="form-control"
-              data-ng-required="true"
-              data-ng-readonly="!isNew"
-              data-ng-disabled="::!user.isAdministrator()"
-              data-ng-pattern="/^[A-Za-z0-9\-_]+$/"
-              data-ng-model="source.uuid"
-            />
-            <p class="help-block" data-translate="">sourceUuid-help</p>
-
-            <p
-              class="alert alert-info"
-              data-ng-if="source.uuid != ''"
-              data-translate=""
-              data-translate-values="{'uuid': source.uuid, 'lang': lang}"
+            <div
+              data-ng-class="gnSourceForm.sourceId.$error.required
+                                || gnSourceForm.sourceId.$error.maxlength
+                                || gnSourceForm.sourceId.$error.pattern ? 'has-error' : ''"
             >
-              sourceUrlInfo
-            </p>
-            <label data-translate="">sourceName</label>
-            <input
-              type="text"
-              data-ng-required="true"
-              class="form-control"
-              data-ng-pattern="/^[A-Za-z0-9\-_]+$/"
-              data-ng-model="source.name"
-            />
-            <p class="help-block" data-translate="">sourceName-help</p>
+              <label class="control-label gn-required" data-translate=""
+                >sourceUuid</label
+              >
+              <input
+                type="text"
+                class="form-control"
+                name="sourceId"
+                data-ng-required="true"
+                data-ng-readonly="!isNew"
+                data-ng-disabled="::!user.isAdministrator()"
+                data-ng-pattern="/^[A-Za-z0-9\-_]+$/"
+                data-ng-maxlength="255"
+                data-ng-model="source.uuid"
+              />
+              <p class="help-block" data-translate="">sourceUuid-help</p>
+
+              <p class="help-block">
+                <span
+                  class="error"
+                  data-ng-show="gnSourceForm.sourceId.$error.maxlength"
+                  data-translate=""
+                  >portalIdMaxlength</span
+                >
+              </p>
+
+              <p
+                class="alert alert-info"
+                data-ng-if="source.uuid != ''"
+                data-translate=""
+                data-translate-values="{'uuid': source.uuid, 'lang': lang}"
+              >
+                sourceUrlInfo
+              </p>
+            </div>
+
+            <div
+              data-ng-class="gnSourceForm.name.$error.required
+                                || gnSourceForm.name.$error.maxlength
+                                || gnSourceForm.name.$error.pattern ? 'has-error' : ''"
+            >
+              <label class="control-label" data-translate="">sourceName</label>
+              <input
+                type="text"
+                name="name"
+                data-ng-required="true"
+                class="form-control"
+                data-ng-pattern="/^[A-Za-z0-9\-_]+$/"
+                data-ng-model="source.name"
+                data-ng-maxlength="255"
+              />
+              <p class="help-block" data-translate="">sourceName-help</p>
+              <p class="help-block">
+                <span
+                  class="error"
+                  data-ng-show="gnSourceForm.name.$error.maxlength"
+                  data-translate=""
+                  >portalNameMaxlength</span
+                >
+              </p>
+            </div>
 
             <label data-translate="">sourceFilter</label>
             <input type="text" class="form-control" data-ng-model="source.filter" />

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-  xmlns:srv="http://standards.iso.org/iso/19115/-3/srv/2.1"
+  xmlns:srv="http://standards.iso.org/iso/19115/-3/srv/2.0"
   xmlns:mds="http://standards.iso.org/iso/19115/-3/mds/2.0"
   xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0"
   xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0"
@@ -203,7 +203,7 @@
                 match="*[gco:CharacterString|gcx:Anchor|gco:Integer|gco:UnlimitedInteger|gco:Decimal|
        gco:Boolean|gco:Real|gco:Measure|gco:Length|gco:Distance|gco:Angle|gmx:FileName|
        gco:Scale|gco:RecordType|gcx:MimeFileType|gco:LocalName|gco:ScopedName|gco:RecordType|
-       gco:Record|lan:PT_FreeText|mcc:URI|gco:TM_PeriodDuration]">
+       gco:Record|lan:PT_FreeText|mcc:URI|gco:TM_PeriodDuration|gco:UomIdentifier]">
     <xsl:param name="schema" select="$schema" required="no"/>
     <xsl:param name="labels" select="$labels" required="no"/>
     <xsl:param name="overrideLabel" select="''" required="no"/>
@@ -271,7 +271,7 @@
                           gco:Distance|gco:Angle|gmx:FileName|
                           gco:Scale|gco:RecordType|gcx:MimeFileType|
                           gco:LocalName|gco:ScopedName|gco:RecordType|
-                          gco:Record|mcc:URI|gco:TM_PeriodDuration"/>
+                          gco:Record|mcc:URI|gco:TM_PeriodDuration|gco:UomIdentifier"/>
     <xsl:variable name="theElement"
                   select="if ($isMultilingualElement and $hasOnlyPTFreeText or not($monoLingualValue))
                           then lan:PT_FreeText

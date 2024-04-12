@@ -430,7 +430,7 @@
             }
 
             scope.harvester.filters.push({
-              field: scope.cswCriteriaTranslated[0],
+              field: "",
               operator: "LIKE",
               value: "",
               condition: condition

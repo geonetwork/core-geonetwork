@@ -96,7 +96,7 @@ In order to define which groups the user is member of and which profile is the u
 ``` text
 ldapUserContextMapper.mapping[privilege]=groups,sample
 # If not set, the default profile is RegisteredUser
-# Valid profiles are http://geonetwork-opensource.org/manuals/trunk/eng/developer/apidocs/geonetwork/org/fao/geonet/constants/Geonet.Profile.html
+# Valid profiles are ADMINISTRATOR, USER_ADMIN, REVIEWER, EDITOR, REGISTERED_USER, GUEST
 ldapUserContextMapper.mapping[profile]=privileges,RegisteredUser
 ```
 
@@ -143,7 +143,7 @@ An attribute could define both the profile and the group for a user. To extract 
     ldap.privilege.pattern.idx.profil=2
     ```
 
-    Enable the bean `er` for `LDAPUserDetailsContextMapperWithPattern` ( in `WEB-INF/config-security/config-security-ldap.xml`).
+    Enable the bean `ldapUserContextMapper` for `LDAPUserDetailsContextMapperWithPattern` ( in `WEB-INF/config-security/config-security-ldap.xml`).
 
     ``` xml
     <!--<bean id="ldapUserContextMapper"
@@ -302,7 +302,7 @@ GeoNetwork comes with a sample LDAP configuration that you can use in Apache Dir
     To use this configuration, uncomment the "<import resource="config-security-ldap-recursive.xml"/>" line in ``web/src/main/webapp/WEB-INF/config-security/config-security.xml``
 
 
-1.  Configure the `ce` bean with a reference to your LDAP server and a user that can execute LDAP queries.
+1.  Configure the `contextSource` bean with a reference to your LDAP server and a user that can execute LDAP queries.
 
     ``` xml
     <bean id="contextSource"   class="org.springframework.security.ldap.DefaultSpringSecurityContextSource">
@@ -313,9 +313,9 @@ GeoNetwork comes with a sample LDAP configuration that you can use in Apache Dir
     </bean>
     ```
 
-2.  Configure the `ch` bean with the query used to find the user (given what was typed in the login page).
+2.  Configure the `ldapUserSearch` bean with the query used to find the user (given what was typed in the login page).
 
-    NOTE: Set `ee` to `ue` to do a recursive search of the LDAP. Use `se` to control which directory the search starts in ("" means start from the root).
+    NOTE: Set `searchSubtree` to `true` to do a recursive search of the LDAP. Use `searchBase` to control which directory the search starts in ("" means start from the root).
 
     ``` xml
     <bean id="ldapUserSearch" class="…">
@@ -327,9 +327,9 @@ GeoNetwork comes with a sample LDAP configuration that you can use in Apache Dir
     </bean>
     ```
 
-3.  Configure the `er` bean with how to convert the LDAP user's attributes to GeoNetwork user attributes (see the original configuration documentation, above).
+3.  Configure the `ldapUserContextMapper` bean with how to convert the LDAP user's attributes to GeoNetwork user attributes (see the original configuration documentation, above).
 
-    NOTE: The `ue` portion has two parts. The first part is the name of LDAP attribute (can be blank). The second part is the default value if the LDAP attribute is missing or empty (see the original configuration documentation, above).
+    NOTE: The `value` portion has two parts. The first part is the name of LDAP attribute (can be blank). The second part is the default value if the LDAP attribute is missing or empty (see the original configuration documentation, above).
 
     ``` xml
     <bean id="ldapUserContextMapper" class=“LDAPUserDetailsContextMapperWithProfileSearchEnhanced">
@@ -354,9 +354,9 @@ GeoNetwork comes with a sample LDAP configuration that you can use in Apache Dir
     </bean>
     ```
 
-4.  Continue configuring the `er` bean so the LDAP can also provide group/profile roles for the user.
+4.  Continue configuring the `ldapUserContextMapper` bean so the LDAP can also provide group/profile roles for the user.
 
-    NOTE: The `ry` is the LDAP directory where the membership query will be start ("" means start at the root of the LDAP).
+    NOTE: The `ldapMembershipQuery` is the LDAP directory where the membership query will be start ("" means start at the root of the LDAP).
 
     ``` xml
     <bean id="ldapUserContextMapper" class="LDAPUserDetailsContextMapperWithProfileSearchEnhanced">
@@ -374,9 +374,9 @@ GeoNetwork comes with a sample LDAP configuration that you can use in Apache Dir
     </bean>
     ```
 
-5.  Continue configuring the `er` bean so the LDAP roles can be converted to GeoNetwork Groups/Profiles.
+5.  Continue configuring the `ldapUserContextMapper` bean so the LDAP roles can be converted to GeoNetwork Groups/Profiles.
 
-    NOTE: You can use multiple `rs`.
+    NOTE: You can use multiple `ldapRoleConverters`.
 
     ``` xml
     <bean id="ldapUserContextMapper" class="LDAPUserDetailsContextMapperWithProfileSearchEnhanced">
@@ -392,7 +392,7 @@ GeoNetwork comes with a sample LDAP configuration that you can use in Apache Dir
 
 There are currently two ways to convert an LDAP group to GeoNetwork Groups/Profiles.
 
--   The `er`, which works the same as the original LDAP configuration. It uses a regular expression to parse the LDAP group name into a GeoNetwork Group/Profile. This will convert the LDAP role `OR` into the GeoNetwork group `AL` with Profile `r.`
+-   The `LDAPRoleConverterGroupNameParser`, which works the same as the original LDAP configuration. It uses a regular expression to parse the LDAP group name into a GeoNetwork Group/Profile. This will convert the LDAP role `GCAT_GENERAL_EDITOR` into the GeoNetwork group `GENERAL` with Profile `Editor`.
 
     ``` xml
     <bean id="ldapRoleConverterGroupNameParser"  class="LDAPRoleConverterGroupNameParser">
@@ -411,7 +411,7 @@ There are currently two ways to convert an LDAP group to GeoNetwork Groups/Profi
     </bean>
     ```
 
--   There is also a more direct way using `er`. This directly converts the LDAP group name into a list of GeoNetwork Groups/Profiles.
+-   There is also a more direct way using `LDAPRoleConverterGroupNameConverter`. This directly converts the LDAP group name into a list of GeoNetwork Groups/Profiles.
 
     ``` xml
     <bean id=“ldapRoleConverterGroupNameParser" class="LDAPRoleConverterGroupNameConverter">
@@ -500,7 +500,7 @@ Geonetwork's Open ID Connect plugin has a lot of configuration options - please 
 
 **GEONETWORK_SECURITY_TYPE**
 
-Should be `ct`.
+Should be `openidconnect`.
 
 **OPENIDCONNECT_CLIENTID**
 
@@ -508,7 +508,7 @@ The name of the client/application you configured on your OpenID server.
 
 **OPENIDCONNECT_CLIENTSECRET**
 
-The `et` you configured on your OpenID server.
+The `client secret` you configured on your OpenID server.
 
 **OPENIDCONNECT_SERVERMETADATA_CONFIG_URL**
 
@@ -516,7 +516,7 @@ URL to the external OIDC server's JSON metadata document. This is typically at `
 
 !!! note
 
-    This will download the server's configuration everytime GeoNetwork starts up, which could be a security concern. For security, use a `ps` URL.
+    This will download the server's configuration everytime GeoNetwork starts up, which could be a security concern. For security, use a `https` URL.
 
 
 **OPENIDCONNECT_SERVERMETADATA_JSON_TEXT**
@@ -594,13 +594,13 @@ It's outside the scope of this document to fully describe the steps to configure
 
 This will configure keycloak backed by **another OpenID IDP** (for example, by an Azure AD). In keycloak:
 
-1.  Create a realm (i.e. `lm`)
-2.  Create an openid client (i.e. `nt`). This is your ClientID.
+1.  Create a realm (i.e. `myrealm`)
+2.  Create an openid client (i.e. `myclient`). This is your ClientID.
     1.  Root URL: ``http://localhost:7777/geonetwork`` (this is the GN root URL)
     2.  Valid Redirect URIs: ``http://localhost:7777/geonetwork/*``
     3.  Access Type: Confidential
-    4.  On the `ls` tab, get the secret (this is your Client Secret)
-    5.  On the `es` tab, create some roles: Administrator, Editor, Reviewer, RegisteredGuest
+    4.  On the `Credentials` tab, get the secret (this is your Client Secret)
+    5.  On the `Roles` tab, create some roles: Administrator, Editor, Reviewer, RegisteredGuest
 3.  Create your backing Identity Provider (i.e. to another OpenID server). Or you can configure users directly in keycloak.
     1.  At the bottom of the page, choose "import from URL" and import the backing server's configuration location.
     2.  Add the Client Secret (from the backing service)
@@ -610,9 +610,9 @@ This will configure keycloak backed by **another OpenID IDP** (for example, by a
     1.  Edit the "Identity Provider" you just created, and go to the "Mappers" tab.
     2.  Press "Create" and and add a "Claim to Role".
     3.  Set Sync Mode Override to "Force"
-    4.  Claim: `es`
-    5.  Claim Value: `DP`
-    6.  Role: choose the "Administrator" role from the `nt` client.
+    4.  Claim: `roles`
+    5.  Claim Value: `name of the administrator role in the backing IDP`
+    6.  Role: choose the "Administrator" role from the `myclient` client.
     7.  Repeat the above for Administrator, Editor, Reviewer, and RegisteredGuest
 5.  Configure details for your backing IDP
     1.  Edit the "Identity Provider" you just configured
@@ -639,7 +639,7 @@ There are two ways to setup Azure AD. The first is with user and groups (a more 
 
 Setup the Azure Application:
 
-1.  Create a new `on`
+1.  Create a new `App Registration`
 2.  use `http://localhost:8080/geonetwork/login/oauth2/code/geonetwork-oicd` as a redirect URIs
 3.  On the "Certificates & Secrets" add a new secret and record it (make sure you get the secret value and NOT the object id)
 4.  Make sure the groups are in the ID token - on the "Manifest" tab, edit the JSON so that "groupMembershipClaims": "SecurityGroup" is set
@@ -740,9 +740,9 @@ This has been tested with Keycloak and with Azure AD. It should work with other 
 
 The token is validated in three major ways:
 
-1.  The bearer token will be used to access the `fo` ("token validation") endpoint specified in the OIDC configuration. This means the IDP validates the token (at the very least its signature and expiry).
+1.  The bearer token will be used to access the `userinfo` ("token validation") endpoint specified in the OIDC configuration. This means the IDP validates the token (at the very least its signature and expiry).
 2.  The bearer token (JWT) will be checked that the audience for it is the same as our configurated OIDC configuration. This will ensure that someone isn't getting a token from a different service and attempting to use it here. See ``AudienceAccessTokenValidator.java``
-3.  The bearer token (JWT) will be checked that the subject of the JWT and the `fo` (returned from the IDP) are the same. This shouldnt be a problem in our use-case, but the OAUTH2 specification recommends this check. See ``SubjectAccessTokenValidator.java``
+3.  The bearer token (JWT) will be checked that the subject of the JWT and the `userinfo` (returned from the IDP) are the same. This shouldnt be a problem in our use-case, but the OAUTH2 specification recommends this check. See ``SubjectAccessTokenValidator.java``
 
 #### Configuration {#bearer_token_configuration}
 
@@ -752,19 +752,19 @@ Instead of using `GEONETWORK_SECURITY_TYPE=openidconnect`, use `GEONETWORK_SECUR
 
 Inside `WEB-INF/config-security/config-security-openidconnectbearer.xml`:
 
-1.  If you are using keycloak (configured with Groups in the `fo` response), then uncomment the `er` bean and comment out the `er` bean.
-2.  If you are using Azure AD (MS Graph API for the user's groups), then then uncomment the `er` bean and comment out the `er` bean.
+1.  If you are using keycloak (configured with Groups in the `userinfo` response), then uncomment the `UserInfoAccessTokenRolesResolver` bean and comment out the `MSGraphUserRolesResolver` bean.
+2.  If you are using Azure AD (MS Graph API for the user's groups), then then uncomment the `MSGraphUserRolesResolver` bean and comment out the `UserInfoAccessTokenRolesResolver` bean.
 
 The easiest way to test is to obtain a Bearer Token, and then use a browser plugin to add the ``Authorization: Bearer <token>`` header to all requests. When you visit the Geonetwork website, you should see yourself logged in with the appropriate permissions.
 
 #### Other Providers
 
-This has been tested with Azure AD (groups in the MS Graph API) and KeyCloak (groups in the `fo`).
+This has been tested with Azure AD (groups in the MS Graph API) and KeyCloak (groups in the `userinfo`).
 
 For other IDP, you might have to make some modifications.
 
-1.  Make sure the `or` and `or` work correctly for your JWT bearer tokens.
-2.  Make sure that the user's groups are available - see the `er` interface and its two implementations - `er` and `er`.
+1.  Make sure the `AudienceAccessTokenValidator` and `SubjectAccessTokenValidator` work correctly for your JWT bearer tokens.
+2.  Make sure that the user's groups are available - see the `UserRolesResolver` interface and its two implementations - `UserInfoAccessTokenRolesResolver` and `MSGraphUserRolesResolver`.
 
 ## Configuring Keycloak {#authentication-keycloak}
 

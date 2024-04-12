@@ -60,6 +60,7 @@ import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.*;
 import org.fao.geonet.util.MetadataPublicationMailNotifier;
+import org.fao.geonet.util.UserUtil;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
@@ -71,6 +72,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -148,6 +150,9 @@ public class MetadataWorkflowApi {
 
     @Autowired
     MetadataPublicationMailNotifier metadataPublicationMailNotifier;
+
+    @Autowired
+    RoleHierarchy roleHierarchy;
 
     // The restore function currently supports these states
     static final Integer[] supportedRestoreStatuses = {
@@ -499,7 +504,7 @@ public class MetadataWorkflowApi {
 
         List<MetadataStatus> listOfStatusChange = new ArrayList<>(1);
         listOfStatusChange.add(metadataStatusValue);
-        Map<Integer, StatusChangeType> statusUpdate = sa.onStatusChange(listOfStatusChange);
+        Map<Integer, StatusChangeType> statusUpdate = sa.onStatusChange(listOfStatusChange, false);
 
         int metadataIdApproved = metadata.getId();
 
@@ -635,7 +640,7 @@ public class MetadataWorkflowApi {
     @io.swagger.v3.oas.annotations.Operation(summary = "Search status", description = "")
     @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET, path = "/status/search")
     @ResponseStatus(value = HttpStatus.OK)
-    @PreAuthorize("hasAuthority('Editor')")
+    @PreAuthorize("hasAuthority('RegisteredUser')")
     @ResponseBody
     public List<MetadataStatusResponse> getWorkflowStatusByType(
         @Parameter(description = "One or more types to retrieve (ie. worflow, event, task). Default is all.",
@@ -694,6 +699,9 @@ public class MetadataWorkflowApi {
         ServiceContext context = ApiUtils.createServiceContext(request);
 
         Profile profile = context.getUserSession().getProfile();
+        String allowedProfileLevel = org.apache.commons.lang.StringUtils.defaultIfBlank(settingManager.getValue(Settings.METADATA_HISTORY_ACCESS_LEVEL), Profile.Editor.toString());
+        Profile allowedAccessLevelProfile = Profile.valueOf(allowedProfileLevel);
+
         if (profile != Profile.Administrator) {
             if (CollectionUtils.isEmpty(recordIdentifier) &&
                 CollectionUtils.isEmpty(uuid)) {
@@ -704,7 +712,12 @@ public class MetadataWorkflowApi {
             if (!CollectionUtils.isEmpty(recordIdentifier)) {
                 for (Integer recordId : recordIdentifier) {
                     try {
-                        ApiUtils.canEditRecord(String.valueOf(recordId), request);
+                        if (allowedAccessLevelProfile == Profile.RegisteredUser) {
+                            ApiUtils.canViewRecord(String.valueOf(recordId), request);
+                        } else {
+                            ApiUtils.canEditRecord(String.valueOf(recordId), request);
+                        }
+
                     } catch (SecurityException e) {
                         throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT);
                     }
@@ -713,7 +726,12 @@ public class MetadataWorkflowApi {
             if (!CollectionUtils.isEmpty(uuid)) {
                 for (String recordId : uuid) {
                     try {
-                        ApiUtils.canEditRecord(recordId, request);
+                        if (allowedAccessLevelProfile == Profile.RegisteredUser) {
+                            ApiUtils.canViewRecord(recordId, request);
+                        } else {
+                            ApiUtils.canEditRecord(recordId, request);
+                        }
+
                     } catch (SecurityException e) {
                         throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT);
                     }
@@ -1308,6 +1326,7 @@ public class MetadataWorkflowApi {
         metadataStatusValue.setPreviousState(previousStatus);
         List<MetadataStatus> listOfStatusChange = new ArrayList<>(1);
         listOfStatusChange.add(metadataStatusValue);
-        sa.onStatusChange(listOfStatusChange);
+        sa.onStatusChange(listOfStatusChange, true);
     }
+
 }

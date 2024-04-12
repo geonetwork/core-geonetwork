@@ -31,6 +31,7 @@
   "language.id": "Identifier",
   "language.remove": "Verwijder taal",
   "layerName": "Laagnaam",
+  "layerNameTooltip": "A layer name from the GetCapabilities document",
   "ogcServiceUrl": "Service URL",
   "translation.addFor": "Voeg een nieuwe vertaling toe voor",
   "translation.add": "Toevoegen",
@@ -293,6 +294,8 @@
   "pageContent": "Pagina inhoud",
   "pageContentFile": "Pagina bestand",
   "pageLabel": "Pagina label",
+  "pageIcon": "Page icon",
+  "pageIcon-help": "Optionally, define a <a target='_blank' href='https://fontawesome.com/v4/icons/'>font-awesome icon</a>. Example: 'fa-wrench'.",
   "pageSection": "Pagina sectie",
   "pageApiLink": "Pagina API Link",
   "uiRestorePrevious": "Herstel laatst opgeslagen",
@@ -393,6 +396,7 @@
   "measureName": "Naam maatregel",
   "measureDescription": "Beschrijving",
   "measureValue": "Waarde",
+  "measureDate": "Datum",
   "switchPortals": "Ga naar een ander Portaal",
   "dataPreview":  "Ontdek data",
   "tableOfContents": "Inhoudsopgave",
@@ -414,5 +418,9 @@
   "lastCreatedRecords": "Laatst aangemaakte records",
   "associationType": "Relatie link",
   "initiativeType": "Initiatief type",
-  "associatedTo": "Gerelateerd"
+  "associatedTo": "Gerelateerd",
+  "overviewDescription": "Overview description",
+  "overviewUrl": "Overview URL",
+  "restApiUrl": "REST API URL",
+  "filterHelp": "Please click on one of the buttons below to activate the filter"
 }

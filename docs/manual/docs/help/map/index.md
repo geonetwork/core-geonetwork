@@ -31,7 +31,7 @@ The map viewer has a number of features to explore the data:
 * Location search including searching for your current position.
 
   ![Map viewer](img/map.png)
-  *Mapviewer*
+  *Map viewer*
 
 ## Add layers
 
@@ -104,7 +104,7 @@ Use web mapping service:
    ![WMS Layers Style](img/add_wms_style.png)
    *Add WMS Layer style*
    
-6. Locate the ``mapcolor9` layer style, and press **Add to map**.
+6. Locate the ``mapcolor9`` layer style, and press **Add to map**.
 
 ### Add files
 
@@ -126,14 +126,6 @@ Use **`KML`** files on the map.
     
 3. Use these buttons to mange the layer order, and remove layers.
 
-### Background map
-
-1.  From the **Map** viewer, press **Manage layers** control
-
-2.  Change the **Background map** from `OpenStreetMap` to `Stamen Watercolor`.
-    
-    ![Basemap](img/manage_basemap.png)
-    *Manage basemap*
 
 ## Legend
 

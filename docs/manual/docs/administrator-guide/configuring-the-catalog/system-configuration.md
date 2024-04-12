@@ -151,7 +151,7 @@ See [Configuring for the INSPIRE Directive](inspire-configuration.md).
 
 ## INSPIRE Atom Feed
 
-Allows to define the configuration of Atom Feeds referenced by the metadata to provide services related to the [INSPIRE technical guidance for download services](http://inspire.ec.europa.eu/documents/Network_Services/Technical_Guidance_Download_Services_3.0.pdf):
+Allows to define the configuration of Atom Feeds referenced by the metadata to provide services related to the [INSPIRE technical guidance for download services](https://inspire.ec.europa.eu/documents/Network_Services/Technical_Guidance_Download_Services_3.0.pdf):
 
 -   Select the type of atom feed:
 
@@ -229,6 +229,19 @@ Allows to configure the user profile allowed to publish and un-publish metadata.
 -   **Minimum user profile allowed to un-publish metadata** Minimum user profile allowed to un-publish metadata (`Reviewer` or `Administrator`). The default value is `Reviewer`.
 
 ![](img/metadata-publication.png)
+
+## Metadata History
+
+Allows to view metadata history
+
+![](img/metadata_history.png)
+
+-   **Minimum user profile allowed to view metadata history** Minimum user profile allowed to delete metadata (`Registered User`, `Editor` or `Administrator`). The default value is `Editor`.
+![](img/metadata_history_config.png)
+
+-   **Registered User Configuration** The user who has granted view permission to the metadata record can view the history.
+-   **Editor Configuration** The user who has granted editing permission to the metadata record can view the history.
+-   **Administrator Configuration** The user who has granted system administrator permission can view the history.
 
 ## Harvesting
 

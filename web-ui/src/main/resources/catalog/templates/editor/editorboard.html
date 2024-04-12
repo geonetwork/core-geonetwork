@@ -27,7 +27,7 @@
                   autocomplete="off"
                   placeholder="{{'anyPlaceHolder' | translate}}"
                   aria-label="{{'anyPlaceHolder' | translate}}"
-                  data-ng-keyup="$event.keyCode == 13 && triggerSearch()"
+                  data-ng-keyup="$event.keyCode == 13 && hideSearchSuggestions() && triggerSearch()"
                   data-typeahead="md.label as md.label for md in getAnySuggestions($viewValue, searchObj)"
                   data-typeahead-template-url="../../catalog/templates/gn-typeahead-match.html"
                   data-typeahead-loading="anyLoading"
@@ -208,7 +208,7 @@
               href="#/batchedit"
               class="btn btn-default btn-block gn-margin-bottom"
               title="{{'batchEditing' | translate}}"
-              ng-if="user.isEditorOrMore()"
+              ng-if="user.canBatchEditMetadata()"
             >
               <i class="fa fa-fw fa-pencil" /><span
                 class="hidden-xs hidden-sm hidden-md"

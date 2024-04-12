@@ -28,6 +28,7 @@ eclipse/
 es/elasticsearch-*
 es/es-dashboards/kibana-*
 es/es-dashboards/data/nodes/
+es/es-dashboards/data/index/
 harvesters/harvester_*.log
 idea/
 jcs_caching/
@@ -36,6 +37,7 @@ out/
 package-lock.json
 rebel.xml
 release/jetty/*
+release-build.sh
 schemas/*/doc/*/*.rst
 schematrons/.build
 target/
@@ -69,6 +71,7 @@ web/src/main/webapp/WEB-INF/data/data/metadata_data
 web/src/main/webapp/WEB-INF/data/data/metadata_subversion
 web/src/main/webapp/WEB-INF/data/data/resources/htmlcache
 web/src/main/webapp/WEB-INF/data/data/resources/images
+web/src/main/webapp/WEB-INF/data/data/resources/schemapublication
 web/src/main/webapp/WEB-INF/data/data/resources/xml
 web/src/main/webapp/WEB-INF/data/data/upload/
 web/src/main/webapp/WEB-INF/data/harvester_*
@@ -80,8 +83,8 @@ web/src/main/webapp/WEB-INF/data/wro4j*.db
 web/src/main/webapp/WEB-INF/data/wro4j-cache*
 web/src/main/webapp/WEB-INF/data_*
 web/src/main/webapp/WEB-INF/metadata_subversion/
-web/src/main/webapp/WEB-INF/server.prop
 web/src/main/webapp/WEB-INF/prebuilt
 web/src/main/webapp/data/
 web/src/main/webapp/doc/en
 web/src/main/webapp/doc/fr
+web/src/main/webapp/WEB-INF/data/data/resources/schemapublication

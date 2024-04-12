@@ -893,10 +893,8 @@
         data-gn-field-highlight="">
         <label class="col-sm-2 control-label"
                data-gn-field-tooltip="{$schema}|{$qualifiedName}|{$parentName}|">
-          <xsl:if test="normalize-space($label) != ''">
-            <xsl:value-of select="$label"/>
-          </xsl:if>
-          &#160;
+          <xsl:value-of select="if (normalize-space($label) != '')
+                                then $label else '&#160;'"/>
         </label>
         <div class="col-sm-9">
 
@@ -1667,12 +1665,13 @@
     <xsl:param name="type"/>
     <xsl:param name="options"/>
     <xsl:param name="label"/>
+    <xsl:param name="btnClass" required="no"/>
 
     <div class="row form-group gn-field gn-extra-field">
       <div class="col-xs-10 col-xs-offset-2">
         <a class="btn gn-associated-resource-btn"
            data-ng-click="gnOnlinesrc.onOpenPopup('{$type}'{if ($options != '') then concat(', ''', $options, '''') else ''})">
-          <i class="fa gn-icon-{$type}"></i>&#160;
+          <i class="fa {if ($btnClass != '') then $btnClass else concat('gn-icon-', $type)}"></i>&#160;
           <span data-translate="">
             <xsl:choose>
               <xsl:when test="$label">

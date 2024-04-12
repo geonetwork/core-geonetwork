@@ -29,7 +29,7 @@
   <groupId>org.geonetwork-opensource</groupId>
   <artifactId>geonetwork</artifactId>
   <packaging>pom</packaging>
-  <version>4.4.1-SNAPSHOT</version>
+  <version>4.4.4-SNAPSHOT</version>
   <name>GeoNetwork opensource</name>
   <description>GeoNetwork opensource is a standards based, Free and
     Open Source catalog application to manage spatially referenced
@@ -112,11 +112,6 @@
           <version>3.1.2</version>
         </plugin>
         <plugin>
-          <groupId>org.codehaus.mojo</groupId>
-          <artifactId>jslint-maven-plugin</artifactId>
-          <version>1.0.1</version>
-        </plugin>
-        <plugin>
           <groupId>org.bsc.maven</groupId>
           <artifactId>maven-processor-plugin</artifactId>
           <version>3.3.3</version>
@@ -132,6 +127,14 @@
         <plugin>
           <artifactId>maven-clean-plugin</artifactId>
           <version>3.1.0</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-install-plugin</artifactId>
+          <version>3.1.1</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-deploy-plugin</artifactId>
+          <version>3.1.1</version>
         </plugin>
         <plugin>
           <groupId>net.alchim31.maven</groupId>
@@ -242,12 +245,36 @@
           <artifactId>maven-toolchains-plugin</artifactId>
           <version>3.0.0</version>
         </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-enforcer-plugin</artifactId>
+          <version>3.4.1</version>
+        </plugin>
       </plugins>
     </pluginManagement>
 
     <plugins>
+      <!-- build enviornment -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>enforce-maven</id>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <configuration>
+              <rules>
+                <requireMavenVersion>
+                  <version>3.8.3</version>
+                </requireMavenVersion>
+              </rules>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
           <source>11</source>
@@ -266,7 +293,6 @@
 
       <!-- resources -->
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-resources-plugin</artifactId>
         <configuration>
           <encoding>UTF-8</encoding>
@@ -292,7 +318,6 @@
         </executions>
       </plugin>
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
           <excludedGroups>org.fao.geonet.repository.AbstractSpringDataTest</excludedGroups>
@@ -517,7 +542,7 @@
       <dependency>
         <groupId>commons-fileupload</groupId>
         <artifactId>commons-fileupload</artifactId>
-        <version>1.3.3</version>
+        <version>1.5</version>
       </dependency>
       <dependency>
         <groupId>commons-collections</groupId>
@@ -1192,9 +1217,10 @@
         <artifactId>jaxb-impl</artifactId>
         <version>2.3.1</version>
       </dependency>
+
       <dependency>
-        <groupId>org.elasticsearch.client</groupId>
-        <artifactId>elasticsearch-rest-high-level-client</artifactId>
+        <groupId>co.elastic.clients</groupId>
+        <artifactId>elasticsearch-java</artifactId>
         <version>${es.version}</version>
       </dependency>
       <dependency>
@@ -1261,6 +1287,12 @@
         <groupId>com.amazonaws</groupId>
         <artifactId>aws-java-sdk-s3</artifactId>
         <version>1.12.261</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.json</groupId>
+        <artifactId>json</artifactId>
+        <version>20240205</version>
       </dependency>
 
     </dependencies>
@@ -1449,16 +1481,6 @@
      </snapshotRepository>
   </distributionManagement>
 
-  <!--
-  <distributionManagement>
-    <snapshotRepository>
-      <id>scp-repository.geonetwork-opensource.org</id>
-      <name>GeoNetwork opensource repositories</name>
-      <url>scpexe://TO DEFINED</url>
-    </snapshotRepository>
-  </distributionManagement>
-  -->
-
   <properties>
     <db.properties>WEB-INF/config-db/jdbc.properties</db.properties>
     <!--<db.properties>file:/${geonetwork.dir}/jdbc.properties</db.properties>-->
@@ -1516,12 +1538,18 @@
        * allow only host registered in metadata link table
     -->
     <proxy.securityMode>DB_LINK_CHECK</proxy.securityMode>
+    <!-- Hosts to exclude from http proxy access: typically localhost, intranet resources -->
+    <proxy.excludeHosts>^(localhost|127\..*|0\..*|255\.255\.255\.255|.*\.local|.*\.localhost|0:0:0:0:0:0:1|::1)$</proxy.excludeHosts>
+
+    <!-- Additional ports (separated by | char) allowed to be access through the http proxy. 80 and 443 are always allowed -->
+    <proxy.allowPorts></proxy.allowPorts>
+    <!--<proxy.allowPorts>8443|8080</proxy.allowPorts>-->
 
     <!-- Jetty plugin port configuration -->
     <jetty.port>8080</jetty.port>
     <jetty.stop.port>8090</jetty.stop.port>
 
-    <es.version>7.15.1</es.version>
+    <es.version>8.11.3</es.version>
     <es.platform>linux-x86_64</es.platform>
     <es.installer.extension>tar.gz</es.installer.extension>
     <es.protocol>http</es.protocol>
@@ -1534,7 +1562,7 @@
     <es.index.records.type>records</es.index.records.type>
     <es.index.searchlogs>gn-searchlogs</es.index.searchlogs>
     <es.index.searchlogs.type>searchlogs</es.index.searchlogs.type>
-    <es.maven.plugin.version>6.19</es.maven.plugin.version>
+    <es.maven.plugin.version>6.28</es.maven.plugin.version>
 
     <!-- Define the default analyzer for full text search. -->
     <es.index.analyzer.default>standard</es.index.analyzer.default>
@@ -1579,7 +1607,7 @@
      request the list of hosts (but JPA cache db queries). -->
     <cors.allowedHosts>*</cors.allowedHosts>
 
-    <jetty.version>9.4.52.v20230823</jetty.version>
+    <jetty.version>9.4.53.v20231009</jetty.version>
     <jetty.file>jetty-distribution-${jetty.version}</jetty.file>
     <jetty.download>https://repo1.maven.org/maven2/org/eclipse/jetty/jetty-distribution/${jetty.version}/${jetty.file}.tar.gz</jetty.download>
 
@@ -1589,11 +1617,11 @@
     <jts.version>1.19.0</jts.version>
     <pg.version>42.6.0</pg.version>
 
-    <spring.version>5.3.30</spring.version>
-    <spring.security.version>5.8.7</spring.security.version>
-    <spring.jpa.version>2.7.16</spring.jpa.version>
+    <spring.version>5.3.31</spring.version>
+    <spring.security.version>5.8.8</spring.security.version>
+    <spring.jpa.version>2.7.18</spring.jpa.version>
     <springboot.version>2.7.0</springboot.version>
-    <springdoc.version>1.5.13</springdoc.version>
+    <springdoc.version>1.7.0</springdoc.version>
     <hibernate.version>5.6.15.Final</hibernate.version>
 
     <metrics.version>2.2.0</metrics.version>
@@ -1604,13 +1632,13 @@
     <wro.debug>true</wro.debug>
     <fop.version>2.7</fop.version>
     <xmlunit.version>2.1.1</xmlunit.version>
-    <jackson.version>2.15.2</jackson.version>
+    <jackson.version>2.15.3</jackson.version>
     <flying-saucer>9.1.22</flying-saucer>
     <camel.version>2.25.1</camel.version>
     <log4j2.version>2.17.2</log4j2.version>
     <slf4j.version>1.8.0-beta2</slf4j.version>
     <xbean.version>4.22</xbean.version>
-    <jolokia.version>1.6.0</jolokia.version>
+    <jolokia.version>1.7.2</jolokia.version>
     <httpcomponents.version>4.5.14</httpcomponents.version>
     <jasypt.version>1.9.3</jasypt.version>
     <jupiter.version>5.9.1</jupiter.version>

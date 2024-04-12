@@ -43,7 +43,7 @@
           scope.type = scope.metadata.draft === "e" ? "y" : "e";
           var query = {
             _source: {
-              include: ["id", "uuid", "draft", "isTemplate", "valid"]
+              includes: ["id", "uuid", "draft", "isTemplate", "valid"]
             },
             size: 1,
             query: {

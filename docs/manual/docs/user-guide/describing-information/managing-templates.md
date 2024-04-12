@@ -1,6 +1,6 @@
 # Managing templates {#creating-templates}
 
-Templates are metadata records that you can use for describing new resources. This topic describes how to load and manage templates.
+Templates are metadata records that you can use as the starting point to describe new resources. This topic describes how to load and manage templates.
 
 ## Creating and managing templates
 

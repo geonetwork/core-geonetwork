@@ -46,6 +46,9 @@
       $scope.selectCategory = function (c) {
         $scope.cateroryUpdated = false;
         $scope.categorySelected = c;
+
+        $scope.gnCategoryFrom.$setPristine();
+
         $timeout(function () {
           $("#categoryname").focus();
         }, 100);

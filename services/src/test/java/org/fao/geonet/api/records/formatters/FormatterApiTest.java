@@ -23,17 +23,8 @@
 package org.fao.geonet.api.records.formatters;
 
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.domain.MetadataType;
-import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.SchemaManager;
-import org.fao.geonet.kernel.UpdateDatestamp;
-import org.fao.geonet.kernel.search.IndexingMode;
-import org.fao.geonet.repository.SourceRepository;
-import org.fao.geonet.schema.iso19115_3_2018.ISO19115_3_2018SchemaPlugin;
-import org.fao.geonet.schema.iso19139.ISO19139SchemaPlugin;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
-import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.junit.Before;
 import org.junit.Test;
@@ -58,15 +49,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class FormatterApiTest extends AbstractServiceIntegrationTest {
     @Autowired
     private WebApplicationContext wac;
-    @Autowired
-    private SchemaManager schemaManager;
-    @Autowired
-    private DataManager dataManager;
-    @Autowired
-    private SourceRepository sourceRepository;
 
     private Map<String, String> testDataUuidBySchema = new HashMap<>();
-
     private ServiceContext context;
 
     public static Collection<String[]> data() throws Exception {
@@ -89,46 +73,6 @@ public class FormatterApiTest extends AbstractServiceIntegrationTest {
     public void setUp() throws Exception {
         this.context = createServiceContext();
         createTestData();
-    }
-
-    private void createTestData() throws Exception {
-        loginAsAdmin(context);
-        loadFile(getSampleISO19139MetadataXml());
-        loadFile(getSampleISO19115MetadataXml());
-    }
-
-    private void loadFile(Element sampleMetadataXml) throws Exception {
-        String uuid = UUID.randomUUID().toString();
-        String schema = schemaManager.autodetectSchema(sampleMetadataXml);
-        Xml.selectElement(sampleMetadataXml,
-                "iso19139".equals(schema)
-                    ? "gmd:fileIdentifier/gco:CharacterString"
-                    : "mdb:metadataIdentifier/*/mcc:code/*",
-                "iso19139".equals(schema)
-                    ? ISO19139SchemaPlugin.allNamespaces.asList()
-                    : ISO19115_3_2018SchemaPlugin.allNamespaces.asList())
-            .setText(uuid);
-
-        String source = sourceRepository.findAll().get(0).getUuid();
-        final Metadata metadata = new Metadata();
-        metadata
-            .setDataAndFixCR(sampleMetadataXml)
-            .setUuid(uuid);
-        metadata.getDataInfo()
-            .setRoot(sampleMetadataXml.getQualifiedName())
-            .setSchemaId(schema)
-            .setType(MetadataType.METADATA)
-            .setPopularity(1000);
-        metadata.getSourceInfo()
-            .setOwner(1)
-            .setSourceId(source);
-        metadata.getHarvestInfo()
-            .setHarvested(false);
-
-        dataManager.insertMetadata(context, metadata, sampleMetadataXml, IndexingMode.none, false, UpdateDatestamp.NO,
-            false, false);
-
-        testDataUuidBySchema.put(schema, uuid);
     }
 
     @Test
@@ -168,5 +112,16 @@ public class FormatterApiTest extends AbstractServiceIntegrationTest {
                 fail(url);
             }
         }
+    }
+
+    private void createTestData() throws Exception {
+        loginAsAdmin(context);
+        loadFile(getSampleISO19139MetadataXml());
+        loadFile(getSampleISO19115MetadataXml());
+    }
+
+    private void loadFile(Element sampleMetadataXml) throws Exception {
+        AbstractMetadata metadata = injectMetadataInDbDoNotRefreshHeader(sampleMetadataXml, context);
+        testDataUuidBySchema.put(metadata.getDataInfo().getSchemaId(), metadata.getUuid());
     }
 }

@@ -8,13 +8,13 @@ This feature allows to store the HTML content for static pages and show the link
 
 -   Each page can be in 3 states:
 
-    -   `EN`: visible to administrator.
-    -   `TE`: visible to logged users.
-    -   `IC`: visible to everyone.
+    -   `HIDDEN`: visible to administrator.
+    -   `PRIVATE`: visible to logged users.
+    -   `PUBLIC`: visible to everyone.
 
--   Pages can be added to different page sections. Currently the sections implemented are `OP` (top menu of the main page) and `ER` (footer of the main page).
+-   Pages can be added to different page sections. Currently the sections implemented are `TOP` (top menu of the main page) and `FOOTER` (footer of the main page).
 
--   Only the administrator can edit the pages and see the pages in `EN` status.
+-   Only the administrator can edit the pages and see the pages in `HIDDEN` status.
 
 -   The creation and the management of the content is done via the API.
 
@@ -80,10 +80,10 @@ curl -X DELETE "http://localhost:8080/geonetwork/srv/api/pages/eng/contactus?for
 
 The status of the page can be changed with the method PUT `/api/pages/{language}/{pageId}/{status}` where status could assume these values:
 
--   `IC` - Visible to every user
--   `LY` - Visible to not logged users
--   `TE` - Visible to logged users
--   `EN` - Hidden to anyone
+-   `PUBLIC` - Visible to every user
+-   `PUBLIC_ONLY` - Visible to not logged users
+-   `PRIVATE` - Visible to logged users
+-   `HIDDEN` - Hidden to anyone
 
 Other methods in the API are to change/delete a page and to GET the list of the pages or the info of a specific one.
 

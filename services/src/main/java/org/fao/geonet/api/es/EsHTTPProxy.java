@@ -35,9 +35,14 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.Sets;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
+import com.jayway.jsonpath.PathNotFoundException;
 import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
@@ -65,8 +70,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -270,12 +275,16 @@ public class EsHTTPProxy {
 
 
     @io.swagger.v3.oas.annotations.Operation(
-        summary = "Search endpoint",
-        description = "See https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl.html for search parameters details.")
+        summary = "Execute a search query and get back search hits that match the query.",
+        description = "The search API execute a search query with a JSON request body. For more information see https://www.elastic.co/guide/en/elasticsearch/reference/current/search-search.html for search parameters, and https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl.html JSON Query DSL.")
     @RequestMapping(value = "/search/records/_search",
-        method = {
-            RequestMethod.POST
-        })
+        method = RequestMethod.POST,
+        produces = MediaType.APPLICATION_JSON_VALUE,
+        consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Search results.",
+            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(type = "string")))
+    })
     @ResponseStatus(value = HttpStatus.OK)
     @ResponseBody
     public void search(
@@ -292,22 +301,28 @@ public class EsHTTPProxy {
         HttpServletRequest request,
         @Parameter(hidden = true)
         HttpServletResponse response,
-        @RequestBody(description = "JSON request based on Elasticsearch API.")
-        String body,
-        @Parameter(hidden = true)
-        HttpEntity<String> httpEntity) throws Exception {
+        @RequestBody
+        @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "JSON request based on Elasticsearch API.",
+            content = @Content(examples = {
+                @ExampleObject(value = "{\"query\":{\"match\":{\"_id\":\"catalogue_uuid\"}}}")
+            }))
+        String body) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
-        call(context, httpSession, request, response, SEARCH_ENDPOINT, httpEntity.getBody(), bucket, relatedTypes);
+        call(context, httpSession, request, response, SEARCH_ENDPOINT, body, bucket, relatedTypes);
     }
 
 
     @io.swagger.v3.oas.annotations.Operation(
-        summary = "Search endpoint",
-        description = "See https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl.html for search parameters details.")
+        summary = "Executes several searches with a Elasticsearch API request.",
+        description = "The multi search API executes several searches from a single API request. See https://www.elastic.co/guide/en/elasticsearch/reference/current/search-multi-search.html for search parameters, and https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl.html Query DSL.")
     @RequestMapping(value = "/search/records/_msearch",
-        method = {
-            RequestMethod.POST
-        })
+        method = RequestMethod.POST,
+        produces = MediaType.APPLICATION_JSON_VALUE,
+        consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Search results.",
+            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(type = "string")))
+    })
     @ResponseStatus(value = HttpStatus.OK)
     @ResponseBody
     public void msearch(
@@ -324,12 +339,14 @@ public class EsHTTPProxy {
         HttpServletRequest request,
         @Parameter(hidden = true)
         HttpServletResponse response,
-        @RequestBody(description = "JSON request based on Elasticsearch API.")
-        String body,
-        @Parameter(hidden = true)
-        HttpEntity<String> httpEntity) throws Exception {
+        @RequestBody
+        @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "JSON request based on Elasticsearch API.",
+            content = @Content(examples = {
+            @ExampleObject(value = "{\"query\":{\"match\":{\"_id\":\"catalogue_uuid\"}}}")
+        }))
+        String body) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
-        call(context, httpSession, request, response, MULTISEARCH_ENDPOINT, httpEntity.getBody(), bucket, relatedTypes);
+        call(context, httpSession, request, response, MULTISEARCH_ENDPOINT, body, bucket, relatedTypes);
     }
 
 
@@ -342,7 +359,13 @@ public class EsHTTPProxy {
     @RequestMapping(value = "/search/records/{endPoint}",
         method = {
             RequestMethod.POST, RequestMethod.GET
-        })
+        },
+        produces = MediaType.APPLICATION_JSON_VALUE,
+        consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Search results.",
+            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(type = "string")))
+    })
     @ResponseStatus(value = HttpStatus.OK)
     @PreAuthorize("hasAuthority('Administrator')")
     @ResponseBody
@@ -357,16 +380,18 @@ public class EsHTTPProxy {
         HttpServletRequest request,
         @Parameter(hidden = true)
         HttpServletResponse response,
-        @RequestBody(description = "JSON request based on Elasticsearch API.")
-        String body,
-        @Parameter(hidden = true)
-        HttpEntity<String> httpEntity) throws Exception {
+        @RequestBody
+        @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "JSON request based on Elasticsearch API.",
+            content = @Content(examples = {
+                @ExampleObject(value = "{\"query\":{\"match\":{\"_id\":\"catalogue_uuid\"}}}")
+            }))
+        String body) throws Exception {
 
         ServiceContext context = ApiUtils.createServiceContext(request);
-        call(context, httpSession, request, response, endPoint, httpEntity.getBody(), bucket, null);
+        call(context, httpSession, request, response, endPoint, body, bucket, null);
     }
 
-    public void call(ServiceContext context, HttpSession httpSession, HttpServletRequest request,
+    private void call(ServiceContext context, HttpSession httpSession, HttpServletRequest request,
                      HttpServletResponse response,
                      String endPoint, String body,
                      String selectionBucket,
@@ -817,7 +842,7 @@ public class EsHTTPProxy {
      *      <xsl:element name="contact{$fieldSuffix}">
      *        <xsl:attribute name="type" select="'object'"/>{
      *        ...
-     *        "address":"<xsl:value-of select="gn-fn-index:json-escape($address)"/>"
+     *        "address":"<xsl:value-of select="util:escapeForJson($address)"/>"
      *        <xsl:if test="$hasWithheld">
      *         ,"nilReason": "withheld"
      *        </xsl:if>
@@ -880,7 +905,11 @@ public class EsHTTPProxy {
 
         for(String jsonPath : jsonPathFilters) {
             if (StringUtils.isNotBlank(jsonPath)) {
-                jsonContext = jsonContext.delete(jsonPath);
+                try {
+                    jsonContext = jsonContext.delete(jsonPath);
+                } catch (PathNotFoundException ex) {
+                    // The node to remove is not returned in the response, ignore the error
+                }
             }
         }
 

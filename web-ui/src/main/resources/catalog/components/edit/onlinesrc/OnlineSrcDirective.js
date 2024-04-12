@@ -179,6 +179,15 @@
       "gn_urlutils_service",
       "gn_related_directive"
     ])
+    .directive("gnUrlValidator", [
+      function () {
+        return {
+          restrict: "A",
+          templateUrl:
+            "../../catalog/components/edit/onlinesrc/partials/urlValidator.html"
+        };
+      }
+    ])
     .directive("gnRemoteRecordSelector", [
       "$http",
       "gnGlobalSettings",
@@ -195,20 +204,51 @@
             } else {
               scope.allowRemoteRecordLink = true;
             }
-            scope.remoteRecord = {
-              remoteUrl: "",
-              title: "",
-              uuid: ""
-            };
-            scope.isRemoteRecordUrlOk = true;
-            scope.isRemoteRecordPropertiesExtracted = false;
-            scope.selectionList = undefined;
 
-            scope.$on("resetSearch", function (event, args) {
-              scope.remoteRecord = {
+            scope.multipleSelection = false;
+
+            scope.$watch("config.sources.remoteurl", function (newVal, oldVal) {
+              if (newVal != oldVal && newVal) {
+                scope.multipleSelection = newVal.multiple;
+              }
+            });
+
+            // Model for the multiple selection mode
+            scope.multipleSelectionModel = {
+              remoteLinksToCheck: 0,
+              checkingRemoteLinks: false,
+              invalidRemoteLinks: [],
+              remoteRecordsList: ""
+            };
+
+            // Model for the single selection mode
+            scope.singleSelectionModel = {
+              remoteRecord: {
                 remoteUrl: "",
                 title: "",
                 uuid: ""
+              },
+              isRemoteRecordUrlOk: true,
+              isRemoteRecordPropertiesExtracted: false
+            };
+
+            scope.selectionList = undefined;
+
+            // Get the parent div's ID
+            scope.popupId = element.closest(".onlinesrc-popup").attr("id");
+
+            scope.$on("resetSearch", function (event, args) {
+              scope.singleSelectionModel.remoteRecord = {
+                remoteUrl: "",
+                title: "",
+                uuid: ""
+              };
+
+              scope.multipleSelectionModel = {
+                remoteLinksToCheck: 0,
+                checkingRemoteLinks: false,
+                invalidRemoteLinks: [],
+                remoteRecordsList: ""
               };
             });
 
@@ -223,8 +263,9 @@
               return "application/xml";
             }
 
-            function getProperties(doc) {
-              scope.isRemoteRecordPropertiesExtracted = true;
+            function getProperties(doc, url) {
+              var record = {};
+
               if (angular.isObject(doc)) {
                 // JSON doc
               } else if (doc.startsWith("<?xml")) {
@@ -243,7 +284,7 @@
                     null
                   );
                   if (titles.stringValue) {
-                    scope.remoteRecord.title = titles.stringValue;
+                    record.title = titles.stringValue;
                   }
 
                   var uuid = xml.evaluate(
@@ -256,73 +297,200 @@
                     null
                   );
                   if (uuid.stringValue) {
-                    scope.remoteRecord.uuid = uuid.stringValue;
+                    record.uuid = uuid.stringValue;
                   } else {
-                    scope.remoteRecord.uuid = scope.remoteRecord.remoteUrl;
+                    record.uuid = url;
                   }
                 } catch (e) {
                   console.warn(e);
-                  return false;
+                  return {};
                 }
               } else if (doc.indexOf("<html") != -1) {
                 // Basic support of HTML page eg. GeoNode record page
                 // In this case the head/title is considered the record title.
                 // No UUID can be easily extracted.
                 try {
-                  scope.remoteRecord.title = doc.replace(
+                  record.title = doc.replace(
                     /(.|[\r\n])*<title(.*)>(.*)<\/title>(.|[\r\n])*/,
                     "$3"
                   );
 
-                  scope.remoteRecord.uuid = scope.remoteRecord.remoteUrl;
+                  record.uuid = url;
 
                   // Looking for schema.org tags or json+ld format could also be an option.
                 } catch (e) {
                   console.warn(e);
-                  return false;
+                  return {};
                 }
               } else {
-                return false;
+                return {};
               }
-              return true;
+
+              record.remoteUrl = url;
+              return record;
             }
 
+            scope.$watch(
+              "multipleSelectionModel.remoteLinksToCheck",
+              function (newVal, oldVal) {
+                if (newVal != oldVal) {
+                  if (newVal == 0) {
+                    scope.multipleSelectionModel.remoteRecordsList = "";
+                    scope.multipleSelectionModel.checkingRemoteLinks = false;
+                  }
+                }
+              }
+            );
+
+            /**
+             * Checks if the button to add multiple links can be enabled:
+             *   - There are links to add.
+             *   - The processs to add the links is not on-going.
+             *   - The association type field is selected.
+             * Used in the multiple mode selection.
+             *
+             * @returns {boolean}
+             */
+            scope.canAddMultipleLinks = function () {
+              return (
+                scope.multipleSelectionModel.remoteRecordsList !== "" &&
+                !scope.multipleSelectionModel.checkingRemoteLinks &&
+                scope.config &&
+                scope.config.associationType != null
+              );
+            };
+
+            /**
+             * Process the urls links to extract the record information: title, url.
+             *
+             * Used in the multiple mode selection.
+             */
+            scope.addMultipleLinks = function () {
+              // Ignore in single selection mode
+              if (!scope.multipleSelection) return;
+
+              var remoteUrls = scope.multipleSelectionModel.remoteRecordsList.split("\n");
+              scope.multipleSelectionModel.invalidRemoteLinks = [];
+              scope.multipleSelectionModel.remoteLinksToCheck = remoteUrls.length;
+              scope.multipleSelectionModel.checkingRemoteLinks = true;
+              for (var i = 0; i < remoteUrls.length; i++) {
+                var url = remoteUrls[i];
+                if (url.indexOf("http") === 0) {
+                  $http
+                    .get(url, {
+                      headers: { Accept: guessContentType() }
+                    })
+                    .then(
+                      function (response) {
+                        scope.multipleSelectionModel.remoteLinksToCheck--;
+
+                        var isRemoteRecordUrlOk = response.status === 200;
+                        if (isRemoteRecordUrlOk) {
+                          // Check we can retrieve title
+                          var remoteRecordInfo = getProperties(
+                            response.data,
+                            response.config.url
+                          );
+
+                          if (!_.isEmpty(remoteRecordInfo)) {
+                            remoteRecordInfo.resourceTitle = remoteRecordInfo.title;
+                            scope.addToSelection(
+                              remoteRecordInfo,
+                              scope.config.associationType,
+                              scope.config.initiativeType
+                            );
+                          } else {
+                            scope.multipleSelectionModel.invalidRemoteLinks.push(
+                              response.config.url
+                            );
+                          }
+                        }
+                      },
+                      function (response) {
+                        scope.multipleSelectionModel.remoteLinksToCheck--;
+                        scope.multipleSelectionModel.invalidRemoteLinks.push(
+                          response.config.url
+                        );
+                      }
+                    );
+                } else {
+                  scope.multipleSelectionModel.remoteLinksToCheck--;
+                  scope.multipleSelectionModel.invalidRemoteLinks.push(url);
+                }
+              }
+            };
+
+            /**
+             * Checks a link and adds it to the selection.
+             *
+             * Used in single mode selection.
+             *
+             * @returns {*}
+             */
             scope.checkLink = function () {
+              // Ignore in multiple selection mode
+              if (scope.multipleSelection) return;
+
               scope.resetLink(false);
-              if (scope.remoteRecord.remoteUrl.indexOf("http") === 0) {
+              if (
+                scope.singleSelectionModel.remoteRecord.remoteUrl.indexOf("http") === 0
+              ) {
                 return $http
-                  .get(scope.remoteRecord.remoteUrl, {
+                  .get(scope.singleSelectionModel.remoteRecord.remoteUrl, {
                     headers: { Accept: guessContentType() }
                   })
                   .then(
                     function (response) {
-                      scope.isRemoteRecordUrlOk = response.status === 200;
-                      if (scope.isRemoteRecordUrlOk) {
+                      scope.singleSelectionModel.isRemoteRecordUrlOk =
+                        response.status === 200;
+                      if (scope.singleSelectionModel.isRemoteRecordUrlOk) {
                         // Check we can retrieve title
-                        scope.isRemoteRecordPropertiesExtracted = getProperties(
-                          response.data
+                        var remoteRecordInfo = getProperties(
+                          response.data,
+                          scope.singleSelectionModel.remoteRecord.remoteUrl
                         );
-                        if (scope.isRemoteRecordPropertiesExtracted) {
-                          scope.updateSelection();
+                        scope.singleSelectionModel.isRemoteRecordPropertiesExtracted =
+                          !_.isEmpty(remoteRecordInfo);
+                        if (
+                          scope.singleSelectionModel.isRemoteRecordPropertiesExtracted
+                        ) {
+                          scope.singleSelectionModel.remoteRecord = remoteRecordInfo;
+                          scope.singleSelectionModel.resourceTitle =
+                            remoteRecordInfo.title;
                         }
                       }
                     },
                     function (response) {
-                      scope.isRemoteRecordUrlOk = response.status === 500;
+                      scope.singleSelectionModel.isRemoteRecordUrlOk =
+                        response.status === 500;
                     }
                   );
               }
             };
 
+            scope.updateSelectionAndTriggerSearch = function () {
+              // Ignore in multiple selection mode
+              if (scope.multipleSelection) return;
+
+              scope.updateSelection();
+              scope.triggerSearch();
+            };
+
             scope.updateSelection = function () {
+              // Ignore in multiple selection mode
+              if (scope.multipleSelection) return;
+
               if (scope.selectionList) {
-                scope.selectionList.length = 0;
-                scope.selectionList.push(scope.remoteRecord);
+                if (!scope.multipleSelection) {
+                  scope.selectionList.length = 0;
+                }
+                scope.selectionList.push(scope.singleSelectionModel.remoteRecord);
               } else if (angular.isFunction(scope.addToSelection)) {
                 // sibling mode
-                scope.remoteRecord.resourceTitle = scope.remoteRecord.title;
+                scope.singleSelectionModel.remoteRecord.resourceTitle =
+                  scope.singleSelectionModel.remoteRecord.title;
                 scope.addToSelection(
-                  scope.remoteRecord,
+                  scope.singleSelectionModel.remoteRecord,
                   scope.config.associationType,
                   scope.config.initiativeType
                 );
@@ -330,14 +498,18 @@
             };
 
             scope.resetLink = function (allProperties) {
+              // Ignore in multiple selection mode
+              if (scope.multipleSelection) return;
+
               scope.selectionList = angular.isDefined(scope.stateObj)
                 ? scope.stateObj.selectRecords
                 : scope.selectRecords;
-              scope.isRemoteRecordUrlOk = true;
-              scope.remoteRecord.title = "";
-              scope.remoteRecord.uuid = "";
+              scope.singleSelectionModel.isRemoteRecordUrlOk = true;
               if (allProperties) {
-                scope.remoteRecord.remoteUrl = "";
+                scope.singleSelectionModel.remoteRecord.remoteUrl = "";
+              } else {
+                scope.singleSelectionModel.remoteRecord.title = "";
+                scope.singleSelectionModel.remoteRecord.uuid = "";
               }
               clearSelection();
             };
@@ -394,13 +566,15 @@
       "gnConfigService",
       "$filter",
       "gnConfig",
+      "gnDoiService",
       function (
         gnOnlinesrc,
         gnCurrentEdit,
         gnRelatedResources,
         gnConfigService,
         $filter,
-        gnConfig
+        gnConfig,
+        gnDoiService
       ) {
         return {
           restrict: "A",
@@ -422,11 +596,10 @@
             scope.isMdWorkflowEnableForMetadata =
               gnConfig["metadata.workflow.enable"] &&
               scope.gnCurrentEdit.metadata.draft === "y";
-            scope.isDoiApplicableForMetadata =
-              gnConfig["system.publication.doi.doienabled"] &&
-              scope.gnCurrentEdit.metadata.isTemplate === "n" &&
-              scope.gnCurrentEdit.metadata.isPublished() &&
-              JSON.parse(scope.gnCurrentEdit.metadata.isHarvested) === false;
+            scope.isDoiApplicableForMetadata = gnDoiService.isDoiApplicableForMetadata(
+              scope.gnCurrentEdit.metadata
+            );
+            scope.canPublishDoiForResource = gnDoiService.canPublishDoiForResource;
 
             /**
              * Calls service 'relations.get' to load
@@ -448,24 +621,6 @@
               return angular.isUndefined(scope.types)
                 ? true
                 : category.match(scope.types) !== null;
-            };
-
-            /**
-             * Doi can be published for a resource if:
-             *   - Doi publication is enabled.
-             *   - The resource matches doi.org url
-             *   - The workflow is not enabled for the metadata and
-             *     the metadata is published.
-             *
-             */
-            scope.canPublishDoiForResource = function (resource) {
-              var doiKey = gnConfig["system.publication.doi.doikey"];
-              return (
-                scope.isDoiApplicableForMetadata &&
-                resource.lUrl !== null &&
-                resource.lUrl.match("doi.org/" + doiKey) !== null &&
-                !scope.isMdWorkflowEnableForMetadata
-              );
             };
 
             /**
@@ -586,7 +741,7 @@
         return {
           restrict: "A",
           templateUrl:
-            "../../catalog/components/edit/onlinesrc/" + "partials/addOnlinesrc.html",
+            "../../catalog/components/edit/onlinesrc/partials/addOnlinesrc.html",
           link: {
             pre: function preLink(scope) {
               scope.searchObj = {
@@ -609,7 +764,7 @@
 
               scope.config = null;
               scope.linkType = null;
-
+              scope.linkTypeGroupFilter = null;
               scope.loaded = false;
               scope.layers = null;
               scope.capabilitiesLayers = null;
@@ -623,6 +778,13 @@
                 params: {
                   sortBy: "resourceTitleObject.default.sort"
                 }
+              };
+
+              scope.filterTypeChoices = function (type) {
+                if (!scope.linkTypeGroupFilter) {
+                  return true;
+                }
+                return type.group.match(new RegExp(scope.linkTypeGroupFilter)) != null;
               };
 
               // This object is used to share value between this
@@ -675,7 +837,6 @@
                 //   });
                 // }
                 // Add each WMS layer to the map
-                scope.layers = scope.gnCurrentEdit.layerConfig;
                 angular.forEach(scope.gnCurrentEdit.layerConfig, function (layer) {
                   scope.map.addLayer(
                     new ol.layer.Tile({
@@ -739,8 +900,8 @@
                       }
                     }
                   )
-                  .then(function () {
-                    $rootScope.$broadcast("gnFileStoreUploadDone");
+                  .then(function (response) {
+                    $rootScope.$broadcast("gnFileStoreUploadDone", response.data.url);
                   });
               };
 
@@ -870,6 +1031,7 @@
               gnOnlinesrc.register("onlinesrc", function (linkToEditOrType) {
                 var linkToEdit = undefined,
                   linkType = undefined;
+
                 if (angular.isDefined(linkToEditOrType)) {
                   if (angular.isObject(linkToEditOrType)) {
                     linkToEdit = linkToEditOrType;
@@ -879,6 +1041,14 @@
                 }
 
                 scope.isEditing = angular.isDefined(linkToEdit);
+
+                // In edit mode or in add mode when the link type is provided and
+                // it's not the default addOnlinesrc value, can't be edited
+                scope.isEditableLinkType =
+                  !scope.isEditing &&
+                  (!angular.isDefined(linkType) ||
+                    linkType.indexOf("addOnlinesrc") === 0);
+
                 // Flag used when editing an online resource to prevent the watcher to update the online
                 // resource description when loading the dialog.
                 scope.processSelectedWMSLayer = false;
@@ -897,7 +1067,14 @@
                         return t;
                       }
                     }
-                    return scope.config.types[0];
+                    return scope.config.types.filter(scope.filterTypeChoices)[0];
+                  }
+
+                  // LinkType may describe an additional group filter
+                  if (linkType && linkType.indexOf("#")) {
+                    var linkTypeConfig = linkType.split("#");
+                    linkType = linkTypeConfig[0];
+                    scope.linkTypeGroupFilter = linkTypeConfig[1];
                   }
 
                   var typeConfig = linkToEdit
@@ -964,6 +1141,8 @@
                       }
                     }
                     scope.editingKey = [keyUrl, linkToEdit.protocol, keyName].join("");
+                    scope.editingIdx = linkToEdit.idx;
+                    scope.editingHash = linkToEdit.hash;
 
                     scope.OGCProtocol = checkIsOgc(linkToEdit.protocol);
 
@@ -1012,6 +1191,8 @@
                     };
                   } else {
                     scope.editingKey = null;
+                    scope.editingIdx = null;
+                    scope.editingHash = null;
                     scope.params.linkType = typeConfig;
                     scope.params.protocol = null;
                     scope.params.mimeType = "";
@@ -1203,6 +1384,8 @@
 
                 if (scope.isEditing) {
                   processParams.updateKey = scope.editingKey;
+                  processParams.resourceIdx = scope.editingIdx;
+                  processParams.resourceHash = scope.editingHash;
                 }
 
                 // Add list of layers for WMS
@@ -1232,6 +1415,14 @@
               scope.onAddSuccess = function () {
                 gnEditor.refreshEditorForm();
                 scope.onlinesrcService.reload = true;
+              };
+
+              scope.isUrlEmpty = function () {
+                var url = scope.params.url;
+                if (angular.isObject(url)) {
+                  url = url[scope.ctrl.urlCurLang];
+                }
+                return (url || "") === "";
               };
 
               /**
@@ -1575,10 +1766,9 @@
               scope.selectUploadedResource = function (res) {
                 if (res && res.url) {
                   var o = {
-                    name: decodeURI(res.id.split("/").splice(2).join("/")),
                     url: res.url
                   };
-                  ["url", "name"].forEach(function (pName) {
+                  ["url"].forEach(function (pName) {
                     setParameterValue(pName, o[pName]);
                   });
                   scope.params.protocol = scope.params.protocol || "WWW:DOWNLOAD";
@@ -1683,7 +1873,15 @@
                 scope.onlineSrcLink = "";
                 scope.addOnlineSrcInDataset = true;
 
-                gnOnlinesrc.register(scope.mode, function () {
+                gnOnlinesrc.register(scope.mode, function (config) {
+                  if (config && !angular.isObject(config)) {
+                    config = angular.fromJson(config);
+                  }
+
+                  scope.config = {
+                    sources: config && config.sources
+                  };
+
                   $(scope.popupid).modal("show");
 
                   // parameters of the online resource form
@@ -1697,7 +1895,7 @@
                   } else {
                     // Any records which are not services
                     // ie. dataset, series, ...
-                    searchParams["-type"] = "service";
+                    searchParams["-resourceType"] = "service";
                   }
                   scope.$broadcast("resetSearch", searchParams);
                   scope.layers = [];
@@ -1785,6 +1983,18 @@
                         );
                       }
                     });
+                  }
+                };
+
+                scope.addToSelection = function (record) {
+                  scope.stateObj.selectRecords.length = 0;
+                  scope.stateObj.selectRecords.push(record);
+                };
+
+                scope.removeFromSelection = function (record) {
+                  var index = scope.stateObj.selectRecords.indexOf(record);
+                  if (index > -1) {
+                    scope.stateObj.selectRecords.splice(index, 1);
                   }
                 };
 
@@ -1916,8 +2126,7 @@
         return {
           restrict: "A",
           scope: {},
-          templateUrl:
-            "../../catalog/components/edit/onlinesrc/" + "partials/linkToMd.html",
+          templateUrl: "../../catalog/components/edit/onlinesrc/partials/linkToMd.html",
           compile: function compile(tElement, tAttrs, transclude) {
             return {
               pre: function preLink(scope) {
@@ -1927,6 +2136,7 @@
                   params: {}
                 };
                 scope.modelOptions = angular.copy(gnGlobalSettings.modelOptions);
+                scope.selectRecords = [];
               },
               post: function postLink(scope, iElement, iAttrs) {
                 scope.mode = iAttrs["gnLinkToMetadata"];
@@ -1944,7 +2154,12 @@
                  * @returns {boolean}
                  */
                 scope.canEnableLinkButton = function (selectRecords) {
-                  if (selectRecords.length < 1) return false;
+                  if (
+                    !selectRecords ||
+                    !Array.isArray(selectRecords) ||
+                    selectRecords.length < 1
+                  )
+                    return false;
 
                   // Check if the metadata titles are defined
                   for (var i = 0; i < selectRecords.length; i++) {
@@ -1955,39 +2170,39 @@
                   return true;
                 };
 
+                scope.addToSelection = function (record) {
+                  scope.selectRecords.length = 0;
+                  scope.selectRecords.push(record);
+                };
+
+                scope.removeFromSelection = function (record) {
+                  var index = scope.selectRecords.indexOf(record);
+                  if (index > -1) {
+                    scope.selectRecords.splice(index, 1);
+                  }
+                };
+
                 /**
                  * Register a method on popup open to reset
                  * the search form and trigger a search.
                  */
-                gnOnlinesrc.register(scope.mode, function () {
-                  $(scope.popupid).modal("show");
-                  var searchParams = {};
-                  if (scope.mode === "fcats") {
-                    searchParams = {
-                      resourceType: "featureCatalog",
-                      isTemplate: "n"
-                    };
-                    scope.btn = {
-                      label: $translate.instant("linkToFeatureCatalog")
-                    };
-                  } else if (scope.mode === "parent") {
-                    searchParams = {
-                      isTemplate: "n"
-                    };
-                    scope.btn = {
-                      label: $translate.instant("linkToParent")
-                    };
-                  } else if (scope.mode === "source") {
-                    searchParams = {
-                      isTemplate: "n"
-                    };
-                    scope.btn = {
-                      label: $translate.instant("linkToSource")
-                    };
+                gnOnlinesrc.register(scope.mode, function (config) {
+                  if (config && !angular.isObject(config)) {
+                    config = angular.fromJson(config);
                   }
-                  scope.$broadcast("resetSearch", searchParams);
-                });
 
+                  scope.config = {
+                    sources: config && config.sources
+                  };
+
+                  $(scope.popupid).modal("show");
+                  var searchParams =
+                    scope.config.sources && scope.config.sources.metadataStore
+                      ? scope.config.sources.metadataStore.params || {}
+                      : {};
+                  scope.$broadcast("resetSearch", searchParams);
+                  scope.selectRecords = [];
+                });
                 scope.gnOnlinesrc = gnOnlinesrc;
               }
             };
@@ -2064,20 +2279,23 @@
                  * Register a method on popup open to reset
                  * the search form and trigger a search.
                  */
-                gnOnlinesrc.register("sibling", function (config) {
+                gnOnlinesrc.register("siblings", function (config) {
                   if (config && !angular.isObject(config)) {
                     config = angular.fromJson(config);
                   }
 
                   scope.config = {
                     associationTypeForced: angular.isDefined(
-                      config && config.associationType
+                      config && config.fields && config.fields.associationType
                     ),
-                    associationType: (config && config.associationType) || null,
+                    associationType:
+                      (config && config.fields && config.fields.associationType) || null,
                     initiativeTypeForced: angular.isDefined(
-                      config && config.initiativeType
+                      config && config.fields && config.fields.initiativeType
                     ),
-                    initiativeType: (config && config.initiativeType) || null
+                    initiativeType:
+                      (config && config.fields && config.fields.initiativeType) || null,
+                    sources: config && config.sources
                   };
 
                   $(scope.popupid).modal("show");
@@ -2151,7 +2369,7 @@
                 /**
                  * Add the result metadata to the selection.
                  * Add it only it associationType & initiativeType are set.
-                 * If the metadata alreay exists, it override it with the new
+                 * If the metadata already exists, it overrides it with the new
                  * given associationType/initiativeType.
                  */
                 scope.addToSelection = function (md, associationType, initiativeType) {
@@ -2216,6 +2434,105 @@
                   return gnOnlinesrc.linkToSibling(params, scope.popupid);
                 };
               }
+            };
+          }
+        };
+      }
+    ])
+
+    /**
+     * @ngdoc directive
+     * @name gn_onlinesrc.directive:gnDoiSearchPanel
+     * @restrict A
+     * @requires gnOnlinesrc
+     *
+     * @description
+     * The `gnDoiSearchPanel` directive provides a form to search and link DOI resources
+     * to the current metadata.
+     */
+    .directive("gnDoiSearchPanel", [
+      "gnDoiSearchService",
+      function (gnDoiSearchService) {
+        return {
+          restrict: "A",
+          replace: true,
+          scope: {
+            doiUrl: "=?",
+            doiPrefix: "=?",
+            doiQueryPattern: "=?",
+            mode: "@",
+            addToSelectionCb: "&?",
+            removeFromSelectionCb: "&?"
+          },
+          templateUrl:
+            "../../catalog/components/edit/onlinesrc/" + "partials/doisearchpanel.html",
+          link: function (scope, element, attrs) {
+            // select (single value) / add mode (used in siblings dialog)
+            scope.mode = scope.mode || "select";
+            scope.updateSelection = angular.isFunction(scope.addToSelectionCb)
+              ? function (md) {
+                  if (scope.isSelected(md)) {
+                    scope.selectedMd = null;
+                    if (angular.isFunction(scope.removeFromSelectionCb)) {
+                      scope.removeFromSelectionCb({ record: md });
+                    }
+                  } else {
+                    scope.selectedMd = md;
+                    scope.addToSelectionCb({ record: md });
+                  }
+                }
+              : undefined;
+
+            scope.isSelected = function (md) {
+              return md == scope.selectedMd;
+            };
+
+            scope.queryValue = "";
+            scope.isSearching = false;
+
+            scope.clearSearch = function () {
+              scope.queryValue = "";
+              scope.results = [];
+            };
+
+            scope.$on("resetSearch", scope.clearSearch);
+
+            scope.search = function () {
+              var searchQuery =
+                scope.queryValue !== ""
+                  ? scope.doiQueryPattern.replaceAll("{query}", scope.queryValue)
+                  : "";
+              scope.isSearching = true;
+              gnDoiSearchService.search(scope.doiUrl, scope.doiPrefix, searchQuery).then(
+                function (response) {
+                  scope.isSearching = false;
+                  var results = [];
+
+                  angular.forEach(response.data.data, function (r) {
+                    results.push({
+                      uuid: r.id,
+                      remoteUrl: r.attributes.url,
+                      resourceTitle:
+                        r.attributes.titles.length > 0
+                          ? r.attributes.titles[0].title
+                          : r.url,
+                      title:
+                        r.attributes.titles.length > 0
+                          ? r.attributes.titles[0].title
+                          : r.url,
+                      description:
+                        r.attributes.descriptions.length > 0
+                          ? r.attributes.descriptions[0].descriptions
+                          : ""
+                    });
+                  });
+
+                  scope.results = results;
+                },
+                function (response) {
+                  scope.isSearching = false;
+                }
+              );
             };
           }
         };

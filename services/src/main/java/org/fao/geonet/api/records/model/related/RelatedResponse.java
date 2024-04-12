@@ -1,3 +1,26 @@
+/*
+ * Copyright (C) 2001-2024 Food and Agriculture Organization of the
+ * United Nations (FAO-UN), United Nations World Food Programme (WFP)
+ * and United Nations Environment Programme (UNEP)
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or (at
+ * your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+ *
+ * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+ * Rome - Italy. email: geonetwork@osgeo.org
+ */
+
 package org.fao.geonet.api.records.model.related;
 
 
@@ -8,6 +31,7 @@ import javax.xml.bind.annotation.XmlType;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * <p>Java class for relatedResponse complex type.
@@ -174,150 +198,150 @@ import java.util.List;
 @XmlRootElement(name = "related")
 public class RelatedResponse {
 
-    protected RelatedResponse.Children children;
-    protected RelatedResponse.Parent parent;
-    protected RelatedResponse.Siblings siblings;
-    protected RelatedResponse.Associated associated;
-    protected RelatedResponse.Service services;
-    protected RelatedResponse.Dataset datasets;
-    protected RelatedResponse.Fcat fcats;
-    protected RelatedResponse.Hasfeaturecats hasfeaturecats;
-    protected RelatedResponse.Source sources;
-    protected RelatedResponse.Hassource hassources;
-    protected RelatedResponse.Related related;
-    protected RelatedResponse.Online onlines;
-    protected RelatedResponse.Thumbnail thumbnails;
+    protected Children children;
+    protected Parent parent;
+    protected Siblings siblings;
+    protected Associated associated;
+    protected Service services;
+    protected Dataset datasets;
+    protected Fcat fcats;
+    protected Hasfeaturecats hasfeaturecats;
+    protected Source sources;
+    protected Hassource hassources;
+    protected Related related;
+    protected Online onlines;
+    protected Thumbnail thumbnails;
 
     /**
      * Gets the value of the children property.
      *
-     * @return possible object is {@link RelatedResponse.Children }
+     * @return possible object is {@link Children }
      */
-    public RelatedResponse.Children getChildren() {
+    public Children getChildren() {
         return children;
     }
 
     /**
      * Sets the value of the children property.
      *
-     * @param value allowed object is {@link RelatedResponse.Children }
+     * @param value allowed object is {@link Children }
      */
-    public void setChildren(RelatedResponse.Children value) {
+    public void setChildren(Children value) {
         this.children = value;
     }
 
     /**
      * Gets the value of the parent property.
      *
-     * @return possible object is {@link RelatedResponse.Parent }
+     * @return possible object is {@link Parent }
      */
-    public RelatedResponse.Parent getParent() {
+    public Parent getParent() {
         return parent;
     }
 
     /**
      * Sets the value of the parent property.
      *
-     * @param value allowed object is {@link RelatedResponse.Parent }
+     * @param value allowed object is {@link Parent }
      */
-    public void setParent(RelatedResponse.Parent value) {
+    public void setParent(Parent value) {
         this.parent = value;
     }
 
     /**
      * Gets the value of the siblings property.
      *
-     * @return possible object is {@link RelatedResponse.Siblings }
+     * @return possible object is {@link Siblings }
      */
-    public RelatedResponse.Siblings getSiblings() {
+    public Siblings getSiblings() {
         return siblings;
     }
 
     /**
      * Sets the value of the siblings property.
      *
-     * @param value allowed object is {@link RelatedResponse.Siblings }
+     * @param value allowed object is {@link Siblings }
      */
-    public void setSiblings(RelatedResponse.Siblings value) {
+    public void setSiblings(Siblings value) {
         this.siblings = value;
     }
 
     /**
      * Gets the value of the associated property.
      *
-     * @return possible object is {@link RelatedResponse.Associated }
+     * @return possible object is {@link Associated }
      */
-    public RelatedResponse.Associated getAssociated() {
+    public Associated getAssociated() {
         return associated;
     }
 
     /**
      * Sets the value of the associated property.
      *
-     * @param value allowed object is {@link RelatedResponse.Associated }
+     * @param value allowed object is {@link Associated }
      */
-    public void setAssociated(RelatedResponse.Associated value) {
+    public void setAssociated(Associated value) {
         this.associated = value;
     }
 
     /**
      * Gets the value of the service property.
      *
-     * @return possible object is {@link RelatedResponse.Service }
+     * @return possible object is {@link Service }
      */
-    public RelatedResponse.Service getServices() {
+    public Service getServices() {
         return services;
     }
 
     /**
      * Sets the value of the service property.
      *
-     * @param value allowed object is {@link RelatedResponse.Service }
+     * @param value allowed object is {@link Service }
      */
-    public void setServices(RelatedResponse.Service value) {
+    public void setServices(Service value) {
         this.services = value;
     }
 
     /**
      * Gets the value of the dataset property.
      *
-     * @return possible object is {@link RelatedResponse.Dataset }
+     * @return possible object is {@link Dataset }
      */
-    public RelatedResponse.Dataset getDatasets() {
+    public Dataset getDatasets() {
         return datasets;
     }
 
     /**
      * Sets the value of the dataset property.
      *
-     * @param value allowed object is {@link RelatedResponse.Dataset }
+     * @param value allowed object is {@link Dataset }
      */
-    public void setDatasets(RelatedResponse.Dataset value) {
+    public void setDatasets(Dataset value) {
         this.datasets = value;
     }
 
     /**
      * Gets the value of the fcat property.
      *
-     * @return possible object is {@link RelatedResponse.Fcat }
+     * @return possible object is {@link Fcat }
      */
-    public RelatedResponse.Fcat getFcats() {
+    public Fcat getFcats() {
         return fcats;
     }
 
     /**
      * Sets the value of the fcat property.
      *
-     * @param value allowed object is {@link RelatedResponse.Fcat }
+     * @param value allowed object is {@link Fcat }
      */
-    public void setFcats(RelatedResponse.Fcat value) {
+    public void setFcats(Fcat value) {
         this.fcats = value;
     }
 
     /**
      * Gets the value of the hasfeaturecats property.
      *
-     * @return possible object is {@link RelatedResponse.Hasfeaturecats }
+     * @return possible object is {@link Hasfeaturecats }
      */
     public Hasfeaturecats getHasfeaturecats() {
         return hasfeaturecats;
@@ -326,99 +350,99 @@ public class RelatedResponse {
     /**
      * Sets the value of the hasfeaturecats property.
      *
-     * @param value allowed object is {@link RelatedResponse.Hasfeaturecats }
+     * @param value allowed object is {@link Hasfeaturecats }
      */
-    public void setHasfeaturecats(RelatedResponse.Hasfeaturecats value) {
+    public void setHasfeaturecats(Hasfeaturecats value) {
         this.hasfeaturecats = value;
     }
 
     /**
      * Gets the value of the source property.
      *
-     * @return possible object is {@link RelatedResponse.Source }
+     * @return possible object is {@link Source }
      */
-    public RelatedResponse.Source getSources() {
+    public Source getSources() {
         return sources;
     }
 
     /**
      * Sets the value of the source property.
      *
-     * @param value allowed object is {@link RelatedResponse.Source }
+     * @param value allowed object is {@link Source }
      */
-    public void setSources(RelatedResponse.Source value) {
+    public void setSources(Source value) {
         this.sources = value;
     }
 
     /**
      * Gets the value of the hassource property.
      *
-     * @return possible object is {@link RelatedResponse.Hassource }
+     * @return possible object is {@link Hassource }
      */
-    public RelatedResponse.Hassource getHassources() {
+    public Hassource getHassources() {
         return hassources;
     }
 
     /**
      * Sets the value of the hassource property.
      *
-     * @param value allowed object is {@link RelatedResponse.Hassource }
+     * @param value allowed object is {@link Hassource }
      */
-    public void setHassources(RelatedResponse.Hassource value) {
+    public void setHassources(Hassource value) {
         this.hassources = value;
     }
 
     /**
      * Gets the value of the related property.
      *
-     * @return possible object is {@link RelatedResponse.Related }
+     * @return possible object is {@link Related }
      */
-    public RelatedResponse.Related getRelated() {
+    public Related getRelated() {
         return related;
     }
 
     /**
      * Sets the value of the related property.
      *
-     * @param value allowed object is {@link RelatedResponse.Related }
+     * @param value allowed object is {@link Related }
      */
-    public void setRelated(RelatedResponse.Related value) {
+    public void setRelated(Related value) {
         this.related = value;
     }
 
     /**
      * Gets the value of the online property.
      *
-     * @return possible object is {@link RelatedResponse.Online }
+     * @return possible object is {@link Online }
      */
-    public RelatedResponse.Online getOnlines() {
+    public Online getOnlines() {
         return onlines;
     }
 
     /**
      * Sets the value of the online property.
      *
-     * @param value allowed object is {@link RelatedResponse.Online }
+     * @param value allowed object is {@link Online }
      */
-    public void setOnlines(RelatedResponse.Online value) {
+    public void setOnlines(Online value) {
         this.onlines = value;
     }
 
     /**
      * Gets the value of the thumbnail property.
      *
-     * @return possible object is {@link RelatedResponse.Thumbnail }
+     * @return possible object is {@link Thumbnail }
      */
-    public RelatedResponse.Thumbnail getThumbnails() {
+    public Thumbnail getThumbnails() {
         return thumbnails;
     }
 
     /**
      * Sets the value of the thumbnail property.
      *
-     * @param value allowed object is {@link RelatedResponse.Thumbnail }
+     * @param value allowed object is {@link Thumbnail }
      */
-    public void setThumbnails(RelatedResponse.Thumbnail value) {
+    public void setThumbnails(Thumbnail value) {
         this.thumbnails = value;
     }
 
@@ -452,7 +476,7 @@ public class RelatedResponse {
         /**
          * Gets the value of the item property.
          *
-         * <p> This accessor method returns a reference to the live list, not a snapshot. Therefore
+         * <p> This accessor method returns a reference to the live list, not a snapshot. Therefor
          * any modification you make to the returned list will be present inside the JAXB object.
          * This is why there is not a <CODE>set</CODE> method for the item property.
          *
@@ -467,7 +491,7 @@ public class RelatedResponse {
          */
         public List<AssociatedSiblingMetadataItem> getItem() {
             if (item == null) {
-                item = new ArrayList<AssociatedSiblingMetadataItem>();
+                item = new ArrayList<>();
             }
             return this.item;
         }
@@ -504,7 +528,7 @@ public class RelatedResponse {
         /**
          * Gets the value of the item property.
          *
-         * <p> This accessor method returns a reference to the live list, not a snapshot. Therefore
+         * <p> This accessor method returns a reference to the live list, not a snapshot. Therefor
          * any modification you make to the returned list will be present inside the JAXB object.
          * This is why there is not a <CODE>set</CODE> method for the item property.
          *
@@ -519,7 +543,7 @@ public class RelatedResponse {
          */
         public List<RelatedMetadataItem> getItem() {
             if (item == null) {
-                item = new ArrayList<RelatedMetadataItem>();
+                item = new ArrayList<>();
             }
             return this.item;
         }
@@ -556,7 +580,7 @@ public class RelatedResponse {
         /**
          * Gets the value of the item property.
          *
-         * <p> This accessor method returns a reference to the live list, not a snapshot. Therefore
+         * <p> This accessor method returns a reference to the live list, not a snapshot. Therefor
          * any modification you make to the returned list will be present inside the JAXB object.
          * This is why there is not a <CODE>set</CODE> method for the item property.
          *
@@ -571,7 +595,7 @@ public class RelatedResponse {
          */
         public List<RelatedMetadataItem> getItem() {
             if (item == null) {
-                item = new ArrayList<RelatedMetadataItem>();
+                item = new ArrayList<>();
             }
             return this.item;
         }
@@ -608,7 +632,7 @@ public class RelatedResponse {
         /**
          * Gets the value of the item property.
          *
-         * <p> This accessor method returns a reference to the live list, not a snapshot. Therefore
+         * <p> This accessor method returns a reference to the live list, not a snapshot. Therefor
          * any modification you make to the returned list will be present inside the JAXB object.
          * This is why there is not a <CODE>set</CODE> method for the item property.
          *
@@ -623,7 +647,7 @@ public class RelatedResponse {
          */
         public List<FCRelatedMetadataItem> getItem() {
             if (item == null) {
-                item = new ArrayList<FCRelatedMetadataItem>();
+                item = new ArrayList<>();
             }
             return this.item;
         }
@@ -660,7 +684,7 @@ public class RelatedResponse {
         /**
          * Gets the value of the item property.
          *
-         * <p> This accessor method returns a reference to the live list, not a snapshot. Therefore
+         * <p> This accessor method returns a reference to the live list, not a snapshot. Therefor
          * any modification you make to the returned list will be present inside the JAXB object.
          * This is why there is not a <CODE>set</CODE> method for the item property.
          *
@@ -675,7 +699,7 @@ public class RelatedResponse {
          */
         public List<RelatedMetadataItem> getItem() {
             if (item == null) {
-                item = new ArrayList<RelatedMetadataItem>();
+                item = new ArrayList<>();
             }
             return this.item;
         }
@@ -710,7 +734,7 @@ public class RelatedResponse {
         /**
          * Gets the value of the item property.
          *
-         * <p> This accessor method returns a reference to the live list, not a snapshot. Therefore
+         * <p> This accessor method returns a reference to the live list, not a snapshot. Therefor
          * any modification you make to the returned list will be present inside the JAXB object.
          * This is why there is not a <CODE>set</CODE> method for the item property.
          *
@@ -725,7 +749,7 @@ public class RelatedResponse {
          */
         public List<RelatedMetadataItem> getItem() {
             if (item == null) {
-                item = new ArrayList<RelatedMetadataItem>();
+                item = new ArrayList<>();
             }
             return this.item;
         }
@@ -762,7 +786,7 @@ public class RelatedResponse {
         /**
          * Gets the value of the item property.
          *
-         * <p> This accessor method returns a reference to the live list, not a snapshot. Therefore
+         * <p> This accessor method returns a reference to the live list, not a snapshot. Therefor
          * any modification you make to the returned list will be present inside the JAXB object.
          * This is why there is not a <CODE>set</CODE> method for the item property.
          *
@@ -776,7 +800,7 @@ public class RelatedResponse {
          */
         public List<RelatedLinkItem> getItem() {
             if (item == null) {
-                item = new ArrayList<RelatedLinkItem>();
+                item = new ArrayList<>();
             }
             return this.item;
         }
@@ -813,7 +837,7 @@ public class RelatedResponse {
         /**
          * Gets the value of the item property.
          *
-         * <p> This accessor method returns a reference to the live list, not a snapshot. Therefore
+         * <p> This accessor method returns a reference to the live list, not a snapshot. Therefor
          * any modification you make to the returned list will be present inside the JAXB object.
          * This is why there is not a <CODE>set</CODE> method for the item property.
          *
@@ -828,7 +852,7 @@ public class RelatedResponse {
          */
         public List<RelatedMetadataItem> getItem() {
             if (item == null) {
-                item = new ArrayList<RelatedMetadataItem>();
+                item = new ArrayList<>();
             }
             return this.item;
         }
@@ -865,7 +889,7 @@ public class RelatedResponse {
         /**
          * Gets the value of the item property.
          *
-         * <p> This accessor method returns a reference to the live list, not a snapshot. Therefore
+         * <p> This accessor method returns a reference to the live list, not a snapshot. Therefor
          * any modification you make to the returned list will be present inside the JAXB object.
          * This is why there is not a <CODE>set</CODE> method for the item property.
          *
@@ -880,7 +904,7 @@ public class RelatedResponse {
          */
         public List<RelatedMetadataItem> getItem() {
             if (item == null) {
-                item = new ArrayList<RelatedMetadataItem>();
+                item = new ArrayList<>();
             }
             return this.item;
         }
@@ -917,7 +941,7 @@ public class RelatedResponse {
         /**
          * Gets the value of the item property.
          *
-         * <p> This accessor method returns a reference to the live list, not a snapshot. Therefore
+         * <p> This accessor method returns a reference to the live list, not a snapshot. Therefor
          * any modification you make to the returned list will be present inside the JAXB object.
          * This is why there is not a <CODE>set</CODE> method for the item property.
          *
@@ -932,7 +956,7 @@ public class RelatedResponse {
          */
         public List<RelatedMetadataItem> getItem() {
             if (item == null) {
-                item = new ArrayList<RelatedMetadataItem>();
+                item = new ArrayList<>();
             }
             return this.item;
         }
@@ -969,7 +993,7 @@ public class RelatedResponse {
         /**
          * Gets the value of the item property.
          *
-         * <p> This accessor method returns a reference to the live list, not a snapshot. Therefore
+         * <p> This accessor method returns a reference to the live list, not a snapshot. Therefor
          * any modification you make to the returned list will be present inside the JAXB object.
          * This is why there is not a <CODE>set</CODE> method for the item property.
          *
@@ -984,7 +1008,7 @@ public class RelatedResponse {
          */
         public List<RelatedSiblingMetadataItem> getItem() {
             if (item == null) {
-                item = new ArrayList<RelatedSiblingMetadataItem>();
+                item = new ArrayList<>();
             }
             return this.item;
         }
@@ -1014,6 +1038,8 @@ public class RelatedResponse {
     @XmlType(name = "", propOrder = {
         "item"
     })
+    // Use different schema name for source to resolve conflict with org.fao.geonet.domain.Source
+    @Schema(name = "RelatedSource")
     public static class Source implements IListOnlyClassToArray {
 
         protected List<RelatedMetadataItem> item;
@@ -1021,7 +1047,7 @@ public class RelatedResponse {
         /**
          * Gets the value of the item property.
          *
-         * <p> This accessor method returns a reference to the live list, not a snapshot. Therefore
+         * <p> This accessor method returns a reference to the live list, not a snapshot. Therefor
          * any modification you make to the returned list will be present inside the JAXB object.
          * This is why there is not a <CODE>set</CODE> method for the item property.
          *
@@ -1036,7 +1062,7 @@ public class RelatedResponse {
          */
         public List<RelatedMetadataItem> getItem() {
             if (item == null) {
-                item = new ArrayList<RelatedMetadataItem>();
+                item = new ArrayList<>();
             }
             return this.item;
         }
@@ -1073,7 +1099,7 @@ public class RelatedResponse {
         /**
          * Gets the value of the item property.
          *
-         * <p> This accessor method returns a reference to the live list, not a snapshot. Therefore
+         * <p> This accessor method returns a reference to the live list, not a snapshot. Therefor
          * any modification you make to the returned list will be present inside the JAXB object.
          * This is why there is not a <CODE>set</CODE> method for the item property.
          *
@@ -1088,7 +1114,7 @@ public class RelatedResponse {
          */
         public List<RelatedThumbnailItem> getItem() {
             if (item == null) {
-                item = new ArrayList<RelatedThumbnailItem>();
+                item = new ArrayList<>();
             }
             return this.item;
         }
