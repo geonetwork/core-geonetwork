@@ -1973,7 +1973,7 @@ This field facilitates users in selecting a `subtemplate` (also known as xml-sni
 but can also be used to store snippets of xml having Quality reports, Access constraints, CRS definitions, etc.
 
                   
-`data-insert-modes` can be `test` and/or `xlink` depending on how the subtemplate is encoded. 
+`data-insert-modes` can be `text` and/or `xlink` depending on how the subtemplate is encoded. 
 Contact can be forced to be `xlink` but some other type of subtemplates (eg. DQ report) are usually just simple default values 
 that need to be detailed by editors and in that case `text` mode is recommended. For `xlink`, the XLink resolver needs to be enabled in the admin settings.
 
