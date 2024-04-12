@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2007 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2024 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -26,6 +26,7 @@ package org.fao.geonet.kernel.harvest.harvester;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
@@ -41,7 +42,7 @@ import jeeves.server.context.ServiceContext;
  */
 
 public class UriMapper {
-    private HashMap<String, List<RecordInfo>> hmUriRecords = new HashMap<String, List<RecordInfo>>();
+    private HashMap<String, List<RecordInfo>> hmUriRecords = new HashMap<>();
 
     //--------------------------------------------------------------------------
     //---
@@ -49,21 +50,21 @@ public class UriMapper {
     //---
     //--------------------------------------------------------------------------
 
-    public UriMapper(ServiceContext context, String harvestUuid) throws Exception {
+    public UriMapper(ServiceContext context, String harvestUuid) {
         final IMetadataUtils metadataRepository = context.getBean(IMetadataUtils.class);
         final List<? extends AbstractMetadata> metadataList = metadataRepository.findAll(MetadataSpecs.hasHarvesterUuid(harvestUuid));
 
-        for (AbstractMetadata record : metadataList) {
-            String uri = record.getHarvestInfo().getUri();
+        for (AbstractMetadata metadataRecord : metadataList) {
+            String uri = Optional.ofNullable(metadataRecord.getHarvestInfo().getUri()).orElse("");
 
-            List<RecordInfo> records = hmUriRecords.get(uri);
+            List<RecordInfo> records = hmUriRecords.computeIfAbsent(uri, k -> new ArrayList<>());
 
             if (records == null) {
-                records = new ArrayList<RecordInfo>();
+                records = new ArrayList<>();
                 hmUriRecords.put(uri, records);
             }
 
-            records.add(new RecordInfo(record));
+            records.add(new RecordInfo(metadataRecord));
         }
     }
 
