@@ -50,14 +50,14 @@ public class UriMapper {
     //---
     //--------------------------------------------------------------------------
 
-    public UriMapper(ServiceContext context, String harvestUuid)  {
+    public UriMapper(ServiceContext context, String harvestUuid) {
         final IMetadataUtils metadataRepository = context.getBean(IMetadataUtils.class);
         final List<? extends AbstractMetadata> metadataList = metadataRepository.findAll(MetadataSpecs.hasHarvesterUuid(harvestUuid));
 
         for (AbstractMetadata metadataRecord : metadataList) {
             String uri = Optional.ofNullable(metadataRecord.getHarvestInfo().getUri()).orElse("");
 
-            List<RecordInfo> records = hmUriRecords.computeIfAbsent(uri,k-> new ArrayList<>() );
+            List<RecordInfo> records = hmUriRecords.computeIfAbsent(uri, k -> new ArrayList<>());
 
             if (records == null) {
                 records = new ArrayList<>();
