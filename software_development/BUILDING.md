@@ -125,7 +125,7 @@ To run GeoNetwork with the embedded Jetty server:
 
    ```
    cd web
-   mvn jetty:run -Penv-dev
+   mvn jetty:run
    ```
 
 2. After a moment, GeoNetwork is available at: http://localhost:8080/geonetwork

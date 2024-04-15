@@ -1278,6 +1278,19 @@
       </properties>
     </profile>
     <profile>
+      <id>env-ui</id>
+      <activation>
+        <property> <!-- -Denv=ui -->
+          <name>env</name>
+          <value>ui</value>
+        </property>
+      </activation>
+      <properties>
+        <env>ui</env>
+        <wro.debug>true</wro.debug>
+      </properties>
+    </profile>
+    <profile>
       <id>env-inspire</id>
       <activation> <!-- -Denv=inspire -->
         <property>
