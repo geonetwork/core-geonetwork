@@ -26,9 +26,19 @@ jobs:
         with:
           python-version: 3.x
       - name: mkdocs install
-        run: pip install --upgrade pip && pip install -r docs/manual/requirements.txt
+        run: |
+          pip install --upgrade pip && pip install -r docs/manual/requirements.txt
       - name: git configuration
-        run: git config user.name 'github-actions[bot]' && git config user.email 'github-actions[bot]@users.noreply.github.com'
+        run: |
+          git config user.name 'github-actions[bot]' && git config user.email 'github-actions[bot]@users.noreply.github.com'
+      - name: check docs for warnings
+        working-directory: docs/manual
+        run: |
+          mkdocs build --no-directory-urls --strict
+      - name: check online help for warnings
+        working-directory: docs/manual
+        run: |
+          mkdocs build --no-directory-urls --strict --config-file help.yml
       - name: build docs without publishing them
         if: ${{ github.event_name == 'pull_request' }}
         working-directory: docs/manual
