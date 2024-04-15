@@ -270,7 +270,7 @@ nav:
     - 'Workflow':
       - user-guide/workflow/index.md
       - 'Updating a set of records':
-        - user-guide/workflow/batchupdate.md
+        - user-guide/workflow/batchupdate/index.md
         - user-guide/workflow/batchediting.md
         - user-guide/workflow/batchupdate-from-admin.md
         - user-guide/workflow/batchupdate-xsl.md
