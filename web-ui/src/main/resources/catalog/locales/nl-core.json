@@ -184,7 +184,7 @@
     "hitsPerPage": "Resultaten per pagina",
     "chooseRecordsPerPage": "Kies het aantal resultaten per pagina",
     "sortedBy": "Sortering: {{field}}",
-    "sortBy-dateStampDesc": "Laatste wijziging",
+    "sortBy-changeDateDesc": "Laatste wijziging",
     "sortBy-createDateDesc": "Aanmaak datum",
     "sortBy-resourceTitleObject.default.sort": "titel (oplopend)",
     "sortBy-resourceTitleObject.default.sortDesc": "titel (aflopend)",
