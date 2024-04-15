@@ -40,12 +40,12 @@ jobs:
         run: |
           mkdocs build --no-directory-urls --strict --config-file help.yml
       - name: build docs without publishing them
-        if: ${{ github.event_name == 'pull_request' }}
+        if: github.event_name == 'pull_request' || github.ref != 'refs/heads/main'
         working-directory: docs/manual
         run: |
           mike deploy --title "4.4 Latest" --alias-type=copy --update-aliases 4.4 latest
-      - name: deploy latest docs to gh-pages branch
-        if: ${{ github.event_name != 'pull_request' }}
+      - name: deploy main docs to gh-pages 4.4 latest
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
         working-directory: docs/manual
         run: |
           mike deploy --push --title "4.4 Latest" --alias-type=copy --update-aliases 4.4 latest
