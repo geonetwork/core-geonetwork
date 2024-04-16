@@ -1004,13 +1004,11 @@
           <webApp>
             <contextPath>${geonetwork.webapp.contextpath}</contextPath>
             <descriptor>${project.build.directory}/WEB-INF/web.xml</descriptor>
-            <baseResource implementation="org.eclipse.jetty.util.resource.ResourceCollection">
-              <resourcesAsCSV>
-                ${project.basedir}/src/main/webapp,
-                ${rootProjectDir}/web-ui/src/main/resources/,
-                ${build.webapp.resources}
-              </resourcesAsCSV>
-            </baseResource>
+            <resourceBases>
+              <resourceBase>${project.basedir}/src/main/webapp</resourceBase>
+              <resourceBase>${rootProjectDir}/web-ui/src/main/resources/</resourceBase>
+              <resourceBase>${build.webapp.resources}</resourceBase>
+            </resourceBases>
           </webApp>
           <systemProperties>
             <systemProperty>
