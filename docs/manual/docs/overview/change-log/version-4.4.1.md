@@ -2,15 +2,13 @@
 
 GeoNetwork 4.4.1 release is a minor release.
 
-## Migration notes
+## Update notes
 
-### Java
-
-**Version 4.4 only works on Java 11.**
+When updating please review the following actions:
 
 ### Index changes
 
-After update, don't forget to go to admin console --> tools --> Delete index and reindex.
+After updating use **Admin Console > Tools** and use **Delete index and reindex**.
 
 ## List of changes
 
