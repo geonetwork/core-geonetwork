@@ -54,6 +54,7 @@
     <xsl:namespace name="msr" select="'http://standards.iso.org/iso/19115/-3/msr/2.0'"/>
     <!-- Data Quality Measures (ISO 19157-2) -->
     <xsl:namespace name="mdq" select="'http://standards.iso.org/iso/19157/-2/mdq/1.0'"/>
+    <xsl:namespace name="dqm" select="'http://standards.iso.org/iso/19157/-2/dqm/1.0'"/>
     <!-- Metadata for Acquisition (ISO 19115-2) -->
     <xsl:namespace name="mac" select="'http://standards.iso.org/iso/19115/-3/mac/2.0'"/>
     <!-- other ISO namespaces -->
