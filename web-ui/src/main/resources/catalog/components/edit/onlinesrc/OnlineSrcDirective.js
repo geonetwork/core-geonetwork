@@ -656,6 +656,8 @@
                       }
                       scope.editingKey = [keyUrl, linkToEdit.protocol,
                         keyName].join('');
+                      scope.editingIdx = linkToEdit.idx;
+                      scope.editingHash = linkToEdit.hash;
 
                       scope.OGCProtocol = checkIsOgc(linkToEdit.protocol);
 
@@ -701,6 +703,8 @@
                       };
                     } else {
                       scope.editingKey = null;
+                      scope.editingIdx = null;
+                      scope.editingHash = null;
                       scope.params.linkType = typeConfig;
                       scope.params.protocol = null;
                       scope.params.name= '';
@@ -870,6 +874,8 @@
 
                   if (scope.isEditing) {
                     processParams.updateKey = scope.editingKey;
+                    processParams.resourceIdx = scope.editingIdx;
+                    processParams.resourceHash = scope.editingHash;
                   }
 
                   // Add list of layers for WMS

@@ -33,6 +33,7 @@
                 xmlns:gmx="http://www.isotc211.org/2005/gmx"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
                 xmlns:util="java:org.fao.geonet.util.XslUtil"
+                xmlns:exslt="http://exslt.org/common"
                 xmlns:gn-fn-rel="http://geonetwork-opensource.org/xsl/functions/relations"
                 version="2.0"
                 exclude-result-prefixes="#all">
@@ -84,7 +85,7 @@
   </xsl:template>
 
   <!-- Relation contained in the metadata record has to be returned
-  It could be document or thumbnails
+  It could be a document or thumbnails
   -->
   <xsl:template mode="relation"
                 match="metadata[gmd:MD_Metadata or *[contains(@gco:isoType, 'MD_Metadata')]]"
@@ -96,20 +97,26 @@
       </xsl:call-template>
     </xsl:variable>
 
-    <xsl:if test="count(*/descendant::*[name(.) = 'gmd:graphicOverview']/*) > 0">
+    <xsl:if test="count(*//gmd:graphicOverview) > 0">
       <thumbnails>
-        <xsl:for-each select="*/descendant::*[name(.) = 'gmd:graphicOverview']/*">
+        <xsl:for-each select="*//gmd:graphicOverview">
           <item>
             <id>
-              <xsl:value-of select="gmd:fileName/gco:CharacterString"/>
+              <xsl:value-of select="gmd:MD_BrowseGraphic/gmd:fileName/gco:CharacterString"/>
             </id>
+            <idx>
+              <xsl:value-of select="position()"/>
+            </idx>
+            <hash>
+              <xsl:value-of select="util:md5Hex(string(exslt:node-set(.)))"/>
+            </hash>
             <url>
               <xsl:apply-templates mode="get-iso19139-localized-string"
-                                   select="gmd:fileName"/>
+                                   select="gmd:MD_BrowseGraphic/gmd:fileName"/>
             </url>
             <title>
               <xsl:apply-templates mode="get-iso19139-localized-string"
-                                   select="gmd:fileDescription"/>
+                                   select="gmd:MD_BrowseGraphic/gmd:fileDescription"/>
             </title>
             <type>thumbnail</type>
           </item>
@@ -117,41 +124,56 @@
       </thumbnails>
     </xsl:if>
 
-    <xsl:if test="count(*/descendant::*[name(.) = 'gmd:onLine']/*[gmd:linkage/gmd:URL!='']) > 0">
+    <xsl:if test="count(*//gmd:MD_DigitalTransferOptions/gmd:onLine[gmd:CI_OnlineResource[gmd:linkage/gmd:URL!='']]) > 0">
       <onlines>
-        <xsl:for-each select="*/descendant::*[name(.) = 'gmd:onLine']/*[gmd:linkage/gmd:URL!='']">
-          <item>
-            <xsl:variable name="langCode">
-              <xsl:value-of select="concat('#', upper-case(util:twoCharLangCode($lang, 'EN')))"/>
-            </xsl:variable>
-            <xsl:variable name="url" select="gmd:linkage/gmd:URL"/>
-            <id>
-              <xsl:value-of select="$url"/>
-            </id>
-            <title>
-              <xsl:apply-templates mode="get-iso19139-localized-string"
-                                   select="gmd:name"/>
-            </title>
-            <url>
-              <value lang="{$mainLanguage}">
+        <xsl:for-each select="*//gmd:MD_DigitalTransferOptions/gmd:onLine">
+          <xsl:if test="gmd:CI_OnlineResource[gmd:linkage/gmd:URL!='']">
+            <item>
+              <xsl:variable name="langCode">
+                <xsl:value-of select="concat('#', upper-case(util:twoCharLangCode($lang, 'EN')))"/>
+              </xsl:variable>
+              <xsl:variable name="url" select="gmd:CI_OnlineResource/gmd:linkage/gmd:URL"/>
+              <id>
                 <xsl:value-of select="$url"/>
-              </value>
-            </url>
-            <function>
-              <xsl:value-of select="gmd:function/*/@codeListValue"/>
-            </function>
-            <applicationProfile>
-              <xsl:value-of select="gmd:applicationProfile/*/text()"/>
-            </applicationProfile>
-            <description>
-              <xsl:apply-templates mode="get-iso19139-localized-string"
-                                   select="gmd:description"/>
-            </description>
-            <protocol>
-              <xsl:value-of select="gn-fn-rel:translate(gmd:protocol, $langCode)"/>
-            </protocol>
-            <type>onlinesrc</type>
-          </item>
+              </id>
+              <idx>
+                <xsl:value-of select="position()"/>
+              </idx>
+              <hash>
+                <xsl:value-of select="util:md5Hex(string(exslt:node-set(.)))"/>
+              </hash>
+              <title>
+                <xsl:apply-templates mode="get-iso19139-localized-string"
+                                     select="gmd:CI_OnlineResource/gmd:name"/>
+              </title>
+              <url>
+                <value lang="{$mainLanguage}">
+                  <xsl:value-of select="$url"/>
+                </value>
+              </url>
+              <function>
+                <xsl:value-of select="gmd:CI_OnlineResource/gmd:function/*/@codeListValue"/>
+              </function>
+              <applicationProfile>
+                <xsl:value-of select="gmd:CI_OnlineResource/gmd:applicationProfile/*/text()"/>
+              </applicationProfile>
+              <description>
+                <xsl:apply-templates mode="get-iso19139-localized-string"
+                                     select="gmd:CI_OnlineResource/gmd:description"/>
+              </description>
+              <protocol>
+                <xsl:value-of select="gn-fn-rel:translate(gmd:CI_OnlineResource/gmd:protocol, $langCode)"/>
+              </protocol>
+              <mimeType>
+                <xsl:value-of select="if (gmd:CI_OnlineResource/*/gmx:MimeFileType)
+                                  then gmd:CI_OnlineResource/*/gmx:MimeFileType/@type
+                                  else if (starts-with(gmd:CI_OnlineResource/gmd:protocol/gco:CharacterString, 'WWW:DOWNLOAD:'))
+                                  then replace(gmd:CI_OnlineResource/gmd:protocol/gco:CharacterString, 'WWW:DOWNLOAD:', '')
+                                  else ''"/>
+              </mimeType>
+              <type>onlinesrc</type>
+            </item>
+          </xsl:if>
         </xsl:for-each>
       </onlines>
     </xsl:if>

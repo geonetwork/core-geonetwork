@@ -25,10 +25,19 @@
 <!--
 Processing to insert or update an online resource element.
 Insert is made in first transferOptions found.
+
+Note: It assumes that it will be adding new items in
+      the first /gmd:distributionInfo
+      and first /gmd:MD_Distribution
+      and first /gmd:transferOptions
 -->
 <xsl:stylesheet xmlns:gmd="http://www.isotc211.org/2005/gmd"
                 xmlns:gco="http://www.isotc211.org/2005/gco"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                xmlns:digestUtils="java:org.apache.commons.codec.digest.DigestUtils"
+                xmlns:exslt="http://exslt.org/common"
+                exclude-result-prefixes="#all"
                 version="2.0">
 
   <!-- Main properties for the link.
@@ -49,17 +58,29 @@ Insert is made in first transferOptions found.
   in this one. -->
   <xsl:param name="extra_metadata_uuid"/>
 
-  <!-- Target element to update. The key is based on the concatenation
-  of URL+Protocol+Name -->
-  <xsl:param name="updateKey"/>
+  <!-- Target element to update.
+      updateKey is used to identify the resource name to be updated - it is for backwards compatibility.  Will not be used if resourceHash is set.
+                The key is based on the concatenation of URL+Protocol+Name
+      resourceHash is hash value of the object to be removed which will ensure the correct value is removed. It will override the usage of updateKey
+      resourceIdx is the index location of the object to be removed - can be used when duplicate entries exists to ensure the correct one is removed.
+  -->
 
+  <xsl:param name="updateKey" select="''"/>
+  <xsl:param name="resourceHash" select="''"/>
+  <xsl:param name="resourceIdx" select="''"/>
+
+  <xsl:variable name="update_flag">
+    <xsl:value-of select="boolean($updateKey != '' or $resourceHash != '' or $resourceIdx != '')"/>
+  </xsl:variable>
 
   <xsl:variable name="mainLang">
     <xsl:value-of
       select="(gmd:MD_Metadata|*[@gco:isoType='gmd:MD_Metadata'])/gmd:language/gmd:LanguageCode/@codeListValue"/>
   </xsl:variable>
 
-  <xsl:template match="gmd:MD_Metadata|*[@gco:isoType='gmd:MD_Metadata']">
+  <!-- Add new gmd:onLine and consider cases where parent elements don't exist -->
+  <!--  <gmd:distributionInfo> does not exist-->
+  <xsl:template match="gmd:MD_Metadata[not(gmd:distributionInfo) and $update_flag = false()]|*[@gco:isoType='gmd:MD_Metadata' and not(gmd:distributionInfo) and $update_flag = false()]">
     <xsl:copy>
       <xsl:apply-templates select="@*"/>
       <xsl:apply-templates
@@ -83,40 +104,14 @@ Insert is made in first transferOptions found.
 
       <gmd:distributionInfo>
         <gmd:MD_Distribution>
-          <xsl:apply-templates
-            select="gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat"/>
-          <xsl:apply-templates
-            select="gmd:distributionInfo/gmd:MD_Distribution/gmd:distributor"/>
           <gmd:transferOptions>
             <gmd:MD_DigitalTransferOptions>
-              <xsl:apply-templates
-                select="gmd:distributionInfo/gmd:MD_Distribution/
-                          gmd:transferOptions[1]/gmd:MD_DigitalTransferOptions/gmd:unitsOfDistribution"/>
-              <xsl:apply-templates
-                select="gmd:distributionInfo/gmd:MD_Distribution/
-                          gmd:transferOptions[1]/gmd:MD_DigitalTransferOptions/gmd:transferSize"/>
-              <xsl:apply-templates
-                select="gmd:distributionInfo/gmd:MD_Distribution/
-                          gmd:transferOptions[1]/gmd:MD_DigitalTransferOptions/gmd:onLine"/>
-
-
-              <xsl:if test="$updateKey = ''">
-                <xsl:call-template name="createOnlineSrc"/>
-              </xsl:if>
-
-              <xsl:apply-templates
-                select="gmd:distributionInfo/gmd:MD_Distribution/
-                          gmd:transferOptions[1]/gmd:MD_DigitalTransferOptions/gmd:offLine"/>
+              <xsl:call-template name="createOnlineSrc"/>
             </gmd:MD_DigitalTransferOptions>
           </gmd:transferOptions>
-
-
-          <xsl:apply-templates
-            select="gmd:distributionInfo/gmd:MD_Distribution/
-                      gmd:transferOptions[position() > 1]"/>
-
         </gmd:MD_Distribution>
       </gmd:distributionInfo>
+
 
       <xsl:apply-templates
         select="gmd:dataQualityInfo|
@@ -132,14 +127,71 @@ Insert is made in first transferOptions found.
     </xsl:copy>
   </xsl:template>
 
+  <!--  <gmd:MD_Distribution> does not exist-->
+  <xsl:template match="*/gmd:distributionInfo[not(gmd:MD_Distribution) and $update_flag = false() and position() = 1]">
+    <xsl:copy>
+      <xsl:apply-templates select="node()|@*"/>
+      <gmd:MD_Distribution>
+        <gmd:transferOptions>
+          <gmd:MD_DigitalTransferOptions>
+            <xsl:call-template name="createOnlineSrc"/>
+          </gmd:MD_DigitalTransferOptions>
+        </gmd:transferOptions>
+      </gmd:MD_Distribution>
+    </xsl:copy>
+  </xsl:template>
 
-  <!-- Updating the link matching the update key. -->
-  <xsl:template match="gmd:onLine[
-                        normalize-space($updateKey) = concat(
-                        gmd:CI_OnlineResource/gmd:linkage/gmd:URL,
-                        gmd:CI_OnlineResource/gmd:protocol/gco:CharacterString,
-                        gmd:CI_OnlineResource/gmd:name/gco:CharacterString)
-                        ]">
+  <!--  <gmd:transferOptions> does not exist-->
+  <xsl:template match="*/gmd:distributionInfo[1]/gmd:MD_Distribution[not(gmd:transferOptions) and $update_flag = false() and position() = 1]">
+    <xsl:copy>
+      <xsl:apply-templates select="node()|@*"/>
+      <gmd:transferOptions>
+        <gmd:MD_DigitalTransferOptions>
+          <xsl:call-template name="createOnlineSrc"/>
+        </gmd:MD_DigitalTransferOptions>
+      </gmd:transferOptions>
+    </xsl:copy>
+  </xsl:template>
+
+  <!--  <gmd:MD_DigitalTransferOptions> does not exist-->
+  <xsl:template match="*/gmd:distributionInfo[1]/gmd:MD_Distribution[1]/gmd:transferOptions[not(gmd:MD_DigitalTransferOptions) and $update_flag = false() and position() = 1]">
+    <xsl:copy>
+      <xsl:apply-templates select="node()|@*"/>
+      <gmd:MD_DigitalTransferOptions>
+        <xsl:call-template name="createOnlineSrc"/>
+      </gmd:MD_DigitalTransferOptions>
+    </xsl:copy>
+  </xsl:template>
+
+  <!--  Add new gmd:gmd:onLine-->
+  <xsl:template match="*/gmd:distributionInfo[1]/gmd:MD_Distribution[1]/gmd:transferOptions[1]/gmd:MD_DigitalTransferOptions[$update_flag = false() and position() = 1]">
+    <xsl:copy>
+      <xsl:apply-templates select="@*"/>
+      <xsl:apply-templates
+        select="gmd:unitsOfDistribution|
+                gmd:transferSize|
+                gmd:onLine"/>
+
+      <xsl:call-template name="createOnlineSrc"/>
+
+      <xsl:apply-templates select="gmd:offLine"/>
+    </xsl:copy>
+  </xsl:template>
+
+  <!-- End of inserting gmd:onLine -->
+
+  <!-- Updating the gmd:onLine based on update parameters -->
+  <!-- Note: first part of the match needs to match the xsl:for-each select from extract-relations.xsl in order to get the position() to match -->
+  <!-- The unique identifier is marked with resourceIdx which is the position index and resourceHash which is hash code of the current node (combination of url, resource name, and description) -->
+  <xsl:template
+    match="*//gmd:MD_DigitalTransferOptions/gmd:onLine
+        [gmd:CI_OnlineResource[gmd:linkage/gmd:URL!=''] and ($resourceIdx = '' or position() = xs:integer($resourceIdx))]
+        [($resourceHash != '' or ($updateKey != '' and normalize-space($updateKey) = concat(
+                          gmd:CI_OnlineResource/gmd:linkage/gmd:URL,
+                          gmd:CI_OnlineResource/gmd:protocol/*,
+                          gmd:CI_OnlineResource/gmd:name/gco:CharacterString)))
+                     and ($resourceHash = '' or digestUtils:md5Hex(string(exslt:node-set(.))) = $resourceHash)]"
+    priority="2">
     <xsl:call-template name="createOnlineSrc"/>
   </xsl:template>
 
@@ -167,7 +219,7 @@ Insert is made in first transferOptions found.
 
     <xsl:if test="$url">
       <!-- In case the protocol is an OGC protocol
-      the name parameter may contains a list of layers
+      the name parameter may contain a list of layers
       separated by comma.
       In that case on one online element is added per
       layer/featureType.
