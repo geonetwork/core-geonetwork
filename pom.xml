@@ -1437,6 +1437,21 @@
       </modules>
     </profile>
     <profile>
+      <id>macOS-M-series</id>
+      <activation>
+        <os>
+          <family>mac</family>
+          <arch>aarch64</arch>
+        </os>
+      </activation>
+      <properties>
+        <es.platform>darwin-aarch64</es.platform>
+        <kb.executable>kibana.sh</kb.executable>
+        <kb.platform>darwin-aarch64</kb.platform>
+        <kb.installer.extension>tar.gz</kb.installer.extension>
+      </properties>
+    </profile>
+    <profile>
       <id>macOS</id>
       <activation>
         <os>

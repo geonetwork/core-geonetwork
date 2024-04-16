@@ -37,9 +37,10 @@ Get GeoNetwork running - the short path:
 2. Elasticsearch:
    ```
    cd es
-   mvn install -Pes-download
-   mvn exec:exec -Des-start
+   docker-compose up
    ```
+
+   See [es/readme](../es/README.md) for more ElasticSearch options (like running it locally) as well as troubleshooting.
 
 3. GeoNetwork web application:
    ```

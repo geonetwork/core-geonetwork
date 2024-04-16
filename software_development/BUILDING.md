@@ -88,15 +88,10 @@ GeoNetwork requires an Elasticsearch instance as an index.
 
    ```
    cd es
-   mvn install -Pes-download
+   docker-compose up
    ```
 
-2. And run locally:
-   ```
-   mvn exec:exec -Des-start
-   ```
-
-3. For alternatives see [es/readme](../es/README.md).
+2For alternatives see [es/readme](../es/README.md).
 
 ## Run Kibana
 
