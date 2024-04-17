@@ -184,7 +184,7 @@
     "hitsPerPage": "Treffer pro Seite",
     "chooseRecordsPerPage": "Anzahl der Datensätze pro Seite wählen",
     "sortedBy": "Sortieren nach {{field}}",
-    "sortBy-dateStampDesc": "letztes Update",
+    "sortBy-changeDateDesc": "letztes Update",
     "sortBy-createDateDesc": "neue Datensätze",
     "sortBy-resourceTitleObject.default.sort": "Titel (aufsteigend)",
     "sortBy-resourceTitleObject.default.sortDesc": "Titel (absteigend)",

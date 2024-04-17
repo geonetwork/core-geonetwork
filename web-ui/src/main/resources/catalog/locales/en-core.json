@@ -184,7 +184,7 @@
     "hitsPerPage": "Records per page",
     "chooseRecordsPerPage": "Click to choose the number of records per page",
     "sortedBy": "Sorted by {{field}}",
-    "sortBy-dateStampDesc": "last updates",
+    "sortBy-changeDateDesc": "last updates",
     "sortBy-createDateDesc": "new records",
     "sortBy-resourceTitleObject.default.sort": "title (ascending)",
     "sortBy-resourceTitleObject.default.sortDesc": "title (descending)",

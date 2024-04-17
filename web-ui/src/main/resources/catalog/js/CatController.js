@@ -295,7 +295,7 @@
                 // Start boosting down records more than 3 months old
                 {
                   gauss: {
-                    dateStamp: {
+                    changeDate: {
                       scale: "365d",
                       offset: "90d",
                       decay: 0.5
@@ -629,7 +629,7 @@
                 sortOrder: ""
               },
               {
-                sortBy: "dateStamp",
+                sortBy: "changeDate",
                 sortOrder: "desc"
               },
               {
@@ -1111,7 +1111,7 @@
                 sortOrder: ""
               },
               {
-                sortBy: "dateStamp",
+                sortBy: "changeDate",
                 sortOrder: "desc"
               },
               {
