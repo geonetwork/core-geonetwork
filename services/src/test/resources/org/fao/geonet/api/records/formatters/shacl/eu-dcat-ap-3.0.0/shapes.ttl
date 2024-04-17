@@ -513,7 +513,7 @@
         sh:path dcatap:availability ;
         sh:severity sh:Violation
     ], [
-        sh:datatype xsd:decimal ;
+        sh:datatype xsd:nonNegativeInteger ;
         sh:maxCount 1 ;
         sh:path dcat:byteSize ;
         sh:severity sh:Violation
