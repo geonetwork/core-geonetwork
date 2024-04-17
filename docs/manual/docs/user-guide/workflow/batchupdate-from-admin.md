@@ -1,4 +1,4 @@
-# Updating a set of records from the admin console {#batchupdate_from_admin}
+# Updating records from Admin console {#batchupdate_from_admin}
 
 In some circumstances, users may want to update a set of records. Administrator users can, from the `admin console`, open the `tools`, `Batch process` page.
 

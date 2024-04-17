@@ -165,7 +165,7 @@
     "linkToParentTitle": "Link a parent metadata record to the current metadata",
     "linkToService": "Link to a service",
     "linkToServiceTitle": "Link a service to the current metadata",
-    "linkToSibling": "Link to other resources",
+    "linkToSibling": "Link to records",
     "linkToSiblingTitle": "Link a resource to the current metadata",
     "linkToSource": "Link to a source dataset",
     "linkToSourceTitle": "Link a source dataset to the current metadata",
@@ -446,5 +446,13 @@
     "addOnlinesrc#links": "Add links",
     "addOnlinesrc#links-help": "eg. web links",
     "addOnlinesrc#quality": "Add quality info",
-    "addOnlinesrc#quality-help": "eg. specification, reports"
+    "addOnlinesrc#quality-help": "eg. specification, reports",
+    "associated-parent": "Parent Metadata",
+    "associated-service": "Gwasanaeth",
+    "associated-dataset": "Set ddata",
+    "associated-source": "Setiau data ffynhonnell",
+    "associated-fcats": "Catalog nodwedd",
+    "associated-siblings": "Adnoddau cysylltiedig",
+    "associated-hasfeaturecats": "Using this feature catalog",
+    "associatedResourcesPanel": "Adnoddau cysylltiedig"
 }

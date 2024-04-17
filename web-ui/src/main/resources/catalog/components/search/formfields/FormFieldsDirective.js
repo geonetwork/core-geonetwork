@@ -436,6 +436,7 @@
       }
     ])
 
+
     .directive("hitsperpageCombo", [
       function () {
         return {

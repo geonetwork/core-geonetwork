@@ -184,7 +184,7 @@
     "hitsPerPage": "Antal poster per sida",
     "chooseRecordsPerPage": "Klicka för att välja hur många poster som visas per sida",
     "sortedBy": "Sorterat på {{field}}",
-    "sortBy-dateStampDesc": "senaste uppdateringar",
+    "sortBy-changeDateDesc": "senaste uppdateringar",
     "sortBy-createDateDesc": "nya poster",
     "sortBy-resourceTitleObject.default.sort": "title (ascending)",
     "sortBy-resourceTitleObject.default.sortDesc": "title (descending)",
