@@ -390,7 +390,6 @@
     a sh:NodeShape ;
     rdfs:label "PeriodOfTime"@en ;
     sh:property [
-    ], [
         sh:class time:Instant ;
         sh:path time:hasBeginning ;
         sh:severity sh:Violation
@@ -419,7 +418,7 @@
     a sh:NodeShape ;
     rdfs:label "Dataset Series"@en ;
     sh:property [
-       sh:inversePath dcat:inSeries;
+       sh:path [sh:inversePath dcat:inSeries;];
        sh:severity sh:Warning
     ], [
   	sh:path dcatap:applicableLegislation;

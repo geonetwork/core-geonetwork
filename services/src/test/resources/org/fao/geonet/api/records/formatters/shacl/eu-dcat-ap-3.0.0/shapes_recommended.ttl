@@ -95,7 +95,6 @@
     a sh:NodeShape ;
     rdfs:label "Catalog Record"@en ;
     sh:property [
-    ], [
         sh:minCount 1 ;
         sh:path dct:conformsTo ;
         sh:severity sh:Warning
@@ -166,22 +165,16 @@
 :CategoryScheme_Shape
     a sh:NodeShape ;
     rdfs:label "Category Scheme"@en ;
-    sh:property [
-    ] ;
     sh:targetClass skos:ConceptScheme .
 
 :Category_Shape
     a sh:NodeShape ;
     rdfs:label "Category"@en ;
-    sh:property [
-    ] ;
     sh:targetClass skos:Concept .
 
 :Checksum_Shape
     a sh:NodeShape ;
     rdfs:label "Checksum"@en ;
-    sh:property [
-    ] ;
     sh:targetClass spdx:Checksum .
 
 :DataService_Shape
@@ -286,8 +279,6 @@
 :Identifier_Shape
     a sh:NodeShape ;
     rdfs:label "Identifier"@en ;
-    sh:property [
-    ] ;
     sh:targetClass adms:Identifier .
 
 :LicenceDocument_Shape
@@ -331,7 +322,5 @@
 :Relationship_Shape
     a sh:NodeShape ;
     rdfs:label "Relationship"@en ;
-    sh:property [
-    ] ;
     sh:targetClass dcat:Relationship .
 
