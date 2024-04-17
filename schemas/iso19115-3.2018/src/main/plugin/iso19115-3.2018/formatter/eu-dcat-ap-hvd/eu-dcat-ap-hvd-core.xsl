@@ -31,7 +31,7 @@
 
   <xsl:template mode="iso19115-3-to-dcat-resource"
                 match="mdb:MD_Metadata">
-    <xsl:call-template name="iso19115-3-to-dcat-resource"/>
+    <xsl:call-template name="iso19115-3-to-dcat-ap-resource"/>
 
     <xsl:apply-templates mode="iso19115-3-to-dcat"
                          select="mdb:identificationInfo/*/mri:resourceConstraints/mco:MD_LegalConstraints/mco:reference"/>
