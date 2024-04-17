@@ -370,6 +370,60 @@
           - une nouvelle zone non destinée à l'urbanisation : zone d'extraction (ZE).</dct:description>
       </dct:ProvenanceStatement>
     </dct:provenance>
+    <adms:identifier>
+      <rdf:Description>
+        <rdf:type rdf:resource="http://www.w3.org/ns/adms#Identifier" />
+        <skos:notation>7fe2f305-1302-4297-b67e-792f55acd834</skos:notation>
+        <adms:schemaAgency>http://geodata.wallonie.be/id/</adms:schemaAgency>
+      </rdf:Description>
+    </adms:identifier>
+    <adms:identifier>
+      <rdf:Description>
+        <rdf:type rdf:resource="http://www.w3.org/ns/adms#Identifier" />
+        <skos:notation>DGATLPE__PDS</skos:notation>
+        <adms:schemaAgency>BE.SPW.INFRASIG.CARTON</adms:schemaAgency>
+      </rdf:Description>
+    </adms:identifier>
+    <dcat:theme>
+      <skos:Concept rdf:about="http://publications.europa.eu/resource/authority/data-theme/AGRI">
+        <skos:prefLabel xml:lang="fr">Agriculture, pêche, sylviculture et alimentation</skos:prefLabel>
+      </skos:Concept>
+    </dcat:theme>
+    <dcat:theme>
+      <skos:Concept rdf:about="http://publications.europa.eu/resource/authority/data-theme/ECON">
+        <skos:prefLabel xml:lang="fr">Économie et finances</skos:prefLabel>
+      </skos:Concept>
+    </dcat:theme>
+    <dcat:theme>
+      <skos:Concept rdf:about="http://publications.europa.eu/resource/authority/data-theme/ENER">
+        <skos:prefLabel xml:lang="fr">Énergie</skos:prefLabel>
+      </skos:Concept>
+    </dcat:theme>
+    <dcat:theme>
+      <skos:Concept rdf:about="http://publications.europa.eu/resource/authority/data-theme/ENVI">
+        <skos:prefLabel xml:lang="fr">Environnement</skos:prefLabel>
+      </skos:Concept>
+    </dcat:theme>
+    <dcat:theme>
+      <skos:Concept rdf:about="http://publications.europa.eu/resource/authority/data-theme/HEAL">
+        <skos:prefLabel xml:lang="fr">Santé</skos:prefLabel>
+      </skos:Concept>
+    </dcat:theme>
+    <dcat:theme>
+      <skos:Concept rdf:about="http://publications.europa.eu/resource/authority/data-theme/REGI">
+        <skos:prefLabel xml:lang="fr">Régions et villes</skos:prefLabel>
+      </skos:Concept>
+    </dcat:theme>
+    <dcat:theme>
+      <skos:Concept rdf:about="http://publications.europa.eu/resource/authority/data-theme/SOCI">
+        <skos:prefLabel xml:lang="fr">Population et société</skos:prefLabel>
+      </skos:Concept>
+    </dcat:theme>
+    <dcat:theme>
+      <skos:Concept rdf:about="http://publications.europa.eu/resource/authority/data-theme/TECH">
+        <skos:prefLabel xml:lang="fr">Science et technologie</skos:prefLabel>
+      </skos:Concept>
+    </dcat:theme>
     <dcatap:applicableLegislation rdf:resource="http://data.europa.eu/eli/reg_impl/2023/138/oj" />
     <dcat:spatialResolutionInMeters rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.01</dcat:spatialResolutionInMeters>
     <dcat:temporalResolution rdf:datatype="http://www.w3.org/2001/XMLSchema#duration">P0Y2M0DT0H0M0S</dcat:temporalResolution>
