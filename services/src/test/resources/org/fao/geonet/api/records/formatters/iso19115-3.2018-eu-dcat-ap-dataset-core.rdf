@@ -456,9 +456,9 @@
         <dcat:accessURL rdf:resource="https://data.monde.org/secteur.shp" />
         <dcat:byteSize rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">10485760</dcat:byteSize>
         <dct:format>
-          <dct:MediaType>
+          <dct:MediaTypeOrExtent>
             <rdfs:label>ESRI Shapefile (.shp)</rdfs:label>
-          </dct:MediaType>
+          </dct:MediaTypeOrExtent>
         </dct:format>
         <dcat:compressFormat>
           <dct:MediaType rdf:about="https://publications.europa.eu/resource/authority/file-type/ZIP" />

@@ -402,15 +402,20 @@
                   as="xs:string?"
                   select="($formatLabelToUri[lower-case($format) = text()]/@key)[1]"/>
 
+    <xsl:variable name="rangeName"
+                  as="xs:string"
+                  select="if ($elementName = 'dct:format') then 'dct:MediaTypeOrExtent' else 'dct:MediaType'"/>
     <xsl:element name="{$elementName}">
       <xsl:choose>
         <xsl:when test="$formatUri">
-          <dct:MediaType rdf:about="{$formatUri}"/>
+          <xsl:element name="{$rangeName}">
+            <xsl:attribute name="rdf:about" select="$formatUri"/>
+          </xsl:element>
         </xsl:when>
         <xsl:otherwise>
-          <dct:MediaType>
+          <xsl:element name="{$rangeName}">
             <rdfs:label><xsl:value-of select="$format"/></rdfs:label>
-          </dct:MediaType>
+          </xsl:element>
         </xsl:otherwise>
       </xsl:choose>
     </xsl:element>
