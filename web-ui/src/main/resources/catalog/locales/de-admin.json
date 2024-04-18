@@ -1108,6 +1108,7 @@
     "ui-paginationInfo": "Standardanzahl der Datensätze pro Seite",
     "ui-sortbyValues": "Art der Sortieroptionen",
     "ui-sortBy": "Standardmäßig nach Option sortieren",
+    "ui-sortbyValues-help": "For sort fields that can be multilingual, can be used the placeholder ${searchLang}. For example: resourceTitleObject.${searchLang}.keyword, to use the sort field based on the user interface language.",
     "ui-facetsSummaryType": "Art des facet",
     "ui-facetsSummaryType-help": "Die Liste der Facets ist in der Datei config-summary.xml definiert, der Benutzer kann jedoch einen anderen Satz von Facets auswählen. Die Standardeinstellung ist 'details'. Andere Möglichkeit lautet: 'manager'.",
     "ui-resultViewTpls": "Liste der Vorlagen für Suchergebnisse",

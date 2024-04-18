@@ -1108,6 +1108,7 @@
     "ui-paginationInfo": "Número de registres per pàgina per defecte",
     "ui-sortbyValues": "Tipus d'opcions d'ordenació",
     "ui-sortBy": "Opció d'ordenació per defecte",
+    "ui-sortbyValues-help": "For sort fields that can be multilingual, can be used the placeholder ${searchLang}. For example: resourceTitleObject.${searchLang}.keyword, to use the sort field based on the user interface language.",
     "ui-facetsSummaryType": "Tipus de facet.",
     "ui-facetsSummaryType-help": "La llista de facets està definida en el fitxer config-summary.xml però l'usuari pot seleccionar un conjunt diferent de facets. Per defecte és 'detalls'. Altres opcions: 'gestor'.",
     "ui-resultViewTpls": "Llista de plantilles pels resultats de cerca",

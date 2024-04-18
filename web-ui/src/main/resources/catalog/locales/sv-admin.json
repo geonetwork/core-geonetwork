@@ -1108,6 +1108,7 @@
     "ui-paginationInfo": "Standardantal poster per sida",
     "ui-sortbyValues": "Typ av sorteringsalternativ",
     "ui-sortBy": "Standard sorteringsalternativ",
+    "ui-sortbyValues-help": "For sort fields that can be multilingual, can be used the placeholder ${searchLang}. For example: resourceTitleObject.${searchLang}.keyword, to use the sort field based on the user interface language.",
     "ui-facetsSummaryType": "Typ av fasett",
     "ui-facetsSummaryType-help": "Listan över fasetter definieras i filen config-summary.xml men användaren kan välja andra uppsättningar av fasetter. Standard är 'details'. Andra alternativ: 'manager'.",
     "ui-resultViewTpls": "Lista med mallar för sökresultat",

@@ -1108,6 +1108,7 @@
     "ui-paginationInfo": "Nombre de fiche par page par défaut",
     "ui-sortbyValues": "Option de tri",
     "ui-sortBy": "Option de tri par défaut",
+    "ui-sortbyValues-help": "For sort fields that can be multilingual, can be used the placeholder ${searchLang}. For example: resourceTitleObject.${searchLang}.keyword, to use the sort field based on the user interface language.",
     "ui-facetsSummaryType": "Facettes",
     "ui-facetsSummaryType-help": "La liste des facettes est définie dans le fichier config-summary.xml. Par défaut, le groupe 'details' est utilisé.",
     "ui-resultViewTpls": "Liste des mises en page des résultats",
