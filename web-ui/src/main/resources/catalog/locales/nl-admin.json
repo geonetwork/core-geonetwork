@@ -1108,6 +1108,7 @@
     "ui-paginationInfo": "Default aantal records per pagina",
     "ui-sortbyValues": "Type sorteer opties",
     "ui-sortBy": "Default sorteer optie",
+    "ui-sortbyValues-help": "For sort fields that can be multilingual, can be used the placeholder ${searchLang}. For example: resourceTitleObject.${searchLang}.keyword, to use the sort field based on the user interface language.",
     "ui-facetsSummaryType": "Facet type",
     "ui-facetsSummaryType-help": "De lijst met facetten wordt gedefinieerd in het bestand config-summary.xml, maar de gebruiker kan een andere set facetten selecteren. Standaard is 'details'. Overige opties: 'manager'.",
     "ui-resultViewTpls": "Lijst van templates voor de zoek resultaten",

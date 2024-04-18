@@ -1108,6 +1108,7 @@
     "ui-paginationInfo": "Výchozí počet záznamů na stránku",
     "ui-sortbyValues": "Typ možností řazení",
     "ui-sortBy": "Výchozí třídění podle volby",
+    "ui-sortbyValues-help": "For sort fields that can be multilingual, can be used the placeholder ${searchLang}. For example: resourceTitleObject.${searchLang}.keyword, to use the sort field based on the user interface language.",
     "ui-facetsSummaryType": "Typ aspektu",
     "ui-facetsSummaryType-help": "Seznam faset je definován v souboru config-summary.xml, ale uživatel si může vybrat jinou sadu faset. Výchozí nastavení je „podrobnosti“. Další možnosti: 'manager'.",
     "ui-resultViewTpls": "Seznam šablon pro výsledky vyhledávání",

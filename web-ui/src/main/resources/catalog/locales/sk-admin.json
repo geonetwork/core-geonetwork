@@ -1108,6 +1108,7 @@
     "ui-paginationInfo": "Prednastavený počet záznamov na stránku",
     "ui-sortbyValues": "Nastavenia typov zoraďovania",
     "ui-sortBy": "Prednastavené nastavenia zoraďovania",
+    "ui-sortbyValues-help": "For sort fields that can be multilingual, can be used the placeholder ${searchLang}. For example: resourceTitleObject.${searchLang}.keyword, to use the sort field based on the user interface language.",
     "ui-facetsSummaryType": "Typ facet-ov",
     "ui-facetsSummaryType-help": "List of facets is defined in the config-summary.xml file but the user can select a different set of facets. Default is 'details'. Other options: 'manager'.",
     "ui-resultViewTpls": "Zoznam vzorov pre výsledky vyhľadávania.",

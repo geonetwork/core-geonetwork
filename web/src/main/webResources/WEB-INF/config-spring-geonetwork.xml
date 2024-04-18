@@ -81,6 +81,8 @@
     at some point but at the moment they are needed here. -->
   <util:set id="languages" value-type="java.lang.String">
     <value>ara</value>
+    <value>arm</value>
+    <value>aze</value>
     <value>cat</value>
     <value>chi</value>
     <value>cze</value>
@@ -89,6 +91,7 @@
     <value>eng</value>
     <value>fin</value>
     <value>fre</value>
+    <value>geo</value>
     <value>ger</value>
     <value>ice</value>
     <value>ita</value>
@@ -96,11 +99,13 @@
     <value>nor</value>
     <value>pol</value>
     <value>por</value>
+    <value>rum</value>
     <value>rus</value>
     <value>slo</value>
     <value>spa</value>
     <value>swe</value>
     <value>tur</value>
+    <value>ukr</value>
     <value>wel</value>
   </util:set>
 

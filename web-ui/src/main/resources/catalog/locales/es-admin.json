@@ -1108,6 +1108,7 @@
     "ui-paginationInfo": "Número predeterminado de registros por página",
     "ui-sortbyValues": "Tipo de opciones de clasificación",
     "ui-sortBy": "Clasificación predeterminada por opción",
+    "ui-sortbyValues-help": "For sort fields that can be multilingual, can be used the placeholder ${searchLang}. For example: resourceTitleObject.${searchLang}.keyword, to use the sort field based on the user interface language.",
     "ui-facetsSummaryType": "Tipo de aspectos",
     "ui-facetsSummaryType-help": "La lista de facetas se define en el archivo config-summary.xml, pero el usuario puede seleccionar un conjunto diferente de facetas. El valor predeterminado es &quot;detalles&quot;. Otras opciones: &#39;administrador&#39;.",
     "ui-resultViewTpls": "Listado de plantillas para los resultados de búsquedas",

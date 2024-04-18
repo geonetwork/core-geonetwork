@@ -93,11 +93,14 @@
           header: {
             enabled: true,
             languages: {
+              arm: "hy",
+              aze: "az",
               eng: "en",
               cat: "ca",
               chi: "zh",
               cze: "cs",
               dan: "da",
+              geo: "ka",
               ger: "de",
               fre: "fr",
               spa: "es",
@@ -106,9 +109,11 @@
               dut: "nl",
               kor: "ko",
               por: "pt",
+              rum: "ro",
               rus: "ru",
               slo: "sk",
               fin: "fi",
+              ukr: "uk",
               swe: "sv",
               wel: "cy"
             },
@@ -1661,9 +1666,12 @@
 
       // Lang names to be displayed in language selector
       $scope.langLabels = {
+        arm: "հայերեն",
+        aze: "Azərbaycan dili",
         eng: "English",
         dut: "Nederlands",
         fre: "Français",
+        geo: "ქართული",
         ger: "Deutsch",
         kor: "한국의",
         spa: "Español",
@@ -1673,10 +1681,12 @@
         ita: "Italiano",
         fin: "Suomeksi",
         ice: "Íslenska",
+        rum: "Română",
         rus: "русский",
         chi: "中文",
         slo: "Slovenčina",
         swe: "Svenska",
+        ukr: "українська",
         dan: "Dansk",
         wel: "Cymraeg"
       };
