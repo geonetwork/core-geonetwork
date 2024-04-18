@@ -96,19 +96,6 @@
       $scope.harvesterNew = false;
       $scope.harvesterHistory = {};
       $scope.isLoadingOneHarvester = false;
-      $scope.translationProviderConfigured = false;
-
-      $scope.languageSource = null;
-      gnLanguageService.getLanguages().then(function (data) {
-        angular.forEach(data, function (lang) {
-          lang.english = lang.label["eng"];
-          lang.name = lang.label[$scope.lang] || lang.english;
-          lang.code = lang.code;
-          lang.tokens = [lang.name, lang.code, lang.english];
-        });
-
-        $scope.languageSource = gnLanguageService.getLanguageAutocompleter(data);
-      });
 
       $scope.harvesterHistoryPaging = {
         page: 1,
@@ -118,12 +105,6 @@
       };
       $scope.isLoadingHarvesterHistory = false;
       $scope.deleting = []; // all harvesters being deleted
-
-      gnConfigService.load().then(function (c) {
-        $scope.translationProviderConfigured =
-          gnConfig["system.translation.provider"] !== null &&
-          gnConfig["system.translation.provider"] !== "";
-      });
 
       var unbindStatusListener = null;
 

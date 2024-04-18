@@ -28,6 +28,7 @@
 -->
 <xsl:stylesheet xmlns:gmd="http://www.isotc211.org/2005/gmd"
                 xmlns:gco="http://www.isotc211.org/2005/gco"
+                xmlns:gmx="http://www.isotc211.org/2005/gmx"
                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
@@ -37,209 +38,119 @@
                 version="2.0"
                 exclude-result-prefixes="#all">
 
-  <xsl:include href="../convert/functions.xsl"/>
+    <!-- List of iso3 code languages to translate -->
+    <xsl:param name="languages"
+               as="xs:string*"/>
 
-  <!-- List of languages to translate -->
-  <xsl:param name="languages" as="xs:string*" />
+    <!-- List of fields (xpaths) to translate -->
+    <xsl:param name="fieldsToTranslate"
+               as="xs:string*"/>
 
-  <!-- List of fields (xpaths) to translate -->
-  <xsl:param name="fieldsToTranslate" as="xs:string*" />
+    <xsl:variable name="translateAll"
+                  as="xs:boolean"
+                  select="$fieldsToTranslate = ''"/>
 
-  <xsl:variable name="langsList">
-    <langs>
-    <xsl:for-each select="$languages">
-      <lang code2="{util:twoCharLangCode(.)}" code3="{.}" />
-    </xsl:for-each>
-    </langs>
-  </xsl:variable>
+    <xsl:variable name="translateOnlyEmptyText"
+                  as="xs:boolean"
+                  select="false()"/>
 
-  <xsl:variable name="fieldsList">
-    <fields>
-      <xsl:for-each select="$fieldsToTranslate">
-        <field xpath="{replace(., '/gmd:MD_Metadata', '')}" />
-      </xsl:for-each>
-    </fields>
-  </xsl:variable>
-
-  <xsl:variable name="mainLanguage">
-    <xsl:call-template name="langId_from_gmdlanguage19139">
-      <xsl:with-param name="gmdlanguage" select="//gmd:MD_Metadata/gmd:language"/>
-    </xsl:call-template>
-  </xsl:variable>
-
-  <xsl:variable name="mainLanguage2code" select="util:twoCharLangCode($mainLanguage)" />
-
-  <!-- Do a copy of every nodes and attributes -->
-  <xsl:template match="@*|node()">
-    <xsl:copy>
-      <xsl:apply-templates select="@*|node()"/>
-    </xsl:copy>
-  </xsl:template>
-
-  <xsl:template match="gmd:MD_Metadata | *[contains(@gco:isoType, 'MD_Metadata')]" priority="2">
-    <xsl:copy>
-      <xsl:copy-of select="@*"/>
-      <xsl:apply-templates select="
-          gmd:fileIdentifier | gmd:language | gmd:characterSet | gmd:parentIdentifier | gmd:hierarchyLevel |
-          gmd:hierarchyLevelName | gmd:contact | gmd:dateStamp | gmd:metadataStandardName | gmd:metadataStandardVersion |
-          gmd:dataSetURI | gmd:locale" />
-
-      <!-- gmd:locale -->
-      <xsl:for-each select="$langsList/langs/lang">
-        <xsl:variable name="lang2code" select="@code2" />
-        <xsl:variable name="lang3code" select="@code3" />
-        <xsl:if test="not(gmd:locale[gmd:PT_Locale/gmd:languageCode/@codeListValue = $lang3code])">
-          <gmd:locale>
-            <gmd:PT_Locale id="{upper-case($lang2code)}">
-              <gmd:languageCode>
-                <gmd:LanguageCode codeList="" codeListValue="{$lang3code}"/>
-              </gmd:languageCode>
-              <gmd:characterEncoding>
-                <gmd:MD_CharacterSetCode codeListValue="utf8"
-                                         codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_CharacterSetCode"/>
-              </gmd:characterEncoding>
-            </gmd:PT_Locale>
-          </gmd:locale>
-        </xsl:if>
-      </xsl:for-each>
-
-      <xsl:apply-templates select="gmd:spatialRepresentationInfo | gmd:referenceSystemInfo | gmd:metadataExtensionInfo |
-        gmd:identificationInfo | gmd:contentInfo | gmd:distributionInfo | gmd:dataQualityInfo | gmd:portrayalCatalogueInfo |
-        gmd:metadataConstraints | gmd:applicationSchemaInfo | gmd:metadataMaintenance |
-        gmd:series | gmd:describes | gmd:propertyType | gmd:featureType | gmd:featureAttribute" />
-    </xsl:copy>
-  </xsl:template>
-
-
-  <xsl:template match="*[gco:CharacterString]" priority="2">
-    <xsl:variable name="xpath" select="gn-fn-metadata:getXPath(.)"/>
-
-    <xsl:choose>
-      <xsl:when test="$fieldsList/fields/field[@xpath = $xpath]">
-        <!-- Translate -->
-        <xsl:copy>
-          <xsl:apply-templates select="@*" />
-          <xsl:attribute name="xsi:type">gmd:PT_FreeText_PropertyType</xsl:attribute>
-
-          <xsl:apply-templates select="gco:CharacterString" />
-
-          <xsl:call-template name="multilingual">
-            <xsl:with-param name="value" select="gco:CharacterString" />
-            <xsl:with-param name="mainLanguage" select="$mainLanguage" />
-            <xsl:with-param name="mainLanguage2code" select="$mainLanguage2code" />
-          </xsl:call-template>
-
-        </xsl:copy>
-      </xsl:when>
-
-      <xsl:otherwise>
-        <xsl:copy>
-          <xsl:apply-templates select="@*|node()" />
-        </xsl:copy>
-      </xsl:otherwise>
-    </xsl:choose>
-  </xsl:template>
-
-
-  <xsl:function name="gn-fn-metadata:getXPath" as="xs:string">
-    <xsl:param name="node" as="node()"/>
-
-    <xsl:value-of select="gn-fn-metadata:getXPath($node, false())"/>
-  </xsl:function>
-
-  <xsl:function name="gn-fn-metadata:positionOfType" as="xs:string">
-    <xsl:param name="node" as="node()"/>
-    <xsl:variable name="nodePosition" select="$node/position()"/>
-    <xsl:variable name="allPrecedingSiblings"
-                  select="$node/preceding-sibling::*[name() = name($node)]"/>
-    <!--<xsl:value-of select="count($node/../*[name = name($node) and position() &lt; $nodePosition]) + 1"/>-->
-    <xsl:value-of select="count($allPrecedingSiblings) + 1"/>
-  </xsl:function>
-
-  <!--
-   Return the xpath of a node.
-  -->
-  <xsl:function name="gn-fn-metadata:getXPath" as="xs:string">
-    <xsl:param name="node" as="node()"/>
-    <xsl:param name="withPosition" as="xs:boolean"/>
-
-    <!-- Avoid root element. -->
-    <xsl:variable name="untilIndex" select="1"/>
-    <xsl:variable name="xpathSeparator">/</xsl:variable>
-    <xsl:variable name="elementName" select="name($node)"/>
-    <xsl:variable name="isAttribute" select="$node/../attribute::*[name() = $elementName]"/>
-    <xsl:variable name="ancestors" select="$node/ancestor::*"/>
-
-    <xsl:variable name="xpath">
-      <xsl:for-each select="$ancestors[position() != $untilIndex]">
-        <xsl:value-of select="if ($withPosition)
-          then concat($xpathSeparator, name(.), '[', gn-fn-metadata:positionOfType(.), ']')
-          else concat($xpathSeparator, name(.))"/>
-      </xsl:for-each>
+    <xsl:variable name="languagesToTranslate"
+                  as="node()*">
+        <xsl:for-each select="$languages">
+            <lang code2="{util:twoCharLangCode(.)}"
+                  code3="{.}"/>
+        </xsl:for-each>
     </xsl:variable>
 
-    <xsl:value-of
-      select="if ($isAttribute)
-      then concat($xpath, $xpathSeparator, '@', $elementName)
-      else if ($withPosition)
-      then concat($xpath, $xpathSeparator, $elementName, '[', gn-fn-metadata:positionOfType($node), ']')
-        else concat($xpath, $xpathSeparator, $elementName)
-      "
-    />
-  </xsl:function>
+    <xsl:variable name="mainLanguage"
+                  select="if (//gmd:MD_Metadata/gmd:language/*/@codeListValue) then //gmd:MD_Metadata/gmd:language/*/@codeListValue
+                          else substring-before(*/text(),';')"/>
 
+    <xsl:variable name="allRecordLanguages"
+                  select="($mainLanguage|//gmd:MD_Metadata/gmd:locale/*/gmd:languageCode/*/@codeListValue)"/>
 
-  <xsl:template name="multilingual">
-    <xsl:param name="value" />
-    <xsl:param name="mainLanguage" />
-    <xsl:param name="mainLanguage2code" />
+    <xsl:variable name="mainLanguage2code"
+                  select="util:twoCharLangCode($mainLanguage)"/>
 
-    <xsl:choose>
-      <xsl:when test="gmd:PT_FreeText">
+    <!-- Do a copy of every nodes and attributes -->
+    <xsl:template match="@*|node()">
         <xsl:copy>
-          <xsl:apply-templates select="@*" />
-
-          <xsl:for-each select="$langsList/langs/lang">
-            <xsl:variable name="currentLang2code" select="@code2" />
-            <xsl:variable name="currentLang3code" select="@code3" />
-
-            <xsl:if test="$currentLang3code != lower-case($mainLanguage)">
-              <gmd:textGroup>
-                <gmd:LocalisedCharacterString locale="{concat('#', upper-case($currentLang2code))}"><xsl:value-of select="translation:translate($value, lower-case($mainLanguage2code), $currentLang2code)"/></gmd:LocalisedCharacterString>
-              </gmd:textGroup>
-            </xsl:if>
-
-            <xsl:if test="$currentLang3code = lower-case($mainLanguage)">
-              <gmd:textGroup>
-                <gmd:LocalisedCharacterString locale="{concat('#', upper-case($currentLang2code))}"><xsl:value-of select="$value"/></gmd:LocalisedCharacterString>
-              </gmd:textGroup>
-            </xsl:if>
-          </xsl:for-each>
+            <xsl:apply-templates select="@*|node()"/>
         </xsl:copy>
-      </xsl:when>
+    </xsl:template>
 
-      <xsl:otherwise>
+    <!-- Update language list -->
+    <xsl:template match="gmd:MD_Metadata | *[contains(@gco:isoType, 'MD_Metadata')]" priority="2">
+        <xsl:copy>
+            <xsl:copy-of select="@*"/>
+            <xsl:apply-templates select="
+          gmd:fileIdentifier | gmd:language | gmd:characterSet | gmd:parentIdentifier | gmd:hierarchyLevel |
+          gmd:hierarchyLevelName | gmd:contact | gmd:dateStamp | gmd:metadataStandardName | gmd:metadataStandardVersion |
+          gmd:dataSetURI | gmd:locale"/>
+
+            <xsl:for-each select="$languagesToTranslate[not(@code3 = $allRecordLanguages)]">
+                <xsl:variable name="lang2code" select="@code2"/>
+                <xsl:variable name="lang3code" select="@code3"/>
+                <gmd:locale>
+                    <gmd:PT_Locale id="{upper-case($lang2code)}">
+                        <gmd:languageCode>
+                            <gmd:LanguageCode codeList="" codeListValue="{$lang3code}"/>
+                        </gmd:languageCode>
+                        <gmd:characterEncoding>
+                            <gmd:MD_CharacterSetCode codeListValue="utf8"
+                                                     codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_CharacterSetCode"/>
+                        </gmd:characterEncoding>
+                    </gmd:PT_Locale>
+                </gmd:locale>
+            </xsl:for-each>
+
+
+            <xsl:apply-templates select="gmd:spatialRepresentationInfo | gmd:referenceSystemInfo | gmd:metadataExtensionInfo |
+        gmd:identificationInfo | gmd:contentInfo | gmd:distributionInfo | gmd:dataQualityInfo | gmd:portrayalCatalogueInfo |
+        gmd:metadataConstraints | gmd:applicationSchemaInfo | gmd:metadataMaintenance |
+        gmd:series | gmd:describes | gmd:propertyType | gmd:featureType | gmd:featureAttribute"/>
+        </xsl:copy>
+    </xsl:template>
+
+
+    <!-- TODO: Maybe translateAll should exclude some fields
+    eg. keywords from thesaurus have to be translated from the thesaurus
+    eg. add config-editor exclusion ? -->
+    <xsl:template
+            match="*[(gco:CharacterString or gmx:Anchor) and ($translateAll or concat('/', string-join(current()/ancestor-or-self::*[name() != 'root']/name(), '/')) = $fieldsToTranslate)]"
+            priority="2">
+        <xsl:copy>
+            <xsl:copy-of select="@*"/>
+            <xsl:if test="not(@xsi:type)">
+                <xsl:attribute name="xsi:type">mdb:PT_FreeText_PropertyType</xsl:attribute>
+            </xsl:if>
+            <xsl:copy-of select="gco:CharacterString|gmx:Anchor"/>
+            <xsl:call-template name="translate"/>
+        </xsl:copy>
+    </xsl:template>
+
+
+    <xsl:template name="translate">
+        <xsl:variable name="node" select="."/>
+
         <gmd:PT_FreeText>
-          <xsl:for-each select="$langsList/langs/lang">
-            <xsl:variable name="currentLang2code" select="@code2" />
-            <xsl:variable name="currentLang3code" select="@code3" />
+            <xsl:copy-of select="*/gmd:textGroup[*/@locale = $mainLanguage2code]"/>
+            <xsl:copy-of select="*/gmd:textGroup[not(*/@locale = $languagesToTranslate/concat('#', upper-case(@code2)))]"/>
 
-            <xsl:if test="$currentLang3code != lower-case($mainLanguage)">
-              <gmd:textGroup>
-                <gmd:LocalisedCharacterString locale="{concat('#', upper-case($currentLang2code))}"><xsl:value-of select="translation:translate($value, lower-case($mainLanguage2code), $currentLang2code)"/></gmd:LocalisedCharacterString>
-              </gmd:textGroup>
-            </xsl:if>
+            <xsl:for-each select="$languagesToTranslate">
+                <xsl:variable name="langId" select="concat('#', upper-case(@code2))"/>
 
-            <xsl:if test="$currentLang3code = lower-case($mainLanguage)">
-              <gmd:textGroup>
-                <gmd:LocalisedCharacterString locale="{concat('#', upper-case($currentLang2code))}"><xsl:value-of select="$value"/></gmd:LocalisedCharacterString>
-              </gmd:textGroup>
-            </xsl:if>
-          </xsl:for-each>
+                <xsl:variable name="currentTranslation"
+                              select="$node/*/gmd:textGroup/*[@locale = $langId]"/>
+                <gmd:textGroup>
+                    <gmd:LocalisedCharacterString locale="{$langId}">
+                        <xsl:value-of select="if(not($translateOnlyEmptyText)
+                                                 or ($translateOnlyEmptyText and $currentTranslation = ''))
+                                              then translation:translate($node/(gco:CharacterString|gmx:Anchor), lower-case($mainLanguage2code), @code2)
+                                              else $currentTranslation"/>
+                    </gmd:LocalisedCharacterString>
+                </gmd:textGroup>
+            </xsl:for-each>
         </gmd:PT_FreeText>
-      </xsl:otherwise>
-    </xsl:choose>
-
-
-  </xsl:template>
+    </xsl:template>
 </xsl:stylesheet>

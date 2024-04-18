@@ -327,67 +327,9 @@
       </div>
     </fieldset>
 
-    <!-- Options to translate the metadata content -->
     <div
-      id="gn-harvest-settings-csw-advanced-translate-row"
-      data-ng-show="translationProviderConfigured"
-    >
-      <label class="control-label">
-        <input
-          id="gn-harvest-settings-csw-advanced-translate-checkbox"
-          type="checkbox"
-          data-ng-model="harvesterSelected.content.translateContent"
-        />
-
-        <span id="gn-harvest-settings-csw-advanced-translate-label" data-translate=""
-          >harvesterTranslateContent</span
-        >
-      </label>
-
-      <p class="help-block" data-translate="">harvesterTranslateContentHelp</p>
-    </div>
-
-    <div
-      id="gn-harvest-settings-csw-advanced-translatelangs-row"
-      data-ng-show="translationProviderConfigured && harvesterSelected.content.translateContent"
-    >
-      <label
-        id="gn-harvest-settings-csw-advanced-translatelangs-label"
-        class="control-label"
-        data-translate=""
-        >harvesterTranslateContentLangs</label
-      >
-
-      <div
-        data-gn-data-picker=""
-        data-source="languageSource"
-        data-value="harvesterSelected.content.translateContentLangs"
-        data-element-id="csw-languagepicker"
-      />
-
-      <p class="help-block" data-translate="">harvesterTranslateContentLangsHelp</p>
-    </div>
-
-    <div
-      id="gn-harvest-settings-csw-advanced-translatefields-row"
-      data-ng-show="translationProviderConfigured &&harvesterSelected.content.translateContent"
-    >
-      <label
-        id="gn-harvest-settings-csw-advanced-translatefields-label"
-        class="control-label"
-        data-translate=""
-        >harvesterTranslateContentFields</label
-      >
-
-      <div
-        id="gn-harvest-settings-csw-advanced-translatefields-list"
-        style="height: 300px"
-        ui-ace="{useWrapMode:true, showGutter:true, mode:'text'}"
-        data-ng-model="harvesterSelected.content.translateContentFields"
-      />
-
-      <p class="help-block" data-translate="">harvesterTranslateContentFieldsHelp</p>
-    </div>
+      data-gn-harvester-translate-content-configurator="harvesterSelected.content"
+    ></div>
 
     <div
       id="gn-harvest-settings-csw-advanced-category-row"
