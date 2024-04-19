@@ -55,7 +55,10 @@
      openidconnect   - OAUTH2 Open ID Connect (see config-security-openidconnect.xml and -overrides.properties for details)
                            + openidconnect can be used instead of the keycloak provider
      jwt-headers     - Support for JSON/JWT headers for username & roles + Access Token validation
-                           + (see config-security-jwt-headers.xml and -overrides.properties for details)                           
+                           + (see config-security-jwt-headers.xml and -overrides.properties for details)
+     jwt-headers-multi - This adds two configurable jwt-headers filters.  This is useful for BOTH OIDC and OAUTH2 (access token)
+                         at the same time.
+                           + (see config-security-jwt-headers-multi.xml and -overrides.properties for details)
      ldap            - ldap security (see config-security-ldap.xml for more details)
      ldap-recursive  - ldap-recursive security (see config-security-ldap-recursive.xml for more details)
      ecas            - ecas security (see config-security-ecas.xml for more details)

@@ -863,7 +863,7 @@ You must turn on JWT Header Support by setting the `GEONETWORK_SECURITY_TYPE` en
 GEONETWORK_SECURITY_TYPE=jwt-headers
 ```
 
-Please see the files for more detailed configuration:
+Please see these files for more detailed configuration:
 * `config-security-jwt-header.xml`
 * `config-security-jwt-header-overrides.properties`
 
@@ -1038,13 +1038,33 @@ You can also extract roles from the Access Token in a similar manner - make sure
 
 #### Using Headers or GeoNetwork Database for Profiles & Profile Groups
 
-Inside `JwtHeaderConfiguration`, use these values to determine where Profile and ProfileGroups come from.  
+Inside `JwtHeaderSecurityConfig`, use these values to determine where Profile and ProfileGroups come from.  
 
 | Property | Meaning |
 | ------------- | ------- |
 |updateProfile|  true -> update the DB with the information from OIDC (don't allow user to edit profile in the UI)<br>false -> don't update the DB (user must edit profile in UI). |
 |updateGroup| true -> update the DB (user's group) with the information from OIDC (don't allow admin to edit user's groups in the UI)<br>false -> don't update the DB (admin must edit groups in UI).|
 
+### Using JWT Headers for both OIDC and OAUTH2 (Simultaneously)
+
+Using the above configuration, you can configure JWT Headers for either OIDC-based browser access (i.e. with Apache `mod_auth_openidc`) ***or*** for OAUTH2 based Bearer Token access.  However, you cannot do both at the same time.
+
+To configure JWT Headers to simultaneously provide OIDC and OAUTH2 access, you can use the `jwt-headers-multi` configuration.
+
+To use this, set the `GEONETWORK_SECURITY_TYPE` to `jwt-headers-multi`
+
+```
+GEONETWORK_SECURITY_TYPE=jwt-headers-multi
+```
+
+Please see these files for more detailed configuration:
+* `config-security-jwt-header-multi.xml`
+* `config-security-jwt-header-multi-overrides.properties`
+
+This creates two JWT Header authentication filters for GeoNetwork - one for OIDC based Browser access, and one for OAUTH2 based Robot access.
+
+You configure each of these independently using the same environment variables described above. 
+For the first filter, use the environment variables defined above (ie. `JWTHEADERS_UserNameFormat`).  For the second filter, add a `2` at the end of the environment variable (i.e. `JWTHEADERS_UserNameFormat2`).
 
 ## Configuring EU Login {#authentication-ecas}
 

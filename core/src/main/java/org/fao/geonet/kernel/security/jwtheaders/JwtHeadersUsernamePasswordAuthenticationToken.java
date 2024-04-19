@@ -33,8 +33,11 @@ import java.util.Collection;
  */
 public class JwtHeadersUsernamePasswordAuthenticationToken extends UsernamePasswordAuthenticationToken {
 
+    //ID of the JwtHeaderAuthFilter that authenticated the user
+    String authFilterId;
 
-    public JwtHeadersUsernamePasswordAuthenticationToken(Object principal, Object credentials, Collection<? extends GrantedAuthority> authorities) {
+    public JwtHeadersUsernamePasswordAuthenticationToken(String authFilterId, Object principal, Object credentials, Collection<? extends GrantedAuthority> authorities) {
         super(principal, credentials, authorities);
+        this.authFilterId = authFilterId;
     }
 }

@@ -38,7 +38,6 @@ import java.io.IOException;
 
 /**
  * This handles the JWT-Headers authentication filter.  It's based on the Shibboleth filter.
- *
  */
 public class JwtHeadersAuthFilter extends GenericFilterBean {
 
@@ -46,6 +45,10 @@ public class JwtHeadersAuthFilter extends GenericFilterBean {
     public JwtHeadersUserUtil jwtHeadersUserUtil;
 
     JwtHeadersConfiguration jwtHeadersConfiguration;
+
+    //uniquely identify this authfilter
+    //this is need if there are >1 Jwt-Header filters active at the same time
+    String filterId = java.util.UUID.randomUUID().toString();
 
 
     public JwtHeadersAuthFilter(JwtHeadersConfiguration jwtHeadersConfiguration) {
@@ -63,8 +66,11 @@ public class JwtHeadersAuthFilter extends GenericFilterBean {
 
         var user = JwtHeadersTrivialUser.create(config, request);
 
+        //if request is already logged in by us (same filterId), but there aren't any Jwt-Headers attached
+        //then log them out.
         if (user == null && existingAuth != null) {
-            if (existingAuth instanceof JwtHeadersUsernamePasswordAuthenticationToken) {
+            if (existingAuth instanceof JwtHeadersUsernamePasswordAuthenticationToken
+                && ((JwtHeadersUsernamePasswordAuthenticationToken) existingAuth).authFilterId.equals(filterId)) {
                 //at this point, there isn't a JWT header, but there's an existing auth that was made by us (JWT header)
                 // in this case, we need to log-off.  They have a JSESSION auth that is no longer valid.
                 logout(request);
@@ -98,10 +104,9 @@ public class JwtHeadersAuthFilter extends GenericFilterBean {
         var userDetails = jwtHeadersUserUtil.getUser(user, jwtHeadersConfiguration);
         if (userDetails != null) {
             UsernamePasswordAuthenticationToken auth = new JwtHeadersUsernamePasswordAuthenticationToken(
-                userDetails, null, userDetails.getAuthorities());
+                filterId, userDetails, null, userDetails.getAuthorities());
             auth.setDetails(userDetails);
             SecurityContextHolder.getContext().setAuthentication(auth);
-
         }
 
         filterChain.doFilter(servletRequest, servletResponse);
@@ -109,6 +114,7 @@ public class JwtHeadersAuthFilter extends GenericFilterBean {
 
     /**
      * handle a logout - clear out the security context, and invalidate the session
+     *
      * @param request
      * @throws ServletException
      */

@@ -36,7 +36,6 @@ import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.util.HashSet;
@@ -46,7 +45,6 @@ import java.util.Set;
 
 /**
  * This class handles GeoNetwork related User (and Group/UserGroup) activities.
- *
  */
 public class JwtHeadersUserUtil {
 
@@ -67,20 +65,20 @@ public class JwtHeadersUserUtil {
 
     /**
      * Gets a user.
-     *  1. if the user currently existing in the GN DB:
-     *         - user is retrieved from the GN DB
-     *         - if the profile/profileGroup update is true then the DB is updated with info from `userFromHeaders`
-     *                  - otherwise, the header roles are ignored and profile/profileGroups are taken from the GN DB
-     *
-     *  2. if the user doesn't existing in the DB:
-     *         - user is created and saved to the DB
-     *         - if the profile/profileGroup update is true then the DB is updated with info from `userFromHeaders`
-     *                  - otherwise, the header roles are ignored and profile/profileGroups are taken from the GN DB
-     *                  - NOTE: in this case, the user will not have any profile/profileGraoup -
-     *                          an admin will have to manually set them in GN GUI
+     * 1. if the user currently existing in the GN DB:
+     * - user is retrieved from the GN DB
+     * - if the profile/profileGroup update is true then the DB is updated with info from `userFromHeaders`
+     * - otherwise, the header roles are ignored and profile/profileGroups are taken from the GN DB
+     * <p>
+     * 2. if the user doesn't existing in the DB:
+     * - user is created and saved to the DB
+     * - if the profile/profileGroup update is true then the DB is updated with info from `userFromHeaders`
+     * - otherwise, the header roles are ignored and profile/profileGroups are taken from the GN DB
+     * - NOTE: in this case, the user will not have any profile/profileGraoup -
+     * an admin will have to manually set them in GN GUI
      *
      * @param userFromHeaders This is user info supplied in the request headers
-     * @param configuration Configuration of the JWT Headers filter
+     * @param configuration   Configuration of the JWT Headers filter
      * @return
      */
     public User getUser(JwtHeadersTrivialUser userFromHeaders, JwtHeadersConfiguration configuration) {
@@ -96,7 +94,7 @@ public class JwtHeadersUserUtil {
     /**
      * given an existing user (both from GN DB and from the Request Headers),
      * update roles (profile/profileGroups).
-     *
+     * <p>
      * isUpdateProfile/isUpdateGroup control if the DB is updated from the request Headers
      *
      * @param userFromDb
@@ -130,11 +128,12 @@ public class JwtHeadersUserUtil {
 
     /**
      * creates a new user based on what was in the request headers.
-     *
-     *  profile updating (in GN DB) is controlled by isUpdateGroup
-     *  profileGroup updating (in GN DB) is controlled by isUpdateGroup
-     *
+     * <p>
+     * profile updating (in GN DB) is controlled by isUpdateGroup
+     * profileGroup updating (in GN DB) is controlled by isUpdateGroup
+     * <p>
      * cf. updateGroups for how the profile/profileGroups are updated
+     *
      * @param userFromHeaders
      * @param configuration
      * @return

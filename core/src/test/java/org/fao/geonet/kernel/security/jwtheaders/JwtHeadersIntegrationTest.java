@@ -65,7 +65,7 @@ public class JwtHeadersIntegrationTest {
      * standard configuration for testing JSON
      */
     public static JwtHeadersConfiguration getBasicConfig() {
-        JwtHeadersConfiguration config = new JwtHeadersConfiguration();
+        JwtHeadersConfiguration config = new JwtHeadersConfiguration(new JwtHeadersSecurityConfig());
         var jwtheadersConfiguration = config.getJwtConfiguration();
         jwtheadersConfiguration.setUserNameHeaderAttributeName("OIDC_id_token_payload");
 
@@ -100,7 +100,7 @@ public class JwtHeadersIntegrationTest {
      * standard configuration for testing JWT
      */
     public static JwtHeadersConfiguration getBasicConfigJWT() {
-        JwtHeadersConfiguration config = new JwtHeadersConfiguration();
+        JwtHeadersConfiguration config = new JwtHeadersConfiguration(new JwtHeadersSecurityConfig());
         var jwtheadersConfiguration = config.getJwtConfiguration();
         jwtheadersConfiguration.setUserNameHeaderAttributeName("TOKEN");
 

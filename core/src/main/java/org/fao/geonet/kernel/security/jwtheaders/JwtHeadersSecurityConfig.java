@@ -20,21 +20,17 @@
  * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
  * Rome - Italy. email: geonetwork@osgeo.org
  */
-
 package org.fao.geonet.kernel.security.jwtheaders;
 
 import org.fao.geonet.kernel.security.SecurityProviderConfiguration;
-import org.geoserver.security.jwtheaders.JwtConfiguration;
 
 /**
- * configuration for the JWT Headers security filter.
- * See GN documentation.
- * This is based on GeoServer's JWT-Headers Module, so you can see there as well.
- * <p>
- * This class handles the GN filter configuration details, and hands the actual configuration
- * for the filter to the JwtConfiguration class.  This class is also used in Geoserver.
+ * GeoNetwork only allows one SecurityProviderConfiguration bean.
+ * In the jwt-headers-multi (2 auth filters) situation, we need to have a single SecurityProviderConfiguration.
+ * We, therefore, share a single one.
+ * This class is shared between all the JwtHeadersConfiguration objects.
  */
-public class JwtHeadersConfiguration {
+public class JwtHeadersSecurityConfig implements SecurityProviderConfiguration {
 
 
     public SecurityProviderConfiguration.LoginType loginType = SecurityProviderConfiguration.LoginType.AUTOLOGIN;
@@ -48,65 +44,56 @@ public class JwtHeadersConfiguration {
      * false -> don't update the DB (admin must edit groups in UI).
      */
     public boolean updateGroup = true;
-    protected JwtConfiguration jwtConfiguration;
 
-    //shared JwtHeadersSecurityConfig object
-    JwtHeadersSecurityConfig securityConfig;
 
     // getters/setters
 
-    public JwtHeadersConfiguration(JwtHeadersSecurityConfig securityConfig) {
-        this.securityConfig = securityConfig;
-        jwtConfiguration = new JwtConfiguration();
+
+    public JwtHeadersSecurityConfig() {
+
     }
 
     public boolean isUpdateProfile() {
-        return securityConfig.isUpdateProfile();
+        return updateProfile;
     }
 
     public void setUpdateProfile(boolean updateProfile) {
-        securityConfig.setUpdateProfile(updateProfile);
+        this.updateProfile = updateProfile;
     }
 
     public boolean isUpdateGroup() {
-        return securityConfig.isUpdateGroup();
+        return updateGroup;
     }
 
 
     //---- abstract class methods
 
     public void setUpdateGroup(boolean updateGroup) {
-        securityConfig.setUpdateGroup(updateGroup);
+        this.updateGroup = updateGroup;
     }
 
+    //@Override
     public String getLoginType() {
-        return securityConfig.getLoginType();
+        return loginType.toString();
     }
 
-
+    // @Override
     public String getSecurityProvider() {
-        return securityConfig.getSecurityProvider();
+        return "JWT-HEADERS";
     }
 
-
+    // @Override
     public boolean isUserProfileUpdateEnabled() {
-        return securityConfig.isUserProfileUpdateEnabled();
+        // If updating profile from the security provider then disable the profile updates in the interface
+        return !updateProfile;
     }
 
     //========================================================================
 
     // @Override
     public boolean isUserGroupUpdateEnabled() {
-        return securityConfig.isUserGroupUpdateEnabled();
-    }
-
-    public org.geoserver.security.jwtheaders.JwtConfiguration getJwtConfiguration() {
-        return jwtConfiguration;
-    }
-
-    public void setJwtConfiguration(
-        org.geoserver.security.jwtheaders.JwtConfiguration jwtConfiguration) {
-        this.jwtConfiguration = jwtConfiguration;
+        // If updating group from the security provider then disable the group updates in the interface
+        return !updateGroup;
     }
 
 }

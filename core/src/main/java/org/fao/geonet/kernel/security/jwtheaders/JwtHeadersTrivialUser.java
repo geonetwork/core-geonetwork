@@ -85,10 +85,12 @@ public class JwtHeadersTrivialUser {
 
         var tokenValidator = new TokenValidator(config);
         try {
-            tokenValidator.validate(userNameHeader);
-        }
-        catch (Exception e) {
-            throw new IOException("JWT Token is invalid",e);
+            var accessToken = userNameHeader.replaceFirst("^Bearer", "");
+            accessToken = accessToken.replaceFirst("^bearer", "");
+            accessToken = accessToken.trim();
+            tokenValidator.validate(accessToken);
+        } catch (Exception e) {
+            throw new IOException("JWT Token is invalid", e);
         }
 
         //get roles from the headers (pay attention to config)
