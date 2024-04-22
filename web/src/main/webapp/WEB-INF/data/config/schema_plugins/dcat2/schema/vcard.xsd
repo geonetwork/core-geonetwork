@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+           xmlns:vcard="http://www.w3.org/2006/vcard/ns#"
+           targetNamespace="http://www.w3.org/2006/vcard/ns#" elementFormDefault="qualified"
+           attributeFormDefault="qualified">
+  <xs:annotation>
+    <xs:documentation xml:lang="en">
+      VCARD XML Schema
+      http://www.w3.org/2006/vcard/ns#
+      Modified 2019-10-03
+    </xs:documentation>
+  </xs:annotation>
+  <xs:import namespace="http://purl.org/dc/terms/" schemaLocation="dcterms.xsd"/>
+  <xs:import namespace="http://xmlns.com/foaf/0.1/" schemaLocation="foaf.xsd"/>
+  <xs:import namespace="http://www.w3.org/1999/02/22-rdf-syntax-ns#" schemaLocation="rdf.xsd"/>
+  <xs:import namespace="http://www.w3.org/2004/02/skos/core#" schemaLocation="skos.xsd"/>
+  <!-- vcard:Kind-->
+  <xs:complexType name="Organization">
+    <xs:sequence>
+      <xs:element name="Organization">
+        <xs:complexType>
+          <xs:sequence>
+            <!-- optional properties-->
+            <xs:element name="fn" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="organization-name" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element ref="vcard:hasAddress" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="hasEmail" type="rdf:Resource" maxOccurs="1"/>
+            <xs:element name="hasURL" type="rdf:Resource" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="hasTelephone" type="xs:anyURI" minOccurs="0" maxOccurs="1"/>
+          </xs:sequence>
+          <xs:attribute ref="rdf:about"/>
+          <xs:attribute ref="rdf:nodeID"/>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <!-- vcard:Address-->
+  <xs:complexType name="Address">
+    <xs:sequence>
+      <xs:element name="Address">
+        <xs:complexType>
+          <xs:sequence>
+            <!-- mandatory properties-->
+            <xs:element name="street-address" type="xs:string" maxOccurs="1"/>
+            <xs:element name="locality" type="xs:string" maxOccurs="1"/>
+            <xs:element name="postal-code" type="xs:string" maxOccurs="1"/>
+            <xs:element name="country-name" type="xs:string" minOccurs="0" maxOccurs="1"/>
+          </xs:sequence>
+          <xs:attribute ref="rdf:about"/>
+          <xs:attribute ref="rdf:nodeID"/>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <!-- individual elements-->
+  <xs:element name="hasAddress" type="vcard:Address"/>
+</xs:schema>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+  <basic>Basique</basic>
+  <advanced>Avancée</advanced>
+  <xml>XML</xml>
+  <metadata.section>Détails de la métadonnée</metadata.section>
+  <dcat.addThemes>Thèmes</dcat.addThemes>
+  <dcat.addTags>Mots clef/balises</dcat.addTags>
+  <dcat.addType>Type</dcat.addType>
+  <dcat.addAccessRight>Droit d'accès</dcat.addAccessRight>
+  <dcat.addFormat>Format</dcat.addFormat>
+  <dcat.addPackageFormat>Format du packet</dcat.addPackageFormat>
+  <dcat.addCompressFormat>Format de compression</dcat.addCompressFormat>
+  <dcat.addMediaType>Type de média</dcat.addMediaType>
+  <dcat.addAccrualPeriodicity>Fréquence de mise à jour</dcat.addAccrualPeriodicity>
+  <dcatResource>Resource</dcatResource>
+  <dcatCatalogRecord>Fiche</dcatCatalogRecord>
+</strings>
